@@ -10,6 +10,8 @@ Notes on what to build and sell on Fab. Planning only: nothing here is built or 
 | `PRODUCT_LIST.md` | Ninja-line product list: 32 candidates in 5 tiers, scored on demand, gap, pipeline fit, game reuse and effort |
 | `MARKET_FINDINGS.md` | Fab's 2025/2026 market data and the feudal-Japan/ninja competition, with sources and open questions |
 
+Specs written from this research: `WorkFiles/cardshop/CARDSHOP_KIT_SPEC.md` (GENRE_SCAN #1).
+
 Add a `<product>_COMPETITION.md` here before starting any product (see the end of `GENRE_SCAN.md`).
 
 The basis for fees, price rungs, listing rules and IP rules is `FAB_ASSET_STUDY.md` in the repo root.
