@@ -89,6 +89,10 @@ also get `Snap_L`/`Snap_R` sockets at their end faces.
 | D8 | **Validation project** | a new `CardShopKit.uproject` (UE 5.8, Substrate off) · the ShurikenValidation project | **New project**, reached by `run_build.sh` through `NP_PROJECT` (D5). It keeps the content root clean and makes Fab packaging and the dependency check trivial |
 | D9 | **Publisher name** | the user's current seller name, or a second brand for the sim/horror line | GENRE_SCAN advises a second brand for sim content (niche consistency). **User's call.** |
 
+**Decided by the user, 2026-09-28:** D1 = **a** (clean realistic PBR); D2 = **a** (full v1, 171 meshes); D3 = Claude
+proposes. The web-screened shortlist is in `BRAND_NAMES.md`, waiting for the user's picks and USPTO screen. D4-D9 are
+still open.
+
 ---
 
 ## 3. Asset list
