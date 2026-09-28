@@ -91,7 +91,8 @@ also get `Snap_L`/`Snap_R` sockets at their end faces.
 
 **Decided by the user, 2026-09-28:** D1 = **a** (clean realistic PBR); D2 = **a** (full v1, 171 meshes); D3 = Pyrecall,
 Lumenfold, Rimvault (fictional sport), Clearmark Grading, Halcyon Grading, Sleevesmith, Longhaul Hobby Distribution,
-Corner Pocket Cards (`BRAND_NAMES.md`); the user's USPTO screen is still pending. D4-D9 are
+Corner Pocket Cards (`BRAND_NAMES.md`); the user's USPTO screen is still pending. D4 = **user-made illustrations** (18 to start, 6 per line; brief in
+`CARD_ART_BRIEF.md`); Claude builds the frames, names, backs, pack and box art around them by script. D5-D9 are
 still open.
 
 ---
@@ -654,7 +655,7 @@ cards or graders. The listing says this in its first paragraph.
 | 4 | Use generic names in files, listings and tags: "graded card slab", "top-loader" (pending the screen in 6.3), "booster pack", "magnetic card holder", "semi-rigid holder", "deck sleeve", "collector box" |
 | 5 | Use only fonts we may embed in textures (OFL or similar). Log each font and its licence in `WorkFiles/cardshop/FONTS.md` |
 | 6 | Make the sports-style line a **fictional sport** with fictional teams: no leagues, team names, logos, real athletes or likenesses |
-| 7 | Keep a per-product AI decision log (FAB_ASSET_STUDY line 314). With D4 = a, nothing is AI-generated |
+| 7 | Keep a per-product AI decision log (FAB_ASSET_STUDY line 314) in `CARD_ART_LOG.md`: for each user illustration, whether any AI tool was used. Any AI use means the CreatedWithAI tag on the listing. Claude's script-made art is not AI-generated |
 | 8 | Keep tier names and colours as buyer-editable parameters, with our own defaults (4.1) |
 | 9 | Design every POS item (terminal, printer, price gun, scanner, phone, laptop) as an original shape; only sizes come from research |
 
