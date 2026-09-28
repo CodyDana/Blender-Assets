@@ -1,0 +1,741 @@
+"""Hero pieces: the floor andon lantern and the two black-glaze plum vases (user reference sheets
+WorkFiles/armory/reference/lantern.png and vase_plum.png; context back_wall.png and armory3_reference2.png).
+
+SM_AK_Lantern      46 x 46 x 64.5 cm andon, measured off lantern.png's front view: four 5 cm square posts on slightly
+                   wider feet running up through the cap to 4 cm flat-topped, chamfered blocks (a 0.9 mm hip: the top
+                   view's faint X); a thin 1.75 cm cap board (46 cm, stepped inner edge = the top view's groove line) over
+                   a separate apron frame with a sloped soffit; per face a bottom rail, a lower and an upper panel rail with
+                   OPEN see-through gaps to the apron / bottom rail (spacer blocks beside the posts), and washi panes
+                   between the panel rails on all four faces plus one under the cap: the kit's M_AK_LanternPaper glow
+                   picture (fibre mottling, hot core) on a unique 0-1 UV per pane. Frame: the kit's M_AK_Timber read in
+                   its darkest streak band (brushed grain), chamfers ~90 % worn bronze-gold (M_AK_HLanternEdge).
+SM_AK_Vase_Plum_S  sill vase: vase_plum.png's black tenmoku vase (rolled foot ring, round shoulder, short neck, everted
+                   rolled lip thinning to rust at the rim) with thin gnarled plum branches (tapered, kinked tubes with
+                   bark knots), ~42 round cupped five-petal crimson blossoms (dark-red centre, yellow stamen filaments; the
+                   white ones on the long right-hand branch) and round buds strung along the twig tips; fans along local
+                   X in front of the wall (-Y = wall side).
+SM_AK_Vase_Plum_L  platform vase: back_wall.png's slender black baluster (narrow neck, flared trumpet mouth, brass lip and
+                   foot bands) with a radial V bouquet of thin stems (the top view a full star), a dense crimson mass of
+                   ~80 small blossoms facing the entrance (-Y) plus buds, a few pale accents.
+Both keep the scripted bbox and collision (the scripted spray envelope: S 0.88 x 0.30 x 1.18, L 0.45 x 0.78 x 1.32);
+L_FAN_ALONG_X swaps the L footprint to X 0.78 x Y 0.45 (back_wall's V face-on; a layout decision, off by default).
+
+ENABLED stays False: the user reviews images of every piece before anything goes into the armory.
+"""
+import math
+import random
+
+import bpy
+import bmesh
+from mathutils import Vector
+
+import armory_hero as H
+
+ENABLED = False
+L_FAN_ALONG_X = False       # True: the platform vase spray fans across X (face-on to the entrance): footprint X/Y swapped
+
+MATERIALS = {
+    # lantern: the frame is the kit's M_AK_Timber (read in its darkest streak band, see TIMBER_BAND) and the panes the
+    # kit's M_AK_LanternPaper glow picture; only the worn bronze-gold arris is new (flat; Unreal: flat master)
+    # worn bronze-gold on the arrises (the sheet's thin gold edge lines on every post, rail and cap edge)
+    "M_AK_HLanternEdge": (None, 1.0, {"color": "#86704A", "rough": 0.44, "metal": 1.0}),
+    # vases: tenmoku glaze (brown undertone, softer gloss) and the rust rim where the glaze thins
+    "M_AK_HGlaze": (None, 1.0, {"color": "#0D0907", "rough": 0.24, "coat": 0.3}),
+    "M_AK_HGlazeRim": (None, 1.0, {"color": "#44200D", "rough": 0.3, "coat": 0.3}),
+    # plum: dark bark, scarlet petals, white petals, yellow stamens, red buds
+    "M_AK_HPlumBark": (None, 1.0, {"color": "#2E2119", "rough": 0.85}),
+    "M_AK_HPlumPetal": (None, 1.0, {"color": "#9A0612", "rough": 0.78}),
+    "M_AK_HPlumWhite": (None, 1.0, {"color": "#EEE7DC", "rough": 0.66}),
+    "M_AK_HPlumStamen": (None, 1.0, {"color": "#E2B23C", "rough": 0.6}),
+    "M_AK_HPlumBud": (None, 1.0, {"color": "#A2080F", "rough": 0.45}),
+}
+
+FRAME = "M_AK_Timber"          # the kit's dark grained timber, read in its darkest streak band (TIMBER_BAND)
+TIMBER_BAND = (0.53, 0.72, 4.0)  # u range of T_AK_Timber's darkest streaks (sRGB ~25), max cross-grain scale per m
+EDGE = "M_AK_HLanternEdge"     # worn chamfers (the sheet's thin, broken dark-gold edge lines)
+PAPER = "M_AK_LanternPaper"    # the kit's glowing washi (fibre streaks, hot core), mapped per pane
+GZ, RIM, BRASS = "M_AK_HGlaze", "M_AK_HGlazeRim", "M_AK_Brass"
+BARK, PETAL, WHITE, STAMEN, BUD = ("M_AK_HPlumBark", "M_AK_HPlumPetal", "M_AK_HPlumWhite", "M_AK_HPlumStamen",
+                                   "M_AK_HPlumBud")
+
+
+# ------------------------------------------------------------------------------------------------ helpers
+
+def _link(name, bm, mats):
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    for m in mats:
+        me.materials.append(bpy.data.materials[m])
+    ob = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(ob)
+    return ob
+
+
+def _uv_project(bm, grain, tile=1.0, band=None):
+    """Box-project UV0 in metres / tile, the grain axis along V wherever the face contains it."""
+    uv = bm.loops.layers.uv.verify()
+    ax = "xyz"
+    for f in bm.faces:
+        n = f.normal
+        k = max(range(3), key=lambda i: abs(n[i]))
+        plane = [i for i in range(3) if i != k]
+        g = ax.index(grain)
+        if g in plane:
+            v_ax = g
+            u_ax = [i for i in plane if i != g][0]
+        else:
+            u_ax, v_ax = plane
+        if band is None:
+            for lp in f.loops:
+                co = lp.vert.co
+                lp[uv].uv = (co[u_ax] / tile, co[v_ax] / tile)
+            continue
+        # the kit's timber picture, read only inside its darkest streak band (u band[0]-band[1]): the cross-grain
+        # extent of each face squeezed into the band (fine streaks), the grain along V at the kit's 2 m tile
+        us = [lp.vert.co[u_ax] for lp in f.loops]
+        uc, ext = (max(us) + min(us)) / 2, max(us) - min(us)
+        w = band[1] - band[0]
+        k = min(band[2], 0.9 * w / ext) if ext > 1e-9 else band[2]
+        mid = band[0] + w / 2 + _BAND.uniform(-1, 1) * max(0.0, (w - ext * k) / 2 - 0.004)
+        for lp in f.loops:
+            co = lp.vert.co
+            lp[uv].uv = (mid + (co[u_ax] - uc) * k, co[v_ax] / 2.0)
+
+
+_WEAR = random.Random(5)
+_BAND = random.Random(9)
+
+
+def _finish(piece, bm, grain, bevel, wear=0.6):
+    """Chamfer every real arris (not the flat mitre / poke edges) by `bevel`; about `wear` of the chamfers take the
+    worn-bronze EDGE, the rest stay FRAME. UV0 box projected along the grain; flat shaded."""
+    bm.normal_update()
+    if bevel:
+        edges = [e for e in bm.edges if len(e.link_faces) == 2 and e.calc_face_angle(0) > 0.25]
+        res = bmesh.ops.bevel(bm, geom=edges, offset=bevel, offset_type="OFFSET", segments=1, profile=0.5,
+                              affect="EDGES", clamp_overlap=True)
+        for f in res["faces"]:
+            f.material_index = 1 if _WEAR.random() < wear else 0
+    bm.normal_update()
+    _uv_project(bm, grain, 1.0, TIMBER_BAND if FRAME == "M_AK_Timber" else None)
+    H.from_object(piece, _link("tmp_frame", bm, [FRAME, EDGE]))
+
+
+def _box_bm(x0, x1, y0, y1, z0, z1, apex=None):
+    bm = bmesh.new()
+    v = [bm.verts.new(c) for c in ((x0, y0, z0), (x1, y0, z0), (x1, y1, z0), (x0, y1, z0),
+                                   (x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1))]
+    for q in ((0, 3, 2, 1), (0, 1, 5, 4), (2, 3, 7, 6), (3, 0, 4, 7), (1, 2, 6, 5)):
+        bm.faces.new([v[i] for i in q])
+    if apex is None:
+        bm.faces.new([v[i] for i in (4, 5, 6, 7)])
+    else:                       # a low hipped top: four faces rising to a centre apex
+        ap = bm.verts.new(((x0 + x1) / 2, (y0 + y1) / 2, apex))
+        for a, b in ((4, 5), (5, 6), (6, 7), (7, 4)):
+            bm.faces.new((v[a], v[b], ap))
+    return bm
+
+
+def frame_box(piece, x0, x1, y0, y1, z0, z1, grain="z", bevel=0.002, apex=None, wear=0.85):
+    _finish(piece, _box_bm(x0, x1, y0, y1, z0, z1, apex), grain, bevel, wear)
+
+
+def frame_ring(piece, prof, bevel=0.002, wear=0.85):
+    """A mitred square frame swept round the lantern axis: prof = its closed (half width, z) cross-section loop."""
+    bm = bmesh.new()
+    rings = [[bm.verts.new((sx * h, sy * h, z)) for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))] for h, z in prof]
+    n = len(prof)
+    for k in range(n):
+        a, b = rings[k], rings[(k + 1) % n]
+        for i in range(4):
+            j = (i + 1) % 4
+            bm.faces.new((a[i], a[j], b[j], b[i]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    _finish(piece, bm, "x", bevel, wear)  # noqa
+
+
+PANE_UV = ((0.35, 0.65), (0.34, 0.78))    # the glow picture's pale fibrous core and warm falloff (not its deep amber rim)
+
+
+def pane(piece, face, lo, hi, z0, z1, out0, out1, uvr=PANE_UV):
+    """A thin paper pane on one lantern face ('-y', '+y', '-x', '+x', or '+z' for the top pane: lo/hi are then the
+    half extent and z0/z1 its thickness), the outer face mapped once over the glow picture's core (uvr, read left to
+    right from outside; every pane shows the whole hot core), the other faces on one texel of its edge."""
+    if face == "+z":
+        x0, x1, y0, y1 = lo, hi, lo, hi
+    else:
+        a0, a1 = lo, hi
+        if face == "-y":
+            x0, x1, y0, y1 = a0, a1, -out1, -out0
+        elif face == "+y":
+            x0, x1, y0, y1 = a0, a1, out0, out1
+        elif face == "-x":
+            x0, x1, y0, y1 = -out1, -out0, a0, a1
+        else:
+            x0, x1, y0, y1 = out0, out1, a0, a1
+    c = [(x0, y0, z0), (x1, y0, z0), (x1, y1, z0), (x0, y1, z0), (x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1)]
+    quads = {"-z": (0, 3, 2, 1), "+z": (4, 5, 6, 7), "-y": (0, 1, 5, 4), "+y": (2, 3, 7, 6), "-x": (3, 0, 4, 7),
+             "+x": (1, 2, 6, 5)}
+    faces, uvs = [], []
+    for key, q in quads.items():
+        faces.append(q)
+        if key != face:
+            uvs.append([(uvr[0][0], uvr[1][0])] * 4)
+            continue
+        fu = []
+        for i in q:
+            x, y, z = c[i]
+            if face == "-y":
+                u, v = (x - x0) / (x1 - x0), (z - z0) / (z1 - z0)
+            elif face == "+y":
+                u, v = 1 - (x - x0) / (x1 - x0), (z - z0) / (z1 - z0)
+            elif face == "-x":
+                u, v = 1 - (y - y0) / (y1 - y0), (z - z0) / (z1 - z0)
+            elif face == "+x":
+                u, v = (y - y0) / (y1 - y0), (z - z0) / (z1 - z0)
+            else:
+                u, v = (x - x0) / (x1 - x0), (y - y0) / (y1 - y0)
+            fu.append((uvr[0][0] + u * (uvr[0][1] - uvr[0][0]), uvr[1][0] + v * (uvr[1][1] - uvr[1][0])))
+        uvs.append(fu)
+    piece.mesh(c, faces, uvs, PAPER)
+
+
+# ------------------------------------------------------------------------------------------------ lantern
+# lantern.png front view (cap 46 cm = 353 px, height 64.5 cm = 468 px): post-top blocks z 0.605-0.645 (4 cm over the
+# cap, flat tops with a shallow chamfer), cap board 0.5875-0.605 (1.75 cm), apron 0.5645-0.5875 (sloped soffit out to
+# the cap edge), open gap, upper panel rail 0.506-0.5315, paper, lower panel rail 0.098-0.1235, open gap, bottom rail
+# 0.0515-0.0805, feet 0-0.049; posts 5 cm with their outer faces at +/-0.1975 (cap overhang 3.25 cm).
+PX, PH = 0.1725, 0.025                 # post centre and half width: outer faces +/-0.1975, inner +/-0.1475
+IN = PX - PH
+RAILS = ((0.0515, 0.0805), (0.0975, 0.1235), (0.5055, 0.5315))    # bottom rail, lower and upper panel rails
+RAIL_OUT = (0.1735, 0.1925)            # rail faces 5 mm behind the post faces
+SPACERS = ((0.0795, 0.0985), (0.5305, 0.5655))                      # blocks beside the posts in the two open gaps
+
+
+def _face_box(piece, face, a0, a1, o0, o1, z0, z1, grain, bevel=0.002, wear=0.85):
+    if face == "-y":
+        frame_box(piece, a0, a1, -o1, -o0, z0, z1, grain, bevel, wear=wear)
+    elif face == "+y":
+        frame_box(piece, a0, a1, o0, o1, z0, z1, grain, bevel, wear=wear)
+    elif face == "-x":
+        frame_box(piece, -o1, -o0, a0, a1, z0, z1, grain, bevel, wear=wear)
+    else:
+        frame_box(piece, o0, o1, a0, a1, z0, z1, grain, bevel, wear=wear)
+
+
+def lantern(G):
+    ln = G["Piece"]("SM_AK_Lantern")
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            cx, cy = sx * PX, sy * PX
+            # post: a flat top, chamfered all round, with a 0.9 mm hip (the top view's faint X, no peak)
+            frame_box(ln, cx - PH, cx + PH, cy - PH, cy + PH, 0.047, 0.6441, "z", 0.003, apex=0.645, wear=0.9)
+            frame_box(ln, cx - 0.027, cx + 0.027, cy - 0.027, cy + 0.027, 0.0, 0.049, "z", 0.0024, wear=0.9)   # foot
+    for face in ("-y", "+y", "-x", "+x"):
+        along = "x" if face in ("-y", "+y") else "y"
+        for z0, z1 in RAILS:
+            _face_box(ln, face, -IN - 0.003, IN + 0.003, RAIL_OUT[0], RAIL_OUT[1], z0, z1, along)
+        for z0, z1 in SPACERS:
+            for s in (-1, 1):
+                a0, a1 = (IN - 0.019, IN + 0.002) if s > 0 else (-IN - 0.002, -IN + 0.019)
+                _face_box(ln, face, a0, a1, 0.1765, 0.1885, z0, z1, "z", 0.0012, wear=0.5)
+    # cap board: 46 cm square frame, 1.75 cm thick, its inner edge stepped down 5 mm (the top view's groove line)
+    frame_ring(ln, [(0.230, 0.5875), (0.230, 0.605), (0.166, 0.605), (0.166, 0.600), (0.150, 0.600), (0.150, 0.5875)],
+               0.0018, wear=0.9)
+    # apron: a separate frame under the cap, its soffit sloping from the cap edge back to 5 mm behind the post faces
+    frame_ring(ln, [(0.170, 0.5645), (0.192, 0.5645), (0.192, 0.5695), (0.226, 0.588), (0.170, 0.588)], 0.0018,
+               wear=0.85)
+    for face in ("-y", "+y", "-x", "+x"):
+        pane(ln, face, -IN - 0.0015, IN + 0.0015, 0.1215, 0.5075, 0.166, 0.170)
+    pane(ln, "+z", -0.172, 0.172, 0.5665, 0.5705, 0, 0)                                 # the pane under the cap
+    pane(ln, "+z", -0.160, 0.160, 0.054, 0.063, 0, 0)       # the lit floor pad inside (glowing through the bottom gap)
+    ln.col(-0.23, 0.23, -0.23, 0.23, 0, 0.645)     # the scripted lantern's collision, unchanged
+    return ln
+
+
+# ------------------------------------------------------------------------------------------------ vases
+# (r / r_max, z / height, material of the segment to the next point): up the outside, over the lip, down the inside
+# to a hidden floor. S = vase_plum.png's front view (measured per pixel row), L = back_wall.png's platform baluster.
+PROFILE_S = [
+    (0.0, 0.0, RIM), (0.55, 0.0, RIM), (0.600, 0.010, GZ), (0.626, 0.036, GZ), (0.604, 0.064, GZ), (0.600, 0.078, GZ),
+    (0.640, 0.110, GZ), (0.740, 0.180, GZ), (0.860, 0.280, GZ), (0.950, 0.390, GZ), (0.995, 0.500, GZ),
+    (0.995, 0.620, GZ), (0.955, 0.710, GZ), (0.880, 0.770, GZ), (0.760, 0.820, GZ), (0.620, 0.856, GZ),
+    (0.520, 0.884, GZ), (0.476, 0.912, GZ), (0.490, 0.948, GZ), (0.528, 0.976, RIM), (0.536, 0.992, RIM),
+    (0.490, 1.0, GZ), (0.450, 0.985, GZ), (0.415, 0.910, GZ), (0.0, 0.870, GZ),
+]
+PROFILE_L = [
+    (0.0, 0.0, BRASS), (0.56, 0.0, BRASS), (0.605, 0.008, BRASS), (0.620, 0.024, BRASS), (0.600, 0.040, GZ),
+    (0.556, 0.058, GZ), (0.575, 0.100, GZ), (0.660, 0.210, GZ), (0.780, 0.350, GZ), (0.900, 0.480, GZ),
+    (0.975, 0.590, GZ), (0.998, 0.680, GZ), (0.960, 0.760, GZ), (0.820, 0.825, GZ), (0.620, 0.865, GZ),
+    (0.460, 0.892, GZ), (0.395, 0.925, GZ), (0.420, 0.960, BRASS), (0.500, 0.984, BRASS), (0.540, 0.996, BRASS),
+    (0.515, 1.0, GZ), (0.460, 0.990, GZ), (0.380, 0.955, GZ), (0.340, 0.905, GZ), (0.0, 0.880, GZ),
+]
+# the S spray as drawn on vase_plum.png's front view (px of the 2x crop of x 90-670, y 0-340; mouth at 586, 636):
+# (name, parent, points, base radius scale, depth at the tip in [-1, 1]; + = toward the room, the sheet's viewer)
+BRANCHES_S = [
+    ("A", None, [(575, 640), (540, 590), (470, 512), (400, 442), (330, 398), (250, 366), (170, 340), (110, 324),
+                 (58, 316)], 1.0, -0.45),
+    ("A1", "A", [(338, 402), (322, 340), (304, 272), (286, 205)], 0.55, -0.95),
+    ("A3", "A", [(440, 480), (452, 420), (458, 345)], 0.5, 0.55),
+    ("A2", "A", [(540, 590), (470, 556), (400, 551), (312, 556)], 0.55, 0.75),
+    ("B", None, [(588, 640), (598, 570), (615, 480), (628, 400), (615, 320), (592, 250), (568, 210)], 0.75, 0.65),
+    ("C", None, [(612, 640), (650, 565), (685, 470), (708, 380), (728, 285), (744, 200), (758, 120), (776, 38)], 0.95,
+     -0.1),
+    ("C1", "C", [(700, 400), (694, 330), (690, 262), (688, 205)], 0.45, -0.85),
+    ("D", None, [(630, 640), (690, 570), (755, 480), (808, 405), (860, 325), (905, 258), (932, 200)], 0.85, 0.35),
+    ("E", None, [(640, 640), (725, 575), (800, 522), (872, 480), (950, 432), (1022, 390), (1092, 350)], 0.9, -0.3),
+    ("E1", "E", [(790, 530), (812, 450), (846, 370)], 0.5, 0.9),
+    ("F", None, [(596, 640), (592, 580), (588, 520), (590, 450)], 0.45, 1.0),
+    ("G", None, [(580, 640), (572, 590), (560, 545), (548, 505)], 0.45, -1.0),
+]
+RED_S = [(165, 312), (185, 375), (290, 360), (345, 338), (395, 405), (462, 445), (405, 485), (495, 555), (525, 475),
+         (635, 410), (630, 530), (680, 545), (715, 425), (725, 340), (740, 205), (728, 140), (775, 355), (700, 480),
+         (420, 570), (655, 455), (760, 262), (590, 575)]
+WHITE_S = [(795, 470), (730, 535), (825, 545), (880, 440), (940, 470), (950, 400), (870, 495)]
+MOUTH_S = (586, 636)
+WHITE_SET_S = {"E", "E1"}              # the sheet: the white blossoms are all on the long right-hand branch
+MOUTH_L = (283, 340)
+
+
+def _radial_l():
+    """The L spray: back_wall.png's platform vases carry a dense V bouquet of thin straight stems radiating from the
+    mouth all round (the top view a full star), the centre stems tallest. Written in the same px frame as the S sheet
+    (mouth 283, 340; half width 190 px; up = -py): (azimuth deg, 0 = +X, 90 = +Y; tip height px; reach 0-1; radius)."""
+    mx, my = MOUTH_L
+    spec = [(0, 240, 1.0, 0.9), (30, 262, 0.92, 0.85), (60, 282, 0.78, 0.8), (92, 292, 0.62, 0.8),
+            (124, 278, 0.8, 0.85), (154, 258, 0.95, 0.9), (182, 236, 1.0, 0.9), (212, 262, 0.92, 0.85),
+            (244, 284, 0.74, 0.8), (272, 298, 0.6, 0.85), (302, 276, 0.82, 0.85), (334, 252, 0.95, 0.9),
+            (160, 300, 0.2, 1.0)]
+    out = []
+    for k, (az, h, reach, rs) in enumerate(spec):
+        ca, sa = math.cos(math.radians(az)), math.sin(math.radians(az))
+        w = 190 * reach * ca
+        pts = [(mx + w * t ** 0.85, my - h * t) for t in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0)]
+        out.append((f"s{k}", None, pts, rs, sa * reach))
+        if k % 2 == 0 and k < 12:     # an intermediate branch leaving the stem at mid height, a little further out
+            x0, y0 = pts[2]
+            out.append((f"s{k}b", f"s{k}", [(x0, y0), (x0 + w * 0.35 + 18 * ca, y0 - h * 0.25),
+                                              (x0 + w * 0.6 + 30 * ca, y0 - h * 0.45)], 0.6, sa * min(1.0, reach + 0.25)))
+    return out
+
+
+BRANCHES_L = _radial_l()
+WHITE_SET_L = set()                    # back_wall: nearly all red; a few pale accents at random (white_any)
+
+
+def _frame(t):
+    t = t.normalized()
+    a = Vector((0, 0, 1)) if abs(t.z) < 0.9 else Vector((1, 0, 0))
+    n = (a - t * a.dot(t)).normalized()
+    return n, t.cross(n)
+
+
+def tube(pts, radii, sides):
+    """Tapered tube along pts (parallel-transport frames), closed by a pole at each end. -> verts, faces, uvs"""
+    verts, faces, uvs, rings = [], [], [], []
+    n = None
+    for i, p in enumerate(pts):
+        t = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)]).normalized()
+        if n is None:
+            n, _b = _frame(t)
+        n = (n - t * n.dot(t)).normalized()
+        b = t.cross(n)
+        ring = []
+        for k in range(sides):
+            a = 2 * math.pi * k / sides
+            verts.append(tuple(p + radii[i] * (math.cos(a) * n + math.sin(a) * b)))
+            ring.append(len(verts) - 1)
+        rings.append(ring)
+    L = [0.0]
+    for i in range(1, len(pts)):
+        L.append(L[-1] + (pts[i] - pts[i - 1]).length)
+    for i in range(len(pts) - 1):
+        a, c = rings[i], rings[i + 1]
+        for k in range(sides):
+            j = (k + 1) % sides
+            faces.append((a[k], a[j], c[j], c[k]))
+            uvs.append([(k / sides, L[i] * 8), ((k + 1) / sides, L[i] * 8), ((k + 1) / sides, L[i + 1] * 8),
+                        (k / sides, L[i + 1] * 8)])
+    t0 = (pts[0] - pts[1]).normalized()
+    verts.append(tuple(pts[0] + t0 * radii[0] * 0.6))
+    base = len(verts) - 1
+    tip_d = (pts[-1] - pts[-2]).normalized()
+    verts.append(tuple(pts[-1] + tip_d * max(radii[-1], 0.0015) * 1.5))
+    tip = len(verts) - 1
+    for k in range(sides):
+        j = (k + 1) % sides
+        faces.append((rings[0][j], rings[0][k], base))
+        uvs.append([(0, 0), (0.1, 0), (0.05, 0.05)])
+        faces.append((rings[-1][k], rings[-1][j], tip))
+        uvs.append([(0, 0), (0.1, 0), (0.05, 0.05)])
+    return verts, faces, uvs
+
+
+# per rim-point count: (angle off the petal axis in deg, radius / R) of the rounded petal edge
+RIMS = {4: ((-27, 0.80), (-10, 0.98), (10, 0.98), (27, 0.80)),
+        3: ((-24, 0.84), (0, 1.0), (24, 0.84)),
+        2: ((-17, 0.93), (17, 0.93))}
+
+
+def flower(c, nrm, R, petal_mat, rng, m=4, fil=8, hub=True):
+    """A plum blossom: five round cupped petals (a fan of m rim points round each petal's dipped centre, the notches
+    between petals shared, so the corolla is one welded, non-overlapping surface), a closed back layer a little
+    behind it (the bloom reads from both sides with Unreal's one-sided flat materials, no coincident vertices), a small
+    dark-red centre and `fil` radiating yellow stamen filaments. Smooth shaded, planar UV.
+    Tris: 5 x (m + 3) + 10 + (5 if hub) + fil."""
+    nrm = nrm.normalized()
+    u, v = _frame(nrm)
+    th0 = rng.uniform(0, 2 * math.pi)
+    cup = 0.42 * R
+    dip = 0.03 * R
+    back = -(dip + 0.0007)
+    verts, vuv, faces, mats = [], [], [], []
+
+    def P(ang, r, h):
+        verts.append(tuple(c + r * (math.cos(ang) * u + math.sin(ang) * v) + nrm * h))
+        vuv.append((0.5 + 0.5 * r / R * math.cos(ang - th0), 0.5 + 0.5 * r / R * math.sin(ang - th0)))
+        return len(verts) - 1
+
+    def hcup(r):
+        return cup * (r / R) ** 2
+
+    def add(f, mat):
+        faces.append(tuple(f))
+        mats.append(mat)
+
+    jit = [math.radians(rng.uniform(-5, 5)) for _ in range(5)]
+    sc = [rng.uniform(0.9, 1.06) for _ in range(5)]
+    for layer, off in ((0, 0.0), (1, back)):
+        hc = P(0, 0, 0.02 * R + off)
+        notch = []
+        for i in range(5):
+            a = th0 + math.radians(72 * i + 36) + (jit[i] + jit[(i + 1) % 5]) / 2
+            rn = 0.40 * R * (sc[i] + sc[(i + 1) % 5]) / 2
+            notch.append(P(a, rn, hcup(rn) + off))
+        for i in range(5):
+            a = th0 + math.radians(72 * i) + jit[i]
+            nl, nr = notch[i - 1], notch[i]
+            if layer == 0:
+                rp = 0.52 * R * sc[i]
+                pc = P(a, rp, hcup(rp) - dip)
+                rv = [P(a + math.radians(o), rr * R * sc[i], hcup(rr * R * sc[i]) * 1.12) for o, rr in RIMS[m]]
+                chain = [nl] + rv + [nr]
+                for j in range(len(chain) - 1):
+                    add((pc, chain[j], chain[j + 1]), petal_mat)
+                add((pc, nr, hc), petal_mat)
+                add((pc, hc, nl), petal_mat)
+            else:           # the closed back: one tip per petal, facing away
+                rt = 0.9 * R * sc[i]
+                tip = P(a, rt, hcup(rt) * 1.1 + off)
+                add((hc, tip, nl), petal_mat)
+                add((hc, nr, tip), petal_mat)
+    if hub:                 # the dark-red centre (receptacle)
+        dc = P(0, 0, 0.075 * R)
+        ring = [P(th0 + math.radians(72 * j + 36), 0.15 * R, 0.05 * R) for j in range(5)]
+        for j in range(5):
+            add((dc, ring[j], ring[(j + 1) % 5]), BUD)
+    for j in range(fil):    # stamen filaments: thin slivers rising outward from the centre, their wide tips the anthers
+        a = th0 + 2 * math.pi * (j + 0.5) / fil + rng.uniform(-0.12, 0.12)
+        rr = rng.uniform(0.36, 0.47) * R
+        hh = rng.uniform(0.26, 0.34) * R
+        b0 = P(a, 0.05 * R, 0.08 * R)
+        add((b0, P(a - 0.11, rr, hh), P(a + 0.11, rr, hh)), STAMEN)
+    uvs = [[vuv[k] for k in f] for f in faces]
+    return verts, faces, uvs, mats
+
+
+def bud(c, d, s, n=4, rng=None):
+    """A round plum bud: a smooth n-sided bipyramid, a little longer along d, its waist set toward the tip so it reads
+    as an ovoid (2n tris; smooth shaded)."""
+    d = d.normalized()
+    u, v = _frame(d)
+    verts = [tuple(c + d * s * 1.25), tuple(c - d * s * 1.0)]
+    a0 = rng.uniform(0, 6.3) if rng else 0.0
+    for k in range(n):
+        a = a0 + 2 * math.pi * k / n
+        verts.append(tuple(c + d * s * 0.12 + s * (math.cos(a) * u + math.sin(a) * v)))
+    faces, uvs = [], []
+    for k in range(n):
+        j = (k + 1) % n
+        faces += [(0, 2 + k, 2 + j), (1, 2 + j, 2 + k)]
+        uvs += [[(0.5, 1), (k / n, 0.5), ((k + 1) / n, 0.5)], [(0.5, 0), ((k + 1) / n, 0.5), (k / n, 0.5)]]
+    return verts, faces, uvs
+
+
+def spray(cfg, hgt, fan_half, top, depth_half, fan_sign, front, seed):
+    """Plum spray for one vase, fanned along local X (fan_sign -1: the sheet is seen from +Y, +1: from -Y), depth
+    along Y. cfg: branches, mouth, r_main, kink, seg, sides, R (blossom radius range), m / fil / hub (blossom detail),
+    red / white lists (the sheet's blossoms), stations (dense: spacing, bloom_frac, upper, dense_buds, max_blooms,
+    white_set / white_p / white_any), twigs, buds. -> list of (verts, faces, uvs, mats, smooth), fitted by _fit."""
+    rng = random.Random(seed)
+    branches = cfg["branches"]
+    mx, my = cfg["mouth"]
+    zb = hgt * 0.86                      # branch butts rest in the vase's hidden inner floor
+    lmin = min(p[0] for b in branches for p in b[2]) - mx
+    lmax = max(p[0] for b in branches for p in b[2]) - mx
+    ytop = min(p[1] for b in branches for p in b[2])
+    s_neg, s_pos = (fan_half - 0.012) / -lmin, (fan_half - 0.012) / lmax
+    s_z = (top - hgt) / (my - ytop) * 0.97
+    up = Vector((0, 0, 1))
+    fanv = Vector((fan_sign, 0, 0))
+    dep = Vector((0, 1, 0))
+
+    def fanz(px, py):
+        f = (px - mx) * (s_neg if px < mx else s_pos)
+        return f, hgt + (my - py) * s_z
+
+    def to3(f, z, d):
+        return Vector((fan_sign * f, d, z))
+
+    def planar(a):          # distance in the fan plane (depth ignored)
+        return Vector((a.x, 0, a.z)).length
+
+    skel, parts, tails = {}, [], []
+    for name, parent, pts, rs, dtip in branches:
+        fz = [fanz(*p) for p in pts]
+        L = [0.0]
+        for i in range(1, len(fz)):
+            L.append(L[-1] + math.dist(fz[i - 1], fz[i]))
+        if parent is None:
+            ds = [dtip * depth_half * (l / L[-1]) ** 1.1 for l in L]
+            p3 = [to3(f, z, d) for (f, z), d in zip(fz, ds)]
+            # every stem passes the mouth a little off the axis toward its own tip and rests crossed in the neck (no
+            # two stems share a point: radial sprays all leave the same sheet pixel)
+            hd = Vector((p3[-1].x, p3[-1].y, 0))
+            hd = hd.normalized() if hd.length > 1e-6 else Vector((1, 0, 0))
+            jit = Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), 0)) * 0.004
+            p3[0] = p3[0] + hd * cfg.get("mouth_off", 0.0) + jit
+            p3 = [Vector((p3[0].x * 0.3 - hd.x * 0.008, p3[0].y * 0.3 - hd.y * 0.008, zb - rng.uniform(0, 0.03)))] + p3
+            r0 = cfg["r_main"] * rs
+        else:
+            pp, pr = skel[parent]
+            q = to3(*fz[0], 0)
+            kk = min(range(len(pp)), key=lambda i: planar(pp[i] - q))
+            d0 = pp[kk].y
+            ds = [d0 + (dtip * depth_half - d0) * (l / L[-1]) for l in L]
+            p3 = [pp[kk]] + [to3(f, z, d) for (f, z), d in zip(fz[1:], ds[1:])]
+            r0 = pr[kk] * 0.75
+            pr[kk] *= 1.2                # the node swells where the branch leaves
+        # subdivide into short segments; plum wood zig-zags: alternate kinks at the nodes (mostly in the fan plane, so
+        # the silhouette shows them) and a little random gnarl
+        pts3 = []
+        for i in range(len(p3) - 1):
+            a, b = p3[i], p3[i + 1]
+            n = max(1, int((b - a).length / cfg["seg"]))
+            for j in range(n):
+                pts3.append(a.lerp(b, j / n))
+        pts3.append(p3[-1])
+        side = rng.choice((-1, 1))
+        for i in range(2, len(pts3) - 1):
+            t = (pts3[i + 1] - pts3[i - 1]).normalized()
+            perp = fanv + dep * rng.uniform(-0.5, 0.5)
+            perp = (perp - t * perp.dot(t)).normalized()
+            side = -side
+            amp = cfg["kink"] * rng.uniform(0.4, 1.0)
+            pts3[i] = pts3[i] + perp * side * amp + Vector([rng.uniform(-1, 1) for _ in range(3)]) * cfg["kink"] * 0.3
+        total = sum((pts3[i + 1] - pts3[i]).length for i in range(len(pts3) - 1))
+        radii, acc = [], 0.0
+        for i, p in enumerate(pts3):
+            if i:
+                acc += (pts3[i] - pts3[i - 1]).length
+            t = acc / total
+            knob = rng.uniform(1.05, 1.35) if 1 < i < len(pts3) - 1 and rng.random() < 0.6 else 1.0   # bark knots
+            radii.append(max(0.0012, r0 * (1 - 0.88 * t ** 1.1) * knob))
+        skel[name] = (pts3, radii)
+        tails.append((name, pts3, radii))
+    # short side twigs along the outer part of every branch, each ending in a bud chain
+    twigs = []
+    for name, (pts3, radii) in list(skel.items()):
+        total = sum((pts3[i + 1] - pts3[i]).length for i in range(len(pts3) - 1))
+        acc, nxt, side = 0.0, total * rng.uniform(0.3, 0.4), rng.choice((-1, 1))
+        for i in range(1, len(pts3)):
+            acc += (pts3[i] - pts3[i - 1]).length
+            if acc < nxt or acc > total - 0.03 or i == len(pts3) - 1:
+                continue
+            nxt = acc + rng.uniform(*cfg["twig_every"])
+            side = -side
+            t = (pts3[min(i + 1, len(pts3) - 1)] - pts3[i - 1]).normalized()
+            perp = (fanv * 0.8 + dep * rng.uniform(-0.7, 0.7))
+            perp = (perp - t * perp.dot(t)).normalized() * side
+            ang = math.radians(rng.uniform(32, 52))
+            d = (t * math.cos(ang) + perp * math.sin(ang)).normalized()
+            ln_ = rng.uniform(*cfg["twig_len"])
+            a = pts3[i]
+            q = [a, a + d * ln_ * 0.5 + Vector([rng.uniform(-1, 1) for _ in range(3)]) * 0.003, a + d * ln_]
+            r = [max(min(radii[i] * 0.5, 0.0035), 0.0012), max(min(radii[i] * 0.3, 0.0022), 0.0011), 0.0011]
+            radii[i] *= 1.12
+            twigs.append((name, q, r))
+            tails.append((name, q, r))
+    for name, q, r in twigs:
+        v, f, u = tube(q, r, 3)
+        parts.append((v, f, u, BARK, True))
+    for name, parent, pts, rs, dtip in branches:
+        pts3, radii = skel[name]
+        sides = cfg["sides"][0] if parent is None and rs >= 0.8 else cfg["sides"][1]
+        v, f, u = tube(pts3, radii, sides)
+        parts.append((v, f, u, BARK, True))
+    used = []
+
+    def bloom(p, r, t, mat, R, bias):
+        """A blossom on the branch at p (radius r, tangent t), opening outward from the branch toward bias."""
+        o = Vector([rng.uniform(-1, 1) for _ in range(3)])
+        o = (o - t * o.dot(t)).normalized()
+        nrm = (o * 0.8 + bias + Vector([rng.uniform(-1, 1) for _ in range(3)]) * 0.25).normalized()
+        c = p + nrm * (r + 0.003)
+        if any((c - q).length < R * cfg["space"] for q in used):
+            return False
+        used.append(c)
+        parts.append((*flower(c, nrm, R, mat, rng, cfg["m"], cfg["fil"], cfg["hub"]), True))
+        return True
+
+    def add_bud(c, d, s, gap=0.011):
+        if any((c - q).length < gap for q in used):
+            return False
+        used.append(c)
+        parts.append((*bud(c, d, s, cfg.get("bud_n", 4), rng), BUD, True))
+        return True
+
+    def nearest(target):
+        best = None
+        for pts3, radii in skel.values():
+            for i in range(1, len(pts3)):
+                dd = planar(pts3[i] - target)
+                if best is None or dd < best[0]:
+                    t = (pts3[min(i + 1, len(pts3) - 1)] - pts3[i - 1]).normalized()
+                    best = (dd, pts3[i], radii[i], t)
+        return best[1:]
+
+    R0, R1 = cfg["R"]
+    bias = front * cfg.get("front_w", 0.9) + up * cfg.get("lift", 0.0)
+    nb = 0
+    # 1. the sheet's own blossoms, where it draws them (nearest branch point)
+    for lst, mat in ((cfg.get("red", []), PETAL), (cfg.get("white", []), WHITE)):
+        for (px, py) in lst:
+            p, r, t = nearest(to3(*fanz(px, py), 0))
+            nb += bloom(p, r, t, mat, rng.uniform(R0, R1), bias)
+    # 2. every stem and twig tip ends in a string of round buds (the sheet: buds strung along every tip)
+    bs0, bs1 = cfg["bud_size"]
+    for name, pts3, radii in tails:
+        tip, prev = pts3[-1], pts3[-2]
+        d = (tip - prev).normalized()
+        add_bud(tip + d * bs1, d, rng.uniform(bs0, bs1) * 1.05, gap=0.004)
+        seg_l = (tip - prev).length
+        side = rng.choice((-1, 1))
+        for k, back_d in enumerate(cfg["chain"]):
+            if back_d > seg_l * 0.95:
+                break
+            p = tip - d * back_d
+            o = Vector([rng.uniform(-1, 1) for _ in range(3)])
+            o = (o - d * o.dot(d)).normalized() * side
+            side = -side
+            add_bud(p + o * (radii[-1] + bs0 * 0.9), o * 0.4 + d, rng.uniform(bs0, bs1) * (0.9 - 0.08 * k), gap=0.008)
+    # 3. stations all along the outer part of every stem: blossoms (weighted to the upper spray where cfg['upper'])
+    # and buds between them
+    ztop = max(p.z for pts3, _r in skel.values() for p in pts3)
+    stations = []
+    for name, (pts3, radii) in skel.items():
+        total = sum((pts3[i + 1] - pts3[i]).length for i in range(len(pts3) - 1))
+        acc, nxt = 0.0, total * rng.uniform(*cfg["start"])
+        for i in range(1, len(pts3)):
+            seg = (pts3[i] - pts3[i - 1]).length
+            t = (pts3[i] - pts3[i - 1]).normalized()
+            while nxt <= acc + seg:
+                stations.append((name, pts3[i - 1].lerp(pts3[i], (nxt - acc) / seg), radii[i], t))
+                nxt += rng.uniform(*cfg["dense"])
+            acc += seg
+    rng.shuffle(stations)
+    ua, ub = cfg.get("upper", (1.0, 0.0))
+    for name, p, r, t in stations:
+        hf = min(1.0, max(0.0, (p.z - hgt) / (ztop - hgt)))
+        if rng.random() < cfg["bloom_frac"] * (ua + ub * hf) and nb < cfg["max_blooms"]:
+            white = (name in cfg["white_set"] and rng.random() < cfg["white_p"]) or rng.random() < cfg["white_any"]
+            if bloom(p, r, t, WHITE if white else PETAL, rng.uniform(R0, R1) * 0.95, bias):
+                nb += 1
+                continue
+        if rng.random() < cfg["dense_buds"]:
+            o = Vector([rng.uniform(-1, 1) for _ in range(3)])
+            o = (o - t * o.dot(t)).normalized()
+            add_bud(p + o * (r + bs0 * 0.8), o * 0.5 + t, rng.uniform(bs0, bs1))
+    print("HERO_BLOOMS", nb, "stations", len(stations), "buds", sum(1 for q in parts if q[3] == BUD))
+    return parts
+
+
+def _fit(parts, hgt, lo, hi):
+    """Scale the spray about the vase axis so it reaches the scripted bbox exactly along X and Y (each side on its own)
+    and at the top (z above the mouth, cubic so the low fan keeps the sheet's shape)."""
+    vs = [Vector(v) for p in parts for v in p[0]]
+    mn = Vector([min(v[i] for v in vs) for i in range(3)])
+    mxv = Vector([max(v[i] for v in vs) for i in range(3)])
+    s = {}
+    for i in range(2):
+        s[(i, -1)], s[(i, 1)] = lo[i] / mn[i], hi[i] / mxv[i]
+    h0 = mxv[2] - hgt
+    sz = (hi[2] - hgt) / h0 - 1.0
+    out = []
+    for verts, faces, uvs, mats, sm in parts:
+        nv = []
+        for x, y, z in verts:
+            x *= s[(0, -1)] if x < 0 else s[(0, 1)]
+            y *= s[(1, -1)] if y < 0 else s[(1, 1)]
+            if z > hgt:
+                z = hgt + (z - hgt) * (1 + sz * ((z - hgt) / h0) ** 3)
+            nv.append((x, y, z))
+        out.append((nv, faces, uvs, mats, sm))
+    return out, s, sz
+
+
+def vase(G, name, hgt, r_vis, r_col, profile, sides, bbox_lo, bbox_hi, fan_sign, front, seed, cfg):
+    """r_vis: the drawn vase's widest radius; r_col: the scripted vase's (its collision box, unchanged).
+    bbox_lo / bbox_hi: the spray's envelope (the scripted cards' bbox, the sill vase pulled back on the wall side)."""
+    v = G["Piece"](name)
+    prof = [(r * r_vis, z * hgt) for r, z, _m in profile]
+    verts, faces_v, uvs = G["lathe"](prof, sides)
+    mats = [profile[k][2] for k in range(len(profile) - 1) for _i in range(sides)]
+    assert len(mats) == len(faces_v)
+    v.mesh(verts, faces_v, uvs, mats, smooth=True)
+    parts = spray(cfg, hgt, bbox_hi[0], bbox_hi[2], bbox_hi[1] * 0.92, fan_sign, front, seed)
+    parts, fs, fz = _fit(parts, hgt, bbox_lo, bbox_hi)
+    tri = {}
+    for verts_, faces, uvs_, m, sm in parts:
+        for f, mm in zip(faces, m if isinstance(m, list) else [m] * len(faces)):
+            tri[mm] = tri.get(mm, 0) + len(f) - 2
+    print("HERO_TRIS", name, tri, "vase", sum(len(f) - 2 for f in faces_v))
+    print("HERO_FIT", name, {str(k): round(x, 3) for k, x in fs.items()}, round(fz, 3))
+    for verts_, faces, uvs_, m, sm in parts:
+        v.mesh(verts_, faces, uvs_, m, smooth=sm)
+    v.col(-r_col, r_col, -r_col, r_col, 0, hgt)          # the scripted vase's collision, unchanged
+    return v
+
+
+CFG_S = dict(branches=BRANCHES_S, mouth=MOUTH_S, r_main=0.0095, kink=0.009, seg=0.07, sides=(5, 4), R=(0.031, 0.037),
+             m=3, fil=5, hub=True, space=0.85, red=RED_S, white=WHITE_S, start=(0.24, 0.32), dense=(0.026, 0.036),
+             bloom_frac=0.7, max_blooms=42, dense_buds=0.2, white_set=WHITE_SET_S, white_p=0.7, white_any=0.0,
+             bud_size=(0.006, 0.0075), bud_n=5, chain=(0.018,), twig_every=(0.08, 0.12), twig_len=(0.03, 0.06),
+             mouth_off=0.0, vase_sides=22)
+CFG_L = dict(branches=BRANCHES_L, mouth=MOUTH_L, r_main=0.0058, kink=0.007, seg=0.08, sides=(4, 3), R=(0.024, 0.029),
+             m=2, fil=3, hub=False, space=0.9, start=(0.14, 0.22), dense=(0.02, 0.027), bloom_frac=0.7,
+             upper=(0.45, 0.8), max_blooms=80, dense_buds=0.2, white_set=WHITE_SET_L, white_p=0.0, white_any=0.02, front_w=1.5,
+             lift=0.25, bud_size=(0.005, 0.0064), bud_n=4, chain=(0.013,), twig_every=(0.13, 0.19),
+             twig_len=(0.025, 0.045), mouth_off=0.012, vase_sides=24)
+
+
+def pieces(G):
+    # scripted bboxes (build_armory_kit.kit(): vase_profile widest radius, crossed cards)
+    rs_max = max(r for r, _ in G["vase_profile"](0.46))
+    rl_max = max(r for r, _ in G["vase_profile"](0.56))
+    # sill vase: its local -Y faces the wall (placed at 0.17 m off it, turned +/-90): the spray stops at -0.121 on that
+    # side, as the scripted cards (4.9 cm in front of the wall face, 2.4 cm in front of the 2.5 cm window casing)
+    s = vase(G, "SM_AK_Vase_Plum_S", 0.46, rs_max, rs_max, PROFILE_S, CFG_S["vase_sides"], (-0.44, -0.121, 0),
+             (0.44, rs_max, 1.18), -1, Vector((0, 1, 0.25)), 7, CFG_S)
+    # platform vase: back_wall's slender baluster (w/h 0.55); the spray keeps the scripted cards' bbox (X +/-0.225, Y
+    # +/-0.39): a radial V bouquet. back_wall shows the V face-on to the entrance (about 2.5x the vase width in front
+    # elevation), which needs the footprint turned (X +/-0.39, Y +/-0.225): L_FAN_ALONG_X = True builds that (open issue:
+    # it changes the scripted footprint; computed clearance to the platform lantern at X 3.55 (edge 3.78) is 3 cm)
+    lx = 0.45 * math.cos(math.radians(60))
+    ly = 0.45 * math.sin(math.radians(60))
+    if L_FAN_ALONG_X:
+        lx, ly = ly, lx
+    L = vase(G, "SM_AK_Vase_Plum_L", 0.56, 0.155, rl_max, PROFILE_L, CFG_L["vase_sides"], (-lx, -ly, 0), (lx, ly, 1.32),
+             1, Vector((0, -1, 0.25)), 11, CFG_L)
+    return [lantern(G), s, L]

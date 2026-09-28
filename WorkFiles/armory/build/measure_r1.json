@@ -1,0 +1,109 @@
+{
+ "stage": "independent measurer r1",
+ "date": "2026-09-27",
+ "blend": "Assets/Armory/ArmoryKit.blend (saved 07:38:53)",
+ "layout": "WorkFiles/armory/build/layout.json (07:38:44)",
+ "method": "Headless Blender 5.2 (-b --factory-startup) on the evaluated world meshes of Assembly + AssemblyExterior (488 instances, 83,516 tris): BVH ray casts, per-pair BVH overlap and a UCX-hull flood fill, plus a copy of walk_check.py with its output redirected to scratch. Nothing in the project was modified except this file.",
+ "checks": [
+  {
+   "name": "interior_12x16_walls_30cm",
+   "passed": true,
+   "detail": "Wall inner faces X 0.0008 / 11.9992, Y 0.0008 / 15.9992 (bbox incl. the 0.8 mm piece pad) -> 12.00 x 16.00 m; outer faces -0.3008 / 12.3008 / -0.3008 / 16.3008; rays through the lower wall: inner 0.0003 to outer -0.3003 (west), 15.9997 -> 16.3003 (north) = 0.300 m. Floor top +0.0008 over X 0-12 Y 0-16; ceiling underside +4.739, top +5.001 over the whole room; wall/facade tops 5.000-5.002. 488 Blender instances = 488 layout.json instances, all bboxes within 1 cm (the 6 corner pieces my first sorted comparison flagged match layout.json exactly per object)."
+  },
+  {
+   "name": "entrance_clear_opening",
+   "passed": true,
+   "detail": "Rays from the axis at 8 heights and 2 depths: jambs at X 4.0007 and 7.9993 -> clear width 3.999 m, centred on X 6.000 (0.0 mm offset). Lintel underside +2.9993 at every sampled X 4.05-7.95, Y -0.28..+0.05; threshold beam top +0.0807 -> clear 2.919 m above the threshold, 2.999 m above the floor. An 81 x 59 ray sweep (X 4.00-8.00 step 5 cm, Z 0.05-2.95) along +Y from Y -1.5 to +1.5 hits nothing but the jamb faces on the exact X 4.00 / 8.00 edge columns and the threshold beam at Z 0.05. Door leaves parked at X 2.05-3.95 / 8.05-9.95 (outside the opening); the floor lanterns (Y 2.02-2.48) leave 3.736 m between them."
+  },
+  {
+   "name": "aisle_widths_ge_2.3m",
+   "passed": true,
+   "detail": "Plinth bboxes: west side cases X 1.1952-2.3048, centre row X 5.0954-6.9046 (case 3: 5.1956-6.8044), east side X 9.6952-10.8048. Aisles 2.791 m west and 2.791 m east (min 2.791 >= 2.3). Side cases to niche fronts (X 0.252 / 11.749): 0.943 m. Centre gaps Y 4.354-6.995 (2.64 m) and 8.205-10.796 (2.59 m); case 3 back to the first riser 0.875 m."
+  },
+  {
+   "name": "case_and_platform_positions_vs_plan_3.2",
+   "passed": true,
+   "detail": "All 12 cases match the ARMORY_PLAN 3.2 table: 1 L (6.0,3.70) 1.809x1.309, plinth top 0.508, glass top 1.451; 2 M (6.0,7.60) 1.809x1.209, 0.709/1.252; 3 LN (6.0,11.30) 1.609x1.009, 0.458/1.202; west 5/4/G1/G3 at Y 4.10/6.60/9.10/11.60; east 8/7/6/G2 at Y 4.00/6.30/8.80/11.40; hero table (6.0,14.85) 2.43x0.927, top +1.126 (platform 0.60 + 0.526). Plan S1 sightline re-derived: eye (Y 1.0, +1.60) to (Y 14.55, +1.12) clears case 1 by 3.07 cm, case 2 by 9.4 cm, case 3 by 1.7 cm (plan: 3.1 / 9.5 / 1.7). Ceiling lattice panels X 4-8, Y 14-16 as stated."
+  },
+  {
+   "name": "rear_platform_0.60_with_15cm_steps",
+   "passed": true,
+   "detail": "Axis profile (ray down every 1 cm at X 6.0): 0.001 -> 0.151 (Y 12.68) -> 0.301 (12.93) -> 0.451 (13.18) -> 0.601 (13.43): 4 risers of 0.150 m, 0.25 m treads, platform top +0.6009, platform Y 13.429-16.0 over X 0-12. Steps span X 4.0-8.0 (same levels at X 4.2/5.0/7.0/7.8); outside that the platform front is a 0.60 m face, by design."
+  },
+  {
+   "name": "windows_sill_niches_both_long_walls",
+   "passed": true,
+   "detail": "Per long wall: 8 WallUpper_Window_2 bays (Y 0-16), 8 Window_Lattice (Y 0.25-15.75, Z 2.649-3.851), 8 SillLedge_2 (Y 0-16, Z 2.549-2.641, 0.337 deep), 13 lit niche panels (12 at Z 0.40-2.40 over Y 1.07-13, 1 on the platform bay), plus 2 on the north wall. West bays Y 0.25-5.75 have the 3 closed ShojiPanes (plan). Rays pass through each open window between Z 2.70 and 3.80 (13 of 16; the 3 closed west windows block, as designed). See the platform-bay clash below."
+  },
+  {
+   "name": "platform_bay_niche_vs_sill_and_window",
+   "passed": false,
+   "detail": "The platform-level niche panels SM_AK_WallPanel_Lit__268 (west) and __269 (east) span Z 0.999-3.001 at Y 14.074-14.926 (X 0-0.251 / 11.749-12.0). Their top is 0.36 m above the sill ledge top (+2.641) and 0.35 m into the window opening (sill +2.65) of the Y 14.25-15.75 bay, so they cut through the ledge and cover the lower part of that window over Y 14.25-14.93. Sill vase SM_AK_Vase_Plum_S__314 (Y 14.36-14.94) intersects panel __268 (242 intersecting triangle pairs). All other panels stop at +2.401."
+  },
+  {
+   "name": "light_leaks_wall_ceiling_corner_entrance",
+   "passed": true,
+   "detail": "1,912,369 outside-in rays (4 cm grid, 5 mm within 12 cm of every wall end, 2 m module joint, window/door edge and datum height; window and door rectangles excluded): 0 reach 8 cm inside any of the 4 walls; 0 miss the ceiling layer (rays from +5.05 down 40 cm over X 0-12, Y 0-16); 0 leaks on 45-degree rays into the 4 vertical corners (1 cm steps) and the 4 wall/ceiling junctions (1 cm steps). Sun (to-sun 0.871 W, 0.317 N, 0.375 up) from 19,481 floor/top points: 775 are sunlit, and every one sees the sun through a west window rectangle (0 through a non-opening). The roof underside at the wall outer face is +5.008 vs wall top +5.000 (8 mm), but the facade band (+5.002) meets the roof and the ceiling layer below is closed, so there is no light path."
+  },
+  {
+   "name": "nothing_floating",
+   "passed": true,
+   "detail": "Every one of the 471 non-scenery instances touches (<= 5 mm, or surface crossing) at least one other instance: 0 floating. Banners hang from the ceiling coffers, sill vases and caddies rest on the ledges, the roof rests on the facade bands. Scenery cards and rings reach Z -0.5 / -3.0, below the ground field top (-0.02)."
+  },
+  {
+   "name": "no_unintended_interpenetration",
+   "passed": false,
+   "detail": "Surface-crossing pairs outside intended joints (piece-to-wall seating, glass-in-plinth, floor overlap pads, rocks set in moss/gravel): (1) platform lantern SM_AK_Lantern__486 (X 3.768-4.232, Y 14.918-15.382) crosses the large plum vase SM_AK_Vase_Plum_L__304 (X 4.131-4.769, Y 15.021-15.679): 19 crossing triangle pairs, 10 cm bbox overlap in X (east pair 487/305 also overlaps 10 cm in bbox, no crossing); (2) the platform niche panels vs sill ledge, window and vase __314 (above); (3) every sill vase (8) has one plum stem leaning 12.9 cm into the wall (X -0.129 / 12.129) with its tip at +4.10, above the +3.85 window head, i.e. into the solid head/ranma band (21 crossing pairs with WallUpper_Window_2 each); (4) exterior: black pine SM_AKX_Pine_B__361 crosses the courtyard wall SM_AKX_Wall_4__365 at Z 1.60-2.36 (76 crossing pairs; wall top +2.05)."
+  },
+  {
+   "name": "fbx_ucx",
+   "passed": true,
+   "detail": "90 FBX in Exports/ArmoryKit = 90 layout pieces (0 missing, 0 stale); every FBX is binary and contains UCX_<its own name>_NN nodes (109 UCX names in total; 569 hulls in the assembly). export_report / qa_report: 0 hard fails."
+  },
+  {
+   "name": "walk_check",
+   "passed": true,
+   "detail": "Ran an unmodified copy of Scripts/armory/walk_check.py (output redirected to scratch; build/walk_check.json untouched): 569 hulls, 15 routes clear; CONTROL_must_hit_case1 blocked at (6.0, 2.75) by SM_AK_Case_L_Glass__460; CONTROL_must_hit_stone_lantern blocked at (7.58, -7.3); passed = True."
+  },
+  {
+   "name": "courtyard_walkable_start_to_entrance",
+   "passed": true,
+   "detail": "Independent 5 cm flood fill over the UCX hulls (capsule r 0.35, band +1.80, step 0.45) from PlayerStart (6.0, -10.4) reaches the landing (6, -0.6), threshold (h 0.08), mat (h 0.035), both aisles, both wall walks, both rear-alcove fronts on the platform (h 0.60) and outside the gate (6, -15); case 1's interior is blocked. Narrowest reachable width across the axis path (incl. capsule) is 3.90 m at the entrance (Y -0.4..0.1), and >= 5.8 m elsewhere from the landing back to the start. Only (6.0, 14.05), directly in front of the hero table, is blocked (0.335 m to the table front < 0.35 capsule), as expected."
+  },
+  {
+   "name": "cases_empty",
+   "passed": true,
+   "detail": "0 foreign vertices inside any of the 11 glass volumes (2 cm inset); 0 own interior vertices in any glass piece (> 3 cm from every face); plinth geometry tops out at the deck (e.g. L 0.508 under the glass base 0.499-0.508), with no raised stands; nothing rests on the hero table top (+1.126); no object or mesh name matches sword/katana/blade/weapon/item/stand/mannequin/kunai/shuriken/prop/placeholder etc. Rear-alcove racks and niche rails are fixtures only."
+  },
+  {
+   "name": "emblem_on_plinth_fronts",
+   "passed": true,
+   "detail": "M_AK_Emblem faces are centred (0.0 mm offset) on the front face (within 11 mm of the bbox front) of all 11 case plinths, facing the aisle or entrance: L 0.25 m, M 0.30 m, LN 0.20 m, S 0.30 m (front and back); hero table 0.17 m on its front; the tansu in both rear alcoves 0.15 m, facing the room. The tall-case plinths (4, 6, G2, G3) carry only a 0.072 m medallion (Z 0.086-0.159 on a 0.21 m plinth), front only: present, but far smaller than the reference's plinth medallions."
+  },
+  {
+   "name": "emblem_on_banners",
+   "passed": true,
+   "detail": "Both banners (X 1.30-2.00 / 10.00-10.70, Y 15.55, Z 2.25-4.80) map M_AK_Banner UV 0-1 onto the room-facing (-Y) face. In T_AK_Banner_BC (512 x 2048) the top gold blob (371 x 372 px, 73 % of the width, centred 28 % from the top) matches the T_AK_Emblem mask with IoU 0.965; the lower half carries 4,162 px of small gold motifs."
+  },
+  {
+   "name": "platform_front_emblem_R6",
+   "passed": false,
+   "detail": "No M_AK_Emblem (or any emblem) geometry on SM_AK_Platform_Edge_2x1 or SM_AK_Steps_2: the gold emblem the reference shows at the platform front centre (R6) is missing (the builder's notes also say it is not built)."
+  },
+  {
+   "name": "plan_and_drawing_consistency",
+   "passed": false,
+   "detail": "ARMORY_PLAN 3.1 / 3.2 / 3.4 numbers agree with the build (above), and ARMORY_LAYOUT/SITE were regenerated at 07:40, after layout.json (07:38). But section 3.3 still has a stray, stale fragment after the sightline table (line 178 '---|---|---|---|', then an old S1-S3 table: 'C1, inside the door, eye +160 to +230', 'Hero case 10', 'cases 1-3 tops at or under 125', 'passes at about +152'). It contradicts the current build (case 1 glass top +1.451; the hero is a table). Section 3 never states the platform-bay niche height (top +3.00)."
+  }
+ ],
+ "fixes_required": [
+  "Platform-bay niche panels SM_AK_WallPanel_Lit__268/__269 (Y 14.07-14.93, Z 0.999-3.001): lower the top to <= +2.54 (below the sill ledge underside +2.549), e.g. a 1.9 m panel at Z 0.62-2.52. They would then stop cutting the sill ledge, covering the lower 0.35 m of the Y 14.25-15.75 windows and swallowing sill vase __314. State the height in ARMORY_PLAN 3.1/3.2.",
+  "Platform lantern SM_AK_Lantern__486 at (4.0, 15.15) intersects the large plum vase SM_AK_Vase_Plum_L__304 at X 4.45 (10 cm overlap, 19 crossing triangle pairs). Move the lanterns outward (e.g. X 3.85 / 8.15) or the vases inward by >= 0.12 m, keep the walk_check platform routes clear, and mirror the east pair.",
+  "Sill vases SM_AK_Vase_Plum_S (all 8): one plum stem leans 12.9 cm into the wall, with its tip at +4.10, inside the solid head/ranma band above the +3.85 window head. Rotate the sprays so the leaning stems point into the room, or shorten/tilt that stem so it stays inside X >= 0.01 (west) / <= 11.99 (east) above +3.85.",
+  "Build the gold emblem at the platform front centre (R6): a medallion on the platform edge at X 6.0 (the riser face above/behind the top step, facing -Y), as in the reference.",
+  "Exterior: SM_AKX_Pine_B__361 at (9.9, -11.3) pushes branches through the courtyard wall SM_AKX_Wall_4__365 at Z 1.60-2.36 (76 crossing pairs; wall top +2.05). Move it >= 0.6 m north, or rotate/trim it so the canopy clears the wall.",
+  "ARMORY_PLAN.md section 3.3: delete the stale fragment after the sightline table (line 178 '---|---|---|---|' and the old S1-S3 rows about 'C1 eye +160 to +230', 'Hero case 10', 'tops at or under 125').",
+  "Fidelity (minor): the tall-case plinths carry only a 7.2 cm, front-only medallion on a 21 cm plinth. The S/M/L/LN plinths have 20-30 cm medallions front and back, and the reference shows prominent medallions. Consider a taller tall-case plinth with a >= 20 cm medallion."
+ ],
+ "all_passed": false
+}

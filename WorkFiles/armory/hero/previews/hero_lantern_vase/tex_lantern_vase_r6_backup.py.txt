@@ -1,0 +1,92 @@
+"""The floor lantern's own washi picture (hero_lantern_vase, reference sheet WorkFiles/armory/reference/lantern.png):
+
+  T_AK_HWashi_BC / _ORM / _N   one lantern pane, UV 0-1 over the pane (U across, V up), for M_AK_HWashi (emit_image,
+                               unlit: the colour IS the glow). The sheet's paper: an even cream-white washi (~#EDE3D3
+                               in the orthographic views) with fine, low-contrast fibre veins (a wandering network of
+                               thin kozo fibres, a few longer strands) and a warm, even glow through every pane with a
+                               soft hotspot a little above the middle (the lamp) - no aged stains, no dark vignette
+                               toward the frame (the kit's T_AK_LanternPaper burns to deep amber at the rim).
+                               1024 px, unique per pane (not tiled).
+
+Judge delta (2026-09-28, lantern 8/10): "paper reads aged and stained, with an amber vignette; the sheet's washi is an
+even cream-white with fine fibre veins". A NEW set: M_AK_LanternPaper (used by other pieces) is untouched.
+Original and procedural (periodic FFT noise, no photo, scan or third-party source). Uses make_armory_textures'
+writers (same PNG / DirectX-normal conventions). Never overwrites another set.
+
+Run (Git Bash, from the project root):
+  "/c/Program Files/Blender Foundation/Blender 5.2/5.2/python/bin/python.exe" Scripts/armory/hero/tex_lantern_vase.py
+"""
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import make_armory_textures as MT  # noqa: E402
+
+NAME = "HWashi"
+
+
+def _fibres(n, rng, count, length, width, bend, strength):
+    """Kozo fibres: `count` thin, gently curved strands (quadratic curves `length` px long, random direction, a random
+    sideways bow of up to `bend` x their length), each with its own strength, fading in and out along its length
+    (they dive into and out of the sheet), splatted bilinearly and softened to about `width` px. -> 0..~1 map."""
+    acc = np.zeros((n, n))
+    for _ in range(count):
+        L = rng.uniform(*length)
+        th = rng.uniform(0, np.pi)
+        c = rng.uniform(0, n, 2)
+        d = np.array([np.cos(th), np.sin(th)])
+        nrm = np.array([-d[1], d[0]])
+        t = np.linspace(-0.5, 0.5, int(L * 2.2) + 2)
+        bow = rng.uniform(-bend, bend) * L
+        wig = rng.uniform(-0.02, 0.02, 3) * L
+        side = bow * (1 - 4 * t * t) + wig[0] * np.sin(2 * np.pi * (t * 2 + wig[1]))
+        pts = c[None, :] + t[:, None] * L * d[None, :] + side[:, None] * nrm[None, :]
+        k = rng.uniform(*strength) * np.clip(np.sin(np.pi * (t + 0.5)) * rng.uniform(1.2, 2.0), 0, 1) ** 0.7
+        x, y = pts[:, 0] % n, pts[:, 1] % n
+        x0, y0 = np.floor(x).astype(int), np.floor(y).astype(int)
+        fx, fy = x - x0, y - y0
+        for dx, dy, w in ((0, 0, (1 - fx) * (1 - fy)), (1, 0, fx * (1 - fy)), (0, 1, (1 - fx) * fy), (1, 1, fx * fy)):
+            np.add.at(acc, ((y0 + dy) % n, (x0 + dx) % n), w * k / 2.2)
+    acc = MT.blur(acc, max(1, int(round(width / 2))), 2) * width * 1.6
+    return np.clip(acc, 0, 1)
+
+
+def washi(n=1024, seed=701):
+    rng = np.random.default_rng(seed)
+    v, u = (np.mgrid[0:n, 0:n] + 0.5) / n
+    v = 1 - v                                                   # rows run down; V up
+    # the glow: an even cream field with a broad, soft warm hotspot a little above the middle (no rim falloff to
+    # amber: at the frame the paper keeps ~93 % of its brightness)
+    d2 = ((u - 0.5) / 0.46) ** 2 + ((v - 0.54) / 0.52) ** 2
+    hot = np.exp(-1.6 * d2)                                     # 1 at the lamp, ~0.2 at the pane corners
+    edge_c, hot_c = MT.srgb("#DEC195"), MT.srgb("#FFE9C2")
+    col = edge_c + (hot_c - edge_c) * hot[..., None]
+    # the sheet's fibres: a loose web of fine, warm tan kozo strands (short and long, fading in and out), a few faint
+    # pale strands, and a very light cloudy formation (lighter blotches); no stains
+    tan = np.clip(_fibres(n, rng, 300, (40, 190), 1.2, 0.12, (0.2, 0.85))
+                  + _fibres(n, rng, 30, (200, 420), 1.3, 0.06, (0.3, 0.75)), 0, 1)
+    pale = _fibres(n, rng, 260, (30, 140), 1.6, 0.15, (0.2, 0.6))
+    cloud = MT.pnoise(n, n, 2.0, seed + 5)
+    grain = MT.pnoise(n, n, 0.4, seed + 6)
+    vein_c = MT.srgb("#CFA878")
+    k = (0.7 * tan)[..., None]
+    col = col * (1 - k) + (col * vein_c / MT.srgb("#EDE3D3")) * k
+    col = col * (1 + 0.035 * pale[..., None] + 0.015 * cloud[..., None] + 0.008 * grain[..., None])
+    col = np.clip(col, 0, 1)
+    height = 0.5 * tan + 0.3 * pale + 0.1 * cloud
+    rough = np.full((n, n), 0.9)
+    stats = MT.save_set(NAME, col, height * 0.01, 1.0, rough)
+    c = col.reshape(-1, 3)
+    stats["centre_srgb"] = [round(float(x), 3) for x in col[int(n * 0.46), n // 2]]
+    stats["corner_srgb"] = [round(float(x), 3) for x in col[8, 8]]
+    stats["p05_srgb"] = [round(float(x), 3) for x in np.percentile(c, 5, axis=0)]
+    return stats
+
+
+if __name__ == "__main__":
+    for suf in ("BC", "ORM", "N"):
+        assert (MT.OUT / f"T_AK_{NAME}_{suf}.png").name.startswith("T_AK_HWashi")
+    print(json.dumps(washi(), indent=1))
