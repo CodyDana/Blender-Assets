@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-26",
+  "asset": "BlackCloak (ChatGPT/Codex original)",
+  "report": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/BlackCloak_Review/BLACK_CLOAK_REVIEW.md",
+  "contact_sheet": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/BlackCloak_Review/BLACK_CLOAK_contact_sheet.png",
+  "backup": "C:/Users/Cody/Desktop/Blender_Projects/Backups/BlackCloak_original_2026-09-26/manifest.json",
+  "source_blend_sha256_unchanged": "bd42c71ea6243689d7a1d2d71b7be89907a7b3a21170b8ef4be89bf102fb2853",
+  "areas_without_result": [],
+  "fidelity": {
+    "blind": {"correct": 20, "of": 20, "confident_correct": 20, "pass_mark": "13 or fewer", "result": "fail"},
+    "silhouette_iou_lod0": 0.934,
+    "silhouette_iou_strict_ref_mask": 0.947,
+    "iou_mh_fit_vs_ref": 0.924,
+    "h_over_w": {"ref": 1.661, "lod0": 1.683},
+    "grain_highpass_rel_pct": {"ref": "5.4-15.6", "ours": "1.0-4.4"},
+    "basecolor_levels_srgb": "21-31 (11 levels, linear mean 0.00997)",
+    "tells": ["no fabric grain", "square-cut hem strips with gaps", "no fray", "no layer thickness", "straight ringed collar cone", "thin ring clasp with invented pin, no strap", "background leaks through gaps", "no floor shadow (staging)", "soft gradients instead of draped layers"],
+    "not_compared": ["in-game SKM_BlackCloak_MH look (LOOK-M1)", "back view (LOOK-M2)"]
+  },
+  "game_ready": {
+    "original_exports": false,
+    "original": {"skeleton": "JinMuWon 152 bones, 3/342 names shared with metahuman_base_skel", "influences": 1, "weighted_bones": ["spine01", "neck01", "clavicle.R"], "sim_section": false, "pinmask": false, "lod_tris": [84612, 47088, 25646], "character_total": 206504, "inside_mh_skin_gt_1mm": 1370, "deepest_cm": 6.21, "qa_check_fail": {"skeletal": "65/325", "static": "71/320"}, "garment_qa_failed_gates": 13, "intersecting_tri_pairs_lod0": {"cross": 7894, "self": 470}},
+    "mh_build": {"file": "WorkFiles/garment_pipeline/BlackCloak/export/SK_BlackCloak_MH.fbx (pipeline) / DemoGame_1 SKM_BlackCloak_MH (in game)", "skeleton": "metahuman_base_skel 342", "tris": 28378, "sim_tris": 5991, "sim_verts": 3420, "character_total": 150270, "garment_gates": "all pass", "open_issues": ["fitted to male only; female is now the active player", "sim mesh 3.7% decimation: 1,731 tris <5 deg, edges to 92 cm", "about 1,121 self-intersecting pairs, self-collision off", "UV0 not tiled: weave repeat 43-125 cm", "OpenGL normal shipped", "1 LOD", "cowl gap 0.25 cm < 1 cm", "front opening shows underwear"]},
+    "textures": {"dx_normal_correct": true, "pack_convention": false, "orm": false, "detail_map": false, "format": "2048 8-bit RGB PNG", "flat_at_game_mip": "BC 2.2% variation, normal 0.009-0.04 deg at mip 4-5"},
+    "unreal_check": {"engine": "5.8.3", "runs": 2, "other_ue_cmd_running_before": 0, "interchange_static_parts": 17, "fab_default_import_loose_meshes": 51, "embedded_material_normal": "OpenGL, flip off", "roughness_default_srgb": true, "dx_normal_default_ok": true}
+  },
+  "colour_option": {"move_to_pack": true, "masters": ["M_Fabric_Master via MF_TintDetail", "M_Steel_Master"], "prerequisites": ["two-sided MI override", "Used with Clothing flag", "default Colour >= 0.01", "UV tiling parameter or UV0 rescale"], "cost": "about 1-1.5 working days (pack 6-9 h, clasp 2-3 h, DemoGame re-point 1-2 h)", "breaks": ["CloakColor parameter renamed to Colour", "presets re-derived", "RECOLOR.md/README rewrite"]},
+  "recommendation": "Repair on the MetaHuman garment-pipeline version; do not rebuild from scratch. Retire the original skeletal/static exports, BlackCloak_Package.zip, export_refined_cloak.py and M_Cloak_Recolor. Keep Assets/BlackCloak.blend frozen (hash-pinned) until geometry changes; for geometry fixes promote WorkFiles/garment_pipeline/BlackCloak/BlackCloak_MH_garment.blend to Assets/Garments/ as the source of truth and ship build_garment output (SK_BlackCloak_MH), with user + character-chat sign-off.",
+  "ranked_fixes": [
+    {"rank": 1, "title": "Decide which body wears the cloak (male/female/both); fit the female if needed", "severity": "blocker", "cost": "decision; 3-5 h per extra body", "touches_character_track": true},
+    {"rank": 2, "title": "Retire original exports; withdraw BlackCloak_Package.zip (ships the reference photo)", "severity": "major", "cost": "30-60 min", "touches_character_track": false},
+    {"rank": 3, "title": "Lit Unreal capture of the in-game cloak before geometry decisions", "severity": "major", "cost": "1-2 h", "touches_character_track": false},
+    {"rank": 4, "title": "Fix in-game weave scale (tiling param or UV0 rescale) and unify per-panel UV scale", "severity": "major", "cost": "1-3 h", "touches_character_track": true},
+    {"rank": 5, "title": "Regenerate fabric maps at slub scale, pack convention (BC/ORM/N DX/Detail), albedo ~0.015-0.025", "severity": "major", "cost": "6-9 h", "touches_character_track": true},
+    {"rank": 6, "title": "Move colour option onto M_Fabric_Master/M_Steel_Master; retire M_Cloak_Recolor", "severity": "major", "cost": "1-1.5 days", "touches_character_track": true},
+    {"rank": 7, "title": "Purpose-made cloth sim mesh replacing the 3.7% decimation", "severity": "major", "cost": "4-8 h", "touches_character_track": true},
+    {"rank": 8, "title": "De-intersect layers, attach mid-air leaves, cowl clearance and arm pass-through", "severity": "major", "cost": "4-8 h", "touches_character_track": true},
+    {"rank": 9, "title": "Close the front opening (dark inner layer or body hiding)", "severity": "major", "cost": "4-10 h", "touches_character_track": true},
+    {"rank": 10, "title": "Fidelity pass: continuous flared hem, wrapped diagonal cowl", "severity": "major", "cost": "7-13 h", "touches_character_track": true},
+    {"rank": 11, "title": "Design the back", "severity": "major", "cost": "decision + 3-5 h", "touches_character_track": true},
+    {"rank": 12, "title": "Smaller fidelity: clasp, shoulder shelf, mantle edge, rolled edges, left wing, fray", "severity": "minor", "cost": "5-8 h", "touches_character_track": true},
+    {"rank": 13, "title": "Switch game to pipeline SK_BlackCloak_MH at next rebuild", "severity": "minor", "cost": "1-2 h", "touches_character_track": true},
+    {"rank": 14, "title": "Exporter strips FBX texture paths; garment import disables physics asset + normal recompute", "severity": "minor", "cost": "1-1.5 h", "touches_character_track": true},
+    {"rank": 15, "title": "Skeletal LODs in build_garment", "severity": "major (Fab) / optional (game)", "cost": "2-4 h", "touches_character_track": true},
+    {"rank": 16, "title": "Fab static version: LOD group, UCX, clean UV1, SM_ names, no embedded materials", "severity": "minor", "cost": "3-5 h", "touches_character_track": false},
+    {"rank": 17, "title": "Tooling/docs: qa_check total-tris check, README, Outfit_Pipeline cloth table", "severity": "minor", "cost": "about 1.5 h", "touches_character_track": true}
+  ],
+  "decisions_for_user": [
+    "Which body is the player for this cloak: male, female, or both",
+    "Source of truth: promote BlackCloak_MH_garment.blend (recommended) or keep sculpt + refit recipe",
+    "Switch the game to the pipeline SK_BlackCloak_MH (reimport + cloth rebuild); which FBX is canonical",
+    "Move the colour option onto the pack material system (accepts CloakColor -> Colour rename)",
+    "Target darkness and Cloth Sheen, from a matched Unreal capture",
+    "Inner layer / under-robe as part of the asset, or body hiding",
+    "Back design (no reference)",
+    "Scope of the fidelity rework",
+    "Fab plan: skeletal only or also static; withdraw BlackCloak_Package.zip; reference photo ownership",
+    "Permission to delete the stray 13.8 MB recovery uasset in WorkFiles/BlackCloak/UnrealRecolor"
+  ],
+  "severity_adjustments": {"ENG-03": "major", "ENG-04": "major", "ENG-11": "info", "CHR-11": "major", "UE-2": "major", "UE-5": "major (corrected)", "FID-1": "major (corrected)", "FID-2": "major (corrected)", "FID-5": "minor", "MAT-7": "minor"},
+  "refuted_or_corrected": ["UE-5 MH FBX texture refs", "FID-2 hem lower/shorten", "FID-1 ref stdev and target albedo", "FID-5 offsets", "CHR-11 MI-swap-only", "ENG-11 cloth values", "textures RGBA->RGB", "ENG-09 normal amplitude", "CHR-02 shared names 2->3", "ENG-05 cage intersection count", "staging tells", "Unreal name-only skeleton match"]
+}

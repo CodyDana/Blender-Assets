@@ -1,0 +1,54 @@
+{
+ "role": "offline geometry diagnostician (no Unreal launched); inputs = player_base mesh dumps",
+ "dump_alignment": "faces/mesh_dump FaceC/ref Face dumps are NOT offset: head neck ring == body neck ring (max gap 0.0001 cm, 92/92 verts); FaceC dump projected through the UE capture cameras matches the capture silhouettes (IoU 0.9979 front, 0.9965 3/4). The +10.4 cm face offset was a pb_conform-session artifact only.",
+ "defect1_jaw_line": {
+  "mesh_defect": false,
+  "evidence": [
+   "under-jaw region FaceC: 0 self-intersections, 0 triangles flipped vs Kelvin, dihedral p99 19.8 deg (Kelvin 23.6), 0 anisotropic-stretch>2 triangles; all >45 deg edges near the jaw are lips/mouth corners, same in Kelvin",
+   "100% of near-black (<24/255) jaw pixels in FaceC_Face_ThreeQuarter (2692 px) and FaceC_Face_Front (516 px) map to head vertices whose outward normal points DOWN (n.z median -0.90 / -0.94), seen at grazing N.V 0.1-0.2; 64 of 71 front-view vertices are also dark in the 3/4 view",
+   "that jaw-underside band gets no direct light from any of the 3 rig lights (facing away or ray-occluded); UE SkyLight default bLowerHemisphereIsBlack=true + no GI -> no ambient either; UE maxRGB there median 16 (43% <12) vs 61 on other no-direct head pixels that face sideways",
+   "source mesh UE capture also has the dark jaw band (1352 px <12 in the 3/4 crop); FaceC exposes more down-facing jaw skin to the eye-level cameras: front 2468 px (nz<-0.8) vs Kelvin 1218, source 1629, ref 1872; FaceC under-chin normal (0,0.49,-0.87) vs Kelvin (0,0.33,-0.94), cervicomental angle FaceC 120-125 deg (not sharper than Kelvin 110-117)"
+  ],
+  "files": [
+   "sheet_jaw_evidence.png",
+   "sheet_jaw34_frontbelow.png",
+   "sheet_chin_below.png",
+   "sheet_jaw34_uerig_and_backfaces.png",
+   "sheet_ue34_nogi_lowerhemiblack.png",
+   "sheet_front_nogi_lowerhemiblack.png",
+   "pixmap_report.json",
+   "lightvis_report_FaceC.json",
+   "jawfacing_report.json",
+   "cervicomental_report.json"
+  ]
+ },
+ "defect2_ear_patch": {
+  "side": "image-left = UE -X = character RIGHT ear (camera looks -Y, right vector +X; *_l bones at +X)",
+  "mesh_defect": false,
+  "evidence": [
+   "ear_R region (2235 verts): 0 self-intersections, 0 flipped vs Kelvin, dihedral max 74.3 deg (Kelvin 87.0), min triangle angle 7.65 deg, 2 tris stretch>2",
+   "white pixels at surface (-8.56,-0.03,171.53) UE, normal (0.15,0.33,0.93) (up-facing concha floor/antitragus); rim light (pitch -37 yaw 90, cast_shadows False) N.H = 0.992 (mirror reflection into the front camera) although its shadow ray is blocked for 92% of those pixels; key light blocked 100%",
+   "-X patch surface is 3.9 deg off the perfect rim->camera mirror direction, the mirrored +X spot 6.8 deg -> only the -X ear glints",
+   "Blender plain-material render with the same rig reproduces the glint at the same spot (Kelvin geometry glints too); it disappears when rim+fill cast shadows or the rim light is removed"
+  ],
+  "files": [
+   "sheet_earR_glint.png",
+   "sheet_earR.png",
+   "earglint_report.json"
+  ]
+ },
+ "defect3_shoulder_slivers": {
+  "mesh_defect_in_saved_assets": false,
+  "evidence": [
+   "all body dumps (FaceC, ref, mh_apose, Kelvin) closed: 1 boundary loop (neck, 92 edges), 0 non-manifold edges, 1 component -> no removed faces",
+   "crescent slivers appear ONLY in the conform-session captures (captures/mh_Face_Front*.png, mh_Face_ThreeQuarter.png); absent in posed_*, FaceA/B/C, ref, verify_*, probe_* captures",
+   "the slivers lie exactly on the projected head/body neck seam at its lateral ends over the trapezius (x=+-19 cm, z~150-153), i.e. a head/body seam gap in that editor session (same session as the +10.4 cm face-dump offset), not the outfit hide mask",
+   "reloaded assets: seam gap 0.0001 cm, seam normal mismatch max 5.4 deg (Kelvin 12.4)"
+  ],
+  "files": [
+   "sheet_shoulder_seam.png",
+   "seethrough/all_front_shoulders.png",
+   "seethrough_report.json"
+  ]
+ }
+}

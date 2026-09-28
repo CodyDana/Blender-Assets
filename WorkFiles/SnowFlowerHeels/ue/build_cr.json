@@ -1,0 +1,168 @@
+{
+ "asset": "/Game/HeelsCheck/CR_HeelPose",
+ "status": "ok",
+ "errors": [],
+ "link_failures": [],
+ "default_failures": [],
+ "constants": {
+  "l": {
+   "heel": [
+    -7.2543,
+    -0.8482,
+    -1.5585
+   ],
+   "ballc": [
+    -6.8394,
+    14.0122,
+    -3.5443
+   ],
+   "sole": [
+    0.3642,
+    1.8196,
+    -3.2276
+   ],
+   "tip": [
+    -15.4536,
+    3.1602,
+    -1.3427
+   ],
+   "toe_bare": [
+    5.50163540550749,
+    0.6464329097631971,
+    -0.0943061662915865
+   ],
+   "toe_shoe": [
+    12.096454158576547,
+    1.4551317663992087,
+    -1.3864073706312068
+   ],
+   "tiptip": [
+    13.239467310067404,
+    0.9529098550526562,
+    -0.935858740867932
+   ]
+  },
+  "r": {
+   "heel": [
+    7.255,
+    0.8485,
+    1.5544
+   ],
+   "ballc": [
+    6.8394,
+    -14.0165,
+    3.5416
+   ],
+   "sole": [
+    -0.371,
+    -1.8235,
+    3.2273
+   ],
+   "tip": [
+    15.4536,
+    -3.1602,
+    1.3427
+   ],
+   "toe_bare": [
+    -5.503622911896521,
+    -0.6495593373925814,
+    0.09274432583825964
+   ],
+   "toe_shoe": [
+    -12.09908661328831,
+    -1.4583039149278818,
+    1.3882780147620863
+   ],
+   "tiptip": [
+    -13.24209835085491,
+    -0.9560819319336691,
+    0.9377299352982211
+   ]
+  }
+ },
+ "deleted_old": true,
+ "bones_imported": 342,
+ "local_forward_in_foot": {
+  "l": [
+   0.03154662195318447,
+   0.9992259207097058,
+   -0.023493360023283283
+  ],
+  "r": [
+   -0.03154686484382144,
+   -0.999230055499713,
+   0.023311995422258883
+  ]
+ },
+ "nodes": 261,
+ "exec_chain": [
+  "ForwardSolve",
+  "Set_PelvisLift",
+  "Set_pelvis",
+  "IK_leg_l",
+  "IK_leg_r",
+  "Set_foot_l",
+  "Set_ball_l",
+  "Set_foot_r",
+  "Set_ball_r"
+ ],
+ "status_after_compile": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+ "saved": true,
+ "events": [
+  "Forwards Solve"
+ ],
+ "self_test": {
+  "execute_returns": [
+   "True",
+   "True",
+   "True"
+  ],
+  "pelvis_lift_var": "7.183983",
+  "pelvis_dz_cm": 7.183982849121094,
+  "pelvis_forward_cm": [
+   0.0004071712610311806,
+   5.01580810546875
+  ],
+  "shin_l_tilt_from_vertical_deg": 3.554897486984207,
+  "shin_l_tilt_rest_deg": 3.353325739491034,
+  "l": {
+   "foot_rotation_deg": 33.67740200471753,
+   "ankle_cm": [
+    14.451960297430253,
+    6.478510040433751,
+    14.43676294171093
+   ],
+   "ankle_expected_cm": [
+    14.452000000000002,
+    6.476999999999999,
+    14.435999999999998
+   ],
+   "ankle_error_mm": 0.016922997547381843,
+   "shoe_heel_tip_z_mm": 0.019547928136240955,
+   "shoe_ball_sole_z_mm": 1.764789647751286e-08,
+   "ball_component_rotation_deg": 3.000000083484193
+  },
+  "r": {
+   "foot_rotation_deg": 33.677422495284915,
+   "ankle_cm": [
+    -14.45154205193645,
+    6.479363077087844,
+    14.436780264591462
+   ],
+   "ankle_expected_cm": [
+    -14.451,
+    6.478000000000001,
+    14.435999999999998
+   ],
+   "ankle_error_mm": 0.01661509037563164,
+   "shoe_heel_tip_z_mm": 0.021036882772502707,
+   "shoe_ball_sole_z_mm": -4.6561510202991485e-09,
+   "ball_component_rotation_deg": 3.000000083483221
+  },
+  "expected": {
+   "foot_pitch_deg": 33.6693,
+   "pelvis_lift_cm": "7.10 without the forward follow; <= 7.30 with it",
+   "note": "soft clamp adds ~0.007 deg; heel tip is the built top-lift (README), ball sole from heel_pose.json"
+  }
+ }
+}

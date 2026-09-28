@@ -1,0 +1,65 @@
+# --- Blender / Python ---
+*.blend1
+*.blend2
+__pycache__/
+*.pyc
+
+# --- Unreal caches (every project) ---
+**/DerivedDataCache/
+**/Intermediate/
+**/Saved/
+**/Binaries/
+.vs/
+*.sln
+
+# --- Local only ---
+.claude/settings.local.json
+.codex/
+*.log
+*.dmp
+*.bak
+*.tmp
+
+# --- Backups: git history is the backup now. Only the two verified baselines that exist nowhere else are kept. ---
+Backups/*
+!Backups/SnowFlower_v4_pre_lookmatch_2026-09-27/
+!Backups/Flashbang_r1_final_2026-09-27/
+
+# --- WorkFiles: keep text (reports, specs, tools, small json); drop heavy scratch ---
+WorkFiles/**/*.npy
+WorkFiles/**/*.npz
+WorkFiles/**/*.pkl
+WorkFiles/**/*.exr
+WorkFiles/**/*.png
+WorkFiles/**/*.jpg
+WorkFiles/**/*.jpeg
+WorkFiles/**/*.webp
+WorkFiles/**/*.blend
+WorkFiles/**/*.fbx
+WorkFiles/**/*.obj
+WorkFiles/**/*.glb
+WorkFiles/**/*.uasset
+WorkFiles/**/*.umap
+WorkFiles/**/*.zip
+WorkFiles/**/*.mp4
+WorkFiles/shuriken/UnrealShuriken/
+WorkFiles/BlackCloak_Review/unreal/
+# build inputs that must stay
+!WorkFiles/SnowFlower/v4/SnowFlower_HighPoly_v4.blend
+!WorkFiles/SnowFlower/v4/SnowFlower_Sheath_HighPoly.blend
+!WorkFiles/flashbang/metrology/fb_ref_srgb.npy
+!WorkFiles/world/DOJO_ARENA_TOPDOWN.png
+
+# --- Package zips (rebuildable deliverables) ---
+Exports/*.zip
+
+# --- Private / licensed: never upload ---
+WorkFiles/Characters/2B_private/
+References/Characters/2B_kimono_private/
+WorkFiles/MetaHuman/hiyuki_private/
+References/Characters/Hiyuki_private/
+**/*Hiyuki_Private*
+
+# --- JinMuWon (removed by the user 2026-09-28; its references include third-party manhwa art) ---
+**/*JinMuWon*
+**/*jinmuwon*

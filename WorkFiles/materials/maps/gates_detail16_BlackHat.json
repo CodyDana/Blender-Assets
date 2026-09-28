@@ -1,0 +1,1074 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "BlackHat",
+ "generated": "2026-09-26",
+ "generator": {
+  "script": "Scripts/unreal/materials/maps/make_detail16.py",
+  "script_sha256": "b86cdce5899ddd63f62752fa93fd0948d1499c86f78c0e18e53f223502a503c2",
+  "common": "Scripts/unreal/materials/maps/recolour_common.py",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "1.0.0",
+  "blender": "5.2.0 LTS"
+ },
+ "sidecar": {
+  "file": "Exports/BlackHat/SM_BlackHat.sockets.json",
+  "sha256": "6a8d03c1e8d4c9dd2dca6e36e9fb08119d5fda564da2acd4206bf31a2f0e295d"
+ },
+ "maps": {
+  "T_BlackHat_Straw_Detail16": {
+   "file": "Exports/BlackHat/Textures/Recolour/T_BlackHat_Straw_Detail16.png",
+   "sha256": "f580a6b231693733fe25082cb946d708d16653e1f6a700e48e7499adb6e136dd",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/BlackHat/Textures/T_BlackHat_Straw_Detail.png",
+    "sha256": "473726936068360bfe32f3521de30a2bc65467fea613aeaeafe62e439a2e10d5",
+    "stored_levels": 256,
+    "source_png_rgb_equal": true
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8.R / 255)); lossless (one code per 8-bit level)"
+  },
+  "T_BlackHat_Cloth_Detail16": {
+   "file": "Exports/BlackHat/Textures/Recolour/T_BlackHat_Cloth_Detail16.png",
+   "sha256": "89404117506a3fb9c67acb92e9a86ae0b7567953459be0b5ca6043acf9adb0a5",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/BlackHat/Textures/T_BlackHat_Cloth_Detail.png",
+    "sha256": "d98e72d3b28571f58d4669952265a4dc847ada0825789525b812f28024dcdd38",
+    "stored_levels": 256,
+    "source_png_rgb_equal": true
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8.R / 255)); lossless (one code per 8-bit level)"
+  }
+ },
+ "parts": {
+  "Straw": {
+   "slot_material": "M_BlackHat_Straw",
+   "instance": "MI_BlackHat_Straw",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_BlackHat_Straw_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/BlackHat/Textures/T_BlackHat_Straw_BC.png",
+    "sha256": "4cc6cc607269b149f19032104c5a245da14505895eff858046920fd612e9895e"
+   },
+   "params": {
+    "Colour": [
+     0.049758,
+     0.045438,
+     0.044183,
+     1.0
+    ],
+    "Detail Bias": 0.058461,
+    "Detail Scale": 6.879606,
+    "Detail Mean": 0.9602616053159547,
+    "Detail Highlight Ratio": 6.340228346303502,
+    "Detail Moments Low": [
+     0.731468915939331,
+     -0.2622264517076937,
+     0.08408187818546914,
+     -0.015410032633953796
+    ],
+    "Detail Moments High": [
+     0.26853108406066895,
+     0.106996086245838,
+     0.011084568109597348,
+     0.035735557116697736
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour in the mean-colour form (the buyer's one colour)",
+    "Detail Moments": "ASCENDING cubic coefficients as RGBA: E(c) = R + G*c + B*c^2 + A*c^3; Low = E[n^c; n <= 1], High = E[n^c; n > 1], over every texel of the map, fitted exactly through c = 0, 0.5, 1, 1.5 (so Low(1) + High(1) = Detail Mean)",
+    "n": "n = Detail Bias + Detail Scale x Detail16 (the texel's multiple of the mean colour)"
+   },
+   "derivation": "sidecar: BaseColor = saturate(Tint x (DetailBias + DetailScale x Detail)), Tint = the part's MEAN colour (sidecar values; BLACKHAT_REPORT.md's Bias/Scale table is stale)",
+   "sidecar_values": {
+    "tint_default_linear": [
+     0.049758,
+     0.045438,
+     0.044183
+    ],
+    "detail_bias_default": 0.058461,
+    "detail_scale_default": 6.879606,
+    "specular_scale": 0.65
+   },
+   "moment_samples": {
+    "c": [
+     0.0,
+     0.5,
+     1.0,
+     1.5
+    ],
+    "low": [
+     0.731468915939331,
+     0.6194499055526073,
+     0.5379143097831527,
+     0.47530460415550196
+    ],
+    "high": [
+     0.26853108406066895,
+     0.3292672138505745,
+     0.42234729553280204,
+     0.5745729969448748
+    ]
+   },
+   "n_range": [
+    0.058461,
+    6.938067
+   ],
+   "fraction_n_le_1": 0.731468915939331,
+   "gates": {
+    "lossless_16bit": {
+     "levels_present": 256,
+     "distinct_codes": 256,
+     "injective": true,
+     "max_abs_decode_error": 7.603962993790736e-06,
+     "limit_half_step": 7.629510948348211e-06,
+     "pass": true
+    },
+    "readback": {
+     "own_decoder_equal": true,
+     "bits": 16,
+     "colour_type": 0,
+     "blender_decoder_max_abs": 2.9116098199111207e-08,
+     "png_chunks": [
+      "IHDR",
+      "IDAT",
+      "IEND"
+     ],
+     "pass": true
+    },
+    "default_8bit_vs_shipped_BC": {
+     "max": 0,
+     "mean": 0.0,
+     "texels_diff_gt0": 0,
+     "texels_diff_gt1": 0,
+     "texels": 4194304,
+     "pass": true
+    },
+    "reference_shipped_detail8_path_vs_BC": {
+     "max": 0,
+     "mean": 0.0,
+     "texels_diff_gt0": 0,
+     "texels_diff_gt1": 0,
+     "texels": 4194304
+    },
+    "default_every_mip_vs_BC_mips": {
+     "max_level_diff": 1,
+     "per_mip": [
+      {
+       "mip": 0,
+       "size": [
+        2048,
+        2048
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 4194304
+      },
+      {
+       "mip": 1,
+       "size": [
+        1024,
+        1024
+       ],
+       "max": 1,
+       "mean": 0.23243,
+       "texels_diff_gt0": 243718,
+       "texels_diff_gt1": 0,
+       "texels": 1048576
+      },
+      {
+       "mip": 2,
+       "size": [
+        512,
+        512
+       ],
+       "max": 1,
+       "mean": 0.1409,
+       "texels_diff_gt0": 36937,
+       "texels_diff_gt1": 0,
+       "texels": 262144
+      },
+      {
+       "mip": 3,
+       "size": [
+        256,
+        256
+       ],
+       "max": 1,
+       "mean": 0.09622,
+       "texels_diff_gt0": 6306,
+       "texels_diff_gt1": 0,
+       "texels": 65536
+      },
+      {
+       "mip": 4,
+       "size": [
+        128,
+        128
+       ],
+       "max": 1,
+       "mean": 0.08374,
+       "texels_diff_gt0": 1372,
+       "texels_diff_gt1": 0,
+       "texels": 16384
+      },
+      {
+       "mip": 5,
+       "size": [
+        64,
+        64
+       ],
+       "max": 1,
+       "mean": 0.10181,
+       "texels_diff_gt0": 417,
+       "texels_diff_gt1": 0,
+       "texels": 4096
+      },
+      {
+       "mip": 6,
+       "size": [
+        32,
+        32
+       ],
+       "max": 1,
+       "mean": 0.1416,
+       "texels_diff_gt0": 145,
+       "texels_diff_gt1": 0,
+       "texels": 1024
+      },
+      {
+       "mip": 7,
+       "size": [
+        16,
+        16
+       ],
+       "max": 1,
+       "mean": 0.19922,
+       "texels_diff_gt0": 51,
+       "texels_diff_gt1": 0,
+       "texels": 256
+      },
+      {
+       "mip": 8,
+       "size": [
+        8,
+        8
+       ],
+       "max": 1,
+       "mean": 0.15625,
+       "texels_diff_gt0": 10,
+       "texels_diff_gt1": 0,
+       "texels": 64
+      },
+      {
+       "mip": 9,
+       "size": [
+        4,
+        4
+       ],
+       "max": 1,
+       "mean": 0.125,
+       "texels_diff_gt0": 2,
+       "texels_diff_gt1": 0,
+       "texels": 16
+      },
+      {
+       "mip": 10,
+       "size": [
+        2,
+        2
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 4
+      },
+      {
+       "mip": 11,
+       "size": [
+        1,
+        1
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 1
+      }
+     ],
+     "pass": true
+    },
+    "twin_default_vs_contract_max_abs_linear": 0.0,
+    "G-H1": {
+     "H_default": 1.5676,
+     "max_default_albedo": 0.34522,
+     "pass": true
+    },
+    "recolour_stress": {
+     "pass": true,
+     "colours": {
+      "white": {
+       "H": 0.06377,
+       "C_hi": 0.06377,
+       "C_lo": 0.53189,
+       "E": 0.88887,
+       "clip_frac": 0.0,
+       "max_gap_levels": 2,
+       "levels_used": 70,
+       "p1_p99_span_levels": 81.0,
+       "occupied_fraction_of_span": 0.8642,
+       "pass": true,
+       "std_ratio_logL": 0.3963,
+       "corr_logL": 0.90003,
+       "mean_albedo": [
+        0.76606,
+        0.76606,
+        0.76606
+       ],
+       "target_mean": [
+        0.76821,
+        0.76821,
+        0.76821
+       ],
+       "dE00_mean_vs_target": 0.062
+      },
+      "cream": {
+       "H": 0.06377,
+       "C_hi": 0.06377,
+       "C_lo": 0.53189,
+       "E": 0.88887,
+       "clip_frac": 0.0,
+       "max_gap_levels": 2,
+       "levels_used": 70,
+       "p1_p99_span_levels": 81.0,
+       "occupied_fraction_of_span": 0.8642,
+       "pass": true,
+       "std_ratio_logL": 0.3963,
+       "corr_logL": 0.90003,
+       "mean_albedo": [
+        0.76606,
+        0.6703,
+        0.47878
+       ],
+       "target_mean": [
+        0.76821,
+        0.67218,
+        0.48013
+       ],
+       "dE00_mean_vs_target": 0.063
+      },
+      "pastel_pink": {
+       "H": 0.03095,
+       "C_hi": 0.03095,
+       "C_lo": 0.51547,
+       "E": 0.88838,
+       "clip_frac": 0.0,
+       "max_gap_levels": 2,
+       "levels_used": 65,
+       "p1_p99_span_levels": 76.0,
+       "occupied_fraction_of_span": 0.8553,
+       "pass": true,
+       "std_ratio_logL": 0.3708,
+       "corr_logL": 0.8733,
+       "mean_albedo": [
+        0.80875,
+        0.57088,
+        0.66603
+       ],
+       "target_mean": [
+        0.81622,
+        0.57616,
+        0.67218
+       ],
+       "dE00_mean_vs_target": 0.206
+      },
+      "saturated_red": {
+       "H": 0.06377,
+       "C_hi": 0.06377,
+       "C_lo": 0.53189,
+       "E": 0.88887,
+       "clip_frac": 0.0,
+       "max_gap_levels": 2,
+       "levels_used": 70,
+       "p1_p99_span_levels": 81.0,
+       "occupied_fraction_of_span": 0.8642,
+       "pass": true,
+       "std_ratio_logL": 0.3963,
+       "corr_logL": 0.90003,
+       "mean_albedo": [
+        0.76606,
+        0.01915,
+        0.01915
+       ],
+       "target_mean": [
+        0.76821,
+        0.01921,
+        0.01921
+       ],
+       "dE00_mean_vs_target": 0.063
+      },
+      "saturated_blue": {
+       "H": 0.06377,
+       "C_hi": 0.06377,
+       "C_lo": 0.53189,
+       "E": 0.88887,
+       "clip_frac": 0.0,
+       "max_gap_levels": 2,
+       "levels_used": 70,
+       "p1_p99_span_levels": 81.0,
+       "occupied_fraction_of_span": 0.8642,
+       "pass": true,
+       "std_ratio_logL": 0.3963,
+       "corr_logL": 0.90003,
+       "mean_albedo": [
+        0.01915,
+        0.04788,
+        0.76606
+       ],
+       "target_mean": [
+        0.01921,
+        0.04801,
+        0.76821
+       ],
+       "dE00_mean_vs_target": 0.045
+      },
+      "yellow": {
+       "H": 0.03095,
+       "C_hi": 0.03095,
+       "C_lo": 0.51547,
+       "E": 0.88838,
+       "clip_frac": 0.0,
+       "max_gap_levels": 2,
+       "levels_used": 65,
+       "p1_p99_span_levels": 76.0,
+       "occupied_fraction_of_span": 0.8553,
+       "pass": true,
+       "std_ratio_logL": 0.3708,
+       "corr_logL": 0.8733,
+       "mean_albedo": [
+        0.80875,
+        0.7136,
+        0.04757
+       ],
+       "target_mean": [
+        0.81622,
+        0.7202,
+        0.04801
+       ],
+       "dE00_mean_vs_target": 0.21
+      },
+      "mid_grey": {
+       "H": 0.87142,
+       "C_hi": 0.87142,
+       "C_lo": 0.93571,
+       "E": 0.94093,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 140,
+       "p1_p99_span_levels": 139.0,
+       "occupied_fraction_of_span": 1.0072,
+       "pass": true,
+       "std_ratio_logL": 0.9126,
+       "corr_logL": 0.99967,
+       "mean_albedo": [
+        0.17287,
+        0.17287,
+        0.17287
+       ],
+       "target_mean": [
+        0.17285,
+        0.17285,
+        0.17285
+       ],
+       "dE00_mean_vs_target": 0.002
+      },
+      "near_black": {
+       "H": 2.43639,
+       "C_hi": 1.0,
+       "C_lo": 1.0,
+       "E": 0.96026,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 47,
+       "p1_p99_span_levels": 46.0,
+       "occupied_fraction_of_span": 1.0217,
+       "pass": true,
+       "std_ratio_logL": 1.0,
+       "corr_logL": 1.0,
+       "mean_albedo": [
+        0.0096,
+        0.0096,
+        0.0096
+       ],
+       "target_mean": [
+        0.0096,
+        0.0096,
+        0.0096
+       ],
+       "dE00_mean_vs_target": 0.0
+      },
+      "extreme_white": {
+       "H": -0.02927,
+       "C_hi": 0.0,
+       "C_lo": 0.5,
+       "E": 0.88798,
+       "clip_frac": 0.0,
+       "max_gap_levels": 2,
+       "levels_used": 57,
+       "p1_p99_span_levels": 67.0,
+       "occupied_fraction_of_span": 0.8507,
+       "pass": true,
+       "std_ratio_logL": 0.3171,
+       "corr_logL": 0.82779,
+       "mean_albedo": [
+        0.86761,
+        0.86761,
+        0.86761
+       ],
+       "target_mean": [
+        0.91225,
+        0.91225,
+        0.91225
+       ],
+       "dE00_mean_vs_target": 1.11
+      }
+     }
+    }
+   },
+   "pass": true
+  },
+  "Cloth": {
+   "slot_material": "M_BlackHat_Cloth",
+   "instance": "MI_BlackHat_Cloth",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_BlackHat_Cloth_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/BlackHat/Textures/T_BlackHat_Cloth_BC.png",
+    "sha256": "5bc43a3b0faa447fffde388a5c493ed883345300d3474d5cca7b73ac15ad3bc5"
+   },
+   "params": {
+    "Colour": [
+     0.039551,
+     0.038501,
+     0.038618,
+     1.0
+    ],
+    "Detail Bias": 0.239278,
+    "Detail Scale": 3.800177,
+    "Detail Mean": 0.9654891924766131,
+    "Detail Highlight Ratio": 3.581995682795453,
+    "Detail Moments Low": [
+     0.7336254119873047,
+     -0.18274252668439006,
+     0.03777242258839042,
+     -0.0050344440649645605
+    ],
+    "Detail Moments High": [
+     0.2663745880126953,
+     0.0876767268475826,
+     0.017542300756761664,
+     0.010274713033233018
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour in the mean-colour form (the buyer's one colour)",
+    "Detail Moments": "ASCENDING cubic coefficients as RGBA: E(c) = R + G*c + B*c^2 + A*c^3; Low = E[n^c; n <= 1], High = E[n^c; n > 1], over every texel of the map, fitted exactly through c = 0, 0.5, 1, 1.5 (so Low(1) + High(1) = Detail Mean)",
+    "n": "n = Detail Bias + Detail Scale x Detail16 (the texel's multiple of the mean colour)"
+   },
+   "derivation": "sidecar: BaseColor = saturate(Tint x (DetailBias + DetailScale x Detail)), Tint = the part's MEAN colour (sidecar values; BLACKHAT_REPORT.md's Bias/Scale table is stale)",
+   "sidecar_values": {
+    "tint_default_linear": [
+     0.039551,
+     0.038501,
+     0.038618
+    ],
+    "detail_bias_default": 0.239278,
+    "detail_scale_default": 3.800177,
+    "specular_scale": 0.5
+   },
+   "moment_samples": {
+    "c": [
+     0.0,
+     0.5,
+     1.0,
+     1.5
+    ],
+    "low": [
+     0.7336254119873047,
+     0.6510679487840867,
+     0.5836208638263405,
+     0.5275083240653426
+    ],
+    "high": [
+     0.2663745880126953,
+     0.31588286575483115,
+     0.3818683286502726,
+     0.4720370114739444
+    ]
+   },
+   "n_range": [
+    0.239278,
+    4.039455
+   ],
+   "fraction_n_le_1": 0.7336254119873047,
+   "gates": {
+    "lossless_16bit": {
+     "levels_present": 256,
+     "distinct_codes": 256,
+     "injective": true,
+     "max_abs_decode_error": 7.603962993790736e-06,
+     "limit_half_step": 7.629510948348211e-06,
+     "pass": true
+    },
+    "readback": {
+     "own_decoder_equal": true,
+     "bits": 16,
+     "colour_type": 0,
+     "blender_decoder_max_abs": 2.9116098199111207e-08,
+     "png_chunks": [
+      "IHDR",
+      "IDAT",
+      "IEND"
+     ],
+     "pass": true
+    },
+    "default_8bit_vs_shipped_BC": {
+     "max": 0,
+     "mean": 0.0,
+     "texels_diff_gt0": 0,
+     "texels_diff_gt1": 0,
+     "texels": 4194304,
+     "pass": true
+    },
+    "reference_shipped_detail8_path_vs_BC": {
+     "max": 0,
+     "mean": 0.0,
+     "texels_diff_gt0": 0,
+     "texels_diff_gt1": 0,
+     "texels": 4194304
+    },
+    "default_every_mip_vs_BC_mips": {
+     "max_level_diff": 1,
+     "per_mip": [
+      {
+       "mip": 0,
+       "size": [
+        2048,
+        2048
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 4194304
+      },
+      {
+       "mip": 1,
+       "size": [
+        1024,
+        1024
+       ],
+       "max": 1,
+       "mean": 0.20512,
+       "texels_diff_gt0": 215084,
+       "texels_diff_gt1": 0,
+       "texels": 1048576
+      },
+      {
+       "mip": 2,
+       "size": [
+        512,
+        512
+       ],
+       "max": 1,
+       "mean": 0.1185,
+       "texels_diff_gt0": 31065,
+       "texels_diff_gt1": 0,
+       "texels": 262144
+      },
+      {
+       "mip": 3,
+       "size": [
+        256,
+        256
+       ],
+       "max": 1,
+       "mean": 0.0692,
+       "texels_diff_gt0": 4535,
+       "texels_diff_gt1": 0,
+       "texels": 65536
+      },
+      {
+       "mip": 4,
+       "size": [
+        128,
+        128
+       ],
+       "max": 1,
+       "mean": 0.04596,
+       "texels_diff_gt0": 753,
+       "texels_diff_gt1": 0,
+       "texels": 16384
+      },
+      {
+       "mip": 5,
+       "size": [
+        64,
+        64
+       ],
+       "max": 1,
+       "mean": 0.04126,
+       "texels_diff_gt0": 169,
+       "texels_diff_gt1": 0,
+       "texels": 4096
+      },
+      {
+       "mip": 6,
+       "size": [
+        32,
+        32
+       ],
+       "max": 1,
+       "mean": 0.04883,
+       "texels_diff_gt0": 50,
+       "texels_diff_gt1": 0,
+       "texels": 1024
+      },
+      {
+       "mip": 7,
+       "size": [
+        16,
+        16
+       ],
+       "max": 1,
+       "mean": 0.08203,
+       "texels_diff_gt0": 21,
+       "texels_diff_gt1": 0,
+       "texels": 256
+      },
+      {
+       "mip": 8,
+       "size": [
+        8,
+        8
+       ],
+       "max": 1,
+       "mean": 0.125,
+       "texels_diff_gt0": 8,
+       "texels_diff_gt1": 0,
+       "texels": 64
+      },
+      {
+       "mip": 9,
+       "size": [
+        4,
+        4
+       ],
+       "max": 1,
+       "mean": 0.0625,
+       "texels_diff_gt0": 1,
+       "texels_diff_gt1": 0,
+       "texels": 16
+      },
+      {
+       "mip": 10,
+       "size": [
+        2,
+        2
+       ],
+       "max": 1,
+       "mean": 0.25,
+       "texels_diff_gt0": 1,
+       "texels_diff_gt1": 0,
+       "texels": 4
+      },
+      {
+       "mip": 11,
+       "size": [
+        1,
+        1
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 1
+      }
+     ],
+     "pass": true
+    },
+    "twin_default_vs_contract_max_abs_linear": 0.0,
+    "G-H1": {
+     "H_default": 2.4491,
+     "max_default_albedo": 0.15976,
+     "pass": true
+    },
+    "recolour_stress": {
+     "pass": true,
+     "colours": {
+      "white": {
+       "H": 0.09231,
+       "C_hi": 0.09231,
+       "C_lo": 0.54616,
+       "E": 0.91889,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 57,
+       "p1_p99_span_levels": 56.0,
+       "occupied_fraction_of_span": 1.0179,
+       "pass": true,
+       "std_ratio_logL": 0.3681,
+       "corr_logL": 0.90166,
+       "mean_albedo": [
+        0.77154,
+        0.77154,
+        0.77154
+       ],
+       "target_mean": [
+        0.77239,
+        0.77239,
+        0.77239
+       ],
+       "dE00_mean_vs_target": 0.025
+      },
+      "cream": {
+       "H": 0.09231,
+       "C_hi": 0.09231,
+       "C_lo": 0.54616,
+       "E": 0.91889,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 57,
+       "p1_p99_span_levels": 56.0,
+       "occupied_fraction_of_span": 1.0179,
+       "pass": true,
+       "std_ratio_logL": 0.3681,
+       "corr_logL": 0.90166,
+       "mean_albedo": [
+        0.77154,
+        0.67509,
+        0.48221
+       ],
+       "target_mean": [
+        0.77239,
+        0.67584,
+        0.48274
+       ],
+       "dE00_mean_vs_target": 0.025
+      },
+      "pastel_pink": {
+       "H": 0.0448,
+       "C_hi": 0.0448,
+       "C_lo": 0.5224,
+       "E": 0.91809,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 51,
+       "p1_p99_span_levels": 50.0,
+       "occupied_fraction_of_span": 1.02,
+       "pass": true,
+       "std_ratio_logL": 0.3325,
+       "corr_logL": 0.85916,
+       "mean_albedo": [
+        0.81677,
+        0.57655,
+        0.67264
+       ],
+       "target_mean": [
+        0.82067,
+        0.57929,
+        0.67584
+       ],
+       "dE00_mean_vs_target": 0.107
+      },
+      "saturated_red": {
+       "H": 0.09231,
+       "C_hi": 0.09231,
+       "C_lo": 0.54616,
+       "E": 0.91889,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 57,
+       "p1_p99_span_levels": 56.0,
+       "occupied_fraction_of_span": 1.0179,
+       "pass": true,
+       "std_ratio_logL": 0.3681,
+       "corr_logL": 0.90166,
+       "mean_albedo": [
+        0.77154,
+        0.01929,
+        0.01929
+       ],
+       "target_mean": [
+        0.77239,
+        0.01931,
+        0.01931
+       ],
+       "dE00_mean_vs_target": 0.025
+      },
+      "saturated_blue": {
+       "H": 0.09231,
+       "C_hi": 0.09231,
+       "C_lo": 0.54616,
+       "E": 0.91889,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 57,
+       "p1_p99_span_levels": 56.0,
+       "occupied_fraction_of_span": 1.0179,
+       "pass": true,
+       "std_ratio_logL": 0.3681,
+       "corr_logL": 0.90166,
+       "mean_albedo": [
+        0.01929,
+        0.04822,
+        0.77154
+       ],
+       "target_mean": [
+        0.01931,
+        0.04827,
+        0.77239
+       ],
+       "dE00_mean_vs_target": 0.018
+      },
+      "yellow": {
+       "H": 0.0448,
+       "C_hi": 0.0448,
+       "C_lo": 0.5224,
+       "E": 0.91809,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 51,
+       "p1_p99_span_levels": 50.0,
+       "occupied_fraction_of_span": 1.02,
+       "pass": true,
+       "std_ratio_logL": 0.3325,
+       "corr_logL": 0.85916,
+       "mean_albedo": [
+        0.81677,
+        0.72068,
+        0.04805
+       ],
+       "target_mean": [
+        0.82067,
+        0.72412,
+        0.04827
+       ],
+       "dE00_mean_vs_target": 0.109
+      },
+      "mid_grey": {
+       "H": 1.26139,
+       "C_hi": 1.0,
+       "C_lo": 1.0,
+       "E": 0.96549,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 105,
+       "p1_p99_span_levels": 104.0,
+       "occupied_fraction_of_span": 1.0096,
+       "pass": true,
+       "std_ratio_logL": 1.0,
+       "corr_logL": 1.0,
+       "mean_albedo": [
+        0.17379,
+        0.17379,
+        0.17379
+       ],
+       "target_mean": [
+        0.17379,
+        0.17379,
+        0.17379
+       ],
+       "dE00_mean_vs_target": 0.0
+      },
+      "near_black": {
+       "H": 3.52672,
+       "C_hi": 1.0,
+       "C_lo": 1.0,
+       "E": 0.96549,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 32,
+       "p1_p99_span_levels": 31.0,
+       "occupied_fraction_of_span": 1.0323,
+       "pass": true,
+       "std_ratio_logL": 1.0,
+       "corr_logL": 1.0,
+       "mean_albedo": [
+        0.00965,
+        0.00965,
+        0.00965
+       ],
+       "target_mean": [
+        0.00965,
+        0.00965,
+        0.00965
+       ],
+       "dE00_mean_vs_target": 0.0
+      },
+      "extreme_white": {
+       "H": -0.04238,
+       "C_hi": 0.0,
+       "C_lo": 0.5,
+       "E": 0.91744,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 42,
+       "p1_p99_span_levels": 41.0,
+       "occupied_fraction_of_span": 1.0244,
+       "pass": true,
+       "std_ratio_logL": 0.2578,
+       "corr_logL": 0.77931,
+       "mean_albedo": [
+        0.88233,
+        0.88233,
+        0.88233
+       ],
+       "target_mean": [
+        0.91721,
+        0.91721,
+        0.91721
+       ],
+       "dE00_mean_vs_target": 0.858
+      }
+     }
+    }
+   },
+   "pass": true
+  }
+ },
+ "pass": true
+}

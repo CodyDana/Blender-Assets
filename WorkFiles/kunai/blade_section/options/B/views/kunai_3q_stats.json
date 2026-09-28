@@ -1,0 +1,744 @@
+{
+ "kunai_3q_y40": {
+  "yaw_deg": 40.0,
+  "camera": {
+   "el": 29.0,
+   "az": -22.0,
+   "lens_mm": 72.0,
+   "framed_mm": 320.0,
+   "target_design_x_mm": 0.0,
+   "rig_scale": 2.724318
+  },
+  "samples": 160,
+  "coat": {
+   "pixels": 38590,
+   "fraction_of_object": 0.43513,
+   "mean": 0.2802,
+   "p05": 0.2186,
+   "p50": 0.2356,
+   "p95": 0.5414,
+   "fraction_below_0_03": 0.00036,
+   "fraction_below_0_05": 0.00132,
+   "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+  },
+  "whole": {
+   "mean": 0.239,
+   "std": 0.1118,
+   "p05": 0.1305,
+   "p50": 0.2233,
+   "p95": 0.5423,
+   "max": 0.7429
+  },
+  "wrap": {
+   "pixels": 37181,
+   "fraction_of_object": 0.41924,
+   "mean": 0.1766,
+   "p05": 0.1266,
+   "p50": 0.1661,
+   "p95": 0.2826,
+   "note": "pixels of the cloth wrap (mask blue on a knife): information, never a steel gate"
+  },
+  "coat_gate": {
+   "passed": true,
+   "fraction_below_0_03": 0.00036,
+   "dark_fraction_max": 0.02,
+   "coat_pixels": 38590,
+   "rule": "flat coat steel does not read as a hole: dark pixels are a wall's business, not the plate's"
+  },
+  "anchor_hero": {
+   "p50": 0.5599,
+   "mean": 0.5503
+  },
+  "coat_split": {
+   "flat_coat_nz_ge_0_9995": {
+    "pixels": 5033,
+    "mean": 0.526,
+    "p05": 0.4826,
+    "p50": 0.5347,
+    "p95": 0.5807
+   },
+   "tilted_coat_0_95_to_0_9995": {
+    "pixels": 33557,
+    "mean": 0.2433,
+    "p05": 0.2182,
+    "p50": 0.2347,
+    "p95": 0.3089
+   },
+   "all_coat": {
+    "pixels": 38590,
+    "mean": 0.2802,
+    "p05": 0.2186,
+    "p50": 0.2356,
+    "p95": 0.5414
+   },
+   "reference_coat": {
+    "flat": {
+     "pixels": 5033,
+     "mean": 0.5403,
+     "p05": 0.5013,
+     "p50": 0.5493,
+     "p95": 0.5893
+    },
+    "tilted": {
+     "pixels": 33557,
+     "mean": 0.2315,
+     "p05": 0.1535,
+     "p50": 0.2347,
+     "p95": 0.3045
+    },
+    "all_coat": {
+     "pixels": 38590,
+     "mean": 0.2718,
+     "p05": 0.1602,
+     "p50": 0.2356,
+     "p95": 0.5532
+    }
+   },
+   "baked_minus_reference": {
+    "flat": {
+     "p50": -0.0146,
+     "mean": -0.0143,
+     "ratio_mean": 0.9735
+    },
+    "tilted": {
+     "p50": 0.0,
+     "mean": 0.0119,
+     "ratio_mean": 1.0512
+    },
+    "all_coat": {
+     "p50": 0.0,
+     "mean": 0.0084,
+     "ratio_mean": 1.0311
+    }
+   }
+  },
+  "stats": {
+   "resolution": [
+    1600,
+    900
+   ],
+   "object_pixel_fraction": 0.06159,
+   "object_mean_rgb": [
+    0.2429,
+    0.2369,
+    0.2492
+   ],
+   "object_luminance": {
+    "mean": 0.239,
+    "std": 0.1118,
+    "p05": 0.1305,
+    "p50": 0.2233,
+    "p95": 0.5423,
+    "max": 0.7429
+   },
+   "object_fraction_above_0_50": 0.08426,
+   "object_fraction_below_0_05": 0.0013,
+   "bbox_px": [
+    218,
+    279,
+    1477,
+    624
+   ],
+   "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+   "bbox_margins_px_lrtb": [
+    218,
+    122,
+    279,
+    275
+   ],
+   "bbox_width_fraction": 0.7875,
+   "bbox_height_fraction": 0.3844,
+   "facet_luminance": {
+    "pixels": 9563,
+    "fraction_of_object": 0.10783,
+    "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+    "all": {
+     "pixels": 9563,
+     "mean": 0.3228,
+     "p05": 0.1028,
+     "p50": 0.2305,
+     "p95": 0.5891,
+     "fraction_below_0_05": 0.00314
+    },
+    "near": {
+     "pixels": 7000,
+     "mean": 0.3406,
+     "p05": 0.1076,
+     "p50": 0.2269,
+     "p95": 0.5961,
+     "fraction_below_0_05": 0.0
+    },
+    "far": {
+     "pixels": 2563,
+     "mean": 0.274,
+     "p05": 0.0773,
+     "p50": 0.2348,
+     "p95": 0.5358,
+     "fraction_below_0_05": 0.01171
+    }
+   },
+   "coat_luminance": {
+    "pixels": 38590,
+    "fraction_of_object": 0.43513,
+    "mean": 0.2802,
+    "p05": 0.2186,
+    "p50": 0.2356,
+    "p95": 0.5414,
+    "fraction_below_0_03": 0.00036,
+    "fraction_below_0_05": 0.00132,
+    "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+   },
+   "wall_luminance": {
+    "pixels": 4367,
+    "fraction_of_object": 0.04924,
+    "mean": 0.2804,
+    "p05": 0.163,
+    "p50": 0.2266,
+    "p95": 0.6068,
+    "fraction_below_0_03": 0.00023,
+    "fraction_below_0_05": 0.00801,
+    "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+   },
+   "wrap_luminance": {
+    "pixels": 37181,
+    "fraction_of_object": 0.41924,
+    "mean": 0.1766,
+    "p05": 0.1266,
+    "p50": 0.1661,
+    "p95": 0.2826,
+    "note": "pixels of the cloth wrap (mask blue on a knife): information, never a steel gate"
+   },
+   "silhouette_band_luminance": {
+    "mean": 0.3604,
+    "p50": 0.3106,
+    "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+   },
+   "object_sector_luminance": {
+    "arm0": 0.2609,
+    "arm1": 0.2226
+   },
+   "object_sector_spread": 0.1584,
+   "backdrop_luminance_mean": 0.5288,
+   "backdrop_points": {
+    "tl": 0.412,
+    "tr": 0.3417,
+    "bl": 0.4204,
+    "br": 0.4036,
+    "r28": 0.428,
+    "r50": 0.5697,
+    "r78": 0.5297,
+    "q11": 0.3728,
+    "q50": 0.6952,
+    "q78": 0.6599,
+    "t03": 0.3485,
+    "t97": 0.5022
+   },
+   "contact_shadow_ratio": 0.8771,
+   "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+   "halo_luminance_4px": 0.5368
+  },
+  "camera_used": {
+   "location": [
+    0.5251998901367188,
+    -0.20448391139507294,
+    0.31027814745903015
+   ],
+   "lens": 72.0,
+   "shift": [
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "kunai_hero_y-25": {
+  "yaw_deg": -25.0,
+  "camera": {
+   "el": 29.0,
+   "az": -22.0,
+   "lens_mm": 72.0,
+   "framed_mm": 320.0,
+   "target_design_x_mm": 0.0,
+   "rig_scale": 2.724318
+  },
+  "samples": 160,
+  "coat": {
+   "pixels": 50416,
+   "fraction_of_object": 0.58715,
+   "mean": 0.4579,
+   "p05": 0.3328,
+   "p50": 0.4787,
+   "p95": 0.5384,
+   "fraction_below_0_03": 0.00912,
+   "fraction_below_0_05": 0.01029,
+   "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+  },
+  "whole": {
+   "mean": 0.3912,
+   "std": 0.1421,
+   "p05": 0.1611,
+   "p50": 0.423,
+   "p95": 0.5423,
+   "max": 0.9667
+  },
+  "wrap": {
+   "pixels": 22218,
+   "fraction_of_object": 0.25876,
+   "mean": 0.2314,
+   "p05": 0.1308,
+   "p50": 0.2255,
+   "p95": 0.3414,
+   "note": "pixels of the cloth wrap (mask blue on a knife): information, never a steel gate"
+  },
+  "coat_gate": {
+   "passed": true,
+   "fraction_below_0_03": 0.00912,
+   "dark_fraction_max": 0.02,
+   "coat_pixels": 50416,
+   "rule": "flat coat steel does not read as a hole: dark pixels are a wall's business, not the plate's"
+  },
+  "anchor_hero": {
+   "p50": 0.5599,
+   "mean": 0.5503
+  },
+  "coat_split": {
+   "flat_coat_nz_ge_0_9995": {
+    "pixels": 4169,
+    "mean": 0.4099,
+    "p05": 0.0148,
+    "p50": 0.4787,
+    "p95": 0.5658
+   },
+   "tilted_coat_0_95_to_0_9995": {
+    "pixels": 46247,
+    "mean": 0.4623,
+    "p05": 0.3414,
+    "p50": 0.4787,
+    "p95": 0.5375
+   },
+   "all_coat": {
+    "pixels": 50416,
+    "mean": 0.4579,
+    "p05": 0.3328,
+    "p50": 0.4787,
+    "p95": 0.5384
+   },
+   "reference_coat": {
+    "flat": {
+     "pixels": 4169,
+     "mean": 0.4183,
+     "p05": 0.0171,
+     "p50": 0.4854,
+     "p95": 0.5854
+    },
+    "tilted": {
+     "pixels": 46247,
+     "mean": 0.4735,
+     "p05": 0.3456,
+     "p50": 0.4935,
+     "p95": 0.5426
+    },
+    "all_coat": {
+     "pixels": 50416,
+     "mean": 0.4689,
+     "p05": 0.3367,
+     "p50": 0.4905,
+     "p95": 0.5454
+    }
+   },
+   "baked_minus_reference": {
+    "flat": {
+     "p50": -0.0067,
+     "mean": -0.0084,
+     "ratio_mean": 0.98
+    },
+    "tilted": {
+     "p50": -0.0149,
+     "mean": -0.0112,
+     "ratio_mean": 0.9763
+    },
+    "all_coat": {
+     "p50": -0.0118,
+     "mean": -0.011,
+     "ratio_mean": 0.9765
+    }
+   }
+  },
+  "stats": {
+   "resolution": [
+    1600,
+    900
+   ],
+   "object_pixel_fraction": 0.05963,
+   "object_mean_rgb": [
+    0.399,
+    0.3883,
+    0.3972
+   ],
+   "object_luminance": {
+    "mean": 0.3912,
+    "std": 0.1421,
+    "p05": 0.1611,
+    "p50": 0.423,
+    "p95": 0.5423,
+    "max": 0.9667
+   },
+   "object_fraction_above_0_50": 0.22295,
+   "object_fraction_below_0_05": 0.00646,
+   "bbox_px": [
+    689,
+    90,
+    910,
+    860
+   ],
+   "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+   "bbox_margins_px_lrtb": [
+    689,
+    689,
+    90,
+    39
+   ],
+   "bbox_width_fraction": 0.1388,
+   "bbox_height_fraction": 0.8567,
+   "facet_luminance": {
+    "pixels": 11269,
+    "fraction_of_object": 0.13124,
+    "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+    "all": {
+     "pixels": 11269,
+     "mean": 0.436,
+     "p05": 0.1686,
+     "p50": 0.3944,
+     "p95": 0.9224,
+     "fraction_below_0_05": 0.0008
+    },
+    "near": {
+     "pixels": 7810,
+     "mean": 0.481,
+     "p05": 0.2692,
+     "p50": 0.4115,
+     "p95": 0.9387,
+     "fraction_below_0_05": 0.0
+    },
+    "far": {
+     "pixels": 3459,
+     "mean": 0.3343,
+     "p05": 0.1239,
+     "p50": 0.3143,
+     "p95": 0.6339,
+     "fraction_below_0_05": 0.0026
+    }
+   },
+   "coat_luminance": {
+    "pixels": 50416,
+    "fraction_of_object": 0.58715,
+    "mean": 0.4579,
+    "p05": 0.3328,
+    "p50": 0.4787,
+    "p95": 0.5384,
+    "fraction_below_0_03": 0.00912,
+    "fraction_below_0_05": 0.01029,
+    "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+   },
+   "wall_luminance": {
+    "pixels": 2257,
+    "fraction_of_object": 0.02629,
+    "mean": 0.2371,
+    "p05": 0.1759,
+    "p50": 0.2126,
+    "p95": 0.3971,
+    "fraction_below_0_03": 0.00044,
+    "fraction_below_0_05": 0.00044,
+    "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+   },
+   "wrap_luminance": {
+    "pixels": 22218,
+    "fraction_of_object": 0.25876,
+    "mean": 0.2314,
+    "p05": 0.1308,
+    "p50": 0.2255,
+    "p95": 0.3414,
+    "note": "pixels of the cloth wrap (mask blue on a knife): information, never a steel gate"
+   },
+   "silhouette_band_luminance": {
+    "mean": 0.4703,
+    "p50": 0.3961,
+    "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+   },
+   "object_sector_luminance": {
+    "arm0": 0.3509,
+    "arm1": 0.4275
+   },
+   "object_sector_spread": 0.1968,
+   "backdrop_luminance_mean": 0.5659,
+   "backdrop_points": {
+    "tl": 0.4395,
+    "tr": 0.3563,
+    "bl": 0.3882,
+    "br": 0.4232,
+    "r28": 0.4955,
+    "r50": 0.6871,
+    "r78": 0.5885,
+    "q11": 0.3966,
+    "q50": 0.7342,
+    "q78": 0.6512,
+    "t03": 0.3681,
+    "t97": 0.4739
+   },
+   "contact_shadow_ratio": 0.7657,
+   "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+   "halo_luminance_4px": 0.4159
+  },
+  "camera_used": {
+   "location": [
+    0.4768655002117157,
+    -0.192666158080101,
+    0.28508999943733215
+   ],
+   "lens": 72.0,
+   "shift": [
+    -0.02370813488960266,
+    -0.025823097676038742
+   ]
+  }
+ },
+ "kunai_top_y0": {
+  "yaw_deg": 0.0,
+  "camera": {
+   "el": 29.0,
+   "az": -22.0,
+   "lens_mm": 72.0,
+   "framed_mm": 320.0,
+   "target_design_x_mm": 0.0,
+   "rig_scale": 2.724318
+  },
+  "samples": 160,
+  "coat": {
+   "pixels": 75396,
+   "fraction_of_object": 0.55749,
+   "mean": 0.3594,
+   "p05": 0.3143,
+   "p50": 0.3538,
+   "p95": 0.4328,
+   "fraction_below_0_03": 0.0,
+   "fraction_below_0_05": 0.0,
+   "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+  },
+  "whole": {
+   "mean": 0.3407,
+   "std": 0.1399,
+   "p05": 0.1938,
+   "p50": 0.3389,
+   "p95": 0.4697,
+   "max": 0.988
+  },
+  "wrap": {
+   "pixels": 45289,
+   "fraction_of_object": 0.33487,
+   "mean": 0.2365,
+   "p05": 0.1787,
+   "p50": 0.2257,
+   "p95": 0.3282,
+   "note": "pixels of the cloth wrap (mask blue on a knife): information, never a steel gate"
+  },
+  "coat_gate": {
+   "passed": true,
+   "fraction_below_0_03": 0.0,
+   "dark_fraction_max": 0.02,
+   "coat_pixels": 75396,
+   "rule": "flat coat steel does not read as a hole: dark pixels are a wall's business, not the plate's"
+  },
+  "anchor_hero": {
+   "p50": 0.5599,
+   "mean": 0.5503
+  },
+  "coat_split": {
+   "flat_coat_nz_ge_0_9995": {
+    "pixels": 13126,
+    "mean": 0.4228,
+    "p05": 0.3888,
+    "p50": 0.428,
+    "p95": 0.4398
+   },
+   "tilted_coat_0_95_to_0_9995": {
+    "pixels": 62270,
+    "mean": 0.346,
+    "p05": 0.3106,
+    "p50": 0.3496,
+    "p95": 0.3692
+   },
+   "all_coat": {
+    "pixels": 75396,
+    "mean": 0.3594,
+    "p05": 0.3143,
+    "p50": 0.3538,
+    "p95": 0.4328
+   },
+   "reference_coat": {
+    "flat": {
+     "pixels": 13126,
+     "mean": 0.4345,
+     "p05": 0.4288,
+     "p50": 0.4358,
+     "p95": 0.4398
+    },
+    "tilted": {
+     "pixels": 62270,
+     "mean": 0.3542,
+     "p05": 0.33,
+     "p50": 0.3613,
+     "p95": 0.3692
+    },
+    "all_coat": {
+     "pixels": 75396,
+     "mean": 0.3682,
+     "p05": 0.33,
+     "p50": 0.3622,
+     "p95": 0.4367
+    }
+   },
+   "baked_minus_reference": {
+    "flat": {
+     "p50": -0.0078,
+     "mean": -0.0117,
+     "ratio_mean": 0.973
+    },
+    "tilted": {
+     "p50": -0.0118,
+     "mean": -0.0082,
+     "ratio_mean": 0.9769
+    },
+    "all_coat": {
+     "p50": -0.0084,
+     "mean": -0.0088,
+     "ratio_mean": 0.9761
+    }
+   }
+  },
+  "stats": {
+   "resolution": [
+    1600,
+    900
+   ],
+   "object_pixel_fraction": 0.09392,
+   "object_mean_rgb": [
+    0.3527,
+    0.3372,
+    0.34
+   ],
+   "object_luminance": {
+    "mean": 0.3407,
+    "std": 0.1399,
+    "p05": 0.1938,
+    "p50": 0.3389,
+    "p95": 0.4697,
+    "max": 0.988
+   },
+   "object_fraction_above_0_50": 0.04194,
+   "object_fraction_below_0_05": 0.00036,
+   "bbox_px": [
+    100,
+    360,
+    1495,
+    539
+   ],
+   "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+   "bbox_margins_px_lrtb": [
+    100,
+    104,
+    360,
+    360
+   ],
+   "bbox_width_fraction": 0.8725,
+   "bbox_height_fraction": 0.2,
+   "facet_luminance": {
+    "pixels": 14558,
+    "fraction_of_object": 0.10764,
+    "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+    "all": {
+     "pixels": 14558,
+     "mean": 0.5678,
+     "p05": 0.154,
+     "p50": 0.4619,
+     "p95": 0.9807,
+     "fraction_below_0_05": 0.00337
+    },
+    "near": {
+     "pixels": 7282,
+     "mean": 0.5678,
+     "p05": 0.1543,
+     "p50": 0.4619,
+     "p95": 0.979,
+     "fraction_below_0_05": 0.00261
+    },
+    "far": {
+     "pixels": 7276,
+     "mean": 0.5679,
+     "p05": 0.1531,
+     "p50": 0.4616,
+     "p95": 0.9807,
+     "fraction_below_0_05": 0.00412
+    }
+   },
+   "coat_luminance": {
+    "pixels": 75396,
+    "fraction_of_object": 0.55749,
+    "mean": 0.3594,
+    "p05": 0.3143,
+    "p50": 0.3538,
+    "p95": 0.4328,
+    "fraction_below_0_03": 0.0,
+    "fraction_below_0_05": 0.0,
+    "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+   },
+   "wrap_luminance": {
+    "pixels": 45289,
+    "fraction_of_object": 0.33487,
+    "mean": 0.2365,
+    "p05": 0.1787,
+    "p50": 0.2257,
+    "p95": 0.3282,
+    "note": "pixels of the cloth wrap (mask blue on a knife): information, never a steel gate"
+   },
+   "silhouette_band_luminance": {
+    "mean": 0.5648,
+    "p50": 0.4095,
+    "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+   },
+   "object_sector_luminance": {
+    "arm0": 0.3931,
+    "arm1": 0.2781
+   },
+   "object_sector_spread": 0.3427,
+   "backdrop_luminance_mean": 0.563,
+   "backdrop_points": {
+    "tl": 0.6599,
+    "tr": 0.6638,
+    "bl": 0.6599,
+    "br": 0.6638,
+    "r28": 0.6353,
+    "r50": 0.6274,
+    "r78": 0.6403,
+    "q11": 0.6168,
+    "q50": null,
+    "q78": 0.6011,
+    "t03": 0.5932,
+    "t97": 0.5932
+   },
+   "contact_shadow_ratio": 0.8871,
+   "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+   "halo_luminance_4px": 0.4819
+  },
+  "camera_used": {
+   "location": [
+    0.008096899837255478,
+    0.0,
+    0.30000001192092896
+   ],
+   "lens": 50.0,
+   "shift": [
+    0.0,
+    0.0
+   ]
+  }
+ }
+}

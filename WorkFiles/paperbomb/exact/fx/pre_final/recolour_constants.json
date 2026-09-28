@@ -1,0 +1,101 @@
+{
+ "schema": "ninjapack.recolour_constants/1",
+ "item": "PaperBomb",
+ "generated": "2026-09-26",
+ "generator": {
+  "script": "Scripts/unreal/materials/maps/derive_constants.py",
+  "script_sha256": "9e10f7fa0f0072ffe922160ed97378bf7ccf9fe63ca00d65f6e2faf4dd5bba8b",
+  "twin": "Scripts/unreal/materials/maps/np_twin.py",
+  "twin_sha256": "738545ec678088158dea86ddf5ff786941df07b9537d745f30a17ebac9c4b66a",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "2.0.0",
+  "blender": "5.2.0 LTS"
+ },
+ "source": {
+  "recolour_maps": "Exports/PaperBomb/Textures/Recolour/recolour_maps.json",
+  "sha256": "7bfcb603586dfb87be538dc5dc79e575d489329a4110d8a1c790fd1fd0f9f81b"
+ },
+ "merge_rule": "np_spec.py: params here override recolour_maps.json params of the same instance",
+ "parts": {
+  "Tag": {
+   "instance": "MI_PaperBomb_Tag",
+   "master": "M_PaperInk_Master",
+   "params": {
+    "Paper Colour": [
+     0.899961699,
+     0.771111294,
+     0.54795989,
+     1.0
+    ],
+    "Black Ink Colour": [
+     0.0048,
+     0.0047,
+     0.0045,
+     1.0
+    ],
+    "Red Ink Colour": [
+     0.6649,
+     0.00926,
+     0.0035,
+     1.0
+    ],
+    "Paper Weight Scale": 1.1030573172545175,
+    "Black Ink Dry Paper Mix": 0.006087414096234238,
+    "Black Ink Dry Gain": [
+     0.9756840086707801,
+     1.003687706937218,
+     1.0501692226429504
+    ],
+    "Red Ink Dry Value Scale": 0.82,
+    "Red Ink Pool Saturation": 0.3,
+    "Red Ink Pool Gain": [
+     0.07914699735168605,
+     0.10324641029313997,
+     0.07823439517863023
+    ],
+    "Albedo Ceiling": 0.962,
+    "Paper Colour Limit": 0.90405,
+    "Red Ink Pool Default Saturation": 0.994736050533915
+   },
+   "derivation": {
+    "paper_weight_p999_maxchannel": 1.0641042245947951,
+    "paper_weight_max": 1.1030573172545175,
+    "derived_default": {
+     "PaperColour_e": [
+      0.899961699,
+      0.771111294,
+      0.54795989
+     ],
+     "BlackDry": [
+      0.010000000001590095,
+      0.009399999997169185,
+      0.008200000000187125
+     ],
+     "RedDry": [
+      0.42653379913307027,
+      0.00692575266478112,
+      0.0028552696469248207
+     ],
+     "RedPool": [
+      0.024,
+      0.011,
+      0.0082
+     ]
+    }
+   },
+   "gates": {
+    "default_equals_v1": {
+     "max_abs": 0.0,
+     "pass": true
+    },
+    "paper_default_below_limit": {
+     "max3": 0.899961699,
+     "limit": 0.90405,
+     "pass": true
+    }
+   },
+   "pass": true
+  }
+ },
+ "pass": true
+}

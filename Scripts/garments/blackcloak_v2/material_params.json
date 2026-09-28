@@ -1,0 +1,79 @@
+{
+ "version": "1.0 (stage 1 surface kit, 2026-09-27)",
+ "generated_by": "WorkFiles/BlackCloak_MH_v2/surface (rounds r1-r9), maps by Scripts/garments/blackcloak_v2/make_fabric_maps.py",
+ "texture_dir": "Exports/Garments/BlackCloak_MH_v2/Textures",
+ "tile_m": 0.45,
+ "uv_convention": "UV0 of the wool = pattern metres / tile_m (1 UV unit = one 0.45 m tile) -> UV Scale 1.0. Pattern pieces authored in plain metres: UV Scale = 2.2222. Tiling UVs may overlap (garment_unique_uvs stays False).",
+ "textures": {
+  "cloth_bc": "T_BlackCloakV2_Cloth_BC.png",
+  "cloth_orm": "T_BlackCloakV2_Cloth_ORM.png",
+  "cloth_n": "T_BlackCloakV2_Cloth_N.png",
+  "cloth_detail16": "T_BlackCloakV2_Cloth_Detail16.png",
+  "fray_bca": "T_BlackCloakV2_Fray_BCA.png"
+ },
+ "texture_import": {
+  "T_BlackCloakV2_Cloth_BC": {"srgb": true, "compression": "TC_Default (BC1)", "note": "8-bit sRGB, median 32/255, slightly warm"},
+  "T_BlackCloakV2_Cloth_ORM": {"srgb": false, "compression": "TC_Masks", "channels": "R cavity AO (gentle, mean 0.97), G roughness (0.78-0.93, mean 0.86), B metal 0"},
+  "T_BlackCloakV2_Cloth_N": {"srgb": false, "compression": "TC_Normalmap", "flip_green": false, "note": "DirectX on disk (green down), sign-tested"},
+  "T_BlackCloakV2_Cloth_Detail16": {"srgb": false, "compression": "TC_Grayscale (G16)", "note": "pack recolour convention (MATERIAL_PLAN 5.1): BaseColor = Colour x (Bias + Scale x Detail); constants in T_BlackCloakV2_maps.json -> detail16"},
+  "T_BlackCloakV2_Fray_BCA": {"srgb": true, "compression": "TC_Default (BC3, alpha)", "alpha_coverage_threshold": 0.5, "note": "turn on mip alpha-coverage preservation (thin fibres vanish at distance otherwise); tiles along U, row 0 = cloth side"}
+ },
+ "cloth": {
+  "name": "M_BlackCloakV2_Cloth",
+  "blender": {
+   "uv_scale": 1.0,
+   "roughness_adjust": 0.0,
+   "specular_ior_level": 0.1,
+   "normal_strength": 1.0,
+   "sheen_weight": 0.2,
+   "sheen_roughness": 0.45,
+   "sheen_tint": [1.0, 1.0, 1.0],
+   "albedo_multiplier": 1.0
+  },
+  "unreal": {
+   "blend_mode": "Opaque",
+   "two_sided": true,
+   "shading_model": "Cloth",
+   "base_color": "T_BC x Tint (Tint default 1,1,1)  - or through the pack's MF_TintDetail with T_Detail16 and the detail16 constants for recolouring",
+   "roughness": "T_ORM.G + Roughness Adjust (default 0.0)",
+   "metallic": 0.0,
+   "specular": 0.1,
+   "normal": "T_N (DirectX, no green flip), Normal Strength 1.0",
+   "ambient_occlusion": "T_ORM.R",
+   "fuzz_colour": [0.2, 0.2, 0.2],
+   "cloth": 0.2,
+   "uv_scale": 1.0,
+   "mapping_note": "Blender sheen weight w, tint t -> Unreal Fuzz Colour = t x w, Cloth = w: the pack's measured Blender->Unreal sheen mapping (WorkFiles/materials/MATERIALS_REPORT.md 4.5, RMS log error 0.259). Blender Specular IOR Level L and Unreal Specular S both mean F0 = 0.08 x value, so S = L = 0.1.",
+   "open_check": "NOT verified in Unreal (only the Unreal agent may launch it). The pack found Unreal's Cloth lobe REPLACES the GGX specular and dims the grazing rim (kunai wrap: Default Lit measured closer, 0.206 vs 0.259). Before shipping, run the pack's sheen sphere calibration (Scripts/unreal/materials/verify/sheen_compare.py method) for this albedo; fallback = Default Lit, Specular 0.15, no fuzz.",
+   "fallback_default_lit": {"shading_model": "DefaultLit", "specular": 0.15}
+  }
+ },
+ "lining": {
+  "name": "M_BlackCloakV2_Lining",
+  "note": "optional under-layer look for the front opening; same maps; if slots are tight use the cloth material (the under-layer then reads dark by occlusion alone)",
+  "blender_overrides": {"albedo_multiplier": 0.6, "sheen_weight": 0.12},
+  "unreal": {"tint": [0.6, 0.6, 0.6], "fuzz_colour": [0.12, 0.12, 0.12], "cloth": 0.12}
+ },
+ "fray": {
+  "name": "M_BlackCloakV2_Fray",
+  "blender": {"uv_scale": 1.0, "roughness": 0.88, "specular_ior_level": 0.1, "sheen_weight": 0.2,
+              "sheen_roughness": 0.45, "sheen_tint": [1.0, 1.0, 1.0]},
+  "unreal": {"blend_mode": "Masked", "opacity_mask": "T_Fray_BCA.A", "opacity_mask_clip": 0.5, "dithered_opacity_mask": true,
+             "two_sided": true, "shading_model": "DefaultLit", "roughness": 0.88, "specular": 0.1,
+             "uv": "U along the edge in tiles (edge metres / 0.45), V 0..1 across the 5.6 cm card (V=1 at the cloth side)"}
+ },
+ "clasp": {
+  "name": "M_BlackCloakV2_Clasp",
+  "blender": {"base_colour_linear": [0.013, 0.0115, 0.0105], "metallic": 0.0, "roughness": 0.3,
+              "specular_ior_level": 0.5, "coat_weight": 0.0},
+  "unreal": {"shading_model": "DefaultLit", "base_color_linear": [0.013, 0.0115, 0.0105], "metallic": 0.0,
+             "roughness": 0.3, "specular": 0.5, "two_sided": false,
+             "note": "dark lacquer / polished horn: glossy dielectric, not chrome; no textures (UV0 laid out if a detail map is wanted later)"}
+ },
+ "render_calibration": {
+  "module": "Scripts/garments/blackcloak_v2/bcv2_studio.py",
+  "rig": "the male cloak review's product studio: white world + key/fill/top area lights, scaled so a white Lambertian card facing the camera reads 0.90 linear",
+  "view_transform": "Standard", "look": "None", "exposure": 0.0,
+  "note": "AgX/Filmic lift blacks; every stage-2 round must use this module so tone numbers stay comparable"
+ }
+}

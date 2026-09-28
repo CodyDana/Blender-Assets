@@ -1,0 +1,1746 @@
+{
+  "generated": "2026-09-18T18:25:46",
+  "verifier": "UnrealCheck8 (independent import verifier, style pass 2 / knife grind, library 3.6.0)",
+  "engine": "5.8.2-56702186+++UE5+Release-5.8",
+  "project": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealShuriken\\ShurikenValidation.uproject",
+  "content_path": "/Game/ShurikenCheck8/SpikeMaint2",
+  "logs": {
+    "p1": {
+      "what": "import 3 FBX + ue_import_sockets.apply_sidecar + save",
+      "lines": 1728,
+      "strict_warning_error_lines": 0,
+      "loose_warning_error_mentions": 0,
+      "stderr_lines": 0,
+      "engine_summary": "LogInit: Display: Success - 0 error(s), 0 warning(s)",
+      "examples": []
+    },
+    "p2": {
+      "what": "ue_import_textures.py MODE=import (15 maps)",
+      "lines": 1767,
+      "strict_warning_error_lines": 0,
+      "loose_warning_error_mentions": 0,
+      "stderr_lines": 0,
+      "engine_summary": "LogInit: Display: Success - 0 error(s), 0 warning(s)",
+      "examples": []
+    },
+    "p3": {
+      "what": "FRESH read-back of meshes + textures (gates M1-M7, T)",
+      "lines": 1651,
+      "strict_warning_error_lines": 0,
+      "loose_warning_error_mentions": 0,
+      "stderr_lines": 0,
+      "engine_summary": "LogInit: Display: Success - 0 error(s), 0 warning(s)",
+      "examples": []
+    },
+    "p3b": {
+      "what": "ue_import_textures.py MODE=verify (fresh)",
+      "lines": 1652,
+      "strict_warning_error_lines": 0,
+      "loose_warning_error_mentions": 0,
+      "stderr_lines": 0,
+      "engine_summary": "LogInit: Display: Success - 0 error(s), 0 warning(s)",
+      "examples": []
+    },
+    "p4": {
+      "what": "FRESH export of the saved meshes with LODs + collision",
+      "lines": 1667,
+      "strict_warning_error_lines": 0,
+      "loose_warning_error_mentions": 0,
+      "stderr_lines": 0,
+      "engine_summary": "LogInit: Display: Success - 0 error(s), 0 warning(s)",
+      "examples": []
+    }
+  },
+  "logs_clean": true,
+  "forms": {
+    "four_point": {
+      "verified": true,
+      "gates": {
+        "M1_lods_3_triangles_equal_blender": true,
+        "M2_exactly_one_convex_hull": true,
+        "M3_grip_trail_scale_1_match_sidecar_and_blend": true,
+        "M4_bounds_cm_match_spec": true,
+        "M5_lod_screen_sizes_applied": true,
+        "M6_lightmap_index_1_generated_0_to_1": true,
+        "M7_one_slot_one_section_nanite_off": true,
+        "R1_stored_hull_identical_to_shipped_ucx": true,
+        "R1_lod0_0cm_outside_hull": true,
+        "R2_positions_within_1e-6cm_triangles_equal_handedness": true,
+        "R3_uv1_inside_0_1_zero_overlap": true,
+        "S_bytes_imported_equal_disk_and_report": true,
+        "L_zero_warning_error_lines_all_processes": true
+      },
+      "asset": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_FourPoint.SM_Shuriken_FourPoint",
+      "sha256": {
+        "imported": {
+          "fbx": "c6c84a19baf9c5b46317090aef448144365e3d2772b1018301c76b51ad030599",
+          "sidecar": "1f838d0bd7255028f25eff3a40dec107a61f2fe82aadcfef8c9a38818e4cf247"
+        },
+        "on_disk_now": {
+          "fbx": "c6c84a19baf9c5b46317090aef448144365e3d2772b1018301c76b51ad030599",
+          "sidecar": "1f838d0bd7255028f25eff3a40dec107a61f2fe82aadcfef8c9a38818e4cf247"
+        },
+        "report_export_sha256": {
+          "fbx": "c6c84a19baf9c5b46317090aef448144365e3d2772b1018301c76b51ad030599",
+          "sidecar": "1f838d0bd7255028f25eff3a40dec107a61f2fe82aadcfef8c9a38818e4cf247",
+          "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+        }
+      },
+      "lod_triangles": {
+        "unreal": [
+          1232,
+          592,
+          232
+        ],
+        "blend": [
+          1232,
+          592,
+          232
+        ],
+        "fbx_reimport": [
+          1232,
+          592,
+          232
+        ],
+        "report": [
+          1232,
+          592,
+          232
+        ],
+        "unreal_reexport": [
+          1232,
+          592,
+          232
+        ]
+      },
+      "lod_vertices_unreal": [
+        1232,
+        752,
+        330
+      ],
+      "lod_screen_sizes": {
+        "unreal": [
+          1.0,
+          0.10000000149011612,
+          0.03500000014901161
+        ],
+        "sidecar": [
+          1.0,
+          0.1,
+          0.035
+        ],
+        "spec": [
+          1.0,
+          0.1,
+          0.035
+        ],
+        "auto_compute": {
+          "error": "Exception: StaticMesh: Failed to find property 'auto_compute_lod_screen_size' for attribute 'auto_compute_lod_screen_size' on 'StaticMesh'"
+        }
+      },
+      "bounds_cm": {
+        "unreal": [
+          9.7,
+          9.7,
+          0.3
+        ],
+        "spec": [
+          9.7,
+          9.7,
+          0.3
+        ],
+        "min": [
+          -4.85,
+          -4.85,
+          -0.15
+        ],
+        "max": [
+          4.85,
+          4.85,
+          0.15
+        ]
+      },
+      "sockets": {
+        "Grip": {
+          "relative_location_cm": [
+            0.7778,
+            -0.7778,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": -45.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_FourPoint.SM_Shuriken_FourPoint"
+        },
+        "Trail": {
+          "relative_location_cm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_FourPoint.SM_Shuriken_FourPoint"
+        }
+      },
+      "hull": {
+        "shipped": {
+          "node": "UCX_SM_Shuriken_FourPoint_LOD0_00",
+          "unique_verts": 8,
+          "tris": 12,
+          "volume_cm3": 14.113500955237203
+        },
+        "unreal": {
+          "node": "UCX_SM_Shuriken_FourPoint_LOD0",
+          "unique_verts": 8,
+          "tris": 12,
+          "volume_cm3": 14.11349878711825
+        },
+        "vertex_sets_equal_1e-5cm": true,
+        "two_sided_vertex_distance_cm": 4.76837158203125e-07,
+        "lod0_shipped_max_outside_unreal_hull_cm": 2.634178262218042e-07,
+        "lod0_unreal_max_outside_unreal_hull_cm": 0.0,
+        "lod0_shipped_max_outside_shipped_hull_cm": 0.0,
+        "lod1_2_unreal_max_outside_unreal_hull_cm": 0.0
+      },
+      "lightmap": {
+        "light_map_coordinate_index": 1,
+        "light_map_resolution": 64,
+        "uv1": {
+          "LOD0": {
+            "u_range": [
+              0.00806427001953125,
+              0.98974609375
+            ],
+            "v_range": [
+              0.05908203125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 3688,
+            "charts": 16,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD1": {
+            "u_range": [
+              0.00806427001953125,
+              0.9892578125
+            ],
+            "v_range": [
+              0.05712890625,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 1308,
+            "charts": 16,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD2": {
+            "u_range": [
+              0.00806427001953125,
+              0.98779296875
+            ],
+            "v_range": [
+              0.189453125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 610,
+            "charts": 14,
+            "texels_sampled_by_two_charts": 0
+          }
+        },
+        "negative_control": {
+          "overlapping_pairs": 4,
+          "overlap_area_total": 0.00020630657672884856,
+          "detects": true
+        }
+      },
+      "positions_two_sided_max_cm": {
+        "LOD0": 4.76837158203125e-07,
+        "LOD1": 4.76837158203125e-07,
+        "LOD2": 4.76837158203125e-07
+      },
+      "uv0_roundtrip": {
+        "LOD0": {
+          "worst_du": 0.00024336576461791992,
+          "worst_dv": 0.00024364888668060303,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD1": {
+          "worst_du": 0.00024336576461791992,
+          "worst_dv": 0.00024364888668060303,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD2": {
+          "worst_du": 0.00024336576461791992,
+          "worst_dv": 0.00024364888668060303,
+          "u_float16_exact_fraction": 1.0
+        }
+      },
+      "build_settings_lod0": {
+        "generate_lightmap_u_vs": true,
+        "src_lightmap_index": 0,
+        "dst_lightmap_index": 1,
+        "min_lightmap_resolution": 64,
+        "recompute_normals": false,
+        "recompute_tangents": true,
+        "use_mikk_t_space": true,
+        "remove_degenerates": true,
+        "use_full_precision_u_vs": false,
+        "use_high_precision_tangent_basis": false,
+        "build_scale3d": "<Struct 'Vector' (0x00000282F68E1058) {x: 1.000000, y: 1.000000, z: 1.000000}>"
+      },
+      "material_slots": [
+        {
+          "slot": "M_Shuriken_Master",
+          "material": "/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial"
+        }
+      ],
+      "nanite": false
+    },
+    "eight_point": {
+      "verified": true,
+      "gates": {
+        "M1_lods_3_triangles_equal_blender": true,
+        "M2_exactly_one_convex_hull": true,
+        "M3_grip_trail_scale_1_match_sidecar_and_blend": true,
+        "M4_bounds_cm_match_spec": true,
+        "M5_lod_screen_sizes_applied": true,
+        "M6_lightmap_index_1_generated_0_to_1": true,
+        "M7_one_slot_one_section_nanite_off": true,
+        "R1_stored_hull_identical_to_shipped_ucx": true,
+        "R1_lod0_0cm_outside_hull": true,
+        "R2_positions_within_1e-6cm_triangles_equal_handedness": true,
+        "R3_uv1_inside_0_1_zero_overlap": true,
+        "S_bytes_imported_equal_disk_and_report": true,
+        "L_zero_warning_error_lines_all_processes": true
+      },
+      "asset": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_EightPoint.SM_Shuriken_EightPoint",
+      "sha256": {
+        "imported": {
+          "fbx": "48ba1b8d4fa26d07aa7fa62a587d18e27ad79b88474179b7e1d9f7fcbe002f52",
+          "sidecar": "65d769aa5de0d2b11781e304e17d63f8b9d916f07d06bef215fc907bd4063b6d"
+        },
+        "on_disk_now": {
+          "fbx": "48ba1b8d4fa26d07aa7fa62a587d18e27ad79b88474179b7e1d9f7fcbe002f52",
+          "sidecar": "65d769aa5de0d2b11781e304e17d63f8b9d916f07d06bef215fc907bd4063b6d"
+        },
+        "report_export_sha256": {
+          "fbx": "48ba1b8d4fa26d07aa7fa62a587d18e27ad79b88474179b7e1d9f7fcbe002f52",
+          "sidecar": "65d769aa5de0d2b11781e304e17d63f8b9d916f07d06bef215fc907bd4063b6d",
+          "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+        }
+      },
+      "lod_triangles": {
+        "unreal": [
+          1536,
+          672,
+          240
+        ],
+        "blend": [
+          1536,
+          672,
+          240
+        ],
+        "fbx_reimport": [
+          1536,
+          672,
+          240
+        ],
+        "report": [
+          1536,
+          672,
+          240
+        ],
+        "unreal_reexport": [
+          1536,
+          672,
+          240
+        ]
+      },
+      "lod_vertices_unreal": [
+        1728,
+        1040,
+        482
+      ],
+      "lod_screen_sizes": {
+        "unreal": [
+          1.0,
+          0.10000000149011612,
+          0.03500000014901161
+        ],
+        "sidecar": [
+          1.0,
+          0.1,
+          0.035
+        ],
+        "spec": [
+          1.0,
+          0.1,
+          0.035
+        ],
+        "auto_compute": {
+          "error": "Exception: StaticMesh: Failed to find property 'auto_compute_lod_screen_size' for attribute 'auto_compute_lod_screen_size' on 'StaticMesh'"
+        }
+      },
+      "bounds_cm": {
+        "unreal": [
+          10.0,
+          10.0,
+          0.25
+        ],
+        "spec": [
+          10.0,
+          10.0,
+          0.25
+        ],
+        "min": [
+          -5.0,
+          -5.0,
+          -0.125
+        ],
+        "max": [
+          5.0,
+          5.0,
+          0.125
+        ]
+      },
+      "sockets": {
+        "Grip": {
+          "relative_location_cm": [
+            2.0325,
+            -0.8419,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": -22.5
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_EightPoint.SM_Shuriken_EightPoint"
+        },
+        "Trail": {
+          "relative_location_cm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_EightPoint.SM_Shuriken_EightPoint"
+        }
+      },
+      "hull": {
+        "shipped": {
+          "node": "UCX_SM_Shuriken_EightPoint_LOD0_00",
+          "unique_verts": 16,
+          "tris": 28,
+          "volume_cm3": 17.677670213001598
+        },
+        "unreal": {
+          "node": "UCX_SM_Shuriken_EightPoint_LOD0",
+          "unique_verts": 16,
+          "tris": 28,
+          "volume_cm3": 17.677668895912554
+        },
+        "vertex_sets_equal_1e-5cm": true,
+        "two_sided_vertex_distance_cm": 4.76837158203125e-07,
+        "lod0_shipped_max_outside_unreal_hull_cm": 3.441719778746247e-07,
+        "lod0_unreal_max_outside_unreal_hull_cm": 2.220446049250313e-16,
+        "lod0_shipped_max_outside_shipped_hull_cm": 2.220446049250313e-16,
+        "lod1_2_unreal_max_outside_unreal_hull_cm": 2.220446049250313e-16
+      },
+      "lightmap": {
+        "light_map_coordinate_index": 1,
+        "light_map_resolution": 64,
+        "uv1": {
+          "LOD0": {
+            "u_range": [
+              0.00806427001953125,
+              0.9814453125
+            ],
+            "v_range": [
+              0.01220703125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 3349,
+            "charts": 33,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD1": {
+            "u_range": [
+              0.00806427001953125,
+              0.98876953125
+            ],
+            "v_range": [
+              0.01123046875,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 1295,
+            "charts": 33,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD2": {
+            "u_range": [
+              0.00806427001953125,
+              0.98486328125
+            ],
+            "v_range": [
+              0.01513671875,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 504,
+            "charts": 26,
+            "texels_sampled_by_two_charts": 0
+          }
+        },
+        "negative_control": {
+          "overlapping_pairs": 5,
+          "overlap_area_total": 9.803473949431679e-05,
+          "detects": true
+        }
+      },
+      "positions_two_sided_max_cm": {
+        "LOD0": 4.76837158203125e-07,
+        "LOD1": 4.76837158203125e-07,
+        "LOD2": 4.76837158203125e-07
+      },
+      "uv0_roundtrip": {
+        "LOD0": {
+          "worst_du": 0.00024390220642089844,
+          "worst_dv": 0.00024375319480895996,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD1": {
+          "worst_du": 0.00024259090423583984,
+          "worst_dv": 0.00024369359016418457,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD2": {
+          "worst_du": 0.00024259090423583984,
+          "worst_dv": 0.00024247169494628906,
+          "u_float16_exact_fraction": 1.0
+        }
+      },
+      "build_settings_lod0": {
+        "generate_lightmap_u_vs": true,
+        "src_lightmap_index": 0,
+        "dst_lightmap_index": 1,
+        "min_lightmap_resolution": 64,
+        "recompute_normals": false,
+        "recompute_tangents": true,
+        "use_mikk_t_space": true,
+        "remove_degenerates": true,
+        "use_full_precision_u_vs": false,
+        "use_high_precision_tangent_basis": false,
+        "build_scale3d": "<Struct 'Vector' (0x00000282F68E4988) {x: 1.000000, y: 1.000000, z: 1.000000}>"
+      },
+      "material_slots": [
+        {
+          "slot": "M_Shuriken_Master",
+          "material": "/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial"
+        }
+      ],
+      "nanite": false
+    },
+    "square_plate": {
+      "verified": true,
+      "gates": {
+        "M1_lods_3_triangles_equal_blender": true,
+        "M2_exactly_one_convex_hull": true,
+        "M3_grip_trail_scale_1_match_sidecar_and_blend": true,
+        "M4_bounds_cm_match_spec": true,
+        "M5_lod_screen_sizes_applied": true,
+        "M6_lightmap_index_1_generated_0_to_1": true,
+        "M7_one_slot_one_section_nanite_off": true,
+        "R1_stored_hull_identical_to_shipped_ucx": true,
+        "R1_lod0_0cm_outside_hull": true,
+        "R2_positions_within_1e-6cm_triangles_equal_handedness": true,
+        "R3_uv1_inside_0_1_zero_overlap": true,
+        "S_bytes_imported_equal_disk_and_report": true,
+        "L_zero_warning_error_lines_all_processes": true
+      },
+      "asset": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_SquarePlate.SM_Shuriken_SquarePlate",
+      "sha256": {
+        "imported": {
+          "fbx": "bdd671060b8eed9ec72526c2bdfbade4fcebbe506c3ddd005c5c1aa16f589317",
+          "sidecar": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f"
+        },
+        "on_disk_now": {
+          "fbx": "bdd671060b8eed9ec72526c2bdfbade4fcebbe506c3ddd005c5c1aa16f589317",
+          "sidecar": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f"
+        },
+        "report_export_sha256": {
+          "fbx": "bdd671060b8eed9ec72526c2bdfbade4fcebbe506c3ddd005c5c1aa16f589317",
+          "sidecar": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f",
+          "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+        }
+      },
+      "lod_triangles": {
+        "unreal": [
+          1344,
+          576,
+          128
+        ],
+        "blend": [
+          1344,
+          576,
+          128
+        ],
+        "fbx_reimport": [
+          1344,
+          576,
+          128
+        ],
+        "report": [
+          1344,
+          576,
+          128
+        ],
+        "unreal_reexport": [
+          1344,
+          576,
+          128
+        ]
+      },
+      "lod_vertices_unreal": [
+        1024,
+        512,
+        156
+      ],
+      "lod_screen_sizes": {
+        "unreal": [
+          1.0,
+          0.10779999941587448,
+          0.037700001150369644
+        ],
+        "sidecar": [
+          1.0,
+          0.1078,
+          0.0377
+        ],
+        "spec": [
+          1.0,
+          0.1078,
+          0.0377
+        ],
+        "auto_compute": {
+          "error": "Exception: StaticMesh: Failed to find property 'auto_compute_lod_screen_size' for attribute 'auto_compute_lod_screen_size' on 'StaticMesh'"
+        }
+      },
+      "bounds_cm": {
+        "unreal": [
+          10.776307,
+          10.776307,
+          0.19
+        ],
+        "spec": [
+          10.776307,
+          10.776307,
+          0.19
+        ],
+        "min": [
+          -5.388154,
+          -5.388154,
+          -0.095
+        ],
+        "max": [
+          5.388154,
+          5.388154,
+          0.095
+        ]
+      },
+      "sockets": {
+        "Grip": {
+          "relative_location_cm": [
+            2.2698,
+            -2.2698,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": -45.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_SquarePlate.SM_Shuriken_SquarePlate"
+        },
+        "Trail": {
+          "relative_location_cm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_SquarePlate.SM_Shuriken_SquarePlate"
+        }
+      },
+      "hull": {
+        "shipped": {
+          "node": "UCX_SM_Shuriken_SquarePlate_LOD0_00",
+          "unique_verts": 8,
+          "tris": 12,
+          "volume_cm3": 11.032236367351633
+        },
+        "unreal": {
+          "node": "UCX_SM_Shuriken_SquarePlate_LOD0",
+          "unique_verts": 8,
+          "tris": 12,
+          "volume_cm3": 11.032234165887967
+        },
+        "vertex_sets_equal_1e-5cm": true,
+        "two_sided_vertex_distance_cm": 0.0,
+        "lod0_shipped_max_outside_unreal_hull_cm": 2.63417826221805e-07,
+        "lod0_unreal_max_outside_unreal_hull_cm": 4.440892098500626e-16,
+        "lod0_shipped_max_outside_shipped_hull_cm": 0.0,
+        "lod1_2_unreal_max_outside_unreal_hull_cm": 4.440892098500626e-16
+      },
+      "lightmap": {
+        "light_map_coordinate_index": 1,
+        "light_map_resolution": 64,
+        "uv1": {
+          "LOD0": {
+            "u_range": [
+              0.00806427001953125,
+              0.98974609375
+            ],
+            "v_range": [
+              0.216796875,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 3858,
+            "charts": 10,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD1": {
+            "u_range": [
+              0.00806427001953125,
+              0.98828125
+            ],
+            "v_range": [
+              0.216796875,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 1368,
+            "charts": 10,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD2": {
+            "u_range": [
+              0.00806427001953125,
+              0.99072265625
+            ],
+            "v_range": [
+              0.3154296875,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 332,
+            "charts": 8,
+            "texels_sampled_by_two_charts": 0
+          }
+        },
+        "negative_control": {
+          "overlapping_pairs": 1,
+          "overlap_area_total": 8.040418227528087e-08,
+          "detects": true
+        }
+      },
+      "positions_two_sided_max_cm": {
+        "LOD0": 4.76837158203125e-07,
+        "LOD1": 4.76837158203125e-07,
+        "LOD2": 1.1920928955078125e-07
+      },
+      "uv0_roundtrip": {
+        "LOD0": {
+          "worst_du": 0.00024056434631347656,
+          "worst_dv": 0.0002441704273223877,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD1": {
+          "worst_du": 0.00023740530014038086,
+          "worst_dv": 0.000244140625,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD2": {
+          "worst_du": 0.00023192167282104492,
+          "worst_dv": 0.0002410411834716797,
+          "u_float16_exact_fraction": 1.0
+        }
+      },
+      "build_settings_lod0": {
+        "generate_lightmap_u_vs": true,
+        "src_lightmap_index": 0,
+        "dst_lightmap_index": 1,
+        "min_lightmap_resolution": 64,
+        "recompute_normals": false,
+        "recompute_tangents": true,
+        "use_mikk_t_space": true,
+        "remove_degenerates": true,
+        "use_full_precision_u_vs": false,
+        "use_high_precision_tangent_basis": false,
+        "build_scale3d": "<Struct 'Vector' (0x00000282F68E5EC8) {x: 1.000000, y: 1.000000, z: 1.000000}>"
+      },
+      "material_slots": [
+        {
+          "slot": "M_Shuriken_Master",
+          "material": "/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial"
+        }
+      ],
+      "nanite": false
+    },
+    "six_point": {
+      "verified": true,
+      "gates": {
+        "M1_lods_3_triangles_equal_blender": true,
+        "M2_exactly_one_convex_hull": true,
+        "M3_grip_trail_scale_1_match_sidecar_and_blend": true,
+        "M4_bounds_cm_match_spec": true,
+        "M5_lod_screen_sizes_applied": true,
+        "M6_lightmap_index_1_generated_0_to_1": true,
+        "M7_one_slot_one_section_nanite_off": true,
+        "R1_stored_hull_identical_to_shipped_ucx": true,
+        "R1_lod0_0cm_outside_hull": true,
+        "R2_positions_within_1e-6cm_triangles_equal_handedness": true,
+        "R3_uv1_inside_0_1_zero_overlap": true,
+        "S_bytes_imported_equal_disk_and_report": true,
+        "L_zero_warning_error_lines_all_processes": true
+      },
+      "asset": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_SixPoint.SM_Shuriken_SixPoint",
+      "sha256": {
+        "imported": {
+          "fbx": "d8493f9f96a55a96665ab5239ed48a73113097e99a797dd863556b852e0ab2b9",
+          "sidecar": "b4b89bd0b65ec42f396753ccf2f4992525b76f8b58ce489c80d437aa2e9cff1b"
+        },
+        "on_disk_now": {
+          "fbx": "d8493f9f96a55a96665ab5239ed48a73113097e99a797dd863556b852e0ab2b9",
+          "sidecar": "b4b89bd0b65ec42f396753ccf2f4992525b76f8b58ce489c80d437aa2e9cff1b"
+        },
+        "report_export_sha256": {
+          "fbx": "d8493f9f96a55a96665ab5239ed48a73113097e99a797dd863556b852e0ab2b9",
+          "sidecar": "b4b89bd0b65ec42f396753ccf2f4992525b76f8b58ce489c80d437aa2e9cff1b",
+          "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+        }
+      },
+      "lod_triangles": {
+        "unreal": [
+          1320,
+          576,
+          228
+        ],
+        "blend": [
+          1320,
+          576,
+          228
+        ],
+        "fbx_reimport": [
+          1320,
+          576,
+          228
+        ],
+        "report": [
+          1320,
+          576,
+          228
+        ],
+        "unreal_reexport": [
+          1320,
+          576,
+          228
+        ]
+      },
+      "lod_vertices_unreal": [
+        1404,
+        840,
+        410
+      ],
+      "lod_screen_sizes": {
+        "unreal": [
+          1.0,
+          0.09799999743700027,
+          0.034299999475479126
+        ],
+        "sidecar": [
+          1.0,
+          0.098,
+          0.0343
+        ],
+        "spec": [
+          1.0,
+          0.098,
+          0.0343
+        ],
+        "auto_compute": {
+          "error": "Exception: StaticMesh: Failed to find property 'auto_compute_lod_screen_size' for attribute 'auto_compute_lod_screen_size' on 'StaticMesh'"
+        }
+      },
+      "bounds_cm": {
+        "unreal": [
+          9.8,
+          8.487049,
+          0.2
+        ],
+        "spec": [
+          9.8,
+          8.487049,
+          0.2
+        ],
+        "min": [
+          -4.9,
+          -4.243525,
+          -0.1
+        ],
+        "max": [
+          4.9,
+          4.243525,
+          0.1
+        ]
+      },
+      "sockets": {
+        "Grip": {
+          "relative_location_cm": [
+            1.5588,
+            -0.9,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": -30.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_SixPoint.SM_Shuriken_SixPoint"
+        },
+        "Trail": {
+          "relative_location_cm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_SixPoint.SM_Shuriken_SixPoint"
+        }
+      },
+      "hull": {
+        "shipped": {
+          "node": "UCX_SM_Shuriken_SixPoint_LOD0_00",
+          "unique_verts": 12,
+          "tris": 20,
+          "volume_cm3": 12.475961921670272
+        },
+        "unreal": {
+          "node": "UCX_SM_Shuriken_SixPoint_LOD0",
+          "unique_verts": 12,
+          "tris": 20,
+          "volume_cm3": 12.47596137405256
+        },
+        "vertex_sets_equal_1e-5cm": true,
+        "two_sided_vertex_distance_cm": 0.0,
+        "lod0_shipped_max_outside_unreal_hull_cm": 3.7252902984619035e-07,
+        "lod0_unreal_max_outside_unreal_hull_cm": 4.440892098500626e-16,
+        "lod0_shipped_max_outside_shipped_hull_cm": 0.0,
+        "lod1_2_unreal_max_outside_unreal_hull_cm": 4.440892098500626e-16
+      },
+      "lightmap": {
+        "light_map_coordinate_index": 1,
+        "light_map_resolution": 64,
+        "uv1": {
+          "LOD0": {
+            "u_range": [
+              0.00806427001953125,
+              0.99169921875
+            ],
+            "v_range": [
+              0.02880859375,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 2906,
+            "charts": 26,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD1": {
+            "u_range": [
+              0.00806427001953125,
+              0.99169921875
+            ],
+            "v_range": [
+              0.0283203125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 1150,
+            "charts": 26,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD2": {
+            "u_range": [
+              0.00806427001953125,
+              0.98974609375
+            ],
+            "v_range": [
+              0.0517578125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 448,
+            "charts": 20,
+            "texels_sampled_by_two_charts": 0
+          }
+        },
+        "negative_control": {
+          "overlapping_pairs": 3,
+          "overlap_area_total": 2.7568832745017424e-05,
+          "detects": true
+        }
+      },
+      "positions_two_sided_max_cm": {
+        "LOD0": 5.331201577973843e-07,
+        "LOD1": 5.331201577973843e-07,
+        "LOD2": 3.3717478231665154e-07
+      },
+      "uv0_roundtrip": {
+        "LOD0": {
+          "worst_du": 0.00024378299713134766,
+          "worst_dv": 0.00024366378784179688,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD1": {
+          "worst_du": 0.00024336576461791992,
+          "worst_dv": 0.00024390220642089844,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD2": {
+          "worst_du": 0.00024336576461791992,
+          "worst_dv": 0.00024336576461791992,
+          "u_float16_exact_fraction": 1.0
+        }
+      },
+      "build_settings_lod0": {
+        "generate_lightmap_u_vs": true,
+        "src_lightmap_index": 0,
+        "dst_lightmap_index": 1,
+        "min_lightmap_resolution": 64,
+        "recompute_normals": false,
+        "recompute_tangents": true,
+        "use_mikk_t_space": true,
+        "remove_degenerates": true,
+        "use_full_precision_u_vs": false,
+        "use_high_precision_tangent_basis": false,
+        "build_scale3d": "<Struct 'Vector' (0x00000282F68E8538) {x: 1.000000, y: 1.000000, z: 1.000000}>"
+      },
+      "material_slots": [
+        {
+          "slot": "M_Shuriken_Master",
+          "material": "/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial"
+        }
+      ],
+      "nanite": false
+    },
+    "spike": {
+      "verified": true,
+      "gates": {
+        "M1_lods_3_triangles_equal_blender": true,
+        "M2_exactly_one_convex_hull": true,
+        "M3_grip_trail_scale_1_match_sidecar_and_blend": true,
+        "M4_bounds_cm_match_spec": true,
+        "M5_lod_screen_sizes_applied": true,
+        "M6_lightmap_index_1_generated_0_to_1": true,
+        "M7_one_slot_one_section_nanite_off": true,
+        "R1_stored_hull_identical_to_shipped_ucx": true,
+        "R1_lod0_0cm_outside_hull": true,
+        "R2_positions_within_1e-6cm_triangles_equal_handedness": true,
+        "R3_uv1_inside_0_1_zero_overlap": true,
+        "S_bytes_imported_equal_disk_and_report": true,
+        "L_zero_warning_error_lines_all_processes": true
+      },
+      "asset": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_Spike.SM_Shuriken_Spike",
+      "sha256": {
+        "imported": {
+          "fbx": "24f712a26ce8c76719521723ba74366fd967f687d6747f37b8787fd263ad3a32",
+          "sidecar": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7"
+        },
+        "on_disk_now": {
+          "fbx": "24f712a26ce8c76719521723ba74366fd967f687d6747f37b8787fd263ad3a32",
+          "sidecar": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7"
+        },
+        "report_export_sha256": {
+          "fbx": "24f712a26ce8c76719521723ba74366fd967f687d6747f37b8787fd263ad3a32",
+          "sidecar": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7",
+          "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+        }
+      },
+      "lod_triangles": {
+        "unreal": [
+          92,
+          60,
+          28
+        ],
+        "blend": [
+          92,
+          60,
+          28
+        ],
+        "fbx_reimport": [
+          92,
+          60,
+          28
+        ],
+        "report": [
+          92,
+          60,
+          28
+        ],
+        "unreal_reexport": [
+          92,
+          60,
+          28
+        ]
+      },
+      "lod_vertices_unreal": [
+        136,
+        104,
+        56
+      ],
+      "lod_screen_sizes": {
+        "unreal": [
+          1.0,
+          0.1500999927520752,
+          0.05249999836087227
+        ],
+        "sidecar": [
+          1.0,
+          0.1501,
+          0.0525
+        ],
+        "spec": [
+          1.0,
+          0.1501,
+          0.0525
+        ],
+        "auto_compute": {
+          "error": "Exception: StaticMesh: Failed to find property 'auto_compute_lod_screen_size' for attribute 'auto_compute_lod_screen_size' on 'StaticMesh'"
+        }
+      },
+      "bounds_cm": {
+        "unreal": [
+          15.0,
+          0.600001,
+          0.6
+        ],
+        "spec": [
+          15.0,
+          0.6,
+          0.6
+        ],
+        "min": [
+          -7.089432,
+          -0.3,
+          -0.3
+        ],
+        "max": [
+          7.910568,
+          0.3,
+          0.3
+        ]
+      },
+      "sockets": {
+        "Grip": {
+          "relative_location_cm": [
+            -3.0894,
+            0.0,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_Spike.SM_Shuriken_Spike"
+        },
+        "Trail": {
+          "relative_location_cm": [
+            -7.0894,
+            0.0,
+            0.0
+          ],
+          "relative_rotation": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "relative_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "outer": "/Game/ShurikenCheck8/SpikeMaint2/SM_Shuriken_Spike.SM_Shuriken_Spike"
+        }
+      },
+      "hull": {
+        "shipped": {
+          "node": "UCX_SM_Shuriken_Spike_LOD0_00",
+          "unique_verts": 16,
+          "tris": 28,
+          "volume_cm3": 4.507687534654163
+        },
+        "unreal": {
+          "node": "UCX_SM_Shuriken_Spike_LOD0",
+          "unique_verts": 16,
+          "tris": 28,
+          "volume_cm3": 4.507687590879217
+        },
+        "vertex_sets_equal_1e-5cm": true,
+        "two_sided_vertex_distance_cm": 4.76837158203125e-07,
+        "lod0_shipped_max_outside_unreal_hull_cm": 7.450580587732932e-07,
+        "lod0_unreal_max_outside_unreal_hull_cm": 3.97089282722779e-08,
+        "lod0_shipped_max_outside_shipped_hull_cm": 4.935282884276082e-08,
+        "lod1_2_unreal_max_outside_unreal_hull_cm": 3.97089282722779e-08
+      },
+      "lightmap": {
+        "light_map_coordinate_index": 1,
+        "light_map_resolution": 64,
+        "uv1": {
+          "LOD0": {
+            "u_range": [
+              0.00806427001953125,
+              0.96728515625
+            ],
+            "v_range": [
+              0.00830078125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 120,
+            "charts": 6,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD1": {
+            "u_range": [
+              0.00806427001953125,
+              0.96728515625
+            ],
+            "v_range": [
+              0.00830078125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 68,
+            "charts": 6,
+            "texels_sampled_by_two_charts": 0
+          },
+          "LOD2": {
+            "u_range": [
+              0.00806427001953125,
+              0.97216796875
+            ],
+            "v_range": [
+              0.00830078125,
+              0.9919357299804688
+            ],
+            "strictly_inside_0_1": true,
+            "overlapping_pairs": 0,
+            "candidate_pairs": 16,
+            "charts": 6,
+            "texels_sampled_by_two_charts": 0
+          }
+        },
+        "negative_control": {
+          "overlapping_pairs": 6,
+          "overlap_area_total": 0.04877060651779175,
+          "detects": true
+        }
+      },
+      "positions_two_sided_max_cm": {
+        "LOD0": 4.76837158203125e-07,
+        "LOD1": 4.76837158203125e-07,
+        "LOD2": 4.76837158203125e-07
+      },
+      "uv0_roundtrip": {
+        "LOD0": {
+          "worst_du": 0.00024074316024780273,
+          "worst_dv": 0.00024218857288360596,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD1": {
+          "worst_du": 0.00024068355560302734,
+          "worst_dv": 0.00024218857288360596,
+          "u_float16_exact_fraction": 1.0
+        },
+        "LOD2": {
+          "worst_du": 0.0001627802848815918,
+          "worst_dv": 0.00024218857288360596,
+          "u_float16_exact_fraction": 1.0
+        }
+      },
+      "build_settings_lod0": {
+        "generate_lightmap_u_vs": true,
+        "src_lightmap_index": 0,
+        "dst_lightmap_index": 1,
+        "min_lightmap_resolution": 64,
+        "recompute_normals": false,
+        "recompute_tangents": true,
+        "use_mikk_t_space": true,
+        "remove_degenerates": true,
+        "use_full_precision_u_vs": false,
+        "use_high_precision_tangent_basis": false,
+        "build_scale3d": "<Struct 'Vector' (0x00000282F68E3268) {x: 1.000000, y: 1.000000, z: 1.000000}>"
+      },
+      "material_slots": [
+        {
+          "slot": "M_Shuriken_Master",
+          "material": "/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial"
+        }
+      ],
+      "nanite": false
+    }
+  },
+  "textures": {
+    "T_Shuriken_FourPoint_BC": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "2945da77b547d0aac85280ec99fdf023dbba9475d20277dc635db5cfb50b393e",
+      "sha256_on_disk_now": "2945da77b547d0aac85280ec99fdf023dbba9475d20277dc635db5cfb50b393e",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_FourPoint_ORM": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": false,
+      "sha256_imported": "782d5428d841af7826892774558563a6dd7cdf3c4e2e2184944f69011622abc2",
+      "sha256_on_disk_now": "782d5428d841af7826892774558563a6dd7cdf3c4e2e2184944f69011622abc2",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_FourPoint_N": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "flip_green_channel": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD_NORMAL_MAP: 1>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "a5ba3c37e84bd57db2af4064b774313053ac5a981d22e1305ed8fd1d916d10b1",
+      "sha256_on_disk_now": "a5ba3c37e84bd57db2af4064b774313053ac5a981d22e1305ed8fd1d916d10b1",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_EightPoint_BC": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "596b3e176b9764f67d5689f688c4d7285f345da65c5e9cfea447047bcb998100",
+      "sha256_on_disk_now": "596b3e176b9764f67d5689f688c4d7285f345da65c5e9cfea447047bcb998100",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_EightPoint_ORM": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": false,
+      "sha256_imported": "23d868f5123b0ff63050874a87c5da446dd95cf0e11e721bda5fb649cd6fab66",
+      "sha256_on_disk_now": "23d868f5123b0ff63050874a87c5da446dd95cf0e11e721bda5fb649cd6fab66",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_EightPoint_N": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "flip_green_channel": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD_NORMAL_MAP: 1>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "3bf249ff2a08b367471afc6c66741f4a36052b2964749f890390c7574db4c50f",
+      "sha256_on_disk_now": "3bf249ff2a08b367471afc6c66741f4a36052b2964749f890390c7574db4c50f",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_SquarePlate_BC": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "7a455020f8d1d2d1fe6e15e1732a669195f9f0e087f2a01eec27fa0569ccd3cc",
+      "sha256_on_disk_now": "7a455020f8d1d2d1fe6e15e1732a669195f9f0e087f2a01eec27fa0569ccd3cc",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_SquarePlate_ORM": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": false,
+      "sha256_imported": "3ff2b26a4f1a96d1197305202d5344778537b8b4256e655c72c6d9af749680b4",
+      "sha256_on_disk_now": "3ff2b26a4f1a96d1197305202d5344778537b8b4256e655c72c6d9af749680b4",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_SquarePlate_N": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "flip_green_channel": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD_NORMAL_MAP: 1>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "486642057346874b353f3e18fbbfd6683cfc42c4d2a2b7273bbfff9c40657f30",
+      "sha256_on_disk_now": "486642057346874b353f3e18fbbfd6683cfc42c4d2a2b7273bbfff9c40657f30",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_Spike_BC": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          512
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "985481b37f6eceaa7d53777de2157db0a3e20f6cf27b43a84ef4a4208741912b",
+      "sha256_on_disk_now": "985481b37f6eceaa7d53777de2157db0a3e20f6cf27b43a84ef4a4208741912b",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_Spike_ORM": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          512
+        ]
+      },
+      "raw_assetimporttask_matched_intent": false,
+      "sha256_imported": "877749b2b377a7bea2d73bab60822ad0cb075e0bcfaacbe22bb99021ae17ac87",
+      "sha256_on_disk_now": "877749b2b377a7bea2d73bab60822ad0cb075e0bcfaacbe22bb99021ae17ac87",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_Spike_N": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "flip_green_channel": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD_NORMAL_MAP: 1>",
+        "size": [
+          2048,
+          512
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "a717a74cc1d0c91754367114e307f8f72b9c3b38e329208d6d4f8dcdff63fca5",
+      "sha256_on_disk_now": "a717a74cc1d0c91754367114e307f8f72b9c3b38e329208d6d4f8dcdff63fca5",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_SixPoint_BC": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "6a7cc26908c892a2004ce41329b44d17c8eebcad482a8acfa9f7b5a136d9794a",
+      "sha256_on_disk_now": "6a7cc26908c892a2004ce41329b44d17c8eebcad482a8acfa9f7b5a136d9794a",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_SixPoint_ORM": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": false,
+      "sha256_imported": "d516a823209840b732b25f8213bb8f6324c149a73c65dceb94d99b600b12fcbc",
+      "sha256_on_disk_now": "d516a823209840b732b25f8213bb8f6324c149a73c65dceb94d99b600b12fcbc",
+      "script_verify_mode_passed": true
+    },
+    "T_Shuriken_SixPoint_N": {
+      "ok_fresh_process": true,
+      "checks": {
+        "srgb": true,
+        "compression_settings": true,
+        "flip_green_channel": true,
+        "size_equals_png": true,
+        "size_power_of_two": true,
+        "texture2d": true
+      },
+      "flags": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+        "flip_green_channel": "False",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD_NORMAL_MAP: 1>",
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      "raw_assetimporttask_matched_intent": true,
+      "sha256_imported": "3e271a191514f888d17bffda6e740c8c0bf7365ebeb72b345fc458428c762cf6",
+      "sha256_on_disk_now": "3e271a191514f888d17bffda6e740c8c0bf7365ebeb72b345fc458428c762cf6",
+      "script_verify_mode_passed": true
+    }
+  },
+  "textures_all_ok": true,
+  "all_verified": true
+}

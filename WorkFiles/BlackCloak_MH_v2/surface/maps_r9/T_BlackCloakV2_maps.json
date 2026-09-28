@@ -1,0 +1,466 @@
+{
+ "generator": "Scripts/garments/blackcloak_v2/make_fabric_maps.py",
+ "date": "2026-09-27 02:16",
+ "params": {
+  "tile_m": 0.45,
+  "size": 2048,
+  "texel_mm": 0.2197265625,
+  "seed": 20260927,
+  "gain": 1.3,
+  "mottle_10_45mm_logstd": 0.06,
+  "grain_3_10mm_logstd": 0.18,
+  "fibre_0p6_3mm_logstd": 0.12,
+  "micro_0p25_0p6mm_logstd": 0.06,
+  "mottle_band_mm": [
+   25,
+   80
+  ],
+  "mottle_soft": 0.25,
+  "dash_count": 2600,
+  "dash_len_mm": [
+   6,
+   28
+  ],
+  "dash_width_mm": [
+   1.0,
+   2.6
+  ],
+  "dash_logamp": [
+   0.15,
+   0.4
+  ],
+  "dash_dark_frac": 0.4,
+  "slub_threads": 26,
+  "slub_len_mm": [
+   30,
+   65
+  ],
+  "slub_width_mm": [
+   1.0,
+   1.7
+  ],
+  "slub_logamp": [
+   0.2,
+   0.38
+  ],
+  "slub_axis_jitter_deg": 7.0,
+  "neps": 700,
+  "nep_logamp": [
+   -0.35,
+   0.35
+  ],
+  "weave_pitch_texels": 4,
+  "weave_height_mm": 0.025,
+  "weave_logamp": 0.025,
+  "height_mm": {
+   "mottle": 0.05,
+   "grain": 0.035,
+   "fibre": 0.03,
+   "slub_peak": 0.16
+  },
+  "rough": {
+   "base": 0.865,
+   "slub": -0.07,
+   "fibre": 0.022,
+   "mottle": 0.018,
+   "min": 0.74,
+   "max": 0.93
+  },
+  "ao_cavity": {
+   "blur_mm": 0.9,
+   "k_per_mm": 1.4,
+   "floor": 0.86
+  }
+ },
+ "hue_linear": [
+  1.03,
+  1.0,
+  0.972
+ ],
+ "median_target_srgb8": 33.0,
+ "tile": {
+  "metres_per_tile": 0.45,
+  "texels": 2048,
+  "mm_per_texel": 0.2197265625,
+  "uv_convention": "UV0 = pattern metres / 0.45 (1 UV unit = one 0.45 m tile); material UV Scale 1.0. If UVs are authored in plain metres set UV Scale = 1/0.45 = 2.2222"
+ },
+ "stats": {
+  "bc_median_lum_srgb8": 32.92879623548129,
+  "bc_median_rgb_srgb8": [
+   33.0,
+   33.0,
+   32.0
+  ],
+  "bc_p1_p99_lum_srgb8": [
+   20.216029970290894,
+   50.21442631444219
+  ],
+  "bc_mean_linear_rgb": [
+   0.016454931351241514,
+   0.015975683312693462,
+   0.015528507644658397
+  ],
+  "n_std": 0.33221349417321316,
+  "n_p1_p99": [
+   0.45192138706321167,
+   2.0313853228685086
+  ],
+  "rough_mean": 0.8599279665206412,
+  "rough_p1_p99": [
+   0.7848641739423527,
+   0.928747777714646
+  ],
+  "ao_mean": 0.972447312259737,
+  "ao_min": 0.86,
+  "normal_tilt_mean_deg": 11.072814334695243,
+  "normal_tilt_p99_deg": 24.353804099528414
+ },
+ "normal_sign_test": {
+  "format": "DirectX (green down)",
+  "corr_G_vs_dH_dV_expect_positive": 0.9995424279734956,
+  "corr_R_vs_dH_dU_expect_negative": -0.9995388862590233,
+  "dome": {
+   "texel_above_centre_row24_G": 0.45820470763329946,
+   "texel_below_centre_row40_G": 0.5417952923667005,
+   "rule": "DirectX: the upper flank of a bump (towards image top, +V) faces up in GL (+Y), so stored green there is < 0.5 (green down)",
+   "pass": true
+  },
+  "pass": true
+ },
+ "mips": [
+  {
+   "mip": 0,
+   "size": 2048,
+   "texel_mm": 0.22,
+   "bc_lum_std_over_mean": 0.3323,
+   "bc_lum_hp45mm_std_over_mean": 0.3312,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 11.074,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0303
+  },
+  {
+   "mip": 1,
+   "size": 1024,
+   "texel_mm": 0.439,
+   "bc_lum_std_over_mean": 0.2857,
+   "bc_lum_hp45mm_std_over_mean": 0.2844,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 6.723,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0243
+  },
+  {
+   "mip": 2,
+   "size": 512,
+   "texel_mm": 0.879,
+   "bc_lum_std_over_mean": 0.2483,
+   "bc_lum_hp45mm_std_over_mean": 0.2468,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 3.784,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0214
+  },
+  {
+   "mip": 3,
+   "size": 256,
+   "texel_mm": 1.758,
+   "bc_lum_std_over_mean": 0.1869,
+   "bc_lum_hp45mm_std_over_mean": 0.1849,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 2.15,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0201
+  },
+  {
+   "mip": 4,
+   "size": 128,
+   "texel_mm": 3.516,
+   "bc_lum_std_over_mean": 0.128,
+   "bc_lum_hp45mm_std_over_mean": 0.1251,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 1.026,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0188
+  },
+  {
+   "mip": 5,
+   "size": 64,
+   "texel_mm": 7.031,
+   "bc_lum_std_over_mean": 0.0934,
+   "bc_lum_hp45mm_std_over_mean": 0.0896,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 0.622,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0168
+  },
+  {
+   "mip": 6,
+   "size": 32,
+   "texel_mm": 14.062,
+   "bc_lum_std_over_mean": 0.0644,
+   "bc_lum_hp45mm_std_over_mean": 0.0591,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 0.359,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0123
+  },
+  {
+   "mip": 7,
+   "size": 16,
+   "texel_mm": 28.125,
+   "bc_lum_std_over_mean": 0.033,
+   "bc_lum_hp45mm_std_over_mean": 0.0242,
+   "bc_lum_mean": 0.016045,
+   "n_mean_tilt_deg": 0.125,
+   "rough_mean": 0.8599,
+   "rough_std": 0.0061
+  }
+ ],
+ "albedo_bands_at_photo_scale_2p64mm": {
+  "5.4_10": 0.0898,
+  "10_20": 0.0648,
+  "20_45": 0.0744,
+  "v_over_h": 1.0299,
+  "axes_over_diag": 1.018
+ },
+ "tiling_seam": {
+  "BC_max_wrap_step_vs_interior": [
+   4.002224577888374,
+   4.0302734375
+  ],
+  "N_wrap_step_vs_interior": [
+   19.91406035318454,
+   20.45361328125
+  ]
+ },
+ "detail16": {
+  "file": "T_BlackCloakV2_Cloth_Detail16.png",
+  "convention": "d = (Y - Ylo)/(Yhi - Ylo) of the linear luminance multiple; BaseColor = Colour x (Bias + Scale x d) (MATERIAL_PLAN 5.1, MF_TintDetail)",
+  "Colour_linear": [
+   0.016454005064338542,
+   0.01597476219838694,
+   0.015527468856832103
+  ],
+  "Bias": 0.1777670995513324,
+  "Scale": 5.221813373425767,
+  "DetailMean": 0.9999999835152452,
+  "DetailHighlightRatio": 2.6494092546473635,
+  "DetailMomentsLow": [
+   0.5666375160217285,
+   -0.15492715151207698,
+   0.031075393236248416,
+   -0.0037458995605985645
+  ],
+  "DetailMomentsHigh": [
+   0.4333624839782715,
+   0.10422336904180629,
+   0.017961340379669566,
+   0.005412931930196541
+  ],
+  "H_default": 4.107230978898289,
+  "G_H1_pass": true,
+  "contract_model_vs_BC_levels": {
+   "max": 1,
+   "mean": 0.00137,
+   "texels_diff_gt0": 5730,
+   "texels_diff_gt1": 0,
+   "texels": 4194304
+  },
+  "contract_every_mip": [
+   {
+    "mip": 0,
+    "max": 1,
+    "mean": 0.00137,
+    "texels_diff_gt0": 5730,
+    "texels_diff_gt1": 0,
+    "texels": 4194304
+   },
+   {
+    "mip": 1,
+    "max": 1,
+    "mean": 0.31375,
+    "texels_diff_gt0": 328988,
+    "texels_diff_gt1": 0,
+    "texels": 1048576
+   },
+   {
+    "mip": 2,
+    "max": 1,
+    "mean": 0.1673,
+    "texels_diff_gt0": 43858,
+    "texels_diff_gt1": 0,
+    "texels": 262144
+   },
+   {
+    "mip": 3,
+    "max": 1,
+    "mean": 0.08731,
+    "texels_diff_gt0": 5722,
+    "texels_diff_gt1": 0,
+    "texels": 65536
+   },
+   {
+    "mip": 4,
+    "max": 1,
+    "mean": 0.04272,
+    "texels_diff_gt0": 700,
+    "texels_diff_gt1": 0,
+    "texels": 16384
+   },
+   {
+    "mip": 5,
+    "max": 1,
+    "mean": 0.02222,
+    "texels_diff_gt0": 91,
+    "texels_diff_gt1": 0,
+    "texels": 4096
+   },
+   {
+    "mip": 6,
+    "max": 1,
+    "mean": 0.01074,
+    "texels_diff_gt0": 11,
+    "texels_diff_gt1": 0,
+    "texels": 1024
+   },
+   {
+    "mip": 7,
+    "max": 1,
+    "mean": 0.00391,
+    "texels_diff_gt0": 1,
+    "texels_diff_gt1": 0,
+    "texels": 256
+   }
+  ],
+  "contract_pass": true,
+  "recolour_stress_subsample7": {
+   "white": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 0.3808,
+    "dE00_mean_vs_target": 0.066
+   },
+   "cream": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 0.3808,
+    "dE00_mean_vs_target": 0.067
+   },
+   "pastel_pink": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 0.3235,
+    "dE00_mean_vs_target": 0.277
+   },
+   "saturated_red": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 0.3808,
+    "dE00_mean_vs_target": 0.068
+   },
+   "saturated_blue": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 0.3808,
+    "dE00_mean_vs_target": 0.048
+   },
+   "yellow": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 0.3235,
+    "dE00_mean_vs_target": 0.283
+   },
+   "mid_grey": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 1.0,
+    "dE00_mean_vs_target": 0.007
+   },
+   "near_black": {
+    "pass": true,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 1.0,
+    "dE00_mean_vs_target": 0.002
+   },
+   "extreme_white": {
+    "pass": false,
+    "clip_frac": 0.0,
+    "std_ratio_logL": 0.2152,
+    "dE00_mean_vs_target": 1.273
+   }
+  }
+ },
+ "fray": {
+  "file": "T_BlackCloakV2_Fray_BCA.png",
+  "size": [
+   2048,
+   256
+  ],
+  "metres": [
+   0.45,
+   0.05625
+  ],
+  "layout": "row 0 (V=1) = cloth side, opaque down to a ragged cut ~15 mm from the top (+-3 mm), then a weft fringe 0.5-9 mm and 5 long loose threads 2-4 cm; tiles along U",
+  "fringe_threads": 416,
+  "alpha_coverage_by_mip": [
+   {
+    "mip": 0,
+    "coverage_at_0.5": 0.2885,
+    "mean_alpha": 0.2885
+   },
+   {
+    "mip": 1,
+    "coverage_at_0.5": 0.2847,
+    "mean_alpha": 0.2885
+   },
+   {
+    "mip": 2,
+    "coverage_at_0.5": 0.2815,
+    "mean_alpha": 0.2885
+   },
+   {
+    "mip": 3,
+    "coverage_at_0.5": 0.2815,
+    "mean_alpha": 0.2885
+   },
+   {
+    "mip": 4,
+    "coverage_at_0.5": 0.2817,
+    "mean_alpha": 0.2885
+   },
+   {
+    "mip": 5,
+    "coverage_at_0.5": 0.2715,
+    "mean_alpha": 0.2885
+   }
+  ]
+ },
+ "files": {
+  "BC": {
+   "name": "T_BlackCloakV2_Cloth_BC.png",
+   "sha256": "e74524fff58fb0ba49d7744f2c0b61d5a9bc7ac2991faefe2398938e20727ef2",
+   "bytes": 5260519
+  },
+  "ORM": {
+   "name": "T_BlackCloakV2_Cloth_ORM.png",
+   "sha256": "c82d359259d24f53b10d53ec5e1944e6bf79aa465d8088cde9bfd2a22ad79c2f",
+   "bytes": 6621649
+  },
+  "N": {
+   "name": "T_BlackCloakV2_Cloth_N.png",
+   "sha256": "b4916112b38e884ca198f917593a744b26c04eeb4865a1d9b4d9c6adab9e1814",
+   "bytes": 9902109
+  },
+  "Detail16": {
+   "name": "T_BlackCloakV2_Cloth_Detail16.png",
+   "sha256": "f67bd07abdcc155a3c5bcfaf4bcb9638136881bdfad56b53d54757c01b67428c",
+   "bytes": 7823872
+  },
+  "Fray_BCA": {
+   "name": "T_BlackCloakV2_Fray_BCA.png",
+   "sha256": "1fa9c2a25909eae98babeb734bc62e5a1b4a45776fc987d3f65c5bb0ce607e41",
+   "bytes": 749282
+  }
+ }
+}

@@ -1,0 +1,141 @@
+def _ortho_fit(co, cd, pts, rot3, margin=1.12, aspect=1.2):
+    """Aim an orthographic camera with orientation rot3 (columns = camera x, y, z) at the points, fitted."""
+    R = np.array(rot3)
+    P = np.array([p[:] for p in pts])
+    loc = P @ R                                    # camera-space coordinates (x, y, depth)
+    lo, hi = loc.min(0), loc.max(0)
+    c = 0.5 * (lo + hi)
+    w, h = hi[0] - lo[0], hi[1] - lo[1]
+    cd.ortho_scale = max(w, h * aspect) * margin
+    centre = R @ np.array([c[0], c[1], hi[2] + 1.0])
+    M = Matrix(np.eye(4).tolist())
+    for i in range(3):
+        for j in range(3):
+            M[i][j] = R[i, j]
+    M.translation = Vector(centre.tolist())
+    co.matrix_world = M
+    cd.clip_start = 0.001
+    cd.clip_end = 5.0
+    return float(cd.ortho_scale)
+
+
+def _view_rot(elev_deg, azim_deg=0.0):
+    """Camera orientation looking at the standing fan (front toward -Y) from the front, raised elev_deg."""
+    e, a = math.radians(elev_deg), math.radians(azim_deg)
+    back = Vector((math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), math.sin(e)))   # camera +Z (towards it)
+    x = Vector((0, 0, 1)).cross(back).normalized()
+    if x.length < 1e-6:
+        x = Vector((1, 0, 0))
+    y = back.cross(x).normalized()
+    return [[x.x, y.x, back.x], [x.y, y.y, back.y], [x.z, y.z, back.z]]
+
+
+def fold_sheet(spec, arm, obj, pose_at: Callable[[float], None], out_png: Path, work: Path, samples: int = 64,
+               angles: Sequence[float] = FOLD_ANGLES, tile=(480, 400), closeup_png: Optional[Path] = None):
+    """Two rows of tiles: the fan at each opening angle (guard axis to guard axis) straight from the FRONT and
+    from ABOVE (raised 60 deg over the leaf's top edge, so the pleats' depth, the fins of the half-closed leaf
+    and the page stack read), each tile fitted to the fan; plus a two-panel close-up of the closed stack (end-on
+    at the tip, and from above the tip).  ``pose_at(opening_deg)`` poses the armature (the build poses the
+    mechanism, the verifier plays the re-imported FBX animation)."""
+    scene = bpy.context.scene
+    LK._cycles(scene, samples, denoise=True)
+    scene.render.resolution_x, scene.render.resolution_y = tile
+    scene.render.resolution_percentage = 100
+    scene.render.film_transparent = True
+    scene.view_settings.view_transform = "Standard"
+    coll = bpy.data.collections.new("FOLD_SHEET_RIG")
+    scene.collection.children.link(coll)
+    cd = bpy.data.cameras.new("FoldCam")
+    cd.type = "ORTHO"
+    co = bpy.data.objects.new("FoldCam", cd)
+    coll.objects.link(co)
+    scene.camera = co
+    lamps = []
+    for name, loc, en in (("K", (0.35, -0.7, 0.9), 30.0), ("F", (-0.7, -0.8, 0.2), 12.0), ("T", (0.0, 0.2, 1.0), 14.0),
+                          ("B", (0.0, 0.8, -0.3), 6.0)):
+        ld = bpy.data.lights.new("Fold" + name, "AREA")
+        ld.size = 0.5
+        ld.energy = en
+        lo = bpy.data.objects.new("Fold" + name, ld)
+        coll.objects.link(lo)
+        lo.location = Vector(loc).normalized() * 1.2
+        lo.rotation_euler = (-Vector(loc)).to_track_quat("-Z", "Y").to_euler()
+        lamps.append(lo)
+    wd = bpy.data.worlds.new("FoldWorld")
+    wd.use_nodes = True
+    bg = next(n for n in wd.node_tree.nodes if n.type == "BACKGROUND")
+    bg.inputs["Color"].default_value = (1, 1, 1, 1)
+    bg.inputs["Strength"].default_value = 0.3
+    saved_world = scene.world
+    scene.world = wd
+    saved_M = arm.matrix_world.copy()
+    tiles = {"front": [], "above": []}
+    info = {"angles_deg": list(angles), "tiles": []}
+    views = {"front": _view_rot(0.0), "above": _view_rot(60.0)}
+    try:
+        with Visible([obj]):
+            for ang in angles:
+                pose_at(ang)
+                arm.matrix_world = standing(spec, yaw_deg=0.0)
+                bpy.context.view_layer.update()
+                pts = _world_pts([obj], step=2)
+                for view in ("front", "above"):
+                    scale = _ortho_fit(co, cd, pts, views[view], aspect=tile[0] / tile[1])
+                    a = LK.render_exr(work / f"fold_{view}_{ang:06.2f}.exr")
+                    tiles[view].append(LK.composite_over(a, 0.93))
+                    info["tiles"].append({"opening_deg": ang, "view": view, "field_mm": round(scale * 1000, 1)})
+            if closeup_png is not None:
+                pose_at(0.0)
+                arm.matrix_world = standing(spec, yaw_deg=0.0)
+                bpy.context.view_layer.update()
+                pts = _world_pts([obj], step=1)
+                P = np.array([p[:] for p in pts])
+                # the fan's long axis (closed) in the world: the front guard's direction
+                ax = np.array((arm.matrix_world.to_3x3() @ Vector((1, 0, 0)))[:])
+                far = P @ ax
+                tip = P[far > far.max() - 0.016]
+                panels = []
+                scene.render.resolution_x, scene.render.resolution_y = (700, 560)
+                # (a) end-on: looking back along the fan from beyond its tip
+                zc = Vector((-ax).tolist())
+                xc = Vector((0, 1, 0)).cross(zc).normalized() if abs(zc.y) < 0.9 else Vector((1, 0, 0))
+                yc = zc.cross(xc).normalized()
+                rot = [[xc.x, yc.x, -zc.x], [xc.y, yc.y, -zc.y], [xc.z, yc.z, -zc.z]]
+                _ortho_fit(co, cd, [Vector(p) for p in tip], rot, margin=1.35, aspect=700 / 560)
+                panels.append(LK.composite_over(LK.render_exr(work / "fold_closed_end.exr"), 0.93))
+                # (b) from above the tip (raised 55 deg, a little from the side)
+                _ortho_fit(co, cd, [Vector(p) for p in P[far > far.max() - 0.05]], _view_rot(55.0, 25.0), margin=1.2,
+                           aspect=700 / 560)
+                panels.append(LK.composite_over(LK.render_exr(work / "fold_closed_above.exr"), 0.93))
+                gap = np.ones((560, 12, 3))
+                LK.write_png(closeup_png, np.concatenate([panels[0], gap, panels[1]], 1))
+                info["closeup"] = {"path": str(closeup_png),
+                                   "panels": ["end-on at the tip: guards either side, the 50 faces lying as a stack of "
+                                              "pages between them", "from above the last 50 mm: the page stack's fold "
+                                              "edges and the scalloped tip"]}
+    finally:
+        arm.matrix_world = saved_M
+        scene.world = saved_world
+        for o in list(coll.objects):
+            d = o.data
+            bpy.data.objects.remove(o, do_unlink=True)
+            for lib in (bpy.data.cameras, bpy.data.lights):
+                try:
+                    lib.remove(d)
+                    break
+                except Exception:
+                    pass
+        bpy.data.collections.remove(coll)
+        bpy.data.worlds.remove(wd)
+    rows = []
+    for view in ("front", "above"):
+        rows.append(np.concatenate([np.pad(t, ((4, 4), (4, 4), (0, 0)), constant_values=1.0) for t in tiles[view]], 1))
+    sheet = np.concatenate(rows, 0)
+    LK.write_png(out_png, sheet)
+    info["path"] = str(out_png)
+    info["layout"] = "row 1: straight from the front; row 2: from above (raised 60 deg over the leaf edge); each tile " \
+                     "fitted to the fan; columns: " + ", ".join(f"{a:g} deg" for a in angles) + \
+                     " (0 = closed: the guards stay 1.5 deg apart, the leaf lines coincide)"
+    return info
+
+

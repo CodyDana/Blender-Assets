@@ -1,0 +1,20 @@
+== regression: the five frozen forms against post_spike_maint
+exit 0
+FROZEN_REGRESSION {"four_point": {"blend": true, "fbx": true, "sidecar": true, "report": true, "textures_identical": true}, "eight_point": {"blend": true, "fbx": true, "sidecar": true, "report": true, "textures_identical": true}, "square_plate": {"blend": true, "fbx": true, "sidecar": true, "report": true, "textures_identical": true}, "six_point": {"blend": true, "fbx": true, "sidecar": true, "report": true, "textures_identical": true}, "spike": {"blend": true, "fbx": true, "sidecar": true, "report": true, "textures_identical": true}, "material_export_scalars_identical": true} passed=True
+== plan silhouettes (the frozen forms' refs + the hooked cross's own un-ground outline)
+ "all_unchanged": true
+== texture-sheet gate on the shipped 3.9.1 blend (and it was run on the 3.9.0 blend before the build)
+TEXTURE_GATE True caught True {"+Z plate": [65.101, [35.0, 35.0, 35.0, 35.0], "as seen from +Z (left-facing)"], "-Z plate": [65.101, [35.0, 35.0, 35.0, 35.0], "as seen from +Z (left-facing)"]}
+== visual + coat metrics
+spike_hero halo: None
+hooked_cross_hero halo: None
+== sheets
+LINE_SHEET {"out": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\modern_line_sheet.png", "size": [4800, 900], "forms": ["four_point", "eight_point", "square_plate", "six_point", "spi
+PASS2_SHEET C:\Users\Cody\Desktop\Blender_Projects\Renders\Shuriken\style_comparison.png 7200 1740
+== grind extent evidence: A (the shipped build) and B (the rejected photo-length variant), same code
+SHEET C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/shuriken/hooked_cross/grind_extent_compare.png (2400, 1800)
+== before / after evidence
+C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\shuriken\hooked_cross_maint\evidence_sheets.py:68: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = img.getdata()
+EVIDENCE {"threshold_luma": 0.9, "metric": "share of frame pixels with stored-sRGB Rec.709 luma > 0.9", "after": {"four_point": 0.0145, "eight_point": 0.0167, "square_plate": 0.027, "six_point": 0.0158, "spike": 0.0479, "hooked_cross": 0.0152}, "before": {"four_point": 0.0145, "eight_point": 0.0167, "square_plate": 0.027, "six_point": 0.0158, "spike": 0.0479, "hooked_cross": 0.1812}}
+== done

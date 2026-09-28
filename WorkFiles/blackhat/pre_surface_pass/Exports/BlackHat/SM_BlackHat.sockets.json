@@ -1,0 +1,192 @@
+{
+  "fbx": "SM_BlackHat.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [
+    {
+      "socket": "HEAD",
+      "fbx_node": "SOCKET_SM_BlackHat_LOD0_HEAD",
+      "mesh": "SM_BlackHat_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        13.4833
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    }
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.695,
+    0.2432
+  ],
+  "materials": {
+    "M_BlackHat_Straw": {
+      "slot": 0,
+      "part": "straw",
+      "textures": {
+        "BC": "T_BlackHat_Straw_BC",
+        "ORM": "T_BlackHat_Straw_ORM",
+        "N": "T_BlackHat_Straw_N",
+        "Detail": "T_BlackHat_Straw_Detail"
+      },
+      "tint_default_linear": [
+        0.042821,
+        0.039103,
+        0.038023
+      ],
+      "tint_default_srgb": [
+        0.228863,
+        0.218321,
+        0.21515
+      ],
+      "tint_is": "the part's MEAN colour: edit Tint to recolour",
+      "detail_bias_default": 0.122772,
+      "detail_scale_default": 5.256401,
+      "specular_scale": 0.8,
+      "orm_texture_settings": {
+        "composite_texture": "T_BlackHat_Straw_N",
+        "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+        "composite_power": 1.0
+      },
+      "graph": {
+        "shading_model": "Default Lit (or Substrate Slab); opaque; no Cloth/Fuzz layer",
+        "BaseColor": "saturate(Tint x (DetailBias + DetailScale x T_BlackHat_Straw_Detail.R)); at the default Tint / Bias / Scale it equals T_BlackHat_Straw_BC at every mip (source / 8-bit level)",
+        "parameters": {
+          "Tint": "the part's MEAN colour (linear). Set it to the colour you want the part to read as: the average of the part, and its far mips, come out at exactly that colour",
+          "DetailBias": "the darkest texel as a fraction of the mean (leave at the default)",
+          "DetailScale": "the detail's contrast as a multiple of the mean (leave at the default; lower it toward 0 with Bias toward 1 for a flatter, lighter recolour whose flecks do not clip)"
+        },
+        "Tint_default_linear": [
+          0.042821,
+          0.039103,
+          0.038023
+        ],
+        "Tint_default_srgb": [
+          0.228863,
+          0.218321,
+          0.21515
+        ],
+        "DetailBias_default": 0.122772,
+        "DetailScale_default": 5.256401,
+        "BaseColor_alt": "T_BlackHat_Straw_BC (sRGB) directly, for a fixed-colour instance",
+        "Detail_encoding": "sRGB-encoded LINEAR detail d = (albedo - a_lo) / (a_hi - a_lo), full range 0..255, quantised once from linear float data; import sRGB ON (TC_Grayscale, G8, uncompressed)",
+        "bc_equality_note": "BC = the recolour graph at the defaults holds at the source (8-bit PNG) level. In Unreal BC is BC1-compressed (TC_Default) and Detail is uncompressed G8, so the two paths differ by BC1 block error",
+        "Specular": "0.8 x T_BlackHat_Straw_ORM.A (the baked specular mask; linear, mip-safe)",
+        "Roughness": "T_BlackHat_Straw_ORM.G (with the ORM texture's Composite Texture = T_BlackHat_Straw_N, mode CTM_NormalRoughnessToGreen: Unreal widens roughness per mip by the normal map's variance)",
+        "Metallic": "0",
+        "AmbientOcclusion": "T_BlackHat_Straw_ORM.R",
+        "Normal": "T_BlackHat_Straw_N (DirectX; TC_Normalmap, flip green OFF)",
+        "textures": {
+          "BC": "sRGB, TC_Default",
+          "ORM": "linear (sRGB OFF), TC_Masks, RGBA (A = specular mask), CompositeTexture T_BlackHat_Straw_N, CTM_NormalRoughnessToGreen",
+          "N": "TC_Normalmap",
+          "Detail": "sRGB ON, TC_Grayscale, R channel",
+          "all": "MipGenSettings TMGS_FROM_TEXTURE_GROUP; 2048, power of two (12 mips)"
+        }
+      }
+    },
+    "M_BlackHat_Cloth": {
+      "slot": 1,
+      "part": "cloth",
+      "textures": {
+        "BC": "T_BlackHat_Cloth_BC",
+        "ORM": "T_BlackHat_Cloth_ORM",
+        "N": "T_BlackHat_Cloth_N",
+        "Detail": "T_BlackHat_Cloth_Detail"
+      },
+      "tint_default_linear": [
+        0.035018,
+        0.034089,
+        0.034192
+      ],
+      "tint_default_srgb": [
+        0.20604,
+        0.203132,
+        0.203457
+      ],
+      "tint_is": "the part's MEAN colour: edit Tint to recolour",
+      "detail_bias_default": 0.133561,
+      "detail_scale_default": 2.444596,
+      "specular_scale": 0.5,
+      "orm_texture_settings": {
+        "composite_texture": "T_BlackHat_Cloth_N",
+        "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+        "composite_power": 1.0
+      },
+      "graph": {
+        "shading_model": "Default Lit (or Substrate Slab); opaque; no Cloth/Fuzz layer",
+        "BaseColor": "saturate(Tint x (DetailBias + DetailScale x T_BlackHat_Cloth_Detail.R)); at the default Tint / Bias / Scale it equals T_BlackHat_Cloth_BC at every mip (source / 8-bit level)",
+        "parameters": {
+          "Tint": "the part's MEAN colour (linear). Set it to the colour you want the part to read as: the average of the part, and its far mips, come out at exactly that colour",
+          "DetailBias": "the darkest texel as a fraction of the mean (leave at the default)",
+          "DetailScale": "the detail's contrast as a multiple of the mean (leave at the default; lower it toward 0 with Bias toward 1 for a flatter, lighter recolour whose flecks do not clip)"
+        },
+        "Tint_default_linear": [
+          0.035018,
+          0.034089,
+          0.034192
+        ],
+        "Tint_default_srgb": [
+          0.20604,
+          0.203132,
+          0.203457
+        ],
+        "DetailBias_default": 0.133561,
+        "DetailScale_default": 2.444596,
+        "BaseColor_alt": "T_BlackHat_Cloth_BC (sRGB) directly, for a fixed-colour instance",
+        "Detail_encoding": "sRGB-encoded LINEAR detail d = (albedo - a_lo) / (a_hi - a_lo), full range 0..255, quantised once from linear float data; import sRGB ON (TC_Grayscale, G8, uncompressed)",
+        "bc_equality_note": "BC = the recolour graph at the defaults holds at the source (8-bit PNG) level. In Unreal BC is BC1-compressed (TC_Default) and Detail is uncompressed G8, so the two paths differ by BC1 block error",
+        "Specular": "0.5 x T_BlackHat_Cloth_ORM.A (the baked specular mask; linear, mip-safe)",
+        "Roughness": "T_BlackHat_Cloth_ORM.G (with the ORM texture's Composite Texture = T_BlackHat_Cloth_N, mode CTM_NormalRoughnessToGreen: Unreal widens roughness per mip by the normal map's variance)",
+        "Metallic": "0",
+        "AmbientOcclusion": "T_BlackHat_Cloth_ORM.R",
+        "Normal": "T_BlackHat_Cloth_N (DirectX; TC_Normalmap, flip green OFF)",
+        "textures": {
+          "BC": "sRGB, TC_Default",
+          "ORM": "linear (sRGB OFF), TC_Masks, RGBA (A = specular mask), CompositeTexture T_BlackHat_Cloth_N, CTM_NormalRoughnessToGreen",
+          "N": "TC_Normalmap",
+          "Detail": "sRGB ON, TC_Grayscale, R channel",
+          "all": "MipGenSettings TMGS_FROM_TEXTURE_GROUP; 2048, power of two (12 mips)"
+        }
+      }
+    }
+  },
+  "materials_note": "BaseColor = saturate(Tint x (DetailBias + DetailScale x Detail.R)) (Detail sRGB ON, TC_Grayscale). Tint is the part's MEAN colour: set it to the colour the part should read as. At the defaults the graph equals BC at every mip at the source (8-bit PNG) level; in Unreal BC is BC1-compressed and Detail is uncompressed G8, so they differ by BC1 block error. Specular = specular_scale x ORM.A; Roughness = ORM.G (set the ORM texture's Composite Texture to the part's _N, mode CTM_NormalRoughnessToGreen); Metallic 0; N DirectX (flip green OFF). The cloth's UV0 lies in the second tile (U + 1): keep the address mode Wrap.",
+  "triangle_budget": {
+    "lod_triangles": [
+      16816,
+      6290,
+      1977
+    ],
+    "lod0_by_part": {
+      "skin_outer": 1106,
+      "skin_inner": 378,
+      "ribs": 416,
+      "cap": 1088,
+      "rim_tube": 2880,
+      "rim_cord": 1152,
+      "lashings": 4992,
+      "band": 2800,
+      "knot": 432,
+      "tails": 1572
+    },
+    "why_lod0_is_over_10k": "a 600 mm hat whose signature details are real geometry: 26 lashings of three cords, the rolled rim tube, its binding cord, 13 ribs, the band and two torn tails with walls; the pack's LOD rule switches LOD1 in at screen size 0.70, LOD2 at 0.25"
+  },
+  "collision_note": "one convex hull (UCX_..._00, <= 50 vertices) round the hat's body; the hanging cloth tails have no collision by design"
+}

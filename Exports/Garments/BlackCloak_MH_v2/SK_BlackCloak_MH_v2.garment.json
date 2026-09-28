@@ -1,0 +1,29 @@
+{
+ "fbx": "SK_BlackCloak_MH_v2.fbx",
+ "fbx_sha256": "7ee72a4df0172b535435dbc4ce5b46011324a61b4e068ad69bca833907caeb11",
+ "garment_type": "cloak",
+ "base": "MH_PlayerDefault",
+ "skeleton": "/Game/MetaHumans/Common/Female/Medium/NormalWeight/Body/metahuman_base_skel.metahuman_base_skel",
+ "skeleton_hash": "b6e1cbf5c7d04b9966dd123ffb3a832a3d36ec13fdd055a0939825ad5dd802ed",
+ "physics_asset": "/Game/MetaHumans/MH_PlayerDefault/Body/PHYS_MH_PlayerDefault.PHYS_MH_PlayerDefault",
+ "socket_bone": null,
+ "cloth_section": "M_BlackCloakV2_Wool_Sim",
+ "pin_mask": "PinMask",
+ "material_slots": [
+  "M_BlackCloakV2_Wool_Sim",
+  "M_BlackCloakV2_Wool",
+  "M_BlackCloakV2_Clasp"
+ ],
+ "triangles": {
+  "garment": 10749,
+  "sim": 5390,
+  "sim_vertices": 2861,
+  "base_lod0": 121892,
+  "extra_loadout": 0,
+  "character_total": 132641
+ },
+ "waived": [],
+ "textures": [],
+ "unreal_import": "FBX import onto the skeleton above (never create a new one): Import Normals, Convert Scene ON, Force Front X OFF, no materials/textures/physics asset. Verified 2026-09-26 through 5.8's default (Interchange) FBX path, which is what DemoGame_1 and CharacterLab use (neither sets the legacy flag); expect the harmless 'invalid bind poses, rebind using the time zero pose' warning (the pose is the rest pose). Then assign the slots through MCP in the mesh's own slot order (Outfit_Pipeline traps 6/7) and build the cloth on cloth_section from the PinMask red channel (trap 9)",
+ "built": "2026-09-27T05:06:51-05:00"
+}

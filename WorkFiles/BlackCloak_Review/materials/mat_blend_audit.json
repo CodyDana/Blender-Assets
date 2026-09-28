@@ -1,0 +1,532 @@
+{
+ "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\BlackCloak_Review\\materials\\mat_copy_BlackCloak.blend",
+ "images": [
+  {
+   "name": "T_BlackCloak_BaseColor",
+   "filepath": "//..\\Textures\\BlackCloak\\T_BlackCloak_BaseColor.png",
+   "packed": true,
+   "size": [
+    2048,
+    2048
+   ],
+   "colorspace": "sRGB",
+   "users": 1,
+   "packed_sha256": "72fb0604f2ce2ebe1f421b054d25758451bd62cfc9f65cfe2a261517d48cefa3"
+  },
+  {
+   "name": "T_BlackCloak_Normal_OpenGL",
+   "filepath": "//..\\Textures\\BlackCloak\\T_BlackCloak_Normal_OpenGL.png",
+   "packed": true,
+   "size": [
+    2048,
+    2048
+   ],
+   "colorspace": "Non-Color",
+   "users": 1,
+   "packed_sha256": "9aa4c1c91b4d213720222c24450a8e91f1d9ca7ce76fcd8ed52afcc84967e9f9"
+  },
+  {
+   "name": "T_BlackCloak_Roughness",
+   "filepath": "//..\\Textures\\BlackCloak\\T_BlackCloak_Roughness.png",
+   "packed": true,
+   "size": [
+    2048,
+    2048
+   ],
+   "colorspace": "Non-Color",
+   "users": 1,
+   "packed_sha256": "cb402830281e1912f983292e0261949436ca24e4dc09d83a16bce0f6a43363b3"
+  }
+ ],
+ "materials": {
+  "M_BlackCloak_BlackenedSteel": {
+   "users": 2,
+   "nodes": [
+    {
+     "type": "BSDF_PRINCIPLED",
+     "name": "Principled BSDF",
+     "Base Color": [
+      0.012000000104308128,
+      0.013000000268220901,
+      0.012000000104308128,
+      1.0
+     ],
+     "Metallic": 1.0,
+     "Roughness": 0.7300000190734863,
+     "Specular IOR Level": 0.5,
+     "Sheen Weight": 0.0,
+     "Coat Weight": 0.0
+    },
+    {
+     "type": "OUTPUT_MATERIAL",
+     "name": "Material Output"
+    }
+   ]
+  },
+  "M_BlackCloak_CharcoalLeather": {
+   "users": 1,
+   "nodes": [
+    {
+     "type": "BSDF_PRINCIPLED",
+     "name": "Principled BSDF",
+     "Base Color": [
+      0.014000000432133675,
+      0.010999999940395355,
+      0.00800000037997961,
+      1.0
+     ],
+     "Metallic": 0.0,
+     "Roughness": 0.6600000262260437,
+     "Specular IOR Level": 0.5,
+     "Sheen Weight": 0.0,
+     "Coat Weight": 0.0
+    },
+    {
+     "type": "OUTPUT_MATERIAL",
+     "name": "Material Output"
+    }
+   ]
+  },
+  "M_BlackCloak_WovenWool": {
+   "users": 14,
+   "nodes": [
+    {
+     "type": "OUTPUT_MATERIAL",
+     "name": "Material Output"
+    },
+    {
+     "type": "BSDF_PRINCIPLED",
+     "name": "Principled BSDF",
+     "Base Color": "linked",
+     "Metallic": 0.0,
+     "Roughness": "linked",
+     "Specular IOR Level": 0.07999999821186066,
+     "Sheen Weight": 0.0,
+     "Coat Weight": 0.0
+    },
+    {
+     "type": "TEX_COORD",
+     "name": "Texture Coordinate"
+    },
+    {
+     "type": "VECT_MATH",
+     "name": "Meter UV to 128 mm tile"
+    },
+    {
+     "type": "TEX_IMAGE",
+     "name": "Export_BaseColor",
+     "image": "T_BlackCloak_BaseColor",
+     "cs": "sRGB"
+    },
+    {
+     "type": "TEX_IMAGE",
+     "name": "Export_Roughness",
+     "image": "T_BlackCloak_Roughness",
+     "cs": "Non-Color"
+    },
+    {
+     "type": "TEX_IMAGE",
+     "name": "Export_Normal",
+     "image": "T_BlackCloak_Normal_OpenGL",
+     "cs": "Non-Color"
+    },
+    {
+     "type": "NORMAL_MAP",
+     "name": "Fine woven grain"
+    }
+   ]
+  },
+  "Studio_WarmGray": {
+   "users": 1,
+   "nodes": [
+    {
+     "type": "BSDF_PRINCIPLED",
+     "name": "Principled BSDF",
+     "Base Color": [
+      0.8299999833106995,
+      0.8299999833106995,
+      0.8299999833106995,
+      1.0
+     ],
+     "Metallic": 0.0,
+     "Roughness": 0.8700000047683716,
+     "Specular IOR Level": 0.5,
+     "Sheen Weight": 0.0,
+     "Coat Weight": 0.0
+    },
+    {
+     "type": "OUTPUT_MATERIAL",
+     "name": "Material Output"
+    }
+   ]
+  }
+ },
+ "objects": [
+  {
+   "name": "Clasp_BlackenedRing",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_BlackenedSteel"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_BlackenedSteel": 2304
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 0,
+   "modifiers": []
+  },
+  {
+   "name": "Clasp_DarkLoop",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_CharcoalLeather"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_CharcoalLeather": 60
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 0,
+   "modifiers": []
+  },
+  {
+   "name": "Clasp_Pin",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_BlackenedSteel"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_BlackenedSteel": 28
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 0,
+   "modifiers": []
+  },
+  {
+   "name": "Cloak_DiagonalShawl",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 23400
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_GatheredSideFall",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 18000
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_InnerLeftFall",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 6440
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_LeftLongLeaf",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 13200
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_LeftShoulder",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 2688
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_LeftWing",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 12800
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_LongDrape",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 30240
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_MiddleMantle",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 10672
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_OverlappingFrontPanel",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 24576
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_RearMantle_2",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 16800
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_RightInnerLongLeaf",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 8640
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_RightWingReturn",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 9720
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_UpperMantle",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 9744
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "Cloak_WrappedCowl",
+   "collections": [
+    "BLACK_CLOAK"
+   ],
+   "slots": [
+    "M_BlackCloak_WovenWool"
+   ],
+   "tris_by_slot_base_mesh": {
+    "M_BlackCloak_WovenWool": 64480
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 1,
+   "modifiers": [
+    "SUBSURF",
+    "SOLIDIFY"
+   ]
+  },
+  {
+   "name": "StudioFloor",
+   "collections": [
+    "STUDIO_ExcludeFromExport"
+   ],
+   "slots": [
+    "Studio_WarmGray"
+   ],
+   "tris_by_slot_base_mesh": {
+    "Studio_WarmGray": 2
+   },
+   "uv_layers": [
+    "UVMap"
+   ],
+   "color_attributes": [],
+   "vertex_groups": 0,
+   "modifiers": []
+  }
+ ]
+}

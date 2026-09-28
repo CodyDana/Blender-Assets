@@ -1,0 +1,2092 @@
+{
+ "schema": "ninjapack.material_spec/2",
+ "date": "2026-09-26",
+ "status": "FINAL PASS v2 (2026-09-26): recolour fixes (black floor, lightest-colour cap, mip compensation, paper colour limit, neutral red pool), base/leaf instance chain, neutral master default textures, one parameter-group scheme, buyer tooltips. See changes_v2.",
+ "plan": "WorkFiles/materials/MATERIAL_PLAN.md | v2: WorkFiles/materials/MATERIALS_REPORT.md section 'Final pass'",
+ "pack_name_note": "\"NinjaPack\" is a WORKING name for the content root only. No asset name contains it, so the user's final pack name is a folder rename. The final name is the user's call.",
+ "unreal": {
+  "engine": "UE 5.8.3 (UnrealEditor-Cmd.exe)",
+  "project": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/shuriken/UnrealShuriken/ShurikenValidation.uproject",
+  "content_root": "/Game/NinjaPack",
+  "folders": {
+   "materials": "/Game/NinjaPack/Materials",
+   "functions": "/Game/NinjaPack/Materials/Functions",
+   "instances": "/Game/NinjaPack/MaterialInstances",
+   "presets": "/Game/NinjaPack/MaterialInstances/Presets",
+   "textures": "/Game/NinjaPack/Textures/<Item>",
+   "meshes": "/Game/NinjaPack/Meshes",
+   "base": "/Game/NinjaPack/MaterialInstances/Base",
+   "default_textures": "/Game/NinjaPack/Textures/Default",
+   "skeletal_items": "/Game/NinjaPack/Meshes/Fan  (the fan: SK_Fan, SK_Fan_Tassel, their skeletons, PHYS_*, LODS_*, A_Fan_*)"
+  },
+  "substrate": "off in this project (engine default r.Substrate=0; the project ini does not set it). The masters use legacy shading models; a Substrate project converts them automatically. This is untested here.",
+  "shading_model_notes": "Default Lit everywhere except M_Fabric_Master, which takes its shading model From Material Expression (a static switch picks Default Lit or Cloth)."
+ },
+ "texture_import": {
+  "BC": {
+   "srgb": true,
+   "compression": "TC_DEFAULT",
+   "sampler": "SAMPLERTYPE_COLOR",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "pc_format": "DXT1/BC1"
+  },
+  "ORM_rgb": {
+   "srgb": false,
+   "compression": "TC_MASKS",
+   "compression_no_alpha": true,
+   "sampler": "SAMPLERTYPE_MASKS",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "pc_format": "DXT1",
+   "channels": "R AO, G roughness, B metallic"
+  },
+  "ORM_rgba": {
+   "srgb": false,
+   "compression": "TC_MASKS",
+   "compression_no_alpha": false,
+   "sampler": "SAMPLERTYPE_MASKS",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "pc_format": "DXT5/BC3",
+   "channels": "R AO, G roughness, B metallic 0, A specular mask"
+  },
+  "N": {
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false,
+   "sampler": "SAMPLERTYPE_NORMAL",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "pc_format": "BC5",
+   "note": "DirectX green on disk (measured by the item builds)"
+  },
+  "Detail16": {
+   "srgb": false,
+   "compression": "TC_GRAYSCALE",
+   "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "pc_format": "G16 (2 bytes/texel)",
+   "note": "16-bit greyscale PNG, LINEAR values. sRGB must stay OFF: the G8->BGRA8 sRGB fix-up exists only for G8, so a G16 with sRGB ON would be sampled undecoded"
+  },
+  "Detail_sRGB8_shipped": {
+   "srgb": true,
+   "compression": "TC_GRAYSCALE",
+   "sampler": "SAMPLERTYPE_GRAYSCALE",
+   "pc_format": "B8G8R8A8_SRGB (4 bytes/texel!)",
+   "note": "The item contracts' own path. Engine source Texture.cpp: G8 + sRGB is rebuilt as BGRA8 on every target platform (GrayscaleSRGB off). Decode is correct (probe: 128 -> 0.2158), but a 4096 map costs about 85 MiB with mips. The pack imports these for reference and equality checks only. The masters sample Detail16."
+  },
+  "PaperWeights": {
+   "srgb": false,
+   "compression": "TC_BC7 (fallback TC_VECTOR_DISPLACEMENTMAP = uncompressed BGRA8, if BC7 fails the default gate)",
+   "sampler": "SAMPLERTYPE_LINEAR_COLOR",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "note": "linear RGBA8 weights. Alpha is used",
+   "superseded_by": "PaperDetail_sRGB / InkWeights_linear (generator, 2026-09-26)"
+  },
+  "Lettering": {
+   "srgb": false,
+   "compression": "TC_GRAYSCALE",
+   "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+   "address": "Clamp X and Y",
+   "power_of_two_mode": "Stretch to power of two",
+   "mips": "TMGS_FROM_TEXTURE_GROUP (must be set explicitly: an NPOT PNG imports as NoMipmaps and Stretch does not reset it)",
+   "source": "References/Kunai/LETTERING_HOWTO.md section 3"
+  },
+  "M_paperbomb": {
+   "srgb": false,
+   "compression": "TC_MASKS",
+   "note": "imported for completeness and NOT wired (README section 4: R fibre fringe 0, G burn ORDER, B ink mask)",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "sampler": "SAMPLERTYPE_MASKS"
+  },
+  "importer_gotcha": "Scripts/shuriken/ue_import_textures.py and Scripts/props/props_lib/ue_import_textures.py write their JSON next to the texture folder's PARENT by default, which would create a NEW file inside Exports/. Always set *_TEXTURE_OUT to a WorkFiles path. The props importer FAILS on unknown suffixes in a folder it scans, so new maps live in a Recolour/ subfolder, which neither importer's non-recursive glob reads.",
+  "PaperDetail_sRGB": {
+   "srgb": true,
+   "compression": "TC_EDITOR_ICON",
+   "sampler": "SAMPLERTYPE_COLOR",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "pc_format": "B8G8R8A8 (uncompressed, sRGB)",
+   "note": "T_PaperBomb_PaperDetail: RGB = paper weight / Paper Weight Scale, sRGB-ENCODED (the sampler decodes it); A = pooled red-ink weight, LINEAR (sRGB never touches alpha). Changed from the survey's linear BC7 by the generator: linear 8-bit RGB failed G-P1 by 4 levels under the black-ink cores; sRGB encoding holds 1 level."
+  },
+  "InkWeights_linear": {
+   "srgb": false,
+   "compression": "TC_VECTOR_DISPLACEMENTMAP",
+   "sampler": "SAMPLERTYPE_LINEAR_COLOR",
+   "address": "Wrap",
+   "mips": "TMGS_FROM_TEXTURE_GROUP",
+   "pc_format": "B8G8R8A8 (uncompressed, linear)",
+   "note": "T_PaperBomb_InkWeights: R black wet, G black dry, B red wet, A red dry. Uncompressed: G-P1 was measured on the uncompressed weights; BC7 was never measured"
+  }
+ },
+ "material_functions": {
+  "MF_TintDetail": {
+   "inputs": [
+    "Detail (scalar, linear)",
+    "Colour (V3)",
+    "DetailBias",
+    "DetailScale",
+    "DetailMean",
+    "DetailStrength",
+    "HighlightRatio",
+    "DarkFollow",
+    "AlbedoCeiling",
+    "MomentsLow (V4)",
+    "MomentsHigh (V4)",
+    "LightestColour",
+    "MipLevel",
+    "MipCompensation1to4 (V4)",
+    "MipCompensation5to8 (V4)",
+    "MipCompensationPower"
+   ],
+   "outputs": [
+    "Albedo (V3, before roll-off)",
+    "Headroom"
+   ],
+   "math": [
+    "Colour_f = Colour + max(0.01 - max3(Colour), 0)            (v2: pure black is lifted to ~#1A1A1A, hue kept)",
+    "Colour_e = Colour_f * min(1, LightestColour / max3(Colour_f)) (v2: very light picks scale down so the highlights keep detail)",
+    "n      = DetailBias + DetailScale * Detail",
+    "H      = log(AlbedoCeiling / max3(Colour_e)) / log(HighlightRatio)",
+    "C_hi   = min(DetailStrength, max(H, 0)); C_lo = lerp(DetailStrength, C_hi, DarkFollow)",
+    "n'     = n <= 1 ? pow(n, C_lo) : pow(n, C_hi)",
+    "E(C)   = El(C_lo) + Eh(C_hi) (cubic moment fits, covered texels only in v2)",
+    "K      = exp(-A(MipLevel) * max(1 - C_hi, 0)^P), A piecewise linear from the increments (v2: mip compensation)",
+    "Albedo = Colour_e * n' * (DetailMean / E(C)) * K",
+    "MipLevel (master) = 0.5 * log2(max(min(|dUV/dx|^2, |dUV/dy|^2), max(...)/64) * DetailMapSize^2), clamped 0..8"
+   ],
+   "default_exactness": "At the default Colour: Colour > 0.01 and < LightestColour (guards inactive), H >= 1 so C = 1, E(1) = DetailMean and K = exp(0) = 1, so Albedo = Colour * n: the item contract, at every mip (derive_constants.py gates)."
+  },
+  "MF_AlbedoRollOff": {
+   "inputs": [
+    "Albedo (V3)",
+    "Knee",
+    "Limit"
+   ],
+   "math": "m = max channel; if m <= Knee: unchanged; else scale rgb by (Knee + (Limit-Knee)*(1-exp(-(m-Knee)/(Limit-Knee)))) / m. Keeps the hue and never exceeds Limit. With Knee >= Limit it is a hard min(rgb, Limit).",
+   "fabric_defaults": {
+    "Knee": 0.85,
+    "Limit": 0.95
+   },
+   "paper_defaults": {
+    "Knee": 0.962,
+    "Limit": 0.962,
+    "why": "paperbomb_art Palette.ceiling_linear = 0.962 is the art's own clip"
+   }
+  },
+  "MF_NormalStrength": {
+   "math": "N' = normalize(lerp(float3(0,0,1), N, Strength)); Strength 1 = unchanged"
+  },
+  "MF_LetteringBand": {
+   "math": [
+    "L  = (TexCoord0 - Rect.xy) / (Rect.zw - Rect.xy)",
+    "in = step(0,L.x)*step(L.x,1)*step(0,L.y)*step(L.y,1)",
+    "Ink = LetteringMask(L).r * in    (sampler Clamp)",
+    "BaseColor = lerp(BaseColor, LetteringColour, Ink); Roughness = lerp(Roughness, LetteringRoughness, Ink)"
+   ],
+   "source": "References/Kunai/LETTERING_HOWTO.md section 5; Rect in UNREAL UV0 (V flipped by the FBX importer)"
+  },
+  "MF_InkDerive": {
+   "math": [
+    "Y(c) = dot(c, (0.2126, 0.7152, 0.0722))",
+    "StoredScale(c, k) = sRGBdecode(k * sRGBencode(c)) per channel (exact piecewise sRGB)",
+    "SatGain(c, s, g)  = lerp(Y(c), c, s) * g",
+    "BlackDry = lerp(BlackInk, PaperColour, BlackDryPaperMix) * BlackDryGain",
+    "RedDry   = StoredScale(RedInk, RedDryValueScale)",
+    "RedPool  = SatGain(RedInk, RedPoolSaturation, RedPoolGain)",
+    "v2: PoolGain_e = lerp(mean(RedPoolGain), RedPoolGain, saturate(sat(RedInk) / RedPoolDefaultSaturation)), sat(c) = (max3 - min3) / max3: a neutral red-ink pick pools neutral; the default is exact"
+   ],
+   "note": "The functions depend on parameters only, so UE can evaluate them as preshaders. The gains make them exact at the default colours, and they stay inside [0,1] for any colour."
+  }
+ },
+ "masters": {
+  "M_Steel_Master": {
+   "path": "/Game/NinjaPack/Materials/M_Steel_Master",
+   "shading_model": "Default Lit",
+   "blend": "Opaque",
+   "two_sided": false,
+   "graph": {
+    "BaseColor": "saturate(BaseColourMap.rgb * SteelTint)",
+    "Metallic": "ORM.B",
+    "Roughness": "saturate(ORM.G + RoughnessAdjust)",
+    "Specular": "0.5 (constant; only the rust specks are non-metal)",
+    "AmbientOcclusion": "ORM.R",
+    "Normal": "MF_NormalStrength(NormalMap, NormalStrength)"
+   },
+   "parameters": [
+    {
+     "name": "Steel Tint",
+     "type": "vector",
+     "group": "01 Colour",
+     "sort": 0,
+     "default": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "desc": "Multiplies the steel's colour. White = exactly as shipped. Try warm (1.0, 0.8, 0.6) for a bronze tone or cool (0.8, 0.9, 1.0) for blued steel. Values above 1 are clamped."
+    },
+    {
+     "name": "Roughness Adjust",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 0,
+     "default": 0.0,
+     "min": -0.25,
+     "max": 0.25,
+     "desc": "Added to the baked roughness. Negative = more polished, positive = duller. 0 = as shipped."
+    },
+    {
+     "name": "Normal Strength",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 1,
+     "default": 1.0,
+     "min": 0.0,
+     "max": 2.0,
+     "desc": "Strength of the normal map's scratches and relief. 1 = as shipped, 0 = flat."
+    },
+    {
+     "name": "Base Colour Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 0,
+     "desc": "The steel's colour map (sRGB).",
+     "sampler": "Color"
+    },
+    {
+     "name": "ORM Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 1,
+     "desc": "R ambient occlusion, G roughness, B metallic (linear).",
+     "sampler": "Masks"
+    },
+    {
+     "name": "Normal Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 2,
+     "desc": "Normal map (DirectX / Unreal convention).",
+     "sampler": "Normal"
+    }
+   ],
+   "settings": {
+    "used_with_instanced_static_meshes": true,
+    "used_with_skeletal_mesh": true
+   }
+  },
+  "M_Fabric_Master": {
+   "path": "/Game/NinjaPack/Materials/M_Fabric_Master",
+   "shading_model": "From Material Expression (static switch 'Cloth Sheen': off = Default Lit, on = Cloth)",
+   "use_material_attributes": true,
+   "why_attributes": "UE 5.8 Python's MaterialProperty enum has no ShadingModel or CustomData0 member (probe). MakeMaterialAttributes exposes 'ShadingModel', 'SubsurfaceColor' (= Cloth Fuzz Colour) and 'ClearCoat' (= CustomData0 = the Cloth amount pin, to be confirmed by render)",
+   "blend": "Opaque",
+   "two_sided": false,
+   "graph": {
+    "BaseColor": "UseOriginalBakedColours ? BaseColourMap.rgb : MF_AlbedoRollOff(MF_TintDetail(DetailMap.r, Colour, LightestColour, ..., MipLevel), 0.85, 0.95); then UseLettering ? MF_LetteringBand(...)",
+    "Metallic": "0",
+    "Roughness": "saturate(ORM.G + RoughnessAdjust) (lettering lerps it)",
+    "Specular": "SpecularFromORMAlpha ? SpecularStrength * ORM.A : SpecularStrength",
+    "AmbientOcclusion": "ORM.R",
+    "Normal": "MF_NormalStrength(NormalMap, NormalStrength)",
+    "ShadingModel": "ClothSheen ? MSM_Cloth : MSM_DefaultLit (default off everywhere after the V4 calibration)",
+    "Cloth (MMA ClearCoat = CustomData0)": "Sheen Amount",
+    "Fuzz Colour (MMA SubsurfaceColor)": "Sheen Colour"
+   },
+   "parameters": [
+    {
+     "name": "Colour",
+     "type": "vector",
+     "group": "01 Colour",
+     "sort": 0,
+     "default": "per instance",
+     "desc": "The colour of this part: its average colour. Click the swatch and pick any colour (the picker's Hex sRGB field takes web colours). The weave, fibre and wear detail follow the new colour. Very light picks are capped by Lightest Colour so the highlights keep their detail; pure black is lifted to about #1A1A1A so the detail stays visible. The default is the shipped look."
+    },
+    {
+     "name": "Lightest Colour",
+     "type": "scalar",
+     "group": "01 Colour",
+     "sort": 1,
+     "default": "per instance",
+     "min": 0.3,
+     "max": 0.9,
+     "desc": "The lightest average brightness this part will take (linear). Lighter picks are scaled down to it, keeping their hue, so the highlights never blow out into flat white. Raise it for a brighter result with softer highlight detail (0.9 = no limit)."
+    },
+    {
+     "name": "Use Original Baked Colours",
+     "type": "static_switch",
+     "group": "01 Colour",
+     "sort": 2,
+     "default": false,
+     "desc": "On = ignore the colour settings and show the original baked colour map exactly as shipped (fixed colour)."
+    },
+    {
+     "name": "Detail Strength",
+     "type": "scalar",
+     "group": "02 Detail",
+     "sort": 0,
+     "default": 1.0,
+     "min": 0.0,
+     "max": 1.5,
+     "desc": "How strong the cloth or straw detail is. 1 = as shipped, 0 = flat colour. On very light colours the highlight detail is limited automatically, so values above 1 mainly deepen the darker weave."
+    },
+    {
+     "name": "Roughness Adjust",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 0,
+     "default": 0.0,
+     "min": -0.25,
+     "max": 0.25,
+     "desc": "Added to the baked roughness. Negative = shinier, positive = duller. 0 = as shipped."
+    },
+    {
+     "name": "Specular Strength",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 1,
+     "default": "per instance",
+     "min": 0.0,
+     "max": 1.0,
+     "desc": "Strength of the surface reflection. On the smoke bomb and the hat it scales the baked specular mask, which keeps the cloth from looking greyed. 0.5 = standard."
+    },
+    {
+     "name": "Normal Strength",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 2,
+     "default": 1.0,
+     "min": 0.0,
+     "max": 2.0,
+     "desc": "Strength of the normal map's weave and folds. 1 = as shipped, 0 = flat."
+    },
+    {
+     "name": "Cloth Sheen",
+     "type": "static_switch",
+     "group": "04 Sheen",
+     "sort": 0,
+     "default": false,
+     "desc": "Optional soft, velvety cloth sheen (Unreal's Cloth shading model). Off by default: without it the part matches the original look more closely."
+    },
+    {
+     "name": "Sheen Colour",
+     "type": "vector",
+     "group": "04 Sheen",
+     "sort": 1,
+     "default": [
+      0.217,
+      0.21,
+      0.196,
+      1.0
+     ],
+     "calibration": "V4 sheen calibration (2026-09-26, WorkFiles/materials/ue_renders/sheen_calibration/sheen_compare.json): a flat wrap-coloured sphere under one key and one rim light, sheen-on/sheen-off ratio per N.V bin, Blender (Principled sheen 0.35, tint 0.62/0.60/0.56, roughness 0.35) vs Unreal. RMS log-ratio error: Default Lit (no Cloth lobe) 0.206; best Cloth pair Fuzz = tint x 0.35 = (0.217, 0.21, 0.196), Cloth 0.35: 0.259; the survey's Fuzz (0.62, 0.60, 0.56) Cloth 0.35: 0.477 (reads light grey). Unreal's Cloth lobe REPLACES the GGX specular, so it darkens the grazing rim that Blender's additive sheen brightens. Default: Cloth Sheen OFF; the calibrated pair is the default for buyers who turn it on.",
+     "desc": "Colour of the soft sheen at grazing angles. Used when Cloth Sheen is on."
+    },
+    {
+     "name": "Sheen Amount",
+     "type": "scalar",
+     "group": "04 Sheen",
+     "sort": 2,
+     "default": 0.35,
+     "min": 0.0,
+     "max": 1.0,
+     "desc": "Strength of the cloth sheen. Used when Cloth Sheen is on."
+    },
+    {
+     "name": "Use Lettering",
+     "type": "static_switch",
+     "group": "05 Lettering",
+     "sort": 0,
+     "default": false,
+     "desc": "Kunai only: paints the Lettering Mask onto the grip's lettering band. The shipped mask is blank, so this is off; see the kunai README to paint your own text."
+    },
+    {
+     "name": "Lettering Colour",
+     "type": "vector",
+     "group": "05 Lettering",
+     "sort": 1,
+     "default": [
+      0.62,
+      0.56,
+      0.44,
+      1.0
+     ],
+     "desc": "Colour of the painted lettering (white in the mask = ink)."
+    },
+    {
+     "name": "Lettering Roughness",
+     "type": "scalar",
+     "group": "05 Lettering",
+     "sort": 2,
+     "default": 0.62,
+     "min": 0.0,
+     "max": 1.0,
+     "desc": "Roughness of the painted lettering."
+    },
+    {
+     "name": "Lettering Mask",
+     "type": "texture",
+     "group": "05 Lettering",
+     "sort": 3,
+     "desc": "Greyscale lettering mask, 1536 x 256, white = ink (kunai README, 'Lettering').",
+     "sampler": "LinearGrayscale"
+    },
+    {
+     "name": "Lettering Band UV",
+     "type": "vector",
+     "group": "05 Lettering",
+     "sort": 4,
+     "default": [
+      1.1328125,
+      0.61898509,
+      1.8359375,
+      0.73617259,
+      0.0
+     ],
+     "desc": "Where the lettering band sits in the kunai's UVs (u min, v min, u max, v max). Do not change unless you re-map the mesh."
+    },
+    {
+     "name": "Detail Bias",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 0,
+     "desc": "Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Scale",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 1,
+     "desc": "Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Mean",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 2,
+     "desc": "Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Highlight Ratio",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 3,
+     "desc": "Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Moments Low",
+     "type": "vector",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 4,
+     "desc": "Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Moments High",
+     "type": "vector",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 5,
+     "desc": "Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Dark Detail Follow",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 6,
+     "default": 0.5,
+     "desc": "How much of the highlight softening the dark weave follows on light colours. Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Albedo Ceiling",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 7,
+     "default": 0.9,
+     "desc": "The brightest a highlight may get on light colours. Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Map Size",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 8,
+     "desc": "The detail map's width in texels (for the distance correction). Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Mip Compensation 1-4",
+     "type": "vector",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 9,
+     "desc": "Keeps a recoloured part the same colour at a distance as up close. Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Mip Compensation 5-8",
+     "type": "vector",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 10,
+     "desc": "Keeps a recoloured part the same colour at a distance as up close. Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Detail Mip Compensation Power",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the detail map - do not change)",
+     "sort": 11,
+     "desc": "Keeps a recoloured part the same colour at a distance as up close. Matched to this part's detail map. Do not change."
+    },
+    {
+     "name": "Specular From ORM Alpha",
+     "type": "static_switch",
+     "group": "09 Textures",
+     "sort": 0,
+     "default": true,
+     "desc": "On = the ORM map's alpha holds a baked specular mask (smoke bomb, hat). Off = constant specular."
+    },
+    {
+     "name": "Detail Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 1,
+     "desc": "16-bit linear greyscale detail map that drives the recolour. Swap it only together with its matched settings in 08 Advanced.",
+     "sampler": "LinearGrayscale"
+    },
+    {
+     "name": "Base Colour Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 2,
+     "desc": "The original baked colour map, used when Use Original Baked Colours is on.",
+     "sampler": "Color"
+    },
+    {
+     "name": "ORM Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 3,
+     "desc": "R ambient occlusion, G roughness, B metallic, A specular mask (linear).",
+     "sampler": "Masks"
+    },
+    {
+     "name": "Normal Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 4,
+     "desc": "Normal map (DirectX / Unreal convention).",
+     "sampler": "Normal"
+    }
+   ],
+   "settings": {
+    "float_precision_mode": "MFPM_FULL",
+    "used_with_instanced_static_meshes": true,
+    "used_with_skeletal_mesh": true
+   }
+  },
+  "M_PaperInk_Master": {
+   "path": "/Game/NinjaPack/Materials/M_PaperInk_Master",
+   "shading_model": "Default Lit",
+   "blend": "Opaque (README: the M map is not wired, on purpose)",
+   "two_sided": false,
+   "graph": {
+    "BaseColor": "UseOriginalBakedColours ? BaseColourMap.rgb : min(PaperColour_e*(PaperDetail.rgb*PaperWeightScale) + BlackInk*Ink.r + BlackDry*Ink.g + RedInk*Ink.b + RedDry*Ink.a + RedPool*PaperDetail.a, AlbedoCeiling); then * lerp(1, ORM.R, BakedAOInColour). PaperColour_e = floor + PaperColour * min(1, PaperColourLimit / max3)",
+    "Metallic": "0",
+    "Roughness": "saturate(ORM.G + RoughnessAdjust)",
+    "Specular": "SpecularStrength (0.5)",
+    "AmbientOcclusion": "ORM.R",
+    "Normal": "MF_NormalStrength(NormalMap, NormalStrength)"
+   },
+   "parameters": [
+    {
+     "name": "Paper Colour",
+     "type": "vector",
+     "group": "01 Colour",
+     "sort": 0,
+     "default": "per instance",
+     "desc": "The paper's average colour. Grain, ageing, stains and the show-through on the back follow it. The lightest paper is about #F3F3F3 so the grain stays visible; pure black is lifted to about #1A1A1A. The default is the shipped look."
+    },
+    {
+     "name": "Black Ink Colour",
+     "type": "vector",
+     "group": "01 Colour",
+     "sort": 1,
+     "default": "per instance",
+     "desc": "Colour of the brushed text and emblem. The dry-brush strokes follow it."
+    },
+    {
+     "name": "Red Ink Colour",
+     "type": "vector",
+     "group": "01 Colour",
+     "sort": 2,
+     "default": "per instance",
+     "desc": "Colour of the border, ring and seals. The dry and pooled strokes follow it; pooled ink is always darker."
+    },
+    {
+     "name": "Use Original Baked Colours",
+     "type": "static_switch",
+     "group": "01 Colour",
+     "sort": 9,
+     "default": false,
+     "desc": "On = ignore the colour settings and show the original baked colour map exactly as shipped (fixed colour)."
+    },
+    {
+     "name": "Roughness Adjust",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 0,
+     "default": 0.0,
+     "min": -0.25,
+     "max": 0.25,
+     "desc": "Added to the baked roughness. Negative = shinier, positive = duller. 0 = as shipped."
+    },
+    {
+     "name": "Specular Strength",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 1,
+     "default": 0.5,
+     "min": 0.0,
+     "max": 1.0,
+     "desc": "Strength of the surface reflection. 0.5 = standard."
+    },
+    {
+     "name": "Normal Strength",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 2,
+     "default": 1.0,
+     "min": 0.0,
+     "max": 2.0,
+     "desc": "Strength of the paper's creases and relief. 1 = as shipped."
+    },
+    {
+     "name": "Baked AO In Colour",
+     "type": "scalar",
+     "group": "03 Surface",
+     "sort": 3,
+     "default": 1.0,
+     "min": 0.0,
+     "max": 1.0,
+     "desc": "How much of the baked ambient occlusion darkens the colour itself. 1 = the original look, 0 = none."
+    },
+    {
+     "name": "Paper Weight Scale",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 0,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Black Ink Dry Paper Mix",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 1,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Black Ink Dry Gain",
+     "type": "vector",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 2,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Red Ink Dry Value Scale",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 3,
+     "default": 0.82,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Red Ink Pool Saturation",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 4,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Red Ink Pool Gain",
+     "type": "vector",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 5,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Albedo Ceiling",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 6,
+     "default": 0.962,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Paper Colour Limit",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 7,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Red Ink Pool Default Saturation",
+     "type": "scalar",
+     "group": "08 Advanced (matched to the paper maps - do not change)",
+     "sort": 8,
+     "desc": "Matched to this item's paper and ink maps. Do not change."
+    },
+    {
+     "name": "Base Colour Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 1,
+     "desc": "The original baked colour map, used when Use Original Baked Colours is on.",
+     "sampler": "Color"
+    },
+    {
+     "name": "ORM Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 2,
+     "desc": "R ambient occlusion, G roughness, B metallic (linear).",
+     "sampler": "Masks"
+    },
+    {
+     "name": "Normal Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 3,
+     "desc": "Normal map (DirectX / Unreal convention).",
+     "sampler": "Normal"
+    },
+    {
+     "name": "Paper Detail Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 4,
+     "desc": "Paper grain and pooled-ink weights that drive the paper recolour. Swap only with its matched settings.",
+     "sampler": "Color"
+    },
+    {
+     "name": "Ink Weights Map",
+     "type": "texture",
+     "group": "09 Textures",
+     "sort": 5,
+     "desc": "Where each ink sits (R black, G dry black, B red, A dry red). Swap only with its matched settings.",
+     "sampler": "LinearColor"
+    }
+   ],
+   "settings": {
+    "float_precision_mode": "MFPM_FULL",
+    "used_with_instanced_static_meshes": true
+   }
+  }
+ },
+ "items": [
+  {
+   "item": "Shuriken_FourPoint",
+   "mesh": "SM_Shuriken_FourPoint",
+   "fbx": "Exports/Shuriken/SM_Shuriken_FourPoint.fbx",
+   "sidecar": "Exports/Shuriken/SM_Shuriken_FourPoint.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Shuriken_Master",
+     "part": "Steel",
+     "instance": "MI_Shuriken_FourPoint_Steel",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Shuriken_FourPoint_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Shuriken_FourPoint_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Shuriken_FourPoint_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "base_instance": "MI_Shuriken_FourPoint_Steel_Base"
+    }
+   ]
+  },
+  {
+   "item": "Shuriken_EightPoint",
+   "mesh": "SM_Shuriken_EightPoint",
+   "fbx": "Exports/Shuriken/SM_Shuriken_EightPoint.fbx",
+   "sidecar": "Exports/Shuriken/SM_Shuriken_EightPoint.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Shuriken_Master",
+     "part": "Steel",
+     "instance": "MI_Shuriken_EightPoint_Steel",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Shuriken_EightPoint_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Shuriken_EightPoint_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Shuriken_EightPoint_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "base_instance": "MI_Shuriken_EightPoint_Steel_Base"
+    }
+   ]
+  },
+  {
+   "item": "Shuriken_SquarePlate",
+   "mesh": "SM_Shuriken_SquarePlate",
+   "fbx": "Exports/Shuriken/SM_Shuriken_SquarePlate.fbx",
+   "sidecar": "Exports/Shuriken/SM_Shuriken_SquarePlate.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Shuriken_Master",
+     "part": "Steel",
+     "instance": "MI_Shuriken_SquarePlate_Steel",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Shuriken_SquarePlate_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Shuriken_SquarePlate_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Shuriken_SquarePlate_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "base_instance": "MI_Shuriken_SquarePlate_Steel_Base"
+    }
+   ]
+  },
+  {
+   "item": "Shuriken_SixPoint",
+   "mesh": "SM_Shuriken_SixPoint",
+   "fbx": "Exports/Shuriken/SM_Shuriken_SixPoint.fbx",
+   "sidecar": "Exports/Shuriken/SM_Shuriken_SixPoint.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Shuriken_Master",
+     "part": "Steel",
+     "instance": "MI_Shuriken_SixPoint_Steel",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Shuriken_SixPoint_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Shuriken_SixPoint_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Shuriken_SixPoint_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "base_instance": "MI_Shuriken_SixPoint_Steel_Base"
+    }
+   ]
+  },
+  {
+   "item": "Shuriken_Spike",
+   "mesh": "SM_Shuriken_Spike",
+   "fbx": "Exports/Shuriken/SM_Shuriken_Spike.fbx",
+   "sidecar": "Exports/Shuriken/SM_Shuriken_Spike.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Shuriken_Master",
+     "part": "Steel",
+     "instance": "MI_Shuriken_Spike_Steel",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Shuriken_Spike_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Shuriken_Spike_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Shuriken_Spike_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      2048,
+      512
+     ],
+     "params": {},
+     "base_instance": "MI_Shuriken_Spike_Steel_Base"
+    }
+   ]
+  },
+  {
+   "item": "Shuriken_HookedCross",
+   "mesh": "SM_Shuriken_HookedCross",
+   "fbx": "Exports/Shuriken/SM_Shuriken_HookedCross.fbx",
+   "sidecar": "Exports/Shuriken/SM_Shuriken_HookedCross.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Shuriken_Master",
+     "part": "Steel",
+     "instance": "MI_Shuriken_HookedCross_Steel",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Shuriken_HookedCross_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Shuriken_HookedCross_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Shuriken_HookedCross_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "note": "Never mirror it: a negative-scale instance renders the opposite-handed symbol (shuriken memory, manji rules). Not a material concern.",
+     "base_instance": "MI_Shuriken_HookedCross_Steel_Base"
+    }
+   ]
+  },
+  {
+   "item": "Kunai_Plain",
+   "mesh": "SM_Kunai_Plain",
+   "fbx": "Exports/Shuriken/SM_Kunai_Plain.fbx",
+   "sidecar": "Exports/Shuriken/SM_Kunai_Plain.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Shuriken_Master",
+     "part": "Steel",
+     "instance": "MI_Kunai_Plain_Steel",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Kunai_Plain_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Kunai_Plain_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Kunai_Plain_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "uv_tile": "u 0..1",
+     "params": {},
+     "base_instance": "MI_Kunai_Plain_Steel_Base"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_Kunai_Wrap",
+     "part": "Wrap",
+     "instance": "MI_Kunai_Plain_Wrap",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": false,
+     "textures": {
+      "Detail Map": "Exports/Shuriken/Textures/Recolour/T_Kunai_Wrap_Detail16.png (NEW)",
+      "Base Colour Map": "Exports/Shuriken/Textures/T_Kunai_Wrap_BC.png",
+      "ORM Map": "Exports/Shuriken/Textures/T_Kunai_Wrap_ORM.png",
+      "Normal Map": "Exports/Shuriken/Textures/T_Kunai_Wrap_N.png",
+      "Lettering Mask": "Exports/Shuriken/Textures/T_Kunai_Lettering.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N",
+      "Lettering Mask": "Lettering"
+     },
+     "size": [
+      1024,
+      1024
+     ],
+     "uv_tile": "u 1..2 (Wrap addressing reads the same texels)",
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": false,
+      "Cloth Sheen": false,
+      "Sheen Colour": [
+       0.217,
+       0.21,
+       0.196,
+       1.0
+      ],
+      "Sheen Amount": 0.35,
+      "Use Lettering": false,
+      "Lettering Colour": [
+       0.62,
+       0.56,
+       0.44,
+       1.0
+      ],
+      "Lettering Roughness": 0.62,
+      "Lettering Band UV": [
+       1.1328125,
+       0.61898509,
+       1.8359375,
+       0.73617259,
+       0.0
+      ]
+     },
+     "look_contract": {
+      "BaseColor": "T_Kunai_Wrap_BC (sRGB), baked from M_Kunai_Wrap with Dye = 0 (kunai_wrap.py: DARK linear (0.042, 0.039, 0.036) x value recipe, mixed toward FIBRE (0.150, 0.142, 0.126) at flecks and fray)",
+      "Roughness": "ORM.G (0.74-0.98, mean 0.859)",
+      "Metallic": "0",
+      "Specular": "Principled default (Specular IOR Level 0.5 -> Unreal Specular 0.5); no specular mask",
+      "Normal": "T_Kunai_Wrap_N (DirectX)",
+      "sheen": "wrap_preview_material: Sheen Weight 0.35, Sheen Roughness 0.35, Sheen Tint (0.62, 0.60, 0.56). Docstring: 'Unreal: the Cloth shading model's fuzz'",
+      "lettering": "LETTERING_HOWTO.md section 5 graph; the shipped mask is blank, so Ink = 0 and the graph changes nothing",
+      "sheen_unreal": "V4 sheen calibration (2026-09-26, WorkFiles/materials/ue_renders/sheen_calibration/sheen_compare.json): a flat wrap-coloured sphere under one key and one rim light, sheen-on/sheen-off ratio per N.V bin, Blender (Principled sheen 0.35, tint 0.62/0.60/0.56, roughness 0.35) vs Unreal. RMS log-ratio error: Default Lit (no Cloth lobe) 0.206; best Cloth pair Fuzz = tint x 0.35 = (0.217, 0.21, 0.196), Cloth 0.35: 0.259; the survey's Fuzz (0.62, 0.60, 0.56) Cloth 0.35: 0.477 (reads light grey). Unreal's Cloth lobe REPLACES the GGX specular, so it darkens the grazing rim that Blender's additive sheen brightens. Default: Cloth Sheen OFF; the calibrated pair is the default for buyers who turn it on."
+     },
+     "presets": [
+      {
+       "instance": "MI_Kunai_Plain_Wrap_Undyed",
+       "parent": "MI_Kunai_Plain_Wrap_Base",
+       "params": {
+        "Base Colour Map": "Exports/Shuriken/Textures/T_Kunai_Wrap_Natural_BC.png",
+        "Use Original Baked Colours": true
+       },
+       "optional": true,
+       "why": "The undyed BC is NOT a recolour of the dark one (natural/dark luminance ratio p1-p99 = 6.2-9.2, correlation 0.86), so it ships as the baked-colour path."
+      }
+     ],
+     "lettering_note": "v2: Use Lettering OFF until a real mask exists (blank mask: no visible effect, +16 PS instructions)",
+     "base_instance": "MI_Kunai_Plain_Wrap_Base"
+    }
+   ]
+  },
+  {
+   "item": "SmokeBomb",
+   "mesh": "SM_SmokeBomb",
+   "fbx": "Exports/SmokeBomb/SM_SmokeBomb.fbx",
+   "sidecar": "Exports/SmokeBomb/SM_SmokeBomb.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_SmokeBomb",
+     "part": "Cloth",
+     "instance": "MI_SmokeBomb_Cloth",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/SmokeBomb/Textures/Recolour/T_SmokeBomb_Detail16.png (NEW: lossless linear copy of T_SmokeBomb_Detail)",
+      "Base Colour Map": "Exports/SmokeBomb/Textures/T_SmokeBomb_BC.png",
+      "ORM Map": "Exports/SmokeBomb/Textures/T_SmokeBomb_ORM.png",
+      "Normal Map": "Exports/SmokeBomb/Textures/T_SmokeBomb_N.png"
+     },
+     "reference_only_textures": {
+      "Detail_sRGB8": "Exports/SmokeBomb/Textures/T_SmokeBomb_Detail.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgba",
+      "Normal Map": "N"
+     },
+     "size": {
+      "BC": 4096,
+      "Detail": 4096,
+      "ORM": 2048,
+      "N": 2048
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": true,
+      "Cloth Sheen": false,
+      "Use Lettering": false
+     },
+     "param_derivation": "Colour = Tint_default_linear (0.630803, 0.532934, 0.481121) x mean(d), Scale = 1/mean(d), with mean(d) = 0.072262 over the whole 4096 map. So Colour x Scale x d = Tint x d, the sidecar contract, for any mean. The generator recomputes mean(d) from the Detail16 it writes and derives both numbers from that one mean.",
+     "look_contract": {
+      "BaseColor": "sidecar: \"T_SmokeBomb_Detail.R x Tint  (Tint default = tint_linear; equals T_SmokeBomb_BC at the default Tint, at every mip)\"",
+      "Detail_encoding": "sidecar: sRGB-encoded LINEAR detail, import sRGB ON (TC_Grayscale)",
+      "Specular": "sidecar: \"0.5 x T_SmokeBomb_ORM.A\" ... \"Do NOT use a constant Specular: 0.5 greys the cloth (p50 +53 %, p10 +111 %)\"",
+      "Roughness": "ORM.G",
+      "Metallic": "0",
+      "AO": "ORM.R",
+      "Normal": "T_SmokeBomb_N (DirectX)",
+      "Sheen_Fuzz": "0; shading 'Default Lit ... no Cloth/Fuzz layer'"
+     },
+     "survey_check": "Detail x Tint reproduces the BC with 0 stored levels of difference on all 16.8 M texels (map_stats.json)",
+     "base_instance": "MI_SmokeBomb_Cloth_Base"
+    }
+   ]
+  },
+  {
+   "item": "BlackHat",
+   "mesh": "SM_BlackHat",
+   "fbx": "Exports/BlackHat/SM_BlackHat.fbx",
+   "sidecar": "Exports/BlackHat/SM_BlackHat.sockets.json",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_BlackHat_Straw",
+     "part": "Straw",
+     "instance": "MI_BlackHat_Straw",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/BlackHat/Textures/Recolour/T_BlackHat_Straw_Detail16.png (NEW: lossless linear copy)",
+      "Base Colour Map": "Exports/BlackHat/Textures/T_BlackHat_Straw_BC.png",
+      "ORM Map": "Exports/BlackHat/Textures/T_BlackHat_Straw_ORM.png",
+      "Normal Map": "Exports/BlackHat/Textures/T_BlackHat_Straw_N.png"
+     },
+     "reference_only_textures": {
+      "Detail_sRGB8": "Exports/BlackHat/Textures/T_BlackHat_Straw_Detail.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgba",
+      "Normal Map": "N"
+     },
+     "size": 2048,
+     "orm_texture_settings": {
+      "composite_texture": "T_BlackHat_Straw_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.65,
+      "Specular From ORM Alpha": true,
+      "Cloth Sheen": false,
+      "Use Lettering": false
+     },
+     "look_contract": {
+      "BaseColor": "sidecar: \"saturate(Tint x (DetailBias + DetailScale x T_BlackHat_Straw_Detail.R)); at the default Tint / Bias / Scale it equals T_BlackHat_Straw_BC at every mip\"",
+      "Specular": "sidecar: \"0.65 x T_BlackHat_Straw_ORM.A\"",
+      "Roughness": "ORM.G with the ORM texture's Composite Texture = the part's _N, CTM_NormalRoughnessToGreen",
+      "Metallic": "0",
+      "AO": "ORM.R",
+      "Normal": "DirectX",
+      "shading": "Default Lit, no Cloth/Fuzz"
+     },
+     "survey_check": "model reproduces BC with 0 stored levels difference (map_stats.json)",
+     "base_instance": "MI_BlackHat_Straw_Base"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_BlackHat_Cloth",
+     "part": "Cloth",
+     "instance": "MI_BlackHat_Cloth",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/BlackHat/Textures/Recolour/T_BlackHat_Cloth_Detail16.png (NEW: lossless linear copy)",
+      "Base Colour Map": "Exports/BlackHat/Textures/T_BlackHat_Cloth_BC.png",
+      "ORM Map": "Exports/BlackHat/Textures/T_BlackHat_Cloth_ORM.png",
+      "Normal Map": "Exports/BlackHat/Textures/T_BlackHat_Cloth_N.png"
+     },
+     "reference_only_textures": {
+      "Detail_sRGB8": "Exports/BlackHat/Textures/T_BlackHat_Cloth_Detail.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgba",
+      "Normal Map": "N"
+     },
+     "size": 2048,
+     "uv_tile": "U + 1 (second tile): keep Wrap",
+     "orm_texture_settings": {
+      "composite_texture": "T_BlackHat_Cloth_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": true,
+      "Cloth Sheen": false,
+      "Use Lettering": false
+     },
+     "look_contract": {
+      "BaseColor": "sidecar: saturate(Tint x (DetailBias + DetailScale x T_BlackHat_Cloth_Detail.R))",
+      "Specular": "sidecar: 0.5 x T_BlackHat_Cloth_ORM.A",
+      "Roughness": "ORM.G + composite N (Toksvig)",
+      "Metallic": "0",
+      "AO": "ORM.R",
+      "shading": "Default Lit, no Cloth/Fuzz (the hat's cloth has NO sheen, unlike the kunai wrap)"
+     },
+     "survey_check": "model reproduces BC with 0 stored levels difference (map_stats.json)",
+     "discrepancy": "BLACKHAT_REPORT.md table lists Bias/Scale straw 0.05858/6.853311 and cloth 0.199741/3.847832 with mean 1.000005. The sidecar (0.058461/6.879606, 0.239278/3.800177) is the set that reproduces the shipped BC exactly, so the sidecar wins and the report table is stale.",
+     "base_instance": "MI_BlackHat_Cloth_Base"
+    }
+   ]
+  },
+  {
+   "item": "PaperBomb",
+   "mesh": "SM_PaperBomb",
+   "fbx": "Exports/PaperBomb/SM_PaperBomb.fbx",
+   "sidecar": "Exports/PaperBomb/SM_PaperBomb.sockets.json",
+   "status": "PAUSED mid exact-match pass: the maps WILL change. Every value below that the art produces is GENERATOR-owned. Re-pointing = rerun make_paperbomb_recolour_maps.py + build_pack_materials.py (reimport keeps the asset names).",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_PaperBomb",
+     "part": "Tag",
+     "instance": "MI_PaperBomb_Tag",
+     "master": "M_PaperInk_Master",
+     "recolourable": true,
+     "recolourable_parts": [
+      "Paper",
+      "Black Ink",
+      "Red Ink"
+     ],
+     "tint_ready_shipped": false,
+     "textures": {
+      "Paper Detail Map": "Exports/PaperBomb/Textures/Recolour/T_PaperBomb_PaperDetail.png (NEW)",
+      "Ink Weights Map": "Exports/PaperBomb/Textures/Recolour/T_PaperBomb_InkWeights.png (NEW)",
+      "Base Colour Map": "Exports/PaperBomb/Textures/T_PaperBomb_BC.png",
+      "ORM Map": "Exports/PaperBomb/Textures/T_PaperBomb_ORM.png",
+      "Normal Map": "Exports/PaperBomb/Textures/T_PaperBomb_N.png"
+     },
+     "unwired_textures": {
+      "M": "Exports/PaperBomb/Textures/T_PaperBomb_M.png"
+     },
+     "texture_kinds": {
+      "Paper Detail Map": "PaperDetail_sRGB",
+      "Ink Weights Map": "InkWeights_linear",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": 2048,
+     "params": {
+      "Paper Colour": "GENERATOR (survey: mean of ink-free texels (0.880906, 0.752713, 0.532533))",
+      "Black Ink Colour": "GENERATOR (Palette.black_wet = (0.0048, 0.0047, 0.0045))",
+      "Red Ink Colour": "GENERATOR (Palette.red_wet = (0.6649, 0.00926, 0.00350))",
+      "Paper Weight Scale": "GENERATOR",
+      "Black Ink Dry Paper Mix": "GENERATOR",
+      "Black Ink Dry Gain": "GENERATOR",
+      "Red Ink Dry Value Scale": 0.82,
+      "Red Ink Pool Saturation": "GENERATOR",
+      "Red Ink Pool Gain": "GENERATOR",
+      "Albedo Ceiling": 0.962,
+      "Specular Strength": 0.5,
+      "Baked AO In Colour": 1.0
+     },
+     "look_contract": {
+      "BaseColor": "paperbomb_art._composite: red over paper, black over red, colour = lerp(dry, wet, load) (+ pool for red), x (1 - 0.13 dirt thin), clipped to [0.0016, 0.962]; transferred 1:1 into the atlas (bake.transfer)",
+      "gallery": "props_lib/paper_material.py gallery_material: BaseColor = BC x ORM.R ('AO into base colour, as a UE master does'), Specular IOR Level 0.5 at IOR 1.5, Roughness ORM.G, Metallic ORM.B (0), Normal DirectX green inverted in-graph",
+      "M_map": "README.txt section 4: M is NOT wired; the shipped master is OPAQUE"
+     },
+     "survey_check": "The shipped _M.B is max(red, black) opacity: one channel cannot separate the two inks, and it carries no paper detail. Luminance-only tint fits the paper (dE76 p99 0.89) and the black ink (p99 2.96), but NOT the red ink (p99 17.4, because of the pooled vermilion (0.024, 0.011, 0.0082)). So new maps are needed.",
+     "unwired_texture_kinds": {
+      "M": "M_paperbomb"
+     },
+     "base_instance": "MI_PaperBomb_Tag_Base"
+    }
+   ]
+  },
+  {
+   "item": "Fan",
+   "kind": "skeletal",
+   "folder": "/Game/NinjaPack/Meshes/Fan",
+   "short": "Fan",
+   "mesh": "SK_Fan",
+   "fbx": "Exports/Fan/SK_Fan.fbx",
+   "sidecar": "Exports/Fan/SK_Fan.skeletal.json",
+   "note": "ADDED 2026-09-26 (the fan's Integrate phase). A SKELETAL mesh (77 bones + root, 3 LODs, 3 clips, PHYS_Fan, sockets): np_skeletal.py imports it into its own folder from the sidecar; slots are assigned by name",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Fan_Leaf",
+     "part": "Leaf",
+     "instance": "MI_Fan_Leaf",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Fan/Textures/Recolour/T_Fan_Leaf_Detail16.png (NEW: lossless linear copy of T_Fan_Leaf_Detail)",
+      "Base Colour Map": "Exports/Fan/Textures/T_Fan_Leaf_BC.png",
+      "ORM Map": "Exports/Fan/Textures/T_Fan_Leaf_ORM.png",
+      "Normal Map": "Exports/Fan/Textures/T_Fan_Leaf_N.png"
+     },
+     "reference_only_textures": {
+      "Detail_sRGB8": "Exports/Fan/Textures/T_Fan_Leaf_Detail.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgba",
+      "Normal Map": "N"
+     },
+     "size": {
+      "BC": 2048,
+      "Detail": 2048,
+      "ORM": 2048,
+      "N": 2048
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": true,
+      "Cloth Sheen": false,
+      "Use Lettering": false
+     },
+     "look_contract": {
+      "BaseColor": "sidecar: saturate(Colour x (Detail Bias + Detail Scale x Detail)), Colour = the part's MEAN colour (default = REFERENCE_SPEC 9's reference colour)",
+      "Specular": "sidecar: 0.5 x ORM.A (specular_scale)",
+      "Roughness": "ORM.G",
+      "Metallic": "0",
+      "AO": "ORM.R",
+      "Normal": "T_Fan_Leaf_N (DirectX)",
+      "Sheen_Fuzz": "0 (Default Lit)"
+     },
+     "note": "the pleated silk leaf (both layers) and the glued rear flap",
+     "base_instance": "MI_Fan_Leaf_Base"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_Fan_Sticks",
+     "part": "Ribs",
+     "instance": "MI_Fan_Ribs",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Fan/Textures/Recolour/T_Fan_Sticks_Detail16.png (NEW: lossless linear copy of T_Fan_Sticks_Detail)",
+      "Base Colour Map": "Exports/Fan/Textures/T_Fan_Sticks_BC.png",
+      "ORM Map": "Exports/Fan/Textures/T_Fan_Sticks_ORM.png",
+      "Normal Map": "Exports/Fan/Textures/T_Fan_Sticks_N.png"
+     },
+     "reference_only_textures": {
+      "Detail_sRGB8": "Exports/Fan/Textures/T_Fan_Sticks_Detail.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgba",
+      "Normal Map": "N"
+     },
+     "size": {
+      "BC": 2048,
+      "Detail": 2048,
+      "ORM": 2048,
+      "N": 2048
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.6,
+      "Specular From ORM Alpha": true,
+      "Cloth Sheen": false,
+      "Use Lettering": false
+     },
+     "look_contract": {
+      "BaseColor": "sidecar: saturate(Colour x (Detail Bias + Detail Scale x Detail)), Colour = the part's MEAN colour (default = REFERENCE_SPEC 9's reference colour)",
+      "Specular": "sidecar: 0.6 x ORM.A (specular_scale)",
+      "Roughness": "ORM.G",
+      "Metallic": "0",
+      "AO": "ORM.R",
+      "Normal": "T_Fan_Sticks_N (DirectX)",
+      "Sheen_Fuzz": "0 (Default Lit)"
+     },
+     "note": "all 26 sticks: both guards, the 24 ribs and their leaf-zone prongs (lacquered bamboo)",
+     "base_instance": "MI_Fan_Ribs_Base"
+    },
+    {
+     "index": 2,
+     "slot_name": "M_Fan_Rivet",
+     "part": "Rivet",
+     "instance": "MI_Fan_Rivet",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Fan/Textures/T_Fan_Rivet_BC.png",
+      "ORM Map": "Exports/Fan/Textures/T_Fan_Rivet_ORM.png",
+      "Normal Map": "Exports/Fan/Textures/T_Fan_Rivet_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "size": [
+      256,
+      256
+     ],
+     "params": {},
+     "note": "the eyelet rivet (polished metal, not tintable; its blind recess is dark in its own maps)",
+     "base_instance": "MI_Fan_Rivet_Base"
+    }
+   ]
+  },
+  {
+   "item": "Fan_Tassel",
+   "kind": "skeletal",
+   "folder": "/Game/NinjaPack/Meshes/Fan",
+   "short": "Fan_Tassel",
+   "mesh": "SK_Fan_Tassel",
+   "fbx": "Exports/Fan/SK_Fan_Tassel.fbx",
+   "sidecar": "Exports/Fan/SK_Fan_Tassel.skeletal.json",
+   "note": "ADDED 2026-09-26: the fan's optional tassel, its own skeletal mesh (a 6-bone chain) with PHYS_Fan_Tassel; it attaches at SK_Fan's 'Tassel' socket",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Fan_Tassel",
+     "part": "Tassel",
+     "instance": "MI_Fan_Tassel",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Fan/Textures/Recolour/T_Fan_Tassel_Detail16.png (NEW: lossless linear copy of T_Fan_Tassel_Detail)",
+      "Base Colour Map": "Exports/Fan/Textures/T_Fan_Tassel_BC.png",
+      "ORM Map": "Exports/Fan/Textures/T_Fan_Tassel_ORM.png",
+      "Normal Map": "Exports/Fan/Textures/T_Fan_Tassel_N.png"
+     },
+     "reference_only_textures": {
+      "Detail_sRGB8": "Exports/Fan/Textures/T_Fan_Tassel_Detail.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgba",
+      "Normal Map": "N"
+     },
+     "size": {
+      "BC": 1024,
+      "Detail": 1024,
+      "ORM": 1024,
+      "N": 1024
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": true,
+      "Cloth Sheen": false,
+      "Use Lettering": false
+     },
+     "look_contract": {
+      "BaseColor": "sidecar: saturate(Colour x (Detail Bias + Detail Scale x Detail)), Colour = the part's MEAN colour (default = REFERENCE_SPEC 9's reference colour)",
+      "Specular": "sidecar: 0.5 x ORM.A (specular_scale)",
+      "Roughness": "ORM.G",
+      "Metallic": "0",
+      "AO": "ORM.R",
+      "Normal": "T_Fan_Tassel_N (DirectX)",
+      "Sheen_Fuzz": "0 (Default Lit)"
+     },
+     "note": "the cord, knot and thread skirt",
+     "base_instance": "MI_Fan_Tassel_Base"
+    }
+   ]
+  }
+ ],
+ "new_maps": [
+  {
+   "file": "Exports/Shuriken/Textures/Recolour/T_Kunai_Wrap_Detail16.png",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "16-bit greyscale PNG, LINEAR",
+   "script": "Scripts/unreal/materials/maps/make_kunai_wrap_detail.py (Blender headless, opens Assets/Shuriken.blend READ-ONLY, never saves)",
+   "recipe": "Bake M_Kunai_Wrap Base Color (Dye = 0) on SM_Kunai_Plain_LOD0 into a FLOAT image, exactly as kunai_wrap.bake_kunai does: B._alone(lod0), _absorber(steel material), _wrap_uv(lod0), B._bake_channel(..., 'Base Color', float image), spec.wrap_px 1024, then B._fill with B._coverage. Y = luminance(linear rgb). Ymean = mean over covered texels (fill texels carry the mean). Ylo/Yhi = min/max of Y. d = (Y - Ylo) / (Yhi - Ylo), written as 16-bit. Colour = mean linear rgb, Bias = Ylo / Ymean, Scale = (Yhi - Ylo) / Ymean.",
+   "gates": [
+    "G-K1 bake parity: sRGB8(float bake) vs the shipped T_Kunai_Wrap_BC.png: max |diff| <= 1 level, mean <= 0.2 (bake-noise tolerance the kunai freeze used)",
+    "G-K2 default model vs shipped BC: dE00 mean <= 0.5, p99 <= 1.5",
+    "G-K3 Assets/Shuriken.blend sha256 unchanged (f712b421...)",
+    "G-H1 headroom H(default Colour) >= 1"
+   ]
+  },
+  {
+   "file": "Exports/SmokeBomb/Textures/Recolour/T_SmokeBomb_Detail16.png",
+   "size": [
+    4096,
+    4096
+   ],
+   "format": "16-bit greyscale PNG, LINEAR",
+   "script": "Scripts/unreal/materials/maps/make_detail16.py",
+   "recipe": "d16 = round(65535 * sRGBdecode(T_SmokeBomb_Detail.R / 255)). This is a lossless re-encoding: every sRGB8 level maps to a distinct 16-bit value. The equality gate proves it.",
+   "gates": [
+    "decode(d16) vs sRGBdecode(Detail8): max abs <= 1/65535 x 0.5",
+    "model(Detail16) vs BC: 0 stored levels (as the shipped Detail)"
+   ]
+  },
+  {
+   "file": "Exports/BlackHat/Textures/Recolour/T_BlackHat_Straw_Detail16.png",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "16-bit greyscale PNG, LINEAR",
+   "script": "make_detail16.py",
+   "recipe": "as above, from T_BlackHat_Straw_Detail.png"
+  },
+  {
+   "file": "Exports/BlackHat/Textures/Recolour/T_BlackHat_Cloth_Detail16.png",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "16-bit greyscale PNG, LINEAR",
+   "script": "make_detail16.py",
+   "recipe": "as above, from T_BlackHat_Cloth_Detail.png"
+  },
+  {
+   "file": "Exports/PaperBomb/Textures/Recolour/T_PaperBomb_PaperDetail.png",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "RGBA 8-bit PNG, LINEAR (colour type 6; props_lib.bake.write_png cannot write alpha: use a local writer)",
+   "script": "Scripts/unreal/materials/maps/make_paperbomb_recolour_maps.py (Blender headless; imports props_lib READ-ONLY and monkeypatches nothing on disk)",
+   "recipe": "see MATERIAL_PLAN.md 5.3: re-run bake.draw_art(spec, plan, seed=20260919, supersample=2) with paperbomb_art._composite and _downsample wrapped IN MEMORY to capture the 2x paper/red/black layers; build per-texel weights at 2x (W_P per channel = (clipped total - ink terms) / PaperColour; W_bw = a_b d_b K; W_bd = a_b (1-d_b) K; W_rw = (1-a_b) a_r d_r (1-p_r) K; W_rd = (1-a_b) a_r (1-d_r)(1-p_r) K; W_rp = (1-a_b) a_r p_r K); box-downsample 2:1 with paperbomb_art._down; compose into the atlas with atlas.compose (back face: W_P = back.base_colour / PaperColour, inks 0; rim: rim_gradient / PaperColour). RGB = W_P / PaperWeightScale, A = W_rp",
+   "gates": [
+    "G-P1 recompose: sum(weights x default colours) vs the shipped T_PaperBomb_BC.png: max |diff| <= 1 stored level everywhere, dE00 mean <= 0.3",
+    "G-P2 derived colours at the defaults within 0.25 stored sRGB levels of the palette (survey: RedDry via stored-space 0.82 = (0.42653, 0.006926, 0.002855) vs Palette.red_dry (0.4269, 0.00694, 0.00286); RedPool with s = 0.30, gain (0.0791, 0.1032, 0.0782) is exact; BlackDry with paper mix t = 0.00624, gain (0.974, 1.003, 1.052) is exact)",
+    "G-P3 derived colours inside [0,1] for the stress colour set",
+    "G-P4 paper-bomb art modules byte-identical to WorkFiles/paperbomb/paused_2026-09-21/Scripts_props (checked 2026-09-26: identical)"
+   ],
+   "survey_constants": {
+    "Red Ink Dry Value Scale": 0.82,
+    "Red Ink Pool Saturation": 0.3,
+    "Red Ink Pool Gain": [
+     0.079147,
+     0.103246,
+     0.078234
+    ],
+    "Black Ink Dry Paper Mix": 0.00624,
+    "Black Ink Dry Gain": [
+     0.973782,
+     1.003244,
+     1.051776
+    ],
+    "note": "computed from the CURRENT palette (props_lib/paperbomb_art.Palette, reference ink floor) and the survey's mean paper; the generator recomputes them from the palette it imports"
+   }
+  },
+  {
+   "file": "Exports/PaperBomb/Textures/Recolour/T_PaperBomb_InkWeights.png",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "RGBA 8-bit PNG, LINEAR",
+   "script": "make_paperbomb_recolour_maps.py",
+   "recipe": "R W_bw, G W_bd, B W_rw, A W_rd (see above)"
+  },
+  {
+   "file": "Exports/<Item>/Textures/Recolour/recolour_maps.json",
+   "what": "per item: sha256 of every new map, the source-map sha256 it was derived from, the generator script and version, and the default parameter values (Colour, Bias, Scale, Mean, HighlightRatio, Moments, ink derivation constants). build_pack_materials.py reads these."
+  }
+ ],
+ "instances": [
+  {
+   "name": "MI_Shuriken_FourPoint_Steel_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Shuriken_FourPoint_Steel",
+   "parent": "MI_Shuriken_FourPoint_Steel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Shuriken_EightPoint_Steel_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Shuriken_EightPoint_Steel",
+   "parent": "MI_Shuriken_EightPoint_Steel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Shuriken_SquarePlate_Steel_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Shuriken_SquarePlate_Steel",
+   "parent": "MI_Shuriken_SquarePlate_Steel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Shuriken_SixPoint_Steel_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Shuriken_SixPoint_Steel",
+   "parent": "MI_Shuriken_SixPoint_Steel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Shuriken_Spike_Steel_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Shuriken_Spike_Steel",
+   "parent": "MI_Shuriken_Spike_Steel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Shuriken_HookedCross_Steel_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Shuriken_HookedCross_Steel",
+   "parent": "MI_Shuriken_HookedCross_Steel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Kunai_Plain_Steel_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Kunai_Plain_Steel",
+   "parent": "MI_Kunai_Plain_Steel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Kunai_Plain_Wrap_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Kunai_Plain_Wrap",
+   "parent": "MI_Kunai_Plain_Wrap_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_SmokeBomb_Cloth_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_SmokeBomb_Cloth",
+   "parent": "MI_SmokeBomb_Cloth_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_BlackHat_Straw_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_BlackHat_Straw",
+   "parent": "MI_BlackHat_Straw_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_BlackHat_Cloth_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_BlackHat_Cloth",
+   "parent": "MI_BlackHat_Cloth_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_PaperBomb_Tag_Base",
+   "parent": "M_PaperInk_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_PaperBomb_Tag",
+   "parent": "MI_PaperBomb_Tag_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Kunai_Plain_Wrap_Undyed",
+   "parent": "MI_Kunai_Plain_Wrap_Base",
+   "folder": "Presets",
+   "optional": true
+  },
+  {
+   "name": "MI_Fan_Leaf_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Fan_Leaf",
+   "parent": "MI_Fan_Leaf_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Fan_Ribs_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Fan_Ribs",
+   "parent": "MI_Fan_Ribs_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Fan_Rivet_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Fan_Rivet",
+   "parent": "MI_Fan_Rivet_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Fan_Tassel_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Fan_Tassel",
+   "parent": "MI_Fan_Tassel_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  }
+ ],
+ "verification": {
+  "V0_frozen": "bash WorkFiles/materials/survey/check_exports_frozen.sh exits 0 (63 baseline files identical; only NEW files under Recolour/)",
+  "V1_source_twin": {
+   "what": "numpy twin of every graph (same math as the MFs) evaluated on the source PNGs",
+   "default_gate": "per recolourable part, covered texels: dE00 mean <= 0.5, p99 <= 1.5 vs the BC PNG (smoke bomb / hat expected 0 levels)",
+   "steel": "BC path is the map itself: nothing to test beyond UE capture"
+  },
+  "V2_ue_uvplane_basecolor": {
+   "what": "UE: engine Plane, orthographic SceneCapture2D at the texture's resolution, capture_source SCS_BASE_COLOR, RTF_RGBA32F, exported as EXR. The GBuffer stores base colour as 8-bit sRGB, so captures are quantised to 1 level",
+   "gate": "default MI vs twin: |diff| <= 1 sRGB level at p99.9, mean <= 0.3 level; BC-direct MI vs PNG: reported (BC1 error), not gated",
+   "calibration": "first capture the BC-direct instance and find the UV orientation (flip/rotation) by cross-correlating with the PNG"
+  },
+  "V3_recolour_stress": {
+   "colours_linear": {
+    "white": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "cream": [
+     0.8,
+     0.7,
+     0.5
+    ],
+    "pastel_pink": [
+     0.85,
+     0.6,
+     0.7
+    ],
+    "saturated_red": [
+     0.8,
+     0.02,
+     0.02
+    ],
+    "saturated_blue": [
+     0.02,
+     0.05,
+     0.8
+    ],
+    "yellow": [
+     0.85,
+     0.75,
+     0.05
+    ],
+    "mid_grey": [
+     0.18,
+     0.18,
+     0.18
+    ],
+    "near_black": [
+     0.01,
+     0.01,
+     0.01
+    ]
+   },
+   "gates": [
+    "clip: <= 0.1 % of covered texels with any channel >= 0.949",
+    "banding: in the 8-bit sRGB output, dominant channel inside its p1..p99 range: largest gap between consecutive occupied levels <= 3 AND occupied levels >= 0.5 x (p99 - p1 level span)",
+    "detail kept: std(log L_recolour) >= 0.25 x std(log L_default) (twin); Spearman rank corr(L_recolour, L_default) >= 0.98 on the UE 8-bit captures (the twin mapping is monotone, so on floats it is 1 by construction)",
+    "mean: dE00(part mean albedo, Colour x Detail Mean) <= 3 for colours whose max channel <= 0.85 (above that the roll-off takes over by design)"
+   ],
+   "where": "full twin on every part for all 8 colours, plus UE V2 captures for white, saturated_red and near_black on every recolourable part; for the paper bomb each of Paper / Black Ink / Red Ink is stressed alone",
+   "report_only_colours_linear": {
+    "extreme_white": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "prototype_result_2026-09-26": "WorkFiles/materials/survey/twin_prototype_f050.json (Dark Detail Follow 0.5, shipped Detail maps): default error <= 2e-16 linear on all three parts; clip 0 for every stress colour; max gap 3 (smoke bomb light colours, from the 8-bit source's own dark steps) / 2 (straw) / 1 (hat cloth); white keeps 0.34-0.40 of the log-contrast; white 0.8 means 0.754 / 0.766 / 0.772"
+  },
+  "V4_lit": "UE lit captures (SCS_FINAL_COLOR_HDR, fixed directional + fill rig, EXR) of every mesh: default MI vs BC-direct MI (dE00 mean <= 1.0 over the object mask); kunai wrap sheen on/off pair; smoke bomb ORM.A mask vs constant-0.5 pair (the +53 % must show); side-by-side with the Blender gallery renders for the look judge",
+  "V5_persistence": "fresh process: every MI's parent, overridden parameters equal to the spec, textures resolved, slot assignment on every LOD, recompile_material() == [] on the 3 masters, get_statistics() on every MI (PS instructions, samplers <= 16), texture flags incl. composite texture on the hat ORMs",
+  "V6_determinism": "two clean builds -> identical graph+parameter dump JSON (asset bytes carry GUIDs)",
+  "V7_buyer_review": "an independent reviewer reads the dumped parameter names, groups, descriptions and ranges of every MI as a buyer would"
+ },
+ "build": {
+  "entry": "Scripts/unreal/materials/build_pack_materials.py (one mode per Unreal process; run_build.sh runs them in order)",
+  "texture_folder": "/Game/NinjaPack/Textures/<Exports group folder>  (Shuriken, SmokeBomb, BlackHat, PaperBomb, Fan)",
+  "recolour_maps": {
+   "Shuriken": "Exports/Shuriken/Textures/Recolour/recolour_maps.json",
+   "SmokeBomb": "Exports/SmokeBomb/Textures/Recolour/recolour_maps.json",
+   "BlackHat": "Exports/BlackHat/Textures/Recolour/recolour_maps.json",
+   "PaperBomb": "Exports/PaperBomb/Textures/Recolour/recolour_maps.json",
+   "Fan": "Exports/Fan/Textures/Recolour/recolour_maps.json"
+  },
+  "not_imported": {
+   "Exports/SmokeBomb/Textures/T_SmokeBomb_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_SmokeBomb_Detail16 (the sRGB G8 builds as BGRA8: ~85 MiB)",
+   "Exports/BlackHat/Textures/T_BlackHat_Straw_Detail.png": "superseded by Recolour/T_BlackHat_Straw_Detail16",
+   "Exports/BlackHat/Textures/T_BlackHat_Cloth_Detail.png": "superseded by Recolour/T_BlackHat_Cloth_Detail16",
+   "Exports/Fan/Textures/T_Fan_Leaf_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_Fan_Leaf_Detail16 (the sRGB G8 builds as BGRA8: ~21 MiB with mips)",
+   "Exports/Fan/Textures/T_Fan_Sticks_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_Fan_Sticks_Detail16 (the sRGB G8 builds as BGRA8: ~21 MiB with mips)",
+   "Exports/Fan/Textures/T_Fan_Tassel_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_Fan_Tassel_Detail16 (the sRGB G8 builds as BGRA8: ~21 MiB with mips)"
+  },
+  "recolour_constants": {
+   "Shuriken": "Exports/Shuriken/Textures/Recolour/recolour_constants.json",
+   "SmokeBomb": "Exports/SmokeBomb/Textures/Recolour/recolour_constants.json",
+   "BlackHat": "Exports/BlackHat/Textures/Recolour/recolour_constants.json",
+   "PaperBomb": "Exports/PaperBomb/Textures/Recolour/recolour_constants.json",
+   "Fan": "Exports/Fan/Textures/Recolour/recolour_constants.json"
+  },
+  "recolour_constants_note": "Scripts/unreal/materials/maps/derive_constants.py derives them from the Recolour maps; their params override recolour_maps.json. run_build.sh 'maps_check' verifies the sha256 chain.",
+  "default_textures": {
+   "Scripts/unreal/materials/default_textures/T_NP_Default_BC.png": "BC",
+   "Scripts/unreal/materials/default_textures/T_NP_Default_ORM.png": "ORM_rgba",
+   "Scripts/unreal/materials/default_textures/T_NP_Default_N.png": "N",
+   "Scripts/unreal/materials/default_textures/T_NP_Default_Detail16.png": "Detail16",
+   "Scripts/unreal/materials/default_textures/T_NP_Default_Lettering.png": "Lettering",
+   "Scripts/unreal/materials/default_textures/T_NP_Default_PaperDetail.png": "PaperDetail_sRGB",
+   "Scripts/unreal/materials/default_textures/T_NP_Default_InkWeights.png": "InkWeights_linear"
+  },
+  "master_defaults": {
+   "note": "v2: masters reference ONLY the neutral 8x8 textures in /Game/NinjaPack/Textures/Default (no item's maps: no dependency drag), and neutral parameter values (a flat grey preview). Every Base instance overrides them.",
+   "M_Steel_Master": {
+    "textures": {
+     "Base Colour Map": "Scripts/unreal/materials/default_textures/T_NP_Default_BC.png",
+     "ORM Map": "Scripts/unreal/materials/default_textures/T_NP_Default_ORM.png",
+     "Normal Map": "Scripts/unreal/materials/default_textures/T_NP_Default_N.png"
+    },
+    "params": {}
+   },
+   "M_Fabric_Master": {
+    "textures": {
+     "Detail Map": "Scripts/unreal/materials/default_textures/T_NP_Default_Detail16.png",
+     "Base Colour Map": "Scripts/unreal/materials/default_textures/T_NP_Default_BC.png",
+     "ORM Map": "Scripts/unreal/materials/default_textures/T_NP_Default_ORM.png",
+     "Normal Map": "Scripts/unreal/materials/default_textures/T_NP_Default_N.png",
+     "Lettering Mask": "Scripts/unreal/materials/default_textures/T_NP_Default_Lettering.png"
+    },
+    "params": {
+     "Colour": [
+      0.18,
+      0.18,
+      0.18,
+      1.0
+     ],
+     "Lightest Colour": 0.6,
+     "Specular Strength": 0.5,
+     "Detail Bias": 0.0,
+     "Detail Scale": 2.0,
+     "Detail Mean": 1.0,
+     "Detail Highlight Ratio": 2.0,
+     "Detail Moments Low": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "Detail Moments High": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "Detail Map Size": 8.0,
+     "Detail Mip Compensation 1-4": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "Detail Mip Compensation 5-8": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "Detail Mip Compensation Power": 1.0
+    }
+   },
+   "M_PaperInk_Master": {
+    "textures": {
+     "Base Colour Map": "Scripts/unreal/materials/default_textures/T_NP_Default_BC.png",
+     "ORM Map": "Scripts/unreal/materials/default_textures/T_NP_Default_ORM.png",
+     "Normal Map": "Scripts/unreal/materials/default_textures/T_NP_Default_N.png",
+     "Paper Detail Map": "Scripts/unreal/materials/default_textures/T_NP_Default_PaperDetail.png",
+     "Ink Weights Map": "Scripts/unreal/materials/default_textures/T_NP_Default_InkWeights.png"
+    },
+    "params": {
+     "Paper Colour": [
+      0.7,
+      0.7,
+      0.7,
+      1.0
+     ],
+     "Black Ink Colour": [
+      0.005,
+      0.005,
+      0.005,
+      1.0
+     ],
+     "Red Ink Colour": [
+      0.66,
+      0.01,
+      0.004,
+      1.0
+     ],
+     "Paper Weight Scale": 1.0,
+     "Black Ink Dry Paper Mix": 0.0,
+     "Black Ink Dry Gain": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ],
+     "Red Ink Pool Saturation": 0.3,
+     "Red Ink Pool Gain": [
+      0.08,
+      0.08,
+      0.08,
+      1.0
+     ],
+     "Paper Colour Limit": 0.9,
+     "Red Ink Pool Default Saturation": 1.0
+    }
+   }
+  },
+  "instance_chain": {
+   "base_folder": "/Game/NinjaPack/MaterialInstances/Base",
+   "base_suffix": "_Base",
+   "leaf_overrides": {
+    "M_Steel_Master": [],
+    "M_Fabric_Master": [
+     "Colour"
+    ],
+    "M_PaperInk_Master": [
+     "Paper Colour",
+     "Black Ink Colour",
+     "Red Ink Colour"
+    ]
+   },
+   "why": "Buyer review: every instance was a direct child of the master, whose defaults were the smoke bomb's, so resetting a parameter on the hat or kunai silently gave the smoke bomb's colour and constants. Now MI_<Item>_<Part>_Base holds every texture and matched setting, and the buyer-facing MI_<Item>_<Part> (the one on the mesh) overrides only its colour(s): reset-to-default restores that part's shipped look."
+  },
+  "clean_policy": "v2: 'clean' deletes only the assets the spec authors (functions, masters, base, leaf and preset instances) and REFUSES if Materials/ or MaterialInstances/ hold anything else (a buyer's or artist's own variant would be listed, never deleted). Add variants as spec presets."
+ },
+ "changes_v2": [
+  "BLOCKER light colours: MF_TintDetail caps the mean at 'Lightest Colour' (per part, min(0.6, 0.9 / HighlightRatio^0.2)) so C_hi >= 0.2: no flat highlight plateau",
+  "MAJOR mips: MF_TintDetail multiplies by exp(-A(lod)(1-C_hi)^P), fitted per part on the Unreal mip chain (derive_constants.py): a recoloured part keeps its colour at distance",
+  "MAJOR black: Colour and Paper Colour get a hue-preserving floor (max channel >= 0.01): 000000 keeps its detail",
+  "MAJOR paper full intensity: Paper Colour is scaled to at most 'Paper Colour Limit' (0.962 / p99.9 paper weight) before the 0.962 ceiling: no clipped grain. The hard min stays (the art's own clip; a soft knee would change the default)",
+  "MINOR red pool: the pool gain's chroma fades with the red ink's saturation (neutral picks pool neutral)",
+  "MINOR constants over covered texels only (recolour_constants.json): Colour = the visible mean",
+  "MAJOR reset trap: MI_<Item>_<Part>_Base holds everything; the buyer MI overrides only its colour(s)",
+  "MAJOR dependency drag: masters reference only /Game/NinjaPack/Textures/Default 8x8 maps",
+  "MAJOR compatibility: Float Precision Mode Full on the fabric and paper masters; Used With Instanced Static Meshes preset on all three",
+  "MINOR tooltips in buyer language; one group scheme (01 Colour, 02 Detail, 03 Surface, 04 Sheen, 05 Lettering, 08 Advanced, 09 Textures); 'Use Baked Colour Map' renamed 'Use Original Baked Colours' and moved to 01 Colour; Steel Tint clamped",
+  "MINOR the kunai wrap ships Use Lettering OFF",
+  "MINOR clean deletes only spec'd assets; run_build.sh checks the Recolour map sha256 chain; paths derived from the script location"
+ ],
+ "changes_v3_fan": {
+  "date": "2026-09-26",
+  "what": "The folding fan joins the pack (additions only): items Fan (SK_Fan) and Fan_Tassel (SK_Fan_Tassel), kind 'skeletal'; 8 instances (MI_Fan_Leaf / _Ribs / _Tassel on M_Fabric_Master, MI_Fan_Rivet on M_Steel_Master, each with its _Base); the fan's recolour_maps.json / recolour_constants.json (maps/derive_constants_fan.py); its three 8-bit Detail PNGs not imported (Detail16 used, as every item).",
+  "masters": "M_Fabric_Master and M_Steel_Master gain the usage flag 'Used with Skeletal Mesh' (settings.used_with_skeletal_mesh). It only adds the skeletal-mesh shader permutation: no graph, parameter, default or instance of any existing item changes (proved by the dump comparison in WorkFiles/fan/regression/post_fan/). Without it a cooked build renders the fan with the default material and the editor would set the flag itself (dirtying the masters). Reverting: remove the two settings keys and the two Fan items.",
+  "code": "np_skeletal.py (NEW, skeletal import / assign / sockets); np_meshes.py, np_verify.py, np_spec.py, np_render.py dispatch to it only for kind 'skeletal' (static items take the unchanged path); np_masters.py / np_dump.py know the new usage flag."
+ }
+}

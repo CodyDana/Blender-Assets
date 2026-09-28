@@ -1,0 +1,115 @@
+{
+  "fbx": "SM_SmokeBomb.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [
+    {
+      "socket": "Burst",
+      "fbx_node": "SOCKET_SM_SmokeBomb_LOD0_Burst",
+      "mesh": "SM_SmokeBomb_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Grip",
+      "fbx_node": "SOCKET_SM_SmokeBomb_LOD0_Grip",
+      "mesh": "SM_SmokeBomb_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    }
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.073,
+    0.0256
+  ],
+  "material": {
+    "name": "M_SmokeBomb",
+    "graph": {
+      "material": "M_SmokeBomb",
+      "shading_model": "Default Lit (legacy) or Substrate Slab; opaque; no Cloth/Fuzz layer",
+      "BaseColor": "T_SmokeBomb_Detail.R x Tint  (Tint default = tint_linear; equals T_SmokeBomb_BC at the default Tint, at every mip)",
+      "Detail_encoding": "sRGB-encoded LINEAR detail d = albedo / Tint luminance, full range, quantised once from linear float data; import with sRGB ON (TC_Grayscale, G8): Unreal decodes before filtering and builds its mips in linear light, as it does for BC",
+      "BaseColor_alt": "T_SmokeBomb_BC (sRGB) directly, for a fixed-colour instance",
+      "Tint_default_linear": [
+        0.630803,
+        0.532934,
+        0.481121
+      ],
+      "Tint_default_srgb": [
+        0.815713,
+        0.756645,
+        0.722783
+      ],
+      "Specular": "0.5 x T_SmokeBomb_ORM.A",
+      "Specular_note": "ORM.A is the BAKED specular mask saturate(d)^2 (d = the linear detail), box-filtered from float data before quantisation, so every mip averages the final quantity. Do NOT use a constant Specular: 0.5 greys the cloth (p50 +53 %, p10 +111 % at the reference view); the look depends on this pin",
+      "Recolour": "change Tint only; Specular and roughness do not follow the dye",
+      "Roughness": "T_SmokeBomb_ORM.G",
+      "Metallic": "0 (constant; ORM.B holds 0 as well)",
+      "AmbientOcclusion": "T_SmokeBomb_ORM.R",
+      "Normal": "T_SmokeBomb_N (DirectX; TC_Normalmap, flip green OFF)",
+      "Sheen_Fuzz": 0.0,
+      "textures": {
+        "BC": "sRGB, TC_Default",
+        "ORM": "linear (sRGB OFF), TC_Masks, RGBA (A = specular mask)",
+        "N": "TC_Normalmap",
+        "Detail": "sRGB ON, TC_Grayscale, R channel",
+        "all": "MipGenSettings TMGS_FROM_TEXTURE_GROUP; power of two"
+      }
+    },
+    "tint_default_linear": [
+      0.630803,
+      0.532934,
+      0.481121
+    ],
+    "tint_default_srgb": [
+      0.815713,
+      0.756645,
+      0.722783
+    ],
+    "textures": {
+      "BC": "T_SmokeBomb_BC (sRGB, TC_Default)",
+      "Detail": "T_SmokeBomb_Detail (sRGB ON, TC_Grayscale, R; sRGB-encoded linear detail: BaseColor = Detail.R x Tint, equal to BC at the default Tint at every mip)",
+      "ORM": "T_SmokeBomb_ORM (linear, TC_Masks, RGBA: R AO, G roughness, B metallic 0, A specular mask: Specular = 0.5 x ORM.A)",
+      "look_depends_on": "Specular = 0.5 x ORM.A and Sheen 0. A constant Specular 0.5 greys the cloth (p50 +53 %, p10 +111 % at the reference view).",
+      "memory": "one material path loads BC OR Detail, not both (see the report's texture budget)",
+      "N": "T_SmokeBomb_N (TC_Normalmap, DirectX, flip green OFF)",
+      "mips": "TMGS_FROM_TEXTURE_GROUP on every map"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "what_this_is": "The same gallery frame rendered with the same camera, the same lamps, the same samples, the same mesh and the same AO bake.  The only difference is props_lib.paperbomb_art's ink-floor policy.",
+  "default": "reference",
+  "flag": {
+    "module": "props_lib.paperbomb_art.ArtConfig.ink_floor",
+    "values": [
+      "reference",
+      "floored"
+    ],
+    "build": "build_paper_bomb.py --ink-floor floored",
+    "art_cli": "paperbomb_art.py -- --ink-floor floored"
+  },
+  "reference_target": {
+    "paper_linear_luma": 0.7893,
+    "black_linear_luma": 0.00262,
+    "contrast_ratio": 300.9,
+    "source": "References/PaperBomb/REFERENCE_SPEC.md row 1"
+  },
+  "modes": {
+    "reference": {
+      "maps": {
+        "BC": "WorkFiles\\paperbomb\\ink_floor_compare\\reference\\T_PaperBomb_BC.png",
+        "ORM": "WorkFiles\\paperbomb\\ink_floor_compare\\reference\\T_PaperBomb_ORM.png",
+        "N": "WorkFiles\\paperbomb\\ink_floor_compare\\reference\\T_PaperBomb_N.png",
+        "M": "WorkFiles\\paperbomb\\ink_floor_compare\\reference\\T_PaperBomb_M.png"
+      },
+      "render": "WorkFiles\\paperbomb\\ink_floor_compare\\reference\\paperbomb_front.png",
+      "base_colour_map": {
+        "paper_linear_luma_p50": 0.7981,
+        "black_core_linear_luma_p01": 0.004707,
+        "black_core_stored_min": 0.056,
+        "contrast_ratio": 152.3,
+        "red_saturation": 0.8993,
+        "red_stored_mean": [
+          0.7171,
+          0.137,
+          0.0893
+        ],
+        "paper_stored_mean": [
+          0.9571,
+          0.8916,
+          0.7674
+        ]
+      },
+      "rendered": {
+        "paper_linear_luma_p50": 0.55596,
+        "ink_linear_luma_p50": 0.004422,
+        "ink_linear_luma_min": 0.003677,
+        "contrast_ratio": 125.7,
+        "warmth_mean": 0.2281
+      },
+      "guide_images_opened": []
+    },
+    "floored": {
+      "maps": {
+        "BC": "WorkFiles\\paperbomb\\ink_floor_compare\\floored\\T_PaperBomb_BC.png",
+        "ORM": "WorkFiles\\paperbomb\\ink_floor_compare\\floored\\T_PaperBomb_ORM.png",
+        "N": "WorkFiles\\paperbomb\\ink_floor_compare\\floored\\T_PaperBomb_N.png",
+        "M": "WorkFiles\\paperbomb\\ink_floor_compare\\floored\\T_PaperBomb_M.png"
+      },
+      "render": "WorkFiles\\paperbomb\\ink_floor_compare\\floored\\paperbomb_front.png",
+      "base_colour_map": {
+        "paper_linear_luma_p50": 0.7532,
+        "black_core_linear_luma_p01": 0.047449,
+        "black_core_stored_min": 0.2409,
+        "contrast_ratio": 15.7,
+        "red_saturation": 0.657,
+        "red_stored_mean": [
+          0.6755,
+          0.2502,
+          0.2444
+        ],
+        "paper_stored_mean": [
+          0.9329,
+          0.8695,
+          0.7484
+        ]
+      },
+      "rendered": {
+        "paper_linear_luma_p50": 0.52522,
+        "ink_linear_luma_p50": 0.01985,
+        "ink_linear_luma_min": 0.017764,
+        "contrast_ratio": 26.5,
+        "warmth_mean": 0.2106
+      },
+      "guide_images_opened": []
+    }
+  },
+  "left_right_in_compare_png": [
+    "reference",
+    "floored"
+  ],
+  "summary": "reference-matched: map 152.3:1, render 125.7:1;  floored: map 15.7:1, render 26.5:1.  The reference measures 300.9:1 - see REFERENCE_SPEC row 78, re-measured on the real-glyph reference of record; the 170:1 figure was the older guide.",
+  "samples": 160,
+  "supersample": 2,
+  "sheet": "WorkFiles\\paperbomb\\ink_floor_compare\\compare.png"
+}

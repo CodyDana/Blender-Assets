@@ -1,0 +1,38 @@
+{
+ "date": "2026-09-27",
+ "subject": "/Game/Ninja/Cloak/SKM_BlackCloak_MH as worn by MH_PlayerDefault (FBX sha fb8d35a2)",
+ "reference": "C:/Users/Cody/Desktop/Blender_Projects/References/BlackCloak/blackcloak.png",
+ "report": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/BlackCloak_Review/male/MALE_CLOAK_REVIEW.md",
+ "contact_sheet": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/BlackCloak_Review/male/MALE_CLOAK_contact_sheet.png",
+ "verdict": "Not an exact match; cannot be repaired into one. Outline close at rest, construction/fabric/edges/clasp/tone wrong, worn behaviour poor.",
+ "captures": {"unreal": "ok", "blender": "ok", "game_idle_silhouette_measured": false},
+ "blind": {"correct": 20, "of": 20, "confident_correct": 18, "pass_mark": "13 or fewer", "our_side": "UE rest capture, aligned IoU 0.94, exposure-matched", "fair": "mostly; no judge tell was about staging"},
+ "measured": {
+  "silhouette_iou": {"UE_rest_raw": 0.920, "UE_rest_aligned": 0.941, "BL_rest": 0.912, "UE_settled_Apose_raw": 0.797, "UE_settled_Apose_aligned": 0.813, "source_sculpt_prev_review": 0.934},
+  "hem_band_iou_aligned": {"UE": 0.727, "BL": 0.694},
+  "hem_jumps_ge8": {"REF": 4, "UE": 12, "BL": 7},
+  "collar_wrap_edges": {"REF": 8, "UE": 4, "BL": 3},
+  "clasp_centre_aligned_px": {"REF": [116, 90], "UE": [113, 90]},
+  "clasp_fold_crossings": {"REF": [23, 21, 24], "UE": [12, 14, 21]},
+  "mantle_edge_mean_err_px_UE": 3.2,
+  "garment_p50_sRGB": {"REF": 31.0, "UE_underlit": 15.5, "BL_calibrated": 23.7},
+  "albedo_target_linear": [0.015, 0.02],
+  "fabric_anisotropy": {"REF": [1.5, 3.0], "UE": [2.1, 6.3], "BL": [2.2, 33]},
+  "worn": {"cowl_front_top_cm": 173.8, "eye_cm": 175.1, "nose_tip_cm": 170.3, "male_height_cm": 186.1, "arm_verts_inside_gt1mm_rest": 69, "arm_deepest_cm": 4.39, "arm_verts_inside_arms_down": 27, "sim_sliver_tris": "1731 / 5991", "sim_self_intersecting_pairs": 707, "between_piece_intersections_fit": 2432}
+ },
+ "grades": {"exact": 0, "close": 5, "partial": 7, "poor": 5, "missing": 2, "invented": 2, "note": "recount after verifier; clasp position moved poor->close (alignment artefact)"},
+ "element_table": [
+  ["Overall silhouette (rest)", "close"], ["Height / width", "close"], ["Clasp position", "close"], ["Long diagonal mantle edge", "close"], ["Viewer-right wing corner", "close"],
+  ["Collar height / top opening", "partial"], ["Fabric gathered into clasp", "partial"], ["Two short overlap edges", "partial"], ["Viewer-left wing", "partial"], ["Front panels", "partial"], ["Inner opening", "partial"], ["Colour / value", "partial"],
+  ["Collar wrap folds", "poor"], ["Clasp ring", "poor"], ["Hem", "poor"], ["Rolled edges", "poor"], ["Fabric grain", "poor"],
+  ["Clasp strap tab", "missing"], ["Fray / loose threads", "missing"],
+  ["Clasp pin bar", "invented"], ["Shoulder horn / notch", "invented"]
+ ],
+ "recurring_tells": ["square-cut hem strips with gaps", "stacked horizontal collar rings", "thin wire ring + pin clasp, no strap/gather", "no fray, knife-thin notched edges", "directional ripple instead of slub grain", "flat grey-lit shading, rigid mantle sheet", "blocky silhouette sides, fragmented hem"],
+ "worn_issues": ["cowl covers face to 1.3 cm under the eyes", "thighs and underwear through the front opening", "hands through the wings; 69 verts inside arms at rest", "idle cloth collapses to a narrow column; board in run/sprint; ribbons in flip; hole in prone", "reads as flat black shape at game distance", "single LOD at 28,378 tris"],
+ "recommended_path": "D: Stage 1 surface (tone, slub texture, clasp) 5-7 h; Stage 2 pattern re-drape on MH_PlayerDefault in Blender 5.2 cloth 30-40 h; ship as SKM_BlackCloak_MH_v2 behind a toggle, new recipe, frozen source untouched",
+ "proposed_targets": {"iou_min": 0.96, "band_iou_min": 0.93, "hem_jumps_max": 4, "collar_wrap_edges": [7, 9], "blind_max": 13, "measured_at": "game idle + product view"},
+ "refuted": ["BM-14", "G14", "BM-02 (taller/clipped)", "BM-03/G08/BM-13 (clasp move)", "BM-09 (wider upper)", "BM-10 (lower-left flare)", "BM-01 (reference numbers)", "U1 (albedo 0.03-0.045)", "U2 (invisible; thread-scale tiling fix)", "U7 (global AnimDrive)", "G06 (numbers)"],
+ "severity_changes": {"BM-01": "blocker->major", "BM-09": "major->minor", "BM-13": "minor", "U11": "info"},
+ "decisions": ["go/no-go and path (D recommended)", "does exact include covering the face to eye level", "back design (no back reference)", "lining only or also player trousers", "stage 2 budget / ultracode", "confirm v2-behind-toggle and frozen source", "confirm acceptance bar"]
+}

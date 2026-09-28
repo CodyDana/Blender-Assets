@@ -1,0 +1,1137 @@
+{
+ "title": "Snow Flower sheath - reference specification (machine twin of References/SnowFlower/SHEATH_REFERENCE_SPEC.md)",
+ "date": "2026-09-26",
+ "instrument": "Blender 5.2 headless Python + NumPy 2; scripts WorkFiles/SnowFlower/v4/sheath_metrology/sm_m00..sm_m20, stage outputs sm_s*.json",
+ "reference": {
+  "file": "References/SnowFlower/SnowFlower_sheath_reference.png",
+  "sha256": "ef794fb19ee1d4fba4b58022ee15ca7d73a019f91aad2c0f66284d886f76a5b7",
+  "size": [
+   1024,
+   1536
+  ]
+ },
+ "sword_reference": {
+  "file": "References/SnowFlower/SnowFlower_user_reference.png",
+  "sha256": "2ee8af4b7286b5f08495299b26db590b9bfeb06136a826bea49ddcafe4c658a8",
+  "size": [
+   1222,
+   1287
+  ]
+ },
+ "conventions": {
+  "rows": "image rows, 0 = top; the sheath runs from row 31 (mouth collar top) to row 1496 (chape point)",
+  "t": "(row - 31) / 1465, 0 = mouth top, 1 = chape point",
+  "u": "-1 = left silhouette edge, +1 = right edge of that row",
+  "scale_designed_m_per_px": 0.000687,
+  "status": "MEASURED = read off pixels; INFERRED = consequence of measured rows; DESIGNED = proposal for what the reference does not show or where the fit forces a change",
+  "build_input_policy": "the build must never read, sample, project or trace the reference pixels or any debug image"
+ },
+ "decided": {
+  "tassel": "none on the sheath; the sword's tassel (cord, charm, bundle) is removed"
+ },
+ "ip_note": "The sword reference sheet is titled 'JIN MUWON - SNOW FLOWER BLADE'. Jin Mu-won is the protagonist of the Korean webtoon 'The Legend of the Northern Blade'. Fine for a personal project; must not be sold on Fab under that name/design unless the user decides otherwise.",
+ "rows": [
+  {
+   "section": "0 reference",
+   "row": "file",
+   "value": "References/SnowFlower/SnowFlower_sheath_reference.png",
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m00",
+   "sha256": "ef794fb19ee1d4fba4b58022ee15ca7d73a019f91aad2c0f66284d886f76a5b7",
+   "size": [
+    1024,
+    1536
+   ],
+   "backdrop_lum": 0.994
+  },
+  {
+   "section": "0 reference",
+   "row": "view",
+   "value": "orthographic-looking front view, sheath vertical, mouth up; top face of the mouth collar visible as a thin ellipse (camera slightly above); no shadow",
+   "tolerance": "-",
+   "status": "INFERRED",
+   "method": "sm_m01 + crops"
+  },
+  {
+   "section": "1 overall",
+   "row": "length_px (mouth-collar top row 31 to chape point row 1496)",
+   "value": 1466,
+   "tolerance": "+-2 px",
+   "status": "MEASURED",
+   "method": "sm_m01 flood-fill silhouette, lum<0.92"
+  },
+  {
+   "section": "1 overall",
+   "row": "centre_x_px",
+   "value": 505.5,
+   "tolerance": "+-1.5",
+   "status": "MEASURED",
+   "method": "sm_m01 per-row centre"
+  },
+  {
+   "section": "1 overall",
+   "row": "axis lean",
+   "value": "-0.12 deg (centre 506.9 at top -> 504.5 at tip = 2.4 px drift over the length): reads straight",
+   "tolerance": "straight: total centre drift <= 3 px (0.2 % of length)",
+   "status": "MEASURED",
+   "method": "sm_m01 line fit rows 470-1200"
+  },
+  {
+   "section": "1 overall",
+   "row": "max width_px (throat lateral plates, row 89)",
+   "value": 147,
+   "tolerance": "+-2",
+   "status": "MEASURED",
+   "method": "sm_m01"
+  },
+  {
+   "section": "1 overall",
+   "row": "length / body width below throat",
+   "value": 15.11,
+   "tolerance": "+-0.3",
+   "status": "MEASURED",
+   "method": "1466 / 97"
+  },
+  {
+   "section": "1 overall",
+   "row": "length / max width",
+   "value": 9.97,
+   "tolerance": "+-0.2",
+   "status": "MEASURED",
+   "method": "1466 / 147"
+  },
+  {
+   "section": "2 body",
+   "row": "body width profile [row, px, t, width/97]",
+   "value": [
+    [
+     170,
+     97,
+     0.0949,
+     1.0
+    ],
+    [
+     250,
+     97,
+     0.1495,
+     1.0
+    ],
+    [
+     340,
+     96,
+     0.2109,
+     0.99
+    ],
+    [
+     400,
+     95,
+     0.2519,
+     0.979
+    ],
+    [
+     500,
+     92,
+     0.3201,
+     0.948
+    ],
+    [
+     600,
+     90,
+     0.3884,
+     0.928
+    ],
+    [
+     700,
+     88,
+     0.4567,
+     0.907
+    ],
+    [
+     800,
+     85,
+     0.5249,
+     0.876
+    ],
+    [
+     900,
+     83,
+     0.5932,
+     0.856
+    ],
+    [
+     1000,
+     79,
+     0.6614,
+     0.814
+    ],
+    [
+     1100,
+     77,
+     0.7297,
+     0.794
+    ],
+    [
+     1200,
+     74,
+     0.798,
+     0.763
+    ],
+    [
+     1250,
+     72,
+     0.8321,
+     0.742
+    ],
+    [
+     1292,
+     71,
+     0.8608,
+     0.732
+    ]
+   ],
+   "tolerance": "+-2 px per row",
+   "status": "MEASURED",
+   "method": "sm_m01 (rows 287-321 are the mid band; 169-286 and 322+ are lacquer body)"
+  },
+  {
+   "section": "2 body",
+   "row": "body width under throat (rows 169-286)",
+   "value": 97,
+   "tolerance": "+-2",
+   "status": "MEASURED",
+   "method": "sm_m01; constant 97 px"
+  },
+  {
+   "section": "2 body",
+   "row": "body width at chape collar (rows 1250-1292)",
+   "value": 72,
+   "tolerance": "+-2",
+   "status": "MEASURED",
+   "method": "sm_m01"
+  },
+  {
+   "section": "2 body",
+   "row": "taper",
+   "value": "linear 96 px (row 322) -> 72 px (row 1250): -0.0258 px/row, symmetric (left edge slope +0.0104, right -0.0146 px/row); ratio 0.742",
+   "tolerance": "ratio 0.74 +-0.03, symmetric +-0.005 px/row",
+   "status": "MEASURED",
+   "method": "sm_m01 edge line fits"
+  },
+  {
+   "section": "2 body",
+   "row": "section - front face width",
+   "value": "0.51 of silhouette width (facet lines at u = -0.52 and +0.51); the facet lines taper with the silhouette (constant u)",
+   "tolerance": "u +-0.04",
+   "status": "MEASURED",
+   "method": "sm_m03 metal-masked median lum across width: dark groove + highlight at u -0.53/-0.50 and +0.50/+0.53"
+  },
+  {
+   "section": "2 body",
+   "row": "section - visible faces",
+   "value": "3 faces + bright rims: flat front face (u -0.51..+0.51), two chamfer faces (u 0.51..~0.92) brighter than the front face (median lum 0.21-0.25 vs 0.13-0.20), and a 2-4 px bright rim at each silhouette edge (median lum 0.44) = narrow side faces / rounded arrises catching light",
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m02/m03 profiles + crop_facets.png"
+  },
+  {
+   "section": "2 body",
+   "row": "section - shape",
+   "value": "flattened octagon: front face 50 % of width, chamfers 21 % each in projection, narrow side faces 4 % each; back = mirror of front",
+   "tolerance": "-",
+   "status": "DESIGNED",
+   "method": "front view cannot show depth; octagon is the simplest solid with the measured front-view facets"
+  },
+  {
+   "section": "2 body",
+   "row": "section - depth (thickness)",
+   "value": "22 mm at the throat -> 17 mm at the chape collar (depth/width 0.33); chamfer planes meet the side faces at 35-40 % of depth",
+   "tolerance": "depth >= cavity + 2 x 2.5 mm wall",
+   "status": "DESIGNED",
+   "method": "not visible in the reference; set by the fit (section 9)"
+  },
+  {
+   "section": "3 throat",
+   "row": "rows",
+   "value": "31-167 (137 px = 9.3 % of length)",
+   "tolerance": "+-2 px",
+   "status": "MEASURED",
+   "method": "sm_m06 + crop_throat4.png"
+  },
+  {
+   "section": "3 throat",
+   "row": "top collar ring (mouth)",
+   "value": "rows 31-40; outer width 63-64 px (0.66 of body width); its top face shows as an ellipse (row 31 w 23 -> row 39 w 63)",
+   "tolerance": "+-2 px",
+   "status": "MEASURED",
+   "method": "sm_m06"
+  },
+  {
+   "section": "3 throat",
+   "row": "plate tiers (silhouette)",
+   "value": {
+    "tier1 upper plates": "rows 41-63, width 112 max (rows 43-50)",
+    "tier2": "rows 65-80, width 117 max (row 67-69)",
+    "tier3 lateral flare": "rows 81-141, width 147 max at row 89, 115 at rows 127-139",
+    "sleeve": "rows 143-167, width 102 (2.5 px proud of the body each side)"
+   },
+   "tolerance": "+-2 px",
+   "status": "MEASURED",
+   "method": "sm_m06"
+  },
+  {
+   "section": "3 throat",
+   "row": "leaf/petal plates visible on the front",
+   "value": "8 pointed plates radiating from the central blossom at ~45 deg steps: 1 small up (behind top petal), 2 upper (up-out, tips at row 44 x 450/561), 2 lateral (largest, tips at row 86 x 432/576), 2 lower (down-out, lower edge row ~140), 1 central drop plate (point at row 165 x 507, lands on the body). Each plate = silver rim 3-4 px + dark lacquer inset",
+   "tolerance": "count 8 +-1",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_throat4.png (4x)"
+  },
+  {
+   "section": "3 throat",
+   "row": "central blossom",
+   "value": "5 petals, one petal pointing up; centre (505, 87) = t 0.038; diameter ~60 px (57 w x 62 h), domed silver stamen centre ~10 px",
+   "tolerance": "centre +-3 px, diameter +-6 px",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_throat4.png; bright-blob peaks sm_m05 rows 59-108"
+  },
+  {
+   "section": "3 throat",
+   "row": "small filigree",
+   "value": "thorn/lace sprigs between the petals and under the blossom (above the drop plate), silver, low relief",
+   "tolerance": "-",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_throat4.png"
+  },
+  {
+   "section": "3 throat",
+   "row": "lace drips on the body below the throat",
+   "value": "short pointed silver lace/leaf sprigs on the lacquer rows 150-178 at both sides of the drop plate",
+   "tolerance": "+-4 px",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_throat.png"
+  },
+  {
+   "section": "4 mid band",
+   "row": "rows / position",
+   "value": "rows 287-321 (35 px = 2.4 % of length); centre row 304 = t 0.186 from the mouth",
+   "tolerance": "+-2 px",
+   "status": "MEASURED",
+   "method": "sm_m06"
+  },
+  {
+   "section": "4 mid band",
+   "row": "structure",
+   "value": "upper ring rows 284-292 + engraved leaf-scroll frieze on dark ground rows 292-308 (pointed ends bulge at the sides) + lower ring rows 308-317; blossom over the frieze centre",
+   "tolerance": "+-2 px",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_band5.png (5x)"
+  },
+  {
+   "section": "4 mid band",
+   "row": "width",
+   "value": "rings 104-106 px (4 px proud of the body per side), frieze ends 117 px at row 304 (10 px proud)",
+   "tolerance": "+-2 px",
+   "status": "MEASURED",
+   "method": "sm_m06"
+  },
+  {
+   "section": "4 mid band",
+   "row": "blossom",
+   "value": "5 petals; centre (504, 300); ~50 px wide x ~40 px tall (petals overlap both rings)",
+   "tolerance": "centre +-3, size +-6",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_band5.png"
+  },
+  {
+   "section": "4 mid band",
+   "row": "count",
+   "value": "exactly ONE band (the belt mount); no loop, ring or cord is shown",
+   "tolerance": "1",
+   "status": "MEASURED",
+   "method": "full view"
+  },
+  {
+   "section": "5 chape",
+   "row": "rows / length",
+   "value": "row 1265 (top of the up-pointing lancet frame) to 1496 = 231 px (15.8 % of length)",
+   "tolerance": "+-3 px",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks) + sm_m06",
+   "method": "crop_chape3.png"
+  },
+  {
+   "section": "5 chape",
+   "row": "silhouette",
+   "value": {
+    "collar (body width, no step)": "rows 1250-1292 width 72",
+    "side plates": "rows 1293-1387 width 75-84, max 84 at row 1344",
+    "ogive point": "row 1388 w 68 -> 1420 w 60 -> 1440 w 50 -> 1460 w 38 -> 1480 w 21 -> 1496 w 3"
+   },
+   "tolerance": "+-2 px",
+   "status": "MEASURED",
+   "method": "sm_m06"
+  },
+  {
+   "section": "5 chape",
+   "row": "point",
+   "value": "ogive: sides tangent-ish at row 1388 (half-angle ~10 deg) steepening to ~33 deg half-angle over the last 16 px; very slightly blunt (3 px at the last row)",
+   "tolerance": "+-3 deg",
+   "status": "MEASURED",
+   "method": "sm_m06 widths"
+  },
+  {
+   "section": "5 chape",
+   "row": "plates",
+   "value": "1 up-pointing lancet frame (tip row ~1268) through which the vine enters; blossom; 2 lateral plates (tips x 465/545 row 1346 = the 84 px max); 2 lower-lateral plates (tips x 475/538 row 1383 = the step to 68 px at row 1388); 1 central down plate under the blossom (tip row ~1397); the ogive = 2 nested silver lancet outlines around a dark lacquer inset (inner inset ends row ~1457)",
+   "tolerance": "count +-1",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_chape3.png (3x)"
+  },
+  {
+   "section": "5 chape",
+   "row": "blossom",
+   "value": "5 petals, one up; centre (505, 1330) = t 0.887; diameter ~54 px",
+   "tolerance": "centre +-3, size +-6",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_chape3.png; sm_m05 peaks rows 1310-1348"
+  },
+  {
+   "section": "6 vine",
+   "row": "path (row, x) main stem",
+   "value": [
+    [
+     167.0,
+     506.0
+    ],
+    [
+     193.0,
+     527.0
+    ],
+    [
+     215.0,
+     521.0
+    ],
+    [
+     250.0,
+     510.0
+    ],
+    [
+     285.0,
+     505.0
+    ],
+    [
+     322.0,
+     508.0
+    ],
+    [
+     340.0,
+     510.0
+    ],
+    [
+     370.0,
+     495.0
+    ],
+    [
+     395.0,
+     485.0
+    ],
+    [
+     430.0,
+     478.0
+    ],
+    [
+     460.0,
+     475.0
+    ],
+    [
+     495.0,
+     486.0
+    ],
+    [
+     530.0,
+     495.0
+    ],
+    [
+     560.0,
+     505.0
+    ],
+    [
+     590.0,
+     515.0
+    ],
+    [
+     625.0,
+     528.0
+    ],
+    [
+     660.0,
+     535.0
+    ],
+    [
+     693.0,
+     525.0
+    ],
+    [
+     720.0,
+     510.0
+    ],
+    [
+     745.0,
+     495.0
+    ],
+    [
+     775.0,
+     485.0
+    ],
+    [
+     800.0,
+     481.0
+    ],
+    [
+     840.0,
+     490.0
+    ],
+    [
+     875.0,
+     510.0
+    ],
+    [
+     900.0,
+     528.0
+    ],
+    [
+     920.0,
+     533.0
+    ],
+    [
+     950.0,
+     525.0
+    ],
+    [
+     980.0,
+     515.0
+    ],
+    [
+     1010.0,
+     507.0
+    ],
+    [
+     1040.0,
+     505.0
+    ],
+    [
+     1077.0,
+     495.0
+    ],
+    [
+     1110.0,
+     490.0
+    ],
+    [
+     1140.0,
+     488.0
+    ],
+    [
+     1170.0,
+     490.0
+    ],
+    [
+     1200.0,
+     500.0
+    ],
+    [
+     1230.0,
+     510.0
+    ],
+    [
+     1245.0,
+     517.0
+    ],
+    [
+     1262.0,
+     510.0
+    ]
+   ],
+   "tolerance": "+-4 px lateral",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks) cross-checked by sm_m04 metal runs (rows 399, 767, 799, 847, 887, 919, 951, 983, 1007, 1167, 1239, 1255 agree within 3 px)",
+   "method": "overlay debug/DEBUG_NEVER_SHIP_sheath_vine_path.png"
+  },
+  {
+   "section": "6 vine",
+   "row": "path character",
+   "value": "one continuous stem: leaves the throat under the drop plate (row 167), S-bend to the right (x 527 row 193) and back to the band blossom; below the band a sinuous stem with lateral extremes at rows ~460 (u -0.66), ~660 (u +0.66), ~800 (u -0.55), ~920 (u +0.66), ~1140 (u -0.40), ~1245 (u +0.33); half-wavelength 150-230 px; a second thinner stem twines around the main one rows ~930-1000 and runs beside it rows 1060-1200; enters the chape lancet at row ~1262",
+   "tolerance": "extremes +-15 rows, u +-0.1",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crops + sm_m04"
+  },
+  {
+   "section": "6 vine",
+   "row": "stem width",
+   "value": {
+    "trunk rows 170-286": "9 px (0.09 W)",
+    "rows 322-700": "6-7 px",
+    "rows 700-1100": "4-6 px",
+    "rows 1100-1262": "4-5 px",
+    "side twigs": "2-3 px"
+   },
+   "tolerance": "+-2 px",
+   "status": "MEASURED (noisy: specular stem)",
+   "method": "sm_m17 run width of L>0.33 nearest the path"
+  },
+  {
+   "section": "6 vine",
+   "row": "stem relief",
+   "value": "raised, half-round, polished silver with dark outline shading",
+   "tolerance": "-",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crops"
+  },
+  {
+   "section": "6 vine",
+   "row": "open blossoms on the vine (5 petals, stamen)",
+   "value": [
+    {
+     "row": 495,
+     "x": 486,
+     "t": 0.3167,
+     "u": -0.429,
+     "diameter_px": 42,
+     "cluster": "A"
+    },
+    {
+     "row": 503,
+     "x": 515,
+     "t": 0.3222,
+     "u": 0.209,
+     "diameter_px": 20,
+     "cluster": "A"
+    },
+    {
+     "row": 544,
+     "x": 508,
+     "t": 0.3502,
+     "u": 0.044,
+     "diameter_px": 43,
+     "cluster": "A"
+    },
+    {
+     "row": 570,
+     "x": 532,
+     "t": 0.3679,
+     "u": 0.578,
+     "diameter_px": 26,
+     "cluster": "A"
+    },
+    {
+     "row": 592,
+     "x": 502,
+     "t": 0.3829,
+     "u": -0.079,
+     "diameter_px": 25,
+     "cluster": "A"
+    },
+    {
+     "row": 693,
+     "x": 525,
+     "t": 0.4519,
+     "u": 0.448,
+     "diameter_px": 42,
+     "cluster": "B"
+    },
+    {
+     "row": 718,
+     "x": 498,
+     "t": 0.4689,
+     "u": -0.176,
+     "diameter_px": 28,
+     "cluster": "B"
+    },
+    {
+     "row": 740,
+     "x": 523,
+     "t": 0.484,
+     "u": 0.412,
+     "diameter_px": 20,
+     "cluster": "B"
+    },
+    {
+     "row": 1043,
+     "x": 518,
+     "t": 0.6908,
+     "u": 0.333,
+     "diameter_px": 39,
+     "cluster": "C"
+    },
+    {
+     "row": 1077,
+     "x": 495,
+     "t": 0.714,
+     "u": -0.247,
+     "diameter_px": 38,
+     "cluster": "C"
+    },
+    {
+     "row": 1127,
+     "x": 513,
+     "t": 0.7481,
+     "u": 0.227,
+     "diameter_px": 27,
+     "cluster": "C"
+    }
+   ],
+   "tolerance": "count 11 +-1; centre +-5 px; diameter +-20 %",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_cl1/cl2/cl3.png (3x); sm_m05 density peaks"
+  },
+  {
+   "section": "6 vine",
+   "row": "clusters",
+   "value": {
+    "A": "rows 450-605 (t 0.29-0.39): 2 large + 3 small/medium blossoms + ~7 buds, left of centre then right",
+    "B": "rows 630-750 (t 0.41-0.49): 1 large + 2 small/medium + ~4 buds, right of centre",
+    "C": "rows 1005-1140 (t 0.66-0.76): 2 large + 1 medium + ~5 buds",
+    "gap": "rows 750-1000 carry only stem + 2 teardrop pods"
+   },
+   "tolerance": "rows +-15",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crops"
+  },
+  {
+   "section": "6 vine",
+   "row": "blossom sizes",
+   "value": "large 38-43 px (0.45-0.50 of local body width), medium 25-28 px, small ~20 px; fittings blossoms larger: throat 60, band 50, chape 54",
+   "tolerance": "+-20 %",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crops"
+  },
+  {
+   "section": "6 vine",
+   "row": "buds",
+   "value": "round closed buds on short stalks, 5-9 px, in clusters: rows 355-365 (2-3), 215-225 above the band (2), 452-458 (2), 523 (1 leafy), 558 (1), 635-685 (4), 1008-1023 (3), 1093-1100 (2)",
+   "tolerance": "count 18 +-4",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crops; sm_m05 small peaks"
+  },
+  {
+   "section": "6 vine",
+   "row": "teardrop pods",
+   "value": "2 large pointed white pods on thin curved stalks: (506, 820) t 0.539 and (501, 919) t 0.606, ~12 x 22 px",
+   "tolerance": "+-5 px",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_body_b.png, crop_facets.png"
+  },
+  {
+   "section": "6 vine",
+   "row": "leaves",
+   "value": "few small pointed silver leaves on the stems (e.g. (472, 523), (482, 1125)); ",
+   "tolerance": "-",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crops"
+  },
+  {
+   "section": "6 vine",
+   "row": "engraved twigs in the lacquer",
+   "value": "faint flat grey etched twigs (not raised) along both chamfers, e.g. rows 420-470 left, 550-600 right, 1100-1230 both; albedo/normal-only detail",
+   "tolerance": "-",
+   "status": "MEASURED (visual read on zoomed crops, pixel-grid ticks)",
+   "method": "crop_body_a/b.png"
+  },
+  {
+   "section": "6 vine",
+   "row": "vine coverage",
+   "value": "front face only (|u| < ~0.75); back not shown",
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m04"
+  },
+  {
+   "section": "7 lacquer",
+   "row": "tone (display lum of metal-free body pixels)",
+   "value": {
+    "1": 0.057,
+    "5": 0.096,
+    "25": 0.14,
+    "50": 0.178,
+    "75": 0.218,
+    "95": 0.291,
+    "99": 0.351
+   },
+   "tolerance": "p50 +-0.03, p5/p95 +-0.04",
+   "status": "MEASURED",
+   "method": "sm_m10"
+  },
+  {
+   "section": "7 lacquer",
+   "row": "colour",
+   "value": {
+    "mean_rgb": [
+     0.169,
+     0.184,
+     0.205
+    ],
+    "dark_quartile_rgb": [
+     0.101,
+     0.113,
+     0.129
+    ],
+    "bright_decile_rgb": [
+     0.286,
+     0.303,
+     0.33
+    ],
+    "saturation": 0.183,
+    "cast": "cool blue-grey (B exceeds R by ~0.03)"
+   },
+   "tolerance": "+-0.03 per channel",
+   "status": "MEASURED",
+   "method": "sm_m10 (stored sRGB values)"
+  },
+  {
+   "section": "7 lacquer",
+   "row": "veins",
+   "value": "thin (1-2 px) light grey wisps (lum 0.30-0.45) over soft cloudy mottling; ~7 % of lacquer pixels read as vein; vein edge energy mostly ALONG the sheath (66 % within 60-120 deg of the across direction; peak 75-105), with diagonal branches",
+   "tolerance": "direction +-15 deg; fraction 4-10 %",
+   "status": "MEASURED",
+   "method": "sm_m10/m11 structure-tensor histogram (facet lines excluded)"
+  },
+  {
+   "section": "7 lacquer",
+   "row": "mottling scale",
+   "value": "clouds 15-40 px (10-27 mm at the design scale); autocorrelation 1/e length ~11 px along vs ~4 px across (only 6 metal-free patches - weak)",
+   "tolerance": "+-50 %",
+   "status": "MEASURED (weak)",
+   "method": "sm_m11"
+  },
+  {
+   "section": "7 lacquer",
+   "row": "finish",
+   "value": "glossy: the chamfers carry a broad soft sheen (brighter than the front face), silhouette rims bright; suggest roughness 0.15-0.25, specular 0.5, no metalness",
+   "tolerance": "-",
+   "status": "INFERRED",
+   "method": "sm_m03 profile"
+  },
+  {
+   "section": "8 metal",
+   "row": "fittings value (display lum, metal pixels L>0.30)",
+   "value": {
+    "throat p50": 0.486,
+    "chape p50": 0.469,
+    "p95": 0.931
+   },
+   "tolerance": "+-0.05",
+   "status": "MEASURED",
+   "method": "sm_m10"
+  },
+  {
+   "section": "8 metal",
+   "row": "hue",
+   "value": "neutral silver (saturation 0.047; rgb ~[0.55,0.54,0.55])",
+   "tolerance": "sat < 0.07",
+   "status": "MEASURED",
+   "method": "sm_m10"
+  },
+  {
+   "section": "8 metal",
+   "row": "sheen",
+   "value": "polished: near-white highlights (L>0.9) on 3-6 % of fitting pixels, dark recesses/insets (L<0.15) on 16-25 %; petals brightest (mean rgb [0.88,0.88,0.89]) with soft gradients = polished silver, lower roughness than the plate rims",
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m10"
+  },
+  {
+   "section": "8 metal",
+   "row": "suggested PBR",
+   "value": "silver base colour sRGB ~0.80-0.85 neutral, metallic 1, roughness 0.25-0.35 on plates/stems, 0.15-0.2 on petals; AO/cavity darkening in engraving",
+   "tolerance": "-",
+   "status": "INFERRED",
+   "method": "tone reads above"
+  },
+  {
+   "section": "9 sword (sheet)",
+   "row": "sheet front view",
+   "value": {
+    "pommel_top_row": 10,
+    "tip_row": 1216,
+    "px_per_m": 960.0,
+    "guard_seat_row": 338,
+    "blade_seat_to_tip": "878 px = 0.915 m",
+    "blade_width_at_seat": "51-54 px = 53 mm",
+    "blade_width_at_70pct": "40.6 mm",
+    "taper_seat_to_70pct": "0.77 (23 %)",
+    "back_edge": "straight to ~63 % of the blade, then bows 19.8 mm outward to the tip",
+    "tip_offset_from_base_axis": "44.9 mm (to the viewer's LEFT in the front view)"
+   },
+   "tolerance": "+-2 px (+-2 mm)",
+   "status": "MEASURED",
+   "method": "sm_m07/m12 silhouette rows; scale = rev-3 overall length 1.2563 m / (1216-10) px"
+  },
+  {
+   "section": "9 sword (sheet)",
+   "row": "sheet side view thickness",
+   "value": "22 px at the guard -> 10 px near the tip = 23 mm -> 10 mm: NOT credible for a blade (would be 45 % of its width); the side view is stylised -> not used",
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m07"
+  },
+  {
+   "section": "9 sword (rev3)",
+   "row": "rev-3 blade (Assets/SnowFlower/SnowFlower_Master.blend, SF_Blade + SF_BladeRelief_*; read-only)",
+   "value": {
+    "axis": "+Z (tip at z 1.085), width X, thickness Y",
+    "seat plane (guard under-leaf face)": "z 0.1628",
+    "pendant below seat": "z 0.1628-0.1708, 24.8 x 18.4 mm",
+    "blade_seat_to_tip": "0.922 m",
+    "width": "46.0 mm at the seat -> 43.6 mm at z 0.80 (5 % taper)",
+    "steel thickness": "6.0 mm -> 2.0 mm linear",
+    "half-thickness incl. relief": "max 6.2 mm (z 0.23); 3.2 mm at 50 %; 1.9 mm at 85 %; relief ends z 1.008",
+    "tip": "from z ~0.80 the -X edge sweeps to meet the +X back edge; the back edge bows 7.5-8.2 mm outward; tip at x +30.5 mm",
+    "orientation": "MIRRORED vs the sheet front view (tip and tassel toward +X seen from -Y; the sheet front shows them on the left) - i.e. rev-3 front = sheet back view"
+   },
+   "tolerance": "+-0.5 mm",
+   "status": "MEASURED",
+   "method": "sm_m09 plane slices every 10 mm"
+  },
+  {
+   "section": "9 fit",
+   "row": "conflict",
+   "value": "The reference sheath is straight and symmetric with a centred point; the sword is a single-edged dao whose tip lies on (rev-3) or beyond (sheet) the back-edge line, 30-45 mm off the blade's base axis, while the reference body tapers 26 % toward the tip. A straight symmetric sheath of natural length (tip resting ~65-80 mm above the chape point) cannot hold the rev-3 blade (static margin -1 to -3 mm even with optimal cavity offset) or the sheet blade (-10 to -12 mm).",
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m12 static/swept fit, wall 3.0/2.5 mm, clearance 1.5/1.0 mm per side"
+  },
+  {
+   "section": "9 fit",
+   "row": "trade-off: blade back-edge sweep -> sheath bow needed (natural length ~1.0 m, wall 2.5, clearance 1.0)",
+   "value": {
+    "sweep0_y1380": {
+     "sweep_mm": 0,
+     "tip_rests_row": 1380,
+     "sheath_len_m": 1.008,
+     "bow_mm": 0.0,
+     "bow_ref_px": 0.0,
+     "bow_from_row": 436,
+     "cavity_offset_mm": 2.4
+    },
+    "sweep0_y1400": {
+     "sweep_mm": 0,
+     "tip_rests_row": 1400,
+     "sheath_len_m": 0.993,
+     "bow_mm": 1.1,
+     "bow_ref_px": 1.6,
+     "bow_from_row": 880,
+     "cavity_offset_mm": 2.4
+    },
+    "sweep0_y1420": {
+     "sweep_mm": 0,
+     "tip_rests_row": 1420,
+     "sheath_len_m": 0.979,
+     "bow_mm": 4.3,
+     "bow_ref_px": 6.5,
+     "bow_from_row": 920,
+     "cavity_offset_mm": 1.6
+    },
+    "sweep2_y1380": {
+     "sweep_mm": 2,
+     "tip_rests_row": 1380,
+     "sheath_len_m": 1.008,
+     "bow_mm": 1.7,
+     "bow_ref_px": 2.4,
+     "bow_from_row": 840,
+     "cavity_offset_mm": 2.8
+    },
+    "sweep2_y1400": {
+     "sweep_mm": 2,
+     "tip_rests_row": 1400,
+     "sheath_len_m": 0.993,
+     "bow_mm": 3.6,
+     "bow_ref_px": 5.3,
+     "bow_from_row": 852,
+     "cavity_offset_mm": 2.2
+    },
+    "sweep2_y1420": {
+     "sweep_mm": 2,
+     "tip_rests_row": 1420,
+     "sheath_len_m": 0.979,
+     "bow_mm": 6.9,
+     "bow_ref_px": 10.3,
+     "bow_from_row": 837,
+     "cavity_offset_mm": 1.2
+    },
+    "sweep4_y1380": {
+     "sweep_mm": 4,
+     "tip_rests_row": 1380,
+     "sheath_len_m": 1.008,
+     "bow_mm": 5.5,
+     "bow_ref_px": 8.0,
+     "bow_from_row": 840,
+     "cavity_offset_mm": 2.6
+    },
+    "sweep4_y1400": {
+     "sweep_mm": 4,
+     "tip_rests_row": 1400,
+     "sheath_len_m": 0.993,
+     "bow_mm": 7.9,
+     "bow_ref_px": 11.7,
+     "bow_from_row": 798,
+     "cavity_offset_mm": 1.6
+    },
+    "sweep4_y1420": {
+     "sweep_mm": 4,
+     "tip_rests_row": 1420,
+     "sheath_len_m": 0.979,
+     "bow_mm": 11.1,
+     "bow_ref_px": 16.6,
+     "bow_from_row": 781,
+     "cavity_offset_mm": 0.4
+    },
+    "sweep6_y1380": {
+     "sweep_mm": 6,
+     "tip_rests_row": 1380,
+     "sheath_len_m": 1.008,
+     "bow_mm": 8.1,
+     "bow_ref_px": 11.7,
+     "bow_from_row": 867,
+     "cavity_offset_mm": 2.6
+    },
+    "sweep6_y1400": {
+     "sweep_mm": 6,
+     "tip_rests_row": 1400,
+     "sheath_len_m": 0.993,
+     "bow_mm": 10.3,
+     "bow_ref_px": 15.2,
+     "bow_from_row": 852,
+     "cavity_offset_mm": 1.6
+    },
+    "sweep6_y1420": {
+     "sweep_mm": 6,
+     "tip_rests_row": 1420,
+     "sheath_len_m": 0.979,
+     "bow_mm": 12.2,
+     "bow_ref_px": 18.3,
+     "bow_from_row": 837,
+     "cavity_offset_mm": 0.8
+    },
+    "sweep8.2_y1380": {
+     "sweep_mm": 8.2,
+     "tip_rests_row": 1380,
+     "sheath_len_m": 1.008,
+     "bow_mm": 8.1,
+     "bow_ref_px": 11.7,
+     "bow_from_row": 867,
+     "cavity_offset_mm": 2.6
+    },
+    "sweep8.2_y1400": {
+     "sweep_mm": 8.2,
+     "tip_rests_row": 1400,
+     "sheath_len_m": 0.993,
+     "bow_mm": 10.3,
+     "bow_ref_px": 15.2,
+     "bow_from_row": 852,
+     "cavity_offset_mm": 1.6
+    },
+    "sweep8.2_y1420": {
+     "sweep_mm": 8.2,
+     "tip_rests_row": 1420,
+     "sheath_len_m": 0.979,
+     "bow_mm": 12.5,
+     "bow_ref_px": 18.7,
+     "bow_from_row": 892,
+     "cavity_offset_mm": 1.2
+    }
+   },
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m16 (rev-3 outline, back edge capped at the given sweep)"
+  },
+  {
+   "section": "9 fit",
+   "row": "long straight alternative",
+   "value": "a straight sheath holds the rev-3 blade only if the tip rests at ref row <= ~1225 (k >= 0.777 mm/px, sheath >= 1.14 m, >= 21 cm hollow past the tip; margin +0.2 mm at wall 3/clr 1.5); tilting the blade 1 deg inside gains little (sm_m15) and shifts the guard 8 mm off-centre. The sheet blade (19.8 mm sweep) needs a >= 16 mm bow at any length <= 1.2 m.",
+   "tolerance": "-",
+   "status": "MEASURED",
+   "method": "sm_m12/m14/m15"
+  },
+  {
+   "section": "9 fit",
+   "row": "RECOMMENDED resolution",
+   "value": "Sheath exactly as the reference: straight, symmetric, centred point. Scale k = 0.687 mm/px -> length 1.008 m, body 66.6 mm wide below the throat, 49.5 mm at the chape collar, throat 101 mm, chape 159 mm long. The blade tip rests at ref row 1380 (just above the lower-lateral chape plates, 80 mm of solid ogive below). Cavity = blade outline + 1.0 mm clearance per side, 2.5 mm walls, cavity axis offset 2.5 mm toward the blade's BACK edge; a hidden bow of <= 2 mm (<= 3 ref px, reads straight) is allowed from ref row ~840 down. REQUIRES the v4 blade's back edge to stay straight to the tip (sweep <= 2 mm beyond the back-edge line): the curved-tip look must come from the cutting edge sweeping up to a straight back. This conflicts with rev-3 (8.2 mm sweep) and the sheet (19.8 mm) -> USER DECISION.",
+   "tolerance": "bow <= 2 mm; margin >= 0 at every 10 mm slice",
+   "status": "DESIGNED",
+   "method": "sm_m16 sweep 0-2 mm rows"
+  },
+  {
+   "section": "9 fit",
+   "row": "fallback if the blade keeps its sweep",
+   "value": {
+    "rev-3 sweep 8 mm": "sheath lower part bows 8 mm (11.7 ref px) toward the back edge from ref row ~860, tip rests row 1380, length 1.008 m - a slight sori, the chape sits ~12 px off the mouth axis in the front view",
+    "sheet sweep 20 mm": "bow 21 mm (31 ref px) from ref row ~440 - visibly curved, no longer the reference",
+    "engine-side": "or hide the blade while sheathed (hilt-only mesh / masked blade section) so no poke-through can show"
+   },
+   "tolerance": "-",
+   "status": "DESIGNED",
+   "method": "sm_m13/m14/m16/m16b"
+  },
+  {
+   "section": "9 fit",
+   "row": "mouth collar",
+   "value": "measured outer width 64 px = 44 mm at k 0.687 < rev-3 blade 46 mm: the collar must be widened to >= blade width at the seat + 2 x 1.0 clearance + 2 x 1.5 metal = 51 mm (74 px, 0.77 of the body width instead of 0.66); it is hidden under the guard when sheathed",
+   "tolerance": ">= 51 mm (rev-3 blade); >= 58 mm for a sheet-width 53 mm blade",
+   "status": "DESIGNED",
+   "method": "deviation from the reference, flagged"
+  },
+  {
+   "section": "9 fit",
+   "row": "mouth interior / pendant pocket",
+   "value": "mouth opening = blade section + 1 mm; a pocket 27 x 21 x 9 mm (rev-3 pendant 24.8 x 18.4 x 7.8 mm + clearance) so the guard's under-leaves seat on the collar top; the opening lined dark (lacquer black), not visible when sheathed",
+   "tolerance": "-",
+   "status": "DESIGNED",
+   "method": "not shown in the reference"
+  },
+  {
+   "section": "9 fit",
+   "row": "cavity thickness",
+   "value": "2 x (blade half-thickness incl. relief + 1.0 mm): 14.4 mm near the mouth (relief up to +-6.2 mm), 8.4 mm at 50 %, 5.8 mm at 85 %; outer depth 22 -> 17 mm leaves >= 2.5 mm walls",
+   "tolerance": "walls >= 2.5 mm",
+   "status": "DESIGNED",
+   "method": "sm_m09 rev-3 slices"
+  },
+  {
+   "section": "9 fit",
+   "row": "swept vs static",
+   "value": "a game only needs the STATIC fit (sheathed pose); straight insertion through a tapered sheath additionally needs the tip's lateral position to pass every station (swept margin in sm_s12). Draw animations are fast; the swept fit is not required.",
+   "tolerance": "-",
+   "status": "INFERRED",
+   "method": "sm_m12"
+  },
+  {
+   "section": "10 sockets",
+   "row": "SOCKET_Holster (sheath)",
+   "value": "at the mouth-collar top plane, on the cavity axis (2.5 mm toward the blade's back edge from the sheath axis); +Z out of the mouth (toward the grip), +X toward the blade's back edge; the sword's matching point = centre of its guard seat plane on the blade axis (rev-3 z 0.1628), blade along -Z of the socket, blade fully inside",
+   "tolerance": "-",
+   "status": "DESIGNED",
+   "method": "fit section"
+  },
+  {
+   "section": "10 sockets",
+   "row": "SOCKET_Hip (sheath)",
+   "value": "at the mid band (ref row 304, t 0.186 = 188 mm below the mouth at k 0.687), on the BACK face centre (behind the vine side), +Z toward the mouth",
+   "tolerance": "+-10 mm",
+   "status": "DESIGNED",
+   "method": "the band is the only belt mount shown"
+  },
+  {
+   "section": "11 not shown (DESIGNED)",
+   "row": "parts",
+   "value": [
+    "back face (plain marbled lacquer; fittings continue around as plain rings/plates, blossoms only on the front)",
+    "sides/depth and the cross-section depth",
+    "mouth interior, cavity, pendant pocket",
+    "belt hardware (none shown - socket only)",
+    "tassel/cord: NONE (decided; none shown)"
+   ],
+   "tolerance": "-",
+   "status": "DESIGNED",
+   "method": "reference is a single front view"
+  }
+ ]
+}

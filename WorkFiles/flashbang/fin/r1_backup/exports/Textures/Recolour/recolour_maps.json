@@ -1,0 +1,109 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "Flashbang",
+ "generated": "2026-09-27",
+ "generator": {
+  "script": "Scripts/props/build_flashbang.py",
+  "script_sha256": "ef3b4bf1b530b4a013b34a5da18298ab6e41e2f9bf6c375161c2a367f31cd24b",
+  "module": "Scripts/props/props_lib/flashbang_paint.py",
+  "module_sha256": "d43f29a3647c9f2244e771f712745a4b4e87ab189c448fa57f51da5f237f987e",
+  "version": "1.0.0",
+  "blender": "5.2.0 LTS"
+ },
+ "sidecar": {
+  "file": "Exports/Flashbang/SM_Flashbang.sockets.json"
+ },
+ "maps": {
+  "T_Flashbang_Paint_Detail16": {
+   "file": "Exports/Flashbang/Textures/Recolour/T_Flashbang_Paint_Detail16.png",
+   "sha256": "675ea7320a01830ef3cbe87874d4c4107c3e434f337e37b08191ecc8443c932a",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG, 16-bit greyscale, no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/Flashbang/Textures/T_Flashbang_Paint_Detail.png",
+    "sha256": "979858d26b6fc5c1337597db44730e24f01863f411ca846de8f0f09f569eb430",
+    "stored_levels": 256
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8 / 255)); lossless (one code per 8-bit level)",
+   "gates": {
+    "lossless_back_to_8bit": true
+   }
+  }
+ },
+ "parts": {
+  "Paint": {
+   "slot_material": "M_Flashbang_Paint",
+   "instance": "MI_Flashbang_Paint",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Flashbang_Paint_Detail16",
+   "switches": {
+    "Metal From ORM": true,
+    "Cloth Sheen": false,
+    "Use Lettering": false,
+    "Specular From ORM Alpha": false
+   },
+   "base_colour_map_reference": {
+    "file": "Exports/Flashbang/Textures/T_Flashbang_BC.png",
+    "sha256": "658fb44c4f8bd613a62c4d22af25820df87d2c074fe8008d9fb4e8ecb731445b"
+   },
+   "params": {
+    "Colour": [
+     0.071395,
+     0.071395,
+     0.033912,
+     1.0
+    ],
+    "Detail Bias": 0.302279,
+    "Detail Scale": 1.005878,
+    "Detail Mean": 1.0000070280460376,
+    "Detail Highlight Ratio": 1.2992072849797318,
+    "Detail Moments Low": [
+     0.3779903159610065,
+     -0.08695896481942571,
+     0.016537634846405663,
+     -0.0020242530997303665
+    ],
+    "Detail Moments High": [
+     0.6220096840389935,
+     0.06753491346447575,
+     0.004640472959650116,
+     0.000277224694662348
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9,
+    "Specular Strength": 0.5
+   },
+   "n_range": [
+    0.3022793988295102,
+    1.3081574905552336
+   ],
+   "fraction_n_le_1": 0.3779903159610065,
+   "covered_texels": 792851,
+   "fill_level": 217,
+   "param_notes": {
+    "Colour": "linear RGBA; the paint's MEAN colour over its dielectric texels (default = the reference olive)"
+   },
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)) on the paint; Metal From ORM keeps the baked BC and metal where ORM.B = 1 (chips, walls); v1 fields over the COVERED (paint) texels; recolour_constants.json (v2) is written by the Finalise step under the materials lock"
+  },
+  "Steel": {
+   "slot_material": "M_Flashbang_Steel",
+   "instance": "MI_Flashbang_Steel",
+   "master": "M_Steel_Master",
+   "recolourable": false,
+   "note": "optional Steel Tint only (white = as shipped); covers the fuze, collar, base cap, lever, ring, pin and the brass inner tube (its colour is in BC)"
+  }
+ },
+ "pass": true
+}

@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-26",
+  "live_vs_post_kunai_plain": {
+    "sha256_files_identical": "113/113 (blend, 14 exports, 26 maps, 7 reports + pack_report, 35 renders, 27 scripts)",
+    "compare_frozen": "passed=True all seven forms (regression_pre_blade_section_live_vs_post_kunai_plain.json, log prep/compare_frozen_live_vs_post_kunai_plain.log)",
+    "Assets/Shuriken.blend": "f712b421bacb010d303c7dc373d3f128d9b0ed334323d6f3c6c6389f9c1e03d6"
+  },
+  "changed_since_post_kunai_plain": {
+    "files": [
+      "Exports/Shuriken/Textures/Recolour/T_Kunai_Wrap_Detail16.png (2026-09-26 04:48)",
+      "Exports/Shuriken/Textures/Recolour/recolour_maps.json (04:48)",
+      "Exports/Shuriken/Textures/Recolour/recolour_constants.json (07:15)",
+      "Exports/Shuriken/MATERIALS_README.md (07:55)"
+    ],
+    "all_new_files": true,
+    "owner": "the pack-materials job (WorkFiles/materials/MATERIALS_REPORT.md 07:57; Scripts/unreal/materials; UE project WorkFiles/shuriken/UnrealShuriken, /Game/NinjaPack). Expected work: its check_exports_frozen.sh proved 63/63 shipped exports identical and Shuriken.blend unchanged; only these new files were added.",
+    "consequence": "Recolour/T_Kunai_Wrap_Detail16 + both JSONs are bound to Shuriken.blend f712b421 and T_Kunai_Wrap_BC 718e4b68; the rebuild changes both, so they must be regenerated (make_kunai_wrap_detail.py, derive_constants.py) and /Game/NinjaPack kunai rebuilt/verified."
+  },
+  "baseline_for_six_after_rebuild": "WorkFiles/shuriken/regression/pre_blade_section (== post_kunai_plain byte for byte) + WorkFiles/kunai/blade_section/prep/frozen_six_sha256.json (66 files)",
+  "frozen_maps_dir": "WorkFiles/shuriken/regression/pre_blade_section/frozen_maps_six (the six forms' 18 maps only; byte-equal to live and to post_hooked_cross/textures). NOT pre_blade_section/textures: it holds T_Kunai_Plain_* and T_Kunai_Wrap_*, so freeze_maps would fail the changed kunai.",
+  "why_staged_build": "A fresh build rewrites every form's FBX (145 header bytes: creation time), all 30 six-form renders (Cycles noise) and every report (timestamps, sha, engine_check) - measured post_hooked_cross vs post_kunai_plain. Byte identity of the six is only possible by building into a stage and promoting kunai + pack-level files only.",
+  "build_command": "\"C:/Program Files/Blender Foundation/Blender 5.2/blender.exe\" -b --factory-startup --python-exit-code 3 --python C:/Users/Cody/Desktop/Blender_Projects/Scripts/shuriken/build_pack.py -- --forms four_point,eight_point,square_plate,six_point,spike,hooked_cross,kunai_plain --frozen-maps C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/shuriken/regression/pre_blade_section/frozen_maps_six --blend C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/kunai/blade_section/build/stage1/Assets/Shuriken.blend --export-dir C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/kunai/blade_section/build/stage1/Exports/Shuriken --texture-dir C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/kunai/blade_section/build/stage1/Exports/Shuriken/Textures --report-dir C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/kunai/blade_section/build/stage1/WorkFiles/shuriken --render-dir C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/kunai/blade_section/build/stage1/Renders/Shuriken --diag-dir C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/kunai/blade_section/build/stage1/WorkFiles/shuriken/diag > C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/kunai/blade_section/build/stage1/build_pack.log 2>&1",
+  "promote_from_stage": [
+    "Assets/Shuriken.blend",
+    "Exports/Shuriken/SM_Kunai_Plain.fbx + .sockets.json",
+    "Exports/Shuriken/Textures/T_Kunai_*.png (8)",
+    "Renders/Shuriken/kunai_plain_{persp,top,wire,lods,lodgrind}.png",
+    "WorkFiles/shuriken/kunai_plain_report.json (stage path prefix rewritten to the live tree, both / and \\ forms)",
+    "WorkFiles/shuriken/pack_report.json = live one with results.kunai_plain replaced and pack_consistency recomputed by render.pack_consistency over the LIVE six reports + the new kunai report"
+  ],
+  "compare_after_build": "compare_frozen.py --snapshot pre_blade_section --forms four_point,eight_point,square_plate,six_point,spike,hooked_cross --root <copy of stage in compare layout: Shuriken.blend, export/, tex/, renders/, reports/> ; then after promotion compare_frozen on the live tree + sha256 re-check of frozen_six_sha256.json",
+  "unreal": {
+    "exe": "C:/Program Files/Epic Games/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Cmd.exe (exists)",
+    "uproject": "WorkFiles/shuriken/UnrealShuriken/ShurikenValidation.uproject (exists)",
+    "harness": "WorkFiles/shuriken/UnrealCheck6/run_all_kunai_plain.sh + run_pass.ps1 + pass1/2/3 + roundtrip_compare + attach_engine_check + Scripts/shuriken/ue_import_textures.py (all exist)",
+    "fresh_dest": "/Game/ShurikenCheck9/KunaiBladeC1 (ShurikenCheck9 holds only SixPointIndep1)",
+    "caveats": [
+      "harness reads the LIVE Exports/Shuriken: run it after promotion",
+      "run passes for kunai_plain only (a kunai-only copy of run_all_kunai_plain.sh) so the six forms' UnrealCheck6 pass files are not overwritten",
+      "attach_engine_check.py MUST be called as `py attach_engine_check.py kunai_plain`: with no args it rewrites all seven reports (six frozen reports would change)",
+      "at prep time: two GUI UnrealEditor.exe (pid 46252 no project arg, pid 138920 DemoGame_1), no commandlet; if a GUI editor has ShurikenValidation.uproject open, wait"
+    ]
+  },
+  "hero_3q": "Renders/Shuriken/kunai_plain_3q.png has no generator in Scripts/; WorkFiles/kunai/blade_section/options/render_3q.py reproduces it (yaw 40, 72 mm, el 29 / az -22, hero lamps x 2.724318, 160 spp). line_sheet.py uses <form>_persp.png, so the kunai's persp render must become the 3/4 pose."
+}

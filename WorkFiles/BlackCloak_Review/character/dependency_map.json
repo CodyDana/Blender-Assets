@@ -1,0 +1,30 @@
+{
+ "note": "Character-track dependencies on the BlackCloak (read-only audit 2026-09-26). 'breaks' = what a kind of fix forces the character side to re-run.",
+ "active_player_note": "DemoGame_1 HEAD 290dc79 (2026-09-26 19:07): player is the FEMALE MetaHuman (MH_PlayerFemale); CloakMH is male-fitted and only tagged NinjaMHGarment when setup_mh_visual.py BODY=='male', so she does not wear it. Garment pipeline has only the MH_PlayerDefault (male) fitting body.",
+ "depends_on": {
+  "Assets/BlackCloak.blend": "sha256 bd42c71e... pinned in Scripts/garments/recipes/BlackCloak.json (refit_garment.py raises on mismatch); copied by run_blackcloak_regression.ps1; WorkFiles/BlackCloak_MH/BlackCloak_work.blend is a byte-identical copy; piece names (SIM_PIECES, Clasp_ prefix) and material names M_BlackCloak_WovenWool/BlackenedSteel/CharcoalLeather are hardcoded in fit_cloak_mh.py, build_cloak_mh.py, recipe, cloak_build_mh.ps1, slot_probe_mh.py, make_cloth_mh.py",
+  "WorkFiles/BlackCloak_MH/BlackCloak_MH_fit.blend": "input of build_cloak_mh.py; regression target (fit stage) of regress_blackcloak.py",
+  "DemoGame_1/Saved/Claude/Blender/SKM_BlackCloak_MH.fbx (fb8d35a2)": "imported by import_cloak_mh.py; regression target (fbx stage); CharacterLab garment_check input",
+  "DemoGame_1/Saved/Claude/Blender/SKM_Manny.fbx, SKM_MH_Body.fbx, SKM_MH_Face.fbx": "warp source/target of the refit (recipe source_body_fbx)",
+  "DemoGame_1 /Game/Ninja/Cloak": "SKM_BlackCloak_MH (+cloth data CloakMH_Cloth), shared M_BlackCloak / MI_BlackCloak_Steel / MI_BlackCloak_Leather and Textures T_BlackCloak_BaseColor/Roughness/Normal_OpenGL (also used by the Manny SKM_BlackCloak), BP_NinjaVisual components Cloak + CloakMH",
+  "DemoGame_1 Tools/Claude/Blender": "fit_cloak_mh.py, build_cloak_mh.py, mh_fit_probe.py",
+  "DemoGame_1 Tools/Claude/Cloak": "cloak_build_mh.ps1, import_cloak_mh.py, make_cloth_mh.py, setup_cloak_mh.py, slot_probe_mh.py, cloak_mh_test.ps1, cloak_mh_fps.ps1, cloak_mh_probe.py, cloak_mh_toggle.py, export_mh_body_fbx.py, shot_sheet.py",
+  "DemoGame_1 Tools/Claude/Character/setup_mh_visual.py": "CloakMH tag switch by BODY",
+  "Scripts/garments": "recipes/BlackCloak.json, refit_garment.py, regress_blackcloak.py, run_blackcloak_regression.ps1, build_fitbody.py/ue_export_fitbody.py (keep the exact body bytes the one-off used)",
+  "WorkFiles/garment_pipeline/BlackCloak + ue_runs": "regression outputs and the pipeline build SK_BlackCloak_MH.fbx (dcb888f3)",
+  "References/Characters/MH_PlayerDefault": "fitting body; regression exactness depends on it being unchanged",
+  "ASSET_GUIDELINES.md 12.10": "quotes the regression numbers",
+  "Scripts/MetaHuman/pb_conform_draft.py": "soft reference to Scripts/BlackCloak/unreal_recolor_setup.py as an FBX-import pattern"
+ },
+ "not_used_by_character_track": ["Exports/BlackCloak/* (static FBX, glb, JinMuWon skeletal FBX + LODs, Textures, README/RECOLOR, Unreal/ recolour project)", "Exports/BlackCloak_Package.zip", "Renders/BlackCloak", "WorkFiles/BlackCloak/UnrealRecolor", "Scripts/BlackCloak (except the soft reference above)"],
+ "fix_kinds": {
+  "texture/material change in Exports only (BC/ORM/N DX, detail map, pack MIs)": "breaks nothing; to reach the game: reimport textures into /Game/Ninja/Cloak/Textures and/or assign new MIs to the EXISTING slot names via MCP (trap 6) - no mesh reimport, no cloth rebuild; changes the hidden Manny cloak too (shared M_BlackCloak). Sign-off: DemoGame_1 is the character chat's.",
+  "texture change saved INTO Assets/BlackCloak.blend (packed images)": "blend hash changes -> recipe pin fails -> regression must be re-baselined; pipeline build re-exports the textures",
+  "material slot rename (pack naming)": "FBX slot names change -> cloak_build_mh.ps1 map throws, make_cloth_mh WOOL_SLOT, slot_probe_mh, build_cloak_mh constants, recipe/regression -> reimport wipes cloth -> make_cloth_mh + PIE tests",
+  "source geometry change": "hash pin + one-off/pipeline equality lost; re-run refit -> build -> import (cloth wiped) -> make_cloth_mh (retune PinZ/FreeZ) -> PIE test suite; piece rename/add breaks SIM_PIECES in 3 places",
+  "re-skin / re-export of Exports/BlackCloak_Skeletal": "breaks nothing (not used) but would create a second, competing MetaHuman cloak",
+  "re-skin / sim-cage / decimation change of the in-game mesh": "build + reimport + cloth rebuild + tests; regression baseline changes",
+  "switch the game to the pipeline build SK_BlackCloak_MH": "asset/file name differs (SK_ vs SKM_): import_cloak_mh SRC/NAME, setup_cloak_mh, make_cloth_mh, BP CloakMH mesh ref - or import it under the old asset name; cloth rebuild"
+ },
+ "source_of_truth_recommendation": "Sculpt: Assets/BlackCloak.blend (bd42c71e) stays frozen as the regression source while no geometry changes. If geometry is fixed, promote the pipeline's MH-native work file (WorkFiles/garment_pipeline/BlackCloak/BlackCloak_MH_garment.blend -> e.g. Assets/Garments/BlackCloak_MH.blend, GARMENT/GARMENT_SIM on the locked fitting body) to the source, archive the Manny-shaped sculpt + one-off fit as history, and ship SK_BlackCloak_MH from build_garment.py. The one-off BlackCloak_MH_fit.blend and DemoGame_1 build_cloak_mh.py should stop being a source."
+}

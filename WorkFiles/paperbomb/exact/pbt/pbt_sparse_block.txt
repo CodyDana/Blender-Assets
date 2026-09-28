@@ -1,0 +1,106 @@
+class _Basis:
+    """A cubic B-spline basis matrix stored SPARSE: four (index, weight) pairs per sample.
+
+    ``B @ c`` evaluates the curve; ``gram()`` / ``rhs(q)`` build the normal equations
+    directly, so a long contour never needs the dense (samples x control points) matrix
+    (the first version built it dense, and a 2000 px loop needed gigabytes).
+    """
+
+    def __init__(self, idx: np.ndarray, w: np.ndarray, nc: int):
+        self.idx = idx
+        self.w = w
+        self.nc = nc
+
+    @property
+    def shape(self):
+        return (len(self.idx), self.nc)
+
+    def __matmul__(self, c):
+        c = np.asarray(c, np.float64)
+        return np.einsum("nk,nkd->nd", self.w, c[self.idx])
+
+    def gram(self) -> np.ndarray:
+        A = np.zeros((self.nc, self.nc))
+        for a in range(4):
+            for b in range(4):
+                np.add.at(A, (self.idx[:, a], self.idx[:, b]), self.w[:, a] * self.w[:, b])
+        return A
+
+    def rhs(self, q: np.ndarray) -> np.ndarray:
+        R = np.zeros((self.nc, q.shape[1]))
+        for a in range(4):
+            np.add.at(R, self.idx[:, a], self.w[:, a, None] * q)
+        return R
+
+
+def _clamped_basis(nspan: int, t: np.ndarray) -> _Basis:
+    """Cubic B-spline basis on the clamped uniform knot vector over [0, 1] with ``nspan``
+    spans (nspan + 3 control points).  De Boor's local recursion, vectorised over t."""
+    inner = np.arange(1, nspan) / nspan
+    knots = np.concatenate([[0.0] * 4, inner, [1.0] * 4])
+    t = np.clip(np.asarray(t, np.float64), 0.0, 1.0 - 1e-12)
+    i = np.minimum(np.floor(t * nspan).astype(np.int64), nspan - 1) + 3
+    i = np.where(t < knots[i], i - 1, i)                 # float edge: knots[i] <= t
+    i = np.clip(i, 3, nspan + 2)
+    i = np.where(t >= knots[i + 1], i + 1, i)            # ...and t < knots[i + 1]
+    i = np.clip(i, 3, nspan + 2)
+    n = len(t)
+    N = np.zeros((n, 4)); N[:, 0] = 1.0
+    left = np.zeros((n, 4)); right = np.zeros((n, 4))
+    for j in range(1, 4):
+        left[:, j] = t - knots[i + 1 - j]
+        right[:, j] = knots[i + j] - t
+        saved = np.zeros(n)
+        for r in range(j):
+            den = right[:, r + 1] + left[:, j - r]
+            ok = den > 0
+            temp = np.where(ok, N[:, r] / np.where(ok, den, 1.0), 0.0)
+            N[:, r] = saved + right[:, r + 1] * temp
+            saved = left[:, j - r] * temp
+        N[:, j] = saved
+    idx = (i - 3)[:, None] + np.arange(4)[None, :]
+    return _Basis(idx, N, nspan + 3)
+
+
+def _periodic_basis(n: int, s: np.ndarray) -> _Basis:
+    """Uniform periodic cubic B-spline basis, ``n`` control points, parameter s in [0, n)."""
+    s = np.asarray(s, np.float64) % n
+    i = np.floor(s).astype(np.int64)
+    t = s - i
+    w = np.stack([(1 - t) ** 3 / 6, (3 * t ** 3 - 6 * t ** 2 + 4) / 6,
+                  (-3 * t ** 3 + 3 * t ** 2 + 3 * t + 1) / 6, t ** 3 / 6], 1)
+    idx = (i[:, None] - 1 + np.arange(4)[None, :]) % n
+    return _Basis(idx, w, n)
+
+
+def _second_diff_gram(n: int, periodic: bool) -> np.ndarray:
+    """D^T D of the second-difference operator, built directly."""
+    S = np.zeros((n, n))
+    rows = np.arange(n) if periodic else np.arange(max(0, n - 2))
+    if len(rows) == 0:
+        return S
+    cols = [(rows - 1) % n, rows, (rows + 1) % n] if periodic else [rows, rows + 1, rows + 2]
+    coef = (1.0, -2.0, 1.0)
+    for a in range(3):
+        for b in range(3):
+            np.add.at(S, (cols[a], cols[b]), coef[a] * coef[b])
+    return S
+
+
+def _solve_clamped(B: _Basis, seg: np.ndarray, P0, P1, smooth: float) -> np.ndarray:
+    """Least squares with the two end control points pinned to P0, P1."""
+    M = B.gram() + smooth * _second_diff_gram(B.nc, False)
+    R = B.rhs(np.asarray(seg, np.float64))
+    P0 = np.asarray(P0, np.float64); P1 = np.asarray(P1, np.float64)
+    rhs = R[1:-1] - np.outer(M[1:-1, 0], P0) - np.outer(M[1:-1, -1], P1)
+    if B.nc <= 2:
+        return np.vstack([P0, P1])
+    ci = np.linalg.solve(M[1:-1, 1:-1], rhs)
+    return np.vstack([P0, ci, P1])
+
+
+def _solve_periodic(B: _Basis, q: np.ndarray, smooth: float) -> np.ndarray:
+    return np.linalg.solve(B.gram() + smooth * _second_diff_gram(B.nc, True),
+                           B.rhs(np.asarray(q, np.float64)))
+
+

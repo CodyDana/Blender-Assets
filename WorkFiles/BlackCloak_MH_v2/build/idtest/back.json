@@ -1,0 +1,349 @@
+{
+ "args": {
+  "view": "back",
+  "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\SK_BlackCloak_MH_v2.fbx",
+  "tex": null,
+  "params": null,
+  "pose": "down",
+  "body": 1,
+  "mult": 3,
+  "samples": 256,
+  "yaw": null,
+  "pitch": null,
+  "focal": null,
+  "out": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\BlackCloak_MH_v2\\build\\idtest",
+  "tag": "back",
+  "no_beauty": true,
+  "clasp_keys": "clasp,button"
+ },
+ "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\SK_BlackCloak_MH_v2.fbx",
+ "textures": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\Textures",
+ "params_file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\SK_BlackCloak_MH_v2.material_params.json",
+ "garment_meshes": [
+  "SK_BlackCloak_MH_v2"
+ ],
+ "pose": "down",
+ "hands_world": {
+  "l": [
+   0.27693459391593933,
+   -0.020009353756904602,
+   0.9234148263931274
+  ],
+  "r": [
+   -0.276987224817276,
+   -0.020072437822818756,
+   0.9228911399841309
+  ]
+ },
+ "materials": [
+  {
+   "slot": "M_BlackCloakV2_Wool_Sim",
+   "params_used": {
+    "base_color_tex": "T_BlackCloakV2_Cloth_BC.png",
+    "orm_tex": "T_BlackCloakV2_Cloth_ORM.png",
+    "normal_tex": "T_BlackCloakV2_Cloth_N.png",
+    "normal_convention": "DirectX (green down) on disk; flip green in Blender, not in Unreal",
+    "uv_map": "UVMap",
+    "uv_scale": 13.0,
+    "uv_note": "UV0 = flat-pattern metres / 5.85 (unique, non-overlapping atlas); the 0.45 m slub tile repeats 13.0 times per UV unit",
+    "base_tint_linear": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "roughness_mult": 1.0,
+    "roughness_note": "roughness = ORM.G (x 1.0; the stage-1 kit's 'ORM.G + 0.0' is the same)",
+    "metallic": 0.0,
+    "specular": 0.1,
+    "sheen_weight": 0.2,
+    "sheen_tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sheen_roughness": 0.45,
+    "normal_strength": 1.0,
+    "two_sided": true,
+    "ao_tex_channel": "ORM.R (Unreal indirect only; Cycles computes its own occlusion)",
+    "fray_opacity_tex": "T_BlackCloakV2_Fray_BCA.png",
+    "fray_opacity_uv_map": "UV1_Fray",
+    "fray_opacity_channel": "A",
+    "fray_opacity_uv_scale": 1.0,
+    "fray_note": "the fringe rows along every cut edge (and every non-fringe vertex at V 0.97, opaque) sample the fray strip's alpha through UV1 (U = edge metres / 0.45, V = 1 at the cloth side). Unreal: Blend Mode Masked, clip 0.5, dithered, alpha-coverage preservation on the fray texture. A measurer that ignores these keys renders the fringe as solid cloth.",
+    "unreal": {
+     "shading_model": "Cloth",
+     "fuzz_colour": [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "cloth": 0.2,
+     "specular": 0.1,
+     "blend_mode": "Masked",
+     "opacity_mask": "T_BlackCloakV2_Fray_BCA.A via UV1_Fray",
+     "opacity_mask_clip": 0.5,
+     "two_sided": true,
+     "uv_scale": 13.0,
+     "fallback": {
+      "shading_model": "DefaultLit",
+      "specular": 0.15
+     },
+     "status": "not verified in Unreal"
+    },
+    "note": "the build's cloth-section copy of M_BlackCloakV2_Wool"
+   },
+   "base_color": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\Textures\\T_BlackCloakV2_Cloth_BC.png",
+   "orm": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\Textures\\T_BlackCloakV2_Cloth_ORM.png",
+   "normal": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\Textures\\T_BlackCloakV2_Cloth_N.png",
+   "opacity": null
+  },
+  {
+   "slot": "M_BlackCloakV2_Wool",
+   "params_used": {
+    "base_color_tex": "T_BlackCloakV2_Cloth_BC.png",
+    "orm_tex": "T_BlackCloakV2_Cloth_ORM.png",
+    "normal_tex": "T_BlackCloakV2_Cloth_N.png",
+    "normal_convention": "DirectX (green down) on disk; flip green in Blender, not in Unreal",
+    "uv_map": "UVMap",
+    "uv_scale": 13.0,
+    "uv_note": "UV0 = flat-pattern metres / 5.85 (unique, non-overlapping atlas); the 0.45 m slub tile repeats 13.0 times per UV unit",
+    "base_tint_linear": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "roughness_mult": 1.0,
+    "roughness_note": "roughness = ORM.G (x 1.0; the stage-1 kit's 'ORM.G + 0.0' is the same)",
+    "metallic": 0.0,
+    "specular": 0.1,
+    "sheen_weight": 0.2,
+    "sheen_tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sheen_roughness": 0.45,
+    "normal_strength": 1.0,
+    "two_sided": true,
+    "ao_tex_channel": "ORM.R (Unreal indirect only; Cycles computes its own occlusion)",
+    "fray_opacity_tex": "T_BlackCloakV2_Fray_BCA.png",
+    "fray_opacity_uv_map": "UV1_Fray",
+    "fray_opacity_channel": "A",
+    "fray_opacity_uv_scale": 1.0,
+    "fray_note": "the fringe rows along every cut edge (and every non-fringe vertex at V 0.97, opaque) sample the fray strip's alpha through UV1 (U = edge metres / 0.45, V = 1 at the cloth side). Unreal: Blend Mode Masked, clip 0.5, dithered, alpha-coverage preservation on the fray texture. A measurer that ignores these keys renders the fringe as solid cloth.",
+    "unreal": {
+     "shading_model": "Cloth",
+     "fuzz_colour": [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "cloth": 0.2,
+     "specular": 0.1,
+     "blend_mode": "Masked",
+     "opacity_mask": "T_BlackCloakV2_Fray_BCA.A via UV1_Fray",
+     "opacity_mask_clip": 0.5,
+     "two_sided": true,
+     "uv_scale": 13.0,
+     "fallback": {
+      "shading_model": "DefaultLit",
+      "specular": 0.15
+     },
+     "status": "not verified in Unreal"
+    }
+   },
+   "base_color": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\Textures\\T_BlackCloakV2_Cloth_BC.png",
+   "orm": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\Textures\\T_BlackCloakV2_Cloth_ORM.png",
+   "normal": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Garments\\BlackCloak_MH_v2\\Textures\\T_BlackCloakV2_Cloth_N.png",
+   "opacity": null
+  },
+  {
+   "slot": "M_BlackCloakV2_Clasp",
+   "params_used": {
+    "base_tint_linear": [
+     0.013,
+     0.0115,
+     0.0105
+    ],
+    "metallic": 0.0,
+    "roughness": 0.3,
+    "specular": 0.5,
+    "normal_strength": 1.0,
+    "two_sided": false,
+    "unreal": {
+     "shading_model": "DefaultLit",
+     "base_color_linear": [
+      0.013,
+      0.0115,
+      0.0105
+     ],
+     "metallic": 0.0,
+     "roughness": 0.3,
+     "specular": 0.5,
+     "two_sided": false,
+     "note": "dark lacquer / polished horn: glossy dielectric, not chrome; no textures (UV0 laid out if a detail map is wanted later)"
+    },
+    "note": "no textures: a dark glossy lacquer / horn dielectric"
+   },
+   "base_color": null,
+   "orm": null,
+   "normal": null,
+   "opacity": null
+  }
+ ],
+ "camera": {
+  "focal": 85.0,
+  "yaw": 180.0,
+  "pitch": 0.0,
+  "target": [
+   0.0,
+   0.0,
+   0.95
+  ],
+  "span_m": 2.02,
+  "res": [
+   600,
+   900
+  ],
+  "target_used": [
+   0.0,
+   0.0,
+   0.949999988079071
+  ],
+  "dist_m": 7.154166666666667,
+  "cam_loc": [
+   8.761327641572218e-16,
+   7.1541666984558105,
+   0.949999988079071
+  ]
+ },
+ "garment_bbox": [
+  [
+   -0.7570893078100435,
+   -0.7235080229698377,
+   -0.006938007008299427
+  ],
+  [
+   0.5046790624211175,
+   0.40830730734703174,
+   1.7515568404350288
+  ]
+ ],
+ "landmarks_3d": {
+  "floor_origin": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "shoulder_line_clothed_r": [
+   -0.18,
+   0.0,
+   1.56
+  ],
+  "shoulder_line_clothed_l": [
+   0.18,
+   0.0,
+   1.56
+  ],
+  "nose_tip": [
+   0.0,
+   -0.1332682967185974,
+   1.7024999999999946
+  ],
+  "subnasale": [
+   0.0,
+   -0.11758836358785629,
+   1.687499999999995
+  ],
+  "stomion_mouth_line": [
+   0.0,
+   -0.11575046181678772,
+   1.6524999999999956
+  ],
+  "eye_l_centre": [
+   0.03774822601587127,
+   -0.1013598037959317,
+   1.7427923428590457
+  ],
+  "eye_r_centre": [
+   -0.03679751936937447,
+   -0.10077063684770901,
+   1.7426311579187657
+  ],
+  "clasp_centre": [
+   -0.19112032440103366,
+   -0.13496619619417108,
+   1.4947995392793325
+  ],
+  "upper_lip": [
+   0.0,
+   -0.12276672571897507,
+   1.6724999999999952
+  ],
+  "chin_point": [
+   0.0,
+   -0.1156168133020401,
+   1.632499999999996
+  ]
+ },
+ "landmarks_px": {
+  "floor_origin": [
+   299.99992847442627,
+   873.2675643637776,
+   7.1541666984558105
+  ],
+  "shoulder_line_clothed_r": [
+   380.1980495452881,
+   178.2180905342102,
+   7.1541666984558105
+  ],
+  "shoulder_line_clothed_l": [
+   219.80202198028564,
+   178.2180905342102,
+   7.1541666984558105
+  ],
+  "nose_tip": [
+   300.00003576278687,
+   120.85921168327332,
+   7.287435054779053
+  ],
+  "subnasale": [
+   300.00003576278687,
+   126.72461271286011,
+   7.271755218505859
+  ],
+  "stomion_mouth_line": [
+   300.00003576278687,
+   141.9886350631714,
+   7.2699174880981445
+  ],
+  "eye_l_centre": [
+   283.41649174690247,
+   101.71043872833252,
+   7.255526542663574
+  ],
+  "eye_r_centre": [
+   316.16724729537964,
+   101.75303220748901,
+   7.254937648773193
+  ],
+  "clasp_centre": [
+   383.57595205307007,
+   211.76227927207947,
+   7.289133071899414
+  ]
+ },
+ "face_landmark_visibility": {
+  "nose_tip": "hidden_by_garment",
+  "subnasale": "hidden_by_garment",
+  "upper_lip": "hidden_by_garment",
+  "stomion_mouth_line": "hidden_by_garment",
+  "chin_point": "hidden_by_garment",
+  "eye_l_centre": "hidden_by_garment",
+  "eye_r_centre": "hidden_by_garment"
+ },
+ "resolution": [
+  600,
+  900
+ ]
+}

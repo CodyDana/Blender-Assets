@@ -1,0 +1,601 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "Shuriken",
+ "generated": "2026-09-27",
+ "generator": {
+  "script": "Scripts/unreal/materials/maps/make_kunai_wrap_detail.py",
+  "script_sha256": "2e8a969e2833c54bcc9e09c35223f72604b355238277f533d8fc8d90b079caea",
+  "common": "Scripts/unreal/materials/maps/recolour_common.py",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "1.0.0",
+  "blender": "5.2.0 LTS",
+  "bake_device": "GPU (OPTIX)",
+  "bake": {
+   "source": "Assets/Shuriken.blend (opened read-only, never saved)",
+   "object": "SM_Kunai_Plain_LOD0",
+   "material": "M_Kunai_Wrap",
+   "Dye": 0.0,
+   "samples": 16,
+   "margin_px": 16,
+   "margin_type": "EXTEND",
+   "size": 1024,
+   "path": "kunai_wrap.bake_kunai's wrap half: B._alone, _absorber(steel), _wrap_uv, B._bake_channel('Base Color') into a FLOAT image, B._fill over B._coverage"
+  }
+ },
+ "maps": {
+  "T_Kunai_Wrap_Detail16": {
+   "file": "Exports/Shuriken/Textures/Recolour/T_Kunai_Wrap_Detail16.png",
+   "sha256": "a69e7f0826ea20226035b9e7379cffd81bae48c7ebea133c489cccb31e217d17",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = d = (Y - Ylo) / (Yhi - Ylo), Y = Rec.709 luminance of the float bake",
+   "uv": "the wrap's UV tile u 1..2 (same texel grid as T_Kunai_Wrap_BC; Wrap addressing)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "blend": "Assets/Shuriken.blend",
+    "blend_sha256": "abb558fef12a3365434f200d66c4fb7949ddaf26bd3eccaa83829c97d6209fd5",
+    "shipped_bc": "Exports/Shuriken/Textures/T_Kunai_Wrap_BC.png",
+    "shipped_bc_sha256": "e60400fd1a26570864324ba7fe57a29ce89d036952bfe2291ff48081b04f4d5e"
+   },
+   "luminance": {
+    "Ylo": 0.01051925150323659,
+    "Yhi": 0.14254559515714646,
+    "Ymean_covered": 0.035365383931717516,
+    "covered_fraction": 0.6533,
+    "islands_fraction": 0.59298
+   },
+   "texel_sources": {
+    "islands": "the float bake (linear, full precision)",
+    "margin_16px_and_fill": "the shipped T_Kunai_Wrap_BC decoded (its own EXTEND margin and mean fill), so the detail's far mips match the BC's"
+   },
+   "recipe": "d = (Y - Ylo) / (Yhi - Ylo), round(65535 d)"
+  }
+ },
+ "parts": {
+  "Kunai_Plain/Wrap": {
+   "slot_material": "M_Kunai_Wrap",
+   "slot_index": 1,
+   "instance": "MI_Kunai_Plain_Wrap",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Kunai_Wrap_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/Shuriken/Textures/T_Kunai_Wrap_BC.png",
+    "sha256": "e60400fd1a26570864324ba7fe57a29ce89d036952bfe2291ff48081b04f4d5e"
+   },
+   "params": {
+    "Colour": [
+     0.037644673,
+     0.035002056,
+     0.032252855,
+     1.0
+    ],
+    "Detail Bias": 0.29744485521624375,
+    "Detail Scale": 3.7332082668414572,
+    "Detail Mean": 0.9935201885629006,
+    "Detail Highlight Ratio": 2.5017338687043678,
+    "Detail Moments Low": [
+     0.730433464050293,
+     -0.06690173533801595,
+     0.007577215553784981,
+     -0.0006609821595924964
+    ],
+    "Detail Moments High": [
+     0.26956653594970703,
+     0.044934356332834324,
+     0.006588295691339896,
+     0.0019830384825498815
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the wrap's MEAN colour (covered texels of the float bake)",
+    "Detail Moments": "ASCENDING cubic coefficients as RGBA: E(c) = R + G*c + B*c^2 + A*c^3; Low = E[n^c; n <= 1], High = E[n^c; n > 1], over every texel, exact through c = 0, 0.5, 1, 1.5 (Low(1) + High(1) = Detail Mean)",
+    "n": "n = Detail Bias + Detail Scale x Detail16 = Y / Ymean"
+   },
+   "moment_samples": {
+    "c": [
+     0.0,
+     0.5,
+     1.0,
+     1.5
+    ],
+    "low": [
+     0.730433464050293,
+     0.6987942774997822,
+     0.6704479621064695,
+     0.6448987812506606
+    ],
+    "high": [
+     0.26956653594970703,
+     0.2939286678492779,
+     0.32307222645643113,
+     0.35848449063307913
+    ]
+   },
+   "n_range": [
+    0.29744485521624375,
+    4.030653122057701
+   ],
+   "fraction_n_le_1": 0.730433464050293,
+   "gates": {
+    "G-K1_bake_parity": {
+     "islands": {
+      "max": 1,
+      "mean": 0.00048,
+      "texels_diff_gt0": 300,
+      "texels_diff_gt1": 0,
+      "texels": 621782
+     },
+     "margin_only_float_extend_vs_byte_extend": {
+      "max": 6,
+      "mean": 0.87185,
+      "texels_diff_gt0": 44590,
+      "texels_diff_gt1": 8607,
+      "texels": 63255
+     },
+     "reference_todays_byte_bake_vs_shipped": {
+      "max": 1,
+      "mean": 0.0,
+      "texels_diff_gt0": 2,
+      "texels_diff_gt1": 0,
+      "texels": 1048576
+     },
+     "islands_texels": 621782,
+     "margin_texels": 63255,
+     "fill_texels": 363539,
+     "note": "gated on the islands (the baked surface).  The margin and the fill of the detail are taken from the shipped BC itself (below), so its mips agree with the BC's",
+     "bake_noise_note": "OPTIX bakes are not bit-deterministic: today's byte bake vs the shipped BC differs in 0-1 texels by 1 level, and three runs of this generator (2026-09-26) differed in ~420 of 1048576 texels by 1 16-bit code (1.5e-5 of the range).  The Detail16 is therefore reproducible to that noise, not bit for bit; its sha256 is recorded here",
+     "pass": true
+    },
+    "G-K2_default_model_vs_shipped_BC": {
+     "texels": "covered (islands + margin)",
+     "dE00_vs_shipped_BC": {
+      "mean": 0.3093,
+      "p99": 0.9851,
+      "p99.9": 1.3655,
+      "max": 1.8091
+     },
+     "dE00_vs_encoded_linear_colour": {
+      "mean": 0.089,
+      "p99": 0.8805,
+      "max": 1.5021
+     },
+     "stored_levels_vs_shipped_BC_covered": {
+      "max": 2,
+      "mean": 0.11292,
+      "texels_diff_gt0": 77102,
+      "texels_diff_gt1": 255,
+      "texels": 685037
+     },
+     "stored_levels_vs_shipped_BC_all": {
+      "max": 2,
+      "mean": 0.07377,
+      "texels_diff_gt0": 77102,
+      "texels_diff_gt1": 255,
+      "texels": 1048576
+     },
+     "why_not_zero": "one greyscale detail cannot carry the fibre flecks' slight hue shift (FIBRE (0.150, 0.142, 0.126) vs DARK (0.042, 0.039, 0.036)); the luminance is carried exactly",
+     "pass": true
+    },
+    "luminance_only_stored_levels_covered": {
+     "max": 1,
+     "mean": 0.18211,
+     "texels_diff_gt0": 124749,
+     "texels_diff_gt1": 0,
+     "texels": 685037
+    },
+    "G-K3_blend_unchanged": {
+     "sha256_before": "abb558fef12a3365434f200d66c4fb7949ddaf26bd3eccaa83829c97d6209fd5",
+     "sha256_after": "abb558fef12a3365434f200d66c4fb7949ddaf26bd3eccaa83829c97d6209fd5",
+     "pass": true
+    },
+    "G-H1": {
+     "H_default": 3.4616,
+     "max_default_albedo": 0.15173,
+     "pass": true
+    },
+    "readback": {
+     "own_decoder_equal": true,
+     "bits": 16,
+     "colour_type": 0,
+     "blender_decoder_max_abs": 2.9990135930191286e-08,
+     "png_chunks": [
+      "IHDR",
+      "IDAT",
+      "IEND"
+     ],
+     "pass": true
+    },
+    "default_every_mip_vs_BC_mips": {
+     "max_level_diff": 2,
+     "per_mip": [
+      {
+       "mip": 0,
+       "size": [
+        1024,
+        1024
+       ],
+       "max": 2,
+       "mean": 0.07377,
+       "texels_diff_gt0": 77102,
+       "texels_diff_gt1": 255,
+       "texels": 1048576
+      },
+      {
+       "mip": 1,
+       "size": [
+        512,
+        512
+       ],
+       "max": 2,
+       "mean": 0.25434,
+       "texels_diff_gt0": 66662,
+       "texels_diff_gt1": 12,
+       "texels": 262144
+      },
+      {
+       "mip": 2,
+       "size": [
+        256,
+        256
+       ],
+       "max": 2,
+       "mean": 0.14499,
+       "texels_diff_gt0": 9497,
+       "texels_diff_gt1": 5,
+       "texels": 65536
+      },
+      {
+       "mip": 3,
+       "size": [
+        128,
+        128
+       ],
+       "max": 1,
+       "mean": 0.10175,
+       "texels_diff_gt0": 1667,
+       "texels_diff_gt1": 0,
+       "texels": 16384
+      },
+      {
+       "mip": 4,
+       "size": [
+        64,
+        64
+       ],
+       "max": 1,
+       "mean": 0.08789,
+       "texels_diff_gt0": 360,
+       "texels_diff_gt1": 0,
+       "texels": 4096
+      },
+      {
+       "mip": 5,
+       "size": [
+        32,
+        32
+       ],
+       "max": 1,
+       "mean": 0.07227,
+       "texels_diff_gt0": 74,
+       "texels_diff_gt1": 0,
+       "texels": 1024
+      },
+      {
+       "mip": 6,
+       "size": [
+        16,
+        16
+       ],
+       "max": 1,
+       "mean": 0.07031,
+       "texels_diff_gt0": 18,
+       "texels_diff_gt1": 0,
+       "texels": 256
+      },
+      {
+       "mip": 7,
+       "size": [
+        8,
+        8
+       ],
+       "max": 1,
+       "mean": 0.03125,
+       "texels_diff_gt0": 2,
+       "texels_diff_gt1": 0,
+       "texels": 64
+      },
+      {
+       "mip": 8,
+       "size": [
+        4,
+        4
+       ],
+       "max": 1,
+       "mean": 0.125,
+       "texels_diff_gt0": 2,
+       "texels_diff_gt1": 0,
+       "texels": 16
+      },
+      {
+       "mip": 9,
+       "size": [
+        2,
+        2
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 4
+      },
+      {
+       "mip": 10,
+       "size": [
+        1,
+        1
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 1
+      }
+     ],
+     "note": "reported, not gated at 1 level: the greyscale model drops the flecks' hue at every mip as at mip 0 (G-K2)"
+    },
+    "twin_default_vs_contract_max_abs_linear": 0.0,
+    "recolour_stress": {
+     "pass": true,
+     "colours": {
+      "white": {
+       "H": 0.12845,
+       "C_hi": 0.12845,
+       "C_lo": 0.56422,
+       "E": 0.97043,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 32,
+       "p1_p99_span_levels": 31.0,
+       "occupied_fraction_of_span": 1.0323,
+       "pass": true,
+       "std_ratio_logL": 0.3727,
+       "corr_logL": 0.88695,
+       "mean_albedo": [
+        0.79467,
+        0.79467,
+        0.79467
+       ],
+       "target_mean": [
+        0.79482,
+        0.79482,
+        0.79482
+       ],
+       "dE00_mean_vs_target": 0.004
+      },
+      "cream": {
+       "H": 0.12845,
+       "C_hi": 0.12845,
+       "C_lo": 0.56422,
+       "E": 0.97043,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 32,
+       "p1_p99_span_levels": 31.0,
+       "occupied_fraction_of_span": 1.0323,
+       "pass": true,
+       "std_ratio_logL": 0.3727,
+       "corr_logL": 0.88695,
+       "mean_albedo": [
+        0.79467,
+        0.69533,
+        0.49667
+       ],
+       "target_mean": [
+        0.79482,
+        0.69546,
+        0.49676
+       ],
+       "dE00_mean_vs_target": 0.004
+      },
+      "pastel_pink": {
+       "H": 0.06233,
+       "C_hi": 0.06233,
+       "C_lo": 0.53117,
+       "E": 0.96933,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 26,
+       "p1_p99_span_levels": 25.0,
+       "occupied_fraction_of_span": 1.04,
+       "pass": true,
+       "std_ratio_logL": 0.3294,
+       "corr_logL": 0.8211,
+       "mean_albedo": [
+        0.84297,
+        0.59504,
+        0.69421
+       ],
+       "target_mean": [
+        0.84449,
+        0.59611,
+        0.69546
+       ],
+       "dE00_mean_vs_target": 0.04
+      },
+      "saturated_red": {
+       "H": 0.12845,
+       "C_hi": 0.12845,
+       "C_lo": 0.56422,
+       "E": 0.97043,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 32,
+       "p1_p99_span_levels": 31.0,
+       "occupied_fraction_of_span": 1.0323,
+       "pass": true,
+       "std_ratio_logL": 0.3727,
+       "corr_logL": 0.88695,
+       "mean_albedo": [
+        0.79467,
+        0.01987,
+        0.01987
+       ],
+       "target_mean": [
+        0.79482,
+        0.01987,
+        0.01987
+       ],
+       "dE00_mean_vs_target": 0.004
+      },
+      "saturated_blue": {
+       "H": 0.12845,
+       "C_hi": 0.12845,
+       "C_lo": 0.56422,
+       "E": 0.97043,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 32,
+       "p1_p99_span_levels": 31.0,
+       "occupied_fraction_of_span": 1.0323,
+       "pass": true,
+       "std_ratio_logL": 0.3727,
+       "corr_logL": 0.88695,
+       "mean_albedo": [
+        0.01987,
+        0.04967,
+        0.79467
+       ],
+       "target_mean": [
+        0.01987,
+        0.04968,
+        0.79482
+       ],
+       "dE00_mean_vs_target": 0.003
+      },
+      "yellow": {
+       "H": 0.06233,
+       "C_hi": 0.06233,
+       "C_lo": 0.53117,
+       "E": 0.96933,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 26,
+       "p1_p99_span_levels": 25.0,
+       "occupied_fraction_of_span": 1.04,
+       "pass": true,
+       "std_ratio_logL": 0.3294,
+       "corr_logL": 0.8211,
+       "mean_albedo": [
+        0.84297,
+        0.7438,
+        0.04959
+       ],
+       "target_mean": [
+        0.84449,
+        0.74514,
+        0.04968
+       ],
+       "dE00_mean_vs_target": 0.041
+      },
+      "mid_grey": {
+       "H": 1.75514,
+       "C_hi": 1.0,
+       "C_lo": 1.0,
+       "E": 0.99352,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 57,
+       "p1_p99_span_levels": 56.0,
+       "occupied_fraction_of_span": 1.0179,
+       "pass": true,
+       "std_ratio_logL": 1.0,
+       "corr_logL": 1.0,
+       "mean_albedo": [
+        0.17883,
+        0.17883,
+        0.17883
+       ],
+       "target_mean": [
+        0.17883,
+        0.17883,
+        0.17883
+       ],
+       "dE00_mean_vs_target": 0.0
+      },
+      "near_black": {
+       "H": 4.90718,
+       "C_hi": 1.0,
+       "C_lo": 1.0,
+       "E": 0.99352,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 18,
+       "p1_p99_span_levels": 17.0,
+       "occupied_fraction_of_span": 1.0588,
+       "pass": true,
+       "std_ratio_logL": 1.0,
+       "corr_logL": 1.0,
+       "mean_albedo": [
+        0.00994,
+        0.00994,
+        0.00994
+       ],
+       "target_mean": [
+        0.00994,
+        0.00994,
+        0.00994
+       ],
+       "dE00_mean_vs_target": 0.0
+      },
+      "extreme_white": {
+       "H": -0.05896,
+       "C_hi": 0.0,
+       "C_lo": 0.5,
+       "E": 0.96836,
+       "clip_frac": 0.0,
+       "max_gap_levels": 1,
+       "levels_used": 18,
+       "p1_p99_span_levels": 17.0,
+       "occupied_fraction_of_span": 1.0588,
+       "pass": false,
+       "std_ratio_logL": 0.2083,
+       "corr_logL": 0.72039,
+       "mean_albedo": [
+        0.90584,
+        0.90584,
+        0.90584
+       ],
+       "target_mean": [
+        0.94384,
+        0.94384,
+        0.94384
+       ],
+       "dE00_mean_vs_target": 0.91
+      }
+     }
+    },
+    "contrast_white_from_shipped_8bit_BC": {
+     "max_gap_levels": 2,
+     "levels_used": 29,
+     "p1_p99_span_levels": 30.0,
+     "occupied_fraction_of_span": 0.9667,
+     "pass": true
+    }
+   },
+   "pass": true
+  }
+ },
+ "pass": true
+}

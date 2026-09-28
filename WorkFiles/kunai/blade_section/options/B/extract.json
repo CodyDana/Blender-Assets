@@ -1,0 +1,280 @@
+{
+ "steel_unground_g": 185.6077,
+ "steel_finished_g": 182.071,
+ "assembled_g": 194.9575,
+ "wrap_g": 12.8865,
+ "mass_target_g": 186.17,
+ "mass_error_g": -0.5623,
+ "mass_gate_passed": true,
+ "pivot_design_x_mm": -8.0969,
+ "centre_of_volume_x_mm": -26.8932,
+ "thickness_mm": 9.0,
+ "apex_x_mm": 130.4949,
+ "grind_width_mm": {
+  "at_plunge": 1.353,
+  "at_widest": 1.377,
+  "mid_leaf": 1.3801,
+  "near_apex": 1.9837
+ },
+ "tip_edge_height_mm": 0.15,
+ "min_edge_mm": 0.15,
+ "min_face_area_mm2": 0.039325169,
+ "unreal_bounds_sphere_radius_mm": 140.008036,
+ "overall_z_mm": 20.0,
+ "overall_y_mm": 35.999998,
+ "lod_triangles": [
+  2182,
+  736,
+  366
+ ],
+ "lod_bands_ok": [
+  true,
+  true,
+  true
+ ],
+ "lod1_is_distinct": {
+  "triangle_reduction": 0.6627,
+  "volume_delta_mm3": -82.062543,
+  "surface_area_delta_mm2": -269.46018,
+  "max_surface_deviation_mm": 0.629892,
+  "rev2_metric_lod0_vertices_to_lod1_mm": 0.59801,
+  "note": "LODs are authored by the kunai generator at their own counts, not decimated: fewer blade stations, a 10-sided grip with plain collar steps (LOD1) or an 8-sided grip without collars (LOD2), a coarser ring; LOD2's cutting edges are the edge line (land 0), its neck edges square and its ring section square. Every LOD keeps the lettering band's mesh lines. Deviation is two-sided."
+ },
+ "physics": {
+  "mass_kg_override": 0.195,
+  "mass_kg_override_exact": 0.19496
+ },
+ "collision": {
+  "hull_derived_centre_of_mass_mm": [
+   -35.9229,
+   -0.0,
+   -0.0
+  ],
+  "unreal_com_nudge_cm": [
+   3.5923,
+   0.0,
+   0.0
+  ],
+  "two_hulls_mm3": 64677.062,
+  "one_hull_mm3": 76350.112,
+  "three_hulls_mm3": 51553.714,
+  "render_mesh_mm3": null
+ },
+ "hulls": {
+  "UCX_00": {
+   "parts": "blade and bare front neck (the head shell, x >= -6.5 mm)",
+   "vertices": 26,
+   "faces": 48,
+   "volume_mm3": 14716.243,
+   "outside_mm": 0.0
+  },
+  "UCX_01": {
+   "parts": "wrap, rear neck and ring (x <= -6 mm)",
+   "vertices": 32,
+   "faces": 60,
+   "volume_mm3": 49960.819,
+   "outside_mm": 0.0
+  }
+ },
+ "gates": {
+  "knife_shading": true,
+  "outline_mass": true,
+  "qa_check": true,
+  "lod_bands": true,
+  "uv_consistency": true,
+  "textures_baked": true,
+  "render_gates": false,
+  "franchise_names_clean": true,
+  "lettering_band_island_and_blank_mask": true,
+  "two_material_slots_every_lod": true,
+  "uv0_no_collapsed_faces_every_lod": true
+ },
+ "form_gates": {
+  "franchise_names_clean": true,
+  "lettering_band_island_and_blank_mask": true,
+  "two_material_slots_every_lod": true,
+  "uv0_no_collapsed_faces_every_lod": true
+ },
+ "render_gates": {
+  "beauty_source": "baked textures only: every material slot through its own baked-map preview material",
+  "hero_walls": {
+   "passed": true,
+   "p50": 0.2109,
+   "p50_min": 0.06,
+   "fraction_below_0_03": 0.00134,
+   "dark_fraction_max": 0.05
+  },
+  "hero_facets_near": {
+   "passed": true,
+   "side": "near",
+   "p50": 0.4095,
+   "p50_min": 0.16,
+   "fraction_below_0_05": 0.0,
+   "dark_fraction_max": 0.06
+  },
+  "hero_plate": {
+   "passed": true,
+   "p50": 0.4787,
+   "band": [
+    0.36,
+    0.64
+   ],
+   "mean": 0.458,
+   "mean_band": [
+    0.38,
+    0.6
+   ],
+   "measured_on": "coat pixels (knife: like with like)",
+   "whole_object": {
+    "p50": 0.4207,
+    "mean": 0.3909,
+    "in_band": true,
+    "note": "information for a knife"
+   }
+  },
+  "hero_coat_dark": {
+   "passed": true,
+   "fraction_below_0_03": 0.00911,
+   "dark_fraction_max": 0.02,
+   "coat_pixels": 50370,
+   "rule": "flat coat steel does not read as a hole: dark pixels are a wall's business, not the plate's"
+  },
+  "top_facets": {
+   "passed": true,
+   "side": "all",
+   "p50": 0.4619,
+   "p50_min": 0.16,
+   "fraction_below_0_05": 0.00278,
+   "dark_fraction_max": 0.06
+  },
+  "top_plate": {
+   "passed": false,
+   "p50": 0.3535,
+   "band": [
+    0.36,
+    0.64
+   ],
+   "mean": 0.3593,
+   "mean_band": [
+    0.38,
+    0.6
+   ],
+   "measured_on": "coat pixels (knife: like with like)",
+   "whole_object": {
+    "p50": 0.3389,
+    "mean": 0.3401,
+    "in_band": false,
+    "note": "information for a knife"
+   }
+  },
+  "top_coat_dark": {
+   "passed": true,
+   "fraction_below_0_03": 0.0,
+   "dark_fraction_max": 0.02,
+   "coat_pixels": 75288,
+   "rule": "flat coat steel does not read as a hole: dark pixels are a wall's business, not the plate's"
+  },
+  "passed": false
+ },
+ "qa_passed": true,
+ "qa_failed": [],
+ "hero_coat": {
+  "pixels": 50370,
+  "fraction_of_object": 0.58825,
+  "mean": 0.458,
+  "p05": 0.3328,
+  "p50": 0.4787,
+  "p95": 0.5384,
+  "fraction_below_0_03": 0.00911,
+  "fraction_below_0_05": 0.01042,
+  "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+ },
+ "top_coat": {
+  "pixels": 75288,
+  "fraction_of_object": 0.55796,
+  "mean": 0.3593,
+  "p05": 0.3143,
+  "p50": 0.3535,
+  "p95": 0.4328,
+  "fraction_below_0_03": 0.0,
+  "fraction_below_0_05": 0.0,
+  "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+ },
+ "texel": 163.285,
+ "uv_consistency": {
+  "method": "LOD1..n UV0 from LOD0's island maps (shuriken_lib.uv); one texture set for every LOD",
+  "island_map_deviation_px_at_2048": {
+   "SM_Kunai_Plain_LOD1": 0.0,
+   "SM_Kunai_Plain_LOD2": 0.0
+  },
+  "island_map_deviation_note": "information: per-loop distance of every LODn UV from the affine map of its LOD0 island (uv.transfer_uvs island_map_deviation)",
+  "overlap_pairs": {
+   "SM_Kunai_Plain_LOD0": 0,
+   "SM_Kunai_Plain_LOD1": 0,
+   "SM_Kunai_Plain_LOD2": 0
+  },
+  "in_unit_square": {
+   "SM_Kunai_Plain_LOD0": true,
+   "SM_Kunai_Plain_LOD1": true,
+   "SM_Kunai_Plain_LOD2": true
+  },
+  "gate": {
+   "top_plate_max_px": 0.5,
+   "surface_max_px": 8.0,
+   "overlap_pairs": 0,
+   "in_unit_square": true
+  },
+  "passed": true
+ },
+ "symmetry_max_dev_mm": {
+  "SM_Kunai_Plain_LOD0": 0.0,
+  "SM_Kunai_Plain_LOD1": 0.0,
+  "SM_Kunai_Plain_LOD2": 0.0
+ },
+ "knife_shading": {
+  "gate_deg": 0.5,
+  "flat_knife_facets_max_corner_normal_dev_deg": {
+   "SM_Kunai_Plain_LOD0": 0.0912,
+   "SM_Kunai_Plain_LOD1": 0.1798,
+   "SM_Kunai_Plain_LOD2": 0.0124
+  },
+  "curved_side_facets_max_corner_normal_dev_deg": {},
+  "warp_mm": {
+   "SM_Kunai_Plain_LOD0": 0.000114,
+   "SM_Kunai_Plain_LOD1": 0.000225,
+   "SM_Kunai_Plain_LOD2": 0.000578
+  },
+  "passed": true,
+  "note": "max angle between a stored corner normal and its own face normal over the knife facets (flat facets shaded flat: creases above geometry.KNIFE_CREASE_DEG inside a knife class are hard edges). Curved-side facets (senban) are smooth within their side by design and bounded by half a chord's turn; they are reported, not gated."
+ },
+ "pack_passed": false,
+ "pack_consistency_passed": false,
+ "knife_coat_vs_anchor": {
+  "hero": {
+   "kunai_plain": {
+    "p50": {
+     "offset": -0.0812,
+     "headroom": -0.0312
+    },
+    "mean": {
+     "offset": -0.0923,
+     "headroom": -0.0423
+    }
+   }
+  },
+  "top": {
+   "kunai_plain": {
+    "p50": {
+     "offset": -0.0761,
+     "headroom": -0.0261
+    },
+    "mean": {
+     "offset": -0.0643,
+     "headroom": -0.0143
+    }
+   }
+  }
+ },
+ "pack_consistency_failures": {},
+ "result_passed": false
+}

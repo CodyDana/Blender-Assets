@@ -1,0 +1,655 @@
+{
+ "_rule": "EVERY ELEMENT IS MATCHED IN POSITION, SIZE, PROPORTION, WEIGHT, COLOUR AND DENSITY - WHILE EVERY STROKE STAYS OUR OWN DRAWING, NEVER TRACED.",
+ "_what_this_is": "One reconciled, buildable specification of the paper-bomb reference, assembled from three independent metrology passes plus a fourth verification pass run for this document. Numbers only. No pixel of either guide was traced, sampled, masked, thresholded into a shipped asset or written anywhere a build can read it.",
+ "_conventions": {
+  "origin": "the TAG's top-left virtual corner - the intersection of the fitted top and left edge lines, i.e. the corner the chamfer cuts off. x right, y down.",
+  "units": "fractions of the tag's own width W and height H, and millimetres on the shipped 70.0 x 156.0 mm card (fW x 70, fH x 156)",
+  "tag_edge": "located at the HALF-MAXIMUM of the paper-to-background transition in warmth (R minus B), which separates cream paper and red ink from the neutral white background and its neutral drop shadow. Stable to +-0.13% on the tag rect across thresholds from 0.25 to 0.80 of the paper level.",
+  "ours_tag_edge": "NOT detected. Taken from the atlas plan, which is exact: the front island's card (0,0) is at atlas pixel (16, 16) at 12.923 px/mm, so the card is 904.61 x 2015.99 px. This removes the +-0.3 mm that a soft texture-island edge put on every earlier OURS number.",
+  "colour": "STORED file values, sRGB-encoded 0..1 (read with colorspace Non-Color, which returns the stored 8-bit value). Linear values are named as such.",
+  "binarisation": "red classified FIRST, then black. A deep seal red is darker than any sensible black threshold, so classifying black first loses it between the two masks.",
+  "authority": "V1 for every proportion, stroke, ornament and colour; V2 for the identity and placement of the text and for the size of the real-kanji blocks."
+ },
+ "_sources": {
+  "V1": "References/PaperBomb/paperbomb_guide.png (1024 x 1536; tag 616.14 x 1378.92 px at 8.802 / 8.839 px/mm)",
+  "V2": "References/PaperBomb/paperbomb_guide_v2_real_glyphs.png (300 x 653; tag 274.30 x 635.89 px at 3.919 / 4.076 px/mm)",
+  "OURS": "Exports/PaperBomb/Textures/T_PaperBomb_BC.png, front card island, as written 22:31 on 2026-09-19. Re-measure if the build writes again.",
+  "rectification": "None needed. V1's four edges are within 0.013 deg of axis-aligned (fit rms 0.016-0.049 px) and V2's within 0.030 deg (rms 0.013-0.022 px). No rotation or keystone correction was applied to either; the tag rectangle was taken from robust line fits to the four straight edge runs and measurements were made in each image's native pixels."
+ },
+ "tag": {
+  "card_mm": [
+   70.0,
+   156.0
+  ],
+  "card_aspect": 0.44872,
+  "V1_aspect": 0.4468,
+  "V2_aspect": 0.4314,
+  "V1_vs_card_pct": -0.43,
+  "V2_vs_card_pct": -3.87,
+  "chamfer_mm": 8.05,
+  "chamfer_fW": 0.115,
+  "chamfer_fH": 0.0516,
+  "chamfer_chord_mm": 11.4,
+  "chamfer_angle_deg": 45.5
+ },
+ "rows": [
+  {
+   "rank": 1,
+   "element": "Ink density: paper-to-black luminance contrast",
+   "knob": "paperbomb_art.PALETTE.black_wet / DIELECTRIC_FLOOR_LINEAR / PALETTE.paper",
+   "reference_V1": "paper stored #F6E6C6 (0.9647,0.9020,0.7765) = linear (0.9216,0.7914,0.5647), luma 0.803; black core stored #0F100D (0.059,0.063,0.051) = linear luma 0.0047; contrast 170:1 on the ink median, 244:1 on its darkest quartile",
+   "reference_V2": "paper #F6E5C3, black #0C0D0A, contrast ~200:1 (V2's 2.2x downsample pushes the surviving core pixels darker - V1 is the conservative figure)",
+   "adopted_value_mm": "paper linear (0.9216,0.7914,0.5647) luma 0.803; black linear luma 0.0047; contrast 170:1",
+   "adopted_value_fraction": "n/a - colour",
+   "tolerance": "contrast ratio within a factor of 1.5 of the adopted target; paper luma +-4%; black core luma within a factor of 2",
+   "ours": "paper stored (0.8549,0.7922,0.6588) = linear luma 0.597; black core stored (0.2471,0.2431,0.2392) = linear luma 0.0470; contrast 11.7:1. Minimum, p0.1 and p1 of our black are ALL exactly 0.2400 stored - the black is clamped flat on the floor with no dark tail at all.",
+   "delta": "-93% on contrast (11.7:1 against 170:1). Paper is 26% dark; black is 10x light.",
+   "how_to_achieve": "This is the one row that is a POLICY decision, not a drawing error. The module deliberately clamps every channel at DIELECTRIC_FLOOR_LINEAR = 0.0473 (stored 0.235 = 60/255) and says so in its own comment. Three steps, in order of how free they are: (a) raise PALETTE.paper from (0.700,0.587,0.393) to the band ceiling (0.870,0.747,0.533) - free, inside the stated band, buys 11.7:1 -> 16:1; (b) lower the floor from 60/255 to 30/255 (linear 0.0137), which is the figure most PBR authoring guides actually cite for non-metal albedo, and set black_wet to (0.0140,0.0137,0.0130) - buys ~55:1; (c) drop the floor for ink only and use the measured (0.0048,0.0047,0.0045) - reaches ~161:1 and matches the guide. ASK THE USER before (b) or (c): it changes a shipped-asset standard they wrote down on purpose.",
+   "expected_visual_effect": "The whole card stops reading grey-on-tan and starts reading black-on-cream. Nothing else on this list changes the read at every viewing distance the way this does, and no amount of extra coverage compensates for it.",
+   "confidence": "high on the measurement (three independent passes agree to 3/255); the remedy is a judgement call"
+  },
+  {
+   "rank": 2,
+   "element": "Centre character 爆 - size",
+   "knob": "LAYOUT.centre_em_mm (50.0) and LAYOUT.centre_stretch_y (1.12)",
+   "reference_V1": "ink bbox 59.30 x 52.38 mm; x 6.99..66.18, y 52.42..104.69; width = 0.8472 W",
+   "reference_V2": "ink bbox 58.44 x 50.78 mm; width = 0.8349 W - agrees with V1 to 1.5%",
+   "adopted_value_mm": "59.3 x 52.4 mm, box centred at (36.59, 78.56) mm",
+   "adopted_value_fraction": "width 0.847 W, height 0.336 H; box x 0.0999..0.9455 W, y 0.336..0.671 H",
+   "tolerance": "width 0.847 W +- 0.015 W (+-1.0 mm); height +- 1.5 mm",
+   "ours": "47.82 x 44.18 mm; x 12.30..60.05, y 56.18..100.29; width = 0.6832 W",
+   "delta": "-19.3% width (-11.5 mm), -15.7% height (-8.2 mm), -33% bounding area",
+   "how_to_achieve": "Raise centre_em_mm 50.0 -> 62.0 (x1.240) and LOWER centre_stretch_y 1.12 -> 1.071, so the width grows 1.240x and the height only 1.186x. That lands w/h on the reference's 1.132 from our present 1.082. Acceptance: the glyph must clear the left rule by ~3 mm and just KISS or cross the right rule (the reference overlaps it by 0.27 mm).",
+   "expected_visual_effect": "The hero character stops floating in a moat and fills its ring the way the guide's does. This is the first thing a buyer sees at thumbnail size.",
+   "confidence": "high - three passes measure the same box to within 1.0 mm"
+  },
+  {
+   "rank": 3,
+   "element": "Centre character 爆 - structural integrity",
+   "knob": "paperbomb_art.typeset_centre / _brush_up ragged and the kasure erosion applied to the centre glyph",
+   "reference_V1": "TWO components: body 43.29 x 52.38 mm and the 火 radical 24.99 x 38.92 mm. Their bounding boxes OVERLAP by 8.86 mm in x and the closest ink-to-ink gap is 0.75 mm.",
+   "reference_V2": "two components, bbox overlap 8.5 mm, ink gap 0.78 mm - identical conclusion",
+   "adopted_value_mm": "2 components; radical/body bbox overlap 8.7 mm; closest ink gap 0.75 mm",
+   "adopted_value_fraction": "overlap 0.124 W",
+   "tolerance": "at most 2 components above 15 mm2; bbox overlap >= 6 mm; no fragment further than 1.5 mm from the body",
+   "ours": "FIVE components: body 31.26x44.18 (476 mm2), radical 11.76x32.58 (116 mm2), an orphan flick 6.27x8.28 at (12.3..18.5, 75.1..83.3), and two strokes broken out of the body at (47.7..54.4, 92.2..97.8) and (44.0..49.6, 85.2..91.8). The radical bbox does NOT overlap the body - there is a 1.62 mm gap between the boxes.",
+   "delta": "component count 2 -> 5; bbox overlap 8.86 mm -> -1.62 mm; radical ink gap 0.75 mm -> 2.36 mm",
+   "how_to_achieve": "The kasure/erosion pass is eating through the thin joins. Cap the erosion so no hole may sever a stroke: after breaking the glyph up, run a connected-component check and re-bridge anything that detaches. measure.py already has the hooks for a component count - make it a build gate (fail if the centre glyph is more than 2 components).",
+   "expected_visual_effect": "At reading distance our 火 radical reads as a separate blot and the orphan flick reads as a smudge. The character is not currently one character. Nothing else will rescue the tag while the hero glyph is in pieces.",
+   "confidence": "high - found independently by the typography pass and by this one, to the same component boxes"
+  },
+  {
+   "rank": 4,
+   "element": "Border frame - number of rules per side",
+   "knob": "LAYOUT.inner_rule_sides (currently ('top','bottom'))",
+   "reference_V1": "exactly ONE rule per side. Occupancy profile across the border band: 0.00 at 3.0 mm, 0.89 at 4.0 mm, 0.07 at 4.5 mm, 0.00 from 5.0 mm outward. Same on all four sides.",
+   "reference_V2": "exactly ONE rule per side - same profile shape",
+   "adopted_value_mm": "ONE rule per side. Corner ORNAMENTS may double the line locally at the corners; a second full-width rectangle may not.",
+   "adopted_value_fraction": "n/a - structural",
+   "tolerance": "no second peak above 0.15 occupancy anywhere in the 0..12 mm border band",
+   "ours": "left 2 (a 0.08 mm hairline at 3.41 mm plus the main rule at 4.06 mm), right 1, top 3 (6.58 mm at occupancy 1.00, a 7.16 mm shoulder, and a SECOND FULL-WIDTH rule at 9.56 mm at occupancy 1.00), bottom 2 (7.39 mm at 1.00 and a weaker one at 10.41 mm)",
+   "delta": "one extra full-width rule top and bottom, 2.98 mm inside the outer one, plus a left hairline",
+   "how_to_achieve": "Set inner_rule_sides = (). Keep bracket_leg_* - the reference does carry a doubled line at the corners, it just never runs the length of the edge. Then chase the 3.41 mm left hairline, which is a second pass of the outer rule, not a designed line.",
+   "expected_visual_effect": "A double frame against a single one changes the whole read of the card at thumbnail size and is the reason ours looks printed where the guide looks brushed.",
+   "confidence": "high - confirmed by all three passes and by a red-occupancy profile here"
+  },
+  {
+   "rank": 5,
+   "element": "Text columns - glyph size inside the cell",
+   "knob": "LAYOUT.col_upper_em_mm (11.9), col_lower_right_em_mm (14.0), col_lower_centre_em_mm (16.1)",
+   "reference_V1": "NOT A TARGET - V1's side columns are pseudo-glyph scribbles 8.7-11.5 mm wide, not characters",
+   "reference_V2": "AUTHORITATIVE. 火遁術 cells 13.35, 13.60, 14.60 mm wide by 12.62, 12.86, 16.01 mm tall; 爆炎陣 15.36, 11.58, 12.09 wide; 焼尽 13.35 and 14.60 wide; 瞬業 12.59 and 12.59 wide. Block widths 13.6 - 15.4 mm.",
+   "adopted_value_mm": "glyph cell 13.9 mm mean width (14.6 mm max) for the three-glyph columns; 14.0 mm for 焼尽; 12.6 mm for 瞬業",
+   "adopted_value_fraction": "upper block width 0.209..0.220 W",
+   "tolerance": "mean cell width within 1.0 mm of target",
+   "ours": "upper-left cells 9.63, 9.95, 9.01 mm wide (mean 9.53); upper-right 10.49, 8.16, 8.70; 焼尽 12.43 and 10.95; 瞬業 12.74 and 11.19",
+   "delta": "upper columns -31% on cell width; 焼尽 -16%; 瞬業 -6%",
+   "how_to_achieve": "col_upper_em_mm 11.9 -> 17.3 (x1.453); col_lower_right_em_mm 14.0 -> 16.7 (x1.195); col_lower_centre_em_mm 16.1 -> 17.6 (x1.09). Check ink_rule_collision afterwards - at 17.3 mm em with the column axis moved out (row 6) the left edge lands at 6.0 mm against a rule at 4.06 mm, which clears.",
+   "expected_visual_effect": "The columns stop looking timid and the top of the card stops looking hollow.",
+   "confidence": "high - this pass and the typography pass agree on every cell to within 0.7 mm"
+  },
+  {
+   "rank": 6,
+   "element": "Text columns - leading between characters",
+   "knob": "LAYOUT.col_upper_y, col_lower_right_y, col_lower_centre_y (the cell-centre fractions)",
+   "reference_V1": "n/a (pseudo-glyphs)",
+   "reference_V2": "the characters TOUCH: gaps 0.00 and 0.24 mm in 火遁術, 0.00 and 0.00 in 爆炎陣, 0.49 mm in 焼尽, 0.00 mm in 瞬業. Each column is one continuous vertical stream of ink.",
+   "adopted_value_mm": "inter-character gap 0.0 - 0.5 mm",
+   "adopted_value_fraction": "gap <= 0.003 H",
+   "tolerance": "no gap above 1.0 mm in any column",
+   "ours": "upper-left 5.80 and 4.72 mm; upper-right 5.26 and 4.80 mm; 焼尽 2.24 mm; 瞬業 2.86 mm",
+   "delta": "+2.2 to +5.8 mm of unwanted air per gap",
+   "how_to_achieve": "Mostly solved for free by row 5: growing the glyph inside a cell whose PITCH is already correct (our advances are 14.7-16.1 mm against the reference's 12.7-15.9 mm) closes the gaps. If any gap survives, tighten col_*_y rather than moving the block.",
+   "expected_visual_effect": "The single biggest reason the tag reads as typeset rather than brushed. The reference sets each column as one unbroken fall of ink.",
+   "confidence": "high"
+  },
+  {
+   "rank": 7,
+   "element": "Enso ring - size and shape",
+   "knob": "LAYOUT.ring_outer_mm (56.0, 68.0)",
+   "reference_V1": "mid-stroke ellipse 52.08 x 59.27 mm (semi-axes 26.04 x 29.63), h/w 1.138; red ink extent 58.17 x 64.82 mm; clears the left rule by 1.94 mm and the right by 1.77 mm - symmetric",
+   "reference_V2": "mid-stroke 52.77 x 57.21 mm, h/w 1.084; ink extent 58.18 x 62.56 mm; gaps 1.97 / 1.55 mm. V2's height is inside its own 3.9% vertical stretch, so V1's 1.138 is the figure.",
+   "adopted_value_mm": "mid-stroke ellipse 52.1 x 59.3 mm, h/w 1.138; ink extent 58.2 x 64.8 mm",
+   "adopted_value_fraction": "mid 0.744 W x 0.380 H; ink extent 0.831 W x 0.415 H",
+   "tolerance": "mid-stroke axes +- 1.5 mm; h/w 1.09 - 1.16; left and right rule gaps equal to within 0.5 mm",
+   "ours": "mid-stroke 50.23 x 61.14 mm, h/w 1.217; ink extent 53.32 x 67.71 mm; clears the left rule by 5.76 mm and the right by 2.76 mm",
+   "delta": "-3.7% width, +3.2% height (h/w +7%); ink extent -4.9 mm wide, +2.9 mm tall; a 3.0 mm left/right asymmetry where the reference has 0.17 mm",
+   "how_to_achieve": "ring_outer_mm (56.0, 68.0) -> about (58.0, 65.5): wider and shorter. The module's own comment says it pushed back toward 68 mm 'now that the centre glyph is set taller' - that reasoning inverts once the glyph is set to the reference's 59.3 x 52.4 (row 2), which is WIDER than tall.",
+   "expected_visual_effect": "An upright narrow oval is what a parametric sweep looks like. The reference's ring is nearly round and the character bursts out of it left and right.",
+   "confidence": "high - my ellipse fit and the typography pass agree to 0.1 mm on both semi-axes"
+  },
+  {
+   "rank": 8,
+   "element": "Enso ring - position",
+   "knob": "LAYOUT.ring_centre (0.522, 0.504)",
+   "reference_V1": "centre (35.47, 76.99) mm = (0.5067 W, 0.4936 H)",
+   "reference_V2": "centre (35.32, 74.35) mm = (0.5046 W, 0.4766 H). x agrees with V1 to 0.15 mm; the y difference is V2's vertical rescale plus content drift.",
+   "adopted_value_mm": "(35.47, 76.99) mm = (0.5067, 0.4936)",
+   "adopted_value_fraction": "0.5067 W, 0.4936 H",
+   "tolerance": "+- 0.5 mm on both axes",
+   "ours": "(36.37, 78.46) mm = (0.5196, 0.5030)",
+   "delta": "+0.90 mm right, +1.47 mm down",
+   "how_to_achieve": "ring_centre (0.522, 0.504) -> (0.5067, 0.4936). One line.",
+   "expected_visual_effect": "Removes the lopsided look: the ring currently clears the left rule by 5.8 mm and the right by 2.8 mm, and it crowds 焼尽 on the right.",
+   "confidence": "high"
+  },
+  {
+   "rank": 9,
+   "element": "Enso ring - stroke weight",
+   "knob": "LAYOUT.ring_stroke_mm (1.2, 5.0)",
+   "reference_V1": "swept band median 4.84 mm, p05 1.48 mm, p95 7.04 mm (the band a radial ray crosses from first ink to last)",
+   "reference_V2": "median 4.88, p05 1.92, p95 6.88 mm - agrees with V1 to 1%",
+   "adopted_value_mm": "median 4.84 mm, p05 1.5 mm, p95 7.0 mm",
+   "adopted_value_fraction": "median 0.069 W",
+   "tolerance": "median 4.3 - 5.4 mm; p95 at least 6.0 mm",
+   "ours": "median 3.40 mm, p05 1.40, p95 4.96",
+   "delta": "-30% on the median, -30% on the peak swell",
+   "how_to_achieve": "ring_stroke_mm (1.2, 5.0) -> (1.5, 7.2). The min is already right; it is the loaded end of the brush that is missing.",
+   "expected_visual_effect": "Ours reads as drawn with a pen; the reference reads as swung with a loaded brush.",
+   "confidence": "high - this pass 4.84, typography 4.67, both by the same ray definition. The ink pass's 6.15 mm is a different (alpha-profile) definition that includes the soft shoulder; do not mix them."
+  },
+  {
+   "rank": 10,
+   "element": "Enso ring - dry-brush breakup (kasure)",
+   "knob": "the hole/erosion pass in draw_ring plus LAYOUT.ring_gaps_deg",
+   "reference_V1": "holes punched through the stroke are 0.198 of the stroke ENVELOPE (envelope = the ink morphologically closed at 1.1 mm); 122 separate holes; angular coverage 0.919 (8.1% of the circumference is an outright gap, in 5 gaps, the largest 6.5 deg)",
+   "reference_V2": "hole fraction 0.200, angular coverage 0.947 - agrees on the hole fraction to 1%",
+   "adopted_value_mm": "hole area 0.20 of the stroke envelope; angular coverage 0.92; 4-6 outright gaps",
+   "adopted_value_fraction": "n/a",
+   "tolerance": "hole fraction 0.16 - 0.24; angular coverage 0.90 - 0.95",
+   "ours": "hole fraction 0.122; 37 holes; angular coverage 0.932 in 3 gaps",
+   "delta": "-39% on hole area, -70% on hole count",
+   "how_to_achieve": "Increase the hole density (not the hole size - the ink pass measured our hole diameter at 0.31 mm against the reference's 0.30 mm and our elongation at 4.8 against 4.2, both correct). Roughly 2.5x as many holes of the same size and shape.",
+   "expected_visual_effect": "A third of the reference's ring is bare paper. Ours is a nearly solid band, which is what makes it read as a filled vector shape.",
+   "confidence": "high - my envelope-hole fraction (0.198 / 0.122) matches the ink pass's (0.210 / 0.090) on an independently written implementation"
+  },
+  {
+   "rank": 11,
+   "element": "Flame emblem - stroke count and weight",
+   "knob": "paperbomb_art._flame_paths / flame_device stroke widths; LAYOUT.emblem_size_mm (26.6, 24.7)",
+   "reference_V1": "FIVE separate strokes with paper between them, areas 57.7, 36.1, 35.2, 19.3, 18.8 mm2, total 167.0 mm2, fill of bbox 0.298, bbox 23.74 x 23.64 mm (w/h 1.004) at centre (34.83, 30.59)",
+   "reference_V2": "FIVE strokes, areas 57.7, 35.4, 34.9, 20.4, 20.3, total 168.8 mm2 - the two guides agree on this element to 1.1%, so it is not a pseudo-glyph artefact",
+   "adopted_value_mm": "5 separate strokes, 167 mm2 of ink, fill of bbox 0.298, bbox 23.7 x 23.6 mm at (34.83, 30.59)",
+   "adopted_value_fraction": "bbox 0.339 W x 0.152 H, centre (0.4976 W, 0.1961 H)",
+   "tolerance": "ink area 150 - 185 mm2; at least 4 separate components; fill of bbox 0.27 - 0.33",
+   "ours": "ONE welded component, 268.2 mm2, fill of bbox 0.466, bbox 23.29 x 24.68 mm at (34.75, 30.41)",
+   "delta": "+61% ink, +56% fill, 5 strokes -> 1, height +4.4%. The POSITION is correct to 0.2 mm and the WIDTH to 0.45 mm.",
+   "how_to_achieve": "Thin the flame strokes until the tongues stop touching, and pull emblem_size_mm (26.6, 24.7) -> (26.6, 23.7). The reference's tongue widths alternate thin-thick-thin-thick-thin (1.79, 6.16, 1.46, 6.50, 1.57 mm); ours has no such rhythm and its eye is 2.78 mm across against the reference's 1.25 mm.",
+   "expected_visual_effect": "Our emblem currently competes with the centre character instead of sitting above it. NOTE: an earlier review called this element 'already matching' on the strength of its bounding box alone - the box does match, the ink inside it does not.",
+   "confidence": "high - two guides and two independent passes give the same 5 components and the same ~168 mm2"
+  },
+  {
+   "rank": 12,
+   "element": "Text columns - horizontal placement of the UPPER pair",
+   "knob": "LAYOUT.col_upper_left_x (0.2214), col_upper_right_x (0.7786)",
+   "reference_V1": "n/a (pseudo-glyphs, and they sit further out than the real kanji would)",
+   "reference_V2": "火遁術 axis at 13.30 mm (0.190 W), block x 5.79..20.40, clearing the left rule by 1.71 mm; 爆炎陣 axis at 57.12 mm (0.816 W), block x 49.10..64.46, clearing the right rule by 1.33 mm",
+   "adopted_value_mm": "axes at 0.190 W and 0.816 W; block outer edge 1.3 - 1.7 mm inboard of its own rule",
+   "adopted_value_fraction": "0.190 W and 0.816 W",
+   "tolerance": "axis +- 0.7 mm; outer edge must clear its rule by 1.0 - 2.2 mm and must not cross it",
+   "ours": "axes at 16.99 mm (0.2427 W) and 53.32 mm (0.7617 W); outer edges 6.5 mm and 5.8 mm inboard of the rules",
+   "delta": "axes 3.7 mm and 3.8 mm too far inboard; outer edges 4.8 mm and 4.5 mm too far inboard",
+   "how_to_achieve": "col_upper_left_x 0.2214 -> 0.190, col_upper_right_x 0.7786 -> 0.816. Do this TOGETHER with row 5, not before it - the axis shift alone would leave a wider empty gutter.",
+   "expected_visual_effect": "Fills the two empty gutters at the top of the card.",
+   "confidence": "high for the upper pair. THE LOWER PAIR IS ALREADY CORRECT: 焼尽 sits at 56.7-57.8 mm against the reference's 57.3-57.6, and 瞬業 at 35.2 against 35.0. Do NOT apply a blanket outward shift."
+  },
+  {
+   "rank": 13,
+   "element": "Red pigment - saturation",
+   "knob": "paperbomb_art.PALETTE.red_wet (0.460, 0.0470, 0.0390)",
+   "reference_V1": "ring red stored (0.753, 0.126, 0.075); its darkest quartile (0.643, 0.086, 0.051). Blue channel 13-19 of 255. Saturation 0.89-0.92 across border, ring and both seals, with a hue spread of only 1.1 deg - ONE pigment at four different laid-on WEIGHTS, not four colours.",
+   "reference_V2": "same hue, saturation ~0.94 (the user's edit lifted it ~5 points); V1 is the conservative figure",
+   "adopted_value_mm": "stored (0.75, 0.13, 0.07) at full weight; hue 4.5 deg; saturation 0.90; vary WEIGHT, never hue",
+   "adopted_value_fraction": "n/a - colour",
+   "tolerance": "saturation >= 0.82; hue 3.5 - 6.0 deg; blue channel <= 0.12 stored at full weight",
+   "ours": "stored (0.722, 0.318, 0.275); darkest quartile (0.710, 0.255, 0.239). Blue channel 61-70 of 255. Saturation 0.61-0.64. All four reds are laid at essentially ONE weight (value spread 0.008 against the reference's 0.139), and our border is our LIGHTEST red where the reference's is its heaviest.",
+   "delta": "-31% saturation on every red; the weight variation between elements is halved and inverted",
+   "how_to_achieve": "Same floor problem as row 1: red_wet's G and B are pinned at 0.047 linear. The hue angle is already right (5.4 deg against 4.5) - do not touch it. Taking the floor to 30/255 for ink (row 1b) brings the blue to 0.118 stored and the saturation to about 0.84. Separately, give the border the HEAVIEST red and the small seal the lightest.",
+   "expected_visual_effect": "Ours reads brick-pink; cinnabar is what the guide reads as. Survives lighting - our shipped render still measures 0.667 saturation.",
+   "confidence": "high on the measurement; tied to the row 1 policy decision"
+  },
+  {
+   "rank": 14,
+   "element": "Corner ornaments - the outboard dart",
+   "knob": "LAYOUT.bracket_curl_mm (1.6), bracket_leg_* and draw_ornaments",
+   "reference_V1": "at EVERY corner the ornament crosses both rules: it reaches 0.50 - 3.63 mm outboard of the side rule and 2.11 - 2.20 mm outboard of the top/bottom rule. Ink outside the rule rectangle: 5.8, 1.2, 2.5, 1.4 mm2 (TL, TR, BL, BR), of which 9-53% is black.",
+   "reference_V2": "0.49 - 0.83 mm outboard of the side rules and 1.93 - 2.02 mm outboard of the horizontals at all four corners - the same signature",
+   "adopted_value_mm": "2.0 - 2.2 mm outboard of the top/bottom rule and 0.5 - 0.8 mm outboard of the side rule, at all four corners; a hook curling inboard plus a tapered dart aimed at the chamfer",
+   "adopted_value_fraction": "0.013 H beyond the horizontal rule",
+   "tolerance": "1.5 - 2.5 mm outboard of the horizontal rule at every corner",
+   "ours": "0.31, 0.54, 0.04 and 0.58 mm outboard of the horizontal rules. Our side-rule overshoot (0.57 - 0.97 mm) is already right. Every pixel of our outside-the-rule ink is RED; the reference mixes red flourish with a black dart.",
+   "delta": "the outboard dart is 1.5 - 2.2 mm short at all four corners",
+   "how_to_achieve": "Extend the bracket curl so it crosses the top and bottom rules by 2.1 mm, and add the black tapered dart. bracket_curl_mm 1.6 -> about 3.0 measured from the rule, or add an explicit dart length.",
+   "expected_visual_effect": "Corners are where a buyer zooms in looking for craft. Ours currently stop at the rule.",
+   "confidence": "high on the outboard numbers (measured here as ink lying outside the fitted rule rectangle, which is tolerance-free); medium on the ornament's shape, which is a look-at judgement"
+  },
+  {
+   "rank": 15,
+   "element": "Paper base colour",
+   "knob": "paperbomb_art.PALETTE.paper (0.700, 0.587, 0.393)",
+   "reference_V1": "centre of the sheet stored #F6E6C6 (0.9647, 0.9020, 0.7765); hue 40.4 deg, saturation 0.198, value 0.963; linear (0.9216, 0.7914, 0.5647)",
+   "reference_V2": "#F6E5C3 - agrees with V1 to 2/255 on every channel and 0.35 deg of hue. Settled; no adjudication needed.",
+   "adopted_value_mm": "linear (0.870, 0.747, 0.533) - the reference's colour with the R channel capped at the module's own 0.87 dielectric ceiling. Stored ~ (0.947, 0.885, 0.760).",
+   "adopted_value_fraction": "n/a - colour",
+   "tolerance": "hue 39 - 42 deg; saturation 0.18 - 0.24; linear luma >= 0.72",
+   "ours": "stored (0.8549, 0.7922, 0.6588), linear luma 0.597 - a kraft tan where the reference is a pale cream. Hue (40.1 deg) and saturation are already right.",
+   "delta": "-26% linear luma. The error is purely VALUE.",
+   "how_to_achieve": "PALETTE.paper (0.700, 0.587, 0.393) -> (0.870, 0.747, 0.533). Free - it stays inside the band the module already declares.",
+   "expected_visual_effect": "Buys roughly a quarter of the contrast gap on its own (11.7:1 -> 16:1). The rest needs row 1.",
+   "confidence": "high"
+  },
+  {
+   "rank": 16,
+   "element": "Centreline ornament chain - the black diamond on the bottom rule",
+   "knob": "LAYOUT - a new entry beside diamond_bottom_y",
+   "reference_V1": "a black diamond at (35.05, 148.0) mm, 2.39 x 3.62 mm, sitting ON the bottom rule (which is at 148.76 mm)",
+   "reference_V2": "a black diamond at (34.92, 148.27) mm, 2.55 x 3.93 mm - the two guides agree to 0.3 mm",
+   "adopted_value_mm": "black leaf/diamond at (35.0, 148.1) mm, 2.5 x 3.8 mm, straddling the bottom rule",
+   "adopted_value_fraction": "(0.500 W, 0.9494 H), size 0.036 W x 0.024 H",
+   "tolerance": "+- 0.7 mm on position, +- 0.6 mm on size",
+   "ours": "absent - the only thing on our centreline at that height is the bottom rule itself",
+   "delta": "one signature ornament missing",
+   "how_to_achieve": "Add it. Shape note: these are LEAF/spindle forms, not rhombi - w/h 0.31-0.71, widest near mid-height, bbox fill 0.49-0.61, pointed at both ends. diamond_path already takes w and h.",
+   "expected_visual_effect": "The vertical chain that runs down the centre of the card is a signature element of the design and it currently stops short.",
+   "confidence": "high - measured directly on both guides and confirmed absent from our map"
+  },
+  {
+   "rank": 17,
+   "element": "Centreline ornament chain - the flanking leaf pair",
+   "knob": "LAYOUT - a new entry",
+   "reference_V1": "two small red leaves flanking the lower-centre column at (32.20, 130.76) 1.02 x 1.47 mm and (38.04, 130.63) 1.14 x 1.81 mm. V1 also carries red leaves flanking the RING at about (11.9, 101.1) and (59.6, 99.6), 1.8 x 2.5 mm.",
+   "reference_V2": "V2 replaces this region with the real 瞬業 kanji, so the flanking pair is a V1 reading",
+   "adopted_value_mm": "red leaves at (32.2, 130.7) and (38.0, 130.7) mm, about 1.1 x 1.6 mm; optional ring-flank pair at (11.9, 101.1) and (59.6, 99.6)",
+   "adopted_value_fraction": "(0.460 W, 0.838 H) and (0.543 W, 0.838 H)",
+   "tolerance": "+- 1.0 mm; these are decorative, not registered to anything",
+   "ours": "absent",
+   "delta": "two (or four) small ornaments missing",
+   "how_to_achieve": "Add a pair beside the lower-centre column. Keep them under 2 mm - at this size they read as punctuation, not as elements.",
+   "expected_visual_effect": "The lower third of our card is visibly emptier than the reference's.",
+   "confidence": "medium - V1-only, and small enough that a designer may reasonably drop them"
+  },
+  {
+   "rank": 18,
+   "element": "Ornament above the top rule",
+   "knob": "LAYOUT.diamond_top_y (0.026)",
+   "reference_V1": "NOTHING above the top rule - the band from the tag edge to the rule is bare except at the corners",
+   "reference_V2": "nothing above the top rule",
+   "adopted_value_mm": "no centreline ornament outboard of the top rule",
+   "adopted_value_fraction": "n/a",
+   "tolerance": "zero centre-column ink above the top rule",
+   "ours": "a red leaf at (35.0, 3.5) mm, 0.71 x 2.21 mm, outboard of the top rule",
+   "delta": "one ornament that exists in neither guide",
+   "how_to_achieve": "Delete diamond_top_y (keep diamond_bottom_y = 0.974 - the reference DOES have a red leaf at (35.05, 151.7) mm, 0.80 x 2.60 mm, and ours matches it to 0.2 mm).",
+   "expected_visual_effect": "Free deletion; it breaks the clean top edge the reference has.",
+   "confidence": "high"
+  },
+  {
+   "rank": 19,
+   "element": "Small seal 火道 - text size inside the box",
+   "knob": "LAYOUT.small_seal_em_mm (6.0)",
+   "reference_V1": "the box is 9.0 x 17.8 mm at centre (59.1, 132.0); 火 is 6.50 x 6.18 mm and 道 6.61 x 7.41 mm on an 8.1 mm advance with only 1.24 mm between them; the frame rule is 0.69 mm",
+   "reference_V2": "box 9.8 x 16.7 mm but 6.6 mm LOWER and crowding the right rule; V1 already carries real 火道 kanji here, so V2's edit added no text information for this element - FOLLOW V1",
+   "adopted_value_mm": "box 9.0 x 17.8 mm at (59.1, 132.0); glyph em ~7.5 mm; inter-glyph gap 1.2 mm; frame rule 0.69 mm",
+   "adopted_value_fraction": "box 0.129 W x 0.114 H, centre (0.844 W, 0.846 H)",
+   "tolerance": "box +- 1.0 mm; glyph em +- 0.7 mm; gap <= 2.0 mm",
+   "ours": "drawn box 10.7 x 21.9 mm centred about 2.3 mm low; 火 4.74 x 4.80 and 道 5.44 x 4.80 on the same 8.14 mm advance but with 3.33 mm between them; frame rule 0.45 mm",
+   "delta": "box +19% wide and +23% tall, glyphs -27%, gap +169%, rule -35%",
+   "how_to_achieve": "small_seal_em_mm 6.0 -> 7.5 and tighten the drawn box back onto small_seal_frame_* (0.7844..0.9125, 0.7920..0.9065), which is ALREADY the reference's 8.97 x 17.86 mm - the spec box is right, the drawn ink is overshooting it by ~4 mm of height.",
+   "expected_visual_effect": "A bigger, weaker box around smaller text is the worst of both. The advance is already right.",
+   "confidence": "high on the reference (V1 and the typography pass agree to 0.2 mm); medium on what is overshooting our own frame box - worth one look"
+  },
+  {
+   "rank": 20,
+   "element": "Big seal - outer box size and ink weight",
+   "knob": "LAYOUT.big_seal_frame_x / _y, big_seal_rule_mm (1.0)",
+   "reference_V1": "outer box 18.0 x 26.5 mm; an outline rectangle drawn with a 1.07 mm rule and, inset 2.07 mm across and 2.19 mm down, a solid red block 13.66 x 22.13 mm that is 72% inked; red fill of the whole bbox 0.59; clears the left rule by 1.03 mm",
+   "reference_V2": "18.6 x 27.2 mm, red fill 0.60 - agrees with V1 to 0.3% on the fill",
+   "adopted_value_mm": "outer box 18.0 x 26.5 mm; inner solid panel 13.7 x 22.1 mm; red fill of bbox 0.59",
+   "adopted_value_fraction": "box 0.257 W x 0.170 H at centre (0.206 W, 0.834 H)",
+   "tolerance": "box +- 1.0 mm; red fill of bbox 0.54 - 0.64",
+   "ours": "drawn box 20.1 x 29.7 mm; red fill of bbox 0.478. BUT the inner 60% of the box is 0.593 inked against the reference's 0.600 - the CENTRE of our chop is as solid as the reference's. The deficit is entirely in the outer band, i.e. the outline rule.",
+   "delta": "box +12% wide and +12% tall; fill -19% overall but correct in the core",
+   "how_to_achieve": "The spec boxes are already right: big_seal_frame_x (0.0827, 0.3387) = 5.79..23.71 mm and big_seal_panel_x (0.110, 0.310) = 7.70..21.70 mm are within 0.4 mm of the reference's frame and panel. What overshoots is the DRAWN ink. Bring big_seal_rule_mm's drawn weight up to the measured 1.07 mm and stop the brush spilling past the frame.",
+   "expected_visual_effect": "The chop reads as a red rectangle with holes in it rather than a stamped seal.",
+   "confidence": "medium-high - my box measurement is 0.7 mm wider than typography's because of where the window ends; the fill numbers are solid"
+  },
+  {
+   "rank": 21,
+   "element": "Border rule weight and symmetry",
+   "knob": "LAYOUT.rule_weight_mm (1.00)",
+   "reference_V1": "left 0.68, right 0.57, top 0.57, bottom 0.57 mm. The centre line is dead straight (wobble rms 0.02-0.08 mm); it is the WIDTH that varies, by a factor of 2.6 to 14 along one rule.",
+   "reference_V2": "0.77, 0.51, 0.49, 0.49 mm - reads 15-20% fat because of the 2.2x downsample. Follow V1.",
+   "adopted_value_mm": "0.60 mm nominal, varying 0.2 - 1.3 mm along the run, on a straight centre line",
+   "adopted_value_fraction": "0.0086 W",
+   "tolerance": "mean 0.5 - 0.8 mm on every side; left and right within 0.15 mm of each other",
+   "ours": "left 0.62, right 1.01, top 0.70, bottom 0.46 mm - the right rule is 63% heavier than the left",
+   "delta": "asymmetric by 0.55 mm; nominal is 1.00 mm where the reference measures 0.57-0.68",
+   "how_to_achieve": "rule_weight_mm 1.00 -> 0.65 (the comment calls 1.00 a 'legibility rule, not the measured 0.8' - the measurement is 0.6). Then find why left and right differ by 63%; that is not the reference's kind of hand variation.",
+   "expected_visual_effect": "Small, but a 63% weight difference between two parallel lines 62 mm apart is visible.",
+   "confidence": "high"
+  },
+  {
+   "rank": 22,
+   "element": "Border rule continuity (dry-brush breaks)",
+   "knob": "the break/erosion pass in draw_rules",
+   "reference_V1": "the rules are BROKEN: peak occupancy 0.89 (left), 0.92 (right), 0.91 (top), 0.82 (bottom) - 8 to 18% of each run is bare paper, in 7 to 12 breaks, the longest 1.9 - 3.9 mm",
+   "reference_V2": "0.87, 0.90, 0.82, 0.81 - the same picture",
+   "adopted_value_mm": "occupancy 0.85 - 0.92 per side; 7 - 12 breaks; longest break under 4 mm",
+   "adopted_value_fraction": "n/a",
+   "tolerance": "occupancy 0.82 - 0.95; no break longer than 5 mm",
+   "ours": "peak occupancy 1.00 on the top and bottom rules - unbroken for their whole length",
+   "delta": "the reference's rules run out of ink; ours never do",
+   "how_to_achieve": "Add 7-12 short breaks per side. Keep the centre line straight - the reference's variation is in WIDTH, not in path. Ours is the other way round (our centre-line wobble is 4-10x the reference's while our width varies less).",
+   "expected_visual_effect": "An unbroken rule of constant width is the most machine-made thing on the card.",
+   "confidence": "high"
+  },
+  {
+   "rank": 23,
+   "element": "Corner chamfer of the card silhouette",
+   "knob": "paperbomb_art.CORNER_CLIP_MM (7.6) and spec.PaperBombSpec.corner_clip_mm (7.6)",
+   "reference_V1": "a straight 45 deg bevel cutting 7.70/7.95, 7.81/7.97, 8.14/8.45 and 8.18/8.56 mm off the two edges at TL, TR, BL, BR - mean 8.10 mm, chord 11.45 mm, angle 46.0 deg. The bevel is dead straight (line-fit rms 0.011 - 0.019 mm). The bottom pair is ~5% longer than the top pair.",
+   "reference_V2": "mean 7.97 mm, chord 11.27 mm, angle 44.9 deg - agrees with V1 to 0.13 mm",
+   "adopted_value_mm": "8.05 mm cut on each edge, all four corners, 45 deg, chord 11.4 mm",
+   "adopted_value_fraction": "0.115 W on the horizontal edge, 0.0516 H on the vertical",
+   "tolerance": "+- 0.5 mm",
+   "ours": "7.6 mm (a geometry constant, not measured from the texture)",
+   "delta": "-5.6% (0.45 mm per edge)",
+   "how_to_achieve": "CORNER_CLIP_MM 7.6 -> 8.05 in both places. Mesh change, so re-run the LOD and collision checks.",
+   "expected_visual_effect": "Changes the silhouette slightly at thumbnail size. Low urgency, trivially cheap.",
+   "confidence": "high - my tolerance-free bevel line fit gives 8.10/7.97 and the ink pass independently gives 8.09/7.96. An earlier recommendation of 8.6 mm came from a departure-threshold method and is too long; my own first pass at 7.6 mm used too coarse a tolerance and was too short."
+  },
+  {
+   "rank": 24,
+   "element": "Baked crease shading in the base colour",
+   "knob": "LAYOUT.crease_y (0.333, 0.667) as it feeds paper_ground / _relief",
+   "reference_V1": "NONE. A band-pass detector finds no line spanning the tag, and a row-luma scan of the paper finds no dip outside the rim. The sheet is flat and evenly lit.",
+   "reference_V2": "none",
+   "adopted_value_mm": "no crease shading in the base colour",
+   "adopted_value_fraction": "n/a",
+   "tolerance": "no row-luma dip above 1.2% spanning more than 25% of the card width",
+   "ours": "a crease line at v 0.331 (51.6 mm) shows in a row-luma scan of our paper; the ink pass also reports a second at v 0.669 (104.4 mm) covering ~51% of the width",
+   "delta": "two shading lines the reference does not have",
+   "how_to_achieve": "The MESH already carries real creases (FoldSpec, 7 deg over a 2.2 mm half-width) and the lighting will shade them. Take the crease term out of the base colour so it is not counted twice.",
+   "expected_visual_effect": "Double-shaded folds read as printed-on dirt rather than as geometry.",
+   "confidence": "high for the 51.6 mm line (confirmed here); medium for the 104.4 mm line, which sits under the ring and glyph where my row scan cannot separate it from ink"
+  },
+  {
+   "rank": 25,
+   "element": "Paper ageing - evenness and reach",
+   "knob": "paperbomb_art.PALETTE.paper_edge, _edge_distance_mm reach, ArtConfig.wear",
+   "reference_V1": "rim darkening 15.7% deep, half-recovered at 4.75 mm, 95% recovered by 7.25 mm (0.104 W). The four sides agree to 1.5 points of plateau luminance and the whole-sheet lighting tilt is under 0.8% on either axis - the ageing has no direction.",
+   "reference_V2": "14.3% deep, 95% by 5.25 mm, sides agree to 2.9 points - same conclusion",
+   "adopted_value_mm": "15% deep, 95% recovered by 7.25 mm, the four sides within 2 points of each other, whole-sheet tilt under 1%",
+   "adopted_value_fraction": "reach 0.104 W",
+   "tolerance": "depth 12 - 19%; 95% reach 6 - 9 mm; side-to-side spread under 4 points",
+   "ours": "21.9% deep, 95% reach 14.75 mm (0.211 W), never reaches 99%; the four sides disagree by 12.4 points (right edge much darker than left) and the sheet tilts 5.3% down its height",
+   "delta": "+40% depth, 2.0x the reach, 8x the unevenness",
+   "how_to_achieve": "Halve the edge-darkening reach and make it isotropic. The directional component is the part that reads as a bug rather than as wear - neither guide has anything like it.",
+   "expected_visual_effect": "Our vignette eats a fifth of the card width where the reference's eats a tenth.",
+   "confidence": "medium-high - measured by the ink pass, not re-measured here"
+  },
+  {
+   "rank": 26,
+   "element": "Paper fibre grain",
+   "knob": "paperbomb_art.PALETTE.grain_linear (0.060) and the noise cell size / anisotropy",
+   "reference_V1": "grain amplitude 17.0% of paper luminance on a 0.50 mm cell, close to isotropic (max/min angular power 1.90)",
+   "reference_V2": "25.2% on a 2.36 mm cell with anisotropy 5.79 - but every one of those figures sits at or past V2's own 0.51 mm resolution limit. USE V1 ONLY for this row.",
+   "adopted_value_mm": "17% amplitude, 0.50 mm cell, anisotropy under 2.5",
+   "adopted_value_fraction": "cell 0.0071 W",
+   "tolerance": "amplitude 12 - 22%; cell 0.35 - 0.8 mm; anisotropy under 3",
+   "ours": "9.8% amplitude on a 2.79 mm cell with anisotropy 17.2 and a strong streak near 125 deg",
+   "delta": "-42% amplitude, 5.6x the cell size, 9x the anisotropy",
+   "how_to_achieve": "Raise grain_linear and drop the noise cell to about 0.5 mm; remove the directional term.",
+   "expected_visual_effect": "Our sheet reads smooth and printed rather than laid. Lowest priority of the paper rows because it only shows at close range.",
+   "confidence": "medium - the ink pass had only two clean ink-free patches on our busy card; the presence of a strong streak is solid, the exact angle is indicative"
+  }
+ ],
+ "v1_v2_adjudication": [
+  {
+   "element": "Tag aspect ratio (W/H)",
+   "V1": "0.4468 +- 0.0005 (616.1 x 1378.9 px)",
+   "V2": "0.4314 +- 0.0006 (274.3 x 635.9 px)",
+   "follow": "V1",
+   "why": "V1 sits 0.43% off the shipped 70x156 card (0.44872); V2 is 3.87% off, i.e. stretched 3.9% vertically per unit width. Both figures are stable to +-0.13% across binarisation thresholds from 0.25 to 0.80 of the paper level, so this is a real difference between the two files, not a measurement choice. Use V1 for every proportion and every millimetre conversion. NOTE: an earlier pass reported V1 at 0.44887 ('the card to 0.03%') on a tag rect 6 px wider than any threshold in that sweep reproduces; that claim does not survive."
+  },
+  {
+   "element": "Which glyphs appear where",
+   "V1": "pseudo-glyph scribbles in the side and lower-centre columns",
+   "V2": "real kanji: 火遁術, 爆炎陣, 焼尽, 瞬業",
+   "follow": "V2",
+   "why": "This is the whole reason V2 exists and it is the only thing V2 is authoritative for, together with the size of the real-kanji blocks. V1's columns are 8.7-11.5 mm wide against V2's 13.6-15.4 mm, and V1 carries an extra lower-LEFT mark group that V2 drops."
+  },
+  {
+   "element": "Ring mid-stroke ellipse",
+   "V1": "52.08 x 59.27 mm, h/w 1.138",
+   "V2": "52.77 x 57.21 mm, h/w 1.084",
+   "follow": "V1",
+   "why": "The widths agree to 1.3%. The height difference is exactly V2's own 3.9% vertical rescale (57.21 x 1.039 = 59.4). V1 is the one that lands correctly on a 70x156 card."
+  },
+  {
+   "element": "Ring centre",
+   "V1": "(35.47, 76.99) mm = (0.5067, 0.4936)",
+   "V2": "(35.32, 74.35) mm = (0.5046, 0.4766)",
+   "follow": "V1",
+   "why": "x agrees to 0.15 mm - both put the ring on the tag's vertical midline. The 2.6 mm y difference is more than V2's stretch explains, so V2's content also drifted; V1's y is the one to build to."
+  },
+  {
+   "element": "Ring stroke width",
+   "V1": "median 4.84 mm (p05 1.48, p95 7.04)",
+   "V2": "median 4.88 mm (p05 1.92, p95 6.88)",
+   "follow": "either",
+   "why": "They agree to 1%. This is the most robust single number on the ring."
+  },
+  {
+   "element": "Ring dry-brush hole fraction",
+   "V1": "0.198 of the stroke envelope",
+   "V2": "0.200 of the stroke envelope",
+   "follow": "either",
+   "why": "Agreement to 1% on a metric that is usually fragile. Both say a fifth of the ring's own envelope is bare paper."
+  },
+  {
+   "element": "Centre glyph 爆 bounding box",
+   "V1": "59.30 x 52.38 mm, w/h 1.132, width 0.8472 W",
+   "V2": "58.44 x 50.78 mm, w/h 1.151, width 0.8349 W",
+   "follow": "V1",
+   "why": "They agree on w/h to 1.6% and on width-as-a-fraction-of-the-tag to 1.5%. Take V1 for the absolute size; the shared conclusion - the character is WIDER than it is tall and spans 84% of the card - holds either way."
+  },
+  {
+   "element": "Centre glyph component structure",
+   "V1": "2 components, bbox overlap 8.86 mm, ink gap 0.75 mm",
+   "V2": "2 components, bbox overlap 8.5 mm, ink gap 0.78 mm",
+   "follow": "either",
+   "why": "Identical. The 火 radical and the 暴 body all but touch in both."
+  },
+  {
+   "element": "Flame emblem",
+   "V1": "5 strokes, 167.0 mm2, bbox 23.74 x 23.64 (w/h 1.004)",
+   "V2": "5 strokes, 168.8 mm2, bbox 24.24 x 21.83 (w/h 1.110)",
+   "follow": "V1 for the proportion, either for the ink",
+   "why": "The stroke COUNT and the ink AREA agree to 1.1%, which proves V2's shorter box is its coarser raster clipping the thin tongue tips, not an edit. Use V1's square proportion."
+  },
+  {
+   "element": "Border rules per side",
+   "V1": "one",
+   "V2": "one",
+   "follow": "either",
+   "why": "Verified twice here: a peak-grouped occupancy profile across the border band, and the profile itself, which is flat zero from 5.0 mm inward on both sides."
+  },
+  {
+   "element": "Border rule insets",
+   "V1": "L 4.033, R 4.090, T 6.675, B 7.240 mm; frame 61.88 x 142.09 at (34.97, 77.72)",
+   "V2": "L 4.083, R 4.211, T 6.501, B 6.992 mm; frame 61.71 x 142.51 at (34.94, 77.76)",
+   "follow": "either",
+   "why": "They agree to 0.25 mm on every side and to 0.3% on the frame rectangle. IMPORTANT: inset numbers are only comparable between agents who place the tag's edge the same way. All values here use the half-maximum of the paper/background warmth transition."
+  },
+  {
+   "element": "Corner chamfer",
+   "V1": "mean cut 8.10 mm, chord 11.45 mm, 46.0 deg",
+   "V2": "mean cut 7.97 mm, chord 11.27 mm, 44.9 deg",
+   "follow": "either",
+   "why": "0.13 mm apart, by a tolerance-free fit of a line to the bevel itself."
+  },
+  {
+   "element": "Big seal",
+   "V1": "18.0 x 26.5 mm, red fill of bbox 0.59",
+   "V2": "18.6 x 27.2 mm, red fill 0.60",
+   "follow": "either",
+   "why": "Agreement to 0.6 mm and to 0.3% on the fill."
+  },
+  {
+   "element": "Small 火道 seal position",
+   "V1": "box 9.0 x 17.8 mm at (59.1, 132.0)",
+   "V2": "box 9.8 x 16.7 mm at (59.1, 138.7)",
+   "follow": "V1",
+   "why": "6.7 mm apart vertically - 4.3% of H, far more than V2's 3.9% stretch explains, so this is a genuine content difference between the two generations. V1 already carries real 火道 kanji here, so V2's edit added no text information for this element, and V1 has 2.2x the resolution. V2's box also crowds the right rule, which is part of why it measures wider."
+  },
+  {
+   "element": "Lower-centre column vertical placement",
+   "V1": "ink y 112.9..145.0 mm (pseudo-glyphs)",
+   "V2": "ink y 110.3..142.4 mm (瞬業)",
+   "follow": "V2",
+   "why": "This is a text slot and V2 is authoritative for text. Both put the ornament chain below it."
+  },
+  {
+   "element": "Black-area / red-area ratio",
+   "V1": "1.542",
+   "V2": "1.630",
+   "follow": "V1",
+   "why": "5.7% apart - the most robust composition number available. Ours is 1.064, i.e. half again too red for its black. Adding red would make the card worse, not better."
+  },
+  {
+   "element": "Total ink coverage of the tag",
+   "V1": "red 0.1126, black 0.1735, total 0.2861",
+   "V2": "red 0.1149, black 0.1874, total 0.3023",
+   "follow": "V1",
+   "why": "V2 reads ~6% heavier because a 2.2x downsample smears every stroke edge outward and the smear counts as ink. Ours is red 0.1105, black 0.1176, total 0.2281."
+  },
+  {
+   "element": "Paper base colour",
+   "V1": "stored (0.9647, 0.9020, 0.7765)",
+   "V2": "stored (0.9647, 0.8980, 0.7647)",
+   "follow": "either",
+   "why": "Agreement to 2/255 on every channel and 0.35 deg of hue. Settled."
+  },
+  {
+   "element": "Black ink core colour",
+   "V1": "stored (0.043, 0.043, 0.035) darkest quartile",
+   "V2": "stored (0.031, 0.035, 0.028)",
+   "follow": "V1",
+   "why": "V2 is 3/255 darker because its downsample pushed the surviving core pixels toward the stroke centres. Both say a near-neutral near-black, not a charcoal. V1 is the conservative target."
+  },
+  {
+   "element": "Red saturation",
+   "V1": "0.89 - 0.92 across all four red elements",
+   "V2": "~0.94",
+   "follow": "V1",
+   "why": "The user's edit lifted saturation about 5 points. V1 is conservative and is still 0.28 above what we ship, so the disagreement changes no decision."
+  },
+  {
+   "element": "Paper fibre grain",
+   "V1": "17.0% amplitude, 0.50 mm cell, anisotropy 1.90",
+   "V2": "25.2%, 2.36 mm cell, anisotropy 5.79",
+   "follow": "V1",
+   "why": "Every V2 figure here sits at or past its own 1.96 cycles/mm Nyquist limit, so it measures the downsample rather than the artwork. V2 must not be used for any fine-texture statistic: fibre, kasure hole size, stroke-edge wavelength or bleed width."
+  },
+  {
+   "element": "Fold, crease or internal shadow",
+   "V1": "none",
+   "V2": "none",
+   "follow": "either",
+   "why": "Both are flat, evenly lit sheets. There is no fold shading to match."
+  }
+ ],
+ "not_capturable_as_a_number": [
+  "Brush GESTURE - the sense that a hand moved. Measurable proxies: stroke-width modulation within one stroke (the reference's centre glyph runs 22.6:1 from its thinnest filament to its widest belly, and that is a LOWER bound because 22.6 is floored by V1's own pixel grid; ours is 3.4:1), and the wet-to-dry taper along a lap. Neither proxy guarantees the gesture.",
+  "The RHYTHM of the flame's tongues - thin, thick, thin, thick, thin (1.79, 6.16, 1.46, 6.50, 1.57 mm). The widths are measurable; whether the alternation reads as a flame is not.",
+  "Whether the pseudo-glyph columns in V1 should have influenced our composition at all. They are not characters, so their extent (63.7 mm tall, 8.9 mm wide) is not a target - but the DENSITY they give the upper third of the card is a real design fact that the real kanji have to carry instead.",
+  "Whether V1's lower-LEFT pseudo-glyph mark group (x 7.28..15.90, y 100.07..114.11 mm) should be reinstated as something. V2 drops it; we do not have it. That is a design call, not a metrology one.",
+  "How much wear is right. Both guides are clean, evenly aged sheets. Ours is a used prop. The spec targets the guides; the product may legitimately want more. Decide once, deliberately.",
+  "Whether the 0.43% aspect difference between V1 and the shipped 70 x 156 card matters. It is 0.3 mm on a 70 mm width. The card's dimensions are a product decision; the guide is a picture."
+ ],
+ "human_judgement": [
+  {
+   "question": "Does the 爆 read as ONE character?",
+   "how_to_judge": "Numbers can count components and measure gaps, but only an eye can say whether the 火 radical reads as part of the character or as a blot beside it. Look at the card at thumbnail size (about 40 px tall) and at 100%. At thumbnail size the radical and the body should merge into one mass; at 100% they should be clearly two strokes that nearly touch."
+  },
+  {
+   "question": "Does the ring read as ONE fast brush stroke?",
+   "how_to_judge": "Hole fraction, thickness distribution and angular coverage can all be right while the ring still reads as a decorated circle. The test: trace the stroke with your eye and see whether you can tell where the brush started and where it ran out. In the reference the band thins into its own gap - it tapers at the end of the lap rather than bulging. Ours currently ends WETTER than it starts, which is why it reads directionless. Fix the direction, then judge the gesture by looking."
+  },
+  {
+   "question": "Is the dry-brush breakup believable, or does it look like noise?",
+   "how_to_judge": "Our kasure holes are already the right size, shape and alignment - there are just too few. When you add more, the failure mode is speckle: holes scattered evenly like film grain instead of clustered where a splitting brush would leave them. Judge by covering the rest of the card and asking whether the voids follow the stroke."
+  },
+  {
+   "question": "Does the flame emblem sit above the character, or compete with it?",
+   "how_to_judge": "This is a weight judgement that no single number captures. The reference's emblem is five delicate strokes; ours is one fat welded mass with 61% more ink in the same box. After thinning it, squint at the card: the eye should land on 爆 first, the ring second, the emblem third."
+  },
+  {
+   "question": "Do the corner ornaments look like craft or like decoration?",
+   "how_to_judge": "The measurable part is the 2.1 mm outboard dart. The unmeasurable part is the hook: the reference's curls inboard like a comma turning down-and-in, with ink pooling darkest where the two rules cross. Draw it, then look at a 4x zoom of each corner as a buyer would in a product shot."
+  },
+  {
+   "question": "Is the ink DARK, or merely darker?",
+   "how_to_judge": "The contrast ratio is arithmetic, but whether the card reads as black ink on cream paper is a look-at call, and it depends on the shader and the lighting as well as the albedo. Judge it in the shipped gallery render, not in the map. If the render still reads grey at 55:1, the floor decision needs revisiting again."
+  },
+  {
+   "question": "Is the red cinnabar or brick?",
+   "how_to_judge": "Saturation 0.90 is the target, but the perceived hue shifts with the paper behind it. Put our red and the reference's side by side at the same size on the same background before accepting it."
+  },
+  {
+   "question": "Does the whole card balance?",
+   "how_to_judge": "The reference is very slightly left- and bottom-weighted: the filled lower-left chop balances the sparser lower right. Ours currently leans the other way. After the size changes land, look at the card upside down and out of focus - the two lower quadrants should feel about equally heavy."
+  },
+  {
+   "question": "Is anything traced?",
+   "how_to_judge": "Not a look-at test but a process test, and the one that protects the product. Every stroke must come out of paperbomb_art.py's own path generators. The module already refuses to open the guides (FORBIDDEN_INPUT_FRAGMENTS, GuideAccess, no_guide_access) - keep that gate, and keep this spec numeric. Matching a measured width is not tracing; sampling a pixel is."
+  }
+ ],
+ "already_correct_do_not_change": [
+  "Border rule RECTANGLE. Ours is 61.836 x 142.033 mm centred (34.981, 77.594); V1's is 61.877 x 142.085 centred (34.971, 77.718). That is 0.04 mm on width, 0.05 mm on height and 0.12 mm on centre. Earlier advice to move the rules 0.5-0.8 mm outward came from comparing numbers measured against two different tag-edge conventions; on one convention the insets already agree to 0.15 mm. DO NOT MOVE THE RULES.",
+  "Flame emblem POSITION and WIDTH: ours (34.75, 30.41) x 23.29 mm wide against the reference's (34.83, 30.59) x 23.74. Correct to 0.2 mm and 0.45 mm. Only its ink weight and stroke count are wrong.",
+  "Lower text columns' horizontal placement: 焼尽 at x 56.7-57.8 mm against the reference's 57.3-57.6, and 瞬業 at 35.2 against 35.0. A blanket 'push the columns out' fix would break these. Only the UPPER pair is inboard.",
+  "Column PITCH: our advances are 14.7-16.1 mm against the reference's 12.7-15.9 mm. The pitch is right; the glyphs inside it are small.",
+  "Big seal FRAME and PANEL boxes in the spec: big_seal_frame_x (0.0827, 0.3387) = 5.79..23.71 mm and big_seal_panel_x (0.110, 0.310) = 7.70..21.70 mm are within 0.4 mm of the reference's 17.81 mm frame and 13.66 mm inner block.",
+  "Small seal FRAME box in the spec: small_seal_frame_* = 8.97 x 17.86 mm against the reference's 9.0 x 17.8 mm.",
+  "Bottom centreline red leaf: ours at (34.98, 151.91) 0.77 x 2.17 mm against V1's (35.05, 151.70) 0.80 x 2.60 mm.",
+  "Kasure hole SHAPE: 0.31 mm median diameter against 0.30, elongation 4.8 against 4.2, 88% of holes within 30 deg of the stroke tangent against 83% (random would be 33%). Only the COUNT is short.",
+  "Ink hue: our black is neutral (R-B = 3/255 against the reference's 2/255) and our red's hue angle is 5.4 deg against 4.5. Neither hue is the problem; both values are."
+ ],
+ "corrections_to_earlier_passes": [
+  "V1's tag is 616.1 x 1378.9 px, aspect 0.4468 - 0.43% off the shipped card, not 0.03%. A threshold sweep from 0.25 to 0.80 of the paper level moves the aspect by only 0.13%, so the 622.0 x 1385.8 px figure reported elsewhere is not reproducible.",
+  "The flame emblem does NOT already match. Its bounding box does (to 0.45 mm), which is what an earlier pass compared; its ink is +61% and it is one welded component where both guides show five.",
+  "Our border rule insets are NOT 0.5-0.8 mm wrong. Measured against the exact atlas card origin they are within 0.15 mm of V1 on every side.",
+  "The corner chamfer is 8.05 mm, not 8.6 mm. A departure-threshold method over-measures the bevel; fitting a line to the bevel and intersecting it with the two edges gives 8.10 (V1) and 7.97 (V2), matching the ink pass's 8.09 / 7.96.",
+  "The ring's 'outer diameter 60.7 mm' conflated the two axes of an ellipse. The ring is 52.08 x 59.27 mm at mid-stroke (h/w 1.138) with a red ink extent of 58.17 x 64.82 mm.",
+  "Ring stroke width: 4.84 mm by the swept-band definition used here and by the typography pass (4.67 mm). The 6.15 mm figure elsewhere is an alpha-profile definition that includes the soft shoulder, and the 5.31 mm figure a third threshold. They are not interchangeable; the build target and the acceptance test must use the same one.",
+  "The centre glyph is in FIVE pieces, not four: body, radical, an orphan flick, and TWO strokes broken out of the body.",
+  "Our ring is not 'solid all the way round' (an ink fill of 1.01 is not a physical quantity). By stroke-envelope hole fraction it is 0.122 against the reference's 0.198 - about 60% as broken."
+ ],
+ "provenance": {
+  "verification_pass": "Blender 5.2.0 LTS headless, factory startup, NumPy, four scripts run for this document: tag detection and levels; ring / glyph / flame / rules / columns / seals / centreline; tolerance-free bevel fit, ink outside the rule rectangle, tight seal boxes, ring envelope holes; and the debug overlay.",
+  "debug_overlay": "WorkFiles/paperbomb/reference_metrology/debug/overlay_reference_vs_ours.png - DEBUG, NEVER SHIP.",
+  "legal": "Nothing in this specification is derived artwork. It contains positions, sizes, fractions, angles, counts, densities and colour values measured from the guides, and descriptions of shape in words. No crop, mask, trace, outline or threshold of either guide exists anywhere a build can read."
+ }
+}

@@ -1,0 +1,39 @@
+{
+  "role": "Unreal import verifier",
+  "date": "2026-09-17",
+  "engine": "5.8.2-56702186+++UE5+Release-5.8",
+  "importer": "legacy FBX (Interchange.FeatureFlags.Import.FBX=0, from the copied Config/DefaultEngine.ini)",
+  "project_copy": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/shuriken/UnrealTest/JinMuWonValidation.uproject",
+  "fbx": "C:/Users/Cody/Desktop/Blender_Projects/Exports/Shuriken/SM_Shuriken_FourPoint.fbx",
+  "asset": "/Game/ShurikenCheck/SM_Shuriken_FourPoint",
+  "verdict": "PASS with two real defects. The mesh imports correctly, at correct scale, with 3 LODs, 1 convex hull, both sidecar sockets persisted at scale 1, UV1 generated, and zero Warning/Error lines in either commandlet log.",
+  "checks": {
+    "1_lods": {"result": "PASS with a discrepancy", "num_lods": 3, "unreal_triangles": [1632, 700, 184], "build_report_triangles": [1664, 700, 184], "note": "LOD0 is 32 triangles lighter in engine; Unreal's remove_degenerates stripped 32 exactly-zero-area faces present in the .blend"},
+    "2_collision": {"result": "PASS", "convex_elems": 1, "box": 0, "sphere": 0, "sphyl": 0, "asset_registry_CollisionPrims": 1, "subsystem_convex_collision_count": 1, "hull_node_name": "UCX_SM_Shuriken_FourPoint_LOD0_00 (keyed to the LOD0 node, which is why it is not 0)"},
+    "3_sockets": {"result": "PASS", "verified_in": "fresh commandlet process after save", "Grip": {"location_cm": [0.7778, -0.7778, 0.0], "rotation_rpy": [0.0, 0.0, -45.0], "scale": [1.0, 1.0, 1.0], "radius_cm": 1.1}, "Trail": {"location_cm": [0.0, 0.0, 0.0], "rotation_rpy": [0.0, 0.0, 0.0], "scale": [1.0, 1.0, 1.0]}, "note": "scale is 1, not the 100 the FBX unit-scale trap gives"},
+    "4_bounds": {"result": "PASS", "min_cm": [-4.85, -4.85, -0.15], "max_cm": [4.85, 4.85, 0.15], "size_cm": [9.7, 9.7, 0.3], "pivot": "geometric centre"},
+    "5_lightmap_uv": {"result": "PASS", "asset_registry_UVChannels": 2, "light_map_coordinate_index": 1, "light_map_resolution": 64, "control_with_generator_off": {"UVChannels": 1, "light_map_coordinate_index": 0}, "note": "the matched control proves the tag discriminates, so UV1 really was generated into render data"},
+    "6_log": {"result": "PASS", "warning_or_error_lines_pass1": 0, "warning_or_error_lines_pass2": 0, "fbx_lines": ["FBX Scene Loaded Succesfully", "Built static mesh [0.02s] /Game/ShurikenCheck/SM_Shuriken_FourPoint"]}
+  },
+  "defects": [
+    {"severity": "major", "area": "source mesh / QA gate", "issue": "32 exactly-zero-area triangles and 16 coincident unmerged vertex pairs at the four tips in Assets/Shuriken.blend LOD0", "evidence": "Blender read-only probe: 32 triangles with area 0.0 mm2, each with one zero-length edge between two distinct vertex indices at identical coordinates (e.g. verts 641 and 140 both at 44.7222, -1.0312, 1.5 mm); 16 duplicate vertex positions of 832. Unreal reports 1632 LOD0 triangles, exactly 1664-32, because MeshBuildSettings.remove_degenerates is true. LOD1 and LOD2 have zero degenerates and match the build exactly."},
+    {"severity": "major", "area": "LOD screen sizes", "issue": "Unreal auto-computed LOD screen sizes 2.0 / 0.75 / 0.5625; the study's plan is 1.0 / 0.5 / 0.25", "evidence": "StaticMeshEditorSubsystem.get_lod_screen_sizes -> [2.0, 0.75, 0.5625]. The FBX LodGroup carries no threshold data (Scripts/pipeline has no screen-size support: no 'screen' or 'threshold' token in helpers.py or export_fbx.py), so Unreal invented them. LOD2 at 0.5625 means the 184-triangle LOD is in use from roughly 9 cm away for a 4.85 cm bounding radius."},
+    {"severity": "minor", "area": "material", "issue": "the M_Shuriken_Master slot imports bound to WorldGridMaterial", "evidence": "static_materials[0] = slot 'M_Shuriken_Master' -> /Engine/EngineMaterials/WorldGridMaterial. Expected: the verification import uses import_materials=False, matching verify_shipped.py. The slot NAME survives, so a buyer can assign by slot."},
+    {"severity": "minor", "area": "lightmap resolution", "issue": "light_map_resolution left at the default 64 for a 9.7 cm prop", "evidence": "light_map_resolution=64, min_lightmap_resolution=64 on all three LODs. Untested in practice: this project sets r.AllowStaticLighting=False."}
+  ],
+  "method_notes": [
+    "get_editor_subsystem(StaticMeshEditorSubsystem) is None under -run=pythonscript, as ASSET_GUIDELINES 6.5 records. new_object(StaticMeshEditorSubsystem) DOES work and was self-tested: add_uv_channel moved the count 1 -> 2, so its readings are live. That is new information for 6.5.",
+    "EditorStaticMeshLibrary.get_num_uv_channels returns 0 for a mesh that demonstrably has UVs - another silently-wrong counter, same family as the -1 collision counters already recorded in 6.5.",
+    "StaticMeshEditorSubsystem.get_num_uv_channels reads the SOURCE MeshDescription (1 channel, the FBX's own UV set), not the built render data. The render-data count is the asset registry 'UVChannels' tag (2). Do not confuse the two.",
+    "A .uasset size comparison is NOT a valid render-data test: an uncooked package stores the source MeshDescription and the render data lives in the DDC. lightmap_render_probe.json's 'NO extra UV set' verdict is wrong and is superseded by uv_registry.json.",
+    "Hull geometry is still unreadable (KConvexElem exposes no data fields), so hull shape remains asserted in Blender only."
+  ],
+  "evidence_files": {
+    "pass1_import": "WorkFiles/shuriken/UnrealCheck/import_report.json + pass1.log",
+    "pass2_fresh_process": "WorkFiles/shuriken/UnrealCheck/reload_report.json + pass2.log",
+    "uv_reader_selftest": "WorkFiles/shuriken/UnrealCheck/uv_selftest.json",
+    "render_data_uv_channels": "WorkFiles/shuriken/UnrealCheck/uv_registry.json",
+    "lod_screen_sizes": "WorkFiles/shuriken/UnrealCheck/lod_screensizes.json",
+    "superseded_invalid": "WorkFiles/shuriken/UnrealCheck/lightmap_render_probe.json"
+  }
+}

@@ -1,0 +1,659 @@
+{
+ "script": "Scripts/MetaHuman/pd_geodiag_analyze.py",
+ "coords": "UE world cm, Z up, faces +Y, character left = +X (bones *_l at +X). UE front camera looks -Y => image-left = -X = character RIGHT.",
+ "neck_seam": {
+  "kelvin_Face": {
+   "head_boundary_loops": 1,
+   "head_boundary_edges": 92,
+   "head_nonmanifold_edges": 0,
+   "body_boundary_loops": 1,
+   "body_boundary_edges": 92,
+   "body_nonmanifold_edges": 0,
+   "seam_verts": 92,
+   "seam_gap_cm_max": 0.0001,
+   "seam_gap_cm_mean": 1e-05,
+   "seam_normal_mismatch_deg_max": 12.43,
+   "seam_normal_mismatch_deg_mean": 3.77,
+   "seam_z_range": [
+    140.48,
+    148.17
+   ]
+  },
+  "ref_Face": {
+   "head_boundary_loops": 1,
+   "head_boundary_edges": 92,
+   "head_nonmanifold_edges": 0,
+   "body_boundary_loops": 1,
+   "body_boundary_edges": 92,
+   "body_nonmanifold_edges": 0,
+   "seam_verts": 92,
+   "seam_gap_cm_max": 0.0001,
+   "seam_gap_cm_mean": 1e-05,
+   "seam_normal_mismatch_deg_max": 5.44,
+   "seam_normal_mismatch_deg_mean": 2.26,
+   "seam_z_range": [
+    144.79,
+    153.47
+   ]
+  },
+  "FaceC_Face": {
+   "head_boundary_loops": 1,
+   "head_boundary_edges": 92,
+   "head_nonmanifold_edges": 0,
+   "body_boundary_loops": 1,
+   "body_boundary_edges": 92,
+   "body_nonmanifold_edges": 0,
+   "seam_verts": 92,
+   "seam_gap_cm_max": 0.0001,
+   "seam_gap_cm_mean": 1e-05,
+   "seam_normal_mismatch_deg_max": 5.44,
+   "seam_normal_mismatch_deg_mean": 2.26,
+   "seam_z_range": [
+    144.79,
+    153.47
+   ]
+  }
+ },
+ "kelvin_to_FaceC_similarity": {
+  "scale": 1.0252,
+  "t": [
+   0.541,
+   1.228,
+   2.002
+  ],
+  "rms_cm": 0.488
+ },
+ "regions": {
+  "ear_R_imageLeft": {
+   "verts": 2235,
+   "tris": 4368,
+   "bbox_FaceC": [
+    [
+     -9.82,
+     -4.04,
+     167.45
+    ],
+    [
+     -7.3,
+     3.49,
+     181.18
+    ]
+   ],
+   "kelvinAl": {
+    "dihedral_max": 87.0,
+    "dihedral_p99": 47.6,
+    "edges_gt30": 336,
+    "edges_gt45": 81,
+    "edges_gt60": 27,
+    "edges_gt90": 0,
+    "tri_normal_dev_vs_kelvin_gt45": 0,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 0.0,
+    "min_angle_deg_min": 3.63,
+    "tris_min_angle_below_5deg": 1,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     1.0,
+     1.0
+    ],
+    "tris_anisotropic_stretch_gt_2": 0,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 0
+   },
+   "ref_Face": {
+    "dihedral_max": 97.8,
+    "dihedral_p99": 38.1,
+    "edges_gt30": 174,
+    "edges_gt45": 33,
+    "edges_gt60": 14,
+    "edges_gt90": 1,
+    "tri_normal_dev_vs_kelvin_gt45": 137,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 77.0,
+    "min_angle_deg_min": 4.22,
+    "tris_min_angle_below_5deg": 4,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.205,
+     1.396
+    ],
+    "tris_anisotropic_stretch_gt_2": 108,
+    "tris_anisotropic_stretch_gt_3": 19,
+    "self_intersections_in_region": 0
+   },
+   "FaceC_Face": {
+    "dihedral_max": 74.3,
+    "dihedral_p99": 44.1,
+    "edges_gt30": 213,
+    "edges_gt45": 65,
+    "edges_gt60": 14,
+    "edges_gt90": 0,
+    "tri_normal_dev_vs_kelvin_gt45": 0,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 35.8,
+    "min_angle_deg_min": 7.65,
+    "tris_min_angle_below_5deg": 0,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.456,
+     1.337
+    ],
+    "tris_anisotropic_stretch_gt_2": 2,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 0
+   }
+  },
+  "ear_L_imageRight": {
+   "verts": 2207,
+   "tris": 4308,
+   "bbox_FaceC": [
+    [
+     7.3,
+     -4.14,
+     167.08
+    ],
+    [
+     9.77,
+     3.5,
+     181.22
+    ]
+   ],
+   "kelvinAl": {
+    "dihedral_max": 88.6,
+    "dihedral_p99": 51.4,
+    "edges_gt30": 329,
+    "edges_gt45": 110,
+    "edges_gt60": 35,
+    "edges_gt90": 0,
+    "tri_normal_dev_vs_kelvin_gt45": 0,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 0.0,
+    "min_angle_deg_min": 2.99,
+    "tris_min_angle_below_5deg": 1,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     1.0,
+     1.0
+    ],
+    "tris_anisotropic_stretch_gt_2": 0,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 0
+   },
+   "ref_Face": {
+    "dihedral_max": 101.5,
+    "dihedral_p99": 39.3,
+    "edges_gt30": 174,
+    "edges_gt45": 37,
+    "edges_gt60": 8,
+    "edges_gt90": 2,
+    "tri_normal_dev_vs_kelvin_gt45": 186,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 83.6,
+    "min_angle_deg_min": 6.47,
+    "tris_min_angle_below_5deg": 0,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.211,
+     1.383
+    ],
+    "tris_anisotropic_stretch_gt_2": 69,
+    "tris_anisotropic_stretch_gt_3": 8,
+    "self_intersections_in_region": 0
+   },
+   "FaceC_Face": {
+    "dihedral_max": 75.1,
+    "dihedral_p99": 43.7,
+    "edges_gt30": 206,
+    "edges_gt45": 62,
+    "edges_gt60": 10,
+    "edges_gt90": 0,
+    "tri_normal_dev_vs_kelvin_gt45": 0,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 42.6,
+    "min_angle_deg_min": 7.64,
+    "tris_min_angle_below_5deg": 0,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.472,
+     1.227
+    ],
+    "tris_anisotropic_stretch_gt_2": 1,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 0
+   }
+  },
+  "under_jaw": {
+   "verts": 1997,
+   "tris": 3581,
+   "bbox_FaceC": [
+    [
+     -7.11,
+     -2.68,
+     159.43
+    ],
+    [
+     7.13,
+     12.22,
+     167.96
+    ]
+   ],
+   "kelvinAl": {
+    "dihedral_max": 176.3,
+    "dihedral_p99": 23.6,
+    "edges_gt30": 27,
+    "edges_gt45": 20,
+    "edges_gt60": 16,
+    "edges_gt90": 10,
+    "tri_normal_dev_vs_kelvin_gt45": 0,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 0.0,
+    "min_angle_deg_min": 5.57,
+    "tris_min_angle_below_5deg": 0,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     1.0,
+     1.0
+    ],
+    "tris_anisotropic_stretch_gt_2": 0,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 0
+   },
+   "ref_Face": {
+    "dihedral_max": 178.4,
+    "dihedral_p99": 21.9,
+    "edges_gt30": 15,
+    "edges_gt45": 10,
+    "edges_gt60": 10,
+    "edges_gt90": 9,
+    "tri_normal_dev_vs_kelvin_gt45": 12,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 54.3,
+    "min_angle_deg_min": 8.47,
+    "tris_min_angle_below_5deg": 0,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.272,
+     1.816
+    ],
+    "tris_anisotropic_stretch_gt_2": 118,
+    "tris_anisotropic_stretch_gt_3": 9,
+    "self_intersections_in_region": 0
+   },
+   "FaceC_Face": {
+    "dihedral_max": 178.8,
+    "dihedral_p99": 19.8,
+    "edges_gt30": 16,
+    "edges_gt45": 11,
+    "edges_gt60": 10,
+    "edges_gt90": 10,
+    "tri_normal_dev_vs_kelvin_gt45": 17,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 57.1,
+    "min_angle_deg_min": 6.86,
+    "tris_min_angle_below_5deg": 0,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.664,
+     1.544
+    ],
+    "tris_anisotropic_stretch_gt_2": 0,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 0
+   }
+  },
+  "jaw_neck_band": {
+   "verts": 7072,
+   "tris": 13826,
+   "bbox_FaceC": [
+    [
+     -8.99,
+     -4.0,
+     152.01
+    ],
+    [
+     8.98,
+     12.28,
+     168.0
+    ]
+   ],
+   "kelvinAl": {
+    "dihedral_max": 178.5,
+    "dihedral_p99": 21.4,
+    "edges_gt30": 103,
+    "edges_gt45": 73,
+    "edges_gt60": 51,
+    "edges_gt90": 25,
+    "tri_normal_dev_vs_kelvin_gt45": 0,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 0.0,
+    "min_angle_deg_min": 3.47,
+    "tris_min_angle_below_5deg": 3,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     1.0,
+     1.0
+    ],
+    "tris_anisotropic_stretch_gt_2": 0,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 593
+   },
+   "ref_Face": {
+    "dihedral_max": 178.4,
+    "dihedral_p99": 24.7,
+    "edges_gt30": 109,
+    "edges_gt45": 56,
+    "edges_gt60": 40,
+    "edges_gt90": 22,
+    "tri_normal_dev_vs_kelvin_gt45": 12,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 0,
+    "tri_normal_dev_vs_kelvin_max_deg": 54.3,
+    "min_angle_deg_min": 4.52,
+    "tris_min_angle_below_5deg": 1,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.272,
+     1.816
+    ],
+    "tris_anisotropic_stretch_gt_2": 170,
+    "tris_anisotropic_stretch_gt_3": 9,
+    "self_intersections_in_region": 435,
+    "self_intersection_sample_centroids": [
+     [
+      2.16,
+      10.84,
+      166.57
+     ],
+     [
+      2.18,
+      10.82,
+      166.57
+     ],
+     [
+      2.18,
+      10.82,
+      166.57
+     ],
+     [
+      2.22,
+      10.79,
+      166.57
+     ],
+     [
+      2.22,
+      10.79,
+      166.57
+     ],
+     [
+      2.22,
+      10.79,
+      166.57
+     ],
+     [
+      2.23,
+      10.77,
+      166.58
+     ],
+     [
+      2.21,
+      10.77,
+      166.58
+     ]
+    ]
+   },
+   "FaceC_Face": {
+    "dihedral_max": 178.8,
+    "dihedral_p99": 20.4,
+    "edges_gt30": 104,
+    "edges_gt45": 67,
+    "edges_gt60": 47,
+    "edges_gt90": 28,
+    "tri_normal_dev_vs_kelvin_gt45": 19,
+    "tri_normal_dev_vs_kelvin_gt90_flipped": 2,
+    "tri_normal_dev_vs_kelvin_max_deg": 152.6,
+    "min_angle_deg_min": 0.47,
+    "tris_min_angle_below_5deg": 11,
+    "edge_len_ratio_vs_kelvin_min_max": [
+     0.651,
+     1.544
+    ],
+    "tris_anisotropic_stretch_gt_2": 0,
+    "tris_anisotropic_stretch_gt_3": 0,
+    "self_intersections_in_region": 602,
+    "self_intersection_sample_centroids": [
+     [
+      2.36,
+      10.3,
+      166.36
+     ],
+     [
+      2.36,
+      10.3,
+      166.36
+     ],
+     [
+      2.4,
+      10.3,
+      166.35
+     ],
+     [
+      2.33,
+      10.28,
+      166.36
+     ],
+     [
+      2.33,
+      10.28,
+      166.36
+     ],
+     [
+      2.33,
+      10.28,
+      166.36
+     ],
+     [
+      2.28,
+      10.34,
+      166.38
+     ],
+     [
+      2.28,
+      10.34,
+      166.38
+     ]
+    ]
+   }
+  }
+ },
+ "jaw_neck_crease_curvature": {
+  "kelvinAl": {
+   "band_min_signed_mean_curv_1_per_cm": -112.159,
+   "band_p1": -3.479,
+   "band_verts_concave_below_-0.5": 359,
+   "band_verts_concave_below_-1.0": 215,
+   "most_concave_sample_xyz_FaceC_space": [
+    [
+     2.27,
+     9.86,
+     166.41
+    ],
+    [
+     -2.34,
+     9.99,
+     166.48
+    ],
+    [
+     2.37,
+     10.19,
+     166.36
+    ],
+    [
+     -2.33,
+     9.92,
+     166.5
+    ],
+    [
+     2.28,
+     9.93,
+     166.4
+    ],
+    [
+     -2.32,
+     9.84,
+     166.52
+    ]
+   ]
+  },
+  "ref_Face": {
+   "band_min_signed_mean_curv_1_per_cm": -86.658,
+   "band_p1": -3.201,
+   "band_verts_concave_below_-0.5": 578,
+   "band_verts_concave_below_-1.0": 320,
+   "most_concave_sample_xyz_FaceC_space": [
+    [
+     2.37,
+     10.19,
+     166.36
+    ],
+    [
+     -2.34,
+     9.99,
+     166.48
+    ],
+    [
+     -2.33,
+     9.92,
+     166.5
+    ],
+    [
+     -2.43,
+     10.21,
+     166.42
+    ],
+    [
+     2.27,
+     9.86,
+     166.41
+    ],
+    [
+     2.28,
+     9.93,
+     166.4
+    ]
+   ]
+  },
+  "FaceC_Face": {
+   "band_min_signed_mean_curv_1_per_cm": -104.563,
+   "band_p1": -3.156,
+   "band_verts_concave_below_-0.5": 407,
+   "band_verts_concave_below_-1.0": 221,
+   "most_concave_sample_xyz_FaceC_space": [
+    [
+     2.26,
+     9.78,
+     166.43
+    ],
+    [
+     -2.32,
+     9.84,
+     166.52
+    ],
+    [
+     2.27,
+     9.69,
+     166.44
+    ],
+    [
+     -2.32,
+     9.76,
+     166.54
+    ],
+    [
+     -2.33,
+     9.92,
+     166.5
+    ],
+    [
+     2.27,
+     9.86,
+     166.41
+    ]
+   ]
+  }
+ },
+ "source_outward_normal_flip_applied": false,
+ "body": {
+  "kelvin_Body": {
+   "verts": 30455,
+   "tris": 60816,
+   "boundary_loops": 1,
+   "boundary_loop_sizes": [
+    92
+   ],
+   "boundary_loop_centers": [
+    [
+     -0.02,
+     0.54,
+     144.69
+    ]
+   ],
+   "nonmanifold_edges": 0,
+   "components": 1,
+   "zero_area_tris": 0
+  },
+  "ref_Body": {
+   "verts": 30455,
+   "tris": 60816,
+   "boundary_loops": 1,
+   "boundary_loop_sizes": [
+    92
+   ],
+   "boundary_loop_centers": [
+    [
+     0.0,
+     0.04,
+     149.48
+    ]
+   ],
+   "nonmanifold_edges": 0,
+   "components": 1,
+   "zero_area_tris": 0
+  },
+  "FaceC_Body": {
+   "verts": 30455,
+   "tris": 60816,
+   "boundary_loops": 1,
+   "boundary_loop_sizes": [
+    92
+   ],
+   "boundary_loop_centers": [
+    [
+     0.0,
+     0.04,
+     149.48
+    ]
+   ],
+   "nonmanifold_edges": 0,
+   "components": 1,
+   "zero_area_tris": 0
+  },
+  "mh_apose_Body": {
+   "verts": 30455,
+   "tris": 60816,
+   "boundary_loops": 1,
+   "boundary_loop_sizes": [
+    92
+   ],
+   "boundary_loop_centers": [
+    [
+     0.0,
+     0.04,
+     149.48
+    ]
+   ],
+   "nonmanifold_edges": 0,
+   "components": 1,
+   "zero_area_tris": 0
+  },
+  "shoulder_tops_FaceC_vs_Kelvin": {
+   "region": "body verts z>138, 6<|x|<24",
+   "verts": 1054,
+   "tris": 1810,
+   "dihedral_max_FaceC": 47.2,
+   "dihedral_max_Kelvin": 163.6,
+   "edges_gt30_FaceC": 24,
+   "edges_gt30_Kelvin": 81,
+   "tri_normal_dev_vs_kelvin_gt45": 116,
+   "tri_normal_dev_vs_kelvin_gt90": 31,
+   "self_intersections": 0
+  }
+ }
+}

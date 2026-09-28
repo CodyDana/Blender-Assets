@@ -1,0 +1,240 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "SnowFlowerHeels",
+ "generated": "2026-09-27",
+ "generator": {
+  "script": "Scripts/unreal/materials/maps/make_snowflowerheels_recolour_maps.py",
+  "script_sha256": "3a3d812239872703ec9f59305ddc7ecafca34055a07513d969ed72abc37fcf2b",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "1.0.0-snowflowerheels",
+  "blender": "5.2.0 LTS",
+  "builder": "Scripts/SnowFlowerHeels/fin_recolour_maps.py",
+  "builder_report": {
+   "file": "WorkFiles/SnowFlowerHeels/final/maps_report.json",
+   "sha256": "29725ecb530f75199422c16236b442ba0d5f32a8da5256cc1c63028bc41d02ec"
+  }
+ },
+ "sidecar": {
+  "files": [
+   "Exports/SnowFlowerHeels/SK_SnowFlowerHeels.skeletal.json",
+   "Exports/SnowFlowerHeels/SK_SnowFlowerHeels.garment.json"
+  ]
+ },
+ "maps": {
+  "T_SnowFlowerHeels_Leather_Detail16": {
+   "file": "Exports/SnowFlowerHeels/Textures/Recolour/T_SnowFlowerHeels_Leather_Detail16.png",
+   "sha256": "c407e9023761ed162d3b975ec39d71cc438ae8bb06bf6e356d3b23497a19b5f0",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "builder_report": "WorkFiles/SnowFlowerHeels/final/maps_report.json",
+    "covered_fraction": 0.6181693077087402
+   },
+   "recipe": "d = clip((lum(BC linear) - a_lo) / (a_hi - a_lo)) over covered texels + 3 px, one constant elsewhere",
+   "gates": {
+    "sha256_matches_builder": true,
+    "bits_16": true,
+    "greyscale": true,
+    "square_power_of_two": true,
+    "fill_is_builder_fill": true
+   }
+  },
+  "T_SnowFlowerHeels_Insole_Detail16": {
+   "file": "Exports/SnowFlowerHeels/Textures/Recolour/T_SnowFlowerHeels_Insole_Detail16.png",
+   "sha256": "7cef097b8b8f87a0960c78a8866af4c9e7ebc52f9270f2b5f15a28ee28a349fd",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "builder_report": "WorkFiles/SnowFlowerHeels/final/maps_report.json",
+    "covered_fraction": 0.44165802001953125
+   },
+   "recipe": "d = clip((lum(BC linear) - a_lo) / (a_hi - a_lo)) over covered texels + 3 px, one constant elsewhere",
+   "gates": {
+    "sha256_matches_builder": true,
+    "bits_16": true,
+    "greyscale": true,
+    "square_power_of_two": true,
+    "fill_is_builder_fill": true
+   }
+  }
+ },
+ "parts": {
+  "Leather": {
+   "slot_material": "M_SnowFlowerHeels_Leather",
+   "instance": "MI_SnowFlowerHeels_Leather",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_SnowFlowerHeels_Leather_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/SnowFlowerHeels/Textures/T_SnowFlowerHeels_Leather_BC.png",
+    "sha256": "396b53720f942aea36b1f560e99fab1c30a24e7c75ecfd02bbbdfae98a409ac7"
+   },
+   "params": {
+    "Colour": [
+     0.010614,
+     0.009822,
+     0.009785,
+     1.0
+    ],
+    "Detail Bias": 0.8149206779924196,
+    "Detail Scale": 2.047313681874047,
+    "Detail Mean": 1.0188996124269565,
+    "Detail Highlight Ratio": 2.8622343598664663,
+    "Detail Moments Low": [
+     0.35875511169433594,
+     -0.049615077227824135,
+     0.004148329009500011,
+     -0.00022638735697595724
+    ],
+    "Detail Moments High": [
+     0.6412448883056641,
+     0.05416571650416624,
+     0.0065595397787472365,
+     0.0038674917193430858
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9
+   },
+   "n_range": [
+    0.8149206779924196,
+    2.8622343598664663
+   ],
+   "fraction_n_le_1": 0.35875511169433594,
+   "moment_samples": {
+    "c": [
+     0.0,
+     0.5,
+     1.0,
+     1.5
+    ],
+    "low": [
+     0.35875511169433594,
+     0.3349563569131769,
+     0.31306197611903586,
+     0.2929021787941809
+    ],
+    "high": [
+     0.6412448883056641,
+     0.6704510679673519,
+     0.7058376363079206,
+     0.7503052121168776
+    ]
+   },
+   "builder_constants": {
+    "a_lo": 0.008139045973278816,
+    "a_hi": 0.028586655941338295,
+    "tint_linear": [
+     0.010613877151734254,
+     0.009821751100044865,
+     0.009785386008947091
+    ],
+    "report": "WorkFiles/SnowFlowerHeels/final/maps_report.json"
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour (the buyer's one colour); default = the baked part's mean linear albedo"
+   },
+   "note": "the black leather: upper, lining, ankle strap, sole, heel cover, binding and crackle medallion",
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)) as the Snow Flower's parts; the v2 constants are written by maps/derive_constants_snowflowerheels.py"
+  },
+  "Insole": {
+   "slot_material": "M_SnowFlowerHeels_Insole",
+   "instance": "MI_SnowFlowerHeels_Insole",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_SnowFlowerHeels_Insole_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/SnowFlowerHeels/Textures/T_SnowFlowerHeels_Insole_BC.png",
+    "sha256": "457a6ce896809bb039c3e6eb5dd71363ce1dc06b431df6a860400bf0b11ec4a5"
+   },
+   "params": {
+    "Colour": [
+     0.047124,
+     0.043754,
+     0.041372,
+     1.0
+    ],
+    "Detail Bias": 0.316544132303048,
+    "Detail Scale": 12.016205877738534,
+    "Detail Mean": 0.9964863644068106,
+    "Detail Highlight Ratio": 12.332750010041583,
+    "Detail Moments Low": [
+     0.8459949493408203,
+     -0.1613700581148785,
+     0.05504852061084772,
+     -0.009146881950096664
+    ],
+    "Detail Moments High": [
+     0.1540050506591797,
+     0.08260783535732903,
+     -0.07760403362241403,
+     0.10695098212602294
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9
+   },
+   "n_range": [
+    0.316544132303048,
+    12.332750010041583
+   ],
+   "fraction_n_le_1": 0.8459949493408203,
+   "moment_samples": {
+    "c": [
+     0.0,
+     0.5,
+     1.0,
+     1.5
+    ],
+    "low": [
+     0.8459949493408203,
+     0.7779286901923309,
+     0.7305265298866929,
+     0.6969283069613337
+    ],
+    "high": [
+     0.1540050506591797,
+     0.18927683269799356,
+     0.2659598345201176,
+     0.4642672927200691
+    ]
+   },
+   "builder_constants": {
+    "a_lo": 0.01402235069019356,
+    "a_hi": 0.5463192268234188,
+    "tint_linear": [
+     0.047124391414179956,
+     0.04375357180209908,
+     0.04137186302046866
+    ],
+    "report": "WorkFiles/SnowFlowerHeels/final/maps_report.json"
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour (the buyer's one colour); default = the baked part's mean linear albedo"
+   },
+   "note": "the blossom-printed insole (the print keeps its luminance; the tint recolours it)",
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)) as the Snow Flower's parts; the v2 constants are written by maps/derive_constants_snowflowerheels.py"
+  }
+ },
+ "pass": true
+}

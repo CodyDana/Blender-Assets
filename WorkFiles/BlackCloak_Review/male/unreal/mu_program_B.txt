@@ -1,0 +1,189 @@
+def read_px(S, x, y):
+    t = S["cap"].get_editor_property("texture_target")
+    c = RL.read_render_target_pixel(world(), t, x, y)
+    return (c.r + c.g + c.b) / 3.0
+
+
+def set_pp(S, **kv):
+    pp = S["cap"].get_editor_property("post_process_settings")
+    for k, v in kv.items():
+        setp(pp, k, v)
+    S["cap"].set_editor_property("post_process_settings", pp)
+
+
+def sky_probe(S, tag):
+    """sky light only, mid-grey sphere centre pixel (sRGB 0-255)."""
+    set_lights(S, False)
+    m = aim(S, S["calib"][1], 0.0, 3.0, 110 / 2 / 0.18 * 1.6, 1200, 600)
+    yield from shoot(S, "calib_skylight_only_" + tag, dict(m, directional=False))
+    v = read_px(S, 600, 300)
+    set_lights(S, True)
+    REP.setdefault("sky_probe", []).append({"variant": tag, "grey_sphere_centre_srgb": v})
+    log("SKYPROBE", tag, v)
+    return v
+
+
+def dome_lights(S, total):
+    """fallback ambient: 26 shadowless soft directional lights over the sphere (no AO)."""
+    dirs = []
+    for el in (-60, -20, 20, 60):
+        for k in range(6):
+            dirs.append((el, k * 60 + (30 if el in (-20, 60) else 0)))
+    dirs += [(-89, 0), (89, 0)]
+    for el, az in dirs:
+        la = EAS.spawn_actor_from_class(ue.DirectionalLight, V(0, 0, 500), ue.Rotator(0.0, float(el), float(az)))
+        lc = la.light_component
+        setp(lc, "mobility", ue.ComponentMobility.MOVABLE)
+        lc.set_intensity(total / len(dirs))
+        lc.set_cast_shadows(False)
+        setp(lc, "light_source_angle", 30.0)
+        setp(lc, "atmosphere_sun_light", False)
+    REP["notes"].append("ambient fallback: %d shadowless directional lights, total %.2f lux" % (len(dirs), total))
+
+
+def program():
+    S = build()
+    save()
+    for _ in range(40):
+        yield
+    ue.AutomationLibrary.finish_loading_before_screenshot()
+    S["sky"].recapture_sky()
+    for _ in range(40):
+        yield
+    # --- 1) prove the sky light is captured (sky-light-only grey sphere must not be black); try variants in order
+    v = yield from sky_probe(S, "cubemap_graylight")
+    if v < 10:
+        sc = S["sky"]
+        setp(sc, "source_type", ue.SkyLightSourceType.SLS_CAPTURED_SCENE)
+        setp(sc, "real_time_capture", True)
+        sc.recapture_sky()
+        for _ in range(40):
+            yield
+        v = yield from sky_probe(S, "captured_scene_realtime")
+    if v < 10:
+        setp(S["sky"], "real_time_capture", False)
+        S["sky"].recapture_sky()
+        for _ in range(60):
+            yield
+        v = yield from sky_probe(S, "captured_scene_recapture")
+    if v < 10:
+        S["sky"].set_intensity(0.0)
+        dome_lights(S, 3.0)
+        for _ in range(5):
+            yield
+        v = yield from sky_probe(S, "dome_fallback")
+    REP["ambient_final"] = REP["sky_probe"][-1]
+    m = aim(S, S["calib"][1], 0.0, 3.0, 110 / 2 / 0.18 * 1.6, 1200, 600)
+    yield from shoot(S, "calib_all_lights", dict(m, directional=True))
+    REP["calib_all_lights_grey_centre"] = read_px(S, 600, 300)
+    o, e = S["cb"]
+    top, bot = o.z + e.z, max(o.z - e.z, 0.0)
+    Hc = top - bot
+    REP["cloak_z_top_bot"] = [round(top, 2), round(bot, 2)]
+    if PASS == "A":
+        vis(S, False)
+        for yaw in (0.0, -10.0, 10.0):
+            yield from shoot(S, "front_cloak_only_yaw%+d" % int(yaw), dict(frame_full(S, yaw), body=False))
+        vis(S, True)
+        yield from shoot(S, "front_with_body", dict(frame_full(S, 0.0), body=True))
+        yield from shoot(S, "threequarter_clasp_side_with_body", dict(frame_full(S, 45.0), body=True))
+        yield from shoot(S, "threequarter_other_side_with_body", dict(frame_full(S, -45.0), body=True))
+        yield from shoot(S, "side_clasp_side_with_body", dict(frame_full(S, 90.0), body=True))
+        yield from shoot(S, "back_with_body", dict(frame_full(S, 180.0), body=True))
+        vis(S, False)
+        yield from shoot(S, "threequarter_clasp_side_cloak_only", dict(frame_full(S, 45.0), body=False))
+        yield from shoot(S, "back_cloak_only", dict(frame_full(S, 180.0), body=False))
+        # close-ups; the clasp sits ~28 cm to the viewer's LEFT of centre at z ~158 (pass-A2 front shot, pixel 218,215)
+        vis(S, True)
+        yield from shoot(S, "close_collar_with_body", dict(frame_region(S, 0.0, top - 0.13 * Hc, 0.30 * Hc), body=True))
+        vis(S, False)
+        yield from shoot(S, "close_collar_clasp_region", dict(frame_region(S, -10.0, top - 0.17 * Hc, 0.36 * Hc), body=False))
+        yield from shoot(S, "close_clasp", dict(frame_region(S, -28.0, 157.0, 26.0), body=False))
+        yield from shoot(S, "close_hem", dict(frame_region(S, 0.0, bot + 0.14 * Hc, 0.30 * Hc, w_=1400, h_=1000), body=False))
+        yield from shoot(S, "close_fabric_chest", dict(frame_region(S, 10.0, top - 0.40 * Hc, 18.0), body=False))
+        # diagnostic: +2 EV to read folds / grain in the near-black cloth (NOT the product-shot exposure)
+        set_pp(S, auto_exposure_bias=EXPOSURE_BIAS + 2.0)
+        yield from shoot(S, "DIAG_front_cloak_only_plus2EV", dict(frame_full(S, 0.0), body=False, exposure_bias=EXPOSURE_BIAS + 2.0))
+        yield from shoot(S, "DIAG_close_collar_clasp_plus2EV", dict(frame_region(S, -10.0, top - 0.17 * Hc, 0.36 * Hc), body=False, exposure_bias=EXPOSURE_BIAS + 2.0))
+        yield from shoot(S, "DIAG_close_fabric_chest_plus2EV", dict(frame_region(S, 10.0, top - 0.40 * Hc, 18.0), body=False, exposure_bias=EXPOSURE_BIAS + 2.0))
+        yield from shoot(S, "DIAG_close_hem_plus2EV", dict(frame_region(S, 0.0, bot + 0.14 * Hc, 0.30 * Hc, w_=1400, h_=1000), body=False, exposure_bias=EXPOSURE_BIAS + 2.0))
+        set_pp(S, auto_exposure_bias=EXPOSURE_BIAS)
+        # base colour buffer (albedo as the GBuffer sees it), cloak alone, front
+        S["cap"].set_editor_property("capture_source", ue.SceneCaptureSource.SCS_BASE_COLOR)
+        yield from shoot(S, "front_cloak_only_basecolor", dict(frame_full(S, 0.0), body=False, source="SCS_BASE_COLOR"))
+        S["cap"].set_editor_property("capture_source", ue.SceneCaptureSource.SCS_FINAL_COLOR_LDR)
+        save()
+        # --- cloth: Simulate-In-Editor so components tick (the editor world does not simulate cloth: pass A2 diff = noise)
+        vis(S, True)
+        setp(S["cloak"], "disable_cloth_simulation", False)
+        frame_full(S, 0.0)
+        try:
+            ue.get_editor_subsystem(ue.LevelEditorSubsystem).editor_play_simulate()
+            REP["notes"].append("SIE requested")
+        except Exception as ex:  # noqa: BLE001
+            REP["notes"].append("SIE failed: %s" % ex)
+        gw = None
+        t_sim = time.time()
+        for i in range(600):
+            yield
+            if i % 10 == 0:
+                try:
+                    gw = ue.get_editor_subsystem(ue.UnrealEditorSubsystem).get_game_world()
+                except Exception:  # noqa: BLE001
+                    gw = None
+                if gw is not None:
+                    REP["notes"].append("SIE game world up at tick %d: %s" % (i, gw.get_name()))
+                    t_sim = time.time()
+                    break
+        if gw is not None:
+            caps = ue.GameplayStatics.get_all_actors_of_class(gw, ue.SceneCapture2D)
+            skels = ue.GameplayStatics.get_all_actors_of_class(gw, ue.SkeletalMeshActor)
+            REP["notes"].append("SIE actors: %d captures, %d skeletal" % (len(caps), len(skels)))
+            gcap = caps[0].get_component_by_class(ue.SceneCaptureComponent2D) if caps else None
+            for a_ in skels:
+                smc = a_.skeletal_mesh_component
+                ma = smc.get_skeletal_mesh_asset()
+                if ma and "BlackCloak" in ma.get_name():
+                    REP["notes"].append("SIE cloak: cloth disabled=%s" % getp(smc, "disable_cloth_simulation"))
+            if gcap is not None:
+                RT_ = rt(S, W, H)
+                gcap.set_editor_property("texture_target", RT_)
+                for idx, nticks in enumerate((30, 300)):
+                    for _ in range(nticks):
+                        gcap.capture_scene()
+                        yield
+                    for _ in range(12):
+                        gcap.capture_scene()
+                        yield
+                    nm = "front_with_body_cloth_SIE_%s" % ("early" if idx == 0 else "settled")
+                    RL.export_render_target(gw, RT_, str(SHOTS), nm + ".png")
+                    REP["captures"].append({"name": nm, "file": str(SHOTS / (nm + ".png")), "cloth": "Simulate-In-Editor, A-pose, gravity",
+                                            "sim_seconds_wall": round(time.time() - t_sim, 1)})
+                    save()
+                    log("CAPTURED", nm)
+            try:
+                ue.get_editor_subsystem(ue.LevelEditorSubsystem).editor_request_end_play()
+            except Exception as ex:  # noqa: BLE001
+                REP["notes"].append("end play: %s" % ex)
+            for _ in range(30):
+                yield
+        else:
+            REP["notes"].append("SIE: no game world within 600 ticks; no settled-cloth frame")
+    else:
+        spec = json.loads((OUT / "mu_passB.json").read_text())
+        for s_ in spec["shots"]:
+            vis(S, s_.get("body", False))
+            m = frame_region(S, s_["dx"], s_["z"], s_["frame_h"], s_.get("yaw", 0.0), s_.get("elev", 3.0), s_.get("w", 1200), s_.get("h", 1200))
+            yield from shoot(S, s_["name"], dict(m, body=s_.get("body", False)))
+    # textures after everything compiled
+    for p_ in list(REP["assets"]["textures"].keys()):
+        t_ = ue.load_asset(p_)
+        try:
+            REP["assets"]["textures"][p_]["size_at_end"] = [t_.blueprint_get_size_x(), t_.blueprint_get_size_y()]
+        except Exception as ex:  # noqa: BLE001
+            REP["assets"]["textures"][p_]["size_at_end"] = str(ex)
+    REP["done"] = True
+    save()
+    log("MU_DONE")
+
+

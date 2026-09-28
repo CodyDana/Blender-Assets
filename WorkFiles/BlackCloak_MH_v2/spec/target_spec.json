@@ -1,0 +1,138 @@
+{
+ "asset": "BlackCloak_MH_v2",
+ "spec_version": "2026-09-27a",
+ "doc": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/BlackCloak_MH_v2/spec/TARGET_SPEC.md",
+ "frame": "Blender world of the locked fitting body: metres, Z up, the character faces -Y, his RIGHT = -X (viewer-left in a front view)",
+ "sources": {
+  "photo": {"path": "References/BlackCloak/blackcloak.png", "role": "DETAIL + outline/proportion: fabric, fray, rolled edges, staggered pooling hem, length, silhouette width (scored on the product-form drape, see pose_plan)", "measure_json": "spec/out/ref_photo_measure.json", "contour_json": "spec/out/ref_photo_contour.json", "mask_npy": "spec/out/ref_photo_mask.npy"},
+  "jin": {"path": "References/BlackCloak/Jin_Cloak.webp", "role": "LOOK / how it sits (never traced or textured from)", "measure_json": "spec/out/spec_jin_measure.json"},
+  "male": {"landmarks_json": "spec/out/male_landmarks.json", "photo_outline_on_male_json": "spec/out/spec_photo_on_male_rows.json", "target_sheet_png": "spec/out/spec_target_overlay.png"}
+ },
+ "male_landmarks_m": {
+  "floor_z": -0.0018, "stature": 1.863, "hair_proxy_top_z": 1.878, "eye_line_z": 1.743, "ipd_eye_front": 0.072,
+  "nose_tip": [0.0, -0.1333, 1.7025], "subnasale": [0.0, -0.1176, 1.6875], "upper_lip": [0.0, -0.1228, 1.6725],
+  "stomion_mouth_line": [0.0, -0.1158, 1.6525], "chin_point": [0.0, -0.1156, 1.6325],
+  "head_x_extent_at_eye_line": [-0.098, 0.097], "head_x_extent_at_mouth": [-0.063, 0.063], "head_y_extent_at_mouth": [-0.119, 0.063],
+  "neck_01_z": 1.566, "neck_02_z": 1.622, "head_bone_z": 1.680,
+  "acromion_proxy_r": [-0.205, 0.034, 1.535], "shoulder_line_z_at_abs_x": {"0.08": 1.505, "0.12": 1.521, "0.16": 1.528, "0.18": 1.535},
+  "biacromial": 0.41, "torso_front_y_at_z1.40": -0.119, "rest_upperarm_from_vertical_deg": 37.4, "rest_hand_r": [-0.518, -0.146, 1.081]
+ },
+ "photo_measured": {
+  "size_px": [417, 674], "garment_bbox_px": [10, 7, 402, 660], "h_over_w": 1.664, "mask": "luma<115 (0.45)",
+  "tone_sRGB_luma_p10_p50_p90": [8.0, 31.0, 40.0], "tone_linear_median": 0.0137, "mean_rgb_sRGB": [27.7, 27.4, 27.1],
+  "hem": {"jumps_ge8px_x20_400": 4, "jump_x": [39, 272, 381, 391], "range_px_x40_380": 34, "std_px_x40_380": 10.5,
+          "corner_lowest_y_x30_x385": [629, 628], "lowest_y": 660, "centre_raised_y_x140_260": [626, 631], "floor_contact_frac": 0.079},
+  "fray": {"hem_residue_per_100_outline_px": 1.26, "hem_contour_hf_rms_px": 1.03, "hem_spikes_gt1px": 63, "hem_spikes_gt2px": 24},
+  "grain_flat_patches": {"hp_rel_mean": 0.055, "band_energy_p2_3_p3_5_p5_10_p10_16": [0.311, 0.258, 0.196, 0.073],
+                         "aniso_sector_max_over_min_mean_range": [2.80, 1.57, 4.04], "vfreq_over_hfreq_mean_range": [0.90, 0.51, 1.29], "acf_halfwidth_px": 1.0},
+  "widths_px": {"collar_top+15": 100, "row150": 269, "max_row337": 375, "row447": 327, "row627": 365}
+ },
+ "photo_to_male_mapping": {
+  "ref_px_per_m_nominal": 365.0, "allowed_band": [350.0, 380.0], "floor_row": 662, "midline_col": 200,
+  "why": "the photo has no body: floor contact (hem pools on the floor) fixes the bottom; the scale is bracketed by the old traced cloak's fit on him (353 px/m), the reviewers' eye-level collar mapping (368) and a collar-top-at-funnel-back-rim mapping (374); 1 ref px = 2.74 mm",
+  "evidence_product_form_has_arms_out": "mapped at 365 px/m the photo's wing points land at (-0.52, 0.91) and (+0.56, 0.76) m = where the fitting body's A-pose hands/fingertips are (hand_r -0.518, 1.081); the straight shoulder-to-point slopes are fabric carried over outstretched arms"
+ },
+ "jin_measured": {
+  "manual_px": {"ipd": 207, "eye_line_y": 535, "nose_tip": [1125, 698], "rim_centre_y": 755, "rim_left_end": [995, 665], "rim_right_end": [1255, 715],
+                "funnel_outer_x": [820, 1580], "funnel_meets_mantle_y": [1040, 1100], "shoulder_peak_y": 1048, "clasp_centre": [563, 1320], "clasp_radius": 78},
+  "px_to_cm_via_ipd": 0.0348,
+  "fan_detector_on_illustration": {"r0.35m": {"cross_-50_10": 5, "fan_15_120": 8, "spread_deg": 76}, "r0.55m": {"fan_15_120": 8, "spread_deg": 77}},
+  "ink_line_counts": {"r0.35m": {"cross": 8, "fan": 9}, "r0.55m": {"fan": 10}},
+  "opening_x_on_male_at_hip_thigh": [-0.26, -0.21], "wrap": "mantle crosses from the clasp on his right shoulder over the front to his left side and around the back; open edge falls from the clasp down his right front"
+ },
+ "targets_on_male": {
+  "funnel_collar": {"rim_front_centre_z": [1.680, 1.702], "rim_front_centre_z_aim": 1.690, "rim_cheek_z_at_abs_x_0.035_0.065": [1.695, 1.725], "rim_back_z": [1.725, 1.765],
+                    "rim_front_standoff_in_front_of_nose_tip_cm": [1.0, 3.5], "min_clearance_to_head_cm": 1.0, "outer_width_at_mouth_line_m": [0.24, 0.29],
+                    "outer_width_at_base_z1.56_m": [0.30, 0.40], "face_visible": ["eye_l_centre", "eye_r_centre"], "face_hidden_from_jin_and_front_cameras": ["stomion_mouth_line", "upper_lip", "chin_point"],
+                    "shape": "smooth stand-up funnel, soft rolled top edge, dark interior visible in the gap in front of the face, continuous all round the back, no wraps/rings/cowl drape"},
+  "clasp": {"centre_x": [-0.205, -0.165], "centre_x_aim": -0.185, "centre_z": [1.46, 1.50], "centre_z_aim": 1.48, "diameter_m": [0.050, 0.060], "dome_height_m": [0.010, 0.018],
+            "look": "solid round glossy dark domed button with a thin raised bezel; roughness 0.2-0.35, base 0.02-0.03 linear, dielectric; no ring hole, no strap, no pin", "slot": "M_BlackCloakV2_Clasp", "garment_hard": true},
+  "fold_fan_jin_render": {"r0.35m_fan_15_120_min": 7, "r0.35m_cross_-50_10_min": 4, "r0.55m_fan_15_120_min": 6, "r0.35m_fan_spread_deg_min": 70},
+  "opening": {"edge_from_clasp_down_his_right_front": true, "x_band_at_hip_thigh": [-0.28, -0.18], "lining_behind": true, "legs_torso_visible_px_front_photo_side": 0},
+  "hem": {"z_min_max_m": 0.01, "floor_contact_length_min_m": 0.5, "pool_onto_floor_cm": [2, 5], "front_opening_hem_raised_cm": [5, 9], "continuous": true, "no_square_strips_or_slits": true},
+  "air_cm": {"torso_neck_p5_min_over_verts_within_5cm": 0.8, "p50": "reported (house rule 1-1.5 cm in the contact zone)"},
+  "fabric_albedo_linear_start": [0.013, 0.019], "fabric_albedo_note": "final value is whatever makes the measured render tone pass (photo view, calibrated rig)",
+  "fabric_warmth_R_over_B_linear": [1.02, 1.08], "fabric_roughness": [0.85, 0.95], "fabric_sheen": "Blender Principled Sheen weight 0.3-0.6 roughness ~0.5 / UE Cloth shading fuzz 0.03-0.05",
+  "slub": "isotropic thick-thin slub mottling 0.5-4 cm + fine fibre noise, no directional weave; tile >= 50 cm, true-scale UVs"
+ },
+ "pattern_plan": {
+  "pieces": [
+   {"name": "Mantle", "cut": "one asymmetric circle cut ~330 deg + wrap extension ~30-40 deg on the wrap side (total ~360-370 deg) with an off-centre opening at azimuth about -50 deg (his right front)", "neck_hole_edge_cm": "~100 (sews to the funnel base)", "radius_cm": {"back": [158, 165], "side": [164, 172], "front_wrap_to_curved_cutaway": [145, 150]}, "sim": "below the pin line", "skinned": "yoke above the pin line + clasp gather zone"},
+   {"name": "WrapGather", "cut": "top 20-30 cm of the wrap edge (neckline to wrap corner) gathered 4-6x into the 5.4 cm clasp footprint at (-0.185, front surface, 1.48)", "sewing": "springs to the clasp footprint on the under-side at the right shoulder front"},
+   {"name": "FunnelCollar", "cut": "curved conical band cut double height and folded at the top edge (the fold = soft rolled rim, 2 layers = thickness + dark inside); CB seam", "top_edge_cm": [83, 90], "base_edge_cm": [95, 108], "finished_height_cm": {"front": [14, 16], "back": [17, 19]}, "support": "invisible stiffener helper in GARMENT_HELPERS (interfacing), stops 1-2 cm below the fold so the rim rolls softly", "skinned": true},
+   {"name": "Lining", "cut": "~200 deg front under-drape (half circle plus) hanging from the neckline seam in front of the legs, hem 3-6 cm above the floor (never shows at the hem)", "radius_cm": [140, 146], "sim": true, "density": "coarse (8-9 cm edges), hidden"},
+   {"name": "Clasp", "cut": "hard mesh, domed disc 5.4 cm, bezel 3-4 mm", "skinned": true, "garment_hard": true}
+  ],
+  "seams": ["funnel CB", "funnel base to mantle neckline", "lining neckline to mantle neckline", "wrap gather into the clasp footprint"],
+  "pin": {"group": "CLOTH_Pin", "full_pin_rows": "top 2 rows of every sim piece along the seam with the skinned yoke (8-12 cm) and the lining attachment", "ramp": "1 -> 0 over the next 25-35 cm", "pin_line_z": {"front": [1.30, 1.35], "sides_over_arms": [1.42, 1.46], "back": [1.35, 1.40]}, "rule": "every area an arm can touch in any pose is sim"},
+  "budget_tris": {"sim_total_max": 6000, "sim_mantle": 4200, "sim_lining": 900, "sim_edge_fringe": 500, "sim_turned_edge_optional": 300,
+                  "skinned_funnel": 4000, "skinned_yoke_and_gather": 7000, "skinned_edges": 1000, "clasp": 800, "loose_thread_cards": 50, "garment_total_target": 22000, "garment_total_max": 30000, "character_total_max": 160000},
+  "sim_edge_length_cm": [4.0, 7.0], "sliver_tris_lt10deg_max_frac": 0.02,
+  "thickness_and_edges": "no Solidify (the build strips it): real geometry. Funnel rim = the fold. Visible cut edges: a 3-5 mm turned-under strip (thickness read) where budget allows + an outward alpha fray fringe row 1-2 cm with UV1 (U along the edge, V 0 at the cut line -> 1 at the fringe tip) sampled against the stage-1 fray alpha in the SAME wool material (Masked); 6-12 loose-thread alpha cards on hem / wing points",
+  "uv": {"uv0": "flat-pattern coordinates / S (S metres per UV unit, one S for every wool piece; 5.0-8.0 m), unique non-overlapping (scene garment_unique_uvs=True) so the fold normal baked from the hi-res drape fits; fabric tiling in the material = UV0 x (S / tile_m)", "uv0_scale_cv_max": 0.12, "uv1": "fray fringe coordinate on edge rows, 0 elsewhere"},
+  "materials": ["M_BlackCloakV2_Wool", "M_BlackCloakV2_Wool_Sim (made by the build)", "M_BlackCloakV2_Clasp", "(4th slot spare)"],
+  "material_params_contract": "Exports/Garments/BlackCloak_MH_v2/SK_BlackCloak_MH_v2.material_params.json {slots: {<slot>: {base_color_tex, orm_tex, normal_tex (DirectX), opacity_tex, uv_map, uv_scale, base_tint_linear, roughness_mult, specular, sheen_weight, sheen_tint, sheen_roughness, normal_strength}}} - v2m_render.py builds its Blender replica from it"
+ },
+ "pose_plan": {
+  "drape_pose": "ARMS_DOWN_V2 (v2m_common.py): garment_qa aim ops upperarm (+-0.16, 0.02, -1), lowerarm (+-0.10, -0.22, -1); clavicles and spine at rest",
+  "bind": "the settled ARMS_DOWN_V2 drape IS the bind mesh, unchanged: the cloak is weighted to spine/neck/head only and those bones have identical transforms in ARMS_DOWN_V2 and in the A-pose rest, so no inverse-skinning step exists or is needed",
+  "photo_validation": "re-simulate the shipped cloth section from the bind drape into the rest A-pose (v2m_posed_resim.py pose 'apose') = the photo's product-form support (arms out under the cloak); the photo outline is scored on that drape",
+  "look_validation": "renders of the shipped bind mesh with the body in ARMS_DOWN_V2 (jin, face, front, q34, sides, back) + idle re-sim settle test",
+  "robustness": "posed re-sim in long_stride, arms_forward, deep_crouch, arms_up (garment_qa POSES) from the bind drape",
+  "rejected": ["drape in A-pose and ship that (tent shape = anim target in game -> board / column; shipped renders would not show the look)", "inverse-skin an arms-down drape into A-pose (meaningless with spine-only weights)"]
+ },
+ "acceptance": {
+  "A_gates": {"garment_qa_all_pass": true, "tool": "build_garment.py --gate-only / SK_BlackCloak_MH_v2.qa.json", "includes": "skeleton lock, fitbody hash, rest 0 verts >1 mm inside (arms ignored), poses <=1% >5 mm (skinned verts), spine chain only, <=2 influences, sim rigid on spine_03..05, <=4 slots, one *_Sim, PinMask active, cloth <=6000, cloak <=30000, character <=160000 (no waiver)"},
+  "B_geometry": {"tool": "v2m_geom_check.py -> geom.json 'pass'", "arms_down_inside_gt1mm_all_regions": 0, "self_intersections": 0, "front_foldover_min": 0.20, "sim_slivers_lt10deg_max_frac": 0.02, "all_slivers_lt5deg_max_frac": 0.01, "uv0_scale_cv_max": 0.12, "funnel_clasp_hem": "targets_on_male ranges"},
+  "C_photo_silhouette": {
+   "product_form_apose_resim": {"tool": "v2m_posed_resim.py apose + v2m_silhouette_score.py <resim> apose_photo", "iou_rows120_aligned_min": 0.95, "band_shoulders_min": 0.92, "band_wings_min": 0.94, "band_lower_min": 0.94, "band_hem_min": 0.90, "hem_jumps_ge8px_max": 4, "floor_row_err_px_max": 6, "ref_px_per_m": [350, 380]},
+   "shipped_bind_arms_down": {"tool": "v2m_silhouette_score.py <round> photo", "iou_rows120_aligned_min": 0.90, "band_hem_min": 0.88, "hem_jumps_ge8px_max": 4, "floor_row_err_px_max": 6, "ref_px_per_m": [350, 380]},
+   "collar_band_rows_0_120": "reported, not scored (v2 has Jin's funnel)",
+   "reference_values_old_cloak_same_tools": {"rest_rows120": 0.962, "hem_band": 0.779, "hem_jumps": 11, "settled_idle_rows120_fixed": 0.818}
+  },
+  "D_tone_fabric_fray": {"tool": "v2m_fabric_score.py <round> photo (cloak-only photo render, no exposure matching)", "tone_p50_sRGB": [28, 36], "tone_p10_sRGB": [4, 13], "tone_p90_sRGB": [35, 46], "warmth_R_over_B_linear": [1.00, 1.10],
+                         "grain_hp_rel": [0.040, 0.075], "grain_band_energy_abs_diff_max": 0.08, "grain_aniso_sector_max": 3.5, "grain_vh": [0.6, 1.6], "hem_contour_hf_rms_px": [0.7, 1.6], "hem_spikes_gt2px": [12, 40]},
+  "E_blind": {"tool": "v2m_make_blind.py (20 pairs: 6 fabric, 5 hem, 5 edge/fray, 2 outline below the cowl, 2 lower quadrants)", "photo_picked_max": 13, "of": 20, "judge": "independent agent, key never shown to it"},
+  "F_look_jin": {"judge_aspects_min_each": 4, "scale": 5, "aspects": ["one heavy mantle wrapping from a clasp high on his right shoulder across the body", "long folds fanning/radiating from the clasp down and across the front", "open edge down his right side (viewer-left), dark lining behind it, room for the arm/sword", "smooth tall funnel collar over mouth, face visible from about the nose up, open top with dark inside", "round glossy dark button clasp (no ring, strap, pin)", "heavy long matte charcoal wool (not flat black), rolled frayed edges", "plain continuous back (mantle + funnel, nothing invented)"],
+                 "measured": {"fold_fan": "v2m_jin_score.py pass (targets_on_male.fold_fan_jin_render)", "face_visibility": "jin + face + front renders: eyes visible, stomion/upper lip/chin hidden_by_garment", "funnel_clasp": "v2m_geom_check funnel/clasp ranges"}},
+  "G_clearance_and_cloth": {"posed_resim": {"tool": "v2m_posed_resim.py", "sim_inside_gt5mm_max_frac": 0.005, "sim_self_intersections_max": 0, "idle_displacement_cm_mean_max": 2.0, "idle_displacement_cm_p95_max": 6.0, "idle_settled_iou_rows120_fixed_min_vs_bind": -0.02, "hem_zmin_min": -0.002},
+                            "skinned_in_poses": "skinned vertices inside the arms in raised-arm poses are expected (gate ignores arms); report counts; torso/leg/neck/head inside = 0"},
+  "H_visible_body": {"tool": "v2m_render.py --body 1 id renders (photo, jin, front, q34, sides, back) + silhouette_score visible_body", "torso_px": 0, "leg_px_above_hem_line": 0, "neck_px": 0, "allowed": "head above the rim, hands/forearm at the opening, toes under the hem only if the look judge agrees"},
+  "I_process": {"measure_the_shipped_fbx_only": true, "view_transform": "Standard", "white_card_linear": 0.90, "renders_under": "C:/Users/Cody/Desktop/Blender_Projects/Renders/BlackCloak_MH_v2/<round>/"}
+ },
+ "cameras": {
+  "photo": {"focal_mm": 100, "sensor_vertical_mm": 24, "yaw_deg": 0, "pitch_deg": 0, "target": "garment bbox centre (ARMS_DOWN_V2)", "distance": "bbox_height*1.08/(24/focal)", "res": "1251x2022 (417x674 x3), box-down in linear to 417x674", "fit": "scale+shift only, IoU on rows>=120, 350-380 px/m, floor at row 662+-6", "from": "camfit_lod0.json refit: yaw fixed at 0 (the review showed -10/-18 yaw was a fit artefact), pitch 0 (pitch +5 may be reported)"},
+  "jin": {"focal_mm": 85, "yaw_deg": 12, "pitch_deg": 3, "target": [0.0, 0.0, 1.358], "vertical_span_m": 1.10, "res": [605, 908], "note": "yaw>0 = camera towards his left; head top .. mid-thigh like the illustration"},
+  "others": {"front/q34/q34_other/side_r/side_l/back": "85 mm, target (0,0,0.95), span 2.02 m, 600x900", "face": "85 mm yaw 12 pitch 3 target (0,-0.05,1.66) span 0.42 m", "hem": "85 mm pitch 8 target (0,-0.1,0.12) span 0.45 m"},
+  "lighting": "male-review product rig: key area 3x3 m 1000 W at centre+(-1.6,-3.0,1.4) (rotates with camera yaw), fill 3x3 m 350 W at (1.9,-2.8,0.5), top 2.5 m 400 W at +3 m, white world 4.0; all scaled so an albedo-1 Lambertian card at (0,-0.25,1.30) facing the camera reads 0.90 linear; Cycles OPTIX 256 spp + OIDN; Standard, look None, exposure 0; 16-bit PNG, film transparent"
+ },
+ "measurement_tools": {
+  "dir": "C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/BlackCloak_MH_v2/spec/scripts/",
+  "runner": "v2m_run_all.sh <out_dir> [<fbx>] [geom photo photo_body jin views resim settled blind]",
+  "scripts": {
+   "v2m_common.py": "scene helpers: append locked fitbody, import+rebind the shipped FBX, ARMS_DOWN_V2, cameras, product rig, white-card calibration, material replica from material_params.json, ID renders",
+   "v2m_render.py": "renders a view (beauty, garment alpha, body-region ID) + json with projected landmarks and face-landmark visibility",
+   "v2m_silhouette_score.py": "IoU raw/aligned (rows>=120), bands, hem profile/jumps/corners, contour distances, scale sanity, visible body; optional fixed alignment",
+   "v2m_fabric_score.py": "tone percentiles, warmth, flat-patch grain spectrum/anisotropy/ACF, fray residue and hem-contour roughness vs the photo",
+   "v2m_geom_check.py": "3D: budgets, slivers, weights, clearance (arms-down all regions / rest gate / rest info), funnel rim heights/stand-off/widths, clasp, hem pooling, fold-over, self-intersections, sim edges, PinMask, UV true scale",
+   "v2m_jin_score.py": "fold-fan crossings around the clasp on the Jin render (--selftest calibrates on the illustration)",
+   "v2m_posed_resim.py": "Blender-cloth stand-in for Chaos: idle settle, apose product-form drape, the 4 gate poses",
+   "v2m_make_blind.py": "20 blind pairs, photo details only, key to a scratchpad file",
+   "v2m_contact.py": "contact strip helper",
+   "v2m_body_landmarks.py": "male landmarks json",
+   "v2m_ref_measure.py": "photo measurements json/mask/contour",
+   "v2m_lib.py": "copy of male/gap/scripts/gap_lib.py + additions",
+   "spec_jin_measure.py / spec_crops_jin*.py / spec_webp2png.py / spec_target_overlay.py": "spec-time Jin measurements and the target sheet"
+  },
+  "smoke_tested_on": "the current in-game cloak FBX (review copy): reproduces the review's numbers (28,378 tris, 5,991 sim, 707 sim self-intersections, 27 verts inside arms-down, fold-over 0.000, settled idle IoU 0.818 vs review 0.797-0.813, hem jumps 10-11)"
+ },
+ "proposals_for_user_not_in_gates": [
+  "clavicle_l/r influence on the shoulder yoke and the clasp zone (spine-only weights let the deltoids poke through when the arms rise; build_garment's skin_cloak would need a change, so it is only a proposal)",
+  "if the 6,000-tri cloth budget cannot hold the photo hem in the blind hem crops: raise the cloth budget (~10-12k) or use Unreal's LOD1->LOD0 clothing proxy (pipeline change)"
+ ],
+ "open_questions": [
+  "Rim height: the user asked for mouth AND nose coverage but 'face visible from about the nose up'; Jin puts the front rim just under the nose tip. Spec aims 1.690 m (under the nose tip, over the upper lip), accepts 1.680-1.702. Higher (over the nose) = say so.",
+  "Silhouette width: the photo's width comes from a product form with its arms out under the cloak. Arms down (Jin look) the heavy wool hangs narrower at the wings; the spec scores the photo outline on the A-pose product-form drape and holds the arms-down outline to >=0.90. If the user wants the arms-down silhouette itself as wide as the photo, the cloak would have to stand off stiffly.",
+  "Clasp x: Jin's button reads at about x=-0.20 (front of the shoulder joint); the spec aims -0.185 (accepts -0.205..-0.165) to keep it off the deltoid with spine-only weights."
+ ]
+}

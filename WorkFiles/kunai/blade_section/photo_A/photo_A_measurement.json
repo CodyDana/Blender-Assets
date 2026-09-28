@@ -1,0 +1,411 @@
+{
+ "measurer": "photo_A",
+ "image": "C:/Users/Cody/Desktop/Blender_Projects/References/Kunai/kunai_reference2.jpg",
+ "image_size": [
+  500,
+  333
+ ],
+ "headline": "face_slope ~0.35 (face angle ~20 deg), ridge_ratio ~0.39, roughly constant along the front of the blade (planar facets). Range 0.26-0.44; wider 0.2-0.65.",
+ "method": [
+  "Ring: ellipse fits to inner and outer silhouettes (radial threshold crossings, algebraic conic fit, 15% trimmed). cos(theta)=(b_o+b_i)/(a_o+a_i) is independent of tube shape.",
+  "Blade: sub-pixel threshold crossings along columns/rows for 6 lines (front/rear top edge, front/rear bottom edge, front/rear ridge = lit/dark boundary); robust TLS line fits.",
+  "Corners = edge-line intersections; crease/cross direction = corner-to-corner line; axis = crease midpoint -> tip (edge intersection). Stations cut along the cross direction.",
+  "Geometric route: ridge offset from the chord midpoint / half-chord = ridge_ratio * tan(roll). Measured offset ~0.01 of the half-width at every front station: the ridge is on the midline, so the blade is seen ~face-on and this route cannot give the height.",
+  "Ring pose (theta 24.8 deg roll about the blade axis) would force ridge_ratio ~0.03 and predicts facet luminances 163/149 or 23/23 vs observed 144/39: rejected. The ring is most likely ~10% oval along the kunai axis (forged loop), or twisted.",
+  "Shading route: the ring tube (round cross-section) is used as a light probe/matcap (luminance vs view-space normal). Planar facets through the edge lines and a ridge of height r*w at the widest crease; r fitted to the 4 facet luminances. Sensitivity grid over kernel width, tube cut, facet set, blade albedo gain, roll +-5 deg, pitch +-15 deg."
+ ],
+ "pose": {
+  "blade_plane": "near face-on to the camera: roll about the blade axis ~2 deg (+-4), from ridge offset ~0.01 with face slope ~0.35; pitch (axis toward/away from camera) not constrained, assumed small (tested +-15 deg)",
+  "in_plane_rotation_deg": -23.82,
+  "in_plane_note": "blade axis rises to the right at ~23.8 deg in the image; cross direction (corner-to-corner) at 65.7 deg; measured axis/cross skew 0.5 deg",
+  "ring_ellipse": {
+   "outer_a": 27.57,
+   "outer_b": 25.75,
+   "inner_a": 16.77,
+   "inner_b": 14.51,
+   "aspect_outer": 0.934,
+   "aspect_inner": 0.865,
+   "major_axis_deg": -19.8,
+   "theta_if_circular_coplanar_deg": 24.8,
+   "theta_bootstrap_68": [
+    23.2,
+    26.1
+   ],
+   "tube_r_over_R": 0.243,
+   "verdict": "not used for pose: coplanar-circle reading contradicts the blade (see method)"
+  },
+  "focal": "long lens assumed (shallow DOF, compressed background) -> orthographic; perspective between ring and blade is along the kunai axis (pitch), which does not change the ridge-offset measurement",
+  "how_derived": "ring ellipse (rejected), ridge-offset symmetry (roll ~0), facet shading vs ring matcap (face slope)"
+ },
+ "photo_blade_proportions": {
+  "widest_chord_px": 64.3,
+  "shoulder_chord_px": 19.5,
+  "shoulder_to_widest_px": 40.4,
+  "shoulder_to_bark_px": 154.4,
+  "shoulder_to_extrapolated_tip_px": 180.9,
+  "width_over_length": 0.355,
+  "widest_at_frac_of_full": 0.223,
+  "widest_at_frac_of_visible": 0.262,
+  "shoulder_over_widest": 0.303,
+  "visible_over_full": 0.854,
+  "ours": {
+   "width_over_length": 0.257,
+   "widest_at": 0.25,
+   "shoulder_over_widest": 0.444
+  },
+  "note": "if the axis is pitched toward the camera the photo length is foreshortened, so width/length is an upper bound"
+ },
+ "geometry": {
+  "top_corner": [
+   286.4804676795326,
+   131.25570601682037
+  ],
+  "bottom_corner": [
+   312.9223538469662,
+   189.8174125768154
+  ],
+  "ridge_junction": [
+   299.4283695802846,
+   159.93184609540972
+  ],
+  "tip_extrapolated": [
+   428.19821911543903,
+   103.80168673419183
+  ],
+  "shoulder_axis": [
+   262.72703888606003,
+   176.86176070404593
+  ],
+  "bark_entry_axis": [
+   404.0,
+   114.48586555047868
+  ],
+  "crease_ridge_frac_from_top": 0.49,
+  "ridge_line_misses_tip_px": -0.43,
+  "lines": {
+   "top_front": {
+    "c": [
+     342.13592233009706,
+     120.4739520750702
+    ],
+    "d": [
+     0.981747815022063,
+     -0.19018734894678263
+    ],
+    "angle_deg": -10.963717867842572,
+    "rms_px": 0.17299042168458761,
+    "n_used": 103,
+    "n_total": 108
+   },
+   "ridge_front": {
+    "c": [
+     352.0,
+     137.2078260448266
+    ],
+    "d": [
+     0.9179184586829819,
+     -0.3967690804599808
+    ],
+    "angle_deg": -23.376352843946574,
+    "rms_px": 0.15660556097448217,
+    "n_used": 97,
+    "n_total": 97
+   },
+   "bot_front": {
+    "c": [
+     341.6521739130435,
+     168.37999963216956
+    ],
+    "d": [
+     0.8014699008851572,
+     -0.5980351143328761
+    ],
+    "angle_deg": -36.729302309772784,
+    "rms_px": 0.120823824292801,
+    "n_used": 46,
+    "n_total": 53
+   },
+   "bot_rear": {
+    "c": [
+     289.0,
+     187.45787618533112
+    ],
+    "d": [
+     0.9951709598780655,
+     0.09815681644883081
+    ],
+    "angle_deg": 5.6330416301205775,
+    "rms_px": 0.1786049510572689,
+    "n_used": 43,
+    "n_total": 43
+   },
+   "ridge_rear": {
+    "c": [
+     279.9642857142857,
+     165.56383799048544
+    ],
+    "d": [
+     0.9376605611619441,
+     -0.34755240186404696
+    ],
+    "angle_deg": -20.337681956655057,
+    "rms_px": 1.9292332495604894,
+    "n_used": 28,
+    "n_total": 28
+   },
+   "top_rear": {
+    "c": [
+     270.278681591592,
+     150.5
+    ],
+    "d": [
+     0.6440442166769986,
+     -0.7649882659001452
+    ],
+    "angle_deg": -49.90594810879118,
+    "rms_px": 0.10819649836911191,
+    "n_used": 30,
+    "n_total": 30
+   }
+  }
+ },
+ "facet_luminance_observed": {
+  "front_top": 144.1,
+  "front_bot": 38.8,
+  "rear_top": 164.9,
+  "rear_bot": 33.5
+ },
+ "ring_pose_hypothesis": {
+  "roll_deg": 24.773580237715766,
+  "ridge_ratio_from_offset": 0.027658094847297567,
+  "predicted_facet_L": {
+   "roll_+24.8": {
+    "front_top": 163.1,
+    "front_bot": 148.8,
+    "rear_top": 164.1,
+    "rear_bot": 149.6
+   },
+   "roll_-24.8": {
+    "front_top": 23.3,
+    "front_bot": 23.0,
+    "rear_top": 23.3,
+    "rear_bot": 23.0
+   }
+  },
+  "observed_facet_L": {
+   "front_top": 144.1,
+   "front_bot": 38.8,
+   "rear_top": 164.9,
+   "rear_bot": 33.5
+  }
+ },
+ "shading_fit": {
+  "base_albedo_free": [
+   0.3,
+   1.3112868598382064,
+   6.116276357917512
+  ],
+  "base_same_albedo": [
+   0.45999999999999996,
+   1.0,
+   9.75248163543543
+  ],
+  "grid_median": 0.35,
+  "grid_p10": 0.26999999999999996,
+  "grid_p90": 0.59,
+  "per_station_top_face": [
+   {
+    "frac": 0.3,
+    "L_top": 139.33333333333334,
+    "n": 290,
+    "r_nogain": 0.39999999999999997,
+    "r_gain": 0.25999999999999995
+   },
+   {
+    "frac": 0.45,
+    "L_top": 145.0,
+    "n": 235,
+    "r_nogain": 0.42999999999999994,
+    "r_gain": 0.27999999999999997
+   },
+   {
+    "frac": 0.6,
+    "L_top": 147.33333333333334,
+    "n": 181,
+    "r_nogain": 0.43999999999999995,
+    "r_gain": 0.29
+   },
+   {
+    "frac": 0.75,
+    "L_top": 146.33333333333334,
+    "n": 124,
+    "r_nogain": 0.43999999999999995,
+    "r_gain": 0.27999999999999997
+   },
+   {
+    "frac": 0.9,
+    "L_top": 143.33333333333334,
+    "n": 69,
+    "r_nogain": 0.41999999999999993,
+    "r_gain": 0.26999999999999996
+   }
+  ]
+ },
+ "stations": [
+  {
+   "frac_from_shoulder": 0.1,
+   "our_blade_mm_from_shoulder": 13.4,
+   "section": "rear",
+   "face_slope": 0.306,
+   "face_slope_low": 0.242,
+   "face_slope_high": 0.37,
+   "face_angle_deg": 17.0,
+   "ridge_ratio": 0.33,
+   "ridge_ratio_assumes": "edge half-thickness 0.25 mm, half-width 10.6 mm (photo width profile scaled to 36 mm widest)",
+   "photo_half_width_px": 18.95,
+   "photo_width_rel_widest": 0.59,
+   "ridge_offset_px": 2.68,
+   "ridge_offset_frac": 0.141,
+   "ridge_ratio_if_ring_pose": 0.307,
+   "uncertainty": "rear-facet planar model only (0.24-0.37); rear ridge line is blurry (fit rms 1.9 px); treat as indicative"
+  },
+  {
+   "frac_from_shoulder": 0.3,
+   "our_blade_mm_from_shoulder": 39.4,
+   "section": "front",
+   "face_slope": 0.33,
+   "face_slope_low": 0.26,
+   "face_slope_high": 0.4,
+   "face_angle_deg": 18.3,
+   "ridge_ratio": 0.344,
+   "ridge_ratio_assumes": "edge half-thickness 0.25 mm, half-width 17.2 mm (photo width profile scaled to 36 mm widest)",
+   "photo_half_width_px": 30.78,
+   "photo_width_rel_widest": 0.958,
+   "ridge_offset_px": 0.62,
+   "ridge_offset_frac": 0.02,
+   "ridge_ratio_if_ring_pose": 0.044,
+   "uncertainty": "shading-model: 0.26 (blade albedo free) to 0.40 (same albedo as ring); full sensitivity grid p10-p90 0.27-0.59. Ridge-line geometry cannot resolve it (blade seen ~face-on)."
+  },
+  {
+   "frac_from_shoulder": 0.45,
+   "our_blade_mm_from_shoulder": 56.7,
+   "section": "front",
+   "face_slope": 0.355,
+   "face_slope_low": 0.28,
+   "face_slope_high": 0.43,
+   "face_angle_deg": 19.5,
+   "ridge_ratio": 0.373,
+   "ridge_ratio_assumes": "edge half-thickness 0.25 mm, half-width 14.3 mm (photo width profile scaled to 36 mm widest)",
+   "photo_half_width_px": 25.48,
+   "photo_width_rel_widest": 0.793,
+   "ridge_offset_px": 0.44,
+   "ridge_offset_frac": 0.017,
+   "ridge_ratio_if_ring_pose": 0.037,
+   "uncertainty": "shading-model: 0.28 (blade albedo free) to 0.43 (same albedo as ring); full sensitivity grid p10-p90 0.27-0.59. Ridge-line geometry cannot resolve it (blade seen ~face-on)."
+  },
+  {
+   "frac_from_shoulder": 0.6,
+   "our_blade_mm_from_shoulder": 74.1,
+   "section": "front",
+   "face_slope": 0.365,
+   "face_slope_low": 0.29,
+   "face_slope_high": 0.44,
+   "face_angle_deg": 20.1,
+   "ridge_ratio": 0.387,
+   "ridge_ratio_assumes": "edge half-thickness 0.25 mm, half-width 11.3 mm (photo width profile scaled to 36 mm widest)",
+   "photo_half_width_px": 20.18,
+   "photo_width_rel_widest": 0.628,
+   "ridge_offset_px": 0.26,
+   "ridge_offset_frac": 0.013,
+   "ridge_ratio_if_ring_pose": 0.028,
+   "uncertainty": "shading-model: 0.29 (blade albedo free) to 0.44 (same albedo as ring); full sensitivity grid p10-p90 0.27-0.59. Ridge-line geometry cannot resolve it (blade seen ~face-on)."
+  },
+  {
+   "frac_from_shoulder": 0.75,
+   "our_blade_mm_from_shoulder": 91.4,
+   "section": "front",
+   "face_slope": 0.36,
+   "face_slope_low": 0.28,
+   "face_slope_high": 0.44,
+   "face_angle_deg": 19.8,
+   "ridge_ratio": 0.39,
+   "ridge_ratio_assumes": "edge half-thickness 0.25 mm, half-width 8.3 mm (photo width profile scaled to 36 mm widest)",
+   "photo_half_width_px": 14.88,
+   "photo_width_rel_widest": 0.463,
+   "ridge_offset_px": 0.08,
+   "ridge_offset_frac": 0.005,
+   "ridge_ratio_if_ring_pose": 0.011,
+   "uncertainty": "shading-model: 0.28 (blade albedo free) to 0.44 (same albedo as ring); full sensitivity grid p10-p90 0.27-0.59. Ridge-line geometry cannot resolve it (blade seen ~face-on)."
+  },
+  {
+   "frac_from_shoulder": 0.9,
+   "our_blade_mm_from_shoulder": 108.7,
+   "section": "front",
+   "face_slope": 0.345,
+   "face_slope_low": 0.27,
+   "face_slope_high": 0.42,
+   "face_angle_deg": 19.0,
+   "ridge_ratio": 0.392,
+   "ridge_ratio_assumes": "edge half-thickness 0.25 mm, half-width 5.4 mm (photo width profile scaled to 36 mm widest)",
+   "photo_half_width_px": 9.58,
+   "photo_width_rel_widest": 0.298,
+   "ridge_offset_px": -0.1,
+   "ridge_offset_frac": -0.011,
+   "ridge_ratio_if_ring_pose": -0.024,
+   "uncertainty": "shading-model: 0.27 (blade albedo free) to 0.42 (same albedo as ring); full sensitivity grid p10-p90 0.27-0.59. Ridge-line geometry cannot resolve it (blade seen ~face-on)."
+  }
+ ],
+ "summary_face_slope": 0.355,
+ "summary_ridge_ratio": 0.387,
+ "ours_same_stations_spec_pre_grind": [
+  {
+   "x_mm": 13.4,
+   "half_width": 11.83,
+   "ridge_half": 2.5,
+   "face_slope": 0.148,
+   "ridge_ratio": 0.211
+  },
+  {
+   "x_mm": 39.4,
+   "half_width": 17.25,
+   "ridge_half": 2.425,
+   "face_slope": 0.097,
+   "ridge_ratio": 0.141
+  },
+  {
+   "x_mm": 56.7,
+   "half_width": 14.28,
+   "ridge_half": 2.131,
+   "face_slope": 0.097,
+   "ridge_ratio": 0.149
+  },
+  {
+   "x_mm": 74.1,
+   "half_width": 11.3,
+   "ridge_half": 1.835,
+   "face_slope": 0.096,
+   "ridge_ratio": 0.162
+  },
+  {
+   "x_mm": 91.4,
+   "half_width": 8.33,
+   "ridge_half": 1.541,
+   "face_slope": 0.095,
+   "ridge_ratio": 0.185
+  },
+  {
+   "x_mm": 108.7,
+   "half_width": 5.37,
+   "ridge_half": 1.247,
+   "face_slope": 0.093,
+   "ridge_ratio": 0.232
+  }
+ ],
+ "caveats": [
+  "500x333 JPEG with sharpening halos; edges located to ~0.2 px rms but the ridge HEIGHT is not visible geometrically in this pose",
+  "shading answer assumes ring and blade share finish and see the same distant lighting; ring tube is only ~11 px wide so the probe is blurred (biases same-albedo fit high)",
+  "blade albedo vs ring is the main degeneracy: 0.26-0.31 if the blade is ~1.3x brighter, 0.40-0.47 if identical",
+  "photo edge thickness unresolvable; ridge_ratio adds an assumed 0.25 mm edge half-thickness",
+  "the photo kunai is a different design (broader blade, narrower shoulder); use ratios, not mm"
+ ]
+}

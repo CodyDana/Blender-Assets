@@ -1,0 +1,39 @@
+{
+  "note": "Face-only recipes v2 for the PlayerBase candidates (supersedes v1). Coefficient-space blend of MH_PlayerBase's conformed face with 3 of Epic's built-in presets (/MetaHumanCharacter/Optional/Presets) per candidate: out = ours + sum w_i*(preset_i - ours) per face-model region ('blend' = every region not listed in 'regions'; groups in Scripts/MetaHuman/pb_face_build.py REGION_GROUPS), then eyelid landmark moves via translate_face_landmarks (UE cm; 36,20,35 / 52,44,51 upper lids, 19,37 / 33,53 lower lids, 18 / 22 outer eye corners). Body state untouched. Validated in scratch as explore round 3 (A3_lm, B3_lm2, C3_lm).",
+  "blend_start": 1,
+  "candidates": {
+    "MH_PlayerBase_FaceA": {
+      "concept": "rounder, fuller-cheeked young face; softer jaw; short rounded nose; fuller lips (Bo + Kelvin, Tuya eyes)",
+      "blend": {"Kelvin": 0.30, "Bo": 0.20},
+      "regions": {"brows": {"Bo": 0.50, "Tuya": 0.20, "Kelvin": 0.15}, "eyes": {"Tuya": 0.40, "Bo": 0.30, "Kelvin": 0.20},
+                  "cheekbones": {"Bo": 0.40, "Kelvin": 0.20}, "nose": {"Bo": 0.55, "Tuya": 0.30},
+                  "cheeks": {"Bo": 0.40, "Kelvin": 0.20}, "mouth": {"Kelvin": 0.55, "Bo": 0.30},
+                  "chin": {"Kelvin": 0.40, "Bo": 0.25}, "jaw": {"Kelvin": 0.40, "Bo": 0.25},
+                  "neck": {"Kelvin": 0.10, "Bo": 0.10}},
+      "landmark_moves": [{"idx": [36, 20, 35, 52, 44, 51], "d": [0, 0, 0.10]}, {"idx": [19, 37, 33, 53], "d": [0, 0, -0.04]},
+                         {"idx": [18, 22], "d": [0, 0, -0.12]}]
+    },
+    "MH_PlayerBase_FaceB": {
+      "concept": "broad cheekbones, squarer chin and jaw, straighter open eyes, shorter nose (Aoi + Orlando, Tuya eyes/nose)",
+      "blend": {"Aoi": 0.35, "Orlando": 0.15},
+      "regions": {"brows": {"Aoi": 0.50, "Orlando": 0.35}, "eyes": {"Tuya": 0.45, "Aoi": 0.45},
+                  "cheekbones": {"Aoi": 0.50, "Orlando": 0.20}, "nose": {"Aoi": 0.50, "Tuya": 0.35},
+                  "cheeks": {"Aoi": 0.50, "Orlando": 0.20}, "mouth": {"Aoi": 0.55, "Orlando": 0.30},
+                  "chin": {"Orlando": 0.40, "Aoi": 0.35}, "jaw": {"Orlando": 0.40, "Aoi": 0.35},
+                  "neck": {"Aoi": 0.10, "Orlando": 0.10}},
+      "landmark_moves": [{"idx": [36, 20, 35, 52, 44, 51], "d": [0, 0, 0.16]}, {"idx": [19, 37, 33, 53], "d": [0, 0, -0.06]},
+                         {"idx": [18, 22], "d": [0, 0, -0.18]}]
+    },
+    "MH_PlayerBase_FaceC": {
+      "concept": "broad nose, full wide mouth, strong wide lower face, larger open eyes (Kelvin + Jorge, Aera eyes)",
+      "blend": {"Kelvin": 0.35, "Jorge": 0.15},
+      "regions": {"brows": {"Kelvin": 0.45, "Jorge": 0.25, "Aera": 0.15}, "eyes": {"Aera": 0.40, "Kelvin": 0.30, "Jorge": 0.20},
+                  "cheekbones": {"Kelvin": 0.35, "Jorge": 0.35}, "nose": {"Jorge": 0.45, "Kelvin": 0.40},
+                  "cheeks": {"Kelvin": 0.35, "Jorge": 0.35}, "mouth": {"Jorge": 0.45, "Kelvin": 0.40},
+                  "chin": {"Kelvin": 0.40, "Jorge": 0.35}, "jaw": {"Kelvin": 0.40, "Jorge": 0.35},
+                  "neck": {"Kelvin": 0.10, "Jorge": 0.10}},
+      "landmark_moves": [{"idx": [36, 20, 35, 52, 44, 51], "d": [0, 0, 0.10]}, {"idx": [19, 37, 33, 53], "d": [0, 0, -0.04]},
+                         {"idx": [18, 22], "d": [0, 0, -0.18]}]
+    }
+  }
+}

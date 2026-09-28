@@ -1,0 +1,4469 @@
+{
+ "meta": {
+  "reference": "References/SmokeBomb/smokebomb.png",
+  "sha256": "813105ecd7192c72b20058a206ea8916912aecdba0abfa02cfb47bc9f7b6e1c2",
+  "size_px": [
+   1254,
+   1254
+  ],
+  "identical_to": "Downloads/smokebomb.png (same sha256)",
+  "measured": "2026-09-21",
+  "role": "reference metrologist (claude)",
+  "status": "MEASURED unless a row says DESIGNED",
+  "units": "px = reference pixels; D = ball diameter in the reference = 928.2 px; frac_D = px / D; arc angles on the sphere in degrees",
+  "image_frame": "x right, y down, origin top-left pixel corner",
+  "image_angle": "degrees CCW from the 3 o'clock direction about the ball centre, y up (90 = 12 o'clock, 180 = 9 o'clock, 270 = 6 o'clock)",
+  "camera_frame": "X right, Y up, Z toward the camera; lat/lon: lat from the X-Z plane toward +Y, lon from +Z (facing the camera) toward +X (right)",
+  "back_projection": "orthographic about the silhouette circle (centre 627.38, 628.92; R 464.11 px) -- see camera.projection",
+  "scripts": "WorkFiles/smokebomb/reference_metrology/sb_m00..sb_m29 (Blender 5.2 Python, NumPy 2)",
+  "debug_diagram": "WorkFiles/smokebomb/reference_metrology/debug/DEBUG_NEVER_SHIP_sb_strip_layout_LABELLED.png",
+  "trace_file": "WorkFiles/smokebomb/reference_metrology/sb_trace.json (measurement use only; the build must not read it or the reference pixels)",
+  "colour_values": "stored sRGB 0-1 unless named _lin"
+ },
+ "silhouette": {
+  "edge_rule": "half-maximum between the background (stored lum 0.996) and the cloth just inside the rim (0.162)",
+  "centre_px": {
+   "value": [
+    627.38,
+    628.92
+   ],
+   "tol": "+-3 px",
+   "unit": "px",
+   "method": "geometric circle fit to 3600 radial edge samples"
+  },
+  "diameter_px": {
+   "value": 928.2,
+   "tol": "+-1.0 %",
+   "unit": "px",
+   "method": "circle fit",
+   "frac_of_frame_width": 0.7402
+  },
+  "circularity_rms_dev": {
+   "value": 1.24,
+   "tol": "build 0.8..1.8",
+   "unit": "% of R",
+   "method": "rms radial deviation from the fitted circle",
+   "px": 5.78
+  },
+  "max_out_in": {
+   "value": [
+    18.7,
+    -14.2
+   ],
+   "tol": "+-4 px each",
+   "unit": "px",
+   "method": "largest outward / inward radial departure"
+  },
+  "ellipse_axes_px": {
+   "value": [
+    468.7,
+    459.6
+   ],
+   "tol": "+-3 px",
+   "unit": "px",
+   "method": "direct LSQ ellipse; long axis along image angle 125 deg (upper-left to lower-right), ratio 1.0198",
+   "long_axis_image_angle_deg": 125,
+   "long_axis_tol_deg": 20
+  },
+  "harmonics_px": {
+   "1": 0.0,
+   "2": 4.58,
+   "3": 3.14,
+   "4": 1.5,
+   "5": 2.45,
+   "6": 2.07,
+   "7": 1.97,
+   "8": 0.67
+  },
+  "sectors_30deg": [
+   {
+    "from_deg": 0,
+    "to_deg": 30,
+    "dev_pct_R": 0.03
+   },
+   {
+    "from_deg": 30,
+    "to_deg": 60,
+    "dev_pct_R": -1.75
+   },
+   {
+    "from_deg": 60,
+    "to_deg": 90,
+    "dev_pct_R": 0.18
+   },
+   {
+    "from_deg": 90,
+    "to_deg": 120,
+    "dev_pct_R": 0.11
+   },
+   {
+    "from_deg": 120,
+    "to_deg": 150,
+    "dev_pct_R": 1.83
+   },
+   {
+    "from_deg": 150,
+    "to_deg": 180,
+    "dev_pct_R": -0.03
+   },
+   {
+    "from_deg": 180,
+    "to_deg": 210,
+    "dev_pct_R": -1.67
+   },
+   {
+    "from_deg": 210,
+    "to_deg": 240,
+    "dev_pct_R": -0.28
+   },
+   {
+    "from_deg": 240,
+    "to_deg": 270,
+    "dev_pct_R": 0.39
+   },
+   {
+    "from_deg": 270,
+    "to_deg": 300,
+    "dev_pct_R": 0.11
+   },
+   {
+    "from_deg": 300,
+    "to_deg": 330,
+    "dev_pct_R": 0.64
+   },
+   {
+    "from_deg": 330,
+    "to_deg": 360,
+    "dev_pct_R": 0.46
+   }
+  ],
+  "flattening": {
+   "value": [
+    "30-60 deg: -1.75 %R",
+    "180-210 deg: -1.67 %R"
+   ],
+   "tol": "+-0.7 %R",
+   "unit": "%R",
+   "method": "sector mean radius vs fitted R"
+  },
+  "bulge": {
+   "value": [
+    "120-150 deg: +1.83 %R",
+    "88 deg (top, at the whorl): local +14.9 px = +3.2 %R over ~6 deg"
+   ],
+   "tol": "+-0.7 %R; top bump +-5 px",
+   "unit": "%R",
+   "method": "sector mean / high-pass peak"
+  },
+  "outline_bumpiness": {
+   "value": 0.74,
+   "tol": "0.5..1.0",
+   "unit": "% of R (rms)",
+   "method": "radius minus its n<=6 Fourier reconstruction",
+   "px_rms": 3.42,
+   "px_range": [
+    -9.5,
+    14.9
+   ]
+  },
+  "strip_edge_steps": {
+   "value": {
+    "count_ge_4px": 12,
+    "median_abs_px": 5.7,
+    "max_abs_px": 8.5
+   },
+   "tol": "count 8..16; median 4.5..7 px; max <= 10 px",
+   "unit": "px",
+   "method": "radius jumps > 4 px within 0.5 deg of arc",
+   "where_deg": [
+    11.8,
+    51.0,
+    64.2,
+    87.1,
+    88.4,
+    155.1,
+    196.1,
+    211.2,
+    218.5,
+    221.2,
+    285.4,
+    332.0
+   ]
+  },
+  "thread_tips_past_outline": {
+   "value": {
+    "max_reach_px": 7.4,
+    "n_reach_gt_3px": 56
+   },
+   "tol": "max <= 9 px; no thread longer than 10 px beyond the outline",
+   "unit": "px",
+   "method": "outermost 97%-of-step crossing minus the 50% edge",
+   "note": "only fibre fuzz and one small hook (T4, image angle ~155 deg) break the outline; no loose thread hangs off the ball"
+  },
+  "no_features": [
+   "no fuse",
+   "no knot",
+   "no tag",
+   "no cord",
+   "no tear, cut, scorch or dirt",
+   "no free strip end anywhere on the visible side"
+  ]
+ },
+ "camera": {
+  "projection": {
+   "value": "orthographic (long-lens equivalent)",
+   "tol": "use orthographic for the comparison render",
+   "unit": "-",
+   "method": "a centred sphere's outline is a circle at every focal length and the reference has no other perspective cue; the spec's sphere positions were back-projected orthographically, so an orthographic camera reproduces them exactly. With a 100 mm FF lens a point 45 deg from the view axis lands 9 % R further out than orthographic, with 200 mm 4.7 % R -- so do not mix a perspective camera with these numbers."
+  },
+  "ortho_scale": {
+   "value": 1.351,
+   "tol": "+-1 %",
+   "unit": "D per frame width",
+   "method": "frame width / ball diameter"
+  },
+  "frame": {
+   "value": [
+    1254,
+    1254
+   ],
+   "tol": "exact aspect 1:1",
+   "unit": "px",
+   "method": "file size"
+  },
+  "ball_centre_in_frame": {
+   "value": [
+    627.4,
+    628.9
+   ],
+   "tol": "+-3 px",
+   "unit": "px",
+   "method": "circle fit"
+  },
+  "elevation": {
+   "value": 0.0,
+   "tol": "convention",
+   "unit": "deg",
+   "method": "a sphere on a seamless white ground has no horizon, no contact shadow and no ground plane, so elevation is not measurable. The strip layout is specified in the camera frame; rendering at elevation 0 with the ball oriented as specified IS the reference view.",
+   "alternative_if_top_whorl_is_world_up": {
+    "camera_elevation_deg": 34.6,
+    "tol": 5,
+    "whorl_lean_in_frame_deg_right_of_vertical": 9.4,
+    "status": "DERIVED convenience, not a second measurement"
+   }
+  },
+  "background": {
+   "value": {
+    "stored": 0.996,
+    "rgb_8bit": [
+     254,
+     254,
+     254
+    ]
+   },
+   "tol": "+-0.004",
+   "unit": "stored sRGB",
+   "method": "all four corners and rings 25..240 px outside the ball: mean 0.9960, std 0.002; uniform, no gradient, no shadow, no ground line"
+  },
+  "focal_length_note": "any lens >= 85 mm FF also explains the outline; not measurable"
+ },
+ "lighting": {
+  "method": "16 px blocks, 75th percentile of linear luminance (the lit top of the cloth, crevices excluded), fitted on the sphere normals",
+  "key": {
+   "value": {
+    "az_deg": 60,
+    "el_deg": 64,
+    "dir_to_light": [
+     0.3796,
+     0.8988,
+     0.2192
+    ]
+   },
+   "tol": "az +-25, el +-10",
+   "unit": "deg (camera frame; az + = right, el + = up)",
+   "method": "key+fill+ambient Lambert fit, alternating grid search"
+  },
+  "fill": {
+   "value": {
+    "az_deg": -116,
+    "el_deg": 4,
+    "dir_to_light": [
+     -0.8966,
+     0.0698,
+     -0.4373
+    ]
+   },
+   "tol": "az +-25, el +-15",
+   "unit": "deg",
+   "method": "same fit; lights the LEFT limb from the left-rear"
+  },
+  "fill_over_key": {
+   "value": 0.67,
+   "tol": "+-0.2",
+   "unit": "ratio",
+   "method": "fit coefficients"
+  },
+  "ambient_over_key": {
+   "value": 0.42,
+   "tol": "+-0.15",
+   "unit": "ratio",
+   "method": "fit coefficients"
+  },
+  "softness": {
+   "value": "large soft sources: no terminator line, no cast shadow, shading ramps smoothly (wrap ~0.1); brightest visible normal (0.22, 0.89, 0.40), darkest (-0.09, -0.56, 0.82), max/min 4.15",
+   "tol": "max/min 3.2..5.2",
+   "unit": "-",
+   "method": "order-2 SH irradiance fit, R2 0.58"
+  },
+  "quadrant_targets_lin": {
+   "value": {
+    "upper_left": 0.0338,
+    "upper_right": 0.04349,
+    "lower_left": 0.01758,
+    "lower_right": 0.01761,
+    "centre": 0.02043
+   },
+   "tol": "each +-15 % after the render's overall exposure is matched at the centre",
+   "unit": "linear luminance (block p75)",
+   "method": "same block statistic -- measure the builder's render the same way"
+  },
+  "specular": {
+   "value": "none: no glossy hot spot anywhere; highlights are only fibre/rim sparkle (see cloth.sheen)",
+   "tol": "-",
+   "unit": "-",
+   "method": "p99.9 of the disc is 0.615 stored and lives on fibres and rolled edges"
+  }
+ },
+ "colour": {
+  "albedo_lum_lin": {
+   "value": 0.0427,
+   "tol": "+-0.010",
+   "unit": "linear reflectance",
+   "method": "region mean linear luminance / modelled irradiance, irradiance scaled so a perfect white facing the key reads 1.0 (the backdrop reads 0.996). If the backdrop was lit hotter than the ball (common), the true albedo is higher; 0.043 matches the kunai wrap's dark cotton (~0.04)."
+  },
+  "albedo_rgb_lin": {
+   "value": [
+    0.0486,
+    0.0418,
+    0.0383
+   ],
+   "tol": "each +-25 %",
+   "unit": "linear",
+   "method": "albedo luminance x measured chromaticity"
+  },
+  "albedo_rgb_srgb": {
+   "value": [
+    0.244,
+    0.226,
+    0.216
+   ],
+   "tol": "+-0.03",
+   "unit": "stored sRGB",
+   "method": "same",
+   "hex": "#3E3A37"
+  },
+  "chromaticity_lin": {
+   "value": [
+    0.378,
+    0.325,
+    0.298
+   ],
+   "tol": "r +-0.012, g +-0.008",
+   "unit": "r/(r+g+b)...",
+   "method": "pooled region means (all strips agree within r 0.375-0.386)"
+  },
+  "hue_deg": {
+   "value": 20.5,
+   "tol": "+-4",
+   "unit": "deg (HSV, sRGB)",
+   "method": "region means: 17.5..23.9"
+  },
+  "saturation_hsv": {
+   "value": 0.13,
+   "tol": "+-0.03",
+   "unit": "-",
+   "method": "region means 0.113..0.160 (darker regions read slightly more saturated)"
+  },
+  "band_to_band": {
+   "value": "no strip-to-strip colour difference beyond lighting: chromaticity identical within 1.5 %; shading-normalised luminance spread (cv 0.22) follows the lighting-model residual (left limb reads bright, bottom reads dark), not the strips",
+   "tol": "build: one BC for all strips, per-strip variation <= 5 %",
+   "unit": "-",
+   "method": "11 regions",
+   "regions": {
+    "A": 0.8133,
+    "B": 0.8104,
+    "C": 1.0708,
+    "W": 0.8139,
+    "X": 0.7446,
+    "L3": 1.2634,
+    "U": 0.7492,
+    "rim_UL": 1.0047,
+    "D_bottom": 0.5637,
+    "E_bottom_right": 0.6857,
+    "whorl_top": 0.7769
+   }
+  },
+  "pixel_targets_srgb": {
+   "value": {
+    "1": 0.0165,
+    "5": 0.0372,
+    "10": 0.0504,
+    "25": 0.0767,
+    "50": 0.1165,
+    "75": 0.1739,
+    "90": 0.2476,
+    "95": 0.3044,
+    "99": 0.4366,
+    "99.9": 0.6153
+   },
+   "tol": "p10/p50/p90 each +-12 %",
+   "unit": "stored sRGB luminance, disc r<0.9R",
+   "method": "what the viewer sees: the render of the shipped asset must reproduce these under the specified camera and light"
+  },
+  "region_means_srgb": {
+   "A": [
+    0.1357,
+    0.1238,
+    0.1172
+   ],
+   "B": [
+    0.2084,
+    0.1933,
+    0.1849
+   ],
+   "C": [
+    0.1595,
+    0.1452,
+    0.1382
+   ],
+   "W": [
+    0.1552,
+    0.1428,
+    0.1346
+   ],
+   "X": [
+    0.1725,
+    0.158,
+    0.1514
+   ],
+   "L3": [
+    0.1817,
+    0.1649,
+    0.1559
+   ],
+   "U": [
+    0.2066,
+    0.1913,
+    0.182
+   ],
+   "rim_UL": [
+    0.2232,
+    0.2059,
+    0.1971
+   ],
+   "D_bottom": [
+    0.1104,
+    0.0979,
+    0.0927
+   ],
+   "E_bottom_right": [
+    0.124,
+    0.1111,
+    0.1046
+   ],
+   "whorl_top": [
+    0.2344,
+    0.2157,
+    0.2079
+   ]
+  }
+ },
+ "cloth": {
+  "construction": {
+   "value": "plain-weave cotton-like tape, warp-faced: the visible texture is striations ALONG each strip; the cross (weft) structure is a faint irregular grid",
+   "tol": "-",
+   "unit": "-",
+   "method": "FFT of 64 px patches in 7 strips: 39-58 % of texture power within +-20 deg of the along-strip lines, 13-20 % across"
+  },
+  "warp_pitch": {
+   "value": {
+    "px": 4.1,
+    "frac_D": 0.0044
+   },
+   "tol": "px 3.4..5.5",
+   "unit": "px",
+   "method": "dominant spectral peak per patch: A 4.3/4.1, B 4.0, C 3.4, U 3.6, W 3.2, X 5.5, rim 3.0-3.9",
+   "threads_across_a_wide_strip": 50
+  },
+  "weft": {
+   "value": "no stable period (3..18 px across patches); read as irregular cross-dots at ~2x the warp pitch",
+   "tol": "-",
+   "unit": "-",
+   "method": "weft wedge peak"
+  },
+  "texture_contrast": {
+   "value": {
+    "highpass_log_std": 0.13,
+    "lin_p90_over_p10": 8.0
+   },
+   "tol": "log std 0.10..0.16; p90/p10 5..13",
+   "unit": "-",
+   "method": "per patch: 0.10..0.15 log std; p90/p10 4.8..13"
+  },
+  "persistent_streaks": {
+   "value": {
+    "per_100px_across": 7.3,
+    "amp_log": 0.073,
+    "spacing_px": 9.6
+   },
+   "tol": "per 100 px 5..10; amp 0.05..0.09",
+   "unit": "-",
+   "method": "warp lines averaged 120-220 px along the strip: A 6.6, B 7.7, C 5.0, X 9.8 per 100 px; these are the only 'slub'-like features"
+  },
+  "slubs": {
+   "value": "no distinct slubs (thick knots) are resolvable -- do not add them beyond the persistent streaks",
+   "tol": "-",
+   "unit": "-",
+   "method": "visual + streak statistics"
+  },
+  "correlation": {
+   "value": {
+    "along_px": [
+     5,
+     10,
+     31,
+     6
+    ],
+    "across_px": [
+     4.0,
+     3.5,
+     4.5,
+     3.5
+    ]
+   },
+   "tol": "along 4..30, across 3..5",
+   "unit": "px",
+   "method": "autocorrelation to 0.3 (A, B, C, X)"
+  },
+  "sheen": {
+   "value": {
+    "speckle_fraction": 0.042,
+    "speckle_srgb": [
+     0.405,
+     0.387,
+     0.367
+    ],
+    "speckle_chroma": [
+     0.367,
+     0.334,
+     0.298
+    ],
+    "density_centre_to_limb": [
+     0.051,
+     0.047,
+     0.041,
+     0.032
+    ]
+   },
+   "tol": "fraction 0.03..0.055",
+   "unit": "-",
+   "method": "pixels > 3x the 6-px local median: fibre sparkle, warm light grey (tinted by the dye, not white), thinning toward the limb; no broad sheen lobe"
+  },
+  "roughness_reading": "matte cloth: no specular lobe; sparkle comes from fibre ends and rolled edges"
+ },
+ "step_and_fray": {
+  "step_height": {
+   "value": {
+    "px": 5.7,
+    "frac_D": 0.0061
+   },
+   "tol": "px 4..8.5 (frac_D 0.004..0.009)",
+   "unit": "px",
+   "method": "direct: radius jumps where strip edges cross the outline (12 jumps >= 4 px, median 5.7); consistent with the shading: rim highlight 4..8 px wide on the over strip, crevice 2.5..3.5 px on the under strip"
+  },
+  "edge_signature": {
+   "value": {
+    "WLO": {
+     "rim_px": -8.25,
+     "crevice_px": 3.0,
+     "rim_log": 1.127,
+     "crevice_log": 0.432
+    },
+    "WUP": {
+     "rim_px": 3.25,
+     "crevice_px": -12.0,
+     "rim_log": 0.477,
+     "crevice_log": 0.352
+    },
+    "BLO": {
+     "rim_px": -6.75,
+     "crevice_px": 3.0,
+     "rim_log": 0.836,
+     "crevice_log": 0.627
+    },
+    "BUP": {
+     "rim_px": -2.5,
+     "crevice_px": 6.5,
+     "rim_log": 0.419,
+     "crevice_log": 0.091
+    },
+    "ALO": {
+     "rim_px": -4.75,
+     "crevice_px": 2.5,
+     "rim_log": 0.687,
+     "crevice_log": 0.452
+    },
+    "CLO": {
+     "rim_px": -7.0,
+     "crevice_px": 3.5,
+     "rim_log": 0.636,
+     "crevice_log": 0.424
+    },
+    "CUP": {
+     "rim_px": 2.75,
+     "crevice_px": -3.25,
+     "rim_log": 0.456,
+     "crevice_log": 0.185
+    }
+   },
+   "tol": "rim 0.4..1.2 log brighter; crevice 0.3..0.65 log darker",
+   "unit": "px offsets across the edge (sign = normal of the traced polyline)",
+   "method": "mean aligned cross profile along each edge",
+   "reading": "every over-strip edge reads as a ROLLED, fuzzy rim 1.5-3x brighter than the strip, with an occlusion crevice 30-47 % darker on the strip beneath"
+  },
+  "fray_amplitude": {
+   "value": {
+    "rms_px": 1.5,
+    "p95_px": 3.5,
+    "frac_D_rms": 0.0016
+   },
+   "tol": "rms 0.9..2.0 px; p95 2..5 px",
+   "unit": "px",
+   "method": "edge position jitter about a 41-px running median, per edge: WLO 1.99, WUP 1.00, BLO 1.72, BUP 1.87, ALO 0.92, CLO 1.38, CUP 1.14, L3L 2.55, UA 1.71"
+  },
+  "fray_wavelength": {
+   "value": {
+    "px": 11.5,
+    "frac_D": 0.0124
+   },
+   "tol": "px 8..15",
+   "unit": "px",
+   "method": "2 / zero-crossing rate of the jitter: WLO 12.2, WUP 15.2, BLO 12.3, BUP 10.8, ALO 8.8, CLO 9.4, CUP 13.2, L3L 11.9, UA 8.4"
+  },
+  "loose_threads": [
+   {
+    "id": "T1",
+    "where": "hangs from W's lower edge at (801,703) down over A",
+    "tip_px": [
+     797,
+     741
+    ],
+    "length_px": 38,
+    "frac_D": 0.0409,
+    "thickness_px": "2-3",
+    "shape": "curly, forks ~12 px from the tip",
+    "tol": "position +-6 px, length +-8 px"
+   },
+   {
+    "id": "T2",
+    "where": "hangs from W's lower edge at (936,783) down over A",
+    "tip_px": [
+     932,
+     812
+    ],
+    "length_px": 29,
+    "frac_D": 0.0312,
+    "thickness_px": "2-3",
+    "shape": "slight fork near the edge",
+    "tol": "position +-6 px, length +-8 px"
+   },
+   {
+    "id": "T3",
+    "where": "short fibre curl lying on A",
+    "centre_px": [
+     375,
+     607
+    ],
+    "length_px": 14,
+    "frac_D": 0.0151,
+    "shape": "forked curl",
+    "tol": "+-8 px"
+   },
+   {
+    "id": "T4",
+    "where": "hook on the outline at the left",
+    "centre_px": [
+     191,
+     432
+    ],
+    "image_angle_deg": 155,
+    "protrusion_px": 6,
+    "frac_D": 0.0065,
+    "tol": "+-3 px"
+   },
+   {
+    "id": "T5",
+    "where": "stub at W's lower edge near the right limb",
+    "centre_px": [
+     989,
+     820
+    ],
+    "length_px": 9,
+    "frac_D": 0.0097,
+    "tol": "+-5 px"
+   }
+  ],
+  "loose_thread_count": {
+   "value": {
+    "prominent": 2,
+    "minor": 3
+   },
+   "tol": "exactly 2 prominent; minor 2..4",
+   "unit": "count",
+   "method": "visual scan + thin-ridge detector (strip-crossing bright ridges)"
+  }
+ },
+ "strips": [
+  {
+   "id": "W",
+   "family": "belt",
+   "rank": "topmost",
+   "visible_width": {
+    "arc_deg": 9.79,
+    "arc_deg_p10_p90": [
+     6.24,
+     12.64
+    ],
+    "frac_D": 0.0855,
+    "image_px": 78.8
+   },
+   "width_is": "true (both edges its own)",
+   "width_tol": "+-15 %",
+   "twisted_section": {
+    "from_px": [
+     363,
+     390
+    ],
+    "to_px": [
+     610,
+     550
+    ],
+    "visible_width": {
+     "arc_deg": 1.14,
+     "arc_deg_p10_p90": [
+      0.55,
+      2.12
+     ],
+     "frac_D": 0.01,
+     "image_px": 9.2
+    },
+    "reading": "the strip is seen edge-on / rolled for ~290 px: a raised double rim 6-15 px wide, then it opens"
+   },
+   "edges": [
+    "WTW",
+    "WUP",
+    "WLO"
+   ],
+   "enters": "from under R_in at (363,390)",
+   "leaves": "right limb between image angles 334 and 349 deg",
+   "over": [
+    "A",
+    "X",
+    "B",
+    "U0"
+   ],
+   "under": [
+    "R_in"
+   ],
+   "features": [
+    "T1",
+    "T2",
+    "T5 hang from its lower edge"
+   ],
+   "edge_control_points": {
+    "WTW": {
+     "control_img": [
+      [
+       363.0,
+       390.0
+      ],
+      [
+       402.0,
+       420.0
+      ],
+      [
+       438.0,
+       451.0
+      ],
+      [
+       478.0,
+       482.0
+      ],
+      [
+       520.0,
+       509.0
+      ],
+      [
+       563.0,
+       530.0
+      ],
+      [
+       609.0,
+       550.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.57,
+       0.515
+      ],
+      [
+       -0.485,
+       0.45
+      ],
+      [
+       -0.407,
+       0.382
+      ],
+      [
+       -0.321,
+       0.317
+      ],
+      [
+       -0.231,
+       0.259
+      ],
+      [
+       -0.139,
+       0.213
+      ],
+      [
+       -0.04,
+       0.171
+      ]
+     ],
+     "control_latlon": [
+      [
+       31.0,
+       -41.6
+      ],
+      [
+       26.8,
+       -32.9
+      ],
+      [
+       22.5,
+       -26.2
+      ],
+      [
+       18.5,
+       -19.8
+      ],
+      [
+       15.0,
+       -13.8
+      ],
+      [
+       12.3,
+       -8.2
+      ],
+      [
+       9.8,
+       -2.3
+      ]
+     ],
+     "end_angle_deg": [
+      137.9,
+      103.0
+     ],
+     "end_r_frac": [
+      0.768,
+      0.175
+     ]
+    },
+    "WUP": {
+     "control_img": [
+      [
+       610.0,
+       550.0
+      ],
+      [
+       682.0,
+       581.0
+      ],
+      [
+       757.0,
+       602.0
+      ],
+      [
+       831.0,
+       625.0
+      ],
+      [
+       902.0,
+       656.0
+      ],
+      [
+       974.0,
+       687.0
+      ],
+      [
+       1048.0,
+       712.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.037,
+       0.17
+      ],
+      [
+       0.117,
+       0.104
+      ],
+      [
+       0.279,
+       0.059
+      ],
+      [
+       0.438,
+       0.008
+      ],
+      [
+       0.593,
+       -0.058
+      ],
+      [
+       0.747,
+       -0.124
+      ],
+      [
+       0.906,
+       -0.179
+      ]
+     ],
+     "control_latlon": [
+      [
+       9.8,
+       -2.2
+      ],
+      [
+       6.0,
+       6.8
+      ],
+      [
+       3.4,
+       16.2
+      ],
+      [
+       0.4,
+       26.0
+      ],
+      [
+       -3.3,
+       36.4
+      ],
+      [
+       -7.1,
+       48.9
+      ],
+      [
+       -10.3,
+       67.0
+      ]
+     ],
+     "end_angle_deg": [
+      102.4,
+      348.8
+     ],
+     "end_r_frac": [
+      0.174,
+      0.923
+     ]
+    },
+    "WLO": {
+     "control_img": [
+      [
+       540.0,
+       522.0
+      ],
+      [
+       620.0,
+       581.0
+      ],
+      [
+       703.0,
+       635.0
+      ],
+      [
+       787.0,
+       688.0
+      ],
+      [
+       875.0,
+       736.0
+      ],
+      [
+       957.0,
+       789.0
+      ],
+      [
+       1044.0,
+       837.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.188,
+       0.23
+      ],
+      [
+       -0.015,
+       0.102
+      ],
+      [
+       0.162,
+       -0.012
+      ],
+      [
+       0.344,
+       -0.128
+      ],
+      [
+       0.533,
+       -0.23
+      ],
+      [
+       0.71,
+       -0.345
+      ],
+      [
+       0.898,
+       -0.449
+      ]
+     ],
+     "control_latlon": [
+      [
+       13.3,
+       -11.2
+      ],
+      [
+       5.9,
+       -0.9
+      ],
+      [
+       -0.7,
+       9.3
+      ],
+      [
+       -7.3,
+       20.3
+      ],
+      [
+       -13.3,
+       33.2
+      ],
+      [
+       -20.2,
+       49.1
+      ],
+      [
+       -26.5,
+       90.0
+      ]
+     ],
+     "end_angle_deg": [
+      129.3,
+      333.5
+     ],
+     "end_r_frac": [
+      0.298,
+      1.004
+     ]
+    }
+   }
+  },
+  {
+   "id": "A",
+   "family": "belt",
+   "visible_width": {
+    "arc_deg": 25.34,
+    "arc_deg_p10_p90": [
+     17.15,
+     29.49
+    ],
+    "frac_D": 0.2211,
+    "image_px": 199.2
+   },
+   "width_is": "visible only (upper edge hidden under W): true width >= this",
+   "width_tol": "+-12 %",
+   "edges": [
+    "ALO (own)",
+    "WLO/WTW (W's)"
+   ],
+   "path": "from under R_in at the upper-left (282..363, 390..455) its lower edge drops almost vertically (x 282->340 over y 455->635) then sweeps right and down across the centre; the edge is NOT a circle (best small circle 11.8 px rms) -- follow the control points",
+   "enters": "from under R_in at the upper-left",
+   "leaves": "right limb between 330 and 334 deg",
+   "over": [
+    "C",
+    "L3",
+    "D family",
+    "E"
+   ],
+   "under": [
+    "W",
+    "R_in"
+   ],
+   "edge_control_points": {
+    "ALO": {
+     "control_img": [
+      [
+       282.0,
+       455.0
+      ],
+      [
+       330.0,
+       612.0
+      ],
+      [
+       435.0,
+       732.0
+      ],
+      [
+       574.0,
+       817.0
+      ],
+      [
+       727.0,
+       876.0
+      ],
+      [
+       882.0,
+       920.0
+      ],
+      [
+       1027.0,
+       861.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.744,
+       0.375
+      ],
+      [
+       -0.642,
+       0.037
+      ],
+      [
+       -0.415,
+       -0.223
+      ],
+      [
+       -0.116,
+       -0.406
+      ],
+      [
+       0.214,
+       -0.532
+      ],
+      [
+       0.549,
+       -0.627
+      ],
+      [
+       0.861,
+       -0.501
+      ]
+     ],
+     "control_latlon": [
+      [
+       22.0,
+       -53.4
+      ],
+      [
+       2.1,
+       -39.9
+      ],
+      [
+       -12.9,
+       -25.2
+      ],
+      [
+       -23.9,
+       -7.3
+      ],
+      [
+       -32.1,
+       14.6
+      ],
+      [
+       -38.8,
+       44.8
+      ],
+      [
+       -30.0,
+       83.9
+      ]
+     ],
+     "end_angle_deg": [
+      153.3,
+      329.8
+     ],
+     "end_r_frac": [
+      0.833,
+      0.996
+     ]
+    },
+    "WLO": {
+     "control_img": [
+      [
+       540.0,
+       522.0
+      ],
+      [
+       620.0,
+       581.0
+      ],
+      [
+       703.0,
+       635.0
+      ],
+      [
+       787.0,
+       688.0
+      ],
+      [
+       875.0,
+       736.0
+      ],
+      [
+       957.0,
+       789.0
+      ],
+      [
+       1044.0,
+       837.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.188,
+       0.23
+      ],
+      [
+       -0.015,
+       0.102
+      ],
+      [
+       0.162,
+       -0.012
+      ],
+      [
+       0.344,
+       -0.128
+      ],
+      [
+       0.533,
+       -0.23
+      ],
+      [
+       0.71,
+       -0.345
+      ],
+      [
+       0.898,
+       -0.449
+      ]
+     ],
+     "control_latlon": [
+      [
+       13.3,
+       -11.2
+      ],
+      [
+       5.9,
+       -0.9
+      ],
+      [
+       -0.7,
+       9.3
+      ],
+      [
+       -7.3,
+       20.3
+      ],
+      [
+       -13.3,
+       33.2
+      ],
+      [
+       -20.2,
+       49.1
+      ],
+      [
+       -26.5,
+       90.0
+      ]
+     ],
+     "end_angle_deg": [
+      129.3,
+      333.5
+     ],
+     "end_r_frac": [
+      0.298,
+      1.004
+     ]
+    }
+   }
+  },
+  {
+   "id": "B",
+   "family": "belt",
+   "visible_width": {
+    "arc_deg": 19.85,
+    "arc_deg_p10_p90": [
+     17.6,
+     20.6
+    ],
+    "frac_D": 0.1732,
+    "image_px": 157.4
+   },
+   "width_is": "true",
+   "width_tol": "+-10 %",
+   "edges": [
+    "BUP",
+    "BLO"
+   ],
+   "path": "both edges are near great circles (BUP pole lat -58.6 lon 56.3, rms 3.4 px; BLO pole lat -77.8 lon 79.6, rms 2.8 px); it tapers to a point under W",
+   "enters": "from under W (tip between (556,510) and (705,586))",
+   "leaves": "right limb between 12 and 26 deg",
+   "over": [
+    "X",
+    "U1..U5"
+   ],
+   "under": [
+    "W"
+   ],
+   "edge_control_points": {
+    "BUP": {
+     "control_img": [
+      [
+       556.0,
+       510.0
+      ],
+      [
+       639.0,
+       476.0
+      ],
+      [
+       722.0,
+       441.0
+      ],
+      [
+       805.0,
+       412.0
+      ],
+      [
+       893.0,
+       393.0
+      ],
+      [
+       983.0,
+       393.0
+      ],
+      [
+       1069.0,
+       417.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.154,
+       0.256
+      ],
+      [
+       0.026,
+       0.329
+      ],
+      [
+       0.204,
+       0.405
+      ],
+      [
+       0.383,
+       0.468
+      ],
+      [
+       0.573,
+       0.508
+      ],
+      [
+       0.766,
+       0.509
+      ],
+      [
+       0.95,
+       0.456
+      ]
+     ],
+     "control_latlon": [
+      [
+       14.8,
+       -9.2
+      ],
+      [
+       19.2,
+       1.6
+      ],
+      [
+       23.9,
+       12.9
+      ],
+      [
+       27.9,
+       25.7
+      ],
+      [
+       30.5,
+       41.7
+      ],
+      [
+       30.6,
+       62.9
+      ],
+      [
+       25.6,
+       90.0
+      ]
+     ],
+     "end_angle_deg": [
+      121.0,
+      25.6
+     ],
+     "end_r_frac": [
+      0.299,
+      1.054
+     ]
+    },
+    "BLO": {
+     "control_img": [
+      [
+       705.0,
+       586.0
+      ],
+      [
+       769.0,
+       584.0
+      ],
+      [
+       830.0,
+       573.0
+      ],
+      [
+       892.0,
+       558.0
+      ],
+      [
+       954.0,
+       544.0
+      ],
+      [
+       1016.0,
+       536.0
+      ],
+      [
+       1079.0,
+       535.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.167,
+       0.092
+      ],
+      [
+       0.305,
+       0.096
+      ],
+      [
+       0.436,
+       0.121
+      ],
+      [
+       0.57,
+       0.153
+      ],
+      [
+       0.705,
+       0.182
+      ],
+      [
+       0.837,
+       0.2
+      ],
+      [
+       0.974,
+       0.203
+      ]
+     ],
+     "control_latlon": [
+      [
+       5.3,
+       9.7
+      ],
+      [
+       5.5,
+       17.8
+      ],
+      [
+       6.9,
+       26.0
+      ],
+      [
+       8.8,
+       35.2
+      ],
+      [
+       10.5,
+       45.8
+      ],
+      [
+       11.6,
+       58.7
+      ],
+      [
+       11.7,
+       83.9
+      ]
+     ],
+     "end_angle_deg": [
+      28.9,
+      11.8
+     ],
+     "end_r_frac": [
+      0.191,
+      0.995
+     ]
+    }
+   }
+  },
+  {
+   "id": "X",
+   "family": "belt",
+   "visible_width": {
+    "arc_deg": 9.81,
+    "arc_deg_p10_p90": [
+     1.51,
+     20.37
+    ],
+    "frac_D": 0.0856,
+    "image_px": 77.1
+   },
+   "width_is": "visible wedge only (no own edge visible)",
+   "width_tol": "+-20 %",
+   "edges": [
+    "BLO (B's)",
+    "WUP (W's)"
+   ],
+   "enters": "from under B/W at x~705",
+   "leaves": "right limb between 349 and 12 deg",
+   "over": [],
+   "under": [
+    "B",
+    "W"
+   ],
+   "edge_control_points": {
+    "BLO": {
+     "control_img": [
+      [
+       705.0,
+       586.0
+      ],
+      [
+       769.0,
+       584.0
+      ],
+      [
+       830.0,
+       573.0
+      ],
+      [
+       892.0,
+       558.0
+      ],
+      [
+       954.0,
+       544.0
+      ],
+      [
+       1016.0,
+       536.0
+      ],
+      [
+       1079.0,
+       535.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.167,
+       0.092
+      ],
+      [
+       0.305,
+       0.096
+      ],
+      [
+       0.436,
+       0.121
+      ],
+      [
+       0.57,
+       0.153
+      ],
+      [
+       0.705,
+       0.182
+      ],
+      [
+       0.837,
+       0.2
+      ],
+      [
+       0.974,
+       0.203
+      ]
+     ],
+     "control_latlon": [
+      [
+       5.3,
+       9.7
+      ],
+      [
+       5.5,
+       17.8
+      ],
+      [
+       6.9,
+       26.0
+      ],
+      [
+       8.8,
+       35.2
+      ],
+      [
+       10.5,
+       45.8
+      ],
+      [
+       11.6,
+       58.7
+      ],
+      [
+       11.7,
+       83.9
+      ]
+     ],
+     "end_angle_deg": [
+      28.9,
+      11.8
+     ],
+     "end_r_frac": [
+      0.191,
+      0.995
+     ]
+    },
+    "WUP": {
+     "control_img": [
+      [
+       610.0,
+       550.0
+      ],
+      [
+       682.0,
+       581.0
+      ],
+      [
+       757.0,
+       602.0
+      ],
+      [
+       831.0,
+       625.0
+      ],
+      [
+       902.0,
+       656.0
+      ],
+      [
+       974.0,
+       687.0
+      ],
+      [
+       1048.0,
+       712.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.037,
+       0.17
+      ],
+      [
+       0.117,
+       0.104
+      ],
+      [
+       0.279,
+       0.059
+      ],
+      [
+       0.438,
+       0.008
+      ],
+      [
+       0.593,
+       -0.058
+      ],
+      [
+       0.747,
+       -0.124
+      ],
+      [
+       0.906,
+       -0.179
+      ]
+     ],
+     "control_latlon": [
+      [
+       9.8,
+       -2.2
+      ],
+      [
+       6.0,
+       6.8
+      ],
+      [
+       3.4,
+       16.2
+      ],
+      [
+       0.4,
+       26.0
+      ],
+      [
+       -3.3,
+       36.4
+      ],
+      [
+       -7.1,
+       48.9
+      ],
+      [
+       -10.3,
+       67.0
+      ]
+     ],
+     "end_angle_deg": [
+      102.4,
+      348.8
+     ],
+     "end_r_frac": [
+      0.174,
+      0.923
+     ]
+    }
+   }
+  },
+  {
+   "id": "C",
+   "family": "belt",
+   "visible_width": {
+    "arc_deg": 26.01,
+    "arc_deg_p10_p90": [
+     23.5,
+     27.21
+    ],
+    "frac_D": 0.227,
+    "image_px": 208.1
+   },
+   "width_is": "true",
+   "width_tol": "+-10 %",
+   "edges": [
+    "CUP",
+    "CLO"
+   ],
+   "enters": "left limb between 198 and 221 deg",
+   "leaves": "under A along A's lower edge between (365,676) and (625,843)",
+   "over": [
+    "L3",
+    "L4",
+    "L5",
+    "D family"
+   ],
+   "under": [
+    "A"
+   ],
+   "edge_control_points": {
+    "CUP": {
+     "control_img": [
+      [
+       190.0,
+       768.0
+      ],
+      [
+       216.0,
+       746.0
+      ],
+      [
+       242.0,
+       728.0
+      ],
+      [
+       271.0,
+       710.0
+      ],
+      [
+       302.0,
+       697.0
+      ],
+      [
+       333.0,
+       686.0
+      ],
+      [
+       365.0,
+       676.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.942,
+       -0.3
+      ],
+      [
+       -0.886,
+       -0.253
+      ],
+      [
+       -0.83,
+       -0.213
+      ],
+      [
+       -0.768,
+       -0.175
+      ],
+      [
+       -0.7,
+       -0.146
+      ],
+      [
+       -0.635,
+       -0.124
+      ],
+      [
+       -0.565,
+       -0.101
+      ]
+     ],
+     "control_latlon": [
+      [
+       -17.4,
+       -81.0
+      ],
+      [
+       -14.7,
+       -66.4
+      ],
+      [
+       -12.3,
+       -58.2
+      ],
+      [
+       -10.1,
+       -51.2
+      ],
+      [
+       -8.4,
+       -45.1
+      ],
+      [
+       -7.1,
+       -39.8
+      ],
+      [
+       -5.8,
+       -34.6
+      ]
+     ],
+     "end_angle_deg": [
+      197.6,
+      190.2
+     ],
+     "end_r_frac": [
+      0.989,
+      0.574
+     ]
+    },
+    "CLO": {
+     "control_img": [
+      [
+       270.0,
+       935.0
+      ],
+      [
+       326.0,
+       908.0
+      ],
+      [
+       385.0,
+       891.0
+      ],
+      [
+       444.0,
+       881.0
+      ],
+      [
+       503.0,
+       862.0
+      ],
+      [
+       563.0,
+       845.0
+      ],
+      [
+       623.0,
+       843.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.77,
+       -0.66
+      ],
+      [
+       -0.65,
+       -0.601
+      ],
+      [
+       -0.522,
+       -0.565
+      ],
+      [
+       -0.395,
+       -0.544
+      ],
+      [
+       -0.268,
+       -0.502
+      ],
+      [
+       -0.14,
+       -0.466
+      ],
+      [
+       -0.009,
+       -0.46
+      ]
+     ],
+     "control_latlon": [
+      [
+       -40.6,
+       -90.0
+      ],
+      [
+       -37.0,
+       -54.5
+      ],
+      [
+       -34.4,
+       -39.2
+      ],
+      [
+       -33.0,
+       -28.1
+      ],
+      [
+       -30.1,
+       -18.1
+      ],
+      [
+       -27.8,
+       -9.1
+      ],
+      [
+       -27.4,
+       -0.6
+      ]
+     ],
+     "end_angle_deg": [
+      220.6,
+      268.8
+     ],
+     "end_r_frac": [
+      1.014,
+      0.46
+     ]
+    }
+   }
+  },
+  {
+   "id": "R_in / L5",
+   "family": "rim (upper-left + left limb)",
+   "visible_width": {
+    "upper_part": {
+     "arc_deg": 4.41,
+     "arc_deg_p10_p90": [
+      3.69,
+      5.82
+     ],
+     "frac_D": 0.0385,
+     "image_px": 25.7
+    },
+    "left_limb_part_px": "~40 (foreshortened)"
+   },
+   "width_is": "visible",
+   "width_tol": "+-25 %",
+   "edges": [
+    "LIN (inner, own)"
+   ],
+   "path": "from beside the top whorl (580,306) it sweeps left and down around the upper-left, then runs down the left limb as L5 to (258,712)",
+   "over": [
+    "W (left end)",
+    "A (top-left)",
+    "U0",
+    "L4"
+   ],
+   "under": [
+    "C (at its lower end)"
+   ],
+   "edge_control_points": {
+    "LIN": {
+     "control_img": [
+      [
+       580.0,
+       306.0
+      ],
+      [
+       478.0,
+       329.0
+      ],
+      [
+       385.0,
+       378.0
+      ],
+      [
+       293.0,
+       434.0
+      ],
+      [
+       223.0,
+       513.0
+      ],
+      [
+       215.0,
+       616.0
+      ],
+      [
+       258.0,
+       712.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.102,
+       0.696
+      ],
+      [
+       -0.321,
+       0.646
+      ],
+      [
+       -0.523,
+       0.541
+      ],
+      [
+       -0.721,
+       0.42
+      ],
+      [
+       -0.871,
+       0.251
+      ],
+      [
+       -0.889,
+       0.028
+      ],
+      [
+       -0.796,
+       -0.179
+      ]
+     ],
+     "control_latlon": [
+      [
+       44.1,
+       -8.2
+      ],
+      [
+       40.2,
+       -24.9
+      ],
+      [
+       32.8,
+       -38.5
+      ],
+      [
+       24.8,
+       -52.6
+      ],
+      [
+       14.5,
+       -64.1
+      ],
+      [
+       1.6,
+       -62.8
+      ],
+      [
+       -10.3,
+       -54.0
+      ]
+     ],
+     "end_angle_deg": [
+      98.3,
+      192.7
+     ],
+     "end_r_frac": [
+      0.703,
+      0.816
+     ]
+    }
+   }
+  },
+  {
+   "id": "R2",
+   "family": "rim",
+   "visible_width": {
+    "arc_deg": 18.54,
+    "arc_deg_p10_p90": [
+     13.74,
+     22.77
+    ],
+    "frac_D": 0.1618,
+    "image_px": 118.3
+   },
+   "width_is": "visible",
+   "width_tol": "+-25 %",
+   "edges": [
+    "LC",
+    "LA"
+   ],
+   "leaves": "upper-left limb between 140 and 167 deg",
+   "over": [],
+   "under": [],
+   "note": "order against R_in/R3 not resolvable",
+   "edge_control_points": {
+    "LC": {
+     "control_img": [
+      [
+       473.0,
+       314.0
+      ],
+      [
+       415.0,
+       335.0
+      ],
+      [
+       360.0,
+       363.0
+      ],
+      [
+       305.0,
+       387.0
+      ],
+      [
+       260.0,
+       429.0
+      ],
+      [
+       221.0,
+       477.0
+      ],
+      [
+       188.0,
+       529.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.333,
+       0.679
+      ],
+      [
+       -0.458,
+       0.634
+      ],
+      [
+       -0.577,
+       0.573
+      ],
+      [
+       -0.695,
+       0.521
+      ],
+      [
+       -0.792,
+       0.431
+      ],
+      [
+       -0.877,
+       0.328
+      ],
+      [
+       -0.948,
+       0.216
+      ]
+     ],
+     "control_latlon": [
+      [
+       42.7,
+       -26.9
+      ],
+      [
+       39.3,
+       -36.3
+      ],
+      [
+       34.9,
+       -44.7
+      ],
+      [
+       31.4,
+       -54.5
+      ],
+      [
+       25.5,
+       -61.4
+      ],
+      [
+       19.1,
+       -68.1
+      ],
+      [
+       12.5,
+       -76.1
+      ]
+     ],
+     "end_angle_deg": [
+      116.1,
+      167.2
+     ],
+     "end_r_frac": [
+      0.756,
+      0.972
+     ]
+    },
+    "LA": {
+     "control_img": [
+      [
+       600.0,
+       238.0
+      ],
+      [
+       542.0,
+       242.0
+      ],
+      [
+       484.0,
+       248.0
+      ],
+      [
+       429.0,
+       256.0
+      ],
+      [
+       373.0,
+       269.0
+      ],
+      [
+       319.0,
+       292.0
+      ],
+      [
+       273.0,
+       326.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.059,
+       0.842
+      ],
+      [
+       -0.184,
+       0.834
+      ],
+      [
+       -0.308,
+       0.822
+      ],
+      [
+       -0.427,
+       0.803
+      ],
+      [
+       -0.549,
+       0.776
+      ],
+      [
+       -0.663,
+       0.727
+      ],
+      [
+       -0.765,
+       0.654
+      ]
+     ],
+     "control_latlon": [
+      [
+       57.4,
+       -6.3
+      ],
+      [
+       56.5,
+       -19.4
+      ],
+      [
+       55.3,
+       -32.7
+      ],
+      [
+       53.4,
+       -45.7
+      ],
+      [
+       50.9,
+       -60.6
+      ],
+      [
+       46.6,
+       -74.9
+      ],
+      [
+       40.5,
+       -90.0
+      ]
+     ],
+     "end_angle_deg": [
+      94.0,
+      139.5
+     ],
+     "end_r_frac": [
+      0.844,
+      1.006
+     ]
+    }
+   }
+  },
+  {
+   "id": "R3",
+   "family": "rim",
+   "visible_width": {
+    "image_px": "10..40 (foreshortened, between LA and the limb)"
+   },
+   "edges": [
+    "LA"
+   ],
+   "leaves": "upper-left limb at ~140 deg",
+   "note": "outermost upper-left strip",
+   "edge_control_points": {
+    "LA": {
+     "control_img": [
+      [
+       600.0,
+       238.0
+      ],
+      [
+       542.0,
+       242.0
+      ],
+      [
+       484.0,
+       248.0
+      ],
+      [
+       429.0,
+       256.0
+      ],
+      [
+       373.0,
+       269.0
+      ],
+      [
+       319.0,
+       292.0
+      ],
+      [
+       273.0,
+       326.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.059,
+       0.842
+      ],
+      [
+       -0.184,
+       0.834
+      ],
+      [
+       -0.308,
+       0.822
+      ],
+      [
+       -0.427,
+       0.803
+      ],
+      [
+       -0.549,
+       0.776
+      ],
+      [
+       -0.663,
+       0.727
+      ],
+      [
+       -0.765,
+       0.654
+      ]
+     ],
+     "control_latlon": [
+      [
+       57.4,
+       -6.3
+      ],
+      [
+       56.5,
+       -19.4
+      ],
+      [
+       55.3,
+       -32.7
+      ],
+      [
+       53.4,
+       -45.7
+      ],
+      [
+       50.9,
+       -60.6
+      ],
+      [
+       46.6,
+       -74.9
+      ],
+      [
+       40.5,
+       -90.0
+      ]
+     ],
+     "end_angle_deg": [
+      94.0,
+      139.5
+     ],
+     "end_r_frac": [
+      0.844,
+      1.006
+     ]
+    }
+   }
+  },
+  {
+   "id": "L3",
+   "family": "left limb",
+   "visible_width": {
+    "arc_deg": 9.57,
+    "arc_deg_p10_p90": [
+     7.35,
+     10.27
+    ],
+    "frac_D": 0.0835,
+    "image_px": 63.9
+   },
+   "width_is": "visible (right edge under A)",
+   "width_tol": "+-20 %",
+   "edges": [
+    "L3L"
+   ],
+   "enters": "from under R_in at ~(270,452)",
+   "leaves": "under C at ~(310,700)",
+   "over": [],
+   "under": [
+    "A",
+    "C",
+    "R_in",
+    "L4? (low confidence)"
+   ],
+   "edge_control_points": {
+    "L3L": {
+     "control_img": [
+      [
+       270.0,
+       452.0
+      ],
+      [
+       252.0,
+       491.0
+      ],
+      [
+       252.0,
+       535.0
+      ],
+      [
+       257.0,
+       579.0
+      ],
+      [
+       266.0,
+       624.0
+      ],
+      [
+       283.0,
+       664.0
+      ],
+      [
+       309.0,
+       699.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.77,
+       0.381
+      ],
+      [
+       -0.808,
+       0.297
+      ],
+      [
+       -0.81,
+       0.202
+      ],
+      [
+       -0.799,
+       0.108
+      ],
+      [
+       -0.778,
+       0.011
+      ],
+      [
+       -0.742,
+       -0.077
+      ],
+      [
+       -0.685,
+       -0.151
+      ]
+     ],
+     "control_latlon": [
+      [
+       22.4,
+       -56.4
+      ],
+      [
+       17.3,
+       -57.8
+      ],
+      [
+       11.7,
+       -55.8
+      ],
+      [
+       6.2,
+       -53.4
+      ],
+      [
+       0.7,
+       -51.1
+      ],
+      [
+       -4.4,
+       -48.1
+      ],
+      [
+       -8.7,
+       -43.9
+      ]
+     ],
+     "end_angle_deg": [
+      153.7,
+      192.5
+     ],
+     "end_r_frac": [
+      0.859,
+      0.702
+     ]
+    }
+   }
+  },
+  {
+   "id": "L4",
+   "family": "left limb",
+   "visible_width": {
+    "arc_deg": 8.99,
+    "arc_deg_p10_p90": [
+     1.74,
+     10.61
+    ],
+    "frac_D": 0.0785,
+    "image_px": 48.6
+   },
+   "width_is": "visible",
+   "width_tol": "+-25 %",
+   "edges": [
+    "L3L",
+    "LIN lower"
+   ],
+   "enters": "from under R_in",
+   "leaves": "under C",
+   "under": [
+    "R_in/L5",
+    "C"
+   ],
+   "edge_control_points": {
+    "L3L": {
+     "control_img": [
+      [
+       270.0,
+       452.0
+      ],
+      [
+       252.0,
+       491.0
+      ],
+      [
+       252.0,
+       535.0
+      ],
+      [
+       257.0,
+       579.0
+      ],
+      [
+       266.0,
+       624.0
+      ],
+      [
+       283.0,
+       664.0
+      ],
+      [
+       309.0,
+       699.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.77,
+       0.381
+      ],
+      [
+       -0.808,
+       0.297
+      ],
+      [
+       -0.81,
+       0.202
+      ],
+      [
+       -0.799,
+       0.108
+      ],
+      [
+       -0.778,
+       0.011
+      ],
+      [
+       -0.742,
+       -0.077
+      ],
+      [
+       -0.685,
+       -0.151
+      ]
+     ],
+     "control_latlon": [
+      [
+       22.4,
+       -56.4
+      ],
+      [
+       17.3,
+       -57.8
+      ],
+      [
+       11.7,
+       -55.8
+      ],
+      [
+       6.2,
+       -53.4
+      ],
+      [
+       0.7,
+       -51.1
+      ],
+      [
+       -4.4,
+       -48.1
+      ],
+      [
+       -8.7,
+       -43.9
+      ]
+     ],
+     "end_angle_deg": [
+      153.7,
+      192.5
+     ],
+     "end_r_frac": [
+      0.859,
+      0.702
+     ]
+    },
+    "LIN": {
+     "control_img": [
+      [
+       580.0,
+       306.0
+      ],
+      [
+       478.0,
+       329.0
+      ],
+      [
+       385.0,
+       378.0
+      ],
+      [
+       293.0,
+       434.0
+      ],
+      [
+       223.0,
+       513.0
+      ],
+      [
+       215.0,
+       616.0
+      ],
+      [
+       258.0,
+       712.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.102,
+       0.696
+      ],
+      [
+       -0.321,
+       0.646
+      ],
+      [
+       -0.523,
+       0.541
+      ],
+      [
+       -0.721,
+       0.42
+      ],
+      [
+       -0.871,
+       0.251
+      ],
+      [
+       -0.889,
+       0.028
+      ],
+      [
+       -0.796,
+       -0.179
+      ]
+     ],
+     "control_latlon": [
+      [
+       44.1,
+       -8.2
+      ],
+      [
+       40.2,
+       -24.9
+      ],
+      [
+       32.8,
+       -38.5
+      ],
+      [
+       24.8,
+       -52.6
+      ],
+      [
+       14.5,
+       -64.1
+      ],
+      [
+       1.6,
+       -62.8
+      ],
+      [
+       -10.3,
+       -54.0
+      ]
+     ],
+     "end_angle_deg": [
+      98.3,
+      192.7
+     ],
+     "end_r_frac": [
+      0.703,
+      0.816
+     ]
+    }
+   }
+  },
+  {
+   "id": "U0",
+   "family": "upper (to the whorl)",
+   "visible_width": {
+    "image_px": "~135",
+    "frac_D": 0.145,
+    "tol": "+-25 %"
+   },
+   "path": "from under W's twisted section up-right to the whorl, between R_in and the V-gap UA",
+   "under": [
+    "W",
+    "R_in"
+   ],
+   "edge_control_points": {}
+  },
+  {
+   "id": "U1..U4",
+   "family": "upper (to the whorl)",
+   "visible_width": {
+    "U1": {
+     "arc_deg": 5.67,
+     "arc_deg_p10_p90": [
+      4.96,
+      11.62
+     ],
+     "frac_D": 0.0495,
+     "image_px": 44.7
+    },
+    "U2": {
+     "arc_deg": 8.54,
+     "arc_deg_p10_p90": [
+      6.78,
+      11.15
+     ],
+     "frac_D": 0.0745,
+     "image_px": 69.0
+    },
+    "U3": {
+     "arc_deg": 13.53,
+     "arc_deg_p10_p90": [
+      8.5,
+      17.52
+     ],
+     "frac_D": 0.1181,
+     "image_px": 97.9
+    },
+    "U4": {
+     "arc_deg": 9.87,
+     "arc_deg_p10_p90": [
+      9.23,
+      11.57
+     ],
+     "frac_D": 0.0861,
+     "image_px": 66.4
+    }
+   },
+   "width_tol": "+-25 %",
+   "edges": [
+    "UA",
+    "UC",
+    "UD",
+    "UE",
+    "UF"
+   ],
+   "path": "fan from B's upper edge up to the top whorl; U1/U2 run up-right, U3/U4 bend over toward the right; UE/UF run down toward the right limb",
+   "under": [
+    "B"
+   ],
+   "note": "U0 and U1 are separated by an open V-gap (dark wedge) that closes at W",
+   "edge_control_points": {
+    "UA": {
+     "control_img": [
+      [
+       496.0,
+       486.0
+      ],
+      [
+       529.0,
+       448.0
+      ],
+      [
+       567.0,
+       416.0
+      ],
+      [
+       596.0,
+       379.0
+      ],
+      [
+       630.0,
+       343.0
+      ],
+      [
+       660.0,
+       302.0
+      ],
+      [
+       690.0,
+       262.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.283,
+       0.308
+      ],
+      [
+       -0.212,
+       0.389
+      ],
+      [
+       -0.13,
+       0.458
+      ],
+      [
+       -0.067,
+       0.538
+      ],
+      [
+       0.006,
+       0.617
+      ],
+      [
+       0.07,
+       0.704
+      ],
+      [
+       0.134,
+       0.79
+      ]
+     ],
+     "control_latlon": [
+      [
+       17.9,
+       -17.3
+      ],
+      [
+       22.9,
+       -13.3
+      ],
+      [
+       27.3,
+       -8.4
+      ],
+      [
+       32.6,
+       -4.6
+      ],
+      [
+       38.1,
+       0.4
+      ],
+      [
+       44.7,
+       5.6
+      ],
+      [
+       52.2,
+       12.7
+      ]
+     ],
+     "end_angle_deg": [
+      132.6,
+      80.3
+     ],
+     "end_r_frac": [
+      0.418,
+      0.801
+     ]
+    },
+    "UC": {
+     "control_img": [
+      [
+       640.0,
+       462.0
+      ],
+      [
+       647.0,
+       427.0
+      ],
+      [
+       652.0,
+       393.0
+      ],
+      [
+       664.0,
+       361.0
+      ],
+      [
+       689.0,
+       334.0
+      ],
+      [
+       708.0,
+       307.0
+      ],
+      [
+       725.0,
+       275.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.027,
+       0.36
+      ],
+      [
+       0.042,
+       0.436
+      ],
+      [
+       0.053,
+       0.508
+      ],
+      [
+       0.079,
+       0.578
+      ],
+      [
+       0.132,
+       0.634
+      ],
+      [
+       0.174,
+       0.693
+      ],
+      [
+       0.21,
+       0.762
+      ]
+     ],
+     "control_latlon": [
+      [
+       21.1,
+       1.7
+      ],
+      [
+       25.8,
+       2.7
+      ],
+      [
+       30.5,
+       3.5
+      ],
+      [
+       35.3,
+       5.6
+      ],
+      [
+       39.4,
+       9.9
+      ],
+      [
+       43.9,
+       14.0
+      ],
+      [
+       49.6,
+       18.9
+      ]
+     ],
+     "end_angle_deg": [
+      85.7,
+      74.6
+     ],
+     "end_r_frac": [
+      0.361,
+      0.791
+     ]
+    },
+    "UD": {
+     "control_img": [
+      [
+       738.0,
+       432.0
+      ],
+      [
+       741.0,
+       404.0
+      ],
+      [
+       744.0,
+       376.0
+      ],
+      [
+       749.0,
+       349.0
+      ],
+      [
+       763.0,
+       322.0
+      ],
+      [
+       774.0,
+       297.0
+      ],
+      [
+       785.0,
+       271.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.238,
+       0.424
+      ],
+      [
+       0.244,
+       0.484
+      ],
+      [
+       0.252,
+       0.544
+      ],
+      [
+       0.261,
+       0.604
+      ],
+      [
+       0.291,
+       0.66
+      ],
+      [
+       0.317,
+       0.715
+      ],
+      [
+       0.339,
+       0.771
+      ]
+     ],
+     "control_latlon": [
+      [
+       25.1,
+       15.3
+      ],
+      [
+       29.0,
+       16.2
+      ],
+      [
+       33.0,
+       17.5
+      ],
+      [
+       37.1,
+       19.1
+      ],
+      [
+       41.3,
+       22.8
+      ],
+      [
+       45.7,
+       26.9
+      ],
+      [
+       50.5,
+       32.2
+      ]
+     ],
+     "end_angle_deg": [
+      60.7,
+      66.3
+     ],
+     "end_r_frac": [
+      0.487,
+      0.842
+     ]
+    },
+    "UE": {
+     "control_img": [
+      [
+       825.0,
+       237.0
+      ],
+      [
+       833.0,
+       264.0
+      ],
+      [
+       840.0,
+       289.0
+      ],
+      [
+       847.0,
+       316.0
+      ],
+      [
+       855.0,
+       343.0
+      ],
+      [
+       863.0,
+       368.0
+      ],
+      [
+       871.0,
+       394.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.426,
+       0.844
+      ],
+      [
+       0.444,
+       0.787
+      ],
+      [
+       0.458,
+       0.733
+      ],
+      [
+       0.473,
+       0.674
+      ],
+      [
+       0.49,
+       0.616
+      ],
+      [
+       0.507,
+       0.563
+      ],
+      [
+       0.526,
+       0.506
+      ]
+     ],
+     "control_latlon": [
+      [
+       57.6,
+       52.7
+      ],
+      [
+       51.9,
+       46.0
+      ],
+      [
+       47.1,
+       42.3
+      ],
+      [
+       42.4,
+       39.8
+      ],
+      [
+       38.1,
+       38.5
+      ],
+      [
+       34.3,
+       37.8
+      ],
+      [
+       30.4,
+       37.6
+      ]
+     ],
+     "end_angle_deg": [
+      63.2,
+      43.9
+     ],
+     "end_r_frac": [
+      0.946,
+      0.73
+     ]
+    },
+    "UF": {
+     "control_img": [
+      [
+       882.0,
+       264.0
+      ],
+      [
+       899.0,
+       281.0
+      ],
+      [
+       914.0,
+       299.0
+      ],
+      [
+       919.0,
+       322.0
+      ],
+      [
+       917.0,
+       344.0
+      ],
+      [
+       917.0,
+       367.0
+      ],
+      [
+       925.0,
+       390.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.549,
+       0.786
+      ],
+      [
+       0.585,
+       0.75
+      ],
+      [
+       0.618,
+       0.712
+      ],
+      [
+       0.628,
+       0.662
+      ],
+      [
+       0.625,
+       0.614
+      ],
+      [
+       0.625,
+       0.564
+      ],
+      [
+       0.641,
+       0.515
+      ]
+     ],
+     "control_latlon": [
+      [
+       51.8,
+       62.6
+      ],
+      [
+       48.6,
+       62.2
+      ],
+      [
+       45.4,
+       61.6
+      ],
+      [
+       41.4,
+       56.8
+      ],
+      [
+       37.9,
+       52.4
+      ],
+      [
+       34.3,
+       49.2
+      ],
+      [
+       31.0,
+       48.4
+      ]
+     ],
+     "end_angle_deg": [
+      55.1,
+      38.8
+     ],
+     "end_r_frac": [
+      0.959,
+      0.822
+     ]
+    }
+   }
+  },
+  {
+   "id": "U5",
+   "family": "upper-right limb",
+   "visible_width": {
+    "image_px": "60..80"
+   },
+   "edges": [
+    "UF"
+   ],
+   "leaves": "upper-right limb",
+   "under": [
+    "B"
+   ],
+   "edge_control_points": {
+    "UF": {
+     "control_img": [
+      [
+       882.0,
+       264.0
+      ],
+      [
+       899.0,
+       281.0
+      ],
+      [
+       914.0,
+       299.0
+      ],
+      [
+       919.0,
+       322.0
+      ],
+      [
+       917.0,
+       344.0
+      ],
+      [
+       917.0,
+       367.0
+      ],
+      [
+       925.0,
+       390.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.549,
+       0.786
+      ],
+      [
+       0.585,
+       0.75
+      ],
+      [
+       0.618,
+       0.712
+      ],
+      [
+       0.628,
+       0.662
+      ],
+      [
+       0.625,
+       0.614
+      ],
+      [
+       0.625,
+       0.564
+      ],
+      [
+       0.641,
+       0.515
+      ]
+     ],
+     "control_latlon": [
+      [
+       51.8,
+       62.6
+      ],
+      [
+       48.6,
+       62.2
+      ],
+      [
+       45.4,
+       61.6
+      ],
+      [
+       41.4,
+       56.8
+      ],
+      [
+       37.9,
+       52.4
+      ],
+      [
+       34.3,
+       49.2
+      ],
+      [
+       31.0,
+       48.4
+      ]
+     ],
+     "end_angle_deg": [
+      55.1,
+      38.8
+     ],
+     "end_r_frac": [
+      0.959,
+      0.822
+     ]
+    }
+   }
+  },
+  {
+   "id": "D family",
+   "family": "bottom",
+   "visible_width": {
+    "D_a": {
+     "arc_deg": 27.15,
+     "arc_deg_p10_p90": [
+      25.0,
+      29.62
+     ],
+     "frac_D": 0.2369,
+     "image_px": 173.0
+    },
+    "D_b": {
+     "arc_deg": 12.31,
+     "arc_deg_p10_p90": [
+      11.58,
+      13.41
+     ],
+     "frac_D": 0.1075,
+     "image_px": 86.2
+    }
+   },
+   "width_tol": "+-20 %",
+   "edges": [
+    "D14",
+    "D57",
+    "D9",
+    "D19",
+    "D27"
+   ],
+   "path": "3-4 steep strips run from under C/A down and right to the bottom limb, converging toward image angle ~265-280 deg; two strips run along the bottom outline",
+   "under": [
+    "C",
+    "A"
+   ],
+   "edge_control_points": {
+    "D14": {
+     "control_img": [
+      [
+       300.0,
+       925.0
+      ],
+      [
+       329.0,
+       950.0
+      ],
+      [
+       358.0,
+       977.0
+      ],
+      [
+       384.0,
+       1004.0
+      ],
+      [
+       413.0,
+       1029.0
+      ],
+      [
+       447.0,
+       1051.0
+      ],
+      [
+       480.0,
+       1070.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.705,
+       -0.638
+      ],
+      [
+       -0.644,
+       -0.692
+      ],
+      [
+       -0.58,
+       -0.75
+      ],
+      [
+       -0.523,
+       -0.809
+      ],
+      [
+       -0.461,
+       -0.862
+      ],
+      [
+       -0.389,
+       -0.909
+      ],
+      [
+       -0.318,
+       -0.95
+      ]
+     ],
+     "control_latlon": [
+      [
+       -39.6,
+       -66.4
+      ],
+      [
+       -43.8,
+       -63.0
+      ],
+      [
+       -48.6,
+       -61.4
+      ],
+      [
+       -54.0,
+       -62.9
+      ],
+      [
+       -59.6,
+       -65.6
+      ],
+      [
+       -65.4,
+       -68.9
+      ],
+      [
+       -71.5,
+       -90.0
+      ]
+     ],
+     "end_angle_deg": [
+      222.1,
+      251.5
+     ],
+     "end_r_frac": [
+      0.951,
+      1.002
+     ]
+    },
+    "D57": {
+     "control_img": [
+      [
+       436.0,
+       865.0
+      ],
+      [
+       448.0,
+       888.0
+      ],
+      [
+       461.0,
+       911.0
+      ],
+      [
+       472.0,
+       932.0
+      ],
+      [
+       484.0,
+       955.0
+      ],
+      [
+       497.0,
+       977.0
+      ],
+      [
+       510.0,
+       1000.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.412,
+       -0.509
+      ],
+      [
+       -0.386,
+       -0.558
+      ],
+      [
+       -0.359,
+       -0.607
+      ],
+      [
+       -0.335,
+       -0.653
+      ],
+      [
+       -0.308,
+       -0.702
+      ],
+      [
+       -0.281,
+       -0.751
+      ],
+      [
+       -0.253,
+       -0.799
+      ]
+     ],
+     "control_latlon": [
+      [
+       -30.6,
+       -28.6
+      ],
+      [
+       -33.9,
+       -27.7
+      ],
+      [
+       -37.4,
+       -26.8
+      ],
+      [
+       -40.7,
+       -26.2
+      ],
+      [
+       -44.6,
+       -25.6
+      ],
+      [
+       -48.7,
+       -25.2
+      ],
+      [
+       -53.1,
+       -24.9
+      ]
+     ],
+     "end_angle_deg": [
+      231.0,
+      252.4
+     ],
+     "end_r_frac": [
+      0.655,
+      0.839
+     ]
+    },
+    "D9": {
+     "control_img": [
+      [
+       527.0,
+       866.0
+      ],
+      [
+       546.0,
+       897.0
+      ],
+      [
+       567.0,
+       928.0
+      ],
+      [
+       590.0,
+       958.0
+      ],
+      [
+       614.0,
+       985.0
+      ],
+      [
+       639.0,
+       1011.0
+      ],
+      [
+       664.0,
+       1039.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.216,
+       -0.511
+      ],
+      [
+       -0.175,
+       -0.577
+      ],
+      [
+       -0.13,
+       -0.645
+      ],
+      [
+       -0.08,
+       -0.71
+      ],
+      [
+       -0.029,
+       -0.768
+      ],
+      [
+       0.025,
+       -0.823
+      ],
+      [
+       0.08,
+       -0.884
+      ]
+     ],
+     "control_latlon": [
+      [
+       -30.7,
+       -14.6
+      ],
+      [
+       -35.2,
+       -12.4
+      ],
+      [
+       -40.1,
+       -9.8
+      ],
+      [
+       -45.2,
+       -6.5
+      ],
+      [
+       -50.2,
+       -2.6
+      ],
+      [
+       -55.4,
+       2.6
+      ],
+      [
+       -62.2,
+       9.9
+      ]
+     ],
+     "end_angle_deg": [
+      247.1,
+      275.2
+     ],
+     "end_r_frac": [
+      0.555,
+      0.888
+     ]
+    },
+    "D19": {
+     "control_img": [
+      [
+       517.0,
+       1029.0
+      ],
+      [
+       545.0,
+       1034.0
+      ],
+      [
+       568.0,
+       1044.0
+      ],
+      [
+       591.0,
+       1057.0
+      ],
+      [
+       616.0,
+       1068.0
+      ],
+      [
+       644.0,
+       1075.0
+      ],
+      [
+       669.0,
+       1080.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.238,
+       -0.862
+      ],
+      [
+       -0.178,
+       -0.873
+      ],
+      [
+       -0.127,
+       -0.895
+      ],
+      [
+       -0.078,
+       -0.921
+      ],
+      [
+       -0.023,
+       -0.946
+      ],
+      [
+       0.035,
+       -0.962
+      ],
+      [
+       0.09,
+       -0.972
+      ]
+     ],
+     "control_latlon": [
+      [
+       -59.5,
+       -28.0
+      ],
+      [
+       -60.8,
+       -21.5
+      ],
+      [
+       -63.5,
+       -16.6
+      ],
+      [
+       -67.1,
+       -11.6
+      ],
+      [
+       -71.1,
+       -4.2
+      ],
+      [
+       -74.1,
+       7.3
+      ],
+      [
+       -76.3,
+       22.3
+      ]
+     ],
+     "end_angle_deg": [
+      254.6,
+      275.3
+     ],
+     "end_r_frac": [
+      0.894,
+      0.976
+     ]
+    },
+    "D27": {
+     "control_img": [
+      [
+       700.0,
+       1050.0
+      ],
+      [
+       730.0,
+       1045.0
+      ],
+      [
+       760.0,
+       1043.0
+      ],
+      [
+       791.0,
+       1042.0
+      ],
+      [
+       821.0,
+       1038.0
+      ],
+      [
+       850.0,
+       1030.0
+      ],
+      [
+       878.0,
+       1021.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.156,
+       -0.907
+      ],
+      [
+       0.22,
+       -0.896
+      ],
+      [
+       0.285,
+       -0.893
+      ],
+      [
+       0.354,
+       -0.889
+      ],
+      [
+       0.418,
+       -0.881
+      ],
+      [
+       0.48,
+       -0.865
+      ],
+      [
+       0.541,
+       -0.844
+      ]
+     ],
+     "control_latlon": [
+      [
+       -65.1,
+       21.8
+      ],
+      [
+       -63.7,
+       29.8
+      ],
+      [
+       -63.2,
+       39.2
+      ],
+      [
+       -62.8,
+       50.6
+      ],
+      [
+       -61.8,
+       61.9
+      ],
+      [
+       -59.8,
+       72.8
+      ],
+      [
+       -57.3,
+       90.0
+      ]
+     ],
+     "end_angle_deg": [
+      279.8,
+      302.7
+     ],
+     "end_r_frac": [
+      0.921,
+      1.002
+     ]
+    }
+   }
+  },
+  {
+   "id": "E",
+   "family": "bottom-right",
+   "visible_width": {
+    "image_px": "~140 at x=800 (visible)"
+   },
+   "edges": [
+    "ALO (A's)",
+    "D27"
+   ],
+   "path": "runs along the lower-right outline under A",
+   "under": [
+    "A"
+   ],
+   "edge_control_points": {
+    "ALO": {
+     "control_img": [
+      [
+       282.0,
+       455.0
+      ],
+      [
+       330.0,
+       612.0
+      ],
+      [
+       435.0,
+       732.0
+      ],
+      [
+       574.0,
+       817.0
+      ],
+      [
+       727.0,
+       876.0
+      ],
+      [
+       882.0,
+       920.0
+      ],
+      [
+       1027.0,
+       861.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       -0.744,
+       0.375
+      ],
+      [
+       -0.642,
+       0.037
+      ],
+      [
+       -0.415,
+       -0.223
+      ],
+      [
+       -0.116,
+       -0.406
+      ],
+      [
+       0.214,
+       -0.532
+      ],
+      [
+       0.549,
+       -0.627
+      ],
+      [
+       0.861,
+       -0.501
+      ]
+     ],
+     "control_latlon": [
+      [
+       22.0,
+       -53.4
+      ],
+      [
+       2.1,
+       -39.9
+      ],
+      [
+       -12.9,
+       -25.2
+      ],
+      [
+       -23.9,
+       -7.3
+      ],
+      [
+       -32.1,
+       14.6
+      ],
+      [
+       -38.8,
+       44.8
+      ],
+      [
+       -30.0,
+       83.9
+      ]
+     ],
+     "end_angle_deg": [
+      153.3,
+      329.8
+     ],
+     "end_r_frac": [
+      0.833,
+      0.996
+     ]
+    },
+    "D27": {
+     "control_img": [
+      [
+       700.0,
+       1050.0
+      ],
+      [
+       730.0,
+       1045.0
+      ],
+      [
+       760.0,
+       1043.0
+      ],
+      [
+       791.0,
+       1042.0
+      ],
+      [
+       821.0,
+       1038.0
+      ],
+      [
+       850.0,
+       1030.0
+      ],
+      [
+       878.0,
+       1021.0
+      ]
+     ],
+     "control_disc_uv": [
+      [
+       0.156,
+       -0.907
+      ],
+      [
+       0.22,
+       -0.896
+      ],
+      [
+       0.285,
+       -0.893
+      ],
+      [
+       0.354,
+       -0.889
+      ],
+      [
+       0.418,
+       -0.881
+      ],
+      [
+       0.48,
+       -0.865
+      ],
+      [
+       0.541,
+       -0.844
+      ]
+     ],
+     "control_latlon": [
+      [
+       -65.1,
+       21.8
+      ],
+      [
+       -63.7,
+       29.8
+      ],
+      [
+       -63.2,
+       39.2
+      ],
+      [
+       -62.8,
+       50.6
+      ],
+      [
+       -61.8,
+       61.9
+      ],
+      [
+       -59.8,
+       72.8
+      ],
+      [
+       -57.3,
+       90.0
+      ]
+     ],
+     "end_angle_deg": [
+      279.8,
+      302.7
+     ],
+     "end_r_frac": [
+      0.921,
+      1.002
+     ]
+    }
+   }
+  }
+ ],
+ "crossings": [
+  {
+   "over": "W",
+   "under": "A",
+   "where": "all along W's lower edge (540,522)->(1046,838)",
+   "evidence": "T1/T2 hang from W onto A; bright rim on W, crevice on A; outline step 5.8 px at 332 deg",
+   "confidence": "high"
+  },
+  {
+   "over": "W",
+   "under": "X",
+   "where": "W's upper edge x 705->1048",
+   "evidence": "rim on W; X has no own edge",
+   "confidence": "high"
+  },
+  {
+   "over": "W",
+   "under": "B",
+   "where": "B's tip (556,510)..(705,586)",
+   "evidence": "both B edges end at W (T-junctions)",
+   "confidence": "high"
+  },
+  {
+   "over": "W",
+   "under": "U0",
+   "where": "(496,486)",
+   "evidence": "UA ends at W's twisted section",
+   "confidence": "medium"
+  },
+  {
+   "over": "R_in",
+   "under": "W",
+   "where": "(363,390)",
+   "evidence": "W's twisted end emerges from R_in's crevice",
+   "confidence": "high"
+  },
+  {
+   "over": "R_in",
+   "under": "A",
+   "where": "(282,455)",
+   "evidence": "A's lower edge ends at R_in's crevice",
+   "confidence": "high"
+  },
+  {
+   "over": "R_in",
+   "under": "U0",
+   "where": "R_in inner edge (378..505, 314..387)",
+   "evidence": "deep crevice on the U0 side",
+   "confidence": "medium"
+  },
+  {
+   "over": "B",
+   "under": "X",
+   "where": "B's lower edge (705,586)->(1080,535)",
+   "evidence": "rim on B, crevice on X; outline step 6.2 px at 11.8 deg",
+   "confidence": "high"
+  },
+  {
+   "over": "B",
+   "under": "U1..U5",
+   "where": "B's upper edge (556,510)->(1070,418)",
+   "evidence": "U edges end at it; the rolled rim carries B's along-strip texture",
+   "confidence": "medium-high"
+  },
+  {
+   "over": "A",
+   "under": "C",
+   "where": "(365,676) and (625,843)",
+   "evidence": "both C edges end at A's lower edge",
+   "confidence": "high"
+  },
+  {
+   "over": "A",
+   "under": "L3",
+   "where": "A's lower edge x 282->365",
+   "evidence": "L3's right edge hidden",
+   "confidence": "medium"
+  },
+  {
+   "over": "A",
+   "under": "D family / E",
+   "where": "A's lower edge x 540->1028",
+   "evidence": "crevice below, D9 ends at the A/C junction",
+   "confidence": "high"
+  },
+  {
+   "over": "C",
+   "under": "L3, L4, L5",
+   "where": "C's upper edge (190,768)->(365,676)",
+   "evidence": "L edges end at C; outline step 6.7 px at 196 deg",
+   "confidence": "high"
+  },
+  {
+   "over": "C",
+   "under": "D family",
+   "where": "C's lower edge (270,935)->(625,843)",
+   "evidence": "D14/D57 end at it; rim on C, crevice below",
+   "confidence": "high"
+  },
+  {
+   "over": "L4",
+   "under": "L3",
+   "where": "(250..310, 480..700)",
+   "evidence": "shading rule only (rim on L4 side)",
+   "confidence": "low"
+  },
+  {
+   "over": "(gap)",
+   "under": "-",
+   "where": "U0/U1 V-gap from (496,486) opening to ~30 px at (585,390); whorl V-gap (626..693, 188..254)",
+   "evidence": "dark wedges: strips abut without overlap",
+   "confidence": "high"
+  }
+ ],
+ "layering_note": "The order is NOT one stack: R_in over A, A over C, C over L5 (= R_in's lower end) is a cycle -- the strips are woven. Build crossing-local layering (per-crossing radial offset of one step height), not a global layer index.",
+ "inferred_continuity": {
+  "status": "INFERRED from measured great-circle fits (the joining stretch is hidden under A and W)",
+  "B_equals_C": {
+   "evidence": [
+    "the great circle through C's upper edge meets the right limb at 18.4 deg, inside B's exit band 12..26 deg",
+    "the great circles through B's edges return to the limb at 192.0 / 206.9 deg, inside C's entry band 198..221 deg",
+    "pole of CUP within 7.7 deg of BLO's and 13.3 deg of BUP's"
+   ],
+   "build": "one strip: enters lower-left as C (0.227 D), passes under A then W, emerges as B (0.173 D) -- ~25 % taper across the hidden stretch"
+  },
+  "X": {
+   "reading": "either a separate strip parallel to A or the upper part of A showing above W; not resolvable",
+   "build": "separate strip >= 0.18 D wide, parallel to A, under B and W"
+  }
+ },
+ "whorls": {
+  "top": {
+   "value": {
+    "image_px": [
+     690,
+     252
+    ],
+    "sphere": [
+     0.135,
+     0.812,
+     0.568
+    ],
+    "deg_from_view_axis": 55.4,
+    "lean_right_of_vertical_deg": 9.4
+   },
+   "tol": "+-10 px",
+   "unit": "px",
+   "method": "apex of the whorl V-gap and the convergence of R2/R3/R_in (from the left), U0..U4 (from below), U5/UF (to the right); the whorl V-gap is ~90 px long and ~20 px wide at its open end"
+  },
+  "bottom": {
+   "value": "at or just behind the bottom outline, image angle 265..280 deg; not visible",
+   "tol": "-",
+   "unit": "-",
+   "method": "convergence of the D family edges"
+  }
+ },
+ "far_side": {
+  "status": "DESIGNED -- NOT MEASURED. The reference shows one hemisphere (orthographic: exactly half the ball). Nothing below is evidence.",
+  "proposal": [
+   "Continue every visible strip on its own path across the back; add no strip that cannot be traced from a visible one.",
+   "A and W leave the right limb at 330..349 deg heading down-right; the great circles through their edges return to the visible side at 147..164 deg, where A and W have already passed under R_in/R2 at the upper-left. On the back run A and W from the right limb under the bottom-back and up over the back to the upper-left limb, closing each loop at the measured widths (+-15 %).",
+   "B and C are one strip on the front (INFERRED, see inferred_continuity): close its loop across the back from the right limb (12..26 deg) to the lower-left limb (198..221 deg), widening from 0.173 D at B's end to 0.227 D at C's end.",
+   "X continues under B/W over the back and ends tucked under the D family near the bottom convergence.",
+   "The U family and R family continue through the top whorl and down the back as meridian-like strips that converge on the bottom whorl, which sits 10..20 deg behind the bottom outline (sphere ~ (0.05, -0.97, -0.25)).",
+   "Keep the same crossing style as the front: roughly half of the crossings with W/A-like strips on top; step height, fray, sparkle and colour identical to the front.",
+   "The tape's free end, if modelled at all, is TUCKED under a strip on the back -- no visible flap, no knot, no fuse, no tag (the front shows none)."
+  ],
+  "acceptance": "a back view must read as the same object: same strip widths (0.04..0.24 D), a whorl at each pole, no feature the front lacks"
+ },
+ "cannot_show": [
+  "the far hemisphere",
+  "the ball's real size (all lengths are fractions of D)",
+  "camera elevation and focal length",
+  "which of R_in/R2/R3 is on top of which",
+  "X's and A's hidden edges",
+  "the order of L3/L4 (low confidence)",
+  "true tape thickness beyond the silhouette steps"
+ ],
+ "acceptance_checks": [
+  "render SM_SmokeBomb from the BAKED maps with an orthographic camera (scale 1.351 D per frame width), 1254x1254, backdrop 0.996, lights per 'lighting'",
+  "outline: circle fit within +-1 % D, rms dev 0.8..1.8 % R, 8..16 steps >= 4 px, no thread beyond 9 px",
+  "strips: every strip in 'strips' present, width within tolerance, entering/leaving at the listed limb angles +-6 deg, every 'crossings' row in the stated order",
+  "pixel targets: disc p10/p50/p90 stored luminance within +-12 %; quadrant lighting ratios within +-15 %",
+  "look first: overlay the render on the reference at 50 % and flip; any strip, whorl gap, twisted section or thread that reads differently is a failure even if the numbers pass"
+ ]
+}

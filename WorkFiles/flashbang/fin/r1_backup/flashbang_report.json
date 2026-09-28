@@ -1,0 +1,1817 @@
+{
+  "asset": "SM_Flashbang",
+  "library": "props_lib flashbang 1.0.0",
+  "built": "2026-09-27T17:47:34",
+  "blender": "5.2.0 LTS",
+  "build_script": "Scripts\\props\\build_flashbang.py",
+  "quick": false,
+  "build_to": {
+    "name": "Flashbang",
+    "meshes": [
+      "SM_Flashbang",
+      "SM_Flashbang_Body",
+      "SM_Flashbang_PullRing",
+      "SM_Flashbang_Lever"
+    ],
+    "materials": [
+      "M_Flashbang_Paint",
+      "M_Flashbang_Steel"
+    ],
+    "textures": [
+      "T_Flashbang_BC",
+      "T_Flashbang_ORM",
+      "T_Flashbang_N",
+      "T_Flashbang_Paint_Detail"
+    ],
+    "atlas_px": 2048,
+    "padding_px": 16,
+    "D_mm": 44.0,
+    "hole_thetas_deg": [
+      52.0,
+      112.0,
+      172.0,
+      262.0,
+      352.0
+    ],
+    "hole_rows_z_mm": [
+      37.796,
+      66.924,
+      94.952
+    ],
+    "mass_g": 300.0,
+    "physics_mass_kg": 0.3,
+    "lod_bands": [
+      [
+        5200,
+        6000
+      ],
+      [
+        2500,
+        3500
+      ],
+      [
+        800,
+        1400
+      ]
+    ],
+    "pack_lod_rule": {
+      "sizes": [
+        1.0,
+        0.1,
+        0.035
+      ],
+      "reference_radius_mm": 50.0
+    },
+    "sockets": [
+      {
+        "name": "Grip",
+        "rule": "on the axis at the palm centre: Z = sleeve step - 41.6 mm (half of an 83 mm finger span)",
+        "use": "hand attach: component relative transform = inverse(Grip)"
+      },
+      {
+        "name": "Throw",
+        "rule": "the centre of mass of the assembled parts (analytic volumes x densities), 0.1 mm",
+        "use": "launch point / spin centre; CCD on when thrown"
+      },
+      {
+        "name": "Pin",
+        "rule": "on the pin axis at the pin's eye; +X = the pull direction (-Y), +Z = world up",
+        "use": "pull-ring attach and the pull (translate along socket +X by pin_travel_mm)"
+      },
+      {
+        "name": "LeverHinge",
+        "rule": "on the knuckle axis at the lever's mid-width (y 0); +X radially out through the lever, +Y along the hinge, +Z up",
+        "use": "lever attach; the lever opens with a POSITIVE pitch in Unreal"
+      },
+      {
+        "name": "Flash",
+        "rule": "on the axis at the middle hole row's centre",
+        "use": "flash / light / smoke FX spawn"
+      }
+    ]
+  },
+  "frozen": {
+    "before": {
+      "baseline": "WorkFiles\\flashbang\\regression\\pre_flashbang\\SHA256SUMS.txt",
+      "identical": 156,
+      "differing_or_missing": []
+    },
+    "after": {
+      "baseline": "WorkFiles\\flashbang\\regression\\pre_flashbang\\SHA256SUMS.txt",
+      "identical": 156,
+      "differing_or_missing": []
+    }
+  },
+  "reference": {
+    "file": "References\\Flashbang\\flashbang_reference.png",
+    "sha256": "64d1f5606df30f70f9f5c6801d990ef10a08cde42a3deee1115e3fd68fa9994a"
+  },
+  "lightmap_uv1": {
+    "layout": "the same islands re-packed with 96 px padding at 2048 (3 px at a 64 px lightmap, 6 px at 128): non-overlapping, inside 0-1",
+    "fill": 0.3583
+  },
+  "atlas": {
+    "size": 2048,
+    "padding_px": 16,
+    "ppmm": 8.6875,
+    "px_per_cm": 86.875,
+    "fill": 0.779,
+    "islands": 59,
+    "flipped_islands_per_lod": [
+      [
+        "arm_curl",
+        "arm_curl_cap1",
+        "arm_pin",
+        "arm_pin_cap1",
+        "block_yn",
+        "block_yp",
+        "body_inner_a",
+        "body_inner_b",
+        "cap_end",
+        "cap_notch_walls",
+        "collar_a",
+        "collar_b",
+        "gap_floor",
+        "hole_walls",
+        "housing_yn",
+        "housing_yp",
+        "knuckle",
+        "knuckle_cap1",
+        "lever_end1",
+        "pin_boss",
+        "pin_shaft",
+        "pin_shaft_cap0",
+        "plate_yn",
+        "plate_yp",
+        "plinth",
+        "sleeve_a",
+        "sleeve_b",
+        "small_boss"
+      ],
+      [
+        "arm_curl",
+        "arm_curl_cap1",
+        "arm_pin",
+        "arm_pin_cap1",
+        "block_yn",
+        "block_yp",
+        "body_inner_a",
+        "body_inner_b",
+        "cap_end",
+        "cap_notch_walls",
+        "collar_a",
+        "collar_b",
+        "gap_floor",
+        "hole_walls",
+        "housing_yn",
+        "housing_yp",
+        "knuckle",
+        "knuckle_cap1",
+        "lever_end1",
+        "pin_boss",
+        "pin_shaft",
+        "pin_shaft_cap0",
+        "plate_yn",
+        "plate_yp",
+        "plinth",
+        "sleeve_a",
+        "sleeve_b",
+        "small_boss"
+      ],
+      [
+        "arm_curl",
+        "arm_curl_cap1",
+        "arm_pin",
+        "arm_pin_cap1",
+        "block_yn",
+        "block_yp",
+        "cap_end",
+        "collar_a",
+        "collar_b",
+        "housing_yn",
+        "housing_yp",
+        "knuckle",
+        "knuckle_cap1",
+        "lever_end1",
+        "pin_boss",
+        "pin_shaft",
+        "pin_shaft_cap0",
+        "plate_yn",
+        "plate_yp",
+        "plinth",
+        "sleeve_a",
+        "sleeve_b",
+        "small_boss"
+      ]
+    ],
+    "density_factors": {
+      "cap_end": 0.8,
+      "floor": 0.3,
+      "hidden": 0.3,
+      "inner": 0.35,
+      "shaft": 0.3,
+      "tube": 0.6
+    },
+    "layout": "MaxRects, no rotation or mirroring, analytic UV parameters (mm) per island; the long revolved islands are cut in two on an exact grid line so the atlas packs"
+  },
+  "parts_info": {
+    "LOD0": {
+      "cap": {
+        "angles": 56,
+        "notches": true
+      },
+      "lever": {
+        "path_len_mm": 136.443,
+        "sections": 20,
+        "tip_z_mm": 40.04,
+        "upper_inner_x_mm": 21.064
+      },
+      "pullring": {
+        "ring_centre_mm": [
+          15.4,
+          -22.701,
+          133.153
+        ],
+        "eye_centre_mm": [
+          15.4,
+          -16.95,
+          154.616
+        ]
+      },
+      "triangles": 5718
+    },
+    "LOD1": {
+      "cap": {
+        "angles": 33,
+        "notches": true
+      },
+      "lever": {
+        "path_len_mm": 136.443,
+        "sections": 16,
+        "tip_z_mm": 40.04,
+        "upper_inner_x_mm": 21.064
+      },
+      "pullring": {
+        "ring_centre_mm": [
+          15.4,
+          -22.701,
+          133.153
+        ],
+        "eye_centre_mm": [
+          15.4,
+          -16.95,
+          154.616
+        ]
+      },
+      "triangles": 3205
+    },
+    "LOD2": {
+      "cap": {
+        "angles": 12,
+        "notches": false
+      },
+      "lever": {
+        "path_len_mm": 136.443,
+        "sections": 9,
+        "tip_z_mm": 40.04,
+        "upper_inner_x_mm": 21.064
+      },
+      "pullring": {
+        "ring_centre_mm": [
+          15.4,
+          -22.701,
+          133.153
+        ],
+        "eye_centre_mm": [
+          15.4,
+          -16.95,
+          154.616
+        ]
+      },
+      "triangles": 1120
+    }
+  },
+  "body_layout": {
+    "seam_deg": 307.0,
+    "columns": [
+      [
+        "web",
+        307.0,
+        322.0,
+        null,
+        3
+      ],
+      [
+        "cell",
+        322.0,
+        382.0,
+        352.0,
+        12
+      ],
+      [
+        "cell",
+        382.0,
+        442.0,
+        412.0,
+        12
+      ],
+      [
+        "cell",
+        442.0,
+        502.0,
+        472.0,
+        12
+      ],
+      [
+        "cell",
+        502.0,
+        562.0,
+        532.0,
+        12
+      ],
+      [
+        "web",
+        562.0,
+        592.0,
+        null,
+        6
+      ],
+      [
+        "cell",
+        592.0,
+        652.0,
+        622.0,
+        12
+      ],
+      [
+        "web",
+        652.0,
+        667.0,
+        null,
+        3
+      ]
+    ],
+    "hole_wall_perimeter_mm": 52.32289545562249,
+    "island_cut_deg": 142.0
+  },
+  "holes": {
+    "per_row": 5,
+    "thetas_deg": [
+      52.0,
+      112.0,
+      172.0,
+      262.0,
+      352.0
+    ],
+    "rows_z_mm": [
+      37.796,
+      66.924,
+      94.952
+    ],
+    "size_mm": [
+      15.359,
+      18.04
+    ],
+    "count_lod0": 15
+  },
+  "textures": {
+    "maps": {
+      "BC": "Exports\\Flashbang\\Textures\\T_Flashbang_BC.png",
+      "ORM": "Exports\\Flashbang\\Textures\\T_Flashbang_ORM.png",
+      "N": "Exports\\Flashbang\\Textures\\T_Flashbang_N.png",
+      "Paint_Detail": "Exports\\Flashbang\\Textures\\T_Flashbang_Paint_Detail.png"
+    },
+    "sha256": {
+      "BC": "658fb44c4f8bd613a62c4d22af25820df87d2c074fe8008d9fb4e8ecb731445b",
+      "ORM": "b6e840d413b01b9e65ce801750e0de3175639453345825d5ed3234fdbca03b26",
+      "N": "36a103f797d1c771d6300d71e170e922b046e4133eeee156067bfda546eafb4a",
+      "Paint_Detail": "979858d26b6fc5c1337597db44730e24f01863f411ca846de8f0f09f569eb430"
+    },
+    "size": 2048,
+    "power_of_two": true,
+    "colour_chunks": {
+      "BC": [],
+      "ORM": [],
+      "N": [],
+      "Paint_Detail": []
+    },
+    "paint": {
+      "chip_threshold": 0.20033746896665544,
+      "chipped_fraction_of_paint": 0.1430009036392015,
+      "near_edge_bare_fraction": 0.5440074906367042,
+      "edge_weight": 0.1,
+      "paint_texels": 925148,
+      "texels_covered": 2618937
+    },
+    "look": {
+      "paint_lin": [
+        0.08,
+        0.08,
+        0.038
+      ],
+      "paint_mottle": 0.28,
+      "paint_fine": 0.1,
+      "paint_grime": 0.7,
+      "paint_rough": 0.5,
+      "chip_frac": 0.143,
+      "chip_near_hole_frac": 0.577,
+      "chip_steel_lin": [
+        0.5,
+        0.45,
+        0.38
+      ],
+      "chip_dark_lin": [
+        0.22,
+        0.19,
+        0.16
+      ],
+      "chip_rough": 0.55,
+      "steel_lin": [
+        0.085,
+        0.078,
+        0.07
+      ],
+      "steel_edge_lin": [
+        0.62,
+        0.49,
+        0.36
+      ],
+      "steel_rough": 0.55,
+      "steel_edge_rough": 0.38,
+      "lever_lin": [
+        0.15,
+        0.14,
+        0.13
+      ],
+      "ring_lin": [
+        0.3,
+        0.28,
+        0.25
+      ],
+      "inner_lin": [
+        0.05,
+        0.047,
+        0.043
+      ],
+      "brass_lin": [
+        0.55,
+        0.41,
+        0.23
+      ],
+      "brass_rough": 0.28,
+      "wall_lin": [
+        0.42,
+        0.38,
+        0.32
+      ],
+      "edge_wear_steel": 0.95,
+      "seed": 20260927
+    },
+    "paint_default_colour_linear": [
+      0.071395,
+      0.071395,
+      0.033912
+    ],
+    "paint_default_colour_srgb8": [
+      76,
+      76,
+      52
+    ],
+    "paint_luminance_range": [
+      0.020763,
+      0.089855
+    ],
+    "detail_fill_srgb8": 217,
+    "detail_bias": 0.302279,
+    "detail_scale": 1.005878,
+    "gates": {
+      "paint_dielectric_lum_max": 0.09207,
+      "paint_dielectric_lum_below_0.18": true,
+      "orm_b_binary_fraction_partial": 0.0
+    },
+    "how": {
+      "BC": "sRGB8 of the painter's linear albedo (props_lib.flashbang_paint.paint)",
+      "ORM": "R = Cycles AO of LOD0 alone (pipeline.textures.bake_ao, 16 px EXTEND); G = roughness; B = metallic exactly 0 (paint) or 1 (chips, hole walls, every steel and brass part)",
+      "N": "DirectX (green flipped on write): the tangent-space bake of a Bevel node (r 0.3 mm) on LOD0 UDN-blended with the painter's height detail (ring-line grooves, paint step at chips, scratches, pits, seams, panel lines) differentiated per island",
+      "Paint_Detail": "recolour detail: sRGB-encoded linear d = (lum - a_lo) / (a_hi - a_lo) over the dielectric paint texels (+3 px), one constant elsewhere (M_Fabric_Master, Metal From ORM keeps chips and steel at their baked colour)"
+    }
+  },
+  "recolour": {
+    "file": "Exports\\Flashbang\\Textures\\Recolour\\recolour_maps.json",
+    "detail16": "Exports\\Flashbang\\Textures\\Recolour\\T_Flashbang_Paint_Detail16.png",
+    "lossless": true,
+    "colour_linear": [
+      0.071395,
+      0.071395,
+      0.033912,
+      1.0
+    ],
+    "detail_mean": 1.0000070280460376
+  },
+  "assembly_identity": {
+    "pullring": {
+      "max_mm": 8e-06,
+      "pass": true
+    },
+    "lever": {
+      "max_mm": 8e-06,
+      "pass": true
+    }
+  },
+  "lever_open": {
+    "tip_before_mm": [
+      8.849,
+      3.346,
+      -121.22
+    ],
+    "tip_after_mm": [
+      117.841,
+      3.346,
+      29.764
+    ],
+    "outward": true
+  },
+  "collision": {
+    "assembled": {
+      "hulls": [
+        "UCX_SM_Flashbang_00",
+        "UCX_SM_Flashbang_01",
+        "UCX_SM_Flashbang_02",
+        "UCX_SM_Flashbang_03"
+      ],
+      "vertices_per_hull": [
+        32,
+        20,
+        14,
+        8
+      ],
+      "worst_outside_mm_all_vertices": -0.0092,
+      "worst_outside_mm_non_ring": -0.0092,
+      "ring_protrusion_mm": -0.01,
+      "ring_note": "plan 6.1: a fourth thin hull (_03, the ring + pin's oriented box) was added because the ring stands ~17 mm outside the three body hulls; the protrusion above is measured against all four",
+      "ring_protrusion_mm_three_hulls": 16.895
+    },
+    "body": {
+      "hulls": [
+        "UCX_SM_Flashbang_Body_00",
+        "UCX_SM_Flashbang_Body_01"
+      ],
+      "vertices_per_hull": [
+        32,
+        20
+      ],
+      "worst_outside_mm_all_vertices": -0.0092,
+      "worst_outside_mm_body_vertices": -0.0092
+    },
+    "pullring": {
+      "hulls": [
+        "UCX_SM_Flashbang_PullRing_00"
+      ],
+      "vertices_per_hull": [
+        8
+      ],
+      "worst_outside_mm_all_vertices": -0.01
+    },
+    "lever": {
+      "hulls": [
+        "UCX_SM_Flashbang_Lever_00"
+      ],
+      "vertices_per_hull": [
+        14
+      ],
+      "worst_outside_mm_all_vertices": -0.01
+    },
+    "gate_contained": true,
+    "hull_volume_cm3": 309.99,
+    "hull_centroid_mm": [
+      1.71,
+      -0.26,
+      80.5
+    ]
+  },
+  "sockets": [
+    {
+      "name": "Grip",
+      "position_mm": [
+        0.0,
+        0.0,
+        69.676
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rule": "on the axis at the palm centre: Z = sleeve step - 41.6 mm (half of an 83 mm finger span)",
+      "use": "hand attach: component relative transform = inverse(Grip)"
+    },
+    {
+      "name": "Throw",
+      "position_mm": [
+        0.8,
+        -0.3,
+        72.2
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rule": "the centre of mass of the assembled parts (analytic volumes x densities), 0.1 mm",
+      "use": "launch point / spin centre; CCD on when thrown"
+    },
+    {
+      "name": "Pin",
+      "position_mm": [
+        15.4,
+        -16.95,
+        154.616
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        -90.0
+      ],
+      "rule": "on the pin axis at the pin's eye; +X = the pull direction (-Y), +Z = world up",
+      "use": "pull-ring attach and the pull (translate along socket +X by pin_travel_mm)"
+    },
+    {
+      "name": "LeverHinge",
+      "position_mm": [
+        18.0,
+        0.0,
+        160.64
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rule": "on the knuckle axis at the lever's mid-width (y 0); +X radially out through the lever, +Y along the hinge, +Z up",
+      "use": "lever attach; the lever opens with a POSITIVE pitch in Unreal"
+    },
+    {
+      "name": "Flash",
+      "position_mm": [
+        0.0,
+        0.0,
+        66.924
+      ],
+      "rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rule": "on the axis at the middle hole row's centre",
+      "use": "flash / light / smoke FX spawn"
+    }
+  ],
+  "measure": {
+    "assembled": {
+      "triangles": [
+        5718,
+        3205,
+        1120
+      ],
+      "descending": true,
+      "bounds_radius_mm": 87.223,
+      "screen_sizes": [
+        1.0,
+        0.1744,
+        0.0611
+      ],
+      "switch_distances_m": [
+        0.8891,
+        2.5379
+      ],
+      "bounds_mm": {
+        "min": [
+          -23.9,
+          -29.303,
+          0.0
+        ],
+        "max": [
+          38.389,
+          23.9,
+          165.859
+        ]
+      },
+      "uv": {
+        "LOD0": {
+          "uv_range": [
+            0.003906,
+            0.99599
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.03674,
+          "texel_density_px_per_cm": 72.615
+        },
+        "LOD1": {
+          "uv_range": [
+            0.003906,
+            0.99599
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.03674,
+          "texel_density_px_per_cm": 72.571
+        },
+        "LOD2": {
+          "uv_range": [
+            0.003906,
+            0.99599
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.31285,
+          "texel_density_px_per_cm": 79.554
+        }
+      },
+      "faces_per_slot": [
+        [
+          1506,
+          2068
+        ],
+        [
+          792,
+          1213
+        ],
+        [
+          354,
+          383
+        ]
+      ],
+      "slots": [
+        "M_Flashbang_Paint",
+        "M_Flashbang_Steel"
+      ],
+      "in_band": [
+        true,
+        true,
+        true
+      ]
+    },
+    "body": {
+      "triangles": [
+        4994,
+        2765,
+        932
+      ],
+      "descending": true,
+      "bounds_radius_mm": 84.648,
+      "screen_sizes": [
+        1.0,
+        0.1693,
+        0.0593
+      ],
+      "switch_distances_m": [
+        0.8889,
+        2.5377
+      ],
+      "bounds_mm": {
+        "min": [
+          -23.9,
+          -23.9,
+          0.0
+        ],
+        "max": [
+          23.9,
+          23.9,
+          164.208
+        ]
+      },
+      "uv": {
+        "LOD0": {
+          "uv_range": [
+            0.003906,
+            0.99599
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.099761,
+          "texel_density_px_per_cm": 70.97
+        },
+        "LOD1": {
+          "uv_range": [
+            0.003906,
+            0.99599
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.131029,
+          "texel_density_px_per_cm": 70.891
+        },
+        "LOD2": {
+          "uv_range": [
+            0.003906,
+            0.99599
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.31285,
+          "texel_density_px_per_cm": 78.315
+        }
+      },
+      "faces_per_slot": [
+        [
+          1506,
+          1700
+        ],
+        [
+          792,
+          987
+        ],
+        [
+          354,
+          283
+        ]
+      ],
+      "slots": [
+        "M_Flashbang_Paint",
+        "M_Flashbang_Steel"
+      ]
+    },
+    "pullring": {
+      "triangles": [
+        408,
+        188,
+        120
+      ],
+      "descending": true,
+      "bounds_radius_mm": 28.471,
+      "screen_sizes": [
+        1.0,
+        0.0569,
+        0.0199
+      ],
+      "switch_distances_m": [
+        0.8895,
+        2.5435
+      ],
+      "bounds_mm": {
+        "min": [
+          -22.25,
+          -22.989,
+          -43.668
+        ],
+        "max": [
+          12.353,
+          22.989,
+          2.3
+        ]
+      },
+      "uv": {
+        "LOD0": {
+          "uv_range": [
+            0.158203,
+            0.990002
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.343864,
+          "texel_density_px_per_cm": 83.805
+        },
+        "LOD1": {
+          "uv_range": [
+            0.158203,
+            0.990002
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.433013,
+          "texel_density_px_per_cm": 85.745
+        },
+        "LOD2": {
+          "uv_range": [
+            0.158203,
+            0.990002
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.433013,
+          "texel_density_px_per_cm": 89.391
+        }
+      },
+      "faces_per_slot": [
+        [
+          210
+        ],
+        [
+          100
+        ],
+        [
+          66
+        ]
+      ],
+      "slots": [
+        "M_Flashbang_Steel"
+      ]
+    },
+    "lever": {
+      "triangles": [
+        316,
+        252,
+        68
+      ],
+      "descending": true,
+      "bounds_radius_mm": 63.858,
+      "screen_sizes": [
+        1.0,
+        0.1277,
+        0.0447
+      ],
+      "switch_distances_m": [
+        0.889,
+        2.5397
+      ],
+      "bounds_mm": {
+        "min": [
+          -5.017,
+          -11.64,
+          -121.22
+        ],
+        "max": [
+          11.04,
+          6.4,
+          5.219
+        ]
+      },
+      "uv": {
+        "LOD0": {
+          "uv_range": [
+            0.003906,
+            0.981988
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.03674,
+          "texel_density_px_per_cm": 86.833
+        },
+        "LOD1": {
+          "uv_range": [
+            0.003906,
+            0.981988
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 0.03674,
+          "texel_density_px_per_cm": 86.936
+        },
+        "LOD2": {
+          "uv_range": [
+            0.003906,
+            0.981988
+          ],
+          "collapsed_uv_triangles": 0,
+          "mirrored_uv_triangles": 0,
+          "min_triangle_area_mm2": 1.027005,
+          "texel_density_px_per_cm": 87.489
+        }
+      },
+      "faces_per_slot": [
+        [
+          158
+        ],
+        [
+          126
+        ],
+        [
+          34
+        ]
+      ],
+      "slots": [
+        "M_Flashbang_Steel"
+      ]
+    },
+    "parts_sum_equals_assembled": true,
+    "visible_deviation_mm": {
+      "LOD1": {
+        "p50": 0.0151,
+        "p95": 0.1838,
+        "p99": 0.3401,
+        "max": 0.7999,
+        "points": 17688,
+        "limit_p99_mm_one_px_at_switch": 0.9262,
+        "pass": true
+      },
+      "LOD2": {
+        "p50": 0.1231,
+        "p95": 0.5606,
+        "p99": 0.7,
+        "max": 1.1929,
+        "points": 17688,
+        "limit_p99_mm_one_px_at_switch": 2.6436,
+        "pass": true
+      }
+    },
+    "scale": {
+      "D_mm": 44.0,
+      "mm_per_D": 44.0,
+      "overall_height_mm": 165.859,
+      "overall_height_D": 3.7695,
+      "spec_overall_height_D": 3.77
+    },
+    "mass": {
+      "parts": [
+        {
+          "name": "outer_tube",
+          "g": 122.72,
+          "centroid_mm": [
+            0.0,
+            0.0,
+            66.0
+          ]
+        },
+        {
+          "name": "sleeve",
+          "g": 119.44,
+          "centroid_mm": [
+            0.0,
+            0.0,
+            120.23
+          ]
+        },
+        {
+          "name": "base_cap",
+          "g": 163.79,
+          "centroid_mm": [
+            0.0,
+            0.0,
+            10.36
+          ]
+        },
+        {
+          "name": "brass_tube",
+          "g": 63.14,
+          "centroid_mm": [
+            0.0,
+            0.0,
+            66.0
+          ]
+        },
+        {
+          "name": "charge",
+          "g": 92.29,
+          "centroid_mm": [
+            0.0,
+            0.0,
+            66.0
+          ]
+        },
+        {
+          "name": "collar",
+          "g": 21.81,
+          "centroid_mm": [
+            0.0,
+            0.0,
+            133.56
+          ]
+        },
+        {
+          "name": "housing",
+          "g": 35.57,
+          "centroid_mm": [
+            0.0,
+            0.0,
+            150.24
+          ]
+        },
+        {
+          "name": "top_plate",
+          "g": 12.6,
+          "centroid_mm": [
+            -3.1,
+            0.0,
+            162.87
+          ]
+        },
+        {
+          "name": "lever",
+          "g": 15.0,
+          "centroid_mm": [
+            27.94,
+            0.0,
+            95.0
+          ]
+        },
+        {
+          "name": "ring_pin",
+          "g": 8.0,
+          "centroid_mm": [
+            15.4,
+            -21.95,
+            136.62
+          ]
+        }
+      ],
+      "model_mass_g": 654.4,
+      "com_mm": [
+        0.77,
+        -0.27,
+        72.19
+      ],
+      "note": "analytic volumes x densities (steel 7.85, brass 8.5, charge 1.6 g/cm3); the physics override is the design mass 0.30 kg, the centre of mass is what Throw carries"
+    }
+  },
+  "lod_triangles": [
+    5718,
+    3205,
+    1120
+  ],
+  "qa": {
+    "passed": true,
+    "per_mesh": {
+      "assembled": {
+        "passed": true,
+        "checks": 88,
+        "failed": [],
+        "triangles": {
+          "SM_Flashbang_LOD0": 5718,
+          "SM_Flashbang_LOD1": 3205,
+          "SM_Flashbang_LOD2": 1120
+        },
+        "informational": [
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_LOD0",
+            "passed": true,
+            "detail": "460 boundary edge(s) of 6663 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_LOD1",
+            "passed": true,
+            "detail": "299 boundary edge(s) of 3757 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_LOD2",
+            "passed": true,
+            "detail": "264 boundary edge(s) of 1429 (informational: open meshes are allowed)"
+          }
+        ]
+      },
+      "body": {
+        "passed": true,
+        "checks": 84,
+        "failed": [],
+        "triangles": {
+          "SM_Flashbang_Body_LOD0": 4994,
+          "SM_Flashbang_Body_LOD1": 2765,
+          "SM_Flashbang_Body_LOD2": 932
+        },
+        "informational": [
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_Body_LOD0",
+            "passed": true,
+            "detail": "460 boundary edge(s) of 5933 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_Body_LOD1",
+            "passed": true,
+            "detail": "299 boundary edge(s) of 3311 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_Body_LOD2",
+            "passed": true,
+            "detail": "264 boundary edge(s) of 1235 (informational: open meshes are allowed)"
+          }
+        ]
+      },
+      "pullring": {
+        "passed": true,
+        "checks": 71,
+        "failed": [],
+        "triangles": {
+          "SM_Flashbang_PullRing_LOD0": 408,
+          "SM_Flashbang_PullRing_LOD1": 188,
+          "SM_Flashbang_PullRing_LOD2": 120
+        },
+        "informational": [
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_PullRing_LOD0",
+            "passed": true,
+            "detail": "0 boundary edge(s) of 414 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_PullRing_LOD1",
+            "passed": true,
+            "detail": "0 boundary edge(s) of 194 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_PullRing_LOD2",
+            "passed": true,
+            "detail": "0 boundary edge(s) of 126 (informational: open meshes are allowed)"
+          }
+        ]
+      },
+      "lever": {
+        "passed": true,
+        "checks": 71,
+        "failed": [],
+        "triangles": {
+          "SM_Flashbang_Lever_LOD0": 316,
+          "SM_Flashbang_Lever_LOD1": 252,
+          "SM_Flashbang_Lever_LOD2": 68
+        },
+        "informational": [
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_Lever_LOD0",
+            "passed": true,
+            "detail": "0 boundary edge(s) of 316 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_Lever_LOD1",
+            "passed": true,
+            "detail": "0 boundary edge(s) of 252 (informational: open meshes are allowed)"
+          },
+          {
+            "name": "open_boundary_edges",
+            "object": "SM_Flashbang_Lever_LOD2",
+            "passed": true,
+            "detail": "0 boundary edge(s) of 68 (informational: open meshes are allowed)"
+          }
+        ]
+      }
+    }
+  },
+  "blend": "Assets\\Flashbang.blend",
+  "blend_sha256": "a94da64010ecfec4afec5b4df2f5a35149d00fd16a3192e468f151a5cbdc17a5",
+  "export": {
+    "assembled": {
+      "fbx": "Exports\\Flashbang\\SM_Flashbang.fbx",
+      "sidecar": "Exports\\Flashbang\\SM_Flashbang.sockets.json",
+      "objects": [
+        "SM_Flashbang_LodGroup",
+        "SM_Flashbang_LOD0",
+        "UCX_SM_Flashbang_LOD0_00",
+        "UCX_SM_Flashbang_LOD0_01",
+        "UCX_SM_Flashbang_LOD0_02",
+        "UCX_SM_Flashbang_LOD0_03",
+        "SM_Flashbang_LOD1",
+        "SM_Flashbang_LOD2"
+      ],
+      "warnings": [
+        "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_Flashbang_LOD0_Flash, SOCKET_SM_Flashbang_LOD0_Grip, SOCKET_SM_Flashbang_LOD0_LeverHinge, SOCKET_SM_Flashbang_LOD0_Pin, SOCKET_SM_Flashbang_LOD0_Throw"
+      ],
+      "lod_screen_sizes": [
+        1.0,
+        0.1744,
+        0.0611
+      ],
+      "sockets": [
+        {
+          "socket": "Flash",
+          "fbx_node": "SOCKET_SM_Flashbang_LOD0_Flash",
+          "mesh": "SM_Flashbang_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            0.0,
+            0.0,
+            6.6924
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "Grip",
+          "fbx_node": "SOCKET_SM_Flashbang_LOD0_Grip",
+          "mesh": "SM_Flashbang_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            0.0,
+            0.0,
+            6.9676
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "LeverHinge",
+          "fbx_node": "SOCKET_SM_Flashbang_LOD0_LeverHinge",
+          "mesh": "SM_Flashbang_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            1.8,
+            0.0,
+            16.064
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "Pin",
+          "fbx_node": "SOCKET_SM_Flashbang_LOD0_Pin",
+          "mesh": "SM_Flashbang_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            1.54,
+            1.695,
+            15.4616
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 90.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "Throw",
+          "fbx_node": "SOCKET_SM_Flashbang_LOD0_Throw",
+          "mesh": "SM_Flashbang_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            0.08,
+            0.03,
+            7.22
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        }
+      ],
+      "sha256": {
+        "fbx": "d1bc026ac53635543a6e1005e33a0e977d424ed6db47f52be90a0806dbff0877",
+        "sidecar": "dad90a247ef778490dda5b65b50f58a7684710ea7d5b68622866ed399159f8b7"
+      },
+      "bytes": 429452
+    },
+    "body": {
+      "fbx": "Exports\\Flashbang\\SM_Flashbang_Body.fbx",
+      "sidecar": "Exports\\Flashbang\\SM_Flashbang_Body.sockets.json",
+      "objects": [
+        "SM_Flashbang_Body_LodGroup",
+        "SM_Flashbang_Body_LOD0",
+        "UCX_SM_Flashbang_Body_LOD0_00",
+        "UCX_SM_Flashbang_Body_LOD0_01",
+        "SM_Flashbang_Body_LOD1",
+        "SM_Flashbang_Body_LOD2"
+      ],
+      "warnings": [
+        "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_Flashbang_Body_LOD0_Flash, SOCKET_SM_Flashbang_Body_LOD0_Grip, SOCKET_SM_Flashbang_Body_LOD0_LeverHinge, SOCKET_SM_Flashbang_Body_LOD0_Pin, SOCKET_SM_Flashbang_Body_LOD0_Throw"
+      ],
+      "lod_screen_sizes": [
+        1.0,
+        0.1693,
+        0.0593
+      ],
+      "sockets": [
+        {
+          "socket": "Flash",
+          "fbx_node": "SOCKET_SM_Flashbang_Body_LOD0_Flash",
+          "mesh": "SM_Flashbang_Body_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            0.0,
+            0.0,
+            6.6924
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "Grip",
+          "fbx_node": "SOCKET_SM_Flashbang_Body_LOD0_Grip",
+          "mesh": "SM_Flashbang_Body_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            0.0,
+            0.0,
+            6.9676
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "LeverHinge",
+          "fbx_node": "SOCKET_SM_Flashbang_Body_LOD0_LeverHinge",
+          "mesh": "SM_Flashbang_Body_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            1.8,
+            0.0,
+            16.064
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "Pin",
+          "fbx_node": "SOCKET_SM_Flashbang_Body_LOD0_Pin",
+          "mesh": "SM_Flashbang_Body_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            1.54,
+            1.695,
+            15.4616
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 90.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        },
+        {
+          "socket": "Throw",
+          "fbx_node": "SOCKET_SM_Flashbang_Body_LOD0_Throw",
+          "mesh": "SM_Flashbang_Body_LOD0",
+          "node_type": "EMPTY",
+          "ue_correction": true,
+          "location_cm": [
+            0.08,
+            0.03,
+            7.22
+          ],
+          "rotation_deg": {
+            "roll": 0.0,
+            "pitch": 0.0,
+            "yaw": 0.0
+          },
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "in_fbx": false
+        }
+      ],
+      "sha256": {
+        "fbx": "161f0431823d9d3a5e42c694ae102f71b9fa3a3c2b7897d0913a3c87e2308bd7",
+        "sidecar": "14cc619e25b86334e239cd87046e5607efb37debea998e56a1bf51d2e03ef371"
+      },
+      "bytes": 366748
+    },
+    "pullring": {
+      "fbx": "Exports\\Flashbang\\SM_Flashbang_PullRing.fbx",
+      "sidecar": "Exports\\Flashbang\\SM_Flashbang_PullRing.sockets.json",
+      "objects": [
+        "SM_Flashbang_PullRing_LodGroup",
+        "SM_Flashbang_PullRing_LOD0",
+        "UCX_SM_Flashbang_PullRing_LOD0_00",
+        "SM_Flashbang_PullRing_LOD1",
+        "SM_Flashbang_PullRing_LOD2"
+      ],
+      "warnings": [],
+      "lod_screen_sizes": [
+        1.0,
+        0.0569,
+        0.0199
+      ],
+      "sockets": [],
+      "sha256": {
+        "fbx": "9688192ddb025d6ad3bdd6043176c95edd941f940a2ba66dfd619d003b98eb52",
+        "sidecar": "e35c495ed0e74499cca2625f85e9c0337ab9e3d9b406e63569e6188d724fe918"
+      },
+      "bytes": 56060
+    },
+    "lever": {
+      "fbx": "Exports\\Flashbang\\SM_Flashbang_Lever.fbx",
+      "sidecar": "Exports\\Flashbang\\SM_Flashbang_Lever.sockets.json",
+      "objects": [
+        "SM_Flashbang_Lever_LodGroup",
+        "SM_Flashbang_Lever_LOD0",
+        "UCX_SM_Flashbang_Lever_LOD0_00",
+        "SM_Flashbang_Lever_LOD1",
+        "SM_Flashbang_Lever_LOD2"
+      ],
+      "warnings": [],
+      "lod_screen_sizes": [
+        1.0,
+        0.1277,
+        0.0447
+      ],
+      "sockets": [],
+      "sha256": {
+        "fbx": "4ca6409e5bb27d2848ef6d47bd83d56213f678a197d23c4c4585bb0d5ed6ad8d",
+        "sidecar": "ffdce1009d2348800abe46a6912b9fa731339910669fe74f0cac98ebf02e8199"
+      },
+      "bytes": 54412
+    }
+  },
+  "pin_travel_mm": 23.08,
+  "renders": {
+    "row": {
+      "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_reference_row.png",
+      "camera": {
+        "lens_mm": 74.64115142822266,
+        "pitch_deg": 3.6751035477564646,
+        "z_mm": 64.6408360600566
+      },
+      "yaws": {
+        "v1": -130.0,
+        "v2": 170.0,
+        "v3": -110.0,
+        "v4": -25.0
+      }
+    },
+    "closeups": {
+      "p1": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_closeup_p1.png",
+      "p2": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_closeup_p2.png",
+      "p3": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_closeup_p3.png",
+      "p4": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_closeup_p4.png"
+    },
+    "sheet": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_eight_views.png",
+    "side_by_side": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_side_by_side.png",
+    "part_compares": [
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_head.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_sleeve_and_rowA.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_holes_rows.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_base_cap.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_lever_lower.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_p1.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_p2.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_p3.png",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\flashbang\\r1\\fb_r1_compare_p4.png"
+    ],
+    "row_metrics": {
+      "v1": {
+        "silhouette_iou": 0.6971,
+        "paint_iou": 0.6873,
+        "paint_fraction_ref": 0.4265,
+        "paint_fraction_ours": 0.4184,
+        "paint_p10_p50_p90_ref": [
+          [
+            45,
+            44,
+            28
+          ],
+          [
+            69,
+            68,
+            53
+          ],
+          [
+            108,
+            104,
+            73
+          ]
+        ],
+        "paint_p10_p50_p90_ours": [
+          [
+            44,
+            43,
+            34
+          ],
+          [
+            70,
+            67,
+            56
+          ],
+          [
+            91,
+            86,
+            77
+          ]
+        ]
+      },
+      "v2": {
+        "silhouette_iou": 0.7305,
+        "paint_iou": 0.6522,
+        "paint_fraction_ref": 0.4558,
+        "paint_fraction_ours": 0.4164,
+        "paint_p10_p50_p90_ref": [
+          [
+            39,
+            41,
+            26
+          ],
+          [
+            76,
+            76,
+            56
+          ],
+          [
+            115,
+            115,
+            93
+          ]
+        ],
+        "paint_p10_p50_p90_ours": [
+          [
+            37,
+            37,
+            27
+          ],
+          [
+            74,
+            73,
+            52
+          ],
+          [
+            93,
+            93,
+            75
+          ]
+        ]
+      },
+      "v3": {
+        "silhouette_iou": 0.6797,
+        "paint_iou": 0.6496,
+        "paint_fraction_ref": 0.3869,
+        "paint_fraction_ours": 0.2989,
+        "paint_p10_p50_p90_ref": [
+          [
+            38,
+            40,
+            25
+          ],
+          [
+            74,
+            74,
+            53
+          ],
+          [
+            116,
+            112,
+            98
+          ]
+        ],
+        "paint_p10_p50_p90_ours": [
+          [
+            30,
+            30,
+            21
+          ],
+          [
+            66,
+            65,
+            47
+          ],
+          [
+            90,
+            89,
+            70
+          ]
+        ]
+      },
+      "v4": {
+        "silhouette_iou": 0.6185,
+        "paint_iou": 0.626,
+        "paint_fraction_ref": 0.3788,
+        "paint_fraction_ours": 0.2182,
+        "paint_p10_p50_p90_ref": [
+          [
+            41,
+            39,
+            29
+          ],
+          [
+            61,
+            62,
+            43
+          ],
+          [
+            101,
+            96,
+            86
+          ]
+        ],
+        "paint_p10_p50_p90_ours": [
+          [
+            31,
+            30,
+            21
+          ],
+          [
+            52,
+            51,
+            36
+          ],
+          [
+            87,
+            81,
+            73
+          ]
+        ]
+      },
+      "background_p50_ref": [
+        45,
+        45,
+        44
+      ],
+      "background_p50_ours": [
+        47,
+        47,
+        46
+      ]
+    },
+    "hero": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_hero.png",
+    "back": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_back.png",
+    "wire": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_wire.png",
+    "lods": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Flashbang\\flashbang_lods.png"
+  },
+  "gates": {
+    "01_qa_check_all_four": true,
+    "02_lod0_within_cap_6000": true,
+    "03_lods_descend_all_four": true,
+    "04_parts_sum_equals_assembled": true,
+    "05_no_collapsed_uv": true,
+    "06_no_mirrored_uv": true,
+    "07_uv_inside_0_1": true,
+    "08_no_triangle_unreal_would_drop": true,
+    "09_collision_contains": true,
+    "10_five_sockets": true,
+    "11_maps_pot_no_colour_chunks": true,
+    "12_paint_dielectric_lum_below_0.18": true,
+    "13_recolour_detail16_lossless": true,
+    "14_lod_visible_deviation_under_1px": true,
+    "15_assembly_identity": true,
+    "16_lever_opens_outward": true,
+    "17_frozen_unchanged": true,
+    "18_no_franchise_string": true,
+    "19_every_slot_used_on_every_lod": true,
+    "_all": true
+  }
+}

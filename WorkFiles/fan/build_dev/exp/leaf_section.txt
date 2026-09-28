@@ -1,0 +1,199 @@
+LEAF_PIECE_FACES = 5          # UV: the flat leaf cut into strips of 5 faces (seams fall on folds)
+LEAF_PAD_PX = 8
+
+
+def leaf_corners(spec: FanSpec, tpl: FF.LeafTemplate):
+    """Every leaf quad (faces and the two glued flaps) with its bind corners, the flat-leaf position of
+    each corner (the development: fold line k at angle k x beta, a corner at its distance along its fold
+    line from the line's axis point), its bone and its piece."""
+    beta = spec.face_angle_deg * D2R
+    out = []
+    for f in leaf_faces(spec, tpl):
+        j = f["j"]
+        q = np.asarray(f["quad"])
+        flat = []
+        for c in range(4):
+            if f["kinds"][c] == "rib":
+                k = 2 * f["rib"]
+                dist = float(np.linalg.norm(q[c][:2]))
+            else:
+                k = 2 * f["mid"] + 1
+                ax = np.array([0.0, 0.0, 0.5 * (tpl.z[f["mid"]] + tpl.z[f["mid"] + 1])])
+                dist = float(np.linalg.norm(q[c] - ax))
+            flat.append(dist * np.array([math.cos(k * beta), math.sin(k * beta)]))
+        out.append({"kind": "face", "j": j, "quad": q, "flat": np.array(flat), "bone": f"leaf_{j:02d}",
+                    "kinds": f["kinds"], "piece": min(j // LEAF_PIECE_FACES, (2 * (spec.n_sticks - 1) - 1) // LEAF_PIECE_FACES)})
+    sc = 0.5 * spec.scallop_L * spec.L
+    n = spec.n_sticks
+    lam0, lam25 = tpl.lam_deg[0], tpl.lam_deg[-1]
+    rear_axis = spec.stick_axis_deg(n - 1, 1.0)
+    npieces = out[-1]["piece"] + 1
+    for name, a0, a1, z, bone, k_edge, piece in (
+            ("front", lam0, -spec.front_flap_past_axis_deg, tpl.z[0], "stick_00", 0, 0),
+            ("rear", lam25, rear_axis + spec.rear_flap_past_axis_deg, tpl.z[-1], f"stick_{n - 1:02d}", 2 * (n - 1),
+             npieces - 1)):
+        r_i, r_o = spec.r_in, spec.r_out - sc
+        corners, flat = [], []
+        for rr, aa in ((r_i, a0), (r_o, a0), (r_o, a1), (r_i, a1)):
+            corners.append(np.array([rr * math.cos(aa * D2R), rr * math.sin(aa * D2R), z]))
+            th = k_edge * beta + (aa - a0) * D2R          # flat: the flap continues the development
+            flat.append(rr * np.array([math.cos(th), math.sin(th)]))
+        out.append({"kind": "flap", "name": name, "quad": np.array(corners), "flat": np.array(flat), "bone": bone,
+                    "piece": piece})
+    return out
+
+
+def _piece_polygon(items):
+    pts = np.vstack([it["flat"] for it in items])
+    # the piece is an annular sector: its outline is the convex-ish hull of its corners; use all corners
+    return pts
+
+
+def leaf_uv_layout(spec: FanSpec, items, tex: int):
+    """Place the pieces (strips of LEAF_PIECE_FACES faces, bisector vertical, alternately pointing up and
+    down so neighbours nest) in rows; return per-piece 2x3 affine maps flat(mm) -> uv and px/mm."""
+    pieces = sorted({it["piece"] for it in items})
+    polys = {}
+    for p in pieces:
+        pts = _piece_polygon([it for it in items if it["piece"] == p])
+        ang = np.arctan2(pts[:, 1], pts[:, 0])
+        mid = 0.5 * (ang.min() + ang.max())
+        polys[p] = (pts, mid)
+    # orientation: rotate so the bisector points up (+y) for even pieces, down for odd ones
+    placed = {}
+    for p in pieces:
+        pts, mid = polys[p]
+        rot = (math.pi / 2 - mid) + (math.pi if p % 2 else 0.0)
+        c, s = math.cos(rot), math.sin(rot)
+        R = np.array([[c, -s], [s, c]])
+        q = pts @ R.T
+        placed[p] = (R, q)
+    # rows of alternating pieces, nested by a 1-D search on a 0.25 mm raster
+    per_row = int(math.ceil(len(pieces) / 2))
+    rows = [pieces[:per_row], pieces[per_row:]]
+    res = 0.25
+    gap_mm = 2.0
+    layout = {}
+    row_y = 0.0
+    for row in rows:
+        x_cursor = None
+        occupied = []
+        row_h = 0.0
+        for p in row:
+            R, q = placed[p]
+            q0 = q - q.min(0)
+            h = q0[:, 1].max()
+            row_h = max(row_h, h)
+        for p in row:
+            R, q = placed[p]
+            lo = q.min(0)
+            q0 = q - lo
+            poly = _sector_outline(q0)
+            if x_cursor is None:
+                dx = 0.0
+            else:
+                dx = _nest(occupied, poly, x_cursor, gap_mm)
+            occupied.append(poly + np.array([dx, 0.0]))
+            layout[p] = (R, lo, np.array([dx, row_y]))
+            x_cursor = max(pp[:, 0].max() for pp in occupied)
+        row_y += row_h + gap_mm
+    allpts = np.vstack([ (placed[p][1] - layout[p][1]) + layout[p][2] for p in pieces])
+    extent = allpts.max(0)
+    side = max(extent) + 2 * 1.0
+    ppmm = (tex - 2 * LEAF_PAD_PX) / side
+    maps = {}
+    for p in pieces:
+        R, lo, off = layout[p]
+        maps[p] = (R, lo, off)
+
+    def uv(p, flat_pt):
+        R, lo, off = maps[p]
+        m = (R @ np.asarray(flat_pt)) - lo + off
+        px = LEAF_PAD_PX + m * ppmm
+        return px / tex
+    return uv, ppmm, side
+
+
+def _sector_outline(q0):
+    """Outline polygon of a placed piece from its corner cloud (convex hull; the pieces are thin)."""
+    pts = np.unique(np.round(q0, 6), axis=0)
+    pts = pts[np.lexsort((pts[:, 1], pts[:, 0]))]
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lower, upper = [], []
+    for p in pts:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+    for p in pts[::-1]:
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+    return np.array(lower[:-1] + upper[:-1])
+
+
+def _poly_overlap(a, b, gap):
+    """True if convex polygons a and b are closer than gap (separating axis with a margin)."""
+    for poly in (a, b):
+        n = len(poly)
+        for i in range(n):
+            e = poly[(i + 1) % n] - poly[i]
+            ax = np.array([-e[1], e[0]])
+            ax /= np.linalg.norm(ax)
+            pa, pb = a @ ax, b @ ax
+            if pa.max() + gap <= pb.min() or pb.max() + gap <= pa.min():
+                return False
+    return True
+
+
+def _nest(occupied, poly, x_cursor, gap):
+    lo, hi = x_cursor - poly[:, 0].max() - 50.0, x_cursor + gap
+    # the smallest shift that clears everything already placed
+    for _ in range(50):
+        mid = 0.5 * (lo + hi)
+        if any(_poly_overlap(o, poly + np.array([mid, 0.0]), gap) for o in occupied):
+            lo = mid
+        else:
+            hi = mid
+    return hi
+
+
+def build_leaf(mb: FanMesh, spec: FanSpec, tpl: FF.LeafTemplate, soft_mountain: float = 0.35):
+    items = leaf_corners(spec, tpl)
+    uvf, ppmm, side = leaf_uv_layout(spec, items, spec.texture_size)
+    slot = SLOTS["leaf"]
+    faces = [it for it in items if it["kind"] == "face"]
+    normals = [_face_normal(f["quad"]) for f in faces]
+    for it in items:
+        q = it["quad"]
+        uvs = [uvf(it["piece"], it["flat"][c]) for c in range(4)]
+        if it["kind"] == "face":
+            j = it["j"]
+            n = normals[j]
+            cn = []
+            for c in range(4):
+                if it["kinds"][c] == "mid":
+                    other = normals[j + 1] if j % 2 == 0 else normals[j - 1]
+                    b = n + other
+                    b /= np.linalg.norm(b)
+                    v = (1 - soft_mountain) * n + soft_mountain * b
+                    cn.append(v / np.linalg.norm(v))
+                else:
+                    cn.append(n)
+            part, grp, bone = "leaf", f"leaf_{j:02d}", it["bone"]
+        else:
+            n = np.array([0.0, 0.0, 1.0])
+            cn = [n] * 4
+            part, grp, bone = "flaps", f"flap_{it['name']}", it["bone"]
+        fl = it["flat"]
+        for (a, b, c) in ((0, 1, 2), (0, 2, 3)):
+            mb.tri([q[a], q[b], q[c]], [uvs[a], uvs[b], uvs[c]], [cn[a], cn[b], cn[c]], bone, slot, part, grp,
+                   layer="front", locs=[fl[a], fl[b], fl[c]], kind="leaf")
+        back = q - n * LEAF_BACK_OFFSET_MM
+        for (a, b, c) in ((0, 1, 2), (0, 2, 3)):
+            mb.tri([back[a], back[c], back[b]], [uvs[a], uvs[c], uvs[b]], [-cn[a], -cn[c], -cn[b]], bone, slot, part,
+                   grp, layer="back", locs=[fl[a], fl[c], fl[b]], kind="leaf")
+    return {"leaf_uv_side_mm": round(side, 3), "leaf_ppmm": round(ppmm, 4)}
+
+

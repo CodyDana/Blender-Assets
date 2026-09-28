@@ -1,0 +1,503 @@
+{
+ "dest": "/Game/FanCheck/Final_0926a",
+ "checks": {
+  "skeleton": {
+   "bones": 78,
+   "missing": [],
+   "extra": [],
+   "parents_bad": [],
+   "max_head_error_cm": 2.1327272528994995e-06,
+   "max_scale_error": 2.3841856844342146e-07,
+   "root_local_scale": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "sockets": {
+   "Grip": {
+    "bone": "stick_00",
+    "location_error_cm": 0.0,
+    "rotation_error_deg": 0.0,
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "Pivot": {
+    "bone": "pivot",
+    "location_error_cm": 0.0,
+    "rotation_error_deg": 0.0,
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "Tassel": {
+    "bone": "pivot",
+    "location_error_cm": 0.0,
+    "rotation_error_deg": 0.0,
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "Tip": {
+    "bone": "stick_12",
+    "location_error_cm": 0.0,
+    "rotation_error_deg": 0.0,
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  "lods": {
+   "count": 3,
+   "screen_sizes": [
+    1.0,
+    0.41269999742507935,
+    0.1444000005722046
+   ],
+   "verts": [
+    4466,
+    2280,
+    1476
+   ]
+  },
+  "animations": {
+   "A_Fan_OpenClose": {
+    "skeleton_ok": true,
+    "num_frames": 78,
+    "expected_keys": 79,
+    "play_length_s": 1.2999999523162842,
+    "expected_s": 1.3,
+    "samples": 157,
+    "max_crack_cm": 0.007823096107100273,
+    "max_opening_error_deg": 4.833274719828751e-05
+   },
+   "A_Fan_Openness": {
+    "skeleton_ok": true,
+    "num_frames": 60,
+    "expected_keys": 61,
+    "play_length_s": 1.0,
+    "expected_s": 1.0,
+    "samples": 121,
+    "max_crack_cm": 0.007830768824918143,
+    "max_opening_error_deg": 4.261833066365739e-05
+   },
+   "A_Fan_OpenPose": {
+    "skeleton_ok": true,
+    "num_frames": 1,
+    "expected_keys": 2,
+    "play_length_s": 0.01666666753590107,
+    "expected_s": 0.016666666666666666,
+    "samples": 3,
+    "max_crack_cm": 1.509903313490213e-14,
+    "max_opening_error_deg": 6.209586899785791e-06
+   }
+  },
+  "fold_worst": {
+   "crack_cm": 0.007830768824918143,
+   "anim": "A_Fan_Openness",
+   "time": 0.08333333333333333,
+   "kind": "key"
+  },
+  "physics": {
+   "fan": {
+    "asset": "/Game/FanCheck/Final_0926a/PHYS_Fan.PHYS_Fan",
+    "bodies": {
+     "pivot": {
+      "bone": "pivot",
+      "boxes_cm": [
+       [
+        21.214000701904297,
+        1.399999976158142,
+        1.6085000038146973
+       ],
+       [
+        37.55350112915039,
+        21.265300750732422,
+        2.6005001068115234
+       ]
+      ],
+      "capsules_cm": [],
+      "spheres_cm": [],
+      "physics_type": "<PhysicsType.PHYS_TYPE_DEFAULT: 0>",
+      "consider_for_bounds": true,
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+      "mass_kg": 0.02199999988079071,
+      "ok": true
+     }
+    },
+    "extra_bodies": [],
+    "constraints": 0
+   },
+   "tassel": {
+    "asset": "/Game/FanCheck/Final_0926a/PHYS_Fan_Tassel.PHYS_Fan_Tassel",
+    "bodies": {
+     "tassel_root": {
+      "bone": "tassel_root",
+      "boxes_cm": [],
+      "capsules_cm": [],
+      "spheres_cm": [
+       0.15000000596046448
+      ],
+      "physics_type": "<PhysicsType.PHYS_TYPE_KINEMATIC: 1>",
+      "consider_for_bounds": true,
+      "collision": "<CollisionEnabled.NO_COLLISION: 0>",
+      "mass_kg": 0.0010000000474974513,
+      "ok": true
+     },
+     "cord_01": {
+      "bone": "cord_01",
+      "boxes_cm": [],
+      "capsules_cm": [
+       [
+        0.14499999582767487,
+        1.315000057220459
+       ]
+      ],
+      "spheres_cm": [],
+      "physics_type": "<PhysicsType.PHYS_TYPE_DEFAULT: 0>",
+      "consider_for_bounds": true,
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+      "mass_kg": 0.0006000000284984708,
+      "ok": true
+     },
+     "cord_02": {
+      "bone": "cord_02",
+      "boxes_cm": [],
+      "capsules_cm": [
+       [
+        0.14499999582767487,
+        1.315000057220459
+       ]
+      ],
+      "spheres_cm": [],
+      "physics_type": "<PhysicsType.PHYS_TYPE_DEFAULT: 0>",
+      "consider_for_bounds": true,
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+      "mass_kg": 0.0006000000284984708,
+      "ok": true
+     },
+     "knot": {
+      "bone": "knot",
+      "boxes_cm": [],
+      "capsules_cm": [
+       [
+        0.44999998807907104,
+        0.3160000145435333
+       ]
+      ],
+      "spheres_cm": [],
+      "physics_type": "<PhysicsType.PHYS_TYPE_DEFAULT: 0>",
+      "consider_for_bounds": true,
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+      "mass_kg": 0.0006000000284984708,
+      "ok": true
+     },
+     "skirt_01": {
+      "bone": "skirt_01",
+      "boxes_cm": [],
+      "capsules_cm": [
+       [
+        0.6000000238418579,
+        2.3434998989105225
+       ]
+      ],
+      "spheres_cm": [],
+      "physics_type": "<PhysicsType.PHYS_TYPE_DEFAULT: 0>",
+      "consider_for_bounds": true,
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+      "mass_kg": 0.0006000000284984708,
+      "ok": true
+     },
+     "skirt_02": {
+      "bone": "skirt_02",
+      "boxes_cm": [],
+      "capsules_cm": [
+       [
+        0.6000000238418579,
+        2.3434998989105225
+       ]
+      ],
+      "spheres_cm": [],
+      "physics_type": "<PhysicsType.PHYS_TYPE_DEFAULT: 0>",
+      "consider_for_bounds": true,
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+      "mass_kg": 0.0006000000284984708,
+      "ok": true
+     }
+    },
+    "extra_bodies": [],
+    "constraints": 5
+   }
+  },
+  "bounds": {
+   "1.5": {
+    "origin": [
+     0.4232699999999987,
+     -8.524799999999999,
+     0.39598
+    ],
+    "extent": [
+     18.776750564575195,
+     10.632650375366211,
+     1.3002500534057617
+    ],
+    "corners_at_deg": 1.5,
+    "worst_corner_outside_cm": -0.20538311796984132,
+    "pose_opening_deg": 1.4999702381418274,
+    "runtime_crack_cm": 0.006427049252231881
+   },
+   "30.0": {
+    "origin": [
+     0.4232699999999987,
+     -8.524799999999999,
+     0.39598
+    ],
+    "extent": [
+     18.776750564575195,
+     10.632650375366211,
+     1.3002500534057617
+    ],
+    "corners_at_deg": 31.145,
+    "worst_corner_outside_cm": -0.10212217093844722,
+    "pose_opening_deg": 29.999996908167702,
+    "runtime_crack_cm": 0.007383924500832681
+   },
+   "90.0": {
+    "origin": [
+     0.4232699999999987,
+     -8.524799999999999,
+     0.39598
+    ],
+    "extent": [
+     18.776750564575195,
+     10.632650375366211,
+     1.3002500534057617
+    ],
+    "corners_at_deg": 90.435,
+    "worst_corner_outside_cm": -0.12096457482299527,
+    "pose_opening_deg": 90.00000474413422,
+    "runtime_crack_cm": 0.0043146678435726825
+   },
+   "150.0": {
+    "origin": [
+     0.4232699999999987,
+     -8.524799999999999,
+     0.39598
+    ],
+    "extent": [
+     18.776750564575195,
+     10.632650375366211,
+     1.3002500534057617
+    ],
+    "corners_at_deg": 149.725,
+    "worst_corner_outside_cm": -0.11873812478472345,
+    "pose_opening_deg": 149.9999554533719,
+    "runtime_crack_cm": 0.0009224783073808915
+   },
+   "163.2": {
+    "origin": [
+     0.4232699999999987,
+     -8.524799999999999,
+     0.39598
+    ],
+    "extent": [
+     18.776750564575195,
+     10.632650375366211,
+     1.3002500534057617
+    ],
+    "corners_at_deg": 163.2,
+    "worst_corner_outside_cm": -0.10008037536620762,
+    "pose_opening_deg": 163.19998896074054,
+    "runtime_crack_cm": 1.636489170340712e-06
+   }
+  },
+  "render_materials_compiled": [
+   "M_FanCheck_Leaf",
+   "M_FanCheck_Sticks",
+   "M_FanCheck_Rivet",
+   "M_FanCheck_Tassel"
+  ],
+  "runtime_fold": {
+   "max_crack_cm": 0.007824649823739222,
+   "max_opening_error_deg": 4.454662808939247e-05,
+   "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression"
+  }
+ },
+ "gates": {
+  "U1_bones_78_hierarchy_ref_pose": true,
+  "U2_no_bone_scale": true,
+  "U3_sockets": true,
+  "U4_lods": true,
+  "U5_animations_play_and_fold_holds": true,
+  "U6_physics_assets": true,
+  "U7_bounds_hold_the_leaf": true,
+  "U9_runtime_pose_fold_holds": true,
+  "U8_renders_written_posed_tassel_on_socket": true,
+  "_all": true
+ },
+ "renders": {
+  "camera": {
+   "loc_cm": [
+    0.5,
+    -6.0,
+    60.0
+   ],
+   "ortho_width_cm": 44.0,
+   "px": 768,
+   "view": "front (down the rivet axis, component +Z toward the camera)"
+  },
+  "shots": [
+   {
+    "deg": 0.0,
+    "time_s": 0.0,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_000.00.png",
+    "stick_25_yaw": 88.5000152728393,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 1.4999702381418274,
+    "runtime_crack_cm": 0.006427049252231881,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 1.5
+   },
+   {
+    "deg": 15.0,
+    "time_s": 0.08348794063079777,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_015.00.png",
+    "stick_25_yaw": 74.99997281412661,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 15.000012696854526,
+    "runtime_crack_cm": 0.007824649823739222,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 15.0
+   },
+   {
+    "deg": 30.0,
+    "time_s": 0.17625231910946196,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_030.00.png",
+    "stick_25_yaw": 59.99998860281343,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 29.999996908167702,
+    "runtime_crack_cm": 0.007383924500832681,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 30.0
+   },
+   {
+    "deg": 60.0,
+    "time_s": 0.3617810760667904,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_060.00.png",
+    "stick_25_yaw": 29.99997538123201,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 60.00001012974913,
+    "runtime_crack_cm": 0.005924988568449235,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 60.0
+   },
+   {
+    "deg": 90.0,
+    "time_s": 0.5473098330241187,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_090.00.png",
+    "stick_25_yaw": -1.9233153078716563e-05,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 90.00000474413422,
+    "runtime_crack_cm": 0.0043146678435726825,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 90.0
+   },
+   {
+    "deg": 120.0,
+    "time_s": 0.7328385899814471,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_120.00.png",
+    "stick_25_yaw": -30.00000353883978,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 119.99998904982091,
+    "runtime_crack_cm": 0.0026363816593677858,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 120.0
+   },
+   {
+    "deg": 150.0,
+    "time_s": 0.9183673469387756,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_150.00.png",
+    "stick_25_yaw": -59.999969942390784,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 149.9999554533719,
+    "runtime_crack_cm": 0.0009224783073808915,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 150.0
+   },
+   {
+    "deg": 163.2,
+    "time_s": 1.0,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_fold_163.20.png",
+    "stick_25_yaw": -73.20000344975941,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 163.19998896074054,
+    "runtime_crack_cm": 1.636489170340712e-06,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0,
+    "expected_opening_deg": 163.2
+   },
+   {
+    "anim": "A_Fan_OpenClose",
+    "time_s": 0.25,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_openclose_0.25s.png",
+    "stick_25_yaw": 7.650015111463844,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 82.34997039951729,
+    "runtime_crack_cm": 0.0047326626070676595,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0
+   },
+   {
+    "anim": "A_Fan_OpenClose",
+    "time_s": 0.65,
+    "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\fan\\UnrealCheck\\final\\ue_renders\\ue_openclose_hold_0.65s.png",
+    "stick_25_yaw": -73.20000344975941,
+    "stick_00_yaw": 89.99998551098113,
+    "opening_deg": 163.19998896074054,
+    "runtime_crack_cm": 1.636489170340712e-06,
+    "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+    "attached": true,
+    "tassel_error_cm": 0.0
+   }
+  ],
+  "exists": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ]
+ },
+ "status": "ok",
+ "seconds": 5.0
+}

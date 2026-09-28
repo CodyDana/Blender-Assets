@@ -1,0 +1,2580 @@
+{
+  "asset": "SM_Shuriken_SquarePlate",
+  "form": "square_plate",
+  "title": "Senban square-plate hira-shuriken",
+  "pack": "Shuriken",
+  "revision": 4,
+  "generated": "2026-09-18T15:38:56",
+  "script": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Scripts\\shuriken\\build_square_plate.py",
+  "library": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Scripts\\shuriken\\shuriken_lib",
+  "library_version": "3.7.1",
+  "pipeline_version": "1.0.0",
+  "blender": "5.2.0 LTS",
+  "build_to": {
+    "points": 4,
+    "side_mm": 76.2,
+    "corner_to_corner_mm": 107.7631,
+    "corner_to_corner_study_rounded_mm": 108.0,
+    "thickness_mm": 1.9,
+    "sagitta_mm": 6.0,
+    "arc_radius_mm": 123.9675,
+    "side_midpoint_radius_mm": 32.1,
+    "corner_included_deg": 54.2022,
+    "hole_side_mm": 12.7,
+    "hole_orientation": "parallel",
+    "hole_fillet_mm": 1.0,
+    "edge_grind": "full_side",
+    "grind": "knife: both faces, every concave side, to an edge land",
+    "grind_angle_deg": 35.0,
+    "edge_land_mm": 0.15,
+    "grind_width_mm": 1.2496,
+    "grind_depth_mm": 0.875,
+    "chamfer_width_mm": 1.2496,
+    "chamfer_wall_top_drop_mm": 0.875,
+    "hole_chamfer_mm": 0.3,
+    "hole_chamfer_deg": 45.0,
+    "mass_g": 66.0,
+    "mass_gate": "outline (un-ground plate) mass within +-2 g of the target; ground mass reported",
+    "source": "References/Shuriken/SHURIKEN_STUDY.md section 2.3",
+    "analytic_exact_mm2": 4420.7824,
+    "analytic_exact_g": 65.936,
+    "hand_check_mm2": 4420.0,
+    "hand_check_g": 65.9,
+    "diagonal_note": "the [17] pair (3 in closest tips, 4.25 in farthest) is a 76.2 mm square: corner to corner 76.2 x sqrt 2 = 107.763 mm, which study 2.3 rounds to 108 mm. Built to the exact square; measured 107.7631 mm."
+  },
+  "geometry": "square_plate",
+  "uv_wall_islands": {},
+  "uv_island_margin": {
+    "used": 0.012,
+    "pack_default": 0.005,
+    "why": "Chosen before the knife grind, when LOD2 had no facet and its top plate ran to the edge, its 4-chord sides up to ~1.1 mm (~15 px at 2048) past LOD0's top-plate island: at the pack's 0.005 that grazed the hole-wall island packed beside it (1 overlapping UV pair on LOD2); at 0.008 the transfer's clamp moved a LOD2 plate corner 1.8 px (cross-LOD gate 0.5 px); at 0.012 both gates passed with 0.5 pt less coverage. The knife-grind LOD2 keeps a single facet (land 0), so its plate now ends at the grind line like LOD0's; 0.012 is kept and both gates still pass."
+  },
+  "lod0_triangles_pre_group": 1344,
+  "hull_method": "tip_prism: shuriken_lib.geometry.author_tip_prism_hull, the square prism through the four corners at full plate thickness - the plate's exact convex hull in plan (the sides are concave), exactly C4, encloses LOD0",
+  "hull": {
+    "name": "UCX_SM_Shuriken_SquarePlate_LOD0_00",
+    "verts": 8,
+    "faces": 12
+  },
+  "uv_transfer": {
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "method": "LOD0 island affine maps (Smart UV planar projection + pack transform, fitted by least squares)",
+      "lod0_islands": 10,
+      "lod0_island_fit_residual_max_uv": 7.351e-08,
+      "lod0_islands_used": 10,
+      "face_match_distance_mm": {
+        "median": 0.0,
+        "max": 0.167935
+      },
+      "normal_weight_mm": 1.0,
+      "clamped_loops": 0,
+      "clamp_rounds": 0,
+      "overlapping_faces_left": 0,
+      "unit_square_clamped_loops": 0,
+      "uv_range_before_unit_square_clamp": [
+        0.00157,
+        0.00157,
+        0.73896,
+        0.9985
+      ],
+      "uv_range": [
+        0.00157,
+        0.00157,
+        0.73896,
+        0.9985
+      ]
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "method": "LOD0 island affine maps (Smart UV planar projection + pack transform, fitted by least squares)",
+      "lod0_islands": 10,
+      "lod0_island_fit_residual_max_uv": 7.351e-08,
+      "lod0_islands_used": 6,
+      "face_match_distance_mm": {
+        "median": 0.0,
+        "max": 0.162946
+      },
+      "normal_weight_mm": 1.0,
+      "clamped_loops": 8,
+      "clamp_rounds": 1,
+      "overlapping_faces_left": 0,
+      "unit_square_clamped_loops": 0,
+      "uv_range_before_unit_square_clamp": [
+        0.00157,
+        0.00157,
+        0.73896,
+        0.9985
+      ],
+      "uv_range": [
+        0.00157,
+        0.00157,
+        0.73896,
+        0.9985
+      ]
+    }
+  },
+  "density": {
+    "points": 4,
+    "EDGE_INTERVALS_PER_HALF_SIDE": 6,
+    "edge_chords_total": 48,
+    "FILLET_SEGMENTS_PER_HALF_CORNER": 2,
+    "fillet_chords_total": 16,
+    "HOLE_INTERVALS": 1,
+    "BEVEL_SEGMENTS": 1,
+    "plate_contours": "hole 3 -> offset 1.5 mm -> offset 4.0 mm -> ring 3 at lam 0.2 -> ring 4 at lam 0.45 -> ring 5 at lam 0.72 -> ring 6 at lam 0.88 -> plate edge 6 (per half side)",
+    "arc_radius_mm": 123.9675,
+    "edge_chord_sagitta_mm": 0.04200481062352241,
+    "mitre_point_from_tip_mm": 2.6926845388955676
+  },
+  "mesh_stats": {
+    "authored_vertices": 672,
+    "authored_faces": 872,
+    "quads": 472,
+    "tris": 400,
+    "ngons": 0,
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_verts": 0,
+    "zero_length_edges": 0,
+    "zero_area_faces": 0,
+    "folded_plate_faces": 0,
+    "sharp_edges": 300,
+    "knife_faces": 96,
+    "grind_line_segments": 48,
+    "signed_volume_m3": 8.078012e-06,
+    "min_edge_mm": 0.150000007125,
+    "min_face_area_mm2": 0.188550188795,
+    "coincident_vertices": 0,
+    "triangles": 1344,
+    "predicted_triangles": 1344,
+    "curved_facet_shading_max_dev_deg": 0.856,
+    "curved_facet_max_warp_mm": 0.006818,
+    "curved_facets_measured": 96
+  },
+  "lod_mesh_stats": {
+    "SM_Shuriken_SquarePlate_LOD0": {
+      "authored_vertices": 672,
+      "authored_faces": 872,
+      "quads": 472,
+      "tris": 400,
+      "ngons": 0,
+      "non_manifold_edges": 0,
+      "boundary_edges": 0,
+      "loose_verts": 0,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "folded_plate_faces": 0,
+      "sharp_edges": 300,
+      "knife_faces": 96,
+      "grind_line_segments": 48,
+      "signed_volume_m3": 8.078012e-06,
+      "min_edge_mm": 0.150000007125,
+      "min_face_area_mm2": 0.188550188795,
+      "coincident_vertices": 0,
+      "triangles": 1344,
+      "predicted_triangles": 1344,
+      "curved_facet_shading_max_dev_deg": 0.856,
+      "curved_facet_max_warp_mm": 0.006818,
+      "curved_facets_measured": 96
+    },
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "authored_vertices": 288,
+      "authored_faces": 312,
+      "quads": 264,
+      "tris": 48,
+      "ngons": 0,
+      "non_manifold_edges": 0,
+      "boundary_edges": 0,
+      "loose_verts": 0,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "folded_plate_faces": 0,
+      "sharp_edges": 172,
+      "knife_faces": 48,
+      "grind_line_segments": 24,
+      "signed_volume_m3": 8.12465e-06,
+      "min_edge_mm": 0.150000007125,
+      "min_face_area_mm2": 0.359493753876,
+      "coincident_vertices": 0,
+      "triangles": 576,
+      "predicted_triangles": 576,
+      "curved_facet_shading_max_dev_deg": 1.7245,
+      "curved_facet_max_warp_mm": 0.01555,
+      "curved_facets_measured": 48
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "authored_vertices": 64,
+      "authored_faces": 72,
+      "quads": 56,
+      "tris": 16,
+      "ngons": 0,
+      "non_manifold_edges": 0,
+      "boundary_edges": 0,
+      "loose_verts": 0,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "folded_plate_faces": 0,
+      "sharp_edges": 76,
+      "knife_faces": 32,
+      "grind_line_segments": 16,
+      "signed_volume_m3": 8.173949e-06,
+      "min_edge_mm": 1.569735235535,
+      "min_face_area_mm2": 12.064999282302,
+      "coincident_vertices": 0,
+      "triangles": 128,
+      "predicted_triangles": 128,
+      "curved_facet_shading_max_dev_deg": 2.7456,
+      "curved_facet_max_warp_mm": 0.025246,
+      "curved_facets_measured": 32
+    }
+  },
+  "lod_params": {
+    "SM_Shuriken_SquarePlate_LOD0": {
+      "edge_intervals": 6,
+      "fillet_segments": 2,
+      "bevel_segments": 1,
+      "hole_intervals": 1,
+      "fillet_u": 0.34,
+      "offsets_mm": [
+        1.5,
+        4.0
+      ],
+      "rings": [
+        [
+          3,
+          0.2
+        ],
+        [
+          4,
+          0.45
+        ],
+        [
+          5,
+          0.72
+        ],
+        [
+          "edge",
+          0.88
+        ]
+      ],
+      "band": [
+        1200,
+        2500
+      ],
+      "note": "LOD0: 12 chords per side (0.042 mm sagitta), one-facet knife grind, 4-chord hole fillets + deburr, graded plate",
+      "knife_land": true,
+      "hole_bevel": true
+    },
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "edge_intervals": 3,
+      "fillet_segments": 1,
+      "bevel_segments": 1,
+      "hole_intervals": 1,
+      "fillet_u": 0.34,
+      "offsets_mm": [
+        2.5
+      ],
+      "rings": [
+        [
+          "edge",
+          0.3
+        ],
+        [
+          "edge",
+          0.65
+        ]
+      ],
+      "band": [
+        500,
+        900
+      ],
+      "note": "LOD1: 6 chords per side, one-facet knife grind, 2-chord fillets + deburr",
+      "knife_land": true,
+      "hole_bevel": true
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "edge_intervals": 2,
+      "fillet_segments": 0,
+      "bevel_segments": 1,
+      "hole_intervals": 1,
+      "fillet_u": 0.3,
+      "offsets_mm": [],
+      "rings": [],
+      "band": [
+        0,
+        250
+      ],
+      "note": "LOD2: fillets and deburr dropped, single-facet knife grind to an edge line, plain square hole, 4 chords per side",
+      "knife_land": false,
+      "hole_bevel": false
+    }
+  },
+  "lod_group": "SM_Shuriken_SquarePlate_LodGroup",
+  "objects": [
+    "SM_Shuriken_SquarePlate_LOD0",
+    "SM_Shuriken_SquarePlate_LOD1",
+    "SM_Shuriken_SquarePlate_LOD2"
+  ],
+  "sockets": [
+    "SOCKET_SM_Shuriken_SquarePlate_LOD0_Grip",
+    "SOCKET_SM_Shuriken_SquarePlate_LOD0_Trail"
+  ],
+  "socket_records": [
+    {
+      "socket": "Grip",
+      "fbx_node": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Grip",
+      "mesh": "SM_Shuriken_SquarePlate_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        2.2698,
+        -2.2698,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": -45.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "socket": "Trail",
+      "fbx_node": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Trail",
+      "mesh": "SM_Shuriken_SquarePlate_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "wear_mask_radius_mm": [
+    51.381537,
+    53.881537
+  ],
+  "material": "M_Shuriken_Master",
+  "material_nodes": 1102,
+  "triangles": {
+    "SM_Shuriken_SquarePlate_LOD0": 1344,
+    "SM_Shuriken_SquarePlate_LOD1": 576,
+    "SM_Shuriken_SquarePlate_LOD2": 128
+  },
+  "lod_triangles": [
+    1344,
+    576,
+    128
+  ],
+  "lod_bands": {
+    "LOD0": [
+      1200,
+      2500
+    ],
+    "LOD1": [
+      500,
+      900
+    ],
+    "LOD2": [
+      0,
+      250
+    ]
+  },
+  "lod_bands_ok": [
+    true,
+    true,
+    true
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.1078,
+    0.0377
+  ],
+  "lod_switching": {
+    "screen_sizes": [
+      1.0,
+      0.1078,
+      0.0377
+    ],
+    "study_4_table": [
+      1.0,
+      0.5,
+      0.25
+    ],
+    "bounds_radius_mm": 53.8816,
+    "reference_view": "16:9, 90 deg horizontal FOV (Unreal ComputeBoundsScreenSize: S = 1.778 R / d)",
+    "switch_distance_m": [
+      null,
+      0.8886,
+      2.5408
+    ],
+    "study_table_switch_distance_m": [
+      null,
+      0.1916,
+      0.3832
+    ],
+    "star_height_px_at_switch_1080p": [
+      null,
+      116.4,
+      40.7
+    ],
+    "why": "Study 4's 1.0 / 0.5 / 0.25 put LOD2 - no hole, no bevel - on screen from ~0.36 m, i.e. a star held in first person or lying on a table. The pack sets the thresholds from distance (LOD1 ~0.9 m, LOD2 ~2.5 m for a 5 cm radius) so each switch happens where the LOD's surface deviation is under a pixel or two. They travel in the .sockets.json sidecar (pipeline.export_fbx lod_screen_sizes) and ue_import_sockets applies them.",
+    "scaled_for_bounding_radius": {
+      "reference_radius_mm": 50.0,
+      "form_radius_mm": 53.8815,
+      "scaled_sizes": [
+        1.0,
+        0.1078,
+        0.0377
+      ],
+      "note": "the pack's 0.10 / 0.035 are for a ~50 mm star; S = 1.778 R / d, so the senban's 53.88 mm corner radius scales them by 1.0776 to keep the pack's switch distances (~0.89 m and ~2.54 m)"
+    }
+  },
+  "lod_surfaces": {
+    "SM_Shuriken_SquarePlate_LOD0": {
+      "volume_mm3": 8078.011568,
+      "surface_area_mm2": 9147.924684,
+      "tip_radius_per_arm_mm": [
+        53.881537,
+        53.881537,
+        53.881537,
+        53.881537
+      ],
+      "vertices": 672
+    },
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "volume_mm3": 8124.649881,
+      "surface_area_mm2": 9198.879535,
+      "tip_radius_per_arm_mm": [
+        53.881537,
+        53.881537,
+        53.881537,
+        53.881537
+      ],
+      "vertices": 288
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "volume_mm3": 8173.948724,
+      "surface_area_mm2": 9280.864739,
+      "tip_radius_per_arm_mm": [
+        53.881537,
+        53.881537,
+        53.881537,
+        53.881537
+      ],
+      "vertices": 64
+    }
+  },
+  "lod_surface_deviation_mm": {
+    "SM_Shuriken_SquarePlate_LOD1": 0.096444,
+    "SM_Shuriken_SquarePlate_LOD2": 0.292892
+  },
+  "lod_surface_deviation_two_sided_mm": {
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "lod0_vertices_to_lod": 0.096444,
+      "lod0_surface_to_lod": 0.157853,
+      "lod_surface_to_lod0": 0.167935,
+      "two_sided": 0.167935,
+      "two_sided_hub_and_hole": 0.07612,
+      "two_sided_arms": 0.167935,
+      "split_radius_mm": 13.470384
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "lod0_vertices_to_lod": 0.292892,
+      "lod0_surface_to_lod": 0.292892,
+      "lod_surface_to_lod0": 0.414212,
+      "two_sided": 0.414212,
+      "two_sided_hub_and_hole": 0.414212,
+      "two_sided_arms": 0.335868,
+      "split_radius_mm": 13.470384
+    }
+  },
+  "lod1_is_distinct": {
+    "triangle_reduction": 0.5714,
+    "volume_delta_mm3": 46.638313,
+    "surface_area_delta_mm2": 50.954851,
+    "max_surface_deviation_mm": 0.167935,
+    "rev2_metric_lod0_vertices_to_lod1_mm": 0.096444,
+    "note": "LODs are authored by the square-plate generator at reduced counts, not decimated: LOD1 halves the edge chords and the fillet chords and keeps the one-facet knife grind with its land; LOD2 keeps a single-facet knife grind whose facets meet in an edge line (land 0), drops the fillets and the hole deburr, and KEEPS a plain square hole (the form's defining feature, ~5 px across at the LOD2 switch). max_surface_deviation_mm is two-sided; the split is the hole region (inside 1.5 x the hole corner radius) against the rest of the plate."
+  },
+  "measured": {
+    "across_mm": 107.763074,
+    "across_y_mm": 107.763074,
+    "corner_to_corner_mm": 107.763074,
+    "thickness_mm": 1.9,
+    "corner_radius_mm": 53.881537,
+    "tip_radius_mm": 53.881537,
+    "side_chord_mm": [
+      76.200001,
+      76.200001,
+      76.200001,
+      76.200001
+    ],
+    "side_midpoint_radius_mm": 32.100001,
+    "sagitta_mm": 5.999999,
+    "side_arc_fit": {
+      "radius_mm": 123.9675,
+      "centre_mm": [
+        110.3564,
+        110.3564
+      ],
+      "max_residual_mm": 1e-06,
+      "vertices": 26,
+      "note": "circle fitted to the wall vertices of side 0 (they lie ON the arc)"
+    },
+    "corner_included_deg": 54.2022,
+    "hole_across_flats_mm": 12.699999,
+    "hole_mm": 12.699999,
+    "hole_fillet_radius_mm": 0.999998,
+    "hole_corner_angle_deg": 0.0,
+    "hole_orientation": "parallel: hole corners on the axes, pointing at the outer corners",
+    "hole_wall_vertices": 48,
+    "hole_across_corners_mm": 17.132087,
+    "grind": {
+      "grind_angle_deg": {
+        "area_weighted_mean": 34.9362,
+        "min": 34.4945,
+        "max": 35.0092,
+        "faces": 96
+      },
+      "grind_angle_spec_deg": 35.0,
+      "edge_land_mm": {
+        "min": 0.15,
+        "max": 0.15,
+        "median": 0.15,
+        "outline_vertices": 96
+      },
+      "edge_land_spec_mm": 0.15,
+      "tip_edge_height_mm": 0.15,
+      "tip_radius_mm": 0.075,
+      "tip_radius_definition": "radius of the smallest circle holding the point's end in the vertical section through the point's axis (half the vertical edge the two lands leave there); in plan the point is exactly sharp - the silhouette is unchanged",
+      "tip_ridge_included_deg": 36.0036,
+      "grind_angle_within_spec": true,
+      "edge_land_within_0_25": true,
+      "grind_width_mm": 1.24963,
+      "land_mode": "edge land"
+    },
+    "facet_plan_width_mm": 1.24963,
+    "facet_drop_mm": 0.875,
+    "facet_segments": 1,
+    "edge_land_mm": 0.15,
+    "tip_edge_height_mm": 0.15,
+    "edge_intervals_per_half_side": 6,
+    "hole_chamfer_mm": 0.3,
+    "volume_mm3": 8078.0116,
+    "plate_area_mm2": 4251.585,
+    "outline_volume_mm3": 8416.12159,
+    "outline_plate_area_mm2": 4429.537679,
+    "mass_g": 63.4124,
+    "ground_mass_g": 63.4124,
+    "outline_mass_g": 66.0666,
+    "grind_removes_g": 2.6542,
+    "mass_target_g": 66.0,
+    "mass_error_g": 0.0666,
+    "mass_within_tolerance": true,
+    "mass_gate": {
+      "evaluated_on": "the UN-GROUND plate: the same outline authored with no grind, chamfer or deburr (outline x thickness), which the knife grind does not change",
+      "outline_mass_g": 66.0666,
+      "target_g": 66.0,
+      "tolerance_g": 2.0,
+      "passed": true,
+      "why": "the study mass gate proves the OUTLINE proportions match a real sourced object; the grind is a finish, so the finished (ground) mass is reported, not gated"
+    },
+    "ground_mass_vs_study_range": {
+      "ground_mass_g": 63.4124,
+      "study_min_max_g": [
+        45.0,
+        82.0
+      ],
+      "study_typical_g": [
+        60.0,
+        66.0
+      ],
+      "within_min_max": true,
+      "within_typical": true,
+      "note": "reported, not gated (decision B)"
+    },
+    "density_g_cm3": 7.85,
+    "min_edge_mm": 0.15,
+    "min_face_area_mm2": 0.188550189,
+    "zero_length_edges": 0,
+    "zero_area_faces": 0,
+    "coincident_vertices": 0
+  },
+  "lod_measured": {
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "across_mm": 107.763074,
+      "across_y_mm": 107.763074,
+      "corner_to_corner_mm": 107.763074,
+      "thickness_mm": 1.9,
+      "corner_radius_mm": 53.881537,
+      "tip_radius_mm": 53.881537,
+      "side_chord_mm": [
+        76.200001,
+        76.200001,
+        76.200001,
+        76.200001
+      ],
+      "side_midpoint_radius_mm": 32.100001,
+      "sagitta_mm": 5.999999,
+      "side_arc_fit": {
+        "radius_mm": 123.9675,
+        "centre_mm": [
+          110.3564,
+          110.3564
+        ],
+        "max_residual_mm": 1e-06,
+        "vertices": 14,
+        "note": "circle fitted to the wall vertices of side 0 (they lie ON the arc)"
+      },
+      "corner_included_deg": 54.2022,
+      "hole_across_flats_mm": 12.699999,
+      "hole_mm": 12.699999,
+      "hole_fillet_radius_mm": 0.999998,
+      "hole_corner_angle_deg": 0.0,
+      "hole_orientation": "parallel: hole corners on the axes, pointing at the outer corners",
+      "hole_wall_vertices": 32,
+      "hole_across_corners_mm": 17.132087,
+      "grind": {
+        "grind_angle_deg": {
+          "area_weighted_mean": 34.6622,
+          "min": 33.8617,
+          "max": 35.0365,
+          "faces": 48
+        },
+        "grind_angle_spec_deg": 35.0,
+        "edge_land_mm": {
+          "min": 0.15,
+          "max": 0.15,
+          "median": 0.15,
+          "outline_vertices": 48
+        },
+        "edge_land_spec_mm": 0.15,
+        "tip_edge_height_mm": 0.15,
+        "tip_radius_mm": 0.075,
+        "tip_radius_definition": "radius of the smallest circle holding the point's end in the vertical section through the point's axis (half the vertical edge the two lands leave there); in plan the point is exactly sharp - the silhouette is unchanged",
+        "tip_ridge_included_deg": 36.0036,
+        "grind_angle_within_spec": true,
+        "edge_land_within_0_25": true,
+        "grind_width_mm": 1.24963,
+        "land_mode": "edge land"
+      },
+      "facet_plan_width_mm": 1.24963,
+      "facet_drop_mm": 0.875,
+      "facet_segments": 1,
+      "edge_land_mm": 0.15,
+      "tip_edge_height_mm": 0.15,
+      "edge_intervals_per_half_side": 3,
+      "hole_chamfer_mm": 0.3,
+      "volume_mm3": 8124.6499,
+      "plate_area_mm2": 4276.1315,
+      "outline_volume_mm3": 8465.985956,
+      "outline_plate_area_mm2": 4455.782082,
+      "mass_g": 63.7785,
+      "ground_mass_g": 63.7785,
+      "outline_mass_g": 66.458,
+      "grind_removes_g": 2.6795,
+      "mass_target_g": 66.0,
+      "mass_error_g": 0.458,
+      "mass_within_tolerance": true,
+      "mass_gate": {
+        "evaluated_on": "the UN-GROUND plate: the same outline authored with no grind, chamfer or deburr (outline x thickness), which the knife grind does not change",
+        "outline_mass_g": 66.458,
+        "target_g": 66.0,
+        "tolerance_g": 2.0,
+        "passed": true,
+        "why": "the study mass gate proves the OUTLINE proportions match a real sourced object; the grind is a finish, so the finished (ground) mass is reported, not gated"
+      },
+      "ground_mass_vs_study_range": {
+        "ground_mass_g": 63.7785,
+        "study_min_max_g": [
+          45.0,
+          82.0
+        ],
+        "study_typical_g": [
+          60.0,
+          66.0
+        ],
+        "within_min_max": true,
+        "within_typical": true,
+        "note": "reported, not gated (decision B)"
+      },
+      "density_g_cm3": 7.85,
+      "min_edge_mm": 0.15,
+      "min_face_area_mm2": 0.359493754,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "coincident_vertices": 0
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "across_mm": 107.763074,
+      "across_y_mm": 107.763074,
+      "corner_to_corner_mm": 107.763074,
+      "thickness_mm": 1.9,
+      "corner_radius_mm": 53.881537,
+      "tip_radius_mm": 53.881537,
+      "side_chord_mm": [
+        76.200001,
+        76.200001,
+        76.200001,
+        76.200001
+      ],
+      "side_midpoint_radius_mm": 32.100001,
+      "sagitta_mm": 5.999999,
+      "side_arc_fit": null,
+      "corner_included_deg": null,
+      "hole_across_flats_mm": 12.699999,
+      "hole_mm": 12.699999,
+      "hole_fillet_radius_mm": 0.0,
+      "hole_corner_angle_deg": 0.0,
+      "hole_orientation": "parallel: hole corners on the axes, pointing at the outer corners",
+      "hole_wall_vertices": 16,
+      "hole_across_corners_mm": 17.960511,
+      "grind": {
+        "grind_angle_deg": {
+          "area_weighted_mean": 36.4085,
+          "min": 35.4715,
+          "max": 37.3273,
+          "faces": 32
+        },
+        "grind_angle_spec_deg": 35.0,
+        "edge_land_mm": {
+          "min": 0.0,
+          "max": 0.0,
+          "median": 0.0,
+          "outline_vertices": 16
+        },
+        "edge_land_spec_mm": 0.15,
+        "tip_edge_height_mm": 0.0,
+        "tip_radius_mm": 0.0,
+        "tip_radius_definition": "radius of the smallest circle holding the point's end in the vertical section through the point's axis (half the vertical edge the two lands leave there); in plan the point is exactly sharp - the silhouette is unchanged",
+        "tip_ridge_included_deg": 0.0,
+        "grind_angle_within_spec": false,
+        "edge_land_within_0_25": true,
+        "grind_width_mm": 1.24963,
+        "land_mode": "facets meet in a sharp edge line (land 0)"
+      },
+      "facet_plan_width_mm": 1.24963,
+      "facet_drop_mm": 0.95,
+      "facet_segments": 1,
+      "edge_land_mm": 0.0,
+      "tip_edge_height_mm": 0.0,
+      "edge_intervals_per_half_side": 2,
+      "hole_chamfer_mm": 0.0,
+      "volume_mm3": 8173.9487,
+      "plate_area_mm2": 4302.0783,
+      "outline_volume_mm3": 8546.039418,
+      "outline_plate_area_mm2": 4497.915483,
+      "mass_g": 64.1655,
+      "ground_mass_g": 64.1655,
+      "outline_mass_g": 67.0864,
+      "grind_removes_g": 2.9209,
+      "mass_target_g": 66.0,
+      "mass_error_g": 1.0864,
+      "mass_within_tolerance": true,
+      "mass_gate": {
+        "evaluated_on": "the UN-GROUND plate: the same outline authored with no grind, chamfer or deburr (outline x thickness), which the knife grind does not change",
+        "outline_mass_g": 67.0864,
+        "target_g": 66.0,
+        "tolerance_g": 2.0,
+        "passed": true,
+        "why": "the study mass gate proves the OUTLINE proportions match a real sourced object; the grind is a finish, so the finished (ground) mass is reported, not gated"
+      },
+      "ground_mass_vs_study_range": {
+        "ground_mass_g": 64.1655,
+        "study_min_max_g": [
+          45.0,
+          82.0
+        ],
+        "study_typical_g": [
+          60.0,
+          66.0
+        ],
+        "within_min_max": true,
+        "within_typical": true,
+        "note": "reported, not gated (decision B)"
+      },
+      "density_g_cm3": 7.85,
+      "min_edge_mm": 1.569735,
+      "min_face_area_mm2": 12.064999282,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "coincident_vertices": 0
+    }
+  },
+  "topology_quality": {
+    "SM_Shuriken_SquarePlate_LOD0": {
+      "plate_top_faces": 328,
+      "plate_aspect_median": 4.801,
+      "plate_aspect_max": 9.385,
+      "plate_faces_aspect_over_8": 16,
+      "plate_mirror_misses": 0,
+      "plate_min_triangle_angle_deg": 12.618,
+      "plate_triangles_under_5deg": 0,
+      "strip_triangles_under_5deg": 128,
+      "min_triangle_angle_deg": 1.331,
+      "triangles_under_5deg": 128,
+      "triangles": 1344,
+      "note": "plate_* are the flat top and bottom faces (where a fan of slivers would show); strips are the facet, outer wall and hole wall, long thin quads along the edge by construction"
+    },
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "plate_top_faces": 96,
+      "plate_aspect_median": 2.317,
+      "plate_aspect_max": 7.561,
+      "plate_faces_aspect_over_8": 0,
+      "plate_mirror_misses": 0,
+      "plate_min_triangle_angle_deg": 10.791,
+      "plate_triangles_under_5deg": 0,
+      "strip_triangles_under_5deg": 80,
+      "min_triangle_angle_deg": 0.666,
+      "triangles_under_5deg": 80,
+      "triangles": 576,
+      "note": "plate_* are the flat top and bottom faces (where a fan of slivers would show); strips are the facet, outer wall and hole wall, long thin quads along the edge by construction"
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "plate_top_faces": 16,
+      "plate_aspect_median": 5.951,
+      "plate_aspect_max": 9.258,
+      "plate_faces_aspect_over_8": 8,
+      "plate_mirror_misses": 0,
+      "plate_min_triangle_angle_deg": 10.044,
+      "plate_triangles_under_5deg": 0,
+      "strip_triangles_under_5deg": 40,
+      "min_triangle_angle_deg": 4.607,
+      "triangles_under_5deg": 40,
+      "triangles": 128,
+      "note": "plate_* are the flat top and bottom faces (where a fan of slivers would show); strips are the facet, outer wall and hole wall, long thin quads along the edge by construction"
+    }
+  },
+  "uv": {
+    "uv_square_coverage": 0.409936,
+    "u_range": [
+      0.00157,
+      0.73896
+    ],
+    "v_range": [
+      0.00157,
+      0.9985
+    ],
+    "texture_size": 2048,
+    "texels_per_m": 13709.7,
+    "px_per_cm": 137.097
+  },
+  "lod_uv": {
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "uv_square_coverage": 0.41234,
+      "u_range": [
+        0.00157,
+        0.73896
+      ],
+      "v_range": [
+        0.00157,
+        0.9985
+      ],
+      "texture_size": 2048,
+      "texels_per_m": 13711.6,
+      "px_per_cm": 137.116
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "uv_square_coverage": 0.415259,
+      "u_range": [
+        0.00157,
+        0.73896
+      ],
+      "v_range": [
+        0.00157,
+        0.9985
+      ],
+      "texture_size": 2048,
+      "texels_per_m": 13699.1,
+      "px_per_cm": 136.991
+    }
+  },
+  "cross_lod_uv": {
+    "SM_Shuriken_SquarePlate_LOD1": {
+      "texture_size": 2048,
+      "top_plate": {
+        "samples": 672,
+        "skipped_no_lod0_plate_under": 0,
+        "median_uv": 9.359e-09,
+        "max_uv": 3.007e-08,
+        "max_px": 0.0001,
+        "metric": "centroid + 3 corners of every flat top-plate triangle, looked up at the same XY on LOD0's flat top plate (points with no LOD0 plate under them skipped); the gate"
+      },
+      "surface": {
+        "samples": 576,
+        "near_mm": 0.25,
+        "median_px": 0.0,
+        "p95_px": 0.5155,
+        "max_px": 1.8103,
+        "metric": "centroid_best_near: 1 sample per SM_Shuriken_SquarePlate_LOD1 triangle (its centroid and centroid UV); LOD0 candidates = every LOD0 triangle within near_mm of the closest one (no normal test); value = the smallest UV distance to the closest point on a candidate; px at 2048; all triangles"
+      },
+      "surface_plate": {
+        "samples": 336,
+        "median_px": 0.0,
+        "p95_px": 0.0001,
+        "max_px": 0.0001,
+        "metric": "centroid_best_near, plate triangles (|z| = t/2) whose centroid lies on LOD0's surface"
+      },
+      "surface_non_plate": {
+        "samples": 240,
+        "median_px": 0.4332,
+        "p95_px": 0.7154,
+        "max_px": 1.8103,
+        "metric": "centroid_best_near, non-plate triangles (walls, grind facets, land, tip); where a LOD's edge section differs from LOD0's by design this measures the shape difference"
+      },
+      "surface_off_lod0": {
+        "samples": 192,
+        "median_px": 0.4892,
+        "p95_px": 0.8135,
+        "max_px": 1.8103,
+        "plate_samples": 0,
+        "max_distance_mm": 0.112,
+        "metric": "centroid_best_near over triangles whose centroid lies more than 1 um off LOD0's surface: the designed shape differences (a filled hole, land-free facets, a pyramid tip), where no LOD0 texel exists for the same point"
+      }
+    },
+    "SM_Shuriken_SquarePlate_LOD2": {
+      "texture_size": 2048,
+      "top_plate": {
+        "samples": 84,
+        "skipped_no_lod0_plate_under": 12,
+        "median_uv": 5.187e-09,
+        "max_uv": 2.98e-08,
+        "max_px": 0.0001,
+        "metric": "centroid + 3 corners of every flat top-plate triangle, looked up at the same XY on LOD0's flat top plate (points with no LOD0 plate under them skipped); the gate"
+      },
+      "surface": {
+        "samples": 128,
+        "near_mm": 0.25,
+        "median_px": 0.9441,
+        "p95_px": 1.3785,
+        "max_px": 3.1175,
+        "metric": "centroid_best_near: 1 sample per SM_Shuriken_SquarePlate_LOD2 triangle (its centroid and centroid UV); LOD0 candidates = every LOD0 triangle within near_mm of the closest one (no normal test); value = the smallest UV distance to the closest point on a candidate; px at 2048; all triangles"
+      },
+      "surface_plate": {
+        "samples": 64,
+        "median_px": 0.0,
+        "p95_px": 1.6717,
+        "max_px": 3.1175,
+        "metric": "centroid_best_near, plate triangles (|z| = t/2) whose centroid lies on LOD0's surface"
+      },
+      "surface_non_plate": {
+        "samples": 64,
+        "median_px": 1.1172,
+        "p95_px": 1.3785,
+        "max_px": 1.3786,
+        "metric": "centroid_best_near, non-plate triangles (walls, grind facets, land, tip); where a LOD's edge section differs from LOD0's by design this measures the shape difference"
+      },
+      "surface_off_lod0": {
+        "samples": 64,
+        "median_px": 1.1172,
+        "p95_px": 1.3785,
+        "max_px": 1.3786,
+        "plate_samples": 0,
+        "max_distance_mm": 0.1735,
+        "metric": "centroid_best_near over triangles whose centroid lies more than 1 um off LOD0's surface: the designed shape differences (a filled hole, land-free facets, a pyramid tip), where no LOD0 texel exists for the same point"
+      }
+    }
+  },
+  "uv_consistency": {
+    "method": "LOD1..n UV0 from LOD0's island maps (shuriken_lib.uv); one texture set for every LOD",
+    "overlap_pairs": {
+      "SM_Shuriken_SquarePlate_LOD0": 0,
+      "SM_Shuriken_SquarePlate_LOD1": 0,
+      "SM_Shuriken_SquarePlate_LOD2": 0
+    },
+    "in_unit_square": {
+      "SM_Shuriken_SquarePlate_LOD0": true,
+      "SM_Shuriken_SquarePlate_LOD1": true,
+      "SM_Shuriken_SquarePlate_LOD2": true
+    },
+    "gate": {
+      "top_plate_max_px": 0.5,
+      "surface_max_px": 8.0,
+      "overlap_pairs": 0,
+      "in_unit_square": true
+    },
+    "passed": true
+  },
+  "c4_max_deviation_mm": {
+    "SM_Shuriken_SquarePlate_LOD0": 0.0,
+    "SM_Shuriken_SquarePlate_LOD1": 0.0,
+    "SM_Shuriken_SquarePlate_LOD2": 0.0
+  },
+  "symmetry": {
+    "order": 4,
+    "max_deviation_mm": {
+      "SM_Shuriken_SquarePlate_LOD0": 0.0,
+      "SM_Shuriken_SquarePlate_LOD1": 0.0,
+      "SM_Shuriken_SquarePlate_LOD2": 0.0
+    },
+    "method": "max nearest-neighbour distance after a 90 deg rotation of the stored (float32) vertices (quarter turns are trig-free, so exact 0.0); mirror_max_deviation_mm does the same after a mirror about the corner axis (y -> -y): D4, both exact by construction",
+    "group": "D4",
+    "mirror_max_deviation_mm": {
+      "SM_Shuriken_SquarePlate_LOD0": 0.0,
+      "SM_Shuriken_SquarePlate_LOD1": 0.0,
+      "SM_Shuriken_SquarePlate_LOD2": 0.0
+    }
+  },
+  "physics": {
+    "mass_kg_override": 0.063,
+    "mass_kg_override_exact": 0.06341,
+    "source": "the finished (knife-ground) LOD0 mesh volume x 7.85 g/cm3 - SHURIKEN_STUDY.md 4, Physics: set an explicit Mass in KG override",
+    "study_4_table_kg": 0.06,
+    "outline_mass_kg": 0.06607,
+    "measured_mass_kg": 0.06341,
+    "hull_volume_mm3": 11032.236,
+    "hull_volume_at_steel_density_kg": 0.0866,
+    "applies": "Not carried by the FBX or the sidecar, and not applied by the import scripts: set it on the StaticMeshComponent's Body Instance (Physics > Mass (kg) override) in the Blueprint that throws the star, and say so in the Fab description.",
+    "note": "hull_volume_at_steel_density_kg is the UCX hull volume times 7.85 g/cm3, shown only to say how far a hull-volume mass at steel density would overstate the star. It is NOT Unreal's own figure: without an override Unreal derives mass from the collision volume and the physical material's density (default 1 g/cm3) with RaiseMassToPower 0.75, which was not measured here (StaticMeshComponent.get_mass needs Simulate Physics; UnrealCheck5/mass_diag.json)."
+  },
+  "qa": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "unit_scale",
+        "object": null,
+        "passed": true,
+        "detail": "system=METRIC, scale_length=1.0"
+      },
+      {
+        "name": "transforms_applied",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "rotation error 0.00e+00, scale error 0.00e+00, location (0.0000, 0.0000, 0.0000)"
+      },
+      {
+        "name": "triangle_budget",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "1344 triangles (budget 2500)"
+      },
+      {
+        "name": "no_ngons",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 n-gon(s) of 872 faces"
+      },
+      {
+        "name": "no_non_manifold_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 1544"
+      },
+      {
+        "name": "open_boundary_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 boundary edge(s) of 1544 (informational: open meshes are allowed)"
+      },
+      {
+        "name": "no_loose_vertices",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 loose vertex/vertices of 672"
+      },
+      {
+        "name": "no_zero_length_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 edge(s) at or below 1e-06 of 1544; shortest 0.00015"
+      },
+      {
+        "name": "no_degenerate_faces",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 face(s) at or below 1e-12 area of 872; smallest 1.8855e-07"
+      },
+      {
+        "name": "no_coincident_vertices",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 vertex pair(s) within 1e-06 of 672"
+      },
+      {
+        "name": "uv0_present",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "1 UV map(s); UV0 is 'UVMap' (active layer is 'UVMap')"
+      },
+      {
+        "name": "uv0_tile_range",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "u 0.0016..0.7390, v 0.0016..0.9985 on 'UVMap'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)"
+      },
+      {
+        "name": "texel_density",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "137.097 px/cm at 2048px on 'UVMap' (uv area 0.4099, mesh area 0.0091 m2); no target given"
+      },
+      {
+        "name": "uv_no_overlap",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+      },
+      {
+        "name": "name_prefix",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "mesh object prefix must be one of ('SM_', 'SK_')"
+      },
+      {
+        "name": "material_prefix",
+        "object": "M_Shuriken_Master",
+        "passed": true,
+        "detail": "material prefix must be one of ('M_', 'MI_')"
+      },
+      {
+        "name": "ucx_present",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "UCX_SM_Shuriken_SquarePlate_LOD0_00"
+      },
+      {
+        "name": "ucx_closed",
+        "object": "UCX_SM_Shuriken_SquarePlate_LOD0_00",
+        "passed": true,
+        "detail": "8 vertices, 12 faces"
+      },
+      {
+        "name": "socket_is_empty",
+        "object": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Grip",
+        "passed": true,
+        "detail": "node type EMPTY; UE 5.8.2 only reads an FBX Null as a socket, a child mesh is welded into the render mesh"
+      },
+      {
+        "name": "socket_name_matches_mesh",
+        "object": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Grip",
+        "passed": true,
+        "detail": "parent render node is 'SM_Shuriken_SquarePlate_LOD0'; expected SOCKET_SM_Shuriken_SquarePlate_LOD0_<socket>"
+      },
+      {
+        "name": "socket_is_empty",
+        "object": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Trail",
+        "passed": true,
+        "detail": "node type EMPTY; UE 5.8.2 only reads an FBX Null as a socket, a child mesh is welded into the render mesh"
+      },
+      {
+        "name": "socket_name_matches_mesh",
+        "object": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Trail",
+        "passed": true,
+        "detail": "parent render node is 'SM_Shuriken_SquarePlate_LOD0'; expected SOCKET_SM_Shuriken_SquarePlate_LOD0_<socket>"
+      },
+      {
+        "name": "collision_name_matches_mesh",
+        "object": "UCX_SM_Shuriken_SquarePlate_LOD0_00",
+        "passed": true,
+        "detail": "parent render node is 'SM_Shuriken_SquarePlate_LOD0'; expected <UCX|UBX|USP|UCP>_SM_Shuriken_SquarePlate_LOD0_NN"
+      },
+      {
+        "name": "no_franchise_strings",
+        "object": "SM_Shuriken_SquarePlate_LOD0",
+        "passed": true,
+        "detail": "clean"
+      },
+      {
+        "name": "transforms_applied",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "rotation error 0.00e+00, scale error 0.00e+00, location (0.0000, 0.0000, 0.0000)"
+      },
+      {
+        "name": "triangle_budget",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "576 triangles (budget 2500)"
+      },
+      {
+        "name": "no_ngons",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 n-gon(s) of 312 faces"
+      },
+      {
+        "name": "no_non_manifold_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 600"
+      },
+      {
+        "name": "open_boundary_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 boundary edge(s) of 600 (informational: open meshes are allowed)"
+      },
+      {
+        "name": "no_loose_vertices",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 loose vertex/vertices of 288"
+      },
+      {
+        "name": "no_zero_length_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 edge(s) at or below 1e-06 of 600; shortest 0.00015"
+      },
+      {
+        "name": "no_degenerate_faces",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 face(s) at or below 1e-12 area of 312; smallest 3.59494e-07"
+      },
+      {
+        "name": "no_coincident_vertices",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 vertex pair(s) within 1e-06 of 288"
+      },
+      {
+        "name": "uv0_present",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "1 UV map(s); UV0 is 'UVMap' (active layer is 'UVMap')"
+      },
+      {
+        "name": "uv0_tile_range",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "u 0.0016..0.7390, v 0.0016..0.9985 on 'UVMap'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)"
+      },
+      {
+        "name": "texel_density",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "137.117 px/cm at 2048px on 'UVMap' (uv area 0.4123, mesh area 0.0092 m2); no target given"
+      },
+      {
+        "name": "uv_no_overlap",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+      },
+      {
+        "name": "name_prefix",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "mesh object prefix must be one of ('SM_', 'SK_')"
+      },
+      {
+        "name": "no_franchise_strings",
+        "object": "SM_Shuriken_SquarePlate_LOD1",
+        "passed": true,
+        "detail": "clean"
+      },
+      {
+        "name": "transforms_applied",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "rotation error 0.00e+00, scale error 0.00e+00, location (0.0000, 0.0000, 0.0000)"
+      },
+      {
+        "name": "triangle_budget",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "128 triangles (budget 2500)"
+      },
+      {
+        "name": "no_ngons",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 n-gon(s) of 72 faces"
+      },
+      {
+        "name": "no_non_manifold_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 136"
+      },
+      {
+        "name": "open_boundary_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 boundary edge(s) of 136 (informational: open meshes are allowed)"
+      },
+      {
+        "name": "no_loose_vertices",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 loose vertex/vertices of 64"
+      },
+      {
+        "name": "no_zero_length_edges",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 edge(s) at or below 1e-06 of 136; shortest 0.00156974"
+      },
+      {
+        "name": "no_degenerate_faces",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 face(s) at or below 1e-12 area of 72; smallest 1.2065e-05"
+      },
+      {
+        "name": "no_coincident_vertices",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 vertex pair(s) within 1e-06 of 64"
+      },
+      {
+        "name": "uv0_present",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "1 UV map(s); UV0 is 'UVMap' (active layer is 'UVMap')"
+      },
+      {
+        "name": "uv0_tile_range",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "u 0.0016..0.7390, v 0.0016..0.9985 on 'UVMap'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)"
+      },
+      {
+        "name": "texel_density",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "136.992 px/cm at 2048px on 'UVMap' (uv area 0.4153, mesh area 0.0093 m2); no target given"
+      },
+      {
+        "name": "uv_no_overlap",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+      },
+      {
+        "name": "name_prefix",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "mesh object prefix must be one of ('SM_', 'SK_')"
+      },
+      {
+        "name": "no_franchise_strings",
+        "object": "SM_Shuriken_SquarePlate_LOD2",
+        "passed": true,
+        "detail": "clean"
+      },
+      {
+        "name": "lod_counts_descending",
+        "object": "SM_Shuriken_SquarePlate",
+        "passed": true,
+        "detail": "LOD0=1344, LOD1=576, LOD2=128"
+      }
+    ],
+    "triangles": {
+      "SM_Shuriken_SquarePlate_LOD0": 1344,
+      "SM_Shuriken_SquarePlate_LOD1": 576,
+      "SM_Shuriken_SquarePlate_LOD2": 128
+    },
+    "objects": [
+      "SM_Shuriken_SquarePlate_LOD0",
+      "SM_Shuriken_SquarePlate_LOD1",
+      "SM_Shuriken_SquarePlate_LOD2"
+    ]
+  },
+  "qa_failures": [],
+  "qa_check_names": [
+    "collision_name_matches_mesh",
+    "lod_counts_descending",
+    "material_prefix",
+    "name_prefix",
+    "no_coincident_vertices",
+    "no_degenerate_faces",
+    "no_franchise_strings",
+    "no_loose_vertices",
+    "no_ngons",
+    "no_non_manifold_edges",
+    "no_zero_length_edges",
+    "open_boundary_edges",
+    "socket_is_empty",
+    "socket_name_matches_mesh",
+    "texel_density",
+    "transforms_applied",
+    "triangle_budget",
+    "ucx_closed",
+    "ucx_present",
+    "unit_scale",
+    "uv0_present",
+    "uv0_tile_range",
+    "uv_no_overlap"
+  ],
+  "lod_strategy": {
+    "method": "parametric: every LOD authored by shuriken_lib.plate at its own counts",
+    "table": "study 4's LOD rules adapted to a plate (its bands are for stars): LOD0 full silhouette, knife grind with its land and filleted, deburred hole; LOD1 edge / fillet chords halved, one-facet grind with land; LOD2 single-facet grind to an edge line (land 0), fillets and hole deburr dropped, the square hole kept; nothing padded",
+    "naming": "LODn objects are created as <mesh>_LODn; pipeline.make_lod_group renames LOD0 with its UCX_/SOCKET_ children, so the hull is UCX_<mesh>_LOD0_00",
+    "screen_sizes": [
+      1.0,
+      0.1078,
+      0.0377
+    ]
+  },
+  "export": {
+    "filepath": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_SquarePlate.fbx",
+    "objects": [
+      "SM_Shuriken_SquarePlate_LodGroup",
+      "SM_Shuriken_SquarePlate_LOD0",
+      "UCX_SM_Shuriken_SquarePlate_LOD0_00",
+      "SM_Shuriken_SquarePlate_LOD1",
+      "SM_Shuriken_SquarePlate_LOD2"
+    ],
+    "settings": {
+      "use_selection": true,
+      "use_visible": false,
+      "use_active_collection": false,
+      "object_types": [
+        "EMPTY",
+        "MESH"
+      ],
+      "global_scale": 1.0,
+      "apply_unit_scale": true,
+      "apply_scale_options": "FBX_SCALE_UNITS",
+      "axis_forward": "-Y",
+      "axis_up": "Z",
+      "use_space_transform": true,
+      "bake_space_transform": false,
+      "mesh_smooth_type": "FACE",
+      "use_mesh_modifiers": true,
+      "use_mesh_modifiers_render": true,
+      "use_mesh_edges": false,
+      "use_triangles": true,
+      "use_tspace": false,
+      "use_custom_props": false,
+      "add_leaf_bones": false,
+      "use_armature_deform_only": true,
+      "armature_nodetype": "NULL",
+      "primary_bone_axis": "Y",
+      "secondary_bone_axis": "X",
+      "bake_anim": false,
+      "path_mode": "RELATIVE",
+      "embed_textures": false,
+      "colors_type": "SRGB",
+      "batch_mode": "OFF"
+    },
+    "warnings": [
+      "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_Shuriken_SquarePlate_LOD0_Grip, SOCKET_SM_Shuriken_SquarePlate_LOD0_Trail"
+    ],
+    "sockets": [
+      {
+        "socket": "Grip",
+        "fbx_node": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Grip",
+        "mesh": "SM_Shuriken_SquarePlate_LOD0",
+        "node_type": "EMPTY",
+        "ue_correction": true,
+        "location_cm": [
+          2.2698,
+          -2.2698,
+          0.0
+        ],
+        "rotation_deg": {
+          "roll": 0.0,
+          "pitch": 0.0,
+          "yaw": -45.0
+        },
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "in_fbx": false
+      },
+      {
+        "socket": "Trail",
+        "fbx_node": "SOCKET_SM_Shuriken_SquarePlate_LOD0_Trail",
+        "mesh": "SM_Shuriken_SquarePlate_LOD0",
+        "node_type": "EMPTY",
+        "ue_correction": true,
+        "location_cm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_deg": {
+          "roll": 0.0,
+          "pitch": 0.0,
+          "yaw": 0.0
+        },
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "in_fbx": false
+      }
+    ],
+    "lod_screen_sizes": [
+      1.0,
+      0.1078,
+      0.0377
+    ],
+    "sidecar": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_SquarePlate.sockets.json"
+  },
+  "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_SquarePlate.fbx",
+  "sockets_sidecar": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_SquarePlate.sockets.json",
+  "export_sha256": {
+    "fbx": "bee251f1861e1e2682e27872e10d3be005a52f2b7560f97b1f67ecf6fb1253f1",
+    "sidecar": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f",
+    "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+  },
+  "textures": {
+    "png_chunks": {
+      "BC": [
+        "IHDR",
+        "sRGB",
+        "gAMA",
+        "cHRM",
+        "eXIf",
+        "oFFs",
+        "pHYs",
+        "IDAT x250",
+        "IEND"
+      ],
+      "ORM": [
+        "IHDR",
+        "eXIf",
+        "oFFs",
+        "pHYs",
+        "IDAT x175",
+        "IEND"
+      ],
+      "N": [
+        "IHDR",
+        "eXIf",
+        "oFFs",
+        "pHYs",
+        "IDAT x242",
+        "IEND"
+      ]
+    },
+    "colour_chunks_stripped": {
+      "ORM": [
+        "sRGB",
+        "gAMA",
+        "cHRM"
+      ],
+      "N": [
+        "sRGB",
+        "gAMA",
+        "cHRM"
+      ]
+    },
+    "data_maps_without_colour_chunks": true,
+    "size": [
+      2048,
+      2048
+    ],
+    "margin_px": 16,
+    "margin_type": "EXTEND",
+    "uv_map": "UVMap",
+    "source_material": "M_Shuriken_Master",
+    "maps": {
+      "BC": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\Textures\\T_Shuriken_SquarePlate_BC.png",
+      "ORM": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\Textures\\T_Shuriken_SquarePlate_ORM.png",
+      "N": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\Textures\\T_Shuriken_SquarePlate_N.png"
+    },
+    "sha256": {
+      "BC": "bfe3951dcad12517df31983d3878fd5b97223feeb259b0f7bab09f818000c49b",
+      "ORM": "ece4e612007fe5c5a1da6f699a7a950fff32aca01fb98c5b60cca43d3f706daf",
+      "N": "486642057346874b353f3e18fbbfd6683cfc42c4d2a2b7273bbfff9c40657f30"
+    },
+    "colour_spaces": {
+      "BC": "sRGB",
+      "ORM": "linear (Non-Color): R AO, G roughness, B metallic",
+      "N": "linear (Non-Color), tangent space MikkTSpace, DirectX (green flipped)"
+    },
+    "unreal_import": {
+      "BC": "sRGB ON, Compression Default",
+      "ORM": "sRGB OFF, Compression Masks (no alpha) - Unreal's importer does NOT detect this; a plain import decodes roughness 0.32 as 0.08 (mirror steel)",
+      "N": "sRGB OFF, Compression Normalmap, Flip Green Channel OFF (DirectX on disk); the importer auto-detects the _N suffix",
+      "helper": "Scripts/shuriken/ue_import_textures.py sets and verifies these flags"
+    },
+    "stats": {
+      "BC_stored_srgb": {
+        "mean": [
+          0.1808,
+          0.1764,
+          0.1862
+        ],
+        "min": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max": [
+          0.6902,
+          0.6941,
+          0.702
+        ]
+      },
+      "AO": 0.4621,
+      "roughness": 0.1544,
+      "metallic": 0.4636
+    },
+    "samples": {
+      "emit": 16,
+      "ao": 64,
+      "normal": 16
+    },
+    "device": "GPU (OPTIX)",
+    "isolation": "every other object hidden from render during the bake (hull, other LODs, other forms)",
+    "seconds": 33.72,
+    "shared_by_lods": [
+      "SM_Shuriken_SquarePlate_LOD0",
+      "SM_Shuriken_SquarePlate_LOD1",
+      "SM_Shuriken_SquarePlate_LOD2"
+    ]
+  },
+  "renders": [
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\square_plate_persp.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\square_plate_top.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\square_plate_lodgrind.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\square_plate_wire.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\square_plate_lods.png"
+  ],
+  "render_stats": {
+    "square_plate_persp": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.32317,
+      "object_mean_rgb": [
+        0.5415,
+        0.5261,
+        0.5384
+      ],
+      "object_luminance": {
+        "mean": 0.5302,
+        "std": 0.0944,
+        "p05": 0.2779,
+        "p50": 0.5543,
+        "p95": 0.5904,
+        "max": 0.9812
+      },
+      "object_fraction_above_0_50": 0.85431,
+      "object_fraction_below_0_05": 2e-05,
+      "bbox_px": [
+        81,
+        116,
+        1518,
+        837
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        81,
+        81,
+        116,
+        62
+      ],
+      "bbox_width_fraction": 0.8988,
+      "bbox_height_fraction": 0.8022,
+      "facet_luminance": {
+        "pixels": 46661,
+        "fraction_of_object": 0.10027,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 46661,
+          "mean": 0.3468,
+          "p05": 0.1356,
+          "p50": 0.3025,
+          "p95": 0.7561,
+          "fraction_below_0_05": 6e-05
+        },
+        "near": {
+          "pixels": 36055,
+          "mean": 0.3416,
+          "p05": 0.1347,
+          "p50": 0.2975,
+          "p95": 0.7624,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 10606,
+          "mean": 0.3646,
+          "p05": 0.174,
+          "p50": 0.3106,
+          "p95": 0.7552,
+          "fraction_below_0_05": 0.00028
+        }
+      },
+      "wall_luminance": {
+        "pixels": 6452,
+        "fraction_of_object": 0.01386,
+        "mean": 0.3753,
+        "p05": 0.1877,
+        "p50": 0.339,
+        "p95": 0.5989,
+        "fraction_below_0_03": 0.0,
+        "fraction_below_0_05": 0.00139,
+        "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.5075,
+        "p50": 0.5228,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.5388,
+        "up": 0.5261,
+        "left": 0.5414,
+        "down": 0.4676
+      },
+      "object_sector_spread": 0.1423,
+      "backdrop_luminance_mean": 0.5116,
+      "contact_shadow_ratio": 0.8425,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.4174
+    },
+    "square_plate_top": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.14671,
+      "object_mean_rgb": [
+        0.4579,
+        0.4415,
+        0.4557
+      ],
+      "object_luminance": {
+        "mean": 0.4461,
+        "std": 0.093,
+        "p05": 0.3927,
+        "p50": 0.4319,
+        "p95": 0.5625,
+        "max": 0.9689
+      },
+      "object_fraction_above_0_50": 0.05304,
+      "object_fraction_below_0_05": 0.0,
+      "bbox_px": [
+        429,
+        79,
+        1171,
+        820
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        429,
+        428,
+        79,
+        79
+      ],
+      "bbox_width_fraction": 0.4644,
+      "bbox_height_fraction": 0.8244,
+      "facet_luminance": {
+        "pixels": 18453,
+        "fraction_of_object": 0.08735,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 18453,
+          "mean": 0.6588,
+          "p05": 0.3908,
+          "p50": 0.7115,
+          "p95": 0.9375,
+          "fraction_below_0_05": 0.0
+        },
+        "near": {
+          "pixels": 9268,
+          "mean": 0.6575,
+          "p05": 0.3902,
+          "p50": 0.7075,
+          "p95": 0.9375,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 9185,
+          "mean": 0.6601,
+          "p05": 0.3911,
+          "p50": 0.7154,
+          "p95": 0.9375,
+          "fraction_below_0_05": 0.0
+        }
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.7986,
+        "p50": 0.8678,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.4459,
+        "up": 0.4456,
+        "left": 0.4459,
+        "down": 0.4469
+      },
+      "object_sector_spread": 0.0029,
+      "backdrop_luminance_mean": 0.5466,
+      "contact_shadow_ratio": 0.9298,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.5044
+    },
+    "square_plate_wire": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.14746,
+      "object_mean_rgb": [
+        0.454,
+        0.4312,
+        0.4249
+      ],
+      "object_luminance": {
+        "mean": 0.4356,
+        "std": 0.1091,
+        "p05": 0.3824,
+        "p50": 0.3835,
+        "p95": 0.7316,
+        "max": 0.7748
+      },
+      "object_fraction_above_0_50": 0.17338,
+      "object_fraction_below_0_05": 0.0,
+      "bbox_px": [
+        428,
+        78,
+        1171,
+        821
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        428,
+        428,
+        78,
+        78
+      ],
+      "bbox_width_fraction": 0.465,
+      "bbox_height_fraction": 0.8267,
+      "facet_luminance": {
+        "pixels": 34609,
+        "fraction_of_object": 0.16299,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 34609,
+          "mean": 0.5817,
+          "p05": 0.3824,
+          "p50": 0.6475,
+          "p95": 0.7551,
+          "fraction_below_0_05": 0.0
+        },
+        "near": {
+          "pixels": 17325,
+          "mean": 0.5818,
+          "p05": 0.3824,
+          "p50": 0.6475,
+          "p95": 0.7551,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 17284,
+          "mean": 0.5817,
+          "p05": 0.3824,
+          "p50": 0.6475,
+          "p95": 0.7551,
+          "fraction_below_0_05": 0.0
+        }
+      },
+      "wall_luminance": {
+        "pixels": 7386,
+        "fraction_of_object": 0.03478,
+        "mean": 0.6856,
+        "p05": 0.5801,
+        "p50": 0.6902,
+        "p95": 0.7562,
+        "fraction_below_0_03": 0.0,
+        "fraction_below_0_05": 0.0,
+        "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.5246,
+        "p50": 0.4338,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.4356,
+        "up": 0.4356,
+        "left": 0.4357,
+        "down": 0.4356
+      },
+      "object_sector_spread": 0.0002,
+      "backdrop_luminance_mean": 0.038,
+      "contact_shadow_ratio": 2.0048,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.1555
+    },
+    "square_plate_lods": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.1487,
+      "object_mean_rgb": [
+        0.4744,
+        0.4485,
+        0.4381
+      ],
+      "object_luminance": {
+        "mean": 0.4533,
+        "std": 0.1341,
+        "p05": 0.3824,
+        "p50": 0.3835,
+        "p95": 0.7512,
+        "max": 0.8854
+      },
+      "object_fraction_above_0_50": 0.20882,
+      "object_fraction_below_0_05": 0.0,
+      "bbox_px": [
+        81,
+        188,
+        1518,
+        715
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        81,
+        81,
+        188,
+        184
+      ],
+      "bbox_width_fraction": 0.8988,
+      "bbox_height_fraction": 0.5867,
+      "facet_luminance": {
+        "pixels": 35119,
+        "fraction_of_object": 0.16401,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 35119,
+          "mean": 0.6151,
+          "p05": 0.3824,
+          "p50": 0.6983,
+          "p95": 0.756,
+          "fraction_below_0_05": 0.0
+        },
+        "near": {
+          "pixels": 10074,
+          "mean": 0.5963,
+          "p05": 0.3824,
+          "p50": 0.6676,
+          "p95": 0.7554,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 25045,
+          "mean": 0.6226,
+          "p05": 0.3827,
+          "p50": 0.7067,
+          "p95": 0.7563,
+          "fraction_below_0_05": 0.0
+        }
+      },
+      "wall_luminance": {
+        "pixels": 7487,
+        "fraction_of_object": 0.03496,
+        "mean": 0.6982,
+        "p05": 0.5841,
+        "p50": 0.723,
+        "p95": 0.7602,
+        "fraction_below_0_03": 0.0,
+        "fraction_below_0_05": 0.0,
+        "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.6253,
+        "p50": 0.6729,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.4269,
+        "up": 0.4428,
+        "left": 0.474,
+        "down": 0.5184
+      },
+      "object_sector_spread": 0.1966,
+      "backdrop_luminance_mean": 0.0421,
+      "contact_shadow_ratio": 2.3544,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.1666
+    }
+  },
+  "render_rig": {
+    "ring_lamps": 8,
+    "top_span_mm": [
+      107.763073,
+      107.763073
+    ],
+    "top_frame_mm": [
+      231.111,
+      130.0
+    ],
+    "top_px_per_mm": 6.9231,
+    "lod_strip_pitch_mm": 128.763073,
+    "lod_strip_px_per_mm": 3.9421,
+    "wire_px": 1.1,
+    "hero_composition": {
+      "shift": [
+        -0.035553,
+        -0.027271
+      ],
+      "bbox_centre": [
+        0.5,
+        0.47
+      ],
+      "margins_lrbt": [
+        0.05,
+        0.05,
+        0.0683,
+        0.1283
+      ]
+    },
+    "hero_depth_of_field": {
+      "fstop": 246.706,
+      "focus_mm": 223.475,
+      "depth_range_mm": [
+        179.745,
+        267.206
+      ],
+      "max_coc_px": 1.5,
+      "target_max_coc_px": 1.5
+    },
+    "hero_wall_card": {
+      "strength": 0.9,
+      "colour": [
+        0.88,
+        0.9,
+        0.94
+      ],
+      "radius_mm": 93.882,
+      "visibility": "glossy rays only; top face emits, underside transparent"
+    },
+    "hero_top_panel": {
+      "power_w": 1.3,
+      "size_m": [
+        0.7,
+        0.7
+      ],
+      "elevation_deg": 80.0,
+      "azimuth_deg": 158.0,
+      "distance_m": 0.7,
+      "visibility": "glossy rays only (visible_diffuse off): the camera-facing chamfer facets' mirror direction"
+    },
+    "top_facet_band": {
+      "strength": 0.7,
+      "colour": [
+        0.92,
+        0.94,
+        0.98
+      ],
+      "elevation_deg": [
+        29.0,
+        45.0
+      ],
+      "radius_m": 0.36,
+      "visibility": "glossy rays only; rotationally symmetric cone band the 26.6 deg facets mirror when seen straight down"
+    },
+    "beauty_material": "M_Preview_Baked_SM_Shuriken_SquarePlate",
+    "lod_grind_closeup": {
+      "path": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\square_plate_lodgrind.png",
+      "panels": 3,
+      "panel_px": [
+        533,
+        900
+      ],
+      "view": {
+        "elevation_deg": 21.0,
+        "azimuth_deg": -34.0,
+        "distance_m": 0.075,
+        "lens_mm": 105.0,
+        "target_back_m": 0.011
+      },
+      "target_mm": [
+        42.882,
+        0.0,
+        0.0
+      ],
+      "labels": [
+        "LOD0   1,344 tris   screen size > 0.108",
+        "LOD1   576 tris   screen size 0.038 - 0.108",
+        "LOD2   128 tris   screen size < 0.038"
+      ],
+      "material": "M_Preview_Baked_SM_Shuriken_SquarePlate"
+    },
+    "lod_labels": [
+      "LOD0   1,344 tris\nscreen size > 0.108",
+      "LOD1   576 tris\nscreen size 0.038 - 0.108",
+      "LOD2   128 tris\nscreen size < 0.038"
+    ]
+  },
+  "render_gates": {
+    "beauty_source": "baked textures only (T_Shuriken_*_BC/_ORM/_N via a preview material)",
+    "hero_walls": {
+      "passed": true,
+      "p50": 0.339,
+      "p50_min": 0.06,
+      "fraction_below_0_03": 0.0,
+      "dark_fraction_max": 0.05
+    },
+    "hero_facets_near": {
+      "passed": true,
+      "side": "near",
+      "p50": 0.2975,
+      "p50_min": 0.16,
+      "fraction_below_0_05": 0.0,
+      "dark_fraction_max": 0.06
+    },
+    "hero_plate": {
+      "passed": true,
+      "p50": 0.5543,
+      "band": [
+        0.36,
+        0.64
+      ],
+      "mean": 0.5302,
+      "mean_band": [
+        0.38,
+        0.6
+      ]
+    },
+    "top_facets": {
+      "passed": true,
+      "side": "all",
+      "p50": 0.7115,
+      "p50_min": 0.16,
+      "fraction_below_0_05": 0.0,
+      "dark_fraction_max": 0.06
+    },
+    "top_plate": {
+      "passed": true,
+      "p50": 0.4319,
+      "band": [
+        0.36,
+        0.64
+      ],
+      "mean": 0.4461,
+      "mean_band": [
+        0.38,
+        0.6
+      ]
+    },
+    "passed": true
+  },
+  "blend": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Assets\\Shuriken.blend",
+  "engine_check": {
+    "status": "verified",
+    "matches_this_build": true,
+    "note": "Written 'pending' by the build. The Unreal 5.8 passes run on the exported bytes afterwards (UnrealCheck6: pass 1 import + sidecar, pass 2 fresh-process gates, pass 3 export of the saved asset + Blender round trip), and attach_engine_check.py writes the result here only when the SHA-256 of the FBX and sidecar Unreal imported equal fbx_sha256 / sidecar_sha256 below.",
+    "project": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealShuriken\\ShurikenValidation.uproject",
+    "scripts": [
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\uc6_common.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\pass1_import.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\pass2_reload.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\pass3_export_diag.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\roundtrip_compare.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\run_pass.ps1",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\attach_engine_check.py"
+    ],
+    "run_with": "SHURIKEN_FORM=square_plate",
+    "fbx_sha256": "bee251f1861e1e2682e27872e10d3be005a52f2b7560f97b1f67ecf6fb1253f1",
+    "sidecar_sha256": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f",
+    "gates": [
+      "engine LOD triangle counts equal the Blender counts exactly",
+      "LOD screen sizes read back as [1.0, 0.1078, 0.0377] in a fresh process",
+      "exactly one convex hull, both sockets at relative scale 1, bounds equal the measured size",
+      "LightMapCoordinateIndex 1 with a generated UV1 on every LOD",
+      "Unreal's own FBX export of the saved asset: hull and positions equal the shipped FBX",
+      "zero Warning or Error lines in the commandlet logs"
+    ],
+    "engine": "5.8.2-56702186+++UE5+Release-5.8",
+    "attached_by": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\attach_engine_check.py",
+    "attached": "2026-09-18T15:46:34",
+    "gates_passed": {
+      "1_lod_count_and_triangles_delta_0": true,
+      "2_exactly_one_convex_hull": true,
+      "3_grip_trail_scale_1_sane_cm": true,
+      "4_bounds_cm": true,
+      "5_screen_sizes_from_sidecar": true,
+      "6_lightmap_coordinate_index_1": true,
+      "7_zero_warning_error_log_lines": true,
+      "8_unreal_export_roundtrip_hull_positions_uv": true,
+      "9_verified_bytes_are_this_build": true
+    },
+    "sha256": {
+      "report": {
+        "fbx": "bee251f1861e1e2682e27872e10d3be005a52f2b7560f97b1f67ecf6fb1253f1",
+        "sidecar": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f",
+        "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+      },
+      "imported_by_unreal": {
+        "fbx": "bee251f1861e1e2682e27872e10d3be005a52f2b7560f97b1f67ecf6fb1253f1",
+        "sidecar": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f"
+      },
+      "on_disk_now": {
+        "fbx": "bee251f1861e1e2682e27872e10d3be005a52f2b7560f97b1f67ecf6fb1253f1",
+        "sidecar": "5f54797cb49bc43c37a8d1e1dffcb159f8ba408e15bf22e22262006cb630164f"
+      }
+    },
+    "pass2": {
+      "file_time": "2026-09-18T15:45:40",
+      "asset": "/Game/ShurikenCheck6/SixPointMaint1/SM_Shuriken_SquarePlate.SM_Shuriken_SquarePlate",
+      "lod_triangles": [
+        1344,
+        576,
+        128
+      ],
+      "lod_vertices": [
+        1024,
+        512,
+        156
+      ],
+      "triangle_delta": [
+        0,
+        0,
+        0
+      ],
+      "lod_screen_sizes": [
+        1.0,
+        0.1078,
+        0.0377
+      ],
+      "convex_hulls": 1,
+      "size_cm": [
+        10.7763,
+        10.7763,
+        0.19
+      ],
+      "sockets": [
+        {
+          "name": "Grip",
+          "location_cm": [
+            2.2698,
+            -2.2698,
+            0.0
+          ],
+          "rpy": [
+            -0.0,
+            -0.0,
+            -45.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Trail",
+          "location_cm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rpy": [
+            -0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "light_map_coordinate_index": 1,
+      "light_map_resolution": 64,
+      "material_slots": [
+        {
+          "slot": "M_Shuriken_Master",
+          "material": "/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial"
+        }
+      ]
+    },
+    "roundtrip": {
+      "lods": {
+        "LOD0": {
+          "position_two_sided_max_cm": 0.0,
+          "uv0_keyed_max_cm": 0.0,
+          "uv1_overlap_pixels_2048": 0
+        },
+        "LOD1": {
+          "position_two_sided_max_cm": 0.0,
+          "uv0_keyed_max_cm": 0.0,
+          "uv1_overlap_pixels_2048": 0
+        },
+        "LOD2": {
+          "position_two_sided_max_cm": 0.0,
+          "uv0_keyed_max_cm": 0.0,
+          "uv1_overlap_pixels_2048": 0
+        }
+      },
+      "unreal_hull": {
+        "verts_unique": 8,
+        "tris": 12,
+        "lod0_max_outside_cm": 0.0,
+        "size_cm": [
+          10.7763,
+          10.7763,
+          0.19
+        ]
+      },
+      "hull_vs_shipped_two_sided_cm": 0.0
+    },
+    "pass3_export": {
+      "export_ok": true,
+      "fbx_out": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\roundtrip\\SM_Shuriken_SquarePlate_from_unreal.fbx",
+      "fbx_bytes": 87792
+    },
+    "log_warning_error_lines": {
+      "pass1": 0,
+      "pass2": 0,
+      "pass3": 0
+    },
+    "evidence": [
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\square_plate_pass1.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\square_plate_pass1.log",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\square_plate_pass2.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\square_plate_pass2.log",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\square_plate_pass3.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\square_plate_pass3.log",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\roundtrip_compare.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\blender_fbx_counts.json"
+    ]
+  },
+  "known_gaps": [
+    "The baked maps are 2048 px per form on a Smart UV layout at ~32 % coverage; the pack atlas (study 4: one 2K atlas, or 1K per star) needs hand-laid shells first. The Unreal side has no M_Shuriken_Master / MI_Shuriken_Blackened asset yet: the validation import runs with import_materials=False, so the slot binds to WorldGridMaterial until the pack's material is built and the three maps are assigned.",
+    "The FBX carries only UV0. UV1 (lightmap) exists only because the import generates it (Generate Lightmap UVs ON, src 0 -> dst 1, LightMapCoordinateIndex 1, measured in UnrealCheck5/6): the Fab description and import notes must say so, or a buyer importing with other settings gets no lightmap channel. LightMapResolution is left at Unreal's default 64.",
+    "Wear (a polished band along the edge land and satin steel over the rest of the grind, edge nicks, lightly brightened scallops), whole-face smears, micro-scratches, dirt specks, pits and the two sub-pixel rust specks are procedural in M_Shuriken_Master, and the roll-off toward the hole and the notch arcs is a normal-map dish; all of it reaches the engine only through the baked maps; the per-form numbers travel as object custom properties (shuriken_wear_from / _to, shuriken_points, shuriken_hub_r, shuriken_tip_r, shuriken_chamfer, shuriken_scallop_w, shuriken_hole_w, shuriken_centre_r, shuriken_land, shuriken_half_t, shuriken_wall_top, shuriken_rust1/2_*), which the FBX does not export (use_custom_props off), and the material reads four float point attributes the generator writes (shuriken_edge / _hole / _scallop: distance to the outline, the hole and the notch arcs; shuriken_grind: signed distance from the grind's plate line), which the FBX exporter does not carry either (only colour attributes export) - they matter only to the bake.",
+    "Knife grind (style pass 2): the cutting edges are ground to a 0.15 mm land, so the finished (ground) mass is well under the un-ground outline's; the study mass gate is evaluated on the un-ground plate (outline x thickness) and the ground mass is reported against the study min-max range (measured.mass_gate, measured.ground_mass_vs_study_range); the physics override is the ground mass. The gallery bands (render.PLATE_BAND / PLATE_MEAN_BAND) stay centred on the reference rendered through THIS rig (WorkFiles/shuriken/style_reference/ref_on_rig.py).",
+    "Unreal texture import: the ORM map must be imported with sRGB OFF and Compression Settings = Masks (Unreal cannot detect a mask map; a plain import decodes roughness 0.32 as 0.08 and the steel renders as a mirror); BC is sRGB / Default and the _N suffix is auto-detected (sRGB off, Normalmap, Flip Green OFF - the map is DirectX on disk). Scripts/shuriken/ue_import_textures.py imports, sets and verifies these flags; the report's textures.unreal_import block and the Fab import notes must repeat them.",
+    "LOD0 UV coverage is 41.0% of the square. On the four-point, sweeping the packer over 20 shape x margin combinations moved it only between 26.0% and 32.0%, so the packer is not the limit - Smart UV Project's island shapes are. Hand-laying the shells belongs to the pack-atlas pass.",
+    "Physics: the Mass in KG override (0.063 kg, the knife-ground LOD0 mass; study 4 table 0.06 kg) is recorded here only; it has to be set on the component in the Blueprint (see physics.applies).",
+    "Sagitta 6 mm is the study's ESTIMATE; image F measures ~5.3 mm on a 76.2 mm side (+-0.7 mm from a screen measurement). At 5.3 mm the plate would be ~2 g heavier. Kept at 6 mm.",
+    "The full-length grind departs from study 3's short-facet default on photographic evidence (image F, chart I, source [42]); since style pass 2 it is a knife grind to a 0.15 mm land; the scan shows one face, both faces are ground.",
+    "Image F's own hole is ~27 % of its side; the sourced 12.7 mm hole (study 2.3 [17]) is built. The hole fillet radius (1.0 mm) is read from F's corner shape, not sourced.",
+    "LOD2 keeps the hole (study 4 drops it) and is 128 triangles - see lod_choice.",
+    "The knife facet and land strips have thin triangles by aspect (LOD0 min angle 1.331 deg: the 0.15 mm land along 6.45 mm chords; see lod_choice.strips); the plate faces have none under 12 deg.",
+    "The UCX hull is the 8-vertex square prism through the four corners at full 1.9 mm thickness (hull='tip_prism') (the pipeline hull, probed on this build: 16 verts, 0.0 mm off C4, LOD0 up to 0.0 mm outside it): the plate's exact convex hull in plan, so like any convex hull it spans the four concave sides (up to 6 mm of air at each side midpoint) and stays full thickness over the ground chamfers (0.875 mm proud per face at the edge). Conservative for a thrown projectile; a stick-into-wall mechanic should trace from a corner (study 4)."
+  ],
+  "area_check": {
+    "method": "Exact plan area of the un-bevelled outline = side^2 - 4 circular segments - the hole. Arc: chord c = 76.2, sagitta h = 6 -> radius rho = ((c/2)^2 + h^2) / 2h = 123.9675 mm, angle phi = 2 asin(c / 2 rho); segment = rho^2 (phi - sin phi) / 2. Hole: 12.7^2 minus the material its four r = 1 mm fillets leave in the corners, (4 - pi) r^2. shuriken_lib.plate_spec.plate_analytic_area; mass = area x 1.9 mm x 7.85 g/cm3.",
+    "terms_mm2": {
+      "square 76.2^2": 5806.44,
+      "segment per side": 306.3065,
+      "four segments": 1225.226,
+      "hole 12.7^2 (sharp)": 161.29,
+      "fillet material left in the hole corners (4 - pi) 1^2": 0.8584,
+      "hole, filleted": 160.4316,
+      "total": 4420.7824
+    },
+    "analytic_exact_mm2": 4420.7824,
+    "analytic_exact_g": 65.936,
+    "hand_check_mm2": 4420.0,
+    "hand_check_g": 65.9,
+    "hand_check_terms": {
+      "square_mm2": 5806.4,
+      "segment_mm2": 306.4,
+      "hole_mm2": 161.3,
+      "area_mm2": 4420.0,
+      "mass_g": 65.9
+    },
+    "hand_minus_exact_mm2": -0.7824,
+    "hand_minus_exact_pct": -0.018,
+    "study_mass_g": 66.0,
+    "reconciliation_mm2": {
+      "1 exact outline": 4420.7824,
+      "2 edges as 48 chords (each lies outside the concave edge)": 8.6751,
+      "3 fillets as 16 chords (the hole shrinks)": 0.0801,
+      "4 = analytic polygonised outline": 4429.5377,
+      "5 un-bevelled mesh at LOD0's counts, measured": 4429.537679,
+      "6 ground facet removes (5 - 7), as area": -177.9526,
+      "7 = finished LOD0, measured (volume / 1.9 mm)": 4251.585,
+      "check 4 vs 5 (formula vs generator)": 2.364e-05
+    },
+    "facet_volume_mm3": {
+      "analytic_round_profile": 332.7776,
+      "analytic_1_chord_profile": 332.7776,
+      "measured_unbevelled_minus_finished": 338.11,
+      "measured_minus_analytic_chord_profile": 5.332,
+      "note": "both faces, all four sides: the chamfer profile's depth (a flat facet with a round-over at the wall, spec.ChamferProfile.drop_at) integrated over the concave band (area element (rho + s) ds dbeta) minus the band beyond each corner mitre (straight-edge approximation); the mesh profile is K chords, whose round-over cuts slightly deeper than the arc"
+    },
+    "measured_mesh_mm2": 4251.585,
+    "measured_mesh_g": 63.4124,
+    "unbevelled_mesh": {
+      "volume_mm3": 8416.12159,
+      "plate_area_mm2": 4429.537679,
+      "mass_g": 66.066554,
+      "triangles": 1056
+    },
+    "which_is_right": "The exact analytic area, 4420.78 mm2 (65.94 g at 1.9 mm), is the area of the outline study 2.3 specifies. The hand check (4420 mm2, 65.9 g) agrees to -0.78 mm2 (-0.018 %): unlike the four- and eight-point checks it drops nothing, because a square minus segments has no arm-root slivers to lose; its segment (306.4) is 0.09 mm2 high and it did not count the fillets. The generator's un-bevelled mesh matches the polygonised figure to 2.4e-05 mm2. The finished mesh (4251.59 mm2, 63.41 g) is lower because the full-length ground chamfer removes 338.11 mm3 (2.65 g); the 66 g target was derived without a facet."
+  },
+  "reference_observations": [
+    "Image F (commons File:Senban.jpg, public domain, a flatbed scan of one senban; viewed on the file page, not downloaded): the square hole's sides run PARALLEL to the outer square's sides, so its corners point at the outer corners. Built that way ('parallel': hole corners on the axes).",
+    "Image F: a continuous facet band runs the full length of all four concave sides - light on the bottom and side edges, dark on the top edge, as inclined facets read under one scanner lamp - and at the bottom-left corner the two bands meet in a mitre line. Plan width about 0.85 mm on a 76.2 mm side. This is a ground edge along each side, not a short facet at the points.",
+    "Chart I (commons File:Senban_Shuriken_types.jpg, CC BY-SA, viewed only): every variant has the hole parallel to the outer square; the heavier 3 mm variant shows a wide bright ground bevel along the full length of every side, mitred at the corners; the 2.5 mm variant a narrower edge band; the blackened ones are deeply concave. Supports source [42] (sides ground sharp) over the study 3 default for THIS form.",
+    "Image F proportions (screen measurement, +-5 px of ~808): sagitta about 7.0 % of the side, i.e. ~5.3 mm on a 76.2 mm side, against the study's 6 mm ESTIMATE (kept: 6 mm is inside the scatter of the chart's variants and the 66 g target was derived with it). The hole in F is ~27 % of the side (~21 mm at this scale) - F's object is not the sourced 12.7 mm-hole listing, so its hole size is not used.",
+    "Image F: the hole corners are visibly radiused, about 4 - 5 % of the hole width (~0.8 - 1.0 mm at F's scale): built r = 1.0 mm. The hole's far wall shows as a dark band, so the scan is slightly off-axis; the facet bands on the bottom, left and right sides cannot be walls seen from that direction."
+  ],
+  "sharpening_decision": {
+    "question": "study 3: a short ground facet at each point, long edges square; source [42]: the senban's sides are ground sharp",
+    "seen": "image F: full-length facet bands on all four concave sides meeting in a mitre at the corner; chart I: full-length ground bevels on the senban variants",
+    "decision": "full_side, knife ground (style pass 2): one flat facet at 35 deg from the face on BOTH faces along every concave side, run down to a 0.15 mm land and mitred into a ridge at each corner (the corner ends in a vertical edge the height of the land)",
+    "why_not_study_3": "the photographs are conclusive for this form; study 3's rule is a general hira-shuriken observation (points sharpened, long edges blunt) and the senban - a tool-derived plate whose whole edge is the cutting edge - is the documented exception [42]",
+    "why_a_land": "a zero-width knife edge on LOD0 would be a degenerate wall (normals, UV and lightmap slivers); a 0.15 mm land reads as the thin bright crest line of the reference and stays a clean face. LOD2 lets the facets meet in an edge line (no wall)",
+    "wear": "the knife grind is bare ground steel all round (M_Shuriken_Master) with small 0.2-0.8 mm chips into the face along it, the points bare over their last 6 mm - matching F's lighter edge bands"
+  },
+  "hull_check": {
+    "name": "UCX_SM_Shuriken_SquarePlate_LOD0_00",
+    "method": "tip_prism: shuriken_lib.geometry.author_tip_prism_hull, the square prism through the four corners at full plate thickness - the plate's exact convex hull in plan (the sides are concave), exactly C4, encloses LOD0",
+    "verts": 8,
+    "faces": 12,
+    "radius_mm": [
+      53.8815,
+      53.8815
+    ],
+    "z_mm": [
+      -0.95,
+      0.95
+    ],
+    "c4_max_deviation_mm": 0.0,
+    "lod0_max_outside_mm": 0.0,
+    "volume_mm3": 11032.236,
+    "hull_volume_mass_g": 86.603,
+    "pipeline_hull_for_comparison": {
+      "verts": 16,
+      "faces": 28,
+      "radius_mm": [
+        51.1889,
+        53.8815
+      ],
+      "z_mm": [
+        -0.95,
+        0.95
+      ],
+      "c4_max_deviation_mm": 0.0,
+      "lod0_max_outside_mm": 0.0,
+      "volume_mm3": 10532.894,
+      "hull_volume_mass_g": 82.683
+    }
+  },
+  "originality": {
+    "basis": "historical senban (kugi-nuki derived square plate), public domain (study 2.3, 5)",
+    "name": "generic only: SM_Shuriken_SquarePlate / T_Shuriken_SquarePlate_*; no maker, retailer or franchise name in any object, mesh, material, texture, file or report key",
+    "outline": "a 76.2 mm square on a corner with four 6 mm concave sides (one arc each) - the generic type, built to the sourced closest-tip size, not traced from any photo",
+    "hole": "12.700 mm square, sides parallel to the outer square, corners filleted r = 1.000 mm",
+    "finish": "dark coat (linear ~0.10, faintly cool) with soft cavity grime toward the hole, bare bright steel on the knife grind all round with small chips into the face along it, a lightly brightened hole deburr, many faint micro-scratches, two rust specks; clearly darker coat than bare metal",
+    "stamp": "none (study 5; any future mark must be an invented glyph)",
+    "franchise_strings": "qa_check no_franchise_strings passed on 3 of 3 objects"
+  },
+  "lod_choice": {
+    "lod0": "LOD0: 12 chords per side (0.042 mm sagitta), one-facet knife grind, 4-chord hole fillets + deburr, graded plate",
+    "lod1": "LOD1: 6 chords per side, one-facet knife grind, 2-chord fillets + deburr",
+    "lod2": "LOD2: fillets and deburr dropped, single-facet knife grind to an edge line, plain square hole, 4 chords per side",
+    "triangles": [
+      1344,
+      576,
+      128
+    ],
+    "bands": "study 4's bands are written for stars. LOD0 (1200-2500) and LOD1 (500-900) land inside them anyway; LOD2 is 128 triangles, near the stars' 120 floor, and is not padded: its 4 chords per side are 0.38 mm off the arc (~0.14 px at the ~2.54 m switch), the plain square hole is the only interior feature, and nothing else would change silhouette or shading",
+    "lod0_below_1200": "not applicable: LOD0 is 1344 (the one-facet knife grind cost 192; a fourth plate ring put it back in band)",
+    "screen_sizes": "[1.0, 0.1078, 0.0377] = the pack's 1.0 / 0.10 / 0.035 scaled by 53.88 / 50 (corner radius / the stars' 50 mm tip radius), so the switches stay at ~0.89 m and ~2.54 m; see lod_switching",
+    "hole_at_lod2": "kept, against study 4's 'drop the hole': 12.7 mm is ~5 px at the LOD2 switch (the eight-point's 9.5 mm round hole was ~3.6 px) and a filled hole would pop; it costs 32 of LOD2's 128 triangles",
+    "topology_quality": {
+      "SM_Shuriken_SquarePlate_LOD0": {
+        "plate_aspect_median": 4.801,
+        "plate_aspect_max": 9.385,
+        "plate_faces_aspect_over_8": 16,
+        "plate_mirror_misses": 0,
+        "plate_min_triangle_angle_deg": 12.618,
+        "min_triangle_angle_deg": 1.331,
+        "strip_triangles_under_5deg": 128
+      },
+      "SM_Shuriken_SquarePlate_LOD1": {
+        "plate_aspect_median": 2.317,
+        "plate_aspect_max": 7.561,
+        "plate_faces_aspect_over_8": 0,
+        "plate_mirror_misses": 0,
+        "plate_min_triangle_angle_deg": 10.791,
+        "min_triangle_angle_deg": 0.666,
+        "strip_triangles_under_5deg": 80
+      },
+      "SM_Shuriken_SquarePlate_LOD2": {
+        "plate_aspect_median": 5.951,
+        "plate_aspect_max": 9.258,
+        "plate_faces_aspect_over_8": 8,
+        "plate_mirror_misses": 0,
+        "plate_min_triangle_angle_deg": 10.044,
+        "min_triangle_angle_deg": 4.607,
+        "strip_triangles_under_5deg": 40
+      }
+    },
+    "strips": "the knife facet and the land are long strips along a 310 mm perimeter (1.25 mm facet, 0.15 mm land, 6.45 mm silhouette chords), so their triangles have small angles by aspect, not by fanning; lifting them past 5 deg would need ~10 chords per half side (+60 % triangles) for no change in silhouette or shading. The plate faces - where slivers do matter - have none under 12 deg.",
+    "without_rings": "the plate zipped straight from the hole to the edge is 864 triangles with 0.5 deg slivers (aspect 237) fanning off the fillet chords"
+  },
+  "physics_note": "Mass in KG override 0.06 kg (study 4), set in the Blueprint.",
+  "style_pass_changes": [
+    "Revision 4 (knife grind, maintenance after the same-rig review). Geometry, LODs [1344, 576, 128], UVs, hull and sockets unchanged; the facets follow the curved sides and stay smooth within a side (hard at the corner mitre; curved_side_facets reported in knife_shading). Material (M_Shuriken_Master, second round): the grind is two finishes - a 0.7 mm polished band next to the land (the reference's thin bright line, ~4-5 px in the top view) and satin, grimy steel at the face's tone out to the plate line - so the wide facets of a 1.9 mm plate no longer read as a chrome frame; the last 2.5 mm of each point polished on the grind only; the painted cavity soot ring replaced by a shallow normal-map roll-off toward the hole and notch arcs (reads in the hero, barely in the top view) plus soft 2-6 mm smears over the whole face at one density per unit area; micro-scratches mostly dirt-filled and clustered by direction; sparse dirt specks; rust specks sub-pixel and desaturated; wheel marks -60 %; scallop / hole walls with value variation and a lighter top edge.",
+    "Revision 3 (knife grind, style pass 2). All four concave sides knife ground at 35 deg to a 0.15 mm land (grind 1.24963 mm wide), hole a 0.3 mm deburr; outline, hole and sagitta unchanged. Mass gate on the un-ground plate (66.0666 g), ground mass 63.4124 g reported. LODs [1344, 576, 128] (chord counts unchanged, so the plan silhouette is pass 1's; LOD2 keeps a single-facet grind to an edge line).",
+    "Revision 2 (style pass, STYLE_TARGET.md). The 0.7 mm quarter-round facet became the pack's ground chamfer: 1.24963 mm wide, wall top 0.875 mm below the plate, 0.15 mm land; outline, hole and sagitta unchanged. Mass 63.4124 g (rev 1: 65.47 g).",
+    "M_Shuriken_Master reworked to the reference recipe (see the four-point report / STYLE_TARGET.md).",
+    "Second style round: M_Shuriken_Master rebuilt around gradients (crest-to-fringe bare steel, hairline scratch pairs, darkening pits, radial patina), hero overhead panel + top facet band in the shared rig, facet and mean gates, LOD1/2 UV0 clamped to the unit square; geometry, LODs, hull and sockets unchanged."
+  ],
+  "mass_check": {
+    "evaluated_on": "outline (un-ground plate)",
+    "outline_g": 66.0666,
+    "target_g": 66.0,
+    "within_tolerance": true,
+    "ground_g": 63.4124,
+    "ground_vs_study_range": {
+      "ground_mass_g": 63.4124,
+      "study_min_max_g": [
+        45.0,
+        82.0
+      ],
+      "study_typical_g": [
+        60.0,
+        66.0
+      ],
+      "within_min_max": true,
+      "within_typical": true,
+      "note": "reported, not gated (decision B)"
+    },
+    "measured_g": 63.4124
+  },
+  "knife_shading": {
+    "gate_deg": 0.5,
+    "flat_knife_facets_max_corner_normal_dev_deg": {},
+    "curved_side_facets_max_corner_normal_dev_deg": {
+      "SM_Shuriken_SquarePlate_LOD0": 0.856,
+      "SM_Shuriken_SquarePlate_LOD1": 1.7245,
+      "SM_Shuriken_SquarePlate_LOD2": 2.7456
+    },
+    "warp_mm": {
+      "SM_Shuriken_SquarePlate_LOD0": 0.006818,
+      "SM_Shuriken_SquarePlate_LOD1": 0.01555,
+      "SM_Shuriken_SquarePlate_LOD2": 0.025246
+    },
+    "passed": true,
+    "note": "max angle between a stored corner normal and its own face normal over the knife facets (flat facets shaded flat: creases above geometry.KNIFE_CREASE_DEG inside a knife class are hard edges). Curved-side facets (senban) are smooth within their side by design and bounded by half a chord's turn; they are reported, not gated."
+  },
+  "gates": {
+    "knife_shading": true,
+    "outline_mass": true,
+    "qa_check": true,
+    "lod_bands": true,
+    "uv_consistency": true,
+    "textures_baked": true,
+    "render_gates": true
+  },
+  "seconds": 248.98
+}

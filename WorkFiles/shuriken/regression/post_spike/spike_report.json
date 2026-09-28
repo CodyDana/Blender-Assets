@@ -1,0 +1,2854 @@
+{
+  "asset": "SM_Shuriken_Spike",
+  "form": "spike",
+  "title": "Bo-shuriken throwing spike (Katori / Meifu Shinkage pattern)",
+  "pack": "Shuriken",
+  "revision": 1,
+  "generated": "2026-09-18T16:49:42",
+  "script": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Scripts\\shuriken\\build_spike.py",
+  "library": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Scripts\\shuriken\\shuriken_lib",
+  "library_version": "3.8.0",
+  "pipeline_version": "1.0.0",
+  "blender": "5.2.0 LTS",
+  "build_to": {
+    "form": "bo-shuriken (straight square throwing spike), Katori / Meifu Shinkage pattern",
+    "length_mm": 150.0,
+    "section_mm": 6.0,
+    "point_mm": 25.0,
+    "tail_taper_mm": 20.0,
+    "tail_end_mm": 3.0,
+    "tip_flat_mm": 0.15,
+    "tip_radius_mm": 0.075,
+    "arris_round_mm": 0.3,
+    "arris_round_definition": "radius of the round = Blender Bevel 'Offset' (0.3 mm from the old arris along each face)",
+    "mass_g": 37.0,
+    "status": {
+      "length": "SOURCED [8][12][13]",
+      "section": "SOURCED [8][13] (6 mm, never the reseller's 8 mm)",
+      "point": "SOURCED [8]",
+      "mass": "SOURCED [12][13]",
+      "tail_taper": "ESTIMATE (study 2.5)",
+      "arris_round": "study 2.5 modelling plan (about 0.3 mm)",
+      "tip_flat": "the pack's tip radius (0.075 mm, the stars')"
+    },
+    "orientation": "long axis X, +X toward the point, lying on a flat face (faces normal to +-Y / +-Z)",
+    "symmetry": "C4 about the long axis (and the D4 mirrors), not an array shape (study 4)",
+    "pivot": "centre of mass by volume of the finished LOD0 (study 4, the spikes)",
+    "centre_of_mass_from_butt_mm": 70.894326,
+    "point_included_deg": 13.34653,
+    "mass_gate": "outline (un-ground: square arrises, sharp point) mass within +-2 g of the target; finished mass reported",
+    "analytic": {
+      "units": "mm3 / mm / g",
+      "prism_150x6x6": 5400.0,
+      "point_prism": 900.0,
+      "point_pyramid": 300.0,
+      "point_removes": 600.0,
+      "tail_prism": 720.0,
+      "tail_frustum": 420.0,
+      "tail_removes": 300.0,
+      "outline_volume": 4500.0,
+      "outline_mass_g": 35.325,
+      "hand_check": "5400 - 600 (point pyramid) - 300 (tail frustum) = 4500 mm3 = 35.3 g",
+      "outline_com_from_butt_mm": 70.783333,
+      "outline_com_from_middle_mm": -4.216667,
+      "tip_flat_adds": 7.6875,
+      "finished_unrounded_volume": 4507.6875,
+      "finished_unrounded_com_from_butt_mm": 70.897373,
+      "arris_round_section_loss_mm2": 0.077257,
+      "arris_round_body_loss_mm3": 8.111949,
+      "point_facet_angle_to_axis_deg": 6.673266,
+      "point_included_deg": 13.346533,
+      "point_included_sharp_deg": 13.685547,
+      "tail_facet_angle_to_axis_deg": 4.289153,
+      "mass_target_g": 37.0,
+      "outline_minus_target_g": -1.675
+    },
+    "source": "References/Shuriken/SHURIKEN_STUDY.md section 2.5",
+    "hand_check_mm3": 4500.0,
+    "hand_check_g": 35.3,
+    "analytic_outline_mm3": 4500.0,
+    "analytic_outline_g": 35.325,
+    "unreal_bounds_radius_mm": 75.03
+  },
+  "geometry": "bar",
+  "uv_layout": {
+    "method": "shuriken_lib.bar.bar_unwrap: one planar projection per side (+-Z, +-Y faces with their facets and half-rounds, the tip flat, the butt), u along the bar, then the pack's pack_islands (concave, any rotation, scaled margin)",
+    "faces_per_island": {
+      "+z": 11,
+      "+y": 11,
+      "-y": 11,
+      "-z": 11,
+      "tip": 1,
+      "butt": 1
+    },
+    "island_margin": 0.005
+  },
+  "lod0_triangles_pre_group": 92,
+  "hull_method": "bar_prism: shuriken_lib.bar.author_bar_hull, the un-rounded bar itself (16 vertices: butt, tail base, point base, tip flat; 28 triangles) - the spike is convex, so this is its exact convex hull less the arris round; exactly C4, encloses every LOD",
+  "hull": {
+    "name": "UCX_SM_Shuriken_Spike_LOD0_00",
+    "verts": 16,
+    "faces": 28
+  },
+  "uv_transfer": {
+    "SM_Shuriken_Spike_LOD1": {
+      "method": "LOD0 island affine maps (Smart UV planar projection + pack transform, fitted by least squares)",
+      "lod0_islands": 6,
+      "lod0_island_fit_residual_max_uv": 1.155e-08,
+      "lod0_islands_used": 6,
+      "face_match_distance_mm": {
+        "median": 0.0,
+        "max": 0.022397
+      },
+      "normal_weight_mm": 1.0,
+      "clamped_loops": 0,
+      "clamp_rounds": 0,
+      "overlapping_faces_left": 0,
+      "unit_square_clamped_loops": 0,
+      "uv_range_before_unit_square_clamp": [
+        0.0004,
+        0.0004,
+        0.17881,
+        0.9996
+      ],
+      "uv_range": [
+        0.0004,
+        0.0004,
+        0.17881,
+        0.9996
+      ]
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "method": "LOD0 island affine maps (Smart UV planar projection + pack transform, fitted by least squares)",
+      "lod0_islands": 6,
+      "lod0_island_fit_residual_max_uv": 1.155e-08,
+      "lod0_islands_used": 6,
+      "face_match_distance_mm": {
+        "median": 0.0,
+        "max": 0.0
+      },
+      "normal_weight_mm": 1.0,
+      "clamped_loops": 24,
+      "clamp_rounds": 1,
+      "overlapping_faces_left": 0,
+      "unit_square_clamped_loops": 2,
+      "uv_range_before_unit_square_clamp": [
+        -0.00018,
+        0.0004,
+        0.17881,
+        0.9996
+      ],
+      "uv_range": [
+        0.0,
+        0.0004,
+        0.17881,
+        0.9996
+      ]
+    }
+  },
+  "density": {
+    "points": 4,
+    "segments_along_the_body": 1,
+    "why": "a straight bar: faces and rounds are single planar strips; the vertices are at the run-outs and the point",
+    "per_lod": {
+      "LOD0": {
+        "arris_segments": 4,
+        "triangles": 92,
+        "diagonal_mm": 2.912132,
+        "point_runout_mm": 0.751008,
+        "tail_runout_mm": 1.171573
+      },
+      "LOD1": {
+        "arris_segments": 2,
+        "triangles": 60,
+        "diagonal_mm": 2.912132,
+        "point_runout_mm": 0.751008,
+        "tail_runout_mm": 1.171573
+      },
+      "LOD2": {
+        "arris_segments": 0,
+        "triangles": 28
+      }
+    },
+    "x_butt_mm": -70.89432570754576,
+    "x_tail_base_mm": -50.89432570754576,
+    "x_point_base_mm": 54.10567429245423,
+    "x_tip_mm": 79.10567429245422,
+    "point_slope": 0.11699999999999999,
+    "tail_slope": 0.075
+  },
+  "mesh_stats": {
+    "authored_vertices": 48,
+    "authored_faces": 46,
+    "quads": 46,
+    "tris": 0,
+    "ngons": 0,
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_verts": 0,
+    "zero_length_edges": 0,
+    "zero_area_faces": 0,
+    "sharp_edges": 64,
+    "round_faces": 16,
+    "point_facet_faces": 12,
+    "tail_facet_faces": 12,
+    "signed_volume_m3": 4.498768e-06,
+    "divergence_volume_m3": 4.498768e-06,
+    "centroid_mm": [
+      1.942e-06,
+      -0.0,
+      0.0
+    ],
+    "min_edge_mm": 0.150000007125,
+    "min_face_area_mm2": 0.022500001862,
+    "coincident_vertices": 0,
+    "triangles": 92,
+    "predicted_triangles": 92,
+    "knife_shading_max_dev_deg": 0.0154,
+    "knife_face_max_warp_mm": 0.0,
+    "knife_faces_measured": 13,
+    "curved_facet_shading_max_dev_deg": 20.0969,
+    "curved_facet_max_warp_mm": 0.0,
+    "curved_facets_measured": 16
+  },
+  "lod_mesh_stats": {
+    "SM_Shuriken_Spike_LOD0": {
+      "authored_vertices": 48,
+      "authored_faces": 46,
+      "quads": 46,
+      "tris": 0,
+      "ngons": 0,
+      "non_manifold_edges": 0,
+      "boundary_edges": 0,
+      "loose_verts": 0,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "sharp_edges": 64,
+      "round_faces": 16,
+      "point_facet_faces": 12,
+      "tail_facet_faces": 12,
+      "signed_volume_m3": 4.498768e-06,
+      "divergence_volume_m3": 4.498768e-06,
+      "centroid_mm": [
+        1.942e-06,
+        -0.0,
+        0.0
+      ],
+      "min_edge_mm": 0.150000007125,
+      "min_face_area_mm2": 0.022500001862,
+      "coincident_vertices": 0,
+      "triangles": 92,
+      "predicted_triangles": 92,
+      "knife_shading_max_dev_deg": 0.0154,
+      "knife_face_max_warp_mm": 0.0,
+      "knife_faces_measured": 13,
+      "curved_facet_shading_max_dev_deg": 20.0969,
+      "curved_facet_max_warp_mm": 0.0,
+      "curved_facets_measured": 16
+    },
+    "SM_Shuriken_Spike_LOD1": {
+      "authored_vertices": 32,
+      "authored_faces": 30,
+      "quads": 30,
+      "tris": 0,
+      "ngons": 0,
+      "non_manifold_edges": 0,
+      "boundary_edges": 0,
+      "loose_verts": 0,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "sharp_edges": 48,
+      "round_faces": 8,
+      "point_facet_faces": 8,
+      "tail_facet_faces": 8,
+      "signed_volume_m3": 4.496549e-06,
+      "divergence_volume_m3": 4.496549e-06,
+      "centroid_mm": [
+        -0.000746868,
+        0.0,
+        0.0
+      ],
+      "min_edge_mm": 0.150000007125,
+      "min_face_area_mm2": 0.022500001862,
+      "coincident_vertices": 0,
+      "triangles": 60,
+      "predicted_triangles": 60,
+      "knife_shading_max_dev_deg": 0.0024,
+      "knife_face_max_warp_mm": 0.0,
+      "knife_faces_measured": 9,
+      "curved_facet_shading_max_dev_deg": 22.5,
+      "curved_facet_max_warp_mm": 0.0,
+      "curved_facets_measured": 8
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "authored_vertices": 16,
+      "authored_faces": 14,
+      "quads": 14,
+      "tris": 0,
+      "ngons": 0,
+      "non_manifold_edges": 0,
+      "boundary_edges": 0,
+      "loose_verts": 0,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "sharp_edges": 28,
+      "round_faces": 0,
+      "point_facet_faces": 4,
+      "tail_facet_faces": 4,
+      "signed_volume_m3": 4.507688e-06,
+      "divergence_volume_m3": 4.507688e-06,
+      "centroid_mm": [
+        0.003047707,
+        0.0,
+        -0.0
+      ],
+      "min_edge_mm": 0.150000007125,
+      "min_face_area_mm2": 0.022500001862,
+      "coincident_vertices": 0,
+      "triangles": 28,
+      "predicted_triangles": 28,
+      "knife_shading_max_dev_deg": 0.0201,
+      "knife_face_max_warp_mm": 0.0,
+      "knife_faces_measured": 5,
+      "curved_facet_shading_max_dev_deg": 0.0,
+      "curved_facet_max_warp_mm": 0.0,
+      "curved_facets_measured": 0
+    }
+  },
+  "lod_params": {
+    "SM_Shuriken_Spike_LOD0": {
+      "arris_segments": 4,
+      "band": [
+        0,
+        150
+      ],
+      "note": "LOD0: the four long arrises rounded (0.3 mm, 4 chords, smooth-shaded) running out into the point and tail facets; point facets, 0.15 mm tip flat, tail taper, butt"
+    },
+    "SM_Shuriken_Spike_LOD1": {
+      "arris_segments": 2,
+      "band": [
+        0,
+        100
+      ],
+      "note": "LOD1: the arris round halved to 2 chords; everything else as LOD0"
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "arris_segments": 0,
+      "band": [
+        0,
+        48
+      ],
+      "note": "LOD2: square arrises (the round is ~0.1 px at the ~2.5 m switch); point, tip flat, tail, butt kept"
+    }
+  },
+  "lod_group": "SM_Shuriken_Spike_LodGroup",
+  "objects": [
+    "SM_Shuriken_Spike_LOD0",
+    "SM_Shuriken_Spike_LOD1",
+    "SM_Shuriken_Spike_LOD2"
+  ],
+  "sockets": [
+    "SOCKET_SM_Shuriken_Spike_LOD0_Grip",
+    "SOCKET_SM_Shuriken_Spike_LOD0_Trail"
+  ],
+  "socket_records": [
+    {
+      "socket": "Grip",
+      "fbx_node": "SOCKET_SM_Shuriken_Spike_LOD0_Grip",
+      "mesh": "SM_Shuriken_Spike_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        -3.0894,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "socket": "Trail",
+      "fbx_node": "SOCKET_SM_Shuriken_Spike_LOD0_Trail",
+      "mesh": "SM_Shuriken_Spike_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        -7.0894,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "wear_mask_radius_mm": [
+    76.605674,
+    79.105674
+  ],
+  "material": "M_Shuriken_Master",
+  "material_nodes": 1157,
+  "triangles": {
+    "SM_Shuriken_Spike_LOD0": 92,
+    "SM_Shuriken_Spike_LOD1": 60,
+    "SM_Shuriken_Spike_LOD2": 28
+  },
+  "lod_triangles": [
+    92,
+    60,
+    28
+  ],
+  "lod_bands": {
+    "LOD0": [
+      0,
+      150
+    ],
+    "LOD1": [
+      0,
+      100
+    ],
+    "LOD2": [
+      0,
+      48
+    ]
+  },
+  "lod_bands_ok": [
+    true,
+    true,
+    true
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.1501,
+    0.0525
+  ],
+  "lod_switching": {
+    "screen_sizes": [
+      1.0,
+      0.1501,
+      0.0525
+    ],
+    "study_4_table": [
+      1.0,
+      0.5,
+      0.25
+    ],
+    "bounds_radius_mm": 79.1057,
+    "reference_view": "16:9, 90 deg horizontal FOV (Unreal ComputeBoundsScreenSize: S = 1.778 R / d)",
+    "switch_distance_m": [
+      null,
+      0.9369,
+      2.6787
+    ],
+    "study_table_switch_distance_m": [
+      null,
+      0.2813,
+      0.5625
+    ],
+    "star_height_px_at_switch_1080p": [
+      null,
+      162.1,
+      56.7
+    ],
+    "why": "Study 4's 1.0 / 0.5 / 0.25 put LOD2 - no hole, no bevel - on screen from ~0.36 m, i.e. a star held in first person or lying on a table. The pack sets the thresholds from distance (LOD1 ~0.9 m, LOD2 ~2.5 m for a 5 cm radius) so each switch happens where the LOD's surface deviation is under a pixel or two. They travel in the .sockets.json sidecar (pipeline.export_fbx lod_screen_sizes) and ue_import_sockets applies them.",
+    "scaled_for_bounding_radius": {
+      "reference_radius_mm": 50.0,
+      "form_radius_mm": 75.03,
+      "form_radius_definition": "Unreal's bounds sphere radius: the largest vertex distance from the bounding-box CENTRE (sqrt(75^2 + 2 x 1.5^2), the butt corners), which is what ComputeBoundsScreenSize uses; bounds_radius_mm above is measured from the origin, the centre of mass, and is not",
+      "scaled_sizes": [
+        1.0,
+        0.1501,
+        0.0525
+      ],
+      "switch_distance_m_at_unreal_radius": [
+        null,
+        0.8887,
+        2.5407
+      ],
+      "note": "the pack's 0.10 / 0.035 are for a ~50 mm star; S = 1.778 R / d, so the spike's 75.03 mm bounding radius scales them by 1.5006 to keep the pack's switch distances (~0.89 m, ~2.54 m)"
+    }
+  },
+  "lod_surfaces": {
+    "SM_Shuriken_Spike_LOD0": {
+      "volume_mm3": 4498.767803,
+      "surface_area_mm2": 3143.793894,
+      "tip_radius_per_arm_mm": [
+        79.105711,
+        null,
+        70.91019,
+        null
+      ],
+      "vertices": 48
+    },
+    "SM_Shuriken_Spike_LOD1": {
+      "volume_mm3": 4496.548634,
+      "surface_area_mm2": 3139.952273,
+      "tip_radius_per_arm_mm": [
+        79.105711,
+        null,
+        70.91019,
+        null
+      ],
+      "vertices": 32
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "volume_mm3": 4507.687535,
+      "surface_area_mm2": 3199.631108,
+      "tip_radius_per_arm_mm": [
+        79.105711,
+        null,
+        70.91019,
+        null
+      ],
+      "vertices": 16
+    }
+  },
+  "lod_surface_deviation_mm": {
+    "SM_Shuriken_Spike_LOD1": 0.022836,
+    "SM_Shuriken_Spike_LOD2": 0.0
+  },
+  "lod_surface_deviation_two_sided_mm": {
+    "SM_Shuriken_Spike_LOD1": {
+      "lod0_vertices_to_lod": 0.022836,
+      "lod0_surface_to_lod": 0.022836,
+      "lod_surface_to_lod0": 0.022397,
+      "two_sided": 0.022836,
+      "two_sided_hub_and_hole": 0.022836,
+      "two_sided_arms": 0.022836,
+      "split_radius_mm": 54.105674
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "lod0_vertices_to_lod": 0.0,
+      "lod0_surface_to_lod": 0.087868,
+      "lod_surface_to_lod0": 0.124264,
+      "two_sided": 0.124264,
+      "two_sided_hub_and_hole": 0.124264,
+      "two_sided_arms": 0.124264,
+      "split_radius_mm": 54.105674
+    }
+  },
+  "lod1_is_distinct": {
+    "triangle_reduction": 0.3478,
+    "volume_delta_mm3": -2.219169,
+    "surface_area_delta_mm2": -3.841621,
+    "max_surface_deviation_mm": 0.022836,
+    "rev2_metric_lod0_vertices_to_lod1_mm": 0.022836,
+    "note": "LODs are authored by the bar generator, not decimated: LOD0 rounds the four long arrises with 4 chords (radius 0.3 mm, smooth-shaded), LOD1 with 2 chords, LOD2 leaves them square; the point facets, the 0.15 mm tip flat, the tail taper and the butt are the same planes on every LOD. max_surface_deviation_mm is two-sided; the split radius is the point base's distance from the origin, so 'hub_and_hole' reads as the body and 'arms' as the point and the tail taper."
+  },
+  "measured": {
+    "length_mm": 149.999999,
+    "across_mm": 149.999999,
+    "section_y_mm": 6.0,
+    "section_z_mm": 6.0,
+    "thickness_mm": 6.0,
+    "point_length_mm": 25.000002,
+    "tail_taper_mm": 19.999996,
+    "tail_end_mm": 3.0,
+    "tip_flat_mm": 0.15,
+    "tip_radius_mm": 0.075,
+    "arris_round_mm": 0.3,
+    "arris_segments": 4,
+    "point_facet_angle_to_axis_deg": 6.67323,
+    "point_facet_angle_spread_deg": 0.000109,
+    "point_included_deg": 13.34646,
+    "tail_facet_angle_to_axis_deg": 4.28916,
+    "grind": {
+      "grind_angle_deg": null,
+      "edge_land_mm": null,
+      "tip_radius_mm": 0.075,
+      "tip_edge_height_mm": 0.15,
+      "note": "a bar has no knife grind: the point is four flat ground facets ending in a square tip flat (tip radius = half its side, the stars' 0.075 mm); the arrises carry a round"
+    },
+    "centre_of_mass_mm": [
+      2e-06,
+      -0.0,
+      0.0
+    ],
+    "centre_of_mass_from_butt_mm": 70.894323,
+    "centre_of_mass_from_middle_mm": -4.105676,
+    "centre_of_mass_note": "the object origin is the centre of mass by volume (study 4); negative = toward the butt: the 25 mm point removes more steel than the 20 mm tail taper",
+    "unreal_bounds_sphere_radius_mm": 75.029993,
+    "volume_mm3": 4498.7678,
+    "outline_volume_mm3": 4500.000034,
+    "unground_bar": {
+      "volume_mm3": 4500.000034,
+      "mass_g": 35.325,
+      "centroid_mm": [
+        -0.110992,
+        0.0,
+        -0.0
+      ],
+      "triangles": 22,
+      "note": "same generator, arris_segments 0 and tip flat 0 (the pyramid runs to a point at 150 mm)"
+    },
+    "mass_g": 35.3153,
+    "ground_mass_g": 35.3153,
+    "outline_mass_g": 35.325,
+    "grind_removes_g": 0.0097,
+    "mass_target_g": 37.0,
+    "mass_error_g": -1.675,
+    "mass_within_tolerance": true,
+    "mass_gate": {
+      "evaluated_on": "the UN-GROUND plate: the same outline authored with no grind, chamfer or deburr (outline x thickness), which the knife grind does not change",
+      "outline_mass_g": 35.325,
+      "target_g": 37.0,
+      "tolerance_g": 2.0,
+      "passed": true,
+      "why": "the study mass gate proves the OUTLINE proportions match a real sourced object; the grind is a finish, so the finished (ground) mass is reported, not gated"
+    },
+    "ground_mass_vs_study_range": {
+      "ground_mass_g": 35.3153,
+      "study_min_max_g": [
+        35.0,
+        42.0
+      ],
+      "study_typical_g": [
+        37.0,
+        38.0
+      ],
+      "within_min_max": true,
+      "within_typical": false,
+      "note": "reported, not gated (decision B)"
+    },
+    "density_g_cm3": 7.85,
+    "min_edge_mm": 0.15,
+    "min_face_area_mm2": 0.022500002,
+    "zero_length_edges": 0,
+    "zero_area_faces": 0,
+    "coincident_vertices": 0
+  },
+  "lod_measured": {
+    "SM_Shuriken_Spike_LOD1": {
+      "length_mm": 149.999999,
+      "across_mm": 149.999999,
+      "section_y_mm": 6.0,
+      "section_z_mm": 6.0,
+      "thickness_mm": 6.0,
+      "point_length_mm": 25.000002,
+      "tail_taper_mm": 19.999996,
+      "tail_end_mm": 3.0,
+      "tip_flat_mm": 0.15,
+      "tip_radius_mm": 0.075,
+      "arris_round_mm": 0.3,
+      "arris_segments": 2,
+      "point_facet_angle_to_axis_deg": 6.67325,
+      "point_facet_angle_spread_deg": 2.5e-05,
+      "point_included_deg": 13.34651,
+      "tail_facet_angle_to_axis_deg": 4.28916,
+      "grind": {
+        "grind_angle_deg": null,
+        "edge_land_mm": null,
+        "tip_radius_mm": 0.075,
+        "tip_edge_height_mm": 0.15,
+        "note": "a bar has no knife grind: the point is four flat ground facets ending in a square tip flat (tip radius = half its side, the stars' 0.075 mm); the arrises carry a round"
+      },
+      "centre_of_mass_mm": [
+        -0.000747,
+        0.0,
+        0.0
+      ],
+      "centre_of_mass_from_butt_mm": 70.894323,
+      "centre_of_mass_from_middle_mm": -4.105676,
+      "centre_of_mass_note": "the object origin is the centre of mass by volume (study 4); negative = toward the butt: the 25 mm point removes more steel than the 20 mm tail taper",
+      "unreal_bounds_sphere_radius_mm": 75.029993,
+      "volume_mm3": 4496.5486,
+      "outline_volume_mm3": 4500.000034,
+      "unground_bar": {
+        "volume_mm3": 4500.000034,
+        "mass_g": 35.325,
+        "centroid_mm": [
+          -0.110992,
+          0.0,
+          -0.0
+        ],
+        "triangles": 22,
+        "note": "same generator, arris_segments 0 and tip flat 0 (the pyramid runs to a point at 150 mm)"
+      },
+      "mass_g": 35.2979,
+      "ground_mass_g": 35.2979,
+      "outline_mass_g": 35.325,
+      "grind_removes_g": 0.0271,
+      "mass_target_g": 37.0,
+      "mass_error_g": -1.675,
+      "mass_within_tolerance": true,
+      "mass_gate": {
+        "evaluated_on": "the UN-GROUND plate: the same outline authored with no grind, chamfer or deburr (outline x thickness), which the knife grind does not change",
+        "outline_mass_g": 35.325,
+        "target_g": 37.0,
+        "tolerance_g": 2.0,
+        "passed": true,
+        "why": "the study mass gate proves the OUTLINE proportions match a real sourced object; the grind is a finish, so the finished (ground) mass is reported, not gated"
+      },
+      "ground_mass_vs_study_range": {
+        "ground_mass_g": 35.2979,
+        "study_min_max_g": [
+          35.0,
+          42.0
+        ],
+        "study_typical_g": [
+          37.0,
+          38.0
+        ],
+        "within_min_max": true,
+        "within_typical": false,
+        "note": "reported, not gated (decision B)"
+      },
+      "density_g_cm3": 7.85,
+      "min_edge_mm": 0.15,
+      "min_face_area_mm2": 0.022500002,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "coincident_vertices": 0
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "length_mm": 149.999999,
+      "across_mm": 149.999999,
+      "section_y_mm": 6.0,
+      "section_z_mm": 6.0,
+      "thickness_mm": 6.0,
+      "point_length_mm": 25.000002,
+      "tail_taper_mm": 19.999996,
+      "tail_end_mm": 3.0,
+      "tip_flat_mm": 0.15,
+      "tip_radius_mm": 0.075,
+      "arris_round_mm": 0.0,
+      "arris_segments": 0,
+      "point_facet_angle_to_axis_deg": 6.67327,
+      "point_facet_angle_spread_deg": 0.0,
+      "point_included_deg": 13.34653,
+      "tail_facet_angle_to_axis_deg": 4.28915,
+      "grind": {
+        "grind_angle_deg": null,
+        "edge_land_mm": null,
+        "tip_radius_mm": 0.075,
+        "tip_edge_height_mm": 0.15,
+        "note": "a bar has no knife grind: the point is four flat ground facets ending in a square tip flat (tip radius = half its side, the stars' 0.075 mm); the arrises carry a round"
+      },
+      "centre_of_mass_mm": [
+        0.003048,
+        0.0,
+        -0.0
+      ],
+      "centre_of_mass_from_butt_mm": 70.894323,
+      "centre_of_mass_from_middle_mm": -4.105676,
+      "centre_of_mass_note": "the object origin is the centre of mass by volume (study 4); negative = toward the butt: the 25 mm point removes more steel than the 20 mm tail taper",
+      "unreal_bounds_sphere_radius_mm": 75.029993,
+      "volume_mm3": 4507.6875,
+      "outline_volume_mm3": 4500.000034,
+      "unground_bar": {
+        "volume_mm3": 4500.000034,
+        "mass_g": 35.325,
+        "centroid_mm": [
+          -0.110992,
+          0.0,
+          -0.0
+        ],
+        "triangles": 22,
+        "note": "same generator, arris_segments 0 and tip flat 0 (the pyramid runs to a point at 150 mm)"
+      },
+      "mass_g": 35.3853,
+      "ground_mass_g": 35.3853,
+      "outline_mass_g": 35.325,
+      "grind_removes_g": -0.0603,
+      "mass_target_g": 37.0,
+      "mass_error_g": -1.675,
+      "mass_within_tolerance": true,
+      "mass_gate": {
+        "evaluated_on": "the UN-GROUND plate: the same outline authored with no grind, chamfer or deburr (outline x thickness), which the knife grind does not change",
+        "outline_mass_g": 35.325,
+        "target_g": 37.0,
+        "tolerance_g": 2.0,
+        "passed": true,
+        "why": "the study mass gate proves the OUTLINE proportions match a real sourced object; the grind is a finish, so the finished (ground) mass is reported, not gated"
+      },
+      "ground_mass_vs_study_range": {
+        "ground_mass_g": 35.3853,
+        "study_min_max_g": [
+          35.0,
+          42.0
+        ],
+        "study_typical_g": [
+          37.0,
+          38.0
+        ],
+        "within_min_max": true,
+        "within_typical": false,
+        "note": "reported, not gated (decision B)"
+      },
+      "density_g_cm3": 7.85,
+      "min_edge_mm": 0.15,
+      "min_face_area_mm2": 0.022500002,
+      "zero_length_edges": 0,
+      "zero_area_faces": 0,
+      "coincident_vertices": 0
+    }
+  },
+  "topology_quality": {
+    "SM_Shuriken_Spike_LOD0": {
+      "faces": 46,
+      "triangles": 92,
+      "min_triangle_angle_deg": 0.0626,
+      "triangles_under_5deg": 60,
+      "face_aspect_median": 19.444,
+      "face_aspect_max": 919.563,
+      "c4_face_misses": 0,
+      "note": "aspect = longest edge^2 / area.  The body faces and arris-round chords are single planar strips tail base -> point base by design (a straight bar: nothing to subdivide); their slivers are long, not degenerate (every triangle is well above qa_check's 1 um / 1 um2 thresholds)"
+    },
+    "SM_Shuriken_Spike_LOD1": {
+      "faces": 30,
+      "triangles": 60,
+      "min_triangle_angle_deg": 0.1235,
+      "triangles_under_5deg": 28,
+      "face_aspect_median": 8.284,
+      "face_aspect_max": 469.895,
+      "c4_face_misses": 0,
+      "note": "aspect = longest edge^2 / area.  The body faces and arris-round chords are single planar strips tail base -> point base by design (a straight bar: nothing to subdivide); their slivers are long, not degenerate (every triangle is well above qa_check's 1 um / 1 um2 thresholds)"
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "faces": 14,
+      "triangles": 28,
+      "min_triangle_angle_deg": 0.3369,
+      "triangles_under_5deg": 12,
+      "face_aspect_median": 8.296,
+      "face_aspect_max": 17.5,
+      "c4_face_misses": 0,
+      "note": "aspect = longest edge^2 / area.  The body faces and arris-round chords are single planar strips tail base -> point base by design (a straight bar: nothing to subdivide); their slivers are long, not degenerate (every triangle is well above qa_check's 1 um / 1 um2 thresholds)"
+    }
+  },
+  "uv": {
+    "uv_square_coverage": 0.138533,
+    "u_range": [
+      0.0004,
+      0.17881
+    ],
+    "v_range": [
+      0.0004,
+      0.9996
+    ],
+    "texture_size": 2048,
+    "texels_per_m": 13595.0,
+    "px_per_cm": 135.95
+  },
+  "lod_uv": {
+    "SM_Shuriken_Spike_LOD1": {
+      "uv_square_coverage": 0.138533,
+      "u_range": [
+        0.0004,
+        0.17881
+      ],
+      "v_range": [
+        0.0004,
+        0.9996
+      ],
+      "texture_size": 2048,
+      "texels_per_m": 13603.3,
+      "px_per_cm": 136.033
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "uv_square_coverage": 0.139372,
+      "u_range": [
+        0.0,
+        0.17881
+      ],
+      "v_range": [
+        0.0004,
+        0.9996
+      ],
+      "texture_size": 2048,
+      "texels_per_m": 13516.6,
+      "px_per_cm": 135.166
+    }
+  },
+  "cross_lod_uv": {
+    "SM_Shuriken_Spike_LOD1": {
+      "texture_size": 2048,
+      "top_plate": {
+        "samples": 8,
+        "skipped_no_lod0_plate_under": 0,
+        "median_uv": 7.761e-11,
+        "max_uv": 4.657e-10,
+        "max_px": 0.0,
+        "metric": "centroid + 3 corners of every flat top-plate triangle, looked up at the same XY on LOD0's flat top plate (points with no LOD0 plate under them skipped); the gate"
+      },
+      "surface": {
+        "samples": 60,
+        "near_mm": 0.25,
+        "median_px": 0.0,
+        "p95_px": 0.078,
+        "max_px": 0.078,
+        "metric": "centroid_best_near: 1 sample per SM_Shuriken_Spike_LOD1 triangle (its centroid and centroid UV); LOD0 candidates = every LOD0 triangle within near_mm of the closest one (no normal test); value = the smallest UV distance to the closest point on a candidate; px at 2048; all triangles"
+      },
+      "surface_plate": {
+        "samples": 4,
+        "median_px": 0.0,
+        "p95_px": 0.0,
+        "max_px": 0.0,
+        "metric": "centroid_best_near, plate triangles (|z| = t/2) whose centroid lies on LOD0's surface"
+      },
+      "surface_non_plate": {
+        "samples": 56,
+        "median_px": 0.0,
+        "p95_px": 0.078,
+        "max_px": 0.078,
+        "metric": "centroid_best_near, non-plate triangles (walls, grind facets, land, tip); where a LOD's edge section differs from LOD0's by design this measures the shape difference"
+      },
+      "surface_off_lod0": {
+        "samples": 16,
+        "median_px": 0.0584,
+        "p95_px": 0.078,
+        "max_px": 0.078,
+        "plate_samples": 0,
+        "max_distance_mm": 0.0149,
+        "metric": "centroid_best_near over triangles whose centroid lies more than 1 um off LOD0's surface: the designed shape differences (a filled hole, land-free facets, a pyramid tip), where no LOD0 texel exists for the same point"
+      }
+    },
+    "SM_Shuriken_Spike_LOD2": {
+      "texture_size": 2048,
+      "top_plate": {
+        "samples": 2,
+        "skipped_no_lod0_plate_under": 6,
+        "median_uv": 9.051e-05,
+        "max_uv": 0.0001207,
+        "max_px": 0.2472,
+        "metric": "centroid + 3 corners of every flat top-plate triangle, looked up at the same XY on LOD0's flat top plate (points with no LOD0 plate under them skipped); the gate"
+      },
+      "surface": {
+        "samples": 28,
+        "near_mm": 0.25,
+        "median_px": 0.0618,
+        "p95_px": 0.3996,
+        "max_px": 0.3996,
+        "metric": "centroid_best_near: 1 sample per SM_Shuriken_Spike_LOD2 triangle (its centroid and centroid UV); LOD0 candidates = every LOD0 triangle within near_mm of the closest one (no normal test); value = the smallest UV distance to the closest point on a candidate; px at 2048; all triangles"
+      },
+      "surface_plate": {
+        "samples": 8,
+        "median_px": 0.3234,
+        "p95_px": 0.3996,
+        "max_px": 0.3996,
+        "metric": "centroid_best_near, plate triangles (|z| = t/2) whose centroid lies on LOD0's surface"
+      },
+      "surface_non_plate": {
+        "samples": 20,
+        "median_px": 0.0,
+        "p95_px": 0.3996,
+        "max_px": 0.3996,
+        "metric": "centroid_best_near, non-plate triangles (walls, grind facets, land, tip); where a LOD's edge section differs from LOD0's by design this measures the shape difference"
+      },
+      "surface_off_lod0": {
+        "samples": 0,
+        "plate_samples": 0,
+        "max_distance_mm": 0.0,
+        "metric": "centroid_best_near over triangles whose centroid lies more than 1 um off LOD0's surface: the designed shape differences (a filled hole, land-free facets, a pyramid tip), where no LOD0 texel exists for the same point"
+      }
+    }
+  },
+  "uv_consistency": {
+    "method": "LOD1..n UV0 from LOD0's island maps (shuriken_lib.uv); one texture set for every LOD",
+    "overlap_pairs": {
+      "SM_Shuriken_Spike_LOD0": 0,
+      "SM_Shuriken_Spike_LOD1": 0,
+      "SM_Shuriken_Spike_LOD2": 0
+    },
+    "in_unit_square": {
+      "SM_Shuriken_Spike_LOD0": true,
+      "SM_Shuriken_Spike_LOD1": true,
+      "SM_Shuriken_Spike_LOD2": true
+    },
+    "gate": {
+      "top_plate_max_px": 0.5,
+      "surface_max_px": 8.0,
+      "overlap_pairs": 0,
+      "in_unit_square": true
+    },
+    "passed": true
+  },
+  "c4_max_deviation_mm": {
+    "SM_Shuriken_Spike_LOD0": 0.0,
+    "SM_Shuriken_Spike_LOD1": 0.0,
+    "SM_Shuriken_Spike_LOD2": 0.0
+  },
+  "symmetry": {
+    "order": 4,
+    "max_deviation_mm": {
+      "SM_Shuriken_Spike_LOD0": 0.0,
+      "SM_Shuriken_Spike_LOD1": 0.0,
+      "SM_Shuriken_Spike_LOD2": 0.0
+    },
+    "method": "max nearest-neighbour distance after a quarter turn ABOUT THE LONG AXIS (+X) of the stored (float32) vertices; quarter turns are trig-free sign swaps of 1 nm-snapped positions, so exact 0.0; mirror_max_deviation_mm does the same after mirrors in Y and Z",
+    "group": "D4 about +X",
+    "axis": "+X (the long axis)",
+    "mirror_max_deviation_mm": {
+      "SM_Shuriken_Spike_LOD0": {
+        "y": 0.0,
+        "z": 0.0
+      },
+      "SM_Shuriken_Spike_LOD1": {
+        "y": 0.0,
+        "z": 0.0
+      },
+      "SM_Shuriken_Spike_LOD2": {
+        "y": 0.0,
+        "z": 0.0
+      }
+    }
+  },
+  "physics": {
+    "mass_kg_override": 0.035,
+    "mass_kg_override_exact": 0.03532,
+    "source": "the finished (knife-ground) LOD0 mesh volume x 7.85 g/cm3 - SHURIKEN_STUDY.md 4, Physics: set an explicit Mass in KG override",
+    "study_4_table_kg": 0.037,
+    "outline_mass_kg": 0.03533,
+    "measured_mass_kg": 0.03532,
+    "hull_volume_mm3": 4507.688,
+    "hull_volume_at_steel_density_kg": 0.03539,
+    "applies": "Not carried by the FBX or the sidecar, and not applied by the import scripts: set it on the StaticMeshComponent's Body Instance (Physics > Mass (kg) override) in the Blueprint that throws the star, and say so in the Fab description.",
+    "note": "hull_volume_at_steel_density_kg is the UCX hull volume times 7.85 g/cm3, shown only to say how far a hull-volume mass at steel density would overstate the star. It is NOT Unreal's own figure: without an override Unreal derives mass from the collision volume and the physical material's density (default 1 g/cm3) with RaiseMassToPower 0.75, which was not measured here (StaticMeshComponent.get_mass needs Simulate Physics; UnrealCheck5/mass_diag.json)."
+  },
+  "qa": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "unit_scale",
+        "object": null,
+        "passed": true,
+        "detail": "system=METRIC, scale_length=1.0"
+      },
+      {
+        "name": "transforms_applied",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "rotation error 0.00e+00, scale error 0.00e+00, location (0.0000, 0.0000, 0.0000)"
+      },
+      {
+        "name": "triangle_budget",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "92 triangles (budget 2500)"
+      },
+      {
+        "name": "no_ngons",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 n-gon(s) of 46 faces"
+      },
+      {
+        "name": "no_non_manifold_edges",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 92"
+      },
+      {
+        "name": "open_boundary_edges",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 boundary edge(s) of 92 (informational: open meshes are allowed)"
+      },
+      {
+        "name": "no_loose_vertices",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 loose vertex/vertices of 48"
+      },
+      {
+        "name": "no_zero_length_edges",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 edge(s) at or below 1e-06 of 92; shortest 0.00015"
+      },
+      {
+        "name": "no_degenerate_faces",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 face(s) at or below 1e-12 area of 46; smallest 2.25e-08"
+      },
+      {
+        "name": "no_coincident_vertices",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 vertex pair(s) within 1e-06 of 48"
+      },
+      {
+        "name": "uv0_present",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "1 UV map(s); UV0 is 'UVMap' (active layer is 'UVMap')"
+      },
+      {
+        "name": "uv0_tile_range",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "u 0.0004..0.1788, v 0.0004..0.9996 on 'UVMap'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)"
+      },
+      {
+        "name": "texel_density",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "135.950 px/cm at 2048px on 'UVMap' (uv area 0.1385, mesh area 0.0031 m2); no target given"
+      },
+      {
+        "name": "uv_no_overlap",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+      },
+      {
+        "name": "name_prefix",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "mesh object prefix must be one of ('SM_', 'SK_')"
+      },
+      {
+        "name": "material_prefix",
+        "object": "M_Shuriken_Master",
+        "passed": true,
+        "detail": "material prefix must be one of ('M_', 'MI_')"
+      },
+      {
+        "name": "ucx_present",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "UCX_SM_Shuriken_Spike_LOD0_00"
+      },
+      {
+        "name": "ucx_closed",
+        "object": "UCX_SM_Shuriken_Spike_LOD0_00",
+        "passed": true,
+        "detail": "16 vertices, 28 faces"
+      },
+      {
+        "name": "socket_is_empty",
+        "object": "SOCKET_SM_Shuriken_Spike_LOD0_Grip",
+        "passed": true,
+        "detail": "node type EMPTY; UE 5.8.2 only reads an FBX Null as a socket, a child mesh is welded into the render mesh"
+      },
+      {
+        "name": "socket_name_matches_mesh",
+        "object": "SOCKET_SM_Shuriken_Spike_LOD0_Grip",
+        "passed": true,
+        "detail": "parent render node is 'SM_Shuriken_Spike_LOD0'; expected SOCKET_SM_Shuriken_Spike_LOD0_<socket>"
+      },
+      {
+        "name": "socket_is_empty",
+        "object": "SOCKET_SM_Shuriken_Spike_LOD0_Trail",
+        "passed": true,
+        "detail": "node type EMPTY; UE 5.8.2 only reads an FBX Null as a socket, a child mesh is welded into the render mesh"
+      },
+      {
+        "name": "socket_name_matches_mesh",
+        "object": "SOCKET_SM_Shuriken_Spike_LOD0_Trail",
+        "passed": true,
+        "detail": "parent render node is 'SM_Shuriken_Spike_LOD0'; expected SOCKET_SM_Shuriken_Spike_LOD0_<socket>"
+      },
+      {
+        "name": "collision_name_matches_mesh",
+        "object": "UCX_SM_Shuriken_Spike_LOD0_00",
+        "passed": true,
+        "detail": "parent render node is 'SM_Shuriken_Spike_LOD0'; expected <UCX|UBX|USP|UCP>_SM_Shuriken_Spike_LOD0_NN"
+      },
+      {
+        "name": "no_franchise_strings",
+        "object": "SM_Shuriken_Spike_LOD0",
+        "passed": true,
+        "detail": "clean"
+      },
+      {
+        "name": "transforms_applied",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "rotation error 0.00e+00, scale error 0.00e+00, location (0.0000, 0.0000, 0.0000)"
+      },
+      {
+        "name": "triangle_budget",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "60 triangles (budget 2500)"
+      },
+      {
+        "name": "no_ngons",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 n-gon(s) of 30 faces"
+      },
+      {
+        "name": "no_non_manifold_edges",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 60"
+      },
+      {
+        "name": "open_boundary_edges",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 boundary edge(s) of 60 (informational: open meshes are allowed)"
+      },
+      {
+        "name": "no_loose_vertices",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 loose vertex/vertices of 32"
+      },
+      {
+        "name": "no_zero_length_edges",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 edge(s) at or below 1e-06 of 60; shortest 0.00015"
+      },
+      {
+        "name": "no_degenerate_faces",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 face(s) at or below 1e-12 area of 30; smallest 2.25e-08"
+      },
+      {
+        "name": "no_coincident_vertices",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 vertex pair(s) within 1e-06 of 32"
+      },
+      {
+        "name": "uv0_present",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "1 UV map(s); UV0 is 'UVMap' (active layer is 'UVMap')"
+      },
+      {
+        "name": "uv0_tile_range",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "u 0.0004..0.1788, v 0.0004..0.9996 on 'UVMap'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)"
+      },
+      {
+        "name": "texel_density",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "136.033 px/cm at 2048px on 'UVMap' (uv area 0.1385, mesh area 0.0031 m2); no target given"
+      },
+      {
+        "name": "uv_no_overlap",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+      },
+      {
+        "name": "name_prefix",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "mesh object prefix must be one of ('SM_', 'SK_')"
+      },
+      {
+        "name": "no_franchise_strings",
+        "object": "SM_Shuriken_Spike_LOD1",
+        "passed": true,
+        "detail": "clean"
+      },
+      {
+        "name": "transforms_applied",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "rotation error 0.00e+00, scale error 0.00e+00, location (0.0000, 0.0000, 0.0000)"
+      },
+      {
+        "name": "triangle_budget",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "28 triangles (budget 2500)"
+      },
+      {
+        "name": "no_ngons",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 n-gon(s) of 14 faces"
+      },
+      {
+        "name": "no_non_manifold_edges",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 28"
+      },
+      {
+        "name": "open_boundary_edges",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 boundary edge(s) of 28 (informational: open meshes are allowed)"
+      },
+      {
+        "name": "no_loose_vertices",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 loose vertex/vertices of 16"
+      },
+      {
+        "name": "no_zero_length_edges",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 edge(s) at or below 1e-06 of 28; shortest 0.00015"
+      },
+      {
+        "name": "no_degenerate_faces",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 face(s) at or below 1e-12 area of 14; smallest 2.25e-08"
+      },
+      {
+        "name": "no_coincident_vertices",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 vertex pair(s) within 1e-06 of 16"
+      },
+      {
+        "name": "uv0_present",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "1 UV map(s); UV0 is 'UVMap' (active layer is 'UVMap')"
+      },
+      {
+        "name": "uv0_tile_range",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "u 0.0000..0.1788, v 0.0004..0.9996 on 'UVMap'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)"
+      },
+      {
+        "name": "texel_density",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "135.166 px/cm at 2048px on 'UVMap' (uv area 0.1394, mesh area 0.0032 m2); no target given"
+      },
+      {
+        "name": "uv_no_overlap",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+      },
+      {
+        "name": "name_prefix",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "mesh object prefix must be one of ('SM_', 'SK_')"
+      },
+      {
+        "name": "no_franchise_strings",
+        "object": "SM_Shuriken_Spike_LOD2",
+        "passed": true,
+        "detail": "clean"
+      },
+      {
+        "name": "lod_counts_descending",
+        "object": "SM_Shuriken_Spike",
+        "passed": true,
+        "detail": "LOD0=92, LOD1=60, LOD2=28"
+      }
+    ],
+    "triangles": {
+      "SM_Shuriken_Spike_LOD0": 92,
+      "SM_Shuriken_Spike_LOD1": 60,
+      "SM_Shuriken_Spike_LOD2": 28
+    },
+    "objects": [
+      "SM_Shuriken_Spike_LOD0",
+      "SM_Shuriken_Spike_LOD1",
+      "SM_Shuriken_Spike_LOD2"
+    ]
+  },
+  "qa_failures": [],
+  "qa_check_names": [
+    "collision_name_matches_mesh",
+    "lod_counts_descending",
+    "material_prefix",
+    "name_prefix",
+    "no_coincident_vertices",
+    "no_degenerate_faces",
+    "no_franchise_strings",
+    "no_loose_vertices",
+    "no_ngons",
+    "no_non_manifold_edges",
+    "no_zero_length_edges",
+    "open_boundary_edges",
+    "socket_is_empty",
+    "socket_name_matches_mesh",
+    "texel_density",
+    "transforms_applied",
+    "triangle_budget",
+    "ucx_closed",
+    "ucx_present",
+    "unit_scale",
+    "uv0_present",
+    "uv0_tile_range",
+    "uv_no_overlap"
+  ],
+  "lod_strategy": {
+    "method": "parametric: every LOD authored by shuriken_lib.bar at its own arris segment count",
+    "table": "study 4's rules for a bar (its star bands do not apply: a bar's LOD0 carries less shape than a star's LOD2): LOD0 4-chord arris round, LOD1 2-chord round, LOD2 square arrises; the point, tip flat, tail taper and butt identical on every LOD; nothing padded",
+    "bands": [
+      [
+        0,
+        150
+      ],
+      [
+        0,
+        100
+      ],
+      [
+        0,
+        48
+      ]
+    ],
+    "naming": "LODn objects are created as <mesh>_LODn; pipeline.make_lod_group renames LOD0 with its UCX_/SOCKET_ children, so the hull is UCX_<mesh>_LOD0_00",
+    "screen_sizes": [
+      1.0,
+      0.1501,
+      0.0525
+    ]
+  },
+  "export": {
+    "filepath": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_Spike.fbx",
+    "objects": [
+      "SM_Shuriken_Spike_LodGroup",
+      "SM_Shuriken_Spike_LOD0",
+      "UCX_SM_Shuriken_Spike_LOD0_00",
+      "SM_Shuriken_Spike_LOD1",
+      "SM_Shuriken_Spike_LOD2"
+    ],
+    "settings": {
+      "use_selection": true,
+      "use_visible": false,
+      "use_active_collection": false,
+      "object_types": [
+        "EMPTY",
+        "MESH"
+      ],
+      "global_scale": 1.0,
+      "apply_unit_scale": true,
+      "apply_scale_options": "FBX_SCALE_UNITS",
+      "axis_forward": "-Y",
+      "axis_up": "Z",
+      "use_space_transform": true,
+      "bake_space_transform": false,
+      "mesh_smooth_type": "FACE",
+      "use_mesh_modifiers": true,
+      "use_mesh_modifiers_render": true,
+      "use_mesh_edges": false,
+      "use_triangles": true,
+      "use_tspace": false,
+      "use_custom_props": false,
+      "add_leaf_bones": false,
+      "use_armature_deform_only": true,
+      "armature_nodetype": "NULL",
+      "primary_bone_axis": "Y",
+      "secondary_bone_axis": "X",
+      "bake_anim": false,
+      "path_mode": "RELATIVE",
+      "embed_textures": false,
+      "colors_type": "SRGB",
+      "batch_mode": "OFF"
+    },
+    "warnings": [
+      "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_Shuriken_Spike_LOD0_Grip, SOCKET_SM_Shuriken_Spike_LOD0_Trail"
+    ],
+    "sockets": [
+      {
+        "socket": "Grip",
+        "fbx_node": "SOCKET_SM_Shuriken_Spike_LOD0_Grip",
+        "mesh": "SM_Shuriken_Spike_LOD0",
+        "node_type": "EMPTY",
+        "ue_correction": true,
+        "location_cm": [
+          -3.0894,
+          0.0,
+          0.0
+        ],
+        "rotation_deg": {
+          "roll": 0.0,
+          "pitch": 0.0,
+          "yaw": 0.0
+        },
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "in_fbx": false
+      },
+      {
+        "socket": "Trail",
+        "fbx_node": "SOCKET_SM_Shuriken_Spike_LOD0_Trail",
+        "mesh": "SM_Shuriken_Spike_LOD0",
+        "node_type": "EMPTY",
+        "ue_correction": true,
+        "location_cm": [
+          -7.0894,
+          0.0,
+          0.0
+        ],
+        "rotation_deg": {
+          "roll": 0.0,
+          "pitch": 0.0,
+          "yaw": 0.0
+        },
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "in_fbx": false
+      }
+    ],
+    "lod_screen_sizes": [
+      1.0,
+      0.1501,
+      0.0525
+    ],
+    "sidecar": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_Spike.sockets.json"
+  },
+  "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_Spike.fbx",
+  "sockets_sidecar": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\SM_Shuriken_Spike.sockets.json",
+  "export_sha256": {
+    "fbx": "159b5337cd675014af944ac42c04cdc336780a6da1e931bb3df2df2512448cce",
+    "sidecar": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7",
+    "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+  },
+  "textures": {
+    "png_chunks": {
+      "BC": [
+        "IHDR",
+        "sRGB",
+        "gAMA",
+        "cHRM",
+        "eXIf",
+        "oFFs",
+        "pHYs",
+        "IDAT x97",
+        "IEND"
+      ],
+      "ORM": [
+        "IHDR",
+        "eXIf",
+        "oFFs",
+        "pHYs",
+        "IDAT x67",
+        "IEND"
+      ],
+      "N": [
+        "IHDR",
+        "eXIf",
+        "oFFs",
+        "pHYs",
+        "IDAT x93",
+        "IEND"
+      ]
+    },
+    "colour_chunks_stripped": {
+      "ORM": [
+        "sRGB",
+        "gAMA",
+        "cHRM"
+      ],
+      "N": [
+        "sRGB",
+        "gAMA",
+        "cHRM"
+      ]
+    },
+    "data_maps_without_colour_chunks": true,
+    "size": [
+      2048,
+      2048
+    ],
+    "margin_px": 16,
+    "margin_type": "EXTEND",
+    "uv_map": "UVMap",
+    "source_material": "M_Shuriken_Master",
+    "maps": {
+      "BC": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\Textures\\T_Shuriken_Spike_BC.png",
+      "ORM": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\Textures\\T_Shuriken_Spike_ORM.png",
+      "N": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\Shuriken\\Textures\\T_Shuriken_Spike_N.png"
+    },
+    "sha256": {
+      "BC": "22829a368fad2a5cb80f394f7708278085c76e293ba341ba5ce72b73bf14016f",
+      "ORM": "5a4e170f9f2bbff925cf44d7e7b9ae64f01f3475dc31bd7fcdf12fd45792cdf1",
+      "N": "14bba9d002d6e42e37d4a75b157685d4dc5ff777428f029e81e2b70dda75e0c4"
+    },
+    "colour_spaces": {
+      "BC": "sRGB",
+      "ORM": "linear (Non-Color): R AO, G roughness, B metallic",
+      "N": "linear (Non-Color), tangent space MikkTSpace, DirectX (green flipped)"
+    },
+    "unreal_import": {
+      "BC": "sRGB ON, Compression Default",
+      "ORM": "sRGB OFF, Compression Masks (no alpha) - Unreal's importer does NOT detect this; a plain import decodes roughness 0.32 as 0.08 (mirror steel)",
+      "N": "sRGB OFF, Compression Normalmap, Flip Green Channel OFF (DirectX on disk); the importer auto-detects the _N suffix",
+      "helper": "Scripts/shuriken/ue_import_textures.py sets and verifies these flags"
+    },
+    "stats": {
+      "BC_stored_srgb": {
+        "mean": [
+          0.0672,
+          0.0668,
+          0.069
+        ],
+        "min": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max": [
+          0.702,
+          0.7059,
+          0.7098
+        ]
+      },
+      "AO": 0.1606,
+      "roughness": 0.0511,
+      "metallic": 0.1606
+    },
+    "samples": {
+      "emit": 16,
+      "ao": 64,
+      "normal": 16
+    },
+    "device": "GPU (OPTIX)",
+    "isolation": "every other object hidden from render during the bake (hull, other LODs, other forms)",
+    "seconds": 19.68,
+    "shared_by_lods": [
+      "SM_Shuriken_Spike_LOD0",
+      "SM_Shuriken_Spike_LOD1",
+      "SM_Shuriken_Spike_LOD2"
+    ]
+  },
+  "renders": [
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\spike_persp.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\spike_top.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\spike_lodgrind.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\spike_wire.png",
+    "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\spike_lods.png"
+  ],
+  "render_stats": {
+    "spike_persp": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.07644,
+      "object_mean_rgb": [
+        0.3808,
+        0.3757,
+        0.3983
+      ],
+      "object_luminance": {
+        "mean": 0.3784,
+        "std": 0.1868,
+        "p05": 0.2031,
+        "p50": 0.2715,
+        "p95": 0.6196,
+        "max": 0.9849
+      },
+      "object_fraction_above_0_50": 0.35647,
+      "object_fraction_below_0_05": 0.0,
+      "bbox_px": [
+        81,
+        283,
+        1518,
+        670
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        81,
+        81,
+        283,
+        229
+      ],
+      "bbox_width_fraction": 0.8988,
+      "bbox_height_fraction": 0.4311,
+      "facet_luminance": {
+        "pixels": 3445,
+        "fraction_of_object": 0.0313,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 3445,
+          "mean": 0.4667,
+          "p05": 0.1443,
+          "p50": 0.4858,
+          "p95": 0.8802,
+          "fraction_below_0_05": 0.0
+        },
+        "near": {
+          "pixels": 1582,
+          "mean": 0.6238,
+          "p05": 0.4183,
+          "p50": 0.5841,
+          "p95": 0.9076,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 1863,
+          "mean": 0.3332,
+          "p05": 0.1323,
+          "p50": 0.3048,
+          "p95": 0.5964,
+          "fraction_below_0_05": 0.0
+        }
+      },
+      "coat_luminance": {
+        "pixels": 33650,
+        "fraction_of_object": 0.30569,
+        "mean": 0.5747,
+        "p05": 0.419,
+        "p50": 0.5697,
+        "p95": 0.7899,
+        "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+      },
+      "wall_luminance": {
+        "pixels": 67310,
+        "fraction_of_object": 0.61148,
+        "mean": 0.2758,
+        "p05": 0.1992,
+        "p50": 0.223,
+        "p95": 0.5911,
+        "fraction_below_0_03": 0.0,
+        "fraction_below_0_05": 0.0,
+        "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.514,
+        "p50": 0.5532,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.4017,
+        "up": 0.5789,
+        "left": 0.3583,
+        "down": 0.2473
+      },
+      "object_sector_spread": 0.8362,
+      "backdrop_luminance_mean": 0.5032,
+      "contact_shadow_ratio": 0.7808,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.4803
+    },
+    "spike_top": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.02554,
+      "object_mean_rgb": [
+        0.4953,
+        0.4806,
+        0.4924
+      ],
+      "object_luminance": {
+        "mean": 0.4845,
+        "std": 0.1422,
+        "p05": 0.3784,
+        "p50": 0.4319,
+        "p95": 0.8711,
+        "max": 0.9689
+      },
+      "object_fraction_above_0_50": 0.19129,
+      "object_fraction_below_0_05": 0.0,
+      "bbox_px": [
+        310,
+        429,
+        1344,
+        469
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        310,
+        255,
+        429,
+        430
+      ],
+      "bbox_width_fraction": 0.6469,
+      "bbox_height_fraction": 0.0456,
+      "facet_luminance": {
+        "pixels": 1473,
+        "fraction_of_object": 0.04005,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 1473,
+          "mean": 0.7764,
+          "p05": 0.6,
+          "p50": 0.7969,
+          "p95": 0.9168,
+          "fraction_below_0_05": 0.0
+        },
+        "near": {
+          "pixels": 735,
+          "mean": 0.7738,
+          "p05": 0.6002,
+          "p50": 0.795,
+          "p95": 0.9143,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 738,
+          "mean": 0.779,
+          "p05": 0.5981,
+          "p50": 0.8014,
+          "p95": 0.9182,
+          "fraction_below_0_05": 0.0
+        }
+      },
+      "coat_luminance": {
+        "pixels": 30833,
+        "fraction_of_object": 0.8384,
+        "mean": 0.4492,
+        "p05": 0.3938,
+        "p50": 0.4319,
+        "p95": 0.6379,
+        "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.69,
+        "p50": 0.7146,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.5072,
+        "up": 0.4872,
+        "left": 0.4642,
+        "down": 0.4836
+      },
+      "object_sector_spread": 0.0886,
+      "backdrop_luminance_mean": 0.5414,
+      "contact_shadow_ratio": 0.9019,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.4861
+    },
+    "spike_wire": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.02673,
+      "object_mean_rgb": [
+        0.4523,
+        0.4333,
+        0.4284
+      ],
+      "object_luminance": {
+        "mean": 0.4369,
+        "std": 0.1287,
+        "p05": 0.3824,
+        "p50": 0.3835,
+        "p95": 0.7748,
+        "max": 0.7823
+      },
+      "object_fraction_above_0_50": 0.13825,
+      "object_fraction_below_0_05": 0.0,
+      "bbox_px": [
+        309,
+        429,
+        1346,
+        470
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        309,
+        253,
+        429,
+        429
+      ],
+      "bbox_width_fraction": 0.6488,
+      "bbox_height_fraction": 0.0467,
+      "facet_luminance": {
+        "pixels": 5106,
+        "fraction_of_object": 0.13266,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 5106,
+          "mean": 0.7627,
+          "p05": 0.7278,
+          "p50": 0.7748,
+          "p95": 0.7793,
+          "fraction_below_0_05": 0.0
+        },
+        "near": {
+          "pixels": 2548,
+          "mean": 0.7629,
+          "p05": 0.7314,
+          "p50": 0.7748,
+          "p95": 0.7793,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 2558,
+          "mean": 0.7625,
+          "p05": 0.7274,
+          "p50": 0.7748,
+          "p95": 0.7793,
+          "fraction_below_0_05": 0.0
+        }
+      },
+      "coat_luminance": {
+        "pixels": 30106,
+        "fraction_of_object": 0.7822,
+        "mean": 0.3866,
+        "p05": 0.3824,
+        "p50": 0.3835,
+        "p95": 0.4157,
+        "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+      },
+      "wall_luminance": {
+        "pixels": 1369,
+        "fraction_of_object": 0.03557,
+        "mean": 0.7748,
+        "p05": 0.7711,
+        "p50": 0.7748,
+        "p95": 0.7779,
+        "fraction_below_0_03": 0.0,
+        "fraction_below_0_05": 0.0,
+        "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.6184,
+        "p50": 0.7551,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.4368,
+        "up": 0.4891,
+        "left": 0.4348,
+        "down": 0.489
+      },
+      "object_sector_spread": 0.1174,
+      "backdrop_luminance_mean": 0.0376,
+      "contact_shadow_ratio": 2.1889,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.1807
+    },
+    "spike_lods": {
+      "resolution": [
+        1600,
+        900
+      ],
+      "object_pixel_fraction": 0.14363,
+      "object_mean_rgb": [
+        0.4343,
+        0.428,
+        0.4358
+      ],
+      "object_luminance": {
+        "mean": 0.4299,
+        "std": 0.1248,
+        "p05": 0.3824,
+        "p50": 0.3835,
+        "p95": 0.7708,
+        "max": 0.8854
+      },
+      "object_fraction_above_0_50": 0.12426,
+      "object_fraction_below_0_05": 0.0,
+      "bbox_px": [
+        150,
+        200,
+        1525,
+        702
+      ],
+      "bbox_px_note": "left, top, right, bottom in image pixels, rows top-down",
+      "bbox_margins_px_lrtb": [
+        150,
+        74,
+        200,
+        197
+      ],
+      "bbox_width_fraction": 0.86,
+      "bbox_height_fraction": 0.5589,
+      "facet_luminance": {
+        "pixels": 18106,
+        "fraction_of_object": 0.08754,
+        "note": "pixels of chamfer facets (0.5 <= |N.z| < 0.95); near = image rows below the object's bbox centre (the camera-facing half in the hero)",
+        "all": {
+          "pixels": 18106,
+          "mean": 0.7332,
+          "p05": 0.6055,
+          "p50": 0.7551,
+          "p95": 0.7781,
+          "fraction_below_0_05": 0.0
+        },
+        "near": {
+          "pixels": 5625,
+          "mean": 0.7079,
+          "p05": 0.5974,
+          "p50": 0.7146,
+          "p95": 0.7748,
+          "fraction_below_0_05": 0.0
+        },
+        "far": {
+          "pixels": 12481,
+          "mean": 0.7446,
+          "p05": 0.6648,
+          "p50": 0.7563,
+          "p95": 0.7781,
+          "fraction_below_0_05": 0.0
+        }
+      },
+      "coat_luminance": {
+        "pixels": 170667,
+        "fraction_of_object": 0.8252,
+        "mean": 0.402,
+        "p05": 0.3824,
+        "p50": 0.3835,
+        "p95": 0.4301,
+        "note": "pixels of flat faces (|N.z| >= 0.95) that are not a bar's ground surfaces: a star's plate, a bar's up-facing faces - the coat under the same light (pack_consistency, like with like)"
+      },
+      "wall_luminance": {
+        "pixels": 4869,
+        "fraction_of_object": 0.02354,
+        "mean": 0.764,
+        "p05": 0.7476,
+        "p50": 0.7602,
+        "p95": 0.7781,
+        "fraction_below_0_03": 0.0,
+        "fraction_below_0_05": 0.0,
+        "note": "pixels of faces with |N.z| < 0.5 (rim, notch and hole walls, steep facet segments)"
+      },
+      "silhouette_band_luminance": {
+        "mean": 0.6219,
+        "p50": 0.6992,
+        "note": "outer 4 px of the silhouette; informational - the gate is wall_luminance"
+      },
+      "object_sector_luminance": {
+        "right": 0.4245,
+        "up": 0.4523,
+        "left": 0.4249,
+        "down": 0.4386
+      },
+      "object_sector_spread": 0.0639,
+      "backdrop_luminance_mean": 0.0442,
+      "contact_shadow_ratio": 2.448,
+      "contact_shadow_note": "backdrop luminance hugging the silhouette / well away from it",
+      "halo_luminance_4px": 0.1871
+    }
+  },
+  "render_rig": {
+    "hero_yaw_deg": 40.0,
+    "lod_strip_axis": "y",
+    "ring_lamps": 8,
+    "top_span_mm": [
+      150.0,
+      6.0
+    ],
+    "top_frame_mm": [
+      231.111,
+      130.0
+    ],
+    "top_px_per_mm": 6.9231,
+    "lod_strip_pitch_mm": 22.0,
+    "lod_strip_px_per_mm": 9.1733,
+    "wire_px": 1.1,
+    "hero_composition": {
+      "shift": [
+        0.066579,
+        0.004359
+      ],
+      "bbox_centre": [
+        0.5,
+        0.47
+      ],
+      "margins_lrbt": [
+        0.0502,
+        0.0502,
+        0.2544,
+        0.3144
+      ]
+    },
+    "hero_depth_of_field": {
+      "fstop": 80.037,
+      "focus_mm": 303.097,
+      "depth_range_mm": [
+        270.521,
+        334.092
+      ],
+      "max_coc_px": 1.5,
+      "target_max_coc_px": 1.5
+    },
+    "hero_wall_card": {
+      "strength": 0.9,
+      "colour": [
+        0.88,
+        0.9,
+        0.94
+      ],
+      "radius_mm": 119.106,
+      "visibility": "glossy rays only; top face emits, underside transparent"
+    },
+    "hero_top_panel": {
+      "power_w": 1.3,
+      "size_m": [
+        0.7,
+        0.7
+      ],
+      "elevation_deg": 80.0,
+      "azimuth_deg": 158.0,
+      "distance_m": 0.7,
+      "visibility": "glossy rays only (visible_diffuse off): the camera-facing chamfer facets' mirror direction"
+    },
+    "top_facet_band": {
+      "strength": 0.7,
+      "colour": [
+        0.92,
+        0.94,
+        0.98
+      ],
+      "elevation_deg": [
+        29.0,
+        45.0
+      ],
+      "radius_m": 0.36,
+      "visibility": "glossy rays only; rotationally symmetric cone band the 26.6 deg facets mirror when seen straight down"
+    },
+    "beauty_material": "M_Preview_Baked_SM_Shuriken_Spike",
+    "lod_grind_closeup": {
+      "path": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\spike_lodgrind.png",
+      "panels": 3,
+      "panel_px": [
+        533,
+        900
+      ],
+      "view": {
+        "elevation_deg": 21.0,
+        "azimuth_deg": -34.0,
+        "distance_m": 0.075,
+        "lens_mm": 105.0,
+        "target_back_m": 0.011
+      },
+      "target_mm": [
+        66.106,
+        0.0,
+        0.0
+      ],
+      "labels": [
+        "LOD0   92 tris   screen size > 0.150",
+        "LOD1   60 tris   screen size 0.052 - 0.150",
+        "LOD2   28 tris   screen size < 0.052"
+      ],
+      "material": "M_Preview_Baked_SM_Shuriken_Spike"
+    },
+    "lod_labels": [
+      "LOD0   92 tris\nscreen size > 0.150",
+      "LOD1   60 tris\nscreen size 0.052 - 0.150",
+      "LOD2   28 tris\nscreen size < 0.052"
+    ]
+  },
+  "render_gates": {
+    "beauty_source": "baked textures only (T_Shuriken_*_BC/_ORM/_N via a preview material)",
+    "hero_walls": {
+      "passed": true,
+      "p50": 0.223,
+      "p50_min": 0.06,
+      "fraction_below_0_03": 0.0,
+      "dark_fraction_max": 0.05
+    },
+    "hero_facets_near": {
+      "passed": true,
+      "side": "near",
+      "p50": 0.5841,
+      "p50_min": 0.16,
+      "fraction_below_0_05": 0.0,
+      "dark_fraction_max": 0.06
+    },
+    "hero_plate": {
+      "passed": true,
+      "p50": 0.5697,
+      "band": [
+        0.36,
+        0.64
+      ],
+      "mean": 0.5747,
+      "mean_band": [
+        0.38,
+        0.6
+      ],
+      "measured_on": "coat pixels (bar: like with like)",
+      "whole_object": {
+        "p50": 0.2715,
+        "mean": 0.3784,
+        "in_band": false,
+        "note": "information for a bar"
+      }
+    },
+    "top_facets": {
+      "passed": true,
+      "side": "all",
+      "p50": 0.7969,
+      "p50_min": 0.16,
+      "fraction_below_0_05": 0.0,
+      "dark_fraction_max": 0.06
+    },
+    "top_plate": {
+      "passed": true,
+      "p50": 0.4319,
+      "band": [
+        0.36,
+        0.64
+      ],
+      "mean": 0.4492,
+      "mean_band": [
+        0.38,
+        0.6
+      ],
+      "measured_on": "coat pixels (bar: like with like)",
+      "whole_object": {
+        "p50": 0.4319,
+        "mean": 0.4845,
+        "in_band": true,
+        "note": "information for a bar"
+      }
+    },
+    "passed": true
+  },
+  "blend": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Assets\\Shuriken.blend",
+  "engine_check": {
+    "status": "verified",
+    "matches_this_build": true,
+    "note": "Written 'pending' by the build. The Unreal 5.8 passes run on the exported bytes afterwards (UnrealCheck6: pass 1 import + sidecar, pass 2 fresh-process gates, pass 3 export of the saved asset + Blender round trip), and attach_engine_check.py writes the result here only when the SHA-256 of the FBX and sidecar Unreal imported equal fbx_sha256 / sidecar_sha256 below.",
+    "project": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealShuriken\\ShurikenValidation.uproject",
+    "scripts": [
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\uc6_common.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\pass1_import.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\pass2_reload.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\pass3_export_diag.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\roundtrip_compare.py",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\run_pass.ps1",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\attach_engine_check.py"
+    ],
+    "run_with": "SHURIKEN_FORM=spike",
+    "fbx_sha256": "159b5337cd675014af944ac42c04cdc336780a6da1e931bb3df2df2512448cce",
+    "sidecar_sha256": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7",
+    "gates": [
+      "engine LOD triangle counts equal the Blender counts exactly",
+      "LOD screen sizes read back as [1.0, 0.1501, 0.0525] in a fresh process",
+      "exactly one convex hull, both sockets at relative scale 1, bounds equal the measured size",
+      "LightMapCoordinateIndex 1 with a generated UV1 on every LOD",
+      "Unreal's own FBX export of the saved asset: hull and positions equal the shipped FBX",
+      "zero Warning or Error lines in the commandlet logs"
+    ],
+    "engine": "5.8.2-56702186+++UE5+Release-5.8",
+    "attached_by": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\attach_engine_check.py",
+    "attached": "2026-09-18T16:59:54",
+    "gates_passed": {
+      "1_lod_count_and_triangles_delta_0": true,
+      "2_exactly_one_convex_hull": true,
+      "3_grip_trail_scale_1_sane_cm": true,
+      "4_bounds_cm": true,
+      "5_screen_sizes_from_sidecar": true,
+      "6_lightmap_coordinate_index_1": true,
+      "7_zero_warning_error_log_lines": true,
+      "8_unreal_export_roundtrip_hull_positions_uv": true,
+      "9_verified_bytes_are_this_build": true
+    },
+    "sha256": {
+      "report": {
+        "fbx": "159b5337cd675014af944ac42c04cdc336780a6da1e931bb3df2df2512448cce",
+        "sidecar": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7",
+        "note": "FBX bytes change on every export (header timestamp, object UIDs); the Unreal evidence is tied to these exact bytes by this hash"
+      },
+      "imported_by_unreal": {
+        "fbx": "159b5337cd675014af944ac42c04cdc336780a6da1e931bb3df2df2512448cce",
+        "sidecar": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7"
+      },
+      "on_disk_now": {
+        "fbx": "159b5337cd675014af944ac42c04cdc336780a6da1e931bb3df2df2512448cce",
+        "sidecar": "9f2e9728b12dfa5ae52f5d939e5e6de11e4d9d3ca4faec8cbdba2b0a476837b7"
+      }
+    },
+    "pass2": {
+      "file_time": "2026-09-18T16:59:13",
+      "asset": "/Game/ShurikenCheck6/Spike1/SM_Shuriken_Spike.SM_Shuriken_Spike",
+      "lod_triangles": [
+        92,
+        60,
+        28
+      ],
+      "lod_vertices": [
+        136,
+        104,
+        56
+      ],
+      "triangle_delta": [
+        0,
+        0,
+        0
+      ],
+      "lod_screen_sizes": [
+        1.0,
+        0.1501,
+        0.0525
+      ],
+      "convex_hulls": 1,
+      "size_cm": [
+        15.0,
+        0.6,
+        0.6
+      ],
+      "sockets": [
+        {
+          "name": "Grip",
+          "location_cm": [
+            -3.0894,
+            0.0,
+            0.0
+          ],
+          "rpy": [
+            -0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Trail",
+          "location_cm": [
+            -7.0894,
+            0.0,
+            0.0
+          ],
+          "rpy": [
+            -0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "light_map_coordinate_index": 1,
+      "light_map_resolution": 64,
+      "material_slots": [
+        {
+          "slot": "M_Shuriken_Master",
+          "material": "/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial"
+        }
+      ]
+    },
+    "roundtrip": {
+      "lods": {
+        "LOD0": {
+          "position_two_sided_max_cm": 0.0,
+          "uv0_keyed_max_cm": 0.0,
+          "uv1_overlap_pixels_2048": 0
+        },
+        "LOD1": {
+          "position_two_sided_max_cm": 0.0,
+          "uv0_keyed_max_cm": 0.0,
+          "uv1_overlap_pixels_2048": 0
+        },
+        "LOD2": {
+          "position_two_sided_max_cm": 0.0,
+          "uv0_keyed_max_cm": 0.0,
+          "uv1_overlap_pixels_2048": 0
+        }
+      },
+      "unreal_hull": {
+        "verts_unique": 16,
+        "tris": 28,
+        "lod0_max_outside_cm": 0.0,
+        "size_cm": [
+          15.0,
+          0.6,
+          0.6
+        ]
+      },
+      "hull_vs_shipped_two_sided_cm": 0.0
+    },
+    "pass3_export": {
+      "export_ok": true,
+      "fbx_out": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\roundtrip\\SM_Shuriken_Spike_from_unreal.fbx",
+      "fbx_bytes": 40400
+    },
+    "log_warning_error_lines": {
+      "pass1": 0,
+      "pass2": 0,
+      "pass3": 0
+    },
+    "evidence": [
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\spike_pass1.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\spike_pass1.log",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\spike_pass2.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\spike_pass2.log",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\spike_pass3.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\spike_pass3.log",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\roundtrip_compare.json",
+      "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\blender_fbx_counts.json"
+    ]
+  },
+  "known_gaps": [
+    "The baked maps are 2048 px per form on a Smart UV layout at ~32 % coverage; the pack atlas (study 4: one 2K atlas, or 1K per star) needs hand-laid shells first. The Unreal side has no M_Shuriken_Master / MI_Shuriken_Blackened asset yet: the validation import runs with import_materials=False, so the slot binds to WorldGridMaterial until the pack's material is built and the three maps are assigned.",
+    "The FBX carries only UV0. UV1 (lightmap) exists only because the import generates it (Generate Lightmap UVs ON, src 0 -> dst 1, LightMapCoordinateIndex 1, measured in UnrealCheck5/6): the Fab description and import notes must say so, or a buyer importing with other settings gets no lightmap channel. LightMapResolution is left at Unreal's default 64.",
+    "Wear (a polished band along the edge land and satin steel over the rest of the grind, edge nicks, lightly brightened scallops), whole-face smears, micro-scratches, dirt specks, pits and the two sub-pixel rust specks are procedural in M_Shuriken_Master, and the roll-off toward the hole and the notch arcs is a normal-map dish; all of it reaches the engine only through the baked maps; the per-form numbers travel as object custom properties (shuriken_wear_from / _to, shuriken_points, shuriken_hub_r, shuriken_tip_r, shuriken_chamfer, shuriken_scallop_w, shuriken_hole_w, shuriken_centre_r, shuriken_land, shuriken_half_t, shuriken_wall_top, shuriken_rust1/2_*), which the FBX does not export (use_custom_props off), and the material reads four float point attributes the generator writes (shuriken_edge / _hole / _scallop: distance to the outline, the hole and the notch arcs; shuriken_grind: signed distance from the grind's plate line), which the FBX exporter does not carry either (only colour attributes export) - they matter only to the bake.",
+    "Knife grind (style pass 2): the cutting edges are ground to a 0.15 mm land, so the finished (ground) mass is well under the un-ground outline's; the study mass gate is evaluated on the un-ground plate (outline x thickness) and the ground mass is reported against the study min-max range (measured.mass_gate, measured.ground_mass_vs_study_range); the physics override is the ground mass. The gallery bands (render.PLATE_BAND / PLATE_MEAN_BAND) stay centred on the reference rendered through THIS rig (WorkFiles/shuriken/style_reference/ref_on_rig.py).",
+    "Unreal texture import: the ORM map must be imported with sRGB OFF and Compression Settings = Masks (Unreal cannot detect a mask map; a plain import decodes roughness 0.32 as 0.08 and the steel renders as a mirror); BC is sRGB / Default and the _N suffix is auto-detected (sRGB off, Normalmap, Flip Green OFF - the map is DirectX on disk). Scripts/shuriken/ue_import_textures.py imports, sets and verifies these flags; the report's textures.unreal_import block and the Fab import notes must repeat them.",
+    "LOD0 UV coverage is 13.9% of the square. On the four-point, sweeping the packer over 20 shape x margin combinations moved it only between 26.0% and 32.0%, so the packer is not the limit - Smart UV Project's island shapes are. Hand-laying the shells belongs to the pack-atlas pass.",
+    "Physics: the Mass in KG override (0.035 kg, the knife-ground LOD0 mass; study 4 table 0.037 kg) is recorded here only; it has to be set on the component in the Blueprint (see physics.applies).",
+    "Tail taper (20 mm to 3 mm) is the study's ESTIMATE, kept (see mass_check_spike.choice); the 0.3 mm arris round and the grip distance are modelling estimates. No flight or cord hole (antique spikes sometimes carry one).",
+    "The spike's LOD bands are its own (ceilings 150 / 100 / 48, no floor): study 4's 1,200-2,500 table is for stars.",
+    "Pack consistency compares the spike like with like: its coat pixels (up-facing faces) against the anchor forms' plate pixels; its whole-object gallery statistics are reported, not gated (half of a bar's silhouette is side face and polished point)."
+  ],
+  "mass_check_spike": {
+    "hand_check": {
+      "volume_mm3": 4500.0,
+      "mass_g": 35.3,
+      "text": "5400 - 600 (point pyramid) - 300 (tail frustum) = 4500 mm3"
+    },
+    "analytic_mm3": {
+      "prism 150 x 6 x 6": 5400.0,
+      "point removes (900 - 300)": 600.0,
+      "tail removes (720 - 420)": 300.0,
+      "un-ground outline": 4500.0
+    },
+    "analytic_outline_g": 35.325,
+    "measured_unground_mesh_mm3": 4500.000034,
+    "measured_unground_g": 35.325,
+    "formula_vs_mesh_mm3": 3.4e-05,
+    "target_g": 37.0,
+    "outline_minus_target_g": -1.675,
+    "gate": "PASS",
+    "choice": "KEPT the study's ESTIMATE tail (20 mm to 3 mm). The un-ground bar is 35.325 g, 1.675 g under the sourced 37 g and inside the +-2 g gate. Moving only the tail estimate to close the gap would need a 5.25 mm butt over the same 20 mm (a 1.08 deg taper per face): the tail would stop reading as the study's shorter second taper for a figure the gate already accepts. Real bars run 35-42 g (study 2.5), and a 6 mm section is nominal.",
+    "tail_end_for_37g_mm": 5.2466,
+    "finished_mesh_mm3": 4498.7678,
+    "finished_g": 35.3153,
+    "finished_note": "the finished bar = the outline minus the 0.3 mm arris round (4 x 0.3^2 (1 - pi/4) = 0.0773 mm2 of section for the true arc, the 4-chord round a little more) plus the tip flat's sliver (the facets end on a 0.15 mm square at 150 mm instead of a point: +7.688 mm3); it drives the physics override",
+    "centre_of_mass": {
+      "outline_from_butt_mm_analytic": 70.7833,
+      "outline_from_middle_mm_analytic": -4.2167,
+      "finished_from_butt_mm_mesh": 70.894323,
+      "finished_from_middle_mm_mesh": -4.105676,
+      "origin_residual_mm": [
+        2e-06,
+        -0.0,
+        0.0
+      ],
+      "note": "the origin is the finished LOD0's centre of mass by volume; it sits 4.11 mm toward the butt of the geometric middle (the un-ground outline's: 4.22 mm) because the 25 mm point removes 600 mm3 and the 20 mm tail only 300; the tip flat moves it 0.11 mm back toward the point"
+    }
+  },
+  "sockets_design": {
+    "Grip": "on the long axis 40 mm from the butt (ESTIMATE), +X toward the point: the recorded grip lays the dart along the palm, held by three fingers with the thumb securing the butt, sliding out through the fingers on release (study 4 [70]); 40 mm is the middle of three fingers laid along the bar from the butt",
+    "Trail": "at the butt, on the long axis, +X toward the point: a ribbon or spark emitter trails from the tail",
+    "same_names_as_every_form": true
+  },
+  "throwing": {
+    "method": "jiki-daho (direct throw): point first, little or no spin",
+    "source": "SHURIKEN_STUDY.md 4, Throwing ([3][23]); the half-turn hanten-daho is the alternative for a bar",
+    "for_the_blueprint": "ProjectileMovementComponent along +X with the point leading; no RotatingMovement about Z (that is the flat stars' kaiten-daho). The centre of mass sits 4.11 mm toward the butt of the middle, at the origin, so a half-turn throw pivots about the origin"
+  },
+  "originality": {
+    "basis": "historical bo-shuriken (Katori / Meifu Shinkage pattern), public domain (study 5); study 2.5 numbers",
+    "shape": "a plain straight square bar, 25 mm four-facet point, 20 mm tail taper, no flight, no cord hole, no engraving; generic, no franchise design",
+    "stamp": "none (study 5; any future mark must be an invented glyph)",
+    "franchise_strings": "none in any object, mesh, material, texture or file name; qa_check no_franchise_strings passed on 3 of 3 objects"
+  },
+  "lod_choice": {
+    "lod0": "LOD0: the four long arrises rounded (0.3 mm, 4 chords, smooth-shaded) running out into the point and tail facets; point facets, 0.15 mm tip flat, tail taper, butt",
+    "lod1": "LOD1: the arris round halved to 2 chords; everything else as LOD0",
+    "lod2": "LOD2: square arrises (the round is ~0.1 px at the ~2.5 m switch); point, tip flat, tail, butt kept",
+    "bands": [
+      [
+        0,
+        150
+      ],
+      [
+        0,
+        100
+      ],
+      [
+        0,
+        48
+      ]
+    ],
+    "why_so_few": "study 2.5: 'at 1:25 the silhouette is nearly all straight line, so the triangles belong at the point' - the faces and the rounds are single planar strips; the vertices sit at the point, the tip flat and the two run-outs. Nothing is padded to reach a star's band.",
+    "screen_sizes": "[1.0, 0.1501, 0.0525] = the pack's 1.0 / 0.10 / 0.035 scaled by Unreal's bounds radius 75.030 / 50 mm, so the switches stay at ~0.89 m and ~2.54 m"
+  },
+  "gallery": {
+    "lead_image": "Renders/Shuriken/spike_persp.png",
+    "order": [
+      "spike_persp.png",
+      "spike_top.png",
+      "spike_lodgrind.png",
+      "spike_wire.png",
+      "spike_lods.png"
+    ],
+    "reason": "lead with the hero (the bar turned 40 deg about Z for the shot only, so it lies across the frame with the polished point toward the viewer); the top view keeps the pack's common scale and shows the bar along +X, point right"
+  },
+  "style_on_a_bar": {
+    "material": "M_Shuriken_Master, bar mode (shuriken_wear_axis = 1): the pack recipe, only its inputs switched",
+    "coat": "the four faces, the tail facets and the butt: satin coat linear ~0.10, metallic 1.0, roughness 0.34, smears, dirt-filled clustered micro-scratches laid in each face's own plane, near-invisible pits, two sub-pixel rust specks (top face toward the point, bottom face toward the butt)",
+    "arrises": "0.3 mm round (4 chords at LOD0, smooth-shaded), polished; a worn polished band on the faces along it that widens from 0.08 mm at the butt to 0.30 mm toward the point, nicks chipped into the faces along it, more of them toward the point (the polished highlight)",
+    "point": "ground bare steel, the stars' two-finish grind: polished along the four ridges (the point's cutting edges, the pack's 0.7 mm band) and over the last 10 mm to the 0.15 mm tip flat, satin toward the grind line. The brief asked for 'its four facets polished'; polished over the full 25 mm they rendered as a white arrowhead (WorkFiles/shuriken/spike/iteration/polished_*), the look the pass-2 review rejected on the stars' tips, so the point carries the same grind polish as a star's point",
+    "wear": "along the long axis toward the point (nick density, the arris band, the tip polish), not by radius",
+    "gallery": "hero: the object is turned 40 deg about Z for the shot only (camera, lights and floor unchanged), so the bar lies across the frame; top view unturned at the pack's common scale; LOD strip stacked",
+    "gate_adaptations": [
+      "hero_plate / top_plate: a bar reads its COAT pixels (up-facing coat faces, what a star's plate is); the whole object is reported beside it (render_gates.*.whole_object)",
+      "pack_consistency: the spike's coat pixels against PACK_COAT_ANCHOR (the anchor forms' own plate pixels); its whole-object figures are information (pack_consistency.bar_whole_object)"
+    ]
+  },
+  "mass_check": {
+    "evaluated_on": "outline (un-ground plate)",
+    "outline_g": 35.325,
+    "target_g": 37.0,
+    "within_tolerance": true,
+    "ground_g": 35.3153,
+    "ground_vs_study_range": {
+      "ground_mass_g": 35.3153,
+      "study_min_max_g": [
+        35.0,
+        42.0
+      ],
+      "study_typical_g": [
+        37.0,
+        38.0
+      ],
+      "within_min_max": true,
+      "within_typical": false,
+      "note": "reported, not gated (decision B)"
+    },
+    "measured_g": 35.3153
+  },
+  "knife_shading": {
+    "gate_deg": 0.5,
+    "flat_knife_facets_max_corner_normal_dev_deg": {
+      "SM_Shuriken_Spike_LOD0": 0.0154,
+      "SM_Shuriken_Spike_LOD1": 0.0024,
+      "SM_Shuriken_Spike_LOD2": 0.0201
+    },
+    "curved_side_facets_max_corner_normal_dev_deg": {
+      "SM_Shuriken_Spike_LOD0": 20.0969,
+      "SM_Shuriken_Spike_LOD1": 22.5,
+      "SM_Shuriken_Spike_LOD2": 0.0
+    },
+    "warp_mm": {
+      "SM_Shuriken_Spike_LOD0": 0.0,
+      "SM_Shuriken_Spike_LOD1": 0.0,
+      "SM_Shuriken_Spike_LOD2": 0.0
+    },
+    "passed": true,
+    "note": "max angle between a stored corner normal and its own face normal over the knife facets (flat facets shaded flat: creases above geometry.KNIFE_CREASE_DEG inside a knife class are hard edges). Curved-side facets (senban) are smooth within their side by design and bounded by half a chord's turn; they are reported, not gated."
+  },
+  "gates": {
+    "knife_shading": true,
+    "outline_mass": true,
+    "qa_check": true,
+    "lod_bands": true,
+    "uv_consistency": true,
+    "textures_baked": true,
+    "render_gates": true
+  },
+  "seconds": 379.77,
+  "verification": {
+    "checks": {
+      "qa_check_55": true,
+      "lod_bands": true,
+      "outline_mass_gate": true,
+      "uv_consistency": true,
+      "knife_shading": true,
+      "render_gates_5": true,
+      "pack_consistency": true,
+      "pack_passed": true,
+      "frozen_regression_post_six_point": true,
+      "frozen_regression_post_restyle2": true,
+      "material_noop_cpu_bitwise": true,
+      "silhouette_all_unchanged": true,
+      "unreal_uc6_all_forms_verified": true,
+      "unreal_uc8_all_forms_verified": true,
+      "engine_check_this_build": true
+    },
+    "all_gates_passed": true,
+    "frozen_forms": {
+      "vs_post_six_point": {
+        "forms": [
+          "four_point",
+          "eight_point",
+          "square_plate",
+          "six_point"
+        ],
+        "passed": true,
+        "summary": {
+          "four_point": {
+            "blend": true,
+            "fbx": true,
+            "sidecar": true,
+            "report": true,
+            "textures_identical": false
+          },
+          "eight_point": {
+            "blend": true,
+            "fbx": true,
+            "sidecar": true,
+            "report": true,
+            "textures_identical": false
+          },
+          "square_plate": {
+            "blend": true,
+            "fbx": true,
+            "sidecar": true,
+            "report": true,
+            "textures_identical": false
+          },
+          "six_point": {
+            "blend": true,
+            "fbx": true,
+            "sidecar": true,
+            "report": true,
+            "textures_identical": false
+          },
+          "material_export_scalars_identical": true
+        },
+        "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\regression\\regression_spike_frozen.json"
+      },
+      "vs_post_restyle2": {
+        "forms": [
+          "four_point",
+          "eight_point",
+          "square_plate"
+        ],
+        "passed": true,
+        "summary": {
+          "four_point": {
+            "blend": true,
+            "fbx": true,
+            "sidecar": true,
+            "report": true,
+            "textures_identical": false
+          },
+          "eight_point": {
+            "blend": true,
+            "fbx": true,
+            "sidecar": true,
+            "report": true,
+            "textures_identical": false
+          },
+          "square_plate": {
+            "blend": true,
+            "fbx": true,
+            "sidecar": true,
+            "report": true,
+            "textures_identical": false
+          },
+          "material_export_scalars_identical": true
+        },
+        "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\regression\\regression_spike_vs_post_restyle2.json"
+      },
+      "maps_pixel_diff": {
+        "vs_post_six_point": {
+          "max_abs_8bit": 1,
+          "max_pixels_differing": 46
+        },
+        "vs_post_restyle2": {
+          "max_abs_8bit": 1,
+          "max_pixels_differing": 53
+        },
+        "note": "GPU (OptiX) bake noise: two identical-source builds differ by the same 1/255 on a few dozen pixels (six_point_maint/texdiff_all_vs_pre_maint.json); the material itself is proven unchanged by the CPU bake below"
+      },
+      "material_noop_cpu_bake": {
+        "all_bitwise_identical": true,
+        "size": 512,
+        "library_old_new": [
+          "3.7.1",
+          "3.8.0"
+        ],
+        "forms": {
+          "SM_Shuriken_FourPoint": {
+            "Base Color": true,
+            "Roughness": true,
+            "Metallic": true,
+            "Normal": true
+          },
+          "SM_Shuriken_SquarePlate": {
+            "Base Color": true,
+            "Roughness": true,
+            "Metallic": true,
+            "Normal": true
+          },
+          "SM_Shuriken_SixPoint": {
+            "Base Color": true,
+            "Roughness": true,
+            "Metallic": true,
+            "Normal": true
+          },
+          "SM_Shuriken_EightPoint": {
+            "Base Color": true,
+            "Roughness": true,
+            "Metallic": true,
+            "Normal": true
+          }
+        },
+        "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\spike\\material_noop_check.json"
+      }
+    },
+    "silhouette": {
+      "all_unchanged": true,
+      "spike": {
+        "SM_Shuriken_Spike_LOD0": {
+          "unchanged": true,
+          "xor_pixels": 0,
+          "extents_mm": [
+            149.999999,
+            6.0
+          ]
+        },
+        "SM_Shuriken_Spike_LOD1": {
+          "unchanged": true,
+          "xor_pixels": 0,
+          "extents_mm": [
+            149.999999,
+            6.0
+          ]
+        },
+        "SM_Shuriken_Spike_LOD2": {
+          "unchanged": true,
+          "xor_pixels": 0,
+          "extents_mm": [
+            149.999999,
+            6.0
+          ]
+        }
+      },
+      "reference": "frozen forms: their pass-1 / un-ground references; the spike: the same bar with square arrises",
+      "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\spike\\silhouette.json"
+    },
+    "coat_interior_same_material_read": {
+      "top": {
+        "reference": {
+          "fine_dark": 0.0028,
+          "core_mean": 0.4357
+        },
+        "four_point": {
+          "fine_dark": 0.0025,
+          "core_mean": 0.4217
+        },
+        "eight_point": {
+          "fine_dark": 0.0034,
+          "core_mean": 0.4238
+        },
+        "square_plate": {
+          "fine_dark": 0.0031,
+          "core_mean": 0.4255
+        },
+        "six_point": {
+          "fine_dark": 0.0032,
+          "core_mean": 0.4234
+        },
+        "spike": {
+          "fine_dark": 0.003,
+          "core_mean": 0.4248
+        }
+      },
+      "hero": {
+        "reference": {
+          "fine_dark": 0.0056,
+          "core_mean": 0.5407
+        },
+        "four_point": {
+          "fine_dark": 0.0049,
+          "core_mean": 0.5502
+        },
+        "eight_point": {
+          "fine_dark": 0.0043,
+          "core_mean": 0.5558
+        },
+        "square_plate": {
+          "fine_dark": 0.0038,
+          "core_mean": 0.5542
+        },
+        "six_point": {
+          "fine_dark": 0.0047,
+          "core_mean": 0.5538
+        },
+        "spike": {
+          "fine_dark": 0.0033,
+          "core_mean": 0.5557
+        }
+      },
+      "file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\spike\\coat_interior_metrics.json"
+    },
+    "pack_consistency_spike": {
+      "hero": {
+        "spike": {
+          "p50": {
+            "offset": 0.0098,
+            "headroom": 0.0402
+          },
+          "mean": {
+            "offset": 0.0244,
+            "headroom": 0.0256
+          }
+        }
+      },
+      "top": {
+        "spike": {
+          "p50": {
+            "offset": 0.0023,
+            "headroom": 0.0477
+          },
+          "mean": {
+            "offset": 0.0256,
+            "headroom": 0.0244
+          }
+        }
+      }
+    },
+    "unreal": {
+      "uc6": {
+        "four_point": true,
+        "eight_point": true,
+        "square_plate": true,
+        "six_point": true,
+        "spike": true
+      },
+      "uc6_dest": "/Game/ShurikenCheck6/Spike1",
+      "uc6_out": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck6\\run_all_spike.out",
+      "uc8": {
+        "four_point": true,
+        "eight_point": true,
+        "square_plate": true,
+        "six_point": true,
+        "spike": true
+      },
+      "uc8_dest": "/Game/ShurikenCheck8/Spike1",
+      "uc8_out": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\UnrealCheck8\\run_uc8_spike.out",
+      "uc8_spike_gates": {
+        "M1_lods_3_triangles_equal_blender": true,
+        "M2_exactly_one_convex_hull": true,
+        "M3_grip_trail_scale_1_match_sidecar_and_blend": true,
+        "M4_bounds_cm_match_spec": true,
+        "M5_lod_screen_sizes_applied": true,
+        "M6_lightmap_index_1_generated_0_to_1": true,
+        "M7_one_slot_one_section_nanite_off": true,
+        "R1_stored_hull_identical_to_shipped_ucx": true,
+        "R1_lod0_0cm_outside_hull": true,
+        "R2_positions_within_1e-6cm_triangles_equal_handedness": true,
+        "R3_uv1_inside_0_1_zero_overlap": true,
+        "S_bytes_imported_equal_disk_and_report": true,
+        "L_zero_warning_error_lines_all_processes": true
+      },
+      "fbx_sha256": "159b5337cd675014af944ac42c04cdc336780a6da1e931bb3df2df2512448cce"
+    },
+    "gallery": {
+      "style_comparison": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\style_comparison.png",
+      "modern_line_sheet": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Shuriken\\modern_line_sheet.png",
+      "iteration": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\spike\\iteration"
+    },
+    "regression_baseline_for_the_next_form": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\shuriken\\regression\\post_spike"
+  }
+}

@@ -1,0 +1,103 @@
+{
+ "schema": "ninjapack.recolour_constants/1",
+ "item": "PaperBomb",
+ "generated": "2026-09-26",
+ "generator": {
+  "script": "Scripts/unreal/materials/maps/derive_constants.py",
+  "script_sha256": "2da0e9c7023c2c4d1e4d14e396ef6cc3800a1555d1356af7242e345b6cb4f847",
+  "twin": "Scripts/unreal/materials/maps/np_twin.py",
+  "twin_sha256": "738545ec678088158dea86ddf5ff786941df07b9537d745f30a17ebac9c4b66a",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "2.0.0",
+  "blender": "5.2.0 LTS"
+ },
+ "source": {
+  "recolour_maps": "Exports/PaperBomb/Textures/Recolour/recolour_maps.json",
+  "sha256": "ae6f95b7e8e678d0f1f27c528d4fb4fdd9f9d20cc51a36122aaed34028786bca"
+ },
+ "merge_rule": "np_spec.py: params here override recolour_maps.json params of the same instance",
+ "parts": {
+  "Tag": {
+   "instance": "MI_PaperBomb_Tag",
+   "master": "M_PaperInk_Master",
+   "params": {
+    "Paper Colour": [
+     0.911999418,
+     0.751970581,
+     0.49905668,
+     1.0
+    ],
+    "Black Ink Colour": [
+     0.00243034,
+     0.002732198,
+     0.002128483,
+     1.0
+    ],
+    "Red Ink Colour": [
+     0.589361623,
+     0.008714499,
+     0.003522249,
+     1.0
+    ],
+    "Paper Weight Scale": 1.3487758541856572,
+    "Black Ink Dry Paper Mix": 0.008909181325541035,
+    "Black Ink Dry Gain": [
+     0.9493199554155087,
+     0.9992241273703176,
+     1.2508186807476926
+    ],
+    "Red Ink Dry Value Scale": 0.82,
+    "Red Ink Pool Saturation": 0.3,
+    "Red Ink Pool Gain": [
+     0.08920005669425643,
+     0.11595548789725421,
+     0.08788258523716885
+    ],
+    "Albedo Ceiling": 0.962,
+    "Paper Colour Limit": 0.91201,
+    "Red Ink Pool Default Saturation": 0.9940236200279366
+   },
+   "derivation": {
+    "paper_weight_p999_maxchannel": 1.2088664626778027,
+    "paper_weight_max": 1.3487758541856572,
+    "paper_colour_limit_rule": 0.79579,
+    "paper_colour_limit_raised_to_default": true,
+    "derived_default": {
+     "PaperColour_e": [
+      0.911999418,
+      0.751970581,
+      0.49905668
+     ],
+     "BlackDry": [
+      0.009999999560186289,
+      0.009399999744691256,
+      0.008200000046686693
+     ],
+     "RedDry": [
+      0.3787019881339556,
+      0.006547660945278903,
+      0.0028720471279651697
+     ],
+     "RedPool": [
+      0.02399999999322858,
+      0.01099999997516045,
+      0.008199999977150024
+     ]
+    }
+   },
+   "gates": {
+    "default_equals_v1": {
+     "max_abs": 0.0,
+     "pass": true
+    },
+    "paper_default_below_limit": {
+     "max3": 0.911999418,
+     "limit": 0.91201,
+     "pass": true
+    }
+   },
+   "pass": true
+  }
+ },
+ "pass": true
+}

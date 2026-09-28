@@ -1,0 +1,168 @@
+{
+  "fbx": "SM_Flashbang.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [
+    {
+      "socket": "Flash",
+      "fbx_node": "SOCKET_SM_Flashbang_LOD0_Flash",
+      "mesh": "SM_Flashbang_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        6.6924
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Grip",
+      "fbx_node": "SOCKET_SM_Flashbang_LOD0_Grip",
+      "mesh": "SM_Flashbang_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        6.9676
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "LeverHinge",
+      "fbx_node": "SOCKET_SM_Flashbang_LOD0_LeverHinge",
+      "mesh": "SM_Flashbang_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        1.8,
+        0.0,
+        16.064
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Pin",
+      "fbx_node": "SOCKET_SM_Flashbang_LOD0_Pin",
+      "mesh": "SM_Flashbang_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        1.54,
+        1.695,
+        15.4616
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 90.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Throw",
+      "fbx_node": "SOCKET_SM_Flashbang_LOD0_Throw",
+      "mesh": "SM_Flashbang_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.08,
+        0.03,
+        7.22
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    }
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.1744,
+    0.0611
+  ],
+  "mass_kg": 0.3,
+  "use_ccd": true,
+  "parts": {
+    "PullRing": {
+      "mesh": "SM_Flashbang_PullRing",
+      "attach_socket": "Pin",
+      "relative_transform": "identity",
+      "pull_axis": "socket +X",
+      "pin_travel_mm": 23.08,
+      "mass_kg": 0.008
+    },
+    "Lever": {
+      "mesh": "SM_Flashbang_Lever",
+      "attach_socket": "LeverHinge",
+      "relative_transform": "identity",
+      "open_axis": "socket Y",
+      "open_sign_ue": "+pitch",
+      "release_angle_deg": 100,
+      "mass_kg": 0.015
+    }
+  },
+  "material": {
+    "slots": [
+      "0 M_Flashbang_Paint -> MI_Flashbang_Paint (M_Fabric_Master, Metal From ORM ON)",
+      "1 M_Flashbang_Steel -> MI_Flashbang_Steel (M_Steel_Master)"
+    ],
+    "textures": {
+      "BC": "T_Flashbang_BC (sRGB)",
+      "ORM": "T_Flashbang_ORM (linear: R AO, G roughness, B metallic 0/1)",
+      "N": "T_Flashbang_N (DirectX, flip green OFF)",
+      "Paint_Detail16": "T_Flashbang_Paint_Detail16 (linear G16, the recolour detail)"
+    },
+    "paint_default_colour_linear": [
+      0.071395,
+      0.071395,
+      0.033912
+    ]
+  }
+}

@@ -1,0 +1,131 @@
+{
+ "asset": "/Game/HeelsCheck/CR_HeelPose",
+ "status": "ok",
+ "errors": [],
+ "link_failures": [],
+ "default_failures": [],
+ "constants": {
+  "l": {
+   "heel": [
+    -7.2543,
+    -0.8482,
+    -1.5585
+   ],
+   "ballc": [
+    -6.8394,
+    14.0122,
+    -3.5443
+   ],
+   "sole": [
+    0.3642,
+    1.8196,
+    -3.2276
+   ],
+   "tip": [
+    -15.4536,
+    3.1602,
+    -1.3427
+   ]
+  },
+  "r": {
+   "heel": [
+    7.255,
+    0.8485,
+    1.5544
+   ],
+   "ballc": [
+    6.8394,
+    -14.0165,
+    3.5416
+   ],
+   "sole": [
+    -0.371,
+    -1.8235,
+    3.2273
+   ],
+   "tip": [
+    15.4536,
+    -3.1602,
+    1.3427
+   ]
+  }
+ },
+ "bones_imported": 342,
+ "local_forward_in_foot": {
+  "l": [
+   0.03154662195318447,
+   0.9992259207097058,
+   -0.023493360023283283
+  ],
+  "r": [
+   -0.03154686484382144,
+   -0.999230055499713,
+   0.023311995422258883
+  ]
+ },
+ "nodes": 205,
+ "exec_chain": [
+  "ForwardSolve",
+  "Set_PelvisLift",
+  "Set_pelvis",
+  "IK_leg_l",
+  "IK_leg_r",
+  "Set_foot_l",
+  "Set_ball_l",
+  "Set_foot_r",
+  "Set_ball_r"
+ ],
+ "status_after_compile": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+ "saved": true,
+ "events": [
+  "Forwards Solve"
+ ],
+ "self_test": {
+  "execute_returns": [
+   "True",
+   "True",
+   "True"
+  ],
+  "pelvis_lift_var": "7.045380",
+  "pelvis_dz_cm": 7.045379638671875,
+  "l": {
+   "foot_rotation_deg": 33.67740200471753,
+   "ankle_cm": [
+    14.451960297430253,
+    6.478510040433751,
+    14.381219615869503
+   ],
+   "ankle_expected_cm": [
+    14.452000000000002,
+    6.476999999999999,
+    14.435999999999998
+   ],
+   "ankle_error_mm": 0.5480120695651006,
+   "shoe_heel_tip_z_mm": -0.5358853302780275,
+   "shoe_ball_sole_z_mm": -0.555433240766372,
+   "ball_component_rotation_deg": 3.000000083484193
+  },
+  "r": {
+   "foot_rotation_deg": 33.67957741996811,
+   "ankle_cm": [
+    -14.45163054456382,
+    6.479872571717561,
+    14.381869733597046
+   ],
+   "ankle_expected_cm": [
+    -14.451,
+    6.478000000000001,
+    14.435999999999998
+   ],
+   "ankle_error_mm": 0.5416631658271508,
+   "shoe_heel_tip_z_mm": -0.5256717338847317,
+   "shoe_ball_sole_z_mm": -0.5519337581710504,
+   "ball_component_rotation_deg": 3.000000083483221
+  },
+  "expected": {
+   "foot_pitch_deg": 33.6693,
+   "pelvis_lift_cm": 7.0996,
+   "note": "soft clamp adds ~0.007 deg; heel tip is the built top-lift (README), ball sole from heel_pose.json"
+  }
+ }
+}

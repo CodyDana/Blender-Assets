@@ -1,0 +1,448 @@
+{
+  "schema": "ninjapack.skeletal_prop/1",
+  "fbx": "SK_Fan_Tassel.fbx",
+  "pipeline_module": "1.0.0",
+  "axes": {
+    "blender": "armature space, mm, right-handed, Z up",
+    "unreal": "component space, cm, left-handed (Blender y flipped), Z up"
+  },
+  "asset": "SK_Fan_Tassel",
+  "skeleton": "SK_Fan_Tassel_Skeleton",
+  "bones": [
+    "tassel_root",
+    "cord_01",
+    "cord_02",
+    "knot",
+    "skirt_01",
+    "skirt_02"
+  ],
+  "root_bone": "root",
+  "lod_files": [
+    "SK_Fan_Tassel.fbx",
+    "SK_Fan_Tassel_LOD1.fbx",
+    "SK_Fan_Tassel_LOD2.fbx"
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.1207,
+    0.0423
+  ],
+  "attach": {
+    "to": "SK_Fan",
+    "socket": "Tassel"
+  },
+  "physics_bodies": [
+    {
+      "bone": "tassel_root",
+      "physics_type": "Kinematic",
+      "consider_for_bounds": true,
+      "mass_kg": 0.001,
+      "elements": [
+        {
+          "shape": "sphere",
+          "centre_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "radius_mm": 1.5,
+          "collision": false,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              0.0,
+              -0.0,
+              0.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ],
+      "role": "anchor at the fan's eyelet"
+    },
+    {
+      "bone": "cord_01",
+      "physics_type": "Default",
+      "consider_for_bounds": true,
+      "mass_kg": 0.0006,
+      "elements": [
+        {
+          "shape": "capsule",
+          "centre_mm": [
+            0.0,
+            0.0,
+            -12.025
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "radius_mm": 1.45,
+          "length_mm": 13.15,
+          "axis": "Z",
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              0.0,
+              -0.0,
+              -1.2025
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "bone": "cord_02",
+      "physics_type": "Default",
+      "consider_for_bounds": true,
+      "mass_kg": 0.0006,
+      "elements": [
+        {
+          "shape": "capsule",
+          "centre_mm": [
+            0.0,
+            0.0,
+            -28.075000000000003
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "radius_mm": 1.45,
+          "length_mm": 13.15,
+          "axis": "Z",
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              0.0,
+              -0.0,
+              -2.8075
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "bone": "knot",
+      "physics_type": "Default",
+      "consider_for_bounds": true,
+      "mass_kg": 0.0006,
+      "elements": [
+        {
+          "shape": "capsule",
+          "centre_mm": [
+            0.0,
+            0.0,
+            -42.18000000000001
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "radius_mm": 4.5,
+          "length_mm": 3.16,
+          "axis": "Z",
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              0.0,
+              -0.0,
+              -4.218
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "bone": "skirt_01",
+      "physics_type": "Default",
+      "consider_for_bounds": true,
+      "mass_kg": 0.0006,
+      "elements": [
+        {
+          "shape": "capsule",
+          "centre_mm": [
+            0.0,
+            0.0,
+            -65.9775
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "radius_mm": 6.0,
+          "length_mm": 23.435,
+          "axis": "Z",
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              0.0,
+              -0.0,
+              -6.59775
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "bone": "skirt_02",
+      "physics_type": "Default",
+      "consider_for_bounds": true,
+      "mass_kg": 0.0006,
+      "elements": [
+        {
+          "shape": "capsule",
+          "centre_mm": [
+            0.0,
+            0.0,
+            -101.41250000000001
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "radius_mm": 6.0,
+          "length_mm": 23.435,
+          "axis": "Z",
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              0.0,
+              -0.0,
+              -10.14125
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "simulation": "AnimDynamics chain (Bound Bone tassel_root, Chain End skirt_02) or a Rigid Body node on this physics asset; it must hang under gravity",
+  "materials": {
+    "M_Fan_Tassel": {
+      "slot": 0,
+      "master": "M_Fabric_Master",
+      "textures": {
+        "BC": "T_Fan_Tassel_BC",
+        "ORM": "T_Fan_Tassel_ORM",
+        "N": "T_Fan_Tassel_N",
+        "Detail": "T_Fan_Tassel_Detail"
+      },
+      "tint_default_linear": [
+        0.007144,
+        0.00903,
+        0.013495
+      ],
+      "detail_bias_default": 0.839834,
+      "detail_scale_default": 0.287213,
+      "specular_scale": 0.5
+    }
+  },
+  "mass_kg": 0.003
+}

@@ -1,0 +1,229 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "SnowFlower",
+ "generated": "2026-09-27",
+ "generator": {
+  "script": "Scripts/unreal/materials/maps/make_snowflower_recolour_maps.py",
+  "script_sha256": "ab7f9aee3162b954fe13216d690fc2283176634ee59871f8f4a2d2c29db6adcf",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "1.0.0-snowflower",
+  "blender": "5.2.0 LTS"
+ },
+ "sidecar": {
+  "files": [
+   "Exports/SnowFlower/v4/SM_SnowFlower.sockets.json",
+   "Exports/SnowFlower/v4/SM_SnowFlower_Sheath.sockets.json"
+  ]
+ },
+ "maps": {
+  "T_SnowFlower_Wrap_Detail16": {
+   "file": "Exports/SnowFlower/v4/Textures/Recolour/T_SnowFlower_Wrap_Detail16.png",
+   "sha256": "1d3b1cd9965814abbf6cf06aa8579418d8fef52d85de215d5ec855e6024b2f98",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/SnowFlower/v4/Textures/T_SnowFlower_Wrap_Detail.png",
+    "sha256": "76ae0dbfd2515c4482f1167e05cf17f7c426f1df69375c99e60d45c31880ac44",
+    "stored_levels": 256
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8 / 255)); lossless (one code per 8-bit level)",
+   "gates": {
+    "lossless_back_to_8bit": true
+   }
+  },
+  "T_SnowFlower_Sheath_Lacquer_Detail16": {
+   "file": "Exports/SnowFlower/v4/Textures/Recolour/T_SnowFlower_Sheath_Lacquer_Detail16.png",
+   "sha256": "636dec43814ef520389cf6abbe3d8864a56a5dc1f49554c8017f006d36abc829",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/SnowFlower/v4/Textures/T_SnowFlower_Sheath_Lacquer_Detail.png",
+    "sha256": "c8101f0e05b8d9e37bf1f39a1783c065c80da5a18c0e26bf400d81bac771064b",
+    "stored_levels": 256
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8 / 255)); lossless (one code per 8-bit level)",
+   "gates": {
+    "lossless_back_to_8bit": true
+   }
+  }
+ },
+ "parts": {
+  "Grip": {
+   "slot_material": "M_SnowFlower_Grip",
+   "instance": "MI_SnowFlower_Grip",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_SnowFlower_Wrap_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/SnowFlower/v4/Textures/T_SnowFlower_Wrap_BC.png",
+    "sha256": "abdd6a9140b6f9a6bcec50025d8ad3bf6572d6f75d73d6f61a488ce7b985815b"
+   },
+   "params": {
+    "Colour": [
+     0.017273,
+     0.017273,
+     0.019012,
+     1.0
+    ],
+    "Detail Bias": 0.5768720471338432,
+    "Detail Scale": 0.9861501210216674,
+    "Detail Mean": 0.9931986155434382,
+    "Detail Highlight Ratio": 1.545518546218446,
+    "Detail Moments Low": [
+     0.5942106246948242,
+     -0.10710972923686575,
+     0.02187418091200398,
+     -0.0024220035685284247
+    ],
+    "Detail Moments High": [
+     0.4057893753051758,
+     0.0718245912250871,
+     0.00811261054722015,
+     0.0009189656645210431
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9
+   },
+   "n_range": [
+    0.5768720471338432,
+    1.5630221681555105
+   ],
+   "fraction_n_le_1": 0.5942106246948242,
+   "moment_samples": {
+    "c": [
+     0.0,
+     0.5,
+     1.0,
+     1.5
+    ],
+    "low": [
+     0.5942106246948242,
+     0.5458215548583263,
+     0.506553072801434,
+     0.4745886758477511
+    ],
+    "high": [
+     0.4057893753051758,
+     0.4438446942625895,
+     0.48664554274200406,
+     0.5348811449918103
+    ]
+   },
+   "builder_constants": {
+    "a_lo": 0.01003696582193002,
+    "a_hi": 0.027194938910007474,
+    "tint_linear": [
+     0.017273403704166412,
+     0.017273403704166412,
+     0.019012222066521645
+    ],
+    "report": "WorkFiles/SnowFlower/v4/sword_build/maps_report.json"
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour (the buyer's one colour); default = the baked part's mean linear albedo"
+   },
+   "note": "the sword's two-cord grip wrap (near-black silk)",
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)): Colour = the part's mean linear albedo, Bias = a_lo / lum(Colour), Scale = (a_hi - a_lo) / lum(Colour), so the default reproduces the baked luminance with the mean chroma. The v1 fields are recolour_common.fabric_constants over every texel of the Detail16; recolour_constants.json (v2) is written by Scripts/unreal/materials/maps/derive_constants_snowflower.py"
+  },
+  "Sheath_Lacquer": {
+   "slot_material": "M_SnowFlower_Sheath_Lacquer",
+   "instance": "MI_SnowFlower_Sheath_Lacquer",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_SnowFlower_Sheath_Lacquer_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/SnowFlower/v4/Textures/T_SnowFlower_Sheath_BC.png",
+    "sha256": "a11abe87e7599fcdc103e7b16724c8592929f965fb666a40cb30ed453ac7c85c"
+   },
+   "params": {
+    "Colour": [
+     0.018282,
+     0.020749,
+     0.025636,
+     1.0
+    ],
+    "Detail Bias": 0.4341541044648544,
+    "Detail Scale": 2.9899086507171218,
+    "Detail Mean": 0.9953686327428155,
+    "Detail Highlight Ratio": 3.1390083757448632,
+    "Detail Moments Low": [
+     0.8282077312469482,
+     -0.10008350971217224,
+     0.02254209539210937,
+     -0.0029028728183690122
+    ],
+    "Detail Moments High": [
+     0.17179226875305176,
+     0.057447038518811354,
+     0.011835682644253859,
+     0.006530198718182223
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9
+   },
+   "n_range": [
+    0.4341541044648544,
+    3.4240627551819762
+   ],
+   "fraction_n_le_1": 0.8282077312469482,
+   "moment_samples": {
+    "c": [
+     0.0,
+     0.5,
+     1.0,
+     1.5
+    ],
+    "low": [
+     0.8282077312469482,
+     0.7834386411365933,
+     0.7477634441085164,
+     0.7190049855489405
+    ],
+    "high": [
+     0.17179226875305176,
+     0.20429098351329367,
+     0.24760518863429917,
+     0.30663253315470496
+    ]
+   },
+   "builder_constants": {
+    "a_lo": 0.008933799700718373,
+    "a_hi": 0.07045860099650854,
+    "tint_linear": [
+     0.01828225515782833,
+     0.020749131217598915,
+     0.025635723024606705
+    ],
+    "report": "WorkFiles/SnowFlower/v4/sheath_build/maps_report.json"
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour (the buyer's one colour); default = the baked part's mean linear albedo"
+   },
+   "note": "the scabbard's marbled black lacquer (body and cavity); its metal texels use the baked colour",
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)): Colour = the part's mean linear albedo, Bias = a_lo / lum(Colour), Scale = (a_hi - a_lo) / lum(Colour), so the default reproduces the baked luminance with the mean chroma. The v1 fields are recolour_common.fabric_constants over every texel of the Detail16; recolour_constants.json (v2) is written by Scripts/unreal/materials/maps/derive_constants_snowflower.py"
+  }
+ },
+ "pass": true
+}

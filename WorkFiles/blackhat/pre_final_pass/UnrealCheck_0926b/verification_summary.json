@@ -1,0 +1,689 @@
+{
+  "engine": "5.8.3-58210709+++UE5+Release-5.8",
+  "project": "WorkFiles/shuriken/UnrealShuriken/ShurikenValidation.uproject",
+  "content_path": "/Game/PropsCheck/BlackHat_0926b/SM_BlackHat",
+  "fbx_sha256": "92f135cc2774712d2a1a59f14690a857fca497c8b865dd811c0cd54f0a21dedf",
+  "sidecar_sha256": "16c9c11caefb076098512c27b19be495f1ad2cef2bffabfb902d265c951376c9",
+  "processes": [
+    "pass1 import + sidecar (one save)",
+    "tex_import (props importer)",
+    "tex_verify (fresh)",
+    "pass2 reload + gates (fresh)",
+    "pass3 Unreal FBX export (fresh)",
+    "Blender round-trip compare"
+  ],
+  "warning_error_lines": {
+    "pass1": 0,
+    "tex_import": 0,
+    "tex_verify": 0,
+    "pass2": 0,
+    "pass3": 0
+  },
+  "gates": {
+    "1_three_lods_triangles_match_blender_and_the_fbx": true,
+    "2_exactly_two_convex_hulls": true,
+    "3_head_socket_at_scale_1_outered_to_the_asset": true,
+    "4_bounds_cm_match_the_measured_mesh": true,
+    "5_screen_sizes_applied_from_the_sidecar": true,
+    "5b_bounds_sphere_radius_is_the_one_the_screen_sizes_used": true,
+    "6_lightmap_coordinate_index_1_generated_on_every_lod": true,
+    "7_two_material_slots_straw_cloth": true,
+    "8_nanite_off": true,
+    "9_texture_flags_persisted": true,
+    "10_lightmap_uv_configured_on_every_lod": true,
+    "11_hull_contains_lod0_in_engine_space": true,
+    "12_exact_bytes": true,
+    "13_roundtrip_triangles_and_positions_exact": true,
+    "14_roundtrip_hull_vertices_1e-5cm": true,
+    "15_texture_import_and_fresh_verify": true,
+    "16_zero_warning_error_lines_all_passes": true,
+    "18_uv1_zero_overlap_1024_2048_every_lod": true,
+    "17_same_bytes_everywhere": true
+  },
+  "verified": true,
+  "lod_triangles": [
+    16788,
+    6042,
+    1849
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.7036,
+    0.2463
+  ],
+  "bounds_sphere_radius_cm": 35.18153,
+  "size_cm": [
+    60.2967,
+    63.0476,
+    23.8383
+  ],
+  "sockets": [
+    {
+      "name": "HEAD",
+      "location_cm": [
+        0.0,
+        0.0,
+        13.4833
+      ],
+      "rpy": [
+        -0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "convex_hulls": 2,
+  "hull_roundtrip": {
+    "shipped_vertices": [
+      31,
+      8
+    ],
+    "unreal": {
+      "hullD0_0": {
+        "vertices": 31,
+        "planes": 58
+      },
+      "hullD0_1": {
+        "vertices": 8,
+        "planes": 12
+      }
+    },
+    "vertices_two_sided_cm": 1.8e-06,
+    "lod0_worst_outside_cm": -0.03,
+    "contains_lod0": true
+  },
+  "roundtrip_lods": {
+    "LOD0": {
+      "shipped_triangles": 16788,
+      "unreal_triangles": 16788,
+      "positions_two_sided_cm": 2e-06,
+      "shipped_triangles_absent_in_unreal": 0
+    },
+    "LOD1": {
+      "shipped_triangles": 6042,
+      "unreal_triangles": 6042,
+      "positions_two_sided_cm": 2e-06,
+      "shipped_triangles_absent_in_unreal": 0
+    },
+    "LOD2": {
+      "shipped_triangles": 1849,
+      "unreal_triangles": 1849,
+      "positions_two_sided_cm": 2e-06,
+      "shipped_triangles_absent_in_unreal": 0
+    }
+  },
+  "uv1_overlap": {
+    "SM_BlackHat_LOD0": {
+      "uv_layers": [
+        "UVmap_0",
+        "LightMapUV"
+      ],
+      "uv1_range": [
+        0.00806427001953125,
+        0.9919357299804688
+      ],
+      "overlap_texels_1024": 0,
+      "covered_texels_1024": 320977,
+      "overlap_texels_2048": 0,
+      "covered_texels_2048": 1355156
+    },
+    "SM_BlackHat_LOD1": {
+      "uv_layers": [
+        "UVmap_0",
+        "LightMapUV"
+      ],
+      "uv1_range": [
+        0.00806427001953125,
+        0.9919357299804688
+      ],
+      "overlap_texels_1024": 0,
+      "covered_texels_1024": 354334,
+      "overlap_texels_2048": 0,
+      "covered_texels_2048": 1478638
+    },
+    "SM_BlackHat_LOD2": {
+      "uv_layers": [
+        "UVmap_0",
+        "LightMapUV"
+      ],
+      "uv1_range": [
+        0.00806427001953125,
+        0.9919357299804688
+      ],
+      "overlap_texels_1024": 0,
+      "covered_texels_1024": 391436,
+      "overlap_texels_2048": 0,
+      "covered_texels_2048": 1596165
+    }
+  },
+  "textures": {
+    "T_BlackHat_Cloth_BC": {
+      "srgb": "True",
+      "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "T_BlackHat_Cloth_Detail": {
+      "srgb": "True",
+      "compression_settings": "<TextureCompressionSettings.TC_GRAYSCALE: 3>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "T_BlackHat_Cloth_N": {
+      "srgb": "False",
+      "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "T_BlackHat_Cloth_ORM": {
+      "srgb": "False",
+      "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "T_BlackHat_Straw_BC": {
+      "srgb": "True",
+      "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "T_BlackHat_Straw_Detail": {
+      "srgb": "True",
+      "compression_settings": "<TextureCompressionSettings.TC_GRAYSCALE: 3>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "T_BlackHat_Straw_N": {
+      "srgb": "False",
+      "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    "T_BlackHat_Straw_ORM": {
+      "srgb": "False",
+      "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+      "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+      "flip_green_channel": "False",
+      "size": [
+        2048,
+        2048
+      ]
+    }
+  },
+  "textures_pass2": {
+    "T_BlackHat_Straw_BC": {
+      "read": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF BGRA8",
+          "HasAlphaChannel": "False",
+          "SRGB": "True",
+          "CompressionSettings": "TC_Default",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F4177AF978) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true
+      },
+      "passed": true
+    },
+    "T_BlackHat_Straw_Detail": {
+      "read": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_GRAYSCALE: 3>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF G8",
+          "HasAlphaChannel": "False",
+          "SRGB": "True",
+          "CompressionSettings": "TC_Grayscale",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F4171F0F78) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true
+      },
+      "passed": true
+    },
+    "T_BlackHat_Straw_ORM": {
+      "read": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF BGRA8",
+          "HasAlphaChannel": "False",
+          "SRGB": "False",
+          "CompressionSettings": "TC_Masks",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "source_alpha_min_max": [
+          0.023529,
+          1.0
+        ],
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F429980378) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true,
+        "orm_alpha_kept": true
+      },
+      "passed": true
+    },
+    "T_BlackHat_Straw_N": {
+      "read": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD_NORMAL_MAP: 1>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF BGRA8",
+          "HasAlphaChannel": "False",
+          "SRGB": "False",
+          "CompressionSettings": "TC_Normalmap",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F429980F78) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "flip_green_channel": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true
+      },
+      "passed": true
+    },
+    "T_BlackHat_Cloth_BC": {
+      "read": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF BGRA8",
+          "HasAlphaChannel": "False",
+          "SRGB": "True",
+          "CompressionSettings": "TC_Default",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F429981B78) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true
+      },
+      "passed": true
+    },
+    "T_BlackHat_Cloth_Detail": {
+      "read": {
+        "srgb": "True",
+        "compression_settings": "<TextureCompressionSettings.TC_GRAYSCALE: 3>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF G8",
+          "HasAlphaChannel": "False",
+          "SRGB": "True",
+          "CompressionSettings": "TC_Grayscale",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F429982778) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true
+      },
+      "passed": true
+    },
+    "T_BlackHat_Cloth_ORM": {
+      "read": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_MASKS: 2>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD: 0>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF BGRA8",
+          "HasAlphaChannel": "False",
+          "SRGB": "False",
+          "CompressionSettings": "TC_Masks",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "source_alpha_min_max": [
+          0.352941,
+          0.898039
+        ],
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F429983378) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true,
+        "orm_alpha_kept": true
+      },
+      "passed": true
+    },
+    "T_BlackHat_Cloth_N": {
+      "read": {
+        "srgb": "False",
+        "compression_settings": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+        "flip_green_channel": "False",
+        "mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+        "lod_group": "<TextureGroup.TEXTUREGROUP_WORLD_NORMAL_MAP: 1>",
+        "power_of_two_mode": "<TexturePowerOfTwoSetting.NONE: 0>",
+        "size": [
+          2048,
+          2048
+        ],
+        "num_mips": null,
+        "registry_tags": {
+          "Format": "unknown",
+          "SourceFormat": "TSF BGRA8",
+          "HasAlphaChannel": "False",
+          "SRGB": "False",
+          "CompressionSettings": "TC_Normalmap",
+          "Dimensions": "2048x2048",
+          "MaxTextureSize": "0"
+        },
+        "compression_no_alpha": "False",
+        "mip_probe": {
+          "attrs": [
+            "do_scale_mips_for_alpha_coverage",
+            "global_force_mip_levels_to_be_resident",
+            "mip_gen_settings",
+            "mip_load_options",
+            "num_cinematic_mip_levels",
+            "set_force_mip_levels_to_be_resident",
+            "use_new_mip_filter"
+          ],
+          "prop:num_cinematic_mip_levels": "0",
+          "prop:mip_load_options": "<TextureMipLoadOptions.DEFAULT: 0>",
+          "prop:mip_gen_settings": "<TextureMipGenSettings.TMGS_FROM_TEXTURE_GROUP: 0>",
+          "prop:lod_bias": "0",
+          "prop:never_stream": "False",
+          "prop:max_texture_size": "0",
+          "prop:downscale": "<Struct 'PerPlatformFloat' (0x000001F429983F78) {default: 0.000000}>",
+          "full_chain_would_be": 12
+        }
+      },
+      "matches": {
+        "srgb": true,
+        "compression_settings": true,
+        "flip_green_channel": true,
+        "mip_gen_settings": true,
+        "has_mips": true,
+        "power_of_two": true,
+        "size_as_shipped": true
+      },
+      "passed": true
+    }
+  },
+  "notes": [
+    "BlackHat: two hulls, one HEAD socket, two material slots (straw, cloth), 8 maps at 2048",
+    "UE 5.8 Python has no KConvexElem.vertex_data, so pass 2's own hull gate cannot read the points; gate 11 is carried by the Unreal FBX round trip (pass 3 + Blender)",
+    "final pass (maintainer, 2026-09-25): shingled fan + hidden widening, ClothSpec6, Detail sRGB ON (BaseColor = Detail.R x Tint), ORM RGBA with the baked specular mask in A; verified under a new content path; round 4 record stays in WorkFiles/smokebomb/UnrealCheck_rw4/"
+  ]
+}

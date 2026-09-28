@@ -1,0 +1,63 @@
+{
+ "role": "live diagnostician (pd_diagnose.py), 2026-09-25, UE 5.8.3, nothing saved in the project",
+ "runs": ["defects/1 (contaminated: two MH actors; captures deleted)", "defects/2", "mattests/1", "wardrobe/1", "identity/1", "hairprobe/1", "hairlook/1", "hairlook/2_<style> x5"],
+ "protected_sha256_unchanged_all_runs": {
+  "MH_PlayerBase": "63CC39C027798F900489B5499C7E2C99A91F38B7763A459C59478832E425D962",
+  "MH_PlayerBase_FaceA": "7A05F69439BFCDE199AA9D56D36EFF5EF38E1AD4E59950A2421285F89AA1C26E",
+  "MH_PlayerBase_FaceB": "98DF93A45E0EC0A13B4531E8BC4CBF791E0702B3ED7EE8237C36094CB33F456C",
+  "MH_PlayerBase_FaceC": "088D38ADF89B331CB324E51A6DCE9C4FC559468222EC886DC3FB9CE6E83C04F7",
+  "MH_MaleBase": "0852D29A4C0659C514AC1190D319E1BA6CD427B127F3A7BC4541E1A200CE5E9B"
+ },
+ "defect_1_jaw_line": {
+  "verdict": "lighting artefact of the capture rig on a narrow down-facing under-jaw strip; NOT texture, normal map, cavity/AO, cast shadow or mesh fold",
+  "evidence": {
+   "base_colour_GBuffer": "continuous, no line (sheets/01)",
+   "world_normal_GBuffer": "continuous; the under-jaw strip faces down and is narrow on FaceC, broad on Kelvin (sheets/02)",
+   "all_shadows_off": "line persists (noshadow)",
+   "single_light_front_below": "line gone",
+   "sky_only": "pure black even after recapture_sky(): the SkyLight gives the MetaHuman skin zero light in these -RenderOffscreen captures; Lumen variant differs from lit by 0.89/255",
+   "material_switches": "flat normal map, Normal Global Strength 0, white cavity, Fake AO Strength 0, Material AO Power 0, Specular 0: line unchanged",
+   "hidden_extra_actors": "hidden source mesh / hidden MH_PlayerBase actor: mean diff 1.2/255 (not the cause of this line)",
+   "kelvin_same_rig_grooms_hidden": "same black under-jaw band (hidden by his beard normally)",
+   "bounce_light_test": "studio + DirectionalLight pitch +50 yaw -90 intensity 0.8 no shadows: near-black pixels in JawClose 5.7% -> 0.39% (FaceC), 6.7% -> 0% (Kelvin); FaceC keeps a faint thin contour",
+   "mesh_dump": "max dihedral 23 deg in the under-jaw band (no fold); 3.3 mm bend radius at the lateral jaw-neck junction (x=4.5 cm) on FaceC vs 22 mm unmodified conform / 28 mm Kelvin (CPU dump, noisy)"
+  },
+  "fix": "no asset change required; evaluate with an ambient/bounce light in BOTH before and after captures. Optional softening only if Cody wants it: small jaw/under-chin landmark move or higher Kelvin weight in jaw regions [18,20,21] (changes the FaceC recipe)."
+ },
+ "defect_2_ear_patch": {
+  "verdict": "specular glint of the rim light (pitch -37, yaw 90, from behind) on the antitragus of the character's right ear (-X, image-left); Kelvin has the identical glint",
+  "evidence": "present only with the rim light (keyonly/fillonly: absent), gone with Specular Global Multiply 0, absent in base colour, unchanged with flat normal map / white cavity; no ear edges >90 deg in the dump (sheets/04)",
+  "fix": "none in the asset; in the rig lower rim specular (light_component.set_specular_scale) or turn the rim light 15-20 deg off-axis"
+ },
+ "defect_3_shoulder_slivers": {
+  "verdict": "not an outfit: FaceC has NO wardrobe items; the grey tank top is the skin's painted top underwear (skin.show_top_underwear=True) and the briefs are the always-on painted bottom underwear. The see-through slivers / notched outline exist only in pb_conform's in-session captures (mh_*.png); every fresh load (pb_verify_saved, build/verify, all runs here) has a closed seam",
+  "evidence": "sheets/05-08; head/body seam loops coincide (0.0 mm, 92 verts); HideMaskTexture is T_Flat_White_C (culls nothing); Body tris 60816 with and without WI_DefaultGarment",
+  "fix": "nothing to remove; keep show_top_underwear=True (tank top) or False (bare chest + briefs); verify MH_PlayerDefault in a fresh reload"
+ },
+ "identity_api": {
+  "open": "ch = unreal.EditorAssetLibrary.duplicate_asset(FaceC, '/Game/Characters/MetaHumans/MH_PlayerDefault'); ch.preview_material_type = EDITABLE; mhs.try_add_object_to_edit(ch)",
+  "grooms": "PREFERRED: before try_add_object_to_edit: key = ch.internal_collection.try_add_item_from_wardrobe_item(slot, wi); ch.internal_collection.default_instance.try_add_slot_selection(unreal.MetaHumanPipelineSlotSelection(slot_name=slot, selected_item=key)). Live alternative: col = mhs.get_preview_collection(ch); key = col.try_add_item_from_wardrobe_item(slot, wi); col.default_instance.set_single_slot_selection(slot, key); mhs.on_edit_preview_collection(ch); mhs.assemble_for_preview(ch). Slots: Hair, Eyebrows, Beard, Mustache, Eyelashes, Peachfuzz, Outfits. Clear: set_single_slot_selection(slot, unreal.MetaHumanPaletteItemKey()). Instance params (Melanin, Redness, Roughness, Whiteness, Lightness, DyeColor, ombre/highlights): col.default_instance.get_instance_parameters(item_path=unreal.MetaHumanPaletteItemPath(item_key=key)) -> p.set_float(v)",
+  "groom_roots": "/MetaHumanCharacter/Optional/Grooms/Bindings/{Hair,Eyebrows,Eyelashes,Beards,Mustaches,Peachfuzz}/WI_*",
+  "eyes": "mhs.commit_eyes_settings(ch, unreal.load_asset('/MetaHumanCharacter/Optional/Presets/Kelvin').eyes_settings) -> dark brown (IRIS006, primary U 0.9003 V 0.0755, secondary U 0.9753 V 0.0964, sat 1.7). Trey = IRIS001 U 0.9003 V 0.0339. FaceC now: IRIS001 U 0.90 V 0.56 (amber). Verify via Face slots eyeLeft_/eyeRight_shader_shader scalar 'Iris Primary Color Hue/Value'",
+  "eyelashes_head_model": "hm = ch.head_model_settings; el = hm.eyelashes; el.type = unreal.MetaHumanCharacterEyelashesType.SHORT_FINE; hm.eyelashes = el; mhs.commit_head_model_settings(ch, hm) (FaceC now NONE); plus groom slot Eyelashes",
+  "skin": "s = ch.skin_settings; sp = s.skin; sp.face_texture_index = N (0..152, TS-1.3 nchr-153); sp.u = 0.5; sp.v = 0.5 (neutral default, FaceC already 0.5/0.5); sp.body_texture_index (0..8); sp.show_top_underwear; s.skin = sp; fr = s.freckles; fr.mask = NONE; s.freckles = fr; mhs.commit_skin_settings(ch, s) (~0.3 s). Clean indices (wrinkles Low, stubble None, marks Low): 7,12,16,17,18,33,35,36,37,38,39,44,45,46,49,56,58,59,64,74,78,80,81,82,86,87,92,96,99,102,103,107,112,113,114,118,122,129,130,136,144,147,149. FaceC now = index 0 (marks Medium -> the red moles)",
+  "makeup": "mhs.commit_makeup_settings(ch, unreal.MetaHumanCharacterMakeupSettings()) = all NONE (FaceC already none)",
+  "outfit": "FaceC has none. WI_DefaultGarment (/MetaHumanCharacter/Optional/Clothing/) = Kelvin's T-shirt + shorts"
+ },
+ "short_hair_rendered_on_FaceC": {
+  "sheet": "sheets/12_short_hairstyles_on_FaceC.png",
+  "suitable": ["WI_Hair_S_BrushCut", "WI_Hair_S_SweptUp", "WI_Hair_S_Casual", "WI_Hair_S_Messy", "WI_Hair_S_SideSweptFringe"],
+  "avoid": ["WI_Hair_S_Updo (bangs + face-framing side strands)", "WI_Hair_S_LowPonytail", "all WI_Hair_L_* / M_* long or loose styles"],
+  "other_short_not_rendered": ["S_Clean", "S_SlickBack", "S_PulledBack", "S_UpdoBuns", "S_BuzzCut", "S_Pixie", "S_360Waves", "S_AfroFade", "S_CurlyFade", "S_Coil", "S_CoilBuzzCut", "S_Cornrows", "S_UpdoBraids", "S_RecedeMessy", "S_BaldingStubble", "S_HairLoss", "S_BobLayered"],
+  "brows_lashes_used": "WI_Eyebrows_M_SlightArch + WI_Eyelashes_S_Fine; brows also tested M_Natural (sparse/pale) and M_Fine (sits high)"
+ },
+ "gotchas": [
+  "hidden actors (SceneCaptureComponent2D.hide_actor_components) still cast shadows into the capture: keep ONE MetaHuman actor in the world, destroy others (EditorActorSubsystem.destroy_actor)",
+  "the SkyLight and Lumen contribute ~nothing to the MetaHuman skin in -RenderOffscreen SceneCaptures: any surface facing away from the directional lights renders black",
+  "only the FIRST hair groom assigned in an editor session renders in captures (later ones bind, have bounds, stay invisible); brows/lashes are fine. Pick the hair once and verify after save in a fresh session",
+  "Exporter.run_asset_export_task(TextureExporterPNG) on a synthesized face texture hard-crashes the editor (ImageCoreUtils.cpp:110)",
+  "MaterialInstanceDynamic getters are get_scalar_parameter_value / get_texture_parameter_value (no k2_ prefix); 'Use Cavity' is a static switch",
+  "29 back-to-back commit_eyes_settings calls left captures stale and the eyes mismatched; one commit + ~2 s settle is reliable",
+  "UMetaHumanOutfitEditorPipeline body/head hidden-face-map properties are not reachable from Python"
+ ]
+}

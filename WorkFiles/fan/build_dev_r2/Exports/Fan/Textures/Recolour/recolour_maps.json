@@ -1,0 +1,173 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "Fan",
+ "generated": "2026-09-26",
+ "generator": {
+  "script": "Scripts/props/build_fan.py",
+  "script_sha256": "2d20ef398ea02dbca9885e4ce9568c0803cb6f1f57c11ee32bc502ca79dd989a",
+  "module": "Scripts/props/props_lib/fan_paint.py",
+  "module_sha256": "97e17716eca2117b1b2d9a2cd79d4deb64d17726a1c3a699e3215a1c47600550",
+  "version": "1.0.0",
+  "blender": "5.2.0 LTS"
+ },
+ "sidecar": {
+  "file": "Exports/Fan/SK_Fan.skeletal.json"
+ },
+ "maps": {
+  "T_Fan_Leaf_Detail16": {
+   "file": "Exports/Fan/Textures/Recolour/T_Fan_Leaf_Detail16.png",
+   "sha256": "56a8cea0965fd33022f566a48bf0f8a7cfd4c3428670d894321ac87062173da7",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/Fan/Textures/T_Fan_Leaf_Detail.png",
+    "sha256": "881a396f2071a58325973b69354f6061420e45411d3f8ffb1c29f8a4b2c471f9",
+    "stored_levels": 256
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8 / 255)); lossless (one code per 8-bit level)",
+   "gates": {
+    "lossless_back_to_8bit": true
+   }
+  },
+  "T_Fan_Sticks_Detail16": {
+   "file": "Exports/Fan/Textures/Recolour/T_Fan_Sticks_Detail16.png",
+   "sha256": "451d20c0c356b669adf5c4782dfc583dd33733f1a2ea81da6f6d287ec0603d59",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/Fan/Textures/T_Fan_Sticks_Detail.png",
+    "sha256": "7a46d84689a5940ab5fede73de0dd7522533eddc1b20deea331d4e6ba47e0a8f",
+    "stored_levels": 256
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8 / 255)); lossless (one code per 8-bit level)",
+   "gates": {
+    "lossless_back_to_8bit": true
+   }
+  },
+  "T_Fan_Tassel_Detail16": {
+   "file": "Exports/Fan/Textures/Recolour/T_Fan_Tassel_Detail16.png",
+   "sha256": "ab19a1dc2f29b72d3cb08ccf1339b3b3feef61b1421cca098ad4084e7bd40a56",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "PNG, 16-bit greyscale (colour type 0), no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded shipped Detail)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/Fan/Textures/T_Fan_Tassel_Detail.png",
+    "sha256": "ba9f25d69e285920fcd3469236965ae1bce04a6166c87c1f0e2772fb65386950",
+    "stored_levels": 256
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8 / 255)); lossless (one code per 8-bit level)",
+   "gates": {
+    "lossless_back_to_8bit": true
+   }
+  }
+ },
+ "parts": {
+  "Leaf": {
+   "slot_material": "M_Fan_Leaf",
+   "instance": "MI_Fan_Leaf",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Fan_Leaf_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/Fan/Textures/T_Fan_Leaf_BC.png",
+    "sha256": "388f533f51d416cef87572289fd5439a0ee9792140b2712f039b7d8668ff2da5"
+   },
+   "params": {
+    "Colour": [
+     0.01993,
+     0.024537,
+     0.029945,
+     1.0
+    ],
+    "Detail Bias": 0.960014,
+    "Detail Scale": 0.082479
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour (the buyer's one colour); default = REFERENCE_SPEC 9's reference colour"
+   },
+   "derivation": "BaseColor = saturate(Tint x (DetailBias + DetailScale x Detail)), Tint = the part's MEAN colour; recolour_constants.json (moments, mip compensation, lightest colour) is derived by the materials build's derive_constants.py when the fan is integrated"
+  },
+  "Sticks": {
+   "slot_material": "M_Fan_Sticks",
+   "instance": "MI_Fan_Sticks",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Fan_Sticks_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/Fan/Textures/T_Fan_Sticks_BC.png",
+    "sha256": "07d969f425ca8f7defecb9a5de2d97e420ba90d2ac28aea8fbeb7fe9bbd22ad2"
+   },
+   "params": {
+    "Colour": [
+     0.014982,
+     0.01895,
+     0.021133,
+     1.0
+    ],
+    "Detail Bias": 0.912583,
+    "Detail Scale": 0.199259
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour (the buyer's one colour); default = REFERENCE_SPEC 9's reference colour"
+   },
+   "derivation": "BaseColor = saturate(Tint x (DetailBias + DetailScale x Detail)), Tint = the part's MEAN colour; recolour_constants.json (moments, mip compensation, lightest colour) is derived by the materials build's derive_constants.py when the fan is integrated"
+  },
+  "Tassel": {
+   "slot_material": "M_Fan_Tassel",
+   "instance": "MI_Fan_Tassel",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Fan_Tassel_Detail16",
+   "base_colour_map_reference": {
+    "file": "Exports/Fan/Textures/T_Fan_Tassel_BC.png",
+    "sha256": "dc984341c4fc995dad84d71669d6cac982f6e84ec7863b6fe762399d6ab9fda4"
+   },
+   "params": {
+    "Colour": [
+     0.007144,
+     0.00903,
+     0.013495,
+     1.0
+    ],
+    "Detail Bias": 0.839834,
+    "Detail Scale": 0.287213
+   },
+   "param_notes": {
+    "Colour": "linear RGBA; the part's MEAN colour (the buyer's one colour); default = REFERENCE_SPEC 9's reference colour"
+   },
+   "derivation": "BaseColor = saturate(Tint x (DetailBias + DetailScale x Detail)), Tint = the part's MEAN colour; recolour_constants.json (moments, mip compensation, lightest colour) is derived by the materials build's derive_constants.py when the fan is integrated"
+  }
+ }
+}

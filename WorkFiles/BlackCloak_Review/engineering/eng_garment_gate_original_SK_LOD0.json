@@ -1,0 +1,295 @@
+{
+ "fitbody_file": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\BlackCloak_Review\\engineering\\eng_FitBody_copy.blend",
+ "cloak_fbx": "C:/Users/Cody/Desktop/Blender_Projects/Exports/BlackCloak/BlackCloak_Skeletal.fbx",
+ "imported": {
+  "Armature": "ARMATURE",
+  "Clasp_BlackenedRing": "MESH",
+  "Clasp_DarkLoop": "MESH",
+  "Clasp_Pin": "MESH",
+  "Cloak_DiagonalShawl": "MESH",
+  "Cloak_GatheredSideFall": "MESH",
+  "Cloak_InnerLeftFall": "MESH",
+  "Cloak_LeftLongLeaf": "MESH",
+  "Cloak_LeftShoulder": "MESH",
+  "Cloak_LeftWing": "MESH",
+  "Cloak_LongDrape": "MESH",
+  "Cloak_MiddleMantle": "MESH",
+  "Cloak_OverlappingFrontPanel": "MESH",
+  "Cloak_RearMantle_2": "MESH",
+  "Cloak_RightInnerLongLeaf": "MESH",
+  "Cloak_RightWingReturn": "MESH",
+  "Cloak_UpperMantle": "MESH",
+  "Cloak_WrappedCowl": "MESH"
+ },
+ "garment_qa": {
+  "passed": false,
+  "failed": [
+   "armature_object_name",
+   "bone_names_without_dots",
+   "character_triangle_budget",
+   "cloak_sim_rigid_on_chest",
+   "cloak_weight_bones",
+   "cloth_section",
+   "fitbody_intact",
+   "garment_triangle_budget",
+   "intersection_rest",
+   "name_prefix",
+   "pin_mask_active",
+   "sim_triangle_budget",
+   "skeleton_matches_base"
+  ],
+  "metrics": {
+   "type": "cloak",
+   "base": "MH_PlayerDefault",
+   "skeleton_hash_lock": "b6e1cbf5c7d04b9966dd123ffb3a832a3d36ec13fdd055a0939825ad5dd802ed",
+   "skeleton": {
+    "hash": "a7e5e45ce4149834d3be3bf95552be41b7b5d8e3b13012c6e6b0a22bca9aa2dd",
+    "hash_equal": false,
+    "max_delta_mm": 1508.7468947891825,
+    "max_delta_deg": 113.63920530409098
+   },
+   "triangles": {
+    "garment": 84612,
+    "sim": 0,
+    "sim_vertices": 0,
+    "base_lod0": 121892,
+    "extra_loadout": 0,
+    "character_total": 206504
+   },
+   "intersection": {
+    "rest": {
+     "checked": 42336,
+     "inside": 960,
+     "inside_any_depth": 1009,
+     "deepest_cm": 5.19,
+     "fraction": 0.02268
+    }
+   }
+  },
+  "n_checks": 452,
+  "n_failed": 93,
+  "failed_detail": {
+   "name_prefix": {
+    "count": 17,
+    "examples": [
+     "Clasp_BlackenedRing: mesh object prefix must be one of ('SM_', 'SK_')",
+     "Clasp_DarkLoop: mesh object prefix must be one of ('SM_', 'SK_')",
+     "Clasp_Pin: mesh object prefix must be one of ('SM_', 'SK_')"
+    ]
+   },
+   "bone_names_without_dots": {
+    "count": 1,
+    "examples": [
+     "Armature: pelvis.L, upperleg01.L, upperleg02.L, lowerleg01.L, lowerleg02.L, foot.L, toe1-1.L, pelvis.R, upperleg01.R, upperleg02.R ..."
+    ]
+   },
+   "armature_object_name": {
+    "count": 1,
+    "examples": [
+     "Armature: armature object 'Armature'; Unreal turns the armature object into the root bone, so it must be 'root' (anything else adds a bone above it)"
+    ]
+   },
+   "skeleton_matches_base": {
+    "count": 1,
+    "examples": [
+     "Armature: hash a7e5e45ce4149834 vs lock b6e1cbf5c7d04b99; 152 bones; missing ['ankle_bck_l', 'ankle_bck_r', 'ankle_fwd_l', 'ankle_fwd_r', 'ball_l'], extra ['breast.L', 'breast.R', 'clavicle.L', 'clavicle.R', 'eye.L'], reparented ['head']; max rest delta 1508.7469 mm / 113.6392 deg (e.g. pelvis)"
+    ]
+   },
+   "fitbody_intact": {
+    "count": 1,
+    "examples": [
+     "None: changed vs lock: none; fitting body driven by 'Armature': False"
+    ]
+   },
+   "cloth_section": {
+    "count": 17,
+    "examples": [
+     "Clasp_BlackenedRing: sim slots []; a cloak needs exactly one *_Sim section beside its skinned ones (Outfit_Pipeline trap 5)",
+     "Clasp_DarkLoop: sim slots []; a cloak needs exactly one *_Sim section beside its skinned ones (Outfit_Pipeline trap 5)",
+     "Clasp_Pin: sim slots []; a cloak needs exactly one *_Sim section beside its skinned ones (Outfit_Pipeline trap 5)"
+    ]
+   },
+   "pin_mask_active": {
+    "count": 17,
+    "examples": [
+     "Clasp_BlackenedRing: active colour None; the FBX exporter writes the active colour and Unreal's cloth mask reads it (trap 9)",
+     "Clasp_DarkLoop: active colour None; the FBX exporter writes the active colour and Unreal's cloth mask reads it (trap 9)",
+     "Clasp_Pin: active colour None; the FBX exporter writes the active colour and Unreal's cloth mask reads it (trap 9)"
+    ]
+   },
+   "cloak_weight_bones": {
+    "count": 17,
+    "examples": [
+     "Clasp_BlackenedRing: 1152 weight(s) on ['clavicle.R']; allowed: pelvis, spine_01, spine_02, spine_03, spine_04, spine_05, neck_01, neck_02, head",
+     "Clasp_DarkLoop: 32 weight(s) on ['clavicle.R']; allowed: pelvis, spine_01, spine_02, spine_03, spine_04, spine_05, neck_01, neck_02, head",
+     "Clasp_Pin: 16 weight(s) on ['clavicle.R']; allowed: pelvis, spine_01, spine_02, spine_03, spine_04, spine_05, neck_01, neck_02, head"
+    ]
+   },
+   "cloak_sim_rigid_on_chest": {
+    "count": 17,
+    "examples": [
+     "Clasp_BlackenedRing: 0 simulated vertices ride []; 0 not rigid on spine_03/spine_04/spine_05 (Outfit_Pipeline trap 4)",
+     "Clasp_DarkLoop: 0 simulated vertices ride []; 0 not rigid on spine_03/spine_04/spine_05 (Outfit_Pipeline trap 4)",
+     "Clasp_Pin: 0 simulated vertices ride []; 0 not rigid on spine_03/spine_04/spine_05 (Outfit_Pipeline trap 4)"
+    ]
+   },
+   "garment_triangle_budget": {
+    "count": 1,
+    "examples": [
+     "None: 84612 triangles (budget 30000 for cloak)"
+    ]
+   },
+   "sim_triangle_budget": {
+    "count": 1,
+    "examples": [
+     "None: 0 simulated triangles / 0 cloth particles (budget 6000 triangles)"
+    ]
+   },
+   "character_triangle_budget": {
+    "count": 1,
+    "examples": [
+     "None: base LOD0 121892 + garment 84612 + other worn 0 = 206504 (budget 160000; the base alone is 121892)"
+    ]
+   },
+   "intersection_rest": {
+    "count": 1,
+    "examples": [
+     "Clasp_BlackenedRing,Clasp_DarkLoop,Clasp_Pin,Cloak_DiagonalShawl,Cloak_GatheredSideFall,Cloak_InnerLeftFall,Cloak_LeftLongLeaf,Cloak_LeftShoulder,Cloak_LeftWing,Cloak_LongDrape,Cloak_MiddleMantle,Cloak_OverlappingFrontPanel,Cloak_RearMantle_2,Cloak_RightInnerLongLeaf,Cloak_RightWingReturn,Cloak_UpperMantle,Cloak_WrappedCowl: 960 of 42336 vertices inside the skin (2.27%); deepest 5.19 cm; 1009 at any depth, ignoring ['arm']; limit 0 deeper than 1 mm"
+    ]
+   }
+  }
+ },
+ "clearance_rest": {
+  "verts": 42336,
+  "inside_gt_1mm": 1370,
+  "inside_gt_1mm_excl_arms": 960,
+  "inside_gt_1cm": 867,
+  "deepest_cm": 6.21,
+  "outside_0_to_1cm": 806,
+  "outside_1_to_1_5cm": 546,
+  "no_surface_within_60cm": 0,
+  "inside_by_region": {
+   "arm": 410,
+   "head": 27,
+   "leg": 1,
+   "neck": 39,
+   "torso": 893
+  },
+  "per_mesh": {
+   "Clasp_BlackenedRing": {
+    "verts": 1152,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -23.94,
+    "closer_than_1cm_outside": 0
+   },
+   "Clasp_DarkLoop": {
+    "verts": 32,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -24.6,
+    "closer_than_1cm_outside": 0
+   },
+   "Clasp_Pin": {
+    "verts": 16,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -26.16,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_DiagonalShawl": {
+    "verts": 4186,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -2.56,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_GatheredSideFall": {
+    "verts": 3302,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -14.3,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_InnerLeftFall": {
+    "verts": 1092,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -7.35,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_LeftLongLeaf": {
+    "verts": 2056,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -12.44,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_LeftShoulder": {
+    "verts": 502,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -10.09,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_LeftWing": {
+    "verts": 1994,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -4.33,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_LongDrape": {
+    "verts": 3994,
+    "inside_gt_1mm": 612,
+    "deepest_cm": 5.3,
+    "closer_than_1cm_outside": 250
+   },
+   "Cloak_MiddleMantle": {
+    "verts": 2032,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -3.76,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_OverlappingFrontPanel": {
+    "verts": 3644,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -3.92,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_RearMantle_2": {
+    "verts": 3090,
+    "inside_gt_1mm": 284,
+    "deepest_cm": 6.21,
+    "closer_than_1cm_outside": 136
+   },
+   "Cloak_RightInnerLongLeaf": {
+    "verts": 1406,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -4.22,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_RightWingReturn": {
+    "verts": 1552,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -0.96,
+    "closer_than_1cm_outside": 1
+   },
+   "Cloak_UpperMantle": {
+    "verts": 1876,
+    "inside_gt_1mm": 0,
+    "deepest_cm": -9.63,
+    "closer_than_1cm_outside": 0
+   },
+   "Cloak_WrappedCowl": {
+    "verts": 10410,
+    "inside_gt_1mm": 474,
+    "deepest_cm": 3.96,
+    "closer_than_1cm_outside": 419
+   }
+  }
+ },
+ "mh_body_bounds_cm": [
+  [
+   -58.900001525878906,
+   -28.700000762939453,
+   -0.20000000298023224
+  ],
+  [
+   58.900001525878906,
+   12.899999618530273,
+   153.5
+  ]
+ ]
+}

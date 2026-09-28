@@ -1,0 +1,127 @@
+class provenance_recorder:
+    """Context manager that RECORDS every file opened while the art is drawn.
+
+    It replaces nothing's behaviour: ``builtins.open`` / ``io.open`` are wrapped only to
+    note the path, so the report states exactly what the drawing read (the font, and -
+    once traced shapes are integrated - ``paperbomb_traced.json``).  It used to be a
+    refusal guard ("no_guide_access") that raised on any path under References/PaperBomb;
+    that rule belonged to the old "draw it ourselves" brief.  The paper bomb is the
+    user's own design and tracing their reference is now the method, so the guard became
+    this recorder and the build's provenance gate checks the ONE source instead.
+    """
+
+    def __init__(self):
+        self._open = None
+        self._io = None
+        self._io_open = None
+        self.opened: list[str] = []
+
+    def _note(self, path) -> None:
+        try:
+            s = os.fspath(path)
+        except TypeError:
+            return
+        if not isinstance(s, str):
+            s = s.decode("utf8", "replace")
+        self.opened.append(s)
+
+    def __enter__(self):
+        import builtins
+        import io as _io
+        self._open = builtins.open
+        rec = self
+
+        def _recording(file, *a, **kw):
+            rec._note(file)
+            return rec._open(file, *a, **kw)
+
+        builtins.open = _recording
+        self._io = _io
+        self._io_open = getattr(_io, "open", None)
+        if self._io_open is not None:
+            _io.open = _recording
+        return self
+
+    def __exit__(self, *exc):
+        import builtins
+        if self._open is not None:
+            builtins.open = self._open
+        if self._io is not None and self._io_open is not None:
+            self._io.open = self._io_open
+        return False
+
+
+#: ``props_lib/bake.py`` (shared with other assets, not edited by this chat) still enters
+#: the art through this name.  It is the recorder above; nothing is refused any more.
+no_guide_access = provenance_recorder
+
+
+def _sha256_file(path: str) -> str | None:
+    try:
+        with open(path, "rb") as fh:
+            return hashlib.sha256(fh.read()).hexdigest()
+    except OSError:
+        return None
+
+
+#: THE one source of the design (the user's own drawing, 300 x 653 px).
+REFERENCE_SOURCE = os.path.join(PROJECT_ROOT, "References", "PaperBomb",
+                                "paperbomb_guide_v2_real_glyphs.png")
+REFERENCE_SOURCE_SHA256 = "670acbd782c9a43bb0b2838851ec6bec7aaae144f18aaeb5e8cf45ca7ef01099"
+TRACED_SHAPES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "paperbomb_traced.json")
+
+#: how each element of the print is derived, as of this module version.  "drawn" means
+#: this module still generates it procedurally; "traced" means its shapes come from
+#: ``paperbomb_traced.json`` (props_lib.paperbomb_trace, traced from REFERENCE_SOURCE).
+#: The traced set exists for every element; integration into the build is the next step
+#: (the four text columns wait for the column-font result).
+ELEMENT_DERIVATION = {
+    "emblem":     "drawn (traced shapes ready: paperbomb_traced.json group 'emblem')",
+    "centre":     "drawn (typeset; traced shapes ready: group 'centre')",
+    "ring":       "drawn (traced shapes ready: group 'ring')",
+    "seal_big":   "drawn (traced shapes ready: group 'seal_big')",
+    "small_seal": "drawn (typeset; traced shapes ready: groups 'small_seal' + 'frame')",
+    "chain":      "drawn (traced shapes ready: group 'chain')",
+    "corners":    "drawn (traced shapes ready: group 'frame', contour part)",
+    "rules":      "drawn (traced strokes ready: group 'frame', stroke part)",
+    "columns":    "typeset from " + os.path.basename(FONT_PRIMARY)
+                  + " (traced shapes ready: groups 'col_*'; waits for the font result)",
+    "paper":      "generated (value noise, reference-matched colour)",
+}
+
+
+def art_provenance(opened: Sequence[str] | None = None) -> dict:
+    """The provenance record for the build report: the one source, its SHA-256, what the
+    drawing actually opened, and per element how it was derived."""
+    traced = None
+    if os.path.exists(TRACED_SHAPES):
+        try:
+            with open(TRACED_SHAPES, "r", encoding="utf-8") as fh:
+                tj = json.load(fh)
+            traced = {"path": os.path.relpath(TRACED_SHAPES, PROJECT_ROOT).replace("\\", "/"),
+                      "sha256": _sha256_file(TRACED_SHAPES),
+                      "version": tj.get("version"),
+                      "source_sha256": (tj.get("provenance") or {}).get("source_sha256"),
+                      "groups": sorted({"%s/%s" % (g["group"], g["layer"])
+                                        for g in tj.get("groups", [])})}
+        except (OSError, ValueError, KeyError) as exc:
+            traced = {"error": "%s: %s" % (type(exc).__name__, exc)}
+    on_disk = _sha256_file(REFERENCE_SOURCE)
+    opened_list = sorted(set(opened)) if opened is not None else None
+    refs_opened = sorted({p for p in (opened_list or [])
+                          if "references/paperbomb" in p.lower().replace("\\", "/")})
+    return {
+        "module": "props_lib.paperbomb_art " + LIB_VERSION,
+        "design": "the user's own design; tracing and sampling it is the method",
+        "source": os.path.relpath(REFERENCE_SOURCE, PROJECT_ROOT).replace("\\", "/"),
+        "source_sha256": REFERENCE_SOURCE_SHA256,
+        "source_sha256_on_disk": on_disk,
+        "source_matches": on_disk == REFERENCE_SOURCE_SHA256,
+        "only_source": True,
+        "files_actually_opened": opened_list,
+        "reference_files_opened": refs_opened,
+        "traced_shapes": traced,
+        "elements": dict(ELEMENT_DERIVATION),
+    }
+
+

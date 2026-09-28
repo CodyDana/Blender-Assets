@@ -1,0 +1,243 @@
+# =========================================================================== the solver
+@dataclass
+class GapSolution:
+    s: float
+    TA: np.ndarray         # face 0 (leaf line 0 -> mid 0), bind -> posed, 4x4
+    TB: np.ndarray         # face 1 (mid 0 -> leaf line 1)
+    x: np.ndarray          # the 12 unknowns
+    crack_mm: Dict[str, float]
+
+
+class FoldSolver:
+    """Solves gap 0 at any openness, copies it to the 25 gaps, and re-fits the two end faces onto the
+    glued flaps.
+
+    Objective per openness (least squares over the two rigid faces of gap 0):
+      valley    face A's copy of leaf line 0 against the PREVIOUS gap's face B copy of the same line
+                (the symmetry maps gap 0's face B onto gap -1's), weight 1
+      mountain  face A's copy of the mid-gap fold against face B's, weight 1
+      anchor    each face's leaf-line copy against the stick's leaf line, weight ``w_anchor`` (the leaf
+                stays glued to its ribs; the cracks between faces are what the eye would see)"""
+
+    def __init__(self, spec: FanSpec = FAN, mid_offsets: Optional[np.ndarray] = None, w_anchor: float = 0.15):
+        self.spec = spec
+        self.mid_offsets = None if mid_offsets is None else np.asarray(mid_offsets, np.float64).reshape(2, 3)
+        self.tpl = bind_template(spec, self.mid_offsets)
+        self.w_anchor = float(w_anchor)
+        t = self.tpl
+        self.A_rib = t.rib_pts[0].copy()
+        self.A_mid = t.mid_pts[0].copy()
+        self.B_mid = t.mid_pts[0].copy()
+        self.B_rib = t.rib_pts[1].copy()
+        self.cA = np.vstack([self.A_rib, self.A_mid]).mean(0)
+        self.cB = np.vstack([self.B_mid, self.B_rib]).mean(0)
+        self._cache: Dict[float, GapSolution] = {}
+        self._s = 1.0
+
+    # -- the stick / leaf line placements
+    def stick_T(self, i: int, s: float) -> np.ndarray:
+        sp = self.spec
+        return rotz(sp.stick_axis_deg(i, s) - sp.stick_axis_deg(i, 1.0))
+
+    def line_T(self, i: int, s: float) -> np.ndarray:
+        """bind -> posed for leaf line i (equal to stick i's placement)."""
+        return self.stick_T(i, s)
+
+    def _targets(self, s: float):
+        return apply(self.line_T(0, s), self.A_rib), apply(self.line_T(1, s), self.B_rib)
+
+    def _faces(self, x):
+        TA = rigid(rotvec(x[0:3]), self.cA, x[3:6])
+        TB = rigid(rotvec(x[6:9]), self.cB, x[9:12])
+        return TA, TB
+
+    def _residual(self, x, tA, tB):
+        TA, TB = self._faces(x)
+        G = self.symmetry(1, self._s)
+        a_rib = apply(TA, self.A_rib)
+        b_rib = apply(TB, self.B_rib)
+        b_prev = apply(np.linalg.inv(G), b_rib)
+        w = self.w_anchor
+        return np.concatenate([(a_rib - b_prev).ravel(), (apply(TA, self.A_mid) - apply(TB, self.B_mid)).ravel(),
+                               w * (a_rib - tA).ravel(), w * (b_rib - tB).ravel()])
+
+    @staticmethod
+    def _lm(fun, x0, n, iters=200):
+        x = np.array(x0, np.float64)
+        lam = 1e-6
+        r = fun(x)
+        f = float(r @ r)
+        for _ in range(iters):
+            J = np.empty((r.size, n))
+            for k in range(n):
+                d = np.zeros(n)
+                h = 1e-7 if k % 6 < 3 else 1e-6
+                d[k] = h
+                J[:, k] = (fun(x + d) - r) / h
+            A = J.T @ J
+            g = J.T @ r
+            step = np.linalg.solve(A + lam * np.diag(np.diag(A) + 1e-12), -g)
+            xn = x + step
+            rn = fun(xn)
+            fn = float(rn @ rn)
+            if fn < f:
+                x, r, f = xn, rn, fn
+                lam = max(lam * 0.3, 1e-12)
+                if np.abs(step).max() < 1e-12:
+                    break
+            else:
+                lam *= 10.0
+                if lam > 1e8:
+                    break
+        return x, r
+
+    def _solve(self, s: float, x0: np.ndarray) -> GapSolution:
+        self._s = s
+        tA, tB = self._targets(s)
+        x, r = self._lm(lambda v: self._residual(v, tA, tB), x0, 12)
+        rr = r.reshape(-1, 3)
+        d = np.linalg.norm(rr, axis=1)
+        crack = {"valley_mm": float(d[0:2].max()), "mountain_mm": float(d[2:4].max()),
+                 "off_rib_mm": float(d[4:8].max() / max(self.w_anchor, 1e-12))}
+        TA, TB = self._faces(x)
+        return GapSolution(s, TA, TB, x, crack)
+
+    def solve(self, s: float) -> GapSolution:
+        """Continuation from the open pose: never jumps to the other (mirror) branch."""
+        s = float(min(1.0, max(0.0, s)))
+        key = round(s, 9)
+        if key in self._cache:
+            return self._cache[key]
+        if not self._cache:
+            self._cache[1.0] = self._solve(1.0, np.zeros(12))
+        best = min(self._cache.values(), key=lambda g: abs(g.s - s))
+        cur = best
+        span = s - best.s
+        steps = max(1, int(math.ceil(abs(span) / self._step_limit(min(s, best.s)))))
+        for k in range(1, steps + 1):
+            sk = best.s + span * k / steps
+            cur = self._solve(sk, cur.x)
+            self._cache[round(sk, 9)] = cur
+        return cur
+
+    @staticmethod
+    def _step_limit(s_lo: float) -> float:
+        # the pleats swing fastest in the last few per cent (fins -> pages): walk finely there
+        if s_lo < 0.02:
+            return 0.001
+        if s_lo < 0.1:
+            return 0.005
+        return 0.02
+
+    # -- every face
+    def symmetry(self, i: int, s: float) -> np.ndarray:
+        """gap 0 -> gap i at openness s."""
+        sp = self.spec
+        return translate([0, 0, self.tpl.z[i] - self.tpl.z[0]]) @ rotz(sp.leaf_line_deg(i, s) - sp.leaf_line_deg(0, s))
+
+    def _end_fit(self, T0, rib_bind, rib_target, mid_bind, mid_target):
+        """Re-fit one end face: its leaf-line copy onto the glued flap's edge (the guard's line), its
+        mid copy onto the neighbour's; both weight 1.  A small rigid correction of the symmetric
+        solution about the face's posed centroid."""
+        c = apply(T0, np.vstack([rib_bind, mid_bind])).mean(0)
+
+        def fun(v):
+            T = rigid(rotvec(v[0:3]), c, v[3:6]) @ T0
+            return np.concatenate([(apply(T, rib_bind) - rib_target).ravel(), (apply(T, mid_bind) - mid_target).ravel()])
+        v, _ = self._lm(fun, np.zeros(6), 6, iters=60)
+        return rigid(rotvec(v[0:3]), c, v[3:6]) @ T0
+
+    def face_T(self, s: float) -> List[np.ndarray]:
+        g = self.solve(s)
+        n = self.spec.n_sticks
+        out = []
+        for i in range(n - 1):
+            Si, Si1 = self.symmetry(i, s), self.symmetry(i, 1.0)
+            Sinv = np.linalg.inv(Si1)
+            out.append(Si @ g.TA @ Sinv)
+            out.append(Si @ g.TB @ Sinv)
+        t = self.tpl
+        # face 0 onto the front flap's edge (leaf line 0, fixed with the front guard)
+        out[0] = self._end_fit(out[0], t.rib_pts[0], apply(self.line_T(0, s), t.rib_pts[0]),
+                               t.mid_pts[0], apply(out[1], t.mid_pts[0]))
+        # face 49 onto the rear flap's edge (leaf line 25, on the rear guard)
+        out[-1] = self._end_fit(out[-1], t.rib_pts[n - 1], apply(self.line_T(n - 1, s), t.rib_pts[n - 1]),
+                                t.mid_pts[n - 2], apply(out[-2], t.mid_pts[n - 2]))
+        return out
+
+    def sticks_T(self, s: float) -> List[np.ndarray]:
+        return [self.stick_T(i, s) for i in range(self.spec.n_sticks)]
+
+    def cracks(self, s: float, faces: Optional[List[np.ndarray]] = None) -> Dict[str, float]:
+        """Every fold line's copies, posed: the worst distance between two copies of one vertex (valley =
+        a leaf line incl. the flaps' edges, mountain = a mid-gap fold), and the leaf's worst distance from
+        its ribs' lines."""
+        F = faces if faces is not None else self.face_T(s)
+        t = self.tpl
+        n = self.spec.n_sticks
+        valley = mountain = off = 0.0
+        for k in range(n):
+            copies = []
+            if k > 0:
+                copies.append(apply(F[2 * k - 1], t.rib_pts[k]))
+            if k < n - 1:
+                copies.append(apply(F[2 * k], t.rib_pts[k]))
+            line = apply(self.line_T(k, s), t.rib_pts[k])
+            if k in (0, n - 1):
+                copies.append(line)                      # the glued flap's edge IS the line
+            for a in range(len(copies)):
+                off = max(off, float(np.linalg.norm(copies[a] - line, axis=1).max()))
+                for b in range(a + 1, len(copies)):
+                    valley = max(valley, float(np.linalg.norm(copies[a] - copies[b], axis=1).max()))
+        for i in range(n - 1):
+            a = apply(F[2 * i], t.mid_pts[i])
+            b = apply(F[2 * i + 1], t.mid_pts[i])
+            mountain = max(mountain, float(np.linalg.norm(a - b, axis=1).max()))
+        return {"valley_mm": valley, "mountain_mm": mountain, "leaf_off_rib_mm": off,
+                "worst_mm": max(valley, mountain)}
+
+
+def optimise_bind(spec: FanSpec = FAN, iters: int = 150, samples=(0.6, 0.3, 0.0), log=None):
+    """Nelder-Mead over gap 0's two mid-gap fold points (6 numbers, mm) minimising the worst crack at
+    ``samples`` (continued from the open pose each time).  Deterministic.  The shift it finds is a
+    few tenths of a millimetre; it removes the first-order part of the stacked leaf's inconsistency
+    (the crack drops several times)."""
+    def obj(p):
+        fs = FoldSolver(spec, p.reshape(2, 3))
+        worst = 0.0
+        for s in samples:
+            g = fs.solve(s)
+            worst = max(worst, g.crack_mm["valley_mm"], g.crack_mm["mountain_mm"])
+        return worst
+    n = 6
+    X = [np.zeros(n)] + [np.eye(n)[k] * 0.3 for k in range(n)]
+    Fv = [obj(x) for x in X]
+    f0 = Fv[0]
+    for it in range(iters):
+        o = np.argsort(Fv)
+        X = [X[k] for k in o]
+        Fv = [Fv[k] for k in o]
+        c = np.mean(X[:-1], 0)
+        xr = c + (c - X[-1])
+        fr = obj(xr)
+        if fr < Fv[0]:
+            xe = c + 2 * (c - X[-1])
+            fe = obj(xe)
+            X[-1], Fv[-1] = (xe, fe) if fe < fr else (xr, fr)
+        elif fr < Fv[-2]:
+            X[-1], Fv[-1] = xr, fr
+        else:
+            xc = c + 0.5 * (X[-1] - c)
+            fc = obj(xc)
+            if fc < Fv[-1]:
+                X[-1], Fv[-1] = xc, fc
+            else:
+                X = [X[0]] + [X[0] + 0.5 * (x - X[0]) for x in X[1:]]
+                Fv = [Fv[0]] + [obj(x) for x in X[1:]]
+        if log and it % 25 == 0:
+            log(f"    bind optimisation {it}: worst crack {min(Fv):.5f} mm")
+    k = int(np.argmin(Fv))
+    return X[k].reshape(2, 3), {"iterations": iters, "worst_before_mm": float(f0), "worst_after_mm": float(Fv[k]),
+                                "samples": list(samples), "offsets_mm": np.round(X[k].reshape(2, 3), 6).tolist()}
+
+

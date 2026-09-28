@@ -1,0 +1,1848 @@
+{
+ "meta": {
+  "reference": "References/BlackHat/blackhat_guide.png",
+  "sha256": "8244fd615b6c1575c57eba5a077a18c44da52a234a44b08997f7a2b94d7ec356",
+  "size_px": [
+   670,
+   599
+  ],
+  "units": "R = outer radius of the rim (outside of the rolled rim tube); D = 2R. theta = azimuth about the hat axis, 0 = rim point nearest the reference camera, + toward image right. rho = horizontal radius / R on the cone surface z = H(1-rho). z = 0 is the rim outline plane (bottom of the rim tube, +/-0.02 R).",
+  "instrument": "Blender 5.2 headless Python + NumPy 2; scripts bh_m00..bh_m26 in this folder; stage outputs bh_s*.json",
+  "status_labels": "MEASURED (read off the pixels), INFERRED (geometric consequence of measured rows), DESIGNED (proposal for what the reference cannot show)",
+  "designed_scale_note": "The photo has no scale. DESIGNED default D = 600 mm (R = 300 mm); every length is given in R.",
+  "debug_dir": "WorkFiles/blackhat/reference_metrology/debug (DEBUG, NEVER SHIP)",
+  "build_input_policy": "The build must never read, sample, project or trace the reference pixels or the debug images; this spec is numbers and words."
+ },
+ "camera": {
+  "projection": {
+   "value": "perspective",
+   "tolerance": "must be perspective; orthographic fails the crown-cap check (cap arc rms 1.66 px vs 0.61 px)",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "joint fit of silhouette + crown-cap edge arc over a camera-distance ladder (bh_m07)"
+  },
+  "distance_to_rim_centre_R": {
+   "value": 2.6,
+   "tolerance": [
+    2.2,
+    3.0
+   ],
+   "status": "MEASURED",
+   "unit": "",
+   "how": "minimum of the crown-cap arc residual; band-ring level test agrees (d ~ 2.5)"
+  },
+  "elevation_deg": {
+   "value": 17.03,
+   "tolerance": 0.5,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "line of sight to the rim centre, above the rim plane (range 16.5-17.4 over the distance range)"
+  },
+  "focal_mm_on_36mm_sensor_670px_wide": {
+   "value": 42.8,
+   "tolerance": [
+    35.1,
+    50.3
+   ],
+   "status": "MEASURED",
+   "unit": "",
+   "how": "f_px * 36 / 670; tied to the distance row"
+  },
+  "f_px": {
+   "value": 796.7,
+   "tolerance": [
+    652.6,
+    936.7
+   ],
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "hfov_deg": {
+   "value": 45.6,
+   "tolerance": [
+    39.4,
+    54.3
+   ],
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "rim_centre_image_px": {
+   "value": [
+    332.97,
+    291.94
+   ],
+   "tolerance": 2.0,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "image of the rim centre = camera aim point"
+  },
+  "blender_shift_xy": {
+   "value": [
+    -0.003,
+    0.0113
+   ],
+   "tolerance": 0.005,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "render 670 x 599, sensor fit HORIZONTAL, 36 mm, camera aimed at the rim centre"
+  },
+  "roll_deg": {
+   "value": 0.51,
+   "tolerance": 0.15,
+   "status": "MEASURED",
+   "unit": "deg",
+   "how": "image content rotated 0.51 deg CLOCKWISE (right rim tip 5.5 px lower than the left); generator angles 25.47 / 26.53 deg below horizontal"
+  },
+  "camera_position_R_camera_frame": {
+   "value": [
+    0.0,
+    -2.486,
+    0.761
+   ],
+   "tolerance": "scales with the distance row",
+   "status": "INFERRED",
+   "unit": "",
+   "how": "camera on azimuth theta = 0 (-Y), looking at the rim centre"
+  },
+  "designed_world_orientation": {
+   "value": "hat +Z up, +X forward; knot on the wearer LEFT (+Y). Reference camera azimuth psi = +29 deg from +X toward +Y, at (2.174, 1.205, 0.761) R",
+   "tolerance": "psi +/-5 deg",
+   "status": "DESIGNED",
+   "unit": "",
+   "how": "knot measured at theta = +61 deg from the camera-facing point; psi = 90 - 61"
+  },
+  "frame_extent_px": {
+   "value": {
+    "x": [
+     1,
+     664
+    ],
+    "crown_top_y": 142.5,
+    "rim_bottom_y_at_centre": 433.5,
+    "lowest_tail_tip_y": 533,
+    "left_tip_y": 328,
+    "right_tip_y": 333.5
+   },
+   "tolerance": 2,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "silhouette_generator_lines": {
+   "value": {
+    "left": "y = 299.06 - 0.47641 x",
+    "right": "y = -26.848 + 0.49928 x",
+    "virtual_apex_px": [
+     334.03,
+     139.93
+    ]
+   },
+   "tolerance": "1 px",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "bh_m02; rms 0.69 / 0.73 px"
+  }
+ },
+ "lighting": {
+  "backdrop": {
+   "value": "pure white cut-out, 0.992-0.997 stored everywhere; NO cast shadow and no contact shadow on the backdrop",
+   "tolerance": "must stay absent",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "every backdrop pixel more than 8 px from the hat is >= 0.992 (bh_m01)"
+  },
+  "softness": {
+   "value": "large soft sources; no hard shadow edge anywhere; darkness only in crevices (rim groove 0.011-0.06 stored, black line under the cap lip)",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "straw_brightness_vs_theta_lin_p50": {
+   "value": {
+    "theta 0..16 (front)": 0.017,
+    "theta -28..-24": 0.054,
+    "theta -52..-44 (left, worn + sheen)": 0.074,
+    "theta -76..-64": 0.035,
+    "theta 72..76 (right)": 0.041
+   },
+   "tolerance": "+/-20% each after matching exposure on the front bay",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "unrolled cone, rho 0.55-0.93, rib columns excluded (bh_m20)"
+  },
+  "straw_profile_full": {
+   "value": [
+    [
+     -92,
+     0.028445714557529842,
+     0.03479529631997011,
+     0.1051115997968601
+    ],
+    [
+     -88,
+     0.025615313394948,
+     0.02900383638601703,
+     0.04509686886838925
+    ],
+    [
+     -84,
+     0.03294445273392624,
+     0.037239393422174805,
+     0.06041243898169588
+    ],
+    [
+     -80,
+     0.015172679509019025,
+     0.023711274719573613,
+     0.060887085334796635
+    ],
+    [
+     -76,
+     0.029602756621761147,
+     0.03222720126989635,
+     0.048665573726091045
+    ],
+    [
+     -72,
+     0.02648591718577889,
+     0.02947101405805358,
+     0.04325562190217666
+    ],
+    [
+     -68,
+     0.03907112344466681,
+     0.0433691436802562,
+     0.056793698772529176
+    ],
+    [
+     -64,
+     0.03306145153232247,
+     0.03672857425715899,
+     0.04825676873477663
+    ],
+    [
+     -60,
+     0.04354475101960526,
+     0.049015835287908135,
+     0.0740314926690113
+    ],
+    [
+     -56,
+     0.047938432088596675,
+     0.06252547497667041,
+     0.15944863916942498
+    ],
+    [
+     -52,
+     0.05697851967601238,
+     0.07307712734906743,
+     0.16211615044260458
+    ],
+    [
+     -48,
+     0.06054869252527112,
+     0.07415723299252158,
+     0.121930975088725
+    ],
+    [
+     -44,
+     0.05252079996827525,
+     0.0636502359046956,
+     0.09765612251515285
+    ],
+    [
+     -40,
+     0.03187775628989975,
+     0.042197144243243084,
+     0.07936608398014756
+    ],
+    [
+     -36,
+     0.022738879074394796,
+     0.02732453552865191,
+     0.04887759906161837
+    ],
+    [
+     -32,
+     0.042058979526556836,
+     0.05165571430013266,
+     0.0759369594186852
+    ],
+    [
+     -28,
+     0.049352309080260684,
+     0.055285655771869405,
+     0.07423625571551724
+    ],
+    [
+     -24,
+     0.04740032617466749,
+     0.05322226467760225,
+     0.0717336308519803
+    ],
+    [
+     -20,
+     0.03984988081696398,
+     0.04431817276410564,
+     0.05891345166555725
+    ],
+    [
+     -16,
+     0.031077883038878942,
+     0.035826285470452454,
+     0.062878250001942
+    ],
+    [
+     -12,
+     0.026170459129813042,
+     0.029376681015162047,
+     0.04084015516607394
+    ],
+    [
+     -8,
+     0.020582057891879633,
+     0.023827729561853837,
+     0.037092121207042215
+    ],
+    [
+     -4,
+     0.01768021166118121,
+     0.02012485134636821,
+     0.028979866362037924
+    ],
+    [
+     0,
+     0.01602564369133859,
+     0.017799294775859113,
+     0.023763610441564473
+    ],
+    [
+     4,
+     0.015914091592345768,
+     0.0174482301735044,
+     0.023258849562435926
+    ],
+    [
+     8,
+     0.0154977325667866,
+     0.016673065077100944,
+     0.021602033213289667
+    ],
+    [
+     12,
+     0.014441336717215427,
+     0.01553593061204835,
+     0.02008711699930827
+    ],
+    [
+     16,
+     0.015423088750433942,
+     0.016585745758062514,
+     0.02056057426197743
+    ],
+    [
+     72,
+     0.03516327798004534,
+     0.03747746417041094,
+     0.04644493657428663
+    ],
+    [
+     76,
+     0.03966764837658623,
+     0.044759097022043934,
+     0.05747230600286385
+    ],
+    [
+     80,
+     0.015215568055011139,
+     0.026222108444695393,
+     0.05216112697309115
+    ],
+    [
+     84,
+     0.02629941989159271,
+     0.03994504639355379,
+     0.06668398559308564
+    ],
+    [
+     88,
+     0.054461736567933114,
+     0.06500444942365177,
+     0.09827740234168156
+    ],
+    [
+     92,
+     0.041576703500207875,
+     0.049033162486095405,
+     0.09313782487837921
+    ]
+   ],
+   "tolerance": "+/-20%",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "(theta, p30, p50, p90) linear luminance"
+  },
+  "pattern": {
+   "value": "camera-facing bays darkest; both sides 2-4x brighter; left ~1.3x brighter than right. Not Lambertian from one light (1-light fit R2 0.11, 2-light 0.23): grazing sheen on the straw plus lights behind both sides",
+   "tolerance": "qualitative",
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "rim_tube_lin_p50": {
+   "value": {
+    "front theta 0..15": 0.012,
+    "theta -50": 0.049,
+    "theta +55..60": 0.03
+   },
+   "tolerance": "+/-25%",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "specular": {
+   "value": "straw: soft sheen, streaky glints along strands on the lit left bays (p90 0.16 lin); cloth: matte (p90/p50 1.4)",
+   "tolerance": "qualitative",
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "proposed_rig": {
+   "value": "soft key area light upper-left-behind (theta -110, elev 35); soft kicker right-behind (theta +115, elev 25, 0.6x key); weak front fill 0.2x; straw roughness ~0.5 with sheen",
+   "tolerance": "tune to the brightness rows",
+   "status": "DESIGNED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "cone": {
+  "H_over_R": {
+   "value": 0.488,
+   "tolerance": 0.015,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "virtual apex height above the rim outline plane"
+  },
+  "D_over_H": {
+   "value": 4.1,
+   "tolerance": 0.13,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "slope_from_horizontal_deg": {
+   "value": 26.0,
+   "tolerance": 0.8,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "apex_full_angle_deg": {
+   "value": 128.0,
+   "tolerance": 1.6,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "profile": {
+   "value": "straight generators (silhouette rms 0.7 px, quadratic term negligible); no sag or flare near the rim",
+   "tolerance": "<= 0.005 R deviation from straight",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "crown_cap_radius_over_R": {
+   "value": 0.1055,
+   "tolerance": 0.008,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "cap lower-edge arc (top of its black shadow line) fitted as a circle on the cone (bh_m07)"
+  },
+  "crown_cap_profile": {
+   "value": "low conical lid, slope ~20 deg (flatter than the 26 deg cone); top 0.005 R below the virtual apex; lip thickness / overhang ~0.008 R casting a black 1.5-2 px line; faint radial ribs on the lid meet at a point, no finial",
+   "tolerance": "slope +/-5 deg; lip 0.004-0.012 R",
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "ribs": {
+  "primary_count": {
+   "value": 13,
+   "tolerance": "exactly 13",
+   "status": "INFERRED",
+   "unit": "",
+   "how": "7 visible ribs span 167 deg, mean pitch 27.84 deg (N = 12.93); forced N=13 rms 2.16 deg vs N=12 rms 4.82 deg at the best camera; N=12 becomes the better even-pitch fit only for d >= 2.9 R and matches 30 deg exactly at d = 3.5 R, where the cap residual is 21% worse (bh_m24)"
+  },
+  "visible_azimuths_at_rim_deg": {
+   "value": [
+    -82.0,
+    -54.5,
+    -23.5,
+    7.6,
+    30.0,
+    58.0,
+    85.0
+   ],
+   "tolerance": {
+    "-82 and +85": 4,
+    "others": 2
+   },
+   "status": "MEASURED",
+   "unit": "",
+   "how": "rib meets the rim, unrolled cone (bh_m16), d = 2.6 camera"
+  },
+  "visible_gaps_deg": {
+   "value": [
+    27.5,
+    31.0,
+    31.1,
+    22.4,
+    28.0,
+    27.0
+   ],
+   "tolerance": 2,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "keep them; do not regularise the visible arc"
+  },
+  "far_side_azimuths_deg": {
+   "value": [
+    112.7,
+    140.3,
+    167.9,
+    195.4,
+    223.0,
+    250.6
+   ],
+   "tolerance": 3,
+   "status": "DESIGNED",
+   "unit": "",
+   "how": "6 more ribs evenly filling +85 -> +278 deg (pitch 27.6)"
+  },
+  "diameter_over_R": {
+   "value": 0.011,
+   "tolerance": 0.003,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "dark flank to dark flank 0.9 deg at rho 0.78; bright core 0.5 deg"
+  },
+  "relief": {
+   "value": "round rod lying ON the skin with a dark shadow flank each side (~0.3 deg each)",
+   "tolerance": "relief 0.6-1.0 x diameter",
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "construction": {
+   "value": "twisted cord / split-cane rod; rope twist clearly visible on the theta = +7.6 rib (pitch ~1.6 x diameter); runs from under the cap lip to under the rim binding cord",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "fine_radial_seams": {
+   "value": "thin 1 px dark radial seams in the weave at irregular 3-8 deg spacing; texture only, no relief",
+   "tolerance": "texture",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "theta spectrum peaks 3.8-7.7 deg"
+  }
+ },
+ "weave": {
+  "strand_direction": {
+   "value": "circumferential flat strands (parallel to the rim); radial fine seams break them into brick-like runs",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "strand_width_over_R": {
+   "value": 0.006,
+   "tolerance": 0.002,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "~2 px at the front, slant scale 328 px/R"
+  },
+  "strand_width_over_D": {
+   "value": 0.003,
+   "tolerance": 0.001,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "course_period_over_R_slant": {
+   "value": 0.031,
+   "tolerance": 0.008,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "autocorrelation along rho peaks at 0.0275 rho"
+  },
+  "weave_meets_rib": {
+   "value": "strands run continuously UNDER each rib; no gap or break at the rib; shadow flanks either side",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "weave_at_edges": {
+   "value": "disappears under the cap lip at the top and under the binding cord / rim tube at the bottom",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "rim": {
+  "tube_diameter_over_R": {
+   "value": 0.044,
+   "tolerance": 0.006,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "front: bottom outline 433.5 px to the dark groove 412 px = 21.5 px at 484.6 px/R"
+  },
+  "binding_cord_diameter_over_R": {
+   "value": 0.005,
+   "tolerance": 0.002,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "thin light cord on the inner-top edge of the tube, above the groove"
+  },
+  "groove": {
+   "value": "dark crevice between binding cord and tube, stored 0.011-0.06",
+   "tolerance": "must read black",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "lashing_count": {
+   "value": 26,
+   "tolerance": "exactly 2 per rib bay",
+   "status": "INFERRED",
+   "unit": "",
+   "how": "a lashing at every primary rib end plus one inside every bay, in all 5 measurable bays"
+  },
+  "lashing_visible_azimuths_deg": {
+   "value": {
+    "at_ribs": [
+     -53.7,
+     -22.1,
+     7.65,
+     30.0,
+     58.35
+    ],
+    "in_bays": [
+     -67.0,
+     -32.5,
+     -9.0,
+     17.1,
+     42.75
+    ]
+   },
+   "tolerance": {
+    "|theta| < 45": 1.5,
+    "sides": 4
+   },
+   "status": "MEASURED",
+   "unit": "",
+   "how": "theta-rectified rim face (bh_m15); +30.0 is hidden under tail A, inferred from its rib"
+  },
+  "lashing_detections_raw": {
+   "value": [
+    {
+     "theta": -95.3,
+     "score": 1.82,
+     "width_deg": 0.95,
+     "img": [
+      37.4,
+      275.6
+     ]
+    },
+    {
+     "theta": -90.4,
+     "score": 2.29,
+     "width_deg": 1.1,
+     "img": [
+      26.7,
+      282.8
+     ]
+    },
+    {
+     "theta": -67.0,
+     "score": 2.62,
+     "width_deg": 3.6,
+     "img": [
+      2.4,
+      323.2
+     ]
+    },
+    {
+     "theta": -53.7,
+     "score": 2.35,
+     "width_deg": 2.55,
+     "img": [
+      15.9,
+      349.7
+     ]
+    },
+    {
+     "theta": -32.5,
+     "score": 5.39,
+     "width_deg": 2.4,
+     "img": [
+      92.6,
+      391.4
+     ]
+    },
+    {
+     "theta": -22.1,
+     "score": 4.95,
+     "width_deg": 2.2,
+     "img": [
+      156.5,
+      408.0
+     ]
+    },
+    {
+     "theta": -9.0,
+     "score": 5.28,
+     "width_deg": 2.0,
+     "img": [
+      256.3,
+      421.7
+     ]
+    },
+    {
+     "theta": 7.65,
+     "score": 6.08,
+     "width_deg": 2.2,
+     "img": [
+      396.2,
+      423.7
+     ]
+    },
+    {
+     "theta": 17.1,
+     "score": 6.58,
+     "width_deg": 2.1,
+     "img": [
+      471.3,
+      416.8
+     ]
+    },
+    {
+     "theta": 27.65,
+     "score": 3.49,
+     "width_deg": 1.7,
+     "img": [
+      543.6,
+      403.4
+     ]
+    },
+    {
+     "theta": 35.2,
+     "score": 2.56,
+     "width_deg": 1.55,
+     "img": [
+      585.4,
+      390.9
+     ]
+    },
+    {
+     "theta": 42.75,
+     "score": 4.59,
+     "width_deg": 1.85,
+     "img": [
+      618.1,
+      377.0
+     ]
+    },
+    {
+     "theta": 58.35,
+     "score": 1.55,
+     "width_deg": 2.35,
+     "img": [
+      656.6,
+      346.0
+     ]
+    },
+    {
+     "theta": 66.15,
+     "score": 2.24,
+     "width_deg": 3.55,
+     "img": [
+      662.7,
+      330.7
+     ]
+    },
+    {
+     "theta": 77.5,
+     "score": 1.59,
+     "width_deg": 1.85,
+     "img": [
+      658.6,
+      309.6
+     ]
+    },
+    {
+     "theta": 83.0,
+     "score": 1.43,
+     "width_deg": 1.55,
+     "img": [
+      652.1,
+      300.1
+     ]
+    },
+    {
+     "theta": 87.15,
+     "score": 1.94,
+     "width_deg": 1.0,
+     "img": [
+      645.4,
+      293.3
+     ]
+    },
+    {
+     "theta": 94.2,
+     "score": 1.76,
+     "width_deg": 1.15,
+     "img": [
+      631.3,
+      282.4
+     ]
+    }
+   ],
+   "tolerance": "n/a",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "all peaks incl. tail edges (27.65, 35.2) and weak tip detections"
+  },
+  "bay_lashing_fraction_of_bay": {
+   "value": [
+    0.55,
+    0.68,
+    0.46,
+    0.42,
+    0.45
+   ],
+   "tolerance": 0.08,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "(lashing - previous rib) / bay width"
+  },
+  "lashing_width_over_R": {
+   "value": 0.038,
+   "tolerance": 0.005,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "2.0-2.4 deg at R"
+  },
+  "wraps_per_lashing": {
+   "value": 3,
+   "tolerance": "exactly 3",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "3x-8x crops"
+  },
+  "wrap_cord_diameter_over_R": {
+   "value": 0.012,
+   "tolerance": 0.003,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "lashing_extent": {
+   "value": "wraps cover the tube and the binding cord and reach ~0.015 R onto the skin edge",
+   "tolerance": 0.005,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "band": {
+  "ring_centre_rho": {
+   "value": 0.365,
+   "tolerance": 0.015,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "back-projected band line at theta -80..0; horizontal within +/-0.01 rho"
+  },
+  "ring_height_z_over_H": {
+   "value": 0.635,
+   "tolerance": 0.02,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "gap_below_cap_edge_R_slant": {
+   "value": 0.29,
+   "tolerance": 0.03,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "width_over_R": {
+   "value": {
+    "theta < -20 (twisted, cord-like)": 0.01,
+    "theta 0": 0.04,
+    "theta +30 (fanned toward knot)": 0.11
+   },
+   "tolerance": {
+    "cord": 0.003,
+    "theta 0": 0.01,
+    "theta 30": 0.02
+   },
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "flat_cloth_width_over_R": {
+   "value": 0.1,
+   "tolerance": 0.02,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "fanned width near the knot and the tail widths"
+  },
+  "wrap": {
+   "value": "one turn round the cone lying on it and passing OVER the ribs; progressively twisted into a narrow roll away from the knot; its lower edge dips to rho 0.51 just before the knot",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "knot_theta_deg": {
+   "value": 61,
+   "tolerance": 5,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "back-projected knot centre image (462, 222); 57-64 over the distance range"
+  },
+  "knot_rho": {
+   "value": 0.43,
+   "tolerance": 0.04,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "knot_size_over_R": {
+   "value": [
+    0.08,
+    0.09
+   ],
+   "tolerance": 0.02,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "28 x 35 px at ~370 px/R"
+  },
+  "knot_shape": {
+   "value": "compact gathered knot (square-knot bulk) on the band lower edge; the band fans into 3-4 fold lines entering it",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "tails": {
+  "count": {
+   "value": 2,
+   "tolerance": "exactly 2",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "leave_knot_at": {
+   "value": {
+    "theta": 64,
+    "rho": 0.51
+   },
+   "tolerance": {
+    "theta": 5,
+    "rho": 0.04
+   },
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "cross_rim_theta_deg": {
+   "value": {
+    "A": 31,
+    "B": 40
+   },
+   "tolerance": 4,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "order": {
+   "value": "A (inner, nearer the camera-facing side) lies over B near the knot",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "width_over_R": {
+   "value": {
+    "A": [
+     0.062,
+     0.075
+    ],
+    "B": [
+     0.084,
+     0.091
+    ]
+   },
+   "tolerance": 0.01,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "below-rim widths 28-34 px (A), 36-39 px (B) at 452 / 430 px/R"
+  },
+  "length_knot_to_tip_over_R": {
+   "value": {
+    "A": 0.99,
+    "B": 0.96
+   },
+   "tolerance": 0.1,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "on-cone path + straight fall"
+  },
+  "length_over_D": {
+   "value": 0.49,
+   "tolerance": 0.05,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "hang_below_rim_over_R": {
+   "value": {
+    "A": 0.3,
+    "B": 0.32
+   },
+   "tolerance": 0.04,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "hang_direction": {
+   "value": "falls 12-18 deg off vertical, outward (image right, away from the cone)",
+   "tolerance": 5,
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "tip_image_px": {
+   "value": {
+    "A": [
+     592,
+     533
+    ],
+    "B": [
+     643,
+     520
+    ]
+   },
+   "tolerance": 4,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "twist_drape": {
+   "value": "A is turned ~60-90 deg (edge toward the camera, 17 px wide) for ~0.15 R after the knot, then lies flat on the cone and over the rim; B stays face-on and stands slightly off the cone near the rim (dark air gap)",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "torn_end": {
+   "value": "each end is a long tapering diagonal tear finishing in a point on the OUTER (image-right) edge: A tear 0.18 R long; B 0.25 R long with one deep notch splitting off a narrow sliver; ragged teeth 0.007-0.02 R",
+   "tolerance": {
+    "tear length": 0.04,
+    "teeth": 0.005
+   },
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "cloth_thickness_over_R": {
+   "value": 0.004,
+   "tolerance": "0.003-0.005 (not resolvable, <= 1.5 px)",
+   "status": "DESIGNED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "colour": {
+  "straw_albedo_lin_lum": {
+   "value": 0.042,
+   "tolerance": 0.015,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "unworn straw mean 0.035 lin over the visible arc / mean irradiance ~0.8 (sides lit near full, front ~0.4)"
+  },
+  "straw_albedo_srgb": {
+   "value": [
+    0.233,
+    0.225,
+    0.224
+   ],
+   "tolerance": 0.03,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "albedo lum x chroma (0.350, 0.327, 0.323); #3B3939"
+  },
+  "straw_chroma_hue_sat": {
+   "value": {
+    "chroma": [
+     0.35,
+     0.327,
+     0.323
+    ],
+    "hue_deg": 9,
+    "sat": 0.04
+   },
+   "tolerance": {
+    "r": 0.008,
+    "hue_deg": 8,
+    "sat": 0.02
+   },
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "rim_and_lashing_albedo_srgb": {
+   "value": [
+    0.241,
+    0.223,
+    0.213
+   ],
+   "tolerance": 0.03,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "warmer: chroma (0.375, 0.324, 0.300), hue 18-21 deg, sat 0.10-0.13; #3D3936"
+  },
+  "cloth_albedo_lin_lum": {
+   "value": 0.03,
+   "tolerance": 0.01,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "tails 0.012-0.017 and band 0.010-0.032 lin in dimmer / vertical positions; ~0.72x straw"
+  },
+  "cloth_albedo_srgb": {
+   "value": [
+    0.195,
+    0.188,
+    0.189
+   ],
+   "tolerance": 0.03,
+   "status": "INFERRED",
+   "unit": "",
+   "how": "chroma (0.348, 0.324, 0.328), neutral, sat 0.04; #323030"
+  },
+  "wear_fleck_srgb_observed": {
+   "value": [
+    0.373,
+    0.362,
+    0.358
+   ],
+   "tolerance": 0.04,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "pixels > 1.8x the local p30; neutral light grey; lin lum p50 0.082, p90 0.20"
+  },
+  "wear_fleck_albedo_lin_lum": {
+   "value": 0.1,
+   "tolerance": [
+    0.08,
+    0.2
+   ],
+   "status": "INFERRED",
+   "unit": "",
+   "how": ""
+  },
+  "default_tints_for_sidecar": {
+   "value": {
+    "straw_lin": [
+     0.0443,
+     0.0414,
+     0.041
+    ],
+    "cloth_lin": [
+     0.0316,
+     0.0294,
+     0.0297
+    ],
+    "rim_lin": [
+     0.0473,
+     0.0409,
+     0.0378
+    ]
+   },
+   "tolerance": "+/-25%",
+   "status": "INFERRED",
+   "unit": "",
+   "how": "albedo lum x chroma / (chroma . Rec709 luma)"
+  },
+  "region_stats": {
+   "value": {
+    "straw_centre_bay": {
+     "n": 8750,
+     "mean_lin": [
+      0.0304,
+      0.0284,
+      0.028
+     ],
+     "mean_srgb": [
+      0.191,
+      0.184,
+      0.183
+     ],
+     "hex": "#312F2F",
+     "lum_lin_p10_50_90": [
+      0.0151,
+      0.0242,
+      0.0474
+     ],
+     "lum_lin_mean": 0.0288,
+     "chroma": [
+      0.35,
+      0.327,
+      0.323
+     ],
+     "hue_deg": 9.3,
+     "sat": 0.043
+    },
+    "straw_left_bay_worn": {
+     "n": 11000,
+     "mean_lin": [
+      0.062,
+      0.0581,
+      0.0571
+     ],
+     "mean_srgb": [
+      0.276,
+      0.267,
+      0.265
+     ],
+     "hex": "#464444",
+     "lum_lin_p10_50_90": [
+      0.024,
+      0.0545,
+      0.0967
+     ],
+     "lum_lin_mean": 0.0589,
+     "chroma": [
+      0.35,
+      0.328,
+      0.322
+     ],
+     "hue_deg": 12.2,
+     "sat": 0.04
+    },
+    "straw_leftmost_bay": {
+     "n": 10230,
+     "mean_lin": [
+      0.0421,
+      0.0393,
+      0.0391
+     ],
+     "mean_srgb": [
+      0.227,
+      0.219,
+      0.218
+     ],
+     "hex": "#3A3838",
+     "lum_lin_p10_50_90": [
+      0.0255,
+      0.0376,
+      0.0575
+     ],
+     "lum_lin_mean": 0.0399,
+     "chroma": [
+      0.349,
+      0.326,
+      0.324
+     ],
+     "hue_deg": 4.9,
+     "sat": 0.038
+    },
+    "straw_right_bay": {
+     "n": 8800,
+     "mean_lin": [
+      0.0412,
+      0.0386,
+      0.0387
+     ],
+     "mean_srgb": [
+      0.224,
+      0.217,
+      0.217
+     ],
+     "hex": "#393737",
+     "lum_lin_p10_50_90": [
+      0.0267,
+      0.0395,
+      0.0522
+     ],
+     "lum_lin_mean": 0.0391,
+     "chroma": [
+      0.348,
+      0.326,
+      0.326
+     ],
+     "hue_deg": 358.1,
+     "sat": 0.034
+    },
+    "straw_upper_front_above_band": {
+     "n": 5000,
+     "mean_lin": [
+      0.0245,
+      0.0239,
+      0.0237
+     ],
+     "mean_srgb": [
+      0.17,
+      0.168,
+      0.167
+     ],
+     "hex": "#2B2B2B",
+     "lum_lin_p10_50_90": [
+      0.0164,
+      0.0221,
+      0.0346
+     ],
+     "lum_lin_mean": 0.024,
+     "chroma": [
+      0.34,
+      0.331,
+      0.329
+     ],
+     "hue_deg": 13.8,
+     "sat": 0.018
+    },
+    "rim_tube_front": {
+     "n": 1680,
+     "mean_lin": [
+      0.0251,
+      0.0219,
+      0.0205
+     ],
+     "mean_srgb": [
+      0.172,
+      0.16,
+      0.154
+     ],
+     "hex": "#2C2927",
+     "lum_lin_p10_50_90": [
+      0.0071,
+      0.018,
+      0.0433
+     ],
+     "lum_lin_mean": 0.0224,
+     "chroma": [
+      0.372,
+      0.324,
+      0.304
+     ],
+     "hue_deg": 18.3,
+     "sat": 0.105
+    },
+    "lashing_front": {
+     "n": 208,
+     "mean_lin": [
+      0.0267,
+      0.0229,
+      0.0209
+     ],
+     "mean_srgb": [
+      0.178,
+      0.164,
+      0.156
+     ],
+     "hex": "#2D2A28",
+     "lum_lin_p10_50_90": [
+      0.0028,
+      0.0155,
+      0.0551
+     ],
+     "lum_lin_mean": 0.0235,
+     "chroma": [
+      0.379,
+      0.324,
+      0.297
+     ],
+     "hue_deg": 21.0,
+     "sat": 0.126
+    },
+    "band_wide_near_knot": {
+     "n": 1300,
+     "mean_lin": [
+      0.0105,
+      0.0097,
+      0.0097
+     ],
+     "mean_srgb": [
+      0.103,
+      0.098,
+      0.098
+     ],
+     "hex": "#1A1919",
+     "lum_lin_p10_50_90": [
+      0.0016,
+      0.01,
+      0.016
+     ],
+     "lum_lin_mean": 0.0099,
+     "chroma": [
+      0.351,
+      0.324,
+      0.325
+     ],
+     "hue_deg": 357.1,
+     "sat": 0.051
+    },
+    "band_thin_left": {
+     "n": 2000,
+     "mean_lin": [
+      0.0344,
+      0.0316,
+      0.0303
+     ],
+     "mean_srgb": [
+      0.204,
+      0.195,
+      0.191
+     ],
+     "hex": "#343231",
+     "lum_lin_p10_50_90": [
+      0.0153,
+      0.0295,
+      0.0523
+     ],
+     "lum_lin_mean": 0.0321,
+     "chroma": [
+      0.357,
+      0.328,
+      0.315
+     ],
+     "hue_deg": 19.1,
+     "sat": 0.064
+    },
+    "tailA_below_rim": {
+     "n": 760,
+     "mean_lin": [
+      0.0175,
+      0.0163,
+      0.0167
+     ],
+     "mean_srgb": [
+      0.14,
+      0.135,
+      0.137
+     ],
+     "hex": "#242223",
+     "lum_lin_p10_50_90": [
+      0.0118,
+      0.0162,
+      0.0224
+     ],
+     "lum_lin_mean": 0.0166,
+     "chroma": [
+      0.347,
+      0.323,
+      0.33
+     ],
+     "hue_deg": 342.5,
+     "sat": 0.04
+    },
+    "tailB_below_rim": {
+     "n": 728,
+     "mean_lin": [
+      0.0127,
+      0.0119,
+      0.012
+     ],
+     "mean_srgb": [
+      0.116,
+      0.111,
+      0.112
+     ],
+     "hex": "#1E1C1D",
+     "lum_lin_p10_50_90": [
+      0.0072,
+      0.0112,
+      0.018
+     ],
+     "lum_lin_mean": 0.0121,
+     "chroma": [
+      0.348,
+      0.324,
+      0.328
+     ],
+     "hue_deg": 350.2,
+     "sat": 0.043
+    },
+    "crown_cap_top": {
+     "n": 374,
+     "mean_lin": [
+      0.0424,
+      0.0384,
+      0.0368
+     ],
+     "mean_srgb": [
+      0.228,
+      0.216,
+      0.212
+     ],
+     "hex": "#3A3736",
+     "lum_lin_p10_50_90": [
+      0.0138,
+      0.0282,
+      0.0758
+     ],
+     "lum_lin_mean": 0.0391,
+     "chroma": [
+      0.361,
+      0.326,
+      0.313
+     ],
+     "hue_deg": 17.1,
+     "sat": 0.071
+    },
+    "all_hat_pixels": {
+     "n": 132275,
+     "mean_lin": [
+      0.0333,
+      0.0313,
+      0.0308
+     ],
+     "mean_srgb": [
+      0.201,
+      0.194,
+      0.193
+     ],
+     "hex": "#333131",
+     "lum_lin_p10_50_90": [
+      0.0086,
+      0.0242,
+      0.0601
+     ],
+     "lum_lin_mean": 0.0317,
+     "chroma": [
+      0.349,
+      0.328,
+      0.323
+     ],
+     "hue_deg": 10.4,
+     "sat": 0.04
+    },
+    "straw_theta_profile": [
+     [
+      -92,
+      0.028445714557529842,
+      0.03479529631997011,
+      0.1051115997968601
+     ],
+     [
+      -88,
+      0.025615313394948,
+      0.02900383638601703,
+      0.04509686886838925
+     ],
+     [
+      -84,
+      0.03294445273392624,
+      0.037239393422174805,
+      0.06041243898169588
+     ],
+     [
+      -80,
+      0.015172679509019025,
+      0.023711274719573613,
+      0.060887085334796635
+     ],
+     [
+      -76,
+      0.029602756621761147,
+      0.03222720126989635,
+      0.048665573726091045
+     ],
+     [
+      -72,
+      0.02648591718577889,
+      0.02947101405805358,
+      0.04325562190217666
+     ],
+     [
+      -68,
+      0.03907112344466681,
+      0.0433691436802562,
+      0.056793698772529176
+     ],
+     [
+      -64,
+      0.03306145153232247,
+      0.03672857425715899,
+      0.04825676873477663
+     ],
+     [
+      -60,
+      0.04354475101960526,
+      0.049015835287908135,
+      0.0740314926690113
+     ],
+     [
+      -56,
+      0.047938432088596675,
+      0.06252547497667041,
+      0.15944863916942498
+     ],
+     [
+      -52,
+      0.05697851967601238,
+      0.07307712734906743,
+      0.16211615044260458
+     ],
+     [
+      -48,
+      0.06054869252527112,
+      0.07415723299252158,
+      0.121930975088725
+     ],
+     [
+      -44,
+      0.05252079996827525,
+      0.0636502359046956,
+      0.09765612251515285
+     ],
+     [
+      -40,
+      0.03187775628989975,
+      0.042197144243243084,
+      0.07936608398014756
+     ],
+     [
+      -36,
+      0.022738879074394796,
+      0.02732453552865191,
+      0.04887759906161837
+     ],
+     [
+      -32,
+      0.042058979526556836,
+      0.05165571430013266,
+      0.0759369594186852
+     ],
+     [
+      -28,
+      0.049352309080260684,
+      0.055285655771869405,
+      0.07423625571551724
+     ],
+     [
+      -24,
+      0.04740032617466749,
+      0.05322226467760225,
+      0.0717336308519803
+     ],
+     [
+      -20,
+      0.03984988081696398,
+      0.04431817276410564,
+      0.05891345166555725
+     ],
+     [
+      -16,
+      0.031077883038878942,
+      0.035826285470452454,
+      0.062878250001942
+     ],
+     [
+      -12,
+      0.026170459129813042,
+      0.029376681015162047,
+      0.04084015516607394
+     ],
+     [
+      -8,
+      0.020582057891879633,
+      0.023827729561853837,
+      0.037092121207042215
+     ],
+     [
+      -4,
+      0.01768021166118121,
+      0.02012485134636821,
+      0.028979866362037924
+     ],
+     [
+      0,
+      0.01602564369133859,
+      0.017799294775859113,
+      0.023763610441564473
+     ],
+     [
+      4,
+      0.015914091592345768,
+      0.0174482301735044,
+      0.023258849562435926
+     ],
+     [
+      8,
+      0.0154977325667866,
+      0.016673065077100944,
+      0.021602033213289667
+     ],
+     [
+      12,
+      0.014441336717215427,
+      0.01553593061204835,
+      0.02008711699930827
+     ],
+     [
+      16,
+      0.015423088750433942,
+      0.016585745758062514,
+      0.02056057426197743
+     ],
+     [
+      72,
+      0.03516327798004534,
+      0.03747746417041094,
+      0.04644493657428663
+     ],
+     [
+      76,
+      0.03966764837658623,
+      0.044759097022043934,
+      0.05747230600286385
+     ],
+     [
+      80,
+      0.015215568055011139,
+      0.026222108444695393,
+      0.05216112697309115
+     ],
+     [
+      84,
+      0.02629941989159271,
+      0.03994504639355379,
+      0.06668398559308564
+     ],
+     [
+      88,
+      0.054461736567933114,
+      0.06500444942365177,
+      0.09827740234168156
+     ],
+     [
+      92,
+      0.041576703500207875,
+      0.049033162486095405,
+      0.09313782487837921
+     ]
+    ],
+    "light_fit": {
+     "az_deg": -78,
+     "el_deg": 0,
+     "amb": 0.026675428147886607,
+     "k": 0.025407567308346826,
+     "R2": 0.10736369662731227
+    }
+   },
+   "tolerance": "n/a",
+   "status": "MEASURED",
+   "unit": "",
+   "how": "observed (lighting included), bh_m20"
+  }
+ },
+ "wear": {
+  "coverage_visible_straw": {
+   "value": 0.15,
+   "tolerance": 0.04,
+   "status": "MEASURED",
+   "unit": "",
+   "how": "fraction of pixels > 1.8x the local p30 (bh_m21)"
+  },
+  "zones": {
+   "value": {
+    "left theta -62..-25, rho .45-.97": 0.2,
+    "front theta -5..16": 0.07,
+    "streaks theta -18..-5, rho .70-.82": 0.12,
+    "right theta 72..95": 0.18
+   },
+   "tolerance": 0.05,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "fleck_shape": {
+   "value": "short streaks ALONG the circumferential strands, 0.5-3 deg long, 0.003-0.006 R tall; lighter strand tops, not holes",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "dark_smudge": {
+   "value": "one broad darker smudge at theta -45..-35, rho 0.55-0.90, ~15% darker than its surround",
+   "tolerance": 0.1,
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "rim_wear": {
+   "value": "light scuffs on the front face of the rim tube (image x 280-330 and 360-380); rim p90/p50 = 2.4",
+   "tolerance": "qualitative",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  },
+  "not_present": {
+   "value": "no holes, no tears in the straw, no broken ribs, no missing lashings, no chin cord, no lining, no decals, no colour",
+   "tolerance": "must stay absent",
+   "status": "MEASURED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "cannot_see_DESIGNED": {
+  "underside": {
+   "value": "plain inside of the woven skin (same circumferential strands), skin 0.006 R thick; ribs only on the outside; rim tube round all the way under; lashings wrap fully round the tube; NO headband ring, lining or chin cord (the reference never shows the underside)",
+   "tolerance": "n/a",
+   "status": "DESIGNED",
+   "unit": "",
+   "how": ""
+  },
+  "far_side": {
+   "value": "6 more primary ribs at 27.6 deg pitch; a lashing at every rib + one per bay (26 total); band continues round the back as the narrow twisted roll at rho 0.365; wear flecks ~10% coverage; no new damage",
+   "tolerance": "n/a",
+   "status": "DESIGNED",
+   "unit": "",
+   "how": ""
+  },
+  "head_socket": {
+   "value": "Empty on the axis at the inner crown seat: a 57 cm head (sphere r = 9.07 cm) inscribed in the inner cone (half-angle 64 deg) has its centre 1.113 r below the inner apex, so the skull top sits 0.113 r = 1.03 cm below the inner apex; +Z up out of the crown, +X forward",
+   "tolerance": "n/a",
+   "status": "DESIGNED",
+   "unit": "",
+   "how": ""
+  },
+  "real_size": {
+   "value": "D = 600 mm, H = 146 mm, rib 3.3 mm, rim tube 13 mm, lashing cord 3.6 mm, band cloth 30 mm, tails ~295 mm",
+   "tolerance": "n/a",
+   "status": "DESIGNED",
+   "unit": "",
+   "how": ""
+  }
+ },
+ "acceptance_checks": [
+  "Render the SHIPPED asset from the camera rows (670 x 599) and run bh_m01/bh_m02 on it: generator lines within 1 px of the rows, tips within 2 px, rim bottom within 2 px.",
+  "Crown-cap arc (bh_m07 trace) within 1 px of the reference trace; cap edge ends x 298 / 370 within 2 px.",
+  "Unroll with bh_m16 using the SAME camera: ribs at the listed azimuths, lashings (bh_m15) at the listed azimuths, 3 wraps each.",
+  "Band ring at rho 0.365, knot at theta 61, tails crossing the rim at 31 / 40 and tips within 6 px of (592, 533) / (643, 520).",
+  "Colour/brightness rows via bh_m20 on the render after matching exposure on the front bay.",
+  "LOOK: side-by-side with the reference; if it looks different it fails even when every number passes."
+ ]
+}

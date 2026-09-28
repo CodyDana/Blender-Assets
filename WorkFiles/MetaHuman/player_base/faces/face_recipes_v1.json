@@ -1,0 +1,33 @@
+{
+  "note": "Face-only recipes for the PlayerBase candidates. Coefficient-space blend of MH_PlayerBase's conformed face with Epic's built-in presets (/MetaHumanCharacter/Optional/Presets). out = ours + sum w_i*(preset_i - ours) per face-model region; 'blend' applies to every region not listed in 'regions'. Region groups: Scripts/MetaHuman/pb_face_build.py REGION_GROUPS. Body state untouched.",
+  "blend_start": 1,
+  "candidates": {
+    "MH_PlayerBase_FaceA": {
+      "concept": "rounder, fuller-cheeked young face; open eyes; short broad nose (Bo-led)",
+      "blend": {"Kelvin": 0.30, "Bo": 0.20},
+      "regions": {"brows": {"Bo": 0.55, "Kelvin": 0.30}, "eyes": {"Bo": 0.60, "Kelvin": 0.30},
+                  "cheekbones": {"Bo": 0.40, "Kelvin": 0.20}, "nose": {"Bo": 0.55, "Aoi": 0.30},
+                  "cheeks": {"Bo": 0.40, "Kelvin": 0.20}, "mouth": {"Kelvin": 0.55, "Bo": 0.30},
+                  "chin": {"Kelvin": 0.40, "Bo": 0.25}, "jaw": {"Kelvin": 0.40, "Bo": 0.25},
+                  "neck": {"Kelvin": 0.10, "Bo": 0.10}}
+    },
+    "MH_PlayerBase_FaceB": {
+      "concept": "angular, broad-cheekboned, square-chinned face (Aoi-led, Victor jaw/nose)",
+      "blend": {"Aoi": 0.30, "Kelvin": 0.20},
+      "regions": {"brows": {"Aoi": 0.55, "Kelvin": 0.30}, "eyes": {"Aoi": 0.60, "Kelvin": 0.30},
+                  "cheekbones": {"Aoi": 0.50, "Kelvin": 0.20}, "nose": {"Aoi": 0.50, "Victor": 0.35},
+                  "cheeks": {"Aoi": 0.50, "Kelvin": 0.20}, "mouth": {"Aoi": 0.55, "Kelvin": 0.30},
+                  "chin": {"Kelvin": 0.40, "Victor": 0.35}, "jaw": {"Kelvin": 0.40, "Victor": 0.35},
+                  "neck": {"Aoi": 0.10, "Kelvin": 0.10}}
+    },
+    "MH_PlayerBase_FaceC": {
+      "concept": "strong broad lower face, wide nose, full mouth (Kelvin eyes, Jorge nose/mouth/jaw)",
+      "blend": {"Kelvin": 0.30, "Aoi": 0.20},
+      "regions": {"brows": {"Kelvin": 0.60, "Aoi": 0.25}, "eyes": {"Kelvin": 0.65, "Aoi": 0.25},
+                  "cheekbones": {"Kelvin": 0.35, "Jorge": 0.35}, "nose": {"Jorge": 0.45, "Kelvin": 0.40},
+                  "cheeks": {"Kelvin": 0.35, "Jorge": 0.35}, "mouth": {"Jorge": 0.45, "Kelvin": 0.40},
+                  "chin": {"Kelvin": 0.40, "Jorge": 0.35}, "jaw": {"Kelvin": 0.40, "Jorge": 0.35},
+                  "neck": {"Kelvin": 0.10, "Aoi": 0.10}}
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "fbx": "SM_BlackHat.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [
+    {
+      "socket": "HEAD",
+      "fbx_node": "SOCKET_SM_BlackHat_LOD0_HEAD",
+      "mesh": "SM_BlackHat_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        13.4833
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    }
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.7036,
+    0.2463
+  ],
+  "materials": {
+    "M_BlackHat_Straw": {
+      "slot": 0,
+      "part": "straw",
+      "textures": {
+        "BC": "T_BlackHat_Straw_BC",
+        "ORM": "T_BlackHat_Straw_ORM",
+        "N": "T_BlackHat_Straw_N",
+        "Detail": "T_BlackHat_Straw_Detail"
+      },
+      "tint_default_linear": [
+        0.230343,
+        0.210341,
+        0.204534
+      ],
+      "tint_default_srgb": [
+        0.517236,
+        0.495982,
+        0.489592
+      ],
+      "graph": {
+        "shading_model": "Default Lit (or Substrate Slab); opaque; no Cloth/Fuzz layer",
+        "BaseColor": "T_BlackHat_Straw_Detail.R x Tint (Tint default = tint_linear; equals T_BlackHat_Straw_BC at the default Tint, at every mip)",
+        "BaseColor_alt": "T_BlackHat_Straw_BC (sRGB) directly, for a fixed-colour instance",
+        "Detail_encoding": "sRGB-encoded LINEAR detail d = albedo / Tint luminance, full range, quantised once from linear float data; import sRGB ON (TC_Grayscale, G8)",
+        "Tint_default_linear": [
+          0.230343,
+          0.210341,
+          0.204534
+        ],
+        "Tint_default_srgb": [
+          0.517236,
+          0.495982,
+          0.489592
+        ],
+        "Specular": "1 x T_BlackHat_Straw_ORM.A (the baked specular mask; linear, mip-safe). A constant 0.5 greys the weave gaps and seams",
+        "Roughness": "T_BlackHat_Straw_ORM.G",
+        "Metallic": "0",
+        "AmbientOcclusion": "T_BlackHat_Straw_ORM.R",
+        "Normal": "T_BlackHat_Straw_N (DirectX; TC_Normalmap, flip green OFF)",
+        "textures": {
+          "BC": "sRGB, TC_Default",
+          "ORM": "linear (sRGB OFF), TC_Masks, RGBA (A = specular mask)",
+          "N": "TC_Normalmap",
+          "Detail": "sRGB ON, TC_Grayscale, R channel",
+          "all": "MipGenSettings TMGS_FROM_TEXTURE_GROUP; 2048, power of two"
+        }
+      }
+    },
+    "M_BlackHat_Cloth": {
+      "slot": 1,
+      "part": "cloth",
+      "textures": {
+        "BC": "T_BlackHat_Cloth_BC",
+        "ORM": "T_BlackHat_Cloth_ORM",
+        "N": "T_BlackHat_Cloth_N",
+        "Detail": "T_BlackHat_Cloth_Detail"
+      },
+      "tint_default_linear": [
+        0.090159,
+        0.087765,
+        0.088031
+      ],
+      "tint_default_srgb": [
+        0.332114,
+        0.327798,
+        0.328281
+      ],
+      "graph": {
+        "shading_model": "Default Lit (or Substrate Slab); opaque; no Cloth/Fuzz layer",
+        "BaseColor": "T_BlackHat_Cloth_Detail.R x Tint (Tint default = tint_linear; equals T_BlackHat_Cloth_BC at the default Tint, at every mip)",
+        "BaseColor_alt": "T_BlackHat_Cloth_BC (sRGB) directly, for a fixed-colour instance",
+        "Detail_encoding": "sRGB-encoded LINEAR detail d = albedo / Tint luminance, full range, quantised once from linear float data; import sRGB ON (TC_Grayscale, G8)",
+        "Tint_default_linear": [
+          0.090159,
+          0.087765,
+          0.088031
+        ],
+        "Tint_default_srgb": [
+          0.332114,
+          0.327798,
+          0.328281
+        ],
+        "Specular": "1 x T_BlackHat_Cloth_ORM.A (the baked specular mask; linear, mip-safe). A constant 0.5 greys the weave gaps and seams",
+        "Roughness": "T_BlackHat_Cloth_ORM.G",
+        "Metallic": "0",
+        "AmbientOcclusion": "T_BlackHat_Cloth_ORM.R",
+        "Normal": "T_BlackHat_Cloth_N (DirectX; TC_Normalmap, flip green OFF)",
+        "textures": {
+          "BC": "sRGB, TC_Default",
+          "ORM": "linear (sRGB OFF), TC_Masks, RGBA (A = specular mask)",
+          "N": "TC_Normalmap",
+          "Detail": "sRGB ON, TC_Grayscale, R channel",
+          "all": "MipGenSettings TMGS_FROM_TEXTURE_GROUP; 2048, power of two"
+        }
+      }
+    }
+  },
+  "materials_note": "BaseColor = Detail.R x Tint (Detail sRGB ON, TC_Grayscale); equals BC at the default Tint at every mip. Specular = 1 x ORM.A; Roughness = ORM.G; Metallic 0; N DirectX (flip green OFF). The cloth's UV0 lies in the second tile (U + 1): keep the textures' address mode Wrap."
+}

@@ -1,0 +1,1441 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "PaperBomb",
+ "status": "exact-match pass 2026-09-26: the traced face (paperbomb_tracedart); rerun this generator whenever the art changes (G-P0 fails loudly if the art no longer matches the shipped BC)",
+ "generated": "2026-09-26",
+ "generator": {
+  "script": "Scripts/unreal/materials/maps/make_paperbomb_recolour_maps.py",
+  "script_sha256": "f0dd6980ae338bbaa2e47499761fa450a6357a20ac4a6efbdb26f25ecf6716ff",
+  "common": "Scripts/unreal/materials/maps/recolour_common.py",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "1.0.0",
+  "blender": "5.2.0 LTS",
+  "art": {
+   "seed": 20260919,
+   "supersample": 2,
+   "ink_floor": "reference",
+   "raster": [
+    902,
+    2048
+   ],
+   "ppmm": 12.4222,
+   "atlas": 2048,
+   "capture": "paperbomb_tracedart.composite_traced wrapped in memory (restored after draw_art)"
+  }
+ },
+ "source_maps_sha256": {
+  "BC": "812f2cb4a3649d2e6bd47f81cbaaa83f8bc585e81b725989c20f649846aa824b",
+  "ORM": "4873d2e0fda8bd76128299a83e8ca3bfdbeb93ad93bec1b6cad1fbe58e5b14b9",
+  "N": "6f854e56d3f604c7b5a79c09c0689b149f26cd6bd94b055575daf585ad080bc5",
+  "M": "a111adc8462778309321570f70f0ce0cdce2009fecdd05624547ff89b0ff3710"
+ },
+ "source_maps_unchanged_after": true,
+ "maps": {
+  "T_PaperBomb_PaperDetail": {
+   "file": "Exports/PaperBomb/Textures/Recolour/T_PaperBomb_PaperDetail.png",
+   "sha256": "08bf5c918ff177995847618b4b021e55c30ebf35c035ff0f4d3c01610cbf0def",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG RGBA 8-bit (colour type 6), no colour chunks, row 0 = top",
+   "channels": {
+    "R": "paper weight, red channel / Paper Weight Scale",
+    "G": "... green",
+    "B": "... blue",
+    "A": "W_rp: pooled red ink weight (LINEAR)"
+   },
+   "encoding": "RGB sRGB-ENCODED linear weights (sample with sRGB ON: the sampled value is the linear weight / scale); A linear",
+   "unreal_import": {
+    "srgb": true,
+    "compression": "TC_EDITOR_ICON (UserInterface2D: uncompressed BGRA8, honours sRGB)",
+    "expected_pc_format": "B8G8R8A8 (sRGB)",
+    "sampler": "SAMPLERTYPE_COLOR",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap",
+    "why_uncompressed": "G-P1 holds at 1 stored level with UNCOMPRESSED weights; block compression (BC7) was not measured here and adds its block error on top of that budget - the Unreal V2 capture decides"
+   }
+  },
+  "T_PaperBomb_InkWeights": {
+   "file": "Exports/PaperBomb/Textures/Recolour/T_PaperBomb_InkWeights.png",
+   "sha256": "bd8cc07db9b9ddfe86b2ca07cccd57a79bf6524001ab37ee458eaf11d4cac7fd",
+   "size": [
+    2048,
+    2048
+   ],
+   "format": "PNG RGBA 8-bit (colour type 6), no colour chunks, row 0 = top",
+   "channels": {
+    "R": "W_bw black ink wet",
+    "G": "W_bd black ink dry",
+    "B": "W_rw red ink wet",
+    "A": "W_rd red ink dry"
+   },
+   "encoding": "LINEAR weights 0..1",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_VECTOR_DISPLACEMENTMAP (uncompressed BGRA8, linear)",
+    "expected_pc_format": "B8G8R8A8",
+    "sampler": "SAMPLERTYPE_LINEAR_COLOR",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   }
+  }
+ },
+ "parts": {
+  "Tag": {
+   "slot_material": "M_PaperBomb",
+   "instance": "MI_PaperBomb_Tag",
+   "master": "M_PaperInk_Master",
+   "recolourable_parts": [
+    "Paper",
+    "Black Ink",
+    "Red Ink"
+   ],
+   "params": {
+    "Paper Colour": [
+     0.911999418,
+     0.751970581,
+     0.49905668,
+     1.0
+    ],
+    "Black Ink Colour": [
+     0.00243034,
+     0.002732198,
+     0.002128483,
+     1.0
+    ],
+    "Red Ink Colour": [
+     0.589361623,
+     0.008714499,
+     0.003522249,
+     1.0
+    ],
+    "Paper Weight Scale": 1.3487758541856572,
+    "Black Ink Dry Paper Mix": 0.008909181325541035,
+    "Black Ink Dry Gain": [
+     0.9493199554155087,
+     0.9992241273703176,
+     1.2508186807476926
+    ],
+    "Red Ink Dry Value Scale": 0.82,
+    "Red Ink Pool Saturation": 0.3,
+    "Red Ink Pool Gain": [
+     0.08920005669425643,
+     0.11595548789725421,
+     0.08788258523716885
+    ],
+    "Albedo Ceiling": 0.962
+   },
+   "graph": "BaseColor = min(PaperColour * PaperDetail.rgb * PaperWeightScale + BlackInk * Ink.r + BlackDry * Ink.g + RedInk * Ink.b + RedDry * Ink.a + RedPool * PaperDetail.a, AlbedoCeiling) x lerp(1, ORM.R, Baked AO In Colour); PaperDetail sampled sRGB (decoded), InkWeights linear",
+   "derivation": {
+    "BlackDry": "lerp(BlackInk, PaperColour, Black Ink Dry Paper Mix) * Black Ink Dry Gain",
+    "RedDry": "sRGBdecode(Red Ink Dry Value Scale * sRGBencode(RedInk)), per channel",
+    "RedPool": "lerp(Y(RedInk), RedInk, Red Ink Pool Saturation) * Red Ink Pool Gain, Y = Rec.709 luminance (0.2126, 0.7152, 0.0722)",
+    "derived_at_defaults": {
+     "BlackDry": [
+      0.01,
+      0.0094,
+      0.0082
+     ],
+     "RedDry": [
+      0.378702,
+      0.0065477,
+      0.002872
+     ],
+     "RedPool": [
+      0.024,
+      0.011,
+      0.0082
+     ]
+    },
+    "defaults_from": {
+     "Black Ink Colour": "sRGBdecode of the traced art's black (trace.BLACK_STORED)",
+     "Red Ink Colour": "median linear colour of the traced art's red cores",
+     "dry_pool_rule_anchors": {
+      "black_dry": [
+       0.01,
+       0.0094,
+       0.0082
+      ],
+      "red_pool": [
+       0.024,
+       0.011,
+       0.0082
+      ]
+     }
+    }
+   },
+   "paper_colour_texels": 1162817,
+   "notes": [
+    "Paper Colour is the mean linear colour of the front's ink-free card texels (the shipped BC)",
+    "Pooled red stays dark for any Red Ink Colour (the pool gain ~0.08-0.10): that is how pooled vermilion reads; document it for buyers",
+    "AO is NOT in these maps: the master multiplies ORM.R into the base colour, as the gallery did",
+    "The traced face has no dry or pooled ink layer: W_bd, W_rd and W_rp are zero and the dry / pool colours of MF_InkDerive are unused; the ink's mottle and dry-brush bristles are its coverage, so a LIGHT ink colour keeps them only as coverage and the paper weight carries the rest (see recolour_stress std_ratio_logL)"
+   ],
+   "gates": {
+    "G-P0_rerun_equals_shipped_BC": {
+     "max": 0,
+     "mean": 0.0,
+     "texels_diff_gt0": 0,
+     "texels_diff_gt1": 0,
+     "texels": 4194304,
+     "pass": true
+    },
+    "decomposition_2x_max_abs_linear": 0.0,
+    "weights_2x": {
+     "red_ink_colour_linear": [
+      0.5893616,
+      0.0087145,
+      0.0035222
+     ],
+     "red_core_texels_2x": 570571,
+     "black_ink_colour_linear": [
+      0.0024303,
+      0.0027322,
+      0.0021285
+     ],
+     "texels_g_r_below_1_in_red": 460139,
+     "texels_h_below_1": 156326,
+     "texels_h_below_0.9": 5211,
+     "residual_min_linear_2x": -1.1102230246251565e-16,
+     "pass": true
+    },
+    "G-P1_recompose_default_vs_shipped_BC": {
+     "max": 1,
+     "mean": 0.10546,
+     "texels_diff_gt0": 442349,
+     "texels_diff_gt1": 0,
+     "texels": 4194304,
+     "dE00_mean": 0.2577,
+     "dE00_p99": 0.5031,
+     "dE00_max": 0.8437,
+     "encoding": "PaperDetail RGB sRGB-encoded (chosen)",
+     "pass": true
+    },
+    "encoding_choice": {
+     "PaperDetail_rgb_srgb": {
+      "max": 1,
+      "mean": 0.10546,
+      "texels_diff_gt0": 442349,
+      "texels_diff_gt1": 0,
+      "texels": 4194304,
+      "dE00_mean": 0.2577,
+      "dE00_p99": 0.5031,
+      "dE00_max": 0.8437
+     },
+     "PaperDetail_rgb_linear_rejected": {
+      "max": 8,
+      "mean": 0.27631,
+      "texels_diff_gt0": 432290,
+      "texels_diff_gt1": 319637,
+      "texels": 4194304,
+      "dE00_mean": 0.1718,
+      "dE00_p99": 1.5227,
+      "dE00_max": 6.7697
+     }
+    },
+    "paper_weight_clip": {
+     "texel_channels_negative": 99001,
+     "ink_levels_floored_not_rounded": {
+      "W_rw": 15761,
+      "W_bw": 38195
+     },
+     "most_negative_linear": -0.0029719828726826325,
+     "note": "clipped to 0; rounding of an ink weight above a texel's own BC (bounded by half a stored level of that ink)"
+    },
+    "default_every_mip_vs_BC_mips": {
+     "max_level_diff": 5,
+     "per_mip": [
+      {
+       "mip": 0,
+       "size": [
+        2048,
+        2048
+       ],
+       "max": 1,
+       "mean": 0.10546,
+       "texels_diff_gt0": 442349,
+       "texels_diff_gt1": 0,
+       "texels": 4194304
+      },
+      {
+       "mip": 1,
+       "size": [
+        1024,
+        1024
+       ],
+       "max": 5,
+       "mean": 0.21845,
+       "texels_diff_gt0": 228715,
+       "texels_diff_gt1": 216,
+       "texels": 1048576
+      },
+      {
+       "mip": 2,
+       "size": [
+        512,
+        512
+       ],
+       "max": 4,
+       "mean": 0.2659,
+       "texels_diff_gt0": 69622,
+       "texels_diff_gt1": 65,
+       "texels": 262144
+      },
+      {
+       "mip": 3,
+       "size": [
+        256,
+        256
+       ],
+       "max": 3,
+       "mean": 0.30338,
+       "texels_diff_gt0": 19869,
+       "texels_diff_gt1": 10,
+       "texels": 65536
+      },
+      {
+       "mip": 4,
+       "size": [
+        128,
+        128
+       ],
+       "max": 2,
+       "mean": 0.33856,
+       "texels_diff_gt0": 5546,
+       "texels_diff_gt1": 1,
+       "texels": 16384
+      },
+      {
+       "mip": 5,
+       "size": [
+        64,
+        64
+       ],
+       "max": 1,
+       "mean": 0.36035,
+       "texels_diff_gt0": 1476,
+       "texels_diff_gt1": 0,
+       "texels": 4096
+      },
+      {
+       "mip": 6,
+       "size": [
+        32,
+        32
+       ],
+       "max": 1,
+       "mean": 0.41309,
+       "texels_diff_gt0": 423,
+       "texels_diff_gt1": 0,
+       "texels": 1024
+      },
+      {
+       "mip": 7,
+       "size": [
+        16,
+        16
+       ],
+       "max": 1,
+       "mean": 0.39844,
+       "texels_diff_gt0": 102,
+       "texels_diff_gt1": 0,
+       "texels": 256
+      },
+      {
+       "mip": 8,
+       "size": [
+        8,
+        8
+       ],
+       "max": 1,
+       "mean": 0.375,
+       "texels_diff_gt0": 24,
+       "texels_diff_gt1": 0,
+       "texels": 64
+      },
+      {
+       "mip": 9,
+       "size": [
+        4,
+        4
+       ],
+       "max": 1,
+       "mean": 0.5625,
+       "texels_diff_gt0": 9,
+       "texels_diff_gt1": 0,
+       "texels": 16
+      },
+      {
+       "mip": 10,
+       "size": [
+        2,
+        2
+       ],
+       "max": 1,
+       "mean": 0.25,
+       "texels_diff_gt0": 1,
+       "texels_diff_gt1": 0,
+       "texels": 4
+      },
+      {
+       "mip": 11,
+       "size": [
+        1,
+        1
+       ],
+       "max": 0,
+       "mean": 0.0,
+       "texels_diff_gt0": 0,
+       "texels_diff_gt1": 0,
+       "texels": 1
+      }
+     ]
+    },
+    "G-P2_dry_pool_zero_and_derived_valid": {
+     "BlackDry": {
+      "derived": [
+       0.01,
+       0.0094,
+       0.0082
+      ],
+      "inside_0_1": true
+     },
+     "RedDry": {
+      "derived": [
+       0.378702,
+       0.0065477,
+       0.002872
+      ],
+      "inside_0_1": true
+     },
+     "RedPool": {
+      "derived": [
+       0.024,
+       0.011,
+       0.0082
+      ],
+      "inside_0_1": true
+     },
+     "dry_and_pool_weights_zero": true,
+     "pass": true
+    },
+    "G-P3_derived_inside_0_1": {
+     "pass": true,
+     "cases": {
+      "Paper/white": true,
+      "Paper/cream": true,
+      "Paper/pastel_pink": true,
+      "Paper/saturated_red": true,
+      "Paper/saturated_blue": true,
+      "Paper/yellow": true,
+      "Paper/mid_grey": true,
+      "Paper/near_black": true,
+      "Paper/extreme_white": true,
+      "Black Ink/white": true,
+      "Black Ink/cream": true,
+      "Black Ink/pastel_pink": true,
+      "Black Ink/saturated_red": true,
+      "Black Ink/saturated_blue": true,
+      "Black Ink/yellow": true,
+      "Black Ink/mid_grey": true,
+      "Black Ink/near_black": true,
+      "Black Ink/extreme_white": false,
+      "Red Ink/white": true,
+      "Red Ink/cream": true,
+      "Red Ink/pastel_pink": true,
+      "Red Ink/saturated_red": true,
+      "Red Ink/saturated_blue": true,
+      "Red Ink/yellow": true,
+      "Red Ink/mid_grey": true,
+      "Red Ink/near_black": true,
+      "Red Ink/extreme_white": true
+     }
+    },
+    "G-P4_art_modules_unchanged_during_run": {
+     "pass": true,
+     "modules": {
+      "props_lib/paperbomb_art.py": {
+       "before": "f7c7d3e70ef83754aaa775e30e57f8517bd8df0d3011eddceca91d9ab8af7685",
+       "after": "f7c7d3e70ef83754aaa775e30e57f8517bd8df0d3011eddceca91d9ab8af7685"
+      },
+      "props_lib/paperbomb_tracedart.py": {
+       "before": "65e049c0c717ffe072deb39b482379886cddcd14816afb9775be8c9c1ade1bd8",
+       "after": "65e049c0c717ffe072deb39b482379886cddcd14816afb9775be8c9c1ade1bd8"
+      },
+      "props_lib/paperbomb_trace.py": {
+       "before": "2f5be5b05967f7dbccf3b3d39e15f5630355fc22ee2e49bc46908f01bea7498f",
+       "after": "2f5be5b05967f7dbccf3b3d39e15f5630355fc22ee2e49bc46908f01bea7498f"
+      },
+      "props_lib/paperbomb_finefit.py": {
+       "before": "6303b76317e23c3b988bc8cebb1ac7a2a31b1da4feb61e4fd057cdcd282f395d",
+       "after": "6303b76317e23c3b988bc8cebb1ac7a2a31b1da4feb61e4fd057cdcd282f395d"
+      },
+      "props_lib/paperbomb_traced.json": {
+       "before": "e6b92cc75dffd3c85efcbacc26eaef5ac59f92ec96c091bc30e9391a20ca6e8f",
+       "after": "e6b92cc75dffd3c85efcbacc26eaef5ac59f92ec96c091bc30e9391a20ca6e8f"
+      },
+      "props_lib/trace.py": {
+       "before": "2aa52f12b2ec67b6b47adb950efc4ca05744856fb6f8ed6f2187f230a431489e",
+       "after": "2aa52f12b2ec67b6b47adb950efc4ca05744856fb6f8ed6f2187f230a431489e"
+      },
+      "props_lib/bake.py": {
+       "before": "4fca20e3562d4ebc83190f1d99cc210a683d48163ad7a4f6b95d687508eeb474",
+       "after": "4fca20e3562d4ebc83190f1d99cc210a683d48163ad7a4f6b95d687508eeb474"
+      },
+      "props_lib/atlas.py": {
+       "before": "631c5f691351c58e9effa552721660bde8487d22d417313ac81506c1b6b58e24",
+       "after": "631c5f691351c58e9effa552721660bde8487d22d417313ac81506c1b6b58e24"
+      },
+      "props_lib/spec.py": {
+       "before": "daa8a993017c4b2fe224f13867ea4052b0672396a7797cc51eb4555ffa6dfbea",
+       "after": "daa8a993017c4b2fe224f13867ea4052b0672396a7797cc51eb4555ffa6dfbea"
+      },
+      "props_lib/paper_material.py": {
+       "before": "72e100b02f34cb1d6bff221f03d6c9f9a13c10c53bd22698233f7243db2ca746",
+       "after": "72e100b02f34cb1d6bff221f03d6c9f9a13c10c53bd22698233f7243db2ca746"
+      },
+      "build_paper_bomb.py": {
+       "before": "c2f7ff5163801b24eed8ea9ddc590e5cf7b1bf4606f771bef16f6092fc2756a2",
+       "after": "c2f7ff5163801b24eed8ea9ddc590e5cf7b1bf4606f771bef16f6092fc2756a2"
+      }
+     }
+    },
+    "readback": {
+     "T_PaperBomb_PaperDetail.png": {
+      "own_decoder_equal": true,
+      "blender_decoder_equal": true,
+      "bits": 8,
+      "colour_type": 6,
+      "png_chunks": [
+       "IHDR",
+       "IDAT",
+       "IEND"
+      ]
+     },
+     "T_PaperBomb_InkWeights.png": {
+      "own_decoder_equal": true,
+      "blender_decoder_equal": true,
+      "bits": 8,
+      "colour_type": 6,
+      "png_chunks": [
+       "IHDR",
+       "IDAT",
+       "IEND"
+      ]
+     },
+     "pass": true
+    },
+    "recolour_stress": {
+     "pass": true,
+     "layers": {
+      "Paper": {
+       "white": {
+        "max_gap_levels": 1,
+        "levels_used": 219,
+        "p1_p99_span_levels": 218.0,
+        "occupied_fraction_of_span": 1.0046,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.004105,
+        "mean_colour_in_region": [
+         0.75296,
+         0.7673,
+         0.79206
+        ],
+        "std_ratio_logL": 1.0028,
+        "derived": {
+         "BlackDry": [
+          0.00905,
+          0.00983,
+          0.01155
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "cream": {
+        "max_gap_levels": 1,
+        "levels_used": 219,
+        "p1_p99_span_levels": 218.0,
+        "occupied_fraction_of_span": 1.0046,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.75296,
+         0.67139,
+         0.49507
+        ],
+        "std_ratio_logL": 0.993,
+        "derived": {
+         "BlackDry": [
+          0.00905,
+          0.00894,
+          0.00821
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "pastel_pink": {
+        "max_gap_levels": 1,
+        "levels_used": 225,
+        "p1_p99_span_levels": 224.0,
+        "occupied_fraction_of_span": 1.0045,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.79994,
+         0.57549,
+         0.69308
+        ],
+        "std_ratio_logL": 0.9872,
+        "derived": {
+         "BlackDry": [
+          0.00948,
+          0.00805,
+          0.01044
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "saturated_red": {
+        "max_gap_levels": 1,
+        "levels_used": 219,
+        "p1_p99_span_levels": 218.0,
+        "occupied_fraction_of_span": 1.0046,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.75296,
+         0.01926,
+         0.01985
+        ],
+        "std_ratio_logL": 0.8391,
+        "derived": {
+         "BlackDry": [
+          0.00905,
+          0.00288,
+          0.00286
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "saturated_blue": {
+        "max_gap_levels": 2,
+        "levels_used": 225,
+        "p1_p99_span_levels": 227.0,
+        "occupied_fraction_of_span": 0.9912,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.004105,
+        "mean_colour_in_region": [
+         0.02004,
+         0.04803,
+         0.79206
+        ],
+        "std_ratio_logL": 0.7429,
+        "derived": {
+         "BlackDry": [
+          0.00246,
+          0.00315,
+          0.01155
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "yellow": {
+        "max_gap_levels": 1,
+        "levels_used": 225,
+        "p1_p99_span_levels": 224.0,
+        "occupied_fraction_of_span": 1.0045,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.79994,
+         0.71934,
+         0.04956
+        ],
+        "std_ratio_logL": 0.9951,
+        "derived": {
+         "BlackDry": [
+          0.00948,
+          0.00938,
+          0.0032
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "mid_grey": {
+        "max_gap_levels": 1,
+        "levels_used": 111,
+        "p1_p99_span_levels": 110.0,
+        "occupied_fraction_of_span": 1.0091,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.17038,
+         0.1727,
+         0.17826
+        ],
+        "std_ratio_logL": 0.8329,
+        "derived": {
+         "BlackDry": [
+          0.00381,
+          0.00431,
+          0.00464
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "near_black": {
+        "max_gap_levels": 1,
+        "levels_used": 19,
+        "p1_p99_span_levels": 18.0,
+        "occupied_fraction_of_span": 1.0556,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.01064,
+         0.00967,
+         0.00995
+        ],
+        "std_ratio_logL": 0.3591,
+        "derived": {
+         "BlackDry": [
+          0.00237,
+          0.00279,
+          0.00275
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "extreme_white": {
+        "max_gap_levels": 1,
+        "levels_used": 234,
+        "p1_p99_span_levels": 233.0,
+        "occupied_fraction_of_span": 1.0043,
+        "pass": true,
+        "region_texels": 3766248,
+        "clip_frac": 0.676257,
+        "mean_colour_in_region": [
+         0.89258,
+         0.9009,
+         0.90724
+        ],
+        "std_ratio_logL": 1.0121,
+        "derived": {
+         "BlackDry": [
+          0.01032,
+          0.01116,
+          0.01323
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       }
+      },
+      "Black Ink": {
+       "white": {
+        "max_gap_levels": 1,
+        "levels_used": 14,
+        "p1_p99_span_levels": 13.0,
+        "occupied_fraction_of_span": 1.0769,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.78212,
+         0.78115,
+         0.77915
+        ],
+        "std_ratio_logL": 0.0477,
+        "derived": {
+         "BlackDry": [
+          0.7604,
+          0.79895,
+          0.9973
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "cream": {
+        "max_gap_levels": 1,
+        "levels_used": 14,
+        "p1_p99_span_levels": 13.0,
+        "occupied_fraction_of_span": 1.0769,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.78212,
+         0.68435,
+         0.48878
+        ],
+        "std_ratio_logL": 0.0444,
+        "derived": {
+         "BlackDry": [
+          0.7604,
+          0.69992,
+          0.6254
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "pastel_pink": {
+        "max_gap_levels": 1,
+        "levels_used": 15,
+        "p1_p99_span_levels": 14.0,
+        "occupied_fraction_of_span": 1.0714,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.83052,
+         0.58756,
+         0.68236
+        ],
+        "std_ratio_logL": 0.0429,
+        "derived": {
+         "BlackDry": [
+          0.80745,
+          0.60089,
+          0.87333
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "saturated_red": {
+        "max_gap_levels": 1,
+        "levels_used": 14,
+        "p1_p99_span_levels": 13.0,
+        "occupied_fraction_of_span": 1.0769,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.78212,
+         0.02618,
+         0.02419
+        ],
+        "std_ratio_logL": 0.1131,
+        "derived": {
+         "BlackDry": [
+          0.7604,
+          0.0265,
+          0.03035
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "saturated_blue": {
+        "max_gap_levels": 1,
+        "levels_used": 24,
+        "p1_p99_span_levels": 23.0,
+        "occupied_fraction_of_span": 1.0435,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.02716,
+         0.05522,
+         0.77915
+        ],
+        "std_ratio_logL": 0.1985,
+        "derived": {
+         "BlackDry": [
+          0.02653,
+          0.05621,
+          0.9973
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "yellow": {
+        "max_gap_levels": 1,
+        "levels_used": 15,
+        "p1_p99_span_levels": 14.0,
+        "occupied_fraction_of_span": 1.0714,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.83052,
+         0.73275,
+         0.05323
+        ],
+        "std_ratio_logL": 0.0448,
+        "derived": {
+         "BlackDry": [
+          0.80745,
+          0.74944,
+          0.06755
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "mid_grey": {
+        "max_gap_levels": 1,
+        "levels_used": 44,
+        "p1_p99_span_levels": 43.0,
+        "occupied_fraction_of_span": 1.0233,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.18202,
+         0.18104,
+         0.17905
+        ],
+        "std_ratio_logL": 0.1168,
+        "derived": {
+         "BlackDry": [
+          0.17707,
+          0.18495,
+          0.2287
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "near_black": {
+        "max_gap_levels": 1,
+        "levels_used": 111,
+        "p1_p99_span_levels": 110.0,
+        "occupied_fraction_of_span": 1.0091,
+        "pass": true,
+        "region_texels": 318581,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.01748,
+         0.0165,
+         0.01451
+        ],
+        "std_ratio_logL": 0.6453,
+        "derived": {
+         "BlackDry": [
+          0.01712,
+          0.0166,
+          0.01796
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "extreme_white": {
+        "max_gap_levels": 1,
+        "levels_used": 18,
+        "p1_p99_span_levels": 17.0,
+        "occupied_fraction_of_span": 1.0588,
+        "pass": false,
+        "region_texels": 318581,
+        "clip_frac": 0.078762,
+        "mean_colour_in_region": [
+         0.92731,
+         0.92633,
+         0.92434
+        ],
+        "std_ratio_logL": 0.053,
+        "derived": {
+         "BlackDry": [
+          0.90153,
+          0.9475,
+          1.18325
+         ],
+         "RedDry": [
+          0.3787,
+          0.00655,
+          0.00287
+         ],
+         "RedPool": [
+          0.024,
+          0.011,
+          0.0082
+         ]
+        },
+        "derived_inside_0_1": false
+       }
+      },
+      "Red Ink": {
+       "white": {
+        "max_gap_levels": 1,
+        "levels_used": 75,
+        "p1_p99_span_levels": 74.0,
+        "occupied_fraction_of_span": 1.0135,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.08156,
+        "mean_colour_in_region": [
+         0.78779,
+         0.7019,
+         0.69679
+        ],
+        "std_ratio_logL": 0.6791,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.51198,
+          0.51198,
+          0.51198
+         ],
+         "RedPool": [
+          0.07136,
+          0.09276,
+          0.07031
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "cream": {
+        "max_gap_levels": 1,
+        "levels_used": 75,
+        "p1_p99_span_levels": 74.0,
+        "occupied_fraction_of_span": 1.0135,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.08156,
+        "mean_colour_in_region": [
+         0.78779,
+         0.61575,
+         0.43833
+        ],
+        "std_ratio_logL": 0.6812,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.51198,
+          0.44874,
+          0.32205
+         ],
+         "RedPool": [
+          0.06554,
+          0.08172,
+          0.05666
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "pastel_pink": {
+        "max_gap_levels": 1,
+        "levels_used": 70,
+        "p1_p99_span_levels": 69.0,
+        "occupied_fraction_of_span": 1.0145,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.206379,
+        "mean_colour_in_region": [
+         0.82554,
+         0.52959,
+         0.61063
+        ],
+        "std_ratio_logL": 0.6774,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.54357,
+          0.38544,
+          0.44874
+         ],
+         "RedPool": [
+          0.06398,
+          0.07447,
+          0.05908
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "saturated_red": {
+        "max_gap_levels": 1,
+        "levels_used": 75,
+        "p1_p99_span_levels": 74.0,
+        "occupied_fraction_of_span": 1.0135,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.08156,
+        "mean_colour_in_region": [
+         0.78779,
+         0.02991,
+         0.0248
+        ],
+        "std_ratio_logL": 0.8707,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.51198,
+          0.01423,
+          0.01423
+         ],
+         "RedPool": [
+          0.03301,
+          0.01578,
+          0.01196
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "saturated_blue": {
+        "max_gap_levels": 1,
+        "levels_used": 60,
+        "p1_p99_span_levels": 59.0,
+        "occupied_fraction_of_span": 1.0169,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.11761,
+         0.05576,
+         0.69679
+        ],
+        "std_ratio_logL": 1.1328,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.01423,
+          0.03411,
+          0.51198
+         ],
+         "RedPool": [
+          0.00664,
+          0.00968,
+          0.02711
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "yellow": {
+        "max_gap_levels": 1,
+        "levels_used": 70,
+        "p1_p99_span_levels": 69.0,
+        "occupied_fraction_of_span": 1.0145,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.206379,
+        "mean_colour_in_region": [
+         0.82554,
+         0.65882,
+         0.05065
+        ],
+        "std_ratio_logL": 0.6756,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.54357,
+          0.48037,
+          0.03411
+         ],
+         "RedPool": [
+          0.06775,
+          0.08459,
+          0.04566
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "mid_grey": {
+        "max_gap_levels": 1,
+        "levels_used": 104,
+        "p1_p99_span_levels": 103.0,
+        "occupied_fraction_of_span": 1.0097,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.25545,
+         0.16775,
+         0.16264
+        ],
+        "std_ratio_logL": 0.8874,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.11817,
+          0.11817,
+          0.11817
+         ],
+         "RedPool": [
+          0.01606,
+          0.02087,
+          0.01582
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "near_black": {
+        "max_gap_levels": 1,
+        "levels_used": 157,
+        "p1_p99_span_levels": 156.0,
+        "occupied_fraction_of_span": 1.0064,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.0,
+        "mean_colour_in_region": [
+         0.109,
+         0.0213,
+         0.01618
+        ],
+        "std_ratio_logL": 2.6498,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.00744,
+          0.00744,
+          0.00744
+         ],
+         "RedPool": [
+          0.00089,
+          0.00116,
+          0.00088
+         ]
+        },
+        "derived_inside_0_1": true
+       },
+       "extreme_white": {
+        "max_gap_levels": 1,
+        "levels_used": 61,
+        "p1_p99_span_levels": 60.0,
+        "occupied_fraction_of_span": 1.0167,
+        "pass": true,
+        "region_texels": 191725,
+        "clip_frac": 0.524433,
+        "mean_colour_in_region": [
+         0.88006,
+         0.83103,
+         0.826
+        ],
+        "std_ratio_logL": 0.6533,
+        "derived": {
+         "BlackDry": [
+          0.01,
+          0.0094,
+          0.0082
+         ],
+         "RedDry": [
+          0.60672,
+          0.60672,
+          0.60672
+         ],
+         "RedPool": [
+          0.08474,
+          0.11016,
+          0.08349
+         ]
+        },
+        "derived_inside_0_1": true
+       }
+      }
+     },
+     "regions": {
+      "Paper": "paper term > half the texel's albedo",
+      "Black Ink": "W_bw + W_bd >= 0.5",
+      "Red Ink": "W_rw + W_rd + W_rp >= 0.5"
+     }
+    }
+   },
+   "pass": true
+  }
+ },
+ "pass": true
+}

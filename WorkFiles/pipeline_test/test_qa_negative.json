@@ -1,0 +1,186 @@
+{
+  "status": "passed",
+  "cases": {
+    "clean_control": {
+      "object": "SM_CleanCrate",
+      "expected": [],
+      "failed": [],
+      "passed": true,
+      "details": []
+    },
+    "ngon": {
+      "object": "SM_NgonCrate",
+      "expected": [
+        "no_ngons"
+      ],
+      "failed": [
+        "no_ngons"
+      ],
+      "passed": false,
+      "details": [
+        "no_ngons: 2 n-gon(s) of 6 faces"
+      ]
+    },
+    "overlapping_uv": {
+      "object": "SM_OverlapCrate",
+      "expected": [
+        "uv_no_overlap"
+      ],
+      "failed": [
+        "uv_no_overlap"
+      ],
+      "passed": false,
+      "details": [
+        "uv_no_overlap: 30 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh"
+      ]
+    },
+    "unapplied_scale": {
+      "object": "SM_ScaledCrate",
+      "expected": [
+        "transforms_applied"
+      ],
+      "failed": [
+        "transforms_applied"
+      ],
+      "passed": false,
+      "details": [
+        "transforms_applied: rotation error 0.00e+00, scale error 1.00e+00, location (0.0000, 0.0000, 0.0000)"
+      ]
+    },
+    "missing_ucx": {
+      "object": "SM_NoHullCrate",
+      "expected": [
+        "ucx_present"
+      ],
+      "failed": [
+        "ucx_present"
+      ],
+      "passed": false,
+      "details": [
+        "ucx_present: no child named UCX_SM_NoHullCrate_NN (Unreal keys collision to the render node name, so UCX_<base>_NN on a 'SM_NoHullCrate' node is dropped)"
+      ]
+    },
+    "stale_ucx_name": {
+      "object": "SM_RenamedCrate_LOD0",
+      "expected": [
+        "collision_name_matches_mesh",
+        "ucx_present"
+      ],
+      "failed": [
+        "collision_name_matches_mesh",
+        "ucx_present"
+      ],
+      "passed": false,
+      "details": [
+        "ucx_present: no child named UCX_SM_RenamedCrate_LOD0_NN (Unreal keys collision to the render node name, so UCX_<base>_NN on a 'SM_RenamedCrate_LOD0' node is dropped)",
+        "collision_name_matches_mesh: parent render node is 'SM_RenamedCrate_LOD0'; expected <UCX|UBX|USP|UCP>_SM_RenamedCrate_LOD0_NN"
+      ]
+    },
+    "socket_as_mesh": {
+      "object": "SM_MeshSocketCrate",
+      "expected": [
+        "socket_is_empty"
+      ],
+      "failed": [
+        "socket_is_empty"
+      ],
+      "passed": false,
+      "details": [
+        "socket_is_empty: node type MESH; UE 5.8.2 only reads an FBX Null as a socket, a child mesh is welded into the render mesh"
+      ]
+    },
+    "franchise_name": {
+      "object": "SM_KamishBlade",
+      "expected": [
+        "no_franchise_strings"
+      ],
+      "failed": [
+        "no_franchise_strings"
+      ],
+      "passed": false,
+      "details": [
+        "no_franchise_strings: 'Kamish' in 'SM_KamishBlade'; 'Kamish' in 'SM_KamishBlade'"
+      ]
+    },
+    "open_mesh_passes": {
+      "object": "SM_OpenCrate",
+      "expected": [],
+      "failed": [],
+      "passed": true,
+      "details": []
+    },
+    "non_manifold": {
+      "object": "SM_NonManifoldCrate",
+      "expected": [
+        "no_non_manifold_edges"
+      ],
+      "failed": [
+        "no_non_manifold_edges"
+      ],
+      "passed": false,
+      "details": [
+        "no_non_manifold_edges: 1 edge(s) with more than 2 faces, 0 wire edge(s), of 14"
+      ]
+    },
+    "uv1_active_uv0_graded": {
+      "object": "SM_LightmapCrate",
+      "expected": [],
+      "failed": [],
+      "passed": true,
+      "details": []
+    },
+    "uv1_required_and_broken": {
+      "object": "SM_LightmapCrate",
+      "expected": [
+        "uv1_no_overlap"
+      ],
+      "failed": [
+        "uv1_no_overlap"
+      ],
+      "passed": false,
+      "details": [
+        "uv1_no_overlap: 30 overlapping triangle pair(s) on 'UV1' (UV1); method: numpy separating-axis test on the evaluated mesh"
+      ]
+    },
+    "mirrored_u_offset": {
+      "object": "SM_MirroredCrate",
+      "expected": [],
+      "failed": [],
+      "passed": true,
+      "details": []
+    },
+    "uv0_outside_tile_range": {
+      "object": "SM_MirroredCrate",
+      "expected": [
+        "uv0_tile_range"
+      ],
+      "failed": [
+        "uv0_tile_range"
+      ],
+      "passed": false,
+      "details": [
+        "uv0_tile_range: u 1.0500..1.9500, v 0.0500..0.6167 on 'UV0'; allowed 0.0..1.0 (study 3.3 offsets mirrored shells by +1 in U)"
+      ]
+    },
+    "degenerate_bevel_runout": {
+      "object": "SM_DegenerateCrate",
+      "expected": [
+        "no_coincident_vertices",
+        "no_degenerate_faces",
+        "no_zero_length_edges"
+      ],
+      "failed": [
+        "no_coincident_vertices",
+        "no_degenerate_faces",
+        "no_zero_length_edges"
+      ],
+      "passed": false,
+      "details": [
+        "no_zero_length_edges: 1 edge(s) at or below 1e-06 of 15; shortest 0",
+        "no_degenerate_faces: 1 face(s) at or below 1e-12 area of 7; smallest 0",
+        "no_coincident_vertices: 1 vertex pair(s) within 1e-06 of 9"
+      ]
+    }
+  },
+  "problems": []
+}

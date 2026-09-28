@@ -1,0 +1,86 @@
+{
+  "rule": "every flat plate face of every LOD maps into UV0 turning the same way as its plan outline seen from +Z, and every plate island of LOD0 (the baked BC / ORM / N sheets) has a positive plan -> UV determinant with each hook tip counter-clockwise of its arm in the texture (u right, v up, i.e. the PNG as displayed): both the +Z and the -Z island read as the presented face",
+  "faces": {
+    "SM_Shuriken_HookedCross_LOD0": {
+      "object": "SM_Shuriken_HookedCross_LOD0",
+      "plate_faces": 552,
+      "top_faces_as_seen_from_plus_z": 276,
+      "top_faces_mirrored": 0,
+      "bottom_faces_as_seen_from_plus_z": 0,
+      "bottom_faces_mirrored": 276,
+      "passed": false
+    },
+    "SM_Shuriken_HookedCross_LOD1": {
+      "object": "SM_Shuriken_HookedCross_LOD1",
+      "plate_faces": 296,
+      "top_faces_as_seen_from_plus_z": 148,
+      "top_faces_mirrored": 0,
+      "bottom_faces_as_seen_from_plus_z": 0,
+      "bottom_faces_mirrored": 148,
+      "passed": false
+    },
+    "SM_Shuriken_HookedCross_LOD2": {
+      "object": "SM_Shuriken_HookedCross_LOD2",
+      "plate_faces": 112,
+      "top_faces_as_seen_from_plus_z": 56,
+      "top_faces_mirrored": 0,
+      "bottom_faces_as_seen_from_plus_z": 0,
+      "bottom_faces_mirrored": 56,
+      "passed": false
+    }
+  },
+  "lod0_islands": {
+    "islands": [
+      {
+        "island": 24,
+        "faces": "+Z plate",
+        "determinant_uv_per_m2": 49.284,
+        "tip_offsets_in_texture_deg": [
+          35.0,
+          35.0,
+          35.0,
+          35.0
+        ],
+        "reads": "as seen from +Z (left-facing)"
+      },
+      {
+        "island": 25,
+        "faces": "-Z plate",
+        "determinant_uv_per_m2": -49.284,
+        "tip_offsets_in_texture_deg": [
+          -35.0,
+          -35.0,
+          -35.0,
+          -35.0
+        ],
+        "reads": "MIRRORED (as seen from -Z)"
+      }
+    ],
+    "passed": false
+  },
+  "negative_control": {
+    "mirrored_u_faces_pass": {
+      "SM_Shuriken_HookedCross_LOD0": false,
+      "SM_Shuriken_HookedCross_LOD1": false,
+      "SM_Shuriken_HookedCross_LOD2": false
+    },
+    "mirrored_u_islands_pass": false,
+    "mirrored_u_tip_offsets_deg": [
+      [
+        -35.0,
+        -35.0,
+        -35.0,
+        -35.0
+      ],
+      [
+        35.0,
+        35.0,
+        35.0,
+        35.0
+      ]
+    ],
+    "caught": true
+  },
+  "passed": false,
+  "blend": "C:\\Users\\Cody\\AppData\\Local\\Temp\\claude\\C--Users-Cody-Desktop-Blender-Projects\\70fec35b-8f87-4dbe-ba33-6e5ba8c5d846\\scratchpad\\hcm\\old_shipped.blend"
+}

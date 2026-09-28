@@ -1,0 +1,794 @@
+{
+ "method": "FINAL recolour stress test (v2 graphs) on the float64 twin (Scripts/unreal/materials/maps/np_twin.py).\n\n    \"C:/Program Files/Blender Foundation/Blender 5.2/blender.exe\" -b --factory-startup         --python WorkFiles/materials/final/recolour/fs_twin_stress.py -- [--dump <dump json>] [--only <part>]\n\nSame colours and the same metrics as the recolour verifier's rst_twin_stress.py (WorkFiles/materials/recolour_tests/),\nso the before / after numbers compare directly. Parameters are the ones Unreal READ BACK from the built buyer-facing\ninstances (default: WorkFiles/materials/build/dump_f1.json). Metrics on the 8-bit sRGB base colour the GBuffer stores,\nover COVERED texels (the constant background fill outside the UV islands is excluded):\n    plateau       share of texels on the single most common level of the dominant channel (whole part, highlights)\n    levels / gap  distinct levels used; largest gap between used levels inside p1..p99\n    detail        std of log-luminance vs the default (whole, highlights n > 1, darks n <= 1); Spearman vs default\n    colour        mean albedo vs the pick (dE00) and vs the effective colour after the guards (floor / lightest cap)\n    limit         share of texels at the roll-off limit (>= 0.94)\n    mips          the graph ON Unreal's mip chain at lod k (with the v2 mip compensation) vs the box-filtered mip-0\n                  result: luminance ratio of the means and per-texel dE00\nGates (fabric): plateau(highlights) <= 0.20 and plateau(part) <= 0.15 (not gated when the EFFECTIVE colour is near\nblack, max channel <= 0.0105: the 8-bit sRGB GBuffer has only ~50-100 levels for the whole part there; the shipped\ndefault wrap itself has a 16.7 % highlight plateau); gap <= 3; whole-part detail >= 0.25; clip (any texel >= 0.949,\nthe survey's V3 clip gate) <= 0.1 %, the share in the roll-off (>= 0.85) and near its limit (>= 0.94) reported; mip\n2 / 4 / 6 luminance ratio within 3 % and mean-colour dE00 <= 1; the default equals the shipped BC.\nPaper: paper-region plateau <= 0.20 (not gated for an effective near-black paper: the grain is a few % and the 8-bit\nGBuffer has ~10 levels there), paper texels at the art's 0.962 ceiling <= 1 % (the shipped default: 0.03 %), pooled\nred of a neutral red-ink pick neutral (C*ab <= 3).\nWrites final/recolour/swatch_<part>.png and fs_twin_results.json.",
+ "dump": "WorkFiles\\materials\\build\\dump_kblade_0927.json",
+ "colours": {
+  "pure_white": {
+   "label": "PURE WHITE",
+   "hex": "FFFFFF",
+   "linear": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "pale_cream": {
+   "label": "PALE CREAM",
+   "hex": "F2E8D5",
+   "linear": [
+    0.88792,
+    0.80695,
+    0.66539
+   ]
+  },
+  "sat_red": {
+   "label": "SATURATED RED",
+   "hex": "FF0000",
+   "linear": [
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  "sat_blue": {
+   "label": "SATURATED BLUE",
+   "hex": "0000FF",
+   "linear": [
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  "mid_grey": {
+   "label": "MID GREY",
+   "hex": "808080",
+   "linear": [
+    0.21586,
+    0.21586,
+    0.21586
+   ]
+  },
+  "black": {
+   "label": "BLACK",
+   "hex": "000000",
+   "linear": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "offwhite_E7": {
+   "label": "OFF-WHITE (0.8 LIN)",
+   "hex": "E7E7E7",
+   "linear": [
+    0.7991,
+    0.7991,
+    0.7991
+   ]
+  },
+  "deep_red": {
+   "label": "DEEP RED",
+   "hex": "B01010",
+   "linear": [
+    0.43415,
+    0.00518,
+    0.00518
+   ]
+  },
+  "near_black": {
+   "label": "NEAR BLACK",
+   "hex": "1A1A1A",
+   "linear": [
+    0.01033,
+    0.01033,
+    0.01033
+   ]
+  }
+ },
+ "Kunai_Wrap": {
+  "instance": "MI_Kunai_Plain_Wrap",
+  "params_from": "dump_kblade_0927.json",
+  "size": 1024,
+  "default_vs_shipped_BC_levels": 2,
+  "default_vs_shipped_BC_levels_covered": 2,
+  "background_fill": {
+   "d16": 12005,
+   "fraction": 0.3489
+  },
+  "lightest_colour": 0.600000024,
+  "colours": {
+   "default": {
+    "hex": "373532",
+    "picked": [
+     0.03765,
+     0.035,
+     0.03225
+    ],
+    "effective_colour": [
+     0.03765,
+     0.035,
+     0.03225
+    ],
+    "effective_hex": "373532",
+    "mean_albedo": [
+     0.03765,
+     0.035,
+     0.03225
+    ],
+    "mean_hex": "373532",
+    "dE00_mean_vs_picked": 0.0,
+    "dE00_mean_vs_effective": 0.0,
+    "plateau_frac": 0.0839,
+    "plateau_frac_highlights": 0.1673,
+    "levels_used": 82,
+    "max_gap_levels": 1,
+    "p1_p99_span": 34.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.0,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 1.0,
+    "logL_std_ratio_highlights": 1.0,
+    "logL_std_ratio_darks": 1.0,
+    "spearman_vs_default": 1.0,
+    "H": 3.2595,
+    "C_hi": 1.0,
+    "C_lo": 1.0,
+    "E": 1.0,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "pure_white": {
+    "hex": "FFFFFF",
+    "picked": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "effective_colour": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "effective_hex": "CBCBCB",
+    "mean_albedo": [
+     0.59993,
+     0.59993,
+     0.59993
+    ],
+    "mean_hex": "CBCBCB",
+    "dE00_mean_vs_picked": 11.282,
+    "dE00_mean_vs_effective": 0.003,
+    "plateau_frac": 0.0562,
+    "plateau_frac_highlights": 0.1357,
+    "levels_used": 109,
+    "max_gap_levels": 1,
+    "p1_p99_span": 56.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.00408,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 0.5621,
+    "logL_std_ratio_highlights": 0.4117,
+    "logL_std_ratio_darks": 0.7144,
+    "spearman_vs_default": 0.9984,
+    "H": 0.41637,
+    "C_hi": 0.41637,
+    "C_lo": 0.70818,
+    "E": 0.9705,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0003,
+      "dE00_mean_colour": 0.007,
+      "dE00_texel_mean": 0.114,
+      "dE00_texel_p95": 0.417
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.009,
+      "dE00_texel_mean": 0.186,
+      "dE00_texel_p95": 0.567
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.01,
+      "dE00_texel_mean": 0.126,
+      "dE00_texel_p95": 0.34
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "pale_cream": {
+    "hex": "F2E8D5",
+    "picked": [
+     0.88792,
+     0.80695,
+     0.66539
+    ],
+    "effective_colour": [
+     0.6,
+     0.54529,
+     0.44962
+    ],
+    "effective_hex": "CBC3B3",
+    "mean_albedo": [
+     0.59993,
+     0.54522,
+     0.44957
+    ],
+    "mean_hex": "CBC3B3",
+    "dE00_mean_vs_picked": 8.713,
+    "dE00_mean_vs_effective": 0.003,
+    "plateau_frac": 0.0562,
+    "plateau_frac_highlights": 0.1357,
+    "levels_used": 109,
+    "max_gap_levels": 1,
+    "p1_p99_span": 56.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.00408,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 0.5623,
+    "logL_std_ratio_highlights": 0.411,
+    "logL_std_ratio_darks": 0.7146,
+    "spearman_vs_default": 0.9985,
+    "H": 0.41637,
+    "C_hi": 0.41637,
+    "C_lo": 0.70818,
+    "E": 0.9705,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0003,
+      "dE00_mean_colour": 0.007,
+      "dE00_texel_mean": 0.115,
+      "dE00_texel_p95": 0.419
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.009,
+      "dE00_texel_mean": 0.187,
+      "dE00_texel_p95": 0.569
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.01,
+      "dE00_texel_mean": 0.127,
+      "dE00_texel_p95": 0.342
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "sat_red": {
+    "hex": "FF0000",
+    "picked": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "effective_colour": [
+     0.6,
+     0.0,
+     0.0
+    ],
+    "effective_hex": "CB0000",
+    "mean_albedo": [
+     0.59993,
+     0.0,
+     0.0
+    ],
+    "mean_hex": "CB0000",
+    "dE00_mean_vs_picked": 11.122,
+    "dE00_mean_vs_effective": 0.002,
+    "plateau_frac": 0.0562,
+    "plateau_frac_highlights": 0.1357,
+    "levels_used": 109,
+    "max_gap_levels": 1,
+    "p1_p99_span": 56.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.00408,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 0.5621,
+    "logL_std_ratio_highlights": 0.4117,
+    "logL_std_ratio_darks": 0.7144,
+    "spearman_vs_default": 0.9984,
+    "H": 0.41637,
+    "C_hi": 0.41637,
+    "C_lo": 0.70818,
+    "E": 0.9705,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0003,
+      "dE00_mean_colour": 0.006,
+      "dE00_texel_mean": 0.096,
+      "dE00_texel_p95": 0.352
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.008,
+      "dE00_texel_mean": 0.157,
+      "dE00_texel_p95": 0.48
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.008,
+      "dE00_texel_mean": 0.106,
+      "dE00_texel_p95": 0.279
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "sat_blue": {
+    "hex": "0000FF",
+    "picked": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "effective_colour": [
+     0.0,
+     0.0,
+     0.6
+    ],
+    "effective_hex": "0000CB",
+    "mean_albedo": [
+     0.0,
+     0.0,
+     0.59993
+    ],
+    "mean_hex": "0000CB",
+    "dE00_mean_vs_picked": 6.58,
+    "dE00_mean_vs_effective": 0.001,
+    "plateau_frac": 0.0562,
+    "plateau_frac_highlights": 0.1357,
+    "levels_used": 109,
+    "max_gap_levels": 1,
+    "p1_p99_span": 56.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.00408,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 0.5621,
+    "logL_std_ratio_highlights": 0.4117,
+    "logL_std_ratio_darks": 0.7144,
+    "spearman_vs_default": 0.9984,
+    "H": 0.41637,
+    "C_hi": 0.41637,
+    "C_lo": 0.70818,
+    "E": 0.9705,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0003,
+      "dE00_mean_colour": 0.004,
+      "dE00_texel_mean": 0.06,
+      "dE00_texel_p95": 0.219
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.005,
+      "dE00_texel_mean": 0.098,
+      "dE00_texel_p95": 0.299
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.005,
+      "dE00_texel_mean": 0.066,
+      "dE00_texel_p95": 0.176
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "mid_grey": {
+    "hex": "808080",
+    "picked": [
+     0.21586,
+     0.21586,
+     0.21586
+    ],
+    "effective_colour": [
+     0.21586,
+     0.21586,
+     0.21586
+    ],
+    "effective_hex": "808080",
+    "mean_albedo": [
+     0.21586,
+     0.21586,
+     0.21586
+    ],
+    "mean_hex": "808080",
+    "dE00_mean_vs_picked": 0.0,
+    "dE00_mean_vs_effective": 0.0,
+    "plateau_frac": 0.0428,
+    "plateau_frac_highlights": 0.0928,
+    "levels_used": 163,
+    "max_gap_levels": 1,
+    "p1_p99_span": 69.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.0,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 1.0014,
+    "logL_std_ratio_highlights": 1.0011,
+    "logL_std_ratio_darks": 1.0076,
+    "spearman_vs_default": 0.9985,
+    "H": 1.46616,
+    "C_hi": 1.0,
+    "C_lo": 1.0,
+    "E": 1.0,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.001
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.001
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.001
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "black": {
+    "hex": "000000",
+    "picked": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "effective_colour": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "effective_hex": "191919",
+    "mean_albedo": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "mean_hex": "191919",
+    "dE00_mean_vs_picked": 5.354,
+    "dE00_mean_vs_effective": 0.0,
+    "plateau_frac": 0.1413,
+    "plateau_frac_highlights": 0.2973,
+    "levels_used": 47,
+    "max_gap_levels": 1,
+    "p1_p99_span": 19.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.0,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 1.0014,
+    "logL_std_ratio_highlights": 0.9981,
+    "logL_std_ratio_darks": 0.9996,
+    "spearman_vs_default": 0.9916,
+    "H": 4.62082,
+    "C_hi": 1.0,
+    "C_lo": 1.0,
+    "E": 1.0,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "offwhite_E7": {
+    "hex": "E7E7E7",
+    "picked": [
+     0.7991,
+     0.7991,
+     0.7991
+    ],
+    "effective_colour": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "effective_hex": "CBCBCB",
+    "mean_albedo": [
+     0.59993,
+     0.59993,
+     0.59993
+    ],
+    "mean_hex": "CBCBCB",
+    "dE00_mean_vs_picked": 6.341,
+    "dE00_mean_vs_effective": 0.003,
+    "plateau_frac": 0.0562,
+    "plateau_frac_highlights": 0.1357,
+    "levels_used": 109,
+    "max_gap_levels": 1,
+    "p1_p99_span": 56.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.00408,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 0.5621,
+    "logL_std_ratio_highlights": 0.4117,
+    "logL_std_ratio_darks": 0.7144,
+    "spearman_vs_default": 0.9984,
+    "H": 0.41637,
+    "C_hi": 0.41637,
+    "C_lo": 0.70818,
+    "E": 0.9705,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0003,
+      "dE00_mean_colour": 0.007,
+      "dE00_texel_mean": 0.114,
+      "dE00_texel_p95": 0.417
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.009,
+      "dE00_texel_mean": 0.186,
+      "dE00_texel_p95": 0.567
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0004,
+      "dE00_mean_colour": 0.01,
+      "dE00_texel_mean": 0.126,
+      "dE00_texel_p95": 0.34
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "deep_red": {
+    "hex": "B01010",
+    "picked": [
+     0.43415,
+     0.00518,
+     0.00518
+    ],
+    "effective_colour": [
+     0.43415,
+     0.00518,
+     0.00518
+    ],
+    "effective_hex": "B01010",
+    "mean_albedo": [
+     0.43409,
+     0.00518,
+     0.00518
+    ],
+    "mean_hex": "B01010",
+    "dE00_mean_vs_picked": 0.002,
+    "dE00_mean_vs_effective": 0.002,
+    "plateau_frac": 0.0406,
+    "plateau_frac_highlights": 0.0919,
+    "levels_used": 141,
+    "max_gap_levels": 1,
+    "p1_p99_span": 73.0,
+    "near_limit_frac": 0.00011,
+    "rolloff_frac": 0.00193,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 0.8082,
+    "logL_std_ratio_highlights": 0.7435,
+    "logL_std_ratio_darks": 0.8805,
+    "spearman_vs_default": 0.9985,
+    "H": 0.7486,
+    "C_hi": 0.7486,
+    "C_lo": 0.8743,
+    "E": 0.98571,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0003,
+      "dE00_mean_colour": 0.005,
+      "dE00_texel_mean": 0.046,
+      "dE00_texel_p95": 0.169
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0001,
+      "dE00_mean_colour": 0.002,
+      "dE00_texel_mean": 0.072,
+      "dE00_texel_p95": 0.209
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 0.9998,
+      "dE00_mean_colour": 0.003,
+      "dE00_texel_mean": 0.046,
+      "dE00_texel_p95": 0.143
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   },
+   "near_black": {
+    "hex": "1A1A1A",
+    "picked": [
+     0.01033,
+     0.01033,
+     0.01033
+    ],
+    "effective_colour": [
+     0.01033,
+     0.01033,
+     0.01033
+    ],
+    "effective_hex": "1A1A1A",
+    "mean_albedo": [
+     0.01033,
+     0.01033,
+     0.01033
+    ],
+    "mean_hex": "1A1A1A",
+    "dE00_mean_vs_picked": 0.0,
+    "dE00_mean_vs_effective": 0.0,
+    "plateau_frac": 0.1397,
+    "plateau_frac_highlights": 0.2573,
+    "levels_used": 48,
+    "max_gap_levels": 1,
+    "p1_p99_span": 20.0,
+    "near_limit_frac": 0.0,
+    "rolloff_frac": 0.0,
+    "clip_frac_0949": 0.0,
+    "logL_std_ratio": 1.009,
+    "logL_std_ratio_highlights": 1.011,
+    "logL_std_ratio_darks": 1.0336,
+    "spearman_vs_default": 0.9919,
+    "H": 4.5875,
+    "C_hi": 1.0,
+    "C_lo": 1.0,
+    "E": 1.0,
+    "K": 1.0,
+    "mips": {
+     "mip2": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     },
+     "mip4": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     },
+     "mip6": {
+      "luminance_ratio_gpu_over_true": 1.0,
+      "dE00_mean_colour": 0.0,
+      "dE00_texel_mean": 0.0,
+      "dE00_texel_p95": 0.0
+     }
+    },
+    "gates": {
+     "plateau_highlights_le_0.20": true,
+     "plateau_part_le_0.15": true,
+     "gap_le_3": true,
+     "detail_whole_ge_0.25": true,
+     "clip_0949_le_0.1pct": true,
+     "mips_lum_within_3pct": true,
+     "mips_mean_dE00_le_1": true
+    },
+    "pass": true
+   }
+  },
+  "pass": true,
+  "seconds": 5.9
+ },
+ "seconds": 5.9
+}

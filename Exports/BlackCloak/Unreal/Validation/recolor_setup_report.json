@@ -1,0 +1,248 @@
+{
+  "status": "saved_pending_fresh_process_verification",
+  "engine": "5.8.2-56702186+++UE5+Release-5.8",
+  "project": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\BlackCloak\\UnrealRecolor",
+  "presets_linear": {
+    "Black": [
+      0.013702083,
+      0.01355,
+      0.0134
+    ],
+    "Crimson": [
+      0.32,
+      0.012,
+      0.018
+    ],
+    "Navy": [
+      0.016,
+      0.035,
+      0.12
+    ],
+    "Ivory": [
+      0.8,
+      0.73,
+      0.57
+    ]
+  },
+  "grain_reference_linear": 0.013702083,
+  "color_parameter_semantics": "Linear RGB of the brightest yarn/dye swatch; grain and lighting darken the rendered average.",
+  "limits": [
+    "No cloth physics, cloth simulation or collision setup is created.",
+    "Skeletal mesh has existing rigid attachment weights; no playable animation test.",
+    "This workflow validates saved recoloring controls, not a photorealistic reference match.",
+    "Mesh import includes LOD0 only. Existing exported LOD1/LOD2 remain separately available."
+  ],
+  "source_folder": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\BlackCloak",
+  "source_files_sha256": {
+    "BlackCloak.fbx": "f5c18da636842ae367c97cce721b07d5981dac7913211300989972495901c90a",
+    "BlackCloak_Skeletal.fbx": "a4500b7872ada9428e6713a50192feb883a967d43430ee6f118179b51c729220"
+  },
+  "textures": {
+    "base": {
+      "path": "/Game/BlackCloak/Textures/T_BlackCloak_BaseColor.T_BlackCloak_BaseColor",
+      "source_sha256": "72fb0604f2ce2ebe1f421b054d25758451bd62cfc9f65cfe2a261517d48cefa3",
+      "srgb": true,
+      "compression": "<TextureCompressionSettings.TC_DEFAULT: 0>",
+      "flip_green_channel": false
+    },
+    "roughness": {
+      "path": "/Game/BlackCloak/Textures/T_BlackCloak_Roughness.T_BlackCloak_Roughness",
+      "source_sha256": "cb402830281e1912f983292e0261949436ca24e4dc09d83a16bce0f6a43363b3",
+      "srgb": false,
+      "compression": "<TextureCompressionSettings.TC_MASKS: 2>",
+      "flip_green_channel": false
+    },
+    "normal": {
+      "path": "/Game/BlackCloak/Textures/T_BlackCloak_Normal_DirectX.T_BlackCloak_Normal_DirectX",
+      "source_sha256": "c0c9116a49bd4d97dee7430c51df7c463e7bf1b275bb094c4ae5735315d97e9b",
+      "srgb": false,
+      "compression": "<TextureCompressionSettings.TC_NORMALMAP: 1>",
+      "flip_green_channel": false
+    }
+  },
+  "master_material": "/Game/BlackCloak/Materials/M_Cloak_Recolor.M_Cloak_Recolor",
+  "graph_connections": [
+    [
+      "Fabric base sample (sRGB decoded to linear)",
+      "R",
+      "Normalize neutral grain",
+      "A"
+    ],
+    [
+      "Normalize neutral grain",
+      "",
+      "Bound grain",
+      ""
+    ],
+    [
+      "FabricDetail",
+      "",
+      "Bound FabricDetail",
+      ""
+    ],
+    [
+      "Bound grain",
+      "",
+      "Grain blend",
+      "B"
+    ],
+    [
+      "Bound FabricDetail",
+      "",
+      "Grain blend",
+      "Alpha"
+    ],
+    [
+      "CloakColor",
+      "RGB",
+      "Tint by grain",
+      "A"
+    ],
+    [
+      "Grain blend",
+      "",
+      "Tint by grain",
+      "B"
+    ],
+    [
+      "Tint by grain",
+      "",
+      "Clamp base color",
+      ""
+    ],
+    [
+      "Clamp base color",
+      "",
+      "<MaterialProperty.MP_BASE_COLOR: 5>"
+    ],
+    [
+      "Roughness sample",
+      "R",
+      "Roughness product",
+      "A"
+    ],
+    [
+      "RoughnessMultiplier",
+      "",
+      "Roughness product",
+      "B"
+    ],
+    [
+      "Roughness product",
+      "",
+      "Clamp roughness",
+      ""
+    ],
+    [
+      "Clamp roughness",
+      "",
+      "<MaterialProperty.MP_ROUGHNESS: 8>"
+    ],
+    [
+      "Metallic zero",
+      "",
+      "<MaterialProperty.MP_METALLIC: 6>"
+    ],
+    [
+      "Low fabric specular",
+      "",
+      "<MaterialProperty.MP_SPECULAR: 7>"
+    ],
+    [
+      "Flat normal",
+      "",
+      "Normal blend",
+      "A"
+    ],
+    [
+      "DirectX normal sample",
+      "RGB",
+      "Normal blend",
+      "B"
+    ],
+    [
+      "NormalStrength",
+      "",
+      "Normal blend",
+      "Alpha"
+    ],
+    [
+      "Normal blend",
+      "",
+      "Normalize tangent normal",
+      ""
+    ],
+    [
+      "Normalize tangent normal",
+      "",
+      "<MaterialProperty.MP_NORMAL: 10>"
+    ]
+  ],
+  "instances": {
+    "Black": "/Game/BlackCloak/Materials/MI_Cloak_Black.MI_Cloak_Black",
+    "Crimson": "/Game/BlackCloak/Materials/MI_Cloak_Crimson.MI_Cloak_Crimson",
+    "Navy": "/Game/BlackCloak/Materials/MI_Cloak_Navy.MI_Cloak_Navy",
+    "Ivory": "/Game/BlackCloak/Materials/MI_Cloak_Ivory.MI_Cloak_Ivory"
+  },
+  "meshes": [
+    {
+      "path": "/Game/BlackCloak/Meshes/SM_BlackCloak.SM_BlackCloak",
+      "skeletal": false,
+      "source": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\BlackCloak\\BlackCloak.fbx",
+      "source_sha256": "f5c18da636842ae367c97cce721b07d5981dac7913211300989972495901c90a",
+      "material_slots": [
+        {
+          "index": 0,
+          "slot": "M_BlackCloak_BlackenedSteel",
+          "source_slot": "M_BlackCloak_BlackenedSteel",
+          "material": "/Game/BlackCloak/Materials/M_Cloak_BlackenedSteel.M_Cloak_BlackenedSteel"
+        },
+        {
+          "index": 1,
+          "slot": "M_BlackCloak_CharcoalLeather",
+          "source_slot": "M_BlackCloak_CharcoalLeather",
+          "material": "/Game/BlackCloak/Materials/M_Cloak_CharcoalLeather.M_Cloak_CharcoalLeather"
+        },
+        {
+          "index": 2,
+          "slot": "M_BlackCloak_WovenWool",
+          "source_slot": "M_BlackCloak_WovenWool",
+          "material": "/Game/BlackCloak/Materials/MI_Cloak_Black.MI_Cloak_Black"
+        }
+      ],
+      "imported_object_paths": [
+        "/Game/BlackCloak/Meshes/SM_BlackCloak.SM_BlackCloak"
+      ]
+    },
+    {
+      "path": "/Game/BlackCloak/Meshes/SK_BlackCloak.SK_BlackCloak",
+      "skeletal": true,
+      "source": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\BlackCloak\\BlackCloak_Skeletal.fbx",
+      "skeleton": "/Game/BlackCloak/Meshes/SK_BlackCloak_Skeleton.SK_BlackCloak_Skeleton",
+      "source_sha256": "a4500b7872ada9428e6713a50192feb883a967d43430ee6f118179b51c729220",
+      "material_slots": [
+        {
+          "index": 0,
+          "slot": "M_BlackCloak_BlackenedSteel",
+          "source_slot": "M_BlackCloak_BlackenedSteel",
+          "material": "/Game/BlackCloak/Materials/M_Cloak_BlackenedSteel.M_Cloak_BlackenedSteel"
+        },
+        {
+          "index": 1,
+          "slot": "M_BlackCloak_CharcoalLeather",
+          "source_slot": "M_BlackCloak_CharcoalLeather",
+          "material": "/Game/BlackCloak/Materials/M_Cloak_CharcoalLeather.M_Cloak_CharcoalLeather"
+        },
+        {
+          "index": 2,
+          "slot": "M_BlackCloak_WovenWool",
+          "source_slot": "M_BlackCloak_WovenWool",
+          "material": "/Game/BlackCloak/Materials/MI_Cloak_Black.MI_Cloak_Black"
+        }
+      ],
+      "imported_object_paths": [
+        "/Game/BlackCloak/Meshes/SK_BlackCloak.SK_BlackCloak"
+      ]
+    }
+  ]
+}
