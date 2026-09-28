@@ -1,7 +1,7 @@
 # Card Shop Kit: fictional brand names (D3)
 
-**Date:** 2026-09-28. **Status:** shortlist proposed; **the user picks one per slot, then screens each pick on USPTO**
-(section 3) and fills in the log (section 4) before any art is drawn (`CARDSHOP_KIT_SPEC.md` 6.1 rule 1, gate G0).
+**Date:** 2026-09-28. **Status:** names **picked by the user 2026-09-28** (the ★ recommendations, section 4). **USPTO screen still pending**
+(section 3, the user); no brand art is drawn until it passes (`CARDSHOP_KIT_SPEC.md` 6.1 rule 1, gate G0).
 **Scope:** the 8 names the spec needs (section 4.1 of the spec): 2 fantasy card lines, 1 sports-style line with a
 fictional sport, 2 graders, 1 accessory brand, 1 distributor, 1 demo shop.
 
@@ -77,16 +77,16 @@ For each picked name, plus "toploader" and "top-loader" (spec 6.3 gate 4):
    option in its row, or ask for new names.
 5. Fill in section 4.
 
-## 4. Decision log (fill in)
+## 4. Decision log (the user fills in the USPTO columns)
 
 | Slot | Picked name | USPTO searched on (date) | Result | Notes |
 |---|---|---|---|---|
-| L1 Fantasy line A | | | | |
-| L2 Fantasy line B | | | | |
-| L3 Sports-style line | | | | |
-| G1 Grader | | | | |
-| G2 Grader | | | | |
-| A Accessory brand | | | | |
-| D Distributor | | | | |
-| S Demo shop | | | | |
+| L1 Fantasy line A | **Pyrecall** | pending | | picked 2026-09-28 |
+| L2 Fantasy line B | **Lumenfold** | pending | | picked 2026-09-28 |
+| L3 Sports-style line | **Rimvault** (sport: Rimvault, a hoop sport with a vaulting pole) | pending | | picked 2026-09-28 |
+| G1 Grader | **Clearmark Grading** | pending | | picked 2026-09-28 |
+| G2 Grader | **Halcyon Grading** | pending | | picked 2026-09-28 |
+| A Accessory brand | **Sleevesmith** | pending | | picked 2026-09-28 |
+| D Distributor | **Longhaul Hobby Distribution** | pending | | picked 2026-09-28 |
+| S Demo shop | **Corner Pocket Cards** | pending | | picked 2026-09-28 |
 | "toploader" / "top-loader" | (generic term check) | | | Rename to `RigidHolder` if registered |
