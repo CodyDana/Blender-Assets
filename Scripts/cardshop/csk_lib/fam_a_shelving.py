@@ -1,5 +1,6 @@
 """Family a_shelving: slatwall, hooks, slatwall shelf, gondola shelving, wire rack and box tier shelf
-(CARDSHOP_KIT_SPEC.md 3.A7-A13; reference sheets 19, 20, 21, notes in References/CardShop/REFERENCE_LOG.md).
+(CARDSHOP_KIT_SPEC.md 3.A7-A13; reference sheets 19, 20, 21: References/CardShop/csk_slatwall.png,
+csk_gondola.png, csk_wire_rack_box_shelf.png, notes in REFERENCE_LOG.md).
 
 Flags as in spec.py: M = measured (source key), D = derived, E = estimate / design choice, E* = estimate with a
 measured range. "sheet N" = the value or the form comes from that reference sheet's notes (the picture wins over E).
@@ -18,7 +19,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from . import spec as S
 from .geom import Item, Lod, Socket, _face_out, solve_grid
-from .shapes import Builder
+from .shapes import Builder, Face, Fill
 
 Vec3 = Tuple[float, float, float]
 
@@ -35,8 +36,8 @@ SLAT = dict(                      # A7, sheet 19
     h=2400.0,                     # E (spec)
     pitch=76.2,                   # M [D27]
     grooves=31,                   # D floor(2400 / 76.2)
-    neck=11.0, neck_d=5.0,        # E: the T-slot opening (Z) and its depth; sheet 19 shows a T-slot profile
-    head=24.0, head_d=6.0,        # E: the T's head (undercut), total groove depth 11 of 19
+    neck=12.0, neck_d=6.5,        # sheet 19 cut-away (measured against the 76.2 pitch and the 19 thickness)
+    head=30.0, head_d=6.0,        # sheet 19: the T head, total groove depth 12.5 of 19
     lip_c=1.0,                    # E: crisp chamfer on the groove lips
     edge_c=1.0,                   # E: chamfer on the panel's outer edges
 )
@@ -44,21 +45,27 @@ SLAT = dict(                      # A7, sheet 19
 HOOK = dict(                      # A8, sheet 19
     wire=4.76,                    # M [D28] (sheet 19: 4.8)
     lengths=(102.0, 203.0, 305.0),  # E (spec: v1 picks), inside 25-305 E*
-    plate=(38.0, 45.0, 1.5),      # E: the flat back plate W x H x T; its top bends into the groove (sheet 19)
-    tab_top=-3.8,                 # E: the bend's top face, below the groove centre (inside the 11 opening)
-    leg=(5.5, 7.0, -10.5),        # E: the down-leg behind the lower lip: y0, y1, bottom z
-    arm_z=-36.0,                  # E: the arm's axis below the groove centre (welded low on the plate)
-    kink=(22.0, 30.0),            # E: the short upward kink near the tip (sheet 19): run, angle deg
-    price_plate=(40.0, 28.0, 1.2, 30.0),  # E: W x H x T, tilted back from vertical toward the viewer (sheet 19)
-    hang_start=12.0,              # E: the hang run starts this far in front of the plate
+    plate=(28.0, 60.0, 1.5),      # sheet 19 (scaled off the 203 hook): back plate W x H, T 1.5 E; its top bends
+                                  # into the groove
+    tab_top=-3.8,                 # E: the bend's top face, below the groove centre (inside the 12 opening)
+    leg=(7.0, 8.5, -12.0),        # E: the down-leg behind the lower lip: y0, y1, bottom z (head: y 6.5-12.5)
+    weld=(0.8, 0.4),              # sheet 19: the wire runs down the plate from 80 % to 40 % of its height, then
+                                  # bends out (bend radius 8, E)
+    slope=8.0,                    # sheet 19: the arm falls 8 deg from the plate to the kink
+    kink=(20.0, 38.0),            # sheet 19: the short upward kink at the tip: run, angle deg
+    price_plate=(38.0, 32.0, 2.5, 15.0),  # sheet 19: a white / clear label holder W x H x T, tipped back 15 deg (E)
+    hang_start=10.0,              # E: the hang run starts this far in front of the bend
 )
 
 SHELF_SLAT = dict(                # A9, sheet 19
     w=1000.0, d=305.0, t=19.0,    # E (spec)
-    bracket_x=375.0,              # E: the two blade brackets' centres (+-)
+    bracket_x=375.0,              # E: the two brackets' centres (+-)
+    plate=(25.0, 2.0, -92.0),     # sheet 19: each bracket's back plate W x T (E) and bottom z; its top bends into
+                                  # a groove like the hook's and a lower tongue enters the groove 76.2 below
+    board_z=-10.0,                # E: the board's underside (sheet 19: the blade leaves the plate below its top)
     blade_t=3.0,                  # E
-    blade_h=(100.0, 24.0),        # E: blade height at the wall, at the tip (sheet 19: tapered blade)
-    lip=(4.0, 6.0),               # E: the bracket's front lip: thickness, height above the board (sheet 19)
+    blade_h=(50.0, 10.0),         # sheet 19: tapered blade, height at the plate, at the tip
+    lip=(4.0, 4.0),               # sheet 19: a round post at the blade's tip: radius (E), height above the board
     clear_h=280.0,                # E: the level's clear height (the next shelf 4 grooves up)
 )
 
@@ -66,13 +73,15 @@ GONDOLA = dict(                   # A10, sheet 20
     w=1219.0, h=1372.0,           # M [D30]
     endcap_w=610.0,               # sheet 20 (end cap 610 x 1372)
     deck_d=406.0,                 # E* (range 406-559; sheet 20 406)
-    kick=100.0,                   # E: the deck top / kick plate top
+    kick=100.0,                   # E (sheet 20: 100 kick plate): the kick plate's top
+    deck_top=130.0,               # sheet 20: the base deck is a steel pan (30, E) with a price channel, on the kick
+    kick_setback=12.0,            # sheet 20: the kick plate sits a little behind the deck's front edge (E)
     deck_z0=10.0,                 # E: the base sits on 10 mm levelling feet (sheet 20: feet under the base)
     upright=(30.0, 30.0),         # E: section X x Y (single); double: 30 x 40 (slotted both faces)
     upright_double_d=40.0,        # E
     slot=(5.0, 12.0, 25.4, 4.0),  # slot W x H (E), pitch 25.4 (E*), pocket depth (E); rectangular (sheet 20)
-    slots=49,                     # D: floor((1372 - 100 - 27) / 25.4) slots above the deck
-    grooves=16,                   # D floor((1372 - 100) / 76.2)
+    slots=48,                     # D: slots every 25.4 above the deck top, the last 20 below the top
+    grooves=16,                   # D floor((1372 - 100) / 76.2) (16 also fit above the 130 deck)
     mount_pitch=101.6,            # E (spec: every 4th slot)
     mount_first=2,                # E: the first mount 2 x 101.6 above the deck (a lower shelf leaves no room)
     foot=(12.0, 10.0),            # E: levelling foot radius, height
@@ -93,9 +102,10 @@ GSHELF = dict(                    # A11, sheet 20
 GCORNER = dict(                   # A11 corner, sheet 20
     size=610.0,                   # E (spec; sheet 20 610 x 610 x 1372)
     shelf_d=305.0,                # E: the L shelves (the smaller A11 depth)
-    shelf_z=(354.0, 608.0, 862.0, 1116.0),   # E: 4 shelves splitting deck-to-top in fifths (sheet 20: 4 shelves)
+    shelf_z=(378.4, 626.8, 875.2, 1123.6),   # E: 4 shelves splitting deck-to-top in fifths (sheet 20: 4 shelves)
     slab=30.0,                    # E: shelf thickness (the pan flange)
-    budget=2000,                  # E (spec)
+    budget=4000,                  # raised from 2000 (E): sheet 20 shows slotted end uprights (2 slotted faces, as
+                                  # the Single's 4000)
 )
 
 RACK = dict(                      # A12, sheet 21
@@ -111,6 +121,7 @@ RACK = dict(                      # A12, sheet 21
     zig=30.0,                     # E: horizontal run of one zigzag leg
     collar=(19.0, 16.0, 40.0),    # E: the corner collar: bottom radius, top radius, height
     foot=(17.0, 13.5, 20.0),      # E: black levelling foot: bottom radius, top radius, height (sheet 21)
+    cap=(13.3, 16.0),             # sheet 21 (shelf corner detail): a black cap on each post top: radius, height (E)
     budget=14000,                 # raised from 7000 (E): 5 decks (sheet 21) and 4 ring-grooved posts (sheet 21)
 )
 
@@ -118,11 +129,13 @@ TIER = dict(                      # A13, sheet 21
     w=1219.0, d=457.0, h=1372.0,  # E (spec)
     side_t=19.0,                  # E: oak side panels
     top_d=152.4,                  # E: the side panels' narrow top (sheet 21: tapered, narrow at the top)
-    deck_z=252.0,                 # sheet 21: tiers 280 apart starting at 252 (252 + 4 x 280 = 1372)
+    deck_z=252.0,                 # sheet 21 section: tiers 280 apart starting at 252 (252 + 4 x 280 = 1372)
     pitch=280.0,                  # sheet 21
-    tilt=10.0,                    # E (spec) = sheet 21: shelves tilted back 10 deg
-    lip=(12.0, 25.0),             # sheet 21: 25 front lip; thickness E
-    board=19.0,                   # E: white shelf and deck boards
+    tilt=10.0,                    # E (spec) = sheet 21: "four tiers, each tilted back 10 deg" (the lip detail shows the
+                                  # shelf falling toward the rear)
+    lip=(12.0, 25.0),             # sheet 21: 25 front lip on every tier (the section marks it on the 252 tier); T E
+    board=19.0,                   # E: white tier boards
+    back=12.0,                    # E: the white back panel (sheet 21 main view: white behind every tier)
     kick=(60.0, 30.0),            # E: black kick height, recess (sheet 21: black kick under the oak front)
     step=76.2,                    # D: the front slope's step per tier ((457 - 152.4) / 4)
 )
@@ -176,6 +189,40 @@ def _rotate(v, k, ang):
 
 # =========================================================================== shape helpers
 
+def _earclip(P: Sequence[Tuple[float, float]]) -> List[Tuple[int, int, int]]:
+    """Ear-clipping triangulation of a simple polygon (either winding). Collinear runs are kept whole: an ear with
+    zero area, or with another vertex on or inside it, is never cut (no slivers, no T-junctions). Blender's scanfill
+    left holes in the slatwall's comb-shaped end caps, so the sweeps' caps use this instead."""
+    n = len(P)
+    area = sum(P[i][0] * P[(i + 1) % n][1] - P[(i + 1) % n][0] * P[i][1] for i in range(n))
+    idx = list(range(n)) if area > 0 else list(range(n - 1, -1, -1))
+
+    def cross(a, b, c):
+        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+
+    def inside(p, a, b, c):
+        return cross(a, b, p) >= -1e-9 and cross(b, c, p) >= -1e-9 and cross(c, a, p) >= -1e-9
+
+    tris = []
+    while len(idx) > 3:
+        m = len(idx)
+        reflex = [j for k, j in enumerate(idx) if cross(P[idx[k - 1]], P[j], P[idx[(k + 1) % m]]) <= 1e-9]
+        for k in range(m):
+            a, b_, c = idx[k - 1], idx[k], idx[(k + 1) % m]
+            if cross(P[a], P[b_], P[c]) <= 1e-9:
+                continue
+            if any(inside(P[j], P[a], P[b_], P[c]) for j in reflex if j not in (a, b_, c)
+                   and P[j] not in (P[a], P[b_], P[c])):
+                continue
+            tris.append((a, b_, c))
+            idx.pop(k)
+            break
+        else:
+            raise ValueError("ear clipping found no ear (the profile is not a simple polygon)")
+    tris.append(tuple(idx))
+    return tris
+
+
 def _sweep(b: Builder, prof, path, cap_mat: int, caps=(True, True)) -> Tuple[List[int], List[int]]:
     """Sweep a closed profile ``prof`` [(n, z, mat of the edge to the next point)] along an open polyline ``path``
     [(x, y)] in XY (mitred corners). ``n`` is the offset to the left of the path direction, z is absolute. The caps
@@ -210,10 +257,13 @@ def _sweep(b: Builder, prof, path, cap_mat: int, caps=(True, True)) -> Tuple[Lis
             on, oz = dz * sgn, -dn * sgn                          # the profile edge's outward normal
             _face_out(b, [rings[j][k], rings[j][k1], rings[j + 1][k1], rings[j + 1][k]],
                       (lx * on, ly * on, oz), prof[k][2])
-    if caps[0]:
-        b.fill([rings[0]], cap_mat, 0, (-dirs[0][0], -dirs[0][1], 0.0))
-    if caps[1]:
-        b.fill([rings[-1]], cap_mat, 0, (dirs[-1][0], dirs[-1][1], 0.0))
+    if any(caps):
+        tris = _earclip([(p[0], p[1]) for p in prof])
+        for ring, on, nrm in ((rings[0], caps[0], (-dirs[0][0], -dirs[0][1], 0.0)),
+                              (rings[-1], caps[1], (dirs[-1][0], dirs[-1][1], 0.0))):
+            if on:
+                for t in tris:
+                    _face_out(b, [ring[t[0]], ring[t[1]], ring[t[2]]], nrm, cap_mat)
     return rings[0], rings[-1]
 
 
@@ -382,6 +432,22 @@ def _slotted_bar(b: Builder, x0: float, x1: float, y0: float, y1: float, z0: flo
     b.fill([rings[1]], mat, 0, (0.0, 0.0, 1.0))
 
 
+def _merge_rotz(dst: Builder, src: Builder, deg: float, tx: float, ty: float) -> None:
+    """Append ``src`` to ``dst`` turned ``deg`` about +Z and moved by (tx, ty) (a proper rotation keeps windings)."""
+    c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+    off = len(dst.verts)
+    dst.verts += [(tx + c * x - s_ * y, ty + s_ * x + c * y, z) for x, y, z in src.verts]
+    dst.faces += [Face(tuple(i + off for i in f.verts), f.mat, f.region) for f in src.faces]
+    dst.fills += [Fill([[i + off for i in lp] for lp in fl.loops], fl.mat, fl.region,
+                       (c * fl.normal[0] - s_ * fl.normal[1], s_ * fl.normal[0] + c * fl.normal[1], fl.normal[2]))
+                  for fl in src.fills]
+
+
+def _slot_zs(level: int) -> List[float]:
+    g = GONDOLA
+    return [g["deck_top"] + g["slot"][2] * (i + 1) for i in range(g["slots"])] if level == 0 else []
+
+
 # =========================================================================== slatwall profile (A7, A10, A11 corner)
 
 FACE, CORE = 0, 1           # material indices in every slatwall mesh: white face, bare MDF
@@ -478,7 +544,7 @@ def item_slatwall(w: float) -> Item:
                                  "hooks and brackets slide along +X"}],
               "groove_mm": {"opening": s["neck"], "opening_depth": s["neck_d"], "head": s["head"],
                             "head_depth": s["head_d"], "profile": "T-slot"},
-              "reference": "sheet 19 (csk_slatwall.png, notes in REFERENCE_LOG.md)",
+              "reference": "References/CardShop/csk_slatwall.png (sheet 19)",
               "notes": ["Sheet 19 shows bare MDF in the grooves and no aluminium inserts, so the spec's Insert slot "
                         "is not modelled (M_CSK_MDF instead)."]},
     )
@@ -486,127 +552,166 @@ def item_slatwall(w: float) -> Item:
 
 # =========================================================================== A8 hook
 
+def _hook_path(L: float, arc_segs: int):
+    """The wire (sheet 19): up the plate's face from 80 % to 40 % of its height, a bend out, the arm falling 8 deg,
+    the short upward kink, the tip. Returns (points, the arm's start after the bend, its unit direction)."""
+    h = HOOK
+    pw, ph, pt = h["plate"]
+    zt = h["tab_top"]
+    r = h["wire"] / 2
+    w0, w1 = h["weld"]
+    s = math.radians(h["slope"])
+    run, ang = h["kink"]
+    yw = -pt - r + 0.4                                    # the wire's axis, 0.4 into the plate's face
+    z0, z1 = zt - w0 * ph, zt - w1 * ph
+    rb = 8.0
+    cy, cz = yw - rb, z1
+    arc = [(cy + rb * math.cos(t), cz + rb * math.sin(t))
+           for t in (math.radians(90.0 + h["slope"]) * k / arc_segs for k in range(arc_segs + 1))]
+    ya, za = arc[-1]
+    yk = -(L - run)
+    zk = za - (ya - yk) / math.cos(s) * math.sin(s)
+    tip = (-L, zk + run * math.tan(math.radians(ang)))
+    pts = [(0.0, yw, z0)] + [(0.0, y, z) for y, z in arc] + [(0.0, yk, zk), (0.0, tip[0], tip[1])]
+    return pts, (0.0, ya, za), (0.0, -math.cos(s), -math.sin(s))
+
+
+def _hook_plate_frame():
+    h = HOOK
+    ppw, pph, ppt, tilt = h["price_plate"]
+    t = math.radians(tilt)
+    return (0.0, -math.cos(t), math.sin(t)), (0.0, math.sin(t), math.cos(t))      # face normal, up
+
+
 def _hook_lod(L: float, level: int) -> Lod:
     h = HOOK
     pw, ph, pt = h["plate"]
     zt = h["tab_top"]
     ly0, ly1, lz = h["leg"]
     zb = zt - ph
-    CH = 0
+    CH, LABEL = 0, 1
     b = Builder()
     if level < 2:           # the back plate bent into the groove: front plate, tab, down-leg behind the lower lip
         prof = [(-pt, zb), (-pt, zt), (ly1, zt), (ly1, lz), (ly0, lz), (ly0, zt - pt), (0.0, zt - pt), (0.0, zb)]
     else:
         prof = [(-pt, zb), (-pt, zt), (0.0, zt), (0.0, zb)]
     _prism_x(b, _plain(prof, CH), -pw / 2, pw / 2, CH)
-    r = h["wire"] / 2
-    za = h["arm_z"]
-    run, ang = h["kink"]
-    tip = (0.0, -L, za + run * math.tan(math.radians(ang)))
-    path = [(0.0, -pt + 0.7, za), (0.0, -(L - run), za), tip]
-    _tube(b, path, r, (8, 6, 4)[level], CH, up=(1.0, 0.0, 0.0))
+    pts, _, _ = _hook_path(L, (3, 2, 1)[level])
+    _tube(b, pts, h["wire"] / 2, (8, 6, 4)[level], CH, up=(1.0, 0.0, 0.0), caps=(True, False))
     ppw, pph, ppt, tilt = h["price_plate"]
-    t = math.radians(tilt)
-    nrm = (0.0, -math.cos(t), math.sin(t))                  # the plate's face normal: toward the viewer, tipped up
-    upv = (0.0, math.sin(t), math.cos(t))
-    c = _add(tip, _mul(nrm, ppt / 2 - 0.3))                 # the wire's end sits 0.3 into the plate's back
-    _obox(b, c, (1.0, 0.0, 0.0), upv, nrm, ppw / 2, pph / 2, ppt / 2, CH)
+    nrm, upv = _hook_plate_frame()
+    c = _add(pts[-1], _mul(nrm, ppt / 2 - 0.3))           # the wire's end sits 0.3 into the holder's back
+    _obox(b, c, (1.0, 0.0, 0.0), upv, nrm, ppw / 2, pph / 2, ppt / 2, LABEL)
     return Lod(b, bevel_mm=0.3 if level == 0 else None)
 
 
 def item_hook(L: float) -> Item:
-    """Sheet 19: a flat back plate whose top bends into the groove and drops behind the lower lip, a straight 4.76
-    wire arm, a short upward kink near the tip and a flat price plate at the tip, tilted toward the viewer.
-    Pivot = Mount: the groove centre on the slatwall face plane (the plate's back lies on y = 0, the wall is +Y)."""
+    """Sheet 19: a flat back plate whose top bends into the groove and drops behind the lower lip; a 4.76 wire welded
+    up the plate's face that bends out into an arm falling 8 deg, a short upward kink at the tip and a white / clear
+    label holder on the tip, tipped toward the viewer. Pivot = Mount: the groove centre on the slatwall face plane
+    (the plate's back lies on y = 0, the wall is +Y)."""
     h = HOOK
     pw, ph, pt = h["plate"]
     zb = h["tab_top"] - ph
     r = h["wire"] / 2
-    za = h["arm_z"]
-    run, ang = h["kink"]
     ppw, pph, ppt, tilt = h["price_plate"]
-    t = math.radians(tilt)
-    tip = (0.0, -L, za + run * math.tan(math.radians(ang)))
-    nrm = (0.0, -math.cos(t), math.sin(t))
+    pts, arm0, adir = _hook_path(L, 3)
+    tip = pts[-1]
+    nrm, upv = _hook_plate_frame()
     face = _add(tip, _mul(nrm, ppt - 0.3))
-    upv = (0.0, math.sin(t), math.cos(t))
     c = _add(tip, _mul(nrm, ppt / 2 - 0.3))
     corners = [_add(c, _add(_mul(upv, j * pph / 2), _mul(nrm, k * ppt / 2))) for j in (-1, 1) for k in (-1, 1)]
     ymin = min(p[1] for p in corners)
-    top = max(p[2] for p in corners)
+    top = max(max(p[2] for p in corners), h["tab_top"])
     name = f"SM_CSK_Hook_Slat_{int(L)}"
-    hang_y = -(pt + h["hang_start"])
-    hang_run = (L - run) - pt - h["hang_start"]
+    hang = _add(arm0, _mul(adir, h["hang_start"]))
+    hang = (0.0, hang[1], hang[2] + r / math.cos(math.radians(h["slope"])))
+    hang_run = (hang[1] - pts[-2][1]) / math.cos(math.radians(h["slope"]))
     return Item(
-        name=name, lods=[_hook_lod(L, k) for k in range(3)], materials=["M_CSK_Chrome"], projections={},
-        sockets=[Socket("Seat", (0, 0, 0)), Socket("Mount", (0, 0, 0)),
-                 Socket("Hang_Start", (0.0, hang_y, za + r), kind="CONTAIN"),
+        name=name, lods=[_hook_lod(L, k) for k in range(3)], materials=["M_CSK_Chrome", "M_CSK_PriceStrip"],
+        projections={},
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Mount", (0, 0, 0)), Socket("Hang_Start", hang, kind="CONTAIN"),
                  Socket("Label", face, (90.0 - tilt, 0.0, 0.0))],
-        hulls=[((-pw / 2, ymin, zb), (pw / 2, h["leg"][1], top))], budget=BUDGETS[name],
-        data={"footprint_mm": [pw, round(h["leg"][1] - ymin, 3), round(top - zb, 3)], "pose": "hangs in a slatwall groove",
+        hulls=[((-max(pw, ppw) / 2, ymin, zb), (max(pw, ppw) / 2, h["leg"][1], top))], budget=BUDGETS[name],
+        data={"footprint_mm": [max(pw, ppw), round(h["leg"][1] - ymin, 3), round(top - zb, 3)],
+              "pose": "hangs in a slatwall groove",
               "pivot": "Mount: groove centre on the slatwall face plane (seat it on a Groove_* socket)",
-              "hang": {"socket": "Hang_Start", "axis": "-Y", "run_mm": round(hang_run, 3), "class": "Hang",
-                       "pitch": "item T + 2 (spec 4.2)"},
-              "label": "Label socket: +Z is the price plate's face normal (tilted %g deg toward the viewer)" % tilt,
-              "reference": "sheet 19 (csk_slatwall.png)"},
+              "hang": {"socket": "Hang_Start", "axis": [0.0, round(adir[1], 5), round(adir[2], 5)],
+                       "run_mm": round(hang_run, 3), "class": "Hang", "pitch": "item T + 2 (spec 4.2)",
+                       "note": "the arm falls %g deg (sheet 19); items hang plumb at points along it" % h["slope"]},
+              "label": "Label socket: +Z is the label holder's face normal (tipped %g deg toward the viewer)" % tilt,
+              "reference": "References/CardShop/csk_slatwall.png (sheet 19)"},
     )
 
 
 # =========================================================================== A9 slatwall shelf
 
-def _blade_profile(level: int, s=SHELF_SLAT, h=HOOK):
-    """The blade bracket in YZ (sheet 19: tapered blade, front lip), back edge on y = 0 with two tongues that enter
-    the grooves at z = 0 and z = -76.2 and drop behind the lower lips."""
-    D = s["d"]
-    top = 4.5                                       # the board's underside is z = 4 (0.5 sink)
-    hw, ht = s["blade_h"]
-    lt, lh = s["lip"]
-    yl = -(D + 1.0) - 0.5                           # the lip's back face, 0.5 in front of the board's front edge
-    board_top = 4.0 + s["t"]
-    pts = [(0.0, top), (yl, top), (yl, board_top + lh), (yl - lt, board_top + lh), (yl - lt, top - ht),
-           (0.0, top - hw)]
-    if level < 2:
-        ly0, ly1, lz = h["leg"]
-        for zc in (-SLAT["pitch"], 0.0):
-            pts += [(0.0, zc - 5.0), (ly0, zc - 5.0), (ly0, zc + lz), (ly1, zc + lz), (ly1, zc + 1.0), (0.0, zc + 1.0)]
-    return pts
+def _bracket_plate(level: int, s=SHELF_SLAT, h=HOOK):
+    """The bracket's back plate in YZ: the hook's bent top (tab + down-leg behind the lower lip) and a straight
+    tongue into the groove 76.2 below."""
+    pw, pt, zb = s["plate"]
+    zt = h["tab_top"]
+    ly0, ly1, lz = h["leg"]
+    zl = -SLAT["pitch"]
+    if level == 2:
+        return [(-pt, zb), (-pt, zt), (0.0, zt), (0.0, zb)]
+    return [(-pt, zb), (-pt, zt), (ly1, zt), (ly1, lz), (ly0, lz), (ly0, zt - 1.5), (0.0, zt - 1.5),
+            (0.0, zl + 2.0), (SLAT["neck_d"] - 0.5, zl + 2.0), (SLAT["neck_d"] - 0.5, zl - 2.0), (0.0, zl - 2.0),
+            (0.0, zb)]
+
+
+def _blade_profile(s=SHELF_SLAT):
+    """The tapered blade in YZ, welded to the plate's front, running under the board to the lip post."""
+    pw, pt, _ = s["plate"]
+    top = s["board_z"] + 0.5                        # 0.5 up into the board
+    hb, ht = s["blade_h"]
+    tip = -(s["d"] + 1.0) - 0.5 - s["lip"][0]       # the lip post's axis, just in front of the board's edge
+    return [(-pt + 0.5, top), (tip, top), (tip, top - ht), (-pt + 0.5, top - hb)]
 
 
 def item_shelf_slat() -> Item:
-    """Sheet 19: a 1000 x 305 white board on two tapered blade brackets with a front lip. Pivot = the upper tongues'
-    groove centre on the slatwall face plane, between the brackets (seat Mount_L / Mount_R on one groove)."""
+    """Sheet 19: a 1000 x 305 white board on a pair of slatwall brackets: a back plate that hooks into the groove (as
+    the hooks), a tapered blade under the board and a round lip post at its tip. Pivot = the upper tabs' groove
+    centre on the slatwall face plane, between the brackets (seat Mount_L / Mount_R on one groove)."""
     s = SHELF_SLAT
     W, D, T = s["w"], s["d"], s["t"]
     xb, bt = s["bracket_x"], s["blade_t"]
+    pw, pt, pzb = s["plate"]
+    lr, lh = s["lip"]
     BOARD, CH = 0, 1
     y0, y1 = -(D + 1.0), -1.0
-    zb0, zb1 = 4.0, 4.0 + T
+    zb0, zb1 = s["board_z"], s["board_z"] + T
+    blade = _blade_profile()
+    ytip = blade[1][0]
+    ztip = blade[2][1]
     lods = []
     for level in range(3):
         b = Builder()
         b.box((-W / 2, y0, zb0), (W / 2, y1, zb1), mat=BOARD)
+        extra = Builder()
         for sx in (-1, 1):
-            _prism_x(b, _plain(_blade_profile(level), CH), sx * xb - bt / 2, sx * xb + bt / 2, CH)
-        lods.append(Lod(b, bevel_mm=0.5 if level == 0 else None))
-    hw = s["blade_h"][0]
+            _prism_x(b, _plain(_bracket_plate(level), CH), sx * xb - pw / 2, sx * xb + pw / 2, CH)
+            _prism_x(b, _plain(blade, CH), sx * xb - bt / 2, sx * xb + bt / 2, CH)
+            _lathe(extra if level == 0 else b, sx * xb, ytip, [(lr, ztip - 1.0), (lr, zb1 + lh)], (8, 6, 4)[level], CH)
+        lods.append(Lod(b, bevel_mm=0.5 if level == 0 else None, extra=extra if level == 0 else None))
     yc = (y0 + y1) / 2
     comps = [(x, yc, zb1) for x in (-W / 3, 0.0, W / 3)]
     tags = [((x, y0, (zb0 + zb1) / 2), (0.0, 0.0, 0.0)) for x in (-W / 3, 0.0, W / 3)]
     lsocks, lv = _level("S1", (0.0, yc, zb1), W, D, s["clear_h"], SHELF_ACCEPTS, comps, tags)
     name = "SM_CSK_Shelf_Slat_1000"
-    lt, lh = s["lip"]
     return Item(
         name=name, lods=lods, materials=["M_CSK_Laminate", "M_CSK_Chrome"], projections={},
         sockets=[Socket("Seat", (0, 0, 0))] + lsocks + [Socket("Mount_L", (-xb, 0, 0)), Socket("Mount_R", (xb, 0, 0))],
-        hulls=[((-W / 2, y0 - 0.5 - lt, 4.5 - hw), (W / 2, 0.0, zb1))], budget=BUDGETS[name],
-        data={"footprint_mm": [W, D + 1.5 + lt, zb1 + lh - (4.5 - hw)], "pose": "hangs on a slatwall",
-              "pivot": "the upper tongues' groove centre on the slatwall face plane, centred between the brackets",
+        hulls=[((-W / 2, ytip - lr, pzb), (W / 2, 0.0, zb1))], budget=BUDGETS[name],
+        data={"footprint_mm": [W, round(-(ytip - lr) + HOOK["leg"][1], 3), round(zb1 + lh - pzb, 3)],
+              "pose": "hangs on a slatwall",
+              "pivot": "the upper tabs' groove centre on the slatwall face plane, centred between the brackets",
               "accepts": list(SHELF_ACCEPTS), "levels": [lv],
               "mount": "seat on a Groove_* socket moved +X to the shelf centre (Mount_L / Mount_R fall on the "
                        "same groove); the lower tongues take the groove 76.2 below",
-              "reference": "sheet 19 (csk_slatwall.png)",
-              "notes": ["Sheet 19: 'a white board on two tapered blade brackets with a front lip'. The lip is read as "
-                        "the brackets' upturned tips in front of the board (open question)."]},
+              "reference": "References/CardShop/csk_slatwall.png (sheet 19)",
+              "notes": ["Sheet 19: the brackets' front lip is a short round post at the blade tip, in front of the "
+                        "board's edge."]},
     )
 
 
@@ -633,35 +738,47 @@ def _gondola_mounts():
     g = GONDOLA
     zs = []
     j = g["mount_first"]
-    while g["kick"] + j * g["mount_pitch"] <= g["h"] - 40.0:
-        zs.append(g["kick"] + j * g["mount_pitch"])
+    while g["deck_top"] + j * g["mount_pitch"] <= g["h"] - 40.0:
+        zs.append(g["deck_top"] + j * g["mount_pitch"])
         j += 1
     return zs
+
+
+def _deck_channel(b: Builder, path, zd: float, mat: int) -> None:
+    """The base deck's front price channel (sheet 20: the same extrusion as the shelves'), swept along ``path``
+    (the sweep's left side is the deck)."""
+    prof = [(n, z - GSHELF["top_above_mount"] + zd, mat) for n, z in _price_channel(0.0)]
+    _sweep(b, prof, path, mat)
 
 
 def _gondola_lod(kind: str, level: int) -> Lod:
     g = GONDOLA
     k = _gondola_dims(kind)
     W, ux, (uy0, uy1), (py0, py1) = k["W"], k["ux"], k["up_y"], k["panel_y"]
-    STEEL, FACE_, CORE_ = 0, 1, 2
-    z0d, zk, H = g["deck_z0"], g["kick"], g["h"]
+    STEEL, FACE_, CORE_, STRIP = 0, 1, 2, 3
+    z0d, zk, zd, H, sb = g["deck_z0"], g["kick"], g["deck_top"], g["h"], g["kick_setback"]
     base = Builder()
-    for side, ya, yb in k["decks"]:                            # base deck: its front face is the kick plate
-        ya2, yb2 = (ya, yb + 0.5) if side == "F" else (ya - 0.5, yb)
-        base.box((0.0, ya2, z0d + 0.5), (W, yb2, zk), mat=STEEL)
+    for side, ya, yb in k["decks"]:           # the kick plate (set back) and the deck pan on it, with its channel
+        if side == "F":
+            base.box((0.0, ya + sb, z0d + 0.5), (W, yb + 0.5, zk), mat=STEEL)
+            base.box((0.0, ya, zk - 0.5), (W, yb + 0.5, zd), mat=STEEL)
+            _deck_channel(base, [(0.0, ya), (W, ya)], zd, STRIP)          # along +X: the deck is on the left (+Y)
+        else:
+            base.box((0.0, ya - 0.5, z0d + 0.5), (W, yb - sb, zk), mat=STEEL)
+            base.box((0.0, ya - 0.5, zk - 0.5), (W, yb, zd), mat=STEEL)
+            _deck_channel(base, [(W, yb), (0.0, yb)], zd, STRIP)          # along -X: the deck is on the left (-Y)
     extra = Builder()
-    sw, sh, pitch, sd = g["slot"]
-    slot_zs = [zk + pitch * (i + 1) for i in range(g["slots"])] if level == 0 else []
     faces = ("ny", "py") if k["double"] else ("ny",)
     for x0 in (0.0, W - ux):                                   # slotted uprights (sheet 20)
-        _slotted_bar(extra, x0, x0 + ux, uy0, uy1, z0d, H, faces if level == 0 else (), slot_zs, (sw, sh, sd), STEEL)
-    zcs = _groove_centres(zk, H, g["grooves"], SLAT["pitch"])
+        _slotted_bar(extra, x0, x0 + ux, uy0, uy1, z0d, H, faces if level == 0 else (), _slot_zs(level),
+                     (g["slot"][0], g["slot"][1], g["slot"][3]), STEEL)
+    zcs = _groove_centres(zd, H, g["grooves"], SLAT["pitch"])
     plevel = (0, 1, 3)[level]
     prof = _slat_profile(py0, py1, z0d + 0.5, H - 1.0, zcs, zcs if k["double"] else None, plevel)
     prof = [(y, z, (FACE_, CORE_)[m]) for y, z, m in prof]
     _prism_x(extra, prof, ux - 0.5, W - ux + 0.5, CORE_, caps=(False, False))     # ends hidden in the uprights
     fr, fh = g["foot"]
-    ys = sorted({(uy0 + uy1) / 2} | {ya + fr + 4.0 if ya < 0 else yb - fr - 4.0 for _, ya, yb in k["decks"]})
+    ys = sorted({(uy0 + uy1) / 2} | {ya + sb + fr + 4.0 if ya < 0 else yb - sb - fr - 4.0 for _, ya, yb in k["decks"]})
     for x in (ux / 2, W - ux / 2):
         for y in ys:
             if level < 2:
@@ -679,9 +796,11 @@ def item_gondola(kind: str) -> Item:
     g = GONDOLA
     k = _gondola_dims(kind)
     W, ux, (uy0, uy1), (py0, py1) = k["W"], k["ux"], k["up_y"], k["panel_y"]
-    zk, H = g["kick"], g["h"]
+    zk, H = g["deck_top"], g["h"]
     zcs = _groove_centres(zk, H, g["grooves"], SLAT["pitch"])
     mounts = _gondola_mounts()
+    hgt, proud, fb, ft = GSHELF["lip"]
+    slope = math.degrees(math.atan2(fb - ft, hgt))
     sockets = [Socket("Seat", (0, 0, 0))]
     levels = []
     rails = []
@@ -695,7 +814,8 @@ def item_gondola(kind: str) -> Item:
         if back:
             xs = xs[::-1]
         comps = [(x, yc, zk) for x in xs]
-        tags = [((x, yfront, (g["deck_z0"] + zk) / 2), rot) for x in xs]
+        yt = yfront + (1 if back else -1) * (fb + ft) / 2
+        tags = [((x, yt, zk + proud - hgt / 2), (-slope, 0.0, rot[2])) for x in xs]
         ls, lv = _level(name, (W / 2, yc, zk), W, g["deck_d"], H - zk, SHELF_ACCEPTS, comps, tags, rot,
                         {"note": "open to the top; fitted A11 shelves cut the clear height"})
         sockets += ls
@@ -719,10 +839,12 @@ def item_gondola(kind: str) -> Item:
     for _, ya, yb in k["decks"]:
         hulls.append(((0.0, ya, 0.0), (W, yb, zk)))
     name = f"SM_CSK_Gondola_{kind}_1372"
-    ymin = min(ya for _, ya, _ in k["decks"])
-    ymax = max(max(yb for _, _, yb in k["decks"]), uy1)
-    notes = ["Sheet 20: slotted uprights (rectangular slots on 25.4), slatwall back, grey steel base and kick plate, "
-             "levelling feet. The A11 shelves hook into the slots (Mount_* sockets / the mount rails)."]
+    fdepth = fb
+    ymin = min(ya for _, ya, _ in k["decks"]) - (fdepth)
+    ymax = max(max(yb for _, _, yb in k["decks"]) + (fdepth if k["double"] else 0.0), uy1)
+    notes = ["Sheet 20: slotted uprights (rectangular slots on 25.4), slatwall back, a steel base deck pan with the "
+             "shelves' price channel on its front edge over a set-back 100 kick plate, levelling feet. The A11 "
+             "shelves hook into the slots (Mount_* sockets / the mount rails)."]
     if k["double"]:
         notes.append("Double: 73 sockets would exceed the 40 fixture limit, so the 32 grooves are published as rails "
                      "(first groove + pitch + count per side) instead of Groove_* sockets.")
@@ -730,13 +852,14 @@ def item_gondola(kind: str) -> Item:
         notes.append("End cap 610 wide from sheet 20 (the spec row gives only the 1219 section).")
     return Item(
         name=name, lods=[_gondola_lod(kind, lv) for lv in range(3)],
-        materials=["M_CSK_Steel", "M_CSK_Slatwall", "M_CSK_MDF"], projections={}, sockets=sockets, hulls=hulls,
+        materials=["M_CSK_Steel", "M_CSK_Slatwall", "M_CSK_MDF", "M_CSK_PriceStrip"], projections={},
+        sockets=sockets, hulls=hulls,
         budget=BUDGETS[name],
         data={"footprint_mm": [W, ymax - ymin, H], "pose": "upright",
               "pivot": ("end corner: bottom-left of the rear face" if not k["double"]
                         else "left end of the centre line, on the floor"),
               "accepts": list(SHELF_ACCEPTS), "levels": levels, "rails": rails,
-              "reference": "sheet 20 (csk_gondola.png, notes in REFERENCE_LOG.md)", "notes": notes},
+              "reference": "References/CardShop/csk_gondola.png (sheet 20)", "notes": notes},
     )
 
 
@@ -810,7 +933,7 @@ def item_gondola_shelf(depth: float) -> Item:
               "accepts": list(SHELF_ACCEPTS), "levels": [lv],
               "mount": "seat on a gondola Mount_<Side>_NN socket; the brackets take the slots at the uprights' "
                        "centres (x = +-%g)" % xb,
-              "reference": "sheet 20 (csk_gondola.png)"},
+              "reference": "References/CardShop/csk_gondola.png (sheet 20)"},
     )
 
 
@@ -821,29 +944,37 @@ def _corner_lod(level: int) -> Lod:
     S0 = c["size"]
     ux = g["upright"][0]
     STEEL, FACE_, CORE_, STRIP = 0, 1, 2, 3
-    z0d, zk, H = g["deck_z0"], g["kick"], g["h"]
+    z0d, zk, zd, H, sb = g["deck_z0"], g["kick"], g["deck_top"], g["h"], g["kick_setback"]
     Dd, Ds = g["deck_d"], c["shelf_d"]
     base = Builder()
     e = ux - 0.5                                    # the deck and shelves start 0.5 in front of the backs
-    deck = [(e, -S0), (e + Dd, -S0), (e + Dd, -(e + Dd)), (S0, -(e + Dd)), (S0, -e), (e, -e)]
-    base.prism(deck, z0d + 0.5, zk, mat=STEEL)
-    extra = Builder()
+    L = lambda D: [(e, -S0), (e + D, -S0), (e + D, -(e + D)), (S0, -(e + D)), (S0, -e), (e, -e)]
+    front = lambda D: [(e + D, -S0), (e + D, -(e + D)), (S0, -(e + D))]
+    base.prism(L(Dd - sb), z0d + 0.5, zk, mat=STEEL)                     # the L kick plate, set back (sheet 20)
+    base.prism(L(Dd), zk - 0.5, zd, mat=STEEL)                           # the L deck pan
+    _deck_channel(base, front(Dd), zd, STRIP)
     for zs in c["shelf_z"]:                         # the L shelves, one piece per level (sheet 20)
-        L = [(e, -S0), (e + Ds, -S0), (e + Ds, -(e + Ds)), (S0, -(e + Ds)), (S0, -e), (e, -e)]
-        base.prism(L, zs - c["slab"], zs, mat=STEEL)
+        base.prism(L(Ds), zs - c["slab"], zs, mat=STEEL)
         prof = [(n, z - GSHELF["top_above_mount"] + zs, STRIP) for n, z in _price_channel(Ds)]
-        _sweep(base, prof, [(e + Ds, -S0), (e + Ds, -(e + Ds)), (S0, -(e + Ds))], STRIP)
+        _sweep(base, prof, front(Ds), STRIP)
         if level < 2:                               # end brackets on the two end uprights
             t, hb, ht = GSHELF["bracket"]
             top = zs - c["slab"] + 0.5
-            br = [(0.0, top), (-(Ds - 20.0), top), (-(Ds - 20.0), top - ht), (0.0, top - hb)]
+            br = _plain([(y - e, z) for y, z in
+                         [(0.0, top), (-(Ds - 20.0), top), (-(Ds - 20.0), top - ht), (0.0, top - hb)]], STEEL)
             xr = S0 - ux / 2
-            _prism_x(base, _plain([(y - e, z) for y, z in br], STEEL), xr - t / 2, xr + t / 2, STEEL)
+            _prism_x(base, br, xr - t / 2, xr + t / 2, STEEL)
             yl = -S0 + ux / 2                       # along +Y the sweep's n is -X, so n = y - e gives x = e - y
-            _sweep(base, _plain([(y - e, z) for y, z in br], STEEL), [(0.0, yl - t / 2), (0.0, yl + t / 2)], STEEL)
-    for x0, y0 in ((0.0, -ux), (S0 - ux, -ux), (0.0, -S0)):          # corner post + two end uprights (bevelled)
-        base.box((x0, y0, z0d), (x0 + ux, y0 + ux, H), mat=STEEL)
-    zcs = _groove_centres(zk, H, g["grooves"], SLAT["pitch"])
+            _sweep(base, br, [(0.0, yl - t / 2), (0.0, yl + t / 2)], STEEL)
+    base.box((0.0, -ux, z0d), (ux, 0.0, H), mat=STEEL)                   # the corner post (hidden by the backs)
+    extra = Builder()
+    sl = (g["slot"][0], g["slot"][1], g["slot"][3])
+    faces = ("ny",) if level == 0 else ()
+    _slotted_bar(extra, S0 - ux, S0, -ux, 0.0, z0d, H, faces, _slot_zs(level), sl, STEEL)      # rear run's end
+    tmp = Builder()                                  # the left run's end upright: slots face +X
+    _slotted_bar(tmp, -ux / 2, ux / 2, -ux / 2, ux / 2, z0d, H, faces, _slot_zs(level), sl, STEEL)
+    _merge_rotz(extra, tmp, 90.0, ux / 2, -S0 + ux / 2)
+    zcs = _groove_centres(zd, H, g["grooves"], SLAT["pitch"])
     plevel = (0, 1, 3)[level]
     py0, py1 = -ux + 1.0, -ux + 1.0 + g["panel_t"]
     prof = [(y, z, (FACE_, CORE_)[m]) for y, z, m in _slat_profile(py0, py1, z0d + 0.5, H - 1.0, zcs, None, plevel)]
@@ -851,8 +982,9 @@ def _corner_lod(level: int) -> Lod:
     prof_l = [(-y, z, m) for y, z, m in prof]                                        # left back, faces +X
     _sweep(extra, prof_l, [(0.0, -(ux - 0.5)), (0.0, -(S0 - ux + 0.5))], CORE_, caps=(False, False))
     fr, fh = g["foot"]
-    for x, y in ((ux / 2, -ux / 2), (S0 - ux / 2, -ux / 2), (ux / 2, -S0 + ux / 2), (S0 - 20.0, -(e + Dd) + 20.0),
-                 (e + Dd - 20.0, -(e + Dd) + 20.0), (e + Dd - 20.0, -S0 + 20.0)):
+    for x, y in ((ux / 2, -ux / 2), (S0 - ux / 2, -ux / 2), (ux / 2, -S0 + ux / 2),
+                 (S0 - 20.0, -(e + Dd - sb) + 20.0), (e + Dd - sb - 20.0, -(e + Dd - sb) + 20.0),
+                 (e + Dd - sb - 20.0, -S0 + 20.0)):
         if level < 2:
             _lathe(extra, x, y, [(fr, 0.0), (fr, fh + 1.0)], (8, 6)[level], STEEL)
         else:
@@ -868,7 +1000,7 @@ def item_gondola_corner() -> Item:
     S0 = c["size"]
     ux = g["upright"][0]
     e = ux - 0.5
-    zk, H = g["kick"], g["h"]
+    zk, H = g["deck_top"], g["h"]
     Dd, Ds = g["deck_d"], c["shelf_d"]
     sockets = [Socket("Seat", (0, 0, 0))]
     levels = []
@@ -878,12 +1010,8 @@ def item_gondola_corner() -> Item:
     for i, (name, z, D) in enumerate(lvls):
         xa, ya = (e + S0) / 2, -(e + D / 2)       # the grid: the rear arm (the left arm's extension is compartment 01)
         comps = [((e + e + D) / 2, -(e + D + S0) / 2, z), ((e + e + D) / 2, -(e + D / 2), z), ((e + D + S0) / 2, ya, z)]
-        if name == "Deck":
-            tz, tr = (g["deck_z0"] + zk) / 2, 0.0
-            tf = 0.0
-        else:
-            tz, tr = z + proud - hgt / 2, -slope
-            tf = (fb + ft) / 2
+        tz, tr = z + proud - hgt / 2, -slope                 # on the price channel's face (deck and shelves)
+        tf = (fb + ft) / 2
         tags = [((e + D + tf, -(e + D + S0) / 2, tz), (tr, 0.0, 90.0)),
                 ((e + D + 40.0, -(e + D + tf), tz), (tr, 0.0, 0.0)),
                 (((e + D + S0) / 2, -(e + D + tf), tz), (tr, 0.0, 0.0))]
@@ -912,9 +1040,10 @@ def item_gondola_corner() -> Item:
               "pivot": "the corner of the two walls, on the floor; Snap_R joins a Single's Snap_L along +X, "
                        "Snap_L a Single's Snap_R (that run turned +90 deg)",
               "accepts": list(SHELF_ACCEPTS), "levels": levels, "rails": rails,
-              "reference": "sheet 20 (csk_gondola.png)",
-              "notes": ["Fixed L shelves, so the corner's uprights are plain (no slots) and it has no Mount "
-                        "sockets; the spec's Mount_L / Mount_R belong to the separate shelves.",
+              "reference": "References/CardShop/csk_gondola.png (sheet 20)",
+              "notes": ["Fixed L shelves, so there are no Mount sockets (the spec's Mount_L / Mount_R belong to the "
+                        "separate shelves). The two end uprights are slotted (sheet 20); the corner post is plain "
+                        "because the two backs cover its faces.",
                         "4 hulls (spec): the two backs and the two arms of the base deck; the L shelves have none."]},
     )
 
@@ -955,15 +1084,18 @@ def _rack_lod(level: int) -> Lod:
     for x, y in posts:
         _lathe(b, x, y, [(fr0, 0.0), (fr1, fh)], post_sides, BLACK)            # black levelling foot (sheet 21)
         prof = [(pr, fh - 1.0)]
+        cap_r, cap_h = r["cap"]
+        z_top = r["h"] - cap_h + 1.0                                          # the chrome ends inside the cap
         if level == 0:                                                        # ring grooves (sheet 21)
             zg = pitch
-            while zg < r["h"] - 12.0:
+            while zg < z_top - 6.0:
                 hidden = zg < fh + 6.0 or any(zt - chh - 2.0 < zg < zt + 4.0 for zt in decks)
                 if not hidden:
                     prof += [(pr, zg - gw), (pr - gd, zg)]
                 zg += pitch
-        prof += [(pr, r["h"] - 1.0), (pr - 1.0, r["h"])]
-        _lathe(b, x, y, prof, post_sides, CH, caps=(False, True))
+        prof += [(pr, z_top)]
+        _lathe(b, x, y, prof, post_sides, CH, caps=(False, False))
+        _lathe(b, x, y, [(cap_r, z_top - 1.0), (cap_r, r["h"] - 1.5), (cap_r - 1.5, r["h"])], post_sides, BLACK)
     for zt in decks:
         zr = zt - r["rim_r"]                        # the top rim; the mat wires lie on it, flush with the deck top
         zbr = zr - r["truss"]                       # the bottom rim
@@ -996,7 +1128,7 @@ def _rack_lod(level: int) -> Lod:
 def item_rack_wire() -> Item:
     """Sheet 21: a chrome wire rack, 914 x 457 x 1829, 4 round posts with ring grooves on 25.4, 5 wire decks
     (top + 4) with truss edges (a zigzag rod between a top and a bottom rim) and front-to-back mat wires, tapered
-    corner collars, black levelling feet. Pivot: bottom centre."""
+    corner collars, black post caps and black levelling feet. Pivot: bottom centre."""
     r = RACK
     W, D, H = r["w"], r["d"], r["h"]
     posts, px, py = _rack_posts()
@@ -1024,8 +1156,9 @@ def item_rack_wire() -> Item:
         sockets=sockets, hulls=hulls, budget=BUDGETS[name],
         data={"footprint_mm": [W, D, H], "pose": "upright", "pivot": "bottom-centre",
               "accepts": list(SHELF_ACCEPTS), "levels": levels,
-              "reference": "sheet 21 (csk_wire_rack_box_shelf.png)",
-              "notes": ["Sheet 21 shows 5 decks (the spec's 4 was E): levels L1..L5.",
+              "reference": "References/CardShop/csk_wire_rack_box_shelf.png (sheet 21)",
+              "notes": ["Sheet 21's picture shows 5 decks (its caption and the spec say 4; the reference log's call: "
+                        "build 5): levels L1..L5. Black caps on the post tops (shelf corner detail).",
                         "Budget 7000 -> %d: the fifth deck and the sheet's ring-grooved posts (60 visible grooves a "
                         "post at 25.4, about 7.7k tris) are real geometry." % r["budget"],
                         "Hulls: one per deck (spec: 5); the posts have none."]},
@@ -1035,14 +1168,16 @@ def item_rack_wire() -> Item:
 # =========================================================================== A13 box tier shelf
 
 def _tier_frame(k: int):
-    """Tier k (2..4, the shelves): front-top point O (y, z), the plank's depth axis u and normal w (tilted back)."""
+    """Tier k (1..4): the lip's front-top point O (y, z), the board's depth axis u and normal w (tilted back), and the
+    board's length back to the back panel. The front-bottom corner sits on the front slope line."""
     t = TIER
     a = math.radians(t["tilt"])
-    yf = -t["d"] / 2 + t["step"] * (k - 1)
-    zf = t["deck_z"] + t["pitch"] * (k - 1)
-    u = (math.cos(a), -math.sin(a))                # toward the back and down: the shelf tilts back
+    u = (math.cos(a), -math.sin(a))                # toward the back and down: the tier tilts back
     w = (math.sin(a), math.cos(a))
-    L = (t["d"] / 2 - yf) / math.cos(a)
+    yf = -t["d"] / 2 + t["step"] * (k - 1) + t["board"] * math.sin(a)
+    zf = t["deck_z"] + t["pitch"] * (k - 1)
+    y_back = t["d"] / 2 - t["back"] + 0.5           # 0.5 into the back panel
+    L = (y_back - yf + t["board"] * math.sin(a)) / math.cos(a)
     return (yf, zf), u, w, L
 
 
@@ -1054,7 +1189,7 @@ def _tier_lod(level: int) -> Lod:
     t = TIER
     W, D, H = t["w"], t["d"], t["h"]
     OAK, BLACK, WHITE = 0, 1, 2
-    st, bd = t["side_t"], t["board"]
+    st, bd, bp = t["side_t"], t["board"], t["back"]
     xi = W / 2 - st                                   # the side panels' inner faces
     b = Builder()
     side = [(-D / 2, 0.0), (D / 2, 0.0), (D / 2, H), (D / 2 - t["top_d"], H), (-D / 2, t["deck_z"])]
@@ -1062,28 +1197,31 @@ def _tier_lod(level: int) -> Lod:
         x0 = sx * (W / 2) if sx < 0 else xi
         _prism_x(b, _plain(side, OAK), x0, x0 + st, OAK)
     kh, kr = t["kick"]
-    zd = t["deck_z"]
+    b.box((-xi - 0.5, D / 2 - bp, kh - 0.5), (xi + 0.5, D / 2, H - 0.5), mat=WHITE)             # white back panel
+    O1, u, w, L1 = _tier_frame(1)
+    fb = _tier_pt(O1, u, w, 0.0, -bd)                  # tier 1's front-bottom corner; the cabinet top follows it
+    zu = lambda y: fb[1] - (y - fb[0]) * math.tan(math.radians(t["tilt"])) + 0.5
+    yc0, yc1 = -D / 2 + 2.0, D / 2 - bp + 0.5
+    zc0 = kh if level < 2 else 0.0
+    cab = [(yc0, zc0), (yc1, zc0), (yc1, zu(yc1)), (yc0, zu(yc0))]                           # oak cabinet
+    _prism_x(b, _plain(cab, OAK), -xi - 0.5, xi + 0.5, OAK)
     if level < 2:
-        b.box((-xi - 0.5, -D / 2 + kr, 0.0), (xi + 0.5, D / 2 - kr, kh + 0.5), mat=BLACK)          # recessed kick
-        b.box((-xi - 0.5, -D / 2 + 2.0, kh), (xi + 0.5, D / 2 - 0.5, zd - bd + 0.5), mat=OAK)   # oak cabinet
-    else:
-        b.box((-xi - 0.5, -D / 2 + 2.0, 0.0), (xi + 0.5, D / 2 - 0.5, zd - bd + 0.5), mat=OAK)      # no kick
-    b.box((-xi - 0.5, -D / 2, zd - bd), (xi + 0.5, D / 2, zd), mat=WHITE)                      # the white deck
+        b.box((-xi - 0.5, -D / 2 + kr, 0.0), (xi + 0.5, D / 2 - bp + 0.5, kh + 0.5), mat=BLACK)  # recessed kick
     lt, lh = t["lip"]
-    for k in (2, 3, 4):                                # 3 white shelves tilted back 10 deg, 25 front lip
+    for k in (1, 2, 3, 4):                             # 4 white tiers tilted back 10 deg, 25 front lip
         O, u, w, L = _tier_frame(k)
         uv = [(0.0, -bd), (L, -bd), (L, 0.0), (lt, 0.0), (lt, lh), (0.0, lh)] if level < 2 else \
             [(0.0, -bd), (L, -bd), (L, 0.0), (0.0, lh)]
-        prof = _plain([_tier_pt(O, u, w, a, c) for a, c in uv], WHITE)
+        prof = _plain([_tier_pt(O, u, w, a_, c_) for a_, c_ in uv], WHITE)
         _prism_x(b, prof, -xi - 0.5, xi + 0.5, WHITE)
     return Lod(b, bevel_mm=1.0 if level == 0 else None)
 
 
 def item_box_tier() -> Item:
     """Sheet 21: tapered light-oak side panels (full depth at the base, narrow at the top), a base cabinet with an oak
-    front over a recessed black kick, a white deck on it (tier 1, 252), then 3 white shelves 280 apart, each tilted
-    back 10 deg with a 25 front lip (tiers 2-4). The shelf fronts step back 76.2 a tier along the sides' sloped
-    front edge. Pivot: bottom centre."""
+    front over a recessed black kick, and four white tiers 280 apart from 252, each tilted back 10 deg with a 25 front
+    lip, their front edges stepping back 76.2 a tier along the sides' sloped front edge; a white back panel behind.
+    Pivot: bottom centre."""
     t = TIER
     W, D, H = t["w"], t["d"], t["h"]
     st, bd = t["side_t"], t["board"]
@@ -1093,40 +1231,25 @@ def item_box_tier() -> Item:
     sockets = [Socket("Seat", (0, 0, 0))]
     levels = []
     xs = [-2 * xi / 3 + 2 * xi / 3 * i for i in range(3)]
-    hulls = [((-W / 2, -D / 2, 0.0), (-xi, D / 2, H)), ((xi, -D / 2, 0.0), (W / 2, D / 2, H)),
-             ((-xi, -D / 2, 0.0), (xi, D / 2, t["deck_z"]))]
-    shelf_hull = {}
-    for k in (2, 3, 4):
-        O, u, w, L = _tier_frame(k)
-        mid = _tier_pt(O, u, w, (lt + L) / 2, 0.0)
-        low = _tier_pt(O, u, w, L, -bd)
-        front = _tier_pt(O, u, w, 0.0, -bd)
-        shelf_hull[k] = ((-xi, front[0], low[1]), (xi, D / 2, mid[1]))
-        hulls.append(shelf_hull[k])
+    mids, tops = {}, {}
     for k in (1, 2, 3, 4):
-        name = f"T{k}"
-        if k == 1:
-            loc = (0.0, 0.0, t["deck_z"])
-            rot = (0.0, 0.0, 0.0)
-            depth = D
-            clear = shelf_hull[2][0][2] - t["deck_z"]
-            tags = [((x, -D / 2, t["deck_z"] - bd / 2), rot) for x in xs]
-            comps = [(x, 0.0, t["deck_z"]) for x in xs]
-            extra = {"note": "flat deck; clear height to the lowest point of the tier 2 shelf"}
-        else:
-            O, u, w, L = _tier_frame(k)
-            mid = _tier_pt(O, u, w, (lt + L) / 2, 0.0)
-            loc = (0.0, mid[0], mid[1])
-            rot = (-t["tilt"], 0.0, 0.0)
-            depth = L - lt
-            clear = (t["step"] * math.sin(a) + t["pitch"] * math.cos(a)) - bd
-            face = _tier_pt(O, u, w, 0.0, lh / 2)
-            tags = [((x, face[0], face[1]), rot) for x in xs]
-            comps = [(x, mid[0], mid[1]) for x in xs]
-            extra = {"tilt_deg": t["tilt"], "tilt_axis": "X",
-                     "note": "tilted level: the grid lies in the Level socket's frame (rotated -10 deg about X, "
-                             "the shelf tilts back); interior depth and clear height are measured in that frame"}
-        ls, lv = _level(name, loc, 2 * xi, depth, clear, TIER_ACCEPTS, comps, tags, rot, extra)
+        O, u, w, L = _tier_frame(k)
+        mids[k] = _tier_pt(O, u, w, (lt + L) / 2, 0.0)
+        tops[k] = (_tier_pt(O, u, w, 0.0, -bd), _tier_pt(O, u, w, L, -bd))
+    hulls = [((-W / 2, -D / 2, 0.0), (-xi, D / 2, H)), ((xi, -D / 2, 0.0), (W / 2, D / 2, H)),
+             ((-xi, -D / 2, 0.0), (xi, D / 2, mids[1][1]))]
+    for k in (2, 3, 4):                     # one box per tier board, up to its mid-depth top (axis-aligned hulls)
+        hulls.append(((-xi, tops[k][0][0], tops[k][1][1]), (xi, D / 2, mids[k][1])))
+    clear = (t["step"] * math.sin(a) + t["pitch"] * math.cos(a)) - bd      # between two tier planes
+    for k in (1, 2, 3, 4):
+        O, u, w, L = _tier_frame(k)
+        rot = (-t["tilt"], 0.0, 0.0)
+        face = _tier_pt(O, u, w, 0.0, lh / 2)
+        ls, lv = _level(f"T{k}", (0.0, mids[k][0], mids[k][1]), 2 * xi, L - lt, clear, TIER_ACCEPTS,
+                        [(x, mids[k][0], mids[k][1]) for x in xs], [((x, face[0], face[1]), rot) for x in xs], rot,
+                        {"tilt_deg": t["tilt"], "tilt_axis": "X",
+                         "note": "tilted level: the grid lies in the Level socket's frame (rotated -10 deg about X, "
+                                 "the tier tilts back); interior depth and clear height are measured in that frame"})
         sockets += ls
         levels.append(lv)
     sockets += [Socket("Snap_L", (-W / 2, 0, 0)), Socket("Snap_R", (W / 2, 0, 0))]
@@ -1136,12 +1259,13 @@ def item_box_tier() -> Item:
         projections={}, sockets=sockets, hulls=hulls, budget=BUDGETS[name],
         data={"footprint_mm": [W, D, H], "pose": "upright", "pivot": "bottom-centre",
               "accepts": list(TIER_ACCEPTS) + ["Retail"], "levels": levels,
-              "reference": "sheet 21 (csk_wire_rack_box_shelf.png)",
-              "notes": ["Sheet 21: tiers 280 apart starting at 252: deck 252, shelves 532 / 812 / 1092 (at the lip's "
-                        "foot), sides to 1372 (= 252 + 4 x 280).",
+              "reference": "References/CardShop/csk_wire_rack_box_shelf.png (sheet 21)",
+              "notes": ["Sheet 21 section: tiers at 252 / 532 / 812 / 1092 (the lip's foot), sides to 1372 "
+                        "(= 252 + 4 x 280); every tier tilts back 10 deg with a 25 lip (the sheet's own caption).",
                         "Retail is accepted per item (no fixed grid).",
-                        "Hulls: 2 sides, the base, and one box per shelf up to the plank's mid-depth top (a flat "
-                        "stand-in for the 10 deg plank; hull boxes are axis-aligned)."]},
+                        "Hulls: 2 sides, the base with tier 1, and one box per upper tier up to the board's mid-depth "
+                        "top (a flat stand-in for the 10 deg board). The back panel has no hull of its own (6-hull "
+                        "limit)."]},
     )
 
 
