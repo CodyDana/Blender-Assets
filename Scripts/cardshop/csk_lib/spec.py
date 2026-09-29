@@ -64,6 +64,12 @@ BOX_BOOSTER_S = dict(
     board=2.0,                 # E
     packs=(2, 18),             # 2 across x 18 deep, standing
     pack_pitch=4.0,            # D: = PACK_STD t
+    # reference sheet 5 (csk_booster_box.png)
+    window=(126.0, 100.0, 70.0, 6.0),   # front die-cut: width at the rim, width at the bottom, depth, bottom corner R
+    divider=(2.0, 15.0),       # centre divider: board thickness, top below the rim
+    tab=(77.0, 20.0, 6.0),     # the lid's tuck flap (the display header's tab): W x H, corner R
+    header_rot=-100.0,         # display pose: the lid stands up behind the box, 10 deg past vertical
+    film=0.4,                  # sealed state: shrink film clearance
 )
 
 SHOWCASE_FULL = dict(
@@ -108,6 +114,7 @@ ITEM_CLASS = {
     "SM_CSK_Slab_Std_Filled": "Slab",
     "SM_CSK_Pack_Std_Sealed": "Pack",
     "SM_CSK_Box_Booster_S": "BoxS",
+    "SM_CSK_Box_Booster_S_Sealed": "BoxS",
 }
 
 SHOWCASE_ACCEPTS = ("Card", "CardProt", "Slab", "Pack", "BoxS", "Deck")
@@ -158,6 +165,7 @@ BUDGETS = {
     "SM_CSK_Pack_Std_Sealed": 1500,     # was 300 (E); sheet 4 ribs + 27 teeth + fin seal need ~1.4k
     "SM_CSK_Box_Booster_S": 400,
     "SM_CSK_Box_Booster_S_Lid": 150,
+    "SM_CSK_Box_Booster_S_Sealed": 400,
     "SM_CSK_Showcase_Full_1778": 3000,
     "SM_CSK_Showcase_Full_Glass_1778": 600,
     "SM_CSK_Showcase_Full_Door_1778": 150,

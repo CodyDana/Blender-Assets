@@ -256,7 +256,8 @@ def main():
         m = frame(p)
         place(T["SM_CSK_Box_Booster_S"], m)
         lid = next(x for x in K["SM_CSK_Box_Booster_S"]["sockets"] if x["name"] == "Lid")
-        place(T["SM_CSK_Box_Booster_S_Lid"], m @ frame(lid["loc_mm"], (-160.0, 0, 0)))
+        open_rot = K["SM_CSK_Box_Booster_S"]["parts"]["Lid"]["open_rot_deg"]
+        place(T["SM_CSK_Box_Booster_S_Lid"], m @ frame(lid["loc_mm"], tuple(open_rot)))
         for s in K["SM_CSK_Box_Booster_S"]["sockets"]:
             if s["name"].startswith("Pack_"):
                 place(T["SM_CSK_Pack_Std_Sealed"], m @ frame(s["loc_mm"], s["rot_deg"]))

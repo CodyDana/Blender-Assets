@@ -76,27 +76,32 @@ def test_face(w_mm: float, h_mm: float, bg, letter: str, title: str, sub: str) -
 
 
 def dieline(line: str) -> Image.Image:
-    """Booster box S dieline, 440 x 285 mm (spec 3.B): front | right | back | left, bottom under the front, lid over
-    the back. Each panel labelled and with an up arrow in its own 'up' direction."""
+    """Booster box S dieline, 440 x 305 mm (spec 3.B, sheet 5): front | right | back | left, bottom under the front,
+    lid over the back with its tuck-flap tab above it. Each panel labelled and with an up arrow in its own 'up'
+    direction. The lid's inside (the display header) samples the LID panel from the back tile."""
     W, D, H = 140, 80, 125
+    TW, TH = 77, 20
+    SH = H + 2 * D + TH
     px = 4
-    im = Image.new("RGB", (440 * px, 285 * px), (250, 250, 250))
+    im = Image.new("RGB", (440 * px, SH * px), (250, 250, 250))
     d = ImageDraw.Draw(im)
     col = LINES[line]
     # panels in dieline mm, origin bottom-left (v up) -> image rows flipped
     panels = {"FRONT": (0, D, W, H), "RIGHT": (W, D, D, H), "BACK": (W + D, D, W, H), "LEFT": (2 * W + D, D, D, H),
-              "BOTTOM": (0, 0, W, D), "LID": (W + D, D + H, W, D)}
+              "BOTTOM": (0, 0, W, D), "LID": (W + D, D + H, W, D),
+              "TAB": (W + D + (W - TW) / 2, D + H + D, TW, TH)}
     for name, (x, y, w, h) in panels.items():
         x0, x1 = x * px, (x + w) * px
-        y0, y1 = (285 - (y + h)) * px, (285 - y) * px
-        d.rectangle([x0, y0, x1 - 1, y1 - 1], fill=col if name in ("FRONT", "BACK", "LID") else
+        y0, y1 = (SH - (y + h)) * px, (SH - y) * px
+        d.rectangle([x0, y0, x1 - 1, y1 - 1], fill=col if name in ("FRONT", "BACK", "LID", "TAB") else
                     tuple(int(c * 0.7) for c in col), outline=(20, 20, 20), width=4)
         centred(d, ((x0 + x1) / 2, (y0 + y1) / 2), name, int(min(x1 - x0, y1 - y0) * 0.22))
-        centred(d, ((x0 + x1) / 2, y0 + 40), "^ UP", 36)
-    centred(d, (W * px / 2, (285 - D - H * 0.25) * px), line, 64)
+        if name != "TAB":
+            centred(d, ((x0 + x1) / 2, y0 + 40), "^ UP", 36)
+    centred(d, (W * px / 2, (SH - D - H * 0.25) * px), line, 64)
     s = 60
-    for key, (x, y) in {"TL": (0, 0), "TR": (440 * px - s, 0), "BL": (0, 285 * px - s),
-                        "BR": (440 * px - s, 285 * px - s)}.items():
+    for key, (x, y) in {"TL": (0, 0), "TR": (440 * px - s, 0), "BL": (0, SH * px - s),
+                        "BR": (440 * px - s, SH * px - s)}.items():
         d.rectangle([x, y, x + s, y + s], fill=CORNERS[key])
     return im
 

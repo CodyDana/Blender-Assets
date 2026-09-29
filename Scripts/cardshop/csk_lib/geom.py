@@ -385,12 +385,14 @@ def item_pack() -> Item:
 # =========================================================================== B2 booster box S (+ lid)
 
 def _dieline(s):
-    """Dieline (spec 3.B, S: 440 x 285 mm): front | right | back | left in a 125-high row, the bottom panel under the
-    front, the lid flap over the back. Returns the per-panel planar maps (region -> projection)."""
+    """Dieline (spec 3.B, S: 440 x 305 mm): front | right | back | left in a 125-high row, the bottom panel under the
+    front, the lid over the back with its tuck-flap tab above it (sheet 5). Returns the per-panel planar maps
+    (region -> projection) and the sheet size. Region 16 is the lid's inside (the display header), mapped to the lid
+    panel's place in tile (1, 0) so it reads the right way round when the lid stands up."""
     W, D, H = s["w"], s["d"], s["h"]
-    U, V = 2 * (W + D), H + 2 * D
-    def m(fu, fv):
-        return lambda x, y, z: (inset(fu(x, y, z) / U), inset(fv(x, y, z) / V))
+    U, V = 2 * (W + D), H + 2 * D + s["tab"][1]
+    def m(fu, fv, tile_u=0.0):
+        return lambda x, y, z: (tile_u + inset(fu(x, y, z) / U), inset(fv(x, y, z) / V))
     return {
         10: m(lambda x, y, z: x + W / 2, lambda x, y, z: D + z),                    # front (-Y)
         11: m(lambda x, y, z: W + (y + D / 2), lambda x, y, z: D + z),              # right (+X)
@@ -398,17 +400,47 @@ def _dieline(s):
         13: m(lambda x, y, z: 2 * W + D + (D / 2 - y), lambda x, y, z: D + z),      # left (-X)
         14: m(lambda x, y, z: x + W / 2, lambda x, y, z: D - (y + D / 2)),          # bottom, under the front
         15: m(lambda x, y, z: W + D + (W / 2 - x), lambda x, y, z: D + H + (D / 2 - y)),  # lid top (body y; hinge +D/2)
+        16: m(lambda x, y, z: W + D + (x + W / 2), lambda x, y, z: D + H + (D / 2 - y), tile_u=1.0),  # lid inside
     }, (U, V)
 
 
-def _box_body(s, level: int) -> Builder:
+def _prism_y(b: Builder, outline_xz, y0: float, y1: float, mat: int = 0) -> None:
+    """A closed prism along +Y from an outline in XZ (counter-clockwise seen from -Y)."""
+    f = [b.v(x, y0, z) for x, z in outline_xz]
+    k = [b.v(x, y1, z) for x, z in outline_xz]
+    n = len(outline_xz)
+    b.face(tuple(f), mat)
+    b.face(tuple(reversed(k)), mat)
+    for i in range(n):
+        j = (i + 1) % n
+        b.face((f[i], k[i], k[j], f[j]), mat)
+
+
+def _window_outline(s, segs: int):
+    """The front die-cut (sheet 5): a trapezoid from above the rim down, with rounded bottom corners (quadratic Bezier
+    fillets); points in XZ, counter-clockwise seen from the front. ``segs`` 0 leaves the corners sharp."""
+    H = s["h"]
+    tw, bw, depth, r = s["window"]
+    zb, zt = H - depth, H + 5.0
+    xt = bw / 2 + (tw - bw) / 2 * (zt - zb) / depth          # the slanted sides extended to zt
+    ln = math.hypot((tw - bw) / 2, depth)
+    ux, uz = (tw - bw) / 2 / ln, depth / ln                   # unit vector up the right-hand side
+    def fillet(p0, ctrl, p1):
+        if segs == 0:
+            return [ctrl]
+        return [((1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * ctrl[0] + t * t * p1[0],
+                 (1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * ctrl[1] + t * t * p1[1])
+                for t in (k / segs for k in range(segs + 1))]
+    cl, cr = (-bw / 2, zb), (bw / 2, zb)
+    left = fillet((cl[0] - ux * r, zb + uz * r), cl, (cl[0] + r, zb))
+    right = fillet((cr[0] - r, zb), cr, (cr[0] + ux * r, zb + uz * r))
+    return [(-xt, zt)] + left + right + [(xt, zt)]
+
+
+def _box_shell(b: Builder, s, closed_top: bool) -> None:
+    """The carton: printed outside (regions 10-14), board rim, inner walls and floor; or a closed block."""
     W, D, H, bd = s["w"], s["d"], s["h"], s["board"]
-    b = Builder()
     PRINT, BOARD = 0, 1
-    if level == 2:
-        b.box((-W / 2, -D / 2, 0), (W / 2, D / 2, H), mat=PRINT,
-              regions={"ny": 10, "px": 11, "py": 12, "nx": 13, "nz": 14}, mats={"pz": BOARD})
-        return b
     o = [b.v(-W / 2, -D / 2, 0), b.v(W / 2, -D / 2, 0), b.v(W / 2, D / 2, 0), b.v(-W / 2, D / 2, 0),
          b.v(-W / 2, -D / 2, H), b.v(W / 2, -D / 2, H), b.v(W / 2, D / 2, H), b.v(-W / 2, D / 2, H)]
     b.face((o[0], o[3], o[2], o[1]), PRINT, 14)
@@ -416,6 +448,9 @@ def _box_body(s, level: int) -> Builder:
     b.face((o[1], o[2], o[6], o[5]), PRINT, 11)
     b.face((o[2], o[3], o[7], o[6]), PRINT, 12)
     b.face((o[3], o[0], o[4], o[7]), PRINT, 13)
+    if closed_top:
+        b.face((o[4], o[5], o[6], o[7]), PRINT, 15)
+        return
     it = [b.v(-W / 2 + bd, -D / 2 + bd, H), b.v(W / 2 - bd, -D / 2 + bd, H), b.v(W / 2 - bd, D / 2 - bd, H),
           b.v(-W / 2 + bd, D / 2 - bd, H)]
     ot = [o[4], o[5], o[6], o[7]]
@@ -426,26 +461,40 @@ def _box_body(s, level: int) -> Builder:
     for k in range(4):                      # inner walls face into the box
         b.face((it[k], it[(k + 1) % 4], ib[(k + 1) % 4], ib[k]), BOARD)
     b.face((ib[0], ib[1], ib[2], ib[3]), BOARD)   # inner floor, facing up
-    return b
+
+
+def _box_body(s, level: int) -> Lod:
+    """Sheet 5, opened: the carton with the front die-cut window torn out and the centre divider."""
+    W, D, H, bd = s["w"], s["d"], s["h"], s["board"]
+    b = Builder()
+    _box_shell(b, s, closed_top=False)
+    cut = Builder()
+    _prism_y(cut, _window_outline(s, (6, 2, 0)[level]), -D / 2 - 1.0, -D / 2 + bd + 1.0, mat=1)
+    dt, below = s["divider"]
+    div = Builder()
+    div.box((-dt / 2, -D / 2 + bd - 0.5, bd - 0.5), (dt / 2, D / 2 - bd + 0.5, H - below), mat=1)
+    return Lod(b, bevel_mm=0.5 if level == 0 else None, ops=[("DIFFERENCE", cut), ("UNION", div)],
+               bevel_first=True)
 
 
 def item_box_booster() -> Item:
     s = S.BOX_BOOSTER_S
     W, D, H, bd = s["w"], s["d"], s["h"], s["board"]
     proj, _uv_size = _dieline(s)
-    lods = [Lod(_box_body(s, 0), bevel_mm=0.5), Lod(_box_body(s, 1)), Lod(_box_body(s, 2))]
-    # packs standing: 2 across x 18 deep at 4 pitch; a pack's Seat frame turned +90 deg about X (its length up,
-    # its face toward the customer), so it fills y in [s_y - 4, s_y]
+    lods = [_box_body(s, k) for k in range(3)]
+    # packs standing: 2 across x 18 deep at 4 pitch, either side of the centre divider; a pack's Seat frame turned
+    # +90 deg about X (its length up, its face toward the customer), so it fills y in [s_y - 4, s_y]
     pk = S.PACK_STD
     cols, rows = s["packs"]
     pitch = s["pack_pitch"]
+    dt = s["divider"][0]
     inner_x, inner_y0 = W / 2 - bd, -D / 2 + bd
     sockets = [Socket("Seat", (0, 0, 0))]
     n = 0
     for r in range(rows):
         for c in range(cols):
             n += 1
-            x = (c - (cols - 1) / 2) * pk["w"]
+            x = (c - (cols - 1) / 2) * (pk["w"] + dt)
             y = inner_y0 + pitch * (r + 1)
             sockets.append(Socket(f"Pack_{n:02d}", (x, y, bd + pk["h"] / 2), (90.0, 0.0, 0.0), "CONTAIN"))
     sockets += [Socket("Lid", (0, D / 2, H)), Socket("Grip", (0, -D / 2, H / 2)),
@@ -459,25 +508,64 @@ def item_box_booster() -> Item:
                                    "cavity_mm": [[-inner_x, inner_y0, bd], [inner_x, D / 2 - bd, H]],
                                    "accepts": ["Pack"], "pose": "standing, +90 deg about X"}},
               "parts": {"Lid": {"mesh": "SM_CSK_Box_Booster_S_Lid", "socket": "Lid", "type": "hinge",
-                                "axis": "X", "range_deg": [0, 200], "open_rot_deg": [-160.0, 0.0, 0.0]}},
-              "dieline_mm": list(_uv_size)},
+                                "axis": "X", "range_deg": [0, 200], "open_rot_deg": [s["header_rot"], 0.0, 0.0]}},
+              "dieline_mm": list(_uv_size), "reference": "References/CardShop/csk_booster_box.png (sheet 5)",
+              "notes": ["Opened state (sheet 5): front die-cut window, centre divider; the lid is the display header",
+                        "Sealed state: SM_CSK_Box_Booster_S_Sealed"]},
     )
 
 
 def item_box_lid() -> Item:
+    """The lid (sheet 5): top panel + the tuck-flap tab in one board. Hinge frame: origin on the hinge axis at the
+    rear top edge; closed, the lid covers y in [-D, 0]. Its inside is printed (region 16): stood up at the display
+    pose it is the header the customer sees. The tab is modelled flat (the display look); the closed box is the
+    separate _Sealed mesh."""
     s = S.BOX_BOOSTER_S
     W, D, bd = s["w"], s["d"], s["board"]
+    tw, th, tr = s["tab"]
     proj, _ = _dieline(s)
+    outline = [(-W / 2, 0.0), (-W / 2, -D), (-tw / 2, -D)]
+    for cx, a0 in ((-tw / 2 + tr, 180.0), (tw / 2 - tr, 270.0)):
+        outline += [(cx + tr * math.cos(math.radians(a0 + 90 * i / 3)), -D - th + tr + tr * math.sin(math.radians(a0 + 90 * i / 3)))
+                    for i in range(4)]
+    outline += [(tw / 2, -D), (W / 2, -D), (W / 2, 0.0)]
+    # (down the left side, along the front with the tab, up the right side: counter-clockwise seen from +Z)
     b = Builder()
-    # hinge frame: origin on the hinge axis at the rear top edge; closed, the lid covers y in [-D, 0]
-    b.box((-W / 2, -D, 0), (W / 2, 0, bd), mat=0, regions={"pz": 15}, mats={"nz": 1, "ny": 1, "px": 1, "nx": 1,
-                                                                             "py": 1})
-    lid_proj = {15: (lambda f: (lambda x, y, z: f(x, y + D / 2, z)))(proj[15])}
+    b.prism(outline, 0.0, bd, mat=1, top=15, bottom=16, top_mat=0, bottom_mat=0)
+    shift = lambda f: (lambda x, y, z: f(x, y + D / 2, z))
     return Item(
         name="SM_CSK_Box_Booster_S_Lid", lods=[Lod(b)], materials=["M_CSK_BoxPrint", "M_CSK_Board"],
-        projections=lid_proj, sockets=[Socket("Seat", (0, 0, 0))], hulls=[((-W / 2, -D, 0), (W / 2, 0, bd))],
+        projections={15: shift(proj[15]), 16: shift(proj[16])}, sockets=[Socket("Seat", (0, 0, 0))],
+        hulls=[((-W / 2, -D - th, 0), (W / 2, 0, bd))],
         budget=S.BUDGETS["SM_CSK_Box_Booster_S_Lid"], data={"part_of": "SM_CSK_Box_Booster_S", "pivot": "hinge axis"},
     )
+
+
+def item_box_sealed() -> Item:
+    """Sheet 5, sealed: the closed carton inside a shrink-film shell with soft vertical corners."""
+    s = S.BOX_BOOSTER_S
+    W, D, H, f = s["w"], s["d"], s["h"], s["film"]
+    proj, _ = _dieline(s)
+    b = Builder()
+    _box_shell(b, s, closed_top=True)
+    b.prism(rounded_rect(W + 2 * f, D + 2 * f, 2.0, 2), -f, H + f, mat=2)
+    Hs = H + 2 * f
+    return Item(
+        name="SM_CSK_Box_Booster_S_Sealed", lods=[Lod(_shift_z(b, f), bevel_mm=0.4)],
+        materials=["M_CSK_BoxPrint", "M_CSK_Board", "M_CSK_Film"], projections=proj,
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0, -D / 2 - f, Hs / 2)),
+                 Socket("Face", (0, -D / 2 - f, Hs / 2), (90.0, 0.0, 0.0)), Socket("Stack", (0, 0, Hs))],
+        hulls=[((-W / 2 - f, -D / 2 - f, 0), (W / 2 + f, D / 2 + f, Hs))], cls="BoxS",
+        budget=S.BUDGETS["SM_CSK_Box_Booster_S_Sealed"],
+        data={"footprint_mm": [W + 2 * f, D + 2 * f, Hs], "stack": {"socket": "Stack", "pitch_mm": Hs, "max": 4},
+              "reference": "References/CardShop/csk_booster_box.png (sheet 5)"},
+    )
+
+
+def _shift_z(b: Builder, dz: float) -> Builder:
+    """Move every vertex of ``b`` up by ``dz`` (so a shell built from z = -dz sits on z = 0)."""
+    b.verts = [(x, y, z + dz) for x, y, z in b.verts]
+    return b
 
 
 # =========================================================================== A1 showcase (1778) + glass + door
@@ -644,6 +732,7 @@ def item_showcase_door(L: float = 1778.0) -> Item:
 
 ALL_ITEMS = {
     "card": item_card, "toploader": item_toploader, "toploader_130": lambda: item_toploader("130pt"), "slab": item_slab, "slab_filled": item_slab_filled,
-    "pack": item_pack, "box": item_box_booster, "box_lid": item_box_lid, "showcase": item_showcase,
+    "pack": item_pack, "box": item_box_booster, "box_lid": item_box_lid, "box_sealed": item_box_sealed,
+    "showcase": item_showcase,
     "showcase_glass": item_showcase_glass, "showcase_door": item_showcase_door,
 }
