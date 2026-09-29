@@ -110,6 +110,97 @@ POS = dict(                    # G5 POS screen on a stand, sheet 26 panel 4 (fro
     cam=2.2,                   # sheet 26: the camera dot in the top bezel (E radius)
 )
 
+SCANNER = dict(                # G6 handheld scanner, sheet 26 panel 5 (front = -Y: the nose)
+    w=70.0, l=160.0, h=95.0,   # E (spec); sheet 26 call-outs agree (70 across, 160 long, 95 high)
+    head_rear=30.0,            # sheet 26: the head runs from the nose (y -80) back to y +30 (E)
+    head_z=73.0,               # E: the head's centre height (top at 95)
+    # head sections along the nose axis (from the rear): (distance, W, H, corner r); sheet 26: a rounded body that
+    # flares into a wider nose bezel at the front (E values)
+    head=((0.0, 42.0, 26.0, 11.0), (5.0, 52.0, 34.0, 13.0), (14.0, 56.0, 38.0, 14.0), (80.0, 58.0, 40.0, 14.0),
+          (94.0, 70.0, 44.0, 15.0), (110.0, 70.0, 44.0, 15.0)),
+    window=(58.0, 32.0, 11.0, 9.0),   # sheet 26: the recessed window in the nose: W x H, depth, corner r (E)
+    grip=((0.0, 8.0, 58.0), (0.0, 42.0, 11.0)),   # sheet 26: the grip axis from under the head down-back to the
+                                                   # foot (points, E)
+    grip_sec=((-10.0, 28.0, 32.0), (0.0, 29.0, 33.0), (28.0, 31.0, 35.0), (44.0, 33.0, 37.0), (53.0, 36.0, 38.0)),
+                               # (distance along the axis, W, D): the grip flares into the foot; its last section
+                               # stays inside the foot (the section is square to the raked axis)
+    foot=(64.0, 100.0, 12.0, 27.0, 30.0),   # sheet 26: the flat pill-shaped foot W x L x H, corner r, y centre (E)
+    trigger=(13.0, (13.0, 24.0), (1.0, 14.0), 3.0),  # sheet 26: the blue-grey trigger just under the head, in front
+                                                      # of the grip: W, v, w, top inset (E)
+)
+
+CRADLE = dict(                 # G6 cradle, sheet 26 panel 5 (sizes E, read against the scanner in the picture)
+    base=(100.0, 86.0, 14.0),  # sheet 26: a plinth band at the foot: W x D, corner r (E)
+    plinth_h=10.0, step=3.0,   # E
+    top=(86.0, 58.0, 12.0),    # sheet 26: the body tapers to its top, most in depth: W x D, corner r (E)
+    h=100.0,                   # sheet 26: about as tall as the scanner (E)
+    dip=26.0,                  # sheet 26: the saddle dips between two ears at the sides (E)
+    cup=(72.0, 46.0, 15.0, 45.0),   # E: the cup the scanner's nose drops into: W x D, corner r, floor z
+    ear_r=7.0,                 # sheet 26: the ears' rounded top edge (E radius; real rings)
+)
+
+LABELLER = dict(               # G7 pistol-grip price labeller, sheet 26 panel 6 (front = -Y: the print head)
+    w=45.0, l=190.0, h=125.0,  # E (spec); sheet 26 call-outs agree (45 across, 190 long, 125 high)
+    # side profiles (y, z), counter-clockwise seen from +X; E values read off sheet 26 panel 6
+    body=((-95.0, 0.0), (-10.0, 0.0), (20.0, 34.0), (34.0, 60.0), (34.0, 84.0), (20.0, 92.0), (-56.0, 72.0),
+          (-56.0, 98.0), (-95.0, 98.0)),          # the main body: head block at the front, the roll bed behind
+    plate=((-58.0, 58.0), (-14.0, 58.0), (30.0, 70.0), (33.5, 85.0), (27.0, 102.0), (13.0, 114.0), (-3.0, 118.0),
+           (-18.0, 114.0), (-29.0, 104.0), (-44.0, 88.0), (-58.0, 88.0)),   # the round-topped roll cover plates
+    plate_t=4.0,               # E: the cover plates' thickness (one each side)
+    handle=((22.0, 74.0), (95.0, 90.0), (98.0, 97.0), (95.0, 104.0), (88.0, 107.0), (22.0, 97.0)),
+    handle_w=28.0,             # sheet 26: the fixed upper handle, narrower than the body (E)
+    lever=((12.0, 42.0), (70.0, 46.0), (78.0, 40.0), (82.0, 6.0), (86.0, 0.0), (93.0, 1.5), (95.0, 12.0),
+           (90.0, 46.0), (82.0, 56.0), (12.0, 58.0)),   # sheet 26: the lower lever, its end hooked down to the counter
+    lever_w=24.0,
+    chamfer=1.5,               # E: the moulded edge chamfer of the plates, handle and lever
+    bevel=2.0,                 # E: the body's rounded edges (2 segments)
+    nose=(40.0, 4.0, 40.0, 98.0),   # sheet 26: the print-head frame proud of the front: W, proud, z0, z1 (E)
+    window=(24.0, 5.0, 80.0, 95.0),  # sheet 26: the window at the head's top: W, depth, z0, z1 (E)
+    slider=(16.0, 8.0, 3.5),   # sheet 26: the red selector in the window: W x H, proud of the window floor (E)
+    exit=(28.0, 3.0, 45.5),    # E: the label exit slot: W x H, z centre
+    strip=(23.0, 0.4, ((-97.0, 45.5), (-104.0, 42.0), (-110.0, 30.0), (-113.0, 14.0), (-112.0, 4.0),
+                       (-106.0, 0.6))),   # sheet 26: the label strip hanging from the exit to the counter: W, T,
+                                          # centre line (label 19.8 x 11.2 M [D38] on a backing strip, E)
+    roll=(30.0, 26.0, (-28.0, 96.0)),  # sheet 26: the label roll radius, width, centre (y, z) (E); top at 126
+    hub=(25.0, 3.0),           # sheet 26: the blue spool flange on the far (-X) side: radius, thickness (E)
+    boss=(5.0, 1.0, (-2.0, 20.0)),   # sheet 26: the round screw boss low on each side plate: r, proud, (y, z) (E)
+)
+
+PHONE = dict(                  # G9 smartphone, sheet 26 panel 7 (lies on its back, screen up, top = +Y)
+    w=72.0, l=150.0, t=8.0,    # E (spec); sheet 26 call-outs agree
+    r=9.0,                     # sheet 26: rounded plan corners (E radius)
+    edge=(1.2, 1.6),           # E: the round on the glass edge / on the back edge
+    bezel=(2.4, 2.6),          # sheet 26: a thin black bezel: sides, top / bottom (E)
+    screen_r=7.0,              # E: the screen's own corner radius
+    cam=(1.4, 6.0),            # sheet 26: the hole-punch camera: radius, centre below the screen's top edge (E)
+    buttons=((41.5, 11.0), (12.5, 13.0)),   # sheet 26: the two keys on the right edge: y centre, length (E)
+    button=(0.6, 2.0),         # E: how far they stand proud, their height (centred on the edge)
+)
+
+LAPTOP = dict(                 # G10 laptop + lid, sheet 26 panel 8 (hinge at +Y, keyboard front = -Y)
+    w=320.0, d=220.0, h=16.0,  # E (spec, closed); sheet 26 call-outs agree
+    base_t=9.0, lid_t=7.0,     # sheet 26: the lid reads a little thinner than the base (E split of the 16)
+    r=10.0,                    # sheet 26: rounded plan corners (E radius)
+    base_edge=(1.5, 2.5),      # E: the base's top / bottom edge rounds
+    well=(284.0, 108.0, -26.0, 1.5, 3.0),   # sheet 26: the keyboard well W x D, front y, depth, corner r (E)
+    pad=(110.0, 66.0, -100.0, 0.4),         # sheet 26: the touchpad W x D, front y, depth (E)
+    notch=(60.0, 6.0, 2.0),    # sheet 26: the opening notch at the front edge's top centre: W, D, depth (E)
+    ports=((-44.0, 9.0, 3.2), (-28.0, 13.0, 5.5), (-12.0, 4.0, 4.0)),   # sheet 26: 3 ports on the left side: y,
+                                                                         # W, H (E); 6 deep
+    key_gap=3.0, key_t=1.3, key_ins=0.6,    # E: keycap gap, height over the well floor, top inset
+    fn_h=9.0,                  # E: the function row's key depth
+    rows=((1.0,) * 13 + (2.0,),
+          (1.5,) + (1.0,) * 12 + (1.5,),
+          (1.75,) + (1.0,) * 11 + (2.25,),
+          (2.25,) + (1.0,) * 10 + (2.75,),
+          (1.0, 1.0, 1.0, 1.25, 5.5, 1.25, 1.0, 1.0, "UD", 1.0)),   # key widths in units (15 u a row); "UD" = the
+                                                                     # up / down pair (half height)
+    bezel=(8.0, 10.0, 14.0),   # sheet 26: thin black bezel: sides, top (the lid's free edge), bottom (hinge side) (E)
+    cam=1.5,                   # sheet 26: the camera dot in the top bezel (E radius)
+    open_deg=-110.0,           # sheet 26: the open pose (E)
+    range_deg=(-130.0, 0.0),   # E (spec 0-130)
+)
+
 MONEY = dict(                  # G8 generic money, no currency design (spec 6)
     stack=(150.0, 70.0, 10.0),  # E (spec): the stack's render bounds
     note=(148.0, 68.0),        # E: one note; the stack's notes are offset by up to 1 mm (loose notes)
@@ -125,6 +216,12 @@ BUDGETS = {                    # LOD0 triangle budgets: the spec's "Tris" column
     "SM_CSK_Printer_Receipt": 450,      # spec 700 for the printer; split 450 body + 250 lid (the lid is added)
     "SM_CSK_Printer_Receipt_Lid": 250,
     "SM_CSK_POS_Screen": 800,
+    "SM_CSK_Scanner": 600,
+    "SM_CSK_Scanner_Cradle": 300,       # spec 200: the saddle and the cup are real cuts, the ears rounded (sheet 26)
+    "SM_CSK_PriceGun": 1200,
+    "SM_CSK_Phone": 300,
+    "SM_CSK_Laptop": 1100,             # spec 500: sheet 26 draws a full keyboard; 78 real keycaps are ~780 tris
+    "SM_CSK_Laptop_Lid": 300,
     "SM_CSK_Bills_Stack": 100,
     "SM_CSK_Coin": 120,
 }
@@ -389,6 +486,52 @@ def _prism_x(b: Builder, outline_yz: Sequence[Tuple[float, float]], x0: float, x
     b.fill([lo], cm, 0, (-1.0, 0.0, 0.0))
     b.fill([hi], cm, 0, (1.0, 0.0, 0.0))
     return lo, hi
+
+
+def _area(P) -> float:
+    n = len(P)
+    return 0.5 * sum(P[i][0] * P[(i + 1) % n][1] - P[(i + 1) % n][0] * P[i][1] for i in range(n))
+
+
+def _offset_poly(pts, d: float):
+    """Inward offset of a CCW polygon by ``d`` (mitred)."""
+    n = len(pts)
+    out = []
+    for i in range(n):
+        p0, p1, p2 = pts[i - 1], pts[i], pts[(i + 1) % n]
+        e0 = (p1[0] - p0[0], p1[1] - p0[1])
+        e1 = (p2[0] - p1[0], p2[1] - p1[1])
+        l0, l1 = math.hypot(*e0), math.hypot(*e1)
+        n0 = (-e0[1] / l0, e0[0] / l0)
+        n1 = (-e1[1] / l1, e1[0] / l1)
+        m = (n0[0] + n1[0], n0[1] + n1[1])
+        ml = math.hypot(*m)
+        m = (m[0] / ml, m[1] / ml)
+        c = m[0] * n1[0] + m[1] * n1[1]
+        out.append((p1[0] + m[0] * d / c, p1[1] + m[1] * d / c))
+    return out
+
+
+def _chamfer_prism_x(b: Builder, outline_yz, x0: float, x1: float, c: float, mat: int) -> None:
+    """A prism along +X from a CCW (y, z) outline whose two end faces are chamfered by ``c`` (real 45-degree
+    faces: the moulded edge of a plastic part). ``c`` 0 gives a plain prism."""
+    assert _area(outline_yz) > 0, "outline must be counter-clockwise in (y, z)"
+    if c <= 0:
+        _prism_x(b, outline_yz, x0, x1, mat)
+        return
+    ins = _offset_poly(outline_yz, c)
+    rings = [(ins, x0), (outline_yz, x0 + c), (outline_yz, x1 - c), (ins, x1)]
+    loops = [[b.v(x, y, z) for y, z in o] for o, x in rings]
+    n = len(outline_yz)
+    for k, sx in enumerate((-1.0, 0.0, 1.0)):
+        for i in range(n):
+            j = (i + 1) % n
+            (y0, z0), (y1, z1) = outline_yz[i], outline_yz[j]
+            ln = math.hypot(y1 - y0, z1 - z0)
+            out = (sx, (z1 - z0) / ln, -(y1 - y0) / ln)
+            _face_out(b, [loops[k][i], loops[k][j], loops[k + 1][j], loops[k + 1][i]], out, mat)
+    b.fill([loops[0]], mat, 0, (-1.0, 0.0, 0.0))
+    b.fill([loops[-1]], mat, 0, (1.0, 0.0, 0.0))
 
 
 def _key(b: Builder, fr: Frame, cu: float, cv: float, w: float, h: float, t: float, ins: float, mat: int,
@@ -982,6 +1125,469 @@ def item_pos_screen() -> Item:
     )
 
 
+# =========================================================================== G6 scanner + cradle
+
+def _sc_head_frame() -> Frame:
+    s = SCANNER
+    return Frame((0.0, s["head_rear"], s["head_z"]), (1.0, 0.0, 0.0), (0.0, 0.0, 1.0))   # W = -Y (the nose)
+
+
+def _sc_grip_frame() -> Frame:
+    s = SCANNER
+    p0, p1 = s["grip"]
+    w = _unit(_sub(p1, p0))
+    u = (1.0, 0.0, 0.0)
+    return Frame(p0, u, _cross(w, u))
+
+
+def _scanner_lod(level: int) -> Lod:
+    """Sheet 26 panel 5: a rounded head that flares into a nose bezel round a recessed window, a pistol grip
+    raked back to a flat pill-shaped foot (so it stands on the counter), a blue-grey trigger."""
+    s = SCANNER
+    PLASTIC, WINDOW, TRIG = range(3)
+    segs = (3, 2, 1)[level]
+    hf = _sc_head_frame()
+    loc = Builder()
+    secs = s["head"] if level < 2 else (s["head"][0], s["head"][3], s["head"][5])
+    _loft(loc, [(_rr(w, h, r, segs), z) for z, w, h, r in secs], PLASTIC)
+    b = Builder()
+    _merge_frame(b, loc, hf)
+    ops = []
+    ww, wh, wd, wr = s["window"]
+    nose = s["head"][-1][0]
+    cut = Builder()
+    cl = Builder()
+    _loft(cl, [(_rr(ww, wh, wr, segs), nose - wd), (_rr(ww, wh, wr, segs), nose + 5.0)], PLASTIC,
+          bottom_mat=WINDOW)
+    _merge_frame(cut, cl, hf)
+    ops.append(("DIFFERENCE", cut))
+    e = Builder()
+    gf = _sc_grip_frame()
+    gl = Builder()
+    gsecs = s["grip_sec"] if level < 2 else (s["grip_sec"][0], s["grip_sec"][-1])
+    _loft(gl, [(_rr(w, d, min(w, d) / 2 - 3.0, (2, 2, 1)[level]), z) for z, w, d in gsecs], PLASTIC)
+    _merge_frame(e, gl, gf)
+    fw, fl, fh, fr, fy = s["foot"]
+    fsegs = (4, 2, 1)[level]
+    rings = _round_rings(fh, 0.0, 4.0, 1.5, (2, 1, 0)[level], (1, 0, 0)[level])
+    _loft(e, [(_rr(fw, fl, fr, fsegs, ins, 0.0, fy), z) for ins, z in rings], PLASTIC)
+    tw, (tv0, tv1), (tw0, tw1), ti = s["trigger"]
+    if level < 2:                                       # a finger key: a frustum off the grip's front face
+        tf = Frame(gf.p(0.0, tv0, (tw0 + tw1) / 2), (1.0, 0.0, 0.0), _mul(gf.W, -1.0))
+        _key(e, tf, 0.0, 0.0, tw, tw1 - tw0, tv1 - tv0, ti, TRIG, sink=4.0)
+    return Lod(b, ops=ops, extra=e)
+
+
+def item_scanner() -> Item:
+    s = SCANNER
+    hf = _sc_head_frame()
+    gf = _sc_grip_frame()
+    nose = s["head"][-1][0]
+    win = hf.p(0.0, 0.0, nose - s["window"][2])
+    fw, fl, fh, fr, fy = s["foot"]
+    return Item(
+        name="SM_CSK_Scanner", lods=[_scanner_lod(i) for i in range(3)],
+        materials=["M_CSK_Plastic", "M_CSK_ScanWindow", "M_CSK_AccentBlue"], projections={},
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", gf.p(0.0, 0.0, 26.0)),
+                 Socket("Beam", win, (90.0, 0.0, 0.0))],                    # +Z out of the window (-Y)
+        hulls=[((-s["w"] / 2, -s["l"] / 2, 0.0), (s["w"] / 2, fy + fl / 2, s["h"]))],
+        budget=BUDGETS["SM_CSK_Scanner"],
+        data={"footprint_mm": [s["w"], s["l"], s["h"]], "pose": "upright (stands on its foot)",
+              "pivot": "bottom-centre of the foot's plan", "front": "-Y (nose)", "reference": REF,
+              "notes": ["Sheet 26 panel 5: head with a flared nose bezel and a recessed window (M_CSK_ScanWindow, "
+                        "emissive), a raked pistol grip, a flat pill foot, a blue-grey trigger (M_CSK_AccentBlue)",
+                        "Spec size 160 x 70 x 95 is read as a size: the long axis runs along Y (nose = -Y)"]},
+    )
+
+
+def _cradle_lod(level: int) -> Lod:
+    """Sheet 26 panel 5: a tapered block on a plinth band, its top dipping in a saddle between two ears at the
+    sides, a cup in the middle that the scanner's nose drops into."""
+    c = CRADLE
+    PLASTIC = 0
+    bw, bd, br = c["base"]
+    tw, td, tr = c["top"]
+    H, ph, st = c["h"], c["plinth_h"], c["step"]
+    segs = (2, 1, 1)[level]
+
+    def ring(w, d, r):
+        return rounded_rect(w, d, r, segs)
+    b = Builder()
+    if level < 2:                                       # plinth band, a step in, the taper, a rounded top edge
+        er = c["ear_r"]
+        z0 = ph + 0.8
+        w0, d0, r0 = bw - 2 * st, bd - 2 * st, br - st
+
+        def at(z, ins=0.0):
+            f = (z - z0) / (H - z0)
+            w, d, r = w0 + (tw - w0) * f, d0 + (td - d0) * f, r0 + (tr - r0) * f
+            return ring(w - 2 * ins, d - 2 * ins, max(r - ins, 1.0))
+        top = [(at(H - er + er * math.sin(math.radians(a)), er - er * math.cos(math.radians(a))),
+                H - er + er * math.sin(math.radians(a))) for a in ((0.0, 45.0, 90.0) if level == 0 else (0.0, 90.0))]
+        _loft(b, [(ring(bw, bd, br), 0.0), (ring(bw, bd, br), ph), (at(z0), z0)] + top, PLASTIC)
+    else:
+        _loft(b, [(ring(bw, bd, br), 0.0), (ring(tw, td, tr), H)], PLASTIC)
+    ops = []
+    dip = c["dip"]
+    half = tw / 2 - 10.0                                   # the ears' inner edge
+    R = (half * half + dip * dip) / (2 * dip)
+    sad = Builder()
+    _cyl_axis(sad, (0.0, 0.0, H - dip + R), (0.0, 1.0, 0.0), R, -bd, bd, (16, 12, 8)[level], PLASTIC)
+    ops.append(("DIFFERENCE", sad))
+    cw, cd, cr, cz = c["cup"]
+    if level < 2:
+        cup = Builder()
+        _loft(cup, [(rounded_rect(cw, cd, cr, segs), cz), (rounded_rect(cw, cd, cr, segs), H + 5.0)], PLASTIC)
+        ops.append(("DIFFERENCE", cup))
+    return Lod(b, ops=ops)
+
+
+def item_cradle() -> Item:
+    c = CRADLE
+    s = SCANNER
+    bw, bd, _ = c["base"]
+    H = c["h"]
+    cz = c["cup"][3]
+    nose = s["head"][-1][0]
+    # the scanner parked nose-down in the cup, its grip toward the cradle's front: rot (90, 0, 180) sends the
+    # scanner's -Y (nose) to -Z and its foot to -Y; the nose centre lands on the cup floor
+    nose_c = (0.0, s["head_rear"] - nose, s["head_z"])
+    loc = (0.0, -nose_c[2], cz - nose_c[1])
+    return Item(
+        name="SM_CSK_Scanner_Cradle", lods=[_cradle_lod(i) for i in range(3)], materials=["M_CSK_Plastic"],
+        projections={},
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Scanner", loc, (90.0, 0.0, 180.0))],
+        hulls=[((-bw / 2, -bd / 2, 0.0), (bw / 2, bd / 2, H - c["dip"]))], budget=BUDGETS["SM_CSK_Scanner_Cradle"],
+        data={"footprint_mm": [bw, bd, H], "pose": "upright", "pivot": "bottom-centre", "part_of": "SM_CSK_Scanner",
+              "reference": REF,
+              "notes": ["Sheet 26 panel 5 shows the cradle beside the scanner, not in use: how the scanner sits in it "
+                        "is E (nose down in the cup, grip toward the front)"]},
+    )
+
+
+# =========================================================================== G7 price labeller
+
+def _strip_outline(centre, t: float):
+    """A thin ribbon's (y, z) outline round a polyline (counter-clockwise)."""
+    left, right = [], []
+    n = len(centre)
+    for i in range(n):
+        a = centre[max(i - 1, 0)]
+        c = centre[min(i + 1, n - 1)]
+        dy, dz = c[0] - a[0], c[1] - a[1]
+        ln = math.hypot(dy, dz)
+        ny, nz = -dz / ln, dy / ln
+        left.append((centre[i][0] + ny * t / 2, centre[i][1] + nz * t / 2))
+        right.append((centre[i][0] - ny * t / 2, centre[i][1] - nz * t / 2))
+    poly = right + list(reversed(left))
+    return poly if _area(poly) > 0 else list(reversed(poly))
+
+
+def _labeller_lod(level: int) -> Lod:
+    """Sheet 26 panel 6: a body with the print head at the front (a proud frame with the red selector in a window
+    at the top and the label exit below it), the label roll on top between two round-topped cover plates, a blue
+    spool flange on the far side, a fixed handle raked back and a lower lever whose end hooks down to the counter,
+    the label strip hanging from the exit."""
+    g = LABELLER
+    PLASTIC, PAPER, RED, BLUE = range(4)
+    W = g["w"]
+    ch = g["chamfer"] if level == 0 else 0.0
+    b = Builder()
+    _prism_x(b, list(g["body"]), -W / 2 + 0.6, W / 2 - 0.6, PLASTIC)    # the cover plates stand 0.6 proud of it
+    ops = []
+    nw, npr, nz0, nz1 = g["nose"]
+    front = g["body"][0][0]
+    nose = Builder()
+    nose.box((-nw / 2, front - npr, nz0), (nw / 2, front + 2.0, nz1), mat=PLASTIC)
+    ops.append(("UNION", nose))
+    if level < 2:
+        ww, wd, wz0, wz1 = g["window"]
+        win = Builder()
+        win.box((-ww / 2, front - npr - 1.0, wz0), (ww / 2, front - npr + wd, wz1), mat=PLASTIC)
+        ops.append(("DIFFERENCE", win))
+        ew, eh, ez = g["exit"]
+        ex = Builder()
+        ex.box((-ew / 2, front - npr - 1.0, ez - eh / 2), (ew / 2, front + 12.0, ez + eh / 2), mat=PLASTIC)
+        ops.append(("DIFFERENCE", ex))
+    e = Builder()
+    pt = g["plate_t"]
+    for sx in (-1, 1):                                  # the roll cover plates, flush with the body's sides
+        xo, xi = sx * W / 2, sx * (W / 2 - pt)
+        _chamfer_prism_x(e, list(g["plate"]), min(xo, xi), max(xo, xi), ch, PLASTIC)
+    hw, lw = g["handle_w"], g["lever_w"]
+    _chamfer_prism_x(e, list(g["handle"]), -hw / 2, hw / 2, (2.0 if level == 0 else 0.0), PLASTIC)
+    _chamfer_prism_x(e, list(g["lever"]), -lw / 2, lw / 2, ch, PLASTIC)
+    rr_, rw, (ry, rz) = g["roll"]
+    _cyl_axis(e, (0.0, ry, rz), (1.0, 0.0, 0.0), rr_, -rw / 2, rw / 2, (18, 12, 8)[level], PAPER)
+    hr, ht = g["hub"]
+    _cyl_axis(e, (0.0, ry, rz), (1.0, 0.0, 0.0), hr, -rw / 2 - ht, -rw / 2 + 0.5, (18, 12, 8)[level], BLUE,
+              caps=(True, False))
+    if level < 2:
+        sw_, sh_, sp = g["slider"]
+        ww, wd, wz0, wz1 = g["window"]
+        yw = front - npr + wd                            # the window's floor
+        _box(e, (-sw_ / 2, yw - sp, (wz0 + wz1) / 2 - sh_ / 2), (sw_ / 2, yw + 0.5, (wz0 + wz1) / 2 + sh_ / 2), RED)
+        st_w, st_t, line = g["strip"]
+        _prism_x(e, _strip_outline(list(line), st_t), -st_w / 2, st_w / 2, PAPER)
+    if level == 0:
+        br, bp, (by, bz) = g["boss"]
+        for sx in (-1.0, 1.0):
+            _cyl_axis(e, (sx * (W / 2 - 0.6), by, bz), (sx, 0.0, 0.0), br, -0.5, bp, 10, PLASTIC, caps=(False, True))
+        return Lod(b, bevel_mm=g["bevel"], bevel_segments=2, bevel_first=True, ops=ops, extra=e)
+    return Lod(b, ops=ops, extra=e)
+
+
+def item_price_gun() -> Item:
+    g = LABELLER
+    W = g["w"]
+    front = g["body"][0][0]
+    npr = g["nose"][1]
+    ew, eh, ez = g["exit"]
+    return Item(
+        name="SM_CSK_PriceGun", lods=[_labeller_lod(i) for i in range(3)],
+        materials=["M_CSK_Plastic", "M_CSK_Paper", "M_CSK_AccentRed", "M_CSK_AccentBlue"], projections={},
+        sockets=[Socket("Seat", (0, 0, 0)),
+                 Socket("Grip", (0.0, 60.0, 90.0)),                                  # the fixed handle
+                 Socket("LabelOut", (0.0, front - npr, ez), (90.0, 0.0, 0.0))],    # +Z out of the exit (-Y)
+        hulls=[((-W / 2, -g["l"] / 2 - 18.0, 0.0), (W / 2, g["l"] / 2 + 3.0, g["h"] + 1.0))],
+        budget=BUDGETS["SM_CSK_PriceGun"],
+        data={"footprint_mm": [W, 193.0, 126.0], "pose": "upright (stands on its body and lever hook)",
+              "pivot": "bottom-centre of the 190 body", "front": "-Y (print head, label exit)",
+              "label_mm": [19.8, 11.2], "reference": REF,
+              "notes": ["Sheet 26 panel 6: print head with the red selector, the label roll on top between round "
+                        "cover plates with a blue spool flange, fixed handle, lower lever hooked down to the counter, "
+                        "the label strip hanging to the counter (its red label borders are print, not modelled)",
+                        "The hanging label strip adds 18 in front of the 190 body (render bounds)"]},
+    )
+
+
+# =========================================================================== G9 phone
+
+def _phone_screen_rect():
+    p = PHONE
+    bs, bt = p["bezel"]
+    return p["w"] - 2 * bs, p["l"] - 2 * bt
+
+
+def _phone_lod(level: int) -> Lod:
+    """Sheet 26 panel 7: a slab with rounded corners and rounded edges, a flush screen with a thin black bezel and a
+    hole-punch camera near its top, two keys on the right edge."""
+    p = PHONE
+    PLASTIC, SCREEN = range(2)
+    W, L, T = p["w"], p["l"], p["t"]
+    sw, sh = _phone_screen_rect()
+    b = Builder()
+    if level == 2:
+        b.box((-W / 2, -L / 2, 0.0), (W / 2, L / 2, T), mat=PLASTIC, skip=["pz"])
+        top = [b.v(x, y, T) for x, y in rect(W, L)]
+        scr = [b.v(x, y, T) for x, y in rect(sw, sh)]
+        b.fill([top, scr], PLASTIC, 0, (0, 0, 1))
+        b.fill([scr], SCREEN, R_FRONT, (0, 0, 1))
+        return Lod(b)
+    segs = (3, 1)[level]
+    rf, rb = p["edge"]
+    rings = _round_rings(T, 0.0, rf, rb, (2, 1)[level], (2, 1)[level])
+    _, top = _loft(b, [(_rr(W, L, p["r"], segs, ins), z) for ins, z in rings], PLASTIC, top=None)
+    scr = b.loop(_rr(sw, sh, p["screen_r"], segs), T)
+    b.fill([top, scr], PLASTIC, 0, (0, 0, 1))
+    if level == 0:
+        cr, cy = p["cam"]
+        cam = b.loop(rounded_rect(2 * cr, 2 * cr, cr * 0.999, 2) if False else
+                     [(cr * math.cos(2 * math.pi * k / 8), sh / 2 - cy + cr * math.sin(2 * math.pi * k / 8))
+                      for k in range(8)], T)
+        b.fill([scr, cam], SCREEN, R_FRONT, (0, 0, 1))
+        b.fill([cam], PLASTIC, 0, (0, 0, 1))
+        bp, bh = p["button"]
+        for yc, ln in p["buttons"]:
+            b.box((W / 2 - 1.0, yc - ln / 2, T / 2 - bh / 2), (W / 2 + bp, yc + ln / 2, T / 2 + bh / 2), mat=PLASTIC)
+    else:
+        b.fill([scr], SCREEN, R_FRONT, (0, 0, 1))
+    return Lod(b)
+
+
+def item_phone() -> Item:
+    p = PHONE
+    W, L, T = p["w"], p["l"], p["t"]
+    sw, sh = _phone_screen_rect()
+    return Item(
+        name="SM_CSK_Phone", lods=[_phone_lod(i) for i in range(3)], materials=["M_CSK_Plastic", "M_CSK_Screen"],
+        projections={R_FRONT: _planar(-sw / 2, -sh / 2, sw, sh)},
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0.0, -L / 2, T / 2)), Socket("Screen", (0.0, 0.0, T))],
+        hulls=[((-W / 2, -L / 2, 0.0), (W / 2, L / 2, T))], budget=BUDGETS["SM_CSK_Phone"],
+        data={"footprint_mm": [W, L, T], "pose": "lying on its back, screen up", "pivot": "bottom-centre",
+              "top": "+Y (camera end)", "screen": {"slot": "M_CSK_Screen", "uv0": "0-1 tile", "size_mm": [sw, sh]},
+              "reference": REF,
+              "notes": ["Sheet 26 panel 7: thin bezel, hole-punch camera in the screen, two keys on the right edge; "
+                        "the back is not drawn, so it is plain"]},
+    )
+
+
+# =========================================================================== G10 laptop + lid
+
+def _lt_keys(level: int):
+    """Keycap rects (x0, y0, x1, y1) on the well floor: the function row, then 5 rows at the unit pitch."""
+    t = LAPTOP
+    ww, wd, wy, _, _ = t["well"]
+    g = t["key_gap"]
+    m = 3.0                                          # the well margin round the keys
+    x0, x1 = -ww / 2 + m, ww / 2 - m
+    u = (x1 - x0 + g) / 15.0                         # one unit incl. its gap
+    y_top = wy + wd - m
+    keys = []
+    fn = t["fn_h"]
+    n = 14
+    fw = (x1 - x0 + g) / n
+    for i in range(n):
+        keys.append((x0 + i * fw, y_top - fn, x0 + (i + 1) * fw - g, y_top))
+    y = y_top - fn - g
+    for row in t["rows"]:
+        x = x0
+        for k in row:
+            if k == "UD":
+                hh = (u - g - g / 2) / 2
+                keys.append((x, y - hh, x + u - g, y))
+                keys.append((x, y - u + g, x + u - g, y - u + g + hh))
+                x += u
+                continue
+            keys.append((x, y - (u - g), x + k * u - g, y))
+            x += k * u
+        y -= u
+    return keys
+
+
+def _laptop_lod(level: int) -> Lod:
+    """Sheet 26 panel 8: an aluminium base with rounded corners and edges, the keyboard well with its keycaps,
+    the touchpad, the opening notch at the front and ports on the left side."""
+    t = LAPTOP
+    ALU, PLASTIC = range(2)
+    W, D, Tb = t["w"], t["d"], t["base_t"]
+    segs = (3, 2, 1)[level]
+    b = Builder()
+    rt, rb = t["base_edge"]
+    rings = _round_rings(Tb, 0.0, rt, rb, (2, 1, 0)[level], (2, 1, 0)[level])
+    _loft(b, [(_rr(W, D, t["r"], segs, ins), z) for ins, z in rings], ALU)
+    ops = []
+    ww, wd, wy, wdp, wr = t["well"]
+    well = Builder()
+    well.prism([(x, y + wy + wd / 2) for x, y in rounded_rect(ww, wd, wr, (2, 1, 1)[level])], Tb - wdp, Tb + 1.0,
+               mat=PLASTIC)
+    ops.append(("DIFFERENCE", well))
+    if level < 2:
+        pw, pd, py, pdp = t["pad"]
+        pad = Builder()
+        pad.prism([(x, y + py + pd / 2) for x, y in rounded_rect(pw, pd, 3.0, (2, 1)[level])], Tb - pdp, Tb + 1.0,
+                  mat=ALU)
+        ops.append(("DIFFERENCE", pad))
+    if level == 0:
+        nw, nd, ndp = t["notch"]
+        notch = Builder()
+        notch.box((-nw / 2, -D / 2 - 1.0, Tb - ndp), (nw / 2, -D / 2 + nd, Tb + 1.0), mat=ALU)
+        ops.append(("DIFFERENCE", notch))
+        for y, pw_, ph in t["ports"]:
+            port = Builder()
+            port.box((-W / 2 - 1.0, y - pw_ / 2, Tb / 2 - ph / 2), (-W / 2 + 6.0, y + pw_ / 2, Tb / 2 + ph / 2),
+                     mat=PLASTIC)
+            ops.append(("DIFFERENCE", port))
+    e = Builder()
+    zf = Tb - wdp
+    fr = Frame((0.0, 0.0, zf), (1.0, 0.0, 0.0), (0.0, 1.0, 0.0))
+    if level == 0:
+        for x0, y0, x1, y1 in _lt_keys(level):
+            _key(e, fr, (x0 + x1) / 2, (y0 + y1) / 2, x1 - x0, y1 - y0, t["key_t"], t["key_ins"], PLASTIC)
+    elif level == 1:                                  # mid: the caps as flat tops (2 tris each) over the well floor
+        for x0, y0, x1, y1 in _lt_keys(level):
+            q = [e.v(x, y, zf + t["key_t"]) for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))]
+            e.face(tuple(q), PLASTIC)
+    return Lod(b, ops=ops, extra=e if level < 2 else None)
+
+
+def item_laptop() -> Item:
+    t = LAPTOP
+    W, D, Tb, Tl = t["w"], t["d"], t["base_t"], t["lid_t"]
+    hy, hz = D / 2 - Tl / 2, Tb + Tl / 2
+    return Item(
+        name="SM_CSK_Laptop", lods=[_laptop_lod(i) for i in range(3)], materials=["M_CSK_Aluminium", "M_CSK_Plastic"],
+        projections={},
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Lid", (0.0, hy, hz)), Socket("Grip", (0.0, -D / 2, Tb / 2))],
+        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, Tb))], budget=BUDGETS["SM_CSK_Laptop"],
+        data={"footprint_mm": [W, D, t["h"]], "pose": "lying flat", "pivot": "bottom-centre",
+              "front": "-Y (keyboard front edge); hinge at +Y",
+              "parts": {"Lid": {"mesh": "SM_CSK_Laptop_Lid", "socket": "Lid", "type": "hinge", "axis": "X",
+                                "range_deg": list(t["range_deg"]), "open_rot_deg": [t["open_deg"], 0.0, 0.0]}},
+              "reference": REF,
+              "notes": ["Sheet 26 panel 8: 78 keycaps in a recessed well, the touchpad, the opening notch, 3 ports "
+                        "on the left side; the hinge axis runs along the rear edge at the lid's mid-thickness, and "
+                        "the lid's rear edge is a full round about it, so it clears the base at every angle",
+                        "Key legends are not modelled (print)"]},
+    )
+
+
+def _lid_screen_rect():
+    t = LAPTOP
+    W, D, Tl = t["w"], t["d"], t["lid_t"]
+    bs, btop, bbot = t["bezel"]
+    r = Tl / 2
+    y_front, y_back = -D + r, 0.0                   # the flat face runs from the front round to the rear round
+    return (-W / 2 + r + bs, y_front + btop, W / 2 - r - bs, y_back - bbot)
+
+
+def _laptop_lid_lod(level: int) -> Lod:
+    """The lid in its hinge frame (origin on the axis, closed; the lid covers y in [-D + Tl/2, Tl/2]): a slab
+    whose edges are a full round (the rear edge rounds about the hinge axis), the screen flush in a thin black
+    bezel on its inner face, the camera dot in the top bezel."""
+    t = LAPTOP
+    ALU, PLASTIC, SCREEN = range(3)
+    W, D, Tl = t["w"], t["d"], t["lid_t"]
+    r = Tl / 2
+    cy = -D / 2 + r                                  # the plan centre (the lid spans D along y)
+    sx0, sy0, sx1, sy1 = _lid_screen_rect()
+    b = Builder()
+    if level == 2:
+        b.box((-W / 2, -D + r, -r), (W / 2, r, r), mat=ALU, skip=["nz"])
+        bot = [b.v(x, y, -r) for x, y in ((-W / 2, -D + r), (-W / 2, r), (W / 2, r), (W / 2, -D + r))]
+        scr = [b.v(x, y, -r) for x, y in ((sx0, sy0), (sx0, sy1), (sx1, sy1), (sx1, sy0))]
+        b.fill([bot, scr], PLASTIC, 0, (0, 0, -1))
+        b.fill([scr], SCREEN, R_FRONT, (0, 0, -1))
+        return Lod(b)
+    segs = (3, 1)[level]
+    angs = (-90.0, -45.0, 0.0, 45.0, 90.0) if level == 0 else (-90.0, 0.0, 90.0)
+    rings = [(r - r * math.cos(math.radians(a)), r * math.sin(math.radians(a))) for a in angs]
+    bot, _ = _loft(b, [(_rr(W, D, t["r"], segs, ins, 0.0, cy), z) for ins, z in rings], ALU, bottom=None)
+    scr = b.loop([(sx0, sy0), (sx1, sy0), (sx1, sy1), (sx0, sy1)], -r)
+    if level == 0:
+        cyc = (sy0 + (-D + r + r)) / 2 - 0.5         # centred in the top bezel
+        cam = b.loop([(t["cam"] * math.cos(2 * math.pi * k / 8), cyc + t["cam"] * math.sin(2 * math.pi * k / 8))
+                      for k in range(8)], -r)
+        b.fill([bot, scr, cam], PLASTIC, 0, (0, 0, -1))
+        b.fill([cam], SCREEN, 0, (0, 0, -1))
+    else:
+        b.fill([bot, scr], PLASTIC, 0, (0, 0, -1))
+    b.fill([scr], SCREEN, R_FRONT, (0, 0, -1))
+    return Lod(b)
+
+
+def item_laptop_lid() -> Item:
+    t = LAPTOP
+    W, D, Tl = t["w"], t["d"], t["lid_t"]
+    r = Tl / 2
+    sx0, sy0, sx1, sy1 = _lid_screen_rect()
+
+    def proj(x, y, z):                                # upright when the lid is open: u to +X, v up toward the free edge
+        return (inset((x - sx0) / (sx1 - sx0)), inset((sy1 - y) / (sy1 - sy0)))
+    return Item(
+        name="SM_CSK_Laptop_Lid", lods=[_laptop_lid_lod(i) for i in range(3)],
+        materials=["M_CSK_Aluminium", "M_CSK_Plastic", "M_CSK_Screen"], projections={R_FRONT: proj},
+        sockets=[Socket("Seat", (0, 0, 0)),
+                 Socket("Screen", ((sx0 + sx1) / 2, (sy0 + sy1) / 2, -r), (180.0, 0.0, 0.0))],   # +Z out of it
+        hulls=[((-W / 2, -D + r, -r), (W / 2, r, r))], budget=BUDGETS["SM_CSK_Laptop_Lid"],
+        data={"part_of": "SM_CSK_Laptop", "pivot": "hinge axis (X), closed pose",
+              "open_rot_deg": [t["open_deg"], 0.0, 0.0],
+              "screen": {"slot": "M_CSK_Screen", "uv0": "0-1 tile, upright when open",
+                         "size_mm": [round(sx1 - sx0, 3), round(sy1 - sy0, 3)]},
+              "reference": REF},
+    )
+
+
 ITEMS = {
     "g_devices_cash_drawer": item_cash_drawer,
     "g_devices_cash_drawer_tray": item_cash_drawer_tray,
@@ -991,4 +1597,10 @@ ITEMS = {
     "g_devices_printer": item_printer,
     "g_devices_printer_lid": item_printer_lid,
     "g_devices_pos": item_pos_screen,
+    "g_devices_scanner": item_scanner,
+    "g_devices_cradle": item_cradle,
+    "g_devices_price_gun": item_price_gun,
+    "g_devices_phone": item_phone,
+    "g_devices_laptop": item_laptop,
+    "g_devices_laptop_lid": item_laptop_lid,
 }
