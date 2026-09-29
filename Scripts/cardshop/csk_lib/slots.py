@@ -52,7 +52,12 @@ def write_csk_json(item, fbx_path: str, sidecar_path: Optional[str], lod_info: D
         "sockets": [{"name": s.name, "kind": s.kind, "loc_mm": list(map(fit._r, s.loc)), "rot_deg": list(s.rot)}
                     for s in item.sockets],
     }
+    payload["hulls"] = len(item.hulls)
     data = json.loads(json.dumps(item.data))
+    for part in data.get("parts", {}).values():      # hinge parts: the open pose, pre-converted for Unreal
+        if part.get("type") == "hinge" and "open_rot_deg" in part:
+            part["open_ue"] = ue_slot(socket_locs[part["socket"]], part["open_rot_deg"])
+            part["closed_ue"] = ue_slot(socket_locs[part["socket"]])
     for level in data.get("levels", []):
         lvl = socket_locs[level["socket"]]
         for grid in level["grids"]:

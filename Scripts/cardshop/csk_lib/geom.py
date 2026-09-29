@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
 from . import spec as S
-from .mesh import Builder, chamfer_rect, rect, rounded_rect
+from .shapes import Builder, chamfer_rect, rect, rounded_rect
 
 Vec3 = Tuple[float, float, float]
 R_FRONT, R_BACK, R_LABEL = 1, 2, 3
@@ -364,7 +364,7 @@ def item_box_booster() -> Item:
                                    "cavity_mm": [[-inner_x, inner_y0, bd], [inner_x, D / 2 - bd, H]],
                                    "accepts": ["Pack"], "pose": "standing, +90 deg about X"}},
               "parts": {"Lid": {"mesh": "SM_CSK_Box_Booster_S_Lid", "socket": "Lid", "type": "hinge",
-                                "axis": "X", "range_deg": [0, 200]}},
+                                "axis": "X", "range_deg": [0, 200], "open_rot_deg": [-160.0, 0.0, 0.0]}},
               "dieline_mm": list(_uv_size)},
     )
 
