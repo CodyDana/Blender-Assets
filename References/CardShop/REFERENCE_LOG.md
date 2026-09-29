@@ -8,6 +8,8 @@ meshes are built new from the spec's numbers and no image goes into the product,
 | # | File | Sheet | Date | Source | SHA-256 (first 16) | IP check | Notes |
 |---|---|---|---|---|---|---|---|
 | 0 | `csk_style_anchor.png` | 0 style anchor | 2026-09-29 | AI image chat (user), 1536 x 1024, given as webp and saved as PNG | c9810491d24bb72c | Pass | See "Sheet 0 notes" |
+| 1 | `csk_card.png` | 1 card + stacks | 2026-09-29 | AI image chat (user), 1536 x 1024, given as webp and saved as PNG | fd3ce06451d6a464 | Pass | See "Sheet 1 notes" |
+| 2 | `csk_toploader.png` | 2 top-loaders | 2026-09-29 | AI image chat (user), 1536 x 1024, given as webp and saved as PNG | a06be7ffcbf66cd6 | Pass | See "Sheet 2 notes" |
 
 ## Sheet 0 notes (style anchor)
 
@@ -38,3 +40,28 @@ meshes are built new from the spec's numbers and no image goes into the product,
 2. **Potted plants:** decor. Organic modelling is our weak spot, so they're proposed as out of scope (buyers have
    plant packs).
 3. **Small display boxes on the shelves** (many sizes, colour blocks): already covered by B2/B3/B8 variants.
+
+## Sheet 1 notes (card)
+
+**IP:** blank faces (blue border, plain window, navy back); no text or symbols.
+
+**Geometry:** matches the built card (63 x 88 x 0.3 mm, rounded corners, flat). The picture's corners read nearer 2.5 mm
+than 3 mm. 3 mm stays (real cards are about 3.2 mm; the picture is not measured). The stacks show layered edge lines:
+the planned edge-stripe texture for C2.
+
+**Art (P2):** the frame layout (a border about 5 mm wide round a plain window, a dark back) guides the card frame
+design Claude draws around the user's illustrations.
+
+The grey scale card on the left is out of proportion (AI drift); ignored.
+
+## Sheet 2 notes (top-loaders)
+
+**IP:** generic clear PVC holders; no marks.
+
+**Changes to the build (to match the picture):**
+- **Rounded outer corners**, about 3.5 mm radius (the G1 build has square corners).
+- **Thumb notch:** a semicircle about 14 mm wide and 7 mm deep, cut into the FRONT skin and the top edge at the centre
+  of the open end. The spec guessed 20 mm; the picture wins where the spec was an estimate.
+- **Softened edges:** a small round-over all round.
+- **Wall widths:** about 3.5 mm at the sides, matching the spec's 3.6 mm.
+- **Thicknesses:** a standard one and a thick one (side views), so `TopLoader_130pt` (4.8 mm) is built as well.
