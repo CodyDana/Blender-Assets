@@ -191,7 +191,10 @@ def main():
         "M_CSK_Glass": flat("P_Glass", (0.92, 1.0, 0.96), 0.02, transmission=1.0),
         "M_CSK_Board": flat("P_Board", (0.78, 0.72, 0.62), 0.8),
         "M_CSK_Frame": flat("P_Alu", (0.8, 0.8, 0.82), 0.3, 1.0),
-        "M_CSK_Base": flat("P_Base", (0.04, 0.04, 0.045), 0.5),
+        "M_CSK_Base": flat("P_Base", (0.01, 0.01, 0.012), 0.5),
+        "M_CSK_Oak": flat("P_Oak", (0.36, 0.22, 0.1), 0.55),
+        "M_CSK_Deck": flat("P_Deck", (0.7, 0.62, 0.48), 0.5),
+        "M_CSK_Film": flat("P_Film", (1, 1, 1), 0.1, transmission=1.0),
         "M_CSK_LED": flat("P_LED", (1, 1, 1), 0.5, emit=(1.0, 0.95, 0.85)),
     }
     for t in T.values():

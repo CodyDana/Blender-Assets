@@ -76,15 +76,22 @@ SHOWCASE_FULL = dict(
     lengths=(1219.0, 1778.0),  # M [D23]; G1 builds 1778
     d=508.0, h=965.0,          # M [D22]
     glass=6.35,                # M [D24]
-    kick=152.0,                # E*
-    deck=23.0,                 # deck board on the kick base, E
+    # base (reference sheets 6 + 7): a recessed black toe kick, a light-oak cabinet, its top is the cream deck
+    kick=60.0, kick_inset=10.0,  # E*, sheet 6
+    base=140.0,                # oak cabinet above the kick (deck top at 200), E*, sheet 6
     post=25.0,                 # aluminium corner post section, E
     rail=20.0,                 # aluminium rail section, E
-    shelves=((356.0, 253.0), (305.0, 253.0)),  # (depth, clear height below it) S1, S2; depths E*, spacing E
+    shelves=((None, 244.0), (None, 244.0)),  # (depth, clear height below it) S1, S2; None = full depth to the door
+                                             # track; sheet 6: two full-depth shelves splitting the glass in thirds
     track=(15.0, 25.0),        # rear door track height x depth, E
     door_overlap=25.0,         # door W = L/2 + 25 (E)
     door_travel_off=50.0,      # travel = L/2 - 50 (E)
     stile=15.0,                # door edge stile, E
+    standard=(15.0, 6.0),      # slotted shelf standard: width (Y) x depth (X), on the end posts' inner faces (sheet 7)
+    slot=(3.0, 10.0, 25.0),    # standard slots: width x height, pitch
+    pin=(6.0, 12.0),           # shelf pin: section, length (sheet 7 detail 5)
+    led_channel=(16.0, 9.0),   # aluminium LED channel under the top front rail: depth x height (sheet 7 detail 6)
+    lock=(22.0, 12.0, 150.0),  # door lock cylinder: diameter, projection, height above the door bottom (sheets 6, 7)
 )
 
 # --------------------------------------------------------------------------- classes (spec 4.2)

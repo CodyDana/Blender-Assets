@@ -13,8 +13,8 @@ re-runs the build with 5.2 and those exports are the ones that count. Full repor
 
 | Item | Result |
 |---|---|
-| 10 meshes: card, top-loader, slab, filled slab, sealed pack (3 LODs), booster box S, box lid, 1778 showcase (3 LODs), its glass, its door | Every mesh passes the house `qa_check` (26-130 checks each, `--require-uv1`, UCX present, budgets) |
-| Kit checks (`build_csk.py`) | **110/110**: contain fits 38 (card in slab and top-loader, 36 packs in the box), shelf grids 15 x 3 (volume, cell, hull clearance), stacks 15, `.csk.json` hashes 10, deny scan, socket count |
+| 12 meshes: card, top-loader 35pt + 130pt, slab, filled slab, sealed pack, booster box S, box lid, sealed box, 1778 showcase, its glass, its door | Every mesh passes the house `qa_check` (26-130 checks each, `--require-uv1`, UCX present, budgets) |
+| Kit checks (`build_csk.py`) | **111/111** (rebuild; 110 before): contain fits 38 (card in slab and top-loader, 36 packs in the box), shelf grids 15 x 3 (volume, cell, hull clearance), stacks 15, `.csk.json` hashes 10, deny scan, socket count |
 | Showcase sockets | **33** (limit 40): 3 levels x (Level + 4 Compartment + 4 PriceTag), 2 doors, LED, 2 snaps, Seat |
 | Slot maths pre-check | Unreal-style slots (imported Level socket + grid numbers) vs the Blender-computed `slots_ue`: **0.0001 cm** max error for all 6 classes. This is the G1 test 2 computation, pre-run on the exported sidecar |
 | Self-tests (`test_csk.py`) | **11/11**, including negative cases: 0.1 mm pack overhang, too-small slot, overlap, hull intrusion, deny hits and false hits, atlas padding |
@@ -29,14 +29,31 @@ re-runs the build with 5.2 and those exports are the ones that count. Full repor
 - the showcase posts, deck and base had coincident corners;
 - the stack check itself was wrong, because the spec caps a stack by the shelf's clear height.
 
+**Rebuilt from the reference sheets (same day, after the user's sheets 1-7 arrived).** Every G1 mesh now follows its
+sheet; the notes and measurements are in `References/CardShop/REFERENCE_LOG.md`.
+
+| Mesh | Sheet | What changed | LOD tris |
+|---|---|---|---|
+| Top-loader 35pt + **130pt (new)** | 2 | Rounded corners (R 3.5), boolean pocket, thumb notch 20.8 x 8.4 through the front skin | 228 / 96 / 28 |
+| Slab + filled slab | 3 | Stepped rim, label and window recesses with a cross bar, shell seam groove, 4 side stacking lugs (render width 85.0) | 652 / 108 / 60 |
+| Sealed pack | 4 | Lens-shaped pillow, 27 teeth, one pressed rib per tooth, flat seal strip, back fin seal | 1488 / 440 / 136 |
+| Booster box S | 5 | Front die-cut window, centre divider (packs either side), lid = top + tuck-flap tab, printed inside as the header, display pose 100 deg | 196 / 84 / 68 |
+| Box sealed (**new**) | 5 | Closed carton in a shrink-film shell | 136 |
+| Showcase 1778 | 6, 7 | Oak cabinet on a recessed black kick, cream deck, full-depth shelves in thirds, 4 slotted standards with pins, LED channel | 3000 / 328 / 72 |
+| Door | 6, 7 | Clamp + cylinder lock on the meeting edge (the right door is turned 180 deg so both locks meet at the centre) | 92 |
+
 **Spec deviations, logged:**
 
-- The card ships LOD0 only. Section 3's row lists 96/28/12, but the general rule says 150 tris or fewer ships LOD0 only. At
-  the current G1 detail the slab (128), filled slab (100) and box (92) are also LOD0 only. The rule is applied
-  automatically; it comes back to LODs when P3 adds the slab ridges.
-- Not modelled yet: the top-loader thumb notch, the slab stacking ridges and recess, the pack Open/Wrapper/Strip states and
-  fin seal. All are P3 items and noted in each `.csk.json`.
+- **Budgets:** pack LOD0 300 -> 1500 (the sheet's 27 ribbed teeth and fin seal need about 1.4k); every other mesh is
+  inside its section 3 budget (showcase exactly 3000).
+- **The card ships LOD0 only** (92 tris; the section 3 rule, 150 or fewer). The slab and box have real LODs again.
+- **Showcase:** base kick 60 + oak 140 (was a 152 black kick base + 23 deck); shelves full depth (was 356 / 305).
+- **Box dieline:** 440 x 305 (was 285): the lid's tab.
+- **Not modelled yet:** the pack's Open / Strip / Wrapper states; the slab lugs' matching recesses (not visible).
 - The fit tests count 0.1 micron as "touching", which only absorbs float32 vertex noise (about 0.004 micron).
+
+**Build-speed fix:** island packing now uses bounding boxes (concave packing took about 10 s per call; a full G1
+build is now under 10 s). An unwrap that folds faces onto each other retries at a tighter angle.
 
 **Independent review of the Unreal scripts** (a separate agent checked every Unreal API call and the material and
 transform logic against the armory's and the pipeline's proven scripts). No crash-level bug was found. Four fixes were

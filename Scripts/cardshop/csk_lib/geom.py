@@ -36,6 +36,7 @@ class Lod:
     ops: List[Tuple[str, Builder]] = field(default_factory=list)     # booleans: ("DIFFERENCE" | "UNION", shell)
     bevel_segments: int = 1
     bevel_first: bool = False           # bevel the base shell before the booleans (crisp cut edges)
+    extra: Optional[Builder] = None     # small parts joined after the bevel and booleans (kept crisp, no cuts)
 
 
 @dataclass
@@ -572,8 +573,8 @@ def _shift_z(b: Builder, dz: float) -> Builder:
 
 def _showcase_dims(L: float):
     s = S.SHOWCASE_FULL
-    d, H, g, kick, deck, post, rail = s["d"], s["h"], s["glass"], s["kick"], s["deck"], s["post"], s["rail"]
-    deck_top = kick + deck
+    d, H, g, kick, post, rail = s["d"], s["h"], s["glass"], s["kick"], s["post"], s["rail"]
+    deck_top = kick + s["base"]
     top_under = H - rail                         # underside of the top rails / top glass bearing
     x_in = L / 2 - post                          # inner face of the posts
     y_front_in = -d / 2 + post / 2 + g / 2        # inside face of the front glass (glass centred on the post line)
@@ -589,10 +590,13 @@ def _levels(L: float):
     k = _showcase_dims(L)
     g = k["g"]
     (d1, gap1), (d2, gap2) = s["shelves"]
+    y0 = k["y_front_in"]
+    full = k["y_track_front"] - y0 - 2.0         # a full-depth shelf: 1 mm clear of the glass and the track
+    d1, d2 = d1 or full, d2 or full
     z_s1 = k["deck_top"] + gap1                  # S1 glass bottom
     z_s2 = z_s1 + g + gap2
-    top_clear = k["top_under"] - 5.0             # the LED strip hangs 5 below the top
-    y0 = k["y_front_in"]
+    top_clear = k["top_under"] - s["led_channel"][1] - 1.0   # the LED channel hangs below the top
+    y0 = y0 + 1.0
     return [
         ("Deck", k["deck_top"], y0, k["y_track_front"], z_s1 - k["deck_top"]),
         ("S1", z_s1 + g, y0, y0 + d1, z_s2 - (z_s1 + g)),
@@ -613,32 +617,122 @@ def solve_grid(width: float, depth: float, clear_h: float, cls: str) -> Optional
             "first_mm": [-(cols - 1) * px / 2, -(rows - 1) * py / 2]}
 
 
+def _face_out(b: Builder, ids, outward, mat: int, region: int = 0) -> None:
+    """Add a planar face whose winding makes its normal point along ``outward``."""
+    import numpy as _np
+    P = _np.array([b.verts[i] for i in ids])
+    n = _np.zeros(3)
+    for a, c in zip(P, _np.roll(P, -1, axis=0)):            # Newell normal
+        n += _np.cross(a, c)
+    b.face(tuple(ids) if _np.dot(n, outward) >= 0 else tuple(reversed(ids)), mat, region)
+
+
+def _slotted_standard(b: Builder, sx: int, x_in: float, yc: float, z0: float, z1: float, slots: bool,
+                      mat: int) -> None:
+    """A slotted aluminium shelf standard on an end post's inner face (sheet 7 detail 5): a bar ``depth`` into the
+    case, ``width`` along Y. Its inner face is a ladder of quads round real slot pockets (shared vertices)."""
+    s = S.SHOWCASE_FULL
+    wd, dp = s["standard"]
+    sw, sh, pitch = s["slot"]
+    xo, xf = sx * x_in, sx * (x_in - dp)                   # post side, slotted (inner) face
+    xd = sx * (x_in - dp / 2)                               # slot bottom: half the bar deep
+    ys = [yc - wd / 2, yc - sw / 2, yc + sw / 2, yc + wd / 2]
+    bands = []                                              # (z_lo, z_hi, is_slot)
+    z = z0
+    if slots:
+        zs = z0 + 20.0
+        while zs + sh <= z1 - 20.0:
+            bands.append((z, zs, False))
+            bands.append((zs, zs + sh, True))
+            z = zs + sh
+            zs += pitch
+    bands.append((z, z1, False))
+    zb = [bands[0][0]] + [hi for _, hi, _ in bands]
+    F = [[b.v(xf, y, zz) for y in ys] for zz in zb]         # the inner face grid: rows by z, 4 columns by y
+    inward = (-sx, 0, 0)
+    for r, (lo, hi, is_slot) in enumerate(bands):
+        for c in range(3):
+            if is_slot and c == 1:
+                continue
+            _face_out(b, [F[r][c], F[r][c + 1], F[r + 1][c + 1], F[r + 1][c]], inward, mat)
+        if is_slot:                                         # the pocket: 4 walls + bottom
+            d_ = [b.v(xd, ys[1], lo), b.v(xd, ys[2], lo), b.v(xd, ys[2], hi), b.v(xd, ys[1], hi)]
+            h = [F[r][1], F[r][2], F[r + 1][2], F[r + 1][1]]
+            zc = (lo + hi) / 2
+            for a in range(4):
+                e = (a + 1) % 4
+                my = (b.verts[h[a]][1] + b.verts[h[e]][1]) / 2
+                mz = (b.verts[h[a]][2] + b.verts[h[e]][2]) / 2
+                _face_out(b, [h[a], h[e], d_[e], d_[a]], (0, yc - my, zc - mz), mat)
+            _face_out(b, d_, inward, mat)
+    # the post side and the four edges: plain quads sharing only the ladder's corners (the ladder's edge vertices
+    # sit on their edges: boundary T-junctions, no coincident vertices, no collinear n-gon slivers)
+    o = {(j, k): b.v(xo, ys[j], (z0, z1)[k]) for j in (0, 3) for k in (0, 1)}
+    _face_out(b, [o[0, 0], o[3, 0], o[3, 1], o[0, 1]], (sx, 0, 0), mat)
+    for j, ny in ((0, -1), (3, 1)):
+        _face_out(b, [o[j, 0], F[0][j], F[-1][j], o[j, 1]], (0, ny, 0), mat)
+    _face_out(b, [o[0, 0], o[3, 0], F[0][3], F[0][0]], (0, 0, -1), mat)
+    _face_out(b, [o[0, 1], o[3, 1], F[-1][3], F[-1][0]], (0, 0, 1), mat)
+
+
 def _showcase_body(L: float, level: int) -> Builder:
+    """Sheets 6 + 7: aluminium posts and rails on a light-oak cabinet over a recessed black toe kick; the cabinet top
+    is the cream deck; slotted standards with shelf pins inside the end posts; LED channel under the top front
+    rail; rear door tracks."""
     k = _showcase_dims(L)
     s = S.SHOWCASE_FULL
     d, H, post, rail = k["d"], k["H"], k["post"], k["rail"]
-    FRAME, BASE, LED = 0, 1, 2
+    FRAME, KICK, LED, OAK, DECK = 0, 1, 2, 3, 4
+    kick, ki = s["kick"], s["kick_inset"]
     b = Builder()
-    b.box((-L / 2, -d / 2, 0), (L / 2, d / 2, s["kick"]), mat=BASE)                        # kick base
-    b.box((-k["x_in"], -d / 2 + post, s["kick"] - 0.5), (k["x_in"], d / 2 - post, k["deck_top"]), mat=BASE)  # deck
+    b.box((-L / 2 + ki, -d / 2 + ki, 0), (L / 2 - ki, d / 2 - ki, kick), mat=KICK)            # recessed toe kick
+    b.box((-L / 2 + 1.0, -d / 2 + 1.0, kick - 0.5), (L / 2 - 1.0, d / 2 - 1.0, k["deck_top"]), mat=OAK,
+          mats={"pz": DECK})                                                                  # oak cabinet + deck
     px, py = L / 2 - post / 2, d / 2 - post / 2
-    for sx in (-1, 1):                                                                    # corner posts
+    for sx in (-1, 1):                                                                        # corner posts
         for sy in (-1, 1):
-            b.box((sx * px - post / 2, sy * py - post / 2, s["kick"] - 1.0), (sx * px + post / 2, sy * py + post / 2, H),
+            b.box((sx * px - post / 2, sy * py - post / 2, kick), (sx * px + post / 2, sy * py + post / 2, H),
                   mat=FRAME)
     if level < 2:
         inset = (post - rail) / 2
         zr0, zr1 = H - rail - inset, H - inset
-        for sy in (-1, 1):                                                                # top rails along X
+        for sy in (-1, 1):                                                                    # top rails along X
             b.box((-px - 5.0, sy * py - rail / 2, zr0), (px + 5.0, sy * py + rail / 2, zr1), mat=FRAME)
-        for sx in (-1, 1):                                                                # top rails along Y
+        for sx in (-1, 1):                                                                    # top rails along Y
             b.box((sx * px - rail / 2, -py - 5.0, zr0), (sx * px + rail / 2, py + 5.0, zr1), mat=FRAME)
         th, td = s["track"]
         yt0 = k["y_track_front"]
         b.box((-k["x_in"] - 2.0, yt0, k["deck_top"]), (k["x_in"] + 2.0, yt0 + td, k["deck_top"] + th), mat=FRAME)
         b.box((-k["x_in"] - 2.0, yt0, zr0 - th), (k["x_in"] + 2.0, yt0 + td, zr0), mat=FRAME)
-        b.box((-k["x_in"] + 10.0, k["y_front_in"] + 5.0, k["top_under"] - 5.0),
-              (k["x_in"] - 10.0, k["y_front_in"] + 15.0, k["top_under"] - 1.0), mat=LED)      # LED strip
+        cd, ch = s["led_channel"]                                                             # LED channel + diffuser
+        yl = k["y_front_in"] + 3.0
+        tu = k["top_under"]
+        b.box((-k["x_in"] + 10.0, yl, tu - ch), (k["x_in"] - 10.0, yl + cd, tu + 0.5), mat=FRAME)
+        b.box((-k["x_in"] + 12.0, yl + 2.0, tu - ch - 1.0), (k["x_in"] - 12.0, yl + cd - 2.0, tu - ch + 0.5), mat=LED)
+    return b
+
+
+def _showcase_parts(L: float, level: int) -> Optional[Builder]:
+    """The slotted standards and shelf pins (joined after the bevel: crisp, and slots only on LOD0)."""
+    if level == 2:
+        return None
+    k = _showcase_dims(L)
+    s = S.SHOWCASE_FULL
+    FRAME = 0
+    yt0 = k["y_track_front"]
+    b = Builder()
+    if True:
+        wd, dp = s["standard"]                                                                # standards + pins
+        for sx in (-1, 1):
+            for yc in (k["y_front_in"] + 1.0 + wd / 2, yt0 - 1.0 - wd / 2):
+                _slotted_standard(b, sx, k["x_in"], yc, k["deck_top"], k["top_under"] - s["led_channel"][1] - 2.0,
+                                  slots=(level == 0), mat=FRAME)
+                pw, pl = s["pin"]
+                for name, z, *_ in _levels(L)[1:]:
+                    zb = z - k["g"]                      # the glass shelf's underside
+                    x0 = sx * (k["x_in"] - dp)
+                    b.box((min(x0, x0 - sx * pl), yc - pw / 2, zb - pw), (max(x0, x0 - sx * pl), yc + pw / 2, zb),
+                          mat=FRAME)
     return b
 
 
@@ -646,7 +740,8 @@ def item_showcase(L: float = 1778.0) -> Item:
     k = _showcase_dims(L)
     s = S.SHOWCASE_FULL
     d, H, post = k["d"], k["H"], k["post"]
-    lods = [Lod(_showcase_body(L, 0), bevel_mm=1.0), Lod(_showcase_body(L, 1)), Lod(_showcase_body(L, 2))]
+    lods = [Lod(_showcase_body(L, 0), bevel_mm=1.0, extra=_showcase_parts(L, 0)),
+            Lod(_showcase_body(L, 1), extra=_showcase_parts(L, 1)), Lod(_showcase_body(L, 2))]
     sockets = [Socket("Seat", (0, 0, 0))]
     levels = []
     for name, z, y0, y1, clear in _levels(L):
@@ -667,12 +762,15 @@ def item_showcase(L: float = 1778.0) -> Item:
     door_z = k["deck_top"] + th
     for side, sx, ty in (("L", -1, yt0 + td * 0.3), ("R", 1, yt0 + td * 0.7)):
         cx = sx * (k["x_in"] - door_w / 2)
-        sockets.append(Socket(f"Door_{side}", (cx, ty, door_z)))
-    sockets += [Socket("LED", (0, k["y_front_in"] + 10.0, k["top_under"] - 5.0), (180.0, 0.0, 0.0)),
+        # the door mesh has its lock at local +X: the right door is turned 180 deg so both locks meet at the centre
+        sockets.append(Socket(f"Door_{side}", (cx, ty, door_z), (0.0, 0.0, 180.0 if side == "R" else 0.0)))
+    cd, ch = s["led_channel"]
+    sockets += [Socket("LED", (0, k["y_front_in"] + 3.0 + cd / 2, k["top_under"] - ch - 1.0), (180.0, 0.0, 0.0)),
                 Socket("Snap_L", (-L / 2, 0, 0)), Socket("Snap_R", (L / 2, 0, 0))]
     travel = L / 2 - s["door_travel_off"]
     return Item(
-        name=f"SM_CSK_Showcase_Full_{int(L)}", lods=lods, materials=["M_CSK_Frame", "M_CSK_Base", "M_CSK_LED"],
+        name=f"SM_CSK_Showcase_Full_{int(L)}", lods=lods,
+        materials=["M_CSK_Frame", "M_CSK_Base", "M_CSK_LED", "M_CSK_Oak", "M_CSK_Deck"],
         projections={}, sockets=sockets,
         hulls=[((-L / 2, -d / 2, 0), (L / 2, d / 2, k["deck_top"])),
                ((-L / 2, -d / 2, H - post), (L / 2, d / 2, H))],
@@ -683,7 +781,8 @@ def item_showcase(L: float = 1778.0) -> Item:
                                    "axis": "X", "range_mm": [0, travel]},
                         "Door_R": {"mesh": f"SM_CSK_Showcase_Full_Door_{int(L)}", "socket": "Door_R", "type": "slide",
                                    "axis": "-X", "range_mm": [0, travel]}},
-              "glass": f"SM_CSK_Showcase_Full_Glass_{int(L)}"},
+              "glass": f"SM_CSK_Showcase_Full_Glass_{int(L)}",
+              "reference": "References/CardShop/csk_showcase_full.png + csk_showcase_detail.png (sheets 6, 7)"},
     )
 
 
@@ -702,8 +801,9 @@ def item_showcase_glass(L: float = 1778.0) -> Item:
                       (max(xo - sx * g / 2, xo + sx * g / 2), d / 2 - k["post"], zt)))
     panes.append(((-k["x_in"], -d / 2 + k["post"], zt + 2.0), (k["x_in"], d / 2 - k["post"], zt + 2.0 + g)))  # top
     lv = _levels(L)
-    for (name, z, y0, y1, clear), (depth, _gap) in zip(lv[1:], s["shelves"]):                         # shelves
-        panes.append(((-k["x_in"] + 1.0, y0, z - g), (k["x_in"] - 1.0, y0 + depth, z)))
+    xs = k["x_in"] - s["standard"][1] - 1.0                  # clear of the slotted standards
+    for name, z, y0, y1, clear in lv[1:]:                                                            # shelves
+        panes.append(((-xs, y0, z - g), (xs, y1, z)))
     for mn, mx in panes:
         b.box(mn, mx, mat=0)
     return Item(name=f"SM_CSK_Showcase_Full_Glass_{int(L)}", lods=[Lod(b)], materials=["M_CSK_Glass"],
@@ -722,6 +822,11 @@ def item_showcase_door(L: float = 1778.0) -> Item:
     for sx in (-1, 1):                                                                  # edge stiles
         b.box((sx * (w / 2 - st / 2) - st / 2, -g / 2 - 1.5, 0), (sx * (w / 2 - st / 2) + st / 2, g / 2 + 1.5, h),
               mat=1)
+    ld, lp, lz = s["lock"]                              # cylinder lock clamped on the meeting edge (sheet 7 detail 4)
+    xl = w / 2 - st - 18.0
+    b.box((xl - 15.0, -g / 2 - 5.0, lz - 16.0), (xl + 15.0, g / 2 + 5.0, lz + 16.0), mat=1)
+    _prism_y(b, [(xl + ld / 2 * math.cos(2 * math.pi * i / 12), lz + ld / 2 * math.sin(2 * math.pi * i / 12))
+                 for i in range(12)], g / 2 + 4.0, g / 2 + 5.0 + lp, mat=1)
     return Item(name=f"SM_CSK_Showcase_Full_Door_{int(L)}", lods=[Lod(b)], materials=["M_CSK_Glass", "M_CSK_Frame"],
                 projections={}, sockets=[Socket("Grip", (w / 2 - st / 2, 0, h / 2))],
                 hulls=[((-w / 2, -g / 2 - 1.5, 0), (w / 2, g / 2 + 1.5, h))],

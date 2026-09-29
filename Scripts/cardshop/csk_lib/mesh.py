@@ -165,10 +165,12 @@ def to_object(name: str, b: Builder, materials: Sequence[str], projections: Dict
               bevel_mm: Optional[float] = None, weighted_normals: bool = True,
               collection: Optional["bpy.types.Collection"] = None,
               ops: Sequence[Tuple[str, Builder]] = (), bevel_segments: int = 1,
-              bevel_angle: float = 60.0, bevel_first: bool = False) -> "bpy.types.Object":
+              bevel_angle: float = 60.0, bevel_first: bool = False,
+              extra: Optional[Builder] = None) -> "bpy.types.Object":
     """Build ``name`` from ``b``: booleans (``ops``: ("DIFFERENCE" | "UNION", builder)), bevel, sharp edges, UV0
     (print projections + auto), UV1 (unique), materials. ``bevel_first`` bevels the base shell before the booleans,
-    so cut edges stay crisp and the bevel never meets a cut (no collinear slivers)."""
+    so cut edges stay crisp and the bevel never meets a cut (no collinear slivers). ``extra`` is joined after the bevel
+    and the booleans (small crisp parts, e.g. slotted standards)."""
     bm = build_bmesh(b)
     if bevel_mm and bevel_first:
         bevel_edges(bm, bevel_mm, bevel_angle, bevel_segments)
@@ -190,6 +192,13 @@ def to_object(name: str, b: Builder, materials: Sequence[str], projections: Dict
         bm.faces.layers.int.new(REGION_LAYER)
     if bevel_mm and not bevel_first:
         bevel_edges(bm, bevel_mm, bevel_angle, bevel_segments)
+    if extra is not None:                   # append the extra parts (BMesh.from_mesh adds to what is there)
+        eb = build_bmesh(extra)
+        tmp = bpy.data.meshes.new("__csk_extra")
+        eb.to_mesh(tmp)
+        eb.free()
+        bm.from_mesh(tmp)
+        bpy.data.meshes.remove(tmp)
     for _ in range(3):              # bevel + boolean slivers: dissolve zero-area faces, re-triangulate what it merges
         bmesh.ops.dissolve_degenerate(bm, dist=1e-6, edges=list(bm.edges))
         ngons = [f for f in bm.faces if len(f.verts) > 4]

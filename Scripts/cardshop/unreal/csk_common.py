@@ -24,8 +24,9 @@ LEVEL = "/Game/CardShopKit/G1/Maps/L_CSK_G1"
 STRESS_LEVEL = "/Game/CardShopKit/G1/Maps/L_CSK_G1_Stress"
 MANAGED_TAG = "CSK_G1"
 
-MESHES = ["SM_CSK_Card_Std", "SM_CSK_TopLoader_35pt", "SM_CSK_Slab_Std", "SM_CSK_Slab_Std_Filled",
-          "SM_CSK_Pack_Std_Sealed", "SM_CSK_Box_Booster_S", "SM_CSK_Box_Booster_S_Lid",
+MESHES = ["SM_CSK_Card_Std", "SM_CSK_TopLoader_35pt", "SM_CSK_TopLoader_130pt", "SM_CSK_Slab_Std",
+          "SM_CSK_Slab_Std_Filled", "SM_CSK_Pack_Std_Sealed", "SM_CSK_Box_Booster_S", "SM_CSK_Box_Booster_S_Lid",
+          "SM_CSK_Box_Booster_S_Sealed",
           "SM_CSK_Showcase_Full_1778", "SM_CSK_Showcase_Full_Glass_1778", "SM_CSK_Showcase_Full_Door_1778"]
 SHOWCASE = "SM_CSK_Showcase_Full_1778"
 TEXTURES = ["T_CSK_G1_Cards_BC", "T_CSK_G1_Packs_BC", "T_CSK_G1_Labels_BC", "T_CSK_G1_CardFront_BC",

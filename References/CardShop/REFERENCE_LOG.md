@@ -30,6 +30,16 @@ meshes are built new from the spec's numbers and no image goes into the product,
 | 20 | `csk_gondola.png` (not saved yet) | 20 gondola shelving | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 20 notes" |
 | 21 | `csk_wire_rack_box_shelf.png` (not saved yet) | 21 wire rack + box tier shelf | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 21 notes" |
 | 22 | `csk_card_table.png` (not saved yet) | 22 card tables | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 22 notes" |
+| 24 | `csk_play_area.png` (not saved yet) | 24 play area | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 24 notes" |
+| 25 | `csk_counter_pos.png` (not saved yet) | 25 cash counter | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 25 notes" |
+| 26 | `csk_pos_devices.png` (not saved yet) | 26 POS devices | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 26 notes" |
+| 27 | `csk_bag_mailers.png` (not saved yet) | 27 bag, mailers, tape gun | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 27 notes" |
+| 28 | `csk_backroom.png` (not saved yet) | 28 back room | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 28 notes" |
+| 29 | `csk_bins.png` (not saved yet) | 29 bin + trash bag | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 29 notes" |
+| 30 | `csk_signs_tags.png` (not saved yet) | 30 signs and price tags | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 30 notes" |
+| 31 | `csk_posters_storefront.png` (not saved yet) | 31 posters + lightbox sign | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 31 notes" |
+| 32 | `csk_shell.png` (not saved yet) | 32 shop shell | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 32 notes" |
+| 33 | `csk_entry_door.png` (not saved yet) | 33 entry door | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 33 notes" |
 
 ## Sheet 0 notes (style anchor)
 
@@ -163,7 +173,7 @@ matches the spec's numbers.
 5. **Shelf support:** a slotted standard with a round steel pin and a clear shelf clip.
 6. **LED:** an LED strip in an aluminium channel with a diffuser.
 
-## Sheets 8-22: files pending
+## Sheets 8-33: files pending
 
 These sheets arrived as mid-turn chat attachments, which the session did not save to disk. The notes below were written
 from the images as shown. The PNGs and hashes go in when the user re-sends them (or saves them to
@@ -348,3 +358,115 @@ A shared design rule shows on every package: a **two-tone colour block**, darker
   the side view shows the top sloping slightly down to the front, with a small lock.
 - **Scale:** against the silhouette the tables read about 1.4 x the spec widths. As on sheet 18, **build to the spec
   numbers** ({640, 760, 880} x 460 x 914) with the picture's design.
+
+## Sheet 6 + 7: the built interpretation (2026-09-29)
+
+- **Base:** a black toe kick 60 tall, inset 10 all round; a light-oak cabinet 140 tall above it, whose top is the cream
+  deck (deck at 200). The three full views on sheet 6 agree on proportions and **posts running down to the kick**.
+  Sheet 7's bottom-corner detail shows the post standing on the oak instead; the build follows sheet 6's three
+  consistent views.
+- **Shelves:** two glass shelves, **full depth** (front glass to the rear door track), splitting the glass zone into
+  roughly equal thirds (244 clear each). The spec's depths (356 / 305) were E; the picture wins.
+- **Standards:** 4 slotted aluminium standards (15 x 6) on the end posts' inner faces, front and back. The slots are
+  real pockets (3 x 10 at 25 pitch) on LOD0. Steel pins carry each shelf.
+- **LED:** an aluminium channel with a diffuser under the top front rail.
+- **Lock:** a clamp and cylinder lock on each door's meeting edge. The right door is turned 180 degrees, so the two
+  meet at the centre (sheet 6 shows the lock at the centre, seen through the front glass).
+
+## Sheet 23
+
+Not received yet (easels, risers and stands).
+
+## Sheet 24 notes (play area: tournament tables F1, folding chair F2)
+
+- **Tables:** 914 / 1524 / 1829 x 762 x 737. A white top with rounded corners and a thick edge, and **grey steel
+  trestle legs** (splayed, with a cross brace and foot caps). As in spec.
+- **Conflict:** the call-out says "3 matches spanning this table", but the drawing shows one match per table (two
+  facing mats). The spec's 3 matches per 1829 table (3 x 609.6) keep; the picture's mat layout is the 1524 / 914
+  case. _Flagged for the user._
+- **Chair:** black steel, 450 x 520 x 800, seat 445, a **padded black vinyl seat and back**, tube frame with a lower
+  rail. **Open and folded states** are shown; the spec had one state, so `Folded` is added.
+
+## Sheet 25 notes (cash counter G1)
+
+- 1397 x 610 x 965, as in spec. A light-oak carcass with a **thick white top** (rounded front edge, overhang all
+  round) and a **recessed black kick**.
+- **Customer side:** a plain oak panel.
+- **Staff side:**
+  - left, an open bay with **2 shelves** (bag shelf, paper bags and boxes);
+  - right, a knee space with the **cash drawer slung under the top** in an oak housing;
+  - a **round cable grommet** in the modesty panel, and one in the top.
+- A clear acrylic card display sits on the top (A16).
+
+## Sheet 26 notes (POS devices G2-G10)
+
+- **Cash drawer:** 409 x 417 x 112, black steel, **5 note slots with spring clips, 8 coin cups**, a lock at the front
+  centre. As in spec.
+- **Card terminal:** 168 x 81 x 56, a wedge profile, a screen, and a keypad with red / yellow / green function keys.
+- **Receipt printer:** 179 x 152 x 118, a clamshell lid with a paper roll inside.
+- **POS screen:** 360 x 230 on a 200 x 200 base.
+- **Scanner:** 160 x 70 x 95, pistol grip, with a cradle.
+- **Price labeller:** 190 x 45 x 125, with a label roll and a trigger.
+- **Phone:** 72 x 150 x 8, generic, with a hole-punch camera.
+- **Laptop:** 320 x 220 x 16.
+- All match the spec. The shapes are generic, but the build keeps them our own (no product silhouettes copied).
+
+## Sheet 27 notes (paper bag G11, mailers H3, tape gun H4)
+
+- **Kraft bag:** 250 x 130 x 300 with **twisted paper handles**. Shown open and **folded flat**, so `Flat` is added as
+  a state.
+- **Bubble mailers:** 100 x 200 and 150 x 250, sealed, and **open with the bubble lining and the peel strip** showing
+  (an `Open` state is added).
+- **Tape gun:** 250 x 75 x 180, a pistol grip, a grey side plate, a tape roll on a hub, and a serrated blade with a
+  clear guard.
+
+## Sheet 28 notes (back room: warehouse rack H1, workbench H2, hand truck H7)
+
+- **Rack:** 1829 x 610 x 2134, **orange beams, grey uprights with keyhole slots**, particle-board decks, square foot
+  plates. The picture shows **5 levels**; the spec says 4 (E). **Build 5.**
+- **Workbench:** 1524 x 762 x 914. A **green cutting-mat top in an oak edge frame**, grey steel legs with hole rows,
+  a lower oak shelf.
+- **Hand truck:** 450 x 500 x 1200, blue tube frame with cross bars, black grips, nose plate 350 x 200, 250 wheels with
+  grey hubs. As in spec.
+
+## Sheet 29 notes (bin H5, trash bag H6)
+
+- **Swing-lid bin:** 400 across x 700, matte grey. The body **tapers slightly toward the base**. A **raised band
+  where the dome lid meets the body**, and a **dome lid with an oval swing flap** on its front. The flap pivots on a
+  horizontal axis (the "swinging" frame shows it tipped in). As in spec; the flap is the moving part.
+- **Trash bag:** about 450 across x 600, glossy black, a crumpled full body, a **twisted, tied neck** on top.
+
+## Sheet 30 notes (signs and price tags)
+
+No dimensions are printed, so the spec numbers apply.
+- **Window sign:** a rounded-rectangle plate (about 2:1, colour block) with 2 corner holes, a **black cord**, and a
+  **clear suction cup with a hook**.
+- **Shelf-edge label holder:** a clear extrusion that **clips over the shelf lip** (the side view shows the L-shaped
+  clip), with a white insert.
+- **Tent card:** a clear A-frame with white inserts.
+- **Hook scan plate:** a clear holder on the tip of a chrome hook arm (the A8 plate).
+- **Ceiling sign:** a colour panel in a **thin aluminium frame**, on **two cable suspenders** with ceiling cups.
+
+## Sheet 31 notes (posters and storefront sign)
+
+- **Poster frames:** slim black aluminium, **A2 420 x 594 and A1 594 x 841**, mitred corners. The open detail shows a
+  **snap frame**: the profile flips open to change the poster.
+- **Lightbox sign:** 1829 x 100 x 457. A black frame, a white diffuser face, and an **emissive lit state**. It is
+  mounted on **two black wall brackets**, one at each end, standing it off the wall.
+
+## Sheet 32 notes (shop shell)
+
+- **Wall modules:** 2000 x 150 x 3000, white textured plaster, a **black skirting 150 tall**. Three kinds:
+  - **plain**;
+  - **window**: a tall black-framed window with a mullion and a transom split;
+  - **door**: a **1000 x 2200 opening** with a black frame lining.
+- **Floor module:** 2000 x 2000 grey vinyl with a fine join.
+- **Ceiling module:** 2000 x 2000, **white acoustic tiles 2 x 2 in an aluminium T-grid**.
+
+## Sheet 33 notes (entry door)
+
+- **Frame:** 1000 x 2200 x 150, black aluminium, with a **shop bell** centred on the header.
+- **Leaf:** 900 wide x 45, glass in a black frame, a **long vertical stainless pull bar**, **3 hinges** on the right,
+  and a threshold plate.
+- A blank **hanging sign** on the glass (sheet 30's window sign).
+- Opens 90 degrees (top view), pivoting on the hinge side.

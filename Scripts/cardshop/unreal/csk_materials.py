@@ -252,6 +252,10 @@ def instances():
     I["MI_CSK_G1_LED"] = ("M_CSK_G1_Surface", {"Emissive Intensity": 8.0}, {"Base Colour": (1, 1, 1),
                                                                            "Emissive Colour": (1, 0.95, 0.85)}, {})
     I["MI_CSK_G1_Board"] = ("M_CSK_G1_Surface", {"Roughness": 0.85}, {"Base Colour": (0.62, 0.5, 0.36)}, {})
+    I["MI_CSK_G1_Oak"] = ("M_CSK_G1_Surface", {"Roughness": 0.55}, {"Base Colour": (0.36, 0.22, 0.1)}, {})
+    I["MI_CSK_G1_Deck"] = ("M_CSK_G1_Surface", {"Roughness": 0.5}, {"Base Colour": (0.7, 0.62, 0.48)}, {})
+    I["MI_CSK_G1_Film"] = ("M_CSK_G1_Glass", {"Opacity": 0.06, "Edge Opacity": 0.3, "Roughness": 0.1},
+                           {"Base Colour": (1, 1, 1)}, {})
     return I
 
 
@@ -261,7 +265,8 @@ SLOT_DEFAULT = {"M_CSK_Card": "MI_CSK_G1_Card_Plain", "M_CSK_Pack": "MI_CSK_G1_P
                 "M_CSK_SlabFilled": "MI_CSK_G1_SlabFilled_Plain", "M_CSK_PVC": "MI_CSK_G1_PVC",
                 "M_CSK_BoxPrint": "MI_CSK_G1_BoxPrint_Plain", "M_CSK_Board": "MI_CSK_G1_Board",
                 "M_CSK_Frame": "MI_CSK_G1_Frame", "M_CSK_Base": "MI_CSK_G1_Base", "M_CSK_LED": "MI_CSK_G1_LED",
-                "M_CSK_Glass": "MI_CSK_G1_Glass"}
+                "M_CSK_Glass": "MI_CSK_G1_Glass", "M_CSK_Oak": "MI_CSK_G1_Oak", "M_CSK_Deck": "MI_CSK_G1_Deck",
+                "M_CSK_Film": "MI_CSK_G1_Film"}
 
 
 def main():
