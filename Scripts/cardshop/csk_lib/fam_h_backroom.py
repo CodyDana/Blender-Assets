@@ -28,13 +28,13 @@ Vec3 = Tuple[float, float, float]
 #     fifth level (sheet 28) adds a deck and 4 beams.
 #   Workbench_1524 1500 -> 6000: sheet 28 draws a slot column on each leg's front face and a hole column on its side.
 #   TrashCan 800 -> 1200: the hollow inside (seen through the swinging flap, sheet 29) and the raised band's rounds.
-#   TapeGun 800 -> 1300: sheet 27's three-window hub, the two side plates, the serrated blade and the clear guard.
+#   TapeGun 800 -> 1200: sheet 27's three-window hub, the two side plates, the serrated blade and the clear guard.
 BUDGETS = {
     "SM_CSK_Rack_Warehouse_1829": 20000,
     "SM_CSK_Workbench_1524": 6000,
     "SM_CSK_Mailer_S": 150, "SM_CSK_Mailer_L": 150,
     "SM_CSK_Mailer_S_Open": 150, "SM_CSK_Mailer_L_Open": 150,
-    "SM_CSK_TapeGun": 1300,
+    "SM_CSK_TapeGun": 1200,
     "SM_CSK_TrashCan": 1200, "SM_CSK_TrashCan_Lid": 200,
     "SM_CSK_TrashBag_Full": 600,
     "SM_CSK_HandTruck": 2500,
@@ -60,7 +60,7 @@ BIN = dict(                       # H5, sheet 29 (1)
     dome_c=178.0,                 # D: the dome rises from the band top (522) to 700; sheet 29: a slightly flat dome
     wall=3.0,                     # E: moulded wall
     floor=4.0,                    # E
-    segs=(24, 16, 12),            # per LOD
+    segs=(24, 14, 10),            # per LOD
     # the swing flap, as seen from the front (x, z): a superellipse (sheet 29: a rounded "D", its lower edge just above
     # the band, its top just in front of the apex)
     flap=(136.0, 609.0, 76.0, 2.2, 3.6),   # half width, centre z, half height, exponent above / below the centre
@@ -87,7 +87,8 @@ TAPEGUN = dict(                   # H4, sheet 27 (3): 250 long (X, the blade at 
     blade=(-100.5, 1.0, 78.0, 92.0, 3.0, 27.0, 9),  # serrated blade: x, thickness, z0, z1, tooth height, |y|, teeth
     guard=((-97.0, 92.0), (-89.0, 140.0), 1.5, 25.0),  # clear guard: bottom (x, z), top (x, z), thickness, |y|
     roller=(-78.0, 24.0, 14.0, 28.0),            # the black pressure roller: x, z, r, |y|
-    grip=((44.0, 0.0, 80.0), (114.0, 0.0, 12.0)),  # sheet 27: the raked pistol grip's axis, top to end
+    grip=((44.0, 0.0, 80.0), (114.0, 0.0, 15.9)),  # sheet 27: the raked pistol grip's axis, top to end (its cap
+                                  # rests on the floor, so the roll's top is at 180)
     tongue=(-103.0, 82.0, -110.0, None),        # the tape's end hanging from the blade to the floor: x, z top, x bottom
 )
 
@@ -104,7 +105,7 @@ TRUCK = dict(                     # H7, sheet 28 (3): 450 W x 500 D x 1200 H (E 
     tyre=((66.0, 26.0), (100.0, 37.5), (121.0, 32.0), (125.0, 24.0), (125.0, -24.0), (121.0, -32.0), (100.0, -37.5),
           (66.0, -26.0)),         # the tyre's section (r, x from the wheel's centre plane), sheet 28: a fat pneumatic
     tread=3.0,                    # sheet 28: block tread (alternate segments 3 lower)
-    hub=((66.0, 26.0), (56.0, 29.0), (26.0, 31.0), (15.0, 40.0)),   # the grey steel hub's face (r, x): a dished disc
+    hub=((66.0, 26.0), (56.0, 29.0), (26.0, 31.0), (15.0, 37.0)),   # the grey steel hub's face (r, x): a dished disc
                                   # and a centre cap (sheet 28)
     axle=8.0,                     # E: axle radius
     strut=(11.0, 380.0),          # sheet 28: the wheel strut Ø 22 from the rail at 380 to the axle
@@ -157,7 +158,7 @@ TBAG = dict(                      # H6, sheet 29 (2)
           (390.0, 194.0), (430.0, 166.0), (460.0, 125.0), (482.0, 90.0), (497.0, 52.0), (506.0, 24.0),
           (515.0, 26.0), (532.0, 46.0), (560.0, 66.0), (586.0, 80.0), (600.0, 86.0), (610.0, 70.0)),
     knot=510.0,
-    segs=(16, 10, 8),
+    segs=(16, 10, 6),
     crumple=0.11,                 # E: +- radial crumple (fraction of r), deterministic hash (sheet 29: sharp creases)
     pleat=0.35,                   # E: pleat depth toward the neck (fraction of r)
 )
@@ -857,7 +858,7 @@ def _tapegun_lod(level: int) -> Lod:
     t = TAPEGUN
     PL, GREY, HUB, TAPE, CORE, STEEL, CLEAR, RUB = range(8)
     far = level < 2
-    segs = (16, 12, 8)[level]
+    segs = (16, 10, 6)[level]
     b = Builder()        # bevelled parts
     e = Builder()        # crisp small parts
     X, Y, Z = (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)
@@ -865,7 +866,7 @@ def _tapegun_lod(level: int) -> Lod:
     # the roll: tape + core in one annulus prism (the core's faces are cardboard)
     _lathe_ax(e, (rx, -rw / 2, rz), Y, [(ri, 0.0), (ro, 0.0), (ro, rw), (ri, rw)], segs, [TAPE, TAPE, TAPE],
               caps=(False, False))
-    if level < 2:                                       # the core ring on the side faces (cardboard)
+    if level == 0:                                      # the core ring on the side faces (cardboard)
         for yy, sg in ((-rw / 2 - 0.3, -1.0), (rw / 2 + 0.3, 1.0)):
             ring_o = [e.v(rx + rc * math.cos(q), yy, rz + rc * math.sin(q)) for q in
                       (2 * math.pi * (k + 0.5) / segs for k in range(segs))]
@@ -877,7 +878,7 @@ def _tapegun_lod(level: int) -> Lod:
     w0, w1, wa = t["windows"]
     hub_o = _circle_pts(hr, segs)
     pockets = []
-    if level < 2:
+    if level == 0:
         for k in range(3):
             a0 = math.radians(90.0 + 120.0 * k - wa / 2)
             a1 = math.radians(90.0 + 120.0 * k + wa / 2)
@@ -888,8 +889,9 @@ def _tapegun_lod(level: int) -> Lod:
             pockets.append((win, wd, PL))
     # plane (x, z) seen from -Y: u = +X, v = +Z -> w = X x Z = -Y
     _plate(e, hub_o, (rx, 0.0, rz), X, Z, -hw, hw, HUB, pockets=pockets)          # the -Y face (w = -Y) pocketed
-    _lathe_ax(e, (rx, -hw + 0.5, rz), (0.0, -1.0, 0.0), [(8.0, 0.0), (8.0, 3.0), (6.0, 5.0), (0.0, 5.0)] if level < 2
-              else [(7.0, 0.0), (7.0, 4.0), (0.0, 4.0)], 6, HUB, caps=(False, False))
+    if level < 2:                                       # the centre bolt
+        _lathe_ax(e, (rx, -hw + 0.5, rz), (0.0, -1.0, 0.0), [(8.0, 0.0), (8.0, 3.0), (6.0, 5.0), (0.0, 5.0)], 6, HUB,
+                  caps=(False, False))
     # grey side plates, the far arm, the housing, the cheeks
     y0, y1 = t["plate_y"]
     for sg in ((-1.0, 1.0) if far else (-1.0,)):
@@ -907,15 +909,14 @@ def _tapegun_lod(level: int) -> Lod:
     ck = _round_poly(corners, cr, cseg)
     for sg in ((-1.0, 1.0) if far else (-1.0,)):
         _plate(b, ck, (0.0, sg * (cyi if sg < 0 else cyo), 0.0), X, Z, 0.0, cyo - cyi, PL)
-    if level < 2:                                       # screws: two on each cheek, one on each grey plate
+    if level == 0:                                      # screws: two on each cheek, one on each grey plate
         for sg in (-1.0,):                              # the near side (sheet 27 shows it)
             for (sx, sz), yb in [(p, cyo) for p in t["screws"]] + [(t["plate_screw"], y1)]:
                 _lathe_ax(e, (sx, sg * (yb - 0.5), sz), (0.0, sg, 0.0), [(3.2, 0.0), (3.2, 2.0), (0.0, 2.0)], 6,
                           STEEL, caps=(False, False))
     # the serrated blade (in the YZ plane, teeth up) and the clear guard
     bx, bt, bz0, bz1, th, by, nt = t["blade"]
-    if level == 2:
-        nt = 1
+    nt = (nt, 5, 1)[level]
     outline = [(-by, bz0), (by, bz0)]
     for i in range(nt, 0, -1):
         ya, yb_ = -by + 2 * by * i / nt, -by + 2 * by * (i - 1) / nt
@@ -939,7 +940,7 @@ def _tapegun_lod(level: int) -> Lod:
     mats = [RUB, RUB]
     tt = 12.0
     k = 0
-    while tt < L - 8.0 and level < 2:
+    while tt < L - 8.0 and level == 0:
         prof.append((17.5 if k % 2 == 0 else 16.0, tt))
         mats.append(RUB)
         tt += 10.0 if level == 0 else 20.0
@@ -1000,7 +1001,7 @@ def item_tapegun() -> Item:
               "reference": "References/CardShop/csk_bag_mailers.png (sheet 27 (3))",
               "notes": ["Sheet 27: pistol grip, grey side plates, a tape roll on a hub with three windows and a "
                         "centre bolt, a serrated blade with a clear guard, black cheek plates with two screws.",
-                        "Budget 800 -> 1300: the three-window hub, the two side plates, the serrated blade and the "
+                        "Budget 800 -> 1200: the three-window hub, the two side plates, the serrated blade and the "
                         "clear guard are all visible at arm's length (a handheld item)."]},
     )
 
@@ -1012,7 +1013,8 @@ def _bag_builder(level: int) -> Builder:
     a tie at the neck and a flared tuft above it. Deterministic: the crumple is a hash of (ring, segment)."""
     s = TBAG
     segs = s["segs"][level]
-    prof = s["prof"] if level == 0 else [p for i, p in enumerate(s["prof"]) if i % 2 == 0 or i == len(s["prof"]) - 1]
+    step = (1, 2, 3)[level]
+    prof = [p for i, p in enumerate(s["prof"]) if i % step == 0 or i == len(s["prof"]) - 1]
     b = Builder()
     rings = []
     zn = s["knot"]
@@ -1027,11 +1029,11 @@ def _bag_builder(level: int) -> Builder:
             depth = s["pleat"] * (1.3 if tuft else near) * tight
             pleat = (1.0 - depth) if k % 2 else 1.0
             amp = s["crumple"] * (2.5 if tuft else (0.3 if z < 1.0 else 1.0))
-            cr = 1.0 + amp * (2 * _hash(i, k, 7) - 1)
+            cr = 1.0 - amp * _hash(i, k, 7)          # dents only: the measured profile is the silhouette's outside
             rr = r * pleat * cr
             tw = 0.3 * (2 * math.pi / segs) * near * (2 * _hash(i, k, 3) - 1)   # the twist round the neck
-            if i == last:                             # the ruffled rim: petal tips at different heights
-                zz = z + 12.0 * _hash(i, k, 11)
+            if i == last:                             # the ruffled rim: petal tips at different heights, 610 the top
+                zz = z - 12.0 * _hash(i, k, 11)
             else:
                 gap = min(z - prof[i - 1][0], prof[i + 1][0] - z) if 0 < i else 0.0
                 zz = z + min(9.0, 0.3 * gap) * (2 * _hash(i, k, 11) - 1)      # ragged rings that never cross
@@ -1080,7 +1082,7 @@ def _wheel(b: Builder, x0: float, side: float, level: int) -> None:
     segments 3 lower on the crown) and the grey steel hub (a dished face and a centre cap) on both faces."""
     t = TRUCK
     R, W, yA = t["wheel"]
-    segs = (28, 18, 12)[level]
+    segs = (28, 14, 8)[level]
     RUB, HUB = 1, 2
     prof = t["tyre"] if level == 0 else [t["tyre"][i] for i in ((0, 1, 3, 4, 6, 7) if level == 1 else (0, 1, 6, 7))]
     angs = [2 * math.pi * (k + 0.5) / segs for k in range(segs)]
@@ -1146,7 +1148,7 @@ def _truck_lod(level: int) -> Lod:
     BLUE, RUB, HUB = 0, 1, 2
     b = Builder()        # the nose plate (bevelled)
     e = Builder()        # tubes and wheels
-    sides = (10, 8, 6)[level]
+    sides = (10, 6, 4)[level]
     nw, nd, nt = t["nose"]
     rr, rx, ry = t["rail"]
     y_back = ry - rr                                  # the flange's front face = the rails' front face
@@ -1345,7 +1347,7 @@ def _rack_lod(level: int) -> Lod:
     shape = r["keyhole"] if level == 0 else _rect_shape(10.0, 26.0)
     kh = max(p[1] for p in shape)
     zs = []
-    zz = 60.0
+    zz = ft + 20.0
     while zz + kh < H - 30.0:
         zs.append(zz)
         zz += pitch
@@ -1404,7 +1406,7 @@ def item_rack() -> Item:
     for i, z in enumerate(k["decks"]):
         name = f"L{i + 1}"
         width, depth = 2 * xi - 2.0, 2 * yb
-        nxt = k["decks"][i + 1] - r["deck_t"] - k["bh"] if i + 1 < len(k["decks"]) else H + 400.0
+        nxt = k["decks"][i + 1] - r["deck_t"] - k["bh"] if i + 1 < len(k["decks"]) else z + 600.0   # open top: E
         clear = nxt - z
         sockets.append(Socket(f"Level_{name}", (0.0, 0.0, z), kind="DISPLAY"))
         for c in range(3):
@@ -1463,7 +1465,7 @@ def _bench_lod(level: int) -> Lod:
     ah, ad, ag = t["apron"]
     zl_top = zt0 + 0.5
     pitch = t["hole_pitch"] * (1 if level == 0 else 2)
-    shape = t["hole"] if level == 0 else _rect_shape(3.0, 10.0)
+    shape = t["hole"] if level == 0 else _rect_shape(4.5, 10.0)
     while z + 11.0 < zt0 - ag - ah - 15.0:
         zs.append(z)
         z += pitch
