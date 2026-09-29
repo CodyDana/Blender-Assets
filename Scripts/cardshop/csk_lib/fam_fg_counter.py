@@ -17,7 +17,7 @@ No bpy here: pure data through shapes.Builder.
 from __future__ import annotations
 
 import math
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import List, Optional, Sequence, Tuple
 
 from .geom import R_BACK, R_FRONT, Item, Lod, Socket, _face_out, _planar, inset
 from .shapes import Builder, rounded_rect
@@ -60,13 +60,14 @@ CHAIR = dict(                  # F2 steel folding chair, sheet 24
     bar_z=170.0,               # sheet 24: the two low cross bars (front legs, rear legs)
     bar_d=16.0,                # E
     seat=(350.0, 360.0, 40.0),  # E: seat pan W x D x plan corner R (inside the rear legs; sheet 24 proportions)
-    seat_y0=-270.0,            # sheet 24: the seat front sits just ahead of the front feet
+    seat_y0=-258.0,            # sheet 24: the seat front sits over the front feet (inside the 520 depth)
     pan=(390.0, 410.0),        # E: the steel seat pan band (sheet 24: a black rim under the pad)
     pad=(5.0, 14.0),           # sheet 24: a thick pillowy vinyl pad: inset on the pan, rounded top edge radius (E)
     back=(690.0, 6.0, 22.0, 10.0),  # back pad: starts 690 up the main tube (sheet 24: the top ~21 % of the height),
                                     # 6 behind / 22 in front of the frame plane (sheet 24: it stands proud of the
                                     # tubes), padded front round 10 (E)
     folded_seat_z=(325.0, 685.0),  # sheet 24 Folded: the seat, turned up inside the frame, ends just under the back pad
+    folded_seat_y=24.0,        # E: the folded seat's pad face (+Y); its hangers then reach the main tubes
 )
 # The main frame: front feet at y = -(d/2 - cap r); the back top is placed so the rear legs pivot half way
 # (y_pivot = 0): folded, all four feet then stand on the floor (D). Sheet 24 reads the back top ~60-80 in front of
@@ -324,10 +325,8 @@ def _obox(b: Builder, p0: Vec3, p1: Vec3, side: Vec3, w: float, t: float, mat: i
         for j in (-1, 1):
             for k in (-1, 1):
                 v[i, j, k] = b.v(*_add(p, _add(_mul(sd, j * w / 2), _mul(nn, k * t / 2))))
-    quads = {(0, None, None): ((0, -1, -1), (0, -1, 1), (0, 1, 1), (0, 1, -1)),
-             (1, None, None): ((1, -1, -1), (1, 1, -1), (1, 1, 1), (1, -1, 1))}
-    _face_out(b, [v[q] for q in quads[(0, None, None)]], _mul(ax, -1.0), mat)
-    _face_out(b, [v[q] for q in quads[(1, None, None)]], ax, mat)
+    for i, out in ((0, _mul(ax, -1.0)), (1, ax)):                         # the two ends
+        _face_out(b, [v[i, -1, -1], v[i, 1, -1], v[i, 1, 1], v[i, -1, 1]], out, mat)
     for j in (-1, 1):
         _face_out(b, [v[0, j, -1], v[1, j, -1], v[1, j, 1], v[0, j, 1]], _mul(sd, j), mat)
     for k in (-1, 1):
@@ -422,7 +421,7 @@ def _tb_body(L: float, level: int) -> Tuple[Builder, Optional[Builder]]:
             _tube(b, [start, *knee, top], r, sides, STEEL, up=(0.0, 1.0, 0.0))
             _floor_cap(b, foot, low, cd / 2, ch, sides, RUBBER)
         else:
-            _tube(b, [(foot[0], foot[1], 0.0), top], r, sides, STEEL, up=(0.0, 1.0, 0.0), caps=(True, False))
+            _tube(b, [(foot[0], foot[1], 1.0), top], r, sides, STEEL, up=(0.0, 1.0, 0.0), caps=(True, False))
     zb, bd = s["bar"]
     for sx in (-1, 1):                                              # cross brace between the front and back legs
         xt = sx * (L / 2 - s["leg_in"])
@@ -455,10 +454,8 @@ def item_table(seats: int) -> Item:
     ym = D / 4                                           # mat centres: 2 x 356 = 712 <= 762 (D), 12.7 from the edges
     di, dd = s["deck_in"]
     chairs = []
-    zones = []
     for m in range(1, m_count + 1):
         xm = -L / 2 + pitch * (m - 0.5)
-        zones.append(xm)
         # player A sits on the customer side (-Y) facing +Y; the mat's top edge points away from its player
         sockets.append(Socket(f"Mat_{m}A", (xm, -ym, H)))
         sockets.append(Socket(f"Mat_{m}B", (xm, ym, H), (0.0, 0.0, 180.0)))
@@ -469,13 +466,12 @@ def item_table(seats: int) -> Item:
         chairs += [(xm, -s["chair_y"], 180.0), (xm, s["chair_y"], 0.0)]
     for i, (x, y, rz) in enumerate(chairs, 1):          # chair Seat targets, each chair facing the table
         sockets.append(Socket(f"Chair_{i:02d}", (x, y, 0.0), (0.0, 0.0, rz)))
-    legs = _tb_legs(L)
     xin, xout = L / 2 - s["leg_in"] - s["leg_d"] / 2 - 1.0, L / 2 - s["leg_in"] + s["splay"] + s["cap"][0] / 2
     yl = D / 2 - s["leg_y"] + s["cap"][0] / 2
     zt = H - s["top_t"]
     return Item(
         name=f"SM_CSK_Table_Play_{seats}", lods=lods,
-        materials=["M_CSK_TableTop", "M_CSK_Steel", "M_CSK_Rubber"], projections={}, sockets=sockets,
+        materials=["M_CSK_TableTop", "M_CSK_SteelDark", "M_CSK_Rubber"], projections={}, sockets=sockets,
         hulls=[((-L / 2, -D / 2, zt), (L / 2, D / 2, H)),
                ((-xout, -yl, 0.0), (-xin, yl, zt)), ((xin, -yl, 0.0), (xout, yl, zt))],
         budget=BUDGETS["SM_CSK_Table_Play"],
@@ -491,7 +487,11 @@ def item_table(seats: int) -> Item:
                         "folding struts, black foot caps",
                         "3 matches on the 1829 table as the spec (D); sheet 24 draws one match per table (the "
                         "1524 / 914 layout); the user accepted this pick (log 2026-09-29)",
-                        "Deck socket position on the mat is E (the playmat's own zones are E5's)"]},
+                        "Deck socket position on the mat is E (the playmat's own zones are E5's)",
+                        "1829: the three mats span 1828.8 (D), so the outer mats' corners overhang the top's R40 "
+                        "plan corners by up to ~8",
+                        "Slots: M_CSK_TableTop (white HDPE; black / wood are MIs), M_CSK_SteelDark (sheet 24's dark "
+                        "grey powder coat), M_CSK_Rubber (foot caps)"]},
     )
 
 
@@ -500,9 +500,12 @@ def item_table(seats: int) -> Item:
 def _ch_dims():
     s = CHAIR
     cr = s["cap"][0] / 2
-    yf, yr = -(s["d"] / 2 - cr), s["d"] / 2 - cr
     zt = s["h"] - s["tube"] / 2
-    k = (yr - yf) / (2.0 * s["pivot_z"])               # tan of the main tube's lean: pivot half way (y 0), D
+    half = s["d"] / 2 - cr
+    for _ in range(4):          # the tilted caps meet the floor in ellipses cr / cos(lean) long: D over the caps
+        k = half / s["pivot_z"]                         # tan of the lean: pivot half way (y 0), D
+        half = s["d"] / 2 - cr * math.sqrt(1.0 + k * k)
+    yf, yr = -half, half
     ytop = yf + zt * k
     u = _unit((0.0, ytop - yf, zt))
     stop = math.hypot(ytop - yf, zt)                    # main tube length, foot axis point to the top centre line
@@ -575,7 +578,7 @@ def _ch_frame(b: Builder, place, level: int, STEEL: int, VINYL: int, RUBBER: int
                 _floor_cap(b, foot, up, s["cap"][0] / 2, s["cap"][1], sides, RUBBER)
 
 
-def _ch_rear(b: Builder, foot_y: float, top_pt, level: int, STEEL: int, RUBBER: int, fold_dir=None) -> None:
+def _ch_rear(b: Builder, foot_y: float, top_pt, level: int, STEEL: int, RUBBER: int) -> None:
     """The rear legs (two tubes inside the main frame, pivoting on it), their low cross bar and foot caps.
     ``top_pt(x)`` is the pivot point on each side; the legs run from (x, foot_y, 0) up to it."""
     s = CHAIR
@@ -659,7 +662,7 @@ def _ch_open(level: int) -> Builder:
     _ch_seat(b, lambda p: p, level, STEEL, VINYL)
     if level < 2:                                       # pivot bolts through both tubes
         for sx in (-1, 1):
-            x0, x1 = sx * (s["rear_x"] - s["tube"] / 2 + 2.0), sx * (s["main_x"] + s["tube"] / 2 + 3.0)
+            x0, x1 = sx * (s["rear_x"] - s["tube"] / 2 + 2.0), sx * (s["main_x"] + s["tube"] / 2 + 2.0)
             _tube(b, [(x0, pv[1], pv[2]), (x1, pv[1], pv[2])], 5.0, (8, 6)[level], STEEL, caps=(True, True))
     return b
 
@@ -681,7 +684,7 @@ def _ch_folded(level: int) -> Builder:
     _ch_rear(b, gap, lambda x: (x, gap, zp), level, STEEL, RUBBER)
     zf0, zf1 = s["folded_seat_z"]
     y0 = s["seat_y0"]
-    yface = 24.0                                        # the pad top's plane: its hangers reach the main tubes
+    yface = s["folded_seat_y"]
 
     def to_world(p):
         x, y, z = p
@@ -690,7 +693,7 @@ def _ch_folded(level: int) -> Builder:
     _ch_seat(b, to_world, level, STEEL, VINYL)
     if level < 2:
         for sx in (-1, 1):
-            x0, x1 = sx * (s["rear_x"] - s["tube"] / 2 + 2.0), sx * (s["main_x"] + s["tube"] / 2 + 3.0)
+            x0, x1 = sx * (s["rear_x"] - s["tube"] / 2 + 2.0), sx * (s["main_x"] + s["tube"] / 2 + 2.0)
             _tube(b, [(x0, gap / 2, zp), (x1, gap / 2, zp)], 5.0, (8, 6)[level], STEEL, caps=(True, True))
     return b
 
@@ -700,7 +703,7 @@ def item_chair() -> Item:
     k = _ch_dims()
     W, Dp, _ = s["seat"]
     yc = s["seat_y0"] + Dp / 2
-    lods = [Lod(_ch_open(k)) for k in range(3)]        # rounds are modelled (no auto bevel: budget)
+    lods = [Lod(_ch_open(lv)) for lv in range(3)]        # rounds are modelled (no auto bevel: budget)
     top = (0.0, k["yf"] + k["u"][1] * k["stop"], k["zt"])
     hw, hd = s["w"] / 2, s["d"] / 2
     return Item(
@@ -727,16 +730,18 @@ def item_chair() -> Item:
 def item_chair_folded() -> Item:
     s = CHAIR
     k = _ch_dims()
-    lods = [Lod(_ch_folded(k)) for k in range(3)]
+    lods = [Lod(_ch_folded(lv)) for lv in range(3)]
     H = k["stop"] + s["tube"] / 2
     hw = s["w"] / 2
+    y_min = s["folded_seat_y"] - (s["seat_h"] - s["pan"][0])      # the folded seat pan's underside
+    y_max = s["tube"] + s["cap"][0] / 2                           # the folded rear legs' caps
     return Item(
         name="SM_CSK_Chair_Folding_Folded", lods=lods,
         materials=["M_CSK_SteelBlack", "M_CSK_Vinyl", "M_CSK_Rubber"], projections={},
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0.0, 0.0, k["stop"]))],
-        hulls=[((-hw, -25.0, 0.0), (hw, s["tube"] + s["cap"][0] / 2, H))],
+        hulls=[((-hw, y_min, 0.0), (hw, y_max, H))],
         budget=BUDGETS["SM_CSK_Chair_Folding_Folded"],
-        data={"footprint_mm": [s["w"], round(s["tube"] + s["cap"][0] / 2 + 25.0, 3), round(H, 3)],
+        data={"footprint_mm": [s["w"], round(y_max - y_min, 3), round(H, 3)],
               "pose": "upright, folded flat", "pivot": "bottom-centre (the main frame's plane)",
               "state_of": "SM_CSK_Chair_Folding", "reference": REF24,
               "notes": [f"Height {H:.0f}: the folded frame stands at its tube length. Sheet 24's folded view repeats "
@@ -956,7 +961,7 @@ def _bag_open(level: int) -> Builder:
         izs = [(t, t, 0.0), (h, t, 0.0)]
     inner = [[b.v(x, y, z) for x, y in _offset_poly(_bag_ring(z, dn), off)] for z, off, dn in izs]
 
-    def band(ra, rb, lower: bool, flip: bool):
+    def band(ra, rb, flip: bool):
         """Faces between two 6-point rings. Front (0-1) and back (3-4) panels: print regions on the outside;
         the gusset halves are split into triangles, their diagonal from the outer corner at the lower ring to the
         crease at the upper ring (the bottom gusset triangle's fold on the lowest band)."""
@@ -976,14 +981,14 @@ def _bag_open(level: int) -> Builder:
                 b.face(tuple(reversed(tr)) if flip else tr, KRAFT)
 
     for a, c in zip(outer[:-1], outer[1:]):
-        band(a, c, True, False)
+        band(a, c, False)
     for a, c in zip(inner[:-1], inner[1:]):
         if [b.verts[a[0]][2]] == [b.verts[c[0]][2]]:          # the turned band's lower edge: a ring facing down
             for i in range(6):
                 j = (i + 1) % 6
                 b.face((a[j], a[i], c[i], c[j]), KRAFT)
             continue
-        band(a, c, True, True)
+        band(a, c, True)
     ot, it = outer[-1], inner[-1]
     for i in range(6):                                        # the rim
         j = (i + 1) % 6

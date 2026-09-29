@@ -76,8 +76,9 @@ PLAYMAT = dict(                 # E5, sheet 15 (2)
     side_z=1.5, round=0.5,      # E: the binding rounds over the top edge: vertical to 1.5, then 0.5 in to the top
     segs=5,
     roll_core=10.0,             # E (spec D: 20 core): the inner radius where the roll starts
-    roll_gap=0.2,               # E: 1.8 thick layers at the 2.0 pitch (M thickness), so the spiral reads at the ends
-    roll_facets=20,             # facets per turn (18 deg: round shading under the 30-deg rule)
+    roll_gap=0.1,               # E: 1.9 thick layers at the 2.0 pitch (M thickness), so the spiral reads at the ends
+    roll_facets=16,             # facets per turn (22.5 deg: round shading under the 30-deg rule)
+    roll_chamfer=0.3,           # sheet 15: the red line at each wrap's edge in the black roll end
 )
 
 D6 = dict(size=16.0,            # M [D20]
@@ -93,7 +94,8 @@ TOKEN = dict(d=22.0, t=2.0,     # E (spec) = sheet 15 call-outs
 # LOD0 budgets: the spec's Tris column (E). Raised (logged in the report):
 #   Binder_Body 1500 -> 1800: three O-rings of round wire need 13 sides (27.7 deg < the 30-deg sharp rule) x 16
 #     segments to shade round: ~1250 tris of the 1700.
-#   Playmat_Rolled 600 -> 1000: the spiral end (sheet 15) is a real wound strip, ~120 facets along the 610 mm length.
+#   Playmat_Rolled 600 -> 1200: the spiral end (sheet 15) is a real wound strip (16 facets a turn over 5.8 turns) with
+#     a 0.3 cloth chamfer on each wrap's edge, the red lines of sheet 15's black roll end.
 #   Die_D6 300 -> 800: 21 real pip dimples (10-sided cones) and round edges of 4 segments.
 #   Token_22 100 -> 150: an 18-sided disc with chamfered rims on both faces (still LOD0 only).
 BUDGETS = {
@@ -104,7 +106,7 @@ BUDGETS = {
     "SM_CSK_DeckBox": 600,
     "SM_CSK_DeckBox_Lid": 300,
     "SM_CSK_Playmat_Flat": 200,
-    "SM_CSK_Playmat_Rolled": 1000,
+    "SM_CSK_Playmat_Rolled": 1200,
     "SM_CSK_Die_D6": 800,
     "SM_CSK_Die_D20": 500,
     "SM_CSK_Token_22": 150,
@@ -481,41 +483,62 @@ def _roll_axis_z() -> float:
     return -zmin
 
 
-def _roll_builder(per_turn: int) -> Builder:
+def _roll_builder(per_turn: int, chamfer: bool = True) -> Builder:
     """Sheet 15 rolled mat: the 609.6 long mat wound cloth side out round a Ø 20 core (a 2.0 pitch Archimedean
-    spiral of 1.8 layers), axis along X, 355.6 long. Ends: the stitched binding (the mat's long edges), the rubber
-    inside each wrap, the printed cloth outside."""
+    spiral of 1.9 layers), axis along X, 355.6 long. Sheet 15's roll end is black rubber with a red line at each
+    wrap: the ends are rubber, and each wrap's outer (cloth) edge has a 0.3 chamfer in the cloth print."""
     p = PLAYMAT
-    PRINT, STITCH, RUBBER = 0, 1, 2
+    PRINT, RUBBER = 0, 1
     t, lay, r0, a, Phi, L = _roll_numbers()
     th0 = _roll_theta0()
     zc = _roll_axis_z()
     X = p["h"] / 2
+    c = p["roll_chamfer"] if chamfer else 0.0
     dphi = 2 * math.pi / per_turn                   # the same angles on every turn: the wraps' facets stay parallel,
-    phis = [i * dphi for i in range(int(Phi / dphi) + 1)]   # so the 0.2 gaps never close (no crossing chords)
-    if Phi - phis[-1] < 0.35 * dphi:
-        phis.pop()
-    phis.append(Phi)
+    phis = [i * dphi for i in range(int(Phi / dphi) + 1)]   # so the 0.1 gaps never close (no crossing chords)
+    if Phi - phis[-1] > 1e-6:                        # the short last facet stays: merging it would misalign the
+        phis.append(Phi)                            # outer wrap and cross the one inside it
     b = Builder()
 
     def pt(r, f, x):
         th = f + th0
         return (x, r * math.cos(th), zc + r * math.sin(th))
-    I = {sx: [b.v(*pt(r0 + t * f / (2 * math.pi), f, sx * X)) for f in phis] for sx in (-1, 1)}
-    O = {sx: [b.v(*pt(r0 + t * f / (2 * math.pi) + lay, f, sx * X)) for f in phis] for sx in (-1, 1)}
+    rin = [r0 + t * f / (2 * math.pi) for f in phis]
+    I = {sx: [b.v(*pt(r, f, sx * X)) for r, f in zip(rin, phis)] for sx in (-1, 1)}
+    Os = {sx: [b.v(*pt(r + lay, f, sx * (X - c))) for r, f in zip(rin, phis)] for sx in (-1, 1)}
+    Oe = {sx: [b.v(*pt(r + lay - c, f, sx * X)) for r, f in zip(rin, phis)] for sx in (-1, 1)} if c else Os
     n = len(phis)
     for k in range(n - 1):
         fm = (phis[k] + phis[k + 1]) / 2
         radial = (0.0, math.cos(fm + th0), math.sin(fm + th0))
         _face_out(b, [I[-1][k], I[-1][k + 1], I[1][k + 1], I[1][k]], _mul(radial, -1), RUBBER)
-        _face_out(b, [O[-1][k], O[-1][k + 1], O[1][k + 1], O[1][k]], radial, PRINT, R_FRONT)
-    for k, sgn in ((0, -1), (n - 1, 1)):                    # the mat's short edges: stitched
+        _face_out(b, [Os[-1][k], Os[-1][k + 1], Os[1][k + 1], Os[1][k]], radial, PRINT, R_FRONT)
+        for sx in (-1, 1):
+            if c:                                   # the cloth edge chamfer
+                _face_out(b, [Os[sx][k], Os[sx][k + 1], Oe[sx][k + 1], Oe[sx][k]], _add(radial, (float(sx), 0, 0)),
+                          PRINT, R_FRONT)
+            _face_out(b, [I[sx][k], I[sx][k + 1], Oe[sx][k + 1], Oe[sx][k]], (float(sx), 0.0, 0.0), RUBBER)
+    for k, sgn, reg in ((0, -1, R_ROLL_END), (n - 1, 1, R_ROLL_END + 1)):   # the mat's short edges (core end, free end)
         tang = (0.0, -math.sin(phis[k] + th0) * sgn, math.cos(phis[k] + th0) * sgn)
-        _face_out(b, [I[-1][k], O[-1][k], O[1][k], I[1][k]], tang, STITCH)
-    for sx in (-1, 1):                                      # the spiral ends: the stitched long edges, one quad per
-        for k in range(n - 1):                              # facet across the strip (scanfill mis-fills thin spirals)
-            _face_out(b, [I[sx][k], I[sx][k + 1], O[sx][k + 1], O[sx][k]], (float(sx), 0.0, 0.0), STITCH)
+        ring = [I[-1][k], Oe[-1][k]] + ([Os[-1][k], Os[1][k]] if c else []) + [Oe[1][k], I[1][k]]
+        _face_out(b, ring, tang, RUBBER, reg)
     return b
+
+
+R_ROLL_END = 5          # the roll's two short end faces: their own bands in tile (1, 0) (smart project packs their
+                        # 0.3 mm chamfer corners to zero UV area)
+
+
+def _roll_end_proj(end: int):
+    t, lay, r0, a, Phi, L = _roll_numbers()
+    zc = _roll_axis_z()
+    X = PLAYMAT["h"] / 2
+    rin = r0 + t * (0.0 if end == 0 else Phi) / (2 * math.pi)
+
+    def proj(x, y, z):
+        rr = math.hypot(y, z - zc) - rin
+        return (1.0 + inset(0.5 * end + 0.48 * (x + X) / (2 * X)), inset(0.02 + 0.2 * rr / lay))
+    return proj
 
 
 def _roll_proj(x: float, y: float, z: float):
@@ -555,7 +578,7 @@ def _roll_tube(sides: int) -> Builder:
         am = 2 * math.pi * (i + 0.5) / sides
         radial = (0.0, math.cos(am), math.sin(am))
         _face_out(b, [rings["o", -1][i], rings["o", -1][j], rings["o", 1][j], rings["o", 1][i]], radial, 0)
-        _face_out(b, [rings["i", -1][i], rings["i", -1][j], rings["i", 1][j], rings["i", 1][i]], _mul(radial, -1), 2)
+        _face_out(b, [rings["i", -1][i], rings["i", -1][j], rings["i", 1][j], rings["i", 1][i]], _mul(radial, -1), 1)
     for sx in (-1, 1):
         b.fill([rings["o", sx], rings["i", sx]], 1, 0, (float(sx), 0.0, 0.0))
     return b
@@ -569,8 +592,9 @@ def item_playmat_rolled() -> Item:
     R = r0 + t * Phi / (2 * math.pi) + lay
     return Item(
         name="SM_CSK_Playmat_Rolled",
-        lods=[Lod(_roll_builder(p["roll_facets"])), Lod(_roll_builder(10)), Lod(_roll_tube(12))],
-        materials=["M_CSK_Playmat", "M_CSK_Stitch", "M_CSK_Rubber"], projections={R_FRONT: _roll_proj},
+        lods=[Lod(_roll_builder(p["roll_facets"])), Lod(_roll_builder(8, chamfer=False)), Lod(_roll_tube(12))],
+        materials=["M_CSK_Playmat", "M_CSK_Rubber"],
+        projections={R_FRONT: _roll_proj, R_ROLL_END: _roll_end_proj(0), R_ROLL_END + 1: _roll_end_proj(1)},
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0, 0, zc))],
         hulls=[((-X, -R, 0.0), (X, R, zc + R))], budget=BUDGETS["SM_CSK_Playmat_Rolled"],
         data={"footprint_mm": [2 * X, round(2 * R, 2), round(zc + R, 2)],
@@ -582,9 +606,10 @@ def item_playmat_rolled() -> Item:
               "print": {"tile": [0, 0], "u": "centreline length from the core end / 609.6 (the flat mat's X)",
                         "v": "along the roll axis (the flat mat's Y)"},
               "reference": REF15,
-              "notes": ["Sheet 15: cloth side out, the black base showing in the spiral end. The spiral winds from "
-                        "a Ø 20 core at the M 2.0 pitch; its outer Ø runs 42.9-47.1 round the last turn (spec Ø 45 "
-                        "is the D mean). 1.8 layers leave 0.2 gaps so the spiral reads at the ends.",
+              "notes": ["Sheet 15: cloth side out, the black base showing in the spiral end with a red line at each "
+                        "wrap (a 0.3 cloth chamfer on each wrap's outer edge). The spiral winds from "
+                        "a Ø 20 core at the M 2.0 pitch; its outer Ø runs 43.0-47.0 round the last turn (spec Ø 45 "
+                        "is the D mean). 1.9 layers leave 0.1 gaps so the spiral reads at the ends.",
                         "The mat's free end is at the back, below the axis."]},
     )
 
@@ -623,7 +648,7 @@ def _deckbox_lod(level: int) -> Lod:
     W, D, H = c["w"], c["d"], c["h"]
     zs = H - c["lid"]
     PLASTIC, CHROME = 0, 1
-    segs = (c["corner_segs"], 2, 1)[level]
+    segs = (c["corner_segs"], 1, 1)[level]
     pts = _deck_outline(segs)
     n = len(pts)
     b = Builder()
@@ -640,7 +665,7 @@ def _deckbox_lod(level: int) -> Lod:
     cav.box((-iw / 2, -idp / 2, c["floor"]), (iw / 2, idp / 2, zs + 5.0), mat=PLASTIC)
     ops.append(("DIFFERENCE", cav))
     if level < 2:
-        prof = _dip_profile((8, 3)[level], 0.5)
+        prof = _dip_profile((6, 3)[level], 0.5)
         cut = Builder()
         outline = [(x, zs + z) for x, z in prof] + [(prof[-1][0], zs + 5.0), (prof[0][0], zs + 5.0)]
         _prism_y(cut, outline, -D / 2 - 1.0, -D / 2 + (D - idp) / 2 + 1.0, mat=PLASTIC)
@@ -706,7 +731,7 @@ def _deck_lid_builder(level: int) -> Builder:
     tw = (W - c["in_w"]) / 2
     td = (D - c["in_d"]) / 2
     top_t = c["h"] - c["in_h"] - c["floor"]
-    segs = (c["corner_segs"], 2, 1)[level]
+    segs = (c["corner_segs"], 1, 1)[level]
     r = c["corner_r"]
     b = Builder()
     oy = -D / 2                                     # body y -> lid y
@@ -714,6 +739,14 @@ def _deck_lid_builder(level: int) -> Builder:
     def rr(dw, dr):
         return [(x, y + oy) for x, y in rounded_rect(W - 2 * dw, D - 2 * dw, max(0.3, r - dr), segs)]
     z0 = Lh - top_t
+    xi = W / 2 - tw
+    if level == 2:                                  # far LOD: five convex slabs, no tongue (the base drops its scoop)
+        b.box((-W / 2 + e, -D + e, z0), (W / 2 - e, -e, Lh))
+        for sx in (-1, 1):
+            b.box((min(sx * W / 2, sx * xi), -D, 0.0), (max(sx * W / 2, sx * xi), 0.0, z0 + 0.5))
+        for y0_, y1_ in ((-D + e, -D + td), (-td, -e)):
+            b.box((-xi - 0.5, y0_, 0.0), (xi + 0.5, y1_, z0 + 0.5))
+        return b
     if level == 0:                                  # the top plate, its top rim chamfered
         ch = c["lid_chamfer"]
         loops = [b.loop(rr(e, e), z0), b.loop(rr(e, e), Lh - ch), b.loop(rr(ch, ch), Lh)]
@@ -726,7 +759,6 @@ def _deck_lid_builder(level: int) -> Builder:
     pts = rounded_rect(W, D, r, segs)
     k = segs + 1
     zw = z0 + 0.5
-    xi = W / 2 - tw
     for side in (1, -1):                            # side walls: full depth, the rounded corners
         if side > 0:
             ol = [(xi, -D / 2)] + pts[0:2 * k] + [(xi, D / 2)]
@@ -736,9 +768,9 @@ def _deck_lid_builder(level: int) -> Builder:
     xw = xi + 0.5
     b.box((-xw, -D / 2 + e + oy, 0.0), (xw, -D / 2 + td + oy, zw))      # front wall above the seam
     b.box((-xw, D / 2 - td + oy, 0.0), (xw, D / 2 - e + oy, zw))        # back wall
-    if level < 2:                                   # the tongue that fills the base's scoop
-        prof = _dip_profile((8, 3)[level], 0.5)
-        _prism_y(b, list(prof), -D / 2 + 2 * e + oy, -D / 2 + td - e + oy, mat=0)
+    prof = _dip_profile((6, 3)[level], 0.0)         # the tongue that fills the base's scoop, rising 0.5 into the
+    xt = DECKBOX["dip"][0]                          # wall above the seam (hidden)
+    _prism_y(b, [(-xt, 0.5)] + prof + [(xt, 0.5)], -D / 2 + 2 * e + oy, -D / 2 + td - e + oy, mat=0)
     return b
 
 
