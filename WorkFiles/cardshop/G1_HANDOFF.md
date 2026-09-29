@@ -38,6 +38,19 @@ re-runs the build with 5.2 and those exports are the ones that count. Full repor
   fin seal. All are P3 items and noted in each `.csk.json`.
 - The fit tests count 0.1 micron as "touching", which only absorbs float32 vertex noise (about 0.004 micron).
 
+**Independent review of the Unreal scripts** (a separate agent checked every Unreal API call and the material and
+transform logic against the armory's and the pipeline's proven scripts). No crash-level bug was found. Four fixes were
+applied:
+
+- the right door slid the wrong way;
+- print UVs now sit 0.1% inside their tiles, so the tile pick never lands on a neighbour tile at an edge;
+- `import unreal` comes first in two scripts;
+- the materials step now writes its report even if an atlas index is missing.
+
+One thing to watch in the art check: a 1-pixel ring of flat colour at a print face's edge, seen from a distance, would
+be the mip seam of `frac()` sampling. If you see it, tell Claude; the fix is explicit-derivative sampling in the print
+master.
+
 ## 2. On the PC
 
 1. Pull the branch `claude/confident-meitner-ac6z3c`. Nothing new needs LFS: the art and exports are generated.

@@ -20,10 +20,11 @@ import time
 import traceback
 from pathlib import Path
 
+import unreal  # noqa: E402  (first: Scripts/unreal/ must never shadow the engine module)
+
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parents[1]))
-import unreal  # noqa: E402
 import csk_common as C  # noqa: E402
 from pipeline.ue_import_sockets import _static_mesh_editor_subsystem  # noqa: E402
 

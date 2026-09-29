@@ -55,8 +55,15 @@ def _planar(x0: float, y0: float, w: float, h: float, tile_u: float = 0.0, tile_
         u = (x - x0) / w
         if mirror_x:
             u = 1.0 - u
-        return (tile_u + u, tile_v + (y - y0) / h)
+        return (tile_u + inset(u), tile_v + inset((y - y0) / h))
     return proj
+
+
+UV_INSET = 0.001     # print UVs sit 0.1% inside their tile: floor() in the print master never picks a neighbour tile
+
+
+def inset(t: float) -> float:
+    return UV_INSET + t * (1.0 - 2.0 * UV_INSET)
 
 
 # =========================================================================== C1 card
@@ -295,7 +302,7 @@ def _dieline(s):
     W, D, H = s["w"], s["d"], s["h"]
     U, V = 2 * (W + D), H + 2 * D
     def m(fu, fv):
-        return lambda x, y, z: (fu(x, y, z) / U, fv(x, y, z) / V)
+        return lambda x, y, z: (inset(fu(x, y, z) / U), inset(fv(x, y, z) / V))
     return {
         10: m(lambda x, y, z: x + W / 2, lambda x, y, z: D + z),                    # front (-Y)
         11: m(lambda x, y, z: W + (y + D / 2), lambda x, y, z: D + z),              # right (+X)

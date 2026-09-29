@@ -152,7 +152,7 @@ def showcase(origin, folder, doors_open=0.0):
     base = T(origin)
     spawn(C.SHOWCASE, base, f"{folder}_Showcase", folder)
     spawn("SM_CSK_Showcase_Full_Glass_1778", base, f"{folder}_Glass", folder)
-    for side, off in (("Door_L", 0.0), ("Door_R", doors_open)):
+    for side, off in (("Door_L", 0.0), ("Door_R", -doors_open)):      # Door_R slides along -X (geom parts axis)
         t = compose(compose(T((off, 0, 0)), socket_T(C.SHOWCASE, side)), base)
         spawn("SM_CSK_Showcase_Full_Door_1778", t, f"{folder}_{side}", folder)
     return base

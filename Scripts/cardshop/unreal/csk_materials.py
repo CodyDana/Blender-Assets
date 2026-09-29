@@ -282,7 +282,12 @@ def main():
             e["error"] = traceback.format_exc()[-1500:]
         rep["masters"][name] = e
     mis = {}
-    for name, (master, scal, vec, tex) in instances().items():
+    try:
+        table = instances()
+    except Exception:  # noqa: BLE001 - e.g. a missing atlas index: still write the report
+        table = {}
+        rep["instances_error"] = traceback.format_exc()[-1500:]
+    for name, (master, scal, vec, tex) in table.items():
         e = {}
         try:
             mi, created = get_or_create(f"{C.MAT_DEST}/{name}", unreal.MaterialInstanceConstant,
@@ -325,7 +330,7 @@ def main():
     errs = [k for sec in ("masters", "instances", "meshes") for k, v in rep[sec].items() if v.get("error")]
     unmatched = {k: v["unmatched"] for k, v in rep["meshes"].items() if v.get("unmatched")}
     rep["errors"], rep["unmatched_slots"] = errs, unmatched
-    rep["passed"] = not errs and not unmatched
+    rep["passed"] = not errs and not unmatched and "instances_error" not in rep
     rep["sec"] = round(time.time() - t0, 1)
     C.write_json(C.OUT / "materials.json", rep)
     unreal.log(f"CSK_STEP_DONE materials passed={rep['passed']} masters={len(masters)} instances={len(mis)}")
