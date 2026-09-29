@@ -30,16 +30,17 @@ TABLE = dict(                  # F1 folding tournament tables, sheet 24
     lengths={2: 914.0, 4: 1524.0, 6: 1829.0},   # seats -> length: 914 / 1524 M [D33]; 1829 E (spec)
     d=762.0, h=737.0,          # D 762 E, H 737 M [D33]; sheet 24 call-outs agree
     matches={2: 1, 4: 2, 6: 3},  # spec: one match = 2 facing mats; 3 matches on 1829 (D); log: user accepted
-    top_t=50.0,                # sheet 24: a thick blow-moulded top edge (E 50)
+    top_t=38.0,                # sheet 24: the thick moulded edge reads 30-38 over its rounds (E; not the usual 50)
     corner_r=40.0,             # sheet 24: rounded plan corners (E radius)
-    edge_r=(10.0, 4.0),        # sheet 24: the rounded top edge / the small round under it (E radii)
+    edge_r=(8.0, 4.0),         # sheet 24: the rounded top edge / the small round under it (E radii)
     leg_d=25.4,                # E: 1 in steel tube (sheet 24: slim grey tube legs)
     leg_in=136.0,              # sheet 24 (1829 view): leg tops 136 in from the table ends
     leg_y=70.0,                # sheet 24: the front and back legs 70 in from the long edges (E)
-    splay=40.0,                # sheet 24: the lower legs kink out toward the table end, foot 40 further out
-    knee_z=305.0,              # sheet 24: the kink at the cross brace, about 0.4 of the leg height
-    bar=(330.0, 19.0),         # sheet 24: cross brace between the front and back legs: height, tube diameter (E)
-    brace=(560.0, 250.0, 20.0, 5.0),  # sheet 24: folding strut from the leg (z) to the underside (inward x),
+    splay=30.0,                # sheet 24: below the knee each leg jogs out toward the table end by ~25-30 ...
+    knee=(380.0, 210.0),       # ... between z 380 and 210 (sheet 24: the jog starts at the cross brace, ~0.55 up),
+                               # vertical above and below
+    bar=(375.0, 19.0),         # sheet 24: cross brace between the front and back legs: height, tube diameter (E)
+    brace=(530.0, 150.0, 20.0, 5.0),  # sheet 24: folding strut from the leg (z ~530) to the underside ~150 inward,
                                       # flat bar W x T (E)
     bracket=(50.0, 40.0, 14.0),  # sheet 24: small grey brackets under the top at the leg and strut ends (E)
     cap=(30.0, 30.0),          # sheet 24: black foot caps, diameter x height (E)
@@ -54,17 +55,18 @@ CHAIR = dict(                  # F2 steel folding chair, sheet 24
     cap=(26.0, 32.0),          # sheet 24: black foot caps, diameter x height (E)
     main_x=212.0,              # D: the front feet are 450 wide over the caps (225 - 13)
     rear_x=188.0,              # E: the rear legs run inside the main frame (212 - 22 - 2 clear)
-    top_r=70.0,                # sheet 24: the back frame's rounded top corners (E radius)
+    top_r=90.0,                # sheet 24: the back frame's generously rounded top corners (E radius)
     pivot_z=470.0,             # sheet 24: the rear legs pivot on the main frame at seat-top level
     bar_z=170.0,               # sheet 24: the two low cross bars (front legs, rear legs)
     bar_d=16.0,                # E
     seat=(350.0, 360.0, 40.0),  # E: seat pan W x D x plan corner R (inside the rear legs; sheet 24 proportions)
     seat_y0=-270.0,            # sheet 24: the seat front sits just ahead of the front feet
-    pan=(400.0, 420.0),        # E: the steel seat pan band (sheet 24: a black rim under the pad)
-    pad=(5.0, 8.0),            # E: the vinyl pad's inset on the pan and its rounded top edge radius
-    back=(690.0, 8.0, 14.0, 6.0),  # back pad: starts 690 up the main tube (sheet 24: the top ~21 % of the height),
-                                   # 8 behind / 14 in front of the frame plane, front edge round 6 (E)
-    folded_seat_z=(300.0, 660.0),  # E: the Folded state's seat, turned up inside the frame
+    pan=(390.0, 410.0),        # E: the steel seat pan band (sheet 24: a black rim under the pad)
+    pad=(5.0, 14.0),           # sheet 24: a thick pillowy vinyl pad: inset on the pan, rounded top edge radius (E)
+    back=(690.0, 6.0, 22.0, 10.0),  # back pad: starts 690 up the main tube (sheet 24: the top ~21 % of the height),
+                                    # 6 behind / 22 in front of the frame plane (sheet 24: it stands proud of the
+                                    # tubes), padded front round 10 (E)
+    folded_seat_z=(325.0, 685.0),  # sheet 24 Folded: the seat, turned up inside the frame, ends just under the back pad
 )
 # The main frame: front feet at y = -(d/2 - cap r); the back top is placed so the rear legs pivot half way
 # (y_pivot = 0): folded, all four feet then stand on the floor (D). Sheet 24 reads the back top ~60-80 in front of
@@ -93,22 +95,26 @@ BAG = dict(                    # G11 kraft paper bag, sheet 27
     t=0.5,                     # E: kraft paper thickness
     cuff=40.0,                 # E: the turned-over top band inside the rim (the handles are glued under it)
     gusset=(5.0, 14.0),        # sheet 27: the side gussets fold in along their centre crease: in at z 65 / at the rim
-    crease=(80.0, 0.8),        # sheet 27: the front's bottom-fold crease: height, depth
-    handle=(5.5, 45.0, 105.0, 38.0),  # sheet 27: twisted paper cord diameter, leg half-spread, loop height above
-                                      # the rim, glued length below the rim (E)
+    crease=(95.0, 1.5, 5.0),   # sheet 27: the front's bottom-fold crease (a shallow V): height, depth, half width
+    handle=(5.5, 54.0, 100.0, 38.0),  # sheet 27: twisted paper cord diameter, leg half-spread at the rim (~108
+                                      # apart), loop height above the rim (~100), glued length below the rim (E);
+                                      # the loop is a superellipse arch (legs rise near vertical, broad round top)
     twist=40.0,                # E: the cord's twist, degrees per segment (real twisted faces)
-    flat_t=3.0,                # sheet 27 (Folded flat): the flat bag's layered edge (E 3)
-    flat_notch=(2.5, 0.6),     # sheet 27: the gusset fold between the layers at the long edges: depth, half height
-    flat_handles=((45.0, 4.0, 16.0, 0.0), (39.0, 2.9, 10.0, 6.0)),  # sheet 27: the two loops lying out of the mouth,
-                                               # nested: half-spread, centre height, lift angle, top short of the other (E)
+    flat_t=5.0,                # sheet 27 (Folded flat): the flat bag's layered edge reads ~5 (E)
+    flat_notch=(2.5, 1.0),     # sheet 27: the gusset fold between the layers at the long edges: depth, half height
+    flat_handles=((54.0, 5.5, 40.0, 0.0), (48.0, 3.2, 28.0, 6.0)),  # sheet 27: the two loops spring up out of the
+                                               # mouth, nested: half-spread, centre height at the mouth, lift angle,
+                                               # loop top short of the other (E)
 )
 
-# LOD0 budgets: the spec's Tris column (E). The added states take their parent's budget.
+# LOD0 budgets: the spec's Tris column (E). The added states take their parent's budget. Raised (logged):
+# Bag_Paper 400 -> 450, for the two twisted handle cords (6-sided, 8-segment arches, real twist) and the front's
+# V-crease, both drawn on sheet 27.
 BUDGETS = {
     "SM_CSK_Table_Play": 1000,
     "SM_CSK_Chair_Folding": 1200, "SM_CSK_Chair_Folding_Folded": 1200,
     "SM_CSK_Counter_1397": 2000,
-    "SM_CSK_Bag_Paper": 400, "SM_CSK_Bag_Paper_Flat": 400,
+    "SM_CSK_Bag_Paper": 450, "SM_CSK_Bag_Paper_Flat": 450,
 }
 
 REF24 = "References/CardShop/csk_play_area.png (sheet 24)"
@@ -373,7 +379,7 @@ def _round_rings(t: float, z0: float, r_top: float, r_bot: float, segs_top: int,
 
 # =========================================================================== F1 play tables
 
-def _tb_legs(L: float):
+def _tb_legs(L: float, level: int = 0):
     """Leg geometry for one table: [(sx, sy, top point, knee points, foot point)]."""
     s = TABLE
     zt = s["h"] - s["top_t"]
@@ -384,7 +390,10 @@ def _tb_legs(L: float):
         for sy in (-1, 1):
             y = sy * (s["d"] / 2 - s["leg_y"])
             top = (xt, y, zt + 0.5)
-            knee = [(xt + sx * 4.0, y, s["knee_z"]), (xt, y, s["knee_z"] + 35.0)]   # bottom first
+            k0, k1 = s["knee"]
+            ts = (1 / 3, 2 / 3) if level == 0 else ()           # LOD0: a smooth S (smoothstep) through the jog
+            knee = [(xf, y, k1)] + [(xf + (xt - xf) * (3 * t * t - 2 * t ** 3), y, k1 + (k0 - k1) * t) for t in ts] \
+                + [(xt, y, k0)]                                  # bottom first: the jog out to the foot line
             out.append((sx, sy, top, knee, (xf, y, 0.0)))
     return out
 
@@ -406,7 +415,7 @@ def _tb_body(L: float, level: int) -> Tuple[Builder, Optional[Builder]]:
     r = s["leg_d"] / 2
     sides = (8, 6, 4)[level]
     cd, ch = s["cap"]
-    for sx, sy, top, knee, foot in _tb_legs(L):
+    for sx, sy, top, knee, foot in _tb_legs(L, level):
         low = _unit(_sub(knee[0], foot))                           # the lower leg's axis, pointing up
         start = _add(foot, _mul(low, 12.0 / low[2]))                # the tube starts inside the cap
         if level < 2:
@@ -541,7 +550,10 @@ def _ch_frame(b: Builder, place, level: int, STEEL: int, VINYL: int, RUBBER: int
         return pts                                      # (x, s): CCW seen from the front
 
     if level < 2:                                       # a small round at the back, the padded round at the front
-        rings = [(outline(2.0), -nb), (outline(0.0), -nb + 2.0), (outline(0.0), nfr - fr), (outline(fr), nfr)]
+        rings = [(outline(2.0), -nb), (outline(0.0), -nb + 2.0)] if level == 0 else [(outline(0.0), -nb)]
+        for a in ((0.0, 45.0, 90.0) if level == 0 else (0.0, 90.0)):
+            ar = math.radians(a)
+            rings.append((outline(fr - fr * math.cos(ar)), nfr - fr + fr * math.sin(ar)))
     else:
         rings = [(outline(0.0), -nb), (outline(0.0), nfr)]
     loops = [[b.v(*place(sv, x, n)) for x, sv in o] for o, n in rings]
@@ -897,17 +909,22 @@ def _bag_ring(z: float, dent: float = 0.0):
     return [(-w, -d + dent), (w, -d + dent), (w - g, 0.0), (w, d), (-w, d), (-w + g, 0.0)]
 
 
+def _arch(a: float, b: float, phi: float, n: float = 2.6) -> Tuple[float, float]:
+    """A superellipse arch point (|x/a|^n + |z/b|^n = 1) at angle ``phi`` (0 = the right foot, pi / 2 = the top):
+    legs rising near vertical from the rim, converging a little, under a broad round top (sheet 27)."""
+    c, s_ = math.cos(phi), math.sin(phi)
+    return (a * math.copysign(abs(c) ** (2.0 / n), c), b * abs(s_) ** (2.0 / n))
+
+
 def _bag_handle(b: Builder, y: float, level: int, mat: int) -> None:
     s = BAG
     hd, hx, hh, hg = s["handle"]
-    top = s["h"] + hh - hd / 2
-    zc = top - hx
-    n_arc = (7, 4, 2)[level]
-    path = [(-hx, y, s["h"] - hg), (-hx, y, zc)]
-    for i in range(1, n_arc):
-        a = math.pi - math.pi * i / n_arc
-        path.append((hx * math.cos(a), y, zc + hx * math.sin(a)))
-    path += [(hx, y, zc), (hx, y, s["h"] - hg)]
+    n_arc = (8, 4, 2)[level]
+    path = [(-hx, y, s["h"] - hg)]
+    for i in range(n_arc + 1):
+        x, z = _arch(hx, hh - hd / 2, math.pi - math.pi * i / n_arc)
+        path.append((x, y, s["h"] + z))
+    path.append((hx, y, s["h"] - hg))
     _tube(b, path, hd / 2, (6, 4, 3)[level], mat, up=(0.0, 1.0, 0.0), caps=(level < 2, level < 2),
           twist_deg=s["twist"] if level == 0 else 0.0)
 
@@ -919,11 +936,11 @@ def _bag_open(level: int) -> Builder:
     s = BAG
     t, h = s["t"], s["h"]
     KRAFT, PRINT = 0, 1
-    cz, cd = s["crease"]
+    cz, cd, cw = s["crease"]
     b = Builder()
     if level == 0:
-        zs = [0.0, 65.0, cz, h]
-        dents = [0.0, 0.0, cd, 0.0]
+        zs = [0.0, 65.0, cz - cw, cz, cz + cw, h]
+        dents = [0.0, 0.0, 0.0, cd, 0.0, 0.0]
     elif level == 1:
         zs, dents = [0.0, 65.0, h], [0.0, 0.0, 0.0]
     else:
@@ -931,8 +948,8 @@ def _bag_open(level: int) -> Builder:
     outer = [[b.v(x, y, z) for x, y in _bag_ring(z, dn)] for z, dn in zip(zs, dents)]
     # inner skin: offset by t (2 t in the turned top band); the inside floor at z = t
     if level == 0:
-        izs = [(t, t, 0.0), (65.0, t, 0.0), (cz, t, cd), (h - s["cuff"], t, 0.0), (h - s["cuff"], 2 * t, 0.0),
-               (h, 2 * t, 0.0)]
+        izs = [(t, t, 0.0), (65.0, t, 0.0), (cz - cw, t, 0.0), (cz, t, cd), (cz + cw, t, 0.0),
+               (h - s["cuff"], t, 0.0), (h - s["cuff"], 2 * t, 0.0), (h, 2 * t, 0.0)]
     elif level == 1:
         izs = [(t, t, 0.0), (65.0, t, 0.0), (h, t, 0.0)]
     else:
@@ -1024,7 +1041,7 @@ def _bag_flat_lod(level: int) -> Builder:
     T = s["flat_t"]
     nd, nh = s["flat_notch"]
     KRAFT, PRINT = 0, 1
-    cz, cd = s["crease"]
+    cz, cd, cw = s["crease"]
     b = Builder()
 
     def prof(top: float):
@@ -1035,7 +1052,7 @@ def _bag_flat_lod(level: int) -> Builder:
 
     yc = -h + cz
     if level == 0:
-        secs = [(-h, prof(T)), (yc - 1.0, prof(T)), (yc, prof(T - cd / 2)), (yc + 1.0, prof(T)), (h, prof(T))]
+        secs = [(-h, prof(T)), (yc - cw / 2, prof(T)), (yc, prof(T - cd / 2)), (yc + cw / 2, prof(T)), (h, prof(T))]
     else:
         secs = [(-h, prof(T)), (h, prof(T))]
     rings = [[b.v(x, y, z) for x, z in p] for y, p in secs]
@@ -1058,19 +1075,15 @@ def _bag_flat_lod(level: int) -> Builder:
         for tr in tris:
             _face_out(b, [ring[tr[0]], ring[tr[1]], ring[tr[2]]], nrm, KRAFT)
     hd, _, hh, _ = s["handle"]
-    n_arc = (7, 4, 2)[level]
+    n_arc = (8, 4, 2)[level]
     for hx, zc, lift, short in s["flat_handles"]:
         a = math.radians(lift)
-        leg = hh - hd / 2 - hx - short
+        reach = hh - hd / 2 - short
 
         def pt(x, sv):
             return (x, h + 0.5 + sv * math.cos(a), zc + sv * math.sin(a))
 
-        path = [pt(-hx, 0.0), pt(-hx, leg)]
-        for i in range(1, n_arc):
-            ang = math.pi - math.pi * i / n_arc
-            path.append(pt(hx * math.cos(ang), leg + hx * math.sin(ang)))
-        path += [pt(hx, leg), pt(hx, 0.0)]
+        path = [pt(*_arch(hx, reach, math.pi - math.pi * i / n_arc)) for i in range(n_arc + 1)]   # as the open bag
         up = (0.0, -math.sin(a), math.cos(a))
         _tube(b, path, hd / 2, (6, 4, 3)[level], KRAFT, up=up, caps=(True, True),
               twist_deg=s["twist"] if level == 0 else 0.0)
@@ -1087,7 +1100,7 @@ def item_bag_flat() -> Item:
         name="SM_CSK_Bag_Paper_Flat", lods=lods, materials=["M_CSK_Kraft", "M_CSK_BagPrint"],
         projections={R_FRONT: _planar(-w / 2, -h / 2, w, h),
                      R_BACK: _planar(-w / 2, -h / 2, w, h, tile_u=1.0, mirror_x=True)},
-        sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0.0, h / 2 + hh - hd, T)), Socket("Stack", (0, 0, T))],
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0.0, h / 2, T / 2)), Socket("Stack", (0, 0, T))],
         hulls=[((-w / 2, -h / 2, -pad), (w / 2, h / 2, T + pad))],
         budget=BUDGETS["SM_CSK_Bag_Paper_Flat"],
         data={"footprint_mm": [w, h, T], "pose": "flat, front up, top edge +Y", "pivot": "centre of the back face",
