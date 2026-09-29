@@ -28,13 +28,13 @@ Vec3 = Tuple[float, float, float]
 #     fifth level (sheet 28) adds a deck and 4 beams.
 #   Workbench_1524 1500 -> 5000: sheet 28 draws a slot column on each leg's front face and a hole column on its side.
 #   TrashCan 800 -> 1200: the hollow inside (seen through the swinging flap, sheet 29) and the raised band's rounds.
-#   TapeGun 800 -> 1200: sheet 27's three-spoke hub, the two side plates, the serrated blade and the clear guard.
+#   TapeGun 800 -> 1300: sheet 27's three-window hub, the two side plates, the serrated blade and the clear guard.
 BUDGETS = {
     "SM_CSK_Rack_Warehouse_1829": 20000,
     "SM_CSK_Workbench_1524": 5000,
     "SM_CSK_Mailer_S": 150, "SM_CSK_Mailer_L": 150,
     "SM_CSK_Mailer_S_Open": 150, "SM_CSK_Mailer_L_Open": 150,
-    "SM_CSK_TapeGun": 1400,
+    "SM_CSK_TapeGun": 1300,
     "SM_CSK_TrashCan": 1200, "SM_CSK_TrashCan_Lid": 200,
     "SM_CSK_TrashBag_Full": 600,
     "SM_CSK_HandTruck": 2500,
@@ -73,19 +73,76 @@ TAPEGUN = dict(                   # H4, sheet 27 (3): 250 long (X, the blade at 
     roll=(30.0, 125.0, 55.0, 38.0, 34.0, 48.0),   # sheet 27: roll centre x, z; tape OD/2, core OD/2, core ID/2, width
     hub=(33.5, 23.0, 6.0),        # grey hub: radius, half width, window pocket depth (sheet 27: three dark windows)
     windows=(14.0, 28.0, 64.0),   # window inner / outer radius, angular width (deg)
-    plate=((-30.0, 60.0), (-2.0, 50.0), (38.0, 58.0), (56.0, 84.0), (48.0, 104.0), (20.0, 112.0), (-12.0, 108.0),
-           (-30.0, 94.0)),        # sheet 27: the light grey side plate under the roll (x, z)
+    plate=((-30.0, 60.0), (-17.0, 44.0), (40.0, 52.0), (54.0, 86.0), (46.0, 112.0), (22.0, 118.0), (-12.0, 108.0),
+           (-30.0, 96.0)),        # sheet 27 (measured, 1.4 px/mm): the light grey side plate round the roll's foot
     plate_y=(25.5, 28.0),         # E: the plates' inner / outer faces (|y|)
     arm=((12.0, 110.0), (40.0, 100.0), (48.0, 126.0), (30.0, 143.0), (14.0, 134.0)),   # E: the far arm to the axle
-    housing=(-104.0, -26.0, 22.0, 92.0, 31.0),   # sheet 27: the black front housing x0, x1, z0, z1, |y|
-    cheek=(-98.0, -40.0, 28.0, 90.0, 8.0, 30.5, 35.5),   # the black cheek plates: x0, x1, z0, z1, corner R, |y| in/out
+    housing=(((-98.0, 72.0), (-94.0, 86.0), (-66.0, 89.0), (-32.0, 93.0), (-22.0, 60.0), (-30.0, 38.0),
+              (-62.0, 24.0), (-90.0, 30.0)), 29.0),   # sheet 27: the black front housing's side profile (x, z), |y|
+    cheek=(((-66.0, 80.0), (-32.0, 92.0), (-23.0, 43.0), (-60.0, 29.0)), 8.0, 30.5, 35.5),
+                                  # sheet 27 (measured): the black cheek plate, a rounded tilted quad: corners (x, z),
+                                  # corner R, |y| in / out
     screws=((-44.0, 79.0), (-37.0, 45.0)),       # sheet 27: two screws on each cheek (x, z); one on each grey plate
     plate_screw=(19.0, 57.0),
     blade=(-100.5, 1.0, 78.0, 92.0, 3.0, 27.0, 9),  # serrated blade: x, thickness, z0, z1, tooth height, |y|, teeth
     guard=((-97.0, 92.0), (-89.0, 140.0), 1.5, 25.0),  # clear guard: bottom (x, z), top (x, z), thickness, |y|
     roller=(-78.0, 24.0, 14.0, 28.0),            # the black pressure roller: x, z, r, |y|
     grip=((44.0, 0.0, 80.0), (114.0, 0.0, 12.0)),  # sheet 27: the raked pistol grip's axis, top to end
-    tongue=(-103.0, 92.0, -110.0, 24.0),        # the tape's end hanging from the blade to the floor: x, z top, x bottom
+    tongue=(-103.0, 82.0, -110.0, None),        # the tape's end hanging from the blade to the floor: x, z top, x bottom
+)
+
+TRUCK = dict(                     # H7, sheet 28 (3): 450 W x 500 D x 1200 H (E = sheet), the nose plate toward -Y
+    w=450.0, d=500.0, h=1200.0,
+    nose=(350.0, 200.0, 5.0),     # E (spec) = sheet 28 notes: nose plate W x D, sheet thickness (E)
+    flange=120.0,                 # sheet 28 back / side views: the plate's back turned up ~120 behind the load
+    rail=(14.0, 160.0, -36.0),    # E: rail tube radius (Ø 28), centre |x| (sheet 28 back view: the rails stand on the
+                                  # plate's ends), centre y (the tube's front face on the flange)
+    bend=(1000.0, 40.0, 60.0),    # sheet 28 side view: the rails turn back at ~1000, 40 deg from vertical; bend radius
+    bars=(10.0, (220.0, 590.0, 950.0)),   # sheet 28 front / back views: cross bars Ø 20 at these heights
+    wheel=(125.0, 75.0, 125.0),   # E (spec) = sheet 28: wheel radius (Ø 250), tyre width, axle y (the wheel's back
+                                  # at 250 = the 500 depth)
+    tyre=((66.0, 26.0), (100.0, 37.5), (121.0, 32.0), (125.0, 24.0), (125.0, -24.0), (121.0, -32.0), (100.0, -37.5),
+          (66.0, -26.0)),         # the tyre's section (r, x from the wheel's centre plane), sheet 28: a fat pneumatic
+    tread=3.0,                    # sheet 28: block tread (alternate segments 3 lower)
+    hub=((66.0, 26.0), (56.0, 29.0), (26.0, 31.0), (15.0, 40.0)),   # the grey steel hub's face (r, x): a dished disc
+                                  # and a centre cap (sheet 28)
+    axle=8.0,                     # E: axle radius
+    strut=(11.0, 380.0),          # sheet 28: the wheel strut Ø 22 from the rail at 380 to the axle
+    grip=(17.0, 120.0),           # sheet 28: black grips Ø 34 on the last 120 of each handle
+)
+
+RACK = dict(                      # H1, sheet 28 (1): overall 1829 W x 610 D x 2134 H (E = sheet), feet included
+    w=1829.0, d=610.0, h=2134.0,
+    foot=(12.0, 10.0, 3.0),       # sheet 28 "Upright foot": a black square plate 12 proud of the upright all round,
+                                  # 10 thick (E), 3 chamfer (E)
+    upright=(60.0, 45.0),         # E* (sheet 28: ~60 front face with two keyhole columns, a narrower side face with one)
+    levels=5,                     # sheet 28 notes: the picture shows 5 levels (spec 4, E): build 5
+    deck_first=200.0,             # E*: the L1 deck top (sheet 28: the bottom beam ~150 above the floor)
+    deck_pitch=482.5,             # D: L1 200 to L5 2130; 482.5 leaves 406.5 clear, so the L delivery box (406.2) fits
+    beam=(60.0, 40.0),            # E* (sheet 28: beam height ~ the upright's width): height, depth
+    deck_t=16.0,                  # E: particle board, resting on the beams (sheet 28 deck detail: its edge shows)
+    plate=(30.0, 25.0, 3.0),      # sheet 28 "Boltless beam connection": the end plate over the upright's inner slot
+                                  # column: width, drop below the beam, thickness
+    keyhole=((-2.0, 0.0), (2.0, 0.0), (2.0, 7.0), (4.0, 11.0), (2.0, 16.0), (-2.0, 16.0), (-4.0, 11.0), (-2.0, 7.0)),
+                                  # sheet 28: a round head over a narrow slot, ~8 x 16 (E*)
+    slot_pitch=50.0,              # E* (sheet 28 reads 40-50)
+    slot_cols=15.0,               # the front face's two columns at +-15 from its centre (sheet 28)
+    slot_depth=5.0,               # E: pocket depth; the floor is dark (the tube's inside)
+    rivets=3,                     # sheet 28: three holes down each end plate
+)
+
+BENCH = dict(                     # H2, sheet 28 (2): 1524 W x 762 D x 914 H (E = sheet)
+    w=1524.0, d=762.0, h=914.0,
+    top_t=40.0,                   # E* (sheet 28: a thick oak top)
+    border=30.0,                  # sheet 28: the oak edge frame round the green mat
+    mat_t=2.5,                    # E: the cutting mat, flush with the frame
+    leg=(55.0, 25.0),             # E*: leg section, inset of the legs' outer faces from the top's edges (sheet 28)
+    foot=(66.0, 42.0),            # sheet 28: black foot caps, square side and height
+    apron=(70.0, 38.0, 8.0),      # sheet 28: grey steel apron under the top: height, depth, gap below the top
+    shelf=(170.0, 60.0, 18.0),    # sheet 28: the lower shelf: beam bottom z, beam height, board thickness
+    hole=((-2.0, 0.0), (2.0, 0.0), (3.2, 6.0), (2.0, 11.0), (-2.0, 11.0), (-3.2, 6.0)),   # sheet 28: leg slots (E*)
+    hole_pitch=32.0,              # sheet 28 (reads ~32)
+    hole_depth=4.0,
 )
 
 TBAG = dict(                      # H6, sheet 29 (2)
@@ -373,6 +430,30 @@ def _lathe_ax(b: Builder, o: Vec3, axis: Vec3, prof: Sequence[Tuple[float, float
     if caps[1] and len(rings[-1]) > 1:
         b.fill([rings[-1]], m1, 0, a)
     return rings
+
+
+def _round_poly(P: Sequence[Tuple[float, float]], r: float, segs: int) -> List[Tuple[float, float]]:
+    """A convex polygon with its corners rounded (radius r, ``segs`` segments a corner); keeps the input winding."""
+    n = len(P)
+    out = []
+    for i in range(n):
+        a, c, d = P[i - 1], P[i], P[(i + 1) % n]
+        u1 = _unit((a[0] - c[0], a[1] - c[1], 0.0))
+        u2 = _unit((d[0] - c[0], d[1] - c[1], 0.0))
+        ang = math.acos(max(-1.0, min(1.0, _dot(u1, u2))))
+        tlen = r / math.tan(ang / 2)
+        p1 = (c[0] + u1[0] * tlen, c[1] + u1[1] * tlen)
+        p2 = (c[0] + u2[0] * tlen, c[1] + u2[1] * tlen)
+        bis = _unit(_add(u1, u2))
+        dist = r / math.sin(ang / 2)
+        o = (c[0] + bis[0] * dist, c[1] + bis[1] * dist)
+        a1 = math.atan2(p1[1] - o[1], p1[0] - o[0])
+        a2 = math.atan2(p2[1] - o[1], p2[0] - o[0])
+        da = (a2 - a1 + math.pi) % (2 * math.pi) - math.pi
+        for k in range(segs + 1):
+            q = a1 + da * k / segs
+            out.append((o[0] + r * math.cos(q), o[1] + r * math.sin(q)))
+    return out
 
 
 def _circle_pts(r: float, n: int, cx: float = 0.0, cy: float = 0.0, a0: float = 0.0):
@@ -810,23 +891,18 @@ def _tapegun_lod(level: int) -> Lod:
     # grey side plates, the far arm, the housing, the cheeks
     y0, y1 = t["plate_y"]
     for sg in ((-1.0, 1.0) if far else (-1.0,)):
-        _plate(b, t["plate"], (0.0, sg * y0, 0.0), X, Z, 0.0, (y1 - y0), GREY) if sg < 0 else \
-            _plate(b, t["plate"], (0.0, sg * y1, 0.0), X, Z, 0.0, (y1 - y0), GREY)
+        _plate(e, t["plate"], (0.0, sg * y0, 0.0), X, Z, 0.0, (y1 - y0), GREY) if sg < 0 else \
+            _plate(e, t["plate"], (0.0, sg * y1, 0.0), X, Z, 0.0, (y1 - y0), GREY)
     if far:
-        _plate(b, t["arm"], (0.0, y1 - 0.5, 0.0), X, Z, 0.0, (y1 - y0) - 0.5, GREY)
+        _plate(e, t["arm"], (0.0, y1 - 0.5, 0.0), X, Z, 0.0, (y1 - y0) - 0.5, GREY)
         _lathe_ax(e, (rx, hw - 1.0, rz), Y, [(0.0, 0.0), (9.0, 0.0), (9.0, y0 - hw + 1.5), (0.0, y0 - hw + 1.5)], 8,
                   PL, caps=(False, False))
-    hx0, hx1, hz0, hz1, hy = t["housing"]
-    _box(b, (hx0, -hy, hz0), (hx1, hy, hz1), PL)
-    _box(b, (hx1 - 2.0, -y0 + 1.0, 46.0), (58.0, y0 - 1.0, 70.0), PL)      # the frame bar to the grip, under the roll
-    cx0, cx1, cz0, cz1, cr, cyi, cyo = t["cheek"]
+    hprof, hy = t["housing"]
+    _plate(b, hprof, (0.0, hy, 0.0), X, Z, 0.0, 2 * hy, PL)             # w = -Y: from y = +hy to -hy
+    _box(b, (-26.0, -y0 + 1.0, 50.0), (50.0, y0 - 1.0, 68.0), PL)       # the frame bar to the grip, under the roll
+    corners, cr, cyi, cyo = t["cheek"]
     cseg = (2, 1, 1)[level]
-    ck = []
-    for (qx, qz, a0) in ((cx1 - cr, cz0 + cr, -90.0), (cx1 - cr, cz1 - cr, 0.0), (cx0 + cr, cz1 - cr, 90.0),
-                         (cx0 + cr, cz0 + cr, 180.0)):
-        for i in range(cseg + 1):
-            q = math.radians(a0 + 90.0 * i / cseg)
-            ck.append((qx + cr * math.cos(q), qz + cr * math.sin(q)))
+    ck = _round_poly(corners, cr, cseg)
     for sg in ((-1.0, 1.0) if far else (-1.0,)):
         _plate(b, ck, (0.0, sg * (cyi if sg < 0 else cyo), 0.0), X, Z, 0.0, cyo - cyi, PL)
     if level < 2:                                       # screws: two on each cheek, one on each grey plate
@@ -870,7 +946,8 @@ def _tapegun_lod(level: int) -> Lod:
     mats += [RUB, RUB, GREY, GREY, GREY]
     _lathe_ax(e, p0, ax, prof, (10, 8, 6)[level], mats, caps=(False, False), ref=Y)
     # the tape's end: from the blade down to the floor
-    tx0, tz0, tx1, tz1 = t["tongue"]
+    tx0, tz0, tx1, _ = t["tongue"]
+    tz1 = min(v[2] for v in e.verts)                    # it reaches the floor with the grip's end cap
     tw = rw / 2
     tv = [e.v(tx0, -tw, tz0), e.v(tx0, tw, tz0), e.v(tx1, tw, tz1), e.v(tx1, -tw, tz1)]
     tn = _unit(_cross(_sub(e.verts[tv[1]], e.verts[tv[0]]), _sub(e.verts[tv[3]], e.verts[tv[0]])))
@@ -921,7 +998,7 @@ def item_tapegun() -> Item:
               "reference": "References/CardShop/csk_bag_mailers.png (sheet 27 (3))",
               "notes": ["Sheet 27: pistol grip, grey side plates, a tape roll on a hub with three windows and a "
                         "centre bolt, a serrated blade with a clear guard, black cheek plates with two screws.",
-                        "Budget 800 -> 1200: the three-window hub, the two side plates, the serrated blade and the "
+                        "Budget 800 -> 1300: the three-window hub, the two side plates, the serrated blade and the "
                         "clear guard are all visible at arm's length (a handheld item)."]},
     )
 
@@ -994,9 +1071,452 @@ def item_trashbag() -> Item:
     )
 
 
+# =========================================================================== H7 hand truck (sheet 28)
+
+def _wheel(b: Builder, x0: float, side: float, level: int) -> None:
+    """A pneumatic wheel on the X axis at (x0, axle y, r): the tyre section swept round with block tread (alternate
+    segments 3 lower on the crown) and the grey steel hub (a dished face and a centre cap) on both faces."""
+    t = TRUCK
+    R, W, yA = t["wheel"]
+    segs = (28, 18, 12)[level]
+    RUB, HUB = 1, 2
+    prof = t["tyre"] if level == 0 else [t["tyre"][i] for i in ((0, 1, 3, 4, 6, 7) if level == 1 else (0, 1, 6, 7))]
+    angs = [2 * math.pi * (k + 0.5) / segs for k in range(segs)]
+    rings = []
+    for r, dx in prof:
+        crown = r >= R - 1e-6 and level == 0
+        ring = []
+        for k, q in enumerate(angs):
+            rr = r - (t["tread"] if crown and k % 2 else 0.0)
+            ring.append(b.v(x0 + dx, yA + rr * math.cos(q), R + rr * math.sin(q)))
+        rings.append(ring)
+    n = len(rings)
+    for i in range(n - 1):
+        (r0, x_0), (r1, x_1) = prof[i], prof[i + 1]
+        for k in range(segs):
+            k1 = (k + 1) % segs
+            q = angs[k] + math.pi / segs
+            radial = (0.0, math.cos(q), math.sin(q))
+            out = _add(_mul(radial, -(x_1 - x_0)), (r1 - r0, 0.0, 0.0))   # the section runs +x -> -x over the crown
+            _face_out(b, [rings[i][k], rings[i][k1], rings[i + 1][k1], rings[i + 1][k]], out, RUB)
+    # the hubs: from the tyre's bead ring inward to the centre cap, each face
+    hub = list(t["hub"][1:]) if level < 2 else [t["hub"][-1]]
+    for ring0, (rp0, xp0), sg in ((rings[0], prof[0], 1.0), (rings[-1], prof[-1], -1.0)):
+        prev, rp, xp = ring0, rp0, abs(xp0)
+        for r, dx in hub + [(0.0, hub[-1][1])]:
+            if r <= 1e-9:
+                c = b.v(x0 + sg * dx, yA, R)
+                for k in range(segs):
+                    _face_out(b, [prev[k], prev[(k + 1) % segs], c], (sg, 0.0, 0.0), HUB)
+                break
+            cur = [b.v(x0 + sg * dx, yA + r * math.cos(q), R + r * math.sin(q)) for q in angs]
+            for k in range(segs):
+                k1 = (k + 1) % segs
+                q = angs[k] + math.pi / segs
+                radial = (0.0, math.cos(q), math.sin(q))
+                out = _add(_mul(radial, dx - xp), (-sg * (r - rp), 0.0, 0.0))
+                _face_out(b, [prev[k], prev[k1], cur[k1], cur[k]], out, HUB)
+            prev, rp, xp = cur, r, dx
+
+
+def _truck_rail_path(sx: float, level: int) -> List[Vec3]:
+    t = TRUCK
+    rr, rx, ry = t["rail"]
+    zb, ang, br = t["bend"]
+    a = math.radians(ang)
+    z0 = t["nose"][2] - 1.0
+    pts = [(sx * rx, ry, z0)]
+    n = (4, 2, 1)[level]
+    # the bend: an arc of radius br from vertical to ``ang`` back (toward +Y)
+    for i in range(n + 1):
+        q = a * i / n
+        pts.append((sx * rx, ry + br * (1 - math.cos(q)), zb + br * math.sin(q)))
+    end_len = (t["h"] - rr * math.sin(a) - pts[-1][2]) / math.cos(a)
+    pts.append((sx * rx, pts[-1][1] + end_len * math.sin(a), pts[-1][2] + end_len * math.cos(a)))
+    return pts
+
+
+def _truck_lod(level: int) -> Lod:
+    """Sheet 28: a blue tube frame (two rails turning back at the top into handles with black grips, three cross bars
+    and a centre upright), a blue nose plate with its back turned up, two struts from the rails to the axle, two
+    pneumatic wheels (black block-tread tyres, grey hubs)."""
+    t = TRUCK
+    BLUE, RUB, HUB = 0, 1, 2
+    b = Builder()        # the nose plate (bevelled)
+    e = Builder()        # tubes and wheels
+    sides = (10, 8, 6)[level]
+    nw, nd, nt = t["nose"]
+    rr, rx, ry = t["rail"]
+    y_back = ry - rr                                  # the flange's front face = the rails' front face
+    _box(b, (-nw / 2, y_back - nd, 0.0), (nw / 2, y_back + 0.5, nt), BLUE)
+    _box(b, (-nw / 2, y_back - 0.8, nt - 1.5), (nw / 2, y_back + 4.5, t["flange"]), BLUE)
+    for sx in (-1.0, 1.0):
+        _tube(e, _truck_rail_path(sx, level), rr, sides, BLUE, up=(1.0, 0.0, 0.0), caps=(False, True))
+    br_, zs = t["bars"]
+    for z in zs:
+        _tube(e, [(-rx + rr * 0.5, ry, z), (rx - rr * 0.5, ry, z)], br_, sides, BLUE, up=(0.0, 1.0, 0.0))
+    _tube(e, [(0.0, ry, zs[0] - br_ * 0.5), (0.0, ry, zs[-1] + br_ * 0.5)], br_, sides, BLUE, up=(1.0, 0.0, 0.0))
+    R, W, yA = t["wheel"]
+    sr, sz = t["strut"]
+    for sx in (-1.0, 1.0):                            # struts: rail -> axle
+        _tube(e, [(sx * rx, ry + rr * 0.3, sz), (sx * rx, yA, R)], sr, sides, BLUE, up=(1.0, 0.0, 0.0))
+    xw = t["w"] / 2 - W / 2
+    _tube(e, [(-xw - 26.0, yA, R), (xw + 26.0, yA, R)], t["axle"], sides, HUB, up=(0.0, 0.0, 1.0))
+    for sx in (-1.0, 1.0):
+        _wheel(e, sx * xw, sx, level)
+    # the grips: black sleeves on the handles' last 120
+    gr, gl = t["grip"]
+    for sx in (-1.0, 1.0):
+        pts = _truck_rail_path(sx, level)
+        p1, p0 = pts[-1], pts[-2]
+        ax = _unit(_sub(p1, p0))
+        s0 = _sub(p1, _mul(ax, gl))
+        _lathe_ax(e, s0, ax, [(0.0, 0.0), (gr, 0.0), (gr, gl - 6.0), (gr - 5.0, gl + 1.0), (0.0, gl + 1.0)]
+                  if level < 2 else [(0.0, 0.0), (gr, 0.0), (gr, gl), (0.0, gl)], sides, RUB, caps=(False, False),
+                  ref=(1.0, 0.0, 0.0))
+    return Lod(b, bevel_mm=1.0 if level == 0 else None, extra=e)
+
+
+def item_handtruck() -> Item:
+    t = TRUCK
+    lods = [_truck_lod(k) for k in range(3)]
+    rr, rx, ry = t["rail"]
+    nw, nd, nt = t["nose"]
+    y_back = ry - rr
+    R, W, yA = t["wheel"]
+    top = _truck_rail_path(1.0, 0)[-1]
+    gr, gl = t["grip"]
+    ax = _unit(_sub(top, _truck_rail_path(1.0, 0)[-2]))
+    gc = _sub(top, _mul(ax, gl / 2))
+    xs = [v[0] for bb in (lods[0].builder, lods[0].extra) for v in bb.verts]
+    ys = [v[1] for bb in (lods[0].builder, lods[0].extra) for v in bb.verts]
+    zs = [v[2] for bb in (lods[0].builder, lods[0].extra) for v in bb.verts]
+    mn, mx = (min(xs), min(ys), min(zs)), (max(xs), max(ys), max(zs))
+    # CONTAIN: a carton or a delivery box stands on the nose plate against the flange; one seat per box depth
+    seats = {"Nose": 152.0 + 77.0, "Nose_M": 305.0, "Nose_L": 406.0}
+    socks = [Socket("Seat", (0, 0, 0))]
+    for nm, depth in seats.items():
+        socks.append(Socket(nm, (0.0, y_back - depth / 2 - 0.5, nt), kind="CONTAIN"))
+    socks += [Socket("Grip", (0.0, gc[1], gc[2])), Socket("Axle", (0.0, yA, R))]
+    cav = [[-320.0, y_back - 470.0, nt], [320.0, y_back, nt + 1300.0]]
+    name = "SM_CSK_HandTruck"
+    return Item(
+        name=name, lods=lods, materials=["M_CSK_SteelBlue", "M_CSK_Rubber", "M_CSK_Metal"], projections={},
+        sockets=socks,
+        hulls=[((-rx - rr, y_back, nt), (rx + rr, mx[1], mx[2])),
+               ((-nw / 2, y_back - nd, 0.0), (nw / 2, y_back + 4.5, t["flange"])),
+               ((mn[0], yA - R, 0.0), (mx[0], yA + R, 2 * R))],
+        budget=BUDGETS[name],
+        data={"footprint_mm": [round(mx[0] - mn[0], 1), round(mx[1] - mn[1], 1), round(mx[2], 1)], "pose": "upright",
+              "pivot": "bottom-centre of the footprint",
+              "contain": {"Nose": {"socket": "Nose", "cavity_mm": cav, "accepts": ["Carton", "BoxShipS"]},
+                          "NoseM": {"socket": "Nose_M", "cavity_mm": cav, "accepts": ["BoxShipM"]},
+                          "NoseL": {"socket": "Nose_L", "cavity_mm": cav, "accepts": ["BoxShipL"]}},
+              "stack": {"on": ["Nose", "Nose_M", "Nose_L"], "max": 4, "rule": "spec 4.3: 4 on the hand truck"},
+              "tilt": {"socket": "Axle", "axis": "X", "note": "tip the truck back about the axle to roll it"},
+              "reference": "References/CardShop/csk_backroom.png (sheet 28 (3))",
+              "notes": ["Sheet 28: blue Ø 28 tube rails turning back 40 deg at ~1000 into handles with black grips, "
+                        "3 cross bars and a centre upright, the nose plate's back turned up 120, struts to the axle, "
+                        "Ø 250 pneumatic wheels with block tread and grey hubs.",
+                        "Nose / Nose_M / Nose_L: the load stands against the flange, so each box depth has its own seat "
+                        "(Nose = Carton and BoxShipS; Nose_M, Nose_L = the M and L delivery boxes). The spec lists "
+                        "Nose only; the two extra seats keep every box's back on the flange."]},
+    )
+
+
+# =========================================================================== slotted steel (H1 uprights, H2 legs)
+
+_FACES = {   # face key: (corner ids of the 8-corner box, outward normal, u axis, v axis) - see _slotted_box
+    "ny": ((0, 1, 5, 4), (0.0, -1.0, 0.0), 0, 2), "py": ((2, 3, 7, 6), (0.0, 1.0, 0.0), 0, 2),
+    "nx": ((3, 0, 4, 7), (-1.0, 0.0, 0.0), 1, 2), "px": ((1, 2, 6, 5), (1.0, 0.0, 0.0), 1, 2),
+    "nz": ((0, 3, 2, 1), (0.0, 0.0, -1.0), 0, 1), "pz": ((4, 5, 6, 7), (0.0, 0.0, 1.0), 0, 1),
+}
+
+
+def _slotted_box(b: Builder, mn: Vec3, mx: Vec3, mat: int, holes: Dict[str, Sequence[Tuple[float, float]]],
+                 shape: Sequence[Tuple[float, float]], depth: float, floor_mat: int,
+                 skip: Sequence[str] = ()) -> None:
+    """A box whose faces carry real pockets: ``holes`` {face: [(a, c)]} are the pocket origins on that face in world
+    coordinates of the face's u / v axes (x or y across, z up); ``shape`` [(du, dv)] is the pocket outline. Each face
+    with pockets is one planar fill round them (shared corners, no T-junctions); the pocket walls face the pocket and
+    the floor is ``floor_mat``."""
+    (x0, y0, z0), (x1, y1, z1) = mn, mx
+    C = [b.v(x0, y0, z0), b.v(x1, y0, z0), b.v(x1, y1, z0), b.v(x0, y1, z0),
+         b.v(x0, y0, z1), b.v(x1, y0, z1), b.v(x1, y1, z1), b.v(x0, y1, z1)]
+    for key, (ids, nrm, ua, va) in _FACES.items():
+        if key in skip:
+            continue
+        corners = [C[i] for i in ids]
+        hl = holes.get(key, ())
+        if not hl:
+            _face_out(b, corners, nrm, mat)
+            continue
+        plane = b.verts[corners[0]]
+        axis = [i for i in range(3) if abs(nrm[i]) > 0.5][0]
+        loops = []
+        for a, c in hl:
+            top, bot = [], []
+            for du, dv in shape:
+                p = [0.0, 0.0, 0.0]
+                p[axis] = plane[axis]
+                p[ua], p[va] = a + du, c + dv
+                top.append(b.v(*p))
+                p[axis] -= nrm[axis] * depth
+                bot.append(b.v(*p))
+            m = len(shape)
+            ca = sum(q[0] for q in shape) / m
+            cv = sum(q[1] for q in shape) / m
+            for i in range(m):
+                j = (i + 1) % m
+                inn = [0.0, 0.0, 0.0]
+                inn[ua] = ca - (shape[i][0] + shape[j][0]) / 2
+                inn[va] = cv - (shape[i][1] + shape[j][1]) / 2
+                _face_out(b, [top[i], top[j], bot[j], bot[i]], tuple(inn), floor_mat)
+            b.fill([bot], floor_mat, 0, nrm)
+            loops.append(top)
+        b.fill([corners] + loops, mat, 0, nrm)
+
+
+def _rect_shape(w: float, h: float):
+    return [(-w / 2, 0.0), (w / 2, 0.0), (w / 2, h), (-w / 2, h)]
+
+
+# =========================================================================== H1 warehouse rack (sheet 28)
+
+def _rack_dims():
+    r = RACK
+    W, D, H = r["w"], r["d"], r["h"]
+    fm = r["foot"][0]
+    uw, ud = r["upright"]
+    xo, yo = W / 2 - fm, D / 2 - fm                  # the uprights' outer faces
+    xi, yi = xo - uw, yo - ud                        # their inner faces
+    bh, bd = r["beam"]
+    pt = r["plate"][2]
+    decks = [r["deck_first"] + k * r["deck_pitch"] for k in range(r["levels"])]
+    return dict(W=W, D=D, H=H, xo=xo, yo=yo, xi=xi, yi=yi, uw=uw, ud=ud, bh=bh, bd=bd, pt=pt, decks=decks,
+                yb=yo + pt)                          # the beams' outer faces (on the end plates)
+
+
+def _rack_lod(level: int) -> Lod:
+    """Sheet 28: four grey slotted uprights (keyhole slots, two columns on the front face and one on the outer side)
+    on black square foot plates; five levels of orange beams (front, back and both ends) hung on end plates with three
+    rivet holes; a particle-board deck on the front and back beams of each level."""
+    r = RACK
+    k = _rack_dims()
+    GREY, ORANGE, BOARD, BLACK = 0, 1, 2, 3
+    b = Builder()          # bevelled: feet, beams, decks
+    e = Builder()          # crisp: the slotted uprights and the end plates
+    xo, yo, xi, yi, bh, bd, pt = k["xo"], k["yo"], k["xi"], k["yi"], k["bh"], k["bd"], k["pt"]
+    H, decks, dt = k["H"], k["decks"], r["deck_t"]
+    fm, ft, fc = r["foot"]
+    pw, pdrop, _ = r["plate"]
+    beams = [(z - dt - bh, z - dt) for z in decks]                       # (bottom, top) per level
+    plates_z = [(zb - pdrop, zt) for zb, zt in beams]
+
+    def free(z0, z1, zones):
+        return all(z1 < a - 2.0 or z0 > c + 2.0 for a, c in zones)
+
+    pitch = r["slot_pitch"] * (1 if level == 0 else 2)
+    shape = r["keyhole"] if level == 0 else _rect_shape(4.0, 14.0)
+    kh = max(p[1] for p in shape)
+    zs = []
+    zz = 60.0
+    while zz + kh < H - 30.0:
+        zs.append(zz)
+        zz += pitch
+    for sx in (-1.0, 1.0):
+        for sy in (-1.0, 1.0):
+            x0, x1 = sorted((sx * xo, sx * xi))
+            y0, y1 = sorted((sy * yo, sy * yi))
+            xc = (x0 + x1) / 2
+            holes = {}
+            if level < 2:
+                cols = [xc - sx * r["slot_cols"], xc + sx * r["slot_cols"]]      # outer column, inner column
+                front = []
+                for i, xcol in enumerate(cols):
+                    for z in zs:
+                        if i == 1 and sy < 0 and not free(z, z + kh, plates_z):
+                            continue                     # the front beams' end plates cover the inner column
+                        front.append((xcol, z))
+                holes["ny"] = front
+                if level == 0:
+                    side = [((y0 + y1) / 2, z) for z in zs if free(z, z + kh, plates_z)]
+                    holes["px" if sx > 0 else "nx"] = side
+            _slotted_box(e, (x0, y0, ft - 0.5), (x1, y1, H), GREY, holes, shape, r["slot_depth"], BLACK)
+            # the foot plate
+            _box(b, (x0 - fm, y0 - fm, 0.0), (x1 + fm, y1 + fm, ft), BLACK)
+    for (zb, zt), (pz0, pz1) in zip(beams, plates_z):
+        for sy in (-1.0, 1.0):                                              # front and back beams + end plates
+            _box(b, (-xi - 0.5, sy * k["yb"], zb), (xi + 0.5, sy * (k["yb"] - bd), zt), ORANGE)
+            for sx in (-1.0, 1.0):
+                px0, px1 = sorted((sx * (xi - 0.5), sx * (xi + pw)))
+                py0, py1 = sorted((sy * yo, sy * (yo + pt)))
+                holes = {}
+                if level == 0 and sy < 0:
+                    xc = sx * (xi + pw / 2)
+                    holes["ny"] = [(xc, pz0 + (pz1 - pz0) * (i + 0.5) / r["rivets"] - 2.5) for i in range(r["rivets"])]
+                _slotted_box(e, (px0, py0, pz0), (px1, py1, pz1), ORANGE, holes, [
+                    (2.5 * math.cos(2 * math.pi * i / 6), 2.5 + 2.5 * math.sin(2 * math.pi * i / 6)) for i in range(6)],
+                    1.5, GREY)
+        for sx in (-1.0, 1.0):                                              # end beams (along Y) + end plates
+            _box(b, (sx * (xo + pt), -yi - 0.5, zb), (sx * (xo + pt - bd), yi + 0.5, zt), ORANGE)
+            for sy in (-1.0, 1.0):
+                _box(e, (sx * xo, sy * (yi - 0.5), pz0), (sx * (xo + pt), sy * (yi + 25.0), pz1), ORANGE)
+        zd = zt                                                             # the deck on the front and back beams
+        _box(b, (-xi + 0.5, -k["yb"], zd - 0.5), (xi - 0.5, k["yb"], zd + dt), BOARD)
+    return Lod(b, bevel_mm=1.0 if level == 0 else None, extra=e)
+
+
+def item_rack() -> Item:
+    r = RACK
+    k = _rack_dims()
+    W, D, H = k["W"], k["D"], k["H"]
+    xi, yb = k["xi"], k["yb"]
+    sockets = [Socket("Seat", (0, 0, 0))]
+    levels = []
+    hulls = []
+    accepts = ["Carton", "BoxShipS", "BoxShipM", "BoxShipL"]
+    for i, z in enumerate(k["decks"]):
+        name = f"L{i + 1}"
+        width, depth = 2 * xi - 2.0, 2 * yb
+        nxt = k["decks"][i + 1] - r["deck_t"] - k["bh"] if i + 1 < len(k["decks"]) else H + 400.0
+        clear = nxt - z
+        sockets.append(Socket(f"Level_{name}", (0.0, 0.0, z), kind="DISPLAY"))
+        for c in range(3):
+            sockets.append(Socket(f"Compartment_{name}_{c + 1:02d}", ((c - 1) * width / 3, 0.0, z), kind="DISPLAY"))
+        grids = [g for g in (solve_grid(width, depth, clear, cl) for cl in accepts if cl in S.CLASSES) if g]
+        levels.append({"socket": f"Level_{name}", "interior_mm": [round(width, 3), round(depth, 3)],
+                       "clear_h_mm": round(clear, 3), "compartments": 3, "grids": grids})
+        hulls.append(((-W / 2, -D / 2, z - r["deck_t"] - k["bh"]), (W / 2, D / 2, z)))
+    hulls += [((-W / 2, -D / 2, 0.0), (-xi, D / 2, H)), ((xi, -D / 2, 0.0), (W / 2, D / 2, H))]
+    sockets += [Socket("Snap_L", (-W / 2, 0, 0)), Socket("Snap_R", (W / 2, 0, 0))]
+    name = "SM_CSK_Rack_Warehouse_1829"
+    return Item(
+        name=name, lods=[_rack_lod(i) for i in range(3)],
+        materials=["M_CSK_SteelDark", "M_CSK_SteelOrange", "M_CSK_Chipboard", "M_CSK_SteelBlack"], projections={},
+        sockets=sockets, hulls=hulls, budget=BUDGETS[name],
+        data={"footprint_mm": [W, D, H], "pose": "upright", "pivot": "bottom-centre",
+              "accepts": accepts + ["Retail"], "levels": levels,
+              "reference": "References/CardShop/csk_backroom.png (sheet 28 (1))",
+              "notes": ["Sheet 28: grey uprights with keyhole slots (two columns on the front face, one on the outer "
+                        "side), orange beams on end plates with three rivet holes, particle-board decks, black square "
+                        "foot plates. 5 levels (sheet 28 notes: the picture shows 5; the spec's 4 was E).",
+                        "Level pitch 482.5 (L1 deck at 200): 406.5 clear, so the L delivery box (406.2) fits a level.",
+                        "Retail is accepted per item (no fixed grid). Hulls: one per deck (5) and one per end frame (2).",
+                        "Budget 1500 -> %d: the keyhole slots (sheet 28's defining detail) are real pockets." %
+                        BUDGETS[name]]},
+    )
+
+
+# =========================================================================== H2 workbench (sheet 28)
+
+def _bench_lod(level: int) -> Lod:
+    """Sheet 28: a thick oak top with a green cutting mat inset in an oak edge frame; grey steel legs with a slot
+    column on the front face and a hole column on the outer side, black foot caps; a grey steel apron under the top;
+    a lower oak shelf on grey steel beams."""
+    t = BENCH
+    W, D, H = t["w"], t["d"], t["h"]
+    OAK, GREY, MAT, BLACK = 0, 1, 2, 3
+    b = Builder()
+    e = Builder()
+    tt, bw, mt = t["top_t"], t["border"], t["mat_t"]
+    zt0 = H - tt
+    # the top: an oak slab under the mat, the oak edge frame round it, the mat (print region 1) inset flush
+    _box(b, (-W / 2, -D / 2, zt0), (W / 2, D / 2, H - mt), OAK)
+    mx_, my_ = W / 2 - bw, D / 2 - bw
+    for sy in (-1.0, 1.0):
+        _box(b, (-W / 2, sy * D / 2, H - mt - 0.5), (W / 2, sy * my_, H), OAK)
+    for sx in (-1.0, 1.0):
+        _box(b, (sx * W / 2, -my_ - 0.5, H - mt - 0.5), (sx * mx_, my_ + 0.5, H), OAK)
+    _box(e, (-mx_ + 0.3, -my_ + 0.3, H - mt - 0.3), (mx_ - 0.3, my_ - 0.3, H), MAT, regions={"pz": 1})
+    # legs
+    lw, li = t["leg"]
+    fs, fh = t["foot"]
+    xo, yo = W / 2 - li, D / 2 - li
+    zs = []
+    z = fh + 20.0
+    ah, ad, ag = t["apron"]
+    zl_top = zt0 + 0.5
+    pitch = t["hole_pitch"] * (1 if level == 0 else 2)
+    shape = t["hole"] if level == 0 else _rect_shape(3.0, 10.0)
+    while z + 11.0 < zt0 - ag - ah - 15.0:
+        zs.append(z)
+        z += pitch
+    sb, sh, st = t["shelf"]
+    zs = [z for z in zs if z + 12.0 < sb - 4.0 or z > sb + sh + 4.0]
+    for sx in (-1.0, 1.0):
+        for sy in (-1.0, 1.0):
+            x0, x1 = sorted((sx * xo, sx * (xo - lw)))
+            y0, y1 = sorted((sy * yo, sy * (yo - lw)))
+            holes = {}
+            if level < 2:
+                holes["ny" if sy < 0 else "py"] = [((x0 + x1) / 2, zz) for zz in zs]
+                if level == 0:
+                    holes["px" if sx > 0 else "nx"] = [((y0 + y1) / 2, zz) for zz in zs]
+            _slotted_box(e, (x0, y0, fh - 0.5), (x1, y1, zl_top), GREY, holes, shape, t["hole_depth"], BLACK)
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            _box(b, (cx - fs / 2, cy - fs / 2, 0.0), (cx + fs / 2, cy + fs / 2, fh), BLACK)
+    # the apron (front, back, ends) just under the top, flush with the legs' outer faces
+    za0, za1 = zt0 - ag - ah, zt0 - ag
+    for sy in (-1.0, 1.0):
+        _box(b, (-xo + lw - 0.5, sy * yo, za0), (xo - lw + 0.5, sy * (yo - ad), za1), GREY)
+        _box(b, (-xo + lw - 0.5, sy * yo, za1 - 0.5), (xo - lw + 0.5, sy * (yo - 3.0), zt0 + 0.5), GREY)   # to the top
+    for sx in (-1.0, 1.0):
+        _box(b, (sx * xo, -yo + lw - 0.5, za0), (sx * (xo - ad), yo - lw + 0.5, za1), GREY)
+        _box(b, (sx * xo, -yo + lw - 0.5, za1 - 0.5), (sx * (xo - 3.0), yo - lw + 0.5, zt0 + 0.5), GREY)
+    # the lower shelf: front and back beams, end rails, the oak board on them
+    for sy in (-1.0, 1.0):
+        _box(b, (-xo + lw - 0.5, sy * yo, sb), (xo - lw + 0.5, sy * (yo - 40.0), sb + sh), GREY)
+    for sx in (-1.0, 1.0):
+        _box(b, (sx * xo, -yo + lw - 0.5, sb), (sx * (xo - 40.0), yo - lw + 0.5, sb + sh), GREY)
+    _box(b, (-xo + lw + 0.5, -yo + 0.5, sb + sh - 0.5), (xo - lw - 0.5, yo - 0.5, sb + sh + st), OAK)
+    return Lod(b, bevel_mm=1.0 if level == 0 else None, extra=e)
+
+
+def item_workbench() -> Item:
+    t = BENCH
+    W, D, H = t["w"], t["d"], t["h"]
+    bw = t["border"]
+    mx_, my_ = W / 2 - bw - 0.3, D / 2 - bw - 0.3
+    sb, sh, st = t["shelf"]
+    zs = sb + sh + st
+    lw, li = t["leg"]
+    xo, yo = W / 2 - li, D / 2 - li
+    tools = [((i - 1.5) * 300.0, D / 2 - bw - 60.0, H) for i in range(4)]
+    sockets = [Socket("Seat", (0, 0, 0)), Socket("Work", (0.0, -40.0, H)), Socket("BulkOut", (0.0, 0.0, zs))]
+    sockets += [Socket(f"Tool_{i + 1:02d}", p) for i, p in enumerate(tools)]
+    sockets += [Socket("Lamp", (W / 2 - bw - 80.0, D / 2 - bw - 60.0, H))]
+    name = "SM_CSK_Workbench_1524"
+    zt0 = H - t["top_t"]
+    return Item(
+        name=name, lods=[_bench_lod(i) for i in range(3)],
+        materials=["M_CSK_Oak", "M_CSK_SteelDark", "M_CSK_CuttingMat", "M_CSK_SteelBlack"],
+        projections={1: _planar(-mx_, -my_, 2 * mx_, 2 * my_)},
+        sockets=sockets,
+        hulls=[((-W / 2, -D / 2, zt0 - t["apron"][2] - t["apron"][0]), (W / 2, D / 2, H)),
+               ((-xo, -yo, sb), (xo, yo, zs)),
+               ((-xo, -yo, 0.0), (-xo + lw, yo, zt0)), ((xo - lw, -yo, 0.0), (xo, yo, zt0))],
+        budget=BUDGETS[name],
+        data={"footprint_mm": [W, D, H], "pose": "upright", "pivot": "bottom-centre",
+              "print": {"region": 1, "tile": [0, 0], "rect_mm": [-mx_, -my_, 2 * mx_, 2 * my_],
+                        "what": "the cutting mat's grid (buyer art or the kit's mat texture)"},
+              "reference": "References/CardShop/csk_backroom.png (sheet 28 (2))",
+              "notes": ["Sheet 28: a green cutting mat inset flush in a 30 oak edge frame on a 40 oak top; grey steel "
+                        "legs with a slot column (front) and a hole column (outer side); black foot caps; a grey steel "
+                        "apron; a lower oak shelf on grey beams.",
+                        "Work: the mat's centre; BulkOut: the lower shelf; Tool_01..04 along the back of the mat; "
+                        "Lamp: the back-right corner.",
+                        "Hulls: the top, the lower shelf and the two end frames (spec 3; the lower shelf needs its own).",
+                        "Budget 1500 -> %d: the legs' slot and hole columns (sheet 28) are real pockets." %
+                        BUDGETS[name]]},
+    )
+
+
 # =========================================================================== registry
 
 ITEMS = {
+    "h_backroom_rack": item_rack,
+    "h_backroom_workbench": item_workbench,
     "h_backroom_mailer_s": lambda: item_mailer("S"),
     "h_backroom_mailer_l": lambda: item_mailer("L"),
     "h_backroom_mailer_s_open": lambda: item_mailer("S", True),
@@ -1005,4 +1525,5 @@ ITEMS = {
     "h_backroom_trashcan": item_trashcan,
     "h_backroom_trashcan_lid": item_trashcan_lid,
     "h_backroom_trashbag": item_trashbag,
+    "h_backroom_handtruck": item_handtruck,
 }
