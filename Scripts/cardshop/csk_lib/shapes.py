@@ -28,6 +28,10 @@ def rounded_rect(w: float, h: float, r: float, segs: int) -> List[Tuple[float, f
     return pts
 
 
+def circle(r: float, segs: int, cx: float = 0.0, cy: float = 0.0) -> List[Tuple[float, float]]:
+    return [(cx + r * math.cos(2 * math.pi * i / segs), cy + r * math.sin(2 * math.pi * i / segs)) for i in range(segs)]
+
+
 def chamfer_rect(w: float, h: float, c: float, cx: float = 0.0, cy: float = 0.0) -> List[Tuple[float, float]]:
     x0, x1, y0, y1 = cx - w / 2, cx + w / 2, cy - h / 2, cy + h / 2
     return [(x0 + c, y0), (x1 - c, y0), (x1, y0 + c), (x1, y1 - c), (x1 - c, y1), (x0 + c, y1), (x0, y1 - c),

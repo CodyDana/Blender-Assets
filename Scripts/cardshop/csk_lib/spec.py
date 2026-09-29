@@ -26,13 +26,23 @@ TOPLOADER_35 = dict(
     in_w=69.0, in_h=97.0,     # inner pocket, E* (another source gives 69.9 x 98.4)
     t=2.0,                    # overall thickness, E
     gap=0.89,                 # card gap, D from 35 pt [D4]
+    corner_r=3.5,             # reference sheet 2 (measured off the picture), replaces square corners
+    notch_w=20.8, notch_d=8.4,  # reference sheet 2 measured at 3x: a shallow arc 20.8 wide x 8.4 deep (spec E: 20)
 )
+TOPLOADER_130 = dict(t=4.8, gap=3.30)   # the thick holder: overall 4.8 E, gap 3.30 D from 130 pt [D4]
 
 SLAB_STD = dict(
     w=84.0, h=134.0, t=7.0,   # E, inside the measured ranges W 81-86, H 130-139, T 5-8 (M [D7])
-    chamfer=4.0,              # corner chamfers, not radii (our own design, 3.D)
-    frame=3.5,                # perimeter frame width
-    label_h=24.0,             # label band on the top (+Y) end
+    chamfer=4.0,              # 45-degree corner chamfers (reference sheet 3: 4.0 measured)
+    # the face layout, measured on reference sheet 3 (csk_slab.png, 3.55 px/mm); the same on the back face
+    rim=2.0,                  # the outer rim: full height
+    step=1.0, step_d=0.6,     # the step inside the rim, 0.6 lower
+    label=(71.0, 20.5, 51.75),   # label opening W x H, centre Y
+    label_d=0.6,              # label recess depth: the insert lies flush with the step
+    window=(68.5, 95.3, -13.75),  # window opening W x H, centre Y (cross bar 7.6 between label and window)
+    window_d=0.8,             # window recess depth
+    gasket=(67.6, 92.6, 3.8),  # filled slab: the white gasket ring round the card, outer W x H, corner R
+    lug=(8.0, 3.0, 0.5, 50.0),   # stacking lugs on both long sides: length Y, height Z, proud X, |centre Y|
     well=(65.0, 90.0, 1.0),   # card well W x H x depth: card + 1 mm a side; depth >= 0.76 max card (M)
     well_floor_z=3.0,         # E: 3.0 bottom skin, 1.0 well, 3.0 top skin
 )
@@ -89,6 +99,7 @@ CLASSES: Dict[str, ItemClass] = {c.code: c for c in (
 ITEM_CLASS = {
     "SM_CSK_Card_Std": "Card",
     "SM_CSK_TopLoader_35pt": "CardProt",
+    "SM_CSK_TopLoader_130pt": "CardProt",
     "SM_CSK_Slab_Std": "Slab",
     "SM_CSK_Slab_Std_Filled": "Slab",
     "SM_CSK_Pack_Std_Sealed": "Pack",
@@ -137,6 +148,7 @@ def screen_sizes(radius_mm: float, lod_count: int) -> List[float]:
 BUDGETS = {
     "SM_CSK_Card_Std": 96,
     "SM_CSK_TopLoader_35pt": 300,
+    "SM_CSK_TopLoader_130pt": 300,
     "SM_CSK_Slab_Std": 1200,
     "SM_CSK_Slab_Std_Filled": 1300,
     "SM_CSK_Pack_Std_Sealed": 300,

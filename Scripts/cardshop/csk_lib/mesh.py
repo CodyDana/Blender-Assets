@@ -71,14 +71,14 @@ def build_bmesh(b: Builder) -> "bmesh.types.BMesh":
     return bm
 
 
-def bevel_edges(bm: "bmesh.types.BMesh", width_mm: float, min_angle_deg: float = 60.0) -> int:
+def bevel_edges(bm: "bmesh.types.BMesh", width_mm: float, min_angle_deg: float = 60.0, segments: int = 1) -> int:
     """Chamfer every edge sharper than ``min_angle_deg`` (1 segment); new faces become region 0. Returns the count."""
     region = bm.faces.layers.int[REGION_LAYER]
     edges = [e for e in bm.edges if e.is_manifold and len(e.link_faces) == 2
              and math.degrees(e.calc_face_angle(0.0)) > min_angle_deg]
     if not edges:
         return 0
-    res = bmesh.ops.bevel(bm, geom=edges, offset=width_mm * MM, offset_type="OFFSET", segments=1, profile=0.5,
+    res = bmesh.ops.bevel(bm, geom=edges, offset=width_mm * MM, offset_type="OFFSET", segments=segments, profile=0.5,
                           affect="EDGES", clamp_overlap=True)
     for f in res["faces"]:
         f[region] = 0
@@ -102,37 +102,106 @@ def _select_faces(obj: "bpy.types.Object", pick: Callable[[int, int], bool]) -> 
     return n
 
 
+def _uv_overlaps(obj: "bpy.types.Object", uv_name: str) -> int:
+    """Overlapping UV triangle pairs among the selected faces (the house qa_check test)."""
+    import numpy as np
+    from pipeline.qa_check import uv_overlap_sat
+    me = obj.data
+    uv = me.uv_layers[uv_name].data
+    tris = []
+    for p in me.polygons:
+        if not p.select:
+            continue
+        li = list(p.loop_indices)
+        for i in range(1, len(li) - 1):
+            tris.append([uv[li[0]].uv[:], uv[li[i]].uv[:], uv[li[i + 1]].uv[:]])
+    return uv_overlap_sat(np.array(tris)) if len(tris) > 1 else 0
+
+
 def _smart_project(obj: "bpy.types.Object", uv_name: str, margin: float) -> None:
+    """Smart project + pack. 66 degrees first; if a projection group folds faces onto each other (a boolean pocket's
+    inner wall facing the same way as an outer wall), retry with a tighter angle limit."""
     me = obj.data
     me.uv_layers.active = me.uv_layers[uv_name]
     bpy.ops.object.select_all(action="DESELECT")
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_mode(type="FACE")
-    bpy.ops.uv.smart_project(angle_limit=math.radians(66.0), island_margin=margin, correct_aspect=True,
-                             scale_to_bounds=False)
-    bpy.ops.uv.select_all(action="SELECT")
-    bpy.ops.uv.pack_islands(margin=margin, rotate=True)
-    bpy.ops.object.mode_set(mode="OBJECT")
+    for angle in (66.0, 45.0, 30.0):
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_mode(type="FACE")
+        bpy.ops.uv.smart_project(angle_limit=math.radians(angle), island_margin=margin, correct_aspect=True,
+                                 scale_to_bounds=False)
+        bpy.ops.uv.select_all(action="SELECT")
+        bpy.ops.uv.pack_islands(margin=margin, rotate=True, shape_method="AABB")   # concave packing: ~10 s a call
+        bpy.ops.object.mode_set(mode="OBJECT")
+        if _uv_overlaps(obj, uv_name) == 0:
+            return
+
+
+def _apply_boolean(obj: "bpy.types.Object", operation: str, b: Builder) -> None:
+    """Apply an exact boolean with the closed shell ``b`` (mm). Face tags (region, material index) of the cutter's
+    faces carry over, so a cut face can be given its own region / material by the cutter's builder."""
+    bm = build_bmesh(b)
+    me = bpy.data.meshes.new("__csk_cutter")
+    bm.to_mesh(me)
+    bm.free()
+    cutter = bpy.data.objects.new("__csk_cutter", me)
+    bpy.context.scene.collection.objects.link(cutter)
+    mod = obj.modifiers.new("csk_bool", "BOOLEAN")
+    mod.operation = operation
+    mod.solver = "EXACT"
+    mod.object = cutter
+    try:
+        mod.material_mode = "INDEX"
+    except (AttributeError, TypeError):
+        pass
+    from pipeline.helpers import apply_modifier
+    apply_modifier(obj, mod)
+    bpy.data.objects.remove(cutter, do_unlink=True)
+    bpy.data.meshes.remove(me)
 
 
 def to_object(name: str, b: Builder, materials: Sequence[str], projections: Dict[int, Projection],
               bevel_mm: Optional[float] = None, weighted_normals: bool = True,
-              collection: Optional["bpy.types.Collection"] = None) -> "bpy.types.Object":
-    """Build ``name`` from ``b``: bevel, sharp edges, UV0 (print projections + auto), UV1 (unique), materials."""
+              collection: Optional["bpy.types.Collection"] = None,
+              ops: Sequence[Tuple[str, Builder]] = (), bevel_segments: int = 1,
+              bevel_angle: float = 60.0, bevel_first: bool = False) -> "bpy.types.Object":
+    """Build ``name`` from ``b``: booleans (``ops``: ("DIFFERENCE" | "UNION", builder)), bevel, sharp edges, UV0
+    (print projections + auto), UV1 (unique), materials. ``bevel_first`` bevels the base shell before the booleans,
+    so cut edges stay crisp and the bevel never meets a cut (no collinear slivers)."""
     bm = build_bmesh(b)
-    if bevel_mm:
-        bevel_edges(bm, bevel_mm)
-    mark_sharp(bm)
+    if bevel_mm and bevel_first:
+        bevel_edges(bm, bevel_mm, bevel_angle, bevel_segments)
+        ngons = [f for f in bm.faces if len(f.verts) > 4]
+        if ngons:
+            bmesh.ops.triangulate(bm, faces=ngons)
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
     bm.free()
     for m in materials:
         me.materials.append(_material(m))
-    me.polygons.foreach_set("use_smooth", [True] * len(me.polygons))
     obj = bpy.data.objects.new(name, me)
     (collection or bpy.context.scene.collection).objects.link(obj)
+    for operation, cb in ops:
+        _apply_boolean(obj, operation, cb)
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    if REGION_LAYER not in bm.faces.layers.int:
+        bm.faces.layers.int.new(REGION_LAYER)
+    if bevel_mm and not bevel_first:
+        bevel_edges(bm, bevel_mm, bevel_angle, bevel_segments)
+    for _ in range(3):              # bevel + boolean slivers: dissolve zero-area faces, re-triangulate what it merges
+        bmesh.ops.dissolve_degenerate(bm, dist=1e-6, edges=list(bm.edges))
+        ngons = [f for f in bm.faces if len(f.verts) > 4]
+        if ngons:
+            bmesh.ops.triangulate(bm, faces=ngons)
+        if not any(f.calc_area() < 1e-12 for f in bm.faces):
+            break
+    mark_sharp(bm)
+    bm.to_mesh(obj.data)
+    bm.free()
+    me = obj.data
+    me.polygons.foreach_set("use_smooth", [True] * len(me.polygons))
 
     uv0 = me.uv_layers.new(name="UVMap")
     me.uv_layers.new(name="Lightmap")

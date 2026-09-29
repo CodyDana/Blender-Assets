@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
 from . import spec as S
-from .shapes import Builder, chamfer_rect, rect, rounded_rect
+from .shapes import Builder, chamfer_rect, circle, rect, rounded_rect
 
 Vec3 = Tuple[float, float, float]
 R_FRONT, R_BACK, R_LABEL = 1, 2, 3
@@ -33,6 +33,9 @@ class Socket:
 class Lod:
     builder: Builder
     bevel_mm: Optional[float] = None
+    ops: List[Tuple[str, Builder]] = field(default_factory=list)     # booleans: ("DIFFERENCE" | "UNION", shell)
+    bevel_segments: int = 1
+    bevel_first: bool = False           # bevel the base shell before the booleans (crisp cut edges)
 
 
 @dataclass
@@ -86,114 +89,158 @@ def item_card() -> Item:
     )
 
 
-# =========================================================================== C5 top-loader
+# =========================================================================== C5 top-loader (reference sheet 2)
 
-def item_toploader() -> Item:
-    s = S.TOPLOADER_35
+def _toploader_lod(s, level: int) -> Lod:
+    """Rounded outer shell; the pocket and the thumb notch are boolean cuts (References/CardShop/csk_toploader.png)."""
     w, h, t, iw, ih, gap = s["w"], s["h"], s["t"], s["in_w"], s["in_h"], s["gap"]
     skin = (t - gap) / 2
     y_top, y_floor = h / 2, h / 2 - ih
+    segs = (4, 2, 1)[level]
     b = Builder()
-    # outer shell open at the +Y end face, with the pocket walls going down to the pocket floor
-    o = [b.v(-w / 2, -h / 2, 0), b.v(w / 2, -h / 2, 0), b.v(w / 2, y_top, 0), b.v(-w / 2, y_top, 0),
-         b.v(-w / 2, -h / 2, t), b.v(w / 2, -h / 2, t), b.v(w / 2, y_top, t), b.v(-w / 2, y_top, t)]
-    b.face((o[0], o[3], o[2], o[1]))            # back (-Z)
-    b.face((o[4], o[5], o[6], o[7]))            # front (+Z)
-    b.face((o[0], o[1], o[5], o[4]))            # bottom edge (-Y)
-    b.face((o[3], o[0], o[4], o[7]))            # left (-X)
-    b.face((o[1], o[2], o[6], o[5]))            # right (+X)
-    zi0, zi1 = skin, t - skin
-    i_top = [b.v(-iw / 2, y_top, zi0), b.v(iw / 2, y_top, zi0), b.v(iw / 2, y_top, zi1), b.v(-iw / 2, y_top, zi1)]
-    # the +Y end: a ring between the outer rectangle (o2 o3 o7 o6) and the pocket mouth
-    ring_outer = [o[3], o[2], o[6], o[7]]        # (-x,z0) (+x,z0) (+x,z1) (-x,z1) at y_top, CCW seen from +Y
-    for k in range(4):
-        a0, a1 = ring_outer[k], ring_outer[(k + 1) % 4]
-        c0, c1 = i_top[k], i_top[(k + 1) % 4]
-        b.face((a0, c0, c1, a1))
-    i_bot = [b.v(-iw / 2, y_floor, zi0), b.v(iw / 2, y_floor, zi0), b.v(iw / 2, y_floor, zi1),
-             b.v(-iw / 2, y_floor, zi1)]
-    for k in range(4):                           # pocket walls face into the pocket
-        b.face((i_top[k], i_bot[k], i_bot[(k + 1) % 4], i_top[(k + 1) % 4]))
-    b.face((i_bot[0], i_bot[3], i_bot[2], i_bot[1]))   # pocket floor faces +Y (into the pocket)
-    card_seat = (0.0, y_floor + S.CARD_STD["h"] / 2, zi0)
+    b.prism(rounded_rect(w, h, s["corner_r"], segs) if level < 2 else rect(w, h), 0.0, t)
+    pocket = Builder()
+    pocket.box((-iw / 2, y_floor, skin), (iw / 2, y_top + 5.0, t - skin))
+    ops = [("DIFFERENCE", pocket)]
+    if level < 2:                                   # the thumb notch: through the front skin at the open end
+        notch = Builder()
+        hw, d = s["notch_w"] / 2, s["notch_d"]
+        nr = (hw * hw + d * d) / (2 * d)            # the arc through the two edge points and the bottom point
+        notch.prism(circle(nr, (20, 12)[level], 0.0, y_top + nr - d), t - skin - 0.2, t + 1.0)
+        ops.append(("DIFFERENCE", notch))
+    return Lod(b, bevel_mm=0.25 if level == 0 else None, ops=ops, bevel_segments=1, bevel_first=True)
+
+
+def item_toploader(pt: str = "35pt") -> Item:
+    s = dict(S.TOPLOADER_35, **(S.TOPLOADER_130 if pt == "130pt" else {}))
+    w, h, t, iw, ih, gap = s["w"], s["h"], s["t"], s["in_w"], s["in_h"], s["gap"]
+    skin = (t - gap) / 2
+    y_top, y_floor = h / 2, h / 2 - ih
+    name = f"SM_CSK_TopLoader_{pt}"
+    card_seat = (0.0, y_floor + S.CARD_STD["h"] / 2, skin)
     return Item(
-        name="SM_CSK_TopLoader_35pt", lods=[Lod(b)], materials=["M_CSK_PVC"], projections={},
+        name=name, lods=[_toploader_lod(s, k) for k in range(3)], materials=["M_CSK_PVC"], projections={},
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Card", card_seat, kind="CONTAIN"), Socket("Face", (0, 0, t)),
                  Socket("Grip", (0, -h / 2, t / 2)), Socket("Stack", (0, 0, t))],
         hulls=[((-w / 2, -h / 2, 0), (w / 2, h / 2, t))],
         cls="CardProt", budget=S.BUDGETS["SM_CSK_TopLoader_35pt"],
         data={"footprint_mm": [w, h, t], "stack": {"socket": "Stack", "pitch_mm": t, "max": 20},
-              "contain": {"Card": {"socket": "Card", "cavity_mm": [[-iw / 2, y_floor, zi0], [iw / 2, y_top, zi1]],
+              "contain": {"Card": {"socket": "Card", "cavity_mm": [[-iw / 2, y_floor, skin], [iw / 2, y_top, t - skin]],
                                    "accepts": ["Card"]}},
-              "notes": ["G1: the thumb notch (20 W, spec C5) is not modelled yet"]},
+              "reference": "References/CardShop/csk_toploader.png (sheet 2)"},
     )
 
 
 # =========================================================================== D1 / D3 slab
 
-def _slab_frame(s):
-    w, h, t, fr, lh = s["w"], s["h"], s["t"], s["frame"], s["label_h"]
-    ix0, ix1 = -w / 2 + fr, w / 2 - fr
-    iy0, iy1 = -h / 2 + fr, h / 2 - fr
-    ly = iy1 - lh                         # the label band starts here
-    return ix0, ix1, iy0, iy1, ly
+def _chamfer_inset(s, d: float):
+    """The slab outline inset by ``d`` (45-degree chamfers shrink by 2 d tan 22.5)."""
+    return chamfer_rect(s["w"] - 2 * d, s["h"] - 2 * d, max(0.2, s["chamfer"] - 2 * d * math.tan(math.pi / 8)))
 
 
-def _slab_shell(b: Builder, s, body: int, window: int, filled: bool, detail: bool) -> None:
-    """Top and bottom faces split into frame ring (body), label band (body, label print) and window (window mat,
-    or for a filled slab: the card rect prints front/back and the gasket ring around it is body)."""
+def _slab_openings(s):
+    lw, lh, lcy = s["label"]
+    ww, wh, wcy = s["window"]
+    return (-lw / 2, lcy - lh / 2, lw / 2, lcy + lh / 2), (-ww / 2, wcy - wh / 2, ww / 2, wcy + wh / 2)
+
+
+def _slab_lod2(s, body: int, window: int, filled: bool) -> Builder:
+    """Far LOD: the chamfered block, each face split into frame, label and window (or card print)."""
     w, h, t = s["w"], s["h"], s["t"]
-    ix0, ix1, iy0, iy1, ly = _slab_frame(s)
-    outline = chamfer_rect(w, h, s["chamfer"]) if detail else rect(w, h)
-    lb, lt = b.prism(outline, 0.0, t, mat=body, top=None, bottom=None)
-    cw, ch = S.CARD_STD["w"], S.CARD_STD["h"]
-    wcy = (iy0 + ly) / 2                   # window centre
+    (lx0, ly0, lx1, ly1), (wx0, wy0, wx1, wy1) = _slab_openings(s)
+    b = Builder()
+    lb, lt = b.prism(chamfer_rect(w, h, s["chamfer"]), 0.0, t, mat=body, top=None, bottom=None)
     for z, loop, up in ((t, lt, True), (0.0, lb, False)):
         n = (0, 0, 1) if up else (0, 0, -1)
-        hole = [b.v(ix0, iy0, z), b.v(ix1, iy0, z), b.v(ix1, ly, z), b.v(ix1, iy1, z), b.v(ix0, iy1, z),
-                b.v(ix0, ly, z)]
-        b.fill([loop, hole], body, 0, n)
-        label = (hole[5], hole[2], hole[3], hole[4])
-        win = (hole[0], hole[1], hole[2], hole[5])
-        if up:
-            b.face(label, body, R_LABEL)
+        lab = [b.v(x, y, z) for x, y in ((lx0, ly0), (lx1, ly0), (lx1, ly1), (lx0, ly1))]
+        win = [b.v(x, y, z) for x, y in ((wx0, wy0), (wx1, wy0), (wx1, wy1), (wx0, wy1))]
+        b.fill([loop, lab, win], body, 0, n)
+        b.face(tuple(lab) if up else tuple(reversed(lab)), body, R_LABEL if up else 0)
+        if filled:                                  # the gasket ring round the card print
+            cw, ch = S.CARD_STD["w"], S.CARD_STD["h"]
+            card = [b.v(x, y, z) for x, y in rect(cw, ch, 0.0, (wy0 + wy1) / 2)]
+            b.fill([win, card], body, 0, n)
+            b.face(tuple(card) if up else tuple(reversed(card)), body, R_FRONT if up else R_BACK)
         else:
-            b.face(tuple(reversed(label)), body, 0)
-        if filled:
-            cr = [b.v(x, y, z) for x, y in rect(cw, ch, 0.0, wcy)]
-            win_loop = [hole[0], hole[1], hole[2], hole[5]]
-            b.fill([win_loop, cr], body, 0, n)
-            b.face(tuple(cr) if up else tuple(reversed(cr)), body, R_FRONT if up else R_BACK)
+            b.face(tuple(win) if up else tuple(reversed(win)), window, 0)
+    return b
+
+
+def _slab_lod(s, level: int, body: int, window: int, filled: bool) -> Lod:
+    """Reference sheet 3: an outer rim with a step inside it, a raised frame plateau with a label recess and a
+    window recess separated by a cross bar, on the front and the back; stacking lugs on the long sides; the filled
+    slab's window shows a white gasket ring round the card. All real geometry (booleans on a chamfered block)."""
+    w, h, t = s["w"], s["h"], s["t"]
+    if level == 2:
+        return Lod(_slab_lod2(s, body, window, filled))
+    (lx0, ly0, lx1, ly1), (wx0, wy0, wx1, wy1) = _slab_openings(s)
+    b = Builder()
+    b.prism(chamfer_rect(w, h, s["chamfer"]), 0.0, t, mat=body)
+    ops = []
+    rim, step, sd = s["rim"], s["step"], s["step_d"]
+    for up in (True, False):
+        zin = (lambda d: t - d) if up else (lambda d: d)        # a depth below the face, as a z
+        zout = t + 1.0 if up else -1.0
+        def cut(outline, depth, mat=body, region=0):
+            c = Builder()
+            z0, z1 = sorted((zin(depth), zout))
+            floor = dict(bottom=region, bottom_mat=mat, top=0) if up else dict(top=region, top_mat=mat, bottom=0)
+            c.prism(outline, z0, z1, mat=body, **floor)
+            ops.append(("DIFFERENCE", c))
+        if level == 0:                                  # the step ring: cut the field, then add the plateau back
+            cut(_chamfer_inset(s, rim), sd)
+            plateau = Builder()
+            z0, z1 = sorted((zin(sd + 0.2), zin(0.0)))
+            plateau.prism(_chamfer_inset(s, rim + step), z0, z1, mat=body)
+            ops.append(("UNION", plateau))
+        cut(rect(lx1 - lx0, ly1 - ly0, 0.0, (ly0 + ly1) / 2), s["label_d"], body, R_LABEL if up else 0)
+        wrect = rect(wx1 - wx0, wy1 - wy0, 0.0, (wy0 + wy1) / 2)
+        if filled:                                      # gasket ring (body) round the card print, 0.1 below it
+            cut(wrect, s["window_d"], body, 0)
+            cw, ch = S.CARD_STD["w"], S.CARD_STD["h"]
+            cut(rect(cw, ch, 0.0, (wy0 + wy1) / 2), s["window_d"] + 0.1, body, R_FRONT if up else R_BACK)
         else:
-            b.face(win if up else tuple(reversed(win)), window, 0)
+            cut(wrect, s["window_d"], window, 0)
+    if level == 0:
+        seam = Builder()                            # the parting seam of the two welded shells: a 0.4 groove
+        seam.prism(chamfer_rect(w + 2, h + 2, s["chamfer"] + 1), t / 2 - 0.25, t / 2 + 0.25)
+        ops.append(("DIFFERENCE", seam))
+        core = Builder()
+        core.prism(_chamfer_inset(s, 0.4), t / 2 - 0.4, t / 2 + 0.4)
+        ops.append(("UNION", core))
+        ll, lz, lp, lyc = s["lug"]
+        for sx in (-1, 1):
+            for sy in (-1, 1):
+                lug = Builder()
+                x_in, x_out = sx * (w / 2 - 0.5), sx * (w / 2 + lp)
+                lug.box((min(x_in, x_out), sy * lyc - ll / 2, t / 2 - lz / 2),
+                        (max(x_in, x_out), sy * lyc + ll / 2, t / 2 + lz / 2), mat=body)
+                ops.append(("UNION", lug))
+    return Lod(b, bevel_mm=0.3 if level == 0 else None, ops=ops, bevel_segments=1, bevel_first=True)
 
 
 def _slab_item(filled: bool) -> Item:
     s = S.SLAB_STD
     w, h, t = s["w"], s["h"], s["t"]
-    ix0, ix1, iy0, iy1, ly = _slab_frame(s)
-    wcy = (iy0 + ly) / 2
+    (lx0, ly0, lx1, ly1), (wx0, wy0, wx1, wy1) = _slab_openings(s)
+    wcy = (wy0 + wy1) / 2
     ww, wh, wd = s["well"]
     zf = s["well_floor_z"]
     body, window = 0, (0 if filled else 1)
-    lods = []
-    for level in range(3):
-        b = Builder()
-        if level < 2:
-            _slab_shell(b, s, body, window, filled, detail=True)
-            if level == 0 and not filled:     # the card well: a cavity (faces point inward), gasket walls
-                b.box((-ww / 2, wcy - wh / 2, zf), (ww / 2, wcy + wh / 2, zf + wd), mat=body, inward=True,
-                      mats={"pz": window, "nz": window})
-        else:
-            _slab_shell(b, s, body, window, filled, detail=False)
-        lods.append(Lod(b, bevel_mm=0.4 if level == 0 else None))
+    lods = [_slab_lod(s, k, body, window, filled) for k in range(3)]
+    if not filled:              # LOD0: the card well, a sealed cavity (faces point inward)
+        lods[0].builder.box((-ww / 2, wcy - wh / 2, zf), (ww / 2, wcy + wh / 2, zf + wd), mat=body, inward=True,
+                            mats={"pz": window, "nz": window})
     cw, ch = S.CARD_STD["w"], S.CARD_STD["h"]
     name = "SM_CSK_Slab_Std_Filled" if filled else "SM_CSK_Slab_Std"
-    sockets = [Socket("Seat", (0, 0, 0)), Socket("Label", (0, (ly + iy1) / 2, t)), Socket("Face", (0, 0, t)),
-               Socket("Grip", (0, -h / 2, t / 2)), Socket("Stack", (0, 0, t))]
-    data = {"footprint_mm": [w, h, t], "stack": {"socket": "Stack", "pitch_mm": t, "max": 10},
-            "label_rect_mm": [ix0, ly, ix1 - ix0, iy1 - ly],
-            "notes": ["G1: stacking ridges / recess (3.D) not modelled yet; the stack pitch is 7.0 as specified"]}
+    x_lug = w / 2 + s["lug"][2]
+    sockets = [Socket("Seat", (0, 0, 0)), Socket("Label", (0, (ly0 + ly1) / 2, t - s["label_d"])),
+               Socket("Face", (0, 0, t)), Socket("Grip", (0, -h / 2, t / 2)), Socket("Stack", (0, 0, t))]
+    data = {"footprint_mm": [2 * x_lug, h, t], "stack": {"socket": "Stack", "pitch_mm": t, "max": 10},
+            "label_rect_mm": [lx0, ly0, lx1 - lx0, ly1 - ly0],
+            "reference": "References/CardShop/csk_slab.png (sheet 3)",
+            "notes": ["Sheet 3: stepped rim, label and window recesses, side stacking lugs (0.5 proud, so the "
+                      "render width is 85.0). The lugs' matching recesses are not modelled (not visible)."]}
     if not filled:
         sockets.insert(1, Socket("Card", (0, wcy, zf), kind="CONTAIN"))
         data["contain"] = {"Card": {"socket": "Card", "cavity_mm": [[-ww / 2, wcy - wh / 2, zf],
@@ -202,7 +249,7 @@ def _slab_item(filled: bool) -> Item:
     return Item(
         name=name, lods=lods,
         materials=["M_CSK_SlabFilled"] if filled else ["M_CSK_SlabBody", "M_CSK_SlabWindow"],
-        projections={R_LABEL: _planar(ix0, ly, ix1 - ix0, iy1 - ly, tile_v=1.0),
+        projections={R_LABEL: _planar(lx0, ly0, lx1 - lx0, ly1 - ly0, tile_v=1.0),
                      R_FRONT: _planar(-cw / 2, wcy - ch / 2, cw, ch),
                      R_BACK: _planar(-cw / 2, wcy - ch / 2, cw, ch, tile_u=1.0, mirror_x=True)},
         sockets=sockets, hulls=[((-w / 2, -h / 2, 0), (w / 2, h / 2, t))], cls="Slab",
@@ -555,7 +602,7 @@ def item_showcase_door(L: float = 1778.0) -> Item:
 
 
 ALL_ITEMS = {
-    "card": item_card, "toploader": item_toploader, "slab": item_slab, "slab_filled": item_slab_filled,
+    "card": item_card, "toploader": item_toploader, "toploader_130": lambda: item_toploader("130pt"), "slab": item_slab, "slab_filled": item_slab_filled,
     "pack": item_pack, "box": item_box_booster, "box_lid": item_box_lid, "showcase": item_showcase,
     "showcase_glass": item_showcase_glass, "showcase_door": item_showcase_door,
 }

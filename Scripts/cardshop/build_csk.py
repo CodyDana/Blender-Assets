@@ -69,7 +69,8 @@ def build_item(item: geom.Item) -> dict:
     lods = list(item.lods)
     if len(lods) > 1:            # the LOD0-only rule (spec section 3): measure LOD0 first
         probe = mesh.to_object(f"__probe_{item.name}", lods[0].builder, item.materials, item.projections,
-                               bevel_mm=lods[0].bevel_mm, collection=coll)
+                               bevel_mm=lods[0].bevel_mm, collection=coll, ops=lods[0].ops,
+                               bevel_segments=lods[0].bevel_segments, bevel_first=lods[0].bevel_first)
         if mesh.triangles(probe) <= S.LOD0_ONLY_MAX_TRIS:
             lods = lods[:1]
             item.data.setdefault("notes", []).append(
@@ -82,7 +83,8 @@ def build_item(item: geom.Item) -> dict:
     for i, lod in enumerate(lods):
         name = f"{item.name}_LOD{i}" if multi else item.name
         obj = mesh.to_object(name, lod.builder, item.materials, item.projections, bevel_mm=lod.bevel_mm,
-                             collection=coll)
+                             collection=coll, ops=lod.ops, bevel_segments=lod.bevel_segments,
+                             bevel_first=lod.bevel_first)
         objs.append(obj)
     lod0 = objs[0]
     for k, (mn, mx) in enumerate(item.hulls):
