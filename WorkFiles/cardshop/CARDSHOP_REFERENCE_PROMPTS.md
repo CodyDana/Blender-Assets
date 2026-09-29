@@ -94,6 +94,7 @@ Reply "ready" and wait for the first sheet.
 | 33 | `csk_entry_door.png` | J2 glass entry door and frame | |
 | 34 | `csk_lights.png` | J3 panel light, track and heads, pendant | |
 | 35 | `csk_scale_figure.png` | J4 neutral scale figure | |
+| 36 | `csk_wall_unit.png` | Oak wall shelving unit seen in the style anchor (proposed addition) | |
 
 ---
 
@@ -169,7 +170,7 @@ laid out). Plain printed colour blocks only, plain kraft-grey inside.
 ```
 Sheet 6: a full-vision glass display counter (showcase). 1778 mm long, 508 mm deep, 965 mm tall. Glass on the
 front, both ends and the top (6 mm tempered glass) in a slim brushed-aluminium frame (25 mm square corner posts,
-20 mm rails). A 152 mm tall black kick base with a 23 mm deck board on top. Inside, two glass shelves: the lower one
+20 mm rails). Inside, two glass shelves: the lower one
 356 mm deep at about 430 mm height, the upper one 305 mm deep at about 690 mm, both starting at the front glass.
 The back is two sliding glass doors in top and bottom aluminium tracks (each door about 914 mm wide, overlapping in
 the middle), with a small lock at the centre. A thin LED strip runs along the inside of the top front rail. Show
@@ -181,7 +182,7 @@ empty; one small 3/4 view with a few slabs and packs on the shelves for scale.
 ```
 Sheet 7: close-up details of the glass counter from sheet 6 (attach it). A grid of six close-ups, each straight on:
 (1) a top corner where two rails meet a post and the glass sits in the frame; (2) the bottom corner where the post
-meets the black kick base and the deck; (3) the rear door tracks top and bottom, showing the two doors in separate
+meets the oak base and toe kick; (3) the rear door tracks top and bottom, showing the two doors in separate
 channels; (4) the door lock at the centre; (5) a glass shelf resting on its support pins or clips; (6) the LED strip
 under the top rail. Realistic hardware, no brand marks.
 ```
@@ -269,7 +270,7 @@ counter token 2 mm thick.
 
 ```
 Sheet 16 (attach sheet 6): a half-vision display counter from the same family as sheet 6: 1778 mm long, 457 mm deep,
-965 mm tall. A white melamine carcass; glass only on the front upper part (470 mm tall) and the top; two glass
+965 mm tall. A light-oak cabinet carcass like the attached shop image; glass only on the front upper part (470 mm tall) and the top; two glass
 shelves; below the glass, a closed storage bay with sliding panel doors at the back; black kick base. Same
 aluminium trim and rear sliding glass doors as sheet 6.
 ```
@@ -277,9 +278,9 @@ aluminium trim and rear sliding glass doors as sheet 6.
 ## 17. Glass tower and lit wall case (`csk_tower_wallcase.png`)
 
 ```
-Sheet 17 (attach sheet 6): (1) A frameless glass tower case 457 x 457 x 1829 mm: glass on four sides, a 152 mm base,
+Sheet 17 (attach sheet 6): (1) A frameless glass tower case 457 x 457 x 1829 mm: glass on four sides, a 152 mm light-oak base,
 four glass shelves, a hinged glass door with a small lock. (2) A lit framed wall case 1016 x 457 x 1848 mm: aluminium
-frame, 203 mm base, four glass shelves, two sliding front doors, LED strips in the corner posts. Same materials as
+frame, 203 mm light-oak base, four glass shelves, two sliding front doors, LED strips in the corner posts. Same materials as
 sheet 6.
 ```
 
@@ -341,14 +342,14 @@ card stand 70 x 40 x 25 mm with one slot, and one with a 9-card fan of slots. Sh
 ```
 Sheet 24: (1) White folding tournament tables, 762 mm deep, 737 mm tall, in lengths 914, 1524 and 1829 mm, grey
 steel folding legs; show the longest set for three matches with two playmats facing each other per match.
-(2) A grey steel folding chair, 450 x 520 x 800 mm, seat height 445 mm; show open and folded.
+(2) A black steel folding chair, 450 x 520 x 800 mm, seat height 445 mm; show open and folded.
 ```
 
 ## 25. Cash counter (`csk_counter_pos.png`)
 
 ```
-Sheet 25: a shop cash counter (cash wrap) 1397 mm long, 610 mm deep, 965 mm tall: white laminate carcass, light oak
-worktop, a bag shelf and cable hole on the staff side. On it: a steel cash drawer under the worktop, a generic card
+Sheet 25: a shop cash counter (cash wrap) 1397 mm long, 610 mm deep, 965 mm tall, in the style of the attached shop
+image: light-oak front panel, thick white top with a rounded edge, a bag shelf and cable hole on the staff side. On it: a steel cash drawer under the worktop, a generic card
 terminal, a receipt printer, a POS screen on a stand and a handheld scanner in a cradle, a price-labelling gun. Show
 the customer side and the staff side. All devices are plain generic shapes with no brand marks. (Plain paper notes
 and a plain coin on the drawer tray, with no currency design.)
@@ -436,6 +437,14 @@ metal shade on a 1000 mm cord. Show each lit and unlit, all in matte white or bl
 Sheet 35: a neutral, featureless 3D scale figure, 1800 mm tall, like an artist's mannequin: smooth light-grey
 surfaces, simple rounded head with no face, standing in a relaxed pose. Front, side, back and 3/4 views. It must not
 look like any existing game or engine mannequin.
+```
+
+## 36. Oak wall shelving unit (`csk_wall_unit.png`), optional
+
+```
+Sheet 36: the wall shelving unit from the attached shop image: an open light-oak shelving bay about 1200 mm wide,
+400 mm deep and 2100 mm tall, with four fixed shelves above a row of white base cabinets (about 900 mm tall) with
+doors and a white top. Show it empty, and one small view with deck boxes and small display boxes on the shelves.
 ```
 
 ---
