@@ -111,7 +111,7 @@ RACK = dict(                      # A12, sheet 21
     zig=30.0,                     # E: horizontal run of one zigzag leg
     collar=(19.0, 16.0, 40.0),    # E: the corner collar: bottom radius, top radius, height
     foot=(17.0, 13.5, 20.0),      # E: black levelling foot: bottom radius, top radius, height (sheet 21)
-    budget=15000,                 # raised from 7000 (E): 5 decks (sheet 21) and 4 ring-grooved posts (sheet 21)
+    budget=14000,                 # raised from 7000 (E): 5 decks (sheet 21) and 4 ring-grooved posts (sheet 21)
 )
 
 TIER = dict(                      # A13, sheet 21
@@ -319,13 +319,15 @@ def _obox(b: Builder, c: Vec3, ax: Vec3, ay: Vec3, az: Vec3, hx: float, hy: floa
 
 def _slotted_bar(b: Builder, x0: float, x1: float, y0: float, y1: float, z0: float, z1: float,
                  slot_faces: Sequence[str], slot_zs: Sequence[float], slot: Tuple[float, float, float],
-                 mat: int) -> None:
+                 mat: int, chamfer: float = 1.0) -> None:
     """A rectangular steel upright with a column of real slot pockets on its -Y face ("ny") and / or +Y face ("py")
-    (sheet 20: slotted uprights, rectangular slots). Each slotted face is a ladder of quads round the pockets (shared
-    vertices); the plain faces share only the ladders' corners (boundary T-junctions, no coincident vertices)."""
+    (sheet 20: slotted uprights, rectangular slots), its four long edges chamfered. Each slotted face is a ladder of
+    quads round the pockets (shared vertices); the plain faces and the chamfers share only the ladders' corners
+    (boundary T-junctions, no coincident vertices). The ends are octagon fills."""
     sw, sh, sd = slot
+    c = chamfer
     xc = (x0 + x1) / 2
-    xs = [x0, xc - sw / 2, xc + sw / 2, x1]
+    xs = [x0 + c, xc - sw / 2, xc + sw / 2, x1 - c]
     bands = []
     z = z0
     for zc in slot_zs:
@@ -339,19 +341,19 @@ def _slotted_bar(b: Builder, x0: float, x1: float, y0: float, y1: float, z0: flo
         yf = y0 if face == "ny" else y1
         out = (0.0, -1.0 if face == "ny" else 1.0, 0.0)
         if face not in slot_faces:
-            for c in (0, 3):
+            for col in (0, 3):
                 for k, zz in ((0, z0), (1, z1)):
-                    corners[face, c, k] = b.v(xs[c], yf, zz)
+                    corners[face, col, k] = b.v(xs[col], yf, zz)
             _face_out(b, [corners[face, 0, 0], corners[face, 3, 0], corners[face, 3, 1], corners[face, 0, 1]], out, mat)
             continue
         yd = yf + (sd if face == "ny" else -sd)
         zb = [bands[0][0]] + [hi for _, hi, _ in bands]
         F = [[b.v(x, yf, zz) for x in xs] for zz in zb]
         for r, (lo, hi, is_slot) in enumerate(bands):
-            for c in range(3):
-                if is_slot and c == 1:
+            for col in range(3):
+                if is_slot and col == 1:
                     continue
-                _face_out(b, [F[r][c], F[r][c + 1], F[r + 1][c + 1], F[r + 1][c]], out, mat)
+                _face_out(b, [F[r][col], F[r][col + 1], F[r + 1][col + 1], F[r + 1][col]], out, mat)
             if is_slot:
                 d_ = [b.v(xs[1], yd, lo), b.v(xs[2], yd, lo), b.v(xs[2], yd, hi), b.v(xs[1], yd, hi)]
                 h = [F[r][1], F[r][2], F[r + 1][2], F[r + 1][1]]
@@ -362,14 +364,22 @@ def _slotted_bar(b: Builder, x0: float, x1: float, y0: float, y1: float, z0: flo
                     mz = (b.verts[h[a]][2] + b.verts[h[e]][2]) / 2
                     _face_out(b, [h[a], h[e], d_[e], d_[a]], (xc - mx, 0.0, zc - mz), mat)
                 _face_out(b, d_, out, mat)
-        for c in (0, 3):
-            corners[face, c, 0] = F[0][c]
-            corners[face, c, 1] = F[-1][c]
-    q = corners
-    _face_out(b, [q["ny", 0, 0], q["py", 0, 0], q["py", 0, 1], q["ny", 0, 1]], (-1.0, 0.0, 0.0), mat)
-    _face_out(b, [q["ny", 3, 0], q["py", 3, 0], q["py", 3, 1], q["ny", 3, 1]], (1.0, 0.0, 0.0), mat)
-    _face_out(b, [q["ny", 0, 0], q["ny", 3, 0], q["py", 3, 0], q["py", 0, 0]], (0.0, 0.0, -1.0), mat)
-    _face_out(b, [q["ny", 0, 1], q["ny", 3, 1], q["py", 3, 1], q["py", 0, 1]], (0.0, 0.0, 1.0), mat)
+        for col in (0, 3):
+            corners[face, col, 0] = F[0][col]
+            corners[face, col, 1] = F[-1][col]
+    rings = []
+    for k, zz in ((0, z0), (1, z1)):
+        q = corners
+        rings.append([q["ny", 0, k], q["ny", 3, k], b.v(x1, y0 + c, zz), b.v(x1, y1 - c, zz), q["py", 3, k],
+                      q["py", 0, k], b.v(x0, y1 - c, zz), b.v(x0, y0 + c, zz)])
+    ym = (y0 + y1) / 2
+    for i in (1, 2, 3, 5, 6, 7):                    # the chamfers and the two plain side faces
+        i1 = (i + 1) % 8
+        pa, pb = b.verts[rings[0][i]], b.verts[rings[0][i1]]
+        out = ((pa[0] + pb[0]) / 2 - xc, (pa[1] + pb[1]) / 2 - ym, 0.0)
+        _face_out(b, [rings[0][i], rings[0][i1], rings[1][i1], rings[1][i]], out, mat)
+    b.fill([rings[0]], mat, 0, (0.0, 0.0, -1.0))
+    b.fill([rings[1]], mat, 0, (0.0, 0.0, 1.0))
 
 
 # =========================================================================== slatwall profile (A7, A10, A11 corner)
@@ -405,13 +415,12 @@ def _slat_profile(yf: float, yb: float, z0: float, z1: float, front: Optional[Se
     z0..z1, with grooves at ``front`` / ``back`` centres (None: a plain MDF face). Outer edges chamfered ``ce``."""
     fmat = FACE if front is not None else CORE
     bmat = FACE if back is not None else CORE
-    lvl = level
     P = [(yf, z0 + ce, fmat)]
     if front:
-        P += _groove_run(yf, 1.0, front, lvl)
+        P += _groove_run(yf, 1.0, front, level)
     P += [(yf, z1 - ce, CORE), (yf + ce, z1, CORE), (yb - ce, z1, CORE), (yb, z1 - ce, bmat)]
     if back:
-        U = _groove_run(yb, -1.0, back, lvl)
+        U = _groove_run(yb, -1.0, back, level)
         for i in range(len(U) - 1, -1, -1):
             P.append((U[i][0], U[i][1], U[i - 1][2] if i > 0 else FACE))
     P += [(yb, z0 + ce, CORE), (yb - ce, z0, CORE), (yf + ce, z0, CORE)]
@@ -823,8 +832,6 @@ def _corner_lod(level: int) -> Lod:
         L = [(e, -S0), (e + Ds, -S0), (e + Ds, -(e + Ds)), (S0, -(e + Ds)), (S0, -e), (e, -e)]
         base.prism(L, zs - c["slab"], zs, mat=STEEL)
         prof = [(n, z - GSHELF["top_above_mount"] + zs, STRIP) for n, z in _price_channel(Ds)]
-        if level == 2:
-            prof = [(p[0], p[1], STRIP) for p in prof]
         _sweep(base, prof, [(e + Ds, -S0), (e + Ds, -(e + Ds)), (S0, -(e + Ds))], STRIP)
         if level < 2:                               # end brackets on the two end uprights
             t, hb, ht = GSHELF["bracket"]
@@ -834,8 +841,8 @@ def _corner_lod(level: int) -> Lod:
             _prism_x(base, _plain([(y - e, z) for y, z in br], STEEL), xr - t / 2, xr + t / 2, STEEL)
             yl = -S0 + ux / 2                       # along +Y the sweep's n is -X, so n = y - e gives x = e - y
             _sweep(base, _plain([(y - e, z) for y, z in br], STEEL), [(0.0, yl - t / 2), (0.0, yl + t / 2)], STEEL)
-    for x0, y0 in ((0.0, -ux), (S0 - ux, -ux), (0.0, -S0)):          # corner post + two end uprights
-        extra.box((x0, y0, z0d), (x0 + ux, y0 + ux, H), mat=STEEL)
+    for x0, y0 in ((0.0, -ux), (S0 - ux, -ux), (0.0, -S0)):          # corner post + two end uprights (bevelled)
+        base.box((x0, y0, z0d), (x0 + ux, y0 + ux, H), mat=STEEL)
     zcs = _groove_centres(zk, H, g["grooves"], SLAT["pitch"])
     plevel = (0, 1, 3)[level]
     py0, py1 = -ux + 1.0, -ux + 1.0 + g["panel_t"]
@@ -1019,8 +1026,8 @@ def item_rack_wire() -> Item:
               "accepts": list(SHELF_ACCEPTS), "levels": levels,
               "reference": "sheet 21 (csk_wire_rack_box_shelf.png)",
               "notes": ["Sheet 21 shows 5 decks (the spec's 4 was E): levels L1..L5.",
-                        "Budget 7000 -> %d: the fifth deck and the sheet's ring-grooved posts (about 64 grooves a "
-                        "post at 25.4) are real geometry." % r["budget"],
+                        "Budget 7000 -> %d: the fifth deck and the sheet's ring-grooved posts (60 visible grooves a "
+                        "post at 25.4, about 7.7k tris) are real geometry." % r["budget"],
                         "Hulls: one per deck (spec: 5); the posts have none."]},
     )
 
@@ -1060,7 +1067,7 @@ def _tier_lod(level: int) -> Lod:
         b.box((-xi - 0.5, -D / 2 + kr, 0.0), (xi + 0.5, D / 2 - kr, kh + 0.5), mat=BLACK)          # recessed kick
         b.box((-xi - 0.5, -D / 2 + 2.0, kh), (xi + 0.5, D / 2 - 0.5, zd - bd + 0.5), mat=OAK)   # oak cabinet
     else:
-        b.box((-xi - 0.5, -D / 2 + 2.0, 0.0), (xi + 0.5, D / 2 - 0.5, zd - bd + 0.5), mat=OAK, mats={"ny": OAK})
+        b.box((-xi - 0.5, -D / 2 + 2.0, 0.0), (xi + 0.5, D / 2 - 0.5, zd - bd + 0.5), mat=OAK)      # no kick
     b.box((-xi - 0.5, -D / 2, zd - bd), (xi + 0.5, D / 2, zd), mat=WHITE)                      # the white deck
     lt, lh = t["lip"]
     for k in (2, 3, 4):                                # 3 white shelves tilted back 10 deg, 25 front lip
