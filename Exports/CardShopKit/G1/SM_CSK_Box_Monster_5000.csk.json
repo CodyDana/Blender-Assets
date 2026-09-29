@@ -1,0 +1,256 @@
+{
+ "spec": "g1-1",
+ "fbx": "SM_CSK_Box_Monster_5000.fbx",
+ "fbx_sha256": "b7c117fe59e0ee0bcc64319c70ab444be79814eee678f3c47baeaa7f5400c19e",
+ "sockets_json": "SM_CSK_Box_Monster_5000.sockets.json",
+ "sockets_sha256": "3ea0044c327e4c47da1a4f0a7b1ed8b8f1d9d02f050aa96adba8d72ff431cf70",
+ "class": "StorageMonster5000",
+ "pivot": "Seat: bottom-centre, +X right, +Y away from the customer, +Z up",
+ "render_aabb_mm": [
+  [
+   -206.05,
+   -244.15,
+   0.0
+  ],
+  [
+   206.05,
+   244.15,
+   101.8
+  ]
+ ],
+ "lods": {
+  "count": 3,
+  "triangles": [
+   380,
+   188,
+   76
+  ],
+  "screen_sizes": [
+   1.0,
+   0.143799,
+   0.05752
+  ],
+  "class": "medium",
+  "bounds_radius_mm": 323.507
+ },
+ "sockets": [
+  {
+   "name": "Seat",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_01",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -163.64,
+    -240.15,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_02",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -81.82,
+    -240.15,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_03",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    0.0,
+    -240.15,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_04",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    81.82,
+    -240.15,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_05",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    163.64,
+    -240.15,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Lid",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    47.3
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Stack",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    104.8
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "hulls": 5,
+ "footprint_mm": [
+  419.1,
+  495.3,
+  104.8
+ ],
+ "stack": {
+  "socket": "Stack",
+  "pitch_mm": 104.8,
+  "max": 4
+ },
+ "contain": {
+  "Card": {
+   "sockets": [
+    "Row_01",
+    "Row_02",
+    "Row_03",
+    "Row_04",
+    "Row_05"
+   ],
+   "cavity_mm": [
+    [
+     -203.05,
+     -241.15,
+     3.0
+    ],
+    [
+     203.05,
+     241.15,
+     101.8
+    ]
+   ],
+   "accepts": [
+    "Card"
+   ],
+   "rows": [
+    {
+     "socket": "Row_01",
+     "x_mm": [
+      -203.05,
+      -124.23
+     ]
+    },
+    {
+     "socket": "Row_02",
+     "x_mm": [
+      -121.23,
+      -42.41
+     ]
+    },
+    {
+     "socket": "Row_03",
+     "x_mm": [
+      -39.41,
+      39.41
+     ]
+    },
+    {
+     "socket": "Row_04",
+     "x_mm": [
+      42.41,
+      121.23
+     ]
+    },
+    {
+     "socket": "Row_05",
+     "x_mm": [
+      124.23,
+      203.05
+     ]
+    }
+   ],
+   "row": {
+    "axis": "+Y",
+    "pitch_mm": {
+     "raw": 0.3,
+     "penny_sleeved": 0.5
+    },
+    "max": {
+     "raw": 1604,
+     "penny_sleeved": 962
+    }
+   },
+   "pose": "standing on the short edge, face to -Y; each row grows toward +Y from its socket (the card's back face, 1.0 off the front wall)"
+  }
+ },
+ "parts": {
+  "Lid": {
+   "mesh": "SM_CSK_Box_Monster_Lid_5000",
+   "socket": "Lid",
+   "type": "slide",
+   "axis": "Z",
+   "range_mm": [
+    0,
+    70
+   ],
+   "note": "lift-off: past 54.5 the lid clears the base"
+  }
+ },
+ "reference": "References/CardShop/csk_storage_boxes.png (sheet 13)",
+ "notes": [
+  "Closed outer 419.1 x 495.3 x 104.8 (M [D16]) = the lid; the base is 412.1 x 488.3 x 101.8 (lid board 3 + 0.5 clearance a side).",
+  "5 rows of 78.8 between 3.0 dividers; hand holes 90 x 30 (E) through both ends at the lid's hole height.",
+  "Sheet 13 conflict (decided 2026-09-29): the telescoping lift-off lid of the closed views is built; the open views' hinged lid is the lid set aside.",
+  "Hulls: floor and 4 walls (5; the dividers get none: contained cards are NoCollision)."
+ ]
+}

@@ -1,0 +1,234 @@
+{
+ "spec": "g1-1",
+ "fbx": "SM_CSK_Box_Monster_3200.fbx",
+ "fbx_sha256": "97faea78e4336c4480ede34111352bf6e50764062ffdf385edbafcddeff5d8d9",
+ "sockets_json": "SM_CSK_Box_Monster_3200.sockets.json",
+ "sockets_sha256": "62b177d87a4c54b596affd1b15967bd047df670d878517ed3a2dd9c08414656b",
+ "class": "StorageMonster3200",
+ "pivot": "Seat: bottom-centre, +X right, +Y away from the customer, +Z up",
+ "render_aabb_mm": [
+  [
+   -164.8,
+   -199.7,
+   0.0
+  ],
+  [
+   164.8,
+   199.7,
+   100.2
+  ]
+ ],
+ "lods": {
+  "count": 3,
+  "triangles": [
+   368,
+   176,
+   64
+  ],
+  "screen_sizes": [
+   1.0,
+   0.117224,
+   0.04689
+  ],
+  "class": "medium",
+  "bounds_radius_mm": 263.722
+ },
+ "sockets": [
+  {
+   "name": "Seat",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_01",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -122.475,
+    -195.7,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_02",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -40.825,
+    -195.7,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_03",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    40.825,
+    -195.7,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Row_04",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    122.475,
+    -195.7,
+    47.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Lid",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    45.7
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Stack",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    103.2
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "hulls": 5,
+ "footprint_mm": [
+  336.6,
+  406.4,
+  103.2
+ ],
+ "stack": {
+  "socket": "Stack",
+  "pitch_mm": 103.2,
+  "max": 4
+ },
+ "contain": {
+  "Card": {
+   "sockets": [
+    "Row_01",
+    "Row_02",
+    "Row_03",
+    "Row_04"
+   ],
+   "cavity_mm": [
+    [
+     -161.8,
+     -196.7,
+     3.0
+    ],
+    [
+     161.8,
+     196.7,
+     100.2
+    ]
+   ],
+   "accepts": [
+    "Card"
+   ],
+   "rows": [
+    {
+     "socket": "Row_01",
+     "x_mm": [
+      -161.8,
+      -83.15
+     ]
+    },
+    {
+     "socket": "Row_02",
+     "x_mm": [
+      -80.15,
+      -1.5
+     ]
+    },
+    {
+     "socket": "Row_03",
+     "x_mm": [
+      1.5,
+      80.15
+     ]
+    },
+    {
+     "socket": "Row_04",
+     "x_mm": [
+      83.15,
+      161.8
+     ]
+    }
+   ],
+   "row": {
+    "axis": "+Y",
+    "pitch_mm": {
+     "raw": 0.3,
+     "penny_sleeved": 0.5
+    },
+    "max": {
+     "raw": 1308,
+     "penny_sleeved": 784
+    }
+   },
+   "pose": "standing on the short edge, face to -Y; each row grows toward +Y from its socket (the card's back face, 1.0 off the front wall)"
+  }
+ },
+ "parts": {
+  "Lid": {
+   "mesh": "SM_CSK_Box_Monster_Lid_3200",
+   "socket": "Lid",
+   "type": "slide",
+   "axis": "Z",
+   "range_mm": [
+    0,
+    70
+   ],
+   "note": "lift-off: past 54.5 the lid clears the base"
+  }
+ },
+ "reference": "References/CardShop/csk_storage_boxes.png (sheet 13)",
+ "notes": [
+  "Closed outer 336.6 x 406.4 x 103.2 (M [D16]) = the lid; the base is 329.6 x 399.4 x 100.2 (lid board 3 + 0.5 clearance a side).",
+  "4 rows of 78.7 between 3.0 dividers; hand holes 90 x 30 (E) through both ends at the lid's hole height.",
+  "Sheet 13 conflict (decided 2026-09-29): the telescoping lift-off lid of the closed views is built; the open views' hinged lid is the lid set aside.",
+  "Hulls: floor and 4 walls (5; the dividers get none: contained cards are NoCollision)."
+ ]
+}

@@ -1,0 +1,199 @@
+{
+ "spec": "g1-1",
+ "fbx": "SM_CSK_Box_Row_400.fbx",
+ "fbx_sha256": "b3d2c390286733b4f538d524daf406439c016b633c17240018f93e72512eb94a",
+ "sockets_json": "SM_CSK_Box_Row_400.sockets.json",
+ "sockets_sha256": "7b9296ad00660c4ef1364ba289d4df1e6d38bc96cf126b1a22daff40194ebad4",
+ "class": "StorageRow400",
+ "pivot": "Seat: bottom-centre, +X right, +Y away from the customer, +Z up",
+ "render_aabb_mm": [
+  [
+   -52.4,
+   -96.8,
+   0.0
+  ],
+  [
+   52.4,
+   100.0,
+   73.2
+  ]
+ ],
+ "lods": {
+  "count": 3,
+  "triangles": [
+   232,
+   104,
+   28
+  ],
+  "screen_sizes": [
+   1.0,
+   0.052156,
+   0.020862
+  ],
+  "class": "medium",
+  "bounds_radius_mm": 117.337
+ },
+ "sockets": [
+  {
+   "name": "Seat",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Cards_Start",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    0.0,
+    -92.8,
+    34.8
+   ],
+   "rot_deg": [
+    90.0,
+    90.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Lid",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    100.0,
+    76.2
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Label",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    -96.8,
+    14.6
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Stack",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    76.2
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "hulls": 5,
+ "footprint_mm": [
+  104.8,
+  200.0,
+  76.2
+ ],
+ "stack": {
+  "socket": "Stack",
+  "pitch_mm": 76.2,
+  "max": 5
+ },
+ "contain": {
+  "Card": {
+   "socket": "Cards_Start",
+   "cavity_mm": [
+    [
+     -46.05,
+     -93.8,
+     3.299999999999997
+    ],
+    [
+     46.05,
+     84.00000000000001,
+     73.2
+    ]
+   ],
+   "accepts": [
+    "Card"
+   ],
+   "row": {
+    "axis": "+Y",
+    "pitch_mm": {
+     "raw": 0.3,
+     "penny_sleeved": 0.5
+    },
+    "max": {
+     "raw": 589,
+     "penny_sleeved": 353
+    }
+   },
+   "pose": "standing on the long edge, face to -Y (the customer); the row grows toward +Y; the Seat is the card's back face, 1.0 off the front wall"
+  }
+ },
+ "parts": {
+  "Lid": {
+   "mesh": "SM_CSK_Box_Row_Lid_400",
+   "socket": "Lid",
+   "type": "hinge",
+   "axis": "X",
+   "range_deg": [
+    0,
+    180
+   ],
+   "open_rot_deg": [
+    -100.0,
+    0.0,
+    0.0
+   ],
+   "note": "opens about -X (negative angles); sheet 13 open pose ~100 deg",
+   "open_ue": {
+    "loc_cm": [
+     0.0,
+     -10.0,
+     7.62
+    ],
+    "rot": [
+     100.0,
+     0.0,
+     0.0
+    ]
+   },
+   "closed_ue": {
+    "loc_cm": [
+     0.0,
+     -10.0,
+     7.62
+    ],
+    "rot": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  }
+ },
+ "reference": "References/CardShop/csk_storage_boxes.png (sheet 13)",
+ "notes": [
+  "Outer 104.8 x 200.0 x 76.2, inner 95.3 x 177.8 x 69.9 (M [D16]).",
+  "M needs 22.2 of end structure: flap 3 + gap 0.2 + front wall 3 (sheet 13: thin, with the finger cut) + a folded back end 16.0 (hidden under the lid in every view).",
+  "Label socket: on the front wall under the finger cut (the sheet shows no label)."
+ ]
+}

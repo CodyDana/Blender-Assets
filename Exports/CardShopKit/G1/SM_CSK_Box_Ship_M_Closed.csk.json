@@ -1,0 +1,212 @@
+{
+ "spec": "g1-1",
+ "fbx": "SM_CSK_Box_Ship_M_Closed.fbx",
+ "fbx_sha256": "95d9a6ccb72273bf1dae817af32162ceaaf265c86a7253240b639a5af55f2b2c",
+ "sockets_json": "SM_CSK_Box_Ship_M_Closed.sockets.json",
+ "sockets_sha256": "6a1ef623c551489e9af88aefb52feeddc57c1d083a0685501f7c118dc3e57dc2",
+ "class": "BoxShipM",
+ "pivot": "Seat: bottom-centre, +X right, +Y away from the customer, +Z up",
+ "render_aabb_mm": [
+  [
+   -203.2,
+   -152.5,
+   0.0
+  ],
+  [
+   203.2,
+   152.5,
+   254.2
+  ]
+ ],
+ "lods": {
+  "count": 1,
+  "triangles": [
+   120
+  ],
+  "screen_sizes": null,
+  "class": "medium",
+  "bounds_radius_mm": 284.079
+ },
+ "sockets": [
+  {
+   "name": "Seat",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Contents",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    0.0,
+    0.0,
+    4.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Label",
+   "kind": "UTILITY",
+   "loc_mm": [
+    -203.0,
+    0.0,
+    127.0
+   ],
+   "rot_deg": [
+    0.0,
+    -90.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Tape",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    254.2
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Grip",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    -152.5,
+    127.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Stack",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    254.2
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "hulls": 1,
+ "size": "M",
+ "state": "Closed",
+ "states": {
+  "Closed": "SM_CSK_Box_Ship_M_Closed",
+  "Open": "SM_CSK_Box_Ship_M_Open",
+  "Flat": "SM_CSK_Box_Ship_Flat"
+ },
+ "state_swap": "spec 5.3",
+ "reference": "References/CardShop/csk_cartons.png (sheet 11)",
+ "contain": {
+  "Contents": {
+   "socket": "Contents",
+   "cavity_mm": [
+    [
+     -199.0,
+     -148.5,
+     4.0
+    ],
+    [
+     199.0,
+     148.5,
+     250.0
+    ]
+   ],
+   "interior_mm": [
+    398.0,
+    297.0
+   ],
+   "clear_h_mm": 246.0,
+   "accepts": [
+    "Pack",
+    "BoxS",
+    "Slab"
+   ],
+   "grids": [
+    {
+     "class": "Pack",
+     "cols": 4,
+     "rows": 2,
+     "pitch_mm": [
+      77.0,
+      127.0
+     ],
+     "first_mm": [
+      -115.5,
+      -63.5
+     ]
+    },
+    {
+     "class": "BoxS",
+     "cols": 2,
+     "rows": 3,
+     "pitch_mm": [
+      150.0,
+      90.0
+     ],
+     "first_mm": [
+      -75.0,
+      -90.0
+     ]
+    },
+    {
+     "class": "Slab",
+     "cols": 4,
+     "rows": 1,
+     "pitch_mm": [
+      94.0,
+      144.0
+     ],
+     "first_mm": [
+      -141.0,
+      0.0
+     ]
+    }
+   ],
+   "note": "one floor layer per class from the Contents socket (floor centre), geom.solve_grid (10 margin)",
+   "not_gridded": [
+    "Retail"
+   ]
+  }
+ },
+ "footprint_mm": [
+  406.4,
+  305.0,
+  254.2
+ ],
+ "stack": {
+  "socket": "Stack",
+  "pitch_mm": 254.2,
+  "max": 4
+ },
+ "notes": [
+  "Sheet 11 closed: kraft RSC, 48 tape along the top seam and 223.5 down each end, a joint line across each end; no label (the sheet shows none; the Label socket marks where one goes). Stack pitch = H + the 0.2 tape.",
+  "LOD0 only: 120 tris <= 150 (spec section 3 rule)"
+ ]
+}

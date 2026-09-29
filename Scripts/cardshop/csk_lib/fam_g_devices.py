@@ -154,7 +154,9 @@ LABELLER = dict(               # G7 pistol-grip price labeller, sheet 26 panel 6
     lever_w=24.0,
     chamfer=1.5,               # E: the moulded edge chamfer of the plates, handle and lever
     bevel=2.0,                 # E: the body's rounded edges (2 segments)
-    nose=(40.0, 4.0, 40.0, 98.0),   # sheet 26: the print-head frame proud of the front: W, proud, z0, z1 (E)
+    nose=(40.0, 4.0, 40.0, 97.0),   # sheet 26: the print-head frame proud of the front: W, proud, z0, z1 (E); its
+                                    # top 1 under the body's 98 top, so the union meets the rounded edge, not the top
+                                    # plane (coplanar tops left sliver tris that Unreal drops)
     window=(24.0, 5.0, 80.0, 95.0),  # sheet 26: the window at the head's top: W, depth, z0, z1 (E)
     slider=(16.0, 8.0, 3.5),   # sheet 26: the red selector in the window: W x H, proud of the window floor (E)
     exit=(28.0, 3.0, 45.5),    # E: the label exit slot: W x H, z centre
@@ -1296,7 +1298,8 @@ def _labeller_lod(level: int) -> Lod:
     nw, npr, nz0, nz1 = g["nose"]
     front = g["body"][0][0]
     nose = Builder()
-    nose.box((-nw / 2, front - npr, nz0), (nw / 2, front + 2.0, nz1), mat=PLASTIC)
+    # its hidden back face sits past the body's 2 bevel: ending on the bevel's edge left 4 sliver tris Unreal drops
+    nose.box((-nw / 2, front - npr, nz0), (nw / 2, front + g["bevel"] + 2.0, nz1), mat=PLASTIC)
     ops.append(("UNION", nose))
     if level < 2:
         ww, wd, wz0, wz1 = g["window"]

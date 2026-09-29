@@ -1,0 +1,205 @@
+{
+ "spec": "g1-1",
+ "fbx": "SM_CSK_DeckBox.fbx",
+ "fbx_sha256": "5d5094188104b347442fca2331b1a884d7203020ec8033cafa3c8414cb2098c8",
+ "sockets_json": "SM_CSK_DeckBox.sockets.json",
+ "sockets_sha256": "f8609ee05b7d6cee8d4a3469dba7ad0eb88f0bb63889dcee0157b04b442cfe17",
+ "class": "Deck",
+ "pivot": "Seat: bottom-centre, +X right, +Y away from the customer, +Z up",
+ "render_aabb_mm": [
+  [
+   -38.0,
+   -40.0,
+   0.0
+  ],
+  [
+   38.0,
+   41.5,
+   67.9891
+  ]
+ ],
+ "lods": {
+  "count": 3,
+  "triangles": [
+   380,
+   104,
+   48
+  ],
+  "screen_sizes": [
+   1.0,
+   0.077367,
+   0.029013
+  ],
+  "class": "handheld",
+  "bounds_radius_mm": 65.27
+ },
+ "sockets": [
+  {
+   "name": "Seat",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Cards",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    0.0,
+    -34.5,
+    49.5
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Lid",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    40.0,
+    66.5
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Grip",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    -40.0,
+    33.25
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Stack",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    108.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "hulls": 1,
+ "footprint_mm": [
+  76.0,
+  80.0,
+  108.0
+ ],
+ "stack": {
+  "socket": "Stack",
+  "pitch_mm": 108.0,
+  "max": 4
+ },
+ "contain": {
+  "Card": {
+   "socket": "Cards",
+   "cavity_mm": [
+    [
+     -34.0,
+     -35.5,
+     4.0
+    ],
+    [
+     34.0,
+     35.5,
+     104.0
+    ]
+   ],
+   "accepts": [
+    "Card"
+   ],
+   "row": {
+    "axis": "+Y",
+    "pitch_mm": {
+     "raw": 0.3,
+     "penny_sleeved": 0.5,
+     "deck_sleeved": 0.66
+    },
+    "max": 100
+   },
+   "pose": "standing upright, face to -Y; the Seat is the card's back face centre, 1.0 off the front wall, at the height of a sleeved card (91) standing on the floor"
+  }
+ },
+ "parts": {
+  "Lid": {
+   "mesh": "SM_CSK_DeckBox_Lid",
+   "socket": "Lid",
+   "type": "hinge",
+   "axis": "X",
+   "range_deg": [
+    0,
+    110.0
+   ],
+   "open_rot_deg": [
+    -110.0,
+    0.0,
+    0.0
+   ],
+   "note": "opens about -X (negative angles); pivot on the rear top edge of the base",
+   "open_ue": {
+    "loc_cm": [
+     0.0,
+     -4.0,
+     6.65
+    ],
+    "rot": [
+     110.0,
+     0.0,
+     0.0
+    ]
+   },
+   "closed_ue": {
+    "loc_cm": [
+     0.0,
+     -4.0,
+     6.65
+    ],
+    "rot": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  }
+ },
+ "emblem": {
+  "tile": [
+   0,
+   0
+  ],
+  "face": "the base's front face (below the scoop)",
+  "note": "UV only: sheet 15 shows the box plain; the Plastic material can print an emblem cell there (spec slot 'Print (emblem)')"
+ },
+ "reference": "References/CardShop/csk_deckbox_playmat_dice.png (sheet 15)",
+ "notes": [
+  "Sheet 15: blue matte plastic, 76 x 80 x 108, slightly rounded vertical edges (R 3); the lid covers the top 41.5 (38 %), its front edge has a shallow wave dip (38 wide at the seam, 23.7 across its flat bottom, 9.4 deep) that fills the base's matching finger scoop.",
+  "Inside 68 x 71 x 100 (M): 4 walls (X), 4.5 (Y), 4 floor and lid top.",
+  "The hinge pin (\u00d8 3 x 35) sits on the rear top edge, on the hinge axis (sheet 15 open views)."
+ ]
+}

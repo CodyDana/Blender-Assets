@@ -12,7 +12,14 @@ in the cloud commits the family builders' progress every 10 minutes (commits tit
 
 ## 00. Local session on the PC (2026-09-29, branch `claude/cardshop-build-integration-5227b4`)
 
-Steps 1-5 below are done; step 6 (the G1 Unreal run) is next.
+Steps 1-6 below are done. **The G1 Unreal run passes end to end** (`bash Scripts/cardshop/run_g1.sh`, UE 5.8, verify
+in a fresh process, `g1/unreal/verify.json`): all 179 meshes imported and verified (LODs, LOD0 tris, sockets,
+hulls, screen sizes, an MI on every slot), G1 test 2 (slot seats <= 0.0001 cm for all 6 classes), both levels.
+**Next: the user's manual G1 checks (tests 1 and 3, `G1_HANDOFF.md` section 3), then the design review.**
+- **Unreal drops tiny triangles:** the first run lost 4 LOD0 tris on `SM_CSK_PriceGun` (Unreal cuts any triangle of
+  area <= 0.005 mm^2). The build now fails such triangles on every LOD (`mesh.small_triangles`); fixed at the cause
+  on the price gun (print-head frame top 97, back past the bevel) and the filled top-loader's LOD2 (print recess
+  0.2 deep on LOD2).
 - **Nothing was left uncommitted** by the cloud: all 12 modules and reports were in its last commit.
 - **Combined build in Blender 5.2: `CSK_BUILD PASSED`**, 179 meshes, kit checks 1359/1359, self-tests 11/11
   (`g1/pc_build_report.json`). The 12 G1 meshes have exactly the cloud's triangle counts. No class-code conflicts

@@ -26,6 +26,7 @@ from .spec import MM
 Vec3 = Tuple[float, float, float]
 Projection = Callable[[float, float, float], Tuple[float, float]]
 REGION_LAYER = "csk_region"
+UE_MIN_TRI_MM2 = 0.005      # Unreal's degenerate-triangle cut: |cross|^2 <= 1e-8 cm^4, i.e. area <= 0.005 mm^2
 
 
 # --------------------------------------------------------------------------- to Blender
@@ -268,6 +269,15 @@ def aabb_mm(obj: "bpy.types.Object") -> Tuple[Vec3, Vec3]:
     mn = tuple(min(c[i] for c in xs) / MM for i in range(3))
     mx = tuple(max(c[i] for c in xs) / MM for i in range(3))
     return mn, mx  # type: ignore[return-value]
+
+
+def small_triangles(obj: "bpy.types.Object", min_mm2: float = UE_MIN_TRI_MM2) -> int:
+    """Triangles (as Blender triangulates) at or under ``min_mm2``: Unreal's import drops a triangle whose normal
+    cross product squared is <= 1e-8 cm^4 (area <= UE_MIN_TRI_MM2), so the imported count would not match. Measured
+    on the G1 run of 2026-09-29: exactly the 4 flagged triangles of SM_CSK_PriceGun went missing in Unreal."""
+    me = obj.data
+    me.calc_loop_triangles()
+    return sum(1 for t in me.loop_triangles if t.area / (MM * MM) <= min_mm2)
 
 
 def degenerate_uv_faces(obj: "bpy.types.Object", layer: str, min_area: float = 1e-9) -> int:

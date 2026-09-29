@@ -102,3 +102,4 @@ otherwise.
 | L3 | a_shelving 2 | Tilted levels (A13): `fit.grid_slots` / `slots.write_csk_json` ignore the Level socket's rotation, so `slots_ue` are axis-aligned | Open: rotate grid offsets and slot rotations by the level socket |
 | L4 | b_pack 6 | Sheet 5's S box window reads 128 / 87 / 64 against geom's 126 / 100 / 70 | Open: a G1 change, so it needs the user's OK |
 | L5 | handoff | Blender 5.2's exact boolean appends an empty material slot per cutter | **Done:** `mesh._apply_boolean` drops the added slots |
+| L6 | G1 run | Unreal drops triangles of area <= 0.005 mm^2 on import (price gun lost 4) | **Done:** the build fails them on every LOD (`mesh.small_triangles`); price gun and filled top-loader LOD2 fixed |

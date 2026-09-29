@@ -1,0 +1,56 @@
+{
+  "fbx": "SM_CSK_Box_GradeReturn_Lid.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [
+    {
+      "socket": "Label",
+      "fbx_node": "SOCKET_SM_CSK_Box_GradeReturn_Lid_Label",
+      "mesh": "SM_CSK_Box_GradeReturn_Lid",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        6.02
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": true
+    },
+    {
+      "socket": "Seat",
+      "fbx_node": "SOCKET_SM_CSK_Box_GradeReturn_Lid_Seat",
+      "mesh": "SM_CSK_Box_GradeReturn_Lid",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": true
+    }
+  ]
+}

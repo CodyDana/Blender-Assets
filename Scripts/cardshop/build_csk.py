@@ -123,8 +123,9 @@ def stage_qa(built, report) -> bool:
         uv_degenerate = {o.name: [mesh.degenerate_uv_faces(o, "UVMap"), mesh.degenerate_uv_faces(o, "Lightmap")]
                          for o in objs}
         uv_ok = all(sum(v) == 0 for v in uv_degenerate.values())
-        rep[item.name] = {"passed": r["passed"] and lod_rule and winding == 0 and uv_ok, "checks": len(r["checks"]),
-                          "uv_degenerate_faces": uv_degenerate,
+        small = {o.name: mesh.small_triangles(o) for o in objs}         # Unreal would drop these on import
+        rep[item.name] = {"passed": r["passed"] and lod_rule and winding == 0 and uv_ok and not any(small.values()),
+                          "checks": len(r["checks"]), "uv_degenerate_faces": uv_degenerate, "small_triangles": small,
                           "failed": [{"name": c["name"], "object": c["object"], "detail": c["detail"]}
                                      for c in failed],
                           "triangles": tris, "budget_lod0": item.budget,
@@ -134,7 +135,7 @@ def stage_qa(built, report) -> bool:
         ok_all &= ok
         log(f"qa_check {item.name}: {'PASS' if ok else 'FAIL'} tris={tris}"
             + ("" if ok else f" failed={[c['name'] + '@' + c['object'] for c in failed]} lod_rule={lod_rule}"
-                            f" winding={winding} uv_degenerate={uv_degenerate}"))
+                            f" winding={winding} uv_degenerate={uv_degenerate} small_triangles={small}"))
     report["qa"] = {"passed": ok_all, "per_item": rep}
     return ok_all
 

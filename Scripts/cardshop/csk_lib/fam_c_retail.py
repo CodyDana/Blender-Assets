@@ -70,6 +70,7 @@ DECK_SLEEVE = dict(                 # C4, sheet 8 (2)
 
 TL_FILLED = dict(                   # C5 Filled: the G1 top-loader (spec.TOPLOADER_35, sheet 2) + the card print
     print_d=0.05,                   # the card print lies 0.05 under the clear-coat skin (a region split, as the slab)
+    print_d_far=0.2,                # LOD2: 0.05 walls met LOD2's corners in 0.004 mm^2 tris, which Unreal drops
 )
 
 SEMI = dict(                        # C6, sheet 8 (3)
@@ -616,7 +617,7 @@ def _toploader_filled_lod(level: int) -> Lod:
     h, t, ih = s["h"], s["t"], s["in_h"]
     c = S.CARD_STD
     ycard = h / 2 - ih + c["h"] / 2
-    d = TL_FILLED["print_d"]
+    d = TL_FILLED["print_d_far" if level == 2 else "print_d"]
     segs = (4, 2, 0)[level]
     card = [(x, y + ycard) for x, y in (rounded_rect(c["w"], c["h"], c["r"], segs) if segs else rect(c["w"], c["h"]))]
     front, back = Builder(), Builder()
