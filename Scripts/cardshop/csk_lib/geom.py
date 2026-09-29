@@ -267,51 +267,85 @@ def item_slab_filled() -> Item:
 
 # =========================================================================== B1 pack (sealed)
 
-def _pack_builder(nx: int, ny: int, teeth: int) -> Builder:
+def _pack_builder(cols: List[int], vfr: List[float], teeth: bool, ribs: bool, fin: bool,
+                  n_teeth: Optional[int] = None) -> Builder:
+    """Reference sheet 4: a lens-shaped pillow (both faces domed) with a flat crimp on the mid-plane at both short ends:
+    27 serrated teeth, one pressed rib per tooth, a 1.9 flat seal strip; a raised fin seal down the back centre.
+
+    The crimp line has 2 * teeth + 1 points (k = 0..2n, x = -w/2 + w k / 2n; tips at odd k). ``cols`` are the k
+    indices the pillow's columns use (a subset, so the rows join without T-junction gaps); ``vfr`` the pillow's row
+    fractions 0..1 between the two seal strips."""
     p = S.PACK_STD
-    w, h, t, et, cr = p["w"], p["h"], p["t"], p["edge_t"], p["crimp"]
+    w, h, t, et = p["w"], p["h"], p["t"], p["edge_t"]
+    n2 = 2 * (n_teeth or p["teeth"])          # a far LOD may use fewer, larger teeth
+    fk0, fk1, fw0, fw1, fin_h = p["fin"]
+    hb = (t - fin_h) / 2                        # the pillow's half thickness
+    zm = hb + fin_h                             # the crimp mid-plane (lowest point = the fin at z 0)
+    ys = h / 2 - p["crimp"]                     # pillow ends / seal strip start
+    yj = ys + p["seal"]                         # ribbed band start
     b = Builder()
-    # rows in Y: crimp band (flat, et thick) | body (pillow) | crimp band; columns in X across the width
-    body_y0, body_y1 = -h / 2 + cr, h / 2 - cr
-    ys = [-h / 2, body_y0] + [body_y0 + (body_y1 - body_y0) * j / ny for j in range(1, ny)] + [body_y1, h / 2]
-    xs = [-w / 2 + w * i / nx for i in range(nx + 1)]
+    xk = lambda k: -w / 2 + w * k / n2
 
-    def height(x, y):
-        if y <= body_y0 or y >= body_y1:
-            return et
-        fx = 1.0 - abs(2 * x / w) ** 3
-        fy = 1.0 - abs((2 * y - (body_y0 + body_y1)) / (body_y1 - body_y0)) ** 4
-        return et + (t - et) * max(0.0, fx) * max(0.0, fy)
+    def half(x, y):
+        fx = max(0.0, 1.0 - abs(2 * x / w) ** 4)
+        fy = max(0.0, 1.0 - abs(y / ys) ** 4)
+        return et / 2 + (hb - et / 2) * fx * fy
 
-    tooth = min(1.2, cr * 0.2)
+    def fin_off(k, y):
+        if not fin or abs(y) >= ys - 1e-9:
+            return 0.0
+        return fin_h if fk0 <= k <= fk1 else 0.0
+
+    # rows: (y per k, z-offset per k, columns); built from -y to +y
+    crimp_cols = list(range(n2 + 1)) if teeth else cols
+    def edge_row(sign):
+        ys_ = {k: sign * (h / 2 - (0.0 if (k % 2 == 1 or not teeth) else p["tooth_d"])) for k in crimp_cols}
+        cz = {k: ((p["rib"] if k % 2 == 1 else -p["rib"]) if ribs else 0.0) for k in crimp_cols}
+        return crimp_cols, ys_, cz
+    rib_z = edge_row(1)[2]                      # the pleats run the full ribbed band; they rise inside the seal strip
+    rows = [edge_row(-1), (crimp_cols, {k: -yj for k in crimp_cols}, rib_z)]
+    for f in vfr:
+        y = -ys + 2 * ys * f
+        rows.append((cols, {k: y for k in cols}, None))
+    rows += [(crimp_cols, {k: yj for k in crimp_cols}, rib_z), edge_row(1)]
+
     top, bot = [], []
-    for j, y in enumerate(ys):
-        rt, rb = [], []
-        for i, x in enumerate(xs):
-            yy = y
-            if j in (0, len(ys) - 1) and teeth:      # serrated ends: every other point pulled in by one tooth
-                if (i % 2) == 1:
-                    yy = y + (tooth if j == 0 else -tooth)
-            rt.append(b.v(x, yy, height(x, yy)))
-            on_rim = j in (0, len(ys) - 1) or i in (0, len(xs) - 1)
-            rb.append(b.v(x, yy, 0.0) if on_rim else None)     # the flat bottom only needs its rim
-        top.append(rt)
-        bot.append(rb)
-    nyr = len(ys) - 1
-    for j in range(nyr):
-        for i in range(nx):
-            b.face((top[j][i], top[j][i + 1], top[j + 1][i + 1], top[j + 1][i]), 0, R_FRONT)
-    # the flat bottom as one filled face (the back print)
-    ring = [bot[0][i] for i in range(nx + 1)] + [bot[j][nx] for j in range(1, nyr + 1)] + \
-           [bot[nyr][i] for i in range(nx - 1, -1, -1)] + [bot[j][0] for j in range(nyr - 1, 0, -1)]
-    b.fill([ring], 0, R_BACK, (0, 0, -1))
-    # edges: top rim to bottom rim all round (thin sealed edge)
-    for i in range(nx):
-        b.face((bot[0][i], bot[0][i + 1], top[0][i + 1], top[0][i]), 0, R_EDGE)
-        b.face((bot[nyr][i + 1], bot[nyr][i], top[nyr][i], top[nyr][i + 1]), 0, R_EDGE + 2)
-    for j in range(nyr):
-        b.face((bot[j + 1][0], bot[j][0], top[j][0], top[j + 1][0]), 0, R_EDGE + 3)
-        b.face((bot[j][nx], bot[j + 1][nx], top[j + 1][nx], top[j][nx]), 0, R_EDGE + 1)
+    for ks, yk, cz in rows:
+        rt, rb = {}, {}
+        for k in ks:
+            x, y = xk(k), yk[k]
+            c = cz[k] if cz else 0.0
+            hh = half(x, y) if abs(y) < ys - 1e-9 else et / 2
+            rt[k] = b.v(x, y, zm + hh + c)
+            rb[k] = b.v(x, y, zm - hh + c - fin_off(k, y))
+        top.append((ks, rt))
+        bot.append((ks, rb))
+
+    def strip(ra, rb_, region, up):
+        """Faces between row a (lower y) and row b; columns may differ (one a subset of the other)."""
+        (ka, va), (kb, vb) = ra, rb_
+        coarse = ka if len(ka) <= len(kb) else kb
+        for c0, c1 in zip(coarse[:-1], coarse[1:]):
+            la = [va[k] for k in ka if c0 <= k <= c1]
+            lb = [vb[k] for k in kb if c0 <= k <= c1]
+            poly = la + list(reversed(lb))
+            b.face(tuple(poly) if up else tuple(reversed(poly)), 0, region)
+
+    for r in range(len(rows) - 1):
+        strip(top[r], top[r + 1], R_FRONT, True)
+        strip(bot[r], bot[r + 1], R_BACK, False)
+    # serrated ends (region R_EDGE at -y, R_EDGE + 2 at +y)
+    for (ks, rt), (_, rb), region, sgn in ((top[0], bot[0], R_EDGE, -1), (top[-1], bot[-1], R_EDGE + 2, 1)):
+        for k0, k1 in zip(ks[:-1], ks[1:]):
+            q = (rb[k0], rb[k1], rt[k1], rt[k0])
+            b.face(q if sgn < 0 else tuple(reversed(q)), 0, region)
+    # long sides (R_EDGE + 3 at -x, R_EDGE + 1 at +x)
+    for side, region in ((0, R_EDGE + 3), (1, R_EDGE + 1)):
+        for r in range(len(rows) - 1):
+            ka, kb = top[r][0], top[r + 1][0]
+            k_a, k_b = (ka[0], kb[0]) if side == 0 else (ka[-1], kb[-1])
+            q = (bot[r][1][k_a], bot[r + 1][1][k_b], top[r + 1][1][k_b], top[r][1][k_a])
+            b.face(tuple(reversed(q)) if side == 0 else q, 0, region)
     return b
 
 
@@ -327,7 +361,13 @@ def _pack_edge_projections(w: float, h: float, t: float):
 def item_pack() -> Item:
     p = S.PACK_STD
     w, h, t = p["w"], p["h"], p["t"]
-    lods = [Lod(_pack_builder(10, 6, p["teeth"])), Lod(_pack_builder(6, 3, 6)), Lod(_pack_builder(2, 2, 0))]
+    n2 = 2 * p["teeth"]
+    fk0, fk1, fw0, fw1, _ = p["fin"]
+    k0 = sorted({0, 2, 5, 10, 15, 20, fw0, fk0, n2 // 2, fk1, fw1, n2 - 20, n2 - 15, n2 - 10, n2 - 5, n2 - 2, n2})
+    lods = [Lod(_pack_builder(k0, [0, .04, .12, .25, .5, .75, .88, .96, 1], teeth=True, ribs=True, fin=True)),
+            Lod(_pack_builder([0, 2, 5, 9, 13, 16, 18], [0, .1, .5, .9, 1], teeth=True, ribs=False, fin=False,
+                              n_teeth=9)),
+            Lod(_pack_builder([0, n2 // 4, n2 // 2, 3 * n2 // 4, n2], [0, .5, 1], teeth=False, ribs=False, fin=False))]
     return Item(
         name="SM_CSK_Pack_Std_Sealed", lods=lods, materials=["M_CSK_Pack"],
         projections={R_FRONT: _planar(-w / 2, -h / 2, w, h),
@@ -337,7 +377,8 @@ def item_pack() -> Item:
                  Socket("CardsOut", (0, h / 2, t / 2), (-90.0, 0.0, 0.0)), Socket("Stack", (0, 0, t))],
         hulls=[((-w / 2, -h / 2, 0), (w / 2, h / 2, t))], cls="Pack", budget=S.BUDGETS["SM_CSK_Pack_Std_Sealed"],
         data={"footprint_mm": [w, h, t], "stack": {"socket": "Stack", "pitch_mm": t, "max": 10},
-              "states": ["Sealed"], "notes": ["G1: Open / Wrapper / Strip states and the back fin seal come in P3"]},
+              "states": ["Sealed"], "reference": "References/CardShop/csk_pack.png (sheet 4)",
+              "notes": ["Sheet 4: 27 teeth, ribbed crimps, back fin seal. The Open / Strip / Wrapper states follow."]},
     )
 
 

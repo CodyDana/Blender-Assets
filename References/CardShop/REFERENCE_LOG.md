@@ -109,9 +109,11 @@ stepped frame. The blind brand test (spec 6.3) still runs on the built shell.
 matches the spec's numbers.
 
 **Changes to the build (to match the picture):**
-- **Crimp bands** (about 9 mm) carry fine **vertical ribs**, with a **serrated edge of about 20 teeth** across the
-  width (the G1 build has 10 coarse teeth).
-- **Fin seal:** a ribbed vertical fin seal about 6 mm wide down the back centre, slightly raised.
+- **Crimp bands** (9 mm: a 7.1 mm ribbed band including the teeth, then a 1.9 mm flat seal strip) carry **one pressed
+  rib per tooth**, with a **serrated edge of 27 teeth** (2.48 mm pitch, 1.4 mm deep; counted at 5x zoom, a first read
+  of about 20 was wrong). The G1 build had 10 coarse teeth.
+- **Fin seal:** a ribbed vertical fin seal about 6 mm wide down the back centre, slightly raised (built 0.4 proud; its
+  cross ribs are texture detail).
 - **Side profile:** lens-shaped, tapering to the crimps.
 - **Opened state:** the top crimp is torn off along a jagged line, showing silver foil inside, and the pack gapes.
 - **Tear strip:** on its own it is a ribbed strip with teeth on both edges.

@@ -49,10 +49,14 @@ SLAB_STD = dict(
 
 PACK_STD = dict(
     w=67.0, h=117.0,          # M [D2][D9]
-    t=4.0,                    # pillow height at the centre, E
-    edge_t=0.3,               # sealed edge / crimp thickness, E
-    crimp=9.0,                # crimp depth at both short ends, E
-    teeth=10,                 # serrations across each crimp, E
+    t=4.0,                    # overall, incl. the back fin (reference sheet 4 call-out: 4 mm)
+    edge_t=0.3,               # sealed crimp / fold thickness, E
+    crimp=9.0,                # crimp depth at both short ends (sheet 4: 7.1 ribbed band incl. teeth + 1.9 flat seal)
+    seal=1.9,                 # the flat seal strip between the ribbed band and the pillow
+    teeth=27,                 # sheet 4, counted at 5x: 27 teeth, 2.48 pitch
+    tooth_d=1.4,              # tooth depth, sheet 4
+    rib=0.3,                  # crimp rib amplitude (sheet 4 close-up: strong pleats, about 25 deg) (one rib per tooth; the film is pressed, so both skins move)
+    fin=(25, 29, 24, 30, 0.4),  # back fin seal: flat k 25..29 (|x| <= 2.48), walls to k 24 / 30, 0.4 proud
 )
 
 BOX_BOOSTER_S = dict(
@@ -151,7 +155,7 @@ BUDGETS = {
     "SM_CSK_TopLoader_130pt": 300,
     "SM_CSK_Slab_Std": 1200,
     "SM_CSK_Slab_Std_Filled": 1300,
-    "SM_CSK_Pack_Std_Sealed": 300,
+    "SM_CSK_Pack_Std_Sealed": 1500,     # was 300 (E); sheet 4 ribs + 27 teeth + fin seal need ~1.4k
     "SM_CSK_Box_Booster_S": 400,
     "SM_CSK_Box_Booster_S_Lid": 150,
     "SM_CSK_Showcase_Full_1778": 3000,
