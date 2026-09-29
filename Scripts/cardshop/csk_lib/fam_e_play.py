@@ -36,7 +36,7 @@ BINDER = dict(                  # E3, sheet 14
     t=4.0,                      # E: padded cover board thickness
     band=38.0,                  # sheet 14 front view: the black spine band reaches 38 from the spine face (note: ~40)
     corner_r=3.0,               # sheet 14: slightly rounded cover corners (E)
-    pad_bevel=1.2,              # E: the padded edges, a 2-segment round
+    pad_round=1.2,              # E, sheet 14: the padded boards' round edges
     page=(220.7, 293.7),        # M [D17]
     pocket=(65.1, 90.5),        # M [D17], 3 x 3 on both faces
     hole_pitch=108.0,           # M [D17]: 3 holes
@@ -722,17 +722,20 @@ def item_deckbox() -> Item:
 
 def _deck_lid_builder(level: int) -> Builder:
     """Sheet 15 lid in its hinge frame (origin on the hinge axis at the base's rear top edge; closed, the lid covers
-    y in [-80, 0], z in [0, 41.5], its front tongue down to -9.4): a chamfered top plate over four wall slabs and the
-    wave-dip tongue, each a convex part (the outward-winding check). Parts meet 0.02 inside each other's faces."""
+    y in [-80, 0], z in [0, 41.5], its front tongue down to -9.4): four wall slabs carrying the outer faces up to the
+    top chamfer, a chamfered top plate between them (its sides 0.1 inside the walls), and the wave-dip tongue; each
+    part is convex (the outward-winding check). Front and back walls sit flush between the side walls, touching them
+    (no coplanar overlaps on visible faces, no coincident vertices: the side walls' inner corners stop 0.01 short)."""
     c = DECKBOX
     W, D = c["w"], c["d"]
     Lh = c["lid"]
-    e = 0.02
+    ep = 0.1                                        # the plate's sides, inside the walls
     tw = (W - c["in_w"]) / 2
     td = (D - c["in_d"]) / 2
     top_t = c["h"] - c["in_h"] - c["floor"]
     segs = (c["corner_segs"], 1, 1)[level]
     r = c["corner_r"]
+    ch = c["lid_chamfer"] if level == 0 else 0.0
     b = Builder()
     oy = -D / 2                                     # body y -> lid y
 
@@ -740,37 +743,36 @@ def _deck_lid_builder(level: int) -> Builder:
         return [(x, y + oy) for x, y in rounded_rect(W - 2 * dw, D - 2 * dw, max(0.3, r - dr), segs)]
     z0 = Lh - top_t
     xi = W / 2 - tw
+    zw = Lh - (ch if ch else 0.5)                   # wall tops
     if level == 2:                                  # far LOD: five convex slabs, no tongue (the base drops its scoop)
-        b.box((-W / 2 + e, -D + e, z0), (W / 2 - e, -e, Lh))
+        b.box((-W / 2 + ep, -D + ep, z0), (W / 2 - ep, -ep, Lh))
         for sx in (-1, 1):
-            b.box((min(sx * W / 2, sx * xi), -D, 0.0), (max(sx * W / 2, sx * xi), 0.0, z0 + 0.5))
-        for y0_, y1_ in ((-D + e, -D + td), (-td, -e)):
-            b.box((-xi - 0.5, y0_, 0.0), (xi + 0.5, y1_, z0 + 0.5))
+            b.box((min(sx * W / 2, sx * xi), -D, 0.0), (max(sx * W / 2, sx * xi), 0.0, zw))
+        for y0_, y1_ in ((-D, -D + td), (-td, 0.0)):
+            b.box((-xi + 0.01, y0_, 0.0), (xi - 0.01, y1_, zw))
         return b
-    if level == 0:                                  # the top plate, its top rim chamfered
-        ch = c["lid_chamfer"]
-        loops = [b.loop(rr(e, e), z0), b.loop(rr(e, e), Lh - ch), b.loop(rr(ch, ch), Lh)]
+    if ch:                                          # the top plate, its top rim chamfered
+        loops = [b.loop(rr(ep, ep), z0), b.loop(rr(ep, ep), Lh - ch), b.loop(rr(ch, ch), Lh)]
         b.fill([loops[0]], 0, 0, (0, 0, -1))
         _bridge(b, loops[0], loops[1], 0, centre=(0.0, oy))
         _bridge(b, loops[1], loops[2], 0, up=1.0, centre=(0.0, oy))
         b.fill([loops[2]], 0, 0, (0, 0, 1))
     else:
-        b.prism(rr(e, e), z0, Lh)
+        b.prism(rr(ep, ep), z0, Lh)
     pts = rounded_rect(W, D, r, segs)
     k = segs + 1
-    zw = z0 + 0.5
-    for side in (1, -1):                            # side walls: full depth, the rounded corners
+    for side in (1, -1):                            # side walls: full depth, with the rounded corners
         if side > 0:
-            ol = [(xi, -D / 2)] + pts[0:2 * k] + [(xi, D / 2)]
+            ol = [(xi, -D / 2 + 0.01)] + pts[0:2 * k] + [(xi, D / 2 - 0.01)]
         else:
-            ol = [(-xi, D / 2)] + pts[2 * k:4 * k] + [(-xi, -D / 2)]
+            ol = [(-xi, D / 2 - 0.01)] + pts[2 * k:4 * k] + [(-xi, -D / 2 + 0.01)]
         b.prism([(x, y + oy) for x, y in ol], 0.0, zw)
-    xw = xi + 0.5
-    b.box((-xw, -D / 2 + e + oy, 0.0), (xw, -D / 2 + td + oy, zw))      # front wall above the seam
-    b.box((-xw, D / 2 - td + oy, 0.0), (xw, D / 2 - e + oy, zw))        # back wall
+    b.box((-xi, -D / 2 + oy, 0.0), (xi, -D / 2 + td + oy, zw))          # front wall above the seam
+    b.box((-xi, D / 2 - td + oy, 0.0), (xi, D / 2 + oy, zw))            # back wall
     prof = _dip_profile((6, 3)[level], 0.0)         # the tongue that fills the base's scoop, rising 0.5 into the
-    xt = DECKBOX["dip"][0]                          # wall above the seam (hidden)
-    _prism_y(b, [(-xt, 0.5)] + prof + [(xt, 0.5)], -D / 2 + 2 * e + oy, -D / 2 + td - e + oy, mat=0)
+    xt = DECKBOX["dip"][0]                          # wall above the seam (hidden); 0.04 behind the front face, so
+    _prism_y(b, [(-xt, 0.5)] + prof + [(xt, 0.5)],  # the dip's outline reads as a seam (sheet 15)
+             -D / 2 + 0.04 + oy, -D / 2 + td - 0.02 + oy, mat=0)
     return b
 
 
@@ -793,38 +795,66 @@ def item_deckbox_lid() -> Item:
 COVER, SPINE, CHROME = 0, 1, 2
 
 
+def _pad_profile(z0: float, z1: float, mode: str) -> List[Tuple[float, float]]:
+    """(inset, z) rings of a padded board's edge, bottom to top. "round": each edge a quarter round of the pad radius
+    as 3 facets circumscribing it (facet normals 22.5 deg apart, under the 30-deg sharp rule, so it shades round);
+    "chamfer": one 45-degree facet; "none": square."""
+    rb = BINDER["pad_round"]
+    if mode == "round":
+        R = rb / math.cos(math.radians(11.25))
+        angs = (11.25, 33.75, 56.25, 78.75)
+        bot = [(rb - R * math.sin(math.radians(a)), z0 + rb - R * math.cos(math.radians(a))) for a in angs]
+        top = [(d, z1 - (z - z0)) for d, z in reversed(bot)]
+        return bot + top
+    if mode == "chamfer":
+        c = 0.8 * rb
+        return [(c, z0), (0.0, z0 + c), (0.0, z1 - c), (c, z1)]
+    return [(0.0, z0), (0.0, z1)]
+
+
 def _panel(b: Builder, xs: float, xf: float, y0: float, y1: float, z0: float, z1: float, outer_top: bool,
-           band_w: float, segs: int, round_fore: bool = True) -> None:
-    """A padded cover board (Z prism) from its spine end ``xs`` to its fore edge ``xf`` (either order). Plan corners
-    rounded at the fore edge. The outer face (top if ``outer_top``) is the navy field with the black spine band
-    ``band_w`` wide at the spine end; the inner face, the spine-end face and the band's edges are black."""
+           band_w, segs: int, mode: str, round_fore: bool = True, label: bool = False) -> None:
+    """A padded board (a Z prism with padded edges, sheet 14) from its spine end ``xs`` to its fore edge ``xf``
+    (either order); plan corners rounded at the fore edge. Covers: the outer face (top if ``outer_top``) is the navy
+    field with the black spine band ``band_w`` wide at the spine end; the inside, the band's edges and the spine end
+    are black, the other edges navy (sheet 14's navy piping round the black inside). ``band_w`` None: an all-black
+    board (the spine), its outer face the spine label (region R_LABEL) when ``label``. Faces carry their own slots, so
+    no Lod bevel is used (its new faces would all take slot 0)."""
     r = BINDER["corner_r"]
     sg = 1.0 if xf > xs else -1.0
-    xb = xs + sg * band_w
-    loc = [(0.0, y0), (abs(xb - xs), y0)]            # in a local frame: spine end at 0, fore edge at +L
     L = abs(xf - xs)
-    if round_fore and segs:
-        for cx, cy, a0 in ((L - r, y0 + r, -90.0), (L - r, y1 - r, 0.0)):
-            for i in range(segs + 1):
-                a = math.radians(a0 + 90.0 * i / segs)
-                loc.append((cx + r * math.cos(a), cy + r * math.sin(a)))
-    else:
-        loc += [(L, y0), (L, y1)]
-    loc += [(abs(xb - xs), y1), (0.0, y1)]
-    pts = [(xs + sg * x, y) for x, y in loc]
-    n = len(pts)
-    lb, lt = b.loop(pts, z0), b.loop(pts, z1)
-    cx = (xs + xf) / 2
-    for i in range(n):
-        j = (i + 1) % n
-        band_edge = i in (0, n - 2, n - 1)
-        ids = [lb[i], lb[j], lt[j], lt[i]]
-        c = _centre(b, ids)
-        _face_out(b, ids, (c[0] - cx, c[1] - (y0 + y1) / 2, 0.0), SPINE if band_edge else COVER)
-    outer, inner = (lt, lb) if outer_top else (lb, lt)
+    band = band_w is not None
+
+    def outline(d):
+        pts = [(d, y0 + d)] + ([(band_w, y0 + d)] if band else [])
+        if round_fore and segs:
+            for cx, cy, a0 in ((L - r, y0 + r, -90.0), (L - r, y1 - r, 0.0)):
+                for i in range(segs + 1):
+                    a = math.radians(a0 + 90.0 * i / segs)
+                    pts.append((cx + (r - d) * math.cos(a), cy + (r - d) * math.sin(a)))
+        else:
+            pts += [(L - d, y0 + d), (L - d, y1 - d)]
+        pts += ([(band_w, y1 - d)] if band else []) + [(d, y1 - d)]
+        return [(xs + sg * x, y) for x, y in pts]
+    prof = _pad_profile(z0, z1, mode)
+    loops = [b.loop(outline(d), z) for d, z in prof]
+    n = len(loops[0])
+    cx, cy, zm, hz = (xs + xf) / 2, (y0 + y1) / 2, (z0 + z1) / 2, (z1 - z0) / 2
+    for la, lb in zip(loops[:-1], loops[1:]):
+        for i in range(n):
+            j = (i + 1) % n
+            ids = [la[i], la[j], lb[j], lb[i]]
+            c = _centre(b, ids)
+            pl = math.hypot(c[0] - cx, c[1] - cy)
+            mat = SPINE if (not band or i in (0, n - 2, n - 1)) else COVER
+            _face_out(b, ids, ((c[0] - cx) / pl, (c[1] - cy) / pl, (c[2] - zm) / hz), mat)
+    outer, inner = (loops[-1], loops[0]) if outer_top else (loops[0], loops[-1])
     no = (0.0, 0.0, 1.0 if outer_top else -1.0)
-    _face_out(b, [outer[0], outer[1], outer[n - 2], outer[n - 1]], no, SPINE)
-    b.fill([outer[1:n - 1]], COVER, 0, no)
+    if band:
+        _face_out(b, [outer[0], outer[1], outer[n - 2], outer[n - 1]], no, SPINE)
+        b.fill([outer[1:n - 1]], COVER, 0, no)
+    else:
+        b.fill([outer], SPINE, R_LABEL if label else 0, no)
     b.fill([inner], SPINE, 0, _mul(no, -1))
 
 
@@ -914,32 +944,44 @@ def _binder_body_builder(level: int) -> Builder:
     k, m = BINDER, _binder_dims()
     t, hh = k["t"], m["hh"]
     b = Builder()
-    segs = (3, 1, 0)[level]
-    b.box((m["x0"], -hh, 0.0), (m["xb"], hh, t), mat=SPINE, regions={"nz": R_LABEL})
-    _panel(b, m["xb"] - 0.5, m["xe"], -hh, hh, 0.0, t, False, k["band"] - t + 0.5, segs, round_fore=level < 2)
+    segs, mode = (3, 1, 0)[level], ("round", "chamfer", "none")[level]
+    _panel(b, m["x0"], m["xb"], -hh, hh, 0.0, t, False, None, 0, mode, round_fore=False, label=True)
+    _panel(b, m["xb"] - 0.5, m["xe"], -hh, hh, 0.0, t, False, k["band"] - t + 0.5, segs, mode, round_fore=level < 2)
     return b
 
 
+def _page_droop() -> float:
+    """Degrees the resting page tilts about its pivot so its fore edge comes down onto the cover (0.2 clear): the
+    page rests on the ring clips at its hole strip and lies on the back cover at its far edge (sheet 14 open view)."""
+    k, m = BINDER, _binder_dims()
+    reach = k["page"][0] - k["hole_inset"]
+    drop = (m["zp"] - k["core"] / 2 - k["pad"]) - (k["t"] + 0.2)
+    return math.degrees(math.asin(drop / reach))
+
+
 def _ring_stations():
-    """Ring_01..20: the page's pivot (its middle hole) along the middle ring's arc, from the page lying flat on the
-    right (at rest on the clips) over the top to lying flat on the left; the page turns 0 -> 180 about Y."""
+    """Ring_01..20: the page's pivot (its middle hole) along the middle ring's arc, from resting on the right (the
+    hole strip on the clips, the fore edge on the back cover) over the top to resting on the left, mirrored; the
+    page turns -droop -> 180 + droop about Y."""
     k, m = BINDER, _binder_dims()
     a0 = math.atan2(m["zp"] - m["zc"], m["dx"])
     a1 = math.pi - a0
+    dr = _page_droop()
     out = []
     n = k["stations"]
     for i in range(n):
         f = i / (n - 1)
         a = a0 + (a1 - a0) * f
+        beta = -dr + (180.0 + 2 * dr) * f
         loc = (m["xc"] + m["R"] * math.cos(a), 0.0, m["zc"] + m["R"] * math.sin(a))
-        out.append(Socket(f"Ring_{i + 1:02d}", tuple(round(v, 4) for v in loc), (0.0, round(-180.0 * f, 4), 0.0)))
+        out.append(Socket(f"Ring_{i + 1:02d}", tuple(round(v, 4) for v in loc), (0.0, round(-beta, 4), 0.0)))
     return out
 
 
 def item_binder_body() -> Item:
     k, m = BINDER, _binder_dims()
     t, hh = k["t"], m["hh"]
-    lods = [Lod(_binder_body_builder(0), bevel_mm=k["pad_bevel"], bevel_segments=2, extra=_binder_hardware(0)),
+    lods = [Lod(_binder_body_builder(0), extra=_binder_hardware(0)),
             Lod(_binder_body_builder(1), extra=_binder_hardware(1)),
             Lod(_binder_body_builder(2), extra=_binder_hardware(2))]
     xc, R = m["xc"], m["R"]
@@ -987,11 +1029,12 @@ def item_binder_cover() -> Item:
 
     def build(level):
         b = Builder()
-        _panel(b, 0.0, -wc, -hh, hh, -t, 0.0, False, k["band"] - t, (3, 1, 0)[level], round_fore=level < 2)
+        _panel(b, 0.0, -wc, -hh, hh, -t, 0.0, False, k["band"] - t, (3, 1, 0)[level],
+               ("round", "chamfer", "none")[level], round_fore=level < 2)
         return b
     return Item(
         name="SM_CSK_Binder_Cover",
-        lods=[Lod(build(0), bevel_mm=k["pad_bevel"], bevel_segments=2), Lod(build(1)), Lod(build(2))],
+        lods=[Lod(build(0)), Lod(build(1)), Lod(build(2))],
         materials=["M_CSK_BinderCover", "M_CSK_BinderSpine"], projections={},
         sockets=[Socket("Seat", (0, 0, 0))],
         hulls=[((-wc, -hh, -t), (0.0, hh, 0.0))], budget=BUDGETS["SM_CSK_Binder_Cover"],
@@ -1099,11 +1142,13 @@ def _binder_closed_builder(level: int) -> Builder:
     xi = xo + t
     xe = k["w"] / 2
     sp = k["spine"]
-    segs = (3, 1, 0)[level]
+    segs, mode = (3, 1, 0)[level], ("round", "chamfer", "none")[level]
     b = Builder()
-    b.box((xo, -hh, 0.0), (xi, hh, sp), mat=SPINE, regions={"nx": R_LABEL})
-    _panel(b, xi - 0.5, xe, -hh, hh, 0.0, t, False, k["band"] - t + 0.5, segs, round_fore=level < 2)
-    _panel(b, xi - 0.5, xe, -hh, hh, sp - t, sp, True, k["band"] - t + 0.5, segs, round_fore=level < 2)
+    n0, f0 = len(b.verts), len(b.fills)             # the spine: built flat (57 x 292.1 x 4), turned to stand at -X
+    _panel(b, 0.0, sp, -hh, hh, 0.0, t, False, None, 0, mode, round_fore=False, label=True)
+    _turn(b, lambda v: (v[2], -v[1], v[0]), (xo, 0.0, 0.0), n0, f0)   # a proper rotation: windings hold
+    _panel(b, xi - 0.5, xe, -hh, hh, 0.0, t, False, k["band"] - t + 0.5, segs, mode, round_fore=level < 2)
+    _panel(b, xi - 0.5, xe, -hh, hh, sp - t, sp, True, k["band"] - t + 0.5, segs, mode, round_fore=level < 2)
     return b
 
 
@@ -1118,18 +1163,25 @@ def _binder_pages_block() -> Builder:
     return b
 
 
+def _turn(b: Builder, rot: Callable, shift, n0: int = 0, f0: int = 0) -> Builder:
+    """Rotate (a proper rotation ``rot`` on vectors) and shift the vertices from ``n0`` and the fill normals from
+    ``f0``: the fills' normals are applied at build time, so they must turn with their faces."""
+    b.verts[n0:] = [tuple(a + c for a, c in zip(rot(v), shift)) for v in b.verts[n0:]]
+    for fl in b.fills[f0:]:
+        fl.normal = tuple(float(c) for c in rot(fl.normal))
+    return b
+
+
 def _stand_up(b: Builder) -> Builder:
     """Lying closed (front cover up, top edge +Y) -> standing: front cover toward -Y, top edge up, spine at -X."""
     sp, hh = BINDER["spine"], BINDER["h"] / 2
-    b.verts = [(x, sp / 2 - z, y + hh) for x, y, z in b.verts]
-    return b
+    return _turn(b, lambda v: (v[0], -v[2], v[1]), (0.0, sp / 2, hh))
 
 
 def item_binder_closed() -> Item:
     k = BINDER
     W, D, H = k["w"], k["spine"], k["h"]
-    lods = [Lod(_stand_up(_binder_closed_builder(0)), bevel_mm=k["pad_bevel"], bevel_segments=2,
-                extra=_stand_up(_binder_pages_block())),
+    lods = [Lod(_stand_up(_binder_closed_builder(0)), extra=_stand_up(_binder_pages_block())),
             Lod(_stand_up(_binder_closed_builder(1)), extra=_stand_up(_binder_pages_block())),
             Lod(_stand_up(_binder_closed_builder(2)), extra=_stand_up(_binder_pages_block()))]
     return Item(
