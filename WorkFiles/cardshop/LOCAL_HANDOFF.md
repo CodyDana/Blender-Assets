@@ -10,6 +10,29 @@ in the cloud commits the family builders' progress every 10 minutes (commits tit
 - `References/CardShop/REFERENCE_LOG.md` (all 37 reference sheets, 0-36, with notes and decisions);
 - `Scripts/cardshop/csk_lib/FAMILY_GUIDE.md` (how a family is built).
 
+## 0. Latest status (cloud session ended here, out of credits)
+
+**The family-build workflow FINISHED.** All 12 families report a passing build of their own keys: **167 new meshes**,
+no `qa_check` failures, none over budget. Each family's report, with its deviations, anything not built and its open
+questions, is `WorkFiles/cardshop/families/<family>.md`.
+
+**Next, in order:**
+1. **Commit anything left over.** Run `git status`. The h_backroom / ij_shell modules and reports may be uncommitted
+   if the cloud's auto-checkpoint missed them.
+2. **Combined build of ALL items in Blender 5.2** (never run yet; each family was only built on its own). It should end
+   `CSK_BUILD PASSED`. Watch the cross-family kit checks (contain fits, level grids) and duplicate class codes: the
+   loader keeps the first `CLASSES` entry.
+3. **Check a_cases and a_shelving against their sheet PNGs (16-21).** Those two builders started before the PNGs were
+   on disk. The other 10 families had the images.
+4. **Unreal materials:**
+   - about 60 new material slot names (listed in the family reports), each needing a material instance in
+     `Scripts/cardshop/unreal/csk_materials.py` (`build_instances` + `SLOT_DEFAULT`);
+   - add the new meshes to `csk_common.MESHES` if they should go through the Unreal import;
+   - some builders used names outside the part-before-size pattern the build's winding check expects (a_cases says
+     so); check that the Glass / Lid / Door winding check actually covers them.
+5. **Answer or collect the builders' open questions** (about 70, in the reports) for the user.
+6. **Then the G1 Unreal run** (`run_g1.sh`) and the user's design review.
+
 ## 1. State at handoff
 
 **Done and pushed:**
