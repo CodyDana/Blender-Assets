@@ -149,6 +149,10 @@ WINDOWS_Y = ((5.25, 6.75), (8.25, 9.75))   # lattice window openings on both lon
 WINDOW_Z = (3.50, 4.40)
 DOOR_X, DOOR_Z = (3.25, 4.75), (0.0, 2.0)
 ROOM = (8.0, 12.0, 4.8)   # building stage: main() replaces it with layout.json "room" (12 x 16 m)
+# r20 round 3 (blind judge delta 10: sparkle on the west side terrace in CR, golden): no haze in the rear bay;
+# a --no-fog test proved the speckle was the sun shafts' haze (the rear windows' lattice shafts seen from the high rear
+# camera): the haze fades out over the last 1.5 m before 3.3 m in front of the dais (layout.json room "platform_front_y")
+DAIS = None   # (front y, deck z) from layout.json
 
 
 def _in_range(nt, value, lo, hi):
@@ -255,6 +259,14 @@ def add_fog(sc, density, sun_dir=None):
         fade.inputs["From Min"].default_value = float(arg("--haze-floor", "1.2"))
         fade.inputs["From Max"].default_value = float(arg("--haze-floor", "1.2")) + 1.5
         nt.links.new(sz.outputs[2], fade.inputs["Value"])
+        if DAIS is not None:   # r20 round 3: no haze in the rear bay: it fades out 4.8-3.3 m before the dais front
+            ramp = nt.nodes.new("ShaderNodeMapRange")
+            ramp.inputs["From Min"].default_value = DAIS[0] - 4.8
+            ramp.inputs["From Max"].default_value = DAIS[0] - 3.3
+            ramp.inputs["To Min"].default_value = 1.0
+            ramp.inputs["To Max"].default_value = 0.0
+            nt.links.new(sz.outputs[1], ramp.inputs["Value"])
+            dens = _math(nt, "MULTIPLY", dens, ramp.outputs["Result"])
         dens = _math(nt, "MULTIPLY", dens, fade.outputs["Result"])
         # seen by camera and through-glass rays only: a glossy reflection (the 4-8 % Fresnel off the case glass, the
         # satin floor) gets a handful of the 96 samples and turns the reflected shafts into speckle
@@ -463,10 +475,12 @@ def add_bloom(sc):
 
 
 def main():
-    global WINDOWS_Y, WINDOW_Z, DOOR_X, DOOR_Z, ROOM
+    global WINDOWS_Y, WINDOW_Z, DOOR_X, DOOR_Z, ROOM, DAIS
     data = json.loads(Path(arg("--layout", str(WORK / "layout.json"))).read_text(encoding="utf-8"))   # --layout: a test copy
     if "room" in data:
         ROOM = (data["room"]["width_x"], data["room"]["length_y"], data["room"]["ceiling_z"])
+        if "platform_front_y" in data["room"]:
+            DAIS = (data["room"]["platform_front_y"], data["room"].get("deck_z", 0.90))
     op = data.get("openings")
     if op:
         WINDOWS_Y = tuple(tuple(w) for w in op["windows_y"])

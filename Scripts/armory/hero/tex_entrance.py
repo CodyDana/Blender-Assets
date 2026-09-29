@@ -576,6 +576,113 @@ def knot_weave_black(n=2048, seed=461):
     return knot_weave(n, seed, name="HEntKnotB", gap="#040303", crown="#181513", rough0=0.78)   # b4: b3 #1F1B18 / 0.74 read grey lit
 
 
+def nub_weave(n=2048, seed=471, name="HEntNub", gap="#2A1E17", crown="#907260", nr=30, nc=36, offset=0.5, sx=1.0, tone_k=1.0):
+    """r20 mat (2026-09-28, judge 7/10 on T_AK_HEntKnot: "the knots are ~1.5x too coarse (about 17 visible rows vs ~25 in
+    the reference) ... tall vertical ovals stacked in columns (reads like cable-knit) ... vertical seams mid-mat at night";
+    "the golden field is washed out"): small, ROUND, even nubs in a staggered lattice. A 1 m tile at 2048 px: nr rows
+    along U (hero_entrance maps U to world Y, toward the bar; 2.78 cm apart: ~25 rows over the 0.76 m field, as reference
+    2's C1 field) of nc nubs along V (world X; 2.78 cm, reference 2's column period 7.4 px through C1), alternate rows
+    offset half a nub (nr even, so the offset tiles), so the rows read as strongly as the columns. Every nub is one smooth
+    round dome (height = the max of the neighbouring domes: no cell steps), touching its row neighbours at a soft pinch,
+    a darker pocket where three nubs meet; the size / position / tone jitter is small and per nub only (b7's per-column
+    knot phases and reversed-slant columns read as vertical seams at night: gone), one twist direction for the plies on
+    every nub (alternating reads as knit). Everything is periodic on the tile (checked: edge differences equal the
+    interior's). A darker, warmer grey-tan than HEntKnot (golden field read washed out)."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    rf = uu * nr / n + MT.pnoise(n, n, 3.0, seed + 1) * 0.025          # row coordinate (row units), a whisper of wander
+    cfb = vv * nc / n + MT.pnoise(n, n, 3.0, seed + 2) * 0.025         # column coordinate (nub units)
+    rj = rng.uniform(-0.03, 0.03, nr)
+    cj = rng.uniform(-0.04, 0.04, (nr, nc))
+    # b2: the lattice in pitch units (rows 3.33 cm, nubs 2.78 cm along a row: ~5 px x 7.5 px through C1, reference 2's);
+    # b1 (hard max of steep domes, rows 2.78 cm) read as fish scales / a honeycomb: softer domes merged by a smooth max
+    rad = rng.uniform(0.56, 0.60, (nr, nc))                          # dome radius (pitch units): neighbours touch
+    amp = rng.uniform(0.92, 1.0, (nr, nc))
+    tone = rng.normal(0, 1, (nr, nc)) * tone_k                     # rib: calmer per-nub tone (no checker)
+    ply_ph = rng.uniform(0, 1, (nr, nc))
+    r0 = np.floor(rf).astype(int)
+    E = np.zeros((n, n)); W = np.zeros((n, n)); T = np.zeros((n, n)); P = np.zeros((n, n))
+    for dr in (-1, 0, 1):
+        r = r0 + dr
+        rm = r % nr
+        dy = rf - (r + 0.5 + rj[rm])
+        cf = cfb - offset * (r % 2)                                   # alternate rows offset half a nub (rib: none)
+        c0 = np.floor(cf).astype(int)
+        for dc in (-1, 0, 1):
+            c = c0 + dc
+            cm = c % nc
+            dx = cf - (c + 0.5 + cj[rm, cm])
+            rr = rad[rm, cm]
+            r2 = ((dx / sx) ** 2 + dy * dy) / (rr * rr)                 # sx > 1: nubs merge along the row (a rib)
+            dome = np.clip(1 - r2, 0, 1) ** 0.9 * amp[rm, cm]
+            # three plies twisting across the nub (a looped cord), one slant everywhere
+            ply = 0.5 + 0.5 * np.cos(2 * np.pi * (1.6 * (0.62 * dx - 0.78 * dy) / rr + ply_ph[rm, cm]))
+            w = np.exp(24 * dome) * (dome > 0)
+            E += np.exp(10 * dome) - 1                                  # b2: smooth max (soft creases, no hex outlines)
+            W += w; T += w * tone[rm, cm]; P += w * ply
+    H = np.log1p(E) / 10
+    T = T / np.maximum(W, 1e-9)
+    P = P / np.maximum(W, 1e-9)
+    fuzz = MT.pnoise(n, n, 0.3, seed + 3)
+    mott = MT.pnoise(n, n, 2.4, seed + 4)
+    h = H * (0.92 + 0.08 * P) + 0.010 * fuzz
+    occ = np.clip(H / 0.5, 0, 1) ** 0.7
+    k = np.clip(0.54 + 0.40 * occ + 0.10 * (P - 0.5) * occ + 0.03 * T + 0.02 * np.clip(fuzz, -2, 2)
+                + 0.025 * mott, 0, 1)[..., None]
+    g, cr = MT.srgb(gap), MT.srgb(crown)
+    bc = g * (1 - k) + cr * k
+    bc = bc * (1 + np.array([0.010, 0.0, -0.012]) * T[..., None])
+    # b4 tried matte crowns (0.96) and a warmer #947056: golden R/G matched reference 2 (1.34) but the night field went
+    # orange (G/B 2.2 against b7's 1.5; the user's default is night): kept b3's
+    rough = np.clip(0.86 - 0.05 * occ + 0.03 * fuzz, 0.4, 0.97)
+    ao = np.clip(0.30 + 0.70 * occ, 0, 1)
+    # b3: normal 22 -> 18 (b2's night field read 27% darker than b7's, the moon grazing deep nub shading)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, 18.0, rough, ao)
+
+
+def rib_weave(n=2048, seed=491):
+    """r20 fix round (blind judge 7/10, delta 4: the HEntNub field read as a pebbled, fish-scale bump texture; reference
+    2's is a fine, even, ribbed coir / tatami weave): the nub lattice with its rows ALIGNED (no half-nub offset: the
+    staggered rows made the scales) and each nub stretched 1.6x along its row, so the nubs of a row merge into one
+    continuous rib running across the mat (V = world X) with a soft stitch pinch every 2.78 cm; the rows 3.33 cm apart
+    (~23 over the field), the same tone, roughness and relief as HEntNub. Periodic on the 1 m tile."""
+    return nub_weave(n, seed, name="HEntRib", offset=0.0, sx=1.6, tone_k=0.35)
+
+
+def rope_black(n=2048, seed=481, name="HEntRopeB", ncord=64, twist=120):
+    """r20 mat (judge 7/10: "the border must be solid near-BLACK with a fine rope texture, an even width, crisp edges (it
+    reads speckled grey in golden light)"): the binding as fine twisted black cords laid ALONG the border (hero_entrance
+    maps U along each border strip, V across it). A 1 m tile at 2048 px: ncord cords across V (1.56 cm, ~4 across the
+    binding), each with plies slanting across it every 1/twist m (8.3 mm); near-black (#070606 in the creases to #171412
+    on the crowns), matte (roughness ~0.84) and a gentle normal, so the sun finds no bright glints (HEntKnotB's satin
+    knot crowns read as grey speckle)."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    cv = vv * ncord / n
+    ci = np.floor(cv).astype(int) % ncord
+    pc = cv % 1.0
+    cord = np.clip(1 - (2 * pc - 1) ** 2, 0, 1) ** 0.5                 # a round cord across
+    ph = rng.uniform(0, 1, ncord)[ci]
+    ply = 0.5 + 0.5 * np.cos(2 * np.pi * (uu * twist / n + 1.1 * pc + ph))   # plies slanting across the cord
+    fuzz = MT.pnoise(n, n, 0.4, seed + 1)
+    mott = MT.pnoise(n, n, 2.2, seed + 2)
+    h = cord * (0.75 + 0.25 * ply) + 0.02 * fuzz
+    k = np.clip(0.25 + 0.55 * cord * (0.7 + 0.3 * ply) + 0.04 * mott + 0.03 * np.clip(fuzz, -2, 2), 0, 1)[..., None]
+    # b2: b1 (#171412 crowns, roughness 0.86, normal 8) lit up as grey-white cord lines in the golden sun: darker, matte,
+    # a gentle normal (the rope reads up close, not as glints)
+    g, cr = MT.srgb("#050404"), MT.srgb("#110F0E")
+    bc = g * (1 - k) + cr * k
+    rough = np.clip(0.95 - 0.02 * cord + 0.02 * fuzz, 0.85, 1.0)
+    ao = np.clip(0.55 + 0.45 * cord, 0, 1)
+    return MT.save_set(name, bc, h, 3.0, rough, ao)
+
+
+def timber_board_matte(n=2048, seed=451):
+    """r20 mat b2: T_AK_HEntTimberM (the mat surround boards and the pit's side returns) at roughness ~0.84 (was ~0.62):
+    in the golden preset the low sun's sheen turned the near-black boards pale cream in C1 and the top-down views."""
+    return timber_ebony(n, seed, name="HEntTimberMR", dark="#1A1411", mid="#261D17", lite="#3C3026", rough0=0.84, nknots=0)
+
+
 def brushed(n=1024, seed=391):
     """Final fix r6 (blind judge: the post shoe read heavy blotchy dark patina, its rivets lost; the sheet's shoe is a
     clean brushed brass with four prominent corner rivets - measured (155, 104, 56) on the sheet, the r5 bronze rendered
@@ -605,7 +712,8 @@ def brushed(n=1024, seed=391):
 SETS = {"HEntTimber": timber, "HEntMat": mat, "HEntRush": rush, "HEntTimberW": timber_warm, "HEntCoir": coir,
         "HEntBronze": bronze, "HEntTimberE": timber_ebony, "HEntCoirR": coir_ribbed, "HEntBrushed": brushed,
         "HEntSisal": sisal, "HEntTimberG": timber_weathered, "HEntRushK": rush_knit, "HEntTimberL": timber_lacquer, "HEntWeave": weave,
-        "HEntKnot": knot_weave, "HEntKnotB": knot_weave_black, "HEntTimberN": timber_bar, "HEntTimberM": timber_board}
+        "HEntKnot": knot_weave, "HEntKnotB": knot_weave_black, "HEntTimberN": timber_bar, "HEntTimberM": timber_board,
+        "HEntNub": nub_weave, "HEntRib": rib_weave, "HEntRopeB": rope_black, "HEntTimberMR": timber_board_matte}
 
 if __name__ == "__main__":
     # r4: name the sets to write (e.g. `tex_entrance.py HEntRush`); an existing set is never rewritten by accident

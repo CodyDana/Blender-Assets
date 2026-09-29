@@ -79,6 +79,8 @@ KICK_EMIT = 7.0          # fix 6: M_AK_HKickGlow strength = tex_hero_cases.KICK_
 # yellow-amber rows burn to cream-pink, so in the room it runs at KICK_ROOM x its studio strength
 KICK_ROOM = 0.45
 GLASS_REFL = 0.035    # calibration pass 2: 0.015 -> 0.035 (room judge: the cases read as bare wire frames; reference 2 shows faint pane reflections).       # calib r1 (room judge: glass should be near-invisible; at 0.3 and 0.06 the tall case still mirrored the sunlit courtyard in C5, a test at 0 proved it a reflection): 0.6 -> 0.015 (the kit glass is 0.02). fix 6: M_AK_HCaseGlass Fresnel reflection factor (fix 5: 0.08; the shared glass 0.25)
+GLASS_REFL_TALL = 0.0   # r20 round 3: the tall cases (1.70 m panes seen near grazing down the hall): b6 at 0.008 still showed the
+# ladder (a zero-reflection test render removed it: pure pane reflections of the lit flight and lamps, 7-9 panes deep)
 # fix 1 (blind judge, every case): the kit's lacquer read matte charcoal, the brass dull olive, the frames copper and
 # the under-glow pale peach next to the sheets. Four flat-param case materials (no textures):
 MATERIALS = {
@@ -134,6 +136,9 @@ MATERIALS = {
     # what smoked the view), but a stronger Fresnel reflection again (0.08 -> GLASS_REFL), so the panes carry a sheen
     # and the lights' reflections at an angle
     "M_AK_HCaseGlass": (None, 1.0, {"glass": True, "tint": "#FFFFFF", "refl": GLASS_REFL}),
+    # r20 round 3 (blind judge delta 7: from C1 the tall cases' aisle-side panes, seen near grazing, mirrored the flight's
+    # LED nosings as a ladder of lines inside the empty cases): the tall cases' own anti-reflective glass
+    "M_AK_HCaseGlassTall": (None, 1.0, {"glass": True, "tint": "#FFFFFF", "refl": GLASS_REFL_TALL}),
     # fix 5 (judge: "corner pucks are tiny, dim dots"): the puck lenses, a hot warm-white emitter on a taller dome
     # (the kit's M_AK_LED, 12, stays for other pieces). The light pools on the deck / panes in the sheets come from
     # the case's real light in the room (layout lights(): CaseLight_NN), not from the lens
@@ -156,6 +161,7 @@ MATERIALS = {
 }
 
 LQ, BR, BZ, GL = "M_AK_HLacquer", "M_AK_HBrass", "M_AK_HBronze", "M_AK_HCaseGlass"   # fix 5: own glass
+GL_, GLT = GL, "M_AK_HCaseGlassTall"
 BZE = "M_AK_HBronzeEdge"   # fix 6: champagne edge chamfers
 CH = 0.0025                # fix 6: the posts' / top frame's outer chamfer (1.5 -> 2.5 mm), in M_AK_HBronzeEdge
 LGH = "M_AK_HAmberHot"
@@ -572,6 +578,7 @@ def case_glass(G, t, W, D, Gh):
     a = Acc()
     ox, oy = W / 2 - GLASS_IN, D / 2 - GLASS_IN
     zb = DECK_TOP - 0.001                       # sits on the deck (1 mm into it)
+    GL = GLT if t == "Tall" else GL_            # r20 round 3: the tall cases' low-reflection glass
     FB, FH = 0.026, 0.021                       # bottom / top frame height (fix 3: a slimmer top rail, 24 -> 21 mm)
     # bottom frame: a bronze L-channel, its foot 10 mm out over the black deck step (fix 3: case_detail top-left)
     loft(a, ox, oy, 0, 0, [(-FR, zb), (LIP, zb), (LIP, zb + 0.0045), (0, zb + 0.0045), (0, zb + FB), (-FR, zb + FB)],

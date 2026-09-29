@@ -1888,3 +1888,101 @@ L 0.206 / 0.207; painting box L 0.27 / 0.20 (Unreal's painting and rear screens 
   (~1.26:1) in a recessed bay under the coffered ceiling.
 - The corner showcases read as freestanding tall vitrines; the reference has shallow lit wall niches.
 - The stair-foot lanterns sit on lower pedestals than the reference's post-style ones, slightly further out.
+
+## 2026-09-29: r20 test copy rebuilt from the current scripts (20 m room + rear details + mat)
+
+Test copy only (`WorkFiles/armory/hero/room_preview/r20`, `--preview-dir`); nothing went to `Exports/ArmoryKit` or
+`Assets/Armory`, Unreal was not run, no MCP. Textures: the copy's `Textures/` holds the r20 `T_AK_HPaintingTall_*`
+(from `r20/b2`, differs from Exports) and the mat's `T_AK_HEntNub_*` / `HEntRopeB_*` / `HEntTimberMR_*` (same bytes as
+Exports).
+
+- Build: QA 114 pieces, hard fails 0; 630 instances. Walk check: passed, 33 / 33 routes clear, both controls blocked
+  (case 1, stone lantern), entry_steps_ok, largest step up 0.15 m (the routes were already updated for the 20 m layout).
+- **Integration fix** (`build_armory_exterior.py` `ground_pieces`): the lawn's hole under the genkan had its side faces
+  coplanar with the step beam's side-return inner faces (world X 3.52 / 8.48), so `SM_AKX_Ground_Field` z-fought through
+  as a green slit at both genkan ends (golden C1 bottom corners ~650 px, CE_EntryDown ~550 px; first seen in r20 b5).
+  The hole now ends inside the returns' bodies (X 3.49 / 8.51). After: 0 slit pixels in C1 and CE_EntryDown.
+- **Drawing** (`WorkFiles/armory/armory_layout.py`): the legend's stale "rear platform +0.60" / "4 risers" now read
+  +0.90 and the 5-riser flight to the +0.75 landing with one riser to the deck.
+- Renders (Cycles, golden + night): `r20/final/<preset>/ref_aspect/C1` 1448 x 1086, CX, C10, C3, CW, CG, CE_EntryDown
+  1600 x 900; sheets `r20/final/compare/C1_ref_vs_r20_<preset>.png`, `entry_crop_vs_r20_<preset>.png`; the pre-fix set
+  in `r20/final/pre_fix/`. Whole-frame mean (night): C1 0.146, CX 0.095, C10 0.181, C3 0.200, CW 0.114, CG 0.115.
+
+## 2026-09-29: r20 fix round (blind judge 7/10 on r20/final; test copy only)
+
+Test copy `WorkFiles/armory/hero/room_preview/r20` rebuilt in place (2 builds); nothing went to `Exports/ArmoryKit` or
+`Assets/Armory`, and Unreal was not run. No MCP was used. Scripts: `r20/fix/run_f.sh` (build, walk, cameras, plan) and
+`r20/fix/render_f.sh`. Pre-round copies are in `r20/fix/orig_scripts` and the judged set is in `r20/final/prev_7of10`.
+- Build: QA 114 pieces, 0 hard fails; 614 instances. Walk: passed, 33 of 33 routes clear, both controls blocked,
+  entry_steps_ok, largest step up 0.15 m.
+- (1) **Flight:** one even flight of 6 x 0.15 m risers, each with an LED nosing, with a single 0.35 m going. STAIR_Y0
+  moved 15.50 -> 15.85 (DECK_Y 17.60 kept). The landing, the unlit riser and the brass strip are gone. The emblem is now
+  `SM_AK_EmblemDisc_08` (8 cm) on the top riser, and Landing_Wash covers the whole flight at the same irradiance.
+- (2 / 8) **Cases:** centre 2 / 3 moved to Y 8.70 / 13.40 (1.93 m clear of the bottom nose). Side rows spread evenly:
+  west 7.27 / 10.53 / 13.80, east 7.15 / 10.45 / 13.80. C3 and C5 follow the cases.
+- (3) **Painting:** bay 2.4 -> 2.8 m (`PAINT_BAY_X` 4.6-7.4) and screens 0.7 -> 0.5 m. The paper is 2.48 x 2.08 m
+  above the table (1.19:1). `hero_backwall.PAPER_IMG_W` keeps the sheet's height scale, so the r20
+  `T_AK_HPaintingTall` is reused without being regenerated.
+- (4) **Mat:** new set `T_AK_HEntRib` (`tex_entrance.rib_weave`, in `r20/Textures` only): aligned rows merged into ribs.
+  The binding has a new `spec` 0 material param (Blender only; the Unreal textured master has no Specular scalar).
+  `M_AK_HMatBoard` spec is 0.15.
+- (5) **Tray:** the "white card" in case 8 is item 1, the user's shuriken tray, and was kept.
+- (6) **Genkan:** the side returns are `M_AK_Plank` (were black board), so the bar now ends at the lanterns.
+- (7) **Display bays:** one 3.85 m bay per 4 m window bay between the tall posts, so the displays run continuously along
+  both walls. Each bay has 4 lenses and 8 doors.
+- (9) **Door leaves:** moved to X 2.44-4.14 / 7.86-9.56 (jamb band 0.33). About 39 px of dark leaf now shows at each
+  C1 edge at night. In golden the sunlit leaf faces read pale.
+
+## 2026-09-29: 12 x 20 m hall made live (night_20m) + Unreal night rebuild
+
+User: "lengthen the room to 20m and fix the rest". The r20 fix-round state (test copy `r20`, scripts already live in
+`Scripts/armory/`) was built live under the ArmoryKit lock (claimed 00:46, released 00:51, before Unreal). No MCP.
+
+**Textures.** The two sets the test copy carried only in `r20/Textures` were written into `Exports/ArmoryKit/Textures`
+by their own scripts: `T_AK_HEntRib_*` (`tex_entrance.py HEntRib`, the mat `M_AK_HEntMat` now uses) and the r20
+`T_AK_HPaintingTall_*` (`blender -b --python tex_backwall.py -- tall`, replaces the 16 m sheet). All 15 files in
+`r20/Textures` are now byte-identical (md5) in Exports, and the live blend's 139 images all resolve (the kit's in
+Exports/ArmoryKit/Textures, the tray's in Exports/Shuriken/Textures).
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 114 pieces, hard fails 0; 114 FBX exported;
+`ArmoryKit.blend` saved with 614 instances. Log: `renders/night_20m/build_log.txt`.
+**Orphaned FBX** (not in the live layout.json; all in git history) went to the Windows Recycle Bin: SM_AKX_Facade_Side_2,
+SM_AK_EmblemDisc_12, SM_AK_H_CornerShowcase, SM_AK_WallPanel_Lit, SM_AK_WallUpper_Window_2, SM_AK_Window_Lattice.
+`Exports/ArmoryKit` holds exactly the 114 layout pieces.
+
+**Walk check (live blend):** passed; 33 / 33 routes clear; both controls blocked (case 1 at (6.0, 3.0), stone lantern at
+(7.58, -7.3)); entry_steps_ok; largest step up 0.15 m. Log: `renders/night_20m/walk_log.txt`.
+
+**Drawing:** `WorkFiles/armory/ARMORY_LAYOUT.svg/.txt` and `ARMORY_SITE.svg/.txt` regenerated from the live layout
+(interior 12.0 x 20.0 m).
+
+**Renders** (Cycles, night): `renders/night_20m/` C1, CX, C10, C3, C5, CW, C4, CG at 1600 x 900;
+`night_20m/ref_aspect/` C1 at 1448 x 1086. Sheets in `night_20m/compare/`: `C1_ref_vs_night_live4_vs_night_20m.png`
+(1448 x 1086 panels), `..._1600x900.png`, and `<cam>_night_live4_vs_night_20m.png` (C4, C5 against night_live2).
+Whole-frame mean display luminance, night_live4 -> night_20m: C1 0.162 -> 0.161 (ref aspect 0.160 -> 0.152),
+CX 0.093 -> 0.116, C10 0.178 -> 0.193, C3 0.229 -> 0.214, CW 0.114 -> 0.136, CG 0.121 -> 0.116; C5 0.167, C4 0.215.
+
+### Unreal night rebuild (00:51-00:54, all steps exit 0)
+No ArmoryLab editor was open and no other Unreal process ran. The Blender night baseline for `ak_image_stats.py` /
+`ak_compare_sheet.py` is now `renders/night_20m` (all eight views), fallback `night_live4`.
+
+| Step | Result |
+|---|---|
+| import | 114 meshes, 105 textures; stale deleted: the 6 orphaned meshes above and the unused `T_AK_HEntKnot_*`, `T_AK_HEntKnotB_*`, `T_AK_HEntTimberM_*` |
+| materials | 10 masters, 127 instances, 114 meshes |
+| level | 614 actors; bounds gate max 0.0049 cm; 108 lights |
+| verify (fresh process) | Gates 1-7 all pass |
+| manny / character | Pass |
+| walk | passed |
+| capture | 10 frames (`unreal/captures/`) |
+| stats / compare | `unreal/capture_stats.json`, `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+Whole-frame mean (Unreal / Blender night_20m): C1 ref aspect 0.150 / 0.152, C1 0.153 / 0.161, C10 0.205 / 0.193,
+C3 0.203 / 0.214, C4 0.225 / 0.215, C5 0.184 / 0.167, CW 0.147 / 0.136, CX 0.131 / 0.116, CG 0.139 / 0.116
+(C2 has no Blender night render).
+
+**Open (r20 judge, 7.5/10):** the rear flight's glossy, tube-like treads and its height (6 lit risers against the
+reference's ~4); a tall case's side glass reading as a black slab; the corner niches as narrow slits; the lit beige wall
+panels reading as blank shoji; the mat (fine, light weave; wide light jamb); the entry lanterns slimmer and lighter than
+the reference's; the black bar reading as a flush strip rather than a raised beam; the tray's upright white card in
+case 8 (item 1, kept on purpose); the left side row's tall and low cases overlapping from the entrance.

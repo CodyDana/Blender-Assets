@@ -114,7 +114,9 @@ MATERIALS = {
     # final r1 (blind judge: a broad bright bloom washing onto the pilasters): 1.1 -> 2.6
     "M_AK_HHalo": ("HHalo", None, {"emit_image": True, "emit": 0.6}),   # calibration pass 1: 2.6 -> 0.6 (room)
     # final r1: the canopy's lit recess (the same warm ramp, u = 0 at the hidden cove under the top beam)
-    "M_AK_HSoffitGlow": ("HHalo", None, {"emit_image": True, "emit": 0.25}),   # calibration pass 1: 0.5 -> 0.25 (read white in the room)
+    # r20 rear round (task delta 4: "a lit beam on top" of the painting; reference 2 shows a dark head with a thin light
+    # line): 0.25 -> 0.10
+    "M_AK_HSoffitGlow": ("HHalo", None, {"emit_image": True, "emit": 0.10}),   # calibration pass 1: 0.5 -> 0.25 (read white in the room)
     # r4: the painting's plain pilasters and rails: a satin dark lacquer; final r1 (blind judge: flat dark grey, the
     # reference is near-black lacquer): darker and glossier
     "M_AK_HLacquerSatin": (None, 1.0, {"color": "#0A0807", "rough": 0.42}),
@@ -138,7 +140,9 @@ MATERIALS = {
     "M_AK_HLEDPostWash": (None, 1.0, {"color": "#120902", "emit_color": "#FFA010", "emit": 0.5}),   # calib r2: 0.9 -> 0.5 (white lines in C10)
     # final r2 (blind judge: the reference's step LEDs wash the riser face under each nosing): the halo ramp, u = 0
     # under the line, fading down the riser
-    "M_AK_HStepWash": ("HHalo", None, {"emit_image": True, "emit": 0.6}),
+    # r20 rear round (reference 2 zoom: a thin bright line under each nose over a DARK riser; ours read as fat glowing
+    # bars): 0.6 -> 0.2
+    "M_AK_HStepWash": ("HHalo", None, {"emit_image": True, "emit": 0.2}),
     # final r2 (blind judge: the downlights barely show): brighter lenses that drop below the soffit
     "M_AK_HLamp": (None, 1.0, {"color": "#140A02", "emit_color": "#FFB030", "emit": 9.0}),          # downlight lenses
     # polished brass (the reference caps, collars and kick plates are bright polished gold)
@@ -165,8 +169,18 @@ DECK_Z, PAINT_Z, PAINT_H_ = 0.90, 1.80, 2.15        # build_armory_kit DECK_Z / 
 LAND_Z = 0.75                                        # build_armory_kit LAND_Z (asserted in steps)
 # rear dais b7 (blind judge delta 7: the paper read portrait, ~170 x 190 px in C1, and the bay's painting larger than
 # reference 2's, which is about square over the table): 20 cm pilasters (was 10 cm), so the paper is 1.88 m wide
-PAINT_SW, HALO_W, PAINT_RAIL = 0.20, 0.06, 0.03     # pilaster width, halo width, rail height
-PAPER_W = 2.4 - 2 * (PAINT_SW + HALO_W)              # 1.88 m (was 2.08)
+# r20 (12 x 20 m room, the back wall 4 m further from C1): the b7 paper (1.88 m) measured 0.78x reference 2's against
+# the front case (C1): 10 cm pilasters again, so the paper is 2.08 m wide, and it runs up to +3.50 (below)
+PAINT_SW, HALO_W, PAINT_RAIL = 0.10, 0.06, 0.03     # pilaster width, halo width, rail height (b7-b9: 0.20)
+# r20 fix round (blind judge 7/10, delta 3: the paper read square, ~490 x 495 px in C10; the brief and reference 2 call
+# for a landscape panel): the bay 2.4 -> 2.8 m wide (build_armory_kit PAINT_BAY_X 4.6-7.4), the flanking screens 0.7 ->
+# 0.5 m (X 4.1-4.6 / 7.4-7.9, the LED posts unchanged), the lit reveal and pilasters as before: the paper 2.48 m wide by
+# 2.08 m over the table top (+1.42 to +3.50), 1.19:1. The picture keeps its height scale (PAPER_IMG_W: the sheet was
+# made for the 2.08 m paper) and is spread 1.19x across the wider paper by the world-mapped U
+BAY_W, SCR_W = 2.8, 0.5
+PAPER_W = BAY_W - 2 * (PAINT_SW + HALO_W)            # 2.48 m (r20: 2.08; b7-b9: 1.88)
+PAPER_IMG_W = 2.08                                   # the width the tall sheet's picture height is scaled from
+PAINT_D = 0.18                                       # r20 rear round: the bay's surround depth off the wall (was 0.10)
 PAPER_Z0 = DECK_Z + PAINT_RAIL + HALO_W              # world +0.69
 # final r2 (blind judge: the paper read 2:3 portrait above the table, the reference's is about square, with the crown
 # in its upper third): the paper ends at +3.34 (2.22 m over the table top +1.12, 2.08 m wide: 0.94:1); the top 4 % of
@@ -175,7 +189,7 @@ PAPER_Z0 = DECK_Z + PAINT_RAIL + HALO_W              # world +0.69
 # b7 (judge delta 7): the paper ends at +3.30 (was 3.64): 1.88 m over the table top (+1.42) by 1.88 m wide, square as
 # reference 2; the picture (1.88 / PAINT_ASPECT = 2.15 m tall) starts at +1.30, just under the table top (reference 2
 # hides its foot behind the table), and its top 7 % (plain paper over the crown) is cut
-PAPER_Z1 = 3.30                                      # world (b6: 3.64)
+PAPER_Z1 = 3.50                                      # world (b6: 3.64; b7-b9: 3.30; r20: the wider picture's crown)
 IMG_Z0 = 1.30                                        # world height of the painting picture's bottom edge (b6: 1.36)
 HEADER_REVEAL = 0.005                                # the header field: a faint 5 mm step behind the frame rails
 
@@ -188,7 +202,7 @@ HEADER_REVEAL = 0.005                                # the header field: a faint
 # top-beam line over the bay with the canopy's lit soffit under it, as back_wall.png (the kit's header beam at
 # +3.95-4.35 stays hidden behind the canopy)
 HEADER_Z = 3.86
-CANOPY_Y = 15.705
+CANOPY_Y = 19.705        # r20 (12 x 20 m room): +4.0 with the back wall (was 15.705)
 CANOPY_L = 4.2          # X 3.90-8.10: from the outer face of one LED post to the other's
 CANOPY_D = 0.62         # depth of the top beam (world Y 15.085-15.705)
 RECESS_Y = -0.36        # canopy-local face of the lit recess back
@@ -202,10 +216,12 @@ TOP_Z = HEADER_Z + CANOPY_TOP   # +4.40
 # structure fix: the heavy posts stand at X 3.30 / 8.70 (build_armory_kit.layout(); r2's unapproved 3.75 / 8.25 is
 # reverted: it blocked the rear-alcove walk routes and hid the platform lanterns); keep HEAVY_X equal to layout()'s
 HEAVY_X = (3.30, 8.70)
-HEAVY_Y = 13.33         # layout HEAVY_Y (rear dais b4: on the hall floor, Y 13.18-13.48)
+HEAVY_Y = 16.53         # layout HEAVY_Y (rear dais b4: on the hall floor; r20: Y 16.38-16.68, was 13.33)
 HEAVY_HW = 0.15
 BEAM_Z0, BEAM_Z1 = 4.40, 4.798           # the kit's cross beams' underside; 2 mm under the ceiling plane
-BEAM_Y0, BEAM_Y1 = 13.20, 13.862         # 2 cm behind the heavy posts' front (b4: 13.18); 1.3 cm in front of the cross beam
+# r20: the top beam keeps its relation to the heavy posts (Y 16.40-17.062); it clears the cross beams at Y 16 (to 16.125)
+# and Y 18 (from 17.875), the lattice coffers (4, 16) / (6, 16) over it carry no down-light
+BEAM_Y0, BEAM_Y1 = round(HEAVY_Y - 0.13, 4), round(HEAVY_Y + 0.532, 4)   # 2 cm behind the heavy posts' front
 BEAM_GAP = 0.005                          # shadow gap at the post faces
 SQ_Z0, SQ_Z1 = 4.465, 4.735              # the brass squares on the posts (in the beam band)
 
@@ -538,7 +554,7 @@ def platform_top(G):
     return b.done([(0, 2, 0, DECK_D, 0, DECK_Z)])
 
 
-EDGE_NOSE = 0.568     # underside of the 3.2 cm nosing (clear over the riser emblem SM_AK_EmblemDisc_12, top +0.566)
+EDGE_NOSE = 0.568     # underside of the 3.2 cm nosing (clear over the old riser emblem SM_AK_EmblemDisc_12, top +0.566)
 EDGE_REVEAL = 0.553   # a 1.5 cm shadow reveal under the nosing (recessed 1.6 cm)
 EDGE_FASCIA = 0.440   # the plain deck-edge fascia band +0.44 to +0.553, over a fine groove line
 EDGE_GROOVE = 0.432
@@ -585,40 +601,46 @@ def platform_edge(G):
 
 
 def side_plinth(G):
-    """b7 (blind judge deltas 4 / 6: the b4-b6 plinth faces read as flat black voids; reference 2's side zones are a
-    terraced, panelled base under the rack alcoves): the side zones (X 0-3.80 / 8.20-12; y 0 = LAND_Y 13.56 back to
-    Y 15.20, 1.9 m modules) are terraced in the flight's own rows. At the front a black lacquer door cabinet to +0.60 (the
-    4th riser's line): two doors per module, each a recessed field inside a raised face frame with small polished brass
-    corner brackets, under the steps' nose with its lit ledge (the amber line under the nose, no wash on the doors);
-    then a plain recessed riser (+0.60 to +0.75, unlit as the flight's 5th) to a tread at +0.75 (y GOING), and the lit
-    deck riser at y 2 x GOING (DECK_Y 14.40) to the polished deck."""
+    """r20 rear round (task delta 1: the b7 wings were terraced in the flight's rows - a door cabinet to +0.60, a
+    recessed riser, a +0.75 tread and a deck riser - which read as bleachers either side of the flight; back_wall.png and
+    reference 2 show plain dark panelled plinth fronts on the wings with the stepped, lit flight only between the
+    flanking posts): the side zones (X 0-3.80 / 8.20-12; local y 0 = WING_Y 16.43, 5 cm behind the heavy posts' fronts,
+    back to the first full-width deck row) are ONE black lacquer plinth from the floor to the deck (+0.90). Its face:
+    a recessed toe, two doors per 1.9 m module (a raised face frame round a recessed field with an inset raised panel,
+    small polished brass corner brackets), a plain fascia band under a fine brass line, and the deck's own 4 cm nose
+    with the polished deck finish on top (no LED, no tread)."""
     b = Build(G, "SM_AK_Platform_Side_19")
-    W, D, GO, CZ = 1.9, 1.64, G["GOING"], G["CAB_Z"]
-    b.box(0, W, 0.03, D, 0, CZ - 0.04, LQ)                                                # cabinet carcass
-    riser(b, W, -0.02, 0.0, CZ, True, GO + 0.005, wash=False)                             # cabinet face + lit ledge
-    yr = 0.005                                                                            # the cabinet's face
-    FR = 0.012                                                                            # face frame proud of it
-    zt = CZ - 0.04 - 0.0215 - 0.02                                                        # under the lit ledge
+    W, D = 1.9, round(G["DECK_Y"] + DECK_D - G["WING_Y"], 4)
+    TOE, NOSE_B = 0.08, DECK_Z - 0.04                                                     # toe top; nose underside
+    yr, FR = 0.005, 0.012                                                                 # the face; frame proud of it
+    b.box(0, W, 0.06, D, 0.0, TOE, LQ, grain="x")                                         # recessed toe (6 cm)
+    b.box(0, W, yr, D, TOE, NOSE_B - 0.001, LQ, grain="x")                                # carcass behind the face
+    b.box(0, W, 0.10, D, NOSE_B - 0.002, DECK_Z - 0.03, LQ, grain="x")                    # body under the deck panels
+    nose = [(-0.017, NOSE_B), (0.10, NOSE_B), (0.10, DECK_Z), (-0.014, DECK_Z), (-0.02, DECK_Z - 0.006),
+            (-0.02, NOSE_B + 0.003)]
+    b.prism(nose, "x", 0.0, W, LQ, grain="x", mat_fn=top_is(DECK, LQ))                   # the deck's nose
+    zf = NOSE_B - 0.015                                                                   # fascia band top (reveal)
+    zt = zf - 0.10                                                                        # the doors' top
+    b.cbox(0.0, W, yr - FR, yr + 0.002, zt + 0.006, zf, LQ, 0.003, grain="x")             # plain fascia band
+    b.box(0.004, W - 0.004, yr - FR - 0.002, yr - FR + 0.001, zt + 0.006, zt + 0.012, BR, grain="x")   # brass line
     for x0 in (0.0, W / 2):                                                               # two doors per module
         x1 = x0 + W / 2
-        for a0, a1, z0, z1, g in ((x0 + 0.004, x0 + 0.06, 0.0, zt, "z"), (x1 - 0.06, x1 - 0.004, 0.0, zt, "z"),
-                                  (x0 + 0.06, x1 - 0.06, 0.0, 0.09, "x"), (x0 + 0.06, x1 - 0.06, zt - 0.07, zt, "x")):
+        for a0, a1, z0, z1, g in ((x0 + 0.004, x0 + 0.07, TOE, zt, "z"), (x1 - 0.07, x1 - 0.004, TOE, zt, "z"),
+                                  (x0 + 0.07, x1 - 0.07, TOE, TOE + 0.08, "x"), (x0 + 0.07, x1 - 0.07, zt - 0.07, zt, "x")):
             b.cbox(a0, a1, yr - FR, yr + 0.002, z0, z1, LQ, 0.003, grain=g)
-        fx0, fx1, fz0, fz1 = x0 + 0.06, x1 - 0.06, 0.09, zt - 0.07                         # the recessed field
+        fx0, fx1, fz0, fz1 = x0 + 0.07, x1 - 0.07, TOE + 0.08, zt - 0.07                   # the recessed field
+        b.cbox(fx0 + 0.045, fx1 - 0.045, yr - 0.007, yr + 0.001, fz0 + 0.045, fz1 - 0.045, LQ, 0.006,
+               grain="z")                                                                  # the inset raised panel
         for cx, sx in ((fx0, 1), (fx1, -1)):                                              # brass corner brackets
             for cz, sz in ((fz0, 1), (fz1, -1)):
-                xa, xb = sorted((cx + sx * 0.012, cx + sx * 0.075))
+                xa, xb = sorted((cx + sx * 0.012, cx + sx * 0.060))
                 za, zb_ = sorted((cz + sz * 0.012, cz + sz * 0.018))
                 b.box(xa, xb, yr - 0.004, yr + 0.001, za, zb_, BR, grain="x")
                 xa, xb = sorted((cx + sx * 0.012, cx + sx * 0.018))
-                za, zb_ = sorted((cz + sz * 0.018, cz + sz * 0.075))
+                za, zb_ = sorted((cz + sz * 0.018, cz + sz * 0.060))
                 b.box(xa, xb, yr - 0.004, yr + 0.001, za, zb_, BR, grain="z")
-    b.box(0, W, GO + 0.03, D, CZ - 0.041, LAND_Z - 0.04, LQ)                              # body under the tread
-    riser(b, W, GO - 0.02, CZ - 0.001, LAND_Z, "landing", 2 * GO + 0.005)                # recessed riser, pale tread +0.75
-    b.box(0, W, 2 * GO + 0.03, D, LAND_Z - 0.041, DECK_Z - 0.03, LQ)                      # body under the deck
-    riser(b, W, 2 * GO - 0.02, LAND_Z - 0.001, DECK_Z, "deck", 2 * GO + 0.10)             # the lit deck riser
-    deck_boards(b, 2 * GO + 0.10, D, x1=W)
-    return b.done([(0, W, -0.02, D, 0, CZ), (0, W, GO - 0.02, D, CZ, LAND_Z), (0, W, 2 * GO - 0.02, D, LAND_Z, DECK_Z)])
+    deck_boards(b, 0.10, D, x1=W)
+    return b.done([(0, W, -0.02, D, 0, DECK_Z)])
 
 
 def steps(G):
@@ -631,12 +653,13 @@ def steps(G):
     b = Build(G, "SM_AK_Steps_22")
     W, LD, GO = 2.2, G["DECK_Y"] - G["STAIR_Y0"], G["GOING"]
     cols = []
+    # r20 fix round (blind judge 7/10, delta 1: the unlit crest riser over the deep landing read as one tall step above a
+    # flight of four): five identical lit risers and treads (0.15 m, GOING 0.35) up to the deck riser, which is the
+    # sixth, identical, lit one (SM_AK_Platform_Edge_22); no landing, no unlit riser, no brass strip; the emblem moved to
+    # the sixth riser (build_armory_kit SM_AK_EmblemDisc_08)
+    assert abs(LD - 5 * GO) < 1e-6, "hero_backwall: the flight is five goings to the deck lip"
     for k in range(5):
-        top = k == 4
-        # b8: the +0.75 tread in the polished deck finish ("landing": reference 2's pale lit band under the deck riser)
-        riser(b, W, -0.02 + GO * k, 0.15 * k, 0.15 * (k + 1), "landing" if top else True,
-              LD if top else GO * (k + 1) + 0.005,
-              nose_h=0.032 if top else 0.04)   # b3: the emblem (to +0.716) clears the 5th nose
+        riser(b, W, -0.02 + GO * k, 0.15 * k, 0.15 * (k + 1), True, LD if k == 4 else GO * (k + 1) + 0.005)
         cols.append((0, W, -0.02 + GO * k, LD, 0.15 * k, 0.15 * (k + 1)))
     return b.done(cols)
 
@@ -649,7 +672,9 @@ def stair_cheek(G):
     SM_AK_Lantern_S stands on: a polished brass shoe (6 cm) and a thin brass cap line under a lacquer top plate, a 1.2 cm
     shadow reveal behind it; the wall behind with a thin brass line on both top arrises."""
     b = Build(G, "SM_AK_StairCheek")
-    W, H, L = G["CHEEK_W"], G["CHEEK_H"], G["LAND_Y"] - G["STAIR_Y0"]
+    # r20 rear round (task delta 5): the cheek runs from the stair foot to the wing plinth's face (WING_Y), top +0.75
+    # (the landing's level); the stair-foot lantern stands beside it on its own stand (SM_AK_H_LanternStand), not on it
+    W, H, L = G["CHEEK_W"], G["CHEEK_H"], G["WING_Y"] - G["STAIR_Y0"]
     b.cbox(-0.004, W + 0.004, -0.004, W + 0.004, 0.0, 0.06, BR, 0.003)                  # brass shoe
     b.cbox(0.0, W, 0.0, W, 0.058, H - 0.021, LQ, 0.004, grain="z")                        # the newel
     b.cbox(-0.003, W + 0.003, -0.003, W + 0.003, H - 0.022, H - 0.010, BR, 0.002)        # brass cap line
@@ -670,11 +695,14 @@ def paper_bay(b, H, wz0, top, bottom):
     ramp (u = distance from the paper edge / HALO_W), and the ramp continues on the pilasters' and rails' inner returns
     (u 0.55-1 from the halo plane to their front), so the glow spills onto the surround."""
     SW, G_, RAIL = PAINT_SW, HALO_W, PAINT_RAIL
-    px0, px1 = SW + G_, 2.4 - SW - G_
+    px0, px1 = SW + G_, BAY_W - SW - G_
     pz0 = PAPER_Z0 - wz0 if bottom else 0.0
     pz1 = PAPER_Z1 - wz0 if top else H
     hz = pz1 + G_ if top else H                                    # top of the halo band (the header starts there)
-    YF, YH = 0.10, 0.0655                                          # pilaster front; halo / paper face
+    # r20 rear round (task delta 4: the reference's painting is set INTO a recessed bay, ours read as a flat panel in a
+    # projecting frame): the pilasters and the header come forward to PAINT_D (was 0.10), so the paper sits 11.5 cm
+    # back in a lit reveal (the halo ramp runs on down the deeper inner returns)
+    YF, YH = PAINT_D, 0.0655                                       # pilaster front; halo / paper face
     # final r2 (blind judge: the halo read as a thin even line; the reference's is a broad soft wash that bleeds onto
     # the flanking pilasters): the ramp runs on outward - the visible halo band u 0-0.45, the surround's inner returns
     # u 0.45-0.72 (halo plane to front), then across the pilasters' front faces u 0.72-0.99 (their full 10 cm width)
@@ -683,8 +711,8 @@ def paper_bay(b, H, wz0, top, bottom):
     def ret_uv(p):                                                 # inner returns: the ramp from the halo plane out
         t = min(max((p[1] - YH) / (YF - YH), 0.0), 1.0)
         return (U_BAND + (U_RET - U_BAND) * t, 0.5)
-    b.box(0.0, 2.4, 0.0, 0.02, 0.0, H, T, grain="z")                                    # back board
-    for x0, x1, s in ((0.0, SW, 1), (2.4 - SW, 2.4, -1)):                                # plain lacquer pilasters
+    b.box(0.0, BAY_W, 0.0, 0.02, 0.0, H, T, grain="z")                                  # back board
+    for x0, x1, s in ((0.0, SW, 1), (BAY_W - SW, BAY_W, -1)):                            # plain lacquer pilasters
         xi = x1 if s > 0 else x0                                                         # their inner edge
 
         def pil_uv(p, xi=xi):
@@ -703,18 +731,18 @@ def paper_bay(b, H, wz0, top, bottom):
               (H - RAIL, H, 0, YF - 0.002)] if top else []) + ([(0.0, RAIL, 1, YF - 0.002)] if bottom else [])
     for z0, z1, s, yf in rails:
         if s:
-            b.cbox(SW - 0.002, 2.4 - SW + 0.002, 0.02, yf, z0, z1, LQS, 0.003, grain="x",
+            b.cbox(SW - 0.002, BAY_W - SW + 0.002, 0.02, yf, z0, z1, LQS, 0.003, grain="x",
                    mat_fn=lambda n, s=s: HALO if n[2] * s > 0.9 else LQS,
                    unique=(lambda n, s=s: n[2] * s > 0.9, ret_uv))
         else:
-            b.cbox(SW - 0.002, 2.4 - SW + 0.002, 0.02, yf, z0, z1, LQS, 0.003, grain="x")
+            b.cbox(SW - 0.002, BAY_W - SW + 0.002, 0.02, yf, z0, z1, LQS, 0.003, grain="x")
 
     def halo_uv(p):
         d = max(px0 - p[0], p[0] - px1, (pz0 - p[2]) if bottom else -1.0, (p[2] - pz1) if top else -1.0)
         return (min(max(d / G_, 0.0), 1.0) * U_BAND, 0.5)
     # the halo cells: from the paper edge out to 1 cm behind the pilasters and rails, their face just behind the paper
     # (the north wall's upper base rail, 5 cm proud of the wall at +2.5 world, runs behind the panel at y < 0.05)
-    xs = [SW - 0.01, px0, px1, 2.4 - SW + 0.01]
+    xs = [SW - 0.01, px0, px1, BAY_W - SW + 0.01]
     zs = ([RAIL - 0.01 if bottom else 0.0] + ([pz0] if bottom else []) + ([pz1] if top else [])
           + [hz + 0.01 if top else H])
     for i in range(3):
@@ -746,7 +774,7 @@ def painting_panel(G):
     assert abs(PH - PAINT_H_) < 1e-6 and abs(G["PAINT_Z"] - PAINT_Z) < 1e-6, "hero_backwall: PAINT_H / PAINT_Z changed"
     b = Build(G, "SM_AK_PaintingPanel")
     paper_bay(b, PH, PAINT_Z, top=True, bottom=False)
-    return b.done([(0, 2.4, 0, 0.10, 0, PH)])
+    return b.done([(0, BAY_W, 0, PAINT_D, 0, PH)])
 
 
 def painting_base(G):
@@ -757,7 +785,7 @@ def painting_base(G):
     b = Build(G, "SM_AK_H_PaintingBase")
     H = PAINT_Z - DECK_Z
     paper_bay(b, H, DECK_Z, top=False, bottom=True)
-    return b.done([(0, 2.4, 0, 0.10, 0, H)])
+    return b.done([(0, BAY_W, 0, PAINT_D, 0, H)])
 
 
 PANEL_Y = 0.054   # the screen panel's face (local y)
@@ -775,20 +803,21 @@ def rear_screen(G):
     TW, TH = SCREEN_TILE
     # the panel face stands 5.4 cm off the wall: the north wall's rails (SM_AK_WallUpper_Plain_2 base rail, 5 cm proud
     # at +2.5 world) stay behind it
-    b.box(0.010, 0.690, 0.004, PANEL_Y, RB - 0.01, H - RT + 0.01, SCR, grain="z",
-          unique=(lambda n: n[1] > 0.7, lambda p: ((p[0] - 0.35) / TW + 0.5, (p[2] - 0.02) / TH)))   # the panel
-    for x0, x1, lip in ((0.0, ST, 1), (0.7 - ST, 0.7, -1)):                              # stiles
+    SW_ = SCR_W                                                                           # r20 fix round: 0.7 -> 0.5
+    b.box(0.010, SW_ - 0.010, 0.004, PANEL_Y, RB - 0.01, H - RT + 0.01, SCR, grain="z",
+          unique=(lambda n: n[1] > 0.7, lambda p: ((p[0] - SW_ / 2) / TW + 0.5, (p[2] - 0.02) / TH)))   # the panel
+    for x0, x1, lip in ((0.0, ST, 1), (SW_ - ST, SW_, -1)):                              # stiles
         if lip > 0:
             prof = [(x0, 0.0), (x1, 0.0), (x1, 0.074), (x1 - 0.006, 0.080), (x0, 0.080)]
         else:
             prof = [(x0, 0.0), (x1, 0.0), (x1, 0.080), (x0 + 0.006, 0.080), (x0, 0.074)]
         b.prism(prof, "z", 0.0, H, T, grain="z")
-    b.prism([(0.0, 0.0), (0.0, RB), (0.074, RB), (0.080, RB - 0.006), (0.080, 0.0)], "x", ST, 0.7 - ST, T,
+    b.prism([(0.0, 0.0), (0.0, RB), (0.074, RB), (0.080, RB - 0.006), (0.080, 0.0)], "x", ST, SW_ - ST, T,
             grain="x")                                                                    # bottom rail
-    b.prism([(0.0, H - RT), (0.0, H), (0.080, H), (0.080, H - RT + 0.006), (0.074, H - RT)], "x", ST, 0.7 - ST, T,
+    b.prism([(0.0, H - RT), (0.0, H), (0.080, H), (0.080, H - RT + 0.006), (0.074, H - RT)], "x", ST, SW_ - ST, T,
             grain="x")                                                                    # top rail (stile width)
-    b.ring(ST, 0.7 - ST, RB, H - RT, BEAD, PANEL_Y - 0.0005, 0.066, T, "xz", c=0.003)    # the stepped inner bead
-    return b.done([(0, 0.7, 0, 0.08, 0, H)])
+    b.ring(ST, SW_ - ST, RB, H - RT, BEAD, PANEL_Y - 0.0005, 0.066, T, "xz", c=0.003)    # the stepped inner bead
+    return b.done([(0, SW_, 0, 0.08, 0, H)])
 
 
 def disc(rad, n=32):
@@ -853,6 +882,7 @@ def canopy(G):
     beam's underside over it (instances()), a fine warm line runs under the recess back's lower edge; its underside is
     a flat dark soffit back to the header. At both ends, over the LED posts, two corbel blocks step down in section
     (brass faced), where the LED posts' coves die into the canopy."""
+    assert abs(G["ROOM_L"] - 0.295 - CANOPY_Y) < 1e-6, "hero_backwall: CANOPY_Y must follow ROOM_L (r20)"
     b = Build(G, "SM_AK_H_Canopy")
     L, D = CANOPY_L, CANOPY_D
     zt, zb = SOFFIT, 0.13                                  # top beam underside (+4.25); recess bottom (+4.08)
@@ -876,10 +906,59 @@ def canopy(G):
     return b.done()
 
 
+# r20 round 3 (blind judge 7/10, delta 3: back_wall.png's one full-width top beam with downlights and gold post caps
+# spans both alcoves and the painting bay; ours stopped at the painting's canopy, the alcoves under plain dark wall):
+# the canopy's top beam runs on over both rear alcoves to the side walls (SM_AK_H_CanopyWing_W / _E: the same section,
+# lip and brass fillet at the same heights, no lit recess - the alcoves' heads, +4.10, stand in it - and no corbels),
+# a polished brass square on its face over each alcove post (X 1.2 / 3.0 / 9.0 / 10.8, as the heavy posts' squares)
+# and two downlights over each alcove. A 12 mm shadow joint at the painting canopy's end lips.
+WING_X = ((0.03, 3.888), (8.112, 11.97))          # world X of the two wings (the canopy's lip runs 3.888-8.112)
+# r20 rear round: the alcoves 0.30 m inboard (build_armory_kit REAR_ALCOVE_X)
+WING_POSTS = ((1.5, 3.3), (8.7, 10.5))            # the rear alcoves' side posts (REAR_ALCOVE_X, 1.8 m wide)
+WING_LIGHTS = ((1.95, 2.85), (9.15, 10.05))       # downlights: the alcove centres -/+ 0.45
+
+
+def canopy_wing(G, k):
+    assert abs(G["ROOM_L"] - 0.295 - CANOPY_Y) < 1e-6, "hero_backwall: CANOPY_Y must follow ROOM_L (r20)"
+    assert tuple(G["REAR_ALCOVE_X"]) == (WING_POSTS[0][0], WING_POSTS[1][0]), "hero_backwall: REAR_ALCOVE_X changed"
+    b = Build(G, "SM_AK_H_CanopyWing_" + "WE"[k])
+    x0, x1 = WING_X[k]
+    L, D, zt = x1 - x0, CANOPY_D, SOFFIT
+    b.cbox(0.0, L, -D, -0.001, zt, CANOPY_TOP - 0.05, T, 0.005, grain="x")                 # the top beam
+    b.cbox(0.0, L, -D - 0.018, -0.001, CANOPY_TOP - 0.052, CANOPY_TOP, T, 0.006, grain="x")   # the lip
+    b.cbox(0.004, L - 0.004, -D - 0.005, -D + 0.014, zt - 0.022, zt + 0.001, BR, 0.002, grain="x")   # brass fillet
+    # a fine warm line under the beam's front edge, as the canopy's recess line: the header reads as one lit band
+    b.box(0.03, L - 0.03, -D + 0.035, -D + 0.055, zt - 0.008, zt + 0.001, LL)
+    for xp in WING_POSTS[k]:                                                                 # the brass squares
+        c = xp - x0
+        b.cbox(c - 0.10, c + 0.10, -D - 0.004, -D + 0.001, zt + 0.02, CANOPY_TOP - 0.07, BR, 0.0015)
+    return b.done()
+
+
+def lantern_stand(G):
+    """NEW (r20 rear round, task delta 5; reference 2: the stair-foot lanterns stand on the hall floor on open leg
+    stands about 1.5x the lantern head's height, their tops about level with the cheek tops): the rear dais b1-b6 open
+    stand of the developed andon (hero_lantern_vase.lantern_stand: four legs under the lantern's corner posts, a top
+    frame, a recessed top board, a low stretcher frame), built at the full lantern's size FOOT_STAND_H / LANTERN_S tall
+    and uniformly scaled with SM_AK_Lantern_S (build_armory_kit.scaled_piece), so its legs meet the scaled lantern's
+    posts. Pivot at the floor centre, FOOT_STAND_H tall."""
+    import hero_lantern_vase as HLV
+    k = G["LANTERN_S"]
+    g = dict(G)
+    g["_FOOT_STAND_FULL"] = G["FOOT_STAND_H"] / k
+    src = HLV.lantern_stand(g, "SM_AK_H_LanternStand_Src", "_FOOT_STAND_FULL")   # not exported: only its scaled copy
+    return G["scaled_piece"](src, "SM_AK_H_LanternStand", k)
+
+
 def pieces(G):
     return [steps(G), platform_edge(G), platform_top(G), side_plinth(G), stair_cheek(G), painting_panel(G),
             painting_base(G), rear_screen(G), post_led(G), post_heavy(G), downlight(G), downlight_box(G), canopy(G),
-            top_beam(G)]
+            top_beam(G), canopy_wing(G, 0), canopy_wing(G, 1), lantern_stand(G)]
+
+
+def G_ROOM_L():
+    import armory_hero
+    return armory_hero.G["ROOM_L"]
 
 
 def instances():
@@ -888,6 +967,14 @@ def instances():
     cy, cz = CANOPY_Y + (RECESS_Y - CANOPY_D) / 2, HEADER_Z + SOFFIT
     return [("SM_AK_H_Canopy", 3.90, CANOPY_Y, HEADER_Z, 0.0),
             ("SM_AK_H_TopBeam", HEAVY_X[0] + HEAVY_HW + BEAM_GAP, BEAM_Y0, BEAM_Z0, 0.0),
-            ("SM_AK_H_PaintingBase", 7.2, 16.0, DECK_Z, 180.0),
+            ("SM_AK_H_PaintingBase", G_("PAINT_BAY_X")[1], G_ROOM_L(), DECK_Z, 180.0),   # r20 fix round: X 4.6-7.4
             ("SM_AK_H_DownlightBox", 5.425, cy, cz, 0.0), ("SM_AK_H_DownlightBox", 6.575, cy, cz, 0.0),
-            ("SM_AK_H_Downlight", 4.425, cy, cz, 0.0), ("SM_AK_H_Downlight", 7.575, cy, cz, 0.0)]
+            ("SM_AK_H_Downlight", 4.425, cy, cz, 0.0), ("SM_AK_H_Downlight", 7.575, cy, cz, 0.0)] + [
+            ("SM_AK_H_CanopyWing_" + "WE"[k], WING_X[k][0], CANOPY_Y, HEADER_Z, 0.0) for k in (0, 1)] + [
+            ("SM_AK_H_Downlight", x, cy, cz, 0.0) for xs in WING_LIGHTS for x in xs] + [
+            ("SM_AK_H_LanternStand", x, y, 0.0, 0.0) for (x, y, z, k) in G_("LANTERNS") if k == G_("LANTERN_S")]
+
+
+def G_(key):
+    import armory_hero
+    return armory_hero.G[key]

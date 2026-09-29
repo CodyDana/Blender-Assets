@@ -1,7 +1,7 @@
 """Comparison sheets for the Unreal captures (system Python with Pillow: `py -3 ak_compare_sheet.py`).
 
 For every capture in WorkFiles/armory/build/unreal/captures/<name>.png: Blender render of the preset (env AK_PRESET,
-default night: renders/night_live4, fallback night_live2; golden: renders/hero_live) | Unreal
+default night: renders/night_20m, fallback night_live4; golden: renders/hero_live) | Unreal
 capture, same height, labelled; C1 at the reference aspect also gets the LOOK reference on the left. Out:
 WorkFiles/armory/build/unreal/compare/<name>_blender_vs_unreal.png (C1 ref aspect: reference_blender_unreal_C1.png).
 """
@@ -13,9 +13,10 @@ from PIL import Image, ImageDraw
 ROOT = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory")
 CAP = ROOT / "build" / "unreal" / "captures"
 PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # night + genkan (2026-09-28)
+# 12 x 20 m hall live (2026-09-29): night = renders/night_20m (all eight views), fallback night_live4
 # rear dais live (2026-09-28): night = renders/night_live4; views it lacks (C4, C5) fall back to night_live2
-BL = ROOT / "build" / "renders" / ("night_live4" if PRESET == "night" else "hero_live")   # golden: hero round (was stage_f2)
-BL_FALLBACK = ROOT / "build" / "renders" / "night_live2" if PRESET == "night" else None
+BL = ROOT / "build" / "renders" / ("night_20m" if PRESET == "night" else "hero_live")   # golden: hero round (was stage_f2)
+BL_FALLBACK = ROOT / "build" / "renders" / "night_live4" if PRESET == "night" else None
 
 
 def bl_file(rel):

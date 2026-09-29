@@ -1,20 +1,27 @@
-"""Top-down layout of the armory gallery (v2, building stage 2026-09-27: 12.0 x 16.0 m interior) for ARMORY_PLAN.md.
+"""Top-down layout of the armory gallery (v2, building stage 2026-09-27; r20 2026-09-28: 12.0 x 20.0 m interior) for
+ARMORY_PLAN.md.
 
 Planning aid only: writes ARMORY_LAYOUT.svg and ARMORY_LAYOUT.txt beside this script.
 It draws the BUILD itself: every footprint comes from WorkFiles/armory/build/layout.json (written by
 Scripts/armory/build_armory_kit.py: instance world bounding boxes, cases, openings, sun, cameras), so the drawing and the
 kit cannot disagree. Rebuild the kit, then rerun this script.
-Frame: metres; origin at the interior south-west corner at floor level, X across (0-12), Y along the axis (0-16,
-north = +Y), Z up. The 4 m entrance is in the south wall; the rear platform (+0.60) is at the north end.
+Frame: metres; origin at the interior south-west corner at floor level, X across (0-12), Y along the axis (0-20,
+north = +Y), Z up. The 4 m entrance is in the south wall; the rear dais (a lit flight to the +0.90 deck) is at the
+north end. The room size is read from layout.json, nothing here assumes a length.
 Earlier layouts: armory_layout_v2_8x12.py (the 8 x 12 m v2 table), armory_layout_v1_kura.py.
 Run: "C:/Program Files/Blender Foundation/Blender 5.2/5.2/python/bin/python.exe" WorkFiles/armory/armory_layout.py
+     [--layout <test copy>/layout.json --out <dir>]   (r20: draw a test copy without touching the live drawings)
 """
 import json
 import math
 import os
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = json.load(open(os.path.join(HERE, "build", "layout.json"), encoding="utf-8"))
+_A = sys.argv[1:]
+LAYOUT = _A[_A.index("--layout") + 1] if "--layout" in _A else os.path.join(HERE, "build", "layout.json")
+OUT_DIR = _A[_A.index("--out") + 1] if "--out" in _A else HERE
+DATA = json.load(open(LAYOUT, encoding="utf-8"))
 ROOM = DATA["room"]
 W, L, T = ROOM["width_x"], ROOM["length_y"], 0.30
 OP = DATA["openings"]
@@ -37,9 +44,9 @@ CONTENT = {
 # piece prefix -> (ascii char, svg fill, legend text); first match wins; None = not drawn
 KINDS = [
     ("SM_AK_Case_", ("#", "#f3e6c8", "glass case on a black-lacquer plinth / hero table")),
-    ("SM_AK_Platform", ("=", "#8a6a4a", "rear platform, top +0.60")),
-    ("SM_AK_Steps", ("s", "#a0825f", "steps, 4 risers x 15 cm, LED nosings")),
-    ("SM_AK_WallPanel_Lit", ("9", "#a68d69", "wall bay over a dark dado (counter +0.85): lit cream back, downlight at the head (f2), empty")),
+    ("SM_AK_Platform", ("=", "#8a6a4a", "rear platform (wings and deck), top +0.90 (r20)")),
+    ("SM_AK_Steps", ("s", "#a0825f", "steps: one even flight, 6 risers x 15 cm (0.35 m going) to the +0.90 deck, an LED nosing on every riser (r20 fix round)")),
+    ("SM_AK_WallPanel_Lit", ("9", "#a68d69", "wide wall display bay (1.85 m, r20 round 3) over a dark dado (counter +0.85): lit cream back, two downlights at the head, empty")),
     ("SM_AK_RearAlcove", ("r", "#d9b36a", "rear alcove: top-lit dark back board, empty upright rack, tansu, lattice above")),
     ("SM_AK_RearScreen", ("p", "#6b5d4d", "dark patterned screen")),
     ("SM_AK_PaintingPanel", ("P", "#efe2c2", "painted panel (ink pine), 2.4 x 2.3 m, glowing border")),
@@ -53,7 +60,7 @@ KINDS = [
     ("SM_AK_Post_Heavy", ("o", "#1a1512", "heavy 30 cm post (platform front)")),
     ("SM_AK_Post_Jamb", ("o", "#1a1512", "45 cm jamb post with iron straps (f2: the vestibule posts at Y 1.02)")),
     ("SM_AK_Post_LED", ("o", "#1a1512", "post with LED edge lines")),
-    ("SM_AK_EmblemDisc", ("e", "#c9a057", "the user's emblem on the top riser (f1)")),
+    ("SM_AK_EmblemDisc", ("e", "#c9a057", "the user's emblem on the top (6th) riser (f1; r20 fix round)")),
     ("SM_AK_EntryMat", (".", "#cdbb95", "woven rush runner")),
     ("SM_AK_EntryStep", ("_", "#3a2e25", "raised entry step beam")),
     ("SM_AK_Threshold", ("_", "#3a2e25", "threshold beam")),
@@ -183,10 +190,10 @@ def ascii_plan():
     out.append(" " * (10 + (d0 + d1) // 2) + f"^ C1 at Y {c1['loc'][1]:.2f}, +{c1['loc'][2]:.2f}, {c1['lens_mm']} mm, "
                "looking north")
     out.append("")
-    out.append("Key: # case (label = display number; G = empty growth slot), = rear platform +0.60, s steps,")
+    out.append("Key: # case (label = display number; G = empty growth slot), = rear platform +0.90, s steps,")
     out.append("9 wall bays (dado, lit cream back), r rear alcoves (empty upright racks), p dark screens, P painting, B banners,")
     out.append("L lanterns, W / v vases with plum branches (floor / sill), c sill caddies, o heavy / LED posts, . runner, _ step / threshold beams,")
-    out.append("d sliding door leaves (parked open), w lattice windows (sill +2.65, 1.5 x 1.45 m) with a sill ledge,")
+    out.append("d sliding door leaves (parked open), w lattice windows (sill +2.65, 3.5 x 1.45 m in 4 m bays, r20 round 3) with a sill ledge,")
     out.append("e the user's emblem on the top riser; the two o at Y 1.0 are the 45 cm jamb posts (f2)."
                + (" k west window closed with a lit shoji pane." if OP.get("west_closed_windows_y") else ""))
     out.append("")
@@ -270,7 +277,7 @@ def svg_plan():
         a(f'<rect x="{lx}" y="{yy-13}" width="18" height="16" fill="{k[1]}" stroke="#1a1512"/>')
         a(f'<text x="{lx+26}" y="{yy}" font-size="15" fill="#222">{k[2]}</text>')
         yy += 24
-    for text, colour in [("blue = lattice window 1.5 x 1.45 m, sill +2.65 (both long walls)", "#3b82b8"),
+    for text, colour in [("blue = lattice window 3.5 x 1.45 m, sill +2.65 (both long walls)", "#3b82b8"),
                          ("cream on the west wall = window closed with a lit shoji pane", "#8a6a2a"),
                          ("yellow = sun patches from the west windows: " + ", ".join(
                              f"{L['name']} {L['elev_deg']:.0f} deg up, heading {L['heading_deg_from_x_toward_minus_y']:.0f}"
@@ -411,14 +418,14 @@ def site_svg():
 
 if __name__ == "__main__":
     site = site_ascii()
-    with open(os.path.join(HERE, "ARMORY_SITE.txt"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_DIR, "ARMORY_SITE.txt"), "w", encoding="utf-8") as f:
         f.write(site + "\n")
-    with open(os.path.join(HERE, "ARMORY_SITE.svg"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_DIR, "ARMORY_SITE.svg"), "w", encoding="utf-8") as f:
         f.write(site_svg() + "\n")
     print(site)
     txt = ascii_plan()
-    with open(os.path.join(HERE, "ARMORY_LAYOUT.txt"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_DIR, "ARMORY_LAYOUT.txt"), "w", encoding="utf-8") as f:
         f.write(txt + "\n")
-    with open(os.path.join(HERE, "ARMORY_LAYOUT.svg"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUT_DIR, "ARMORY_LAYOUT.svg"), "w", encoding="utf-8") as f:
         f.write(svg_plan() + "\n")
     print(txt)

@@ -28,7 +28,21 @@ OUT = ROOT / "WorkFiles" / "armory" / "build" / "walk_check.json"
 if Path(bpy.data.filepath).name != "ArmoryKit.blend":   # a test copy (build_armory_kit --preview-dir): report beside it
     OUT = Path(bpy.data.filepath).resolve().parent / "walk_check.json"
 R, Z0, Z1 = 0.35, 0.20, 1.80
-# building stage (2026-09-27): routes for the 12 x 16 m hall (layout.json "cases"), the 4 m entrance and the platform
+# building stage (2026-09-27): routes for the hall (layout.json "cases"), the 4 m entrance and the platform
+# r20 (2026-09-28, the user: "lengthen the room to 20m"): the 12 x 20 m hall. The flight's foot Y 15.50 (was 12.30), the
+# side cabinets' front 16.76, the deck lip 17.60, the hero table 18.90-19.80, the rear alcoves / corner showcases' fronts
+# Y 19.40 / 19.395, the heavy posts Y 16.38-16.68, the deck lanterns Y 18.89-19.31; cases 2 / 3 at Y 8.80 / 13.60
+# r20 rear round (2026-09-28): the lower flight's going 0.28 (risers at Y 15.50 / 15.78 / 16.06 / 16.34 / 16.62), the
+# +0.75 landing Y 16.62-17.60 (X 3.80-8.20); the wings are one +0.90 plinth from Y 16.43 (WING_Y, X 0-3.80 / 8.20-12,
+# no terraces); the cheeks X 3.45-3.80 / 8.20-8.55, Y 15.50-16.43, +0.75 (no longer steppable: 0.75 > 0.45); the
+# stair-foot lanterns on their floor stands X 3.075-3.42 / 8.58-8.925, Y 15.53-15.87; the rear alcoves X 1.50-3.30 /
+# 8.70-10.50; the corner niche blocks X 0.34-1.50 / 10.50-11.66, front Y 19.40
+# r20 fix round (2026-09-29, blind judge 7/10): ONE even flight of six 0.15 m risers, going 0.35, from the foot Y 15.85
+# (nose 15.83) to the deck lip 17.60 (treads +0.15 / +0.30 / +0.45 / +0.60 / +0.75 from Y 16.18 / 16.53 / 16.88 / 17.23 /
+# 17.58 - 0.35); the stair-foot lanterns Y 15.88-16.22; the cheeks Y 15.85-16.43; centre cases 1 / 2 / 3 at Y 4.00 / 8.70
+# / 13.40 (case 3 Y 12.90-13.90); the side rows west 5 / 4 / G1 / G3 at Y 4.10 / 7.27 / 10.53 / 13.80, east 8 / 7 / 6 / G2
+# at 4.00 / 7.15 / 10.45 / 13.80 (the last backs at Y 14.55); the display bays 3.85 m (front X 0.294, unchanged); the
+# parked door leaves X 2.44-4.14 / 7.86-9.56
 ENTRY_STEP_MAX = 0.18   # genkan: the largest single step allowed on the entry routes (sill down, beam up)
 ROUTES = {
     # genkan (2026-09-28): over the low sill (Y -0.435 to -0.30, +0.04) down onto the sunken genkan floor (-0.12, X
@@ -53,37 +67,69 @@ ROUTES = {
     # rear dais (2026-09-28): the flight's foot is Y 12.30 (X 3.80-8.20, cheek blocks X 3.45-3.80 / 8.20-8.55 from
     # Y 12.30), the stair-foot lanterns on their stands X 2.95-3.41 / 8.59-9.05, Y 12.62-13.08: up the aisle to Y 11.92,
     # in front of the cheek block (its cap from Y 12.29) to the flight and up its five 0.15 m risers onto the landing (+0.75)
-    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 11.92), (4.3, 11.92), (4.3, 13.9)],
-    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 11.92), (7.7, 11.92), (7.7, 13.9)],
-    "west_wall_walk_along_niches": [(3.0, 1.5), (0.75, 1.5), (0.75, 12.9)],        # behind the west side cases
-    "east_wall_walk_along_niches": [(9.0, 1.5), (11.25, 1.5), (11.25, 12.9)],      # behind the east side cases
-    "centre_gap_case1_case2": [(3.0, 5.7), (9.0, 5.7)],                            # aisle to aisle, Y 4.4-7.0
-    "centre_gap_case2_case3": [(3.0, 9.5), (9.0, 9.5)],                            # aisle to aisle, Y 8.2-10.8
+    # r20: the aisles run on to Y 15.12 (0.38 m in front of the flight's foot and the cheek lanterns, Y 15.525)
+    # r20 b3: the side rows moved in to X 2.50 / 9.50 (plinths X 1.95-3.05 / 8.95-10.05, the front pair from Y 3.40 /
+    # 3.30), so the aisles run up the middle of the gap to the centre column (X 5.10 / 6.90): X 4.05 / 7.95, entered
+    # on a slant in front of case 5 / 8 after passing outboard of the entry lanterns
+    # r20 round 3: the front pair 5 / 8 is the smaller SF case further in (X 2.65-3.45 / 8.55-9.35, Y 3.50-4.70 /
+    # 3.40-4.60): the aisles at X 4.05 / 7.95 keep 0.60 m to them, the slant in front of them 0.53 m; the parked door
+    # leaves are X 2.40-4.10 / 7.90-9.60 (Y 0.14-0.19); the wall walks pass the wide display bays (front X 0.294)
+    # r20 fix round: to 0.38 m before the flight's nose (15.83), then up it onto the +0.75 tread (Y 17.42)
+    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 2.8), (4.05, 3.1), (4.05, 15.45),
+                                   (4.3, 15.45), (4.3, 17.42)],
+    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 2.7), (7.95, 3.0), (7.95, 15.45),
+                                   (7.7, 15.45), (7.7, 17.42)],
+    # r20 rear round: to 0.38 m before the wing plinth's face (Y 16.43; was the b7 cabinet front 16.76)
+    "west_wall_walk_along_niches": [(3.0, 1.5), (0.75, 1.5), (0.75, 16.05)],       # behind the west side cases
+    "east_wall_walk_along_niches": [(9.0, 1.5), (11.25, 1.5), (11.25, 16.05)],     # behind the east side cases
+    # r20 b3: case 1 Y 3.35-4.65, case 2 8.20-9.40, case 3 13.10-14.10; the side cases' inner faces X 3.05 / 8.95
+    # r20 fix round: case 1 Y 3.35-4.65, case 2 8.10-9.30, case 3 12.90-13.90, the flight's nose 15.83; the side cases'
+    # inner faces X 3.05 / 8.95 (0.40 m from the route ends)
+    "centre_gap_case1_case2": [(3.45, 6.35), (8.55, 6.35)],
+    "centre_gap_case2_case3": [(3.45, 11.10), (8.55, 11.10)],
+    "centre_gap_case3_to_flight": [(3.45, 14.85), (8.55, 14.85)],
+    # r20 round 3 (NEW): between case 5 / 8 and case 1 (X 3.45-5.10 / 6.90-8.55), from the wall walk to the centre gap
+    "west_wall_between_case5_and_case1": [(0.75, 5.35), (4.30, 5.35), (4.30, 3.10)],
+    "east_wall_between_case8_and_case1": [(11.25, 5.35), (7.70, 5.35), (7.70, 3.10)],
     # rear dais: case 3's back is Y 11.8 (X 5.2-6.8); up the flight on a slant onto the landing, the hero table front
     # at Y 14.55 on the +0.90 deck
-    "aisle_up_the_steps_to_hero_table": [(9.0, 11.92), (7.7, 11.92), (6.0, 13.95)],
+    "aisle_up_the_steps_to_hero_table": [(9.0, 15.45), (7.7, 15.45), (6.0, 17.42), (6.0, 18.45)],   # r20 fix round
     # building r5: from the top of the steps across the platform to the rear alcoves (between the heavy platform-front
     # posts, the hero table and the platform lanterns)
     # f1: the rear alcoves moved outboard (X 1.2-3.0 / 9.0-10.8), the platform lanterns to (3.55 / 8.45, 15.10)
     # rear dais: up the flight to the landing (+0.75), across onto the side plinth (b4: +0.90 from Y 13.50, one 0.15 m
     # step at X 3.80 / 8.20) to the alcove front (Y 15.40); the deck lanterns stand at X 3.27-3.73 / 8.27-8.73,
     # Y 14.87-15.33
-    "platform_to_west_rear_alcove": [(6.0, 12.25), (6.0, 13.95), (4.3, 14.2), (2.1, 14.25), (2.1, 14.95)],
-    "platform_to_east_rear_alcove": [(6.0, 12.25), (6.0, 13.95), (7.7, 14.2), (9.9, 14.25), (9.9, 14.95)],
+    # r20: along the +0.75 row (Y 17.40-17.45) and back to 0.45 m before the alcove fronts (Y 19.40)
+    "platform_to_west_rear_alcove": [(6.0, 15.45), (6.0, 17.15), (4.3, 17.40), (2.4, 17.45), (2.4, 18.95)],
+    "platform_to_east_rear_alcove": [(6.0, 15.45), (6.0, 17.15), (7.7, 17.40), (9.6, 17.45), (9.6, 18.95)],
     # rear dais: on to the corner showcases (b4: X 0.39-1.19 / 10.81-11.61, front Y 15.395), clear of the sill ledge
     # (X 0-0.335 / 11.665-12, underside +2.55: head height on the +0.90 deck)
-    "platform_to_west_corner_showcase": [(6.0, 12.25), (6.0, 13.95), (4.3, 14.2), (2.1, 14.25), (0.73, 14.95)],
-    "platform_to_east_corner_showcase": [(6.0, 12.25), (6.0, 13.95), (7.7, 14.2), (9.9, 14.25), (11.27, 14.95)],
+    # r20 rear round: the rear alcoves 0.30 m inboard (X 1.50-3.30 / 8.70-10.50, centres 2.40 / 9.60); the corner
+    # NICHES (blocks X 0.34-1.50 / 10.50-11.66, face Y 19.40, niche openings X 0.95-1.40 / 10.60-11.05)
+    "platform_to_west_corner_niche": [(6.0, 15.45), (6.0, 17.15), (4.3, 17.40), (2.4, 17.45), (1.175, 18.95)],
+    "platform_to_east_corner_niche": [(6.0, 15.45), (6.0, 17.15), (7.7, 17.40), (9.6, 17.45), (10.825, 18.95)],
     # rear dais: up the flight on the axis and the deck riser to the hero table's front (Y 14.55)
     # b4: the table is Y 14.90-15.80 now: on up the plain deck riser onto the deck in front of it
-    "axis_up_the_flight_to_hero_table_front": [(6.0, 12.25), (6.0, 14.50)],
+    "axis_up_the_flight_to_hero_table_front": [(6.0, 15.45), (6.0, 18.50)],       # r20: table front 18.887
     # b4: the side plinths are +0.90 from the landing front (Y 13.50): from the landing across onto the west / east
     # plinth (one 0.15 m step at X 3.80 / 8.20), past the newel side walls (to Y 13.50) and the heavy posts (Y 13.18-13.48)
     # b7: the side zones are terraced in the flight's rows (cabinet +0.60 from Y 13.56, tread +0.75 from 13.98, deck
     # +0.90 from 14.40): along the +0.60 row (Y 13.85: 0.37 m behind the heavy posts' back faces, Y 13.48) across the
     # full width of the room
-    "flight_onto_west_side_terrace": [(5.0, 13.85), (0.8, 13.85)],
-    "flight_onto_east_side_terrace": [(7.0, 13.85), (11.2, 13.85)],
+    # r20: the +0.60 row at Y 17.05 (0.37 m behind the heavy posts' back faces, Y 16.68)
+    # r20 rear round: the wings are one +0.90 plinth (no terraces): from the +0.75 landing up one 0.15 m step onto
+    # the west / east wing deck at X 3.80 / 8.20, 0.37 m behind the heavy posts' back faces (Y 16.68)
+    # r20 fix round: from the +0.75 tread (Y 17.25-17.60) up one 0.15 m step onto the wing deck
+    "landing_onto_west_wing_deck": [(5.0, 17.42), (0.8, 17.42)],
+    "landing_onto_east_wing_deck": [(7.0, 17.42), (11.2, 17.42)],
+    # r20 rear round (NEW): past the stair-foot lanterns on their stands (X 3.12-3.42 / 8.58-8.88, Y 15.55-15.85) along
+    # the wing plinth's face to the wall walk (0.38 m clear of the face, Y 16.05)
+    "aisle_past_west_foot_lantern_to_wall": [(4.05, 15.45), (2.5, 15.45), (2.5, 16.05), (0.75, 16.05)],
+    "aisle_past_east_foot_lantern_to_wall": [(7.95, 15.45), (9.5, 15.45), (9.5, 16.05), (11.25, 16.05)],
+    # r20 (NEW): the 1.30 m deck strip in front of the hero table (front 18.887), the deck lanterns (18.893) and the
+    # plum vases, across the deck from the west to the east rear alcove
+    "deck_strip_in_front_of_hero_table": [(6.0, 15.45), (6.0, 18.45), (2.4, 18.45), (9.6, 18.45)],
     # layout 2 (entrance.png's composition): from the mat along the inside of the south wall across the genkan floor,
     # past the parked leaves (X 2.25-3.95 / 8.05-9.75, genkan: standing on its floor, room face Y 0.19 + hardware) and the inner jamb bands (X 2.11-2.25 / 9.75-9.89, to Y 0.215) up to the deep jamb
     # posts at the frame's outer ends (plinths X 1.57-2.15 / 9.85-10.43, Y 0-0.84; the sconces on their room faces hang
@@ -97,7 +143,7 @@ ROUTES = {
     # entryfix r2: in front of the lanterns (fronts Y 1.57) and past the post plinth (to Y 0.84) on a slant
     "genkan_west_end_up_the_return_to_wall_walk": [(4.2, 1.1), (3.0, 1.15), (1.1, 1.4), (0.75, 2.0)],
     "genkan_east_end_up_the_return_to_wall_walk": [(7.8, 1.1), (9.0, 1.15), (10.9, 1.4), (11.25, 2.0)],
-    "CONTROL_must_hit_case1": [(6.0, 1.2), (6.0, 3.6)],
+    "CONTROL_must_hit_case1": [(6.0, 1.2), (6.0, 3.6)],   # r20 b3: case 1's plinth front is Y 3.35 (the capsule reaches 3.95)
     # exterior stage (2026-09-27): the player starts in the courtyard (layout.json "player_start", on the path inside the
     # gate) and walks the stepping stones and the ishidatami over the landing and the threshold into the hall
     "courtyard_start_along_path_through_entrance": [(6.0, -10.4), (6.1, -7.5), (6.0, -4.9), (6.0, -1.9), (6.0, -0.4),

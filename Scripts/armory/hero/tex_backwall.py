@@ -196,8 +196,13 @@ def halo():
 
 
 def save(name, bc, orm, nrm, flip=True):
+    import sys
+    # r20 (2026-09-28): --out DIR writes a trial set into a test copy's Textures (build_armory_kit --preview-dir reads
+    # <dir>/Textures first), so trial sets never land in Exports/ArmoryKit/Textures
+    out = Path(sys.argv[sys.argv.index("--out") + 1]) if "--out" in sys.argv else TEX
+    out.mkdir(parents=True, exist_ok=True)
     for suf, a in (("BC", bc), ("ORM", orm), ("N", nrm)):
-        path = TEX / f"T_AK_H{name}_{suf}.png"
+        path = out / f"T_AK_H{name}_{suf}.png"
         write_png(path, a[::-1] if flip else a)       # rows were built bottom-up (v up)
         print("wrote", path, a.shape)
 
@@ -212,7 +217,8 @@ def painting_tall():
     sw, sh = im.size
     src = np.array(im.pixels[:], dtype=np.float32).reshape(sh, sw, 4)[..., :3]      # bottom-up, 0-1 sRGB values
     bpy.data.images.remove(im)
-    img_h = HB.PAPER_W / HB.PAINT_ASPECT                   # the painting's height on the wall (m)
+    img_h = HB.PAPER_IMG_W / HB.PAINT_ASPECT               # the painting's height on the wall (m; r20 fix round: the
+    # picture keeps the 2.08 m paper's height scale; the wider 2.48 m paper spreads it 1.19x across by its U)
     OW, OH = 2048, 4096
     z = HB.PAPER_Z0 + (np.arange(OH) + 0.5) / OH * (HB.PAPER_Z1 - HB.PAPER_Z0)
     s = (z - HB.IMG_Z0) / img_h * sh - 0.5                  # fractional source row

@@ -126,7 +126,11 @@ MATERIALS = {
     # set darkened (was a flat #0B0A09, rough 0.92)
     # matfix b3 (blind judge: "the border ... reads as dark grey, not black ... a wide, jet-black woven or knotted
     # border ... with its own rope texture"): the field's knot lattice in jet black (T_AK_HEntKnotB, its own set)
-    "M_AK_HBinding": ("HEntKnotB", 1.0, {}),   # b2: HEntWeave at tint 0.06 (0.11 read dark grey)       # black knotted mat binding
+    # r20 mat (judge: "solid near-BLACK with a fine rope texture ... reads speckled grey in golden light"): T_AK_HEntRopeB
+    # r20 fix round (blind judge delta 4: "in golden light it reads metallic grey or bronze; make it matte black fabric"):
+    # the rope's albedo is already near-black (#050404-#110F0E); the grey was the sun's dielectric sheen on the roll, so
+    # the sheen goes (spec 0: a matte cloth)
+    "M_AK_HBinding": ("HEntRopeB", 1.0, {"spec": 0.0}),   # b7: HEntKnotB;   # b2: HEntWeave at tint 0.06 (0.11 read dark grey)       # black knotted mat binding
     # r5 (blind judge: the thin gold cord outside the binding is barely readable): a lighter gold twisted cord
     "M_AK_HEntCord": (None, 1.0, {"color": "#B98C4C", "rough": 0.62}),
     # fix round 3: the entrance's own names (hero_cases defines a different M_AK_HBrass; the modules' MATERIALS merge)
@@ -183,7 +187,14 @@ MATERIALS = {
     # matfix b3 (blind judge 6/10: "vertical corduroy ropes ... the reference is round, nubbly, roughly isotropic knots
     # ... with strong 3D relief"; golden "washed to pale pinkish cream"): T_AK_HEntKnot, chunky knots 3.1 x 5.6 cm in
     # columns, a strong normal, a greyer tan
-    "M_AK_HEntMat": ("HEntKnot", 1.0, {"tint": 0.68}),   # b2: HEntWeave, tint 0.85; b3 0.80 (golden L 0.66 vs 0.34)
+    # r20 mat (judge 7/10: knots ~1.5x too coarse, tall ovals in columns read as cable-knit, vertical seams at night, the
+    # golden field washed out): T_AK_HEntNub, small round even nubs (2.78 cm) in staggered rows, a darker, warmer grey-tan
+    # r20 fix round (blind judge delta 4: the nub field read pebbled / fish-scale; reference 2's is a fine, even, ribbed
+    # coir / tatami weave): T_AK_HEntRib (tex_entrance.rib_weave: the nub lattice with its rows aligned, the nubs merged
+    # into continuous ribs across the mat with fine stitch pinches; the same pitch, tone and relief)
+    "M_AK_HEntMat": ("HEntRib", 1.0, {"tint": 0.60}),   # r20 mat: HEntNub   # b2 0.56 (night 0.73x b7's); b1 0.60;   # b7: HEntKnot, tint 0.68 (b2: HEntWeave, tint 0.85; b3 0.80)
+    # r20 mat: the lighter worn brown on the chamfers of the surround boards' inner lip (judge: "a visible inner lip")
+    "M_AK_HMatLip": (None, 1.0, {"color": "#3C2F26", "rough": 0.55}),   # b2 #45372C / 0.50 read white in the sun
 }
 PAPER = ("M_AK_HEntPaperHi", "M_AK_HEntPaperMid", "M_AK_HEntPaperLo")
 # the sconce panes (layout 2, judge delta: a SMOOTH hot core fading to amber; flat emissive steps banded visibly even on
@@ -198,6 +209,15 @@ EM, MAT, ST, BP = "M_AK_Emblem", "M_AK_HEntMat", "M_AK_HStone", "M_AK_HEntBrassP
 BD, BA, WE, RP = "M_AK_HBinding", "M_AK_HEntBrassAged", "M_AK_HEntWear", "M_AK_HEntRanma"
 EG, IR = "M_AK_HEntEndGrain", "M_AK_HEntIron"
 SE, CORDM = "M_AK_HEntStoneEdge", "M_AK_HEntCord"
+# r20 mat (2026-09-28, judge 7/10): the entry mat as a low raised frame (entry_mat), heights above GENKAN_Z: the field
+# top (was build_armory_kit MAT_TOP 0.022: ~10 cm of the bar's black face showed above the mat and swallowed the far
+# binding), the surround boards' top (was MAT_BOARD_TOP 0.030), the boards' inner lip, the side boards' width (was
+# MAT_BOARD 0.11; grown outward, the near board stays MAT_BOARD) and the binding width (was 8.5 cm)
+MAT_FIELD_Z, MAT_BOARD_Z = 0.075, 0.082
+LIP_W, LIP_H = 0.014, 0.006
+SIDE_W = 0.145
+BIND_W = 0.062
+LIPM = "M_AK_HMatLip"
 
 TIMBER_TILE = 1.0          # m per timber texture repeat on the hero members (2.0 kit default): the grain reads
 SCONCE_Z = 2.40            # sconce base (finial tip) above the floor: r6 lit body +2.57 to +3.61 (centre as r5's)
@@ -210,8 +230,8 @@ JAMB_PL = 0.04                                # the plinth stands 4 cm proud of 
 JAMB_BACK_Y, JAMB_FACE_Y = -JAMB_HD, JAMB_HD  # post timber back (on the wall's room face, world Y 0) / room face
 POST_IN = (JAMB_POSTS[0][0] + JAMB_HW - ENT_X0, JAMB_POSTS[1][0] - JAMB_HW - ENT_X0)   # entrance-local 2.11 / 9.89
 POST_OUT = JAMB_POSTS[0][0] - JAMB_HW - ENT_X0                                           # entrance-local 1.61
-JAMB_W = 0.14                                 # the inner jamb band between each post and its parked leaf
-LEAF_X = (2.25, 8.05)                         # world X of the parked leaves (SM_AK_DoorLeaf / SM_AK_DoorLeaf_R)
+JAMB_W = 0.33                                 # the inner jamb band between each post and its parked leaf (r20 round 3: 0.14; r20 fix round: 0.29)
+LEAF_X = (2.44, 7.86)                         # world X of the parked leaves (r20 round 3: (2.25, 8.05); fix round: (2.40, 7.90), build_armory_kit)
 # r5 (blind judge: the sheet's plinth is a chunky dark block ~0.3 m tall, clearly wider than the post, bevelled top):
 # the plinth 6 cm proud (collision stays at JAMB_PL, as scripted), 0.30 tall with its bevel, the shoe on it
 PLINTH_PL, PLINTH_H, PLINTH_BEV = 0.06, 0.30, 0.055
@@ -258,7 +278,8 @@ MATERIALS["M_AK_HStepLacquer"] = ("HEntTimberN", 1.0, {})
 # they show a light orange rim ... the reference frame is uniformly dark, near-black, low-sheen board on all sides,
 # matching the dark step bar"): the bar's near-black timber at a low sheen, no knots (T_AK_HEntTimberM), and no warm
 # worn arrises on the surround (the jet-black knotted binding now separates by its relief and raised roll)
-MATERIALS["M_AK_HMatBoard"] = ("HEntTimberM", 1.0, {})   # b2: HEntTimberE, tint 2.4
+# r20 mat b2: the same timber matte (T_AK_HEntTimberMR): the golden sun's sheen read the boards pale cream
+MATERIALS["M_AK_HMatBoard"] = ("HEntTimberMR", 1.0, {"spec": 0.15})   # r20 fix round: less sun sheen (read as a pale frame in golden)   # b7: HEntTimberM; matfix b2: HEntTimberE, tint 2.4
 
 _N = [0]
 
@@ -776,7 +797,7 @@ def entrance(G):
     # front edge and a shallow groove down its face
     # r6 (blind judge: the sheet's reveal gap between the post and the leaf is wider): the casing 8.5 cm, then a dark
     # 5.5 cm reveal set back to y 0.10 (behind the leaf's face) before the leaf's outer stile
-    JC = 0.085
+    JC = JAMB_W - 0.055   # r20 round 3: the casing takes the wider band (0.085 at JAMB_W 0.14); the reveal stays 5.5 cm
     for sgn, (j0, j1), (r0, r1) in (
             (+1, (POST_IN[0] - 0.005, POST_IN[0] + JC), (POST_IN[0] + JC - 0.004, POST_IN[0] + JAMB_W)),
             (-1, (POST_IN[1] - JC, POST_IN[1] + 0.005), (POST_IN[1] - JAMB_W, POST_IN[1] - JC + 0.004))):
@@ -886,7 +907,11 @@ def step_beam(G):
     gx0, gy0, gx1, gy1 = G["GENKAN"]
     gw, gd, rw, bd, base = gx1 - gx0, gy1 - gy0, G["STEP_RETURN_W"], G["STEP_BEAM_D"], G["GENKAN_BASE"]
     ry = G["STEP_RETURN_Y0"]
-    BAR, RET = "M_AK_HStepLacquer", "M_AK_HMatBoard"
+    # r20 fix round (blind judge delta 6: at each entry lantern the black bar seemed to turn 90 deg and run back to the
+    # door, an L-shaped notch reference 2 lacks, where its bar simply ends at the lanterns): the side returns (the pit's
+    # edges outboard of the lanterns) are the hall floor's own planks now, not the near-black board, so the black bar
+    # reads as ending at the lanterns
+    BAR, RET = "M_AK_HStepLacquer", "M_AK_Plank"
     cbox(G, p, -rw, gw + rw, gd, gd + bd, base, 0.0, BAR, 0.006, grain=0)            # the bar, one crisp lacquer block
     for xa, xb in ((-rw, 0.0), (gw, gw + rw)):                                          # the side returns, butted to it
         cbox(G, p, xa, xb, ry, gd - 0.001, base, 0.0, RET, 0.004, grain=1)
@@ -910,43 +935,44 @@ def entry_mat(G):
     B = G["MAT_BOARD"]
     mx0, my0, mx1, my1 = G["ENTRY_MAT"]
     mw, md = round(mx1 - mx0, 4), round(my1 - my0, 4)
-    t, bt = G["MAT_TOP"], G["MAT_BOARD_TOP"]
-    # the surround boards (grain along each board), chamfered with warm worn arrises; the side boards run to the beam
-    # r4 (judge delta 4): near-black boards (M_AK_HMatBoard) with a wide worn lighter arris (12 mm, WE)
+    # r20 mat (judge 7/10: "the top border is swallowed by a black shadow gap under the front sill ... close the gap /
+    # raise the mat so the black border reads on all four sides from C1"): the mat and its surround stand as a low
+    # raised frame on the genkan floor, the field at MAT_FIELD_Z (was G["MAT_TOP"] 0.022), so only a few cm of the
+    # bar's black face show above the far binding (reference 2 through C1: ~10 px of dark gap between the bar and the
+    # border, b7 ~22 px). The side boards SIDE_W wide (judge: "a bit wider", 0.11 -> SIDE_W, grown outward) with a
+    # raised inner lip (LIP_W x LIP_H over the board, its chamfers in a lighter worn brown, M_AK_HMatLip).
+    t = MAT_FIELD_Z
+    bt = MAT_BOARD_Z
     MB = "M_AK_HMatBoard"
-    # matfix b3 (judge: a light orange rim on the boards): no warm worn arris, a smaller chamfer in the board's own timber
-    cbox(G, p, 0.0, B, 0.0, B + md, 0.0, bt, MB, 0.010, grain=1, seg=2)
-    cbox(G, p, B + mw, 2 * B + mw, 0.0, B + md, 0.0, bt, MB, 0.010, grain=1, seg=2)
-    cbox(G, p, B - 0.002, B + mw + 0.002, 0.0, B, 0.0, bt, MB, 0.010, grain=0, seg=2)
+    sx = SIDE_W - B                                                     # the side boards grow outward by sx
+    cbox(G, p, -sx, B, 0.0, B + md, 0.0, bt, MB, 0.006, grain=1, seg=2)
+    cbox(G, p, B + mw, 2 * B + mw + sx, 0.0, B + md, 0.0, bt, MB, 0.006, grain=1, seg=2)
+    cbox(G, p, -sx + 0.002, 2 * B + mw + sx - 0.002, 0.0, B, 0.0, bt, MB, 0.006, grain=0, seg=2)
+    # the inner lip: a raised bead on each board's mat edge (the sides full length to the bar, the near one between them)
+    cbox(G, p, B - LIP_W, B + 0.001, B - LIP_W, B + md, bt - 0.004, bt + LIP_H, MB, 0.0035, grain=1, seg=2, edge=LIPM)
+    cbox(G, p, B + mw - 0.001, B + mw + LIP_W, B - LIP_W, B + md, bt - 0.004, bt + LIP_H, MB, 0.0035, grain=1, seg=2,
+         edge=LIPM)
+    cbox(G, p, B - LIP_W + 0.003, B + mw + LIP_W - 0.003, B - LIP_W, B + 0.001, bt - 0.004, bt + LIP_H, MB, 0.0035,
+         grain=0, seg=2, edge=LIPM)
     X0, X1, Y0, Y1 = B, B + mw, B, B + md
-    # r4 (judge delta 1: the reference's binding is a wide dark band, 2-3x r3's): the black cloth binding 9.5 cm (was
-    # 5 cm), a rolled outer edge, flat across, a small step down to the field
-    # entryfix r2 (reference 2 through the refit C1: the side binding ~12 px = ~5-6 cm): the binding 6 cm (was 9.5)
-    # matfix b2: 7 cm (the crop's border reads wider than b1's 6 cm on every side)
-    # matfix b3 (blind judge: "the border is too thin and too flat ... In the reference the border sits proud of the
-    # field"): 8.5 cm (about 2.7 knots), a raised rounded roll (crown +3 mm over MAT_TOP) with a rolled outer edge, and
-    # a 1.1 cm step down its inner edge onto the field
-    d = [0.0, 0.005, 0.014, 0.030, 0.055, 0.071, 0.080, 0.085]
-    hz = [t - 0.009, t - 0.002, t + 0.002, t + 0.003, t + 0.003, t + 0.002, t - 0.003, t - 0.008]
+    # r20 mat: the binding BIND_W on all four sides (reference 2 through C1: ~15 px at the sides, ~8-9 px at the ends,
+    # 5.5-6 cm; b7's 8.5 cm roll), a flat crown with a small roll at the lip and a CRISP 4 mm drop onto the field, in the
+    # fine black rope (T_AK_HEntRopeB) laid along each strip. The field is flat (b7's +-2 mm undulation on a 10 cm grid,
+    # shaded smooth, is gone); its relief is the nub set's normal.
+    d = [0.0, 0.004, 0.010, BIND_W - 0.004, BIND_W - 0.0012, BIND_W]
+    hz = [t - 0.003, t + 0.0015, t + 0.0035, t + 0.0035, t + 0.0022, t - 0.0010]
     FIELD = len(d) - 1
-    # matfix b3 (judge: "the field shows soft undulating relief"): the field a ~10 cm grid, gently undulating (+-2 mm)
     fx = max(2, round((X1 - X0 - 2 * d[-1]) / 0.10))
     fy = max(2, round((Y1 - Y0 - 2 * d[-1]) / 0.10))
     inx = [X0 + d[-1] + (X1 - X0 - 2 * d[-1]) * k / fx for k in range(1, fx)]
     iny = [Y0 + d[-1] + (Y1 - Y0 - 2 * d[-1]) * k / fy for k in range(1, fy)]
     xs = [X0 + v for v in d] + inx + [X1 - v for v in reversed(d)]
     ys = [Y0 + v for v in d] + iny + [Y1 - v for v in reversed(d)]
-    # matfix: the r2 binding-black band across the field (MAT_STRIPE) is gone: one continuous field, one binding all round
     nx, ny = len(xs), len(ys)
     rk = lambda i, m: min(i, m - 1 - i, FIELD)
 
     def z_at(i, j):
-        z = hz[min(rk(i, nx), rk(j, ny))]
-        if FIELD < i < nx - 1 - FIELD and FIELD < j < ny - 1 - FIELD:      # interior field vertices only
-            x, y = xs[i], ys[j]
-            z += 0.0011 * math.sin(2 * math.pi * (x / 0.83 + 0.21)) * math.sin(2 * math.pi * (y / 0.61 + 0.37))
-            z += 0.0008 * math.sin(2 * math.pi * (x / 0.37 + y / 0.53 + 0.11))
-        return z
+        return hz[min(rk(i, nx), rk(j, ny))]
     bm = bmesh.new()
     uvl = bm.loops.layers.uv.new("UV0")
     top = [[bm.verts.new((xs[i], ys[j], z_at(i, j))) for j in range(ny)] for i in range(nx)]
@@ -954,12 +980,17 @@ def entry_mat(G):
     for i in range(nx - 1):
         for j in range(ny - 1):
             f = bm.faces.new((top[i][j], top[i + 1][j], top[i + 1][j + 1], top[i][j + 1]))
-            ring = min(i, j, nx - 2 - i, ny - 2 - j)
-            # matfix: field and binding share one planar mapping (U = y: the cords run toward the bar), so the weave runs
-            # on unbroken from the field into the dark binding; b4: 1 m per tile (b3's 0.5 m tile read as bands)
-            f.material_index = 0 if ring >= FIELD else 1          # the woven field / the black woven binding
-            for l in f.loops:
-                l[uvl].uv = (l.vert.co.y / 1.0, l.vert.co.x / 1.0)
+            ri, rj = min(i, nx - 2 - i), min(j, ny - 2 - j)
+            if min(ri, rj) >= FIELD:
+                f.material_index = 0                    # the nub field: one planar mapping, U = world Y, 1 m per tile
+                for l in f.loops:
+                    l[uvl].uv = (l.vert.co.y, l.vert.co.x)
+            else:
+                # the rope binding: U along the strip, V across it (mitred at the corners)
+                f.material_index = 1
+                side = ri < rj or (ri == rj and (i + j) % 2 == 0)
+                for l in f.loops:
+                    l[uvl].uv = (l.vert.co.y, l.vert.co.x) if side else (l.vert.co.x, l.vert.co.y)
     bot = [bm.verts.new((x, y, 0.0)) for (x, y) in ((X0, Y0), (X1, Y0), (X1, Y1), (X0, Y1))]
     sides = ([top[i][0] for i in range(nx)], [top[nx - 1][j] for j in range(ny)],
              [top[i][ny - 1] for i in range(nx - 1, -1, -1)], [top[0][j] for j in range(ny - 1, -1, -1)])
@@ -978,9 +1009,11 @@ def entry_mat(G):
     for l in f.loops:
         l[uvl].uv = (0.002, 0.002)
     bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
-    # matfix b3: the top (the rolled binding and the undulating field) shades smooth, the sides and bottom flat
-    _emit(G, p, bm, mats, uv_mode="keep", smooth=set(range((nx - 1) * (ny - 1))))
-    p.col(0, 2 * B + mw, 0, B + md, 0, bt)   # scripted collision
+    # the binding's roll shades smooth; its crisp inner drop and the flat field flat
+    rollf = {i * (ny - 1) + j for i in range(nx - 1) for j in range(ny - 1)
+             if min(i, nx - 2 - i, j, ny - 2 - j) < FIELD - 1}
+    _emit(G, p, bm, mats, uv_mode="keep", smooth=rollf)
+    p.col(-sx, 2 * B + mw + sx, 0, B + md, 0, bt + LIP_H)   # scripted collision
     return p
 
 

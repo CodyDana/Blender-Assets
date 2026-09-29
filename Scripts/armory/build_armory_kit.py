@@ -7,10 +7,11 @@ layout table (collection "Assembly", linked copies of the kit meshes), writes Wo
 and saves Assets/Armory/ArmoryKit.blend.
 
 Frame: Blender metres, origin = interior south-west corner at floor level, +X across (0-12), +Y along the axis toward
-the rear platform (0-16), +Z up. Wall pieces: length along local +X, inner face at local y = 0, thickness toward -Y,
+the rear platform (0-20), +Z up. Wall pieces: length along local +X, inner face at local y = 0, thickness toward -Y,
 pivot on the inner face at the base.
 
-Building stage (2026-09-27, BUILD_NOTES.md): the room is 12.0 x 16.0 m (user decision), with a 4.0 x 3.0 m entrance, the
+Building stage (2026-09-27, BUILD_NOTES.md): the room is 12.0 x 20.0 m (user decision; was 12 x 16 until the r20
+stage, 2026-09-28: "lengthen the room to 20m"), with a 4.0 x 3.0 m entrance, the
 user's own emblem on every plinth front, tansu and banner, and the reference-2 dressing (banners, sill ledges with black
 vases and red plum branches, rear alcoves with empty upright racks, LED-edged beams, lattice ceiling panels). The display
 cases stay empty: no items, stands, mannequins or placeholders.
@@ -175,8 +176,26 @@ def build_material(name):
         bsdf.inputs["Emission Strength"].default_value = p["emit"]
         bsdf.inputs["Roughness"].default_value = 1.0
         if p.get("alpha"):   # exterior stage: the alpha-masked tree-line cards
-            nt.links.new(node.outputs["Alpha"], bsdf.inputs["Alpha"])
+            a_out = node.outputs["Alpha"]
+            if p.get("edge_fade"):   # r20 round 3 (judge delta 9): the tree-line cards fade out seen edge-on (no smear)
+                lw = nt.nodes.new("ShaderNodeLayerWeight")
+                fade = nt.nodes.new("ShaderNodeMapRange")
+                fade.inputs["From Min"].default_value = 0.55
+                fade.inputs["From Max"].default_value = 0.85
+                fade.inputs["To Min"].default_value = 1.0
+                fade.inputs["To Max"].default_value = 0.0
+                nt.links.new(lw.outputs["Facing"], fade.inputs["Value"])
+                am = nt.nodes.new("ShaderNodeMath")
+                am.operation = "MULTIPLY"
+                nt.links.new(a_out, am.inputs[0])
+                nt.links.new(fade.outputs["Result"], am.inputs[1])
+                a_out = am.outputs[0]
+            nt.links.new(a_out, bsdf.inputs["Alpha"])
         return mat
+    if "spec" in p and "Specular IOR Level" in bsdf.inputs:
+        # r20 fix round (blind judge delta 4: the mat's black binding read metallic grey / bronze in the golden sun): a
+        # matte fabric's dielectric sheen scaled down (0.5 = the default); Unreal: the master's Specular input
+        bsdf.inputs["Specular IOR Level"].default_value = p["spec"]
     if tex:
         def img(suffix, noncolor):
             node = nt.nodes.new("ShaderNodeTexImage")
@@ -468,9 +487,19 @@ LIN = 0.031
 WIN_SILL, WIN_HEAD = 0.15, 1.60
 RO0, RO1 = 0.25 - LIN, 1.75 + LIN   # rough opening 0.219-1.781 (156.2 cm)
 NICHE_LENS_Y = 0.20                  # f1: the niche downlight lens, 20 cm in front of the back board
+
+
+def display_lens_x(bw):
+    """Bay-local x of the downlight lenses in a lit wall bay of width bw: one centred in the 0.85 m niche, two at the
+    quarter points of the r20 round 3 wide display (hero_walls and lights() use the same points)."""
+    if bw >= 2.5:   # r20 fix round: the 3.85 m bay carries four lenses, evenly spaced (the same irradiance per metre)
+        return tuple(round((i + 0.5) * bw / 4, 4) for i in range(4))
+    return (bw / 2,) if bw < 1.2 else (round(bw / 4 + 0.05, 4), round(3 * bw / 4 - 0.05, 4))
 # f2: niche bays over a dark dado (hall: floor to +2.40, counter +0.85; platform: +0.60 to +2.50, counter +1.00)
 NICHE_H_FLOOR, NICHE_DADO_FLOOR, NICHE_H_PLAT, NICHE_DADO_PLAT = 2.40, 0.85, 1.90, 0.40
-ROOM_W, ROOM_L, CEIL = 12.0, 16.0, 4.80   # building stage (user decision 2026-09-27): 12.0 x 16.0 m interior
+# r20 (user 2026-09-28: "lengthen the room to 20m"): 16.0 -> 20.0. Plan A: everything tied to the back wall moves back
+# 4.0 m, everything tied to the flight 3.2 m (STAIR_Y0 12.30 -> 15.50), the deck grows 1.6 -> 2.4 m (one more 0.80 m row)
+ROOM_W, ROOM_L, CEIL = 12.0, 20.0, 4.80   # building stage (user decision 2026-09-27): 12.0 x 16.0 m interior; r20: 20 m
 ENTRY_X = (4.0, 8.0)                      # building stage: 4.0 m wide x 3.0 m tall clear entrance, centred
 # f1: 3.0 -> 3.65 m. Reference 2's establishing view is a level (shift-lens) camera at about +3.4 m, 1.5 m in front of the
 # entrance (landmark fit, BUILD_NOTES f1); the lintel must clear the top of that frame (computed: needs >= 3.61)
@@ -482,7 +511,16 @@ GENKAN_Z = -0.12
 # a lower flight of 5 risers x 0.15 m with 0.30 m going (STAIR_Y0 12.30 to the landing front LAND_Y 13.50, X
 # STAIR_X 3.80-8.20, two 2.2 m modules), the LANDING at +0.75 across the full width (Y 13.50-14.40), one riser to the
 # DECK at +0.90 (Y 14.40-16.00). Was: 3 treads (Y 12.70-13.45, X 4-8) up to a single +0.60 platform at Y 13.45
-STAIR_Y0, LAND_Y, DECK_Y = 12.30, 13.50, 14.40
+# r20: the flight's foot 12.30 -> 15.50 and the deck lip 14.40 -> 17.60 (+3.2 m: the deck depth 2.4 m = 0.8 + 2 x 0.8,
+# the module sizes; the flight centred on both references); LAND_Y / TREAD5_Y / GOING derive below
+# r20 fix round (blind judge 7/10, delta 1: the unlit crest riser over the 0.98 m landing read as one tall step, ~1.5-2x
+# the lit risers, above a flight of four; back_wall.png shows one even, lit flight): SIX equal 0.15 m risers, every one
+# with its LED nosing, and ONE going (GOING 0.35) from the stair foot to the deck lip (DECK_Y stays 17.60, the deck rows'
+# module): STAIR_Y0 = DECK_Y - 5 x GOING = 15.85 (was 15.50); the 5th tread (+0.75) is an ordinary 0.35 m tread
+GOING = 0.35
+EMBLEM_R = 0.040
+DECK_Y = 17.60
+STAIR_Y0 = round(DECK_Y - 5 * GOING, 4)     # 15.85
 LAND_Z, DECK_Z = 0.75, 0.90
 STAIR_X = (3.80, 8.20)
 # rear dais b4 (blind judge 6.5/10, 2026-09-28): (1) the side zones are no longer stepped: reference 2 / back_wall.png
@@ -497,30 +535,54 @@ STAIR_X = (3.80, 8.20)
 # (4) the side zones are terraced in the same rows: a panelled door cabinet (+0.60, its front LAND_Y 13.56 = the 4th
 # riser's line) with a lit ledge, a recessed riser to a tread at +0.75 (TREAD5_Y 13.98 = the 5th riser's line) and the
 # lit deck riser at DECK_Y, so from +0.45 up the steps run the full width of the room (SM_AK_Platform_Side_19)
-GOING = round((DECK_Y - STAIR_Y0) / 5, 4)  # 0.42
-LAND_Y = round(STAIR_Y0 + 3 * GOING, 4)   # 13.56: the side cabinets' front = the 4th riser (+0.45 to +0.60)
-TREAD5_Y = round(STAIR_Y0 + 4 * GOING, 4)  # 13.98: the 5th riser (+0.60 to +0.75, unlit: the emblem)
-CAB_Z = 0.60                              # the side cabinets' top (the lit ledge)
-# b7 (judge deltas 1 / 8): no separate newel block; each end of the flight is a low lacquer cheek (X 3.45-3.80 /
-# 8.20-8.55, Y 12.30 to the cabinet front, top +0.45 with thin brass trim), its front end the newel that the
-# stair-foot lantern stands on (SM_AK_StairCheek)
-CHEEK_W, CHEEK_H = 0.35, 0.45
-PLAT_Y = LAND_Y                           # the dais front edge (layout.json "platform_front_y")
-HEAVY_Y = 13.33                           # b4: the heavy posts' centre line on the hall floor (Y 13.18-13.48)
+# r20 rear round (2026-09-28, user "fix the rest"; armory3_reference2.png C1 zoom, x 420-1030 / y 220-400: floor ->
+# 4 lit risers (lines at y ~318 / 332 / 347 / 362) -> an unlit riser (dark band y ~302-317) -> a PALE LANDING band (y
+# ~282-300) wider than the lower flight -> one lit riser (y ~270-282) -> the deck): the lower flight's going 0.42 ->
+# 0.28 (5 risers, Y 15.50-16.62), so the +0.75 landing is 0.98 m deep (Y 16.62-17.60) instead of a 0.42 m tread; the
+# b7 wide going with dark lacquer treads read as a black void band under a thin pale strip
+# (r20 fix round: GOING 0.28 -> 0.35, defined above with STAIR_Y0; the "landing" is the 5th tread, Y 17.25-17.60)
+TREAD5_Y = round(STAIR_Y0 + 4 * GOING, 4)  # 17.25 (r20 fix round): the 5th riser (+0.60 to +0.75, lit like the rest)
+LAND_Y = TREAD5_Y                         # the landing's front (+0.75, Y 16.62-17.60, X 3.80-8.20)
+HEAVY_Y = 16.53                           # b4: the heavy posts' centre line on the hall floor (r20: Y 16.38-16.68; was 13.33)
+# r20 rear round (task delta 1: back_wall.png / reference 2 show plain dark panelled plinth fronts on the wings, no
+# steps; the stepped lit flight only between the flanking posts): the wings (X 0-3.80 / 8.20-12) are ONE panelled plinth
+# from the floor to the deck (+0.90), its face 5 cm behind the heavy posts' fronts (the posts read as pilasters standing
+# proud of it); was the b7 terrace (door cabinet +0.60 at Y 16.76, tread +0.75, deck riser)
+WING_Y = round(HEAVY_Y - 0.10, 4)         # 16.43
+# the cheeks close the lower flight's sides from its foot to the wing face (X 3.45-3.80 / 8.20-8.55, Y 15.50-16.43),
+# top +0.75 = the landing (reference 2: the cheek's lit top edge at the front lines up with the flight's top lit line,
+# 0.84 m further back: +0.71 through C1); the stair-foot lanterns no longer stand on them (see LANTERNS)
+CHEEK_W, CHEEK_H = 0.35, 0.75
+PLAT_Y = WING_Y                           # the dais front edge (layout.json "platform_front_y")
+# r20 rear round (task delta 5, reference 2 zoom x 330-570 / y 140-400: the stair-foot lanterns stand on the hall floor
+# just outboard of the cheek fronts, a box lantern raised on an open leg stand ~1.5x the head's height, the lantern's top
+# about level with the cheek top): SM_AK_Lantern_S on SM_AK_H_LanternStand (hero_backwall: hero_lantern_vase's open
+# leg stand at the lantern's own post positions, scaled with it), FOOT_STAND_H tall. Measured against the lower flight's
+# width (4.4 m = ~323 px): the head ~0.37 m wide, the stand ~0.59 m, the top ~+0.93, the centre ~0.59 m outboard of the
+# flight: LANTERN_S 0.65 -> 0.75 (0.345 m cap), stand 0.45 m, top +0.93, centre X 3.25 / 8.75
+FOOT_STAND_H = 0.45
+FOOT_LANTERN_Y = round(STAIR_Y0 + 0.20, 4)   # 16.05 (r20 fix round; was 15.70): stand + lantern Y 15.88-16.22, 0.16 m in front of the heavy posts
 # (history: newel lanterns, then (rear dais b1-b6) the floor andon on open leg stands SM_AK_LanternPedestal(_Tall))
 # b7 (judge deltas 1 / 2: reference 2's rear lanterns are the front box type with no leg stand): every rear lantern is
 # the developed andon SM_AK_Lantern at a smaller size (the same mesh, uniformly scaled: never a redesign):
 # SM_AK_Lantern_M (x LANTERN_M) straight on the deck beside the vases, SM_AK_Lantern_S (x LANTERN_S) on each cheek's
 # front end at the stair foot (its head at about the lip of the upper steps, as reference 2)
-LANTERN_M, LANTERN_S = 0.90, 0.65   # b8: M 0.80 -> 0.90 (b7 read ~30 x 40 px in C1; reference 2's ~28 x 56)
+LANTERN_M, LANTERN_S = 0.90, 0.75   # r20 rear round: S 0.65 -> 0.75 (the stair-foot pair, on their stands)   # b8: M 0.80 -> 0.90 (b7 read ~30 x 40 px in C1; reference 2's ~28 x 56)
 SCREEN_H = 4.00 - DECK_Z                  # the rear screens' top stays at +4.00
 PAINT_H, PAINT_Z = 2.15, 1.80             # rear dais: the painting bay rises with the deck (+0.30): panel Z 1.80-3.95
+PAINT_BAY_X = (4.6, 7.4)                  # r20 fix round: the painting bay's world X (was 4.8-7.2), hero_backwall.BAY_W 2.8
 CASES = {  # type: (width along local X, depth along local Y, plinth height, glass height)
     # building r2, fitted to reference 2 through the C1 camera (BUILD_NOTES): the front case is a low plinth under tall
     # glass (plinth top +0.50, glass top +1.45), the kasa case a low base under tall glass; the hero is a low two-tier
     # lacquer TABLE (no glass: G = 0)
-    "L": (1.8, 1.3, 0.50, 0.95), "LN": (1.6, 1.0, 0.45, 0.75), "M": (1.8, 1.2, 0.70, 0.55),
+    # r20 b3 (blind judge 7/10, delta 4: case 1 read too big from the entrance, hiding case 2 and the axis): the front
+    # case's glass 0.95 -> 0.70 (glass top +1.20)
+    "L": (1.8, 1.3, 0.50, 0.70), "LN": (1.6, 1.0, 0.45, 0.75), "M": (1.8, 1.2, 0.70, 0.55),
     "S": (1.4, 1.1, 0.90, 0.45), "Tall": (1.5, 1.1, 0.50, 1.70), "Hero": (2.4, 0.9, 0.52, 0.0),
+    # r20 round 3 (blind judge 7/10, delta 2: the front side cases were cut by both C1 frame edges; reference 2's kunai
+    # and shuriken cases are small and sit fully inside it): the front pair's own smaller footprint, 1.20 x 0.80 m (the
+    # same plinth and glass heights as "S"; the shuriken tray, 0.54 x 0.44 m with its card, still fits case 8)
+    "SF": (1.2, 0.8, 0.90, 0.45),
 }
 
 
@@ -734,34 +796,40 @@ def kit():
         transom(upn, x0, x1)
     upn.col(0, 2, -0.30, 0.02, 0, 2.5)
     pieces.append(upn)
-    w = Piece("SM_AK_WallUpper_Window_2")
+    # r20 round 3: the window bay is WIN_BAY long (4 m: a 3.5 m clear opening, was 2 m with 1.5 m); the clear opening
+    # is 0.25 m in from each end, the rough opening the lining (LIN) wider
+    WB = WIN_BAY
+    ro1 = WB - 0.25 + LIN
+    w = Piece(f"SM_AK_WallUpper_Window_{WB}")
     s0, h0 = WIN_SILL - LIN, WIN_HEAD + LIN
-    w.box(0, RO0, -0.30, 0, 0, 2.5, T).box(RO1, 2, -0.30, 0, 0, 2.5, T)
-    w.box(RO0, RO1, -0.30, 0, 0, s0, T).box(RO0, RO1, -0.30, 0, h0, 2.5, T)
-    transom(w, 0.25, 1.75)
-    shoji(w, 0.25, 1.75, WIN_HEAD + LIN + 0.08, 1.93, 13, (1.82,))   # dense ranma band (13 bars); f1: +4.21 to +4.43
-    w.box(RO0, RO1, -0.30, 0.03, s0, WIN_SILL, T).box(RO0, RO1, -0.30, 0.03, WIN_HEAD, h0, T)
-    w.box(RO0, 0.25, -0.30, 0.03, WIN_SILL, WIN_HEAD, T).box(1.75, RO1, -0.30, 0.03, WIN_SILL, WIN_HEAD, T)
-    w.box(0, 2, 0, 0.05, s0 - 0.05, s0, T).box(0, 2, 0, 0.02, 2.20, 2.30, T)            # sill board, top rail
-    w.box(RO0 - 0.07, RO0, 0, 0.025, s0, h0 + 0.07, T).box(RO1, RO1 + 0.07, 0, 0.025, s0, h0 + 0.07, T)
-    w.box(RO0 - 0.07, RO1 + 0.07, 0, 0.025, h0, h0 + 0.07, T)
-    w.col(0, RO0, -0.30, 0.02, 0, 2.5).col(RO1, 2, -0.30, 0.02, 0, 2.5)
-    w.col(RO0, RO1, -0.30, 0.02, 0, s0).col(RO0, RO1, -0.30, 0.02, h0, 2.5)
+    w.box(0, RO0, -0.30, 0, 0, 2.5, T).box(ro1, WB, -0.30, 0, 0, 2.5, T)
+    w.box(RO0, ro1, -0.30, 0, 0, s0, T).box(RO0, ro1, -0.30, 0, h0, 2.5, T)
+    transom(w, 0.25, WB - 0.25)
+    shoji(w, 0.25, WB - 0.25, WIN_HEAD + LIN + 0.08, 1.93, round(13 * (WB - 0.5) / 1.5), (1.82,))   # dense ranma band; f1: +4.21 to +4.43
+    w.box(RO0, ro1, -0.30, 0.03, s0, WIN_SILL, T).box(RO0, ro1, -0.30, 0.03, WIN_HEAD, h0, T)
+    w.box(RO0, 0.25, -0.30, 0.03, WIN_SILL, WIN_HEAD, T).box(WB - 0.25, ro1, -0.30, 0.03, WIN_SILL, WIN_HEAD, T)
+    w.box(0, WB, 0, 0.05, s0 - 0.05, s0, T).box(0, WB, 0, 0.02, 2.20, 2.30, T)            # sill board, top rail
+    w.box(RO0 - 0.07, RO0, 0, 0.025, s0, h0 + 0.07, T).box(ro1, ro1 + 0.07, 0, 0.025, s0, h0 + 0.07, T)
+    w.box(RO0 - 0.07, ro1 + 0.07, 0, 0.025, h0, h0 + 0.07, T)
+    w.col(0, RO0, -0.30, 0.02, 0, 2.5).col(ro1, WB, -0.30, 0.02, 0, 2.5)
+    w.col(RO0, ro1, -0.30, 0.02, 0, s0).col(RO0, ro1, -0.30, 0.02, h0, 2.5)
     pieces.append(w)
     # building stage (R3): reference-2 windows have dense vertical muntins and one horizontal rail (was a 5 x 4 grid)
-    lat = Piece("SM_AK_Window_Lattice")
+    lat = Piece(WINDOW_LATTICE)
     H = WIN_HEAD - WIN_SILL
-    lat.box(0, 1.50, -0.02, 0.02, 0, 0.04, T).box(0, 1.50, -0.02, 0.02, H - 0.04, H, T)
-    lat.box(0, 0.04, -0.02, 0.02, 0.04, H - 0.04, T).box(1.46, 1.50, -0.02, 0.02, 0.04, H - 0.04, T)
+    WW = WB - 0.5
+    lat.box(0, WW, -0.02, 0.02, 0, 0.04, T).box(0, WW, -0.02, 0.02, H - 0.04, H, T)
+    lat.box(0, 0.04, -0.02, 0.02, 0.04, H - 0.04, T).box(WW - 0.04, WW, -0.02, 0.02, 0.04, H - 0.04, T)
     # f2 (blind judge delta 4: "a square grid instead of mostly vertical slats"; reference 2's near-left windows show
-    # tall panes, about 7-9 muntins and 2-3 rails): 9 muntins and 3 rails, panes 14.2 x 34.3 cm (was 11 muntins, 1 rail)
-    for i in range(1, 10):
-        xc = 0.04 + i * 1.42 / 10
+    # tall panes, about 7-9 muntins and 2-3 rails): 9 muntins and 3 rails per 1.5 m, panes 14.2 x 34.3 cm
+    nm = round(10 * WW / 1.5)
+    for i in range(1, nm):
+        xc = 0.04 + i * (WW - 0.08) / nm
         lat.box(xc - 0.011, xc + 0.011, -0.0125, 0.0125, 0.04, H - 0.04, T)
     for k in range(1, 4):
         zc = 0.04 + k * (H - 0.08) / 4
-        lat.box(0.04, 1.46, -0.0125, 0.0125, zc - 0.012, zc + 0.012, T)
-    lat.col(0, 1.50, -0.02, 0.02, 0, H)
+        lat.box(0.04, WW - 0.04, -0.0125, 0.0125, zc - 0.012, zc + 0.012, T)
+    lat.col(0, WW, -0.02, 0.02, 0, H)
     pieces.append(lat)
     # building r3: a closed paper pane behind the lattice (the west wall's three south bays, Y 0-6): with a 22 deg sun
     # from the north-west these windows would throw their lattice patches onto the entry mat and lanterns, which reference
@@ -949,17 +1017,18 @@ def kit():
     # b7 (judge deltas 4 / 6): the side zones (X 0-3.80 / 8.20-12, local y 0 = LAND_Y 13.56 back to Y 15.20) are
     # terraced in the flight's rows: a panelled door cabinet (0-0.60, a lit ledge under its nose), a recessed riser to a
     # tread at +0.75 (y GOING) and the lit deck riser (y 2 x GOING = DECK_Y); 1.9 m modules, two doors each
-    SD = 1.64
+    # r20 b3 (blind judge 7/10, delta 6: the lit ledge and deck riser on the wings read as two extra stair runs; reference
+    # 2's wings are dark panelled bases, the lit nosings only on the central flight): no LED lines on the side zones
+    # r20 rear round (task delta 1): one panelled plinth from the floor to the deck (+0.90), local y 0 = WING_Y 16.43
+    # back to the first full-width deck row (DECK_Y + 0.80); two doors per module, no steps, no LED
+    SD = round(DECK_Y + 0.80 - WING_Y, 4)
     la = Piece("SM_AK_Platform_Side_19")
-    for z0, z1, y0 in ((0.0, CAB_Z, 0.0), (CAB_Z, LAND_Z, GOING), (LAND_Z, DECK_Z, 2 * GOING)):
-        la.box(0, 1.9, y0, SD, z0, z1 - 0.03, T).box(0, 1.9, y0 - 0.02, SD, z1 - 0.03, z1, PL)
-        if z1 != LAND_Z:
-            la.box(0.01, 1.89, y0 - 0.01, y0, z1 - 0.05, z1 - 0.035, LED)
-        la.col(0, 1.9, y0 - 0.02, SD, z0, z1)
+    la.box(0, 1.9, 0.0, SD, 0.0, DECK_Z - 0.03, T).box(0, 1.9, -0.02, SD, DECK_Z - 0.03, DECK_Z, PL)
+    la.col(0, 1.9, -0.02, SD, 0.0, DECK_Z)
     for x0 in (0.0, 0.95):   # the two doors: a recessed field and brass corner trim
-        la.box(x0 + 0.06, x0 + 0.89, -0.008, 0, 0.10, CAB_Z - 0.10, LQ)
+        la.box(x0 + 0.06, x0 + 0.89, -0.008, 0, 0.10, DECK_Z - 0.14, LQ)
         for cx in (x0 + 0.07, x0 + 0.84):
-            for cz in (0.11, CAB_Z - 0.15):
+            for cz in (0.11, DECK_Z - 0.19):
                 la.box(cx, cx + 0.04, -0.012, -0.008, cz, cz + 0.04, BR)
     pieces.append(la)
     # b7 (judge delta 3): the flight, 2.2 m module (two side by side, X 3.80-8.20): the first five of its six uniform
@@ -977,7 +1046,7 @@ def kit():
     # b7 (judge deltas 1 / 8): a low lacquer cheek either side of the flight (X 3.45-3.80 / 8.20-8.55) from the stair
     # foot to the side cabinet's front (LAND_Y), top +0.45 (the 3rd tread's), thin brass trim only; its front end is the
     # newel (a brass shoe and cap line) the stair-foot lantern SM_AK_Lantern_S stands on
-    CL = LAND_Y - STAIR_Y0
+    CL = WING_Y - STAIR_Y0   # r20 rear round: from the stair foot to the wing face, top +0.60
     ck = Piece("SM_AK_StairCheek").box(0, CHEEK_W, 0, CL, 0, CHEEK_H, LQ)
     ck.box(-0.004, CHEEK_W + 0.004, -0.004, CHEEK_W, 0, 0.06, BR)
     ck.box(-0.004, CHEEK_W + 0.004, -0.004, CHEEK_W, CHEEK_H - 0.02, CHEEK_H - 0.008, BR)
@@ -997,23 +1066,27 @@ def kit():
     # 40 cm up). The pegs stay at +1.35 / +1.70 above the hall floor (counter + 0.50 / + 0.85 in both pieces)
     # rear dais (2026-09-28): the platform bays (SM_AK_WallPanel_Lit_190) are gone with NICHE_Y_PLAT (on the +0.90 deck
     # they would cut the sill ledge); the corner showcases (hero_rear_alcove SM_AK_H_CornerShowcase) replace them
-    for wname, NH, DZ in (("SM_AK_WallPanel_Lit", NICHE_H_FLOOR, NICHE_DADO_FLOOR),) + (
-            (("SM_AK_WallPanel_Lit_190", NICHE_H_PLAT, NICHE_DADO_PLAT),) if NICHE_Y_PLAT else ()):
+    # r20 round 3 (blind judge delta 1): the wide display bay SM_AK_WallPanel_LitWide (DISPLAY_W between the posts, the
+    # same section and heights as the hall niche, two downlight lenses); the 0.85 m niche is built only while placed
+    for wname, NH, DZ, BW in ((("SM_AK_WallPanel_Lit", NICHE_H_FLOOR, NICHE_DADO_FLOOR, 0.85),) if NICHE_Y_FLOOR else ()) + (
+            (("SM_AK_WallPanel_Lit_190", NICHE_H_PLAT, NICHE_DADO_PLAT, 0.85),) if NICHE_Y_PLAT else ()) + (
+            (("SM_AK_WallPanel_LitWide", NICHE_H_FLOOR, NICHE_DADO_FLOOR, DISPLAY_W),) if WALL_DISPLAY_Y else ()):
         wp = Piece(wname)
         hd = NH - 0.05   # underside of the head
-        wp.box(0.03, 0.82, 0, 0.02, DZ + 0.05, hd, BB).box(0, 0.03, 0, 0.25, 0, NH, T).box(0.82, 0.85, 0, 0.25, 0, NH, T)
-        wp.box(0.03, 0.82, 0, 0.25, hd, NH, T)
-        wp.cyl(0.425, NICHE_LENS_Y, hd - 0.012, hd, 0.035, BR, 16).cyl(0.425, NICHE_LENS_Y, hd - 0.016, hd - 0.0115, 0.024, LED, 16)
-        wp.box(0.03, 0.82, 0, 0.22, 0, 0.08, T)                        # recessed toe kick
-        wp.box(0.03, 0.82, 0, 0.25, 0.08, DZ, LQ)                      # the dark dado cabinet front
-        wp.box(0.03, 0.82, 0.25, 0.254, 0.10, DZ - 0.02, LQ)           # its door panel, proud by 4 mm
-        wp.box(0.4235, 0.4265, 0.254, 0.257, 0.12, DZ - 0.04, BR)      # the door split line in brass
-        wp.box(0.0, 0.85, 0, 0.29, DZ, DZ + 0.05, LQ)                  # projecting counter (shelf ledge)
-        wp.box(0.0, 0.85, 0.29, 0.294, DZ + 0.015, DZ + 0.035, BR)     # brass nosing
+        wp.box(0.03, BW - 0.03, 0, 0.02, DZ + 0.05, hd, BB).box(0, 0.03, 0, 0.25, 0, NH, T).box(BW - 0.03, BW, 0, 0.25, 0, NH, T)
+        wp.box(0.03, BW - 0.03, 0, 0.25, hd, NH, T)
+        for xl in display_lens_x(BW):
+            wp.cyl(xl, NICHE_LENS_Y, hd - 0.012, hd, 0.035, BR, 16).cyl(xl, NICHE_LENS_Y, hd - 0.016, hd - 0.0115, 0.024, LED, 16)
+        wp.box(0.03, BW - 0.03, 0, 0.22, 0, 0.08, T)                        # recessed toe kick
+        wp.box(0.03, BW - 0.03, 0, 0.25, 0.08, DZ, LQ)                      # the dark dado cabinet front
+        wp.box(0.03, BW - 0.03, 0.25, 0.254, 0.10, DZ - 0.02, LQ)           # its door panel, proud by 4 mm
+        wp.box(BW / 2 - 0.0015, BW / 2 + 0.0015, 0.254, 0.257, 0.12, DZ - 0.04, BR)      # the door split line in brass
+        wp.box(0.0, BW, 0, 0.29, DZ, DZ + 0.05, LQ)                  # projecting counter (shelf ledge)
+        wp.box(0.0, BW, 0.29, 0.294, DZ + 0.015, DZ + 0.035, BR)     # brass nosing
         for zp in (DZ + 0.50, DZ + 0.85):
-            for xp in (0.22, 0.63):
+            for xp in (0.22, BW - 0.22):
                 wp.box(xp - 0.012, xp + 0.012, 0.02, 0.075, zp - 0.012, zp + 0.012, BR)
-        wp.col(0, 0.85, 0, 0.294, 0, NH)
+        wp.col(0, BW, 0, 0.294, 0, NH)
         pieces.append(wp)
     # building stage (R3): the deep continuous windowsill ledge (2 m module, 32 cm deep, top at +2.64 world)
     pieces.append(Piece("SM_AK_SillLedge_2").box(0, 2, 0, 0.32, 0, 0.05, T).box(0, 2, 0.30, 0.335, -0.04, 0.05, T)
@@ -1254,33 +1327,72 @@ def kit():
     pieces.append(cd_.col(-0.047, 0.202, -0.052, 0.052, 0, 0.135))
     # f1 (measurer, R6): the user's emblem at the platform front centre: a gold medallion (11.6 cm) on the top riser face
     # between the top tread (+0.45) and the platform lip (+0.57), set over the riser's LED line on the axis
-    ed = Piece("SM_AK_EmblemDisc_12").mesh(*disc_y(0.0, 0.0, 0.0, 0.058, 0.02, EM, BR, 32, -1))
-    pieces.append(ed.col(-0.058, 0.058, 0.0, 0.02, -0.058, 0.058))
+    # r20 fix round (blind judge delta 1: every riser lit, the same height): the emblem moves to the top (6th) riser, under
+    # its LED line, at 8 cm (SM_AK_EmblemDisc_08: the riser's face between the tread and the line is 8.9 cm tall)
+    ed = Piece("SM_AK_EmblemDisc_08").mesh(*disc_y(0.0, 0.0, 0.0, EMBLEM_R, 0.02, EM, BR, 32, -1))
+    pieces.append(ed.col(-EMBLEM_R, EMBLEM_R, 0.0, 0.02, -EMBLEM_R, EMBLEM_R))
     return pieces
 
 
 # --------------------------------------------------------------------------- the room layout
 
 # look2: every 2 m upper bay of the long walls is a lattice window; building stage: 8 per wall over the 16 m length
-UPPER_RUN = [(y0, 2, "SM_AK_WallUpper_Window_2") for y0 in range(0, 16, 2)]
-WINDOWS_Y = [(y0 + 0.25, y0 + 1.75) for y0, _L, p in UPPER_RUN if p == "SM_AK_WallUpper_Window_2"]  # clear openings
-SHORT_POSTS_Y = tuple(range(1, 16, 2))
+# r20: ROOM_L-driven (10 window bays per side over the 20 m length)
+# r20 round 3 (blind judge 7/10, delta 1: ten 1.5 m windows per side read as a long corridor; reference 2 shows 2-3
+# large lattice windows per side under the transom lattice): 4 m window bays (WIN_BAY), a 3.5 m clear opening each
+# (SM_AK_WallUpper_Window_4 + SM_AK_Window_Lattice_35), 5 per side; the posts at the bay joints (every 4 m) rise to the
+# ceiling, every other post stops under the sill
+WIN_BAY = 4
+UPPER_RUN = [(y0, WIN_BAY, f"SM_AK_WallUpper_Window_{WIN_BAY}") for y0 in range(0, int(ROOM_L), WIN_BAY)]
+WINDOWS_Y = [(y0 + 0.25, y0 + L - 0.25) for y0, L, p in UPPER_RUN if p.startswith("SM_AK_WallUpper_Window_")]  # clear openings
+SHORT_POSTS_Y = tuple(y for y in range(1, int(ROOM_L)) if y % WIN_BAY)
+# r20 round 3 (delta 1: fifteen narrow 0.85 m niches per side read as a row of doorways; reference 2 / the plan show a few
+# wide cream-lit wall displays on a dark ledge under the sill): one 1.85 m display bay (SM_AK_WallPanel_LitWide, between
+# the posts at y - 1 and y + 1; the post at its centre is left out) under the middle of each hall-floor window, the plain
+# dark wall with its pilasters between them. Centres (both long walls):
+# r20 fix round (blind judge 7/10, delta 7: the long walls read as high window strips over separate lit recesses with
+# plain dark wall between them, emptier than reference 2's continuous lit wall-display cabinets under the windows, more so
+# at 20 m): each display bay now fills its whole 4 m window bay between the full-height posts at the bay joints (3.85 m,
+# the three short posts inside it left out), directly under the window, so the lit displays run on down both walls
+# broken only by the tall posts, from the entrance to the wing plinths (bays ending before WING_Y)
+WALL_DISPLAY_Y = tuple(float(y0 + WIN_BAY // 2) for y0, _L, _p in UPPER_RUN if y0 + WIN_BAY <= WING_Y)
+DISPLAY_W = WIN_BAY - 0.15   # 3.85 (was 1.85: one 2 m post interval)
+WINDOW_LATTICE = "SM_AK_Window_Lattice" if WIN_BAY == 2 else f"SM_AK_Window_Lattice_{round((WIN_BAY - 0.5) * 10)}"
 # building r3: west bays with a closed shoji pane (no sun patches in the entry zone). f1: none: every window is open, as in
 # reference 2 (its near-left windows are open and hot), and at the f1 sun (30 deg up, heading 30) the south bays' patches
 # land on the floor by the entry, where reference 2 also shows lattice sun (zoom of its bottom-left lantern)
 WEST_CLOSED_Y0 = ()
 # (every odd post sits at a window centre and stops under the sill)
 # building stage: the displays, re-laid for the 12 x 16 m hall (spirit of reference 1). (label, type, x, y, rot).
-# Centre row on the axis X 6; side rows face the aisles at X 1.75 / 10.25 (aisles 2.7-2.9 m). G1-G3 are EMPTY growth slots.
+# Centre row on the axis X 6; side rows face the aisles at X 1.75 / 10.25 (aisles 2.7-2.9 m; r20 b3: X 2.50 / 9.50). G1-G3 are EMPTY growth slots.
 CASE_TABLE = [
-    ("1", "L", 6.0, 3.70, 0), ("2", "M", 6.0, 7.6, 0), ("3", "LN", 6.0, 11.3, 0),
-    ("5", "S", 1.75, 4.1, 90), ("4", "Tall", 1.75, 6.6, 90), ("G1", "S", 1.75, 9.1, 90), ("G3", "Tall", 1.75, 11.6, 90),
-    ("8", "S", 10.25, 4.0, -90), ("7", "S", 10.25, 6.3, -90), ("6", "Tall", 10.25, 8.8, -90),
-    ("G2", "Tall", 10.25, 11.4, -90),
+    # r20 (12 x 20 m): case 1, the genkan and the front side cases (5, 8) stay (the C1 foreground is unchanged); case 2
+    # 7.6 -> 8.80, case 3 11.3 -> 13.60; the side rows spread to end at Y 12.70 (0.635 L, the plan's side-display band):
+    # west 4 6.6 -> 6.72, G1 9.1 -> 9.33, G3 11.6 -> 11.95; east 7 6.3 -> 6.60, 6 8.8 -> 9.25, G2 11.4 -> 11.95
+    # r20 b3 (blind judge 7/10): (delta 5) the centre cases evenly spaced as the plan's (reference 1: 1 -> 2 -> 3 even,
+    # case 1 at ~23 % of the hall): case 1 3.70 -> 4.00 (20 %; gaps 4.80 / 4.80). b3 tried 4.30 (and case 2 at 8.95):
+    # through C1 its plinth foot rose to y 783 px against reference 2's 835 (4.00: 811, 3.70: 841); (deltas 2 / 3)
+    # the side rows move in, X 1.75 / 10.25 -> 2.50 / 9.50 (the plan's side cases at ~2.65 m off the axis of its 8 m
+    # hall, scaled to the 12 m hall; the gap to the centre column 2.05 m, the wall aisle along the niches 1.6 m), which
+    # also brings the front pair (5, 8) into the C1 frame beside case 1, as reference 2's kunai and shuriken cases
+    # r20 round 3 (blind judge delta 2): the front pair 5 / 8 is the smaller "SF" case, 0.55 m further inboard (X
+    # 2.65-3.45 / 8.55-9.35): through C1 its front face spans x ~22-190 / ~1265-1435 of 1448 (reference 2's kunai case
+    # ~30-195, shuriken case ~1285-1410); 1.65 m of floor stays between it and case 1 (X 5.10 / 6.90)
+    # r20 fix round (blind judge 7/10): (delta 2) the centre row evenly spaced with clear floor before the flight: case 1
+    # stays (the C1 foreground), cases 2 / 3 8.80 / 13.60 -> 8.70 / 13.40 (centres 4.70 m apart; the flight's foot moved
+    # back to 15.85, so case 3's back (13.90) is 1.93 m clear of the bottom nose, was 1.38); (delta 8: the side cases
+    # clustered in pairs with empty floor toward the rear) the side rows spread evenly from the front pair (5 / 8, fixed)
+    # to 1.30 m before the stair-foot lanterns: equal 1.82 / 1.85 m gaps along each aisle, the last case's back at Y 14.55
+    ("1", "L", 6.0, 4.00, 0), ("2", "M", 6.0, 8.70, 0), ("3", "LN", 6.0, 13.40, 0),
+    ("5", "SF", 3.05, 4.1, 90), ("4", "Tall", 2.50, 7.27, 90), ("G1", "S", 2.50, 10.53, 90), ("G3", "Tall", 2.50, 13.80, 90),
+    ("8", "SF", 8.95, 4.0, -90), ("7", "S", 9.50, 7.15, -90), ("6", "Tall", 9.50, 10.45, -90),
+    ("G2", "Tall", 9.50, 13.80, -90),
     # rear dais (2026-09-28): the hero table on the +0.90 deck, 15 cm behind the deck edge (Y 14.55-15.45; was 14.85)
     # b4 (judge delta 3: from the entrance the table's base sat right on the top lit band; reference 2 shows a strip of
     # platform in front of it): 35 cm further back, Y 14.90-15.80 (10 cm in front of the painting base)
-    ("10", "Hero", 6.0, 15.35, 0),
+    # r20: 0.65 m in front of the back wall as before (Y 18.90-19.80; was 15.35 on the 16 m room): 1.30 m of deck in
+    # front of it (b9 judge: "the deck strip in front of the table is thin", was 0.50 m)
+    ("10", "Hero", 6.0, ROOM_L - 0.65, 0),
 ]
 # genkan (2026-09-28): the entry pair stands on the sunken genkan floor just in front of the black step beam, either
 # side of the mat. Entryfix (2026-09-28, the user: "lantern is fine... just keep it the same natural shape as you've
@@ -1311,27 +1423,44 @@ LANTERNS = [  # SM_AK_Lantern (lantern.png's andon)
             # b7 (judge deltas 1 / 2): (x, y, z, scale): the deck pair SM_AK_Lantern_M straight on the deck (X 3.316-3.684 /
             # 8.316-8.684); the stair-foot pair SM_AK_Lantern_S on the cheeks' front ends (X 3.475-3.775 / 8.225-8.525,
             # Y 12.325-12.625, +0.45), flush with the flight's edges
-            (3.50, 15.10, DECK_Z, LANTERN_M), (8.50, 15.10, DECK_Z, LANTERN_M),   # b8: X 3.293-3.707 / 8.293-8.707
-            (STAIR_X[0] - CHEEK_W / 2, STAIR_Y0 + CHEEK_W / 2, CHEEK_H, LANTERN_S),
-            (STAIR_X[1] + CHEEK_W / 2, STAIR_Y0 + CHEEK_W / 2, CHEEK_H, LANTERN_S)]
+            # r20: the deck pair 0.90 m in front of the back wall (Y 19.10; was 15.10 on the 16 m room)
+            (3.50, ROOM_L - 0.90, DECK_Z, LANTERN_M), (8.50, ROOM_L - 0.90, DECK_Z, LANTERN_M),   # b8: X 3.293-3.707 / 8.293-8.707
+            # r20 rear round (task delta 5): the stair-foot pair on SM_AK_H_LanternStand on the hall floor, 3 cm outboard
+            # of the cheeks (X 3.075-3.42 / 8.58-8.925 at the cap), Y 15.53-15.87, top +0.93 (was on the cheek fronts, +0.45)
+            (round(STAIR_X[0] - CHEEK_W - 0.03 - 0.23 * LANTERN_S, 4), FOOT_LANTERN_Y, FOOT_STAND_H, LANTERN_S),
+            (round(STAIR_X[1] + CHEEK_W + 0.03 + 0.23 * LANTERN_S, 4), FOOT_LANTERN_Y, FOOT_STAND_H, LANTERN_S)]
 LANTERN_PIECE = {LANTERN_M: "SM_AK_Lantern_M", LANTERN_S: "SM_AK_Lantern_S"}
-NICHE_Y_FLOOR = list(range(1, 13))          # wall niche bays on the hall floor, both long walls (Y 1-13)
+# r20: 15 bays (Y 1-16; was 12, Y 1-13): the last ends at Y 15.925, 0.835 m before the side cabinets' front (16.76)
+# r20 round 3 (blind judge delta 1): no 0.85 m niches any more; the wide display bays (WALL_DISPLAY_Y) replace them
+NICHE_Y_FLOOR = []   # was list(range(1, int(STAIR_Y0) + 1)): wall niche bays on the hall floor, both long walls
 # rear dais (2026-09-28): no platform bays (was [14]: 1.90 m bays on the +0.60 platform, Y 14-15); on the +0.90 deck
 # they would cut the sill ledge and straddle the deck edge at Y 14.40. The corner showcases replace them
 NICHE_Y_PLAT = []
 NICHE_Z_PLAT = DECK_Z
 # f2 (judge delta 7: one vase in each bay along both walls): every window bay, 8 per wall (was 4)
-SILL_VASES_Y = tuple(float(y) for y in range(1, 16, 2))   # window centres; west vases at y - 0.35, east at y + 0.35
+# r20 b3 (blind judge 7/10, delta 1: a vase on every sill read as copy-paste down the 20 m walls; reference 2 shows one
+# per side): two bays per side, Y 3 (by the entrance) and Y 11 (the one reference 2 shows from the entrance, C1 x ~120 /
+# ~1330 px of 1448)
+SILL_VASES_Y = (3.0, 11.0)   # window centres; west at y - 0.35, east y + 0.35
 # rear dais (2026-09-28): the east vase of the last bay (Y 15) moves to y - 0.35 (Y 14.65, as the west one): at y + 0.35
 # its spray (Y to 15.90, from +2.64) reached over the east corner showcase (X 10.81-11.51, Y 15.395-15.945, to +2.86)
-SILL_VASE_E_BEFORE = (15.0,)
+SILL_VASE_E_BEFORE = (ROOM_L - 1.0,)   # r20: the last bay, Y 19
 # f1: the banners hang from the ceiling near the side walls just in front of the platform, facing the entrance: the
 # landmark-fitted C1 camera puts reference 2's banners (x 355-392 / 1056-1093 px, y 25-172 px on 1448 x 1086; 0.55 m
 # wide) at X 0.78 / 11.22, Y 13.13, cloth Z 2.41-4.60 (was X 1.65 / 10.35, Y 15.55, where the wall medallion read)
-BANNER_X, BANNER_Y, BANNER_Z = (0.78, 11.22), 13.13, 2.40
+# r20: the same relation to the flight (0.83 m behind its foot): Y 13.13 -> 16.33
+# r20 round 3 (blind judge delta 8: the banners hung out in the window bays, C1 x ~295-335 / 1110-1150 of 1448; reference
+# 2 hangs them on the posts beside the rear alcoves, x ~355-390 / 1060-1095): X 0.78 / 11.22 -> 1.51 / 10.49 (C1 centres
+# x ~372 / 1076), the same Y and height
+# r20 fix round: the banners keep Y 16.33 (0.20 m in front of the heavy posts' centre line) now the flight's foot moved
+BANNER_X, BANNER_Y, BANNER_Z = (1.51, 10.49), round(HEAVY_Y - 0.20, 4), 2.40
 # f1: the rear alcoves move outboard to X 1.2-3.0 / 9.0-10.8 (were 2.0-3.8 / 8.2-10.0): the fitted C1 camera measures
 # reference 2's rack alcoves at X ~1.0-2.3; the north-wall corner niches they now cover are gone (reference 2 has none)
-REAR_ALCOVE_X = (1.2, 9.0)
+# r20 rear round (task delta 3, C1 against reference 2: its rack alcoves span x ~437-515 of 1448 (centre ~476 = X
+# ~2.37 at the back wall), with the corner niche (x ~381-412) and a dark pilaster between them; ours at X 1.2-3.0
+# centred on x ~458 left no room for the niche beside the banner): 0.30 m inboard, X 1.50-3.30 / 8.70-10.50 (centre
+# x ~479); the corner niche blocks fill X 0.34-1.50 / 10.50-11.66 (hero_rear_alcove)
+REAR_ALCOVE_X = (1.5, 8.7)
 PLUM_L_X = (4.20, 7.80)                      # f1: the big vases stand in front of the LED bay posts (was 4.45 / 7.55)
 # Layout 2 (user-approved 2026-09-27, reference entrance.png's composition): the vestibule posts 1 m inside the entrance
 # (f1/f2: (3.995, 1.02) / (8.005, 1.02)) are gone. The heavy jamb posts stand at the OUTER ENDS of the entrance frame on
@@ -1347,8 +1476,14 @@ ENTRANCE_X0, ENTRANCE_W = 0.0, 12.0                 # SM_AK_Entrance_12: the who
 JAMB_HW, JAMB_D = 0.25, 0.80                        # post timber half width / depth off the wall's room face
 JAMB_POSTS = ((1.86, 0.40), (10.14, 0.40))          # post centres (rot 0): timber Y 0-0.80, plinth to Y 0.84
 JAMB_PL = 0.04                                      # the plinth stands 4 cm proud of the timber (sides and front)
-ENT_JAMB_W = 0.14                                   # the inner jamb band between each post and its parked leaf
-DOOR_LEAF_X, DOOR_LEAF_W, DOOR_LEAF_H = (2.25, 8.05), 1.70, 3.90   # parked leaves' world X, width, height (on the step)
+# r20 round 3 (blind judge delta 4: reference 2's frame edges show the dark door leaves with their metal fittings; ours
+# stood 31 px outside the C1 frame): the parked leaves 0.15 m inboard, their leading stiles 10 cm into the clear opening
+# (X 2.40-4.10 / 7.90-9.60: C1 x ~0-25 / ~1423-1448 of 1448), the inner jamb band 0.14 -> 0.29 m to meet them
+# r20 fix round (blind judge delta 9: reference 2 frames C1 with heavy dark door panels at BOTH edges; ours showed a thin
+# jamb on the left and nothing on the right): the parked leaves another 0.04 m inboard (X 2.44-4.14 / 7.86-9.56: ~40 px of
+# each leaf inside C1's edges, reference 2's ~40-45; fix b1's 0.10 m showed ~60 px), the inner jamb band 0.29 -> 0.33 m
+ENT_JAMB_W = 0.33                                   # the inner jamb band between each post and its parked leaf
+DOOR_LEAF_X, DOOR_LEAF_W, DOOR_LEAF_H = (2.44, 7.86), 1.70, 3.90   # parked leaves' world X, width, height (on the step)
 ENT_TRACK_Z = 4.12                                  # the brass track rod's axis (the hanger wheels ride on it)
 ENT_LINTEL = (4.30, 4.72)                           # the one heavy lintel, post to post (the posts rise to +5.00)
 ENT_LAT = (4.30, 4.60)                              # the flanks' lit lattice band, level with the lintel
@@ -1393,10 +1528,13 @@ ENTRY_SILL = (-0.435, -0.30)          # the threshold sill's Y range (the exteri
 SILL_TOP = 0.04                       # the low sill (2 cm under the landing's +0.06), 0.16 above the genkan floor
 
 
-SILL_CADDIES = [(0.20, 5.40), (11.80, 8.60), (0.20, 13.40), (11.80, 0.60)]   # f2: clear of the vase in every bay
+SILL_CADDIES = [(0.20, 5.40), (11.80, 8.60), (0.20, 13.40), (11.80, 0.60),   # f2: clear of the vase in every bay
+                (11.80, 16.60)]                                           # r20: one on the new east bays
 # f2 (blind judge delta 6: "lattice panels in the central coffers"): besides the two over the platform (r5), the centre
 # coffers X 4-8 over the gaps between the centre cases (Y 8-10 behind case 2, Y 12-14 at the steps)
-LATTICE_COFFERS = ((4, 8), (6, 8), (4, 12), (6, 12), (4, 14), (6, 14))
+# r20 (12 x 20): (4, 10) / (6, 10) over the gap between cases 2 and 3, (4, 16) / (6, 16) over the flight and the top
+# beam (no down-light under the top beam), (4, 18) / (6, 18) over the deck
+LATTICE_COFFERS = ((4, 10), (6, 10), (4, 16), (6, 16), (4, 18), (6, 18))
 
 
 def layout():
@@ -1439,19 +1577,24 @@ def layout():
     for y0, L, up in UPPER_RUN:
         add(up, 0, y0 + L, 2.5, -90)
         add(up, ROOM_W, y0, 2.5, 90)
-        add("SM_AK_Window_Lattice", -0.15, y0 + 2 - 0.25, 2.5 + WIN_SILL, -90)
+        add(WINDOW_LATTICE, -0.15, y0 + L - 0.25, 2.5 + WIN_SILL, -90)
         if y0 in WEST_CLOSED_Y0:
-            add("SM_AK_Window_ShojiPane", -0.15, y0 + 2 - 0.25, 2.5 + WIN_SILL, -90)
-        add("SM_AK_Window_Lattice", ROOM_W + 0.15, y0 + 0.25, 2.5 + WIN_SILL, 90)
+            add("SM_AK_Window_ShojiPane", -0.15, y0 + L - 0.25, 2.5 + WIN_SILL, -90)
+        add(WINDOW_LATTICE, ROOM_W + 0.15, y0 + 0.25, 2.5 + WIN_SILL, 90)
     for (x, y, r) in ((0, 0, 0), (ROOM_W, 0, 90), (ROOM_W, ROOM_L, 180), (0, ROOM_L, -90)):
         add("SM_AK_Corner_5", x, y, 0, r)
     for y in range(1, int(ROOM_L)):
+        if any(abs(y - yd) < DISPLAY_W / 2 for yd in WALL_DISPLAY_Y):   # r20 fix round: the bay spans the posts inside it
+            continue
         post = "SM_AK_Post_260" if y in SHORT_POSTS_Y else "SM_AK_Post_480"
         add(post, 0, y, 0, -90)
         add(post, ROOM_W, y, 0, 90)
     for y in NICHE_Y_FLOOR:   # R4: the lit wall niche band down both long walls
         add("SM_AK_WallPanel_Lit", 0, y + 0.925, 0.0, -90)          # f2: from the floor (dado + bay), was +0.40
         add("SM_AK_WallPanel_Lit", ROOM_W, y + 0.075, 0.0, 90)
+    for y in WALL_DISPLAY_Y:   # r20 round 3: the wide display bays, centred on y (between the posts at y -/+ 1)
+        add("SM_AK_WallPanel_LitWide", 0, y + DISPLAY_W / 2, 0.0, -90)
+        add("SM_AK_WallPanel_LitWide", ROOM_W, y - DISPLAY_W / 2, 0.0, 90)
     for y in NICHE_Y_PLAT:   # f1: the 1.90 m niche, +0.60 to +2.50 (under the sill ledge; the 2 m one cut through it)
         add("SM_AK_WallPanel_Lit_190", 0, y + 0.925, NICHE_Z_PLAT, -90)
         add("SM_AK_WallPanel_Lit_190", ROOM_W, y + 0.075, NICHE_Z_PLAT, 90)
@@ -1459,19 +1602,24 @@ def layout():
     # flight (X 3.80-8.20, Y 14.40-15.20, its plain upper riser over the landing), the rear deck row (X 0-12, Y
     # 15.20-16.00), the lower flight with the centre landing (X 3.80-8.20, Y 12.30-14.40) and the newels either side
     for x0 in (0.0, 1.9, STAIR_X[1], STAIR_X[1] + 1.9):
-        add("SM_AK_Platform_Side_19", x0, LAND_Y)
+        add("SM_AK_Platform_Side_19", x0, WING_Y)             # r20 rear round: one plinth face at WING_Y
     for x0 in (STAIR_X[0], STAIR_X[0] + 2.2):
         add("SM_AK_Platform_Edge_22", x0, DECK_Y)
-    for x0 in range(0, int(ROOM_W), 2):
-        add("SM_AK_Platform_2x1", x0, DECK_Y + 0.80)
+    # r20: the full-width deck rows behind the front row (Y DECK_Y + 0.80 to the back wall; 2 rows on the 20 m room)
+    for k in range(round((ROOM_L - DECK_Y - 0.80) / 0.80)):
+        for x0 in range(0, int(ROOM_W), 2):
+            add("SM_AK_Platform_2x1", x0, round(DECK_Y + 0.80 * (k + 1), 4))
     for x0 in (STAIR_X[0], STAIR_X[0] + 2.2):
         add("SM_AK_Steps_22", x0, STAIR_Y0)
     for x0 in (STAIR_X[0] - CHEEK_W, STAIR_X[1]):
         add("SM_AK_StairCheek", x0, STAIR_Y0)
     # R6: rear composition on the deck
-    add("SM_AK_PaintingPanel", 7.2, ROOM_L, PAINT_Z, 180)       # X 4.8-7.2, Z 1.80-3.95
-    add("SM_AK_RearScreen", 4.8, ROOM_L, DECK_Z, 180)            # X 4.1-4.8
-    add("SM_AK_RearScreen", 7.9, ROOM_L, DECK_Z, 180)            # X 7.2-7.9
+    # r20 fix round (blind judge delta 3: the painting read square; the brief and reference 2 a landscape panel): the bay
+    # 2.4 -> 2.8 m (PAINT_BAY_X 4.6-7.4; the paper 2.48 m wide over 2.08 m above the table top, 1.19:1), the textured
+    # screens either side 0.7 -> 0.5 m (X 4.1-4.6 / 7.4-7.9, hero_backwall BAY_W / SCR_W)
+    add("SM_AK_PaintingPanel", PAINT_BAY_X[1], ROOM_L, PAINT_Z, 180)   # X 4.6-7.4, Z 1.80-3.95
+    add("SM_AK_RearScreen", PAINT_BAY_X[0], ROOM_L, DECK_Z, 180)      # X 4.1-4.6
+    add("SM_AK_RearScreen", 7.9, ROOM_L, DECK_Z, 180)                 # X 7.4-7.9
     add("SM_AK_Ceiling_Beam_4", 4.0, ROOM_L - 0.15, 4.35)       # LED-edged header over the painting (3.95-4.35)
     for xa in REAR_ALCOVE_X:                                     # f1: X 1.2-3.0 and 9.0-10.8
         add("SM_AK_RearAlcove", xa + 1.8, ROOM_L, DECK_Z, 180)
@@ -1485,10 +1633,11 @@ def layout():
     for x in BANNER_X:
         add("SM_AK_Banner", x, BANNER_Y, BANNER_Z)              # R7 (f1): hung from the ceiling, facing the entrance
     for x in PLUM_L_X:
-        add("SM_AK_Vase_Plum_L", x, 15.35, DECK_Z)               # R6: flanking the painting
+        add("SM_AK_Vase_Plum_L", x, ROOM_L - 0.65, DECK_Z)       # R6: flanking the painting (r20: Y 19.35)
     # f1 (R6): the emblem on the unlit top riser of the flight (the 5th: +0.60 to +0.75, face at Y 13.505), on the axis
     # b7: the 5th riser's face is Y TREAD5_Y + 0.005 (the hero riser: 2.5 cm behind the 2 cm nose overhang)
-    add("SM_AK_EmblemDisc_12", 6.0, TREAD5_Y - 0.015, LAND_Z - 0.092)
+    # r20 fix round: on the 6th riser (face DECK_Y + 0.005), centred at +0.795 (disc +0.755-0.835, the LED line from +0.8385)
+    add("SM_AK_EmblemDisc_08", 6.0, DECK_Y - 0.015, LAND_Z + 0.045)
     # R3: sill vases (west faces +X, east faces -X) and small caddies
     for y in SILL_VASES_Y:
         add("SM_AK_Vase_Plum_S", 0.17, y - 0.35, 2.64, -90)
@@ -1562,16 +1711,16 @@ def lights(cases):
     for side, xa in (("W", REAR_ALCOVE_X[0]), ("E", REAR_ALCOVE_X[1])):   # rear alcoves: from the top front edge
         x = xa + 0.9
         dz = DECK_Z - 0.60   # rear dais: the alcoves stand on the +0.90 deck (their lights were set for +0.60)
-        L.append({"type": "rect", "name": f"RackLight_{side}", "loc": [x, 15.5, round(2.85 + dz, 3)], "size": [1.5, 0.08],
-                  "kelvin": 3400, "role": "rack", "shadows": False, "aim": [x, 16.0, round(1.3 + dz, 3)]})
+        L.append({"type": "rect", "name": f"RackLight_{side}", "loc": [x, ROOM_L - 0.5, round(2.85 + dz, 3)], "size": [1.5, 0.08],
+                  "kelvin": 3400, "role": "rack", "shadows": False, "aim": [x, ROOM_L, round(1.3 + dz, 3)]})
         # f2 (judge delta 8: the side alcoves read as lit niches from the entry in reference 2): a warm spot at each of
         # the two lenses under the alcove head (world +2.93), aimed at the back panel low down: hot at the top of the
         # panel, gold on the empty rack and the tansu
         for dx in (0.35, -0.35):
             L.append({"type": "spot", "name": f"AlcoveSpot_{side}{'ab'[dx < 0]}",
-                      "loc": [round(x + dx, 3), 15.64, round(2.93 + dz, 3)],
+                      "loc": [round(x + dx, 3), ROOM_L - 0.36, round(2.93 + dz, 3)],
                       "angle_deg": 75, "blend": 0.6, "kelvin": 3200, "role": "alcove", "shadows": True,
-                      "aim": [round(x + dx, 3), 15.98, round(1.2 + dz, 3)]})
+                      "aim": [round(x + dx, 3), ROOM_L - 0.02, round(1.2 + dz, 3)]})
     # f1 (judge blocker 2): one warm spot per niche at the lens under its head, aimed down the dark back panel: the
     # light grazes the panel and falls off toward the counter (was a rect wash onto an emissive panel)
     for y in NICHE_Y_FLOOR + NICHE_Y_PLAT:
@@ -1581,6 +1730,16 @@ def lights(cases):
             L.append({"type": "spot", "name": f"PanelLight_{side}{y}", "loc": [x, y + 0.5, round(zh, 3)],
                       "angle_deg": 120, "blend": 0.5, "kelvin": 3100, "role": "panel", "shadows": False,   # f2: 3600 -> 3100 K
                       "aim": [x, y + 0.5, 0.0]})
+    # r20 round 3: two spots per wide display bay, one at each lens; a little cooler (+600 K) than the niches' so the
+    # wide panels read cream (reference 2) rather than amber
+    for y in WALL_DISPLAY_Y:
+        zh = NICHE_H_FLOOR - 0.05 - 0.02
+        for k, xl in enumerate(display_lens_x(DISPLAY_W)):
+            dy = xl - DISPLAY_W / 2
+            for side, x, yy in (("W", NICHE_LENS_Y, y - dy), ("E", ROOM_W - NICHE_LENS_Y, y + dy)):
+                L.append({"type": "spot", "name": f"PanelLight_{side}{y:g}{'abcd'[k]}", "loc": [x, round(yy, 4), round(zh, 3)],
+                          "angle_deg": 120, "blend": 0.5, "kelvin": 3700, "role": "panel", "shadows": False,
+                          "aim": [x, round(yy, 4), 0.0]})
     # entryfix: the entry lanterns are the andon again: every floor lantern's light at +0.36 (genkan r4's slim piece +0.31)
     # b7: the scaled rear andons: the light at the same relative height, radius x k, power x k^2 (the paper's area)
     for (x, y, z, k) in [p + (1.0,) for p in ENTRY_LANTERNS] + list(LANTERNS):
@@ -1607,14 +1766,20 @@ def lights(cases):
         for side, xv, yv, xs in (("W", 0.17, y - 0.35, 1.6), ("E", ROOM_W - 0.17, y + 0.35, ROOM_W - 1.6)):
             L.append({"type": "spot", "name": f"SillSpot_{side}{y}", "loc": [xs, yv, CEIL - 0.15], "angle_deg": 22,
                       "blend": 0.6, "kelvin": 3400, "role": "sill", "shadows": False, "aim": [xv, yv, 3.35]})
-    L.append({"type": "rect", "name": "Painting_Wash", "loc": [6.0, 14.9, 4.2], "size": [2.6, 0.2], "kelvin": 4000,
+    # r20 fix round: 2.6 -> 3.0 m wide with the wider (landscape) painting bay, X 4.6-7.4
+    L.append({"type": "rect", "name": "Painting_Wash", "loc": [6.0, ROOM_L - 1.1, 4.2], "size": [3.0, 0.2], "kelvin": 4000,
               "role": "wash", "shadows": False, "aim": [6.0, ROOM_L, 2.5 + DECK_Z - 0.60]})
     # rear dais b4 (reference 2: the landing between the flight and the deck reads as a lit tan band; the b4 landing,
     # unlit under the plain upper riser, read as a dark void): a soft warm wash from the ceiling onto the landing
     # b7: over the upper treads (+0.60 / +0.75, Y 13.56-14.40), which now run the full width (the side terraces)
-    L.append({"type": "rect", "name": "Landing_Wash", "loc": [6.0, round((LAND_Y + DECK_Y) / 2, 3), CEIL - 0.50],
-              "size": [9.0, 0.6], "kelvin": 3400, "role": "wash", "shadows": False,
-              "power_scale": 4.0, "aim": [6.0, round((LAND_Y + DECK_Y) / 2, 3), LAND_Z]})
+    L.append({"type": "rect", "name": "Landing_Wash", "loc": [6.0, round((STAIR_Y0 + DECK_Y) / 2, 3), CEIL - 0.50],
+              # r20 round 3 (judge delta 7): over the flight only (was 9.0 m wide: it lit the wings' treads behind the
+              # tall cases); the power follows the area, the same irradiance
+              # r20 rear round: over the whole 0.98 m landing (was 0.6 m), the same irradiance (power x area)
+              # r20 fix round (delta 1: one even flight, no landing): over the whole flight (Y 15.85-17.60), the same
+              # irradiance (3.09 x 1.75 / 0.95)
+              "size": [4.4, 1.75], "kelvin": 3400, "role": "wash", "shadows": False,
+              "power_scale": 5.69, "aim": [6.0, round((STAIR_Y0 + DECK_Y) / 2, 3), 0.45]})
     # look3: global white balance. Every light ran 3100-3800 K and the frame read over-saturated orange (C1 floor
     # sRGB B 0.09 vs reference 2's 0.27); one shift keeps the warm hierarchy and travels to Unreal via layout.json
     for e in L:
@@ -1652,13 +1817,14 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     # entryfix r2 (blind judge 6/10): refit jointly with the entry layout (c1fit4.py, RMS 12.5 px on 19 landmark
     # values): 40 mm, 4.18 m out, shift -0.315; the lanterns' top shows 0.33x their front (35 mm: 0.37x)
     ("C1_EntryReveal", (6.0, -4.18, 3.39), (6.0, 20.0, 3.39), 40.0, -0.315),
-    ("C2_Case1", (6.0, 1.20, 2.20), (6.0, 3.70, 0.8), 35),
-    ("C4_ShurikenTray", (9.05, 4.0, 1.62), (10.25, 4.0, 0.99), 50),   # item 1: looking down into case 8
-    ("C3_Case3", (6.0, 9.20, 1.50), (6.0, 11.3, 0.95), 28),
-    ("C5_CloakCase", (3.4, 8.9, 1.25), (1.75, 6.6, 1.0), 28),
-    ("C10_Hero", (6.0, 10.9, 2.30), (6.0, 15.9, 1.85), 26),
-    ("CW_WestAisle", (3.4, 1.2, 1.60), (2.4, 13.0, 1.2), 24),
-    ("CX_FromPlatform", (6.0, 15.4, 2.4), (6.0, 1.0, 0.8), 24),
+    ("C2_Case1", (6.0, 1.50, 2.20), (6.0, 4.00, 0.8), 35),            # r20 b3: follows case 1 (Y 4.00)
+    ("C4_ShurikenTray", (7.75, 4.0, 1.62), (8.95, 4.0, 0.99), 50),    # item 1: looking down into case 8 (r20 round 3: X 8.95)
+    # r20 (12 x 20): C3 / C5 follow cases 3 / 4, C10 / CX the back wall (+4.0), CW's aim the flight (+3.2)
+    ("C3_Case3", (6.0, 11.30, 1.50), (6.0, 13.40, 0.95), 28),        # r20 fix round: follows case 3 (Y 13.40)
+    ("C5_CloakCase", (4.15, 9.57, 1.25), (2.50, 7.27, 1.0), 28),      # r20 b3: case 4 at X 2.50; fix round: Y 7.27
+    ("C10_Hero", (6.0, 14.90, 2.30), (6.0, 19.90, 1.85), 26),
+    ("CW_WestAisle", (4.05, 2.9, 1.60), (3.3, 16.2, 1.2), 24),        # r20 b3: in the west aisle (X 3.05-5.10)
+    ("CX_FromPlatform", (6.0, 19.4, 2.4), (6.0, 1.0, 0.8), 24),
     EXT.CAMERA,   # exterior stage: CG_Garden, the courtyard and the entrance
 ]
 
@@ -1732,7 +1898,8 @@ def main():
                          "west_closed_windows_y": [[y0 + 0.25, y0 + 1.75] for y0 in WEST_CLOSED_Y0],
                          "window_walls_x": [0.0, ROOM_W], "door_x": list(ENTRY_X), "door_z": [0.0, ENTRY_H]},
             # building stage: the room size travels with the layout (render fog box, walk check, Unreal)
-            "room": {"width_x": ROOM_W, "length_y": ROOM_L, "ceiling_z": CEIL, "platform_front_y": PLAT_Y},
+            "room": {"width_x": ROOM_W, "length_y": ROOM_L, "ceiling_z": CEIL, "platform_front_y": PLAT_Y,
+                     "deck_z": DECK_Z},
             "cases": [{"label": lab, "type": t, "loc": [x, y], "rot_z": r,
                        "width_depth_plinth_glass_m": list(CASES[t])} for lab, t, x, y, r in CASE_TABLE],
             # items on display (one at a time): world placements for Unreal (ak_level.py) and the preview renders

@@ -451,7 +451,7 @@ def pieces(G):
         sweep(P, G, [tuple(p0 + out * u + up * v) for u, v in arc], 0.016, side, HK, h=0.019, taper=taper)
 
     P.col(0, 1.8, 0, 0.6, 0, 3.2)   # the scripted piece's collision, unchanged
-    return [P, corner_showcase(G)]
+    return [P, corner_niche(G, "W"), corner_niche(G, "E")]
 
 
 # ------------------------------------------------------------------------------------------------ corner showcases
@@ -474,66 +474,72 @@ def pieces(G):
 # b8 (C1 against reference 2, 2x zoom: its corner niche is a tall recess, ~0.5 : 1, the b7 unit read square and low):
 # 0.70 wide, the counter at +0.62 on the deck (+1.52 world, 10 cm under the rack tansu's top), the opening 0.56 x
 # 1.00 m to +1.62 (+2.52), the 15 cm head band to +2.67. The sill ledge (X 0-0.335) stays 15.5 cm clear in plan.
-SC_W, SC_D, SC_H = 0.70, 0.55, 1.77
-SC_CT, SC_HD = 0.62, 1.62          # counter top; underside of the head band
-SC_ST = 0.07                       # the side stiles
-SC_BACK_Y = 15.945                 # the back face: 5 cm clear of the north wall's upper base rail (Y 15.95-16.0)
-SC_X = (1.19, 11.51)               # instance x (rot 180: the piece spans x - 0.70 .. x): X 0.49-1.19 / 10.81-11.51
-SC_FR = 0.030                      # b7 (judge delta 5: a dark frame): a 3 cm black lacquer frame (b4-b6: 1.4 cm brass)
-SC_SHELF = 1.12                    # b7 (judge delta 5: a visible shelf): a fixed shelf board mid-height in the niche
+# r20 rear round (2026-09-28, task delta 3: the b4-b9 unit read as a freestanding glass cabinet; reference 2's corner
+# pieces are SHALLOW LIT WALL NICHES, backlit, recessed into the wall and facing the entrance, with a dark pilaster between
+# each and the rack alcove; C1 zoom x 330-570 / y 140-400: the opening x ~381-412 (0.45 m at the back wall), ~0.48 : 1,
+# its sill ~0.1 m over the rack tansu's top, its height ~0.47x the alcove's lit span; the dark band between it and the
+# alcove's lit panel ~28 px, 0.41 m = the alcove's 0.28 m post + a 0.10 m pilaster): NEW pieces SM_AK_H_CornerNiche_W /
+# _E (mirror images) replace SM_AK_H_CornerShowcase. A dark wall block fills the corner between the side wall's sill
+# ledge and the rack alcove's outer post (X 0.34-1.50 / 10.50-11.66; the alcoves moved 0.30 m inboard, build_armory_kit
+# REAR_ALCOVE_X), flush with the alcove fronts (Y 19.40), from the deck to the alcove's top (+4.10); a shallow niche is
+# sunk 0.25 m into it next to the alcove (a 0.10 m pilaster between, the wide dark pilaster toward the side wall),
+# 0.45 x 1.00 m, sill +0.85 on the deck (+1.75 world): a backlit cream panel (T_AK_HShowcasePanel) at its back, a warm
+# pale lining on its returns, a hidden glow line and a lens under its head, a thin lacquer sill with a brass nose. Under
+# it an inset panel field. EMPTY: no stand, figure or placeholder. Placed rot 180 like the alcove (local x 0..NB_W,
+# back at y 0 = NB_BACK_Y, the face at y NB_D = Y 19.40).
+NB_W, NB_D, NB_H = 1.16, 0.545, 3.20
+NB_X = (1.50, 11.66)               # instance x (rot 180: the piece spans x - NB_W .. x): X 0.34-1.50 / 10.50-11.66
+NB_BACK_Y = 19.945                 # the back face: 5 cm clear of the north wall's upper base rail (Y 19.95-20.0)
+NO_W, NO_PIL = 0.45, 0.10          # the niche opening's width; the pilaster between it and the alcove
+NO_Z0, NO_Z1 = 0.85, 1.85          # its sill and head (deck-relative): +1.75 / +2.75 world
+NO_DEPTH = 0.25                    # sunk into the block (its back panel at local y NB_D - NO_DEPTH)
 LIN = "M_AK_HShowcaseLining"
 LITS = "M_AK_HShowcasePanel"
-GLS = "M_AK_HCaseGlass"            # b4: the hall cases' clear glass (hero_cases)
 
 
-def corner_showcase(G):
-    P = G["Piece"]("SM_AK_H_CornerShowcase")
-    W, D, H = SC_W, SC_D, SC_H
-    x0, x1 = SC_ST, W - SC_ST
-    # the dark timber side stiles, full height, and the head band over the opening (a brass fillet under its front)
-    box(G, P, 0.0, SC_ST, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
-    box(G, P, W - SC_ST, W, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
-    box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, SC_HD, H, T, bev=0.004, grain=0)
-    box(G, P, x0, x1, D - 0.002, D + 0.004, SC_HD + 0.008, SC_HD + 0.020, BR, grain=0)      # brass fillet
-    P.cyl(W / 2, 0.28, SC_HD - 0.0065, SC_HD + 0.002, 0.034, BR, 12)                       # the soffit lens
-    P.cyl(W / 2, 0.28, SC_HD - 0.0105, SC_HD - 0.006, 0.024, LED, 12)
-    # back board and the backlit cream panel (one quad, unique 0-1 UV: T_AK_HShowcasePanel), LED glow lines round it
-    box(G, P, x0, x1, 0.0, 0.02, SC_CT - 0.03, SC_HD, T, grain=2)
-    px0, px1, pz0, pz1 = x0 + 0.01, x1 - 0.01, SC_CT, SC_HD - 0.01
-    P.mesh([(px0, 0.021, pz0), (px1, 0.021, pz0), (px1, 0.021, pz1), (px0, 0.021, pz1)], [[0, 3, 2, 1]],
+def niche_x(side):
+    """The niche opening's local x range: rot 180 maps local x to world X = instance x - local x, so on the west piece
+    local 0 is its alcove side (X 1.50), on the east piece its side-wall side (X 11.66)."""
+    return (NO_PIL, NO_PIL + NO_W) if side == "W" else (NB_W - NO_PIL - NO_W, NB_W - NO_PIL)
+
+
+def corner_niche(G, side):
+    P = G["Piece"]("SM_AK_H_CornerNiche_" + side)
+    assert abs(G["ROOM_L"] - 0.055 - NB_BACK_Y) < 1e-6, "hero_rear_alcove: NB_BACK_Y must follow ROOM_L (r20)"
+    assert abs(G["REAR_ALCOVE_X"][0] - NB_X[0]) < 1e-6 and abs(G["REAR_ALCOVE_X"][1] + 1.8 - (NB_X[1] - NB_W)) < 1e-6,         "hero_rear_alcove: the niche blocks must meet the rear alcoves (REAR_ALCOVE_X)"
+    W, D, H = NB_W, NB_D, NB_H
+    (x0, x1), z0, z1 = niche_x(side), NO_Z0, NO_Z1
+    yb = D - NO_DEPTH                                                                        # the niche's back plane
+    # the dark block round the opening: two pilasters (full height), the part over the head, the base under the sill
+    box(G, P, 0.0, x0, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
+    box(G, P, x1, W, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
+    box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, z1, H, T, bev=0.004, grain=0)
+    box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, 0.0, z0, T, bev=0.004, grain=0)
+    box(G, P, x0, x1, 0.0, yb, z0, z1, T, grain=2)                                           # fill behind the back
+    # the base's inset panel field (the face of the block under the niche, across the pilasters): a lacquer field
+    # 1.2 cm proud of a recessed ground, a thin brass inlay line inside it
+    fx0, fx1, fz0, fz1 = 0.07, W - 0.07, 0.10, z0 - 0.12
+    box(G, P, fx0, fx1, D - 0.002, D + 0.010, fz0, fz1, LQ, bev=0.003, grain=0)
+    for a0, a1, b0, b1 in ((fx0 + 0.03, fx1 - 0.03, fz0 + 0.03, fz0 + 0.034), (fx0 + 0.03, fx1 - 0.03, fz1 - 0.034, fz1 - 0.03),
+                           (fx0 + 0.03, fx0 + 0.034, fz0 + 0.034, fz1 - 0.034), (fx1 - 0.034, fx1 - 0.03, fz0 + 0.034, fz1 - 0.034)):
+        box(G, P, a0, a1, D + 0.009, D + 0.0115, b0, b1, BR, grain=0)
+    # the backlit cream panel (one quad, unique 0-1 UV: T_AK_HShowcasePanel), glow lines round its head and sides
+    P.mesh([(x0, yb + 0.001, z0), (x1, yb + 0.001, z0), (x1, yb + 0.001, z1), (x0, yb + 0.001, z1)], [[0, 3, 2, 1]],
            [[(0.0, 0.0), (0.0, 1.0), (1.0, 1.0), (1.0, 0.0)]], LITS)
-    box(G, P, x0, x1, 0.02, 0.030, pz1 - 0.001, SC_HD, LE, grain=0)                         # glow line at the head
-    # b7 (judge delta 5): the recess reads as a lit nook - the lining on both side returns and the floor, 1 cm inside
-    # the stiles, from the back panel to behind the glazing, and a fixed shelf board with a thin brass nose
-    box(G, P, x0, x0 + 0.01, 0.02, D - 0.04, SC_CT, SC_HD, LIN, grain=2)
-    box(G, P, x1 - 0.01, x1, 0.02, D - 0.04, SC_CT, SC_HD, LIN, grain=2)
-    box(G, P, x0, x1, 0.02, D - 0.04, SC_CT - 0.002, SC_CT + 0.004, LIN, grain=0)
-    box(G, P, x0 + 0.01, x1 - 0.01, 0.02, D - 0.07, SC_SHELF - 0.022, SC_SHELF, LQ, bev=0.002, grain=0,
-        front=("+z", LIN))
-    box(G, P, x0 + 0.01, x1 - 0.01, D - 0.074, D - 0.066, SC_SHELF - 0.016, SC_SHELF - 0.006, BR, grain=0)
-    # b4: the glazed front round a clear pane 1.6 cm behind its face; b7 (judge delta 5): a 3 cm black lacquer frame
-    # (sides, head, sill) with a thin brass line round the glass
-    F_ = SC_FR
-    box(G, P, x0, x0 + F_, D - 0.040, D - 0.002, SC_CT, SC_HD, LQ, bev=0.003, grain=2)
-    box(G, P, x1 - F_, x1, D - 0.040, D - 0.002, SC_CT, SC_HD, LQ, bev=0.003, grain=2)
-    box(G, P, x0, x1, D - 0.040, D - 0.002, SC_HD - F_, SC_HD, LQ, bev=0.003, grain=0)
-    box(G, P, x0, x1, D - 0.040, D - 0.002, SC_CT, SC_CT + F_, LQ, bev=0.003, grain=0)
-    for a0, a1, b0, b1, g in ((x0 + F_, x0 + F_ + 0.004, SC_CT + F_, SC_HD - F_, 2), (x1 - F_ - 0.004, x1 - F_, SC_CT + F_, SC_HD - F_, 2),
-                              (x0 + F_, x1 - F_, SC_CT + F_, SC_CT + F_ + 0.004, 0), (x0 + F_, x1 - F_, SC_HD - F_ - 0.004, SC_HD - F_, 0)):
-        box(G, P, a0, a1, D - 0.028, D - 0.012, b0, b1, BR, grain=g)
-    box(G, P, x0 + F_ - 0.004, x1 - F_ + 0.004, D - 0.022, D - 0.016, SC_CT + F_ - 0.004, SC_HD - F_ + 0.004, GLS,
-        grain=0)
-    # the black lacquer base cabinet: the counter slab (brass top line), a closed front with a recessed field ringed by
-    # a brass inlay line, a recessed toe
-    box(G, P, x0 - 0.004, x1 + 0.004, 0.02, D + 0.006, SC_CT - 0.03, SC_CT, LQ, bev=0.004, grain=0)
-    box(G, P, x0, x1, D + 0.004, D + 0.010, SC_CT - 0.024, SC_CT - 0.012, BR, grain=0)      # brass top line
-    box(G, P, x0 + 0.005, x1 - 0.005, 0.03, D - 0.01, 0.10, SC_CT - 0.03, LQ, grain=0)       # carcass
-    box(G, P, x0 + 0.01, x1 - 0.01, 0.03, D - 0.05, 0.0, 0.10, LQ, grain=0)                   # recessed toe
-    zf0, zf1 = 0.16, SC_CT - 0.09
-    box(G, P, x0 + 0.03, x1 - 0.03, D - 0.012, D - 0.006, zf0, zf1, LQ, bev=0.002, grain=2)   # the field
-    for a0, a1, b0, b1 in ((x0 + 0.048, x1 - 0.048, zf0 + 0.018, zf0 + 0.022), (x0 + 0.048, x1 - 0.048, zf1 - 0.022, zf1 - 0.018),
-                           (x0 + 0.048, x0 + 0.052, zf0 + 0.022, zf1 - 0.022), (x1 - 0.052, x1 - 0.048, zf0 + 0.022, zf1 - 0.022)):
-        box(G, P, a0, a1, D - 0.0065, D - 0.004, b0, b1, BR, grain=0)                        # brass inlay line
+    box(G, P, x0 + 0.01, x1 - 0.01, yb, yb + 0.012, z1 - 0.016, z1 - 0.004, LE, grain=0)      # glow line at the head
+    # the lining: both returns, the soffit and the sill, warm pale satin (the head spot grades it)
+    box(G, P, x0, x0 + 0.008, yb, D, z0, z1, LIN, grain=2)
+    box(G, P, x1 - 0.008, x1, yb, D, z0, z1, LIN, grain=2)
+    box(G, P, x0, x1, yb, D, z1 - 0.004, z1, LIN, grain=0)
+    # the lens under the head, 12 cm in front of the back panel
+    P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0085, z1 - 0.002, 0.030, BR, 12)
+    P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0125, z1 - 0.008, 0.021, LED, 12)
+    # the sill: a thin lacquer board projecting 2.5 cm, its top the lining, a brass nose line
+    box(G, P, x0 - 0.015, x1 + 0.015, yb, D + 0.025, z0 - 0.03, z0, LQ, bev=0.003, grain=0, front=("+z", LIN))
+    box(G, P, x0 - 0.012, x1 + 0.012, D + 0.024, D + 0.029, z0 - 0.022, z0 - 0.010, BR, grain=0)
+    # a thin bronze reveal line down both jambs of the opening (the pilasters' inner arrises)
+    box(G, P, x0 - 0.004, x0 + 0.001, D - 0.006, D + 0.002, z0, z1, BZ, grain=2)
+    box(G, P, x1 - 0.001, x1 + 0.004, D - 0.006, D + 0.002, z0, z1, BZ, grain=2)
     P.col(0, W, 0, D, 0, H)
     return P
 
@@ -541,20 +547,20 @@ def corner_showcase(G):
 def instances():
     import armory_hero as AH
     z = AH.G["DECK_Z"]
-    return [("SM_AK_H_CornerShowcase", x, SC_BACK_Y, z, 180.0) for x in SC_X]
+    return [("SM_AK_H_CornerNiche_" + side, x, NB_BACK_Y, z, 180.0) for side, x in zip("WE", NB_X)]
 
 
 def lights():
-    """One warm spot at each showcase's soffit lens, straight down the backlit panel (role alcove, as the rack alcoves'
-    lens spots, at half their power for the 0.54 m panel). b9 (C1 zoom: the b8 lining and shelf read too dim to show
-    the recess): 0.35 -> 0.8 (b7: 0.15 -> 0.35)."""
+    """One warm spot at each corner niche's lens, down the backlit panel (role alcove, as the rack alcoves' lens spots;
+    the b9 showcase's 0.8 power for the smaller 0.46 m niche)."""
     import armory_hero as AH
     z = AH.G["DECK_Z"]
     out = []
-    for side, x in zip("WE", SC_X):
-        xc = x - SC_W / 2
-        out.append({"type": "spot", "name": f"ShowcaseSpot_{side}", "loc": [round(xc, 3), round(SC_BACK_Y - 0.28, 3),
-                    round(z + SC_HD - 0.02, 3)], "angle_deg": 90, "blend": 0.6, "kelvin": 3200, "role": "alcove",
-                    "shadows": True, "power_scale": 0.8, "aim": [round(xc, 3), round(SC_BACK_Y - 0.03, 3),
-                                                                  round(z + SC_CT, 3)]})
+    for side, x in zip("WE", NB_X):
+        xc = x - sum(niche_x(side)) / 2                                     # world X of the niche's centre
+        yb = NB_BACK_Y - (NB_D - NO_DEPTH)                                   # world Y of the niche's back panel
+        out.append({"type": "spot", "name": f"NicheSpot_{side}", "loc": [round(xc, 3), round(yb - 0.12, 3),
+                    round(z + NO_Z1 - 0.02, 3)], "angle_deg": 90, "blend": 0.6, "kelvin": 3200, "role": "alcove",
+                    "shadows": True, "power_scale": 0.8, "aim": [round(xc, 3), round(yb - 0.01, 3),
+                                                                  round(z + NO_Z0, 3)]})
     return out

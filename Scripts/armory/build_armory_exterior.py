@@ -64,8 +64,8 @@ MATERIALS = {
     MGRN: ("AKX_MapleGreen", None, {"alpha": True, "two_sided": True, "translucent": 0.2, "edge_fade": True}),
     # scenery: emissive pictures (like the old garden backdrop); the tree lines are alpha-masked
     # f1: 7 -> 10 with a warmer near line (make_exterior_textures.treeline): the windows read hot gold-green
-    "M_AKX_TreeLine": ("AKX_TreeLine", None, {"emit_image": True, "emit": 10.0, "alpha": True, "two_sided": True, "unlit": True}),
-    "M_AKX_TreeLineFar": ("AKX_TreeLineFar", None, {"emit_image": True, "emit": 2.5, "alpha": True, "two_sided": True, "unlit": True}),
+    "M_AKX_TreeLine": ("AKX_TreeLine", None, {"emit_image": True, "emit": 10.0, "alpha": True, "two_sided": True, "unlit": True, "edge_fade": True}),
+    "M_AKX_TreeLineFar": ("AKX_TreeLineFar", None, {"emit_image": True, "emit": 2.5, "alpha": True, "two_sided": True, "unlit": True, "edge_fade": True}),
     "M_AKX_Hills": ("AKX_Hills", None, {"emit_image": True, "emit": 6.0, "unlit": True}),
     "M_AKX_Mountains": ("AKX_Mountains", None, {"emit_image": True, "emit": 5.0, "unlit": True}),
 }
@@ -274,7 +274,11 @@ def ground_pieces():
     # floor is at -0.12): four
     # boxes round it (UVs stay world-continuous: the field is placed at FIELD_AT, local = world - FIELD_AT)
     gx0, gy0, gx1, gy1 = G["GENKAN"]
-    hx0, hx1 = gx0 - FIELD_AT[0], gx1 - FIELD_AT[0]
+    # r20 final (integration fix): the hole's side faces were coplanar with the step beam's side returns' inner faces
+    # (world X 3.52 / 8.48), and the lawn z-fought through them as a green slit at both genkan ends (golden C1, CE_EntryDown);
+    # the hole's sides now lie inside the returns' bodies (X 3.46-3.52 / 8.48-8.54), hidden
+    rh = G["STEP_RETURN_W"] / 2
+    hx0, hx1 = gx0 - rh - FIELD_AT[0], gx1 + rh - FIELD_AT[0]
     hy0, hy1 = G["ENTRY_SILL"][1] - FIELD_AT[1], gy1 + G["STEP_BEAM_D"] - FIELD_AT[1]
     fld = Piece("SM_AKX_Ground_Field")
     for (a, b, c, d) in ((0, 400, 0, hy0), (0, 400, hy1, 400), (0, hx0, hy0, hy1), (hx1, 400, hy0, hy1)):
@@ -635,11 +639,11 @@ def enclosure_pieces():
 # --------------------------------------------------------------------------- building exterior
 
 def roof_piece():
-    """The hipped tile roof over the 12.6 x 16.6 m hall: eaves 1.0 m beyond the outer wall faces (X -1.3..13.3,
-    Y -1.3..17.3), 26 degree pitch, top of the eave edge +4.70, slab 0.18 m, so the underside passes over the wall top
+    """The hipped tile roof over the 12.6 x 20.6 m hall (r20; was 12.6 x 16.6): eaves 1.0 m beyond the outer wall faces
+    (X -1.3..13.3, Y -1.3..21.3; the ridge Y 6.0..14.0), 26 degree pitch, top of the eave edge +4.70, slab 0.18 m, so the underside passes over the wall top
     (+5.00) at the outer face. f2 sun (18 deg up, heading 35 deg): the soffit edge (+4.52) shades the outer wall face
     down to +4.12, 2.3 cm above the clear window heads (+4.10), so the whole west opening takes the sun."""
-    x0, x1, y0, y1 = -0.30 - ROOF_EAVE, 12.30 + ROOF_EAVE, -0.30 - ROOF_EAVE, 16.30 + ROOF_EAVE
+    x0, x1, y0, y1 = -0.30 - ROOF_EAVE, 12.30 + ROOF_EAVE, -0.30 - ROOF_EAVE, G["ROOM_L"] + 0.30 + ROOF_EAVE   # r20
     half = (x1 - x0) / 2
     xr = (x0 + x1) / 2
     zr = ROOF_EAVE_Z + half * math.tan(math.radians(ROOF_PITCH))
@@ -676,7 +680,7 @@ def roof_piece():
     rf.mesh(*beam((xr, ya - 0.25, zr - 0.02), (xr, yb + 0.25, zr - 0.02), 0.30, 0.26, ROOF))
     for (cx, cy) in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
         top_pt = (xr, ya if cy < 0 else yb, zr - 0.05)
-        rf.mesh(*beam((cx + (0.12 if cx < xr else -0.12), cy + (0.12 if cy < 8 else -0.12), ze - 0.04), top_pt,
+        rf.mesh(*beam((cx + (0.12 if cx < xr else -0.12), cy + (0.12 if cy < (y0 + y1) / 2 else -0.12), ze - 0.04), top_pt,
                       0.22, 0.18, ROOF))
     for y in (ya - 0.35, yb + 0.35):
         rf.box(xr - 0.20, xr + 0.20, y - 0.10, y + 0.10, zr - 0.05, zr + 0.42, ROOF)
@@ -707,16 +711,20 @@ def facade_pieces():
         f.box(0.18, L, -0.31, -0.30, 3.60, 4.85, WPL, uv="x")
         f.box(0.0, L, -0.37, -0.30, 4.85, 5.0, T, uv="x")
         out.append(f.col(0, L, -0.37, -0.30, 0.46, 5.0))
-    s = Piece("SM_AKX_Facade_Side_2")
+    # r20 round 3: the side-wall skin follows the kit's window bay (G WIN_BAY: 4 m, a 3.5 m opening; was 2 m)
+    WB = G["WIN_BAY"]
+    s = Piece(f"SM_AKX_Facade_Side_{WB}")
     s.box(0.0, 0.18, -0.36, -0.30, 0.46, 4.85, T)
-    s.box(0.18, 2.0, -0.34, -0.30, 0.46, 0.56, T, uv="x")
+    s.box(0.18, WB, -0.34, -0.30, 0.46, 0.56, T, uv="x")
     zh = 2.5 + G["WIN_HEAD"] + 0.031                                   # f1: the kit's window head (+4.13 rough opening)
-    s.box(0.18, 2.0, -0.35, -0.30, 2.52, 2.60, T, uv="x")             # under the window (opening +2.62..+4.13)
-    s.box(0.18, 2.0, -0.35, -0.30, zh + 0.02, zh + 0.12, T, uv="x")   # over it
-    s.box(0.16, 0.215, -0.35, -0.30, 2.60, zh + 0.02, T).box(1.785, 1.84, -0.35, -0.30, 2.60, zh + 0.02, T)   # jambs
-    s.box(0.18, 2.0, -0.31, -0.30, zh + 0.12, 4.85, WPL, uv="x")
-    s.box(0.0, 2.0, -0.37, -0.30, 4.85, 5.0, T, uv="x")
-    out.append(s.col(0, 2.0, -0.37, -0.30, 0.46, 2.60).col(0, 2.0, -0.37, -0.30, zh, 5.0))
+    s.box(0.18, WB, -0.35, -0.30, 2.52, 2.60, T, uv="x")             # under the window (opening +2.62..+4.13)
+    s.box(0.18, WB, -0.35, -0.30, zh + 0.02, zh + 0.12, T, uv="x")   # over it
+    s.box(0.16, 0.215, -0.35, -0.30, 2.60, zh + 0.02, T).box(WB - 0.215, WB - 0.16, -0.35, -0.30, 2.60, zh + 0.02, T)   # jambs
+    s.box(0.18, WB, -0.31, -0.30, zh + 0.12, 4.85, WPL, uv="x")
+    s.box(0.0, WB, -0.37, -0.30, 4.85, 5.0, T, uv="x")
+    if WB >= 4:   # a post on the plaster band under the window at the bay's middle (the 2 m rhythm below the sill)
+        s.box(WB / 2 - 0.09, WB / 2 + 0.09, -0.36, -0.30, 0.46, 2.52, T)
+    out.append(s.col(0, WB, -0.37, -0.30, 0.46, 2.60).col(0, WB, -0.37, -0.30, zh, 5.0))
     e = Piece("SM_AKX_Facade_Entrance_6")          # the outer skin round the entrance opening (world X 3-9)
     # f1: the entrance is 3.65 m tall (kit ENTRY_H), so the rail rides on the lintel top (+4.05) instead of +3.45, where
     # it would hang 20 cm into the raised opening
@@ -824,15 +832,22 @@ def layout(add, room_w, room_l):
     # short of the red maple's crown (-8.57)
     add("SM_AKX_Pine_B", 9.5, -10.16, 0.0, 90)
     # enclosure: south wall with the gate on the axis, side walls up to Y +3
+    # r20 round 3 (blind judge delta 9: the compound wall stopped at Y +3, so the lengthened hall stood on open grass):
+    # the side walls run on past the hall (4 m off its walls) to a north wall 3 m behind it; piers at the corners and
+    # where the courtyard's walls used to end
     for x in (X0, X0 + 4.0):
         add("SM_AKX_Wall_4", x, Y0)
     add("SM_AKX_Gate", cx - 2.0, Y0)
     for x in (cx + 2.0, cx + 6.0):
         add("SM_AKX_Wall_4", x, Y0)
-    for y in (Y0, Y0 + 4.0, Y0 + 8.0, Y0 + 12.0):
-        add("SM_AKX_Wall_4", X0, y, 0.0, 90)
-        add("SM_AKX_Wall_4", X1, y, 0.0, 90)
-    for (x, y) in ((X0, Y0), (X1, Y0), (X0, Y0 + 16.0), (X1, Y0 + 16.0)):
+    n_side = int(math.ceil((room_l + 3.0 - Y0) / 4.0))
+    YN = Y0 + 4.0 * n_side                                  # the north wall's line (Y 23 on the 20 m hall)
+    for k in range(n_side):
+        add("SM_AKX_Wall_4", X0, Y0 + 4.0 * k, 0.0, 90)
+        add("SM_AKX_Wall_4", X1, Y0 + 4.0 * k, 0.0, 90)
+    for k in range(int(round((X1 - X0) / 4.0))):
+        add("SM_AKX_Wall_4", X0 + 4.0 * k, YN)
+    for (x, y) in ((X0, Y0), (X1, Y0), (X0, Y0 + 16.0), (X1, Y0 + 16.0), (X0, YN), (X1, YN)):
         add("SM_AKX_WallPier", x, y)
     # the building: roof and stone foundation band (south wall stops at the entrance casing X 3.7 / 8.3)
     add("SM_AKX_Roof", 0.0, 0.0)
@@ -853,9 +868,10 @@ def layout(add, room_w, room_l):
     add("SM_AKX_Facade_Entrance_6", 3.0, 0.0)
     for x0 in range(0, int(room_w), 2):
         add("SM_AKX_Facade_2", x0 + 2, room_l, 0.0, 180)
-    for y0 in range(0, int(room_l), 2):
-        add("SM_AKX_Facade_Side_2", 0.0, y0 + 2, 0.0, -90)
-        add("SM_AKX_Facade_Side_2", room_w, y0, 0.0, 90)
+    WB = G["WIN_BAY"]   # r20 round 3: 4 m bays
+    for y0 in range(0, int(room_l), WB):
+        add(f"SM_AKX_Facade_Side_{WB}", 0.0, y0 + WB, 0.0, -90)
+        add(f"SM_AKX_Facade_Side_{WB}", room_w, y0, 0.0, 90)
     # scenery: two tree-line layers west, east and north; the far layer only to the south-west and south-east, so the
     # gate opens on the meadow, the hills and the mountains
     for y in (-14.0, 10.0):

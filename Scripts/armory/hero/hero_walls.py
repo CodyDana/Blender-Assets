@@ -269,8 +269,12 @@ Y_EB, Y_PB, Y_PO, Y_HD, Y_SB, Y_ST, Y_HU, Y_LG, Y_RV, Y_DR, Y_TK = (
     F - d for d in (0.001, 0.004, 0.012, 0.016, 0.020, 0.026, 0.028, 0.034, 0.040, 0.046, 0.080))
 
 
-def wall_panel(G, name, NH, DZ):
+def wall_panel(G, name, NH, DZ, W=W, lens_x=None):
+    """r20 round 3: W is the bay width (0.85 m niche, or the kit's DISPLAY_W wide display); lens_x the bay-local x of
+    its downlight lenses (the kit's display_lens_x: the lights hang there). The wide bay keeps the niche's section,
+    frame widths and heights; its cabinet has four doors and the washi picture is stretched across the opening."""
     p = G["Piece"](name)
+    lens_x = lens_x or (W / 2,)
     top, open_h, paper = NICHE[round(NH, 2)]   # (DZ: the scripted counter height, superseded by the ledge top here)
     hd = NH - 0.05                  # interior ceiling = the scripted lens plane (lights(): the panel spot sits at hd - 0.02)
     zl = top - 0.035                # ledge underside (a 3.5 cm black ledge)
@@ -324,21 +328,25 @@ def wall_panel(G, name, NH, DZ):
     box(p, RV + LED_IN + 0.0002, L(RV + LED_IN + 0.0002), 0.0195, 0.0258, zo - 0.0055, zo + 0.003, LR)
     box(p, RV + LED_IN - 0.0005, L(RV + LED_IN - 0.0005), 0.0195, 0.0262, zo - LED_IN, zo - 0.005, LE)
     # the niche downlight lens under the interior ceiling (lights() places the spot here), behind the lintel
-    p.cyl(0.425, 0.20, hd - 0.012, hd + 0.002, 0.035, BR, 16)
-    p.cyl(0.425, 0.20, hd - 0.016, hd - 0.0115, 0.024, LED, 16)
+    for xl in lens_x:
+        p.cyl(xl, 0.20, hd - 0.012, hd + 0.002, 0.035, BR, 16)
+        p.cyl(xl, 0.20, hd - 0.016, hd - 0.0115, 0.024, LED, 16)
     # the black lacquer ledge over the opening and its reveals, an LED line under its nose
     box(p, ST + 0.0005, L(ST + 0.0005), 0.012, Y_LG, zl, top, LQ, 0.0015)
     box(p, RV + 0.001, L(RV + 0.001), Y_DR - 0.004, Y_RV - 0.001, zl - 0.009, zl - 0.0005, LE)
     # the closed cabinet: carcass, two black lacquer doors split on the centre line
     box(p, RV - 0.001, L(RV - 0.001), 0.012, Y_DR - 0.006, 0.058, zl + 0.001, LQ)
-    for a, b in ((RV + 0.001, xm - 0.0015), (xm + 0.0015, L(RV + 0.001))):
+    nd = 2 if W < 1.2 else max(4, round(W / 0.46))   # r20 round 3: four doors under the wide display (fix round: ~0.46 m doors, 8 under 3.85 m)
+    dx = (L(RV + 0.001) - (RV + 0.001)) / nd
+    for a, b in [((RV + 0.001) + i * dx + (0.0015 if i else 0.0), (RV + 0.001) + (i + 1) * dx - (0.0015 if i < nd - 1 else 0.0))
+                 for i in range(nd)]:
         box(p, a, b, Y_DR - 0.008, Y_DR, 0.064, zl - 0.0095, LQ, 0.0015)
         # wall_alcove.png: a fine bronze border round each door face
         ring(p, a + 0.004, b - 0.004, 0.068, zl - 0.0135, 0.003, 0.003, 0.003, 0.003, Y_DR - 0.001, Y_DR + 0.0007, BZ)
     # the recessed toe kick and the down-facing LED strip under the carcass's front edge (warm line, pool on the floor)
     box(p, ST + 0.001, L(ST + 0.001), 0.0, Y_TK, 0.0, 0.0585, LQ)
     box(p, RV + 0.006, L(RV + 0.006), Y_TK + 0.002, Y_TK + 0.016, 0.051, 0.0575, LD)
-    p.col(0, 0.85, 0, 0.294, 0, NH)   # the scripted collision, unchanged
+    p.col(0, W, 0, 0.294, 0, NH)   # the scripted collision, unchanged
     return p
 
 
@@ -355,8 +363,11 @@ FR, SA = 0.028, 0.018   # the slim dark frame (2.8 cm, full depth) and the sash 
 
 
 def window_lattice(G):
-    p = G["Piece"]("SM_AK_Window_Lattice")
-    W_, H_ = WIN_W, WIN_H
+    # r20 round 3: the kit's window width (G WIN_BAY - 0.5: 3.5 m in the 4 m bay, was 1.5 m); the bars keep reference
+    # 2's pitch (13 per 1.5 m)
+    p = G["Piece"](G["WINDOW_LATTICE"])
+    W_, H_ = G["WIN_BAY"] - 0.5, WIN_H
+    n_bars = round(N_BARS * (W_ - 0.1) / (WIN_W - 0.1))
     # the slim dark oak frame round the whole opening (the scripted piece's 1.50 x 1.45 x 4 cm), front arris chamfered
     ring(p, 0.0, W_, 0.0, H_, FR, FR, FR, FR, -0.020, 0.020, OAK, 0.002)
     # the dark sash inside it, 4 mm back from the frame face: a second thin step (reference 2's frame reads double)
@@ -366,16 +377,16 @@ def window_lattice(G):
     # the open field: thin dark oak bars evenly spaced (1.2 cm deep: they stay open to oblique views along the aisles),
     # one rail, the bars half-lapped through it. Round 2: the bars were the warm walnut sash set and read as pale sunlit
     # slats; reference 2's bars are dark brown against the bright garden
-    pitch = (gx1 - gx0) / (N_BARS + 1)
+    pitch = (gx1 - gx0) / (n_bars + 1)
     bw = BAR_F * pitch
     rc = gz1 - RAIL_AT * (gz1 - gz0)
     rh = 0.020
     oak(p, gx0 - 0.0005, gx1 + 0.0005, -0.007, 0.007, rc - rh / 2, rc + rh / 2, grain=0)
-    for i in range(1, N_BARS + 1):
+    for i in range(1, n_bars + 1):
         xc = gx0 + i * pitch
         for za, zb in ((gz0 - 0.0005, rc - rh / 2 + 0.002), (rc + rh / 2 - 0.002, gz1 + 0.0005)):
             oak(p, xc - bw / 2, xc + bw / 2, -0.006, 0.006, za, zb, grain=2)
-    p.col(0, 1.50, -0.02, 0.02, 0, WIN_H)   # the scripted collision, unchanged
+    p.col(0, W_, -0.02, 0.02, 0, WIN_H)   # the scripted collision, unchanged
     return p
 
 
@@ -401,6 +412,9 @@ def pieces(G):
     _K[0] = 0
     # rear dais (2026-09-28): the platform bay (SM_AK_WallPanel_Lit_190) is built only while the kit places it
     # (build_armory_kit NICHE_Y_PLAT; empty since the deck rose to +0.90)
-    return [wall_panel(G, "SM_AK_WallPanel_Lit", G["NICHE_H_FLOOR"], G["NICHE_DADO_FLOOR"])] + (
+    # r20 round 3: the 0.85 m hall niche only while the kit places it; the wide display bay (SM_AK_WallPanel_LitWide)
+    return ([wall_panel(G, "SM_AK_WallPanel_Lit", G["NICHE_H_FLOOR"], G["NICHE_DADO_FLOOR"])] if G["NICHE_Y_FLOOR"] else []) + (
         [wall_panel(G, "SM_AK_WallPanel_Lit_190", G["NICHE_H_PLAT"], G["NICHE_DADO_PLAT"])] if G["NICHE_Y_PLAT"] else []
+    ) + ([wall_panel(G, "SM_AK_WallPanel_LitWide", G["NICHE_H_FLOOR"], G["NICHE_DADO_FLOOR"], G["DISPLAY_W"],
+                     G["display_lens_x"](G["DISPLAY_W"]))] if G["WALL_DISPLAY_Y"] else []
     ) + [window_lattice(G), sill_ledge(G)]
