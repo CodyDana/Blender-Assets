@@ -26,12 +26,12 @@ Vec3 = Tuple[float, float, float]
 #   Rack_Warehouse_1829 1500 -> 20000: sheet 28 draws keyhole slots on every upright face (2 columns on the front face,
 #     1 on the side), about 400 of them, and they are the rack's defining detail; each is a real 8-sided pocket. The
 #     fifth level (sheet 28) adds a deck and 4 beams.
-#   Workbench_1524 1500 -> 5000: sheet 28 draws a slot column on each leg's front face and a hole column on its side.
+#   Workbench_1524 1500 -> 6000: sheet 28 draws a slot column on each leg's front face and a hole column on its side.
 #   TrashCan 800 -> 1200: the hollow inside (seen through the swinging flap, sheet 29) and the raised band's rounds.
 #   TapeGun 800 -> 1300: sheet 27's three-window hub, the two side plates, the serrated blade and the clear guard.
 BUDGETS = {
     "SM_CSK_Rack_Warehouse_1829": 20000,
-    "SM_CSK_Workbench_1524": 5000,
+    "SM_CSK_Workbench_1524": 6000,
     "SM_CSK_Mailer_S": 150, "SM_CSK_Mailer_L": 150,
     "SM_CSK_Mailer_S_Open": 150, "SM_CSK_Mailer_L_Open": 150,
     "SM_CSK_TapeGun": 1300,
@@ -113,21 +113,23 @@ TRUCK = dict(                     # H7, sheet 28 (3): 450 W x 500 D x 1200 H (E 
 
 RACK = dict(                      # H1, sheet 28 (1): overall 1829 W x 610 D x 2134 H (E = sheet), feet included
     w=1829.0, d=610.0, h=2134.0,
-    foot=(12.0, 10.0, 3.0),       # sheet 28 "Upright foot": a black square plate 12 proud of the upright all round,
-                                  # 10 thick (E), 3 chamfer (E)
+    foot=(15.0, 16.0),            # sheet 28 "Upright foot": a black square plate 15 proud of the upright all round,
+                                  # 16 thick (its edges take the LOD0 bevel)
     upright=(60.0, 45.0),         # E* (sheet 28: ~60 front face with two keyhole columns, a narrower side face with one)
     levels=5,                     # sheet 28 notes: the picture shows 5 levels (spec 4, E): build 5
     deck_first=200.0,             # E*: the L1 deck top (sheet 28: the bottom beam ~150 above the floor)
     deck_pitch=482.5,             # D: L1 200 to L5 2130; 482.5 leaves 406.5 clear, so the L delivery box (406.2) fits
     beam=(60.0, 40.0),            # E* (sheet 28: beam height ~ the upright's width): height, depth
     deck_t=16.0,                  # E: particle board, resting on the beams (sheet 28 deck detail: its edge shows)
-    plate=(30.0, 25.0, 3.0),      # sheet 28 "Boltless beam connection": the end plate over the upright's inner slot
-                                  # column: width, drop below the beam, thickness
-    keyhole=((-2.0, 0.0), (2.0, 0.0), (2.0, 7.0), (4.0, 11.0), (2.0, 16.0), (-2.0, 16.0), (-4.0, 11.0), (-2.0, 7.0)),
-                                  # sheet 28: a round head over a narrow slot, ~8 x 16 (E*)
-    slot_pitch=50.0,              # E* (sheet 28 reads 40-50)
+    plate=(30.0, 40.0, 3.0),      # sheet 28 "Boltless beam connection": the end plate over the upright's inner slot
+                                  # column: width, drop below the beam (sheet 28: two rivet holes show below it),
+                                  # thickness
+    keyhole=((-4.0, 0.0), (4.0, 0.0), (4.0, 13.0), (8.0, 19.0), (4.5, 28.0), (-4.5, 28.0), (-8.0, 19.0), (-4.0, 13.0)),
+                                  # sheet 28 beam and foot details: a round head ~16 wide over a slot half as wide,
+                                  # ~28 tall; the two front columns fill most of the 60 face
+    slot_pitch=45.0,              # sheet 28 (reads 31-50 across the views; 45 keeps the budget)
     slot_cols=15.0,               # the front face's two columns at +-15 from its centre (sheet 28)
-    slot_depth=5.0,               # E: pocket depth; the floor is dark (the tube's inside)
+    slot_depth=3.0,               # E: pocket depth (45-degree dark walls; the slot's floor stays 2 wide)
     rivets=3,                     # sheet 28: three holes down each end plate
 )
 
@@ -142,7 +144,7 @@ BENCH = dict(                     # H2, sheet 28 (2): 1524 W x 762 D x 914 H (E 
     shelf=(170.0, 60.0, 18.0),    # sheet 28: the lower shelf: beam bottom z, beam height, board thickness
     hole=((-2.0, 0.0), (2.0, 0.0), (3.2, 6.0), (2.0, 11.0), (-2.0, 11.0), (-3.2, 6.0)),   # sheet 28: leg slots (E*)
     hole_pitch=32.0,              # sheet 28 (reads ~32)
-    hole_depth=4.0,
+    hole_depth=1.5,               # E: 45-degree dark walls (the slot's floor stays 1.5 wide)
 )
 
 TBAG = dict(                      # H6, sheet 29 (2)
@@ -1226,55 +1228,78 @@ def item_handtruck() -> Item:
 
 # =========================================================================== slotted steel (H1 uprights, H2 legs)
 
-_FACES = {   # face key: (corner ids of the 8-corner box, outward normal, u axis, v axis) - see _slotted_box
-    "ny": ((0, 1, 5, 4), (0.0, -1.0, 0.0), 0, 2), "py": ((2, 3, 7, 6), (0.0, 1.0, 0.0), 0, 2),
-    "nx": ((3, 0, 4, 7), (-1.0, 0.0, 0.0), 1, 2), "px": ((1, 2, 6, 5), (1.0, 0.0, 0.0), 1, 2),
-    "nz": ((0, 3, 2, 1), (0.0, 0.0, -1.0), 0, 1), "pz": ((4, 5, 6, 7), (0.0, 0.0, 1.0), 0, 1),
-}
-
-
 def _slotted_box(b: Builder, mn: Vec3, mx: Vec3, mat: int, holes: Dict[str, Sequence[Tuple[float, float]]],
-                 shape: Sequence[Tuple[float, float]], depth: float, floor_mat: int,
-                 skip: Sequence[str] = ()) -> None:
-    """A box whose faces carry real pockets: ``holes`` {face: [(a, c)]} are the pocket origins on that face in world
-    coordinates of the face's u / v axes (x or y across, z up); ``shape`` [(du, dv)] is the pocket outline. Each face
-    with pockets is one planar fill round them (shared corners, no T-junctions); the pocket walls face the pocket and
-    the floor is ``floor_mat``."""
+                 shape: Sequence[Tuple[float, float]], depth: float, floor_mat: int) -> None:
+    """A box whose vertical faces carry real pockets: ``holes`` {face: [(a, z)]} are the pocket origins on that face
+    (a = x on the Y faces, y on the X faces; z up); ``shape`` [(da, dz)] is the pocket outline. The vertical faces
+    are built as horizontal bands, one per pocket row, that share their edge vertices with the neighbouring faces (no
+    T-junctions); each band is a small planar fill round its pockets (one fill round a whole column made zero-area
+    slivers along the collinear pocket sides). The pocket walls face the pocket; the floor is ``floor_mat``."""
     (x0, y0, z0), (x1, y1, z1) = mn, mx
-    C = [b.v(x0, y0, z0), b.v(x1, y0, z0), b.v(x1, y1, z0), b.v(x0, y1, z0),
-         b.v(x0, y0, z1), b.v(x1, y0, z1), b.v(x1, y1, z1), b.v(x0, y1, z1)]
-    for key, (ids, nrm, ua, va) in _FACES.items():
-        if key in skip:
-            continue
-        corners = [C[i] for i in ids]
+    kh = max(q[1] for q in shape)
+    fshape = _inset(shape, depth)            # 45-degree walls: the unwrap keeps each pocket in its face's island
+    rows = sorted({round(c, 6) for hl in holes.values() for _, c in hl})
+    breaks = [z0]
+    for r0, r1 in zip(rows[:-1], rows[1:]):
+        breaks.append((r0 + kh + r1) / 2)
+    breaks.append(z1)
+    # the four vertical edges' vertex columns, shared by the faces that meet there
+    edge = {key: [b.v(ex, ey, z) for z in breaks] for key, (ex, ey) in
+            {"00": (x0, y0), "10": (x1, y0), "11": (x1, y1), "01": (x0, y1)}.items()}
+    faces = {"ny": ("00", "10", (0.0, -1.0, 0.0), 0), "px": ("10", "11", (1.0, 0.0, 0.0), 1),
+             "py": ("11", "01", (0.0, 1.0, 0.0), 0), "nx": ("01", "00", (-1.0, 0.0, 0.0), 1)}
+    for key, (ea, eb, nrm, ua) in faces.items():
+        axis = 1 if ua == 0 else 0
+        plane = x1 if key == "px" else x0 if key == "nx" else (y1 if key == "py" else y0)
         hl = holes.get(key, ())
-        if not hl:
-            _face_out(b, corners, nrm, mat)
-            continue
-        plane = b.verts[corners[0]]
-        axis = [i for i in range(3) if abs(nrm[i]) > 0.5][0]
-        loops = []
-        for a, c in hl:
-            top, bot = [], []
-            for du, dv in shape:
-                p = [0.0, 0.0, 0.0]
-                p[axis] = plane[axis]
-                p[ua], p[va] = a + du, c + dv
-                top.append(b.v(*p))
-                p[axis] -= nrm[axis] * depth
-                bot.append(b.v(*p))
-            m = len(shape)
-            ca = sum(q[0] for q in shape) / m
-            cv = sum(q[1] for q in shape) / m
-            for i in range(m):
-                j = (i + 1) % m
-                inn = [0.0, 0.0, 0.0]
-                inn[ua] = ca - (shape[i][0] + shape[j][0]) / 2
-                inn[va] = cv - (shape[i][1] + shape[j][1]) / 2
-                _face_out(b, [top[i], top[j], bot[j], bot[i]], tuple(inn), floor_mat)
-            b.fill([bot], floor_mat, 0, nrm)
-            loops.append(top)
-        b.fill([corners] + loops, mat, 0, nrm)
+        for i in range(len(breaks) - 1):
+            lo, hi = breaks[i], breaks[i + 1]
+            corners = [edge[ea][i], edge[eb][i], edge[eb][i + 1], edge[ea][i + 1]]
+            inside = [(a, c) for a, c in hl if lo < c and c + kh < hi]
+            if not inside:
+                _face_out(b, corners, nrm, mat)
+                continue
+            loops = []
+            for a, c in inside:
+                top, bot = [], []
+                for (du, dv), (fu, fv) in zip(shape, fshape):
+                    p = [0.0, 0.0, 0.0]
+                    p[axis] = plane
+                    p[ua], p[2] = a + du, c + dv
+                    top.append(b.v(*p))
+                    p[axis] -= nrm[axis] * depth
+                    p[ua], p[2] = a + fu, c + fv
+                    bot.append(b.v(*p))
+                m = len(shape)
+                ca = sum(q[0] for q in shape) / m
+                cv = sum(q[1] for q in shape) / m
+                for k in range(m):
+                    j = (k + 1) % m
+                    inn = [0.0, 0.0, 0.0]
+                    inn[ua] = ca - (shape[k][0] + shape[j][0]) / 2
+                    inn[2] = cv - (shape[k][1] + shape[j][1]) / 2
+                    _face_out(b, [top[k], top[j], bot[j], bot[k]], tuple(inn), floor_mat)
+                b.fill([bot], floor_mat, 0, nrm)
+                loops.append(top)
+            b.fill([corners] + loops, mat, 0, nrm)
+    _face_out(b, [edge[k][0] for k in ("00", "10", "11", "01")], (0.0, 0.0, -1.0), mat)
+    _face_out(b, [edge[k][-1] for k in ("00", "10", "11", "01")], (0.0, 0.0, 1.0), mat)
+
+
+def _inset(P: Sequence[Tuple[float, float]], d: float) -> List[Tuple[float, float]]:
+    """The polygon P (either winding) offset inward by d (mitred corners)."""
+    n = len(P)
+    sg = 1.0 if _area2(P) > 0 else -1.0
+    out = []
+    for i in range(n):
+        a, c, e = P[i - 1], P[i], P[(i + 1) % n]
+        n1 = _unit((-(c[1] - a[1]) * sg, (c[0] - a[0]) * sg, 0.0))       # inward normals of the two edges
+        n2 = _unit((-(e[1] - c[1]) * sg, (e[0] - c[0]) * sg, 0.0))
+        m = _add(n1, n2)
+        k = d / max(0.2, (1.0 + _dot(n1, n2)) / 2) ** 0.5
+        mu = _unit(m)
+        out.append((c[0] + mu[0] * k, c[1] + mu[1] * k))
+    return out
 
 
 def _rect_shape(w: float, h: float):
@@ -1308,7 +1333,7 @@ def _rack_lod(level: int) -> Lod:
     e = Builder()          # crisp: the slotted uprights and the end plates
     xo, yo, xi, yi, bh, bd, pt = k["xo"], k["yo"], k["xi"], k["yi"], k["bh"], k["bd"], k["pt"]
     H, decks, dt = k["H"], k["decks"], r["deck_t"]
-    fm, ft, fc = r["foot"]
+    fm, ft = r["foot"]
     pw, pdrop, _ = r["plate"]
     beams = [(z - dt - bh, z - dt) for z in decks]                       # (bottom, top) per level
     plates_z = [(zb - pdrop, zt) for zb, zt in beams]
@@ -1317,7 +1342,7 @@ def _rack_lod(level: int) -> Lod:
         return all(z1 < a - 2.0 or z0 > c + 2.0 for a, c in zones)
 
     pitch = r["slot_pitch"] * (1 if level == 0 else 2)
-    shape = r["keyhole"] if level == 0 else _rect_shape(4.0, 14.0)
+    shape = r["keyhole"] if level == 0 else _rect_shape(10.0, 26.0)
     kh = max(p[1] for p in shape)
     zs = []
     zz = 60.0
