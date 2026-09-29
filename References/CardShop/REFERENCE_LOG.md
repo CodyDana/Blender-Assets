@@ -230,7 +230,7 @@ below (sheets 11 and 18).
 - **Flattened:** the picture draws a full unfolded blank with every flap, but prints 644 x 289, which is the
   **knocked-down** size (492 + 152 = 644; 137 + 2 x 76 = 289). The drawn blank is not to scale (its aspect ratio is
   1.8; 644 x 289 is 2.2). **Build the knocked-down flat** (two panels, folded flat, about 8 mm thick), per the numbers.
-  _Flagged for the user._
+  **Decided 2026-09-29: the user accepted this pick.**
 - **Delivery boxes:** S 305 x 229 x 102, M 406 x 305 x 254, L 610 x 406 x 406, as specified. Each is shown closed and
   taped, open with 4 flaps up (the long flaps are about half the width, so they meet at the centre), and flattened (same
   drawing issue as above).
@@ -262,7 +262,7 @@ A shared design rule shows on every package: a **two-tone colour block**, darker
   skirt. Fold-up white row dividers; the rows run along the long side, and cards stand on their short edge.
 - **Conflict:** the closed views (and the spec and prompt) show a **telescoping lift-off lid**, but the open views
   draw a **hinged fold-over lid** attached at the back. Proposed: build the telescoping lid (spec and closed views,
-  and it is the common real design); the open state is the lid set aside. _Flagged for the user._
+  and it is the common real design); the open state is the lid set aside. **Decided 2026-09-29: the user accepted this pick.**
 
 ## Sheet 14 notes (binder E3)
 
@@ -319,7 +319,7 @@ A shared design rule shows on every package: a **two-tone colour block**, darker
 - **Scale conflict:** against the human silhouette, both cases read about twice the spec size (the countertop case
   about 2.1 m long, the wall case about 2 m wide). The spec sizes (900 x 450 x 300; 1000 x 90 x 700) come from the
   counter they sit on and the 40-slab count, and the filled view confirms 10 x 4. **Build to the spec numbers, with the
-  picture's design.** _Flagged for the user._
+  picture's design.** **Decided 2026-09-29: the user accepted this pick.**
 
 ## Sheet 19 notes (slatwall A7, hooks A8, shelf A9)
 
@@ -384,7 +384,7 @@ A shared design rule shows on every package: a **two-tone colour block**, darker
   trestle legs** (splayed, with a cross brace and foot caps). As in spec.
 - **Conflict:** the call-out says "3 matches spanning this table", but the drawing shows one match per table (two
   facing mats). The spec's 3 matches per 1829 table (3 x 609.6) keep; the picture's mat layout is the 1524 / 914
-  case. _Flagged for the user._
+  case. **Decided 2026-09-29: the user accepted this pick.**
 - **Chair:** black steel, 450 x 520 x 800, seat 445, a **padded black vinyl seat and back**, tube frame with a lower
   rail. **Open and folded states** are shown; the spec had one state, so `Folded` is added.
 
@@ -504,4 +504,4 @@ dropped from v1.** The sheet is kept for reference only.
 - **Card stands:** a **block stand with 1 slot**, 70 x 40 x 25. A **9-slot stand**: its label repeats "70 x 40 x 25",
   but the picture shows 9 cards side by side in cross slots, which can't fit in 40 mm. **Built as 70 wide x 120 long x
   25, 9 cross slots at 12 pitch** (a card is 63 wide; the length read against the cards). The spec's "3 or 9 slots"
-  becomes **1 or 9** (the picture). _Flagged for the user._
+  becomes **1 or 9** (the picture). **Decided 2026-09-29: the user accepted this pick.**
