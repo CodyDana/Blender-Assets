@@ -9,6 +9,8 @@
                                    olive variation. 1024 px, tiled every 0.5 m on the mat field
   final fix r5 (new sets, the older ones are kept): T_AK_HEntTimberW (warmer, heavier grain, knots), T_AK_HEntCoir
   (a nubby coir basket weave, no linear ribs), T_AK_HEntBronze (aged bronze with patina; metallic varies in ORM.B)
+  genkan r4 (2026-09-28, new sets): T_AK_HEntSisal (the genkan mat's chunky grey-brown knotted sisal rows) and
+  T_AK_HEntTimberG (the step beam's lighter weathered top face: the ebony grain in a greyed brown)
 
 Blind judge (layout 2 r3, deltas 4 and 6): the kit's M_AK_Timber read as a flat low-contrast grey-brown on the entrance
 and M_AK_Mat as a flat grey-beige; the sheet has near-black grain with lighter worn streaks and a golden straw mat.
@@ -229,7 +231,8 @@ def bronze(n=1024, seed=361):
             "rough_mean": round(float(rough.mean()), 3)}
 
 
-def timber_ebony(n=2048, seed=371):
+def timber_ebony(n=2048, seed=371, name="HEntTimberE", dark="#1E120A", mid="#2F1E12", lite="#553A26", rough0=0.80,
+                 nknots=3):
     """Final fix r6 (blind judge: the r5 timber showed strong regular orange / rust streak bands on every board - it
     read procedural; the sheet's timber is a darker charcoal-ebony with real plank grain, knots, long dark checks and
     only thin warm edge highlights): a charcoal-brown body, low-contrast irregular grain (line spacing varies, lines
@@ -262,7 +265,7 @@ def timber_ebony(n=2048, seed=371):
         crack = np.maximum(crack, np.clip(1.3 - d / 1.6, 0, 1) * fade)
     knot = np.zeros((n, n))
     kring = np.zeros((n, n))
-    for _ in range(3):
+    for _ in range(nknots):   # matfix b3: 0 for the step bar / mat boards (a knot repeated every metre read as holes)
         cu, cv = rng.uniform(0, 1, 2)
         du = np.abs(((u - cu + 0.5) % 1.0) - 0.5) / rng.uniform(0.010, 0.016)
         dv = np.abs(((v - cv + 0.5) % 1.0) - 0.5) / rng.uniform(0.022, 0.034)
@@ -271,9 +274,9 @@ def timber_ebony(n=2048, seed=371):
         kring = np.maximum(kring, np.clip(1 - np.abs(r - 1.35) / 0.25, 0, 1))
     # the studio's grey sheen desaturates it (a first pass at #1E1712 / #4F4034 rendered a grey (55, 49, 46)): a
     # warmer, more saturated dark brown, rougher, so it renders near the sheet's warm charcoal
-    dark = MT.srgb("#1E120A")          # charcoal-brown body
-    mid = MT.srgb("#2F1E12")
-    lite = MT.srgb("#553A26")          # the lighter grain / worn fibres (a brown, not orange)
+    dark = MT.srgb(dark)               # charcoal-brown body (HEntTimberE: #1E120A)
+    mid = MT.srgb(mid)                 # (#2F1E12)
+    lite = MT.srgb(lite)               # the lighter grain / worn fibres (a brown, not orange; #553A26)
     body = np.clip(0.5 + 0.18 * mott + 0.20 * np.clip(fine, -2, 2), 0, 1)[..., None]
     bc = dark * (1 - body) + mid * body
     t = np.clip(0.50 * lines + 0.22 * np.clip(fine - 0.6, 0, None) + 0.10 * np.clip(fib2 - 1.0, 0, None)
@@ -281,9 +284,9 @@ def timber_ebony(n=2048, seed=371):
     bc = bc * (1 - t) + lite * t
     bc *= (1 - 0.70 * crack)[..., None] * (1 - 0.60 * knot)[..., None]
     height = 0.012 * lines + 0.006 * fine - 0.06 * crack - 0.02 * knot + 0.004 * mott
-    rough = np.clip(0.80 + 0.06 * np.tanh(mott) - 0.06 * lines + 0.15 * crack, 0.5, 0.97)
+    rough = np.clip(rough0 + 0.06 * np.tanh(mott) - 0.06 * lines + 0.15 * crack, min(0.5, rough0 - 0.1), 0.97)
     ao = 1 - 0.45 * crack - 0.2 * knot
-    return MT.save_set("HEntTimberE", bc, height, 7.0, rough, ao)
+    return MT.save_set(name, bc, height, 7.0, rough, ao)
 
 
 def coir_ribbed(n=1024, seed=381):
@@ -319,6 +322,260 @@ def coir_ribbed(n=1024, seed=381):
     return MT.save_set("HEntCoirR", np.clip(bc, 0, 0.9), height * 0.05, 5.0, rough, ao)
 
 
+def sisal(n=1024, seed=401):
+    """Genkan r4 (blind judge 6.5, delta 1: "the reference mat is a coarse, chunky basket / sisal weave in mid
+    grey-brown ... r3 reads as a fine horizontal-ribbed tatami in bright straw"): reference 2's foreground mat, zoomed,
+    shows rows of chunky rounded knots running ACROSS the mat (build 3: each row drifted a little, no hex stagger), dark
+    gaps between them and a faint row-to-row tone banding; measured field sRGB ~(111, 82, 67) in the golden light (a
+    greyer, cooler tan than the hall planks). 14 rows per 0.5 m tile (3.6 cm) of 18 knots (2.8 cm); the rows run along
+    V (hero_entrance maps U to world Y, V to world X, so the rows lie across the mat); a knot is a rounded dome with a
+    twisted-fibre sheen across it, per-knot tone jitter, loose fibre speckle. Mid grey-brown, not straw."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    nr, nk = 14, 18                   # build 2: 22 x 20 read a fine dot grid; build 3: 16 rows, staggered, a hex dot grid
+    ru = uu * nr / n
+    ri = np.floor(ru).astype(int) % nr
+    pu = ru % 1.0
+    kv = vv * nk / n + 0.23 * (ri % 3)                                # a slight drift row to row (no hex grid)
+    ki = np.floor(kv).astype(int) % nk
+    pv = kv % 1.0
+    rng = np.random.default_rng(seed)
+    jw = rng.uniform(0.95, 1.12, (nr, nk))[ri, ki]
+    x = (pu - 0.5) / (0.56 * jw)
+    y = np.clip((pv - 0.5) / 0.5, -1, 1)
+    # a chunky knot: deep seams between the rows, a clear pinch between the knots along a row (build 2's plain dome
+    # merged into flat blocks)
+    knot = np.clip(1 - x ** 2, 0, 1) ** 0.45 * (0.62 + 0.38 * np.cos(0.5 * np.pi * y) ** 1.2)   # rows read first
+    twist = 0.5 + 0.5 * np.sin(2 * np.pi * (3.0 * pu + 1.4 * pv))      # the twisted fibres across each knot
+    fib = MT.pnoise(n, n, 0.4, seed + 1)
+    spk = MT.pnoise(n, n, 0.2, seed + 2)
+    mott = MT.pnoise(n, n, 2.2, seed + 3)
+    ktone = rng.normal(0, 1, (nr, nk))[ri, ki]
+    rtone = rng.normal(0, 1, nr)[ri]                                   # faint row-to-row banding
+    gap, crown = MT.srgb("#241910"), MT.srgb("#8E6E56")   # build 2: #3E3027 / #98806C read pale; build 3 warmer
+    k = np.clip(knot * (0.80 + 0.07 * ktone + 0.05 * rtone) + 0.08 * (twist - 0.5) * knot + 0.04 * np.clip(fib, -2, 2)
+                + 0.03 * mott, 0, 1)[..., None]
+    bc = gap * (1 - k) + crown * k
+    bc *= (1 + 0.08 * np.clip(spk - 1.3, 0, None))[..., None]
+    height = knot + 0.08 * twist * knot + 0.04 * fib
+    rough = np.clip(0.86 - 0.06 * knot, 0.5, 0.95)
+    ao = 1 - 0.55 * (1 - knot)
+    return MT.save_set("HEntSisal", np.clip(bc, 0, 0.9), height * 0.06, 6.0, rough, ao)
+
+
+def timber_weathered(n=2048, seed=411):
+    """Genkan r4 (blind judge delta 2: "the reference beam is dark, satin, weathered wood with a visible lighter-brown
+    top face and a darker front face"): the step beam's worn TOP face, reference 2 measured ~(64, 61, 65) there in the
+    golden light against the planks' (105, 71, 48): the ebony set's grain, checks and knots (timber_ebony, seed 371)
+    in a lighter, greyed weathered brown. Grain along V, 1.0 m tile."""
+    return timber_ebony(n, seed, name="HEntTimberG", dark="#2C2622", mid="#3E3630", lite="#6E6258")
+
+
+def timber_lacquer(n=2048, seed=431):
+    """Entryfix r2 (blind judge 6/10: "the reference beam has a slightly lit top face and edge that read as a timber";
+    the user: "a black bar"): the step bar's near-black LACQUERED timber: the ebony set's grain, checks and knots
+    (timber_ebony, its own seed) in #0D0A08 / #15100C / #2B211A under a satin lacquer (roughness ~0.30, a little
+    rougher in the checks), so the top face picks up the lit hall as a soft sheen over faint grain. Grain along V, 1.0 m
+    tile."""
+    # b4: b3's #0D0A08-#2B211A top read L 3-6 at night against the hall floor's ~60 (a void): a touch lighter, still
+    # near-black (mean sRGB ~0.10), satin 0.28; b5: b4's top read L ~12 against the floor's ~60 (reference 2: about
+    # the floor's tone): #1C1612-#46372A (mean sRGB ~0.12)
+    return timber_ebony(n, seed, name="HEntTimberL", dark="#1C1612", mid="#2A2019", lite="#46372A", rough0=0.28)
+
+
+def rush_knit(n=1024, seed=421):
+    """Entryfix r2 (blind judge 6/10, blocker 1: "the weave reads as a regular grid of round dots, like cobbles or polka
+    dots. The reference shows fine woven rush in straw tan, with a woven texture you can make out"): reference 2's mat,
+    zoomed through the refit C1 (4.2 px cords, 5.5 px stitches at ~6.5 m), is COLUMNS of small interlocked V stitches
+    running front to back: cords ~1.8 cm apart (deep dark seams between them), each cord a chain of slanted paired lobes
+    ~4.2 cm long, twisted fibre sheen along each lobe, a slight random phase per cord (no dot rows), cord-to-cord straw
+    tone variation. Straw tan (the knot crowns ~#A88A66, the seams #2A1D12). Tile 0.5 m: 28 cords along V (hero_entrance
+    maps V to world X, across the mat), 12 stitches along U (world Y, toward the bar)."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    nc, nk = 28, 12
+    rng = np.random.default_rng(seed)
+    cv = vv * nc / n
+    ci = np.floor(cv).astype(int) % nc
+    pc = cv % 1.0                                                  # across the cord, 0..1
+    ph = rng.uniform(-0.18, 0.18, nc)[ci]                          # each cord's own stitch phase
+    # b4: b3's sharp paired V lobes read as machine knitting (graphic chevrons) with broad light / dark cord bands:
+    # rounder beads (the lobes merge, a soft central crease), a gentler V, much weaker cord-to-cord and mottle tones
+    wob = 0.05 * np.sin(2 * np.pi * (2 * uu / n + 0.37 * ci))     # the stitch rows wander a little
+    ku = uu * nk / n + ph + wob
+    ki = np.floor(ku).astype(int) % nk
+    pk = ku % 1.0                                                  # along the stitch, 0..1
+    x = (pc - 0.5) * 2.0                                           # -1..1 across the cord
+    ax = np.abs(x)
+    xl = ax - 0.5                                                  # each lobe centred at |x| = 0.5
+    yk = ((pk - 0.16 * xl) % 1.0) - 0.5                            # the V: the lobes rise toward the cord's edges
+    bead = np.clip(1 - (x / 1.05) ** 2 - (yk / 0.56) ** 2, 0, 1) ** 0.5
+    pair = np.clip(1 - (xl / 0.62) ** 2 - (yk / 0.56) ** 2, 0, 1) ** 0.6
+    lobe = 0.65 * bead + 0.35 * pair
+    cord = np.clip(1 - x ** 2, 0, 1) ** 0.30                       # the cord's round section, dark seams between
+    h = cord * (0.45 + 0.55 * lobe)
+    twist = 0.5 + 0.5 * np.sin(2 * np.pi * (5.0 * yk + 2.2 * xl * np.sign(x)))   # fibres along each lobe
+    fib = MT.pnoise(n, n, 0.4, seed + 1)
+    mott = MT.pnoise(n, n, 2.4, seed + 2)
+    ctone = rng.normal(0, 1, nc)[ci]                               # cord-to-cord straw variation
+    stone = rng.normal(0, 1, (nc, nk))[ci, ki]
+    gap, crown = MT.srgb("#2E2115"), MT.srgb("#AE9068")
+    k = np.clip(h * (0.86 + 0.02 * ctone + 0.04 * stone) + 0.07 * (twist - 0.5) * lobe + 0.035 * np.clip(fib, -2, 2)
+                + 0.012 * mott, 0, 1)[..., None]
+    bc = gap * (1 - k) + crown * k
+    bc = bc * (1 + np.array([0.0, 0.008, -0.01]) * ctone[..., None])   # a few greener / warmer cords
+    height = h + 0.06 * twist * lobe + 0.03 * fib
+    rough = np.clip(0.84 - 0.08 * lobe, 0.5, 0.95)
+    ao = 1 - 0.5 * (1 - h)
+    return MT.save_set("HEntRushK", np.clip(bc, 0, 0.9), height * 0.05, 6.0, rough, ao)
+
+
+def weave(n=1024, seed=441, nc=17, nk=15, ns=3):
+    """Matfix (2026-09-28, the user: "fix the mat"; entry_foreground_crop.png): ONE coarse, nubbly woven sisal rug in a
+    warm grey-tan. Reference 2's field through C1 (row / column spectra of the mat, matfix/texstats.py): strongly
+    periodic columns ~7.6 px apart at ~265 px/m = cords ~2.9 cm apart running front to back (toward the bar), only a
+    weak period along them (nubs ~5-8 cm), rounded nubs lit on one side, relief contrast ~0.15 of the mean, field
+    ~(109, 81, 67) sRGB in the golden light. The r2 T_AK_HEntRushK (1.8 cm cords, 4.2 cm stitches) was 1.6x too fine
+    and read as a tatami grid. Here: nc cords per 0.5 m tile along U (hero_entrance maps U to world Y, toward the bar;
+    2.94 cm apart), each a chain of nk rounded nubs (3.3 cm) that bulge and pinch like a basket weave, alternate cords
+    offset half a nub (a staggered interlock, no rows of dots), each nub slanted as a twisted cord, inside each nub ns sisal strands whose direction
+    alternates nub to nub (across / along: the basket checker at close range), the lattice domain-warped by smooth
+    periodic noise (wavy cords), per-nub and per-strand height / tone jitter, twisted-fibre striations and loose-fibre
+    fuzz. Thin deep seams between the cords, the nubs touching along them. Warm grey-tan."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    wv = MT.pnoise(n, n, 2.6, seed + 1) * 0.06                    # cords wander (in cord widths)
+    wu = MT.pnoise(n, n, 2.6, seed + 2) * 0.12                    # nubs wander along the cord (in nub lengths)
+    cv = vv * nc / n + wv
+    ci = np.floor(cv).astype(int) % nc
+    pc = cv % 1.0                                                 # across the cord, 0..1
+    ku = uu * nk / n + 0.5 * (ci % 2) + rng.uniform(-0.08, 0.08, nc)[ci] + wu
+    ki = np.floor(ku).astype(int) % nk
+    pk = ku % 1.0                                                 # along the nub, 0..1
+    x = 2 * pc - 1                                                # -1..1 across the cord
+    # b2: b1's straight nubs with dark seams all round read from above as a dot / cobble grid: each nub a SLANTED bead
+    # (a twisted cord, one slant throughout; alternating read as knit), the nubs along a cord merging (a soft pinch, light seams)
+    x0 = 2 * pc - 1
+    y = ((pk + 0.12 * x0 + 0.5) % 1.0) * 2 - 1                    # -1..1 along the nub (0.22 alternating read as knit)
+    njit = rng.uniform(0.85, 1.10, (nc, nk))[ci, ki]
+    wid = rng.uniform(0.90, 1.0, (nc, nk))[ci, ki]
+    # t2: t1's flat-topped pillows with dark seams all round read as bricks / cobbles: a rounded dome across the cord
+    # (deep seams between cords), a soft pinch between the nubs along it (they touch)
+    pill = np.clip(1 - (np.abs(x) / wid) ** 2, 0, 1) ** 0.45 * (0.45 + 0.55 * np.clip(1 - np.abs(y) ** 2, 0, 1) ** 0.6)
+    o = (ci + ki) % 2                                             # strand direction per nub: across / along
+    sb = np.where(o == 0, (y + 1) / 2, (x + 1) / 2) * ns
+    si = np.clip(np.floor(sb).astype(int), 0, ns - 1)
+    ps = sb % 1.0
+    strand = np.clip(1 - (2 * ps - 1) ** 2, 0, 1) ** 0.5
+    sjit = rng.uniform(0.9, 1.06, (nc, nk, ns))[ci, ki, si]
+    nub = pill * njit * (0.78 + 0.22 * strand * sjit)
+    along = np.where(o == 0, x, y)
+    twist = 0.5 + 0.5 * np.sin(2 * np.pi * (3.5 * along + 1.2 * ps))   # twisted fibres along each strand
+    fuzz = MT.pnoise(n, n, 0.35, seed + 3)
+    mott = MT.pnoise(n, n, 2.2, seed + 4)
+    ntone = rng.normal(0, 1, (nc, nk))[ci, ki]
+    ctone = rng.normal(0, 1, nc)[ci]
+    stone = rng.normal(0, 1, (nc, nk, ns))[ci, ki, si]
+    h = nub + 0.06 * twist * nub + 0.03 * fuzz
+    gap, crown = MT.srgb("#2A1E16"), MT.srgb("#A4866C")                  # b2: warmer tan (b1 read grey in golden)
+    k = np.clip(0.22 + 0.74 * nub + 0.045 * ntone + 0.02 * ctone + 0.03 * stone + 0.06 * (twist - 0.5) * nub
+                + 0.03 * np.clip(fuzz, -2, 2) + 0.03 * mott, 0, 1)[..., None]
+    bc = gap * (1 - k) + crown * k
+    bc = bc * (1 + np.array([0.012, 0.0, -0.02]) * stone[..., None])   # a few warmer / greyer strands
+    rough = np.clip(0.88 - 0.06 * nub, 0.5, 0.95)
+    ao = np.clip(1 - 0.6 * (1 - np.clip(nub, 0, 1)) ** 1.5, 0, 1)
+    return MT.save_set("HEntWeave", np.clip(bc, 0, 0.9), h * 0.12, 7.0, rough, ao)   # b2: stronger relief (0.08)
+
+
+def timber_bar(n=2048, seed=431):
+    """Matfix b3 (blind judge 6/10: "three small dark round dots or holes on the riser face directly above the mat"):
+    T_AK_HEntTimberL's lacquered near-black bar timber with no knots (one knot per 1 m tile repeated along the 12 cm
+    face as a row of holes). Same seed, colours and satin as timber_lacquer; only the knots are gone."""
+    return timber_ebony(n, seed, name="HEntTimberN", dark="#1C1612", mid="#2A2019", lite="#46372A", rough0=0.28, nknots=0)
+
+
+def timber_board(n=2048, seed=451):
+    """Matfix b3 (blind judge: "the frame boards are lighter, redder wood with prominent grain ... the reference frame is
+    uniformly dark, near-black, low-sheen board on all sides, matching the dark step bar"): the bar's near-black timber
+    (#1C1612-#46372A, no knots) at a low sheen (roughness ~0.62) for the mat's surround boards and the pit's side
+    returns (M_AK_HMatBoard; was the ebony at tint 2.4 with warm worn arrises)."""
+    return timber_ebony(n, seed, name="HEntTimberM", dark="#1A1411", mid="#261D17", lite="#3C3026", rough0=0.62, nknots=0)
+
+
+def knot_weave(n=2048, seed=461, name="HEntKnot", gap="#2A221C", crown="#8E7865", rough0=0.86, nc=34, nk=20):
+    """Matfix b3 (blind judge 6/10 on T_AK_HEntWeave: "vertical corduroy ropes separated by continuous dark grooves ...
+    the reference is round, nubbly, roughly isotropic knots in both row and column directions with strong 3D relief";
+    staircase blocks inside each rope; too fine; too flat): a chunky knotted (Berber-loop) sisal. Reference 2's field
+    through C1 (matfix/texstats.py): period 7.6 px across (columns ~3 cm apart) and ~11.9 px along (knots ~7 cm long in
+    the world, which the view foreshortens to a round knot on screen); b2 had 5 px along (3.3 cm nubs), far too fine.
+    Here (b4): a 1 m tile at 2048 px (b3's 0.5 m tile repeated as visible bands across the mat), nc columns along V
+    (world X across the mat: 2.94 cm, reference 2's 7.6 px) of nk knots along U (world Y: 5 cm, a round knot on
+    screen at C1; the reference's along-spectrum is weak, peaks 7.9-11.9 px).
+    Every knot is its own smooth dome (height = the max of the neighbouring domes, so there are no cell steps): a
+    slightly slanted squarish ellipse, touching its neighbours, a clear pinch between the knots along a column, a shallower
+    crease between the columns, dark pockets only where four knots meet. Each column has its own phase (the rows wander,
+    no dot grid); per-knot size / height / tone jitter blended smoothly across the creases; four twisted plies slant
+    across every knot; fine fuzz. The height carries a strong normal (knot flanks tilt ~35-50 deg) for real relief."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    cv = vv * nc / n + MT.pnoise(n, n, 2.8, seed + 1) * 0.05           # columns wander a little (column units)
+    ku = uu * nk / n + MT.pnoise(n, n, 2.8, seed + 2) * 0.06           # knots wander along (knot units)
+    cph = rng.uniform(-0.22, 0.22, nc)                                 # each column's own knot phase
+    cjit = rng.uniform(-0.05, 0.05, nc)
+    kjit = rng.uniform(-0.07, 0.07, (nc, nk))
+    rxs = rng.uniform(0.50, 0.57, (nc, nk))                            # half width, column units
+    rys = rng.uniform(0.56, 0.66, (nc, nk))                            # half length, knot units
+    amp = rng.uniform(0.90, 1.0, (nc, nk))
+    tone = rng.normal(0, 1, (nc, nk))
+    slant = rng.uniform(0.14, 0.24, (nc, nk)) * np.where(rng.random(nc) < 0.85, 1, -1)[:, None]
+    ply_ph = rng.uniform(0, 1, (nc, nk))
+    c0 = np.floor(cv).astype(int)
+    H = np.zeros((n, n)); W = np.zeros((n, n)); T = np.zeros((n, n)); P = np.zeros((n, n)); D = np.zeros((n, n))
+    for dc in (-1, 0, 1):
+        c = c0 + dc
+        cm = c % nc
+        cx = c + 0.5 + cjit[cm]
+        dx = cv - cx
+        kk0 = np.floor(ku - cph[cm]).astype(int)
+        for dk in (-1, 0, 1):
+            k = kk0 + dk
+            km = k % nk
+            cy = k + 0.5 + cph[cm] + kjit[cm, km]
+            dy = ku - cy
+            a = dx / rxs[cm, km]
+            b = (dy + slant[cm, km] * dx) / rys[cm, km]
+            r2 = (np.abs(a) ** 2.4 + np.abs(b) ** 2.4) ** (2 / 2.4)      # a squarer end: chunky knots, not rice grains
+            dome = np.clip(1 - r2, 0, 1) ** 0.85 * amp[cm, km]   # b4: 0.55 read flat-topped cobbles
+            # four plies slanting across the knot (a twisted loop), strongest on the crown
+            ply = 0.5 + 0.5 * np.cos(2 * np.pi * (1.9 * (0.55 * a + 0.83 * b) + ply_ph[cm, km]))
+            w = np.exp(24 * dome) * (dome > 0)
+            upd = dome > H
+            H = np.where(upd, dome, H)
+            D = np.where(upd, ply, D)
+            W += w; T += w * tone[cm, km]; P += w * ply
+    T = T / np.maximum(W, 1e-9)
+    P = P / np.maximum(W, 1e-9)
+    fuzz = MT.pnoise(n, n, 0.3, seed + 3)
+    mott = MT.pnoise(n, n, 2.4, seed + 4)
+    h = H * (0.93 + 0.07 * P) + 0.012 * fuzz
+    # value: mostly the knot's own tone (the relief is left to the normal), dark only low in the creases / pockets
+    occ = np.clip(H / 0.45, 0, 1) ** 0.7
+    # b4: b3's dark crease network and per-knot tone read as a cobble mosaic: lighter creases, gentler tone, more ply
+    k = np.clip(0.48 + 0.44 * occ + 0.12 * (P - 0.5) * occ + 0.025 * T + 0.025 * np.clip(fuzz, -2, 2)
+                + 0.03 * mott, 0, 1)[..., None]
+    g, cr = MT.srgb(gap), MT.srgb(crown)
+    bc = g * (1 - k) + cr * k
+    bc = bc * (1 + np.array([0.010, 0.0, -0.012]) * T[..., None])       # a few warmer / greyer knots
+    rough = np.clip(rough0 - 0.05 * occ + 0.03 * fuzz, 0.4, 0.97)
+    ao = np.clip(0.35 + 0.65 * occ, 0, 1)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, 30.0, rough, ao)   # b4: 2048 px / 1 m (b3 1024 / 0.5 m, 22)
+
+
+def knot_weave_black(n=2048, seed=461):
+    """Matfix b3 (blind judge: "the border is too thin and too flat and reads as dark grey, not black. The reference
+    has a wide, jet-black woven or knotted border ... with its own rope texture"): the field's knots (same lattice, so
+    the weave runs on into the border) in a jet black, a little satin on the knot crowns so the rope relief reads."""
+    return knot_weave(n, seed, name="HEntKnotB", gap="#040303", crown="#181513", rough0=0.78)   # b4: b3 #1F1B18 / 0.74 read grey lit
+
+
 def brushed(n=1024, seed=391):
     """Final fix r6 (blind judge: the post shoe read heavy blotchy dark patina, its rivets lost; the sheet's shoe is a
     clean brushed brass with four prominent corner rivets - measured (155, 104, 56) on the sheet, the r5 bronze rendered
@@ -346,11 +603,18 @@ def brushed(n=1024, seed=391):
 
 
 SETS = {"HEntTimber": timber, "HEntMat": mat, "HEntRush": rush, "HEntTimberW": timber_warm, "HEntCoir": coir,
-        "HEntBronze": bronze, "HEntTimberE": timber_ebony, "HEntCoirR": coir_ribbed, "HEntBrushed": brushed}
+        "HEntBronze": bronze, "HEntTimberE": timber_ebony, "HEntCoirR": coir_ribbed, "HEntBrushed": brushed,
+        "HEntSisal": sisal, "HEntTimberG": timber_weathered, "HEntRushK": rush_knit, "HEntTimberL": timber_lacquer, "HEntWeave": weave,
+        "HEntKnot": knot_weave, "HEntKnotB": knot_weave_black, "HEntTimberN": timber_bar, "HEntTimberM": timber_board}
 
 if __name__ == "__main__":
     # r4: name the sets to write (e.g. `tex_entrance.py HEntRush`); an existing set is never rewritten by accident
-    want = sys.argv[1:] or list(SETS)
+    # entryfix r2: --out DIR writes the sets into DIR (a test copy's Textures folder) instead of Exports/ArmoryKit
+    argv = sys.argv[1:]
+    if "--out" in argv:
+        MT.OUT = Path(argv[argv.index("--out") + 1])
+        del argv[argv.index("--out"):argv.index("--out") + 2]
+    want = argv or list(SETS)
     rep = []
     for name in want:
         _check(name)

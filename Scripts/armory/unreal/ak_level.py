@@ -14,8 +14,12 @@
   (blender_bounds.json) within 1 cm; the south-wall door piece and an east-wall piece are named in the result.
 
 Idempotent: the level is created once; a re-run loads it and destroys only the actors tagged AK_Managed, then respawns.
+Night + genkan (2026-09-28): the lighting follows ak_common.PRESET (env AK_PRESET, default "night"; "golden" rebuilds
+the golden-hour level). Night: ONE directional light, the moon (ak_common.directional_specs; SkyAtmosphere light,
+priority 1, no scattering), the night practical powers and downlight 3500 K, the night sky (UE_SKY_BY_PRESET,
+SKYLIGHT_INTENSITY), no height / volumetric fog, the night exposure bias; the scenery-card dimming is in the materials.
 Result: WorkFiles/armory/build/unreal/level.json (in-process; ak_verify.py re-checks the saved level in a fresh process).
-Env: AK_EXPOSURE_BIAS overrides the exposure bias (EV).
+Env: AK_PRESET night|golden; AK_EXPOSURE_BIAS overrides the exposure bias (EV).
 """
 import json
 import math
@@ -31,7 +35,7 @@ import ak_common as C  # noqa: E402
 
 EAL = unreal.EditorAssetLibrary
 EAS = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
-REP = {"engine": unreal.SystemLibrary.get_engine_version(), "notes": [], "setp_failed": []}
+REP = {"engine": unreal.SystemLibrary.get_engine_version(), "preset": C.PRESET, "notes": [], "setp_failed": []}
 BIAS = float(os.environ.get("AK_EXPOSURE_BIAS", str(round(C.EXPOSURE_BIAS, 3))))
 TOL_CM = 1.0
 ATTEN_CM = 2000.0
@@ -199,7 +203,7 @@ def local_light(L):
     setp(comp, "mobility", unreal.ComponentMobility.MOVABLE)
     setp(comp, "intensity_units", unreal.LightUnits.CANDELAS)
     setp(comp, "intensity", cd)
-    comp.set_light_color(color_of(L["kelvin"]), True)
+    comp.set_light_color(color_of(C.light_kelvin(L)), True)   # night: the downlights at 3500 K (PRESET_KELVIN)
     setp(comp, "attenuation_radius", ATTEN_CM)
     setp(comp, "cast_shadows", C.light_shadows(L))   # Unreal-only: the alcove spots give up theirs (shadow budget 12)
     setp(comp, "volumetric_scattering_intensity", 0.0)      # Blender: only the sun scatters in the haze
@@ -215,14 +219,15 @@ def local_light(L):
         else:             # pointing down with yaw -rot_z: Blender local X lies along Unreal local Z
             setp(comp, "source_height", w * 100.0)
             setp(comp, "source_width", h * 100.0)
-        if "spread_deg" in L:   # f2: a narrowed area light (the hero table's). Blender's spread is a per-point cone
-            # (a honeycomb grid); Unreal has only barn doors. Flared doors never block rays leaving past the near edge,
-            # so the doors stand straight (angle 0) and are as long as puts the half-spread cone's edge ray from the
-            # rect centre at the door tip: L = (short side / 2) / tan(spread / 2)
+        # f2: a narrowed area light (the hero table's). Blender's spread is a per-point cone (a honeycomb grid); Unreal
+        # has only barn doors. Flared doors never block rays leaving past the near edge, so the doors stand straight
+        # (angle 0) and are as long as puts the half-spread cone's edge ray from the rect centre at the door tip:
+        # L = (short side / 2) / tan(spread / 2). Glow round (night): the under-glow rects get Unreal-only doors too
+        # (ak_common.light_barn_door_cm)
+        door = C.light_barn_door_cm(L)
+        if door > 0.0:
             setp(comp, "barn_door_angle", 0.0)
-            setp(comp, "barn_door_length", min(w, h) * 100.0 / 2.0 / math.tan(math.radians(float(L["spread_deg"]) / 2.0)))
-        else:
-            setp(comp, "barn_door_length", 0.0)
+        setp(comp, "barn_door_length", door)
     elif t == "spot":
         half = L["angle_deg"] / 2.0
         setp(comp, "outer_cone_angle", half)
@@ -234,44 +239,51 @@ def local_light(L):
                           "lantern": "Lanterns", "down": "Downlights", "wash": "PaintingWash",
                           "banner": "BannerSpots", "alcove": "RearAlcoves", "sill": "SillVases"}.get(L["role"], L["role"])
     tag(a, L["name"], folder)
-    return {"name": L["name"], "type": t, "role": L["role"], "candela": round(cd, 2), "shadows": C.light_shadows(L),
+    return {"name": L["name"], "type": t, "role": L["role"], "candela": round(cd, 2), "kelvin": C.light_kelvin(L),
+            "barn_door_cm": round(C.light_barn_door_cm(L), 3) if t == "rect" else None,
+            "shadows": C.light_shadows(L),
             "loc_cm": [round(v, 2) for v in loc], "pitch": round(pitch, 3), "yaw": round(yaw, 3)}
 
 
-def sun(L, index):
-    """f2: two directional lights share the golden-hour heading. The real sun (first) drives the SkyAtmosphere and
+def sun(S, index):
+    """A directional light from ak_common.directional_specs (the active preset).
+    Golden (f2): two directional lights share the golden-hour heading. The real sun (first) drives the SkyAtmosphere and
     scatters in the volumetric fog. The window fill (layout.json "link": "interior") lights, and is shadowed by, the room
-    only: lighting channel 1 alone (the room kit is on 0 + 1, the exterior on 0), no atmosphere, no fog scattering."""
-    d = C.dir_bl_to_ue(L["travel_dir"])
+    only: lighting channel 1 alone (the room kit is on 0 + 1, the exterior on 0), no atmosphere, no fog scattering.
+    Night (2026-09-28): ONE light, the moon (render_armory MOON): it drives the SkyAtmosphere, lights everything on
+    channel 0, does not scatter (no volumetric fog, no shafts), forward shading priority 1."""
+    d = C.dir_bl_to_ue(S["travel_dir"])
     pitch, yaw = C.pitch_yaw_of(d)
-    interior = L.get("link") == "interior"
+    interior = S["interior"]
     a = EAS.spawn_actor_from_class(unreal.DirectionalLight, V((400.0 + 100.0 * index, -600.0, 800.0)), rot(pitch, yaw))
     comp = a.get_editor_property("directional_light_component")
-    lux = C.sun_lux(L)
+    lux = S["lux"]
     setp(comp, "mobility", unreal.ComponentMobility.MOVABLE)
     setp(comp, "intensity", lux)
-    comp.set_light_color(color_of(L["kelvin"]), True)
-    setp(comp, "light_source_angle", C.SUN_ANGLE_DEG)
-    setp(comp, "atmosphere_sun_light", not interior)
+    comp.set_light_color(color_of(S["kelvin"]), True)
+    setp(comp, "light_source_angle", S["angle_deg"])
+    setp(comp, "atmosphere_sun_light", S["atmosphere"])
     setp(comp, "cast_shadows", True)
-    setp(comp, "volumetric_scattering_intensity", 0.0 if interior else 1.0)
-    setp(comp, "cast_volumetric_shadow", not interior)
-    # two directional lights: the real sun wins forward shading / translucency / volumetric fog (the editor warned
-    # "Multiple directional lights are competing ... adjust their ForwardShadingPriority" with both at the default 0)
-    fsp_ok = setp(comp, "forward_shading_priority", 0 if interior else 1)
+    setp(comp, "volumetric_scattering_intensity", S["scatter"])
+    setp(comp, "cast_volumetric_shadow", S["volumetric_shadow"])
+    # golden has two directional lights: the real sun wins forward shading / translucency / volumetric fog (the editor
+    # warned "Multiple directional lights are competing ... adjust their ForwardShadingPriority" with both at 0);
+    # night's single moon also carries 1
+    fsp_ok = setp(comp, "forward_shading_priority", S["priority"])
     if interior:
         setp(comp, "lighting_channels", channels(False, True))
-    tag(a, L["name"], "Lights/Sun")
+    tag(a, S["name"], "Lights/Sun" if not C.NIGHT else "Lights/Moon")
     fwd = a.get_actor_forward_vector()
     try:
         fsp = int(comp.get_editor_property("forward_shading_priority"))
     except Exception as exc:  # noqa: BLE001
         fsp = f"readback failed: {str(exc)[:120]}"
-    return {"name": L["name"], "lux": lux, "pitch": round(pitch, 3), "yaw": round(yaw, 3), "interior_only": interior,
+    return {"name": S["name"], "lux": lux, "kelvin": S["kelvin"], "pitch": round(pitch, 3), "yaw": round(yaw, 3),
+            "interior_only": interior, "atmosphere_sun_light": S["atmosphere"], "scatter": S["scatter"],
             "forward_shading_priority": fsp, "forward_shading_priority_set": fsp_ok,
-            "forward_shading_priority_ok": fsp_ok and fsp == (0 if interior else 1),
+            "forward_shading_priority_ok": fsp_ok and fsp == S["priority"],
             "forward_ue": [round(fwd.x, 4), round(fwd.y, 4), round(fwd.z, 4)],
-            "travel_dir_blender": L["travel_dir"], "expected_forward_ue": [round(v, 4) for v in d]}
+            "travel_dir_blender": S["travel_dir"], "expected_forward_ue": [round(v, 4) for v in d]}
 
 
 def pp_tweaks():
@@ -296,15 +308,18 @@ def environment():
     setp(slc, "mobility", unreal.ComponentMobility.MOVABLE)
     setp(slc, "source_type", unreal.SkyLightSourceType.SLS_CAPTURED_SCENE)
     setp(slc, "real_time_capture", True)
-    setp(slc, "intensity", 1.0)
+    setp(slc, "intensity", C.SKYLIGHT_INTENSITY)   # golden 1.0; night lower (ak_common SKYLIGHT_INTENSITY)
     setp(slc, "volumetric_scattering_intensity", C.SKY_SCATTER)
     tag(a, "SkyLight", "Lights/Sky")
-    env["skylight"] = {"real_time_capture": bool(slc.get_editor_property("real_time_capture")), "intensity": 1.0}
+    env["skylight"] = {"real_time_capture": bool(slc.get_editor_property("real_time_capture")),
+                       "intensity": C.SKYLIGHT_INTENSITY}
     a = EAS.spawn_actor_from_class(unreal.ExponentialHeightFog, V((400.0, -600.0, 0.0)), rot())
     fc = a.get_editor_property("component")
+    # night: render_armory FOG["night"] is 0 (the moon does not scatter): density 0 and no volumetric fog (no shafts);
+    # the actor stays so the golden preset is one flag away
     fog = {"fog_density": C.FOG_DENSITY_PER_M * 10.0, "fog_height_falloff": 0.001, "fog_max_opacity": 1.0,
            "start_distance": 0.0, "fog_cutoff_distance": 3000.0,
-           "enable_volumetric_fog": True, "volumetric_fog_scattering_distribution": C.FOG_ANISO,
+           "enable_volumetric_fog": C.FOG_DENSITY_PER_M > 0.0, "volumetric_fog_scattering_distribution": C.FOG_ANISO,
            "volumetric_fog_extinction_scale": 1.0, "volumetric_fog_distance": 3000.0,
            "volumetric_fog_start_distance": 0.0}
     for k, v in fog.items():
@@ -407,8 +422,8 @@ def main():
         REP["mesh_actors"] = len(placed)
         REP["bounds_gate"] = bounds_gate(placed, layout)
         lights = [L for L in layout["lights"] if L["type"] != "sun"]
-        suns = [L for L in layout["lights"] if L["type"] == "sun"]
-        REP["suns"] = [sun(L, i) for i, L in enumerate(suns)]
+        suns = C.directional_specs(layout)   # golden: the two layout suns; night: the moon alone
+        REP["suns"] = [sun(S, i) for i, S in enumerate(suns)]
         REP["local_lights"] = [local_light(L) for L in lights]
         REP["n_local_lights"] = len(REP["local_lights"])
         REP["n_shadowed_local"] = sum(1 for L in REP["local_lights"] if L["shadows"])
@@ -421,11 +436,14 @@ def main():
         sun_ok = len(REP["suns"]) == len(suns) and all(
             all(abs(p - q) < 1e-3 for p, q in zip(sf["forward_ue"], sf["expected_forward_ue"])) for sf in REP["suns"])
         REP["sun_direction_ok"] = sun_ok
-        # hero round: the real sun must win forward shading (1) over the window fill (0), read back from the component
+        # hero round: the real sun must win forward shading (1) over the window fill (0), read back from the component;
+        # night: the single moon reads 1, and there is exactly one directional light in the level
+        REP["n_directional"] = sum(1 for a in EAS.get_all_level_actors() if isinstance(a, unreal.DirectionalLight))
+        REP["n_directional_want"] = len(suns)
         REP["forward_shading_priority_ok"] = all(sf.get("forward_shading_priority_ok") for sf in REP["suns"])
         REP["passed"] = (REP["bounds_gate"]["passed"] and REP["saved"] and sun_ok
                          and REP["n_shadowed_local"] <= C.MAX_SHADOWED_LOCAL and not REP["setp_failed"]
-                         and REP["forward_shading_priority_ok"])
+                         and REP["forward_shading_priority_ok"] and REP["n_directional"] == REP["n_directional_want"])
     except Exception:  # noqa: BLE001
         REP["error"] = traceback.format_exc()[-3000:]
         REP["passed"] = False

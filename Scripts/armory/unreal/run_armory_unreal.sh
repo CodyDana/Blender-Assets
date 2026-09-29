@@ -13,7 +13,10 @@
 #   walk       (Blender -b) Manny-sized capsule clearance along the walking routes against the UCX hulls
 #   capture    offscreen editor (real D3D12 RHI, -RenderOffscreen), tick-driven: every layout.json camera (+ C1 at the
 #              reference's 1448 x 1086), repeated captures; then ak_crop.py (system Python) crops the shift-lens views
-#   stats      (system Python, Pillow) ak_image_stats.py: tone / colour vs the Blender golden renders and the reference
+#   stats      (system Python, Pillow) ak_image_stats.py: tone / colour vs the Blender renders of the preset and the reference
+# Lighting preset (night + genkan, 2026-09-28): env AK_PRESET, default "night" (the moon, night practicals, no fog, night
+# exposure; Blender baseline renders/night_live2). AK_PRESET=golden rebuilds the golden-hour level (baseline hero_live).
+# Run materials, level, verify, capture and stats with the SAME preset (the scenery-card dimming lives in the materials).
 # Guard (house rule): before every Unreal step, if an UnrealEditor.exe has ArmoryLab.uproject open, STOP (exit 3)
 # without touching the project: the user must close it.
 # Logs + results: WorkFiles/armory/build/unreal/{logs/<step>.log, <step>.json}; timings in logs/timings.txt
@@ -21,6 +24,8 @@
 set -u
 export MSYS_NO_PATHCONV=1
 STEPS="${*:-project bounds import materials level verify manny character walk capture stats}"
+export AK_PRESET="${AK_PRESET:-night}"
+echo "preset: $AK_PRESET"
 HERE="C:/Users/Cody/Desktop/Blender_Projects/Scripts/armory/unreal"
 ROOT="C:/Users/Cody/Desktop/Blender_Projects"
 OUT="$ROOT/WorkFiles/armory/build/unreal"
@@ -82,7 +87,7 @@ for step in $STEPS; do
     *) echo "unknown step $step"; exit 2 ;;
   esac
   t1=$(date +%s)
-  stamp "$step exit $code in $((t1 - t0)) s | $(grep -o 'AK_STEP_DONE.*' "$OUT/logs/$step.log" 2>/dev/null | head -1)"
+  stamp "$step [$AK_PRESET] exit $code in $((t1 - t0)) s |$(grep -o 'AK_STEP_DONE.*' "$OUT/logs/$step.log" 2>/dev/null | head -1)"
   if [ "$step" != "project" ] && [ "$step" != "bounds" ] && [ "$step" != "stats" ]; then
     echo "    errors: $(grep -c 'Error:' "$OUT/logs/$step.log" 2>/dev/null)  warnings: $(grep -c 'Warning:' "$OUT/logs/$step.log" 2>/dev/null)"
   fi

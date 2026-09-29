@@ -1511,3 +1511,306 @@ Unreal p10 stays at 0.00-0.02 against Blender's 0.01-0.06 (the filmic toe, as be
 - **Stale export.** `Exports/ArmoryKit/SM_AK_Entrance_6.fbx` is still on disk, unused. It is no longer imported, and its
   Unreal mesh was deleted.
 - **Nanite** stays off. The largest hero pieces are 4-7k tris.
+
+## 2026-09-28: Night lighting + genkan entry (live)
+
+User: "reduce the brightness significantly in ours. make it nighttime for us. also the front entrance is not
+matching... please fix the front entrance." The two test-copy rounds (night preset in `render_armory.py`, genkan
+deltas 1-4 and 6 in the kit) were made live under the ArmoryKit lock.
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 107 pieces, hard fails 0; 107 FBX exported to
+`Exports/ArmoryKit`; `ArmoryKit.blend` saved with 577 instances. HERO lists all 49 hero-mapped meshes (9 groups),
+including the new/changed entry pieces `SM_AK_Lantern_Entry`, `SM_AK_EntryMat`, `SM_AK_StepBeam` (hero_entrance /
+hero_lantern_vase). Re-exported entry FBX: SM_AK_EntryMat, SM_AK_StepBeam, SM_AK_Lantern_Entry, SM_AK_GenkanFloor,
+SM_AK_Entrance_12; texture sets `T_AK_HEntSisal_*` and `T_AK_HEntTimberG_*` are in `Exports/ArmoryKit/Textures`.
+
+**Walk check (live blend):** passed; 705 hulls; every route clear; both controls blocked (case 1, stone lantern);
+largest entry step 0.16 m down (limit 0.18), up 0.12 m.
+
+**Renders** (Cycles, 96 samples; night is now the default preset):
+- `renders/night_live/`: C1, CX, C10, C3, C5, CW, C4, CG at 1600 x 900; `night_live/ref_aspect/` C1 at 1448 x 1086.
+- `renders/golden_live/`: golden C1 at 1448 x 1086 (entry comparison).
+- `renders/night_live/compare/`: `C1_ref_vs_golden_live.png` (entry check), `C1_ref_vs_night_live.png`,
+  `<cam>_hero_live_vs_night_live.png` for all eight views, `C1_region_stats.txt` (reference | golden_live | night).
+
+Whole-frame mean display luminance, night_live / hero_live golden:
+
+| View | Golden | Night | Ratio |
+|---|---|---|---|
+| C1 | 0.383 | 0.134 | 0.35 |
+| CX | 0.358 | 0.094 | 0.26 |
+| C10 | 0.210 | 0.132 | 0.63 |
+| C3 | 0.291 | 0.178 | 0.61 |
+| C5 | 0.288 | 0.107 | 0.37 |
+| CW | 0.274 | 0.103 | 0.38 |
+| C4 | 0.227 | 0.135 | 0.60 |
+| CG | 0.347 | 0.119 | 0.34 |
+
+C1 at 1448 x 1086: reference 0.328, hero_live golden 0.376, golden_live 0.357, night 0.129. C1 regions (reference /
+golden_live / night): lantern paper L0.72 / 0.72 / 0.49, floor front 0.53 / 0.55 / 0.14, front plinth 0.08 / 0.20 /
+0.01, side window 0.79 / 0.82 / 0.02.
+
+**Open (seen in the live renders):**
+- Entry vs reference (golden C1): the step beam still runs the full frame width past both lanterns, and its lighter
+  weathered top reads grey-brown rather than the reference's black bar; the parked-door jambs at the frame edges
+  (delta 5) are still not in view; the sunken genkan floor is the same tone as the hall floor.
+- Close views (C10, C3, C4) only fall to about 0.6x golden: the painting and LED lines dominate them.
+- CX night: the courtyard seen through the open entrance reads comparatively bright (pale ground, a green panel at the
+  gate) against the dark hall.
+- The display cases render empty in C1 / CX (as in hero_live).
+- Unreal not rebuilt: `ak_common` still derives the golden values; the ArmoryLab night stage is a separate step.
+
+## Unreal: night + genkan (2026-09-28)
+
+The ArmoryLab level `/Game/Armory/Maps/L_Armory` was rebuilt from the live night + genkan build (107 pieces, 577
+instances). NIGHT is now the level's default lighting. No ArmoryLab editor was open and no other Unreal process ran. The
+`ArmoryKit` lock was held for the whole stage and then released. No MCP was used. The golden hero-round results
+(captures, level/verify/capture/materials json, scripts) are saved in `unreal/golden_hero/`.
+
+### Preset switch
+`ak_common.PRESET` comes from the environment variable `AK_PRESET`: `night` (default) or `golden`. Every Unreal step is
+its own process, so set it for the whole run: `AK_PRESET=golden bash Scripts/armory/unreal/run_armory_unreal.sh`
+rebuilds the golden-hour level exactly as the hero round (bias -1.58, 9000 + 7650 lux suns, volumetric fog, the golden
+UE_OVERRIDES, saturation 0.85). Run materials, level, verify, capture and stats with the same preset: the scenery-card
+dimming and the night overrides live in the material instances. The golden path was checked offline (constants and
+specs identical to the hero round), not re-run in Unreal.
+
+### Script changes (`Scripts/armory/unreal/`)
+- **`ak_common.py`**
+  - Reads `MOON`, `PRESET_KELVIN`, `NIGHT_EMIT`, `NIGHT_SKY_CAM` and `CAM_EXPOSURE` from `render_armory.py` too.
+  - `ROLE_SCALE` (was `GOLDEN_SCALE`), `SUN_W_M2`, `BLENDER_EXPOSURE_EV`, `FOG_DENSITY_PER_M`, `SKY_FILL` follow the preset.
+  - `light_kelvin()`: `PRESET_KELVIN` (night downlights 3500 K instead of layout.json's 5900 K).
+  - `directional_specs()`: golden = the two layout suns as before; night = ONE light, `Moon`: 300 lux (3.0 W/m2 x K),
+    7500 K, 38 deg up, heading 35 deg (Unreal forward (0.6455, 0.4520, -0.6157)), disc 0.5 deg, SkyAtmosphere light,
+    channel 0, volumetric scattering 0, no volumetric shadow, forward shading priority 1. Sun_GoldenHour and
+    Sun_WindowFill are not spawned.
+  - `camera_exposure_offset()`: `CAM_EXPOSURE[preset]` first (night CG_Garden +0.3 vs +1.1 = -0.8 EV).
+  - `blender_materials()`: night scales the far-scenery cards' emission by `NIGHT_EMIT` (x0.012) and adds `emit_tint`
+    (0.30, 0.45, 1.0); `material_spec()` gives every emissive picture an `Emissive Tint` vector (white by default).
+  - Per preset: `EXPOSURE_BIAS_BY_PRESET` (golden -1.58, night -2.68), `UE_ROLE_SCALE_BY_PRESET`, `UE_SKY_BY_PRESET`,
+    `SKYLIGHT_INTENSITY` (golden 1.0, night 0.25), night `UE_PP`, and `UE_OVERRIDES_NIGHT` merged over `UE_OVERRIDES`
+    (night only). Values and reasons below.
+- **`ak_materials.py`**: the emissive-picture masters multiply the emission by a new `Emissive Tint` parameter.
+- **`ak_level.py`**: directional lights from `directional_specs`; local-light colour from `light_kelvin`; sky light at
+  `SKYLIGHT_INTENSITY`; height fog density from the preset and volumetric fog only when the preset has haze (night: off,
+  no shafts; the fog actor stays). The level passes only if the level holds exactly the preset's directional lights
+  (night: 1) with their priorities read back.
+- **`ak_verify.py`** gate 5: the directional set must equal `directional_specs` (night: `Moon` only), each with direction,
+  lux, disc, atmosphere flag, channels, scattering and priority; every local light's colour matches the preset's
+  temperature (8-bit sRGB within 2); fog matches the preset (night: density 0, volumetric off); sky light intensity and
+  PPV bias are the preset's.
+- **`ak_capture.py`**, **`ak_image_stats.py`**, **`ak_compare_sheet.py`**, **`run_armory_unreal.sh`**: preset-aware; the
+  Blender baseline is `renders/night_live` (`<cam>_night.png`) for night and `renders/hero_live` for golden; the stats
+  key is now `blender`; the runner exports `AK_PRESET` (default night) and stamps it in `logs/timings.txt`.
+
+### Final run (16:15-16:18, all steps exit 0)
+| Step | Result |
+|---|---|
+| import | 107 meshes, 99 textures |
+| materials | 10 masters, 125 instances, 107 meshes |
+| level | 577 mesh actors; bounds gate max 0.0032 cm; 1 directional (Moon, priority 1) + 103 local lights, 12 shadowed; setp_failed empty |
+| verify (fresh process) | 1_meshes, 2_textures, 3_materials, 4_level, 5_lights, 6_items, 7_hero: all pass; directional set `['Moon']`; fog off; PPV bias -2.68 |
+| manny / character | pass (SKM_Manny_Simple; PlayerStart in the courtyard facing the entrance) |
+| walk | passed: every route clear, both controls blocked (case 1, stone lantern) |
+| capture | 10 frames in `unreal/captures/`; night C1: `unreal/captures/C1_EntryReveal.png` and `C1_EntryReveal_ref_aspect.png` |
+| stats | `unreal/capture_stats.json` (against night_live); sheets in `unreal/compare/` |
+
+No log contains "Multiple directional lights".
+
+### Unreal-only night tuning (C1 at 1448 x 1086 against the Blender night C1; `unreal/tuning/night/t2..t11`)
+First pass (straight conversion, bias -2.88): every room view within 0.035 of Blender's whole-frame mean, but white
+clipped pools in front of every plinth (L 0.63 against 0.26), cream-white LED lines, hot niches and case decks, a
+dark-red platform deck, a crushed floor, and a bright DAYTIME blue sky over bright gravel in CG_Garden (+0.14).
+- **glow x0.25** (role scale): the under-glow rects are Lambertian in Unreal; Blender narrows them to a 160 deg spread.
+- **panel x0.6** plus `M_AK_HNicheWashi`/`190` emit 0.02 -> 0.012 and `M_AK_HNicheSide` 0.035 -> 0.015: niche_back
+  L 0.38 -> 0.30 (Blender 0.26).
+- **PP: saturation 1.0, film_toe 0.4.** The golden 0.85 was for the 2800 K sun. The toe lift raised the floor
+  (floor_lo50 0.068 -> 0.10, Blender 0.11).
+- **`M_AK_HAmberHot` 22 -> 6, `M_AK_HKickGlow` 3.15 -> 1.2, `M_AK_HLedStrip` 1.2 -> 0.6:** the LED lines were
+  cream-white in Unreal's shoulder.
+- **`M_AK_HWashi` 0.11**, **`M_AK_HAlcovePanel` 0.6**, **`M_AK_HDeck` #534337** (the golden #432D11 read dark red at
+  night), **`M_AK_HDeckSuede` #060504 rough 0.8** (a cool sheen from the 6400 K case lights), **`M_AKX_Gravel` tint 0.6**.
+- **Sky:** `sky_luminance_factor` (0.06, 0.11, 0.10), sky light 0.25. CG_Garden sky display (0.008, 0.057, 0.124)
+  against Blender (0.011, 0.050, 0.105).
+- **Exposure bias -2.68.**
+
+**Final C1 (1448 x 1086), display sRGB** (`unreal/region_stats_night_final.txt`: reference | Blender night | Unreal night):
+
+| Region | Blender night | Unreal night |
+|---|---|---|
+| whole | (0.19, 0.12, 0.06) L0.13 | (0.18, 0.12, 0.07) L0.13 |
+| floor_front | L0.14 | L0.14 |
+| floor_shade | L0.10 | L0.10 |
+| floor_lo50 | L0.11 | L0.10 |
+| floor_sunpatch_centre (moon) | L0.14 | L0.12 |
+| floor_shadow_left | L0.18 | L0.16 |
+| lantern_paper | L0.49 | L0.50 |
+| painting_centre | L0.20 | L0.22 |
+| platform_deck | (0.40, 0.25, 0.12) L0.27 | (0.42, 0.25, 0.14) L0.28 |
+| case_deck_front | L0.08 | L0.07 |
+| niche_back | L0.26 | L0.30 |
+| rear_alcove_left | L0.30 | L0.32 |
+| side_window | L0.02 | L0.07 |
+| rear_lattice | L0.12 | L0.06 |
+| glow pool before the front plinth | (0.40, 0.24, 0.09) L0.26 | (0.40, 0.25, 0.16) L0.28 |
+| plinth kick line | (0.64, 0.33, 0.03) L0.37 | (0.66, 0.42, 0.24) L0.46 |
+
+**Per view** (whole-frame mean display luminance, Unreal / Blender night):
+
+| View | Unreal | Blender | Difference |
+|---|---|---|---|
+| C1 | 0.127 | 0.134 | -0.007 |
+| C1 1448 x 1086 | 0.129 | 0.129 | 0.000 |
+| C3 | 0.174 | 0.178 | -0.004 |
+| C4 | 0.148 | 0.135 | +0.013 |
+| C5 | 0.120 | 0.107 | +0.013 |
+| C10 | 0.141 | 0.132 | +0.009 |
+| CW | 0.102 | 0.103 | -0.001 |
+| CX | 0.104 | 0.094 | +0.010 |
+| CG_Garden | 0.143 | 0.119 | +0.024 |
+
+C2_Case1 has no Blender night render (not in night_live).
+
+### Open issues
+- **Kick lines and pools.** The plinth kick lines and the glow pools stay paler than Blender's amber. This is Unreal's
+  filmic shoulder against AgX; a tonemapper difference that no material fix removes.
+- **Pre-existing darkness.** The rear lattice (L 0.06 against 0.12) and the left upper wall stay darker, as in golden
+  (Lumen against Cycles).
+- **CG_Garden.** The moonlit gravel is still warmer, L about 0.36 against 0.32. The foreground maple glows red with
+  translucency, and the pine/tree-line cards read somewhat brighter than Blender's.
+- **Unreal p50** runs lower than Blender's in most views: 0.07 against 0.09 on C1. It is the toe; p90 is higher.
+- **The entry.** Unreal reproduces the live genkan as built. The step beam still runs past both lanterns with a
+  grey-brown top; that fix is a separate Blender task.
+- **The Unreal golden preset** was not re-captured this stage. `AK_PRESET=golden` rebuilds it.
+
+## 2026-09-28: Entry fix round 2 made live (night_live2)
+
+The entryfix round 2 test-copy result (b5: the 40 mm C1 camera fitted together with the entry layout; test copy
+`WorkFiles/armory/hero/room_preview/entryfix`, blind judge 7.2/10) was built live under the ArmoryKit lock (claimed
+17:17, released at the end). The script edits were already live in `Scripts/armory/`. No MCP was used and Unreal was
+not run.
+
+**Textures.** The first live build stopped: `T_AK_HEntRushK_*` (the mat) and `T_AK_HEntTimberL_*` (the bar's lacquered
+timber) existed only in the test copy's `Textures/`. They were written into `Exports/ArmoryKit/Textures` with
+`tex_entrance.py HEntRushK HEntTimberL`, and the files are byte-identical (md5) to the test copy's sets.
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 106 pieces, hard fails 0; 106 FBX exported;
+`ArmoryKit.blend` saved with 577 instances; the C1_EntryReveal camera in layout.json is now 40 mm at (6.0, -4.18, 3.39),
+level, shift_y -0.315. The entry lanterns are `SM_AK_Lantern` pieces now, so `SM_AK_Lantern_Entry` is gone from the kit.
+Build log: `renders/night_live2/build_log.txt`.
+
+**Orphaned FBX.** `SM_AK_Lantern_Entry`, `SM_AK_EntryStep_4` and `SM_AK_Entrance_6` are not in the live layout.json
+(which `ak_import` reads), so they went from `Exports/ArmoryKit` to the Windows Recycle Bin (recoverable; the last two
+are also in git). Old snapshot / test-copy layouts still name them (`layout_pre_entrance.json`,
+`pre_hero_live/layout.json`, `hero/room_preview/layout.json`, `genkan/layout*.json`, `newel_lanterns_build/layout.json`);
+those are history only. `Exports/ArmoryKit` now holds exactly the 106 layout pieces.
+
+**Walk check (live blend):** passed; every route clear; both controls blocked (case 1 at (6.0, 2.75), stone lantern at
+(7.58, -7.3)); entry_steps_ok, largest steps 0.12 m up (bar, beside the lanterns) and 0.16 m down (sill). Log:
+`renders/night_live2/walk_log.txt`.
+
+**Renders** (Cycles 96 samples, night preset): `renders/night_live2/` C1, CX, C10, C3, C5, CW, C4, CG at 1600 x 900;
+`night_live2/ref_aspect/` C1 at 1448 x 1086. Comparison sheets in `night_live2/compare/`:
+`C1_ref_vs_night_live_vs_night_live2.png` (1448 x 1086 panels), `..._1600x900.png`, and `C1_region_stats.txt`
+(reference | night_live | night_live2; the region boxes are fixed pixels, so after the camera change the C1 regions no
+longer land on the same content and only "whole" is comparable).
+
+Whole-frame mean display luminance, night_live -> night_live2: C1 0.13 -> 0.15, CX 0.09 -> 0.09, C10 0.13 -> 0.15,
+C3 0.18 -> 0.20, C5 0.11 -> 0.11, CW 0.10 -> 0.11, C4 0.14 -> 0.14, CG 0.12 -> 0.12.
+
+**Open (from the round 2 judge, 7.2/10; not addressed in this build):**
+- Blockers: the entry mat reads as a 2x2 tatami split (a seam near the bottom of C1, fully visible in CE_EntryDown),
+  where the reference shows one continuous woven mat with a black border; the lantern top (an overhanging lid, post
+  stubs, bright gap strips) against the reference's flush, open top with a centre cross-rail.
+- Deltas: the lantern faces lack the thin inner frame and extra mullion; the bar's near-black band is about 32 px against
+  18 px; the right framing board shows lighter orange grain in close views; the lantern footprint is about 15% wider (cap
+  overhang); possibly a second frame behind each lantern against the side wall (low confidence).
+- Unreal was not rebuilt: ArmoryLab still holds the previous night + genkan build. A rebuild is
+  `bash Scripts/armory/unreal/run_armory_unreal.sh` (night default); `ak_import` deletes stale assets not in layout.json.
+
+## Unreal: night rebuild from night_live2 + brighter under-glow (2026-09-28)
+
+User: "please make the lights below the showcase boxes glow brighter". Blender already carries the raise (M_AK_HAmber
+8.5, M_AK_HAmberHot 22, night glow role x3.0), but the previous Unreal night stage had dimmed it again (glow lights x0.25,
+HAmberHot 6, HKickGlow 1.2) because the 4200 K pools clipped cream-white. ArmoryLab `/Game/Armory/Maps/L_Armory` was
+rebuilt at night from the live entry-fix round 2 build (106 pieces, 577 instances; b5 C1 camera) with a brighter,
+saturated amber under-glow. The `ArmoryKit` lock was held for the stage (claimed 17:23) and then released. No MCP was
+used. No ArmoryLab editor was open. One other session's UnrealEditor-Cmd was running at the start, and the runner
+waited for it to finish without touching it.
+
+**Why Unreal read cream.** In Cycles the amber streak on the floor in front of every plinth comes from the hot emissive
+strips (HAmberHot, the HKickGlow picture) lighting the glossy floor and reflecting in it. The 4200 K glow rect only adds
+a soft warm-white spill. In Unreal the emissives light nothing, so the rect alone made a wide cream pool.
+
+**Script changes (`Scripts/armory/unreal/`)**
+- `ak_common.py` (night only; golden unchanged, checked offline):
+  - `UE_ROLE_SCALE` night glow 0.25 -> 1.0.
+  - New `UE_ROLE_KELVIN` {glow: 2000 K}: the rect carries the strips' amber. `light_kelvin()` applies it after
+    PRESET_KELVIN.
+  - New `UE_ROLE_BARN_DOOR_CM` {glow: 2.0}: straight barn doors, since the rect hangs 7.5 cm over the floor. They keep
+    the light in a band beside the plinth.
+  - New `light_barn_door_cm(L)`: also derives the hero table's spread doors as before.
+  - `UE_OVERRIDES_NIGHT`: M_AK_HAmberHot 6 -> 12; M_AK_HKickGlow 1.2 -> 2.0 with `emit_tint` (1.0, 0.8, 0.6), so its
+    white-hot core stays amber in the filmic shoulder.
+- `ak_level.py`: rect barn doors come from `light_barn_door_cm`. `level.json` lights list `barn_door_cm`.
+- `ak_verify.py` gate 5 also checks every rect light's barn-door length and angle.
+- `ak_image_stats.py`, `ak_compare_sheet.py`, `run_armory_unreal.sh`: the night Blender baseline is now
+  `renders/night_live2`.
+- `Scripts/armory/region_stats.py`: new glow regions for the b5 C1 framing: `glow_kick_front`, `glow_kick_front_hi10`,
+  `glow_pool_front`, `glow_pool_front_wide`, `glow_kick_mid`, `glow_pool_mid`, `glow_east_plinths_hi10`.
+
+**Tuning** (C1 at 1448 x 1086, one capture per try; `unreal/tuning/glow/`):
+
+| Try | Result |
+|---|---|
+| g1 | Before (current settings, new build) |
+| g2: 2000 K, doors 6 cm, x0.5 | Doors cut the pool to a line (pool L 0.22) |
+| g3: 3 cm, x1.0, KickGlow 2, AmberHot 12 | Pool 0.56 |
+| g4: 2 cm, KickGlow tint | Pool 0.61, mid pool 0.45. Chosen |
+| g5: 1800 K, x0.8 | Pool 0.55, too orange, B 0.02 |
+| g6: 1900 K, x0.9 | Mid pool 0.43, under Blender's 0.46 |
+
+**Final run (17:41-17:43, all steps exit 0)**
+
+| Step | Result |
+|---|---|
+| import | 106 meshes, 99 textures |
+| materials | 10 masters, 124 instances |
+| level | 577 actors; bounds gate max 0.0047 cm; 1 directional (Moon) + 103 local lights; setp_failed empty |
+| verify (fresh process) | Gates 1-7 all pass, including the barn doors |
+| manny / character | Pass |
+| walk | Every route clear; both controls blocked (case 1, stone lantern); entry_steps_ok |
+| capture | 10 frames |
+| stats / compare | Done |
+
+No "Multiple directional lights" in any log.
+
+**Glow, C1 1448 x 1086, display sRGB** (`unreal/region_stats_glow_final.txt`; reference | Blender night_live2 | Unreal
+before | Unreal after):
+
+| Region | Blender | Unreal before | Unreal after |
+|---|---|---|---|
+| glow_kick_front (plinth LED line + kick band) | (0.65,0.37,0.07) L0.41 | (0.58,0.30,0.05) L0.34 | (0.72,0.37,0.05) L0.42 |
+| glow_kick_front_hi10 | (0.94,0.65,0.40) L0.70 | (0.87,0.71,0.33) L0.71 | (0.99,0.89,0.35) L0.87 |
+| glow_pool_front (floor in front of the front plinth) | (0.74,0.47,0.19) L0.51 | (0.56,0.40,0.28) L0.43 | (0.86,0.58,0.11) L0.61 |
+| glow_pool_front_wide | L0.37 | L0.32 | (0.64,0.40,0.10) L0.43 |
+| glow_kick_mid | L0.42 | L0.38 | L0.45 |
+| glow_pool_mid | (0.65,0.43,0.19) L0.46 | (0.46,0.31,0.21) L0.33 | (0.67,0.42,0.10) L0.45 |
+| glow_east_plinths_hi10 | L0.60 | L0.53 | (0.89,0.64,0.19) L0.66 |
+
+- **Saturation** (mean HSV S), pool front: Blender 0.76, before 0.54, after 0.89.
+- **White clipping** (all channels >= 0.9): 0 % in every glow region. The c% in region_stats is the red channel
+  alone, which is expected for saturated amber.
+- **Whole-frame mean** (Unreal after / Blender): C1 ref aspect 0.147 / 0.155, C1 0.141 / 0.153, C3 0.179 / 0.196,
+  C4 0.148 / 0.136, C5 0.126 / 0.110, C10 0.147 / 0.153, CW 0.106 / 0.108, CX 0.107 / 0.092, CG 0.143 / 0.121.
+- **Hot amber pixels** (max > 0.5, saturation > 0.6), before -> after: C10 10.1 -> 12.0 %, C3 8.6 -> 9.5 %,
+  CW 2.4 -> 3.7 %, CX 2.2 -> 3.6 %. White share is unchanged in every view.
+- **Sheets:** `unreal/compare/C1_glow_blender_before_after.png` (crop), `reference_blender_unreal_C1.png`, and
+  `<cam>_blender_vs_unreal.png`.
+
+**Open**
+- The hottest rows beside the shoe read yellow-amber (0.99, 0.89, 0.35) where Blender's read orange-cream. Unreal's
+  pool is a little tighter than Blender's soft halo. The glow also lights the lowest part of the plinth sides (the rects
+  cast no shadows, as in Blender).
+- Not addressed here: the case-top LED strip (M_AK_HLedStrip 0.6) stays dimmer than Blender (hi10 L 0.68 against
+  0.81), and the pre-existing darker lantern paper in the new C1 framing (L 0.35 against 0.47).

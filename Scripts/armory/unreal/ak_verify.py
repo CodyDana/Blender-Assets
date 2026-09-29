@@ -14,10 +14,14 @@ Gates (all must pass; every count comes from the exports on disk or from layout.
                of EVERY mesh actor equal the Blender Assembly bounds converted within 1 cm (entrance piece and an
                east-wall piece named); the room kit (SM_AK_) is on lighting channels 0 + 1 and the exterior (SM_AKX_) on
                0 only; every layout.json cast_shadow False instance casts no shadow
- 5 lights      the layout.json suns (the real sun drives the atmosphere and is on channel 0; the f2 window fill is on
-               channel 1 only, does not drive the atmosphere and does not scatter) + every local light by role with the
-               ak_common candela, shadows as ak_common.light_shadows (<= 12), sky light real-time capture, SkyAtmosphere,
-               volumetric height fog, unbound PPV with manual exposure, the PlayerStart at layout.json "player_start"
+ 5 lights      the directional lights of the preset (ak_common.directional_specs, env AK_PRESET, default night) and
+               no others: golden = the layout.json suns (the real sun drives the atmosphere and is on channel 0; the f2
+               window fill is on channel 1 only, does not drive the atmosphere and does not scatter); night = the moon
+               alone (atmosphere light, channel 0, no scattering, priority 1) with direction, lux, disc; + every local
+               light by role with the ak_common candela and the preset's colour temperature, shadows as
+               ak_common.light_shadows (<= 12), sky light real-time capture at the preset's intensity, SkyAtmosphere,
+               height fog as the preset (golden volumetric at the haze density, night none), unbound PPV with manual
+               exposure at the preset's bias, the PlayerStart at layout.json "player_start"
                facing the entrance, one camera actor per layout.json camera (shift-lens sensor offset = shift_y x 36 mm)
  6 items       every layout.json item on display (pack asset, placement, +1 scale, sockets)
  7 hero        hero round: every layout.json hero piece is a mesh with all slots assigned, placed as often as layout.json
@@ -254,37 +258,65 @@ def gate_lights(layout, actors):
     want_roles = Counter(L["role"] for L in layout["lights"] if L["type"] != "sun")
     by_label = {a.get_actor_label(): a for a in actors}
     got_roles, shadowed, bad = Counter(), [], []
+    # night + genkan (2026-09-28): the directional lights are ak_common.directional_specs of the active preset (golden:
+    # the layout sun + window fill; night: the moon ALONE, the golden suns absent), and the level holds exactly those
+    specs = C.directional_specs(layout)
+    dirs = [a for a in actors if a.get_class().get_name() == "DirectionalLight"]
+    res["directional_labels"] = sorted(a.get_actor_label() for a in dirs)
+    if sorted(res["directional_labels"]) != sorted(S["name"] for S in specs):
+        bad.append(("directional_set", res["directional_labels"], [S["name"] for S in specs]))
+    for S in specs:
+        a = by_label.get(S["name"])
+        if a is None:
+            bad.append(("missing", S["name"]))
+            continue
+        comp = a.get_component_by_class(unreal.LightComponent)
+        f = a.get_actor_forward_vector()
+        exp = C.dir_bl_to_ue(S["travel_dir"])
+        ch = comp.get_editor_property("lighting_channels")
+        interior = S["interior"]
+        r = {"lux": float(comp.get_editor_property("intensity")),
+             "forward": [round(f.x, 4), round(f.y, 4), round(f.z, 4)],
+             "atmosphere_sun_light": bool(comp.get_editor_property("atmosphere_sun_light")),
+             "channels": [bool(ch.get_editor_property("channel0")), bool(ch.get_editor_property("channel1"))],
+             "volumetric_scattering": float(comp.get_editor_property("volumetric_scattering_intensity")),
+             "source_angle": float(comp.get_editor_property("light_source_angle")), "interior_only": interior,
+             "forward_shading_priority": int(comp.get_editor_property("forward_shading_priority"))}
+        res.setdefault("suns", {})[S["name"]] = r
+        if max(abs(p - q) for p, q in zip(r["forward"], exp)) > 1e-3:
+            bad.append(("sun_direction", S["name"], r["forward"]))
+        if abs(r["lux"] - S["lux"]) > 1e-2:
+            bad.append(("sun_lux", S["name"], r["lux"]))
+        if abs(r["source_angle"] - S["angle_deg"]) > 1e-3:
+            bad.append(("sun_angle", S["name"], r["source_angle"]))
+        if r["atmosphere_sun_light"] != S["atmosphere"] or r["channels"] != ([False, True] if interior else [True, False]):
+            bad.append(("sun_channels_or_atmosphere", S["name"], r))
+        if abs(r["volumetric_scattering"] - S["scatter"]) > 1e-4:   # the fill (and night's moon) never scatter
+            bad.append(("sun_scatter", S["name"], r["volumetric_scattering"]))
+        if r["forward_shading_priority"] != S["priority"]:   # hero round: the real sun wins (1 vs 0); night: moon 1
+            bad.append(("forward_shading_priority", S["name"], r["forward_shading_priority"]))
     for L in layout["lights"]:
+        if L["type"] == "sun":
+            continue
         a = by_label.get(L["name"])
         if a is None:
             bad.append(("missing", L["name"]))
             continue
         comp = a.get_component_by_class(unreal.LightComponent)
-        if L["type"] == "sun":
-            f = a.get_actor_forward_vector()
-            exp = C.dir_bl_to_ue(L["travel_dir"])
-            ch = comp.get_editor_property("lighting_channels")
-            interior = L.get("link") == "interior"
-            r = {"lux": float(comp.get_editor_property("intensity")),
-                 "forward": [round(f.x, 4), round(f.y, 4), round(f.z, 4)],
-                 "atmosphere_sun_light": bool(comp.get_editor_property("atmosphere_sun_light")),
-                 "channels": [bool(ch.get_editor_property("channel0")), bool(ch.get_editor_property("channel1"))],
-                 "volumetric_scattering": float(comp.get_editor_property("volumetric_scattering_intensity")),
-                 "source_angle": float(comp.get_editor_property("light_source_angle")), "interior_only": interior,
-                 "forward_shading_priority": int(comp.get_editor_property("forward_shading_priority"))}
-            res.setdefault("suns", {})[L["name"]] = r
-            if max(abs(p - q) for p, q in zip(r["forward"], exp)) > 1e-3:
-                bad.append(("sun_direction", L["name"], r["forward"]))
-            if abs(r["lux"] - C.sun_lux(L)) > 1e-2:
-                bad.append(("sun_lux", L["name"], r["lux"]))
-            if r["atmosphere_sun_light"] == interior or r["channels"] != ([False, True] if interior else [True, False]):
-                bad.append(("sun_channels_or_atmosphere", L["name"], r))
-            if interior and r["volumetric_scattering"] != 0.0:
-                bad.append(("fill_scatters", L["name"]))
-            if r["forward_shading_priority"] != (0 if interior else 1):   # hero round: the real sun wins (1 vs 0)
-                bad.append(("forward_shading_priority", L["name"], r["forward_shading_priority"]))
-            continue
         got_roles[L["role"]] += 1
+        # night + genkan: the colour temperature of the preset (night downlights 3500 K), as the 8-bit sRGB colour
+        # set_light_color(linear, sRGB=True) stores
+        lcol = comp.get_editor_property("light_color")
+        want_c = [round(255.0 * (12.92 * c if c <= 0.0031308 else 1.055 * c ** (1 / 2.4) - 0.055))
+                  for c in C.kelvin_rgb(C.light_kelvin(L))]
+        got_c = [int(lcol.r), int(lcol.g), int(lcol.b)]
+        if max(abs(p - q) for p, q in zip(got_c, want_c)) > 2:
+            bad.append(("colour", L["name"], got_c, want_c))
+        if L["type"] == "rect":   # glow round: the night under-glow's Unreal-only barn doors (and the hero table's)
+            door = float(comp.get_editor_property("barn_door_length"))
+            if abs(door - C.light_barn_door_cm(L)) > 1e-3 or (door > 0.0 and
+                                                               abs(float(comp.get_editor_property("barn_door_angle"))) > 1e-3):
+                bad.append(("barn_door", L["name"], door, C.light_barn_door_cm(L)))
         cd = float(comp.get_editor_property("intensity"))
         if abs(cd - C.light_candela(L)) > 1e-2 * max(1.0, C.light_candela(L)):
             bad.append(("intensity", L["name"], cd))
@@ -302,6 +334,7 @@ def gate_lights(layout, actors):
         if cls == "SkyLight":
             c = a.get_editor_property("light_component")
             env["skylight_real_time_capture"] = bool(c.get_editor_property("real_time_capture"))
+            env["skylight_intensity"] = float(c.get_editor_property("intensity"))
         elif cls == "ExponentialHeightFog":
             c = a.get_editor_property("component")
             env["fog_volumetric"] = bool(c.get_editor_property("enable_volumetric_fog"))
@@ -333,10 +366,19 @@ def gate_lights(layout, actors):
             off = float(fb.get_editor_property("sensor_vertical_offset"))
             if abs(off - float(c.get("shift_y", 0.0)) * 36.0) > 1e-3:
                 bad.append(("camera_shift", lab, off))
+    # the preset's environment: golden has volumetric fog at the Blender haze density; night has none (no shafts);
+    # the sky light intensity and the manual exposure bias are the preset's
+    fog_want = C.FOG_DENSITY_PER_M > 0.0
+    env["preset"] = C.PRESET
+    env["fog_ok"] = (env.get("fog_volumetric") == fog_want
+                     and abs(env.get("fog_density", -1.0) - C.FOG_DENSITY_PER_M * 10.0) < 1e-6)
+    env["skylight_ok"] = abs(env.get("skylight_intensity", -1.0) - C.SKYLIGHT_INTENSITY) < 1e-4
+    env["ppv_bias_ok"] = abs(env.get("ppv_bias", 99.0) - C.EXPOSURE_BIAS) < 1e-3
     res["environment"] = env
     res["bad"] = bad
     res["passed"] = (not bad and dict(want_roles) == dict(got_roles) and len(shadowed) <= C.MAX_SHADOWED_LOCAL
-                     and env.get("skylight_real_time_capture") and env.get("fog_volumetric") and env.get("sky_atmosphere")
+                     and env.get("skylight_real_time_capture") and env["fog_ok"] and env["skylight_ok"]
+                     and env["ppv_bias_ok"] and env.get("sky_atmosphere")
                      and env.get("ppv_unbound") and "MANUAL" in env.get("ppv_manual", "").upper()
                      and env.get("player_start", {}).get("inside_door") and env.get("player_start", {}).get("faces_into_room")
                      and len(env.get("cameras", [])) == len(layout["cameras"]))
@@ -345,7 +387,7 @@ def gate_lights(layout, actors):
 
 def main():
     t0 = time.time()
-    rep = {"engine": unreal.SystemLibrary.get_engine_version()}
+    rep = {"engine": unreal.SystemLibrary.get_engine_version(), "preset": C.PRESET}
     try:
         layout = C.load_layout()
         bl = json.loads(C.BLENDER_BOUNDS.read_text(encoding="utf-8"))

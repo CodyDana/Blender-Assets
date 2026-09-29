@@ -102,10 +102,10 @@ MATERIALS = {
     "M_AK_HBronzeEdge": (None, 1.0, {"color": "#B39A74", "rough": 0.22, "metal": 1.0}),
     # saturated amber under-glow (a lower strength keeps the hue through AgX; the kit's LEDGlow tone-maps to peach)
     # (a dark base so the case lights do not wash it out; kept low so the hue survives AgX: #FF9A10 at 1.2 read peach)
-    "M_AK_HAmber": (None, 1.0, {"color": "#3A2208", "emit": 5.0, "emit_color": "#FFA838"}),   # fix 3: a hot thin line
+    "M_AK_HAmber": (None, 1.0, {"color": "#3A2208", "emit": 8.5, "emit_color": "#FFA838"}),   # fix 3: a hot thin line; user 2026-09-28 "make the lights below the showcase boxes glow brighter": 5 -> 8.5
     # the downward faces of the under-body strips: hotter, they throw the amber pool on the floor and the shoe
     # (fix 2: 3 -> 9, the recessed strip alone now lights the bronze kick plate and the floor pool)
-    "M_AK_HAmberHot": (None, 1.0, {"color": "#3A2208", "emit": 14.0, "emit_color": "#FF9A10"}),   # fix 3: 12 -> 14 (it
+    "M_AK_HAmberHot": (None, 1.0, {"color": "#3A2208", "emit": 22.0, "emit_color": "#FF9A10"}),   # user 2026-09-28: brighter under-glow, 14 -> 22   # fix 3: 12 -> 14 (it
     # only lights the kick cove and the floor now: the strip's front face is the thin M_AK_HAmber line)
     # fix 2: brushed bronze kick plate / hero feet (case_detail bottom-left: a lighter brushed bronze than the frames)
     "M_AK_HBronzeKick": (None, 1.0, {"color": "#6E5436", "rough": 0.38, "metal": 1.0}),   # fix 3: darker kick

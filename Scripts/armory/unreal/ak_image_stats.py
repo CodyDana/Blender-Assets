@@ -2,7 +2,8 @@
 
 1. Tone: display-value luminance (Rec.709 weights on the 8-bit sRGB values / 255) mean, p10, p50, p90, share below 0.2,
    cream share (L > 0.6 and HSV saturation < 0.35), mean HSV saturation (pixels with max > 0.02), for every Unreal capture,
-   the matching Blender golden render (renders/fix1) and the LOOK reference.
+   the matching Blender render of the preset (env AK_PRESET, default night: renders/night_live2; golden:
+   renders/hero_live; key "blender") and the LOOK reference.
 2. Exposure sweep (captures/diag/<cam>_bias_*.png): the bias whose frame mean / p50 best matches the Blender golden render.
 3. Convergence: mean absolute difference (8-bit levels) between successive checkpoints of each camera's capture sequence,
    and between the last two; plus the share of pixels that still move by more than 4 levels.
@@ -10,6 +11,7 @@
 Out: WorkFiles/armory/build/unreal/capture_stats.json
 """
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -19,7 +21,10 @@ from PIL import Image
 
 OUT = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory\build\unreal")
 CAP = OUT / "captures"
-BL = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory\build\renders\hero_live")   # hero round: the live hero build (was stage_f2; fix1 before)
+PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # night + genkan (2026-09-28)
+# the Blender renders of the same preset: night = renders/night_live2 (the live entry-fix round 2 build; was night_live); golden =
+# renders/hero_live (hero round: the live hero build; was stage_f2, fix1 before)
+BL = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory\build\renders") / ("night_live2" if PRESET == "night" else "hero_live")
 REF = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory\reference\armory3_reference2.png")
 
 
@@ -69,19 +74,19 @@ def mad(a, b):
 
 
 def main():
-    rep = {"tone": {}, "sweep": {}, "convergence": {}, "diag": {}}
+    rep = {"preset": PRESET, "blender_dir": str(BL), "tone": {}, "sweep": {}, "convergence": {}, "diag": {}}
     rep["tone"]["LOOK_reference"] = stats(load(REF))
     finals = sorted(p for p in CAP.glob("*.png"))
     for p in finals:
         cam = p.stem
         ue_img = load(p)
         rep["tone"][cam] = {"unreal": stats(ue_img)}
-        b = (BL / "ref_aspect" / f"{cam.replace('_ref_aspect', '')}_golden.png" if cam.endswith("_ref_aspect")
-             else BL / f"{cam}_golden.png")
+        b = (BL / "ref_aspect" / f"{cam.replace('_ref_aspect', '')}_{PRESET}.png" if cam.endswith("_ref_aspect")
+             else BL / f"{cam}_{PRESET}.png")
         if cam.endswith("_ref_aspect"):   # C1 at 1448 x 1086 against the LOOK reference itself
             rep["tone"][cam]["LOOK_reference"] = stats(load(REF, (ue_img.shape[1], ue_img.shape[0])))
         if b.exists():
-            rep["tone"][cam]["blender_golden"] = stats(load(b, (ue_img.shape[1], ue_img.shape[0])))
+            rep["tone"][cam]["blender"] = stats(load(b, (ue_img.shape[1], ue_img.shape[0])))
         seq = sorted((CAP / "sequence").glob(f"{cam}_f*.png"), key=lambda q: int(q.stem.rsplit("_f", 1)[1]))
         imgs = [(int(q.stem.rsplit("_f", 1)[1]), load_cap(q, cam)) for q in seq]
         steps = {}
@@ -96,7 +101,7 @@ def main():
             rep["diag"][q.stem] = {"mean_abs_levels_vs_final": mad(load_cap(q, "C1_EntryReveal"), base)[0],
                                    "mean_L_off": stats(load_cap(q, "C1_EntryReveal"))["mean"],
                                    "mean_L_final": stats(base)["mean"]}
-        target = rep["tone"].get("C1_EntryReveal", {}).get("blender_golden")
+        target = rep["tone"].get("C1_EntryReveal", {}).get("blender")
         for q in sorted((CAP / "diag").glob("C1_EntryReveal_bias_*.png")):
             m = re.search(r"bias_([+-][0-9.]+)", q.stem)
             s = stats(load_cap(q, "C1_EntryReveal"))

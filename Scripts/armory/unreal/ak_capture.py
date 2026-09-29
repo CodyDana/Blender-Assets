@@ -48,7 +48,7 @@ CHECKPOINTS = sorted({1, 4, 16, 32, 64, FRAMES} | set(range(0, FRAMES + 1, 32)) 
 W, H = 1600, 900
 SEQ = C.CAPTURES / "sequence"
 DIAG = C.CAPTURES / "diag"
-REP = {"engine": ue.SystemLibrary.get_engine_version(), "cams": CAMS, "frames": FRAMES, "warm_ticks": WARM,
+REP = {"engine": ue.SystemLibrary.get_engine_version(), "preset": C.PRESET, "cams": CAMS, "frames": FRAMES, "warm_ticks": WARM,
        "res": [W, H], "captures": {}, "diag": {}, "notes": [], "errors": []}
 T0 = time.time()
 

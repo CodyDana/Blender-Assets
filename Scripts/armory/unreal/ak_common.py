@@ -14,9 +14,19 @@ Lambertian surface gives scene radiance E/pi, candela is luminous intensity (on-
 emissive colour is scene radiance. So ONE factor K (lux per Blender W/m2) keeps every ratio of the Blender review renders:
     sun lux = K S,  point / spot cd = K P / (4 pi)  (a Blender spot's power is that of a point radiating in all directions),
     rect cd = K P / pi,  emissive = K s colour,  exposure multiplier = 2^EV_blender / K  (Unreal manual exposure = 2^bias).
+
+PRESET (night + genkan, 2026-09-28): the lighting preset the whole Unreal stage builds, read from the environment variable
+AK_PRESET: "night" (the DEFAULT, as render_armory.py) or "golden" (golden hour, exactly the hero-round level). Every
+Unreal step is its own process, so set it for the whole run:  AK_PRESET=golden bash run_armory_unreal.sh
+Night (render_armory.py MOON / PRESET_SCALE["night"] / PRESET_KELVIN / NIGHT_EMIT / CAM_EXPOSURE): ONE directional light,
+the dim cool moon (it drives the SkyAtmosphere, forward shading priority 1; the golden sun and the window fill are not
+spawned), a dark-blue physical sky at low sky-light intensity, no height fog and no volumetric fog (no shafts), the
+practicals at the night role multipliers (downlights 3500 K), the far-scenery cards dimmed and cooled, the night
+exposure bias. ak_verify checks whichever preset the level was built with (the same AK_PRESET).
 """
 import json
 import math
+import os
 from pathlib import Path
 
 ROOT = Path(r"C:\Users\Cody\Desktop\Blender_Projects")
@@ -46,7 +56,8 @@ def _render_constants():
     are READ from render_armory.py (its module-level literals, via ast; it imports bpy, so it cannot be imported here),
     so the Unreal light table follows every Blender round without a hand-copied table going stale."""
     import ast
-    want = {"POWER", "PRESET_SCALE", "SUN", "FOG", "SUN_ANGLE_DEG", "EXPOSURE", "LOOK", "SKY", "BLOOM"}
+    want = {"POWER", "PRESET_SCALE", "SUN", "FOG", "SUN_ANGLE_DEG", "EXPOSURE", "LOOK", "SKY", "BLOOM",
+            "MOON", "PRESET_KELVIN", "NIGHT_EMIT", "NIGHT_SKY_CAM", "CAM_EXPOSURE"}   # night: the moon + night tables
     out = {}
     tree = ast.parse(RENDER_SCRIPT.read_text(encoding="utf-8"))
     for node in tree.body:
@@ -61,12 +72,19 @@ def _render_constants():
 
 
 RC = _render_constants()
-PRESET = "golden"
+PRESETS = ("night", "golden")
+PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # night + genkan (2026-09-28): night default
+if PRESET not in PRESETS:
+    raise RuntimeError(f"AK_PRESET={PRESET!r}: expected one of {PRESETS}")
+NIGHT = PRESET == "night"
 POWER_W = dict(RC["POWER"])                         # Blender watts per role ("glow": per metre of plinth perimeter)
-GOLDEN_SCALE = dict(RC["PRESET_SCALE"][PRESET])     # the golden preset's role scales
-SUN_W_M2 = float(RC["SUN"][PRESET])                 # f2: 60 W/m2 (x the light's power_scale: the window fill 0.85)
+ROLE_SCALE = dict(RC["PRESET_SCALE"][PRESET])       # the active preset's role scales (night table / golden)
+GOLDEN_SCALE = ROLE_SCALE                           # (old name, kept for the helper scripts)
+ROLE_KELVIN = dict(RC["PRESET_KELVIN"].get(PRESET, {}))   # night: absolute colour temperature per role (downlights 3500 K)
+MOON = RC["MOON"].get(PRESET)                       # night: the moon replaces the golden sun, the window fill is off
+SUN_W_M2 = float(RC["SUN"][PRESET])                 # golden 90 W/m2 (x power_scale: window fill 0.85); night: the moon 3
 SUN_ANGLE_DEG = float(RC["SUN_ANGLE_DEG"])          # f1: 0.5 deg disc
-BLENDER_EXPOSURE_EV = float(RC["EXPOSURE"][PRESET])  # f1: +2.4 EV with AgX Very High Contrast
+BLENDER_EXPOSURE_EV = float(RC["EXPOSURE"][PRESET])  # golden +2.4 EV, night +1.1 EV (AgX Very High Contrast)
 BLENDER_LOOK = RC["LOOK"]
 FOG_DENSITY_PER_M = float(RC["FOG"][PRESET])        # Blender haze extinction per metre; Unreal FogDensity = per_m * 10
 SKY_FILL = RC["SKY"][PRESET]                        # (colour, strength) of the Blender world for non-camera rays
@@ -76,7 +94,31 @@ SKY_FILL = RC["SKY"][PRESET]                        # (colour, strength) of the 
 # lantern: the paper panes are opaque in Blender, so the lantern point light only escapes through the open top; in
 # Unreal the lanterns cast no shadow (budget), so the light reaches the floor and walls unblocked. 0.2 leaves roughly
 # the open-top share (measured round 1: hot floor pools round every lantern in C1 / C10).
-UE_ROLE_SCALE = {"lantern": 0.2}
+UE_ROLE_SCALE_BY_PRESET = {
+    "golden": {"lantern": 0.2},
+    # night (tuned on the night C1 against the Blender night C1 at 1448 x 1086, BUILD_NOTES "Unreal: night + genkan"):
+    # glow 0.25: the under-glow rects (1.8 x 1.3 m, 7.5 cm over the floor, pointing down) are Lambertian in Unreal where
+    # Blender narrows them to a 160 deg spread; at night x3.0 the spill in front of every plinth read a clipped white pool
+    # (display L 0.63 against 0.26); 0.3 gave 0.31, 0.25 gave 0.28 (with the -2.68 bias). panel 0.6: the wall-niche
+    # returns read hot orange (niche_back L 0.38 against 0.26, together with M_AK_HNicheSide below)
+    # glow round (2026-09-28, user: brighter under-glow): glow 0.25 -> 1.0 together with the amber colour and the barn
+    # doors below (C1 1448 x 1086 against night_live2, display L: pool in front of the front plinth 0.43 -> 0.61
+    # (Blender 0.51), saturation 0.54 -> 0.89; tried: 2000 K doors 6 cm x0.5 (the doors cut the pool to a line, 0.22),
+    # 2000 K 3 cm x1.0 (0.56), 1800 K 2 cm x0.8 (0.55, orange with no yellow), 1900 K 2 cm x0.9 (0.58, mid pool 0.43 < 0.46))
+    "night": {"lantern": 0.2, "glow": 1.0, "panel": 0.6},
+}
+UE_ROLE_SCALE = dict(UE_ROLE_SCALE_BY_PRESET[PRESET])
+# Unreal-only under-glow shape and colour (glow round, 2026-09-28; user: "please make the lights below the showcase boxes
+# glow brighter"; BUILD_NOTES "Unreal: brighter under-glow"). In Cycles the amber floor streak in front of every plinth
+# comes from the hot emissive strips (M_AK_HAmberHot, M_AK_HKickGlow) lighting and mirroring in the glossy floor; the
+# 4200 K glow rect only adds a soft warm-white spill. Unreal's emissives light nothing, so the rect alone made a wide
+# cream pool. Here the rect carries the strips' amber (UE_ROLE_KELVIN) and straight barn doors (UE_ROLE_BARN_DOOR_CM,
+# the rect hangs 7.5 cm over the floor) keep its light in a tight band beside the plinth, so it can run brighter
+# without spreading into a clipped white pool.
+UE_ROLE_KELVIN_BY_PRESET = {"golden": {}, "night": {"glow": 2000}}
+UE_ROLE_KELVIN = dict(UE_ROLE_KELVIN_BY_PRESET[PRESET])
+UE_ROLE_BARN_DOOR_CM_BY_PRESET = {"golden": {}, "night": {"glow": 2.0}}
+UE_ROLE_BARN_DOOR_CM = dict(UE_ROLE_BARN_DOOR_CM_BY_PRESET[PRESET])
 # diagnostics only (hero round): AK_ROLE_SCALE='{"wash": 0}' switches a role off for a test level + capture; the verify
 # gate then fails the light intensities on purpose, so a real run never sets it
 if __import__("os").environ.get("AK_ROLE_SCALE"):
@@ -93,11 +135,26 @@ UE_PP = {"bloom_intensity": 0.3,
          # round 1: Unreal's filmic curve keeps the 2800 K sun saturated where AgX rolls it toward cream (CG sunlit gravel
          # display (0.70, 0.47, 0.18) against Blender's (0.63, 0.51, 0.37))
          "color_saturation": (0.85, 0.85, 0.85, 1.0)}
+if PRESET == "night":
+    # night: no warm sun to desaturate (saturation 1.0: the practicals' amber is the look; at 0.85 the LED lines and the
+    # glow pools read cream-white against Blender's amber); film_toe 0.4 (default 0.55): most of the night frame sits in
+    # the toe, where Unreal crushed the moonlit / downlit floor (floor_lo50 L 0.068 against 0.109 at 0.55; 0.082 at 0.4)
+    UE_PP = dict(UE_PP, color_saturation=(1.0, 1.0, 1.0, 1.0), film_toe=0.4)
 # (tried and dropped: film_toe 0.3 against the default 0.55 lifted C1 p10 only 0.016 -> 0.039 and darkened every mid-tone)
 # Unreal-only sky: SkyAtmosphere's physical sky for a 6000 lux sun reads dim teal (CG_Garden sky display (0.38, 0.44,
 # 0.43)) where the Blender golden world is cream (0.81, 0.77, 0.72); its linearised ratio per channel is about
 # (5.2, 3.5, 3.1). The factor also scales the real-time sky light (the shade fill the Blender world gives).
-UE_SKY = {"sky_luminance_factor": (5.0, 3.5, 3.0)}
+UE_SKY_BY_PRESET = {"golden": {"sky_luminance_factor": (5.0, 3.5, 3.0)},
+                    # night: the moon (300 lux, 38 deg up) is the atmosphere light; its physical sky is a DAYTIME blue
+                    # scaled down and tinted to render_armory NIGHT_SKY_CAM's blue-black (tuned on the CG_Garden sky,
+                    # display sRGB, Blender (0.011, 0.050, 0.105)): (1.0, 1.1, 1.9) gave a bright day sky, (0.08, 0.09,
+                    # 0.16) (0.011, 0.036, 0.201), (0.08, 0.18, 0.04) (0.012, 0.123, 0.033), (0.06, 0.11, 0.10)
+                    # (0.008, 0.057, 0.124)
+                    "night": {"sky_luminance_factor": (0.06, 0.11, 0.10)}}
+UE_SKY = UE_SKY_BY_PRESET[PRESET]
+# the real-time sky light (the shade fill of the Blender world's diffuse rays): golden 1.0; night 0.25 (Blender's diffuse
+# fill SKY["night"] is about a fifth of its camera sky where golden's is about half)
+SKYLIGHT_INTENSITY = {"golden": 1.0, "night": 0.25}[PRESET]
 SPOT_BLEND = 0.5                 # default when a spot has no "blend"
 SPOT_SOFT_M = 0.04
 FOG_ANISO = 0.35
@@ -107,7 +164,12 @@ SKY_SCATTER = 0.0                # Blender: the world does not scatter in the ha
 # The tuned bias is what the capture sweep measured to give the Blender golden C1's mean and median display luminance
 # (capture_stats.json "sweep"; BUILD_NOTES). History: -3.34 (fix1, Blender EV +0.8 AgX MHC), -3.94 (look2, EV +0.2).
 EXPOSURE_BIAS_ANALYTIC = BLENDER_EXPOSURE_EV - math.log2(K_LUX)
-EXPOSURE_BIAS = -1.58            # hero round (2026-09-28): -1.80 -> -1.58, re-tuned over the 7 room views against the
+# per preset; night started from the golden tuning moved by the Blender night - golden EV (+1.1 - +2.4 = -1.3): -2.88
+# (every room view within 0.035 of Blender's mean, but hot glow pools and emissives over a dark floor); with the night
+# role scales, overrides and film toe it is -2.68: C1 whole-frame mean 0.129 / 0.129 (BUILD_NOTES "Unreal: night + genkan")
+EXPOSURE_BIAS_BY_PRESET = {"golden": -1.58, "night": -2.68}
+EXPOSURE_BIAS = EXPOSURE_BIAS_BY_PRESET[PRESET]
+EXPOSURE_BIAS_GOLDEN = -1.58     # hero round (2026-09-28): -1.80 -> -1.58, re-tuned over the 7 room views against the
 # hero_live Blender renders: at -1.80 the per-view mean errors (Unreal - Blender) were C1 -0.027, C3 +0.019, C4 -0.027,
 # C5 -0.041, C10 +0.029, CW -0.042, CX -0.066; their median -0.027 over the measured slope (~0.12 mean per EV) is +0.22 EV
 # (CG_Garden keeps its own camera offset on top). Previous: Unreal rebuild, TUNED over ALL the review views, not C1 alone.
@@ -145,16 +207,63 @@ def kelvin_rgb(k):
 
 
 def light_watts(L):
-    """Blender watts of a layout.json local light in the golden preset (render_armory.py: POWER x perimeter for the
+    """Blender watts of a layout.json local light in the active preset (render_armory.py: POWER x perimeter for the
     under-glow x preset scale x the light's own power_scale), times the Unreal-only role scale."""
     role = L["role"]
     p = POWER_W[role] * (L["perimeter"] if role == "glow" else 1.0)
-    return p * GOLDEN_SCALE.get(role, 1.0) * float(L.get("power_scale", 1.0)) * UE_ROLE_SCALE.get(role, 1.0)
+    return p * ROLE_SCALE.get(role, 1.0) * float(L.get("power_scale", 1.0)) * UE_ROLE_SCALE.get(role, 1.0)
+
+
+def light_kelvin(L):
+    """render_armory.py: PRESET_KELVIN[preset][role] replaces layout.json's kelvin (night downlights 3500 K); then the
+    Unreal-only UE_ROLE_KELVIN (night under-glow: a saturated amber, see there)."""
+    return UE_ROLE_KELVIN.get(L.get("role"), ROLE_KELVIN.get(L.get("role"), L["kelvin"]))
+
+
+def light_barn_door_cm(L):
+    """Unreal barn-door length (cm, doors straight: angle 0) for a rect light: the Unreal-only UE_ROLE_BARN_DOOR_CM
+    (night under-glow) or, for a layout light with its own spread_deg (the hero table's), the length that puts the
+    half-spread cone's edge ray from the rect centre at the door tip; else 0 (no doors)."""
+    if L["role"] in UE_ROLE_BARN_DOOR_CM:
+        return float(UE_ROLE_BARN_DOOR_CM[L["role"]])
+    if "spread_deg" in L:
+        w, h = L["size"]
+        return min(w, h) * 100.0 / 2.0 / math.tan(math.radians(float(L["spread_deg"]) / 2.0))
+    return 0.0
 
 
 def sun_lux(L):
     """Directional light illuminance: K x the golden sun strength x the light's power_scale (the window fill 0.85)."""
     return K_LUX * SUN_W_M2 * float(L.get("power_scale", 1.0))
+
+
+def moon_travel_dir(moon):
+    """render_armory.py main(): the moon's travel direction (Blender frame) from its elevation and heading (degrees from
+    +X toward -Y, layout.json's convention)."""
+    el, az = math.radians(moon["elev_deg"]), math.radians(moon["heading_deg"])
+    return [math.cos(el) * math.cos(az), -math.cos(el) * math.sin(az), -math.sin(el)]
+
+
+def directional_specs(layout=None):
+    """The directional lights of the active preset, as ak_level spawns them and ak_verify checks them. Golden: the
+    layout.json suns (the real sun: atmosphere light, channel 0, scatters, forward shading priority 1; the f2 window fill:
+    channel 1 only, no atmosphere, no scatter, priority 0). Night: ONE light, the moon (render_armory MOON: the golden
+    sun re-aimed and dimmed, the window fill off): atmosphere light, channel 0, no volumetric scattering (no shafts),
+    priority 1 (a single directional light: the multiple-directional-lights warning cannot come back)."""
+    suns = [L for L in (layout or load_layout())["lights"] if L["type"] == "sun"]
+    if MOON is not None:
+        return [{"name": "Moon", "travel_dir": [round(v, 6) for v in moon_travel_dir(MOON)], "lux": K_LUX * SUN_W_M2,
+                 "kelvin": MOON["kelvin"], "angle_deg": float(MOON.get("angle_deg", SUN_ANGLE_DEG)), "interior": False,
+                 "atmosphere": True, "scatter": 0.0, "volumetric_shadow": False, "priority": 1,
+                 "replaces": [L["name"] for L in suns]}]
+    out = []
+    for L in suns:
+        interior = L.get("link") == "interior"
+        out.append({"name": L["name"], "travel_dir": list(L["travel_dir"]), "lux": sun_lux(L), "kelvin": L["kelvin"],
+                    "angle_deg": SUN_ANGLE_DEG, "interior": interior, "atmosphere": not interior,
+                    "scatter": 0.0 if interior else 1.0, "volumetric_shadow": not interior,
+                    "priority": 0 if interior else 1})
+    return out
 
 
 def light_shadows(L):
@@ -167,13 +276,14 @@ def is_interior_piece(piece):
 
 
 def camera_exposure_offset(cam):
-    """A camera's own review exposure relative to the golden room exposure (exterior stage: CG_Garden -2.8 vs +2.4)."""
-    ev = cam.get("exposure_ev", {}).get(PRESET)
+    """A camera's own review exposure relative to the room exposure of the preset, as render_armory.py picks it:
+    CAM_EXPOSURE[preset] first (night: CG_Garden +0.3 vs +1.1), then layout.json exposure_ev (golden: CG -2.8 vs +2.4)."""
+    ev = RC["CAM_EXPOSURE"].get(PRESET, {}).get(cam["name"], cam.get("exposure_ev", {}).get(PRESET))
     return 0.0 if ev is None else float(ev) - BLENDER_EXPOSURE_EV
 
 
 def light_candela(L):
-    """Unreal candela for a layout.json light (golden preset)."""
+    """Unreal candela for a layout.json light (active preset)."""
     p = light_watts(L)
     if L["type"] == "rect":
         return K_LUX * p / math.pi * RECT_CANDELA_SCALE
@@ -242,7 +352,7 @@ def folder_of(piece):
         return "Architecture/Ceiling"
     if p.startswith(("Platform", "Steps")):
         return "Architecture/Platform"
-    if p.startswith(("Threshold", "EntryMat")):
+    if p.startswith(("Threshold", "EntryMat", "StepBeam", "GenkanFloor")):   # genkan (2026-09-28)
         return "Architecture/Entry"
     if p.startswith(("Window",)):
         return "Architecture/Windows"
@@ -326,6 +436,41 @@ UE_OVERRIDES = {
     # rebalanced to #493015 (C1 (0.55, 0.29, 0.09) at bias -1.80), x 1 / 1.165 linear for the -1.58 bias: #432D11
     "M_AK_HDeck": {"color": "#432D11"},
 }
+# night + genkan (2026-09-28): Unreal-only overrides for the NIGHT preset only, merged over UE_OVERRIDES (tuned on the
+# night C1 against the Blender night C1; BUILD_NOTES "Unreal: night + genkan"). Golden keeps UE_OVERRIDES alone.
+UE_OVERRIDES_NIGHT = {
+    # the washi lantern paper read bright (lantern_paper L 0.57 against 0.49 at -2.88): 0.146 -> 0.11 (0.50 / 0.49)
+    "M_AK_HWashi": {"emit": 0.11},
+    # the plinth kick line (M_AK_HAmberHot line over the M_AK_HKickGlow picture) read cream-white, L 0.68 (0.84, 0.65,
+    # 0.48) against amber L 0.37 (0.64, 0.33, 0.03): Unreal's filmic shoulder whitens it; 22 -> 6 and 3.15 -> 1.2 give
+    # L 0.46 (0.66, 0.42, 0.24) (still paler: the tonemapper)
+    # glow round (user: brighter under-glow): HAmberHot 6 -> 12 (the hidden down-facing strip; Lumen emissive bounce
+    # under the overhang), HKickGlow 1.2 -> 2.0 with an amber Emissive Tint (1.0, 0.8, 0.6) so its white-hot core stays
+    # amber in the filmic shoulder: kick band L 0.34 -> 0.42 (Blender 0.41), saturation 0.94
+    "M_AK_HAmberHot": {"emit": 12.0},
+    "M_AK_HKickGlow": {"emit": 2.0, "emit_tint": (1.0, 0.8, 0.6)},
+    # the platform deck: the golden override #432D11 read dark red at night (L 0.13 (0.30, 0.10, 0.01) against 0.27
+    # (0.40, 0.25, 0.12)); Blender's #6E5A48 read 0.43; #534337 gives 0.28 (0.42, 0.25, 0.14)
+    "M_AK_HDeck": {"color": "#534337"},
+    # the wall niches read hot orange (niche_back L 0.38 against 0.26): the washi backs 0.02 -> 0.012, the side
+    # returns 0.035 -> 0.015 (with panel x0.6 above): 0.30
+    "M_AK_HNicheWashi": {"emit": 0.012},
+    "M_AK_HNicheWashi190": {"emit": 0.012},
+    "M_AK_HNicheSide": {"emit": 0.015},
+    # the rear-alcove screens by the painting read hot beside it: 0.9 -> 0.6
+    "M_AK_HAlcovePanel": {"emit": 0.6},
+    # the case-frame LED lines read white (Blender amber): 1.2 -> 0.6
+    "M_AK_HLedStrip": {"emit": 0.6},
+    # the case decks caught a cool sheen of the 6400 K case lights (case_deck L 0.15 (0.17, 0.14, 0.11) against 0.08
+    # (0.12, 0.07, 0.03)): #0A0908 rough 0.35 -> #060504 rough 0.8: 0.07 (0.09, 0.06, 0.04)
+    "M_AK_HDeckSuede": {"color": "#060504", "rough": 0.8},
+    # the moonlit gravel read bright warm cream in CG_Garden (L 0.45 against 0.32; Unreal's filmic keeps the beige that
+    # AgX greys, as in golden): tint 0.6 gives 0.36
+    "M_AKX_Gravel": {"tint": 0.6},
+}
+if PRESET == "night":
+    UE_OVERRIDES = {k: dict(UE_OVERRIDES.get(k, {}), **UE_OVERRIDES_NIGHT.get(k, {}))
+                    for k in set(UE_OVERRIDES) | set(UE_OVERRIDES_NIGHT)}
 # Museum anti-reflective glass. Blender: fully transparent plus a mirror at refl x Fresnel (IOR 1.5; f2 default 0.02).
 # Unreal thin translucent pane: specular 0.1 (F0 0.008) under a small opacity rising at grazing, at refl 0.02; a material
 # with its own "refl" (hero_shared M_AK_HCaseGlass 0.035) scales Specular and Edge Opacity by refl / 0.02.
@@ -334,11 +479,20 @@ GLASS_REFL = 0.02
 
 
 def blender_materials(layout=None):
-    """{name: (texture set or None, params with UE_OVERRIDES applied)} from layout.json."""
+    """{name: (texture set or None, params with UE_OVERRIDES applied)} from layout.json. Night: the painted far-scenery
+    cards (render_armory NIGHT_EMIT) get their emission scaled and an "emit_tint" (render_armory dim_scenery())."""
     out = {k: (v["texture"], dict(v["params"])) for k, v in (layout or load_layout())["materials"].items()}
     for k, o in UE_OVERRIDES.items():
         if k in out:
             out[k] = (out[k][0], dict(out[k][1], **o))
+    if NIGHT:
+        ne = RC["NIGHT_EMIT"]
+        for k, f in ne["scale"].items():
+            if k in out and "emit" in out[k][1]:
+                p = dict(out[k][1])
+                p["emit"] = float(p["emit"]) * float(f)
+                p["emit_tint"] = tuple(float(c) for c in ne["tint"])
+                out[k] = (out[k][0], p)
     return out
 
 
@@ -348,7 +502,7 @@ def material_spec(tex, p):
     if p.get("emit_image"):
         master = "M_AK_EmissiveTexMasked_Master" if p.get("alpha") else "M_AK_EmissiveTex_Master"
         return master, {"Emissive Intensity": p["emit"] * K_LUX, "Base Colour Scale": 0.0 if p.get("unlit") else 1.0}, \
-            {}, {"Base Colour Map": f"{tex_stem(tex)}_BC"}, notes
+            {"Emissive Tint": tuple(p.get("emit_tint", (1.0, 1.0, 1.0)))}, {"Base Colour Map": f"{tex_stem(tex)}_BC"}, notes
     if tex:
         st = tex_stem(tex)
         t = {"Base Colour Map": f"{st}_BC", "ORM Map": f"{st}_ORM", "Normal Map": f"{st}_N"}

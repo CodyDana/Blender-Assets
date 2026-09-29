@@ -7,7 +7,8 @@ Masters (rebuilt from scratch on every run, so the graph always equals this file
     M_AK_Textured_Master  BC x Tint, ORM (R AO, G roughness, B metallic), N (DirectX), UV0 x UV Scale
     M_AK_TexturedTwoSided_Master  the same, two-sided (hero round: Blender two_sided cloth without alpha)
     M_AK_TexturedMasked_Master / M_AK_Foliage_Master  masked two-sided cards (alpha; translucent leaves)
-    M_AK_EmissiveTex_Master / M_AK_EmissiveTexMasked_Master  emissive pictures (emit_image; unlit = Base Colour Scale 0)
+    M_AK_EmissiveTex_Master / M_AK_EmissiveTexMasked_Master  emissive pictures (emit_image; unlit = Base Colour Scale 0;
+                          emission = BC x Emissive Intensity x Emissive Tint, the tint cools the night scenery cards)
     M_AK_Flat_Master      Base Colour, Roughness, Metallic, Clear Coat, Clear Coat Roughness (clear-coat shading model,
                           material attributes: the lacquer)
     M_AK_FlatNoCoat_Master  Base Colour, Roughness, Metallic, Specular, default lit (brass, felt, linen, back board)
@@ -207,7 +208,10 @@ def build_emissive_tex(mat, masked=False):
                sampler_type=unreal.MaterialSamplerType.SAMPLERTYPE_COLOR, group="Textures")
     g.out(g.mul(t, "RGB", g.scalar("Base Colour Scale", 1.0), ""), "", MP.MP_BASE_COLOR)
     g.out(g.scalar("Roughness", 1.0), "", MP.MP_ROUGHNESS)
-    g.out(g.mul(t, "RGB", g.scalar("Emissive Intensity", 1.0, "Emission"), ""), "", MP.MP_EMISSIVE_COLOR)
+    # night + genkan (2026-09-28): Emissive Tint (default white) multiplies the emission, the Unreal half of
+    # render_armory dim_scenery()'s tint on the far-scenery cards at night (ak_common.blender_materials "emit_tint")
+    em = g.mul(t, "RGB", g.scalar("Emissive Intensity", 1.0, "Emission"), "")
+    g.out(g.mul(em, "", g.vector("Emissive Tint", (1, 1, 1), "Emission"), ""), "", MP.MP_EMISSIVE_COLOR)
     if masked:
         g.out(t, "A", MP.MP_OPACITY_MASK)
 
@@ -279,7 +283,7 @@ def instance_spec(name):
 
 def main():
     t0 = time.time()
-    rep = {"engine": unreal.SystemLibrary.get_engine_version(), "K_lux_per_blender_unit": K, "masters": {},
+    rep = {"engine": unreal.SystemLibrary.get_engine_version(), "preset": C.PRESET, "K_lux_per_blender_unit": K, "masters": {},
            "instances": {}, "meshes": {}}
     masters = {}
     for name, fn in MASTERS.items():

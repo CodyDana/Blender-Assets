@@ -39,6 +39,17 @@ REGIONS = {
     "floor_lo50": (0.18, 0.55, 0.36, 0.85),
     "floor_hi10": (0.18, 0.55, 0.36, 0.85),
     "lantern_hi10": (0.075, 0.83, 0.12, 0.93),
+    # glow round (2026-09-28, user: "make the lights below the showcase boxes glow brighter"): the plinth under-glow in
+    # the b5 C1 framing (40 mm, entry fix round 2; reference 2's front plinth sits at about the same rows): the front
+    # plinth's LED kick line + band, its brightest 10 %, the floor streak / pool in front of it (narrow and wide), the
+    # middle plinth's kick line and pool, and the brightest 10 % of the east-aisle plinths' glow
+    "glow_kick_front": (0.40, 0.762, 0.60, 0.772),
+    "glow_kick_front_hi10": (0.40, 0.760, 0.60, 0.775),
+    "glow_pool_front": (0.40, 0.773, 0.60, 0.792),
+    "glow_pool_front_wide": (0.40, 0.773, 0.60, 0.815),
+    "glow_kick_mid": (0.44, 0.521, 0.56, 0.528),
+    "glow_pool_mid": (0.44, 0.529, 0.56, 0.545),
+    "glow_east_plinths_hi10": (0.78, 0.45, 0.97, 0.62),
 }
 REF_BOX = {
     "lantern_paper": (0.075, 0.83, 0.12, 0.93),
@@ -53,7 +64,7 @@ REF_BOX = {
     "floor_hi10": (0.20, 0.55, 0.36, 0.78),
     "lantern_hi10": (0.075, 0.83, 0.12, 0.93),
 }
-HI = {"case_glass_edge", "floor_hi10", "lantern_hi10"}
+HI = {"case_glass_edge", "floor_hi10", "lantern_hi10", "glow_kick_front_hi10", "glow_east_plinths_hi10"}
 LO = {"floor_lo50"}   # the darkest half
 
 

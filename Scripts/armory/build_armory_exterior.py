@@ -74,6 +74,7 @@ MATERIALS = {
 NO_SHADOW = {"SM_AKX_TreeLine_24", "SM_AKX_TreeLineFar_48", "SM_AKX_Hills_Ring", "SM_AKX_Mountains_Ring"}
 
 COURT = (-4.0, 16.0, -13.0, -0.30)       # courtyard X0, X1, Y0, Y1 (wall centre lines / building face)
+FIELD_AT = (-194.0, -192.0)              # SM_AKX_Ground_Field placement (the 400 x 400 m lawn round the site)
 PLAYER_START = {"loc": [6.0, -10.4, 0.0], "rot_z": 90.0}   # on the path inside the gate, facing the entrance (+Y)
 CAMERA = ("CG_Garden", (2.9, -12.3, 1.8), (6.9, -1.0, 2.3), 20)
 CAMERA_EXPOSURE = {"CG_Garden": {"golden": -2.8, "gallery": -1.0}}   # review EV (the room presets are +0.6 / +0.8)
@@ -268,7 +269,17 @@ def flat_stone(rng, rx, ry, top=0.07, bottom=-0.06, sides=11, cx=0.0, cy=0.0, ti
 def ground_pieces():
     out = []
     X0, X1, Y0, Y1 = COURT
-    out.append(Piece("SM_AKX_Ground_Field").box(0, 400, 0, 400, -0.40, -0.02, FIELD).col(0, 400, 0, 400, -0.40, -0.02))
+    # genkan (2026-09-28): the field runs on under the building at -0.02, so it has a HOLE under the kit's sunken entry
+    # vestibule (build_armory_kit GENKAN + the doorway + the step beam, world X 2.17-9.83, Y -0.30-2.72; the genkan
+    # floor is at -0.12): four
+    # boxes round it (UVs stay world-continuous: the field is placed at FIELD_AT, local = world - FIELD_AT)
+    gx0, gy0, gx1, gy1 = G["GENKAN"]
+    hx0, hx1 = gx0 - FIELD_AT[0], gx1 - FIELD_AT[0]
+    hy0, hy1 = G["ENTRY_SILL"][1] - FIELD_AT[1], gy1 + G["STEP_BEAM_D"] - FIELD_AT[1]
+    fld = Piece("SM_AKX_Ground_Field")
+    for (a, b, c, d) in ((0, 400, 0, hy0), (0, 400, hy1, 400), (0, hx0, hy0, hy1), (hx1, 400, hy0, hy1)):
+        fld.box(a, b, c, d, -0.40, -0.02, FIELD).col(a, b, c, d, -0.40, -0.02)
+    out.append(fld)
     out.append(Piece("SM_AKX_Court_Gravel").box(0, X1 - X0, 0, Y1 - Y0, -0.12, 0.0, GRAV, uv="x")
                .col(0, X1 - X0, 0, Y1 - Y0, -0.12, 0.0))
     # cut-granite landing in front of the entrance (X 3.7-8.3, Y -1.82..-0.42 when placed at (3.7, -1.82))
@@ -778,7 +789,7 @@ def kit():
 def layout(add, room_w, room_l):
     X0, X1, Y0, Y1 = COURT
     cx = 6.0                                              # the entrance axis
-    add("SM_AKX_Ground_Field", -194.0, -192.0)
+    add("SM_AKX_Ground_Field", *FIELD_AT)
     add("SM_AKX_Court_Gravel", X0, Y0)
     add("SM_AKX_Landing", 3.7, -1.82)
     add("SM_AKX_PathSlab", cx - 0.6, -4.90)                # Y -4.90..-1.90, just short of the landing

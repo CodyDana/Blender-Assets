@@ -1,8 +1,31 @@
 """Hero group: the entrance (reference sheet WorkFiles/armory/reference/entrance.png, look reference armory3_reference2.png).
 
 Replaces the block-built SM_AK_Entrance_12, SM_AK_DoorLeaf, SM_AK_DoorLeaf_R, SM_AK_Threshold_4, SM_AK_EntryMat,
-SM_AK_EntryStep_4 and SM_AK_Post_Jamb_480 (same names, pivots, facing, bboxes within ~2 cm and the scripted collision
+SM_AK_StepBeam and SM_AK_Post_Jamb_480 (same names, pivots, facing, bboxes within ~2 cm and the scripted collision
 boxes), and adds the NEW SM_AK_H_WallSconce (the wall lantern of the sheet, placed by instances()).
+
+GENKAN (2026-09-28, the user: "the front entrance is not matching ... see how there's like a small entranceway and a
+black bar separating the main floor"; the look reference's foreground, WorkFiles/armory/reference/
+entry_foreground_crop.png). The r4-r6 raised step platform (SM_AK_EntryStep_4) is gone. Inside the 4 m opening the entry
+is a SUNKEN vestibule (build_armory_kit GENKAN / GENKAN_Z / STEP_BEAM_D / ENTRY_MAT / MAT_BOARD / SILL_TOP, read from G),
+post plinth to post plinth (world X 2.17-9.83, Y 0-2.56, the doorway back to the sill): the kit's plank floor 12 cm below
+the hall (SM_AK_GenkanFloor, scripted, with dark skirting under the wall line and the plinths), the woven mat in a
+black binding lying on it inside a dark board surround with worn arrises (entry_mat), and at its far edge the heavy
+dark step beam, the agari-kamachi (step_beam: 16 cm top flush with the hall floor, a crisp 12 cm face, straight across
+the whole vestibule, short returns down both sides in front of the post plinths), with the hall planks running on
+beyond it. Genkan r4 (blind judge 6.5): the mat a chunky grey-brown knotted sisal (T_AK_HEntSisal) in a 9.5 cm black
+binding, its surround boards near-black with lighter worn arrises (0.15 m wide); the beam matte timber in two tones, a
+lighter weathered top board (T_AK_HEntTimberG) nosing 8 mm over the near-black ebony face (was gloss black lacquer);
+the entry lanterns are hero_lantern_vase's SM_AK_Lantern_Entry, tight against the beam. ENTRYFIX (2026-09-28, the user's
+crop): the beam is a solid near-black lacquer bar (M_AK_HStepLacquer) between the two entry lanterns, which are the
+developed andon SM_AK_Lantern again and cap its ends; the genkan is the lanterns' span (GENKAN X 3.52-8.48) with 6 cm
+dark board returns outside it; the hall floor runs on outboard of them. ENTRYFIX r2 (blind judge 6/10): C1 and the entry
+refit together (entryfix/c1fit4.py): the bar Y 2.35-2.51 (GENKAN y1 2.56 -> 2.35), the lanterns 0.32 m in front of it;
+the bar a near-black LACQUERED timber (T_AK_HEntTimberL, satin) so its top reads as a lit timber over the black face;
+the mat field a fine knotted rush in columns (T_AK_HEntRushK) in a 6 cm binding with a binding-black band across it
+(MAT_STRIPE), the side boards 0.11 m, lighter, with 20 mm worn arrises. The parked leaves, the inner jamb bands and the opening's slim casings now stand on
+the genkan floor (LEAF_Z = GENKAN_Z -0.12; the leaves' top +3.78, the hanger straps reach down to it); the sill is a low
+board (+0.04) whose room face closes the step down into the genkan.
 
 Layout 2 (user-approved 2026-09-27: the sheet's COMPOSITION). The two heavy posts stand at the OUTER ENDS of the frame
 on the south wall line; the lintel, the brass top track with its four hanger wheels, both parked leaves and the
@@ -99,7 +122,11 @@ MATERIALS = {
     "M_AK_HStone": (None, 1.0, {"color": "#2A2B2D", "rough": 0.55, "metal": 0.15}),   # dark slate plinths
     "M_AK_HEntStoneEdge": (None, 1.0, {"color": "#4E4D4B", "rough": 0.50, "metal": 0.10}),
     # r5 (blind judge: the binding read thin and low-contrast): a deeper black cloth
-    "M_AK_HBinding": (None, 1.0, {"color": "#0B0A09", "rough": 0.92}),             # black cloth mat binding
+    # matfix: the binding WOVEN black (the crop's border is a textured dark band, not flat cloth): the mat's own weave
+    # set darkened (was a flat #0B0A09, rough 0.92)
+    # matfix b3 (blind judge: "the border ... reads as dark grey, not black ... a wide, jet-black woven or knotted
+    # border ... with its own rope texture"): the field's knot lattice in jet black (T_AK_HEntKnotB, its own set)
+    "M_AK_HBinding": ("HEntKnotB", 1.0, {}),   # b2: HEntWeave at tint 0.06 (0.11 read dark grey)       # black knotted mat binding
     # r5 (blind judge: the thin gold cord outside the binding is barely readable): a lighter gold twisted cord
     "M_AK_HEntCord": (None, 1.0, {"color": "#B98C4C", "rough": 0.62}),
     # fix round 3: the entrance's own names (hero_cases defines a different M_AK_HBrass; the modules' MATERIALS merge)
@@ -143,7 +170,20 @@ MATERIALS = {
     # r5 (blind judge: the rush ribs read like corduroy; the sheet's is a nubby coir / basket): T_AK_HEntCoir
     # r6 (blind judge: the coir read a flat speckle; the sheet's shows woven rows of tufts with directional ribs):
     # T_AK_HEntCoirR - tufted ribs front to back, deep grooves
-    "M_AK_HEntMat": ("HEntCoirR", 0.5, {}),
+    # genkan r4 (blind judge 6.5, delta 1: "the reference mat is a coarse, chunky basket / sisal weave in mid grey-brown
+    # ... r3 reads as a fine horizontal-ribbed tatami in bright straw"): T_AK_HEntSisal, rows of chunky knots across the
+    # mat in a grey-brown (reference 2's field ~(111, 82, 67) in the golden light)
+    # build 3: C1 measured the field ~(167, 133, 107) against the reference's ~(112, 81, 64): darker (tint 0.72)
+    # entryfix r2 (blind judge 6/10, blocker 1: "the weave reads as a regular grid of round dots, like cobbles ... the
+    # reference shows fine woven rush in straw tan"): T_AK_HEntRushK, reference 2's mat zoomed is columns of small
+    # interlocked V stitches running front to back (~1.8 cm cords, ~4.2 cm stitches), deep seams between the cords
+    # matfix (2026-09-28, the user: "fix the mat"; blind judge r2: "reads as a 2x2 tatami split ... the reference shows
+    # one continuous woven mat with a black border"): T_AK_HEntWeave, a coarse nubbly sisal weave, cords ~2.9 cm apart
+    # front to back as reference 2's field spectrum, staggered rounded nubs, warm grey-tan
+    # matfix b3 (blind judge 6/10: "vertical corduroy ropes ... the reference is round, nubbly, roughly isotropic knots
+    # ... with strong 3D relief"; golden "washed to pale pinkish cream"): T_AK_HEntKnot, chunky knots 3.1 x 5.6 cm in
+    # columns, a strong normal, a greyer tan
+    "M_AK_HEntMat": ("HEntKnot", 1.0, {"tint": 0.68}),   # b2: HEntWeave, tint 0.85; b3 0.80 (golden L 0.66 vs 0.34)
 }
 PAPER = ("M_AK_HEntPaperHi", "M_AK_HEntPaperMid", "M_AK_HEntPaperLo")
 # the sconce panes (layout 2, judge delta: a SMOOTH hot core fading to amber; flat emissive steps banded visibly even on
@@ -182,11 +222,43 @@ SHOE = (PLINTH_H, round(PLINTH_H + 0.7 * 2 * JAMB_HW, 3))   # judge delta: the b
 TOP_PLATE, POST_TOP = (4.60, 4.965), 5.00     # the front brass plate; the post top (a brass cap on the end grain)
 TOP_PLATE_HW = 0.20                           # its half width (the post is 0.50 wide)
 BOSS_Z = 4.42                                 # the round brass boss on the room face, at the nuki
-# layout 2 r4 (entrance.png: a RAISED step with a lipped edge, the mat a large rush rectangle through the doorway)
-ENTRY_TOP = 0.15                              # step platform / inset mat top, flush with the threshold (one step)
-ENTRY_MAT = (4.0, -0.30, 8.0, 0.75)           # world x0, y0, x1, y1 (build_armory_kit.ENTRY_MAT)
-ENTRY_STEP = (2.15, 0.035, 9.85, 0.86)        # world x0, y0, x1, y1 (build_armory_kit.ENTRY_STEP)
-ENTRY_SILL = (-0.435, -0.30)                  # the threshold sill's Y range (build_armory_kit.ENTRY_SILL)
+# genkan (2026-09-28): the entry's floor levels and extents are read from build_armory_kit through G (LEAF_Z, GENKAN,
+# GENKAN_Z, GENKAN_BASE, STEP_BEAM_D, STEP_RETURN_W, ENTRY_MAT, MAT_BOARD, MAT_TOP, MAT_BOARD_TOP, ENTRY_SILL, SILL_TOP);
+# r4: the step beam's weathered top board (thickness) and its nosing over the dark face
+STEP_TOP_T, STEP_NOSING = 0.035, 0.008   # r4 two-tone beam (entryfix: unused, the bar is one lacquer block)
+# the r4-r6 constants ENTRY_TOP / ENTRY_MAT / ENTRY_STEP (the raised step platform) are gone
+# the genkan's own materials. r1-r3: the step beam in a gloss black lacquer (M_AK_HStepLacquer; r3 rough 0.24 / coat
+# 0.5). r4 (blind judge 6.5, delta 2: "the reference beam is dark, satin, weathered wood with a visible lighter-brown
+# top face and a darker front face, so it reads as two tones; r3 is a glossy black lacquer band that mirrors the case
+# emblem"): matte timber, the top board in the lighter weathered T_AK_HEntTimberG (reference 2 ~(64, 61, 65)), the
+# front face the entrance's near-black T_AK_HEntTimberE (~(38, 23, 13)). Delta 4 ("the side boards framing the mat
+# should be near-black dark timber with a slightly lighter chamfered top edge, clearly darker than the vestibule
+# planks"): the mat's surround boards in the ebony timber darkened (tint 0.6) with wide worn arrises (WE)
+# build 2: the top at tint 1.0 read lighter than the planks; build 4: C1 measured the top 0.68x the hall planks and
+# the face ~(55, 38, 25) against the reference's 0.50x and ~(10, 6, 3): the top at 0.52, the face its own darker
+# M_AK_HStepFace (the ebony at 0.35), no bright worn arris on the nosing (it read as a light line under the top)
+# entryfix (2026-09-28, the user: "a black bar separating the main floor", the crop entry_foreground_crop.png): the beam is
+# ONE solid near-black lacquer bar again, top and face alike (the r4 two-tone timber read as a grey-brown top board, not
+# the crop's black bar): a gloss black lacquer (#0E0C0B, roughness 0.1, clear coat 0.8: its top picks up the lit hall as
+# the crop's sheen; b1 at 0.2 read as a flat black void at night), crisp 4 mm arrises
+# entryfix r2 (blind judge 6/10, blocker 3: "the bar reads as a thick black void or shadow band ... the reference beam
+# has a slightly lit top face and edge that read as a timber"; reference 2's bar top measures about the hall floor's
+# brightness, its face near-black): still a near-black lacquer, now over timber: T_AK_HEntTimberL (the ebony set's
+# grain in #0D0A08-#2B211A under a satin lacquer, roughness ~0.3, tex_entrance.timber_lacquer), so the top catches the
+# lit hall as a sheen with faint grain and the 6 mm arrises a thin highlight; the face stays black in its own shadow
+# matfix b3 (blind judge: "three small dark round dots or holes on the riser face directly above the mat"): the same
+# lacquered timber without its knots (one per 1 m tile read as a row of holes along the face): T_AK_HEntTimberN
+MATERIALS["M_AK_HStepLacquer"] = ("HEntTimberN", 1.0, {})
+# entryfix r2 (blocker 1 / delta 7: the binding was lost against near-black boards; reference 2's side boards are a
+# dark weathered timber, lighter than the binding, with a lit bevel): the ebony at full strength (was tint 0.6)
+# b4: at night the full-strength ebony still read near-black beside the binding: lifted (tint 1.8), a dark brown
+# b5: at L ~14 against the binding's ~3 the black binding still did not separate (reference 2: boards ~ the mat's tone,
+# binding dark): tint 2.4, and a 20 mm worn arris (was 12 mm; delta 7: "the lighter bevel edge ... is missing")
+# matfix b3 (blind judge: "the frame boards are lighter, redder wood with prominent grain, and on the bottom and right
+# they show a light orange rim ... the reference frame is uniformly dark, near-black, low-sheen board on all sides,
+# matching the dark step bar"): the bar's near-black timber at a low sheen, no knots (T_AK_HEntTimberM), and no warm
+# worn arrises on the surround (the jet-black knotted binding now separates by its relief and raised roll)
+MATERIALS["M_AK_HMatBoard"] = ("HEntTimberM", 1.0, {})   # b2: HEntTimberE, tint 2.4
 
 _N = [0]
 
@@ -206,17 +278,19 @@ def _tile(G, m):
 
 def _emit(G, p, bm, mats, uv_mode="box", grain=None, smooth=False):
     """Append a bmesh part to piece p. uv_mode 'box': tiling planar UVs per face (V along the grain axis, so the timber
-    grain runs along each member); 'keep': the UV layer already set on the bmesh."""
+    grain runs along each member); 'keep': the UV layer already set on the bmesh. smooth: a bool, or a set of face
+    indices to shade smooth."""
     bm.normal_update()
     uvl = bm.loops.layers.uv.active
     bm.verts.index_update()
+    bm.faces.index_update()
     verts = [tuple(v.co) for v in bm.verts]
     faces, uvs, fm, sm = [], [], [], []
     for f in bm.faces:
         faces.append([v.index for v in f.verts])
         m = mats[f.material_index]
         fm.append(m)
-        sm.append(smooth)
+        sm.append(smooth if isinstance(smooth, bool) else (f.index in smooth))   # matfix b3: or a set of face indices
         if uv_mode == "keep":
             uvs.append([tuple(l[uvl].uv) for l in f.loops])
             continue
@@ -694,9 +768,9 @@ def entrance(G):
         # ---- the stub outside the post: the sheet's wall cladding with the lattice (ranma) band
         _clad_face(G, p, s0, s1, -0.021, +1)
         # ---- a slim casing down the side of the opening (behind the parked leaf's leading stile), a brass edge
-        cbox(G, p, k0, k1, -0.004, 0.030, 0, H, T, 0.004, grain=2, edge=WE)
+        cbox(G, p, k0, k1, -0.004, 0.030, G["LEAF_Z"], H, T, 0.004, grain=2, edge=WE)   # genkan: down to its floor
         ke = (k1 - 0.008, k1) if k0 < L / 2 else (k0, k0 + 0.008)
-        cbox(G, p, ke[0], ke[1], 0.022, 0.034, 0, H - 0.002, BR, grain=2)
+        cbox(G, p, ke[0], ke[1], 0.022, 0.034, G["LEAF_Z"], H - 0.002, BR, grain=2)
     # ---- r3 (blind judge: the sheet's inner jamb band between each post and its parked leaf, brass-edged): a 14 cm
     # casing standing on the step, proud to the leaves' hardware line, worn arrises, a brass angle on its leaf-side
     # front edge and a shallow groove down its face
@@ -706,13 +780,13 @@ def entrance(G):
     for sgn, (j0, j1), (r0, r1) in (
             (+1, (POST_IN[0] - 0.005, POST_IN[0] + JC), (POST_IN[0] + JC - 0.004, POST_IN[0] + JAMB_W)),
             (-1, (POST_IN[1] - JC, POST_IN[1] + 0.005), (POST_IN[1] - JAMB_W, POST_IN[1] - JC + 0.004))):
-        cbox(G, p, j0, j1, -0.004, 0.205, ENTRY_TOP - 0.003, Z_L0 + 0.004, T, 0.005, grain=2, edge=WE)
-        cbox(G, p, r0, r1, -0.004, 0.10, ENTRY_TOP - 0.003, Z_L0 + 0.004, EG, grain=2)
+        cbox(G, p, j0, j1, -0.004, 0.205, G["LEAF_Z"] - 0.003, Z_L0 + 0.004, T, 0.005, grain=2, edge=WE)
+        cbox(G, p, r0, r1, -0.004, 0.10, G["LEAF_Z"] - 0.003, Z_L0 + 0.004, EG, grain=2)
         je = j1 if sgn > 0 else j0
-        cbox(G, p, min(je, je - sgn * 0.014), max(je, je - sgn * 0.014), 0.196, 0.214, ENTRY_TOP, Z_L0, BR, 0.0015,
+        cbox(G, p, min(je, je - sgn * 0.014), max(je, je - sgn * 0.014), 0.196, 0.214, G["LEAF_Z"], Z_L0, BR, 0.0015,
              grain=2)
         jc = (j0 + j1) / 2 - sgn * 0.006
-        cbox(G, p, jc - 0.005, jc + 0.005, 0.200, 0.2065, ENTRY_TOP + 0.02, Z_L0 - 0.02, "M_AK_HEntEndGrain", grain=2)
+        cbox(G, p, jc - 0.005, jc + 0.005, 0.200, 0.2065, G["LEAF_Z"] + 0.02, Z_L0 - 0.02, "M_AK_HEntEndGrain", grain=2)
     # ---- between the posts: the recessed panel of vertical boards behind the track (over the opening and the parked
     # leaves), the opening's head casing, ONE heavy lintel through the wall, a recessed fill above it (the posts rise
     # past it)
@@ -758,7 +832,7 @@ def entrance(G):
     # wider riveted strap plates): a deep flanged wheel on the rod, an axle boss, a wide strap plate with two rivets
     WR = 0.080
     wz = RZ + RR + WR - 0.010
-    ltop = ENTRY_TOP + LEAF_H                                                       # the leaves' top (r4: +4.05)
+    ltop = G["LEAF_Z"] + LEAF_H                                                     # the leaves' top (genkan: +3.90)
     for xh in WHEEL_X:
         cyl(G, p, (xh, 0.132, wz), WR, 0.046, "y", BR, 22)                          # the deep wheel on the rod
         for yf in (0.124, 0.176):
@@ -782,118 +856,119 @@ def entrance(G):
 # --------------------------------------------------------------------------- floor pieces
 
 def threshold(G):
-    """Layout 2 r4 (entrance.png: the mat runs back through the doorway to a sill board at its far edge): the outer
-    sill across the 4 m opening in the exterior door casing's depth (ENTRY_SILL, world Y -0.435 to -0.30), top +0.15
-    flush with the mat and the step platform - a set-back body under a squared nosing board lipped out over the street
-    side, the nosing arrises softly worn round in a warm wear tone; its ends meet the street-side door casing
-    (SM_AKX_Facade_Entrance_6, X 3.7-4.0 / 8.0-8.3), its room face the mat's back edge (r3: one sill Y -0.435 to 0.135
-    at +0.095 under a narrow mat)."""
+    """The outer sill across the 4 m opening in the exterior door casing's depth (ENTRY_SILL, world Y -0.435 to -0.30).
+    Genkan (2026-09-28): a LOW sill, top SILL_TOP (+0.04, just under the granite landing), its body down to GENKAN_BASE so
+    its room face closes the 16 cm step down onto the sunken genkan floor that runs through the doorway behind it: a
+    set-back body under a squared nosing board lipped out over the street side, softly worn arrises, a flush brass strip
+    along each top edge (r6)."""
     p = G["Piece"]("SM_AK_Threshold_4")
-    s0, s1 = ENTRY_SILL
-    cbox(G, p, 0.0, 4.0, s0 + 0.018, s1, 0.0, ENTRY_TOP - 0.030, T, 0.004, grain=0, edge=WE)
-    cbox(G, p, 0.0, 4.0, s0, s1, ENTRY_TOP - 0.036, ENTRY_TOP, T, 0.013, grain=0, seg=3, edge=WE)   # r5: wider worn arris
-    # r6 (blind judge: the sheet's sill shows a brass-edged highlight under the leaves): a flush brass strip along the
-    # sill's room-side top edge (against the mat) and a brass angle over its street-side nosing
-    cbox(G, p, 0.004, 3.996, s1 - 0.024, s1 - 0.002, ENTRY_TOP - 0.004, ENTRY_TOP + 0.0015, BR, 0.0015, grain=0)
-    cbox(G, p, 0.004, 3.996, s0 - 0.002, s0 + 0.020, ENTRY_TOP - 0.004, ENTRY_TOP + 0.0015, BR, 0.0015, grain=0)
-    cbox(G, p, 0.004, 3.996, s0 - 0.003, s0 + 0.001, ENTRY_TOP - 0.030, ENTRY_TOP, BR, 0.001, grain=0)
-    p.col(0, 4.0, s0, s1, 0, ENTRY_TOP)   # scripted collision
+    s0, s1 = G["ENTRY_SILL"]
+    top, base = G["SILL_TOP"], G["GENKAN_BASE"]
+    cbox(G, p, 0.0, 4.0, s0 + 0.018, s1, base, top - 0.030, T, 0.004, grain=0, edge=WE)
+    cbox(G, p, 0.0, 4.0, s0, s1, top - 0.036, top, T, 0.013, grain=0, seg=3, edge=WE)
+    cbox(G, p, 0.004, 3.996, s1 - 0.024, s1 - 0.002, top - 0.004, top + 0.0015, BR, 0.0015, grain=0)
+    cbox(G, p, 0.004, 3.996, s0 - 0.002, s0 + 0.020, top - 0.004, top + 0.0015, BR, 0.0015, grain=0)
+    cbox(G, p, 0.004, 3.996, s0 - 0.003, s0 + 0.001, top - 0.030, top, BR, 0.001, grain=0)
+    p.col(0, 4.0, s0, s1, base, top)   # scripted collision
     return p
 
 
-def entry_step(G):
-    """Layout 2 r4 (entrance.png: a RAISED dark timber step with a lipped edge running the full width between the post
-    plinths, in front of the leaves; r3's 9.5 cm platform read as a sliver): the platform round the inset mat, top +0.15
-    (one walkable step) flush with the sill and the mat (build_armory_kit.entry_step_parts, local to ENTRY_STEP x0, y0):
-    a side deck of three boards along X under each parked leaf (the leaves stand on it), and the front board across the
-    whole width, plinth to plinth - a heavy squared nosing board (3.4 cm) with softly worn round warm arrises lipped
-    2.4 cm over a set-back riser, so a dark shadow line runs under the lip along the whole step."""
-    p = G["Piece"]("SM_AK_EntryStep_4")
-    parts = G["entry_step_parts"]()
-    yfront = max(q[2] for q in parts)
-    # r5 (blind judge: the platform edge read as a thin line; the sheet's is a thick lipped board with a strong
-    # shadow): a 5.5 cm nosing board lipped 3.8 cm over a dark set-back riser, wide worn warm arrises
-    # r6 (blind judge: the sheet's step front reads a thicker board with a stronger lit nosing edge; the r5 step read
-    # thin and flat from the front): a 9 cm nosing board with a 2 cm worn warm arris, lipped 3 cm over the dark riser
-    lip, nose = 0.030, 0.090
-    for (xa, xb, ya, yb) in parts:
-        if ya >= yfront - 1e-6:                                   # the front board
-            cbox(G, p, xa, xb, ya, yb - lip, 0.0, ENTRY_TOP - nose + 0.002, T, 0.003, grain=0)
-            cbox(G, p, xa + 0.004, xb - 0.004, yb - lip - 0.004, yb - lip, 0.0, ENTRY_TOP - nose, EG, grain=0)
-            cbox(G, p, xa, xb, ya, yb, ENTRY_TOP - nose, ENTRY_TOP, T, 0.020, grain=0, seg=3, edge=WE)
-        elif xb - xa > 0.3:                                       # a deck under a parked leaf: boards along X
-            # r5 (blind judge: the side decks read as flat dark planes; the sheet shows board seams and worn warm
-            # edges): three boards with dark 4 mm seams, rounded worn arrises, a staggered butt joint in two of them
-            n = 3
-            # r6 (blind judge: the sheet shows plank seams across the top on both sides of the mat): 7 mm seams over
-            # a dark under-layer 2.5 cm down, 1 cm worn arrises
-            cbox(G, p, xa, xb, ya, yb, 0.0, ENTRY_TOP - 0.025, EG, grain=0)
-            for i in range(n):
-                y0 = ya + i * (yb - ya) / n + 0.0035
-                y1 = ya + (i + 1) * (yb - ya) / n - 0.0035
-                cuts = [xa, xb] if i == 1 else [xa, xa + (0.38 if i == 0 else 0.62) * (xb - xa), xb]
-                for ca, cb in zip(cuts, cuts[1:]):
-                    ga = 0.0035 if ca > xa else 0.0
-                    gb = 0.0035 if cb < xb else 0.0
-                    cbox(G, p, ca + ga, cb - gb, y0, y1, 0.0, ENTRY_TOP, T, 0.010, grain=0, seg=2, edge=WE)
-        else:                                                     # a filler at a leaf's leading edge (none in r4)
-            cbox(G, p, xa, xb, ya, yb, 0.0, ENTRY_TOP, T, 0.002, grain=0)
-        p.col(xa, xb, ya, yb, 0, ENTRY_TOP)   # scripted collision
+def step_beam(G):
+    """Genkan (2026-09-28): the agari-kamachi at the genkan's far edge that separates it from the raised hall floor
+    (reference 2's "black bar"), local to (GENKAN x0, 0). Entryfix (2026-09-28, the user: "a black bar separating the main
+    floor", the crop entry_foreground_crop.png): ONE solid near-black lacquer bar (M_AK_HStepLacquer, top and 12 cm face
+    alike, crisp 4 mm arrises; the r4 lighter weathered top board is gone) from X -STEP_RETURN_W to gw + STEP_RETURN_W
+    (world 3.46-8.54: its ends behind the two entry lanterns, which cap them), Y gd to gd + STEP_BEAM_D (world 2.35-2.51),
+    its top flush with the hall floor, the body on down to GENKAN_BASE; the pit's side edges are dark board returns
+    (M_AK_HMatBoard, the mat surround's near-black timber) OUTSIDE the pit, X -rw-0 / gw-gw+rw, from STEP_RETURN_Y0 (the
+    wall) to the bar."""
+    p = G["Piece"]("SM_AK_StepBeam")
+    gx0, gy0, gx1, gy1 = G["GENKAN"]
+    gw, gd, rw, bd, base = gx1 - gx0, gy1 - gy0, G["STEP_RETURN_W"], G["STEP_BEAM_D"], G["GENKAN_BASE"]
+    ry = G["STEP_RETURN_Y0"]
+    BAR, RET = "M_AK_HStepLacquer", "M_AK_HMatBoard"
+    cbox(G, p, -rw, gw + rw, gd, gd + bd, base, 0.0, BAR, 0.006, grain=0)            # the bar, one crisp lacquer block
+    for xa, xb in ((-rw, 0.0), (gw, gw + rw)):                                          # the side returns, butted to it
+        cbox(G, p, xa, xb, ry, gd - 0.001, base, 0.0, RET, 0.004, grain=1)
+    p.col(-rw, gw + rw, gd, gd + bd, base, 0).col(-rw, 0, ry, gd, base, 0)
+    p.col(gw, gw + rw, ry, gd, base, 0)   # scripted collision
     return p
 
 
 def entry_mat(G):
-    """Layout 2 r4 (entrance.png, the top view: a large woven golden rush rectangle nearly filling the platform's depth,
-    the full width of the opening, running back through the doorway, in a black cloth border with a thin woven edge
-    cord; r3's 3.96 x 0.635 m mat read as a 10:1 strip): 4.0 x 1.05 m (world X 4-8, Y -0.30 to 0.75, ENTRY_MAT; the
-    wall is only 0.30 m deep, so this is as square as it gets between the sill and the step's front board), a block up
-    to the platform top (+0.15): the golden rush field (M_AK_HEntMat: T_AK_HEntRush, ribs running front to back,
-    0.5 m tile) 7 mm below a rolled black cloth binding (7 cm), a 1.6 cm rounded woven edge cord round the outside."""
+    """Genkan (2026-09-28, reference 2's foreground): the woven mat lying on the sunken genkan floor, its far
+    end against the step beam, in a dark board surround. Local to the surround's corner (ENTRY_MAT x0 - MAT_BOARD,
+    y0 - MAT_BOARD) on GENKAN_Z: the rush field 2.5 x 2.38 m (ENTRY_MAT, world X 4.75-7.25, Y 0.18-2.56; M_AK_HEntMat,
+    the ribs running ACROSS as the reference's woven rows) in a thin rolled black binding (5 cm; the reference shows no
+    gold cord), top +2.2 cm; the surround a dark timber board down each side and across the near end (MAT_BOARD 0.20,
+    top +3 cm, worn arrises). r4: the field a chunky grey-brown knotted sisal (T_AK_HEntSisal), the binding 9.5 cm,
+    the boards near-black (M_AK_HMatBoard) 0.15 m wide with 12 mm lighter worn arrises. The r4-r6 mat (4.0 x 1.05 m, a 16 cm binding and a gold cord, inset in the raised step)
+    is gone. Matfix (2026-09-28, the user: "fix the mat"): ONE mat, world Y 1.47-2.35 (its near binding where the
+    crop shows the dark band), the r2 stripe gone, field and binding one planar weave mapping (T_AK_HEntWeave, the
+    binding the same weave near-black), the binding 7 cm on all four sides."""
     p = G["Piece"]("SM_AK_EntryMat")
-    X0, X1, Y0, Y1 = 0.0, round(ENTRY_MAT[2] - ENTRY_MAT[0], 4), 0.0, round(ENTRY_MAT[3] - ENTRY_MAT[1], 4)
-    # r5 (blind judge: the binding read thin and low-contrast, the gold cord barely readable): a 2.6 cm rounded gold
-    # cord (M_AK_HEntCord) and a bold 10 cm black binding, the field 8 mm below it
-    # r6 (blind judge: the binding still read slightly thinner than the sheet's bold border): 16 cm to the field
-    bw = 0.160
-    d = [0.0, 0.007, 0.018, 0.026, 0.034, bw - 0.014, bw - 0.005, bw]
-    hz = [ENTRY_TOP - 0.010, ENTRY_TOP - 0.001, ENTRY_TOP - 0.001, ENTRY_TOP - 0.006, ENTRY_TOP, ENTRY_TOP - 0.001,
-          ENTRY_TOP - 0.005, ENTRY_TOP - 0.008]
-    CORD = 3                             # cells in rings 0-2: the gold edge cord; ring len(d) - 1: the field
+    B = G["MAT_BOARD"]
+    mx0, my0, mx1, my1 = G["ENTRY_MAT"]
+    mw, md = round(mx1 - mx0, 4), round(my1 - my0, 4)
+    t, bt = G["MAT_TOP"], G["MAT_BOARD_TOP"]
+    # the surround boards (grain along each board), chamfered with warm worn arrises; the side boards run to the beam
+    # r4 (judge delta 4): near-black boards (M_AK_HMatBoard) with a wide worn lighter arris (12 mm, WE)
+    MB = "M_AK_HMatBoard"
+    # matfix b3 (judge: a light orange rim on the boards): no warm worn arris, a smaller chamfer in the board's own timber
+    cbox(G, p, 0.0, B, 0.0, B + md, 0.0, bt, MB, 0.010, grain=1, seg=2)
+    cbox(G, p, B + mw, 2 * B + mw, 0.0, B + md, 0.0, bt, MB, 0.010, grain=1, seg=2)
+    cbox(G, p, B - 0.002, B + mw + 0.002, 0.0, B, 0.0, bt, MB, 0.010, grain=0, seg=2)
+    X0, X1, Y0, Y1 = B, B + mw, B, B + md
+    # r4 (judge delta 1: the reference's binding is a wide dark band, 2-3x r3's): the black cloth binding 9.5 cm (was
+    # 5 cm), a rolled outer edge, flat across, a small step down to the field
+    # entryfix r2 (reference 2 through the refit C1: the side binding ~12 px = ~5-6 cm): the binding 6 cm (was 9.5)
+    # matfix b2: 7 cm (the crop's border reads wider than b1's 6 cm on every side)
+    # matfix b3 (blind judge: "the border is too thin and too flat ... In the reference the border sits proud of the
+    # field"): 8.5 cm (about 2.7 knots), a raised rounded roll (crown +3 mm over MAT_TOP) with a rolled outer edge, and
+    # a 1.1 cm step down its inner edge onto the field
+    d = [0.0, 0.005, 0.014, 0.030, 0.055, 0.071, 0.080, 0.085]
+    hz = [t - 0.009, t - 0.002, t + 0.002, t + 0.003, t + 0.003, t + 0.002, t - 0.003, t - 0.008]
     FIELD = len(d) - 1
-    xs = [X0 + v for v in d] + [X1 - v for v in reversed(d)]
-    ys = [Y0 + v for v in d] + [Y1 - v for v in reversed(d)]
-    n = len(xs)
+    # matfix b3 (judge: "the field shows soft undulating relief"): the field a ~10 cm grid, gently undulating (+-2 mm)
+    fx = max(2, round((X1 - X0 - 2 * d[-1]) / 0.10))
+    fy = max(2, round((Y1 - Y0 - 2 * d[-1]) / 0.10))
+    inx = [X0 + d[-1] + (X1 - X0 - 2 * d[-1]) * k / fx for k in range(1, fx)]
+    iny = [Y0 + d[-1] + (Y1 - Y0 - 2 * d[-1]) * k / fy for k in range(1, fy)]
+    xs = [X0 + v for v in d] + inx + [X1 - v for v in reversed(d)]
+    ys = [Y0 + v for v in d] + iny + [Y1 - v for v in reversed(d)]
+    # matfix: the r2 binding-black band across the field (MAT_STRIPE) is gone: one continuous field, one binding all round
+    nx, ny = len(xs), len(ys)
+    rk = lambda i, m: min(i, m - 1 - i, FIELD)
+
+    def z_at(i, j):
+        z = hz[min(rk(i, nx), rk(j, ny))]
+        if FIELD < i < nx - 1 - FIELD and FIELD < j < ny - 1 - FIELD:      # interior field vertices only
+            x, y = xs[i], ys[j]
+            z += 0.0011 * math.sin(2 * math.pi * (x / 0.83 + 0.21)) * math.sin(2 * math.pi * (y / 0.61 + 0.37))
+            z += 0.0008 * math.sin(2 * math.pi * (x / 0.37 + y / 0.53 + 0.11))
+        return z
     bm = bmesh.new()
     uvl = bm.loops.layers.uv.new("UV0")
-    top = [[bm.verts.new((xs[i], ys[j], hz[min(i, j, n - 1 - i, n - 1 - j)])) for j in range(n)] for i in range(n)]
-    mats = [MAT, BD, CORDM]
-    for i in range(n - 1):
-        for j in range(n - 1):
+    top = [[bm.verts.new((xs[i], ys[j], z_at(i, j))) for j in range(ny)] for i in range(nx)]
+    mats = [MAT, BD]
+    for i in range(nx - 1):
+        for j in range(ny - 1):
             f = bm.faces.new((top[i][j], top[i + 1][j], top[i + 1][j + 1], top[i][j + 1]))
-            ring = min(i, j, n - 2 - i, n - 2 - j)
-            if ring < CORD:                                       # the gold edge cord
-                f.material_index = 2
-                for l in f.loops:
-                    l[uvl].uv = (l.vert.co.x / 0.5, l.vert.co.y / 0.5)
-                continue
-            if ring >= FIELD:
-                # the coir field, 0.5 m per tile
-                f.material_index = 0
-                for l in f.loops:
-                    l[uvl].uv = (l.vert.co.x / 0.5, l.vert.co.y / 0.5)
-                continue
-            f.material_index = 1                                  # the black cloth binding
+            ring = min(i, j, nx - 2 - i, ny - 2 - j)
+            # matfix: field and binding share one planar mapping (U = y: the cords run toward the bar), so the weave runs
+            # on unbroken from the field into the dark binding; b4: 1 m per tile (b3's 0.5 m tile read as bands)
+            f.material_index = 0 if ring >= FIELD else 1          # the woven field / the black woven binding
             for l in f.loops:
-                l[uvl].uv = ((l.vert.co.x - X0) / 2.0, (l.vert.co.y - Y0) / 2.5)
-    # sides: the perimeter of the top grid down to the 4 bottom corners (quads + triangles, no n-gons)
+                l[uvl].uv = (l.vert.co.y / 1.0, l.vert.co.x / 1.0)
     bot = [bm.verts.new((x, y, 0.0)) for (x, y) in ((X0, Y0), (X1, Y0), (X1, Y1), (X0, Y1))]
-    per = [top[i][0] for i in range(n)] + [top[n - 1][j] for j in range(1, n)] + \
-          [top[i][n - 1] for i in range(n - 2, -1, -1)] + [top[0][j] for j in range(n - 2, 0, -1)]
-    seg = n - 1
+    sides = ([top[i][0] for i in range(nx)], [top[nx - 1][j] for j in range(ny)],
+             [top[i][ny - 1] for i in range(nx - 1, -1, -1)], [top[0][j] for j in range(ny - 1, -1, -1)])
     for s_ in range(4):
         bs, be = bot[s_], bot[(s_ + 1) % 4]
+        edge = sides[s_]
+        seg = len(edge) - 1
         for m in range(seg):
-            a, b = per[s_ * seg + m], per[(s_ * seg + m + 1) % (4 * seg)]
+            a, b = edge[m], edge[m + 1]
             f = bm.faces.new((a, b, bs) if m < seg - 1 else (a, b, be, bs))
             f.material_index = 1
             for l in f.loops:
@@ -903,10 +978,10 @@ def entry_mat(G):
     for l in f.loops:
         l[uvl].uv = (0.002, 0.002)
     bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
-    _emit(G, p, bm, mats, uv_mode="keep")
-    p.col(X0, X1, Y0, Y1, 0, ENTRY_TOP)   # scripted collision
+    # matfix b3: the top (the rolled binding and the undulating field) shades smooth, the sides and bottom flat
+    _emit(G, p, bm, mats, uv_mode="keep", smooth=set(range((nx - 1) * (ny - 1))))
+    p.col(0, 2 * B + mw, 0, B + md, 0, bt)   # scripted collision
     return p
-
 
 
 # --------------------------------------------------------------------------- jamb post and wall sconce
@@ -1012,7 +1087,7 @@ def wall_sconce(G):
 def pieces(G):
     _N[0] = 0
     return [entrance(G), door_leaf(G, "SM_AK_DoorLeaf", +1), door_leaf(G, "SM_AK_DoorLeaf_R", -1), threshold(G),
-            entry_mat(G), entry_step(G), jamb_post(G), wall_sconce(G)]
+            entry_mat(G), step_beam(G), jamb_post(G), wall_sconce(G)]
 
 
 def instances():

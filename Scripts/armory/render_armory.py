@@ -2,7 +2,7 @@
 
 Adds the light table and the cameras, then renders to WorkFiles/armory/build/renders/<camera>_<preset>.png.
 Run: blender -b --factory-startup Assets/Armory/ArmoryKit.blend --python Scripts/armory/render_armory.py --
-     [--cams C1_EntryReveal,...] [--samples 96] [--res 1600x900] [--out DIR] [--preset golden|gallery]
+     [--cams C1_EntryReveal,...] [--samples 96] [--res 1600x900] [--out DIR] [--preset night|golden|gallery]
      [--exposure EV] [--look NAME] [--fog DENSITY] [--no-fog] [--no-bloom]
 (--factory-startup keeps the user's add-ons, e.g. the BlenderMCP add-on, out of the headless process.)
 
@@ -12,6 +12,39 @@ lattice windows, AgX Medium High Contrast at +0.4 EV matched to the LOOK referen
 stand-in for Unreal's default bloom).
 Fix round 1 (same notes file): shaft prisms read from layout.json "openings", sun 0.15 deg, haze 0.006 faded out
 below +2.7 m, an exterior tree line for camera and glossy rays, OIDN high quality, exposure +0.8.
+
+NIGHT (2026-09-28, the user: "reduce the brightness significantly ... make it nighttime"): the DEFAULT preset. Golden hour
+stays selectable with --preset golden (its numbers below are unchanged). The night numbers (the Unreal stage reproduces
+these; ak_common reads the same literals):
+
+  Role multipliers (x POWER, replacing the golden PRESET_SCALE; golden in brackets):
+    role     POWER W   golden   NIGHT   night W        notes
+    case       40      x0.80    x1.20   48             case lights: the stars of the room at night
+    panel      14      x0.85    x1.00   14             wall-niche downlights
+    rack        9      x1.00    x1.00    9             rear-alcove rack strips
+    lantern     8      x1.00    x3.50   28             floor + newel lanterns (newel power_scale 0.5 on top; entryfix r2: 2.5 -> 3.5, and the washi x1.8 at night, NIGHT_PRACTICAL)
+    down       80      x1.30    x0.30   24             ceiling downlights, and 3500 K (PRESET_KELVIN; layout 5900 K)
+    wash        6      x1.00    x0.60    3.6           painting wash
+    glow        8/m    x1.00    x3.00   24/m           plinth under-glow (per metre of perimeter; user 2026-09-28: brighter, was x1.30)
+    alcove     12      x1.00    x1.00   12             rear-alcove spots
+    banner     60      x1.00    x0.80   48             banner grazers
+    sill       14      x1.00    x0.40    5.6           sill-vase spots
+  Sun / moon (coordinator change 2026-09-28: a dim cool moon in through the WEST windows only): Sun_GoldenHour becomes
+    the MOON, the only directional light: 3.0 W/m2 (golden sun 90; x K_LUX 100 = 300 lux in Unreal), 7500 K pale blue,
+    38 deg up, heading 35 deg (travel dir (0.646, -0.452, -0.616) Blender = (0.646, 0.452, -0.616) Unreal: it enters the
+    west windows, the east windows get no direct moonlight), disc 0.5 deg (soft lattice edges). Its lattice patches land
+    at X 2.8-4.3 (the left aisle in C1) as a subtle pale accent under the warm practicals. Sun_WindowFill: OFF.
+  Sky: diffuse fill SKY (0.10, 0.14, 0.28) x 0.05 (golden (0.90, 0.86, 0.80) x 2.2); camera / glossy sky NIGHT_SKY_CAM
+    gradient (0.030, 0.045, 0.085) at the horizon, (0.012, 0.020, 0.045) at sin 0.25, (0.004, 0.007, 0.018) at the
+    zenith, clouds (0.035, 0.045, 0.075), strength 1.0 (golden 4.5); no sun glow.
+  Haze / fog: none (FOG 0; golden 0.0004 in the sun shafts); the moon does not scatter.
+  Scenery cards (unlit emissive): M_AKX_TreeLine / TreeLineFar / Hills / Mountains emission x0.012, colour x (0.30,
+    0.45, 1.0). Interior emissive materials (LEDs, lattice, painting, washi) unchanged: the night exposure dims them.
+  Exposure: AgX Very High Contrast, +1.1 EV (golden +2.4) for the room; CG_Garden +0.3 (CAM_EXPOSURE; golden -2.8).
+  Bloom unchanged (threshold 2.0, strength 0.2).
+  Result (night_draft, 1600 x 900, whole-frame display luminance night / golden): C1 0.36, CX 0.26, CW 0.37, C10 0.62,
+    C3 0.61, C4 0.60 (close views dominated by the emissive LED lines and the painting; their medians fall 0.44-0.57x),
+    CG 0.34 (moonlit).
 """
 import json
 import math
@@ -41,19 +74,57 @@ POWER = {"case": 40.0, "panel": 14.0, "rack": 9.0, "lantern": 8.0, "down": 80.0,
          "banner": 60.0,   # f1: 30 -> 60 (the cloth read as black wall)   # building stage: a narrow spot grazing each banner
          "sill": 14.0}     # f1: a narrow spot on each sill vase
 PRESET_SCALE = {
+    # night: the room is lit by its practicals only (multipliers on POWER; table in the docstring)
+    "night": {"case": 1.2, "panel": 1.0, "rack": 1.0, "lantern": 3.5, "down": 0.3, "wash": 0.6, "glow": 3.0,
+              "alcove": 1.0, "banner": 0.8, "sill": 0.4},
     "golden": {"down": 1.3, "case": 0.8, "panel": 0.85},   # building r4: case 0.85 -> 0.6 (decks read pink); f1: down 0.6 -> 0.9, case 0.6 -> 0.8 (black decks; C1 mid-tones)
     "gallery": {},
 }
-SUN = {"golden": 90.0, "gallery": 0.0}   # look3: 60 -> 90 (the salmon patches came from the pink floor, fixed)   # f2: 100 -> 60 (two suns, broader patches; C1 p90 0.83 against 0.71, and the hot patches tone-mapped salmon-white)         # W/m2: the floor albedo is about 0.05 (linear), so the lattice patch needs a strong key
+SUN = {"night": 3.0, "golden": 90.0, "gallery": 0.0}   # night: the moon (see MOON)   # look3: 60 -> 90 (the salmon patches came from the pink floor, fixed)   # f2: 100 -> 60 (two suns, broader patches; C1 p90 0.83 against 0.71, and the hot patches tone-mapped salmon-white)         # W/m2: the floor albedo is about 0.05 (linear), so the lattice patch needs a strong key
 SKY = {  # colour, strength of the world seen through the windows
+    "night": ((0.10, 0.14, 0.28), 0.05),   # night: a faint blue-black fill (diffuse rays); the camera sky is NIGHT_SKY_CAM
     "golden": ((0.90, 0.86, 0.80), 2.2),   # building stage: less orange fill (was 1.0, 0.66, 0.38); f1: cooler still
     "gallery": ((0.55, 0.62, 0.75), 0.35),
 }
-FOG = {"golden": 0.0004, "gallery": 0.0}   # look3: 0.0008 -> 0.0004 (grey veil on the left wall)   # f2: 0.0015 -> 0.0008 (judge delta 2: less haze and veil)   # building stage: 0.003 -> 0.0015 (reference 2 is crisp)   # look2: crisper, as reference 2         # fix1: 0.014 -> 0.006 (the review read the shafts as a sepia haze)
+FOG = {"night": 0.0, "golden": 0.0004, "gallery": 0.0}   # look3: 0.0008 -> 0.0004 (grey veil on the left wall)   # f2: 0.0015 -> 0.0008 (judge delta 2: less haze and veil)   # building stage: 0.003 -> 0.0015 (reference 2 is crisp)   # look2: crisper, as reference 2         # fix1: 0.014 -> 0.006 (the review read the shafts as a sepia haze)
 SUN_ANGLE_DEG = 0.5    # f1: 0.15 -> 0.5 (judge: soften the patch edges slightly)   # fix1: 0.8 -> 0.15. At 0.8 deg the ~7 m throw blurred the 25 mm lattice bars into one soft patch
 # f1: the niches are no longer emissive lightboxes and the decks are black: golden +0.8 -> +2.4 with AgX Very High
 # Contrast (was Medium High): C1 1086 x 815 p10 0.065 / p90 0.710 against the reference's 0.060 / 0.711
-EXPOSURE = {"golden": 2.4, "gallery": 2.4}
+EXPOSURE = {"night": 1.1, "golden": 2.4, "gallery": 2.4}
+# night: the first sun in layout.json ("Sun_GoldenHour") becomes a dim, pale-blue moon (strength SUN["night"], no
+# power_scale) and the interior-only window fill sun is OFF: the moon is the ONLY directional light. The heading follows
+# layout.json's convention (degrees from +X toward -Y of the travel direction): 35 = in through the WEST windows (the left
+# side in C1), as the golden sun; the east windows get no direct moonlight. 38 deg up puts the lattice patches of the
+# +2.65-+4.10 windows 3.4-5.2 m along the ray: X 2.8-4.3 (the left aisle), a subtle accent under the warm practicals.
+MOON = {"night": {"elev_deg": 38.0, "heading_deg": 35.0, "kelvin": 7500, "angle_deg": 0.5}}
+# night: the camera / glossy-ray sky behind the windows: (sin elevation, linear colour) stops, cloud colour, strength
+NIGHT_SKY_CAM = {"stops": ((0.0, (0.030, 0.045, 0.085)), (0.25, (0.012, 0.020, 0.045)), (1.0, (0.004, 0.007, 0.018))),
+                 "cloud": (0.035, 0.045, 0.075), "strength": 1.0}
+# night: the painted, unlit far-scenery cards (emission is their only light) are dimmed and cooled so the tree line, the
+# hills and the mountains read as faint silhouettes (Unreal: the same factor on their Emissive Intensity, and the tint)
+NIGHT_EMIT = {"scale": {"M_AKX_TreeLine": 0.012, "M_AKX_TreeLineFar": 0.012, "M_AKX_Hills": 0.012,
+                        "M_AKX_Mountains": 0.012},
+              "tint": (0.30, 0.45, 1.0)}
+# night (entryfix 2026-09-28: through the open entrance CX showed the moonlit courtyard pale against the dark hall, and
+# the lawn through the gate as a green panel): the lit exterior ground and walls get a darker, cooler base colour at
+# night only (the courtyard reads as night shade, the moon still draws its shadows); golden and gallery are unchanged.
+# Unreal: not yet mirrored (ak_common reads NIGHT_EMIT, not this table; its M_AKX_Gravel carries a night tint 0.6).
+NIGHT_GROUND = {"scale": {"M_AKX_Gravel": 0.20, "M_AKX_Stone": 0.32, "M_AKX_Moss": 0.40, "M_AKX_Field": 0.12,
+                          "M_AKX_WallPlaster": 0.30, "M_AKX_Shrub": 0.6, "M_AKX_RoofTile": 0.6},
+                "tint": (0.78, 0.86, 1.0),
+                # the garden view looks AT that ground: its review EV rises by this much while the table is applied, so
+                # CG_Garden keeps its moonlit read (added on top of CAM_EXPOSURE, which ak_common reads unchanged)
+                "cam_ev": {"CG_Garden": 1.1}}
+# night (entryfix r2, blind judge: "at night the lanterns should read as the brightest light sources with a pool of
+# light on the floor"; C1 measured their paper L ~0.65 against reference 2's clipped 1.0): the andon washi's emission
+# rises at night only (M_AK_HWashi, the floor, entry and newel lanterns); golden unchanged. The lantern role's watts
+# (the floor pool) rise with it in PRESET_SCALE (night lantern 2.5 -> 3.5). Unreal: not yet mirrored.
+NIGHT_PRACTICAL = {"scale": {"M_AK_HWashi": 1.8}, "tint": (1.0, 1.0, 1.0)}
+# night: absolute colour temperature per role (K, replaces layout.json's kelvin; the golden values are layout.json's):
+# the ceiling downlights run warm at night (layout.json 5900 K read as grey-lavender floor light with no sun)
+PRESET_KELVIN = {"night": {"down": 3500}}
+# per-camera review EV per preset; overrides layout.json's "exposure_ev" (which has no night entry)
+CAM_EXPOSURE = {"night": {"CG_Garden": 0.3}}
 LOOK = "AgX - Very High Contrast"
 _PREV_EXPOSURE = {"golden": 0.8, "gallery": 0.8}   # exterior stage: golden 0.6 -> 0.8 (the emissive garden backdrop that lit the entry is gone; C1 mean 0.273 -> 0.294, was 0.299)   # building stage: 0.2 / 0.5 -> 0.6 / 0.8 (C1 p50 0.16 vs reference 0.29)   # look2: darker, as reference 2   # fix1: +0.4 -> +0.8 with the dark decks and niches (C1 stats in BUILD_NOTES)
 BLOOM = (2.0, 0.2)   # f1: threshold 1.2 -> 2.0, strength 0.35 -> 0.2 (judge: milky, heavy bloom)
@@ -264,6 +335,9 @@ def sky_only(world, bg, preset, sun_dir):
     # blend reads as grey-mauve)
     stops = ((0.0, (1.0, 0.46, 0.15)), (0.12, (1.0, 0.56, 0.22)), (0.30, (1.0, 0.72, 0.40)), (0.55, (0.90, 0.82, 0.66)), (1.0, (0.36, 0.56, 0.92))) \
         if golden else ((0.0, (0.55, 0.60, 0.72)), (0.22, (0.40, 0.48, 0.66)), (1.0, (0.22, 0.30, 0.50)))
+    night = preset == "night"
+    if night:
+        stops = tuple((pos, tuple(c)) for pos, c in NIGHT_SKY_CAM["stops"])
     els = ramp.color_ramp.elements
     els[0].position, els[0].color = stops[0][0], stops[0][1] + (1,)
     els[1].position, els[1].color = stops[-1][0], stops[-1][1] + (1,)
@@ -284,7 +358,8 @@ def sky_only(world, bg, preset, sun_dir):
     cl = nt.nodes.new("ShaderNodeMixRGB")
     nt.links.new(_math(nt, "MULTIPLY", band, 2.2), cl.inputs["Fac"])
     nt.links.new(col, cl.inputs["Color1"])
-    cl.inputs["Color2"].default_value = (1.0, 0.86, 0.72, 1) if golden else (0.6, 0.62, 0.7, 1)
+    cl.inputs["Color2"].default_value = (1.0, 0.86, 0.72, 1) if golden else \
+        (tuple(NIGHT_SKY_CAM["cloud"]) + (1,) if night else (0.6, 0.62, 0.7, 1))
     col = cl.outputs["Color"]
     if sun_dir is not None and golden:                  # glow around the sun (toward the sun = -travel direction)
         dp = nt.nodes.new("ShaderNodeVectorMath")
@@ -302,13 +377,68 @@ def sky_only(world, bg, preset, sun_dir):
         col = ad.outputs["Color"]
     cam_bg = nt.nodes.new("ShaderNodeBackground")
     nt.links.new(col, cam_bg.inputs["Color"])
-    cam_bg.inputs["Strength"].default_value = float(arg("--sky", "4.5" if golden else "0.6"))
+    cam_bg.inputs["Strength"].default_value = float(arg("--sky", "4.5" if golden else
+                                                        (str(NIGHT_SKY_CAM["strength"]) if night else "0.6")))
     lp = nt.nodes.new("ShaderNodeLightPath")
     mix = nt.nodes.new("ShaderNodeMixShader")
     nt.links.new(_math(nt, "MAXIMUM", lp.outputs["Is Camera Ray"], lp.outputs["Is Glossy Ray"]), mix.inputs[0])
     nt.links.new(bg.outputs[0], mix.inputs[1])
     nt.links.new(cam_bg.outputs[0], mix.inputs[2])
     nt.links.new(mix.outputs[0], out.inputs["Surface"])
+
+
+def dim_scenery(table):
+    """Night: scale the emission of the painted scenery cards (the materials in table["scale"]) and cool their colour
+    (table["tint"] multiplied into the emission colour). The interior practicals' materials are untouched."""
+    tint = tuple(table["tint"]) + (1.0,)
+    for mname, k in table["scale"].items():
+        m = bpy.data.materials.get(mname)
+        if m is None or not m.use_nodes:
+            continue
+        nt = m.node_tree
+        for n in list(nt.nodes):
+            if n.type == "BSDF_PRINCIPLED":
+                n.inputs["Emission Strength"].default_value *= k
+                sock = n.inputs["Emission Color"]
+            elif n.type == "EMISSION":
+                n.inputs["Strength"].default_value *= k
+                sock = n.inputs["Color"]
+            else:
+                continue
+            mul = nt.nodes.new("ShaderNodeMixRGB")
+            mul.blend_type = "MULTIPLY"
+            mul.inputs["Fac"].default_value = 1.0
+            mul.inputs["Color2"].default_value = tint
+            if sock.is_linked:
+                nt.links.new(sock.links[0].from_socket, mul.inputs["Color1"])
+            else:
+                mul.inputs["Color1"].default_value = sock.default_value
+            nt.links.new(mul.outputs[0], sock)
+        print("night scenery", mname, "x", k, flush=True)
+
+
+def dim_ground(table):
+    """Night: multiply the base colour of the lit exterior materials in table["scale"] by k x table["tint"] (the
+    courtyard gravel, stones, moss, walls and the lawn beyond the gate). Emission and the interior are untouched."""
+    for mname, k in table["scale"].items():
+        m = bpy.data.materials.get(mname)
+        if m is None or not m.use_nodes:
+            continue
+        nt = m.node_tree
+        for n in list(nt.nodes):
+            if n.type != "BSDF_PRINCIPLED":
+                continue
+            sock = n.inputs["Base Color"]
+            mul = nt.nodes.new("ShaderNodeMixRGB")
+            mul.blend_type = "MULTIPLY"
+            mul.inputs["Fac"].default_value = 1.0
+            mul.inputs["Color2"].default_value = tuple(k * t for t in table["tint"]) + (1.0,)
+            if sock.is_linked:
+                nt.links.new(sock.links[0].from_socket, mul.inputs["Color1"])
+            else:
+                mul.inputs["Color1"].default_value = sock.default_value
+            nt.links.new(mul.outputs[0], sock)
+        print("night ground", mname, "x", k, flush=True)
 
 
 def add_bloom(sc):
@@ -341,7 +471,7 @@ def main():
     if op:
         WINDOWS_Y = tuple(tuple(w) for w in op["windows_y"])
         WINDOW_Z, DOOR_X, DOOR_Z = tuple(op["window_z"]), tuple(op["door_x"]), tuple(op["door_z"])
-    preset = arg("--preset", "golden")
+    preset = arg("--preset", "night")   # night (2026-09-28) is the default; --preset golden for golden hour
     scale = PRESET_SCALE[preset]
     sc = bpy.context.scene
     coll = bpy.data.collections.new("ReviewLights")
@@ -349,11 +479,25 @@ def main():
     for L in data["lights"]:
         kind = {"sun": "SUN", "rect": "AREA", "point": "POINT", "spot": "SPOT"}[L["type"]]
         ld = bpy.data.lights.new(L["name"], kind)
-        ld.color = kelvin_rgb(L["kelvin"])
+        ld.color = kelvin_rgb(PRESET_KELVIN.get(preset, {}).get(L.get("role"), L["kelvin"]))
         o = bpy.data.objects.new(L["name"], ld)
         coll.objects.link(o)
         if kind == "SUN":
             ld.energy = SUN[preset] * L.get("power_scale", 1.0)
+            moon = MOON.get(preset)
+            if moon is not None:   # night: the key sun becomes the moon, the window fill is off
+                if L.get("link") == "interior":
+                    o.hide_render = True
+                    continue
+                el, az = math.radians(moon["elev_deg"]), math.radians(moon["heading_deg"])
+                d = Vector((math.cos(el) * math.cos(az), -math.cos(el) * math.sin(az), -math.sin(el)))
+                L = dict(L, rot_deg=[math.degrees(a) for a in d.to_track_quat("-Z", "Y").to_euler()])
+                ld.energy = SUN[preset]
+                ld.color = kelvin_rgb(moon["kelvin"])
+                ld.angle = math.radians(float(arg("--sun-angle", str(moon.get("angle_deg", SUN_ANGLE_DEG)))))
+                o.rotation_euler = [math.radians(a) for a in L["rot_deg"]]
+                o.visible_volume_scatter = False
+                continue
             if L.get("link") == "interior":   # f2: the window fill sun lights, and is shadowed by, the room only
                 room = bpy.data.collections.get("Assembly")
                 o.light_linking.receiver_collection = room
@@ -409,6 +553,11 @@ def main():
         world.cycles_visibility.scatter = False
     except AttributeError:
         world.visible_volume_scatter = False
+    if preset == "night":
+        dim_scenery(NIGHT_EMIT)
+        dim_scenery(NIGHT_PRACTICAL)
+        if "--no-night-ground" not in ARGS:
+            dim_ground(NIGHT_GROUND)
     for mname in arg("--no-emis-sampling", "").split(","):
         if mname in bpy.data.materials:
             bpy.data.materials[mname].cycles.emission_sampling = "NONE"
@@ -465,8 +614,11 @@ def main():
         co.location = c["loc"]
         look_at(co, c["look_at"])
         # exterior stage: sunlit garden views carry their own exposure (the interior preset would blow them out)
-        ev = c.get("exposure_ev", {}).get(preset) if "--exposure" not in ARGS else None
+        ev = CAM_EXPOSURE.get(preset, {}).get(c["name"], c.get("exposure_ev", {}).get(preset)) \
+            if "--exposure" not in ARGS else None
         sc.view_settings.exposure = float(ev) if ev is not None else float(arg("--exposure", str(EXPOSURE[preset])))
+        if preset == "night" and "--no-night-ground" not in ARGS and "--exposure" not in ARGS:
+            sc.view_settings.exposure += NIGHT_GROUND["cam_ev"].get(c["name"], 0.0)
         sc.camera = co
         sc.render.filepath = str(out / f"{c['name']}_{preset}.png")
         bpy.ops.render.render(write_still=True)
