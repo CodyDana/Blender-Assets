@@ -80,7 +80,9 @@ BLISTER = dict(                # B6, sheet 12 (1)
     web=1.0,                   # sheet 12: the thin divider line between the two cups
     flange=8.0,                # sheet 12: flange 8 round the cups (174 wide; the card is 180)
     flange_r=8.0,              # E
-    flange_bottom=13.0,        # sheet 12: the flange ends 13 above the card's bottom edge
+    bubble_cy=-25.3,           # sheet 12: the bubble's centre 150.3 below the card's top edge. The sheet's bubble is
+                               # taller (flange 174) because its packs are drawn 142 long; ours holds the M 117 pack,
+                               # so it is centred where the sheet's is (header 74, bottom margin 24; sheet 64 / 13)
     draft=3.0,                 # E: thermoform draft, deg (sheet 12 side view: near-vertical walls)
     top_c=3.0,                 # E: 45-degree chamfer round the top face (sheet 12: softly rounded top edges)
     sink=0.2,                  # the flange's underside sits 0.2 inside the card (no touching faces)
@@ -586,7 +588,7 @@ def _blister_card(b: Builder, level: int, mat: int) -> None:
 def _cup_centres():
     p = BLISTER
     cw, ch, _ = p["cup"]
-    yc = -p["h"] / 2 + p["flange_bottom"] + p["flange"] + ch / 2
+    yc = p["bubble_cy"]
     xc = (cw + p["web"]) / 2
     return [(-xc, yc), (xc, yc)]
 

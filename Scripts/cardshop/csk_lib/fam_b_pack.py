@@ -47,7 +47,8 @@ STRIP = dict(                   # B1 Strip: sheet 4 (the strip on its own)
 
 WRAPPER = dict(                 # B1 Wrapper: sheet 4 (the crumpled wrapper), lying back up (the fin seal shows)
     t=(0.45, 0.2, 0.3),         # E: body thickness (two skins), bottom skin only (the silver bites), crimp
-    amp=0.7, creases=11,        # E: crumple crease height and count (sheet 4: facets about 10-20 mm)
+    amp=2.0, creases=18,        # E: crumple crease height and count (sheet 4: sharp facets about 10-20 mm)
+    jitter=(1.0, 1.5, 0.35),    # E: interior vertex jitter x, y, z (breaks the grid into irregular facets)
     ramp=0.35,                  # E: the torn top-skin edge round a bite
     # sheet 4: the top skin is torn away along both long edges, showing the silver inside of the bottom skin:
     # (side, centre y, half length, depth); left bite long and deep, right bite lower and shorter
@@ -94,9 +95,9 @@ TUCK = dict(                    # B7: sheet 10 (2)
 )
 
 BUDGETS = {
-    "SM_CSK_Pack_Std_Open": 1800,       # spec 250 (E): 27 ribbed teeth + fin (as the Sealed, 1500) + the silver inside
-    "SM_CSK_Pack_Std_Wrapper": 1600,    # spec 200 (E): both crimps' 27 teeth (sheet 4) + crumple facets
-    "SM_CSK_Pack_Std_Strip": 700,       # spec 40 (E): 27 ribbed teeth + the torn edge (sheet 4)
+    "SM_CSK_Pack_Std_Open": 1950,       # spec 250 (E): 27 ribbed teeth + fin (as the Sealed, 1500) + the silver inside
+    "SM_CSK_Pack_Std_Wrapper": 1750,    # spec 200 (E): both crimps' 27 teeth (sheet 4) + crumple facets
+    "SM_CSK_Pack_Std_Strip": 750,       # spec 40 (E): 27 ribbed teeth + the torn edge (sheet 4)
     "SM_CSK_Box_Booster_L": 400,
     "SM_CSK_Box_Booster_L_Lid": 150,
     "SM_CSK_Box_Booster_L_Sealed": 400,
@@ -244,7 +245,6 @@ def _open_builder(level: int) -> Builder:
     fine = list(range(n2 + 1))
     crimp = fine if teeth else cols
     mouth = fine if level < 2 else cols
-    icols = {0: [0, 5, 10, 15, 20, 27, 34, 39, 44, 49, 54], 1: [0, 3, 6, 9, 12, 15, 18]}.get(level, cols)
     fk0, fk1, fin_h = p["fin"][0], p["fin"][1], p["fin"][4]
     hb = (p["t"] - fin_h) / 2
     ys = h / 2 - p["crimp"]
@@ -254,8 +254,9 @@ def _open_builder(level: int) -> Builder:
     zm = hb + fin_h + gB                        # LOD0's lowest point (back skin, fin, mouth) at z 0
     film = o["film"]
     xk = lambda k: -w / 2 + w * k / n2
-    vfr = {0: [0, .04, .12, .25, .45, .65, .8, .9, .96, 1.0], 1: [0, .15, .5, .8, .93, 1.0]}.get(level, [0, .5, .85, 1.0])
-    ifr = {0: [0, .3, .6, .8, .92, 1.0], 1: [0, .5, .85, 1.0]}.get(level, [0, .6, 1.0])
+    vfr = {0: [0, .04, .12, .25, .45, .65, .82, .94, 1.0], 1: [0, .15, .5, .8, .93, 1.0]}.get(level, [0, .5, .85, 1.0])
+    fine_from = {0: .94, 1: .93}.get(level, 2.0)      # rows next to the jagged mouth use every column (no fan folds)
+    f_fb = {0: .65, 1: .5}.get(level, .5)            # the inner skins meet in a false bottom here (cards fill below)
 
     def half(x, y):
         fx = max(0.0, 1 - abs(2 * x / w) ** 4)
@@ -301,7 +302,7 @@ def _open_builder(level: int) -> Builder:
     # outer pillow rows, front (top) and back (bottom); the last row is the jagged mouth
     for f in vfr:
         last = f >= 1.0
-        ks = mouth if last else cols
+        ks = mouth if (last or f >= fine_from) else cols
         rt, rb = [], []
         for k in ks:
             if last and k in (0, n2):
@@ -314,22 +315,24 @@ def _open_builder(level: int) -> Builder:
             rb.append(b.v(xk(k), yB, zB(k, yB)))
         top_rows.append(rt)
         bot_rows.append(rb)
-    # inner rows (coarser); the first row (the bottom seal line) and the side columns are shared front / back
+    # inner rows: the outer rows from the false bottom up, offset by the film (the same columns, so the same
+    # triangulation: an exact offset that never pokes through); the false-bottom row and the side columns are
+    # shared front / back
     in_f, in_b = [], []
-    for f in ifr:
+    for f in [f for f in vfr if f >= f_fb]:
         last = f >= 1.0
-        ks = mouth if last else icols
+        ks = mouth if (last or f >= fine_from) else cols
         rf, rb = [], []
         for k in ks:
-            if f == 0 and k in (0, n2):
-                continue                        # the bottom corners: front and back already meet there
+            if f == f_fb and k in (0, n2):
+                continue                        # the false bottom's ends: front and back already meet there
             if last and k in (0, n2):
                 rf.append(corner[k])
                 rb.append(corner[k])
                 continue
             yF = -ys + (ymouth(k, True, last) + ys) * f
             yB = -ys + (ymouth(k, False, last) + ys) * f
-            if f == 0 or k in (0, n2):
+            if f == f_fb or k in (0, n2):
                 v = inner_shared(k, yF)
                 rf.append(v)
                 rb.append(v)
@@ -406,17 +409,17 @@ def _strip_builder(level: int) -> Builder:
     y_rib = h / 2 - p["crimp"] + p["seal"] - dy
     y_seal = h / 2 - p["crimp"] - dy
     jag_cols = fine[::2] if level == 0 else cols if level == 2 else fine
-    mid_cols = cols
     zc = et / 2 + p["rib"] + s["crumple"]        # every LOD: the lowest point near z 0
     xk = lambda k: -w / 2 + w * k / n2
     rib = lambda k: ((p["rib"] if k % 2 else -p["rib"]) if ribs else 0.0)
     b = Builder()
     rows = []                                    # (ks, y(k), dz(k)), from -y (the torn edge) to +y (the teeth)
-    jag = lambda k: (s["jag"] * (1 if (k // 2) % 2 else -1) * (0.6 + 0.8 * _hash(k, 3))) if 0 < k < n2 else 0.0
+    jag = lambda k: (s["jag"] * (2 * _hash(k, 3) - 1)) if 0 < k < n2 else 0.0      # an irregular tear
     wrinkle = lambda k, r: s["crumple"] * (2 * _hash(k, r, 5) - 1)
-    rows.append((jag_cols, lambda k: -hs / 2 + s["jag"] + jag(k), lambda k: wrinkle(k, 1)))
-    rows.append((mid_cols, lambda k: (y_seal - hs / 2 + s["jag"]) / 2 + 0.3 * (2 * _hash(k, 9) - 1),
-                 lambda k: wrinkle(k, 2)))
+    y_jag = -hs / 2 + s["jag"] + 0.1                      # the torn edge's mean line (lowest tooth at -hs/2 + 0.1)
+    y_mid = y_jag + s["jag"] + 0.65                       # a wrinkle row, at least 0.5 above the highest tooth
+    rows.append((jag_cols, lambda k: y_jag + jag(k), lambda k: wrinkle(k, 1)))
+    rows.append((jag_cols, lambda k: y_mid + 0.15 * (2 * _hash(k, 9) - 1), lambda k: wrinkle(k, 2)))
     rows.append((cols, lambda k: y_seal, lambda k: 0.0))
     rows.append((crimp, lambda k: y_rib, rib))
     rows.append((crimp, lambda k: hs / 2 - (0.0 if (k % 2 == 1 or not teeth) else p["tooth_d"]), rib))
@@ -462,11 +465,11 @@ def _crumple(x: float, y: float) -> float:
     for i in range(wr["creases"]):
         th = math.pi * _hash(i, 1)
         d = (_hash(i, 2) - 0.5) * 100.0
-        r = 9.0 + 16.0 * _hash(i, 3)
+        r = 6.0 + 12.0 * _hash(i, 3)
         a = (0.5 + 0.5 * _hash(i, 4)) * (1.0 if _hash(i, 5) > 0.45 else -1.0)
         s = x * math.cos(th) + y * math.sin(th) - d
         c += a * max(0.0, 1.0 - abs(s) / r)
-    return wr["amp"] * c + 0.18 * (_hash(int(round(x * 8)) + 5000, int(round(y * 8)) + 5000) - 0.5)
+    return wr["amp"] * c + wr["jitter"][2] * (2 * _hash(int(round(x * 8)) + 5000, int(round(y * 8)) + 5000) - 1)
 
 
 def _bite(side: int, y: float, j: int) -> float:
@@ -492,7 +495,7 @@ def _wrapper_builder(level: int) -> Builder:
     t_hi, t_lo, t_cr = wr["t"]
     n2, _cols, teeth, ribs, fin = _pack_cols(level)
     crimp = list(range(n2 + 1)) if teeth else _cols
-    J = {0: 12, 1: 7}.get(level, 4)
+    J = {0: 11, 1: 7}.get(level, 4)
     inner = {0: [-14.0, -7.0, -3.72, -2.48, 2.48, 3.72, 7.0, 14.0], 1: [-11.0, 0.0, 11.0]}.get(level, [0.0])
     ys = h / 2 - p["crimp"]
     yj = ys + p["seal"]
@@ -523,17 +526,23 @@ def _wrapper_builder(level: int) -> Builder:
         m, rp = wr["margin"], wr["ramp"]
         xl1, xr1 = -w / 2 + max(m, bl), w / 2 - max(m, br_)
         xl2, xr2 = xl1 + rp, xr1 - rp
-        xs = [-w / 2, xl1, xl2, (xl2 + inner[0]) / 2, *inner, (inner[-1] + xr2) / 2, xr2, xr1, w / 2]
+        xs = [-w / 2, (-w / 2 + xl1) / 2, xl1, xl2, (xl2 + inner[0]) / 2, *inner, (inner[-1] + xr2) / 2, xr2, xr1,
+              (xr1 + w / 2) / 2, w / 2]
         low_l, low_r = bl > m + 0.3, br_ > m + 0.3
-        low = [low_l, low_l] + [False] * (len(xs) - 4) + [low_r, low_r]
+        low = [low_l] * 3 + [False] * (len(xs) - 6) + [low_r] * 3
         tr, brow = [], []
-        for i, x in enumerate(xs):
-            c = _crumple(x, y)
-            brow.append(b.v(x, y, c))
+        jx, jy, _ = wr["jitter"]
+        for i, x0 in enumerate(xs):
+            x, yv = x0, y
+            if 0 < j < J and abs(x0) > 5.0 and 4 <= i <= len(xs) - 5:     # interior, off the fin: irregular facets
+                x += jx * (2 * _hash(j, i, 21) - 1)
+                yv += jy * (2 * _hash(j, i, 22) - 1)
+            c = _crumple(x, yv)
+            brow.append(b.v(x, yv, c))
             z = c + (t_lo if low[i] else t_hi)
             if fin and 0 < j < J and abs(x) <= fin_x:
                 z += p["fin"][4]
-            tr.append(b.v(x, y, z))
+            tr.append(b.v(x, yv, z))
         top_rows.append(tr)
         bot_rows.append(brow)
         low_rows.append(low)
@@ -553,9 +562,9 @@ def _wrapper_builder(level: int) -> Builder:
         n = len(A)
         for i in range(n - 1):
             kind = 0
-            if i in (0, n - 2) and (la[i] or la[i + 1] or lb[i] or lb[i + 1]):
+            if i in (0, 1, n - 3, n - 2) and (la[i] or la[i + 1] or lb[i] or lb[i + 1]):
                 kind = SILVER
-            elif i in (1, n - 3) and (la[i] or la[i + 1] or lb[i] or lb[i + 1]):
+            elif i in (2, n - 4) and (la[i] or la[i + 1] or lb[i] or lb[i + 1]):
                 kind = EDGE
             mat, region = {0: (0, R_BACK), SILVER: (1, R_IN_A), EDGE: (0, R_IN_A)}[kind]
             diag = _hash(r, i, 17) > 0.5
@@ -815,11 +824,16 @@ def item_box_collector() -> Item:
                         "cavity_mm": [[pockets["PackL"][1], py0, c["pack_floor"]],
                                       [pockets["PackR"][2], py1, H - c["board"]]],
                         "accepts": ["Pack"], "pose": "standing on edge, +90 deg about X"}}
-    for name, holds, rot, at_back in (("Dice", "6 x SM_CSK_Die_D6, 2 x 3 at 17 pitch", (0.0, 0.0, 0.0), False),
-                                      ("Cards", "a card stack standing, face to -Y", (90.0, 0.0, 0.0), True),
-                                      ("Sleeves", "a pack of sleeves standing, face to -Y", (90.0, 0.0, 0.0), True)):
+    # Cards / Sleeves stand like the packs (+90 deg about X, the item's Seat = its centre): the socket is half the
+    # item's height over the pocket floor, on the pocket's back wall, so a stack grows toward the customer
+    for name, holds, rot, up in (("Dice", "6 x SM_CSK_Die_D6, 2 x 3 at 17 pitch, from the pocket floor centre",
+                                  (0.0, 0.0, 0.0), 0.0),
+                                 ("Cards", "a card stack standing, face to -Y (Seat = the card centre)",
+                                  (90.0, 0.0, 0.0), c["card_h"] / 2),
+                                 ("Sleeves", "a pack of 66 x 91 sleeves standing, face to -Y (Seat = its centre)",
+                                  (90.0, 0.0, 0.0), c["sleeve_h"] / 2)):
         _, x0, x1, y0, y1, z0 = pockets[name]
-        loc = ((x0 + x1) / 2, y1 if at_back else (y0 + y1) / 2, z0)
+        loc = ((x0 + x1) / 2, y1 if up else (y0 + y1) / 2, z0 + up)
         sockets.append(Socket(name, loc, rot, "CONTAIN"))
         contain[name] = {"socket": name, "cavity_mm": [[x0, y0, z0], [x1, y1, H - c["board"]]],
                          "accepts": ["Card"] if name == "Cards" else [], "holds": holds}
@@ -846,16 +860,28 @@ def item_box_collector() -> Item:
 
 
 def _collector_lid_builder() -> Builder:
+    """Sheet 10's lid, 190 x 89 x 123, board 2: five board slabs (top panel, two full-depth side walls, front and back
+    walls between them), each a closed convex box, so every face points out of its own part (the lid is a cup; one
+    shell would have its inside faces pointing at its own centre). Where two slabs meet, one sits 0.02 inside the
+    other's face plane: no coplanar overlaps, no coincident vertices. Outside print tile (0, 0), navy liner (1, 0)."""
     c = COLLECTOR
     W, D, bd, L = c["w"], c["d"], c["board"], c["lid_depth"]
+    e = 0.02
+    PRINT, BOARD = 0, 1
+    zt = L - bd                                                         # the walls' tops, under the top panel
     b = Builder()
-    A, B = _ring(b, W / 2, D / 2, 0.0), _ring(b, W / 2, D / 2, L)
-    Ci, Di = _ring(b, W / 2 - bd, D / 2 - bd, L - bd), _ring(b, W / 2 - bd, D / 2 - bd, 0.0)
-    _walls(b, A, B, 1, 0, (30, 31, 32, 33))
-    _face_out(b, B, (0, 0, 1), 0, 34)
-    _face_out(b, Ci, (0, 0, -1), 0, 44)
-    _walls(b, Di, Ci, -1, 0, (40, 41, 42, 43))
-    _ledge(b, A, Di, False, 1)
+    b.box((-W / 2 + e, -D / 2 + e, zt), (W / 2 - e, D / 2 - e, L), mat=PRINT,
+          regions={"pz": 34, "nz": 44, "ny": 30, "px": 31, "py": 32, "nx": 33})
+    for sx, outer, inner in ((1, 31, 41), (-1, 33, 43)):               # side walls: the inside of +X faces -X
+        x0, x1 = sorted((sx * W / 2, sx * (W / 2 - bd)))
+        b.box((x0, -D / 2, 0.0), (x1, D / 2, zt), mat=PRINT,
+              regions={("px" if sx > 0 else "nx"): outer, ("nx" if sx > 0 else "px"): inner, "ny": 30, "py": 32},
+              mats={"nz": BOARD, "pz": BOARD})
+    for sy, outer, inner in ((-1, 30, 40), (1, 32, 42)):               # front / back walls between the sides
+        y0, y1 = sorted((sy * (D / 2 - e), sy * (D / 2 - bd)))
+        b.box((-W / 2 + bd, y0, 0.0), (W / 2 - bd, y1, zt), mat=PRINT,
+              regions={("ny" if sy < 0 else "py"): outer, ("py" if sy < 0 else "ny"): inner},
+              mats={"nz": BOARD, "pz": BOARD, "nx": BOARD, "px": BOARD})
     return b
 
 
@@ -864,7 +890,7 @@ def item_box_collector_lid() -> Item:
     W, D, L = c["w"], c["d"], c["lid_depth"]
     _, lid_proj = _collector_dieline()
     return Item(
-        name="SM_CSK_Box_Collector_Lid", lods=[Lod(_collector_lid_builder(), bevel_mm=0.5)],
+        name="SM_CSK_Box_Collector_Lid", lods=[Lod(_collector_lid_builder())],
         materials=["M_CSK_BoxPrintL", "M_CSK_Board"], projections=lid_proj, sockets=[Socket("Seat", (0, 0, 0))],
         hulls=[((-W / 2, -D / 2, 0), (W / 2, D / 2, L))], budget=BUDGETS["SM_CSK_Box_Collector_Lid"],
         data={"part_of": "SM_CSK_Box_Collector", "pivot": "the rim centre = the closed position (Lid socket)",
