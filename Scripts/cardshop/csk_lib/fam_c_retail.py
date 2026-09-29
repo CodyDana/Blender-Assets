@@ -182,7 +182,6 @@ DECK_PACK = dict(                   # B8 DeckBoxPack, sheet 12 (8)
     slot=(22.0, 5.1, 3.2, 12.7),    # sheet 12
     window=(59.3, 86.5, 52.45, 4.3),  # sheet 12: die-cut W x H, centre z, corner R (9.2 above the bottom, 20.3 below
                                     # the top, centred)
-    board=0.5,                      # E: carton board
     deckbox=(76.0, 80.0, 108.0),    # E4 outer (spec E); it sits centred, 3 behind the front board
     flap=(43.8, 0.8),               # sheet 12: the deck box's flap lid ends 43.8 above the carton bottom; 0.8 proud
     split=38.0,                     # sheet 12: the light-blue band is 38 of the 116
@@ -614,12 +613,12 @@ def item_sleeve_deck(size: str) -> Item:
 def _toploader_filled_lod(level: int) -> Lod:
     s = S.TOPLOADER_35
     lod = _toploader_lod(s, level)
-    w, h, t, ih = s["w"], s["h"], s["t"], s["in_h"]
+    h, t, ih = s["h"], s["t"], s["in_h"]
     c = S.CARD_STD
     ycard = h / 2 - ih + c["h"] / 2
     d = TL_FILLED["print_d"]
-    segs = (4, 2, 1)[level]
-    card = [(x, y + ycard) for x, y in rounded_rect(c["w"], c["h"], c["r"], segs)]
+    segs = (4, 2, 0)[level]
+    card = [(x, y + ycard) for x, y in (rounded_rect(c["w"], c["h"], c["r"], segs) if segs else rect(c["w"], c["h"]))]
     front, back = Builder(), Builder()
     front.prism(card, t - d, t + 1.0, top=0, bottom=R_FRONT)
     back.prism(card, -1.0, d, top=R_BACK, bottom=0)
@@ -911,9 +910,9 @@ def _tab(b: Builder, W: float, D: float, H: float, p: Dict, level: int, mat: int
     tab, tt, tr = p["tab"], p["tab_t"], p["tab_r"]
     L, Hs, pr, below = p["slot"]
     z1 = H + tab
-    outline = _top_rounded(W, H - 1.0, z1, tr, (3, 2, 1)[level])
+    outline = _top_rounded(W, H - 1.0, z1, tr, (3, 1, 1)[level])
     cz = z1 - below
-    holes = [] if level == 2 else [_euro_slot(0.0, cz, L, Hs, pr, (4, 2)[level], (6, 3)[level])]
+    holes = [] if level == 2 else [_euro_slot(0.0, cz, L, Hs, pr, (4, 1)[level], (6, 2)[level])]
     y1 = D / 2 - 0.05
     _slab_y(b, outline, holes, y1 - tt, y1, mat, front=front_r, back=back_r)
     return _slot_apex(cz, Hs, pr)
@@ -957,7 +956,7 @@ def item_sleeve_box() -> Item:
     return Item(
         name=name, lods=lods, materials=["M_CSK_BoxPrint"], projections=sh.projections(),
         sockets=_upright_sockets(W, D, H, Hall, (0.0, y_tab, apex)),
-        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, H)), ((-W / 2, D / 2 - 1.0, H), (W / 2, D / 2, Hall))],
+        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, H)), ((-W / 2, D / 2 - 2.0, H), (W / 2, D / 2, Hall))],
         cls="Hang", budget=BUDGETS[name],
         data={"footprint_mm": [W, D, Hall], "hang": _hang_data(D, (0.0, y_tab, apex)),
               "stack": {"socket": "Stack", "pitch_mm": Hall, "max": 4},
@@ -972,11 +971,15 @@ def item_sleeve_box() -> Item:
 
 # =========================================================================== B8: bag with a header (TL / penny)
 
-def _bag_ring(w: float, d: float, c: float):
-    """The bag's section: a rectangle with chamfered long edges (8 points, CCW in XY)."""
+def _bag_ring(w: float, d: float, cx: float, cy: float, n: int = 8):
+    """The bag's section, CCW in XY: a rectangle with chamfered long edges (8 points; ``n`` 4 = a plain rectangle).
+    At the flat welded seals the chamfer runs 3 along X and 0.1 across, so the seal ends have no sliver faces."""
     x, y = w / 2, d / 2
-    c = min(c, y * 0.9)
-    return [(-x, -y + c), (-x + c, -y), (x - c, -y), (x, -y + c), (x, y - c), (x - c, y), (-x + c, y), (-x, y - c)]
+    if n == 4:
+        return [(-x, -y), (x, -y), (x, y), (-x, y)]
+    cy = min(cy, y * 0.9)
+    return [(-x, -y + cy), (-x + cx, -y), (x - cx, -y), (x, -y + cy), (x, y - cy), (x - cx, y), (-x + cx, y),
+            (-x, y - cy)]
 
 
 def _bag(b: Builder, p: Dict, level: int, mat: int) -> None:
@@ -986,13 +989,14 @@ def _bag(b: Builder, p: Dict, level: int, mat: int) -> None:
     s0, s1 = p["seal"]
     f0, f1, into = p["top"]
     flat = 0.3
-    zs = [(0.0, flat), (s0, flat), (s1, D), (f0, D), (f1, flat), (H + into, flat)]
-    if level == 2:
-        zs = [(0.0, flat), (s1, D), (f0, D), (H + into, flat)]
+    zs = [[(0.0, flat), (s0, flat), (s1, D), (f0, D), (f1, flat), (H + into, flat)],
+          [(0.0, flat), (s1, D), (f0, D), (H + into, flat)],
+          [(0.0, D), (H + into, D)]][level]
     c = p["chamfer"]
+    n = 8 if level == 0 else 4
     rings = []
     for z, d in zs:
-        pts = _bag_ring(W, d, c if d > 1.0 else flat / 3)
+        pts = _bag_ring(W, d, c if d > 1.0 else 3.0, c if d > 1.0 else 0.1, n)
         rings.append((pts, b.loop(pts, z)))
     for (pa, la), (pc, lc) in zip(rings[:-1], rings[1:]):
         def out(i, pa=pa):
@@ -1009,7 +1013,7 @@ def _header(b: Builder, p: Dict, level: int, mat: int, fr: int, br: int) -> floa
     z1 = H + hh
     cz = z1 - below
     outline = rect(W, hh, 0.0, H + hh / 2)
-    holes = [] if level == 2 else [_euro_slot(0.0, cz, L, Hs, pr, (4, 2)[level], (6, 3)[level])]
+    holes = [] if level == 2 else [_euro_slot(0.0, cz, L, Hs, pr, (4, 1)[level], (6, 2)[level])]
     _slab_y(b, outline, holes, -ht / 2, ht / 2, mat, front=fr, back=br)
     return _slot_apex(cz, Hs, pr)
 
@@ -1031,7 +1035,7 @@ def _bag_item(kind: str) -> Item:
         b = Builder()
         apex = _header(b, p, k, PRINT, fr, br)
         _bag(b, p, k, FILM)
-        segs = (4, 2, 0)[k] if sr > 0 else 0
+        segs = (4, 1, 0)[k] if sr > 0 else 0
         outline = _rrect_xz(sw, sh_, sr, segs, 0.0, z_stack + sh_ / 2) if segs else rect(sw, sh_, 0.0, z_stack + sh_ / 2)
         _prism_xz(b, outline, -st / 2, st / 2, CONT)
         lods.append(Lod(b))
@@ -1048,7 +1052,7 @@ def _bag_item(kind: str) -> Item:
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Hang", (0.0, 0.0, apex)), Socket("Stack", (0, 0, Hall)),
                  Socket("Face", (0, -D / 2, z_stack + sh_ / 2), (90.0, 0.0, 0.0)),
                  Socket("Grip", (0, -ht / 2, H + hh / 2))],
-        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, H)), ((-W / 2, -ht / 2, H), (W / 2, ht / 2, Hall))],
+        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, H)), ((-W / 2, -1.0, H), (W / 2, 1.0, Hall))],
         cls="Hang", budget=BUDGETS[name],
         data={"footprint_mm": [W, D, Hall], "hang": _hang_data(D, (0.0, 0.0, apex)),
               "stack": {"socket": "Stack", "pitch_mm": Hall, "max": 4},
@@ -1109,29 +1113,29 @@ def item_dice_clam() -> Item:
         u += die + g
     lods = []
     apex = 0.0
+    L, Hs, pr, below = p["slot"]
+    cz = H - below
+    apex = _slot_apex(cz, Hs, pr)
+    cL, cHs, cpr, cbelow = p["card_slot"]
     for k in range(3):
         b = Builder()
-        segs = (2, 1, 0)[k]
+        segs = (2, 0, 0)[k]
+        rr = lambda w_, h_, r_, cz_: _rrect_xz(w_, h_, r_, segs, 0.0, cz_) if segs else rect(w_, h_, 0.0, cz_)
         # the clear clam: back sheet + flange (with the euro slot), the card compartment plateau, the dice bubble
-        L, Hs, pr, below = p["slot"]
-        cz = H - below
-        outline = _rrect_xz(W, H, p["r"], segs, 0.0, H / 2) if segs else rect(W, H, 0.0, H / 2)
-        holes = [] if k == 2 else [_euro_slot(0.0, cz, L, Hs, pr, (3, 2)[k], (5, 3)[k])]
-        _slab_y(b, outline, holes, yf_sheet, yb, FILM)
-        apex = _slot_apex(cz, Hs, pr)
-        plat = _rrect_xz(pw, pz1 - pz0, p["r"], segs, 0.0, (pz0 + pz1) / 2) if segs else rect(pw, pz1 - pz0, 0.0, (pz0 + pz1) / 2)
-        _prism_xz(b, plat, yf_sheet - proud, yf_sheet + 0.1, FILM, back=None)
-        bub = _rrect_xz(bw, bh, br, segs, 0.0, bcz) if segs else rect(bw, bh, 0.0, bcz)
-        ybf = -D / 2
+        holes = [] if k == 2 else [_euro_slot(0.0, cz, L, Hs, pr, (3, 1)[k], (4, 2)[k])]
+        _slab_y(b, rr(W, H, p["r"], H / 2), holes, yf_sheet, yb, FILM)
         if k < 2:
-            bub_in = _rrect_xz(bw - 2 * bch, bh - 2 * bch, max(br - bch, 0.5), segs, 0.0, bcz) if segs else \
-                rect(bw - 2 * bch, bh - 2 * bch, 0.0, bcz)
-            la = _loop_xz(b, _ccw(bub), yf_sheet - proud + 0.1)
-            lb = _loop_xz(b, _ccw(bub), ybf + bch)
-            lc = _loop_xz(b, _ccw(bub_in), ybf)
-            _walls_xz(b, _ccw(bub), lb, la, False, FILM)
-            n = len(bub)
+            _prism_xz(b, rr(pw, pz1 - pz0, p["r"], (pz0 + pz1) / 2), yf_sheet - proud, yf_sheet + 0.1, FILM, back=None)
+        bub = rr(bw, bh, br, bcz)
+        ybf = -D / 2
+        if k == 0:                                         # drafted-free walls and a 2 mm chamfer round the front
+            bub_in = rr(bw - 2 * bch, bh - 2 * bch, max(br - bch, 0.5), bcz)
             pa, pc = _ccw(bub), _ccw(bub_in)
+            la = _loop_xz(b, pa, yf_sheet - proud + 0.1)
+            lb = _loop_xz(b, pa, ybf + bch)
+            lc = _loop_xz(b, pc, ybf)
+            _walls_xz(b, pa, lb, la, False, FILM)
+            n = len(pa)
             for i in range(n):
                 j = (i + 1) % n
                 mx, mz = (pa[i][0] + pa[j][0]) / 2, (pa[i][1] + pa[j][1]) / 2
@@ -1140,14 +1144,18 @@ def item_dice_clam() -> Item:
         else:
             _prism_xz(b, bub, ybf, yf_sheet - proud + 0.1, FILM, back=None)
         # the insert card (print), with its own euro slot
-        cL, cHs, cpr, cbelow = p["card_slot"]
-        c_out = _rrect_xz(cw, ch, cr, segs, 0.0, (cz0 + cz1) / 2) if segs else rect(cw, ch, 0.0, (cz0 + cz1) / 2)
-        c_holes = [] if k == 2 else [_euro_slot(0.0, cz1 - cbelow, cL, cHs, cpr, (3, 2)[k], (5, 3)[k])]
-        _slab_y(b, c_out, c_holes, y_card0, y_card1, PRINT, front=rcf, back=rcb)
-        # the dice: open cubes (the backs sink into the card), each visible face a print cell
+        c_holes = [] if k == 2 else [_euro_slot(0.0, cz1 - cbelow, cL, cHs, cpr, (3, 1)[k], (4, 2)[k])]
+        _slab_y(b, rr(cw, ch, cr, (cz0 + cz1) / 2), c_holes, y_card0, y_card1, PRINT, front=rcf, back=rcb)
+        # the dice: open cubes (the backs sink into the card), each visible face a print cell; the far LOD keeps
+        # the fronts only
         for (dx, dz), fr in zip(dice, face_regions):
-            b.box((dx - die / 2, y_die0, dz - die / 2), (dx + die / 2, y_die1, dz + die / 2), mat=PRINT,
-                  regions=fr if k < 2 else {"ny": fr["ny"]}, skip=("py",))
+            lo_, hi_ = (dx - die / 2, y_die0, dz - die / 2), (dx + die / 2, y_die1, dz + die / 2)
+            if k < 2:
+                b.box(lo_, hi_, mat=PRINT, regions=fr, skip=("py",))
+            else:
+                q = [b.v(lo_[0], y_die0, lo_[2]), b.v(hi_[0], y_die0, lo_[2]), b.v(hi_[0], y_die0, hi_[2]),
+                     b.v(lo_[0], y_die0, hi_[2])]
+                _face_out(b, q, (0, -1, 0), PRINT, fr["ny"])
         lods.append(Lod(b))
     name = "SM_CSK_Retail_DiceClam"
     lay = sheet.layout()
@@ -1220,9 +1228,8 @@ def item_binder_wrapped() -> Item:
     BASE = 2
     lods = []
     for k in range(3):
-        segs_s, segs_f = (3, 2, 1)[k], (2, 1, 1)[k]
+        segs_s, segs_f = (3, 1, 1)[k], (2, 1, 1)[k]
         O = _binder_outline(W, D, p["spine_r"], p["fore_r"], segs_s, segs_f)
-        n = len(O)
 
         def side_region(i, O=O):
             j = (i + 1) % len(O)
@@ -1235,7 +1242,7 @@ def item_binder_wrapped() -> Item:
                 return rb
             return 0
         b = Builder()
-        if k < 2:
+        if k == 0:
             Oi = _inset_outline(O, rim)
             zs = [(Oi, f), (O, f + rim), (O, f + H - rim), (Oi, f + H)]
         else:
@@ -1254,19 +1261,17 @@ def item_binder_wrapped() -> Item:
         b.fill([loops[-1]], PRINT, rtop, (0, 0, 1))
         ops = []
         if k < 2:
+            # the covers and spine stand proud of the page block at the top (sheet 12 side view: an inset
+            # rectangle): a pocket inside the flat top face, clear of the rims (so no cut crosses a chamfer)
             rc, bd = p["recess"], p["board"]
-            x_in = -W / 2 + p["spine_r"] + 2.0
-            for z0, z1 in ((f - 5.0, f + rc), (f + H - rc, f + H + 5.0)):
-                c = Builder()
-                c.box((x_in, -D / 2 + bd, z0), (W / 2 + 5.0, D / 2 - bd, z1), mat=BASE)
-                ops.append(("DIFFERENCE", c))
             c = Builder()
-            c.box((W / 2 - rc, -D / 2 + bd, f + rc - 1.0), (W / 2 + 5.0, D / 2 - bd, f + H - rc + 1.0), mat=BASE)
+            c.box((-W / 2 + p["spine_r"] + 2.0, -D / 2 + bd, f + H - rc), (W / 2 - rim - 1.0, D / 2 - bd, f + H + 5.0),
+                  mat=BASE)
             ops.append(("DIFFERENCE", c))
         # the shrink film: a clear shell 0.4 out, soft rims
         film = Builder()
         Of = _binder_outline(W, D, p["spine_r"], p["fore_r"], segs_s, segs_f, off=f)
-        if k < 2:
+        if k == 0:
             Ofi = _inset_outline(Of, 1.5)
             fz = [(Ofi, 0.0), (Of, 1.5), (Of, H + 2 * f - 1.5), (Ofi, H + 2 * f)]
         else:
@@ -1282,7 +1287,7 @@ def item_binder_wrapped() -> Item:
             _stitch(film, la, lc, outf, FILM)
         film.fill([fl[0]], FILM, 0, (0, 0, -1))
         film.fill([fl[-1]], FILM, 0, (0, 0, 1))
-        lods.append(Lod(b, ops=ops, extra=film))
+        lods.append(Lod(b, ops=ops, extra=film if k < 2 else None))
     name = "SM_CSK_Retail_BinderWrapped"
     Wo, Do, Ho = p["w"], p["d"], p["h"]
     lay = sheet.layout()
@@ -1299,8 +1304,8 @@ def item_binder_wrapped() -> Item:
               "pose": "standing, the front cover toward the customer (-Y), the spine at -X",
               "print_layout": lay, "print_art": art,
               "reference": "References/CardShop/csk_blister_retail.png (sheet 12 (6))",
-              "notes": ["Sheet 12: a padded binder (round spine edges, chamfered rims, the covers 3 proud of the "
-                        "page block at the top, bottom and fore-edge), purple two-tone (the light band is the bottom "
+              "notes": ["Sheet 12: a padded binder (round spine edges, chamfered rims, the covers and spine 3 proud "
+                        "of the page block at the top), purple two-tone (the light band is the bottom "
                         "97), in a clear shrink-film shell 0.4 out with soft rims. The crinkles and the stitched edges "
                         "are texture / normal detail.",
                         "The prompt's sticker is not in the picture: none is built (REFERENCE_LOG sheet 12)."]},
@@ -1316,8 +1321,9 @@ def _ring_xy(r: float, sides: int, z: float, b: Builder, phase: float = 0.0) -> 
 
 def _lathe(b: Builder, prof: Sequence[Tuple[float, float]], sides: int, mat, region=0, cap0: bool = False,
            cap1: bool = False, inward: bool = False) -> List[List[int]]:
-    """Revolve a (r, z) profile about Z. ``mat`` / ``region`` may be functions of the band index; the column at
-    angle 0 is +Y (the back). Faces point away from the axis (``inward`` flips)."""
+    """Revolve a (r, z) profile about Z, listed with the material on its left (up the outside, inward across a top,
+    outward across an underside). ``mat`` / ``region`` may be functions of the band index (region also of the column);
+    column 0 starts at +Y (the back seam). ``inward`` flips every face."""
     rings = [_ring_xy(r, sides, z, b) for r, z in prof]
     for k, (ra, rc) in enumerate(zip(rings[:-1], rings[1:])):
         (r0, z0), (r1, z1) = prof[k], prof[k + 1]
@@ -1365,32 +1371,39 @@ def item_playmat_tube() -> Item:
     sheet = Sheet()
     CAP, RUB = 2, 3
     lods = []
-    reg_a = reg_b = 0
     for k in range(3):
-        n = (p["sides"], 10, 6)[k]
+        n = (p["sides"], 8, 6)[k]
         sh = Sheet()
         reg_a, reg_b = _wrap_panels(sh, rt, lz0, lz1, n, 0.0, 0.0)
         if k == 0:
             sheet = sh
         b = Builder()
-        # caps: cups over the tube ends (sheet 12: black, softly rounded rims)
+        # caps: cups over the tube ends (sheet 12: black, softly rounded rims); far LODs drop the rim chamfer and
+        # the cup's lip
         for bottom in (True, False):
-            if bottom:
-                prof = [(rt, cap), (rc, cap), (rc, ch), (rc - ch, 0.0)] if k < 2 else [(rt, cap), (rc, cap), (rc, 0.0)]
-                rings = _lathe(b, prof, n, CAP, cap1=False)
-                b.fill([rings[-1]], CAP, 0, (0, 0, -1))
+            # the bottom cap's profile with the material on its left (the _lathe convention): the base chamfer, the
+            # side, then the lip inward; the top cap is its mirror
+            if k == 0:
+                prof = [(rc - ch, 0.0), (rc, ch), (rc, cap), (rt, cap)]
+            elif k == 1:
+                prof = [(rc, 0.0), (rc, cap), (rt, cap)]
             else:
-                prof = [(rc - ch, H), (rc, H - ch), (rc, H - cap), (rt, H - cap)] if k < 2 else \
-                    [(rc, H), (rc, H - cap), (rt, H - cap)]
-                prof = list(reversed(prof))
-                rings = _lathe(b, prof, n, CAP)
-                b.fill([rings[-1]], CAP, 0, (0, 0, 1))
+                prof = [(rc, 0.0), (rc, cap)]
+            if not bottom:
+                prof = [(r, H - z) for r, z in reversed(prof)]
+            rings = _lathe(b, prof, n, CAP)
+            end = rings[0] if bottom else rings[-1]
+            b.fill([end], CAP, 0, (0, 0, -1) if bottom else (0, 0, 1))
+            if k == 2:                                   # the far LOD's plain cylinder: close its inner end too
+                inner = rings[-1] if bottom else rings[0]
+                b.fill([inner], CAP, 0, (0, 0, 1) if bottom else (0, 0, -1))
         # the clear tube (label print from the bottom cap up, film above); ends sunk 0.5 into the caps
         seam = lambda kk, i, n=n: (reg_a if (i + 0.5) / n < 0.5 else reg_b) if kk == 0 else 0
         _lathe(b, [(rt, cap - 0.5), (rt, lz1), (rt, H - cap + 0.5)], n, lambda kk: PRINT if kk == 0 else FILM, seam)
         # the rolled playmat inside (E5 Rolled, D Ø 45 x 356), its ends hidden in the caps
-        z0 = (H - rlen) / 2
-        _lathe(b, [(rr, z0), (rr, z0 + rlen)], n, RUB)
+        if k < 2:
+            z0 = (H - rlen) / 2
+            _lathe(b, [(rr, z0), (rr, z0 + rlen)], n, RUB)
         lods.append(Lod(b))
     name = "SM_CSK_Retail_PlaymatTube"
     lay = sheet.layout()
@@ -1424,21 +1437,26 @@ def item_cleaner_bottle() -> Item:
     lods = []
     sheet = Sheet()
     for k in range(3):
-        n = (p["sides"], 10, 6)[k]
+        n = (p["sides"], 8, 6)[k]
         sh = Sheet()
         r_label = p["body"][2][0]
         ra, rb = _wrap_panels(sh, r_label, lz0, lz1, n, 0.0, 0.0)
         if k == 0:
             sheet = sh
         b = Builder()
-        prof = list(p["body"]) if k < 2 else [(20.0, 0.0), (20.0, lz0), (20.0, lz1), (14.0, 94.0), (12.0, 99.5)]
+        neck = p["body"][-1]
+        prof = [list(p["body"]),
+                [(19.0, 0.0), (20.0, lz0), (20.0, lz1), (17.0, 92.0), neck],
+                [(20.0, 0.0), (20.0, lz0), (20.0, lz1), neck]][k]
         li = [i for i, (r, z) in enumerate(prof) if abs(z - lz0) < 1e-6][0]
         mat = lambda kk, li=li: PRINT if kk == li else FILM
         reg = lambda kk, i, li=li, n=n, ra=ra, rb=rb: (ra if (i + 0.5) / n < 0.5 else rb) if kk == li else 0
         _lathe(b, prof, n, mat, reg, cap0=True)
         # the white pump: the ribbed collar (ribs are normal detail) and the head, under the clear overcap
-        _lathe(b, [(rstem, zc1), (rco, zc1), (rco, zc0), (prof[-1][0] - 0.5, zc0)], n, PLAST, inward=False)
-        _lathe(b, [(rh, zh0 - 0.5), (rh, zh1)], n, PLAST, cap1=True)
+        _lathe(b, [(neck[0] - 0.5, zc0), (rco, zc0), (rco, zc1), (rstem, zc1)] if k < 2 else
+               [(neck[0] - 0.5, zc0), (rco, zc0), (rco, zc1), (rcap - 0.5, zc1)], n, PLAST)
+        if k < 2:
+            _lathe(b, [(rh, zh0 - 0.5), (rh, zh1)], n, PLAST, cap1=True)
         _lathe(b, [(rcap, zp0 - 0.5), (rcap, zp1)], n, FILM, cap1=True)
         lods.append(Lod(b))
     name = "SM_CSK_Retail_CleanerBottle"
@@ -1446,7 +1464,7 @@ def item_cleaner_bottle() -> Item:
     u0, v0, w, h = lay["panels"]["label_a"]
     art = [[u0, v0, w, lsplit, p["colours"][1]], [u0, v0 + lsplit, w, h - lsplit, p["colours"][0]]]
     return Item(
-        name=name, lods=lods, materials=["M_CSK_BoxPrint", "M_CSK_Film", "M_CSK_Plastic"],
+        name=name, lods=lods, materials=["M_CSK_BoxPrint", "M_CSK_Film", "M_CSK_PlasticWhite"],
         projections=sheet.projections(),
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Stack", (0, 0, zp1)), Socket("Face", (0, -20.0, 46.0), (90.0, 0.0, 0.0)),
                  Socket("Grip", (0, -20.0, 46.0))],
@@ -1456,7 +1474,7 @@ def item_cleaner_bottle() -> Item:
               "reference": "References/CardShop/csk_blister_retail.png (sheet 12 (9))",
               "notes": ["Sheet 12: a clear PET bottle (round base, shoulder to a neck), a white ribbed collar and pump "
                         "head under a clear overcap, a two-tone red label (light band the bottom 30.7) from 7.3 to "
-                        "85.8. M_CSK_Plastic is the white pump (a tint MI).",
+                        "85.8. M_CSK_PlasticWhite is the white pump.",
                         "Not modelled: the collar's ribs (normal detail), the nozzle hole, the dip tube."]},
     )
 
@@ -1467,7 +1485,6 @@ def item_deck_box_pack() -> Item:
     p = DECK_PACK
     W, D, H = p["w"], p["d"], p["h"]
     ww, wh, wcz, wr = p["window"]
-    bd = p["board"]
     dbw, dbd, dbh = p["deckbox"]
     y_db = -dbd / 2                                       # the deck box's front face (centred in the carton)
     fz, fp = p["flap"]
@@ -1495,7 +1512,7 @@ def item_deck_box_pack() -> Item:
         lods.append(Lod(b, bevel_mm=p["bevel"] if k == 0 else None, bevel_first=True, ops=[("DIFFERENCE", cut)],
                         extra=extra))
     name = "SM_CSK_Retail_DeckBoxPack"
-    lay = sheet_layout = sh.layout()
+    lay = sh.layout()
     Hall = H + p["tab"]
     y_tab = D / 2 - 0.05 - p["tab_t"] / 2
     split = p["split"]
@@ -1506,11 +1523,11 @@ def item_deck_box_pack() -> Item:
         name=name, lods=lods, materials=["M_CSK_BoxPrint", "M_CSK_Board", "M_CSK_Plastic"],
         projections=sh.projections(),
         sockets=_upright_sockets(W, D, H, Hall, (0.0, y_tab, apex)),
-        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, H)), ((-W / 2, D / 2 - 1.0, H), (W / 2, D / 2, Hall))],
+        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, H)), ((-W / 2, D / 2 - 2.0, H), (W / 2, D / 2, Hall))],
         cls="Deck", budget=BUDGETS[name],
         data={"footprint_mm": [W, D, Hall], "hang": _hang_data(D, (0.0, y_tab, apex)),
               "stack": {"socket": "Stack", "pitch_mm": Hall, "max": 4},
-              "print_layout": sheet_layout, "print_art": art,
+              "print_layout": lay, "print_art": art,
               "reference": "References/CardShop/csk_blister_retail.png (sheet 12 (8))",
               "notes": ["Sheet 12: a navy / light-blue carton (the light band is the bottom 38) with a hang tab and a "
                         "rounded die-cut window 59.3 x 86.5 R 4.3 showing the deck box (E4 76 x 80 x 108, centred, "
