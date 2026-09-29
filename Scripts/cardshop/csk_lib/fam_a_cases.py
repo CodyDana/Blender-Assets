@@ -44,7 +44,8 @@ A2 = dict(                     # half-vision showcase, sheet 16
     clip=(10.0, 22.0, 9.0),    # clear shelf clip: X out of the end panel, Y length, Z height (sheet 16 "clear clips"), E
     bay_door_t=16.0,           # E: oak sliding panel thickness
     bay_track=(10.0, 40.0),    # E: bay door track height x depth (aluminium U channel, two channels)
-    pull=(110.0, 30.0, 5.0),   # E: recessed pull W x H x depth, on both faces (sheet 16 "recessed pull handles")
+    pull=(28.0, 80.0, 5.0),    # recessed pull W x H x depth, on both faces: VERTICAL, as sheet 16's rear view and bay
+                               # detail (measured ~27 x 78 against the 965 height); depth E
 )
 
 A3 = dict(                     # frameless glass tower, sheet 17 (1)
@@ -97,6 +98,8 @@ A6 = dict(                     # wall slab case, sheet 18 (2)
     frame=25.0,                # E: aluminium frame member face width
     door_zone=12.0,            # E: front 12 of the 90 depth hold the glass front and its hinge
     back_t=12.0,               # E: light-oak back panel (sheet 18; the spec's felt back: the picture wins)
+    side_alu=30.0,             # sheet 18 (both 3/4 views, the side view): the sides are light oak behind an aluminium
+                               # front post; the post's depth (30 of the 78 carcass, ~half with the door) is E
     rows=4, cols=10,           # D (spec): 10 x 4 = 40 slab slots, confirmed by sheet 18's filled view
     pitch_x=94.0,              # D: the Slab class pitch
     lean=10.0,                 # E (spec): slabs lean 10 deg back
@@ -506,7 +509,7 @@ def item_half_baydoor(L: float) -> Item:
     s = A2
     t = s["bay_door_t"]
     pw, ph, pd = s["pull"]
-    xc = w / 2 - 25.0 - pw / 2
+    xc = w / 2 - s["door_overlap"] - 20.0 - pw / 2     # 20 clear of the overlap, so both pulls show when closed
     pockets = [dict(face=f, x0=xc - pw / 2, x1=xc + pw / 2, z0=h / 2 - ph / 2, z1=h / 2 + ph / 2, depth=pd)
                for f in ("ny", "py")]
     b = Builder()
@@ -1057,8 +1060,10 @@ def _a6_body(level: int) -> Builder:
     FRAME, OAK, LED, ACRYL = 0, 1, 2, 3
     yf = k["yf"]
     b = Builder()
-    for sx in (-1, 1):
-        _box(b, (sx * W / 2, yf, -H / 2), (sx * k["xi"], 0.0, H / 2), FRAME)                       # side members
+    ys = yf + s["side_alu"]
+    for sx in (-1, 1):                  # side members: an aluminium front post, light-oak side panel behind it
+        _box(b, (sx * W / 2, yf, -H / 2), (sx * k["xi"], ys, H / 2), FRAME)
+        _box(b, (sx * (W / 2 - 0.5), ys, -H / 2 + 0.5), (sx * k["xi"], 0.0, H / 2 - 0.5), OAK)   # 0.5 panel joint
     for sz in (-1, 1):
         _box(b, (-k["xi"] - 0.5, yf + 0.5, sz * (H / 2 - 0.5)), (k["xi"] + 0.5, -0.5, sz * (H / 2 - f)), FRAME)
     b.box((-k["xi"] - 0.5, k["ybp"], k["zi0"] - 0.5), (k["xi"] + 0.5, -1.0, k["zi1"] + 0.5), mat=OAK)   # back

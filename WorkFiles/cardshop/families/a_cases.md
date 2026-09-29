@@ -16,6 +16,34 @@ the level grids are fit-tested against real render bounds. The kit checks pass 3
 - ray-parity winding on every mesh and LOD;
 - hinge sweeps at 1-degree steps: the A3 door 0-100°, the A5 lid 0-80° and the A6 front 0-90° do not touch any glass, rail, post or knuckle.
 
+## Checked against the sheet pictures (local, 2026-09-29)
+
+This family was built from the log's notes before the PNGs were on disk. The local session rendered every fixture
+assembled (body, glass and parts at their sockets; `tools/csk_shot.py`, front / back / 3/4) and compared it with
+sheets 16-18.
+
+**Changed:**
+- **A2 bay-door pulls are vertical.** Sheet 16's rear view and its bay detail both show tall recessed pulls; they
+  were 110 × 30 horizontal. Now 28 × 80 × 5 (measured against the 965 height), set 20 clear of the doors' 25
+  overlap so both pulls show when the doors are closed (the right door's pull was hidden behind the left door).
+- **A6 sides are light oak behind an aluminium front post.** Sheet 18's two 3/4 views and its side view show oak
+  side panels; they were solid aluminium. The front 30 of the 78 carcass is aluminium (E), the rest oak, with a
+  0.5 panel joint. Tris 788 → 876 (budget 1500).
+
+**Matches:** A3 (clamp hinges, corner clips, round lock at mid height, back-corner pole, oak base with black band),
+A4 (frame, 2 sliding doors, 4 shelves, LED in the front posts, base), A5 (frame, felt deck, lid on quadrant stays),
+A6 (oak back, 4 slanted acrylic ledges, LED in both side posts), A2 front (oak ends and front, one glass shelf, black
+kick).
+
+**Still different from the picture (for the user, see the questions):**
+- **A2 rear:** the sheet's bay doors run down to the bottom track. With the spec's 184 bay there is a ~250 fixed oak
+  panel under the bay instead (question 4).
+- **A5 proportions:** sheet 18 draws the oak band about as tall as the glass zone (kick ~9 %, oak ~44 %, glass ~47 %
+  of the height). Built: kick 20, oak 50, glass zone 230 of 300. Matching the picture at 300 tall leaves a ~140
+  glass zone (question 7).
+- **A4 posts:** the main view runs the posts down to the floor; the base detail stands them on the base. Built on the
+  base (question 3).
+
 ## Meshes
 
 | Key | Mesh | LOD tris | Budget | qa | Sockets | Hulls |
@@ -33,7 +61,7 @@ the level grids are fit-tested against real render bounds. The kit checks pass 3
 | a_cases_counter | SM_CSK_Case_Counter_900 | 528 / 144 / 96 | 1200 | PASS | 10 | 1 |
 | a_cases_counter_glass | SM_CSK_Case_Counter_Glass_900 | 48 | 200 | PASS | 0 | 4 |
 | a_cases_counter_lid | SM_CSK_Case_Counter_Lid_900 | 136 | 150 | PASS | 1 | 1 |
-| a_cases_wallslab | SM_CSK_Case_WallSlab | 788 / 244 / 140 | 1500 | PASS | 46 | 5 |
+| a_cases_wallslab | SM_CSK_Case_WallSlab | 876 / 268 / 164 | 1500 | PASS | 46 | 5 |
 | a_cases_wallslab_door | SM_CSK_Case_WallSlab_Door | 52 | 200 | PASS | 1 | 1 |
 
 **Sockets:**
@@ -55,8 +83,10 @@ Every mesh also has `Seat`.
 
 The right-hand sliding doors of A2 are turned 180°, so their locks and pulls meet at the centre, as in A1.
 
-**Naming:** the part goes before the size (`_Door_1778`, `_Lid_900`), following A1. As a result the build's name-based
-winding check does not match these meshes; the extra check covers them instead.
+**Naming:** the part goes before the size (`_Door_1778`, `_Lid_900`), following A1. The build's winding check used to
+match only `_Glass_1778` / `_Lid` / `_Door_1778`; since the local integration it matches `_Glass`, `_Lid`, `_Door`
+and `_BayDoor` anywhere in the name and uses a per-shell ray-parity test (`mesh.check_outward_rays`), so it covers
+all of these parts, concave ones included.
 
 ## Deviations from the spec (and why)
 
@@ -115,6 +145,8 @@ Reused: `Frame`, `Base`, `LED`, `Oak`, `Deck`, `Glass`.
 4. A2: keep the 184 bay (spec), or build the picture's ~250 (the glass zone would shrink or the deck would rise)?
 5. A3: which back corner holds the light pole (built back-right)?
 6. Keep `SM_CSK_Showcase_Half_BayDoor_{L}` as its own mesh (+2 meshes)?
+7. A5: keep kick 20 / oak 50 / glass 230, or follow sheet 18's tall oak band (at 300 tall, a ~140 glass zone; or
+   keep the 230 glass zone and make the case ~490 tall)?
 
 ## Renders (`WorkFiles/cardshop/families/a_cases/`)
 

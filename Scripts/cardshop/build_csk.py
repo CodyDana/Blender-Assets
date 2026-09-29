@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 import time
 import traceback
@@ -42,6 +43,9 @@ LIB_VERSION = "g1-1.0.0"
 DEFAULT_OUT = PROJECT / "Exports" / "CardShopKit" / "G1"
 DEFAULT_REPORT = PROJECT / "WorkFiles" / "cardshop" / "g1" / "build_report.json"
 BLEND = PROJECT / "Assets" / "CardShopKit" / "CSK_G1.blend"
+# Separate moving / clear parts get the winding check (their names put the part before or after the size: _Glass_1778,
+# _Lid_900, _Door, _Shell_Wall_Window_2000_Glass, ...).
+PART_RE = re.compile(r"_(Glass|Lid|Door|BayDoor)(_|$)")
 T0 = time.time()
 
 
@@ -115,7 +119,7 @@ def stage_qa(built, report) -> bool:
         failed = [c for c in r["checks"] if not c["passed"]]
         tris = [mesh.triangles(o) for o in objs]
         lod_rule = (len(objs) == 1) == (tris[0] <= S.LOD0_ONLY_MAX_TRIS)
-        winding = sum(mesh.check_outward(o) for o in objs) if item.name.endswith(("_Glass_1778", "_Lid", "_Door_1778")) else 0
+        winding = sum(mesh.check_outward_rays(o) for o in objs) if PART_RE.search(item.name) else 0
         uv_degenerate = {o.name: [mesh.degenerate_uv_faces(o, "UVMap"), mesh.degenerate_uv_faces(o, "Lightmap")]
                          for o in objs}
         uv_ok = all(sum(v) == 0 for v in uv_degenerate.values())

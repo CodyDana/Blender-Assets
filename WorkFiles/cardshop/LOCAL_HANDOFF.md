@@ -10,6 +10,26 @@ in the cloud commits the family builders' progress every 10 minutes (commits tit
 - `References/CardShop/REFERENCE_LOG.md` (all 37 reference sheets, 0-36, with notes and decisions);
 - `Scripts/cardshop/csk_lib/FAMILY_GUIDE.md` (how a family is built).
 
+## 00. Local session on the PC (2026-09-29, branch `claude/cardshop-build-integration-5227b4`)
+
+Steps 1-5 below are done; step 6 (the G1 Unreal run) is next.
+- **Nothing was left uncommitted** by the cloud: all 12 modules and reports were in its last commit.
+- **Combined build in Blender 5.2: `CSK_BUILD PASSED`**, 179 meshes, kit checks 1359/1359, self-tests 11/11
+  (`g1/pc_build_report.json`). The 12 G1 meshes have exactly the cloud's triangle counts. No class-code conflicts
+  (16 family classes, none clashing).
+  - **The 5.2 difference:** the exact boolean appends an empty material slot per cutter (5.0.1 did not), which
+    failed `material_assigned` on every mesh with a cut. Fixed in `mesh._apply_boolean`.
+- **a_cases vs sheets 16-18:** A2 bay-door pulls made vertical; A6 sides made oak behind aluminium posts; the rest
+  matches or is a question (`families/a_cases.md`, "Checked against the sheet pictures"). a_shelving had already been
+  compared with its PNGs by its builder.
+- **Winding check:** it now covers every `_Glass` / `_Lid` / `_Door` / `_BayDoor` part (35, was 12) with a per-shell
+  ray-parity test (`mesh.check_outward_rays`) that is right for concave parts; negative-tested.
+- **Unreal materials:** an `MI_CSK_G1_<Part>` for each of the 64 new slots (79 slots, 93 MIs with the variants),
+  on the three G1 test masters; print slots use the plain test-pattern textures. All 179 meshes are in
+  `csk_common.MESHES` (`G1_MESHES` + `FAMILY_MESHES`), so import, materials and verify cover them.
+- **`run_g1.sh`** now finds the repo from its own path, so it runs from a worktree too.
+- **Questions:** all 66 in `WorkFiles/cardshop/OPEN_QUESTIONS.md`, with recommendations.
+
 ## 0. Latest status (cloud session ended here, out of credits)
 
 **The family-build workflow FINISHED.** All 12 families report a passing build of their own keys: **167 new meshes**,

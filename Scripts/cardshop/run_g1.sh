@@ -20,7 +20,7 @@
 set -u
 export MSYS_NO_PATHCONV=1
 STEPS="${*:-selftest art build preview project import materials map verify}"
-ROOT="C:/Users/Cody/Desktop/Blender_Projects"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd -W)"   # the checkout this script is in (main or a worktree)
 HERE="$ROOT/Scripts/cardshop"
 OUT="$ROOT/WorkFiles/cardshop/g1/unreal"
 UE="C:/Program Files/Epic Games/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Cmd.exe"

@@ -256,7 +256,70 @@ def instances():
     I["MI_CSK_G1_Deck"] = ("M_CSK_G1_Surface", {"Roughness": 0.5}, {"Base Colour": (0.7, 0.62, 0.48)}, {})
     I["MI_CSK_G1_Film"] = ("M_CSK_G1_Glass", {"Opacity": 0.06, "Edge Opacity": 0.3, "Roughness": 0.1},
                            {"Base Colour": (1, 1, 1)}, {})
+    # The 12 families' slots (WorkFiles/cardshop/families/*.md): test looks on the same three masters, one MI per
+    # slot, named MI_CSK_G1_<Part>. Print slots take the plain path on the G1 test-pattern textures, so every print
+    # face shows its orientation (TL red, TR green, BL blue, BR yellow) until the kit's own atlases exist.
+    for part, (rgb, rough, metal) in SURFACE.items():
+        I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Surface", {"Roughness": rough, "Metallic": metal}, {"Base Colour": rgb}, {})
+    for part, (rgb, emit, intensity) in EMISSIVE.items():
+        I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Surface", {"Roughness": 0.2, "Emissive Intensity": intensity},
+                                  {"Base Colour": rgb, "Emissive Colour": emit}, {})
+    for part, (opacity, edge, rough, rgb) in CLEAR.items():
+        I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Glass", {"Opacity": opacity, "Edge Opacity": edge, "Roughness": rough},
+                                  {"Base Colour": rgb}, {})
+    for part, (front, back, label, np_rgb) in PRINT_PLAIN.items():
+        I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Print", plain_face, {"Non Print Colour": np_rgb},
+                                  {"Front Texture": front, "Back Texture": back, "Label Texture": label})
     return I
+
+
+# Family slot looks (linear RGB; E, from each family's sheet notes). Variants that are not a slot default (for a
+# per-actor override) sit at the end of each table.
+SURFACE = {  # part: (base colour, roughness, metallic)
+    "Metal": ((0.85, 0.85, 0.87), 0.15, 1.0), "Chrome": ((0.9, 0.9, 0.92), 0.08, 1.0),
+    "Aluminium": ((0.6, 0.6, 0.62), 0.35, 1.0), "PackInner": ((0.8, 0.8, 0.82), 0.25, 1.0),
+    "Coin": ((1.0, 0.77, 0.34), 0.3, 1.0),
+    "Steel": ((0.6, 0.61, 0.62), 0.5, 0.0), "SteelDark": ((0.12, 0.12, 0.13), 0.5, 0.0),
+    "SteelBlack": ((0.02, 0.02, 0.022), 0.45, 0.0), "SteelOrange": ((0.8, 0.25, 0.02), 0.5, 0.0),
+    "SteelBlue": ((0.03, 0.15, 0.5), 0.5, 0.0), "PowderBlack": ((0.02, 0.02, 0.022), 0.55, 0.0),
+    "Felt": ((0.02, 0.02, 0.022), 0.95, 0.0), "Slatwall": ((0.8, 0.8, 0.78), 0.45, 0.0),
+    "MDF": ((0.45, 0.33, 0.2), 0.9, 0.0), "Laminate": ((0.82, 0.82, 0.8), 0.4, 0.0),
+    "PriceStrip": ((0.85, 0.85, 0.85), 0.3, 0.0), "Tray": ((0.01, 0.01, 0.01), 0.1, 0.0),
+    "Cardboard": ((0.45, 0.32, 0.18), 0.85, 0.0), "Kraft": ((0.5, 0.36, 0.2), 0.85, 0.0),
+    "BoardWhite": ((0.85, 0.85, 0.83), 0.8, 0.0), "Chipboard": ((0.55, 0.42, 0.28), 0.9, 0.0),
+    "Tape": ((0.45, 0.3, 0.12), 0.3, 0.0), "Paper": ((0.9, 0.9, 0.88), 0.8, 0.0),
+    "Foam": ((0.25, 0.25, 0.26), 1.0, 0.0), "Rubber": ((0.02, 0.02, 0.02), 0.9, 0.0),
+    "Plastic": ((0.02, 0.02, 0.022), 0.45, 0.0), "PlasticWhite": ((0.85, 0.85, 0.85), 0.4, 0.0),
+    "PlasticGrey": ((0.3, 0.3, 0.31), 0.6, 0.0), "BagBlack": ((0.01, 0.01, 0.01), 0.2, 0.0),
+    "Bubble": ((0.8, 0.82, 0.85), 0.3, 0.0), "MagHolderBody": ((0.02, 0.02, 0.022), 0.15, 0.0),
+    "BinderCover": ((0.03, 0.03, 0.035), 0.6, 0.0), "BinderSpine": ((0.03, 0.03, 0.035), 0.5, 0.0),
+    "BinderPages": ((0.9, 0.9, 0.88), 0.7, 0.0), "Stitch": ((0.1, 0.1, 0.1), 0.8, 0.0),
+    "Resin": ((0.6, 0.05, 0.05), 0.2, 0.0), "TableTop": ((0.85, 0.85, 0.85), 0.5, 0.0),
+    "Vinyl": ((0.02, 0.02, 0.02), 0.35, 0.0), "AccentRed": ((0.6, 0.03, 0.03), 0.4, 0.0),
+    "AccentYellow": ((0.8, 0.6, 0.02), 0.4, 0.0), "AccentGreen": ((0.05, 0.45, 0.08), 0.4, 0.0),
+    "AccentBlue": ((0.03, 0.12, 0.5), 0.4, 0.0), "Cord": ((0.05, 0.05, 0.05), 0.8, 0.0),
+    "Plaster": ((0.8, 0.79, 0.76), 0.9, 0.0), "FloorVinyl": ((0.35, 0.33, 0.3), 0.6, 0.0),
+    "CeilingTile": ((0.85, 0.85, 0.85), 0.95, 0.0),
+    # variants (not slot defaults): a_display's white table legs, g_devices' silver and copper coins
+    "Steel_White": ((0.85, 0.85, 0.85), 0.5, 0.0), "Coin_Silver": ((0.9, 0.9, 0.92), 0.3, 1.0),
+    "Coin_Copper": ((0.95, 0.64, 0.54), 0.35, 1.0),
+}
+EMISSIVE = {  # part: (base colour, emissive colour, intensity)
+    "Screen": ((0.01, 0.01, 0.012), (0.2, 0.35, 0.6), 2.0), "ScanWindow": ((0.3, 0.0, 0.0), (1.0, 0.05, 0.05), 3.0),
+    "SignLit": ((0.9, 0.9, 0.9), (1.0, 0.97, 0.9), 4.0),     # G1 Print has no emissive: a lit flat panel for now
+}
+CLEAR = {  # part: (opacity, edge opacity, roughness, base colour)
+    "MagHolderWindow": (0.08, 0.35, 0.03, (1, 1, 1)), "FilmStack": (0.6, 0.8, 0.4, (0.95, 0.95, 0.97)),
+}
+_CF, _CB, _LB, _BD = "T_CSK_G1_CardFront_BC", "T_CSK_G1_CardBack_BC", "T_CSK_G1_Label_BC", "T_CSK_G1_BoxDieline_BC"
+PRINT_PLAIN = {  # part: (front, back, label texture, non-print colour)
+    "BoxPrintL": (_BD, _BD, _BD, (0.8, 0.78, 0.72)), "Label": (_LB, _LB, _LB, (0.9, 0.9, 0.88)),
+    "TopLoaderFilled": (_CF, _CB, _LB, (0.9, 0.95, 1.0)), "MagHolderFilled": (_CF, _CB, _LB, (0.02, 0.02, 0.022)),
+    "SleeveBack": (_CB, _CB, _CB, (0.2, 0.05, 0.05)), "Playmat": (_CF, _CB, _LB, (0.02, 0.02, 0.02)),
+    "Money": (_CF, _CB, _LB, (0.8, 0.85, 0.75)), "Sign": (_CF, _CB, _LB, (0.9, 0.9, 0.9)),
+    "Poster": (_CF, _CB, _LB, (0.9, 0.9, 0.9)), "PriceTag": (_CF, _CB, _LB, (0.95, 0.95, 0.95)),
+    "BagPrint": (_CF, _CB, _LB, (0.5, 0.36, 0.2)), "CuttingMat": (_CF, _CB, _LB, (0.05, 0.3, 0.12)),
+}
 
 
 # mesh slot name -> default instance (the plain path)
@@ -266,7 +329,9 @@ SLOT_DEFAULT = {"M_CSK_Card": "MI_CSK_G1_Card_Plain", "M_CSK_Pack": "MI_CSK_G1_P
                 "M_CSK_BoxPrint": "MI_CSK_G1_BoxPrint_Plain", "M_CSK_Board": "MI_CSK_G1_Board",
                 "M_CSK_Frame": "MI_CSK_G1_Frame", "M_CSK_Base": "MI_CSK_G1_Base", "M_CSK_LED": "MI_CSK_G1_LED",
                 "M_CSK_Glass": "MI_CSK_G1_Glass", "M_CSK_Oak": "MI_CSK_G1_Oak", "M_CSK_Deck": "MI_CSK_G1_Deck",
-                "M_CSK_Film": "MI_CSK_G1_Film"}
+                "M_CSK_Film": "MI_CSK_G1_Film", "M_CSK_Acrylic": "MI_CSK_G1_Acrylic"}
+SLOT_DEFAULT.update({f"M_CSK_{p}": f"MI_CSK_G1_{p}" for t in (SURFACE, EMISSIVE, CLEAR, PRINT_PLAIN) for p in t
+                     if "_" not in p})       # the "_" parts are variants
 
 
 def main():

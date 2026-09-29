@@ -7,8 +7,8 @@ UV layout (CARDSHOP_KIT_SPEC.md 4.1):
 * UV1 ``Lightmap``: a unique 0-1 layout of every face (lightmap + per-mesh ORM bake).
 
 Faces are authored counter-clockwise seen from outside (a cavity's faces point into the cavity), so no normal
-recalculation is run: ``recalc_face_normals`` would turn a void inside out. ``check_outward`` verifies the winding of
-convex shells.
+recalculation is run: ``recalc_face_normals`` would turn a void inside out. ``check_outward_rays`` verifies the winding
+of any closed shell (``check_outward``: convex shells only).
 """
 from __future__ import annotations
 
@@ -156,7 +156,15 @@ def _apply_boolean(obj: "bpy.types.Object", operation: str, b: Builder) -> None:
     except (AttributeError, TypeError):
         pass
     from pipeline.helpers import apply_modifier
+    slots = len(obj.data.materials)
     apply_modifier(obj, mod)
+    # Blender 5.2 appends an empty slot per cutter even in INDEX mode (5.0 did not): drop the added slots; INDEX mode
+    # already maps cutter faces onto the object's own slots, so a face on an added slot is a real error.
+    used = max((p.material_index for p in obj.data.polygons), default=0)
+    if used >= slots:
+        raise RuntimeError(f"{obj.name}: boolean left faces on material slot {used} (only {slots} slots)")
+    while len(obj.data.materials) > slots:
+        obj.data.materials.pop()
     bpy.data.objects.remove(cutter, do_unlink=True)
     bpy.data.meshes.remove(me)
 
@@ -327,4 +335,62 @@ def check_outward(obj: "bpy.types.Object") -> int:
         centre = acc[0] / acc[1]
         if (p.center - centre).dot(p.normal) < -1e-9:
             bad += 1
+    return bad
+
+
+def check_outward_rays(obj: "bpy.types.Object") -> int:
+    """Faces whose normal points into their solid, by ray parity: a ray leaving a face along its normal crosses the
+    face's own closed shell (its loose part) an even number of times when the face points out. Right for concave
+    shells too (pockets, holes, frames), unlike ``check_outward``; per loose part, so touching or overlapping parts
+    (a pane in its stiles) do not count each other. The ray is skewed a little off the normal so it never runs along
+    an edge."""
+    from mathutils.bvhtree import BVHTree
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.normal_update()
+    bm.faces.ensure_lookup_table()
+    bm.verts.ensure_lookup_table()
+    part = [-1] * len(bm.faces)                     # loose part per face (faces linked through shared verts)
+    parts = []
+    for f0 in bm.faces:
+        if part[f0.index] >= 0:
+            continue
+        k, stack, faces = len(parts), [f0], []
+        part[f0.index] = k
+        while stack:
+            f = stack.pop()
+            faces.append(f)
+            for v in f.verts:
+                for g in v.link_faces:
+                    if part[g.index] < 0:
+                        part[g.index] = k
+                        stack.append(g)
+        vid = {}
+        for f in faces:
+            for v in f.verts:
+                vid.setdefault(v.index, len(vid))
+        co = [None] * len(vid)
+        for i, j in vid.items():
+            co[j] = bm.verts[i].co.copy()
+        parts.append((faces, BVHTree.FromPolygons(co, [[vid[v.index] for v in f.verts] for f in faces])))
+    skew = Vector((1.3e-3, 2.1e-3, 3.4e-3))
+    step = 2e-6                                     # 2 um in Blender metres: past a hit, far below any feature
+    bad = 0
+    for faces, tree in parts:
+        for j, f in enumerate(faces):
+            n = f.normal
+            if n.length < 0.5:
+                continue
+            d = (n + skew).normalized()
+            o = f.calc_center_median() + d * step
+            hits = 0
+            for _ in range(256):
+                loc, _nrm, idx, _dist = tree.ray_cast(o, d)
+                if loc is None:
+                    break
+                hits += idx != j                    # a non-planar face can sit a hair in front of its own centre
+                o = loc + d * step
+            if hits % 2:
+                bad += 1
+    bm.free()
     return bad
