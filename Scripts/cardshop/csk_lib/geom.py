@@ -841,3 +841,26 @@ ALL_ITEMS = {
     "showcase": item_showcase,
     "showcase_glass": item_showcase_glass, "showcase_door": item_showcase_door,
 }
+
+
+# =========================================================================== family modules (P3-P5)
+# Every csk_lib/fam_<family>.py adds its items here: ``ITEMS`` {key: item function}, optional ``CLASSES``
+# {code: spec.ItemClass} for new placement classes. A family module never edits this file, spec.py, shapes.py or
+# mesh.py, so parallel builders cannot conflict. Keys are prefixed with the family ("fam_b_collector").
+def _load_families() -> None:
+    import importlib
+    import pkgutil
+    from pathlib import Path
+    for m in sorted(pkgutil.iter_modules([str(Path(__file__).parent)]), key=lambda m: m.name):
+        if not m.name.startswith("fam_"):
+            continue
+        mod = importlib.import_module(f"{__package__}.{m.name}")
+        for code, c in getattr(mod, "CLASSES", {}).items():
+            S.CLASSES.setdefault(code, c)
+        for key, fn in getattr(mod, "ITEMS", {}).items():
+            if key in ALL_ITEMS:
+                raise KeyError(f"{m.name}: item key {key!r} is already registered")
+            ALL_ITEMS[key] = fn
+
+
+_load_families()

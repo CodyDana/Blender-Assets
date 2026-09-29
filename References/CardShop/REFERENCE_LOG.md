@@ -30,6 +30,7 @@ meshes are built new from the spec's numbers and no image goes into the product,
 | 20 | `csk_gondola.png` (not saved yet) | 20 gondola shelving | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 20 notes" |
 | 21 | `csk_wire_rack_box_shelf.png` (not saved yet) | 21 wire rack + box tier shelf | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 21 notes" |
 | 22 | `csk_card_table.png` (not saved yet) | 22 card tables | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 22 notes" |
+| 23 | `csk_easels_risers.png` (not saved yet) | 23 easels, risers, stands | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 23 notes" |
 | 24 | `csk_play_area.png` (not saved yet) | 24 play area | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 24 notes" |
 | 25 | `csk_counter_pos.png` (not saved yet) | 25 cash counter | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 25 notes" |
 | 26 | `csk_pos_devices.png` (not saved yet) | 26 POS devices | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 26 notes" |
@@ -40,6 +41,9 @@ meshes are built new from the spec's numbers and no image goes into the product,
 | 31 | `csk_posters_storefront.png` (not saved yet) | 31 posters + lightbox sign | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 31 notes" |
 | 32 | `csk_shell.png` (not saved yet) | 32 shop shell | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 32 notes" |
 | 33 | `csk_entry_door.png` (not saved yet) | 33 entry door | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 33 notes" |
+| 34 | `csk_lights.png` (not saved yet) | 34 lights | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 34 notes" |
+| 35 | `csk_scale_figure.png` (not saved yet) | 35 scale figure (dropped) | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 35 notes" |
+| 36 | `csk_wall_unit.png` (not saved yet) | 36 oak wall unit | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 36 notes" |
 
 ## Sheet 0 notes (style anchor)
 
@@ -173,7 +177,7 @@ matches the spec's numbers.
 5. **Shelf support:** a slotted standard with a round steel pin and a clear shelf clip.
 6. **LED:** an LED strip in an aluminium channel with a diffuser.
 
-## Sheets 8-33: files pending
+## Sheets 8-36: files pending
 
 These sheets arrived as mid-turn chat attachments, which the session did not save to disk. The notes below were written
 from the images as shown. The PNGs and hashes go in when the user re-sends them (or saves them to
@@ -373,9 +377,6 @@ A shared design rule shows on every package: a **two-tone colour block**, darker
 - **Lock:** a clamp and cylinder lock on each door's meeting edge. The right door is turned 180 degrees, so the two
   meet at the centre (sheet 6 shows the lock at the centre, seen through the front glass).
 
-## Sheet 23
-
-Not received yet (easels, risers and stands).
 
 ## Sheet 24 notes (play area: tournament tables F1, folding chair F2)
 
@@ -470,3 +471,37 @@ No dimensions are printed, so the spec numbers apply.
   and a threshold plate.
 - A blank **hanging sign** on the glass (sheet 30's window sign).
 - Opens 90 degrees (top view), pivoting on the hinge side.
+
+## Sheet 34 notes (lights J3)
+
+- **LED panel:** 600 x 600 x 12, a thin aluminium edge frame, a white diffuser, sits in the ceiling T-grid. Lit and
+  unlit states (emissive).
+- **Track:** a black rail 2000 x 35 x 20 with **3 spot heads**. Each head is a 70 x 150 cylinder on an adapter with a
+  pivot knuckle, the lens recessed in the front.
+- **Pendant:** a **dome shade 300 wide x 250 tall** on a 1000 cord with a round ceiling canopy, in matte black or white.
+
+## Sheet 35 notes (scale figure J4): dropped
+
+An artist's-mannequin figure, 1800 tall. **The user decided (2026-09-29) to use the UE mannequin for now; J4 is
+dropped from v1.** The sheet is kept for reference only.
+
+## Sheet 36 notes (oak wall unit, optional, now v1)
+
+- 1200 x 400 x 2100. **Light-oak side panels run full height** to the floor, with an oak top and **4 thick oak shelves
+  (about 30 mm)**, 400 deep, open to the wall.
+- Below: **white base cabinets 900 tall** with **4 doors** (2 pairs), small round knobs, a white top and a white plinth.
+  Inside: an adjustable shelf on pin holes, and concealed hinges.
+
+## Sheet 23 notes (easels A15, risers and stands A16)
+
+- **Bent easels** in 3 mm clear acrylic with polished edges: a back plate leaning back, a front lip, a folded foot.
+  - For slab: 66 x 57 x 64.
+  - For card: 76 x 60 x 57, 25 lip.
+  - Small: 54 x 54 x 51, 19 lip.
+  These match the spec (M).
+- **Slab riser block:** 200 x 80 x 25, 2 slots at 15 degrees back, a solid clear block with polished edges.
+  **3-tier riser:** 200 x 150 x 75, 3 steps of 2 slots (6 slots), 15 degrees back. Both as in spec.
+- **Card stands:** a **block stand with 1 slot**, 70 x 40 x 25. A **9-slot stand**: its label repeats "70 x 40 x 25",
+  but the picture shows 9 cards side by side in cross slots, which can't fit in 40 mm. **Built as 70 wide x 120 long x
+  25, 9 cross slots at 12 pitch** (a card is 63 wide; the length read against the cards). The spec's "3 or 9 slots"
+  becomes **1 or 9** (the picture). _Flagged for the user._
