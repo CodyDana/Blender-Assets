@@ -24,7 +24,7 @@ Vec3 = Tuple[float, float, float]
 
 # LOD0 budgets (the spec's Tris column, E). Raised, with the reason logged in the report and the item notes:
 #   Rack_Warehouse_1829 1500 -> 20000: sheet 28 draws keyhole slots on every upright face (2 columns on the front face,
-#     1 on the side), about 400 of them, and they are the rack's defining detail; each is a real 8-sided pocket. The
+#     1 on the side), 468 of them, and they are the rack's defining detail; each is a real 8-sided pocket. The
 #     fifth level (sheet 28) adds a deck and 4 beams.
 #   Workbench_1524 1500 -> 6000: sheet 28 draws a slot column on each leg's front face and a hole column on its side.
 #   TrashCan 800 -> 1200: the hollow inside (seen through the swinging flap, sheet 29) and the raised band's rounds.
@@ -1029,7 +1029,8 @@ def _bag_builder(level: int) -> Builder:
             depth = s["pleat"] * (1.3 if tuft else near) * tight
             pleat = (1.0 - depth) if k % 2 else 1.0
             amp = s["crumple"] * (2.5 if tuft else (0.3 if z < 1.0 else 1.0))
-            cr = 1.0 - amp * _hash(i, k, 7)          # dents only: the measured profile is the silhouette's outside
+            # dents only, on a profile 6 % fuller, so the dented silhouette spans the measured 450-464
+            cr = (1.0 if tuft or z < 1.0 else 1.06) * (1.0 - amp * _hash(i, k, 7))
             rr = r * pleat * cr
             tw = 0.3 * (2 * math.pi / segs) * near * (2 * _hash(i, k, 3) - 1)   # the twist round the neck
             if i == last:                             # the ruffled rim: petal tips at different heights, 610 the top
@@ -1067,8 +1068,8 @@ def item_trashbag() -> Item:
         name=name, lods=lods, materials=["M_CSK_BagBlack"], projections={},
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0.0, 0.0, 530.0))],
         hulls=[((mn[0], mn[1], 0.0), (mx[0], mx[1], mx[2]))], budget=BUDGETS[name],
-        data={"footprint_mm": [mx[0] - mn[0], mx[1] - mn[1], mx[2]], "pose": "upright", "pivot": "bottom-centre",
-              "reference": "References/CardShop/csk_bins.png (sheet 29 (2))",
+        data={"footprint_mm": [round(mx[0] - mn[0], 1), round(mx[1] - mn[1], 1), round(mx[2], 1)], "pose": "upright",
+              "pivot": "bottom-centre", "reference": "References/CardShop/csk_bins.png (sheet 29 (2))",
               "notes": ["Sheet 29: a crumpled full body, round shoulders, a twisted tied neck and a flared tuft. The "
                         "crumple is deterministic (a hash of ring and segment), so every build is identical.",
                         "Grip: at the twisted neck, where a hand holds it."]},

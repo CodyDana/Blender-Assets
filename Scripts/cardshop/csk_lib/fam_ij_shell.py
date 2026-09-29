@@ -177,7 +177,8 @@ HEAD = dict(                       # J3, sheet 34 (2) detail
     knuckle=(50.0, 6.0, 16.0, 5.0),  # sheet 34: the stem meets the body 1/3 from its rear: distance from the rear,
                                    # barrel radius, barrel length, gap above the body
     bezel=(4.0, 22.0, 13.0),       # sheet 34: front bezel ring width, reflector depth, reflector bottom radius
-    tilt=(0.0, 90.0, 45.0),        # E: tilt range (0 = aimed level at -Y, + = down) and the sheet's display pose
+    tilt=(0.0, 80.0, 45.0),        # E: tilt range (0 = aimed level at -Y, + = down; past 80 the rear cap meets the
+                                   # adapter) and the sheet's display pose
 )
 
 PENDANT = dict(                    # J3, sheet 34 (3)
@@ -189,7 +190,7 @@ PENDANT = dict(                    # J3, sheet 34 (3)
     collar=(31.0, 38.0),           # sheet 34: the cord collar on the dome: radius, height
     cord=(3.0, 1000.0),            # sheet 34: cord radius (6 mm) and the printed 1000 drop
     canopy=(50.0, 30.0),           # sheet 34 detail: round ceiling canopy radius, height
-    segs=(16, 12, 8),
+    segs=(16, 10, 6),
 )
 
 # =========================================================================== small maths
@@ -389,7 +390,10 @@ def _sign_hanger(level: int) -> Builder:
     cr, ch = s["cup"][0] / 2, s["cup"][1]
     segs = _lod_segs(level, 16, 8, 6)
     # the cup: back disc on the glass (y 0), a 1.5 rim, a shallow cone, a small flat nose
-    _revolve(b, "y", 0.0, 0.0, [(0.0, 0.0), (cr, 0.0), (cr, -1.5), (10.0, -ch), (0.0, -ch)], segs, PVC, side=-1)
+    cup = [(0.0, 0.0), (cr, 0.0), (cr, -1.5), (10.0, -ch), (0.0, -ch)]
+    if level == 2:
+        cup = [(0.0, 0.0), (cr, 0.0), (10.0, -ch), (0.0, -ch)]
+    _revolve(b, "y", 0.0, 0.0, cup, segs, PVC, side=-1)
     tw, tl = s["tab"]
     if level < 2:
         _box(b, (-tw / 2, -1.3, -cr - tl), (tw / 2, -0.3, -cr + 6.0), PVC)            # pull tab
@@ -1055,7 +1059,7 @@ def _door_frame_parts(level: int) -> Builder:
     # the bell (sheet 33): a round backplate on the header's outside face, a short arm, the bell, a clapper
     rr, bh, pr, pt = s["bell"]
     zhc = (zh + k["FH"]) / 2
-    segs = (10, 8, 6)[level]
+    segs = (10, 6, 6)[level]
     if level < 2:
         _cyl(b, "y", 0.0, zhc, pr, FD - 0.5, FD + pt, segs, STEEL)
     yb = FD + pt + rr
@@ -1066,8 +1070,9 @@ def _door_frame_parts(level: int) -> Builder:
         prof = [(0.0, bh), (0.6 * rr, bh * 0.8), (rr, 0.0), (0.0, 0.0)]
     _revolve(b, "z", 0.0, yb, [(r, z0 + t) for r, t in prof], segs, STEEL, side=-1)
     if level < 2:
-        _cyl(b, "z", 0.0, yb, 3.5, z0 + bh - 1.0, z0 + bh + 8.0, 6, STEEL)                  # knob
         _box(b, (-3.0, FD + pt - 0.5, z0 + bh + 2.0), (3.0, yb + 1.0, z0 + bh + 7.0), STEEL)  # arm to the backplate
+    if level == 0:
+        _cyl(b, "z", 0.0, yb, 3.5, z0 + bh - 1.0, z0 + bh + 8.0, 6, STEEL)                  # knob
         _octa(b, (0.0, yb, z0 - 3.0), 4.0, STEEL)                                            # clapper
     return b
 
@@ -1134,7 +1139,7 @@ def _door_leaf_parts(level: int) -> Builder:
     ym = (y0 + y1) / 2
     b = Builder()
     ox0, ox1, oz0, oz1 = x0 + so, x1 - so, rb, LH - rt
-    if level < 2:                                   # glazing bead, recessed from both faces
+    if level == 0:                                  # glazing bead, recessed from both faces
         _extrude(b, "y", [(ox0 - 1, oz0 - 1), (ox1 + 1, oz0 - 1), (ox1 + 1, oz1 + 1), (ox0 - 1, oz1 + 1)],
                  y0 + brec, y1 - brec, BLACK,
                  holes=[[(ox0 + bw, oz0 + bw), (ox1 - bw, oz0 + bw), (ox1 - bw, oz1 - bw), (ox0 + bw, oz1 - bw)]])
@@ -1150,7 +1155,7 @@ def _door_leaf_parts(level: int) -> Builder:
         for zz in (pz - pl / 2 + pin, pz + pl / 2 - pin):
             _cyl(b, "y", xp, zz, postr, y1 - 0.5, yp, (8, 6, 6)[level], STEEL)
     hz, hl, hr, hw = s["hinges"]
-    for z in hz:                                    # knuckles on the axis (they turn in place)
+    for z in (hz if level < 2 else ()):             # knuckles on the axis (they turn in place)
         zc = z - k["zl0"]
         _cyl(b, "z", 0.0, 0.0, hr, zc - hl / 2, zc + hl / 2, (8, 6, 6)[level], STEEL)
         if level == 0:
@@ -1302,7 +1307,7 @@ def _head_spot(level: int) -> Builder:
     BLACK, LED = 0, 1
     zc = -(kr + kg + r)                             # the body axis
     y_rear, y_front = kd, kd - L
-    segs = (16, 12, 8)[level]
+    segs = (16, 10, 8)[level]
     b = Builder()
     # one revolve (shared rings, no coincident vertices): rear cap, barrel, bezel, recess lip | reflector, lens
     if level < 2:
@@ -1315,7 +1320,7 @@ def _head_spot(level: int) -> Builder:
     _revolve(b, "y", 0.0, zc, prof, segs, mats, side=-1, phase=math.pi / segs)
     # the knuckle: a barrel on the tilt axis and a lug down into the body
     _cyl(b, "x", 0.0, 0.0, kr, -kl / 2, kl / 2, (8, 6, 6)[level], BLACK)
-    if level < 2:
+    if level == 0:
         _box(b, (-kl / 2 + 2.0, -kr * 0.7, zc + r - 3.0), (kl / 2 - 2.0, kr * 0.7, -kr * 0.5), BLACK)
     return b
 
@@ -1358,9 +1363,9 @@ def _pendant(level: int) -> Builder:
     prof = list(s["prof"]) if level == 0 else ([s["prof"][i] for i in (0, 2, 4, 5, 6, 7)] if level == 1 else
                                                [s["prof"][i] for i in (0, 3, 5, 7)])
     outer = [(R * f, z_rim + Hs * t) for t, f in prof]
-    inner = [(max(R * f - wl, 1.0), z_rim + (Hs - wl) * t) for t, f in prof]
-    if level > 0:
-        inner = [inner[0], inner[len(inner) // 2], inner[-1]]
+    inner = [(max(R * f - wl, 1.0), z_rim + (Hs - wl) * t) for t, f in s["prof"]]
+    # the inside follows the outside with fewer rows (LOD0: 5 of the 8 measured rows)
+    inner = [inner[i] for i in ((0, 2, 4, 6, 7), (0, 4, 7), (0, 7))[level]]
     # one closed thin shell: the inside (lit) from its top down to the rim, the rim, the outside up to its top
     path = [(0.0, inner[-1][1])] + list(reversed(inner)) + outer + [(0.0, outer[-1][1])]
     n_in = len(inner)
