@@ -20,7 +20,7 @@ build is byte-identical.
 from __future__ import annotations
 
 import math
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Sequence
 
 from . import geom as G
 from . import spec as S
