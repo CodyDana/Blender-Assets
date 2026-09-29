@@ -645,7 +645,20 @@ def hero_plinth(G, W, D, H):
     rr, segs = 0.035, 6
     bx, by = hw - 0.003, hd - 0.003
     z0 = 0.050
+    # rear dais b4 (blind judge delta 5: reference 2's altar is two-tier, a wide low plinth under a raised stand): the
+    # same 52 cm overall (USER DECISION) as a wide lower tier (to H1 = +0.36, the brass rim, the second line and the
+    # medallion as before) and a raised stand on it (2.0 x 0.55 m, set 5 cm back of centre, to the full H) with its
+    # own brass top rim; the kit's pivot, footprint, height and collision are unchanged
+    H_ALL, H = H, 0.36
     loft(a, bx, by, rr, segs, [(0, z0), (0, H - 0.0005)], LQ, cap_first=(LQ, -1), cap_last=(LQ, 1))
+    sw, sd, sy0 = hw - 0.20, 0.275, 0.05
+    ua = Acc()
+    loft(ua, sw, sd, 0.025, segs, [(0, H - 0.002), (0, H_ALL - 0.0005)], LQ, cap_first=(LQ, -1), cap_last=(LQ, 1))
+    loft(ua, sw, sd, 0.025, segs, [(-0.003, H_ALL - 0.007), (0.0025, H_ALL - 0.007), (0.0025, H_ALL - 0.0012),
+                                   (0.0013, H_ALL), (-0.010, H_ALL)], BRB, closed=True)
+    loft(ua, sw, sd, 0.025, segs, [(-0.003, H + 0.012), (0.0020, H + 0.012), (0.0020, H + 0.016), (-0.003, H + 0.016)],
+         BRB, closed=True)
+    ua.v = [(x, y + sy0, z) for x, y, z in ua.v]                  # set back (local +y is the back)
     # brass top rim wrapping over the edge (hero_plinth top view: a clear brass outline round the top)
     # fix 3: slimmer lines (rim face 10 -> 7 mm, second line 6 -> 4 mm) and the second line lower (its top 3.9 cm
     # under the top edge, hero_plinth.png)
@@ -674,7 +687,8 @@ def hero_plinth(G, W, D, H):
     # bump"): set 6.3 mm into the slab, an inlaid disc whose face stands 1 mm proud (inside the brass rim line)
     medallion(a, 0.0, -(by - 0.0063), (z0 + H - 0.043) / 2, 0.09, -1, k=0.7)
     a.emit(t)
-    return t.col(-hw - 0.013, hw + 0.013, -hd - 0.013, hd + 0.01, 0, H)   # the scripted collision, unchanged
+    ua.emit(t)
+    return t.col(-hw - 0.013, hw + 0.013, -hd - 0.013, hd + 0.01, 0, H_ALL)   # the scripted collision, unchanged
 
 
 def pieces(G):

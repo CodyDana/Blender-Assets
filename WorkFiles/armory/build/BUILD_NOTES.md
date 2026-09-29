@@ -1814,3 +1814,77 @@ before | Unreal after):
   cast no shadows, as in Blender).
 - Not addressed here: the case-top LED strip (M_AK_HLedStrip 0.6) stays dimmer than Blender (hi10 L 0.68 against
   0.81), and the pre-existing darker lantern paper in the new C1 framing (L 0.35 against 0.47).
+
+## 2026-09-28: Rear dais made live (night_live4) + Unreal night rebuild
+
+User: "review the back part of the armory. The reference seems to have more depth to it.. like more steps and also a
+showcase on both left and right corners. Also the lanterns used in the reference in the back part look like the ones in
+the front." The rear dais round 3 test-copy result (b9, `WorkFiles/armory/hero/room_preview/rear/b9`; blind judge
+6.5/10, no blockers) was built live under the ArmoryKit lock (claimed 21:28, released 21:32, before Unreal). The script
+edits were already live in `Scripts/armory/`. No MCP was used.
+
+**What b9 changes (live now):** one continuous 6-riser flight (0.15 m risers, 0.42 m going, Y 12.30 to the deck lip at
+Y 14.40, +0.90) with LED lines under every nose except the emblem riser; the low black-lacquer stair cheeks
+(`SM_AK_StairCheek`) whose front ends are the newels; all four rear lanterns are the developed `SM_AK_Lantern` design,
+uniformly scaled (`SM_AK_Lantern_M` x0.90 on the deck, `SM_AK_Lantern_S` x0.65 on the cheeks; same mesh design, not a
+redesign); terraced, panelled side zones (`SM_AK_Platform_Side_19`); the recessed corner showcases
+(`SM_AK_H_CornerShowcase`, empty, backlit `T_AK_HShowcasePanel`); the tall painting sheet regenerated for the new paper
+(`T_AK_HPaintingTall`).
+
+**Textures.** `T_AK_HPaintingTall_*` (`tex_backwall.py tall`) and `T_AK_HShowcasePanel_*`
+(`tex_rear_alcove.py HShowcasePanel`) were written into `Exports/ArmoryKit/Textures` by their own scripts; all six files
+are byte-identical (md5) to the test copy's `rear/Textures` sets.
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 108 pieces, hard fails 0; 108 FBX exported;
+`ArmoryKit.blend` saved with 571 instances (was 577); 106 lights, 125 materials, 50 hero-mapped meshes. New FBX:
+SM_AK_Steps_22, SM_AK_Platform_Edge_22, SM_AK_Platform_Side_19, SM_AK_StairCheek, SM_AK_Lantern_M, SM_AK_Lantern_S,
+SM_AK_H_CornerShowcase. Build log: `renders/night_live4/build_log.txt`.
+
+**Orphaned FBX** (not in the live layout.json) went to the Windows Recycle Bin (all five are also in git history):
+SM_AK_H_NewelLantern, SM_AK_LanternPedestal, SM_AK_Platform_Edge_2x1, SM_AK_Steps_2, SM_AK_WallPanel_Lit_190.
+`Exports/ArmoryKit` holds exactly the 108 layout pieces.
+
+**Walk check (live blend):** passed; every route clear, including the new rear routes (up the flight to the hero table,
+onto both side terraces, to both rear alcoves and both corner showcases); both controls blocked (case 1 at (6.0, 2.75),
+stone lantern at (7.58, -7.3)); entry_steps_ok. Largest step up on the rear routes 0.15 m. Log:
+`renders/night_live4/walk_log.txt`.
+
+**Renders** (Cycles 96 samples, night): `renders/night_live4/` C1, CX, C10, C3, CW, CG at 1600 x 900;
+`night_live4/ref_aspect/` C1 at 1448 x 1086. Sheets in `night_live4/compare/`:
+`C1_ref_vs_night_live2_vs_night_live4.png` (1448 x 1086 panels), `..._1600x900.png`, and
+`<cam>_night_live2_vs_night_live4.png` for CX, C10, C3, CW, CG.
+
+Whole-frame mean display luminance, night_live2 -> night_live4: C1 0.153 -> 0.162 (ref aspect 0.155 -> 0.160),
+CX 0.092 -> 0.093, C10 0.153 -> 0.178, C3 0.196 -> 0.229 (the lit flight fills the view), CW 0.108 -> 0.114,
+CG 0.121 -> 0.121.
+
+### Unreal night rebuild (21:33-21:37, all steps exit 0)
+No ArmoryLab editor was open and no other Unreal process ran. The Blender night baseline for `ak_image_stats.py` /
+`ak_compare_sheet.py` is now `renders/night_live4`; views it lacks (C4, C5) fall back to `night_live2` (`bl_file()`).
+
+| Step | Result |
+|---|---|
+| import | 108 meshes, 105 textures; stale deleted: the 5 orphaned meshes above, the unused `T_AK_HEntRushK_*` / `T_AK_HEntTimberL_*` (replaced by the new mat's sets in the previous build) and `T_AK_HNicheWashiRoom190_BC` |
+| materials | 10 masters, 125 instances, 108 meshes |
+| level | 571 actors; bounds gate max 0.0047 cm; 104 lights; setp_failed empty |
+| verify (fresh process) | Gates 1-7 all pass |
+| manny / character | Pass |
+| walk | passed; every route clear; both controls blocked; entry_steps_ok |
+| capture | 10 frames (`unreal/captures/`) |
+| stats / compare | `unreal/capture_stats.json`, `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+Whole-frame mean (Unreal / Blender night_live4): C1 ref aspect 0.155 / 0.160, C1 0.153 / 0.162, C10 0.191 / 0.178,
+C3 0.232 / 0.229, CW 0.119 / 0.114, CX 0.110 / 0.093, CG 0.144 / 0.121 (C4 0.149 / 0.136 and C5 0.127 / 0.110 against
+night_live2). C1 ref aspect, rear band (x 300-1148, y 0-330): L 0.164 / 0.151; the flight (x 560-890, y 220-330)
+L 0.206 / 0.207; painting box L 0.27 / 0.20 (Unreal's painting and rear screens read brighter and browner).
+
+**Open (b9 judge, 6.5/10; not addressed in this build):**
+- The rear bay reads about 1.25x too large / too close from the entrance (flanking posts ~500 px apart in C1 against
+  ~365 px; painting ~175 x 157 px against ~145 x 115). Push the back wall north or narrow the centre bay.
+- The wing fronts carry full-width glowing tread bands (bleachers, very visible in C3); the reference has plain dark
+  panelled plinth fronts on the wings and the stepped flight only between the flanking posts.
+- The deck strip in front of the hero table is thin; the reference sets the table, vases and lanterns further back.
+- The painting is near square (~1.1:1) inside a projecting portal with a lit lintel; the reference is landscape
+  (~1.26:1) in a recessed bay under the coffered ceiling.
+- The corner showcases read as freestanding tall vitrines; the reference has shallow lit wall niches.
+- The stair-foot lanterns sit on lower pedestals than the reference's post-style ones, slightly further out.

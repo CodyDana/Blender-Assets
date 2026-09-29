@@ -50,18 +50,40 @@ ROUTES = {
     # (entryfix: their fronts at Y 2.093) and up over the pit's side return onto the hall floor (one 12 cm step), then
     # up the aisle
     # entryfix r2: in front of the lanterns (their fronts now at Y 1.57), so Y 1.65 -> 1.1
-    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 12.3)],   # aisle X 2.3-5.0
-    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 12.3)],   # aisle X 7.0-9.7
+    # rear dais (2026-09-28): the flight's foot is Y 12.30 (X 3.80-8.20, cheek blocks X 3.45-3.80 / 8.20-8.55 from
+    # Y 12.30), the stair-foot lanterns on their stands X 2.95-3.41 / 8.59-9.05, Y 12.62-13.08: up the aisle to Y 11.92,
+    # in front of the cheek block (its cap from Y 12.29) to the flight and up its five 0.15 m risers onto the landing (+0.75)
+    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 11.92), (4.3, 11.92), (4.3, 13.9)],
+    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 11.92), (7.7, 11.92), (7.7, 13.9)],
     "west_wall_walk_along_niches": [(3.0, 1.5), (0.75, 1.5), (0.75, 12.9)],        # behind the west side cases
     "east_wall_walk_along_niches": [(9.0, 1.5), (11.25, 1.5), (11.25, 12.9)],      # behind the east side cases
     "centre_gap_case1_case2": [(3.0, 5.7), (9.0, 5.7)],                            # aisle to aisle, Y 4.4-7.0
     "centre_gap_case2_case3": [(3.0, 9.5), (9.0, 9.5)],                            # aisle to aisle, Y 8.2-10.8
-    "aisle_up_the_steps_to_hero_table": [(9.0, 12.25), (6.0, 12.25), (6.0, 13.95)],  # hero table front at Y 14.39
+    # rear dais: case 3's back is Y 11.8 (X 5.2-6.8); up the flight on a slant onto the landing, the hero table front
+    # at Y 14.55 on the +0.90 deck
+    "aisle_up_the_steps_to_hero_table": [(9.0, 11.92), (7.7, 11.92), (6.0, 13.95)],
     # building r5: from the top of the steps across the platform to the rear alcoves (between the heavy platform-front
     # posts, the hero table and the platform lanterns)
     # f1: the rear alcoves moved outboard (X 1.2-3.0 / 9.0-10.8), the platform lanterns to (3.55 / 8.45, 15.10)
-    "platform_to_west_rear_alcove": [(6.0, 12.25), (6.0, 13.95), (4.4, 13.95), (2.1, 14.4), (2.1, 14.95)],
-    "platform_to_east_rear_alcove": [(6.0, 12.25), (6.0, 13.95), (7.6, 13.95), (9.9, 14.4), (9.9, 14.95)],
+    # rear dais: up the flight to the landing (+0.75), across onto the side plinth (b4: +0.90 from Y 13.50, one 0.15 m
+    # step at X 3.80 / 8.20) to the alcove front (Y 15.40); the deck lanterns stand at X 3.27-3.73 / 8.27-8.73,
+    # Y 14.87-15.33
+    "platform_to_west_rear_alcove": [(6.0, 12.25), (6.0, 13.95), (4.3, 14.2), (2.1, 14.25), (2.1, 14.95)],
+    "platform_to_east_rear_alcove": [(6.0, 12.25), (6.0, 13.95), (7.7, 14.2), (9.9, 14.25), (9.9, 14.95)],
+    # rear dais: on to the corner showcases (b4: X 0.39-1.19 / 10.81-11.61, front Y 15.395), clear of the sill ledge
+    # (X 0-0.335 / 11.665-12, underside +2.55: head height on the +0.90 deck)
+    "platform_to_west_corner_showcase": [(6.0, 12.25), (6.0, 13.95), (4.3, 14.2), (2.1, 14.25), (0.73, 14.95)],
+    "platform_to_east_corner_showcase": [(6.0, 12.25), (6.0, 13.95), (7.7, 14.2), (9.9, 14.25), (11.27, 14.95)],
+    # rear dais: up the flight on the axis and the deck riser to the hero table's front (Y 14.55)
+    # b4: the table is Y 14.90-15.80 now: on up the plain deck riser onto the deck in front of it
+    "axis_up_the_flight_to_hero_table_front": [(6.0, 12.25), (6.0, 14.50)],
+    # b4: the side plinths are +0.90 from the landing front (Y 13.50): from the landing across onto the west / east
+    # plinth (one 0.15 m step at X 3.80 / 8.20), past the newel side walls (to Y 13.50) and the heavy posts (Y 13.18-13.48)
+    # b7: the side zones are terraced in the flight's rows (cabinet +0.60 from Y 13.56, tread +0.75 from 13.98, deck
+    # +0.90 from 14.40): along the +0.60 row (Y 13.85: 0.37 m behind the heavy posts' back faces, Y 13.48) across the
+    # full width of the room
+    "flight_onto_west_side_terrace": [(5.0, 13.85), (0.8, 13.85)],
+    "flight_onto_east_side_terrace": [(7.0, 13.85), (11.2, 13.85)],
     # layout 2 (entrance.png's composition): from the mat along the inside of the south wall across the genkan floor,
     # past the parked leaves (X 2.25-3.95 / 8.05-9.75, genkan: standing on its floor, room face Y 0.19 + hardware) and the inner jamb bands (X 2.11-2.25 / 9.75-9.89, to Y 0.215) up to the deep jamb
     # posts at the frame's outer ends (plinths X 1.57-2.15 / 9.85-10.43, Y 0-0.84; the sconces on their room faces hang

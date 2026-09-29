@@ -430,20 +430,39 @@ def newel_lantern(G):
     return ln
 
 
+# rear dais (2026-09-28, the user: "the lanterns used in the reference in the back part look like the ones in the
+# front"): the newel lanterns are no longer placed (instances() / lights() empty; newel_lantern() stays for reference,
+# out of pieces()). Every rear lantern is SM_AK_Lantern (the kit's LANTERNS) on SM_AK_LanternPedestal below.
+
+
+def lantern_stand(G, name="SM_AK_LanternPedestal", key="STAND_H"):
+    """SM_AK_LanternPedestal (rear dais): the rear lanterns' open stand, STAND_H tall. armory3_reference2.png's rear
+    lanterns (the deck pair beside the vases and the stair-foot pair) are the floor andon raised on dark corner posts
+    that run on down as open legs: four legs exactly under the lantern's corner posts (the lantern's post-width feet
+    stand on their tops, so each post reads as one member down to the floor), a top frame between them (the rails
+    5 mm behind the post faces, as the lantern's), a recessed dark top board, and a low stretcher frame near the floor;
+    the lantern's near-black brushed lacquer with the worn-bronze arris line."""
+    sh = G[key]   # b4: SM_AK_LanternPedestal_Tall (STAND_H_TALL) under the stair-foot pair, same members
+    st = G["Piece"](name)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            cx, cy = sx * PX, sy * PX
+            frame_box(st, cx - PH, cx + PH, cy - PH, cy + PH, 0.0, sh, "z", 0.002, wear=0.95)
+    for face in ("-y", "+y", "-x", "+x"):
+        along = "x" if face in ("-y", "+y") else "y"
+        for z0, z1 in ((0.045, 0.072), (sh - 0.036, sh - 0.001)):
+            _face_box(st, face, -IN - 0.003, IN + 0.003, RAIL_OUT[0], RAIL_OUT[1], z0, z1, along, 0.002, 0.95)
+    frame_box(st, -IN, IN, -IN, IN, sh - 0.026, sh - 0.012, "x", 0.0015, wear=0.3)          # recessed top board
+    st.col(-PO, PO, -PO, PO, 0, sh)
+    return st
+
+
 def instances():
-    """The newel lanterns on the stair-foot newels' top plates (build_armory_kit NEWEL_X / NEWEL_Y / NEWEL_TOP)."""
-    G = H.G
-    return [("SM_AK_H_NewelLantern", x, G["NEWEL_Y"], G["NEWEL_TOP"], 0.0) for x in G["NEWEL_X"]]
+    return []
 
 
 def lights():
-    """One warm point light in each newel lantern (role lantern, as the floor lanterns': 2700 K, no shadows), at the
-    pane centre, half the floor lantern's power (the head is about a third of its volume)."""
-    G = H.G
-    return [{"type": "point", "name": f"NewelLantern_{x}_{G['NEWEL_Y']}",
-             "loc": [x, G["NEWEL_Y"], round(G["NEWEL_TOP"] + NL_LIGHT["dz"], 4)], "radius": NL_LIGHT["radius"],
-             "kelvin": 2700, "role": "lantern", "shadows": False, "power_scale": NL_LIGHT["power_scale"]}
-            for x in G["NEWEL_X"]]
+    return []
 
 
 # ------------------------------------------------------------------------------------------------ vases
@@ -1272,4 +1291,9 @@ def pieces(G):
         lxs = lx
     L = vase(G, "SM_AK_Vase_Plum_L", 0.56, 0.155, rl_max, PROFILE_L, CFG_L["vase_sides"], (-lxs, -ly, 0), (lxs, ly, 1.32),
              1, Vector((0, -1, 0.25)), 11, CFG_L, col_box=(-lx, lx, -ly, ly, 0, 1.32) if L_FAN_ALONG_X else None)
-    return [lantern(G), newel_lantern(G), s, L]
+    # rear dais b7 (blind judge deltas 1 / 2): the rear lanterns are this andon, uniformly scaled (build_armory_kit
+    # scaled_piece: the same mesh, x LANTERN_M on the deck, x LANTERN_S on the stair cheeks); no stands any more
+    # (lantern_stand() stays for reference, out of the build)
+    ln = lantern(G)
+    return [ln, G["scaled_piece"](ln, "SM_AK_Lantern_M", G["LANTERN_M"]),
+            G["scaled_piece"](ln, "SM_AK_Lantern_S", G["LANTERN_S"]), s, L]

@@ -399,7 +399,8 @@ def sill_ledge(G):
 
 def pieces(G):
     _K[0] = 0
-    return [wall_panel(G, "SM_AK_WallPanel_Lit", G["NICHE_H_FLOOR"], G["NICHE_DADO_FLOOR"]),
-            wall_panel(G, "SM_AK_WallPanel_Lit_190", G["NICHE_H_PLAT"], G["NICHE_DADO_PLAT"]),
-            window_lattice(G),
-            sill_ledge(G)]
+    # rear dais (2026-09-28): the platform bay (SM_AK_WallPanel_Lit_190) is built only while the kit places it
+    # (build_armory_kit NICHE_Y_PLAT; empty since the deck rose to +0.90)
+    return [wall_panel(G, "SM_AK_WallPanel_Lit", G["NICHE_H_FLOOR"], G["NICHE_DADO_FLOOR"])] + (
+        [wall_panel(G, "SM_AK_WallPanel_Lit_190", G["NICHE_H_PLAT"], G["NICHE_DADO_PLAT"])] if G["NICHE_Y_PLAT"] else []
+    ) + [window_lattice(G), sill_ledge(G)]

@@ -1,7 +1,7 @@
 """Comparison sheets for the Unreal captures (system Python with Pillow: `py -3 ak_compare_sheet.py`).
 
 For every capture in WorkFiles/armory/build/unreal/captures/<name>.png: Blender render of the preset (env AK_PRESET,
-default night: renders/night_live2; golden: renders/hero_live) | Unreal
+default night: renders/night_live4, fallback night_live2; golden: renders/hero_live) | Unreal
 capture, same height, labelled; C1 at the reference aspect also gets the LOOK reference on the left. Out:
 WorkFiles/armory/build/unreal/compare/<name>_blender_vs_unreal.png (C1 ref aspect: reference_blender_unreal_C1.png).
 """
@@ -13,7 +13,16 @@ from PIL import Image, ImageDraw
 ROOT = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory")
 CAP = ROOT / "build" / "unreal" / "captures"
 PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # night + genkan (2026-09-28)
-BL = ROOT / "build" / "renders" / ("night_live2" if PRESET == "night" else "hero_live")   # golden: hero round (was stage_f2)
+# rear dais live (2026-09-28): night = renders/night_live4; views it lacks (C4, C5) fall back to night_live2
+BL = ROOT / "build" / "renders" / ("night_live4" if PRESET == "night" else "hero_live")   # golden: hero round (was stage_f2)
+BL_FALLBACK = ROOT / "build" / "renders" / "night_live2" if PRESET == "night" else None
+
+
+def bl_file(rel):
+    b = BL / rel
+    if not b.exists() and BL_FALLBACK is not None and (BL_FALLBACK / rel).exists():
+        return BL_FALLBACK / rel
+    return b
 REF = ROOT / "reference" / "armory3_reference2.png"
 OUT = ROOT / "build" / "unreal" / "compare"
 H = 540
@@ -46,12 +55,12 @@ def main():
         name = p.stem
         if name.endswith("_ref_aspect"):
             cam = name.replace("_ref_aspect", "")
-            b = BL / "ref_aspect" / f"{cam}_{PRESET}.png"
+            b = bl_file(Path("ref_aspect") / f"{cam}_{PRESET}.png")
             tiles = [tile(REF, "reference 2")] + ([tile(b, f"Blender {PRESET}")] if b.exists() else []) + \
                 [tile(p, f"Unreal {PRESET}")]
             sheet(tiles, OUT / f"reference_blender_unreal_{cam.split('_')[0]}.png")
             continue
-        b = BL / f"{name}_{PRESET}.png"
+        b = bl_file(f"{name}_{PRESET}.png")
         tiles = ([tile(b, f"Blender {PRESET}")] if b.exists() else []) + [tile(p, f"Unreal {PRESET}")]
         sheet(tiles, OUT / f"{name}_blender_vs_unreal.png")
 

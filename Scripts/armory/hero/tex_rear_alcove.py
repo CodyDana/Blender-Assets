@@ -123,8 +123,54 @@ def grille_glow(w=1024, h=512, seed=451):
     return MT.save_set("HAlcoveGrille", np.clip(col, 0, 1), np.full((h, w), 0.5), 0.0, np.full((h, w), 0.9))
 
 
+def showcase(w=512, h=512, seed=471):
+    """Rear dais (2026-09-28): the corner showcases' backlit panel (hero_rear_alcove SM_AK_H_CornerShowcase: x 0.08..0.62,
+    z 0.75..1.75 in the piece, 0.54 x 1.00 m, unique 0-1 UV), after armory3_reference2.png's corner niches: a paler,
+    creamier parchment than the rack alcoves' amber panel, the same soft cloudy mottle and faint marbling, a warm LED halo
+    inside the side and head edges and a hot spot under the soffit lens at the top centre."""
+    # b4: the 0.64 x 0.71 m panel of the shorter, wider unit (x 0.08..0.72, z 0.75..1.46)
+    # b8: the 0.54 x 0.99 m panel of the taller unit (x 0.08..0.62, z 0.62..1.61)
+    x0, x1, z0, z1 = 0.08, 0.62, 0.62, 1.61
+    vx0, vx1, vz0, vz1 = 0.082, 0.618, 0.622, 1.588   # inside the frame, under the head line
+    u = (np.arange(w)[None, :] + 0.5) / w
+    v = 1.0 - (np.arange(h)[:, None] + 0.5) / h
+    x = x0 + u * (x1 - x0)
+    z = z0 + v * (z1 - z0)
+    sx = (z1 - z0) / (x1 - x0)
+    cloud = MT.pnoise(h, w, 1.8, seed, stretch_u=sx)
+    fine = MT.pnoise(h, w, 1.3, seed + 1, stretch_u=sx)
+    m = np.clip(0.5 + 0.10 * cloud + 0.045 * fine, 0, 1)
+    rid = MT.pnoise(h, w, 1.9, seed + 2, stretch_u=sx)
+    mask = np.clip(0.55 + 0.6 * MT.pnoise(h, w, 2.4, seed + 3, stretch_u=sx), 0.15, 1)
+    vein = np.exp(-(rid / 0.05) ** 2) * mask
+    # b2: a little deeper and warmer (b1 read near-white in the golden C1, whiter than the rack alcoves)
+    base, deep, pale = MT.srgb("#A98450"), MT.srgb("#9A7746"), MT.srgb("#B8935C")
+    t = (m - 0.5)[..., None]
+    col = base + (deep - base) * np.clip(t, 0, None) * 3.0 + (pale - base) * np.clip(-t, 0, None) * 3.0
+    col = col * (1.0 - 0.04 * vein[..., None])
+
+    def fall(d):
+        return np.exp(-np.power(np.clip(d, 0, None) / 0.045, 1.4))
+    e = [fall(x - vx0), fall(vx1 - x), fall(vz1 - z), 0.6 * fall(z - vz0)]
+    halo = 1.0 - (1 - e[0]) * (1 - e[1]) * (1 - e[2]) * (1 - e[3])
+    hot = np.exp(-(((x - 0.35) / 0.16) ** 2 + ((z - vz1) / 0.22) ** 2))
+    col = col + (MT.srgb("#FFB84A") - col) * (0.50 * halo)[..., None]   # b4: 0.70 -> 0.50 (no side LED lines)
+    col = col + (MT.srgb("#FFD890") - col) * (0.80 * hot)[..., None]
+    height = 0.5 + 0.10 * cloud + 0.05 * fine - 0.06 * vein
+    rough = np.full_like(m, 0.85) + 0.05 * fine
+    return MT.save_set("HShowcasePanel", np.clip(col, 0, 1), height, 0.6, np.clip(rough, 0.6, 0.95))
+
+
 if __name__ == "__main__":
-    for nm in (NAME, "HAlcoveReturn", "HAlcoveGrille"):
+    # rear dais (2026-09-28): [--out DIR] (a test copy's <preview dir>/Textures) [set names: HAlcovePanel HAlcoveReturn
+    # HAlcoveGrille HShowcasePanel; default: all]
+    argv = sys.argv[1:]
+    if "--out" in argv:
+        MT.OUT = Path(argv[argv.index("--out") + 1])
+        del argv[argv.index("--out"):argv.index("--out") + 2]
+    makers = {NAME: panel, "HAlcoveReturn": return_timber, "HAlcoveGrille": grille_glow, "HShowcasePanel": showcase}
+    want = argv or list(makers)
+    for nm in want:
         for suf in ("BC", "ORM", "N"):
-            assert (MT.OUT / f"T_AK_{nm}_{suf}.png").name.startswith("T_AK_HAlcove")
-    print(json.dumps([panel(), return_timber(), grille_glow()], indent=2))
+            assert (MT.OUT / f"T_AK_{nm}_{suf}.png").name.startswith(("T_AK_HAlcove", "T_AK_HShowcase"))
+    print(json.dumps([makers[nm]() for nm in want], indent=2))

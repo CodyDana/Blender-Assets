@@ -15,7 +15,7 @@
 #              reference's 1448 x 1086), repeated captures; then ak_crop.py (system Python) crops the shift-lens views
 #   stats      (system Python, Pillow) ak_image_stats.py: tone / colour vs the Blender renders of the preset and the reference
 # Lighting preset (night + genkan, 2026-09-28): env AK_PRESET, default "night" (the moon, night practicals, no fog, night
-# exposure; Blender baseline renders/night_live2). AK_PRESET=golden rebuilds the golden-hour level (baseline hero_live).
+# exposure; Blender baseline renders/night_live4, fallback night_live2). AK_PRESET=golden rebuilds the golden-hour level (baseline hero_live).
 # Run materials, level, verify, capture and stats with the SAME preset (the scenery-card dimming lives in the materials).
 # Guard (house rule): before every Unreal step, if an UnrealEditor.exe has ArmoryLab.uproject open, STOP (exit 3)
 # without touching the project: the user must close it.
