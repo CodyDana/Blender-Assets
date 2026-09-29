@@ -41,13 +41,16 @@ OPEN = dict(                    # B1 Open: sheet 4 (opened view + close-up); the
 
 STRIP = dict(                   # B1 Strip: sheet 4 (the strip on its own)
     h=12.0,                     # E (spec 67 x 12); sheet 4 measures 12.1 at 19.4 px/mm
+    teeth_band=2.6,             # sheet 4 strip view: the teeth with their ribs (tooth depth 1.4 as the pack)
+    seal_band=3.9,              # sheet 4 strip view: the flat seal band with its horizontal ridges; foil below (5.5)
+    ridge=0.3,                  # E: the seal band's two pressed ridges, raised (0.5 wide: crisp lines as the sheet)
     jag=0.6,                    # sheet 4: the torn lower edge, irregular, +-0.6
     crumple=0.45,               # sheet 4: the torn foil below the seal strip is wrinkled, +-0.45
 )
 
 WRAPPER = dict(                 # B1 Wrapper: sheet 4 (the crumpled wrapper), lying back up (the fin seal shows)
     t=(0.45, 0.2, 0.3),         # E: body thickness (two skins), bottom skin only (the silver bites), crimp
-    amp=2.0, creases=18,        # E: crumple crease height and count (sheet 4: sharp facets about 10-20 mm)
+    amp=1.8, creases=22,        # E: crumple crease height and count (sheet 4: sharp facets about 10-20 mm)
     jitter=(1.0, 1.5, 0.35),    # E: interior vertex jitter x, y, z (breaks the grid into irregular facets)
     ramp=0.35,                  # E: the torn top-skin edge round a bite
     # sheet 4: the top skin is torn away along both long edges, showing the silver inside of the bottom skin:
@@ -88,7 +91,9 @@ COLLECTOR = dict(               # B3: sheet 10 (1)
 TUCK = dict(                    # B7: sheet 10 (2)
     w=70.0, d=30.0, h=95.0,     # E (spec, no source)
     board=0.4,                  # E: folding-carton board (the thumb cut's depth)
-    notch=(30.0, 10.0, 8),      # sheet 10 close-up: half-moon thumb cut, width x depth, arc segments
+    # sheet 10 close-up (measured against the 34 render at the same view): half-moon thumb cut 30 wide x 11.5 deep,
+    # a flat-bottomed curve (superellipse n 2.5, 6 segments) with 2 mm rounded shoulders into the top edge
+    notch=(30.0, 11.5, 6), notch_n=2.5, notch_r=2.0,
     film=0.3, film_r=2.0,       # sheet 10 "shrink-wrapped": film clearance, soft vertical corners (as the S sealed box)
     tuck=15.0,                  # E: tuck flap depth (dieline only)
     bevel=0.3,                  # E: folded-board edge
@@ -97,7 +102,7 @@ TUCK = dict(                    # B7: sheet 10 (2)
 BUDGETS = {
     "SM_CSK_Pack_Std_Open": 1950,       # spec 250 (E): 27 ribbed teeth + fin (as the Sealed, 1500) + the silver inside
     "SM_CSK_Pack_Std_Wrapper": 1750,    # spec 200 (E): both crimps' 27 teeth (sheet 4) + crumple facets
-    "SM_CSK_Pack_Std_Strip": 750,       # spec 40 (E): 27 ribbed teeth + the torn edge (sheet 4)
+    "SM_CSK_Pack_Std_Strip": 850,       # spec 40 (E): 27 ribbed teeth + the torn edge (sheet 4)
     "SM_CSK_Box_Booster_L": 400,
     "SM_CSK_Box_Booster_L_Lid": 150,
     "SM_CSK_Box_Booster_L_Sealed": 400,
@@ -372,7 +377,7 @@ def item_pack_open() -> Item:
             R_IN_A: _in_proj(w, -h / 2, h, 0), R_IN_B: _in_proj(w, -h / 2, h, 1),
             **_pack_edge_proj(w, -h / 2, h, z1)}
     mouth_z = zm + (gF - gB) / 2 + 0.0                 # the mouth's centre between the two torn edges
-    strip_zs = S.PACK_STD["edge_t"] / 2 + S.PACK_STD["rib"] + STRIP["crumple"]
+    strip_zs = _strip_builder(0).crimp_z                 # the strip's crimp mid-plane in its own (Seat) frame
     return Item(
         name="SM_CSK_Pack_Std_Open", lods=lods, materials=["M_CSK_Pack", "M_CSK_PackInner"], projections=proj,
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0, -h / 2, zm)), Socket("Face", (0, 0, z_face)),
@@ -397,18 +402,20 @@ def item_pack_open() -> Item:
 # =========================================================================== B1 Strip (sheet 4)
 
 def _strip_builder(level: int) -> Builder:
-    """Sheet 4, the tear strip on its own: the pack's top crimp (27 ribbed teeth, the flat seal strip) and 3 of
-    wrinkled foil below it, torn along an irregular lower edge. 67 x 12 x 0.3 film, lying front up."""
+    """Sheet 4, the tear strip on its own (67 x 12, lying front up), read off the sheet's strip view top to bottom:
+    the 27 serrated teeth with one pressed rib each (a 2.6 band), a flat seal band carrying two raised horizontal
+    ridges (3.9), then wrinkled foil (5.4) torn along an irregular lower edge. Film 0.3; the ridges and ribs move
+    both skins (pressed), so the strip keeps its thickness everywhere."""
     p, s = S.PACK_STD, STRIP
-    w, h, et = p["w"], p["h"], p["edge_t"]
+    w, et = p["w"], p["edge_t"]
     hs = s["h"]
     n2, cols, teeth, ribs, _ = _pack_cols(level)
     fine = list(range(n2 + 1))
     crimp = fine if teeth else cols
-    dy = h / 2 - hs / 2                          # pack y = strip y + dy
-    y_rib = h / 2 - p["crimp"] + p["seal"] - dy
-    y_seal = h / 2 - p["crimp"] - dy
-    jag_cols = fine[::2] if level == 0 else cols if level == 2 else fine
+    jag_cols = fine[::2] if level < 2 else cols
+    seal_cols = {0: [0, 9, 18, 27, 36, 45, 54], 1: [0, 3, 6, 9, 12, 15, 18]}.get(level, cols)
+    y_teeth = hs / 2 - s["teeth_band"]           # the ribbed teeth band's lower edge
+    y_foil = y_teeth - s["seal_band"]            # the seal band's lower edge; wrinkled foil below
     zc = et / 2 + p["rib"] + s["crumple"]        # every LOD: the lowest point near z 0
     xk = lambda k: -w / 2 + w * k / n2
     rib = lambda k: ((p["rib"] if k % 2 else -p["rib"]) if ribs else 0.0)
@@ -417,11 +424,16 @@ def _strip_builder(level: int) -> Builder:
     jag = lambda k: (s["jag"] * (2 * _hash(k, 3) - 1)) if 0 < k < n2 else 0.0      # an irregular tear
     wrinkle = lambda k, r: s["crumple"] * (2 * _hash(k, r, 5) - 1)
     y_jag = -hs / 2 + s["jag"] + 0.1                      # the torn edge's mean line (lowest tooth at -hs/2 + 0.1)
-    y_mid = y_jag + s["jag"] + 0.65                       # a wrinkle row, at least 0.5 above the highest tooth
+    y_mid = (y_jag + s["jag"] + y_foil) / 2               # a wrinkle row between the tear and the seal band
     rows.append((jag_cols, lambda k: y_jag + jag(k), lambda k: wrinkle(k, 1)))
     rows.append((jag_cols, lambda k: y_mid + 0.15 * (2 * _hash(k, 9) - 1), lambda k: wrinkle(k, 2)))
-    rows.append((cols, lambda k: y_seal, lambda k: 0.0))
-    rows.append((crimp, lambda k: y_rib, rib))
+    if level == 0:                               # the seal band: two sharp pressed ridges (flat, up, flat) x 2
+        for fy, up in ((0.0, 0), (0.13, 1), (0.26, 0), (0.56, 0), (0.69, 1), (0.82, 0)):
+            rows.append((seal_cols, (lambda yr: lambda k: yr)(y_foil + s["seal_band"] * fy),
+                         (lambda up: lambda k: s["ridge"] * up)(up)))
+    else:
+        rows.append((seal_cols, lambda k: y_foil, lambda k: 0.0))
+    rows.append((crimp, lambda k: y_teeth, rib))
     rows.append((crimp, lambda k: hs / 2 - (0.0 if (k % 2 == 1 or not teeth) else p["tooth_d"]), rib))
     top, bot = [], []
     for ks, yf, dz in rows:
@@ -433,7 +445,10 @@ def _strip_builder(level: int) -> Builder:
     _end_faces(b, top[0], bot[0], (0, -1, 0), R_EDGE)
     _end_faces(b, top[-1], bot[-1], (0, 1, 0), R_EDGE + 2)
     _side_faces(b, top, bot)
-    return b
+    b.crimp_z = zc                               # the crimp's mid-plane before the Seat shift (the Open's spawn)
+    zmin = min(v[2] for v in b.verts)
+    b.crimp_z -= zmin
+    return G._shift_z(b, -zmin)                  # the Seat on the lowest point
 
 
 def item_pack_strip() -> Item:
@@ -451,8 +466,11 @@ def item_pack_strip() -> Item:
         data={"footprint_mm": [round(x1 - x0, 3), round(y1 - y0, 3), round(z1 - z0, 3)], "states": ["Strip"],
               "state_of": "SM_CSK_Pack_Std_Sealed", "pose": "lying front up, teeth to +Y",
               "reference": "References/CardShop/csk_pack.png (sheet 4)",
-              "notes": ["Sheet 4: the ribbed crimp with its 27 teeth, the flat seal strip, then wrinkled foil torn "
-                        "along an irregular edge; UVs carry the top 12 of the pack art.", "Litter (spec 3.H)."]},
+              "notes": ["Sheet 4 strip view: 27 teeth with a pressed rib each (2.6 band), a seal band with two "
+                        "horizontal ridges (3.9), then wrinkled foil torn along an irregular edge (5.5); UVs carry the "
+                        "top 12 of the pack art.",
+                        "The strip view's band layout differs from the pack close-up (ribs over the whole 7.1 crimp) "
+                        "that the Sealed pack follows: the strip is built to its own view.", "Litter (spec 3.H)."]},
     )
 
 
@@ -465,7 +483,7 @@ def _crumple(x: float, y: float) -> float:
     for i in range(wr["creases"]):
         th = math.pi * _hash(i, 1)
         d = (_hash(i, 2) - 0.5) * 100.0
-        r = 6.0 + 12.0 * _hash(i, 3)
+        r = 4.0 + 7.0 * _hash(i, 3)
         a = (0.5 + 0.5 * _hash(i, 4)) * (1.0 if _hash(i, 5) > 0.45 else -1.0)
         s = x * math.cos(th) + y * math.sin(th) - d
         c += a * max(0.0, 1.0 - abs(s) / r)
@@ -933,14 +951,18 @@ def item_deck_tuck() -> Item:
           regions={"ny": 10, "px": 11, "py": 12, "nx": 13, "nz": 14, "pz": 15})
     cut = Builder()
     top = H + f
-    outline = [(-nw / 2, top + 1.0)] + [(nw / 2 * math.cos(math.pi + math.pi * i / segs),
-                                         top + nd * math.sin(math.pi + math.pi * i / segs)) for i in range(segs + 1)]
-    outline += [(nw / 2, top + 1.0)]
+    a, r, n = nw / 2, t["notch_r"], t["notch_n"]
+    sp = lambda v: math.copysign(abs(v) ** (2.0 / n), v)            # superellipse parametrisation
+    main = [(a * sp(math.cos(th)), top - r + (nd - r) * sp(math.sin(th)))
+            for th in (math.pi + math.pi * i / segs for i in range(segs + 1))]
+    c45 = r * (1 - math.sqrt(0.5))
+    left = [(-a - r, top + 1.0), (-a - r, top), (-a - c45, top - c45)]          # the rounded shoulder, then the cut
+    outline = left + main + [(-x, z) for x, z in reversed(left)]
     y0, y1 = -D / 2 - 1.0, -D / 2 + bd
     fl = [cut.v(x, y0, z) for x, z in outline]
     bk = [cut.v(x, y1, z) for x, z in outline]
-    cut.face(tuple(fl), 0)
-    cut.face(tuple(reversed(bk)), 0, 16)            # the recess floor = the tuck flap's print
+    cut.fill([fl], 0, 0, (0, -1, 0))               # concave caps: constrained triangulation (fill)
+    cut.fill([bk], 0, 16, (0, 1, 0))                # the recess floor = the tuck flap's print
     for i in range(len(outline)):
         j = (i + 1) % len(outline)
         cut.face((fl[i], bk[i], bk[j], fl[j]), 0)
@@ -958,7 +980,7 @@ def item_deck_tuck() -> Item:
         budget=BUDGETS["SM_CSK_Deck_Tuck"],
         data={"footprint_mm": [W + 2 * f, D + 2 * f, Hs], "stack": {"socket": "Stack", "pitch_mm": Hs, "max": 4},
               "dieline_mm": list(uv), "reference": "References/CardShop/csk_collector_box.png (sheet 10 (2))",
-              "notes": ["Sheet 10: closed tuck box with the half-moon thumb cut (30 x 10) in the front panel's top "
+              "notes": ["Sheet 10: closed tuck box with the half-moon thumb cut (30 x 11.5) in the front panel's top "
                         "edge; shrink film (sealed, as the sheet's first view); dark-red body over a light-red third "
                         "is print."]},
     )
