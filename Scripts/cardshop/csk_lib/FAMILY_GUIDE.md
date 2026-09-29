@@ -126,8 +126,10 @@ reference to the T":
 - nothing invented that the reference doesn't show;
 - dimensions from the spec (M wins; the picture wins over an E value, and you log it).
 
-Sheets 0-7 are on disk in `References/CardShop/` (the style anchor `csk_style_anchor.png` sets the kit's palette and
-materials). Sheets 8-36 are not on disk yet: work from their notes in the log.
+All the sheets (0-36) are on disk in `References/CardShop/` (file names in the log's table). **Open your sheets and
+look at them** (the Read tool shows images; crop and zoom with Pillow from the bpy venv to measure), then read their
+notes in the log. The style anchor `csk_style_anchor.png` sets the kit's palette and materials. Render your build and
+the matching crop of the sheet side by side before calling an item done.
 
 ## Report (`WorkFiles/cardshop/families/<family>.md`)
 

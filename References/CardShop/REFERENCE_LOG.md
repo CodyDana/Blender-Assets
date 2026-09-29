@@ -15,35 +15,35 @@ meshes are built new from the spec's numbers and no image goes into the product,
 | 5 | `csk_booster_box.png` | 5 booster display box | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | d4cd57f6deecfe62 | Pass (dimension call-outs only) | See "Sheet 5 notes" |
 | 6 | `csk_showcase_full.png` | 6 full-vision counter | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | aa4408cb387276b5 | Pass | See "Sheet 6 notes" |
 | 7 | `csk_showcase_detail.png` | 7 counter details | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | d321077786d405c9 | Pass | See "Sheet 7 notes" |
-| 8 | `csk_sleeves_holders.png` (not saved yet) | 8 sleeves and holders | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 8 notes" |
-| 9 | `csk_grade_return.png` (not saved yet) | 9 grading-return box | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 9 notes" |
-| 10 | `csk_collector_box.png` (not saved yet) | 10 collector box + starter deck | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 10 notes" |
-| 11 | `csk_cartons.png` (not saved yet) | 11 cartons and delivery boxes | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 11 notes" |
-| 12 | `csk_blister_retail.png` (not saved yet) | 12 blister + retail accessories | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 12 notes" |
-| 13 | `csk_storage_boxes.png` (not saved yet) | 13 storage boxes | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 13 notes" |
-| 14 | `csk_binder.png` (not saved yet) | 14 binder | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 14 notes" |
-| 15 | `csk_deckbox_playmat_dice.png` (not saved yet) | 15 deck box, playmat, dice | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 15 notes" |
-| 16 | `csk_showcase_half.png` (not saved yet) | 16 half-vision showcase | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 16 notes" |
-| 17 | `csk_tower_wallcase.png` (not saved yet) | 17 glass tower + lit wall case | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 17 notes" |
-| 18 | `csk_counter_case_wallslab.png` (not saved yet) | 18 countertop case + wall slab case | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 18 notes" |
-| 19 | `csk_slatwall.png` (not saved yet) | 19 slatwall, hooks, shelf | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 19 notes" |
-| 20 | `csk_gondola.png` (not saved yet) | 20 gondola shelving | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 20 notes" |
-| 21 | `csk_wire_rack_box_shelf.png` (not saved yet) | 21 wire rack + box tier shelf | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 21 notes" |
-| 22 | `csk_card_table.png` (not saved yet) | 22 card tables | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 22 notes" |
-| 23 | `csk_easels_risers.png` (not saved yet) | 23 easels, risers, stands | 2026-09-29 | AI image chat (user) | pending | Pass (annotations only) | See "Sheet 23 notes" |
-| 24 | `csk_play_area.png` (not saved yet) | 24 play area | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 24 notes" |
-| 25 | `csk_counter_pos.png` (not saved yet) | 25 cash counter | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 25 notes" |
-| 26 | `csk_pos_devices.png` (not saved yet) | 26 POS devices | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 26 notes" |
-| 27 | `csk_bag_mailers.png` (not saved yet) | 27 bag, mailers, tape gun | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 27 notes" |
-| 28 | `csk_backroom.png` (not saved yet) | 28 back room | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 28 notes" |
-| 29 | `csk_bins.png` (not saved yet) | 29 bin + trash bag | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 29 notes" |
-| 30 | `csk_signs_tags.png` (not saved yet) | 30 signs and price tags | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 30 notes" |
-| 31 | `csk_posters_storefront.png` (not saved yet) | 31 posters + lightbox sign | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 31 notes" |
-| 32 | `csk_shell.png` (not saved yet) | 32 shop shell | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 32 notes" |
-| 33 | `csk_entry_door.png` (not saved yet) | 33 entry door | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 33 notes" |
-| 34 | `csk_lights.png` (not saved yet) | 34 lights | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 34 notes" |
-| 35 | `csk_scale_figure.png` (not saved yet) | 35 scale figure (dropped) | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 35 notes" |
-| 36 | `csk_wall_unit.png` (not saved yet) | 36 oak wall unit | 2026-09-29 | AI image chat (user) | pending | Pass | See "Sheet 36 notes" |
+| 8 | `csk_sleeves_holders.png` | 8 sleeves and holders | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 4bd69616936a9135 | Pass (annotations only) | See "Sheet 8 notes" |
+| 9 | `csk_grade_return.png` | 9 grading-return box | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | ec96021880f38ba8 | Pass (annotations only) | See "Sheet 9 notes" |
+| 10 | `csk_collector_box.png` | 10 collector box + starter deck | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 17af87b5ac746f5c | Pass (annotations only) | See "Sheet 10 notes" |
+| 11 | `csk_cartons.png` | 11 cartons and delivery boxes | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 6772d97de21c20f4 | Pass (annotations only) | See "Sheet 11 notes" |
+| 12 | `csk_blister_retail.png` | 12 blister + retail accessories | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | a7aae32731f93c12 | Pass (annotations only) | See "Sheet 12 notes" |
+| 13 | `csk_storage_boxes.png` | 13 storage boxes | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | faaf88f168ec3238 | Pass (annotations only) | See "Sheet 13 notes" |
+| 14 | `csk_binder.png` | 14 binder | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | df784502a515210c | Pass (annotations only) | See "Sheet 14 notes" |
+| 15 | `csk_deckbox_playmat_dice.png` | 15 deck box, playmat, dice | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 8bfaba4d3391cd44 | Pass (annotations only) | See "Sheet 15 notes" |
+| 16 | `csk_showcase_half.png` | 16 half-vision showcase | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 3f182cba0ae0466e | Pass (annotations only) | See "Sheet 16 notes" |
+| 17 | `csk_tower_wallcase.png` | 17 glass tower + lit wall case | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | c8491113add4f217 | Pass (annotations only) | See "Sheet 17 notes" |
+| 18 | `csk_counter_case_wallslab.png` | 18 countertop case + wall slab case | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | f654b8aa42a01e0c | Pass (annotations only) | See "Sheet 18 notes" |
+| 19 | `csk_slatwall.png` | 19 slatwall, hooks, shelf | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 68717d91b7c53dfa | Pass (annotations only) | See "Sheet 19 notes" |
+| 20 | `csk_gondola.png` | 20 gondola shelving | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | b2a2fa94d731f6a3 | Pass (annotations only) | See "Sheet 20 notes" |
+| 21 | `csk_wire_rack_box_shelf.png` | 21 wire rack + box tier shelf | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 719621037761d20d | Pass (annotations only) | See "Sheet 21 notes" |
+| 22 | `csk_card_table.png` | 22 card tables | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | fd532c437c995ab0 | Pass | See "Sheet 22 notes" |
+| 23 | `csk_easels_risers.png` | 23 easels, risers, stands | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | ad049fa2bd48aef4 | Pass (annotations only) | See "Sheet 23 notes" |
+| 24 | `csk_play_area.png` | 24 play area | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 9410909e36fa7098 | Pass | See "Sheet 24 notes" |
+| 25 | `csk_counter_pos.png` | 25 cash counter | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 391325095a807a66 | Pass | See "Sheet 25 notes" |
+| 26 | `csk_pos_devices.png` | 26 POS devices | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | a5b19c74d5495b97 | Pass | See "Sheet 26 notes" |
+| 27 | `csk_bag_mailers.png` | 27 bag, mailers, tape gun | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 323cfc10c6d411b8 | Pass | See "Sheet 27 notes" |
+| 28 | `csk_backroom.png` | 28 back room | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 380047b7e565a1ac | Pass | See "Sheet 28 notes" |
+| 29 | `csk_bins.png` | 29 bin + trash bag | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | f1cdd3cc1bc0007a | Pass | See "Sheet 29 notes" |
+| 30 | `csk_signs_tags.png` | 30 signs and price tags | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | e043be1ca1786e4c | Pass | See "Sheet 30 notes" |
+| 31 | `csk_posters_storefront.png` | 31 posters + lightbox sign | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 26b1be2f86a960a0 | Pass | See "Sheet 31 notes" |
+| 32 | `csk_shell.png` | 32 shop shell | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | e7e9fc297113b3a2 | Pass | See "Sheet 32 notes" |
+| 33 | `csk_entry_door.png` | 33 entry door | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 52af1c604e99600c | Pass | See "Sheet 33 notes" |
+| 34 | `csk_lights.png` | 34 lights | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | bbb72bec17d16c12 | Pass | See "Sheet 34 notes" |
+| 35 | `csk_scale_figure.png` | 35 scale figure (dropped) | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 90cb14fa97fcf93c | Pass | See "Sheet 35 notes" |
+| 36 | `csk_wall_unit.png` | 36 oak wall unit | 2026-09-29 | AI image chat (user), 1536 x 1024, webp -> PNG | 4a3ac8686790ed34 | Pass | See "Sheet 36 notes" |
 
 ## Sheet 0 notes (style anchor)
 
@@ -177,12 +177,12 @@ matches the spec's numbers.
 5. **Shelf support:** a slotted standard with a round steel pin and a clear shelf clip.
 6. **LED:** an LED strip in an aluminium channel with a diffuser.
 
-## Sheets 8-36: files pending
+## Sheets 8-36: files
 
-These sheets arrived as mid-turn chat attachments, which the session did not save to disk. The notes below were written
-from the images as shown. The PNGs and hashes go in when the user re-sends them (or saves them to
-`References/CardShop/` under the file names in the table). Every one passes the IP check: plain colour blocks, no
-text or marks, and only dimension call-outs as annotations.
+These sheets arrived as chat attachments during working turns. The session did not save them to disk at the time, so
+their notes were first written from the images as shown. On 2026-09-29 the lead session recovered every one from the
+session transcript (the original webp data, byte for byte) and saved it here as PNG. Every sheet passes the IP check:
+plain colour blocks, no text or marks, and dimension call-outs only as annotations.
 
 **Scale rule for these sheets:** where a picture's own proportions disagree with a printed dimension or a spec M
 number, the number wins and the picture gives the design (shapes, parts, joints, colours). Two cases are flagged
