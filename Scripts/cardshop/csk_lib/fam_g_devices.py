@@ -45,16 +45,69 @@ DRAWER = dict(                 # G2 cash drawer, sheet 26 panel 1
     back=6.0,                  # E: the housing's back wall
     r=2.5,                     # sheet 26: softly rounded housing edges (E radius, 2 segments)
     panel=(395.0, 96.0, 16.0),  # sheet 26: the tray's front panel W x H x T, flush with the housing front (E)
-    bin=(380.0, 68.0),         # E: the tray bin W x H behind the panel (sheet 26: about 2/3 of the panel height)
+    bin=(380.0, 84.0),         # sheet 26: the tray bin W x H behind the panel; the insert's top sits ~10 under
+                               # the panel's top edge (E)
     bin_back=-200.0,           # E: the bin's back face (y); the tray is 408.5 long
     wall=2.0,                  # E: bin / insert outer wall
     div=3.0,                   # E: insert dividers
     note_len=166.0,            # sheet 26: the note slots take ~45 % of the tray depth, at the back
-    pocket_d=40.0,             # E: pocket depth below the insert top
+    pocket_d=32.0,             # sheet 26: the coins and notes sit ~30 under the insert's top (E)
     notes=5, coin_cols=4, coin_rows=2,   # counts 5 / 8 E* (spec, sheet 26 call-out "5 note slots, 8 coin cups")
     lock=(22.0, 3.5, 55.5),    # sheet 26: round chrome lock, centred on the front: diameter, proud, z (E)
-    travel=280.0,              # E (spec)
-    clip=(7.0, 1.2, 3.0),      # sheet 26: a wire U clip per note slot: half spacing of the wires, wire r, barrel r (E)
+    travel=385.0,              # sheet 26 (wins over the spec's 280 E): the tray is drawn out until the clip barrels
+                               # sit under the housing's front edge, every slot in view (a full-extension slide)
+    clip=(9.0, 1.5, 3.5),      # sheet 26: a wire U clip per note slot: half spacing of the wires, wire r, barrel r (E)
+)
+
+TERMINAL = dict(               # G3 countertop card terminal, sheet 26 panel 2 (front = -Y: card slot, keys)
+    w=81.0, l=168.0, h=56.0,   # E* (spec [D36])
+    # side profile (y, z), counter-clockwise seen from +X (sheet 26: a wedge, low at the keypad end, the screen on
+    # the steeper rear deck, a vertical back, and an undercut under the rear with a foot at the back): E values
+    front_h=22.0, deck_break=(4.0, 40.0), rear_top=(66.0, 56.0), back_top=50.0,
+    undercut=(24.0, 34.0, 60.0, 68.0, 12.0),   # y where the arch leaves the counter, reaches its top, leaves the
+                                               # top, lands; arch height (E, sheet 26)
+    bevel=5.0,                 # sheet 26: soft moulded edges (3 segments)
+    screen=(56.0, 42.0, 1.6, 9.0),   # sheet 26: the colour screen W x H, recess depth, v start on the rear deck (E)
+    key=(16.0, 8.0, 2.2, 0.8),       # E: numeric key W x H, proud, top inset (sheet 26: 3 columns, 4 rows)
+    fkey=(17.0, 9.0),                # E: function key W x H (red / yellow / green, the front row)
+    soft=(15.0, 6.0, 19.0),          # E: soft key W x H (the middle one is 19 wide), the row under the screen
+    cols=21.0,                       # E: key column spacing (u)
+    rows=(10.0, 23.0, 34.0, 45.0, 56.0, 68.0),   # E: key-row centres along the keypad deck (v from the front edge)
+    slot=(62.0, 2.6, 26.0, 8.0),     # sheet 26: the card slot across the front face: W x H, depth, z centre (E)
+)
+
+PRINTER = dict(                # G4 clamshell receipt printer, sheet 26 panel 3 (front = -Y: the paper exit)
+    w=152.0, d=179.0, h=118.0,  # sheet 26 call-outs: 152 across the front, 179 deep (the spec's 179 x 152 E read as
+                                # W x D is swapped: the picture wins over E), H 118 E
+    body_h=100.0,              # sheet 26: the body's top (the front ledge); the lid closes over it to 118 (E)
+    r=4.0,                     # sheet 26: rounded body edges (E radius, 2 segments)
+    seam=(80.0, 0.8, 0.6),     # sheet 26: the parting line round the body: z, height, depth (E)
+    bay=(92.0, -44.0, 62.0, 38.0),   # E: the paper bay W, y front, y back, floor z (sheet 26: the roll sits in it)
+    roll=(80.0, 38.0, 9.0),    # paper 80 wide M [D37]; roll radius 38 E (sheet 26: it stands ~14 over the body top);
+                               # core radius E
+    front_panel=(-56.0, 60.0, 4.0, 42.0, 2.0),   # sheet 26: the recessed panel low on the front: x0, x1, z0, z1, depth
+    tear=(90.0, 7.0, 2.0),     # sheet 26: the tear bar at the paper exit W x D x proud (E)
+    button=(12.0, 10.0, 2.0, -56.0, -75.0),      # sheet 26: the square feed key on the ledge: W x D x proud, x, y (E)
+    hinge=(82.0, 110.0),       # E: the lid's hinge axis (y, z)
+    lid_t=3.0, skirt=3.0,      # E: lid wall thicknesses
+    lid_front=-45.0,           # E: the lid's front edge (over the bay's front, behind the tear bar)
+    platen=(40.0, 6.0),        # sheet 26: the platen roller along the lid's front edge: half length, radius (E)
+    boss=(8.0, 3.0, 2.5),      # sheet 26: the round hinge bosses: radius, proud, pin radius (E)
+    open_deg=-105.0,           # sheet 26: the lid swung up and back, a little past vertical (E)
+)
+
+POS = dict(                    # G5 POS screen on a stand, sheet 26 panel 4 (front = -Y: the screen)
+    disp=(360.0, 230.0, 26.0),  # E (spec): the display W x H; thickness E
+    disp_r=10.0,               # sheet 26: rounded display corners (E radius)
+    edge=(1.5, 6.0),           # E: the round on the front edge / on the back edge
+    bezel=(12.0, 14.0, 16.0),  # sheet 26: thin black bezel: sides, top, bottom (E)
+    recess=1.0,                # E: the screen sits 1 under the bezel
+    tilt=12.0,                 # sheet 26: the display leans back (E, degrees)
+    centre=(0.0, 175.0),       # E: the display centre (y, z): its lower edge ~62 over the counter (sheet 26)
+    base=(200.0, 200.0, 14.0, 12.0),   # E (spec): base W x D; thickness and plan corner radius E
+    base_edge=(4.0, 3.0),      # sheet 26: the base's rounded top edge and chamfered foot (E)
+    neck=(96.0, 30.0, 2.0),    # sheet 26: the neck W x D (about half the base wide), y of its front face (E)
+    cam=2.2,                   # sheet 26: the camera dot in the top bezel (E radius)
 )
 
 MONEY = dict(                  # G8 generic money, no currency design (spec 6)
@@ -68,6 +121,10 @@ MONEY = dict(                  # G8 generic money, no currency design (spec 6)
 BUDGETS = {                    # LOD0 triangle budgets: the spec's "Tris" column, raises logged
     "SM_CSK_CashDrawer": 800,
     "SM_CSK_CashDrawer_Tray": 700,      # spec 400: 13 real pockets + 5 wire clips on barrels + the lock (sheet 26)
+    "SM_CSK_Terminal_Card": 800,
+    "SM_CSK_Printer_Receipt": 450,      # spec 700 for the printer; split 450 body + 250 lid (the lid is added)
+    "SM_CSK_Printer_Receipt_Lid": 250,
+    "SM_CSK_POS_Screen": 800,
     "SM_CSK_Bills_Stack": 100,
     "SM_CSK_Coin": 120,
 }
@@ -350,8 +407,9 @@ def _key(b: Builder, fr: Frame, cu: float, cv: float, w: float, h: float, t: flo
 
 
 def _obox(b: Builder, fr: Frame, u0, u1, v0, v1, w0, w1, mat: int, top_region: int = 0,
-          top_mat: Optional[int] = None) -> None:
-    """A box in the frame ``fr``: [u0, u1] x [v0, v1] x [w0, w1]; the +W face may take its own region / material."""
+          top_mat: Optional[int] = None, faces: Optional[dict] = None) -> None:
+    """A box in the frame ``fr``: [u0, u1] x [v0, v1] x [w0, w1]; the +W face may take its own region / material;
+    ``faces`` {"-w": (mat, region), ...} overrides any side."""
     P = {(i, j, k): b.v(*fr.p((u0, u1)[i], (v0, v1)[j], (w0, w1)[k])) for i in (0, 1) for j in (0, 1) for k in (0, 1)}
     quads = {
         "-u": ([P[0, 0, 0], P[0, 1, 0], P[0, 1, 1], P[0, 0, 1]], fr.d(-1, 0, 0)),
@@ -362,7 +420,9 @@ def _obox(b: Builder, fr: Frame, u0, u1, v0, v1, w0, w1, mat: int, top_region: i
         "+w": ([P[0, 0, 1], P[1, 0, 1], P[1, 1, 1], P[0, 1, 1]], fr.d(0, 0, 1)),
     }
     for key, (q, out) in quads.items():
-        if key == "+w":
+        if faces and key in faces:
+            _face_out(b, q, out, faces[key][0], faces[key][1])
+        elif key == "+w":
             _face_out(b, q, out, mat if top_mat is None else top_mat, top_region)
         else:
             _face_out(b, q, out, mat)
@@ -618,9 +678,317 @@ def item_coin() -> Item:
     )
 
 
+# =========================================================================== G3 card terminal
+
+def _term_profile():
+    t = TERMINAL
+    L = t["l"] / 2
+    by, bz = t["deck_break"]
+    ry, rz = t["rear_top"]
+    u0, u1, u2, u3, uh = t["undercut"]
+    return [(-L, 0.0), (u0, 0.0), (u1, uh), (u2, uh), (u3, 0.0), (L, 0.0), (L, t["back_top"]), (ry, rz),
+            (by, bz), (-L, t["front_h"])]
+
+
+def _term_frames():
+    """The keypad deck frame (origin at the front top edge) and the screen deck frame (origin at the break)."""
+    t = TERMINAL
+    L = t["l"] / 2
+    by, bz = t["deck_break"]
+    ry, rz = t["rear_top"]
+    kd = Frame((0.0, -L, t["front_h"]), (1.0, 0.0, 0.0), (0.0, by + L, bz - t["front_h"]))
+    sd = Frame((0.0, by, bz), (1.0, 0.0, 0.0), (0.0, ry - by, rz - bz))
+    return kd, sd
+
+
+def _term_lod(level: int) -> Lod:
+    """Sheet 26 panel 2: a wedge body, the keypad on the low front deck (3 soft keys under the screen, a 3 x 4
+    numeric block, red / yellow / green function keys at the front), the colour screen recessed in the steeper rear
+    deck, the card slot across the front face, an undercut under the rear."""
+    t = TERMINAL
+    PLASTIC, SCREEN, KEYS, RED, YEL, GRN = range(6)
+    W = t["w"]
+    kd, sd = _term_frames()
+    b = Builder()
+    _prism_x(b, _term_profile(), -W / 2, W / 2, PLASTIC)
+    sw, sh, sdp, sv = t["screen"]
+    ops = []
+    e = Builder()
+    if level < 2:
+        cut = Builder()                                  # the screen recess: its floor is the screen (0-1 island)
+        _obox(cut, sd, -sw / 2, sw / 2, sv, sv + sh, -sdp, 6.0, PLASTIC, faces={"-w": (SCREEN, R_FRONT)})
+        ops.append(("DIFFERENCE", cut))
+        slot = Builder()
+        slw, slh, sld, slz = t["slot"]
+        slot.box((-slw / 2, -t["l"] / 2 - 1.0, slz - slh / 2), (slw / 2, -t["l"] / 2 + sld, slz + slh / 2), mat=KEYS)
+        ops.append(("DIFFERENCE", slot))
+    else:                                                # far: the screen as a thin plate on the deck
+        _obox(e, sd, -sw / 2, sw / 2, sv, sv + sh, -0.5, 0.3, PLASTIC, faces={"+w": (SCREEN, R_FRONT)})
+    kw, kh, kt, ki = t["key"]
+    cs = t["cols"]
+    r = t["rows"]
+    if level == 0:
+        for u, m in ((-cs, RED), (0.0, YEL), (cs, GRN)):
+            _key(e, kd, u, r[0], t["fkey"][0], t["fkey"][1], kt, ki, m)
+        for v in r[1:5]:
+            for u in (-cs, 0.0, cs):
+                _key(e, kd, u, v, kw, kh, kt, ki, KEYS)
+        sw_, sh_, smid = t["soft"]
+        for u, w_ in ((-cs, sw_), (0.0, smid), (cs, sw_)):
+            _key(e, kd, u, r[5], w_, sh_, kt * 0.8, ki, KEYS)
+    elif level == 1:                                     # mid: the key block as one plate, the colour keys kept
+        for u, m in ((-cs, RED), (0.0, YEL), (cs, GRN)):
+            _key(e, kd, u, r[0], t["fkey"][0], t["fkey"][1], kt, ki, m)
+        _key(e, kd, 0.0, (r[1] + r[5]) / 2, 2 * cs + kw, r[5] - r[1] + kh, kt * 0.6, 1.0, KEYS)
+    if level == 0:
+        return Lod(b, bevel_mm=t["bevel"], bevel_segments=3, bevel_first=True, ops=ops, extra=e)
+    if level == 1:
+        return Lod(b, bevel_mm=t["bevel"], bevel_segments=1, bevel_first=True, ops=ops, extra=e)
+    return Lod(b, ops=ops, extra=e)
+
+
+def item_terminal() -> Item:
+    t = TERMINAL
+    W, Lt, H = t["w"], t["l"], t["h"]
+    kd, sd = _term_frames()
+    sw, sh, sdp, sv = t["screen"]
+    tilt = math.degrees(math.atan2(sd.V[2], sd.V[1]))
+    sc = sd.p(0.0, sv + sh / 2, -sdp)
+    slw, slh, sld, slz = t["slot"]
+    return Item(
+        name="SM_CSK_Terminal_Card", lods=[_term_lod(i) for i in range(3)],
+        materials=["M_CSK_Plastic", "M_CSK_Screen", "M_CSK_Rubber", "M_CSK_AccentRed", "M_CSK_AccentYellow",
+                   "M_CSK_AccentGreen"],
+        projections={R_FRONT: _frame_planar(sd, -sw / 2, sv, sw, sh)},
+        sockets=[Socket("Seat", (0, 0, 0)),
+                 Socket("CardSlot", (0.0, -Lt / 2, slz), (90.0, 0.0, 0.0)),         # +Z out of the slot (-Y)
+                 Socket("Tap", sc, (tilt, 0.0, 0.0)),                               # the screen, +Z out of it
+                 Socket("Grip", (0.0, 40.0, H / 2))],
+        hulls=[((-W / 2, -Lt / 2, 0.0), (W / 2, Lt / 2, H))], budget=BUDGETS["SM_CSK_Terminal_Card"],
+        data={"footprint_mm": [W, Lt, H], "pose": "upright", "pivot": "bottom-centre", "front": "-Y (card slot, keys)",
+              "screen": {"slot": "M_CSK_Screen", "uv0": "0-1 tile", "size_mm": [sw, sh]},
+              "reference": REF,
+              "notes": ["Sheet 26 panel 2: wedge body, 3 soft + 12 numeric + 3 function keys (red / yellow / green), "
+                        "a recessed colour screen on the rear deck, the card slot across the front, an undercut under "
+                        "the rear. Key legends are not modelled (print).",
+                        "Spec size 168 x 81 x 56 is W x D x H; the sheet draws 81 across the front, so the long axis "
+                        "runs along Y (front = -Y, the kit rule)"]},
+    )
+
+
+# =========================================================================== G4 receipt printer + lid
+
+def _printer_lod(level: int) -> Lod:
+    """Sheet 26 panel 3: a black box body with rounded edges and a parting line round it, a recessed panel low on
+    the front, the front ledge with the tear bar and a square feed key, the paper bay behind it holding the 80 mm
+    roll (the lid is the separate hinged part)."""
+    p = PRINTER
+    PLASTIC, PAPER, BOARD, STEEL = range(4)
+    W, D, Hb = p["w"], p["d"], p["body_h"]
+    b = Builder()
+    b.box((-W / 2, -D / 2, 0.0), (W / 2, D / 2, Hb), mat=PLASTIC)
+    ops = []
+    bw, by0, by1, bz = p["bay"]
+    bay = Builder()
+    bay.box((-bw / 2, by0, bz), (bw / 2, by1, Hb + 1.0), mat=PLASTIC)
+    ops.append(("DIFFERENCE", bay))
+    if level == 0:
+        sz, sh, sd = p["seam"]
+        cut = Builder()
+        cut.box((-W / 2 - 2, -D / 2 - 2, sz - sh / 2), (W / 2 + 2, D / 2 + 2, sz + sh / 2), mat=PLASTIC)
+        core = Builder()
+        core.box((-W / 2 + sd, -D / 2 + sd, sz - sh / 2 - 0.3), (W / 2 - sd, D / 2 - sd, sz + sh / 2 + 0.3),
+                 mat=PLASTIC)
+        ops += [("DIFFERENCE", cut), ("UNION", core)]
+    if level < 2:
+        x0, x1, z0, z1, dp = p["front_panel"]
+        fp = Builder()
+        fp.box((x0, -D / 2 - 1.0, z0), (x1, -D / 2 + dp, z1), mat=PLASTIC)
+        ops.append(("DIFFERENCE", fp))
+    e = Builder()
+    rw, rr, rc = p["roll"]
+    ry = (by0 + by1) / 2
+    rz = bz + rr - 0.5                                  # the roll rests on the bay floor
+    _cyl_axis(e, (0.0, ry, rz), (1.0, 0.0, 0.0), rr, -rw / 2, rw / 2, (16, 10, 6)[level], PAPER)
+    if level < 2:
+        _cyl_axis(e, (0.0, ry, rz), (1.0, 0.0, 0.0), rc, -rw / 2 - 0.4, rw / 2 + 0.4, (8, 6)[level], BOARD)
+        tw, td, tp = p["tear"]
+        _box(e, (-tw / 2, by0 - td, Hb - 0.5), (tw / 2, by0 - 0.5, Hb + tp), STEEL)
+        kw, kd, kp, kx, ky = p["button"]
+        _box(e, (kx - kw / 2, ky - kd / 2, Hb - 0.5), (kx + kw / 2, ky + kd / 2, Hb + kp), PLASTIC)
+    if level == 0:
+        return Lod(b, bevel_mm=p["r"], bevel_segments=2, bevel_first=True, ops=ops, extra=e)
+    return Lod(b, ops=ops, extra=e)
+
+
+def item_printer() -> Item:
+    p = PRINTER
+    W, D, H, Hb = p["w"], p["d"], p["h"], p["body_h"]
+    hy, hz = p["hinge"]
+    by0 = p["bay"][1]
+    return Item(
+        name="SM_CSK_Printer_Receipt", lods=[_printer_lod(i) for i in range(3)],
+        materials=["M_CSK_Plastic", "M_CSK_Paper", "M_CSK_Board", "M_CSK_SteelDark"], projections={},
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Lid", (0.0, hy, hz)),
+                 Socket("PaperOut", (0.0, by0 - 1.0, Hb + 1.0), (20.0, 0.0, 0.0))],     # +Z up and a little forward
+        hulls=[((-W / 2, -D / 2, 0.0), (W / 2, D / 2, Hb))], budget=BUDGETS["SM_CSK_Printer_Receipt"],
+        data={"footprint_mm": [W, D, H], "pose": "upright", "pivot": "bottom-centre", "front": "-Y (paper exit)",
+              "parts": {"Lid": {"mesh": "SM_CSK_Printer_Receipt_Lid", "socket": "Lid", "type": "hinge", "axis": "X",
+                                "range_deg": [p["open_deg"], 0], "open_rot_deg": [p["open_deg"], 0.0, 0.0]}},
+              "reference": REF,
+              "notes": ["Sheet 26 panel 3 draws the lid open over the 80 mm roll; the lid is a separate hinged part "
+                        "(spec: parts none) so the printer can stand closed on the counter; open_rot_deg is the "
+                        "sheet's pose",
+                        "Size: the sheet's call-outs put 152 across the front and 179 deep (the spec's 179 x 152 E)"]},
+    )
+
+
+def _printer_lid_lod(level: int) -> Lod:
+    """The clamshell lid in its hinge frame (origin on the hinge axis, closed): top plate, side skirts and a front
+    wall as separate convex blocks (a shell), the platen roller along the front edge inside, round hinge bosses
+    with pins (sheet 26)."""
+    p = PRINTER
+    PLASTIC, RUBBER, METAL = range(3)
+    W, Hb, H = p["w"], p["body_h"], p["h"]
+    hy, hz = p["hinge"]
+    t, sk = p["lid_t"], p["skirt"]
+    yf = p["lid_front"] - hy
+    z0, z1 = Hb - hz, H - hz                           # the lid's bottom edge (on the body top) and its top
+    b = Builder()
+    b.box((-W / 2, yf, z1 - t), (W / 2, 0.0, z1), mat=PLASTIC)                          # top plate (bevelled)
+    e = Builder()
+    for sx in (-1, 1):                                                                 # side skirts
+        _box(e, (sx * (W / 2 - 0.3), yf + 0.8, z0), (sx * (W / 2 - sk), -0.8, z1 - 0.5), PLASTIC)
+    e.box((-W / 2 + sk - 0.5, yf + 0.8, z0 + 4.0), (W / 2 - sk + 0.5, yf + t, z1 - 0.5), mat=PLASTIC)  # front wall
+    if level < 2:
+        pl, pr = p["platen"]
+        _cyl_axis(e, (0.0, yf + t + pr + 2.0, z0 + 4.0 + pr * 0.5), (1.0, 0.0, 0.0), pr, -pl, pl, (8, 6)[level],
+                  RUBBER)
+        br, bp, pin = p["boss"]
+        for sx in (-1, 1):                              # the inner end is inside the skirt: no cap there
+            _cyl_axis(e, (0.0, 0.0, 0.0), (float(sx), 0.0, 0.0), br, W / 2 - 1.0, W / 2 + bp, (10, 8)[level],
+                      PLASTIC, caps=(False, True))
+            if level == 0:
+                _cyl_axis(e, (0.0, 0.0, 0.0), (float(sx), 0.0, 0.0), pin, W / 2 + bp - 0.5, W / 2 + bp + 0.6, 6,
+                          METAL, caps=(False, True))
+    if level == 0:
+        return Lod(b, bevel_mm=1.2, bevel_segments=1, extra=e)
+    return Lod(b, extra=e)
+
+
+def item_printer_lid() -> Item:
+    p = PRINTER
+    W, Hb, H = p["w"], p["body_h"], p["h"]
+    hy, hz = p["hinge"]
+    yf = p["lid_front"] - hy
+    br, bp, _ = p["boss"]
+    return Item(
+        name="SM_CSK_Printer_Receipt_Lid", lods=[_printer_lid_lod(i) for i in range(3)],
+        materials=["M_CSK_Plastic", "M_CSK_Rubber", "M_CSK_Metal"], projections={},
+        sockets=[Socket("Seat", (0, 0, 0))],
+        hulls=[((-W / 2, yf, Hb - hz), (W / 2, 0.0, H - hz))], budget=BUDGETS["SM_CSK_Printer_Receipt_Lid"],
+        data={"part_of": "SM_CSK_Printer_Receipt", "pivot": "hinge axis (X), closed pose",
+              "open_rot_deg": [p["open_deg"], 0.0, 0.0], "reference": REF},
+    )
+
+
+# =========================================================================== G5 POS screen
+
+def _pos_frame() -> Frame:
+    p = POS
+    t = math.radians(p["tilt"])
+    yc, zc = p["centre"]
+    return Frame((0.0, yc, zc), (1.0, 0.0, 0.0), (0.0, math.sin(t), math.cos(t)))    # W: the screen's facing (-Y, up)
+
+
+def _pos_screen_rect():
+    p = POS
+    W, H, _ = p["disp"]
+    bs, bt, bb = p["bezel"]
+    return -W / 2 + bs, -H / 2 + bb, W - 2 * bs, H - bt - bb      # u0, v0, w, h
+
+
+def _pos_lod(level: int) -> Lod:
+    """Sheet 26 panel 4: a slim display with rounded corners and a thin black bezel, leaning back on a short wide
+    neck that rises from a square base plate with a rounded top edge."""
+    p = POS
+    PLASTIC, SCREEN = range(2)
+    fr = _pos_frame()
+    W, H, T = p["disp"]
+    segs = (3, 2, 0)[level]
+    loc = Builder()
+    if level < 2:
+        rf, rb = p["edge"]
+        rings = _round_rings(T, -T / 2, rf, rb, (1, 0)[level], (2, 1)[level])
+        _loft(loc, [(_rr(W, H, p["disp_r"], segs, ins), z) for ins, z in rings], PLASTIC)
+    else:
+        loc.box((-W / 2, -H / 2, -T / 2), (W / 2, H / 2, T / 2), mat=PLASTIC)
+    b = Builder()
+    _merge_frame(b, loc, fr)
+    u0, v0, sw, sh = _pos_screen_rect()
+    ops = []
+    e = Builder()
+    if level < 2:
+        cut = Builder()
+        _obox(cut, fr, u0, u0 + sw, v0, v0 + sh, T / 2 - p["recess"], T / 2 + 5.0, PLASTIC,
+              faces={"-w": (SCREEN, R_FRONT)})
+        ops.append(("DIFFERENCE", cut))
+    else:
+        _obox(e, fr, u0, u0 + sw, v0, v0 + sh, T / 2 - 0.5, T / 2 + 0.2, PLASTIC, faces={"+w": (SCREEN, R_FRONT)})
+    if level == 0:                                                  # the camera dot, centred in the top bezel
+        cv = H / 2 - p["bezel"][1] / 2
+        _cyl_axis(e, fr.p(0.0, cv, 0.0), fr.W, p["cam"], T / 2 - 0.5, T / 2 + 0.3, 8, SCREEN, caps=(False, True))
+    # the base plate
+    bw, bd, bt, br = p["base"]
+    re, rc = p["base_edge"]
+    bsegs = (4, 2, 0)[level]
+    if level < 2:
+        rings = [(rc, 0.0), (0.0, rc)] + [(ins, z) for ins, z in _round_rings(bt - rc, rc, re, 0.0,
+                                                                                (2, 1)[level], 0)][1:]
+        _loft(e, [(_rr(bw, bd, br, bsegs, ins), z) for ins, z in rings], PLASTIC)
+    else:
+        e.box((-bw / 2, -bd / 2, 0.0), (bw / 2, bd / 2, bt), mat=PLASTIC)
+    # the neck: a vertical block from the base into the display's back, and a mount block square to the display
+    nw, nd, ny = p["neck"]
+    back = fr.p(0.0, -H / 2 + 60.0, -T / 2)             # a point on the display's back, low down
+    ztop = back[2] + 25.0
+    e.box((-nw / 2, ny, bt - 1.0), (nw / 2, ny + nd, ztop), mat=PLASTIC)
+    if level < 2:
+        _obox(e, fr, -nw / 2 + 4.0, nw / 2 - 4.0, -H / 2 + 30.0, -H / 2 + 100.0, -T / 2 - 16.0, -T / 2 + 4.0, PLASTIC)
+    return Lod(b, ops=ops, extra=e)
+
+
+def item_pos_screen() -> Item:
+    p = POS
+    fr = _pos_frame()
+    W, H, T = p["disp"]
+    bw, bd, bt, _ = p["base"]
+    u0, v0, sw, sh = _pos_screen_rect()
+    sc = fr.p(u0 + sw / 2, v0 + sh / 2, T / 2 - p["recess"])
+    top = fr.p(0.0, H / 2, T / 2)
+    return Item(
+        name="SM_CSK_POS_Screen", lods=[_pos_lod(i) for i in range(3)], materials=["M_CSK_Plastic", "M_CSK_Screen"],
+        projections={R_FRONT: _frame_planar(fr, u0, v0, sw, sh)},
+        sockets=[Socket("Seat", (0, 0, 0)), Socket("Screen", sc, (90.0 - p["tilt"], 0.0, 0.0))],
+        hulls=[((-bw / 2, -bd / 2, 0.0), (bw / 2, bd / 2, bt)),
+               ((-W / 2, fr.p(0, -H / 2, T / 2)[1], fr.p(0, -H / 2, 0)[2] - T / 2),
+                (W / 2, fr.p(0, H / 2, -T / 2)[1], top[2]))],
+        budget=BUDGETS["SM_CSK_POS_Screen"],
+        data={"footprint_mm": [W, bd, round(top[2], 1)], "pose": "upright", "pivot": "bottom-centre",
+              "front": "-Y (screen)", "screen": {"slot": "M_CSK_Screen", "uv0": "0-1 tile", "size_mm": [sw, sh]},
+              "reference": REF,
+              "notes": ["Sheet 26 panel 4: 360 x 230 display on a 200 x 200 base; the back of the display is not "
+                        "drawn, so it is plain (rounded back edge) with the neck's mount block"]},
+    )
+
+
 ITEMS = {
     "g_devices_cash_drawer": item_cash_drawer,
     "g_devices_cash_drawer_tray": item_cash_drawer_tray,
     "g_devices_bills": item_bills_stack,
     "g_devices_coin": item_coin,
+    "g_devices_terminal": item_terminal,
+    "g_devices_printer": item_printer,
+    "g_devices_printer_lid": item_printer_lid,
+    "g_devices_pos": item_pos_screen,
 }

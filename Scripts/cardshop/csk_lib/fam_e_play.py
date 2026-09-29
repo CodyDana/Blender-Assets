@@ -89,7 +89,7 @@ D6 = dict(size=16.0,            # M [D20]
 D20 = dict(face_to_face=22.0,   # E (spec 22); sheet 15's silhouette (~26-27 across) matches 22 face to face
            chamfer=0.07)        # E: edge chamfer as a fraction of each face's inradius (0.55 mm wide), sheet 15 crisp edges
 TOKEN = dict(d=22.0, t=2.0,     # E (spec) = sheet 15 call-outs
-             chamfer=0.3, sides=18)  # sheet 15: slightly softened edge
+             chamfer=0.3, sides=24)  # sheet 15: slightly softened edge; 24 sides read round in the hand
 
 # LOD0 budgets: the spec's Tris column (E). Raised (logged in the report):
 #   Binder_Body 1500 -> 1800: three O-rings of round wire need 13 sides (27.7 deg < the 30-deg sharp rule) x 16
@@ -97,7 +97,8 @@ TOKEN = dict(d=22.0, t=2.0,     # E (spec) = sheet 15 call-outs
 #   Playmat_Rolled 600 -> 1200: the spiral end (sheet 15) is a real wound strip (16 facets a turn over 5.8 turns) with
 #     a 0.3 cloth chamfer on each wrap's edge, the red lines of sheet 15's black roll end.
 #   Die_D6 300 -> 800: 21 real pip dimples (10-sided cones) and round edges of 4 segments.
-#   Token_22 100 -> 150: an 18-sided disc with chamfered rims on both faces (still LOD0 only).
+#   Token_22 100 (LOD0 only) -> 200 with LODs: sheet 15's disc is round with softened rims; 24 sides with a chamfer
+#     on both rims is 188 (an 18-sided disc read polygonal in the hand).
 BUDGETS = {
     "SM_CSK_Binder_Body": 1800,
     "SM_CSK_Binder_Cover": 300,
@@ -109,7 +110,7 @@ BUDGETS = {
     "SM_CSK_Playmat_Rolled": 1200,
     "SM_CSK_Die_D6": 800,
     "SM_CSK_Die_D20": 500,
-    "SM_CSK_Token_22": 150,
+    "SM_CSK_Token_22": 200,
 }
 
 # Binder: spec 4.2 class (E3 Closed + Retail_BinderWrapped), standing, front toward -Y; pitch = spine + 2 along Y
@@ -370,15 +371,20 @@ def item_die_d20() -> Item:
     )
 
 
-def _token_builder() -> Builder:
+def _token_builder(level: int) -> Builder:
+    """LOD0: a 24-sided disc with 0.3 chamfers on both rims (sheet 15's softened edge, round at hand distance);
+    LOD1 square rims; LOD2 8 sides."""
     tk = TOKEN
-    R, t, c, n = tk["d"] / 2, tk["t"], tk["chamfer"], tk["sides"]
+    R, t, c = tk["d"] / 2, tk["t"], tk["chamfer"]
+    n = (tk["sides"], tk["sides"], 8)[level]
+    rings = ((R - c, 0.0), (R, c), (R, t - c), (R - c, t)) if level == 0 else ((R, 0.0), (R, t))
     b = Builder()
-    loops = [b.loop(circle(rr, n), z) for rr, z in ((R - c, 0.0), (R, c), (R, t - c), (R - c, t))]
+    loops = [b.loop(circle(rr, n), z) for rr, z in rings]
     b.fill([loops[0]], 0, 0, (0, 0, -1))
-    for la, lb, up in ((loops[0], loops[1], -1.0), (loops[1], loops[2], 0.0), (loops[2], loops[3], 1.0)):
-        _bridge(b, la, lb, 0, up=up * R)
-    b.fill([loops[3]], 0, 0, (0, 0, 1))
+    for la, lb in zip(loops[:-1], loops[1:]):
+        zc = (b.verts[la[0]][2] + b.verts[lb[0]][2]) / 2 - t / 2
+        _bridge(b, la, lb, 0, up=zc * R)
+    b.fill([loops[-1]], 0, 0, (0, 0, 1))
     return b
 
 
@@ -386,7 +392,7 @@ def item_token() -> Item:
     tk = TOKEN
     R, t = tk["d"] / 2, tk["t"]
     return Item(
-        name="SM_CSK_Token_22", lods=[Lod(_token_builder())], materials=["M_CSK_Resin"], projections={},
+        name="SM_CSK_Token_22", lods=[Lod(_token_builder(k)) for k in range(3)], materials=["M_CSK_Resin"], projections={},
         sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (0, 0, t / 2))],
         hulls=[((-R, -R, 0.0), (R, R, t))], budget=BUDGETS["SM_CSK_Token_22"],
         data={"footprint_mm": [2 * R, 2 * R, t], "reference": REF15,
@@ -648,7 +654,7 @@ def _deckbox_lod(level: int) -> Lod:
     W, D, H = c["w"], c["d"], c["h"]
     zs = H - c["lid"]
     PLASTIC, CHROME = 0, 1
-    segs = (c["corner_segs"], 1, 1)[level]
+    segs = (c["corner_segs"], 2, 1)[level]
     pts = _deck_outline(segs)
     n = len(pts)
     b = Builder()
@@ -675,7 +681,7 @@ def _deckbox_lod(level: int) -> Lod:
         extra = Builder()
         pd, pl = c["pin"]
         _cyl(extra, "x", (-pl / 2, D / 2, zs), pl, pd / 2, 13, CHROME)
-    return Lod(b, bevel_mm=c["bevel"] if level == 0 else None, ops=ops, bevel_first=True, extra=extra)
+    return Lod(b, bevel_mm=c["bevel"] if level == 0 else None, ops=ops, bevel_first=False, extra=extra)
 
 
 def item_deckbox() -> Item:
