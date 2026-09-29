@@ -34,7 +34,7 @@ BUDGETS = {
     "SM_CSK_Workbench_1524": 5000,
     "SM_CSK_Mailer_S": 150, "SM_CSK_Mailer_L": 150,
     "SM_CSK_Mailer_S_Open": 150, "SM_CSK_Mailer_L_Open": 150,
-    "SM_CSK_TapeGun": 1200,
+    "SM_CSK_TapeGun": 1400,
     "SM_CSK_TrashCan": 1200, "SM_CSK_TrashCan_Lid": 200,
     "SM_CSK_TrashBag_Full": 600,
     "SM_CSK_HandTruck": 2500,
@@ -55,7 +55,7 @@ MAILER = dict(                    # H3, sheet 27 (2)
 BIN = dict(                       # H5, sheet 29 (1)
     r_top=200.0, r_bot=187.5,     # E (spec Ø 400) at the top; sheet 29: tapers to ~375 at the base
     h=700.0,                      # E (spec) = sheet 29
-    band=(478.0, 522.0, 211.0),   # sheet 29: the raised band where the dome meets the body: z0, z1, outer radius
+    band=(474.0, 522.0, 211.0),   # sheet 29: the raised band where the dome meets the body: z0, z1, outer radius
     foot_r=4.0,                   # E: the rounded bottom edge
     dome_c=178.0,                 # D: the dome rises from the band top (522) to 700; sheet 29: a slightly flat dome
     wall=3.0,                     # E: moulded wall
@@ -69,6 +69,25 @@ BIN = dict(                       # H5, sheet 29 (1)
     swing=(-45.0, 45.0),          # E: the flap rocks both ways on its pins (sheet 29 "Lid swinging")
 )
 
+TAPEGUN = dict(                   # H4, sheet 27 (3): 250 long (X, the blade at -X) x 75 wide (Y) x 180 tall (E = sheet)
+    roll=(30.0, 125.0, 55.0, 38.0, 34.0, 48.0),   # sheet 27: roll centre x, z; tape OD/2, core OD/2, core ID/2, width
+    hub=(33.5, 23.0, 6.0),        # grey hub: radius, half width, window pocket depth (sheet 27: three dark windows)
+    windows=(14.0, 28.0, 64.0),   # window inner / outer radius, angular width (deg)
+    plate=((-30.0, 60.0), (-2.0, 50.0), (38.0, 58.0), (56.0, 84.0), (48.0, 104.0), (20.0, 112.0), (-12.0, 108.0),
+           (-30.0, 94.0)),        # sheet 27: the light grey side plate under the roll (x, z)
+    plate_y=(25.5, 28.0),         # E: the plates' inner / outer faces (|y|)
+    arm=((12.0, 110.0), (40.0, 100.0), (48.0, 126.0), (30.0, 143.0), (14.0, 134.0)),   # E: the far arm to the axle
+    housing=(-104.0, -26.0, 22.0, 92.0, 31.0),   # sheet 27: the black front housing x0, x1, z0, z1, |y|
+    cheek=(-98.0, -40.0, 28.0, 90.0, 8.0, 30.5, 35.5),   # the black cheek plates: x0, x1, z0, z1, corner R, |y| in/out
+    screws=((-44.0, 79.0), (-37.0, 45.0)),       # sheet 27: two screws on each cheek (x, z); one on each grey plate
+    plate_screw=(19.0, 57.0),
+    blade=(-100.5, 1.0, 78.0, 92.0, 3.0, 27.0, 9),  # serrated blade: x, thickness, z0, z1, tooth height, |y|, teeth
+    guard=((-97.0, 92.0), (-89.0, 140.0), 1.5, 25.0),  # clear guard: bottom (x, z), top (x, z), thickness, |y|
+    roller=(-78.0, 24.0, 14.0, 28.0),            # the black pressure roller: x, z, r, |y|
+    grip=((44.0, 0.0, 80.0), (114.0, 0.0, 12.0)),  # sheet 27: the raked pistol grip's axis, top to end
+    tongue=(-103.0, 92.0, -110.0, 24.0),        # the tape's end hanging from the blade to the floor: x, z top, x bottom
+)
+
 TBAG = dict(                      # H6, sheet 29 (2)
     d=450.0,                      # E (spec) = sheet 29 call-out (the 450 line spans the bag's base exactly)
     h=610.0,                      # sheet 29: 610 to the tuft's top at the 450 line's scale (spec 600 E; the sheet's
@@ -77,10 +96,10 @@ TBAG = dict(                      # H6, sheet 29 (2)
     # near-straight sides, round shoulders from ~390, the twisted neck tied at ~510, a ruffled tuft to 610
     prof=((0.0, 170.0), (14.0, 218.0), (50.0, 232.0), (130.0, 221.0), (230.0, 210.0), (330.0, 205.0),
           (390.0, 194.0), (430.0, 166.0), (460.0, 125.0), (482.0, 90.0), (497.0, 52.0), (506.0, 24.0),
-          (515.0, 26.0), (530.0, 45.0), (560.0, 66.0), (588.0, 72.0), (602.0, 92.0), (610.0, 62.0)),
+          (515.0, 26.0), (532.0, 46.0), (560.0, 66.0), (586.0, 80.0), (600.0, 86.0), (610.0, 70.0)),
     knot=510.0,
     segs=(16, 10, 8),
-    crumple=0.07,                 # E: +- radial crumple (fraction of r), deterministic hash
+    crumple=0.11,                 # E: +- radial crumple (fraction of r), deterministic hash (sheet 29: sharp creases)
     pleat=0.35,                   # E: pleat depth toward the neck (fraction of r)
 )
 
@@ -267,6 +286,97 @@ def _tube(b: Builder, pts: Sequence[Vec3], r: float, sides: int, mat: int, close
             b.fill([rings[0]], mat, 0, _mul(d[0], -1.0))
         if caps[1]:
             b.fill([rings[-1]], mat, 0, d[-1])
+
+
+def _area2(P) -> float:
+    return sum(P[i][0] * P[(i + 1) % len(P)][1] - P[(i + 1) % len(P)][0] * P[i][1] for i in range(len(P)))
+
+
+def _frame(u: Vec3, v: Vec3):
+    u = _unit(u)
+    w = _unit(_cross(u, v))
+    return u, _cross(w, u), w
+
+
+def _to3(o: Vec3, u: Vec3, v: Vec3, w: Vec3, a: float, c: float, d: float = 0.0) -> Vec3:
+    return _add(o, _add(_add(_mul(u, a), _mul(v, c)), _mul(w, d)))
+
+
+def _plate(b: Builder, outline, o: Vec3, u: Vec3, v: Vec3, t0: float, t1: float, mat: int,
+           pockets: Sequence[Tuple[Sequence[Tuple[float, float]], float, int]] = (), cap_mats=(None, None)) -> None:
+    """A prism of the planar outline [(a, c)] (either winding) in the plane (o, u, v), from t0 to t1 along w = u x v.
+    ``pockets`` [(outline, depth, floor_mat)] are sunk into the t1 face (depth < t1 - t0) or through when depth is
+    None."""
+    u, v, w = _frame(u, v)
+    lo = [b.v(*_to3(o, u, v, w, a, c, t0)) for a, c in outline]
+    hi = [b.v(*_to3(o, u, v, w, a, c, t1)) for a, c in outline]
+    n = len(outline)
+    sg = 1.0 if _area2(outline) > 0 else -1.0
+    for i in range(n):
+        j = (i + 1) % n
+        (a0, c0), (a1, c1) = outline[i], outline[j]
+        nx, ny = sg * (c1 - c0), -sg * (a1 - a0)          # the edge's outward normal in the plane
+        _face_out(b, [lo[i], lo[j], hi[j], hi[i]], _add(_mul(u, nx), _mul(v, ny)), mat)
+    holes_hi, holes_lo = [], []
+    for pol, depth, fmat in pockets:
+        top = [b.v(*_to3(o, u, v, w, a, c, t1)) for a, c in pol]
+        bot_t = t0 if depth is None else t1 - depth
+        bot = [b.v(*_to3(o, u, v, w, a, c, bot_t)) for a, c in pol]
+        m = len(pol)
+        sp = 1.0 if _area2(pol) > 0 else -1.0
+        for i in range(m):
+            j = (i + 1) % m
+            nx, ny = -sp * (pol[j][1] - pol[i][1]), sp * (pol[j][0] - pol[i][0])   # into the pocket
+            _face_out(b, [top[i], top[j], bot[j], bot[i]], _add(_mul(u, nx), _mul(v, ny)), fmat)
+        holes_hi.append(top)
+        if depth is None:
+            holes_lo.append(bot)
+        else:
+            b.fill([bot], fmat, 0, w)
+    b.fill([hi] + holes_hi, mat if cap_mats[1] is None else cap_mats[1], 0, w)
+    b.fill([lo] + holes_lo, mat if cap_mats[0] is None else cap_mats[0], 0, _mul(w, -1.0))
+
+
+def _lathe_ax(b: Builder, o: Vec3, axis: Vec3, prof: Sequence[Tuple[float, float]], sides: int, mat,
+              caps=(True, True), phase: float = 0.5, ref: Vec3 = (0.0, 0.0, 1.0)) -> List[List[int]]:
+    """A solid of revolution about ``axis`` through ``o``; ``prof`` [(r, t)] along the axis. ``mat`` may be a list
+    (one material per profile band). r = 0 closes to a point."""
+    a = _unit(axis)
+    e1 = _sub(ref, _mul(a, _dot(ref, a)))
+    if _dot(e1, e1) < 1e-9:
+        e1 = _sub((1.0, 0.0, 0.0), _mul(a, a[0]))
+    e1 = _unit(e1)
+    e2 = _cross(a, e1)
+    angs = [2 * math.pi * (k + phase) / sides for k in range(sides)]
+    rings = []
+    for r, t in prof:
+        c = _add(o, _mul(a, t))
+        if r <= 1e-9:
+            rings.append([b.v(*c)])
+        else:
+            rings.append([b.v(*_add(c, _add(_mul(e1, r * math.cos(q)), _mul(e2, r * math.sin(q))))) for q in angs])
+    for i in range(len(prof) - 1):
+        A, B = rings[i], rings[i + 1]
+        mt = mat[i] if isinstance(mat, (list, tuple)) else mat
+        (r0, t0), (r1, t1) = prof[i], prof[i + 1]
+        for k in range(sides):
+            k1 = (k + 1) % sides
+            q = angs[k] + math.pi / sides
+            radial = _add(_mul(e1, math.cos(q)), _mul(e2, math.sin(q)))
+            out = _add(_mul(radial, t1 - t0), _mul(a, r0 - r1))
+            ids = ([A[k], A[k1]] if len(A) > 1 else [A[0]]) + ([B[k1], B[k]] if len(B) > 1 else [B[0]])
+            _face_out(b, ids, out, mt)
+    m0 = mat[0] if isinstance(mat, (list, tuple)) else mat
+    m1 = mat[-1] if isinstance(mat, (list, tuple)) else mat
+    if caps[0] and len(rings[0]) > 1:
+        b.fill([rings[0]], m0, 0, _mul(a, -1.0))
+    if caps[1] and len(rings[-1]) > 1:
+        b.fill([rings[-1]], m1, 0, a)
+    return rings
+
+
+def _circle_pts(r: float, n: int, cx: float = 0.0, cy: float = 0.0, a0: float = 0.0):
+    return [(cx + r * math.cos(a0 + 2 * math.pi * i / n), cy + r * math.sin(a0 + 2 * math.pi * i / n)) for i in range(n)]
 
 
 def _grid_faces(b: Builder, G: List[List[int]], outward, mat: int, mats=None) -> None:
@@ -654,6 +764,167 @@ def item_trashcan_lid() -> Item:
                         "faceted back inside the bin (the `_Lid` winding test needs convex parts)."]},
     )
 
+# =========================================================================== H4 tape gun (sheet 27)
+
+def _tapegun_lod(level: int) -> Lod:
+    """Sheet 27: a black pistol-grip frame, a light grey side plate each side under the roll, a brown tape roll on a
+    cardboard core, a grey hub with three dark windows and a centre bolt, the black front housing with a black cheek
+    plate each side (two screws), a serrated steel blade under a clear guard, a black pressure roller under the front,
+    a ribbed black rubber grip with a grey end cap, and the tape's end hanging from the blade to the floor."""
+    t = TAPEGUN
+    PL, GREY, HUB, TAPE, CORE, STEEL, CLEAR, RUB = range(8)
+    far = level < 2
+    segs = (16, 12, 8)[level]
+    b = Builder()        # bevelled parts
+    e = Builder()        # crisp small parts
+    X, Y, Z = (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)
+    rx, rz, ro, rc, ri, rw = t["roll"]
+    # the roll: tape + core in one annulus prism (the core's faces are cardboard)
+    _lathe_ax(e, (rx, -rw / 2, rz), Y, [(ri, 0.0), (ro, 0.0), (ro, rw), (ri, rw)], segs, [TAPE, TAPE, TAPE],
+              caps=(False, False))
+    if level < 2:                                       # the core ring on the side faces (cardboard)
+        for yy, sg in ((-rw / 2 - 0.3, -1.0), (rw / 2 + 0.3, 1.0)):
+            ring_o = [e.v(rx + rc * math.cos(q), yy, rz + rc * math.sin(q)) for q in
+                      (2 * math.pi * (k + 0.5) / segs for k in range(segs))]
+            ring_i = [e.v(rx + (ri + 0.2) * math.cos(q), yy, rz + (ri + 0.2) * math.sin(q)) for q in
+                      (2 * math.pi * (k + 0.5) / segs for k in range(segs))]
+            e.fill([ring_o, ring_i], CORE, 0, (0.0, sg, 0.0))
+    # the hub (a wheel inside the core): three window pockets on each face, a centre bolt on the near side
+    hr, hw, wd = t["hub"]
+    w0, w1, wa = t["windows"]
+    hub_o = _circle_pts(hr, segs)
+    pockets = []
+    if level < 2:
+        for k in range(3):
+            a0 = math.radians(90.0 + 120.0 * k - wa / 2)
+            a1 = math.radians(90.0 + 120.0 * k + wa / 2)
+            n = 2
+            win = [(w1 * math.cos(a0 + (a1 - a0) * i / n), w1 * math.sin(a0 + (a1 - a0) * i / n)) for i in range(n + 1)]
+            win += [(w0 * math.cos(a1 - (a1 - a0) * i / (n - 1)), w0 * math.sin(a1 - (a1 - a0) * i / (n - 1)))
+                    for i in range(n)]
+            pockets.append((win, wd, PL))
+    # plane (x, z) seen from -Y: u = +X, v = +Z -> w = X x Z = -Y
+    _plate(e, hub_o, (rx, 0.0, rz), X, Z, -hw, hw, HUB, pockets=pockets)          # the -Y face (w = -Y) pocketed
+    _lathe_ax(e, (rx, -hw + 0.5, rz), (0.0, -1.0, 0.0), [(8.0, 0.0), (8.0, 3.0), (6.0, 5.0), (0.0, 5.0)] if level < 2
+              else [(7.0, 0.0), (7.0, 4.0), (0.0, 4.0)], 6, HUB, caps=(False, False))
+    # grey side plates, the far arm, the housing, the cheeks
+    y0, y1 = t["plate_y"]
+    for sg in ((-1.0, 1.0) if far else (-1.0,)):
+        _plate(b, t["plate"], (0.0, sg * y0, 0.0), X, Z, 0.0, (y1 - y0), GREY) if sg < 0 else \
+            _plate(b, t["plate"], (0.0, sg * y1, 0.0), X, Z, 0.0, (y1 - y0), GREY)
+    if far:
+        _plate(b, t["arm"], (0.0, y1 - 0.5, 0.0), X, Z, 0.0, (y1 - y0) - 0.5, GREY)
+        _lathe_ax(e, (rx, hw - 1.0, rz), Y, [(0.0, 0.0), (9.0, 0.0), (9.0, y0 - hw + 1.5), (0.0, y0 - hw + 1.5)], 8,
+                  PL, caps=(False, False))
+    hx0, hx1, hz0, hz1, hy = t["housing"]
+    _box(b, (hx0, -hy, hz0), (hx1, hy, hz1), PL)
+    _box(b, (hx1 - 2.0, -y0 + 1.0, 46.0), (58.0, y0 - 1.0, 70.0), PL)      # the frame bar to the grip, under the roll
+    cx0, cx1, cz0, cz1, cr, cyi, cyo = t["cheek"]
+    cseg = (2, 1, 1)[level]
+    ck = []
+    for (qx, qz, a0) in ((cx1 - cr, cz0 + cr, -90.0), (cx1 - cr, cz1 - cr, 0.0), (cx0 + cr, cz1 - cr, 90.0),
+                         (cx0 + cr, cz0 + cr, 180.0)):
+        for i in range(cseg + 1):
+            q = math.radians(a0 + 90.0 * i / cseg)
+            ck.append((qx + cr * math.cos(q), qz + cr * math.sin(q)))
+    for sg in ((-1.0, 1.0) if far else (-1.0,)):
+        _plate(b, ck, (0.0, sg * (cyi if sg < 0 else cyo), 0.0), X, Z, 0.0, cyo - cyi, PL)
+    if level < 2:                                       # screws: two on each cheek, one on each grey plate
+        for sg in (-1.0,):                              # the near side (sheet 27 shows it)
+            for (sx, sz), yb in [(p, cyo) for p in t["screws"]] + [(t["plate_screw"], y1)]:
+                _lathe_ax(e, (sx, sg * (yb - 0.5), sz), (0.0, sg, 0.0), [(3.2, 0.0), (3.2, 2.0), (0.0, 2.0)], 6,
+                          STEEL, caps=(False, False))
+    # the serrated blade (in the YZ plane, teeth up) and the clear guard
+    bx, bt, bz0, bz1, th, by, nt = t["blade"]
+    if level == 2:
+        nt = 1
+    outline = [(-by, bz0), (by, bz0)]
+    for i in range(nt, 0, -1):
+        ya, yb_ = -by + 2 * by * i / nt, -by + 2 * by * (i - 1) / nt
+        outline += [(ya, bz1), ((ya + yb_) / 2, bz1 + th)] if level < 2 else []
+    outline += [(-by, bz1)] if level < 2 else [(by, bz1), (-by, bz1)]
+    _plate(e, outline, (bx, 0.0, 0.0), Y, Z, 0.0, bt, STEEL)      # w = Y x Z = +X
+    (gx0, gz0), (gx1, gz1), gt, gy = t["guard"]
+    gl = math.hypot(gx1 - gx0, gz1 - gz0)
+    ga = _unit((gx1 - gx0, 0.0, gz1 - gz0))
+    gn = _cross(ga, Y)
+    _obox(e, ((gx0 + gx1) / 2, 0.0, (gz0 + gz1) / 2), gn, Y, ga, gt / 2, gy, gl / 2, CLEAR)
+    # the pressure roller
+    ox, oz, orr, oy = t["roller"]
+    _lathe_ax(e, (ox, -oy, oz), Y, [(0.0, 0.0), (orr, 0.0), (orr, 2 * oy), (0.0, 2 * oy)], (12, 8, 6)[level], RUB,
+              caps=(False, False))
+    # the ribbed grip and its grey end cap
+    p0, p1 = t["grip"]
+    ax = _sub(p1, p0)
+    L = math.sqrt(_dot(ax, ax))
+    prof = [(0.0, -2.0), (15.0, -2.0), (16.5, 5.0)]
+    mats = [RUB, RUB]
+    tt = 12.0
+    k = 0
+    while tt < L - 8.0 and level < 2:
+        prof.append((17.5 if k % 2 == 0 else 16.0, tt))
+        mats.append(RUB)
+        tt += 10.0 if level == 0 else 20.0
+        k += 1
+    prof += [(17.0, L - 2.0), (17.8, L - 2.0), (17.8, L + 6.0), (13.0, L + 10.0), (0.0, L + 10.0)]
+    mats += [RUB, RUB, GREY, GREY, GREY]
+    _lathe_ax(e, p0, ax, prof, (10, 8, 6)[level], mats, caps=(False, False), ref=Y)
+    # the tape's end: from the blade down to the floor
+    tx0, tz0, tx1, tz1 = t["tongue"]
+    tw = rw / 2
+    tv = [e.v(tx0, -tw, tz0), e.v(tx0, tw, tz0), e.v(tx1, tw, tz1), e.v(tx1, -tw, tz1)]
+    tn = _unit(_cross(_sub(e.verts[tv[1]], e.verts[tv[0]]), _sub(e.verts[tv[3]], e.verts[tv[0]])))
+    tv2 = [e.v(*_add(e.verts[i], _mul(tn, 0.6))) for i in tv]
+    for q, o in (([tv[0], tv[1], tv[2], tv[3]], _mul(tn, -1.0)), ([tv2[0], tv2[1], tv2[2], tv2[3]], tn)):
+        _face_out(e, q, o, TAPE)
+    for i in range(4):
+        j = (i + 1) % 4
+        mid = _mul(_add(e.verts[tv[i]], e.verts[tv[j]]), 0.5)
+        cen = _mul(tuple(sum(e.verts[v][c] for v in tv) for c in range(3)), 0.25)
+        _face_out(e, [tv[i], tv[j], tv2[j], tv2[i]], _sub(mid, cen), TAPE)
+    return Lod(b, bevel_mm=0.8 if level == 0 else None, extra=e)
+
+
+def _lod_zmin(lods: Sequence[Lod]) -> float:
+    zs = [v[2] for L in lods for bb in (L.builder, L.extra) if bb is not None for v in bb.verts]
+    return min(zs)
+
+
+def _shift_all(lods: Sequence[Lod], dz: float) -> None:
+    for L in lods:
+        for bb in (L.builder, L.extra):
+            if bb is not None:
+                bb.verts = [(x, y, z + dz) for x, y, z in bb.verts]
+
+
+def item_tapegun() -> Item:
+    t = TAPEGUN
+    lods = [_tapegun_lod(k) for k in range(3)]
+    dz = -_lod_zmin(lods)                        # rest on the grip's end cap and the hanging tape end
+    _shift_all(lods, dz)
+    bbs = [L.builder for L in lods[:1]] + [lods[0].extra]
+    xs = [v[0] for bb in bbs for v in bb.verts]
+    ys = [v[1] for bb in bbs for v in bb.verts]
+    zs = [v[2] for bb in bbs for v in bb.verts]
+    mn, mx = (min(xs), min(ys), 0.0), (max(xs), max(ys), max(zs))
+    p0, p1 = t["grip"]
+    gc = _mul(_add(p0, p1), 0.5)
+    name = "SM_CSK_TapeGun"
+    return Item(
+        name=name, lods=lods,
+        materials=["M_CSK_Plastic", "M_CSK_Steel", "M_CSK_PlasticGrey", "M_CSK_Tape", "M_CSK_Board", "M_CSK_Metal",
+                   "M_CSK_Acrylic", "M_CSK_Rubber"],
+        projections={}, sockets=[Socket("Seat", (0, 0, 0)), Socket("Grip", (gc[0], gc[1], gc[2] + dz))],
+        hulls=[(mn, mx)], budget=BUDGETS[name],
+        data={"footprint_mm": [round(mx[0] - mn[0], 1), round(mx[1] - mn[1], 1), round(mx[2], 1)],
+              "pose": "resting on its grip end and the hanging tape end", "pivot": "bottom-centre of the frame",
+              "reference": "References/CardShop/csk_bag_mailers.png (sheet 27 (3))",
+              "notes": ["Sheet 27: pistol grip, grey side plates, a tape roll on a hub with three windows and a "
+                        "centre bolt, a serrated blade with a clear guard, black cheek plates with two screws.",
+                        "Budget 800 -> 1200: the three-window hub, the two side plates, the serrated blade and the "
+                        "clear guard are all visible at arm's length (a handheld item)."]},
+    )
+
 
 # =========================================================================== H6 full trash bag (sheet 29)
 
@@ -666,30 +937,41 @@ def _bag_builder(level: int) -> Builder:
     b = Builder()
     rings = []
     zn = s["knot"]
+    last = len(prof) - 1
     for i, (z, r) in enumerate(prof):
         ring = []
+        tuft = z > zn + 1.0
         for k in range(segs):
             t = 2 * math.pi * (k + 0.5 * (i % 2)) / segs
-            near = max(0.0, 1.0 - abs(z - zn) / 130.0)      # pleats gather toward the neck (and flare in the tuft)
-            pleat = (1.0 - s["pleat"] * near) if k % 2 else 1.0
-            cr = 1.0 + s["crumple"] * (2 * _hash(i, k, 7) - 1) * (0.3 if z < 1.0 else 1.0)
+            near = max(0.0, 1.0 - abs(z - zn) / (130.0 if z > zn else 280.0))   # pleats run down from the neck
+            tight = min(1.0, max(0.0, (r - 30.0) / 40.0))     # the tight twisted neck itself is not pleated
+            depth = s["pleat"] * (1.3 if tuft else near) * tight
+            pleat = (1.0 - depth) if k % 2 else 1.0
+            amp = s["crumple"] * (2.5 if tuft else (0.3 if z < 1.0 else 1.0))
+            cr = 1.0 + amp * (2 * _hash(i, k, 7) - 1)
             rr = r * pleat * cr
             tw = 0.3 * (2 * math.pi / segs) * near * (2 * _hash(i, k, 3) - 1)   # the twist round the neck
-            gap = min(z - prof[i - 1][0], prof[i + 1][0] - z) if 0 < i < len(prof) - 1 else 0.0
-            zz = z + min(9.0, 0.3 * gap) * (2 * _hash(i, k, 11) - 1)      # ragged rings that never cross
+            if i == last:                             # the ruffled rim: petal tips at different heights
+                zz = z + 12.0 * _hash(i, k, 11)
+            else:
+                gap = min(z - prof[i - 1][0], prof[i + 1][0] - z) if 0 < i else 0.0
+                zz = z + min(9.0, 0.3 * gap) * (2 * _hash(i, k, 11) - 1)      # ragged rings that never cross
+            tw += 0.25 * (2 * math.pi / segs) * (2 * _hash(i, k, 5) - 1) * (0.0 if z < 1.0 else 1.0)
             ring.append(b.v(rr * math.cos(t + tw), rr * math.sin(t + tw), zz))
         rings.append(ring)
     for i in range(len(rings) - 1):
         A, B = rings[i], rings[i + 1]
         for k in range(segs):
             k1 = (k + 1) % segs
-            for tri in ((A[k], A[k1], B[k1]), (A[k], B[k1], B[k])) if (i + k) % 2 else \
-                    ((A[k], A[k1], B[k]), (A[k1], B[k1], B[k])):
+            # a regular triangle lattice: every other ring is turned half a step
+            tris = ((A[k], A[k1], B[k]), (A[k1], B[k1], B[k])) if i % 2 == 0 else \
+                ((A[k], B[k1], B[k]), (A[k], A[k1], B[k1]))
+            for tri in tris:
                 P = [b.verts[j] for j in tri]
                 cen = _mul(_add(_add(P[0], P[1]), P[2]), 1 / 3)
                 _face_out(b, tri, (cen[0], cen[1], 0.0), 0)
     b.fill([rings[0]], 0, 0, (0.0, 0.0, -1.0))
-    top = b.v(0.0, 0.0, prof[-1][0] - 12.0)          # the tuft's crumpled top, dipping in
+    top = b.v(0.0, 0.0, prof[-1][0] - 14.0)          # the tuft's crumpled top, dipping in
     for k in range(segs):
         _face_out(b, [rings[-1][k], rings[-1][(k + 1) % segs], top], (0.0, 0.0, 1.0), 0)
     return b
@@ -719,6 +1001,7 @@ ITEMS = {
     "h_backroom_mailer_l": lambda: item_mailer("L"),
     "h_backroom_mailer_s_open": lambda: item_mailer("S", True),
     "h_backroom_mailer_l_open": lambda: item_mailer("L", True),
+    "h_backroom_tapegun": item_tapegun,
     "h_backroom_trashcan": item_trashcan,
     "h_backroom_trashcan_lid": item_trashcan_lid,
     "h_backroom_trashbag": item_trashbag,

@@ -358,11 +358,8 @@ def _revolve(b: Builder, c: Vec3, axis: Vec3, prof: Sequence[Tuple[float, float]
         (r0, a0), (r1, a1) = prof[i], prof[j]
         on_r, on_a = (a1 - a0), -(r1 - r0)
         mr, ma = (r0 + r1) / 2 - cr, (a0 + a1) / 2 - ca
-        if closed and on_r * mr + on_a * ma < 0:
+        if on_r * mr + on_a * ma < 0:                # face away from the profile's centroid
             on_r, on_a = -on_r, -on_a
-        if not closed:                               # an open profile runs round the solid: normal points out
-            if on_r * mr + on_a * ma < 0:
-                on_r, on_a = -on_r, -on_a
         for k in range(sides):
             k1 = (k + 1) % sides
             tm = (angs[k] + angs[k1]) / 2 if k1 else angs[k] + math.pi / sides
@@ -647,7 +644,7 @@ def _tray_layout():
     bw, wall, dv = s["bin"][0], s["wall"], s["div"]
     xi0, xi1 = -bw / 2 + wall, bw / 2 - wall
     yi0 = s["bin_back"] + wall
-    yi1 = k["yf"] - k["pt"] - wall - 0.5 + 0.5          # the insert's front wall behind the panel
+    yi1 = k["yf"] - k["pt"] - wall                      # the insert's front wall behind the panel
     ztop = k["zb"] + s["bin"][1]
     zfl = ztop - s["pocket_d"]
     n = s["notes"]
@@ -787,8 +784,7 @@ def item_bills_stack() -> Item:
             regions["pz"] = R_FRONT
         if i == 0:
             regions["nz"] = R_BACK
-        skip = [] if i in (0, n - 1) else []
-        b.box((-nw / 2 + ox, -nd / 2 + oy, z0), (nw / 2 + ox, nd / 2 + oy, z1), mat=0, regions=regions, skip=skip)
+        b.box((-nw / 2 + ox, -nd / 2 + oy, z0), (nw / 2 + ox, nd / 2 + oy, z1), mat=0, regions=regions)
     # the offsets stay inside the stack bounds: 148 + 2 x 1 = 150, 68 + 2 x 1 = 70
     return Item(
         name="SM_CSK_Bills_Stack", lods=[Lod(b)], materials=["M_CSK_Money"],
@@ -1397,8 +1393,7 @@ def _phone_lod(level: int) -> Lod:
     b.fill([top, scr], PLASTIC, 0, (0, 0, 1))
     if level == 0:
         cr, cy = p["cam"]
-        cam = b.loop(rounded_rect(2 * cr, 2 * cr, cr * 0.999, 2) if False else
-                     [(cr * math.cos(2 * math.pi * k / 8), sh / 2 - cy + cr * math.sin(2 * math.pi * k / 8))
+        cam = b.loop([(cr * math.cos(2 * math.pi * k / 8), sh / 2 - cy + cr * math.sin(2 * math.pi * k / 8))
                       for k in range(8)], T)
         b.fill([scr, cam], SCREEN, R_FRONT, (0, 0, 1))
         b.fill([cam], PLASTIC, 0, (0, 0, 1))
