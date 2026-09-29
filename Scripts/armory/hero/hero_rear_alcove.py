@@ -81,10 +81,19 @@ MATERIALS = {
     # b4 (blind judge delta 4: over-bright white slots from the entrance): 0.90 -> 0.22
     # b7 (blind judge delta 5: from the entrance the b6 niches read as flat blank light boxes): 0.22 -> 0.12, so the
     # lit lining and the shelf read in front of it
-    "M_AK_HShowcasePanel": ("HShowcasePanel", None, {"emit_image": True, "emit": 0.12, "unlit": True}),
+    # r16 niches (C1 against reference 2: its niche back is a bright cream, near the rack alcove panel; the framed r16
+    # niche read a dim ochre box behind the tall case's glass; reference 2's is hot at the head, graded down): 0.12 ->
+    # 0.08 and no longer unlit, so the niche spot under the head grades it (base colour on; at 0.16 AgX bleached it to
+    # a pale cream, C1 golden mean 0.83 against the reference's 0.55 amber)
+    "M_AK_HShowcasePanel": ("HShowcasePanel", None, {"emit_image": True, "emit": 0.08}),
     # b7 (judge delta 5): the niche's lining (side returns, floor, shelf top): a warm pale satin that the soffit spot
     # grades from bright at the head to shadow at the counter, so the recess depth reads
     "M_AK_HShowcaseLining": (None, 1.0, {"color": "#A57D50", "rough": 0.5}),   # b9: #8C6A44 -> #A57D50
+    # r16 fix round (blind judge 7/10, point 3 / delta 4: the corner niche's black casing on the dark wall barely showed
+    # from C1, so it read as a lit slot more than a framed alcove): the casing in a warm mid-brown timber (the kit's
+    # T_AK_Timber lifted 2.6x, ~(88,73,62) against the block's ~(34,28,24)), a wider brass bead and a gold LED line
+    # down the opening's front arrises and under its head (as the wall bays' lit edges)
+    "M_AK_HNicheFrame": ("Timber", 2.0, {"tint": 2.6}),
 }
 
 T, LQ, BR, BZ = "M_AK_Timber", "M_AK_Lacquer", "M_AK_Brass", "M_AK_Bronze"
@@ -487,14 +496,34 @@ def pieces(G):
 # pale lining on its returns, a hidden glow line and a lens under its head, a thin lacquer sill with a brass nose. Under
 # it an inset panel field. EMPTY: no stand, figure or placeholder. Placed rot 180 like the alcove (local x 0..NB_W,
 # back at y 0 = NB_BACK_Y, the face at y NB_D = Y 19.40).
+# r16 niches round (2026-09-29, task (3): from C1 the r20 niches read as narrow lit slits beside the banners, partly
+# hidden by them; reference 2's are framed display alcoves with a lit back and a plinth). Measured with the C1 camera
+# (level shift lens, WorkFiles/armory/hero/room_preview/r16/niches/work/proj.py): the banners' cloth ends at y 145.7 and
+# their gold tassels hang to y 164.6 (x 349-395 / 1053-1099 of 1448), right over the r20 opening (x 380-410, y 130-190),
+# so its upper-left third sat behind the cloth and the right tassel. Reference 2's niche is x 382-412, y 170-235, its
+# head just under the banner's foot, a dark surround, a lit cream back hot at the head, a small plinth at its foot.
+# NOW: the opening sits under the tassels in the reference's pixel box, 0.50 m wide, 0.30 m deep. Its head is tied to
+# the banners (niche_z: BANNER_Z - 0.20 = +2.20 world, C1 y ~168, the frame head's top meeting the tassel foot, as
+# reference 2's niche head meets its banner's foot), its sill 2 cm over the rack alcove's cabinet top (as reference 2),
+# so with the 4-riser deck (DECK_Z +0.60) the opening is 0.86 m tall, sill +0.74 / head +1.60 on the deck (+1.34 / +2.20
+# world; C1 x ~379-413, y ~168-227 against reference 2's 382-412 / 170-235); on a higher deck the sill drops so the
+# opening keeps 0.85 m under the banners. A black lacquer casing frame (6 cm face,
+# 3.5 cm proud) with a brass bead round its sides and head; a lacquer plinth under it (12 cm tall, projecting 8 cm,
+# 2 cm past the frame each side, its top the warm lining so it reads as a lit ledge, a brass nose line) whose top is the
+# niche floor. The 0.10 m pilaster (with the frame in it) stays between the opening and the rack alcove's post. EMPTY.
 NB_W, NB_D, NB_H = 1.16, 0.545, 3.20
 NB_X = (1.50, 11.66)               # instance x (rot 180: the piece spans x - NB_W .. x): X 0.34-1.50 / 10.50-11.66
 NB_BACK_Y = 19.945                 # the back face: 5 cm clear of the north wall's upper base rail (Y 19.95-20.0)
-NO_W, NO_PIL = 0.45, 0.10          # the niche opening's width; the pilaster between it and the alcove
-NO_Z0, NO_Z1 = 0.85, 1.85          # its sill and head (deck-relative): +1.75 / +2.75 world
-NO_DEPTH = 0.25                    # sunk into the block (its back panel at local y NB_D - NO_DEPTH)
+NO_W, NO_PIL = 0.50, 0.10          # the niche opening's width; the pilaster between it and the alcove (frame inside it)
+NO_H_MAX, NO_H_MIN = 0.88, 0.85    # the opening's height (niche_z)
+HEAD_BELOW_BANNER = 0.20           # the head sits this far under the banners' tassel foot (BANNER_Z), world
+NO_DEPTH = 0.30                    # sunk into the block (its back panel at local y NB_D - NO_DEPTH)
+FR, FR_P = 0.06, 0.035             # the casing frame's face width and how far it stands proud of the block face
+PL_H, PL_P, PL_X = 0.12, 0.08, 0.02  # the plinth: height, projection past the block face (walk_check's niche routes
+                                    # stop 0.45 m before the face with a 0.35 m capsule), overhang past the frame
 LIN = "M_AK_HShowcaseLining"
 LITS = "M_AK_HShowcasePanel"
+NF = "M_AK_HNicheFrame"            # r16 fix round: the casing frame's warm mid-brown timber
 
 
 def niche_x(side):
@@ -503,44 +532,68 @@ def niche_x(side):
     return (NO_PIL, NO_PIL + NO_W) if side == "W" else (NB_W - NO_PIL - NO_W, NB_W - NO_PIL)
 
 
+def niche_z(G):
+    """The opening's sill (the plinth top) and head, deck-relative: the head under the banners' tassels, the sill 2 cm
+    over the rack alcove's cabinet top (CT), both as reference 2; if that leaves under NO_H_MIN (a higher deck), the sill
+    drops instead."""
+    z1 = G["BANNER_Z"] - HEAD_BELOW_BANNER - G["DECK_Z"]
+    z0 = CT + 0.02
+    z1 = min(z1, z0 + NO_H_MAX)
+    if z1 - z0 < NO_H_MIN:
+        z0 = z1 - NO_H_MIN
+    return round(z0, 4), round(z1, 4)
+
+
 def corner_niche(G, side):
     P = G["Piece"]("SM_AK_H_CornerNiche_" + side)
     assert abs(G["ROOM_L"] - 0.055 - NB_BACK_Y) < 1e-6, "hero_rear_alcove: NB_BACK_Y must follow ROOM_L (r20)"
     assert abs(G["REAR_ALCOVE_X"][0] - NB_X[0]) < 1e-6 and abs(G["REAR_ALCOVE_X"][1] + 1.8 - (NB_X[1] - NB_W)) < 1e-6,         "hero_rear_alcove: the niche blocks must meet the rear alcoves (REAR_ALCOVE_X)"
+    assert NO_PIL >= FR + 0.03, "hero_rear_alcove: the frame must fit inside the pilaster beside the alcove"
     W, D, H = NB_W, NB_D, NB_H
-    (x0, x1), z0, z1 = niche_x(side), NO_Z0, NO_Z1
+    (x0, x1), (z0, z1) = niche_x(side), niche_z(G)
+    assert z0 - PL_H > 0.15, "hero_rear_alcove: the plinth must stand clear of the deck"
     yb = D - NO_DEPTH                                                                        # the niche's back plane
-    # the dark block round the opening: two pilasters (full height), the part over the head, the base under the sill
+    zp = z0 - PL_H                                                                           # the plinth's underside
+    # the dark block round the opening: two pilasters (full height), the part over the head, the base under the plinth
     box(G, P, 0.0, x0, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
     box(G, P, x1, W, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
     box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, z1, H, T, bev=0.004, grain=0)
-    box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, 0.0, z0, T, bev=0.004, grain=0)
+    box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, 0.0, zp + 0.002, T, bev=0.004, grain=0)
     box(G, P, x0, x1, 0.0, yb, z0, z1, T, grain=2)                                           # fill behind the back
-    # the base's inset panel field (the face of the block under the niche, across the pilasters): a lacquer field
-    # 1.2 cm proud of a recessed ground, a thin brass inlay line inside it
-    fx0, fx1, fz0, fz1 = 0.07, W - 0.07, 0.10, z0 - 0.12
-    box(G, P, fx0, fx1, D - 0.002, D + 0.010, fz0, fz1, LQ, bev=0.003, grain=0)
-    for a0, a1, b0, b1 in ((fx0 + 0.03, fx1 - 0.03, fz0 + 0.03, fz0 + 0.034), (fx0 + 0.03, fx1 - 0.03, fz1 - 0.034, fz1 - 0.03),
-                           (fx0 + 0.03, fx0 + 0.034, fz0 + 0.034, fz1 - 0.034), (fx1 - 0.034, fx1 - 0.03, fz0 + 0.034, fz1 - 0.034)):
-        box(G, P, a0, a1, D + 0.009, D + 0.0115, b0, b1, BR, grain=0)
-    # the backlit cream panel (one quad, unique 0-1 UV: T_AK_HShowcasePanel), glow lines round its head and sides
+    # the backlit cream panel (one quad, unique 0-1 UV: T_AK_HShowcasePanel), a glow line along its head
     P.mesh([(x0, yb + 0.001, z0), (x1, yb + 0.001, z0), (x1, yb + 0.001, z1), (x0, yb + 0.001, z1)], [[0, 3, 2, 1]],
            [[(0.0, 0.0), (0.0, 1.0), (1.0, 1.0), (1.0, 0.0)]], LITS)
     box(G, P, x0 + 0.01, x1 - 0.01, yb, yb + 0.012, z1 - 0.016, z1 - 0.004, LE, grain=0)      # glow line at the head
-    # the lining: both returns, the soffit and the sill, warm pale satin (the head spot grades it)
+    # the lining: both returns and the soffit, warm pale satin (the head spot grades it); the floor is the plinth top
     box(G, P, x0, x0 + 0.008, yb, D, z0, z1, LIN, grain=2)
     box(G, P, x1 - 0.008, x1, yb, D, z0, z1, LIN, grain=2)
     box(G, P, x0, x1, yb, D, z1 - 0.004, z1, LIN, grain=0)
     # the lens under the head, 12 cm in front of the back panel
     P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0085, z1 - 0.002, 0.030, BR, 12)
     P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0125, z1 - 0.008, 0.021, LED, 12)
-    # the sill: a thin lacquer board projecting 2.5 cm, its top the lining, a brass nose line
-    box(G, P, x0 - 0.015, x1 + 0.015, yb, D + 0.025, z0 - 0.03, z0, LQ, bev=0.003, grain=0, front=("+z", LIN))
-    box(G, P, x0 - 0.012, x1 + 0.012, D + 0.024, D + 0.029, z0 - 0.022, z0 - 0.010, BR, grain=0)
-    # a thin bronze reveal line down both jambs of the opening (the pilasters' inner arrises)
-    box(G, P, x0 - 0.004, x0 + 0.001, D - 0.006, D + 0.002, z0, z1, BZ, grain=2)
-    box(G, P, x1 - 0.001, x1 + 0.004, D - 0.006, D + 0.002, z0, z1, BZ, grain=2)
+    # the plinth: a black lacquer block from the niche's back out 8 cm past the block face, 2 cm past the frame each
+    # side, its top the lining (the niche floor and a lit ledge in front of the opening), a brass nose line under its top
+    px0, px1 = x0 - FR - PL_X, x1 + FR + PL_X
+    box(G, P, px0, px1, 0.0, D + PL_P, zp, z0, LQ, bev=0.004, grain=0, front=("+z", LIN))
+    box(G, P, px0 + 0.006, px1 - 0.006, D + PL_P - 0.001, D + PL_P + 0.0025, z0 - 0.030, z0 - 0.021, BR, grain=0)
+    # the casing frame: two stiles standing on the plinth and a head rail across them (butt joints, no overlapping faces)
+    # r16 fix round: the casing in the warm mid-brown NF (was black lacquer), the bead 8 -> 12 mm
+    for a0, a1 in ((x0 - FR, x0), (x1, x1 + FR)):
+        box(G, P, a0, a1, D - 0.010, D + FR_P, z0, z1, NF, bev=0.004, grain=2)
+    box(G, P, x0 - FR, x1 + FR, D - 0.010, D + FR_P, z1, z1 + FR, NF, bev=0.004, grain=0)
+    # a brass bead on the frame's face along its inner edge (both stiles and the head)
+    bz = D + FR_P
+    box(G, P, x0 - 0.018, x0 - 0.006, bz - 0.001, bz + 0.002, z0 + 0.006, z1 + 0.018, BR, grain=2)
+    box(G, P, x1 + 0.006, x1 + 0.018, bz - 0.001, bz + 0.002, z0 + 0.006, z1 + 0.018, BR, grain=2)
+    box(G, P, x0 - 0.006, x1 + 0.006, bz - 0.001, bz + 0.002, z1 + 0.006, z1 + 0.018, BR, grain=0)
+    # r16 fix round: a gold LED line (8 mm) on the lining at the opening's front arrises and under its head, so the
+    # opening reads as a framed, edge-lit alcove from C1 (on the linings, 2 mm proud; the frame's inner faces cover
+    # their front ends)
+    box(G, P, x0 + 0.008, x0 + 0.010, D - 0.022, D - 0.014, z0, z1 - 0.004, LE, grain=2)
+    box(G, P, x1 - 0.010, x1 - 0.008, D - 0.022, D - 0.014, z0, z1 - 0.004, LE, grain=2)
+    box(G, P, x0 + 0.010, x1 - 0.010, D - 0.022, D - 0.014, z1 - 0.006, z1 - 0.004, LE, grain=0)
     P.col(0, W, 0, D, 0, H)
+    P.col(px0, px1, D, D + PL_P, zp, z0)
     return P
 
 
@@ -552,15 +605,19 @@ def instances():
 
 def lights():
     """One warm spot at each corner niche's lens, down the backlit panel (role alcove, as the rack alcoves' lens spots;
-    the b9 showcase's 0.8 power for the smaller 0.46 m niche)."""
+    the b9 showcase's 0.8 power for the smaller niche; r16: it follows the lowered 0.50 x 0.85 m opening and, now the
+    panel takes light, runs warmer (3200 -> 2500 K before the room's KELVIN_SHIFT): reference 2's niche back is a
+    saturated amber, C1 mean RGB (0.82, 0.50, 0.23), where the 3200 K spot left ours a pale cream (0.95, 0.81, 0.69)), at 0.5 power
+    (was 0.8: the spot now falls on the panel as well as the lining)."""
     import armory_hero as AH
     z = AH.G["DECK_Z"]
+    z0, z1 = niche_z(AH.G)
     out = []
     for side, x in zip("WE", NB_X):
         xc = x - sum(niche_x(side)) / 2                                     # world X of the niche's centre
         yb = NB_BACK_Y - (NB_D - NO_DEPTH)                                   # world Y of the niche's back panel
         out.append({"type": "spot", "name": f"NicheSpot_{side}", "loc": [round(xc, 3), round(yb - 0.12, 3),
-                    round(z + NO_Z1 - 0.02, 3)], "angle_deg": 90, "blend": 0.6, "kelvin": 3200, "role": "alcove",
-                    "shadows": True, "power_scale": 0.8, "aim": [round(xc, 3), round(yb - 0.01, 3),
-                                                                  round(z + NO_Z0, 3)]})
+                    round(z + z1 - 0.02, 3)], "angle_deg": 90, "blend": 0.6, "kelvin": 2500, "role": "alcove",
+                    "shadows": True, "power_scale": 0.5, "aim": [round(xc, 3), round(yb - 0.01, 3),
+                                                                  round(z + z0, 3)]})
     return out

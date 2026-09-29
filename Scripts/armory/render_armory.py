@@ -86,7 +86,12 @@ SKY = {  # colour, strength of the world seen through the windows
     "golden": ((0.90, 0.86, 0.80), 2.2),   # building stage: less orange fill (was 1.0, 0.66, 0.38); f1: cooler still
     "gallery": ((0.55, 0.62, 0.75), 0.35),
 }
-FOG = {"night": 0.0, "golden": 0.0004, "gallery": 0.0}   # look3: 0.0008 -> 0.0004 (grey veil on the left wall)   # f2: 0.0015 -> 0.0008 (judge delta 2: less haze and veil)   # building stage: 0.003 -> 0.0015 (reference 2 is crisp)   # look2: crisper, as reference 2         # fix1: 0.014 -> 0.006 (the review read the shafts as a sepia haze)
+# r16 fix round (blind judge delta 3: in golden the side bays' dark backs and the upper long walls read a "sparkly
+# gold-speck finish, glitter or terrazzo"): a --no-fog render of CW / C1 proved the specks were this haze's scatter
+# noise (denoised into round blobs against the dark walls; fading it off the walls did not remove them), and the shafts
+# add nothing else visible (reference 2 is crisp: sun patches on the floor, no visible beams). Golden haze 0.0004 -> 0
+# (--fog DENSITY still turns it on for a test)
+FOG = {"night": 0.0, "golden": 0.0, "gallery": 0.0}   # r16 fix round: golden 0.0004 -> 0 (see above)   # look3: 0.0008 -> 0.0004 (grey veil on the left wall)   # f2: 0.0015 -> 0.0008 (judge delta 2: less haze and veil)   # building stage: 0.003 -> 0.0015 (reference 2 is crisp)   # look2: crisper, as reference 2         # fix1: 0.014 -> 0.006 (the review read the shafts as a sepia haze)
 SUN_ANGLE_DEG = 0.5    # f1: 0.15 -> 0.5 (judge: soften the patch edges slightly)   # fix1: 0.8 -> 0.15. At 0.8 deg the ~7 m throw blurred the 25 mm lattice bars into one soft patch
 # f1: the niches are no longer emissive lightboxes and the decks are black: golden +0.8 -> +2.4 with AgX Very High
 # Contrast (was Medium High): C1 1086 x 815 p10 0.065 / p90 0.710 against the reference's 0.060 / 0.711
@@ -575,7 +580,7 @@ def main():
     for mname in arg("--no-emis-sampling", "").split(","):
         if mname in bpy.data.materials:
             bpy.data.materials[mname].cycles.emission_sampling = "NONE"
-    if FOG[preset] > 0 and "--no-fog" not in ARGS:
+    if (FOG[preset] > 0 or "--fog" in ARGS) and "--no-fog" not in ARGS:
         suns = [L for L in data["lights"] if L["type"] == "sun" and "travel_dir" in L]   # f2: two suns
         sun_dir = [Vector(L["travel_dir"]).normalized() for L in suns] or None
         add_fog(sc, float(arg("--fog", str(FOG[preset]))), sun_dir)

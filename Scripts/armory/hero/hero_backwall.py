@@ -143,6 +143,12 @@ MATERIALS = {
     # r20 rear round (reference 2 zoom: a thin bright line under each nose over a DARK riser; ours read as fat glowing
     # bars): 0.6 -> 0.2
     "M_AK_HStepWash": ("HHalo", None, {"emit_image": True, "emit": 0.2}),
+    # r16 stairs round (blind judge on night_20m: the treads read as glossy rounded tubes, mirror reflections of every
+    # LED line smearing the light down each riser): the flight's own finishes, off the kit's high-gloss lacquer (rough
+    # 0.16, coat 0.6): a matte near-black riser and a satin dark tread board (no clear coat), so each riser reads as one
+    # dark band under one thin line, as back_wall.png's flight
+    "M_AK_HStepRiser": (None, 1.0, {"color": "#0D0B0A", "rough": 0.62}),
+    "M_AK_HStepTread": (None, 1.0, {"color": "#16120F", "rough": 0.46}),
     # final r2 (blind judge: the downlights barely show): brighter lenses that drop below the soffit
     "M_AK_HLamp": (None, 1.0, {"color": "#140A02", "emit_color": "#FFB030", "emit": 9.0}),          # downlight lenses
     # polished brass (the reference caps, collars and kick plates are bright polished gold)
@@ -158,6 +164,7 @@ LL, HP, DECK, HALO, SCR = "M_AK_HLEDAmber", "M_AK_HPaintingTall", "M_AK_HDeck", 
 LINE, LPOST, LWASH = "M_AK_HLEDLine", "M_AK_HLEDPost", "M_AK_HLEDPostWash"
 LAMP, SATIN, LQS, SGLOW = "M_AK_HLamp", "M_AK_HSatinBlack", "M_AK_HLacquerSatin", "M_AK_HSoffitGlow"
 SWASH = "M_AK_HStepWash"
+SRISER, STREAD = "M_AK_HStepRiser", "M_AK_HStepTread"
 PAINT_ASPECT = 0.8738   # width / height of T_AK_HPainting (tex_painting.TARGET_ASPECT: the painting + paper above)
 SCREEN_TILE = (0.52, 1.04)   # metres per T_AK_HScreen tile (tex_backwall.SCREEN_W / SCREEN_H)
 
@@ -165,8 +172,12 @@ SCREEN_TILE = (0.52, 1.04)   # metres per T_AK_HScreen tile (tex_backwall.SCREEN
 # X 4.8-7.2 from the deck +0.60 to +1.50 under it). One sheet of backlit paper runs over both, from PAPER_Z0 (behind
 # the hero table) to PAPER_Z1 (just under the header); the painting's own picture (T_AK_HPainting) sits on it with its
 # ground at IMG_Z0 + ~5 cm, just over the hero table's top (+1.12)
-DECK_Z, PAINT_Z, PAINT_H_ = 0.90, 1.80, 2.15        # build_armory_kit DECK_Z / PAINT_Z / PAINT_H (asserted in painting_panel)
-LAND_Z = 0.75                                        # build_armory_kit LAND_Z (asserted in steps)
+# r16 stairs round (2026-09-29): the flight is 4 x 0.15 m risers up to a +0.60 deck (was 6 up to +0.90); everything on
+# the deck drops 0.30 m; the painting panel starts 0.90 m over the deck and keeps its top at +3.95 (2.45 m tall)
+DECK_Z, PAINT_Z, PAINT_H_ = 0.60, 1.50, 2.45        # build_armory_kit DECK_Z / PAINT_Z / PAINT_H (asserted in painting_panel)
+RISE, NRISE = 0.15, 4                                # build_armory_kit RISE / NRISE (asserted in steps)
+LAND_Z = round(DECK_Z - RISE, 4)                     # build_armory_kit LAND_Z: the tread under the lip riser (+0.45)
+ALCOVE_H = 3.20                                      # hero_rear_alcove: the rear alcoves' / corner niches' height on the deck
 # rear dais b7 (blind judge delta 7: the paper read portrait, ~170 x 190 px in C1, and the bay's painting larger than
 # reference 2's, which is about square over the table): 20 cm pilasters (was 10 cm), so the paper is 1.88 m wide
 # r20 (12 x 20 m room, the back wall 4 m further from C1): the b7 paper (1.88 m) measured 0.78x reference 2's against
@@ -179,7 +190,13 @@ PAINT_SW, HALO_W, PAINT_RAIL = 0.10, 0.06, 0.03     # pilaster width, halo width
 # made for the 2.08 m paper) and is spread 1.19x across the wider paper by the world-mapped U
 BAY_W, SCR_W = 2.8, 0.5
 PAPER_W = BAY_W - 2 * (PAINT_SW + HALO_W)            # 2.48 m (r20: 2.08; b7-b9: 1.88)
-PAPER_IMG_W = 2.08                                   # the width the tall sheet's picture height is scaled from
+# r16 fix round (blind judge regression: the top ~15 % of the r16 paper showed a smeared, mirrored ghost band): with
+# the picture's foot lowered to +1.00 its top (+1.00 + 2.38 = +3.38) no longer reached the paper's top (+3.50), so
+# tex_backwall.painting_tall filled the last 0.12 m with the plain band's rows MIRRORED (the ghost). The picture is now
+# scaled from a 2.36 m width (2.70 m tall, +1.00 to +3.70): the paper ends INSIDE it again (its plain top 7.4 % cut,
+# the r20 path, clean in night_20m), the crown sits ~10 % under the paper's top as before, the ground stays hidden
+# behind the 52 cm table (top +1.12), and the across-spread falls 1.19x -> 1.05x (the pine closer to its true shape)
+PAPER_IMG_W = 2.36                                   # the width the tall sheet's picture height is scaled from (r20: 2.08)
 PAINT_D = 0.18                                       # r20 rear round: the bay's surround depth off the wall (was 0.10)
 PAPER_Z0 = DECK_Z + PAINT_RAIL + HALO_W              # world +0.69
 # final r2 (blind judge: the paper read 2:3 portrait above the table, the reference's is about square, with the crown
@@ -190,7 +207,11 @@ PAPER_Z0 = DECK_Z + PAINT_RAIL + HALO_W              # world +0.69
 # reference 2; the picture (1.88 / PAINT_ASPECT = 2.15 m tall) starts at +1.30, just under the table top (reference 2
 # hides its foot behind the table), and its top 7 % (plain paper over the crown) is cut
 PAPER_Z1 = 3.50                                      # world (b6: 3.64; b7-b9: 3.30; r20: the wider picture's crown)
-IMG_Z0 = 1.30                                        # world height of the painting picture's bottom edge (b6: 1.36)
+# r16 stairs round: the paper keeps its top (+3.50) and runs down with the deck (PAPER_Z0 0.99 -> 0.69), so 2.38 m of it
+# shows over the 52 cm table (top +1.12; was 2.08 m over +1.42): 2.48 x 2.38 m, about square as back_wall.png's paper.
+# The picture keeps its scale and its ground just behind the table top (IMG_Z0 = DECK_Z + 0.40, was 1.30 = 0.90 + 0.40);
+# T_AK_HPaintingTall must be regenerated for these values (tex_backwall.py -- tall), or the r20 sheet stretches 1.12x
+IMG_Z0 = round(DECK_Z + 0.40, 4)                     # world height of the painting picture's bottom edge (+1.00)
 HEADER_REVEAL = 0.005                                # the header field: a faint 5 mm step behind the frame rails
 
 # the canopy (instance X 3.90, Y 15.705 = 2 cm in front of the kit's header beam SM_AK_Ceiling_Beam_4, pivot +3.95 =
@@ -475,7 +496,7 @@ def post_heavy(G):
     in the beam's band; a solid brass block (22 cm) at the foot on the deck."""
     b = Build(G, "SM_AK_Post_Heavy_480")
     hw = HEAVY_HW
-    assert abs(G["HEAVY_Y"] - HEAVY_Y) < 1e-6 and abs(G["LAND_Z"] - LAND_Z) < 1e-6, "hero_backwall: HEAVY_Y / LAND_Z"
+    assert abs(G["HEAVY_Y"] - HEAVY_Y) < 1e-6, "hero_backwall: HEAVY_Y"
     F = -0.60                                         # rear dais b4 (judge delta 2): the foot on the hall floor
     b.cbox(-0.148, 0.148, -0.148, 0.148, 0.0, 0.822 + F, BR, 0.005)                    # the solid brass foot block
     b.cbox(-0.137, 0.137, -0.137, 0.137, 0.818 + F, 0.832 + F, LQ, 0.003)              # dark line over it
@@ -592,12 +613,11 @@ def platform_edge(G):
     a lacquer carcass hidden in the landing (y >= 0.03 below +0.75), and the deck panels behind it."""
     b = Build(G, "SM_AK_Platform_Edge_22")
     W = 2.2                                           # b4: the centre bay only (X 3.80-8.20, two modules)
-    b.box(0, W, 0.03, DECK_D, 0, LAND_Z, LQ)                                              # carcass (in the landing)
-    # b7 (judge delta 3): the flight's 6th riser, lit like the others, its nose the deck's polished edge
-    riser(b, W, -0.02, LAND_Z + 0.001, DECK_Z, "deck", 0.10)                              # the 6th riser (lit)
-    b.box(0, W, 0.10, DECK_D, LAND_Z + 0.001, DECK_Z - 0.03, LQ)                          # body under the deck panels
-    deck_boards(b, 0.10, DECK_D, x1=W)
-    return b.done([(0, W, -0.02, DECK_D, 0, DECK_Z)])
+    # r16 stairs round: a plain deck module (the lip riser is now the flight's 4th, in SM_AK_Steps_22, whose top tread
+    # runs on as the deck to this row): the lacquer body under two polished deck panels, as SM_AK_Platform_2x1
+    b.box(0, W, 0.0, DECK_D, 0, DECK_Z - 0.03, LQ)
+    deck_boards(b, 0.0, DECK_D, x1=W)
+    return b.done([(0, W, 0.0, DECK_D, 0, DECK_Z)])
 
 
 def side_plinth(G):
@@ -648,20 +668,42 @@ def steps(G):
     judge delta 3: b4-b6 read as four steps up to a dark landing pad) the first five of six uniform risers of 0.15 m with
     a 0.42 m going (GOING) up to the deck riser (SM_AK_Platform_Edge_22 at y 2.10 = DECK_Y), ONE crisp amber line under
     each nose with the warm wash down the riser (r4 / final r2), except the 5th riser (+0.60 to +0.75), unlit: it
-    carries the emblem (reference 2's unlit 5th riser). Every tread is the lacquer tread board."""
+    carries the emblem (reference 2's unlit 5th riser). Every tread is the lacquer tread board.
+    (r16: four risers to the +0.60 deck, crisp_step() below; the emblem is on the lip riser)"""
     assert abs(G["LAND_Z"] - LAND_Z) < 1e-6 and abs(G["DECK_Z"] - DECK_Z) < 1e-6, "hero_backwall: LAND_Z / DECK_Z"
+    assert abs(G["RISE"] - RISE) < 1e-6 and G["NRISE"] == NRISE, "hero_backwall: RISE / NRISE"
     b = Build(G, "SM_AK_Steps_22")
     W, LD, GO = 2.2, G["DECK_Y"] - G["STAIR_Y0"], G["GOING"]
     cols = []
-    # r20 fix round (blind judge 7/10, delta 1: the unlit crest riser over the deep landing read as one tall step above a
-    # flight of four): five identical lit risers and treads (0.15 m, GOING 0.35) up to the deck riser, which is the
-    # sixth, identical, lit one (SM_AK_Platform_Edge_22); no landing, no unlit riser, no brass strip; the emblem moved to
-    # the sixth riser (build_armory_kit SM_AK_EmblemDisc_08)
-    assert abs(LD - 5 * GO) < 1e-6, "hero_backwall: the flight is five goings to the deck lip"
-    for k in range(5):
-        riser(b, W, -0.02 + GO * k, 0.15 * k, 0.15 * (k + 1), True, LD if k == 4 else GO * (k + 1) + 0.005)
-        cols.append((0, W, -0.02 + GO * k, LD, 0.15 * k, 0.15 * (k + 1)))
+    # r16 stairs round (blind judge on night_20m: the treads read as glossy rounded tubes, the flight too tall - 5-6 lit
+    # steps against about 4 in armory3_reference2.png / back_wall.png, whose section shows 4 risers to a lower deck):
+    # FOUR equal risers (RISE 0.15, GOING 0.35) from the foot to the deck lip (y 3 x GOING = LIP_Y), each a crisp flat
+    # tread board (a square nosing with a 3 mm bevel, the satin tread finish; the lip's top in the polished deck finish)
+    # over a matte near-black riser, and ONE thin (1 cm) amber line tucked under each nose, no wash on the riser. The top
+    # tread runs on as the deck (+0.60) back to DECK_Y, where SM_AK_Platform_Edge_22 (now plain deck) continues it
+    ylip = GO * (NRISE - 1)
+    assert abs(G["LIP_Y"] - G["STAIR_Y0"] - ylip) < 1e-6 and ylip + 0.10 < LD, "hero_backwall: LIP_Y"
+    for k in range(NRISE):
+        yn, z0, z1 = -0.02 + GO * k, RISE * k, RISE * (k + 1)
+        top = k == NRISE - 1
+        crisp_step(b, W, yn, z0, z1, DECK if top else STREAD, ylip + 0.10 if top else GO * (k + 1) + 0.005,
+                   LD if top else None)
+        cols.append((0, W, yn, LD, z0, z1))
+    b.box(0, W, ylip + 0.10, LD, DECK_Z - 0.036, DECK_Z - 0.03, LQ, grain="x")           # under the deck panels
+    deck_boards(b, ylip + 0.10, LD, n_from=ylip + 0.10, x1=W)
     return b.done(cols)
+
+
+def crisp_step(b, W, yn, z_lo, zt, top_mat, board_to, block_to=None, nose_h=0.035):
+    """r16 stairs round: one riser and its tread board across local x 0-W: a matte near-black riser block (SRISER) from
+    z_lo up under the board, its face 2.5 cm behind the nose; a flat 3.5 cm tread board with a SQUARE nosing (3 mm bevel
+    on every edge; its top in top_mat) from the nose at yn back to board_to; ONE thin amber line (1 cm, LINE) tucked
+    under the nose, 1 cm behind its face. block_to: how far back the riser block runs (default board_to)."""
+    zb = zt - nose_h
+    yr = yn + 0.025                                                                       # riser face
+    b.box(0, W, yr, block_to or board_to, z_lo, zb + 0.001, SRISER, grain="x")           # riser block (matte)
+    b.cbox(0, W, yn, board_to, zb, zt, STREAD, 0.003, grain="x", mat_fn=top_is(top_mat, STREAD))   # tread board
+    b.box(0.0005, W - 0.0005, yn + 0.010, yr + 0.002, zb - 0.012, zb - 0.002, LINE)       # the line under the nose
 
 
 def stair_cheek(G):
@@ -921,14 +963,25 @@ WING_LIGHTS = ((1.95, 2.85), (9.15, 10.05))       # downlights: the alcove centr
 def canopy_wing(G, k):
     assert abs(G["ROOM_L"] - 0.295 - CANOPY_Y) < 1e-6, "hero_backwall: CANOPY_Y must follow ROOM_L (r20)"
     assert tuple(G["REAR_ALCOVE_X"]) == (WING_POSTS[0][0], WING_POSTS[1][0]), "hero_backwall: REAR_ALCOVE_X changed"
+    assert abs(G["DECK_Z"] - DECK_Z) < 1e-6, "hero_backwall: DECK_Z changed"
     b = Build(G, "SM_AK_H_CanopyWing_" + "WE"[k])
     x0, x1 = WING_X[k]
     L, D, zt = x1 - x0, CANOPY_D, SOFFIT
     b.cbox(0.0, L, -D, -0.001, zt, CANOPY_TOP - 0.05, T, 0.005, grain="x")                 # the top beam
     b.cbox(0.0, L, -D - 0.018, -0.001, CANOPY_TOP - 0.052, CANOPY_TOP, T, 0.006, grain="x")   # the lip
-    b.cbox(0.004, L - 0.004, -D - 0.005, -D + 0.014, zt - 0.022, zt + 0.001, BR, 0.002, grain="x")   # brass fillet
+    # r16 stairs round: the deck dropped 0.30 m, so the rear alcoves' and corner niches' heads (DECK_Z + ALCOVE_H, +3.80;
+    # were +4.10, standing in the beam) left a 0.36 m slot of bare wall under the beam: the beam's front drops as a
+    # valance to 3 mm over their heads (back face at the alcoves' front plane, local y -0.30 = world Y 19.405), so the
+    # heads still meet one dark beam, as back_wall.png; the brass fillet, the warm line and the wing downlights move to
+    # its underside (zu)
+    zu = round(DECK_Z + ALCOVE_H + 0.003 - HEADER_Z, 4)                                    # local (-0.057)
+    if zu < zt - 0.01:
+        b.cbox(0.0, L, -D, -0.30, zu, zt + 0.004, T, 0.004, grain="x")                     # the valance
+    else:
+        zu = zt
+    b.cbox(0.004, L - 0.004, -D - 0.005, -D + 0.014, zu - 0.022, zu + 0.001, BR, 0.002, grain="x")   # brass fillet
     # a fine warm line under the beam's front edge, as the canopy's recess line: the header reads as one lit band
-    b.box(0.03, L - 0.03, -D + 0.035, -D + 0.055, zt - 0.008, zt + 0.001, LL)
+    b.box(0.03, L - 0.03, -D + 0.035, -D + 0.055, zu - 0.008, zu + 0.001, LL)
     for xp in WING_POSTS[k]:                                                                 # the brass squares
         c = xp - x0
         b.cbox(c - 0.10, c + 0.10, -D - 0.004, -D + 0.001, zt + 0.02, CANOPY_TOP - 0.07, BR, 0.0015)
@@ -965,13 +1018,14 @@ def instances():
     # the downlights' centre line (Y 15.215: over the lit recess, 13 cm in front of its back) in the top beam's
     # underside (final r2: +4.16, the canopy hangs 9 cm lower)
     cy, cz = CANOPY_Y + (RECESS_Y - CANOPY_D) / 2, HEADER_Z + SOFFIT
+    czw = round(min(cz, DECK_Z + ALCOVE_H + 0.003), 4)   # r16: the wings' downlights under their valance (canopy_wing)
     return [("SM_AK_H_Canopy", 3.90, CANOPY_Y, HEADER_Z, 0.0),
             ("SM_AK_H_TopBeam", HEAVY_X[0] + HEAVY_HW + BEAM_GAP, BEAM_Y0, BEAM_Z0, 0.0),
             ("SM_AK_H_PaintingBase", G_("PAINT_BAY_X")[1], G_ROOM_L(), DECK_Z, 180.0),   # r20 fix round: X 4.6-7.4
             ("SM_AK_H_DownlightBox", 5.425, cy, cz, 0.0), ("SM_AK_H_DownlightBox", 6.575, cy, cz, 0.0),
             ("SM_AK_H_Downlight", 4.425, cy, cz, 0.0), ("SM_AK_H_Downlight", 7.575, cy, cz, 0.0)] + [
             ("SM_AK_H_CanopyWing_" + "WE"[k], WING_X[k][0], CANOPY_Y, HEADER_Z, 0.0) for k in (0, 1)] + [
-            ("SM_AK_H_Downlight", x, cy, cz, 0.0) for xs in WING_LIGHTS for x in xs] + [
+            ("SM_AK_H_Downlight", x, cy, czw, 0.0) for xs in WING_LIGHTS for x in xs] + [
             ("SM_AK_H_LanternStand", x, y, 0.0, 0.0) for (x, y, z, k) in G_("LANTERNS") if k == G_("LANTERN_S")]
 
 

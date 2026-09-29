@@ -24,7 +24,11 @@ T_AK_HNicheWashiRoom_* / T_AK_HNicheWashiRoom190_*  (calibration pass 2, 2026-09
   the same paper (seed, fibres, relief) as a plain beige albedo (ROOM_PAPER), lit by the niche's downlight, so the back
   reads warm beige, hot under the lens and falling off toward the ledge, as reference 2's niches (washi_room()).
 
-Writes only its own sets (never overwrites another set's textures).
+T_AK_HBayBoard_BC / _ORM / _N  (r16 walls round, 2026-09-29: M_AK_HBayBoard, the wall bays' DARK backboard)
+  armory3_reference2.png's side-wall displays: a matte dark warm taupe hemp cloth board, 1 m tile (bay_board()).
+
+Writes only its own sets (never overwrites another set's textures). -- --out DIR writes into DIR (a test copy's
+<preview dir>/Textures); -- --board writes only T_AK_HBayBoard.
 Run (Git Bash, from the project root):
   "/c/Program Files/Blender Foundation/Blender 5.2/blender.exe" -b --factory-startup --python Scripts/armory/hero/tex_walls.py
   (-- --room: only the pass-2 room sets)
@@ -280,12 +284,66 @@ ROOM_SETS = {"HNicheWashiRoom": 1.26, "HNicheWashiRoom190": 1.00}
 ROOM_PAPER = (0.80, 0.64, 0.44)
 OWN = OWN + tuple(f"T_AK_{k}_" for k in ROOM_SETS)
 
+# ------------------------------------------------------------------ dark bay backboard (r16 walls round, 2026-09-29)
+# The room judge: the lit wall bays read as big flat beige glowing panels (blank shoji). armory3_reference2.png's side
+# wall displays have DARK backboards (measured between the downlight pools ~sRGB (90,60,40) in its golden light, the
+# pools ~(250,210,135)), dark frames and a warm gold light only at the edges and grazing down from the top. The board:
+# a matte dark warm taupe hemp cloth on a board, 1 m tile (hero_walls maps it in metres, so the 3.85 m bay is not a
+# stretched picture): a fine plain weave (warp and weft ~1.6 mm pitch), slubbed threads, a faint mottle; low contrast so
+# it reads as a quiet dark board under the downlight graze.
+BOARD_SET = "HBayBoard"
+N_BOARD = 2048
+BOARD_BASE = (0.40, 0.32, 0.25)      # sRGB albedo (~(102,82,64)); calibrated in the room (r16 walls t2: (0.235,0.196,0.168) read black at night)
+OWN = OWN + (f"T_AK_{BOARD_SET}_",)
+
+
+def bay_board():
+    rng = np.random.default_rng(SEED + 31)
+    n = N_BOARD
+    t = (np.arange(n) + 0.5) / n
+    U, VV = np.meshgrid(t, t)
+    threads = 640                                   # per metre (tiles: an integer count over the tile)
+    # slubs: each thread's thickness wanders along its length (long blur along the thread, tiling through the FFT)
+    slub_w = blur(rng.normal(0, 1, (n, n)), 40, 0.8)     # weft (horizontal threads): long in x
+    slub_w /= slub_w.std() + 1e-9
+    slub_p = blur(rng.normal(0, 1, (n, n)), 0.8, 40)     # warp (vertical threads): long in y
+    slub_p /= slub_p.std() + 1e-9
+    weft = 0.5 + 0.5 * np.cos(2 * np.pi * threads * VV)
+    warp = 0.5 + 0.5 * np.cos(2 * np.pi * threads * U)
+    over = (np.floor(threads * U) + np.floor(threads * VV)) % 2       # plain weave: which thread lies on top
+    hgt = np.where(over > 0, weft * (1 + 0.25 * slub_w), warp * (1 + 0.25 * slub_p))
+    tone = 0.035 * (hgt - hgt.mean()) / (hgt.std() + 1e-9)
+    tone += 0.030 * np.where(over > 0, slub_w, slub_p)
+    mott = blur(rng.normal(0, 1, (n, n)), 90, 90)
+    mott = 0.030 * mott / (mott.std() + 1e-9)
+    lin = srgb_to_lin(np.array(BOARD_BASE)) * np.exp(tone + mott)[..., None]
+    bc = lin_to_srgb(lin)
+    sets = {k: TEX / f"T_AK_{BOARD_SET}_{k}.png" for k in ("BC", "ORM", "N")}
+    save(sets["BC"], bc)
+    orm = np.zeros((n, n, 3))
+    orm[..., 0] = 1.0 - 0.10 * (1 - hgt)
+    orm[..., 1] = 0.86 + 0.04 * (1 - hgt)
+    orm[..., 2] = 0.0
+    save(sets["ORM"], orm, noncolor=True)
+    save(sets["N"], normal_from_height(blur(hgt, 0.7, 0.7), 0.6), noncolor=True)
+    print("BAY BOARD written", sets["BC"], "mean sRGB", [round(float(c) * 255) for c in bc.reshape(-1, 3).mean(0)])
+
+
 if __name__ == "__main__":
     import sys
-    only_room = "--room" in (sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
+    _a = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+    if "--out" in _a:   # a test copy: write into <preview dir>/Textures (build_armory_kit.tex_file prefers it)
+        TEX = Path(_a[_a.index("--out") + 1])
+        TEX.mkdir(parents=True, exist_ok=True)
+        OAK = {k: TEX / f"T_AK_HWallOak_{k}.png" for k in ("BC", "ORM", "N")}
+    if "--board" in _a:   # r16 walls round: only the dark bay backboard set
+        bay_board()
+        sys.exit(0)
+    only_room = "--room" in _a
     if not only_room:   # --room: write only the pass-2 room sets (the studio washi and the oak are left as they are)
         for _name, _h in WASHI_SETS.items():
             washi(_name, _h)
         oak()
     for _name, _h in ROOM_SETS.items():
         washi_room(_name, _h)
+    bay_board()

@@ -75,9 +75,12 @@ ROUTES = {
     # 3.40-4.60): the aisles at X 4.05 / 7.95 keep 0.60 m to them, the slant in front of them 0.53 m; the parked door
     # leaves are X 2.40-4.10 / 7.90-9.60 (Y 0.14-0.19); the wall walks pass the wide display bays (front X 0.294)
     # r20 fix round: to 0.38 m before the flight's nose (15.83), then up it onto the +0.75 tread (Y 17.42)
-    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 2.8), (4.05, 3.1), (4.05, 15.45),
+    # r16 stairs+cases round: the front pair 5 / 8 moved forward (X 2.5-3.3 / 8.7-9.5, Y 3.0-4.2): the slant onto the
+    # aisle runs in front of them (0.6 m clear of their inner front corner, 0.45 m of the entry lantern's back corner);
+    # the flight is four 0.15 m risers (foot 15.85, lip 16.90) to the +0.60 deck, so Y 17.42 is on the deck
+    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 2.3), (4.05, 2.65), (4.05, 15.45),
                                    (4.3, 15.45), (4.3, 17.42)],
-    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 2.7), (7.95, 3.0), (7.95, 15.45),
+    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 2.3), (7.95, 2.65), (7.95, 15.45),
                                    (7.7, 15.45), (7.7, 17.42)],
     # r20 rear round: to 0.38 m before the wing plinth's face (Y 16.43; was the b7 cabinet front 16.76)
     "west_wall_walk_along_niches": [(3.0, 1.5), (0.75, 1.5), (0.75, 16.05)],       # behind the west side cases
@@ -85,12 +88,20 @@ ROUTES = {
     # r20 b3: case 1 Y 3.35-4.65, case 2 8.20-9.40, case 3 13.10-14.10; the side cases' inner faces X 3.05 / 8.95
     # r20 fix round: case 1 Y 3.35-4.65, case 2 8.10-9.30, case 3 12.90-13.90, the flight's nose 15.83; the side cases'
     # inner faces X 3.05 / 8.95 (0.40 m from the route ends)
-    "centre_gap_case1_case2": [(3.45, 6.35), (8.55, 6.35)],
-    "centre_gap_case2_case3": [(3.45, 11.10), (8.55, 11.10)],
-    "centre_gap_case3_to_flight": [(3.45, 14.85), (8.55, 14.85)],
+    # r16 stairs+cases round: the side rows staggered as reference 2 (west 5 / 4 / G1 / G3 at Y 3.0-4.2 / 5.0-6.5 /
+    # 7.35-8.75 / 10.6-12.1, inner faces X 3.3 / 3.55; east 8 / 7 / 6 / G2 at 3.0-4.2 / 5.05-6.45 / 7.3-8.8 / 10.6-12.1,
+    # inner faces X 8.7 / 8.45): the centre gaps run wall walk to wall walk through the 0.80 m gaps between the side
+    # cases (Y 6.9: 0.40 m clear of 4 / 6; Y 9.7: 0.40 m behind case 2) and in front of the flight
+    # r16 fix round: the rows step out to the walls (tall 4 / 6 / G3 / G2 at X 1.60 / 10.40, 1.0 x 0.85 m: faces
+    # X 1.175 / 10.825, Y 5.25-6.25 / 7.55-8.55 / 10.85-11.85; S G1 / 7 at X 2.10 / 9.90, Y 7.35-8.75 / 5.05-6.45): the
+    # wall walks (X 0.75 / 11.25) keep 0.075 m, the cross walks 0.30-0.65 m
+    "centre_gap_case1_case2": [(0.75, 6.9), (11.25, 6.9)],
+    "centre_gap_case2_case3": [(0.75, 9.7), (11.25, 9.7)],
+    "centre_gap_case3_to_flight": [(0.75, 14.85), (11.25, 14.85)],
     # r20 round 3 (NEW): between case 5 / 8 and case 1 (X 3.45-5.10 / 6.90-8.55), from the wall walk to the centre gap
-    "west_wall_between_case5_and_case1": [(0.75, 5.35), (4.30, 5.35), (4.30, 3.10)],
-    "east_wall_between_case8_and_case1": [(11.25, 5.35), (7.70, 5.35), (7.70, 3.10)],
+    # r16: through the 0.80 m gap between the front case and the second case (5 / 4, 8 / 7) onto the aisle
+    "west_wall_between_case5_and_case4": [(0.75, 4.6), (4.05, 4.6), (4.05, 2.9)],
+    "east_wall_between_case8_and_case7": [(11.25, 4.6), (7.95, 4.6), (7.95, 2.9)],
     # rear dais: case 3's back is Y 11.8 (X 5.2-6.8); up the flight on a slant onto the landing, the hero table front
     # at Y 14.55 on the +0.90 deck
     "aisle_up_the_steps_to_hero_table": [(9.0, 15.45), (7.7, 15.45), (6.0, 17.42), (6.0, 18.45)],   # r20 fix round
@@ -121,6 +132,7 @@ ROUTES = {
     # r20 rear round: the wings are one +0.90 plinth (no terraces): from the +0.75 landing up one 0.15 m step onto
     # the west / east wing deck at X 3.80 / 8.20, 0.37 m behind the heavy posts' back faces (Y 16.68)
     # r20 fix round: from the +0.75 tread (Y 17.25-17.60) up one 0.15 m step onto the wing deck
+    # r16: the flight's top tread is the +0.60 deck itself (from Y 16.90): level across onto the wings
     "landing_onto_west_wing_deck": [(5.0, 17.42), (0.8, 17.42)],
     "landing_onto_east_wing_deck": [(7.0, 17.42), (11.2, 17.42)],
     # r20 rear round (NEW): past the stair-foot lanterns on their stands (X 3.12-3.42 / 8.58-8.88, Y 15.55-15.85) along

@@ -45,6 +45,13 @@ Window pass (user decision 2026-09-28 "follow the armory reference"): SM_AK_Wind
   through). Name, pivot, bbox (1.50 x 0.04 x 1.45, the old hero posts' 8 cm depth is gone) and collision as scripted.
   Room check (C1 at the reference framing, region_stats side_window): L0.68 -> 0.82 (reference 0.79).
 
+r16 walls round (2026-09-29, room judge: the lit bays read as big flat beige glowing panels, like blank shoji): the
+  backboard of every bay is M_AK_HBayBoard (T_AK_HBayBoard, tex_walls.bay_board: a matte dark warm taupe cloth board,
+  sRGB albedo ~(102,82,64), 1 m tile mapped in metres), no emission (was the beige washi room set with its own glow).
+  The light is at the edges: the LED lines #FFB45A emit 4.0 (was #FFCB78 0.30), their gold returns 0.6 (was 0.3), and
+  the downlights' graze from the lenses under the head. Bays stay EMPTY. Test copy r16/walls: bay L (display) night
+  C1 0.40 -> 0.13, CW 0.47 -> 0.15, C5 0.48 -> 0.15; golden C1 0.54 -> 0.21 (reference 2's right bay 0.36 with items).
+
 ENABLED stays False: the user reviews images of every piece before anything goes into the armory.
 """
 import bmesh
@@ -58,32 +65,31 @@ OAK = "M_AK_HWallOak"         # the wall pieces' dark oak: T_AK_HWallOak (tex_wa
 LE = "M_AK_HNicheLED"         # calib r1: renamed from M_AK_HLEDEdge (clashed with hero_rear_alcove's). The niche's LED lines: warm golden white (wall_alcove.png ~(253,235,164))
 LR = "M_AK_HLEDReturn"        # the gold-lit return beside each LED line (the reference's lit side edge, ~(231,170,101))
 LD = "M_AK_HLEDDown"          # the down-facing toe-kick strip under the niche (a warm pool on the floor)
-PAPER = "M_AK_HNicheWashi"    # the lit washi back panel of the 2.40 m niche: T_AK_HNicheWashi (tex_walls.py), unlit emissive
-PAPER190 = "M_AK_HNicheWashi190"   # the same for the 1.90 m niche (its own opening height): T_AK_HNicheWashi190
 LINING = "M_AK_ScreenPanel"   # dark matte board above the paper, behind the head
 NSIDE = "M_AK_HNicheSide"     # the niche's side linings: dark bronze with a faint gold glow (the reference's lit sides)
 SASH = "M_AK_HWallSash"       # the kit's walnut board set (T_AK_Plank), brightened: window.png's warm copper-walnut sash
 GLOSS = "M_AK_Glaze"          # the kit's high-gloss black (vases): the sill's gloss lacquer
 
-E_WASHI = 5.0   # = tex_walls.E_WASHI: the washi BC is painted in scene-linear emission / E_WASHI
-# calibration pass 1 (room judge: the lower niches read as flat overexposed white-cream panels, C1 L0.74 41 % clipped;
-# reference 2's are warm beige recesses lit from the top, falling off downward, ~L0.3-0.4): the washi's own glow in the
-# room = E_WASHI x WASHI_ROOM (5.0 -> 0.03; under the room's +2.4 EV AgX even 1.5 clipped), and the paper is no longer
-# unlit: its picture is also its base colour, so the niche's own downlight (lights(): PanelLight_*, at the lens under the
-# head) grazes it from the top and falls off toward the ledge (the picture keeps its studio design)
-WASHI_ROOM = 0.006
-# calibration pass 2 (room judge: pass 1's niches read as saturated amber-orange panels with no downlight gradient; the
-# studio picture is painted glow, ~sRGB (135,92,24) as an ALBEDO, so the warm downlight turned it orange): in the room
-# the paper wears T_AK_HNicheWashiRoom(190) (tex_walls.washi_room: the same fibres as a beige albedo, sRGB ~(203,174,132))
-# lit by the niche downlight, with a faint glow of its own (WASHI_ROOM_GLOW x the picture)
-WASHI_ROOM_GLOW = 0.02
+# r16 walls round (2026-09-29, room judge: the lit bays read as big flat beige glowing panels, like blank shoji;
+# armory3_reference2.png's side-wall displays, wall_alcove.png and side_wall_bay.png: DARK backboards, dark frames, a warm
+# gold light only at the edges (thin LED lines) and grazing down from the top): the washi back (T_AK_HNicheWashiRoom,
+# beige albedo with its own glow) is replaced by M_AK_HBayBoard, a matte dark warm taupe cloth board (T_AK_HBayBoard,
+# tex_walls.bay_board, 1 m tile mapped in metres), no emission: the only light on it is the downlights' graze from the
+# lenses under the head (lights() PanelLight_*) and the spill of the gold LED lines down its sides and across its top.
+# The bays stay EMPTY (no rails, pegs, mounts or items: the user adds items one at a time).
+BOARD = "M_AK_HBayBoard"
 MATERIALS = {
-    PAPER: ("HNicheWashiRoom", None, {"emit_image": True, "emit": WASHI_ROOM_GLOW}),
-    PAPER190: ("HNicheWashiRoom190", None, {"emit_image": True, "emit": WASHI_ROOM_GLOW}),
+    # r16 fix round (blind judge 7/10, delta 3: in golden light the bays' backs had a sparkly gold-speck finish, read
+    # as glitter or terrazzo): the 1.6 mm cloth weave (640 threads / m at 2048 px: ~3 px per thread) aliased into
+    # speckle and its normal glinted in the sun; the board is now a PLAIN matte dark lacquer-cloth, one flat colour
+    # (T_AK_HBayBoard's mean ~(102,82,64) a touch darker and calmer), no normal, no texture
+    BOARD: (None, 1.0, {"color": "#5A4838", "rough": 0.85}),   # r16 walls: ("HBayBoard", 1.0, {})
     OAK: ("HWallOak", 1.0, {}),
     SASH: ("Plank", 4.0, {"tint": 1.35}),
-    LE: (None, 1.0, {"color": "#FFCB78", "emit": 0.30}),   # calibration pass 2: 1.0 -> 0.30 (the side lines lit the paper evenly top to bottom: no downlight pool). Pass 1: 5.0 -> 1.0
-    LR: (None, 1.0, {"color": "#2A1A0C", "emit": 0.3, "emit_color": "#FFA522"}),   # calibration pass 2: 0.5 -> 0.3. Pass 1: 1.4 -> 0.5
+    # r16 walls: the LED lines are the bay's light now (thin gold lines, as the case frames' strips): #FFCB78 0.30 ->
+    # #FFB45A 4.0 (pass 2 had cut them to 0.30 only because they lit the beige paper evenly)
+    LE: (None, 1.0, {"color": "#FFB45A", "emit": 4.0}),
+    LR: (None, 1.0, {"color": "#2A1A0C", "emit": 0.6, "emit_color": "#FFA522"}),   # r16 walls: 0.3 -> 0.6 (the gold return beside the line). Pass 2: 0.5 -> 0.3
     LD: (None, 1.0, {"color": "#FFB65C", "emit": 12.0}),
     NSIDE: (None, 1.0, {"color": "#2B2117", "emit": 0.035, "emit_color": "#FFA64D"}),   # calibration pass 2: 0.12 -> 0.035 (seen obliquely from the aisles the 22 cm deep side linings fill most of each opening: at 0.12 they were the flat bright orange "panels" the judge saw, ray-cast in CW). Pass 1: 0.35 -> 0.12
 }
@@ -261,8 +267,9 @@ ST = 0.155      # wood-grain stile inner edge (10 cm stile)
 RV = 0.175      # black lacquer reveal inner edge (2 cm): the lit opening is x 0.175-0.675 (50 cm)
 LED_IN = 0.017  # = tex_walls.LED_IN: the return strip (5 mm) + the LED line (12 mm) inside the reveal edge
 EB = 0.10       # end blocks on the post tops
-# NH -> (ledge top, lit opening height, washi material): tex_walls.WASHI_SETS carries the same opening heights
-NICHE = {2.40: (0.74, 1.26, PAPER), 1.90: (0.58, 1.00, PAPER190)}
+PIL_W = 0.10    # r16 fix round: the centre pilaster splitting a wide display bay (the side stiles' 10 cm)
+# NH -> (ledge top, lit opening height): the backboard is M_AK_HBayBoard at every height (r16 walls)
+NICHE = {2.40: (0.74, 1.26), 1.90: (0.58, 1.00)}   # r16 walls: every height wears the dark board (BOARD)
 # faces, back from the front F: end blocks 0.1 cm, plinth blocks 0.4, posts 1.2, lintel 1.6, stile bases 2.0, stiles
 # 2.6, upper head board 2.8, ledge 3.4, reveal 4.0, doors 4.6 cm; the toe kick 8 cm
 Y_EB, Y_PB, Y_PO, Y_HD, Y_SB, Y_ST, Y_HU, Y_LG, Y_RV, Y_DR, Y_TK = (
@@ -275,7 +282,7 @@ def wall_panel(G, name, NH, DZ, W=W, lens_x=None):
     frame widths and heights; its cabinet has four doors and the washi picture is stretched across the opening."""
     p = G["Piece"](name)
     lens_x = lens_x or (W / 2,)
-    top, open_h, paper = NICHE[round(NH, 2)]   # (DZ: the scripted counter height, superseded by the ledge top here)
+    top, open_h = NICHE[round(NH, 2)]   # (DZ: the scripted counter height, superseded by the ledge top here)
     hd = NH - 0.05                  # interior ceiling = the scripted lens plane (lights(): the panel spot sits at hd - 0.02)
     zl = top - 0.035                # ledge underside (a 3.5 cm black ledge)
     zo = top + open_h               # the visible top of the lit opening (the reveal band's underside)
@@ -311,13 +318,14 @@ def wall_panel(G, name, NH, DZ, W=W, lens_x=None):
     # the side linings from the ledge to the interior ceiling (dark bronze, a faint gold glow)
     for a, b in ((RV - 0.0105, RV), (L(RV), L(RV - 0.0105))):
         box(p, a, b, 0.012, Y_RV - 0.0295, zl, hd + 0.0005, NSIDE)
-    # the cream washi back panel (unique 0-1 UV: T_AK_HNicheWashi(190) is laid out on this face, tex_walls.py), a dark
-    # board above it behind the head
+    # r16 walls: the DARK backboard (was the cream washi picture): the cloth board mapped in metres (1 m tile, a random
+    # offset per piece), a dark board above it behind the head
     px0, px1, pz0, pz1 = RV - 0.0045, L(RV - 0.0045), top - 0.010, zo + 0.030
+    bu, bv = (W * 0.37) % 1.0, (NH * 0.23) % 1.0
 
     def puv(c, n):
-        return ((c.x - px0) / (px1 - px0), (c.z - pz0) / (pz1 - pz0))
-    _emit(p, _box_bm(px0, px1, 0.001, 0.019, pz0, pz1), paper, puv)
+        return (bu + c.x, bv + c.z)
+    _emit(p, _box_bm(px0, px1, 0.001, 0.019, pz0, pz1), BOARD, puv)
     box(p, RV - 0.010, L(RV - 0.010), 0.001, 0.0185, pz1 + 0.0005, hd + 0.0005, LINING)
     # the LED lines (12 mm) down both back corners and across the top, each with a 5 mm gold-lit return strip on its
     # outer side tucked under the reveal / band: the black reveal never borders the hot line (the dotted edge)
@@ -346,6 +354,24 @@ def wall_panel(G, name, NH, DZ, W=W, lens_x=None):
     # the recessed toe kick and the down-facing LED strip under the carcass's front edge (warm line, pool on the floor)
     box(p, ST + 0.001, L(ST + 0.001), 0.0, Y_TK, 0.0, 0.0585, LQ)
     box(p, RV + 0.006, L(RV + 0.006), Y_TK + 0.002, Y_TK + 0.016, 0.051, 0.0575, LD)
+    # r16 fix round (blind judge 7/10, delta 3: the 3.85 m bays read as long unbroken panels; reference 2 /
+    # side_wall_bay.png frame each display between pilasters): the wide bay is split into two framed displays by a
+    # centre pilaster (PIL_W wood-grain stile on its base block, as the side stiles), a black lacquer reveal either side
+    # of it, a bronze-lined divider back to the board, and the gold LED line + return down both of its sides (the
+    # lenses sit clear of it at 1/8, 3/8, 5/8, 7/8 of the bay)
+    if W >= 1.2:
+        pw = PIL_W / 2
+        oak(p, xm - pw, xm + pw, 0.0, Y_ST, 0.058, zh0 + 0.001, 0.002)
+        oak(p, xm - pw - 0.001, xm + pw + 0.001, 0.0, Y_SB, 0.0, 0.060, 0.002, grain=2)
+        rv = pw + (RV - ST)                                        # the reveal's inner edge off the centre (2 cm)
+        box(p, xm - rv, xm + rv, Y_RV - 0.030, Y_RV, top - 0.002, zo + 0.021, LQ)   # (its foot inside the ledge)
+        box(p, xm - rv, xm + rv, 0.0192, Y_RV - 0.0295, top - 0.002, hd + 0.0005, NSIDE)   # the divider to the board
+        for sgn in (-1, 1):                                        # LED line + gold return on each face of the divider
+            e = xm + sgn * rv                                      # the divider's face
+            a0, a1 = sorted((e - sgn * 0.002, e + sgn * 0.0055))
+            c0, c1 = sorted((e + sgn * 0.005, e + sgn * LED_IN))
+            box(p, a0, a1, 0.0195, 0.0258, top + 0.0005, zo + 0.003, LR)
+            box(p, c0, c1, 0.0195, 0.0262, top + 0.0005, zo + 0.003, LE)
     p.col(0, W, 0, 0.294, 0, NH)   # the scripted collision, unchanged
     return p
 

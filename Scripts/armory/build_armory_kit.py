@@ -266,6 +266,17 @@ def build_material(name):
         bsdf.inputs["Roughness"].default_value = 0.02
         bsdf.inputs["Transmission Weight"].default_value = 1.0
         bsdf.inputs["IOR"].default_value = 1.5
+        # glass-bug (2026-09-29): this glass is a Transparent BSDF, so every face a ray crosses costs one Cycles
+        # transparent bounce, and every pane is a closed 6 mm slab (two faces: Unreal's one-sided translucent pane needs
+        # both). The factory budget of 8 ends a camera ray after 4 panes and renders what lies behind as black: from C1
+        # the aisle pane of the east Tall case (6) is crossed with its far pane and both panes of G2 behind it (8 faces,
+        # measured by ray cast), so it read as a solid black slab. Rays cross up to 12 glass faces in the layout cameras
+        # (CG); the scene this material is saved with gets a budget of 32 (16 panes). Blender renders only.
+        try:
+            sc_ = bpy.context.scene
+            sc_.cycles.transparent_max_bounces = max(sc_.cycles.transparent_max_bounces, 32)
+        except AttributeError:   # no Cycles settings on this scene (Cycles disabled)
+            pass
         # look2: thin architectural glass, as Unreal's thin translucent pane renders it: see-through (no refraction, no
         # smoky internal bounces), a Fresnel-weighted mirror reflection on top, and fully transparent to shadow rays
         lp = nt.nodes.new("ShaderNodeLightPath")
@@ -517,11 +528,20 @@ GENKAN_Z = -0.12
 # the lit risers, above a flight of four; back_wall.png shows one even, lit flight): SIX equal 0.15 m risers, every one
 # with its LED nosing, and ONE going (GOING 0.35) from the stair foot to the deck lip (DECK_Y stays 17.60, the deck rows'
 # module): STAIR_Y0 = DECK_Y - 5 x GOING = 15.85 (was 15.50); the 5th tread (+0.75) is an ordinary 0.35 m tread
+# r16 stairs round (2026-09-29, blind judge on night_20m: the flight too tall, 6 lit steps against about 4 in
+# armory3_reference2.png / back_wall.png, whose section shows 4 risers up to a lower deck): FOUR equal risers (RISE
+# 0.15, NRISE 4) with the same 0.35 m going from the same foot (STAIR_Y0 15.85) to the deck lip LIP_Y 16.90, the deck
+# at +0.60 (DECK_Z, was +0.90: everything standing on it drops 0.30 m). The flight's top tread IS the deck (+0.60, Y
+# 16.90 back); DECK_Y 17.60 stays the origin of the 0.80 m deck rows (SM_AK_Platform_Edge_22 is now a plain deck
+# module, no riser). LAND_Z is the top tread under the lip (+0.45), where the emblem riser starts
 GOING = 0.35
 EMBLEM_R = 0.040
 DECK_Y = 17.60
-STAIR_Y0 = round(DECK_Y - 5 * GOING, 4)     # 15.85
-LAND_Z, DECK_Z = 0.75, 0.90
+RISE, NRISE = 0.15, 4
+STAIR_Y0 = 15.85                              # the flight's foot (unchanged since the r20 fix round)
+LIP_Y = round(STAIR_Y0 + (NRISE - 1) * GOING, 4)   # 16.90: the 4th riser (the deck lip)
+DECK_Z = round(RISE * NRISE, 4)               # +0.60 (was 0.90)
+LAND_Z = round(DECK_Z - RISE, 4)              # +0.45: the tread under the lip riser
 STAIR_X = (3.80, 8.20)
 # rear dais b4 (blind judge 6.5/10, 2026-09-28): (1) the side zones are no longer stepped: reference 2 / back_wall.png
 # show solid panelled plinth faces either side of the flight, so X 0-3.80 / 8.20-12 is one +0.90 plinth from the
@@ -541,8 +561,8 @@ STAIR_X = (3.80, 8.20)
 # 0.28 (5 risers, Y 15.50-16.62), so the +0.75 landing is 0.98 m deep (Y 16.62-17.60) instead of a 0.42 m tread; the
 # b7 wide going with dark lacquer treads read as a black void band under a thin pale strip
 # (r20 fix round: GOING 0.28 -> 0.35, defined above with STAIR_Y0; the "landing" is the 5th tread, Y 17.25-17.60)
-TREAD5_Y = round(STAIR_Y0 + 4 * GOING, 4)  # 17.25 (r20 fix round): the 5th riser (+0.60 to +0.75, lit like the rest)
-LAND_Y = TREAD5_Y                         # the landing's front (+0.75, Y 16.62-17.60, X 3.80-8.20)
+TREAD5_Y = LIP_Y                          # r16: the lip riser (was the 5th riser at 17.25)
+LAND_Y = LIP_Y                            # r16: the deck lip (+0.60 from Y 16.90; was the +0.75 tread's front)
 HEAVY_Y = 16.53                           # b4: the heavy posts' centre line on the hall floor (r20: Y 16.38-16.68; was 13.33)
 # r20 rear round (task delta 1: back_wall.png / reference 2 show plain dark panelled plinth fronts on the wings, no
 # steps; the stepped lit flight only between the flanking posts): the wings (X 0-3.80 / 8.20-12) are ONE panelled plinth
@@ -552,7 +572,7 @@ WING_Y = round(HEAVY_Y - 0.10, 4)         # 16.43
 # the cheeks close the lower flight's sides from its foot to the wing face (X 3.45-3.80 / 8.20-8.55, Y 15.50-16.43),
 # top +0.75 = the landing (reference 2: the cheek's lit top edge at the front lines up with the flight's top lit line,
 # 0.84 m further back: +0.71 through C1); the stair-foot lanterns no longer stand on them (see LANTERNS)
-CHEEK_W, CHEEK_H = 0.35, 0.75
+CHEEK_W, CHEEK_H = 0.35, DECK_Z   # r16: top = the deck (+0.60; was the +0.75 tread)
 PLAT_Y = WING_Y                           # the dais front edge (layout.json "platform_front_y")
 # r20 rear round (task delta 5, reference 2 zoom x 330-570 / y 140-400: the stair-foot lanterns stand on the hall floor
 # just outboard of the cheek fronts, a box lantern raised on an open leg stand ~1.5x the head's height, the lantern's top
@@ -569,7 +589,10 @@ FOOT_LANTERN_Y = round(STAIR_Y0 + 0.20, 4)   # 16.05 (r20 fix round; was 15.70):
 # front end at the stair foot (its head at about the lip of the upper steps, as reference 2)
 LANTERN_M, LANTERN_S = 0.90, 0.75   # r20 rear round: S 0.65 -> 0.75 (the stair-foot pair, on their stands)   # b8: M 0.80 -> 0.90 (b7 read ~30 x 40 px in C1; reference 2's ~28 x 56)
 SCREEN_H = 4.00 - DECK_Z                  # the rear screens' top stays at +4.00
-PAINT_H, PAINT_Z = 2.15, 1.80             # rear dais: the painting bay rises with the deck (+0.30): panel Z 1.80-3.95
+# r16 stairs round: the painting panel starts 0.90 m over the deck (1.80 -> 1.50 with the +0.60 deck) and keeps its
+# top at +3.95 (under the canopy), so it grows 0.30 m: the paper runs from behind the (lower) table top to +3.50 as before
+PAINT_Z = round(DECK_Z + 0.90, 4)         # +1.50 (was 1.80 on the +0.90 deck)
+PAINT_H = round(3.95 - PAINT_Z, 4)        # 2.45: panel Z 1.50-3.95 (was 2.15)
 PAINT_BAY_X = (4.6, 7.4)                  # r20 fix round: the painting bay's world X (was 4.8-7.2), hero_backwall.BAY_W 2.8
 CASES = {  # type: (width along local X, depth along local Y, plinth height, glass height)
     # building r2, fitted to reference 2 through the C1 camera (BUILD_NOTES): the front case is a low plinth under tall
@@ -578,7 +601,10 @@ CASES = {  # type: (width along local X, depth along local Y, plinth height, gla
     # r20 b3 (blind judge 7/10, delta 4: case 1 read too big from the entrance, hiding case 2 and the axis): the front
     # case's glass 0.95 -> 0.70 (glass top +1.20)
     "L": (1.8, 1.3, 0.50, 0.70), "LN": (1.6, 1.0, 0.45, 0.75), "M": (1.8, 1.2, 0.70, 0.55),
-    "S": (1.4, 1.1, 0.90, 0.45), "Tall": (1.5, 1.1, 0.50, 1.70), "Hero": (2.4, 0.9, 0.52, 0.0),
+    # r16 fix round (blind judge delta 1: from C1 the tall cases read as oversized wire boxes, reference 2's hat and
+    # back tall cases about half as wide): the Tall footprint 1.5 x 1.1 -> 1.0 x 0.85 m (the 1.70 m glass kept: user
+    # decision), still room for a mannequin or a standing item
+    "S": (1.4, 1.1, 0.90, 0.45), "Tall": (1.0, 0.85, 0.50, 1.70), "Hero": (2.4, 0.9, 0.52, 0.0),
     # r20 round 3 (blind judge 7/10, delta 2: the front side cases were cut by both C1 frame edges; reference 2's kunai
     # and shuriken cases are small and sit fully inside it): the front pair's own smaller footprint, 1.20 x 0.80 m (the
     # same plinth and glass heights as "S"; the shuriken tray, 0.54 x 0.44 m with its card, still fits case 8)
@@ -1009,11 +1035,10 @@ def kit():
                   .box(0, 2, 0, 0.80, DECK_Z - 0.03, DECK_Z, PL).col(0, 2, 0, 0.80, 0, DECK_Z))
     # b4: the centre bay's front deck row (2 x 2.2 m over the flight, X 3.80-8.20, Y 14.40-15.20)
     # b7 (judge delta 3): its riser (+0.75 to +0.90) is the flight's 6th, lit like the others (the LED line under its nose)
-    pe = Piece("SM_AK_Platform_Edge_22").box(0, 2.2, 0.03, 0.80, 0, DECK_Z - 0.03, T)
-    pe.box(0, 2.2, -0.02, 0.80, DECK_Z - 0.03, DECK_Z, PL)
-    pe.box(0, 2.2, 0.0, 0.03, LAND_Z - 0.002, DECK_Z - 0.03, T)
-    pe.box(0.01, 2.19, -0.01, 0.0, DECK_Z - 0.05, DECK_Z - 0.035, LED)
-    pieces.append(pe.col(0, 2.2, -0.02, 0.80, 0, DECK_Z))
+    # r16 stairs round: a plain deck module (the lip riser moved into SM_AK_Steps_22, whose top tread is the deck)
+    pe = Piece("SM_AK_Platform_Edge_22").box(0, 2.2, 0.0, 0.80, 0, DECK_Z - 0.03, T)
+    pe.box(0, 2.2, 0.0, 0.80, DECK_Z - 0.03, DECK_Z, PL)
+    pieces.append(pe.col(0, 2.2, 0.0, 0.80, 0, DECK_Z))
     # b7 (judge deltas 4 / 6): the side zones (X 0-3.80 / 8.20-12, local y 0 = LAND_Y 13.56 back to Y 15.20) are
     # terraced in the flight's rows: a panelled door cabinet (0-0.60, a lit ledge under its nose), a recessed riser to a
     # tread at +0.75 (y GOING) and the lit deck riser (y 2 x GOING = DECK_Y); 1.9 m modules, two doors each
@@ -1034,13 +1059,14 @@ def kit():
     # b7 (judge delta 3): the flight, 2.2 m module (two side by side, X 3.80-8.20): the first five of its six uniform
     # risers (0.15 m, 0.42 m going) from the stair foot (local y 0 = STAIR_Y0) to the deck riser (y 2.10 = DECK_Y); an
     # LED line under every nose but the 5th riser's (it carries the emblem, as reference 2's unlit 5th riser)
+    # r16 stairs round: NRISE (4) equal RISE (0.15) risers, one GOING (0.35), from the foot to the deck lip (LIP_Y);
+    # the top tread runs on as the deck to DECK_Y (the first deck row); ONE thin LED line under every nose
     s = Piece("SM_AK_Steps_22")
     LD = DECK_Y - STAIR_Y0
-    for k in range(5):
-        y0, z0, z1 = GOING * k, 0.15 * k, 0.15 * (k + 1)
+    for k in range(NRISE):
+        y0, z0, z1 = GOING * k, RISE * k, RISE * (k + 1)
         s.box(0, 2.2, y0, LD, z0, z1 - 0.03, T).box(0, 2.2, y0 - 0.02, LD, z1 - 0.03, z1, PL)
-        if k != 4:
-            s.box(0.01, 2.19, y0 - 0.01, y0, z1 - 0.05, z1 - 0.035, LED)
+        s.box(0.01, 2.19, y0 - 0.008, y0, z1 - 0.045, z1 - 0.035, LED)
         s.col(0, 2.2, y0 - 0.02, LD, z0, z1)
     pieces.append(s)
     # b7 (judge deltas 1 / 8): a low lacquer cheek either side of the flight (X 3.45-3.80 / 8.20-8.55) from the stair
@@ -1383,10 +1409,28 @@ CASE_TABLE = [
     # back to 15.85, so case 3's back (13.90) is 1.93 m clear of the bottom nose, was 1.38); (delta 8: the side cases
     # clustered in pairs with empty floor toward the rear) the side rows spread evenly from the front pair (5 / 8, fixed)
     # to 1.30 m before the stair-foot lanterns: equal 1.82 / 1.85 m gaps along each aisle, the last case's back at Y 14.55
+    # r16 stairs+cases round (blind judge on night_20m: from C1 the east column 8 / 7 / 6 / G2 stacked into one another;
+    # reference 2 staggers it: the shuriken case far front at the frame edge, the boots behind it and further in, the
+    # hat's tall case further back; the kunai case likewise at the left edge). Reference 2's case feet measured through
+    # the C1 camera (y = 87 + 5455 / (Y + 4.18) px on the floor; x = 724 + 1609 (X - 6) / (Y + 4.18)): shuriken front Y
+    # ~3.0 (foot y 850), inner edge X ~8.5; boots front Y ~4.5, inner X ~8.46; hat front Y ~7.1, inner X ~8.5; the back
+    # tall case front Y ~10.1, inner X ~8.45 (the left row mirrors it: kunai 3.0 / cloak 4.7 / scrolls 6.8 / tall 10.2,
+    # inner X 3.55-3.8). The front pair 5 / 8 moves 0.6 m forward (front face Y 3.0) and 0.15 m outboard (X 2.5-3.3 /
+    # 8.7-9.5: the outer half runs behind the C1 frame edge, the parked door leaf); X 1.6 / 10.4 would put them wholly
+    # outside C1 (the frame edge at Y 3-4 is X ~2.3-2.8 / 9.2-9.7). The second case sits 0.8 m behind and further in
+    # (inner faces X 3.55 / 8.45), the tall cases further back; 0.80 m walkable gaps between them (two cross-hall walks
+    # at Y 6.9 / 9.7), the back pair's backs at Y 12.1
     ("1", "L", 6.0, 4.00, 0), ("2", "M", 6.0, 8.70, 0), ("3", "LN", 6.0, 13.40, 0),
-    ("5", "SF", 3.05, 4.1, 90), ("4", "Tall", 2.50, 7.27, 90), ("G1", "S", 2.50, 10.53, 90), ("G3", "Tall", 2.50, 13.80, 90),
-    ("8", "SF", 8.95, 4.0, -90), ("7", "S", 9.50, 7.15, -90), ("6", "Tall", 9.50, 10.45, -90),
-    ("G2", "Tall", 9.50, 13.80, -90),
+    # r16 fix round (blind judge 7/10, point 6 / delta 1: in plan the side rows stood 2.1-2.5 m off the wall bays, a
+    # wide floor lane between them; reference 2 / the plan (armory3_reference.png) stand the displays close in front of
+    # the lit wall displays, staggered in X, and the tall frames crossed the low cases in front of them from C1): the
+    # front pair 5 / 8 stays (the C1 frame edges); behind it the rows step OUT to the walls and alternate in X: the tall
+    # cases (now 1.0 x 0.85 m) hug the wall walk (X 1.175-2.025 / 9.975-10.825: 0.88 m off the bays' front X 0.294,
+    # the wall-walk capsule at X 0.75 / 11.25 keeps 0.075 m), the low S cases 0.5 m further in (X 1.55-2.65 / 9.35-10.45);
+    # the same Y slots (the cross walks at Y 4.6 / 6.9 / 9.7 stay clear)
+    ("5", "SF", 2.90, 3.60, 90), ("4", "Tall", 1.60, 5.75, 90), ("G1", "S", 2.10, 8.05, 90), ("G3", "Tall", 1.60, 11.35, 90),
+    ("8", "SF", 9.10, 3.60, -90), ("7", "S", 9.90, 5.75, -90), ("6", "Tall", 10.40, 8.05, -90),
+    ("G2", "Tall", 10.40, 11.35, -90),
     # rear dais (2026-09-28): the hero table on the +0.90 deck, 15 cm behind the deck edge (Y 14.55-15.45; was 14.85)
     # b4 (judge delta 3: from the entrance the table's base sat right on the top lit band; reference 2 shows a strip of
     # platform in front of it): 35 cm further back, Y 14.90-15.80 (10 cm in front of the painting base)
@@ -1637,7 +1681,9 @@ def layout():
     # f1 (R6): the emblem on the unlit top riser of the flight (the 5th: +0.60 to +0.75, face at Y 13.505), on the axis
     # b7: the 5th riser's face is Y TREAD5_Y + 0.005 (the hero riser: 2.5 cm behind the 2 cm nose overhang)
     # r20 fix round: on the 6th riser (face DECK_Y + 0.005), centred at +0.795 (disc +0.755-0.835, the LED line from +0.8385)
-    add("SM_AK_EmblemDisc_08", 6.0, DECK_Y - 0.015, LAND_Z + 0.045)
+    # r16 stairs round: on the lip riser (the 4th; face LIP_Y + 0.005), centred at +0.495 (disc +0.455-0.535, the LED
+    # line under the nose from +0.548)
+    add("SM_AK_EmblemDisc_08", 6.0, LIP_Y - 0.015, LAND_Z + 0.045)
     # R3: sill vases (west faces +X, east faces -X) and small caddies
     for y in SILL_VASES_Y:
         add("SM_AK_Vase_Plum_S", 0.17, y - 0.35, 2.64, -90)
@@ -1821,7 +1867,7 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     ("C4_ShurikenTray", (7.75, 4.0, 1.62), (8.95, 4.0, 0.99), 50),    # item 1: looking down into case 8 (r20 round 3: X 8.95)
     # r20 (12 x 20): C3 / C5 follow cases 3 / 4, C10 / CX the back wall (+4.0), CW's aim the flight (+3.2)
     ("C3_Case3", (6.0, 11.30, 1.50), (6.0, 13.40, 0.95), 28),        # r20 fix round: follows case 3 (Y 13.40)
-    ("C5_CloakCase", (4.15, 9.57, 1.25), (2.50, 7.27, 1.0), 28),      # r20 b3: case 4 at X 2.50; fix round: Y 7.27
+    ("C5_CloakCase", (3.90, 7.10, 1.35), (1.60, 5.75, 1.0), 28),      # r16 fix round: case 4 at (1.60, 5.75), from the aisle
     ("C10_Hero", (6.0, 14.90, 2.30), (6.0, 19.90, 1.85), 26),
     ("CW_WestAisle", (4.05, 2.9, 1.60), (3.3, 16.2, 1.2), 24),        # r20 b3: in the west aisle (X 3.05-5.10)
     ("CX_FromPlatform", (6.0, 19.4, 2.4), (6.0, 1.0, 0.8), 24),

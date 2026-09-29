@@ -594,6 +594,9 @@ def case_glass(G, t, W, D, Gh):
             poly = [(sx * x, sy * y) for x, y in poly]
             prism(a, poly, zb + FB - 0.001, Gh - FH + 0.001, [BZ, BZ, BZE, BZ, BZ], cap0=False, cap1=False)
     # glass panes set in the middle of the frame section, their edges buried in the posts and frames
+    # (glass-bug 2026-09-29: the black-slab Tall pane in C1 was not this geometry: normals, faces and material checked
+    # clean; each pane is two faces, so stacked panes exhaust Cycles' transparent bounces: build_material's glass
+    # branch raises the budget. Keep the panes closed slabs: Unreal's glass master is one-sided)
     pz0, pz1 = zb + FB - 0.002, Gh - FH + 0.002
     e = FR - 0.003
     g0, g1 = FR / 2 - 0.003, FR / 2 + 0.003

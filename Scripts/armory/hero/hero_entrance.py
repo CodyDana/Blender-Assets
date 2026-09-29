@@ -192,7 +192,15 @@ MATERIALS = {
     # r20 fix round (blind judge delta 4: the nub field read pebbled / fish-scale; reference 2's is a fine, even, ribbed
     # coir / tatami weave): T_AK_HEntRib (tex_entrance.rib_weave: the nub lattice with its rows aligned, the nubs merged
     # into continuous ribs across the mat with fine stitch pinches; the same pitch, tone and relief)
-    "M_AK_HEntMat": ("HEntRib", 1.0, {"tint": 0.60}),   # r20 mat: HEntNub   # b2 0.56 (night 0.73x b7's); b1 0.60;   # b7: HEntKnot, tint 0.68 (b2: HEntWeave, tint 0.85; b3 0.80)
+    # r16 entry (2026-09-29, the user's crop: "a darker, coarse, bumpy coir mat; ours is fine, light and tatami-like"):
+    # T_AK_HEntCoirB (tex_entrance.coir_bump): reference 2's grid of separate round coir bumps (2.8 x 3.0 cm, aligned
+    # rows and columns, dark creases and pockets, bristly fibres, normal 30), warm grey-brown, greyer than HEntRib
+    # (linear R/G 1.44 against 1.66); tint 0.66: the field's linear albedo ~0.75x the r20 HEntRib at 0.60
+    # r16 fix round (blind judge 7/10, point 5: the coir a very regular dot grid, like pegboard, and light beige in the
+    # golden sun; reference 2 has looped rows, darker): T_AK_HEntCoirL (tex_entrance.coir_loop: loops elongated along
+    # their rows, each row slid by its own amount, jittered, darker crowns; mean sRGB 0.335 against HEntCoirB's 0.408),
+    # tint 0.70 -> 0.48 (b2: 0.58 still read pale grey-beige where the golden sun lands on it)
+    "M_AK_HEntMat": ("HEntCoirL", 1.0, {"tint": 0.48}),   # r16 entry: ("HEntCoirB", 1.0, {"tint": 0.70})   # b1 0.66 (night field 43 against the hall's ~60)   # r20 fix round: ("HEntRib", 1.0, {"tint": 0.60})   # r20 mat: HEntNub   # b2 0.56 (night 0.73x b7's); b1 0.60;   # b7: HEntKnot, tint 0.68 (b2: HEntWeave, tint 0.85; b3 0.80)
     # r20 mat: the lighter worn brown on the chamfers of the surround boards' inner lip (judge: "a visible inner lip")
     "M_AK_HMatLip": (None, 1.0, {"color": "#3C2F26", "rough": 0.55}),   # b2 #45372C / 0.50 read white in the sun
 }
@@ -215,7 +223,19 @@ SE, CORDM = "M_AK_HEntStoneEdge", "M_AK_HEntCord"
 # MAT_BOARD 0.11; grown outward, the near board stays MAT_BOARD) and the binding width (was 8.5 cm)
 MAT_FIELD_Z, MAT_BOARD_Z = 0.075, 0.082
 LIP_W, LIP_H = 0.014, 0.006
-SIDE_W = 0.145
+SIDE_W = 0.145             # r20 (r16 entry: unused; the slim boards are MAT_SIDE_BOARD / MAT_GAP)
+# r16 entry (2026-09-29, the user's crop: "the light-wood outer frame around the black border is wider and brighter than
+# the reference's slim dark surround"; reference 2 measured on its shaded east side: board ~9-10 cm with a lit outer
+# arris, a ~2-3 cm dark crease between it and the binding, the board about the planks' tone): slim near-black boards
+# MAT_SIDE_BOARD wide, standing MAT_GAP off the binding (a dark slot down to the genkan floor), the r20 raised inner lip
+# in the lighter worn brown gone; the whole surround inside the scripted MAT_BOARD (0.11) footprint
+MAT_SIDE_BOARD, MAT_GAP = 0.080, 0.020
+# r16 entry (the crop: "a thick polished near-black beam with a visible front face"; reference 2 through C1: the beam
+# top 27 px deep (ours 20 px = 16 cm), a crisp highlight line on the nosing, ~10 px of dark brown face, then the far
+# binding): the beam's face stands BEAM_FWD in front of the scripted GENKAN y1 (world Y 2.30; the top 0.21 m deep),
+# its front-top arris a polished quarter-round nosing NOSE_R, and the mat ends at the new face
+BEAM_FWD = 0.05
+NOSE_R, NOSE_SEG = 0.016, 6
 BIND_W = 0.062
 LIPM = "M_AK_HMatLip"
 
@@ -268,7 +288,24 @@ STEP_TOP_T, STEP_NOSING = 0.035, 0.008   # r4 two-tone beam (entryfix: unused, t
 # lit hall as a sheen with faint grain and the 6 mm arrises a thin highlight; the face stays black in its own shadow
 # matfix b3 (blind judge: "three small dark round dots or holes on the riser face directly above the mat"): the same
 # lacquered timber without its knots (one per 1 m tile read as a row of holes along the face): T_AK_HEntTimberN
-MATERIALS["M_AK_HStepLacquer"] = ("HEntTimberN", 1.0, {})
+MATERIALS["M_AK_HStepLacquer"] = ("HEntTimberN", 1.0, {})   # r16 entry: unused (the beam is M_AK_HStepTop / Face)
+# r16 entry (the crop: "a thick polished near-black beam with a visible front face"; reference 2's top a cool sheen
+# (59-87, 56-71, 60-79) over dark wood, its face a dark brown (16-29, 8-18, 2-11), ours at night a black void (0, 0, 0)
+# under a near-black top (19, 9, 3)): the top and its quarter-round nosing in a POLISHED near-black timber
+# (T_AK_HEntTimberP, roughness ~0.16: the nosing's curve catches the lit hall as a crisp highlight line), the front face
+# a step lighter satin timber (T_AK_HEntTimberF, ~0.34) so it reads as timber, not shadow
+# b2 (b1 C1 night: the top (5-23) read 0.2x the hall floor (~60), the face still 0 and the nosing line invisible; golden
+# fine: top 0.7x the hall, a nosing highlight 205, the face 47-59): the top a little lighter (tint 1.5), the face 2x
+# (night bounce from the lanterns and the mat shows it as timber, still darker than the top), the quarter-round nosing
+# its own lighter polished worn edge (tint 2.6: the crop's bright line along the beam's front edge, also at night)
+# r16 fix round (blind judge 7/10, point 5: from C1 the beam read as a thin BROWN matte strip close to the floor's tone,
+# not a polished near-black beam): the top back to near-black (tint 1.5 -> 0.85) with a stronger dielectric sheen
+# (spec 0.5 -> 0.85, Blender; its polished ORM roughness ~0.16 unchanged), so the lit hall shows on it as a sheen over
+# dark wood; the face darker than the top, as reference 2's (16-29, 8-18, 2-11): 2.0 -> 0.8 (b1's 1.5 read a light
+# brown band under the top in golden C1, the "brown strip"), the nosing's lighter worn line kept (2.6) for the arris
+MATERIALS["M_AK_HStepTop"] = ("HEntTimberP", 1.0, {"tint": 0.85, "spec": 0.85})   # r16 entry: tint 1.5
+MATERIALS["M_AK_HStepFace"] = ("HEntTimberF", 1.0, {"tint": 0.8})   # r16 entry: 2.0
+MATERIALS["M_AK_HStepNose"] = ("HEntTimberP", 1.0, {"tint": 2.6})
 # entryfix r2 (blocker 1 / delta 7: the binding was lost against near-black boards; reference 2's side boards are a
 # dark weathered timber, lighter than the binding, with a lit bevel): the ebony at full strength (was tint 0.6)
 # b4: at night the full-strength ebony still read near-black beside the binding: lifted (tint 1.8), a dark brown
@@ -279,7 +316,9 @@ MATERIALS["M_AK_HStepLacquer"] = ("HEntTimberN", 1.0, {})
 # matching the dark step bar"): the bar's near-black timber at a low sheen, no knots (T_AK_HEntTimberM), and no warm
 # worn arrises on the surround (the jet-black knotted binding now separates by its relief and raised roll)
 # r20 mat b2: the same timber matte (T_AK_HEntTimberMR): the golden sun's sheen read the boards pale cream
-MATERIALS["M_AK_HMatBoard"] = ("HEntTimberMR", 1.0, {"spec": 0.15})   # r20 fix round: less sun sheen (read as a pale frame in golden)   # b7: HEntTimberM; matfix b2: HEntTimberE, tint 2.4
+# r16 fix round (blind judge point 5: the surround still read as a fairly wide LIGHT wood tray in the golden sun, not a
+# slim dark strip): the slim boards darker (tint 0.80 -> 0.30; b1's 0.45 still read a pale strip in the sun) and matter
+MATERIALS["M_AK_HMatBoard"] = ("HEntTimberMR", 1.0, {"spec": 0.08, "tint": 0.30})   # r16 entry: tint 0.80   # r16 entry: darker (tint 0.80)   # r20 fix round: less sun sheen (read as a pale frame in golden)   # b7: HEntTimberM; matfix b2: HEntTimberE, tint 2.4
 
 _N = [0]
 
@@ -911,12 +950,54 @@ def step_beam(G):
     # door, an L-shaped notch reference 2 lacks, where its bar simply ends at the lanterns): the side returns (the pit's
     # edges outboard of the lanterns) are the hall floor's own planks now, not the near-black board, so the black bar
     # reads as ending at the lanterns
-    BAR, RET = "M_AK_HStepLacquer", "M_AK_Plank"
-    cbox(G, p, -rw, gw + rw, gd, gd + bd, base, 0.0, BAR, 0.006, grain=0)            # the bar, one crisp lacquer block
+    # r16 entry (2026-09-29, the crop: "the black bar reads as a thin flush floor strip; the reference shows a thick
+    # polished near-black beam with a visible front face"): the beam is one extruded profile, its top flush with the
+    # hall floor and 0.21 m deep (the face BEAM_FWD in front of the scripted gd, world Y 2.30), the front-top arris a
+    # polished quarter-round nosing (NOSE_R, NOSE_SEG facets shaded smooth: the highlight line), a 4 mm arris at the back
+    # (the joint line with the hall planks), the front face in the lighter satin timber (M_AK_HStepFace) straight down to
+    # GENKAN_BASE; the top and nosing polished (M_AK_HStepTop). The side returns stop at the new face.
+    TOP, FACE, NOSE, RET = "M_AK_HStepTop", "M_AK_HStepFace", "M_AK_HStepNose", "M_AK_Plank"
+    yf, yb, a = gd - BEAM_FWD, gd + bd, 0.004
+    prof = [(yf, base, FACE)]                                        # (y, z, material of the face FROM this point)
+    for k in range(NOSE_SEG + 1):                                    # up the face, round the nosing
+        t = 0.5 * math.pi * k / NOSE_SEG
+        prof.append((yf + NOSE_R - NOSE_R * math.cos(t), -NOSE_R + NOSE_R * math.sin(t), TOP))
+    prof[-1] = (yf + NOSE_R, 0.0, TOP)
+    prof += [(yb - a, 0.0, TOP), (yb, -a, FACE), (yb, base, FACE)]
+    x0, x1 = -rw, gw + rw
+    bm = bmesh.new()
+    uvl = bm.loops.layers.uv.new("UV0")
+    L = [bm.verts.new((x0, y, z)) for (y, z, _m) in prof]
+    R = [bm.verts.new((x1, y, z)) for (y, z, _m) in prof]
+    mats, smooth = [TOP, FACE, NOSE], set()
+    nprof = len(prof)
+    for i in range(nprof):                                           # the long faces (closed loop: the last is the base)
+        j = (i + 1) % nprof
+        f = bm.faces.new((L[i], L[j], R[j], R[i]))
+        f.material_index = 0 if prof[i][2] == TOP else 1
+        if 1 <= i <= NOSE_SEG:                                       # the nosing's facets (face -> top)
+            smooth.add(f)
+            f.material_index = 2
+    for cap in (L, list(reversed(R))):                               # the end caps (behind the lanterns)
+        f = bm.faces.new(cap)
+        f.material_index = 1
+    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+    bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if len(f.verts) > 4])
+    bm.normal_update()
+    for f in bm.faces:                                               # box-mapped tiling UVs, the grain along X
+        n = f.normal
+        ax = max(range(3), key=lambda i: abs(n[i]))
+        ua, va = (1, 0) if ax == 2 else ((2, 0) if ax == 1 else (1, 2))
+        for l in f.loops:
+            l[uvl].uv = (l.vert.co[ua] / TIMBER_TILE, l.vert.co[va] / TIMBER_TILE)
+    bm.faces.index_update()
+    sm = {f.index for f in smooth if f.is_valid}
+    _emit(G, p, bm, mats, uv_mode="keep", smooth=sm)
     for xa, xb in ((-rw, 0.0), (gw, gw + rw)):                                          # the side returns, butted to it
-        cbox(G, p, xa, xb, ry, gd - 0.001, base, 0.0, RET, 0.004, grain=1)
-    p.col(-rw, gw + rw, gd, gd + bd, base, 0).col(-rw, 0, ry, gd, base, 0)
-    p.col(gw, gw + rw, ry, gd, base, 0)   # scripted collision
+        cbox(G, p, xa, xb, ry, yf - 0.001, base, 0.0, RET, 0.004, grain=1)
+    # collision: the beam's box follows its face forward (r16 entry: from yf, was gd), the returns stop at it
+    p.col(-rw, gw + rw, yf, gd + bd, base, 0).col(-rw, 0, ry, yf, base, 0)
+    p.col(gw, gw + rw, ry, yf, base, 0)
     return p
 
 
@@ -944,16 +1025,17 @@ def entry_mat(G):
     t = MAT_FIELD_Z
     bt = MAT_BOARD_Z
     MB = "M_AK_HMatBoard"
-    sx = SIDE_W - B                                                     # the side boards grow outward by sx
-    cbox(G, p, -sx, B, 0.0, B + md, 0.0, bt, MB, 0.006, grain=1, seg=2)
-    cbox(G, p, B + mw, 2 * B + mw + sx, 0.0, B + md, 0.0, bt, MB, 0.006, grain=1, seg=2)
-    cbox(G, p, -sx + 0.002, 2 * B + mw + sx - 0.002, 0.0, B, 0.0, bt, MB, 0.006, grain=0, seg=2)
-    # the inner lip: a raised bead on each board's mat edge (the sides full length to the bar, the near one between them)
-    cbox(G, p, B - LIP_W, B + 0.001, B - LIP_W, B + md, bt - 0.004, bt + LIP_H, MB, 0.0035, grain=1, seg=2, edge=LIPM)
-    cbox(G, p, B + mw - 0.001, B + mw + LIP_W, B - LIP_W, B + md, bt - 0.004, bt + LIP_H, MB, 0.0035, grain=1, seg=2,
-         edge=LIPM)
-    cbox(G, p, B - LIP_W + 0.003, B + mw + LIP_W - 0.003, B - LIP_W, B + 0.001, bt - 0.004, bt + LIP_H, MB, 0.0035,
-         grain=0, seg=2, edge=LIPM)
+    # r16 entry: the mat ends at the beam's new face (BEAM_FWD in front of the scripted far end, 1 mm clear of it)
+    md = round(md - BEAM_FWD - 0.001, 4)
+    # r16 entry (the crop: "make the surround slim and dark"): slim near-black boards MAT_SIDE_BOARD wide, MAT_GAP off
+    # the mat (a dark slot down to the genkan floor, reference 2's crease between the binding and the board), their
+    # 5 mm arrises in the board timber (the r20 raised inner lip and its lighter worn brown are gone); the outer edges
+    # stay inside the scripted MAT_BOARD footprint
+    ob = B - MAT_GAP - MAT_SIDE_BOARD                                   # the boards' outer edge (local 0.01)
+    ib = B - MAT_GAP                                                    # their inner edge
+    cbox(G, p, ob, ib, ob, B + md, 0.0, bt, MB, 0.005, grain=1, seg=2)
+    cbox(G, p, 2 * B + mw - ib, 2 * B + mw - ob, ob, B + md, 0.0, bt, MB, 0.005, grain=1, seg=2)
+    cbox(G, p, ib + 0.002, 2 * B + mw - ib - 0.002, ob, ib, 0.0, bt, MB, 0.005, grain=0, seg=2)
     X0, X1, Y0, Y1 = B, B + mw, B, B + md
     # r20 mat: the binding BIND_W on all four sides (reference 2 through C1: ~15 px at the sides, ~8-9 px at the ends,
     # 5.5-6 cm; b7's 8.5 cm roll), a flat crown with a small roll at the lip and a CRISP 4 mm drop onto the field, in the
@@ -1013,7 +1095,7 @@ def entry_mat(G):
     rollf = {i * (ny - 1) + j for i in range(nx - 1) for j in range(ny - 1)
              if min(i, nx - 2 - i, j, ny - 2 - j) < FIELD - 1}
     _emit(G, p, bm, mats, uv_mode="keep", smooth=rollf)
-    p.col(-sx, 2 * B + mw + sx, 0, B + md, 0, bt + LIP_H)   # scripted collision
+    p.col(ob, 2 * B + mw - ob, ob, B + md, 0, bt)   # r16 entry: the slim surround's footprint, to the beam's face
     return p
 
 

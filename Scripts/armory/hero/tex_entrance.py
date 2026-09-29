@@ -683,6 +683,99 @@ def timber_board_matte(n=2048, seed=451):
     return timber_ebony(n, seed, name="HEntTimberMR", dark="#1A1411", mid="#261D17", lite="#3C3026", rough0=0.84, nknots=0)
 
 
+def coir_bump(n=2048, seed=501, name="HEntCoirB", gap="#150F0B", crown="#8A7564", nr=33, nc=36, across=0.94, jit=0.04,
+              rad_r=(0.55, 0.59), amp_r=(0.85, 1.0), row_shift=0.0, wander=0.03):
+    """r16 entry (2026-09-29, the user's crop entry_foreground_crop.png / reference 2 zoomed: "a darker, coarse, bumpy
+    coir mat; ours is fine, light and tatami-like"): a coarse loop-pile coir. Reference 2's field through C1 is a GRID
+    of round bumps - columns 7.5 px apart at the far end (2.7-2.8 cm, measured by FFT), rows ~3 cm, the columns the
+    stronger - each bump lit on one side and dark on the other, deep dark pockets between them, warm grey-brown
+    ((106-131, 79-97, 63-79) in the golden light, R/G 1.35, G/B 1.22). HEntRib merged the bumps into ribs across the
+    mat (the "tatami" read); HEntNub staggered them (the "fish-scale" read). Here: rows ALIGNED (no offset) and each
+    bump its own round dome, packed so neighbours meet in dark creases (radius 0.57 pitch, a little narrower across, so
+    the creases between the columns run deeper), bristly coir fibres slanting across each loop, strong relief (normal
+    30), dark pockets where four bumps meet. b1 (radius 0.47, hard max) read as separate discs on a dark ground.
+    A 1 m tile at 2048 px: nr rows along U (hero_entrance maps U to world Y), nc bumps along V (world X). Periodic."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    rf = uu * nr / n + MT.pnoise(n, n, 3.0, seed + 1) * wander         # row coordinate (row units), a little wander
+    # coir_loop: each row slides along itself by its own amount (no column grid survives from row to row)
+    rsh = rng.uniform(-row_shift, row_shift, nr) if row_shift else np.zeros(nr)
+    cf = vv * nc / n + MT.pnoise(n, n, 3.0, seed + 2) * wander
+    rj = rng.uniform(-jit, jit, (nr, nc))
+    cj = rng.uniform(-jit, jit, (nr, nc))
+    rad = rng.uniform(*rad_r, (nr, nc))
+    amp = rng.uniform(*amp_r, (nr, nc))
+    tone = rng.normal(0, 1, (nr, nc))
+    slant = rng.uniform(-0.25, 0.25, (nr, nc))
+    ph = rng.uniform(0, 1, (nr, nc))
+    r0 = np.floor(rf).astype(int)
+    E = np.zeros((n, n)); W = np.zeros((n, n)); T = np.zeros((n, n)); F = np.zeros((n, n))
+    for dr in (-1, 0, 1):
+        r = r0 + dr
+        rm = r % nr
+        cfs = cf - rsh[rm]                                               # this row's own slide (no seams: per row)
+        c0 = np.floor(cfs).astype(int)
+        for dc in (-1, 0, 1):
+            c = c0 + dc
+            cm = c % nc
+            dy = rf - (r + 0.5 + rj[rm, cm])
+            dx = cfs - (c + 0.5 + cj[rm, cm])
+            rr = rad[rm, cm]
+            q = ((dx / across) ** 2 + dy * dy) / (rr * rr)               # 0.94: a touch narrower across (columns separate)
+            dome = np.clip(1 - q, 0, 1) ** 0.75 * amp[rm, cm]           # a full round crown
+            # coir fibres: fine twisted strands slanting across the loop (one slant per bump, jittered)
+            fib = 0.5 + 0.5 * np.cos(2 * np.pi * (5.0 * (dx * (0.8 + slant[rm, cm]) - 0.6 * dy) / rr + ph[rm, cm]))
+            w = np.exp(24 * dome) * (dome > 0)
+            E += np.exp(12 * dome) - 1                                   # smooth max: soft creases, no outlines
+            W += w; T += w * tone[rm, cm]; F += w * fib
+    H = np.log1p(E) / 12
+    T = T / np.maximum(W, 1e-9)
+    F = F / np.maximum(W, 1e-9)
+    fuzz = MT.pnoise(n, n, 0.2, seed + 3)                                # bristle speckle
+    mott = MT.pnoise(n, n, 2.4, seed + 4)
+    h = H * (0.90 + 0.10 * F) + 0.012 * fuzz
+    occ = np.clip(H / 0.55, 0, 1) ** 1.4                                  # 0 in the pockets, 1 on the crowns
+    # b2 (b1 C1: golden pockets read pure black under white crowns, a polka-dot grid; reference 2's pockets are a dark
+    # brown, not black): the pockets lifted (k 0.14 -> 0.26)
+    k = np.clip(0.26 + 0.64 * occ + 0.09 * (F - 0.5) * occ + 0.035 * T + 0.03 * np.clip(fuzz, -2, 2)
+                + 0.03 * mott, 0, 1)[..., None]
+    g, cr = MT.srgb(gap), MT.srgb(crown)
+    bc = g * (1 - k) + cr * k
+    bc = bc * (1 + np.array([0.012, 0.0, -0.010]) * T[..., None])
+    rough = np.clip(0.90 - 0.04 * occ + 0.03 * fuzz, 0.6, 0.98)
+    ao = np.clip(0.20 + 0.80 * occ, 0, 1)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, 30.0, rough, ao)
+
+
+def coir_loop(n=2048):
+    """r16 fix round (blind judge 7/10, point 5: HEntCoirB's field read as a very regular dot grid, like pegboard, and
+    light in the golden sun; reference 2 / entry_foreground_crop.png show LOOPED ROWS of coarse coir, darker): the same
+    loop pile, but each loop is elongated along its row (1.18x) so neighbours in a row merge into a knotted looped row
+    with pinches between the loops, the rows parted by deeper creases; every row slides along itself by a random amount
+    (+-0.5 loop) and the loops jitter (+-0.12), vary in size (0.50-0.62) and height (0.70-1.0), so no column grid or
+    polka-dot lattice survives; darker, warmer crowns (#7A5C42, was #8A7564; b1's #6C5A4B read grey in the sun). Rows ~3.0 cm (33 per metre) as before."""
+    return coir_bump(n, seed=517, name="HEntCoirL", gap="#140C07", crown="#7A5C42", nr=33, nc=30, across=1.18,
+                     jit=0.12, rad_r=(0.50, 0.62), amp_r=(0.70, 1.0), row_shift=0.5, wander=0.06)
+
+
+def timber_polished(n=2048, seed=433):
+    """r16 entry (the crop: "a thick polished near-black beam with a visible front face"): the step beam's TOP and its
+    rounded nosing: the knot-free near-black bar timber (T_AK_HEntTimberN's colours, a little lighter grain so the
+    polish shows the figure) under a polished finish (roughness ~0.16), so the top picks up the lit hall as a sheen and
+    the rounded nosing a crisp highlight line (reference 2's top reads (59-87, 56-71, 60-79): a cool sheen over dark
+    wood). Grain along V, 1.0 m tile."""
+    return timber_ebony(n, seed, name="HEntTimberP", dark="#1A1411", mid="#271E18", lite="#4C3B2E", rough0=0.16,
+                        nknots=0)
+
+
+def timber_face(n=2048, seed=437):
+    """r16 entry: the step beam's FRONT FACE (reference 2: a dark brown face (16-29, 8-18, 2-11) below the nosing,
+    clearly darker than the top but not a void; ours at night rendered 0): the bar timber a step lighter
+    (#2A1F17-#5A4533) at a satin finish (~0.34), so the lanterns' and the mat's light shows the face as timber."""
+    return timber_ebony(n, seed, name="HEntTimberF", dark="#2A1F17", mid="#3A2C21", lite="#5A4533", rough0=0.34,
+                        nknots=0)
+
+
 def brushed(n=1024, seed=391):
     """Final fix r6 (blind judge: the post shoe read heavy blotchy dark patina, its rivets lost; the sheet's shoe is a
     clean brushed brass with four prominent corner rivets - measured (155, 104, 56) on the sheet, the r5 bronze rendered
@@ -713,7 +806,8 @@ SETS = {"HEntTimber": timber, "HEntMat": mat, "HEntRush": rush, "HEntTimberW": t
         "HEntBronze": bronze, "HEntTimberE": timber_ebony, "HEntCoirR": coir_ribbed, "HEntBrushed": brushed,
         "HEntSisal": sisal, "HEntTimberG": timber_weathered, "HEntRushK": rush_knit, "HEntTimberL": timber_lacquer, "HEntWeave": weave,
         "HEntKnot": knot_weave, "HEntKnotB": knot_weave_black, "HEntTimberN": timber_bar, "HEntTimberM": timber_board,
-        "HEntNub": nub_weave, "HEntRib": rib_weave, "HEntRopeB": rope_black, "HEntTimberMR": timber_board_matte}
+        "HEntNub": nub_weave, "HEntRib": rib_weave, "HEntRopeB": rope_black, "HEntTimberMR": timber_board_matte,
+        "HEntCoirB": coir_bump, "HEntCoirL": coir_loop, "HEntTimberP": timber_polished, "HEntTimberF": timber_face}
 
 if __name__ == "__main__":
     # r4: name the sets to write (e.g. `tex_entrance.py HEntRush`); an existing set is never rewritten by accident

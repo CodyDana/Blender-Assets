@@ -235,6 +235,9 @@ def painting_tall():
         return P1 - k if k < P1 - P0 else P0 + (k - (P1 - P0))
     s_top = (HB.PAPER_Z1 - HB.IMG_Z0) / img_h * sh           # final r2: the paper ends inside the picture: its plain top
     cut, XF = sh - s_top, 40.0                              # rows are cut, its top edge band kept (shifted down)
+    # r16 fix round: the paper must end inside the picture; the mirrored filler above the sheet showed as a smeared
+    # ghost band across the paper's top (r16 final C10), so hero_backwall's IMG_Z0 / PAPER_IMG_W must keep cut > 0
+    assert cut > 0, f"painting_tall: the picture ends {-cut:.0f} rows under the paper's top (raise PAPER_IMG_W)"
     rows_a, rows_b, wts = [], [], []
     for si in s:
         if cut > 0 and si >= s_top - EB - XF:              # final r2: direct rows cross-faded into the shifted band

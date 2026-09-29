@@ -1986,3 +1986,54 @@ reference's ~4); a tall case's side glass reading as a black slab; the corner ni
 panels reading as blank shoji; the mat (fine, light weave; wide light jamb); the entry lanterns slimmer and lighter than
 the reference's; the black bar reading as a flush strip rather than a raised beam; the tray's upright white card in
 case 8 (item 1, kept on purpose); the left side row's tall and low cases overlapping from the entrance.
+
+## 2026-09-29: r16 round made live (night_r16) + Unreal night rebuild
+
+User: "run one round on the 1-6" (the r20 judge's open points: stairs, glass, corner niches, wall bays, entry mat and
+bar, side cases). The r16 combined state (test copy `hero/room_preview/r16/final`, scripts already live in
+`Scripts/armory/`) was built live under the ArmoryKit lock (claimed 04:58, released 05:15, before Unreal). No MCP.
+
+**Textures.** Generated into `Exports/ArmoryKit/Textures` by their own scripts: `tex_entrance.py HEntCoirB HEntCoirL
+HEntTimberP HEntTimberF` (the mat `M_AK_HEntMat` uses HEntCoirL, tint 0.48), `tex_walls.py -- --board`
+(`T_AK_HBayBoard_*`, the wall bays' dark backboard) and `tex_backwall.py -- tall` (`T_AK_HPaintingTall_*`). All 18
+files in `r16/final/Textures` are byte-identical (md5) in Exports. The live blend's 146 images all resolve.
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 114 pieces, hard fails 0; 114 FBX exported;
+`ArmoryKit.blend` saved with 614 instances. No orphaned FBX (Exports/ArmoryKit holds exactly the 114 layout pieces, so
+nothing went to the Recycle Bin). Log: `renders/night_r16/build_log.txt`.
+
+**Walk check (live blend):** passed; 33 / 33 routes clear; both controls blocked (case 1 at (6.0, 3.0), stone lantern at
+(7.58, -7.3)); entry_steps_ok; largest step up 0.15 m.
+
+**Drawing:** `WorkFiles/armory/ARMORY_LAYOUT.svg/.txt` and `ARMORY_SITE.svg/.txt` regenerated. Side cases: west 5 SF
+(2.90, 3.60), 4 Tall (1.60, 5.75), G1 S (2.10, 8.05), G3 Tall (1.60, 11.35); east 8 SF (9.10, 3.60), 7 S (9.90, 5.75),
+6 Tall (10.40, 8.05), G2 Tall (10.40, 11.35).
+
+**Renders** (Cycles, night): `renders/night_r16/` C1, CX, C10, C3, C5, CW, C4, CG at 1600 x 900; `night_r16/ref_aspect/`
+C1 at 1448 x 1086. Sheets (`night_r16/compare.py`): `compare/C1_ref_vs_night_20m_vs_night_r16.png` (+ `_1600x900`),
+`<cam>_night_20m_vs_night_r16.png`. Whole-frame mean display luminance, night_20m -> night_r16: C1 ref aspect
+0.152 -> 0.131, C1 0.161 -> 0.141, CX 0.116 -> 0.097, C10 0.193 -> 0.180, C3 0.214 -> 0.170, C5 0.167 -> 0.131,
+CW 0.136 -> 0.111, C4 0.215 -> 0.205, CG 0.116 -> 0.116 (dark wall bays and a darker mat; reference 2 is 0.328).
+
+### Unreal night rebuild (05:16-05:20, all steps exit 0)
+No ArmoryLab editor was open; a DojoLab commandlet finished before the run. `ak_image_stats.py` / `ak_compare_sheet.py`
+baseline is now `renders/night_r16`, fallback `night_20m`.
+
+| Step | Result |
+|---|---|
+| import | 114 meshes, 110 textures; stale deleted: `T_AK_HEntRib_*`, `T_AK_HEntTimberN_*`, `T_AK_HNicheWashiRoom_BC` |
+| materials | 10 masters, 130 instances, 114 meshes |
+| level | 614 actors; bounds gate max 0.0049 cm; 108 lights |
+| verify (fresh process) | Gates 1-7 all pass |
+| manny / character / walk | Pass |
+| capture | all layout cameras + C1 ref aspect (`unreal/captures/`) |
+| stats / compare | `unreal/capture_stats.json`, `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+Whole-frame mean (Unreal / Blender night_r16): C1 ref aspect 0.128 / 0.131, C1 0.135 / 0.141, C10 0.194 / 0.180,
+C3 0.154 / 0.170, C4 0.209 / 0.205, C5 0.149 / 0.131, CW 0.114 / 0.111, CX 0.112 / 0.097, CG 0.138 / 0.116.
+
+**Open (r16 judge, 7.5/10, before the fix round):** front side cases 5 / 8 still at X 2.90 / 9.10 (inboard of the
+cases behind them), so the east 8 / 7 / 6 cluster still overlaps in C1; the mat texture (HEntCoirL replaced the
+pebble-like HEntCoirB, not re-judged); the golden-hour wall-bay backs read amber (night is right; in Unreal night the
+bays read warmer and lighter than in Blender); the corner niches lack a sill or plinth; the room reads sparser than the
+reference; the east tall case 6 and G2 are two same-height frames.
