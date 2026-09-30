@@ -620,7 +620,14 @@ CASES = {  # type: (width along local X, depth along local Y, plinth height, gla
     # front tall must stand wholly above the low front case, the back tall wholly beside it and left of the lit corner
     # niche); the talls' footprint 1.0 x 0.85 -> 0.90 x 0.75 m (the 1.70 m glass kept: user decision; still room for a
     # mannequin) and the S case 1.2 x 0.9 -> 1.0 x 0.8 m open 30-35 px between every pair
-    "S": (1.0, 0.8, 0.55, 0.70), "Tall": (0.9, 0.75, 0.50, 1.70), "Hero": (2.4, 0.9, 0.52, 0.0),   # r18: "S" (1.2, 0.9, ...), "Tall" (1.0, 0.85, ...)
+    # r19 (USER DECISION 2026-09-30 "copy the reference order"): the S case is reference 2's medium glass case (the
+    # kunai, scroll and boots cases): measured through C1 their plinths are ~0.55 m with the glass top at ~+1.10-1.17,
+    # so the glass 0.70 -> 0.60 (top +1.25 -> +1.15)
+    "S": (1.0, 0.8, 0.55, 0.60), "Tall": (0.9, 0.75, 0.50, 1.70), "Hero": (2.4, 0.9, 0.52, 0.0),   # r18: "S" (1.0, 0.8, 0.55, 0.70); r18 cases round: "S" (1.2, 0.9, ...), "Tall" (1.0, 0.85, ...)
+    # r19 (NEW): reference 2's hat case (east, third from the entry) is neither low nor the 2.2 m tall: through C1 its
+    # plinth reads ~0.60 m and its glass ~0.95 m (top ~+1.55) over a near-square footprint; room for the straw hat on a
+    # stand with the attire under it
+    "MT": (0.8, 0.75, 0.60, 0.95),
     # r20 round 3 (blind judge 7/10, delta 2: the front side cases were cut by both C1 frame edges; reference 2's kunai
     # and shuriken cases are small and sit fully inside it): the front pair's own smaller footprint, 1.20 x 0.80 m (the
     # same plinth and glass heights as "S"; the shuriken tray, 0.54 x 0.44 m with its card, still fits case 8)
@@ -632,7 +639,12 @@ CASES = {  # type: (width along local X, depth along local Y, plinth height, gla
     # r18 final fix: 1.2 -> 1.0 m wide (along world Y; the centre and the tray unchanged: the 0.54 m tray still fits)
     # and the glass 0.50 -> 0.45 (top +0.85; the tray card top +0.63): through C1 its top edge drops from y 557 to 572,
     # 33 px above the tall behind it
-    "SF": (1.0, 0.8, 0.40, 0.45),   # r18 cases round: (1.2, 0.8, 0.40, 0.50)
+    # r19 b (r19 a judge delta 2: case 8 read ~25 px too high and too big from C1, its right end ~114 px behind the
+    # jamb, where reference 2's shuriken case is a compact cube whose right glass edge shows at x ~1407): the SF
+    # footprint 1.0 x 0.8 -> 0.70 x 0.66 m around the unchanged tray (0.541 m along the case width, local Y -0.186 to
+    # +0.252 with its card; the hero_cases glass frame's inner face stands 0.060 m inside the footprint, so 0.70 x 0.66
+    # is the smallest that keeps >= 1.5 cm round the tray and its card); plinth and glass heights kept (the tray deck)
+    "SF": (0.70, 0.66, 0.40, 0.45),   # r19 a / r18: (1.0, 0.8, 0.40, 0.45); r18 cases round: (1.2, 0.8, 0.40, 0.50)
 }
 
 
@@ -1513,10 +1525,41 @@ CASE_TABLE = [
     # (5 -> 4, 40 px inward) cannot open further without the cases overlapping: the front tall has to stand wholly above
     # the low front case, and the back tall wholly beside it and left of the niche. From CX the S / back-tall overlap
     # (-173 px) is gone; the back tall and the front tall overlap there by ~50 px instead (no layout clears both)
-    ("5", "SF", 2.70, 3.75, 90), ("G1", "S", 2.53, 14.43, 90), ("4", "Tall", 1.505, 8.30, 90),
-    ("G3", "Tall", 1.975, 10.95, 90),
-    ("8", "SF", 9.30, 3.75, -90), ("7", "S", 9.47, 14.43, -90), ("6", "Tall", 10.495, 8.30, -90),
-    ("G2", "Tall", 10.025, 10.95, -90),
+    # r19 (USER DECISION 2026-09-30 "copy the reference order"; reference 2's own on-screen overlap between neighbouring
+    # cases, ~90-150 px, is ACCEPTED, no zero-overlap rule any more): each side row follows reference 2's order and C1
+    # screen placement. West from the entry: 5 the LOW kunai case (S) beside the entry lantern, 4 the tall cloak case, G1
+    # the scroll case (S), G3 a tall case near the stairs; east: 8 the shuriken case (SF, the tray, rot -90 kept), 7 the
+    # boots case (S), 6 the hat case (MT), G2 a tall case near the stairs. Fitted per case on the C1 projection
+    # (WorkFiles/armory/hero/room_preview/r19/a/work/solve.py: every plinth + glass corner, visible x 40-1408) to
+    # reference 2's boxes measured on 2x crops (x0, x1, y0, y1 of 1448 x 1086): kunai (28, 195, 545, 855), cloak (130,
+    # 313, 310, 700), scrolls (255, 407, 400, 590), W rear tall (287, 450, 255, 470), shuriken (1260, 1408, 625, 855),
+    # boots (1180, 1410, 472, 715), hat (1078, 1210, 344, 575), E rear tall (1000, 1130, 255, 472). Ours (the fit):
+    # 5 (-93, 194, 545, 856), 4 (122, 321, 287, 705), G1 (256, 405, 394, 594), G3 (307, 429, 220, 487); 8 (1260, 1522,
+    # 600, 868), 7 (1183, 1405, 460, 701), 6 (1074, 1214, 337, 578), G2 (1004, 1125, 220, 485). The rear talls stand
+    # ~35 px taller on screen than reference 2's (the 1.70 m glass is the user's) and the shuriken case keeps its
+    # rotation for the tray. Plan: the rows run X 2.40-3.67 / 8.52-9.76 (about halfway from the wall displays, front X
+    # 0.294, toward the centre column, X 5.10), gaps along each row 0.94 / 1.19 / 1.89 m (west) and 0.90 / 1.43 / 1.85 m
+    # (east), the aisles to the centre cases 1.43 / 1.62 m; the rear talls' C1 boxes end at x 429 / 1004, clear of the
+    # stair-foot lanterns (x 489-521 / 927-959). The table keeps its old label order (the CaseLight_NN numbering).
+    # r19 b (r19 a judge 8/10, delta 1: reference 2 ends each row with a staggered PAIR of tall cases, an outer-near one
+    # straight behind the scroll / hat case with its foot hidden by it, and an inner-far one whose plinth foot shows at
+    # y ~470; r19 a had one): the rear slot is now that pair, G4 / G5 (NEW, appended after "10" so the CaseLight_NN
+    # numbering of the others is unchanged) the near one, G3 / G2 the far one by the stairs. Fitted jointly on C1
+    # (WorkFiles/armory/hero/room_preview/r19/b/work/solve_pair.py; 0.40 m of floor behind the scroll / hat case): W
+    # near G4 (275, 414, 236, 536) against reference (287, 400, 272, hidden), far G3 (344, 462, 218, 478) against (357,
+    # 450, 257, 470); E near G5 (1020, 1156, 234, 532) against (1048, 1130, 272, hidden), far G2 (984, 1103, 218, 480)
+    # against (1000, 1087, 257, 472). The tops stay ~35 px higher: the cases are the one Tall type (0.50 + the user's
+    # 1.70 m glass = 2.20 m, which reference 2's cloak case measures, ~0.53 + 1.63 m); its rear talls measure ~1.85 m.
+    # (delta 2) case 8 is the compact SF (see CASES) at (8.80, 3.13): C1 (1243, 1408, 623, 868), raw right edge 1448
+    # (r19 a 1522) against reference 2's (1260, 1407, 627, 855); the tray moves with it, unchanged
+    ("5", "S", 2.90, 3.31, 0), ("G1", "S", 3.27, 7.08, 90), ("4", "Tall", 3.15, 5.02, 0),
+    ("G3", "Tall", 3.16, 10.13, 0),
+    ("8", "SF", 8.80, 3.13, -90), ("7", "S", 9.26, 5.10, 0), ("6", "MT", 8.98, 7.30, 0),
+    ("G2", "Tall", 8.82, 10.09, 0),
+    # r19 a: ("G3", "Tall", 2.91, 9.84, 0), ("8", "SF", 9.06, 3.30, -90), ("G2", "Tall", 8.97, 9.90, 0)
+    # r18 final fix: ("5", "SF", 2.70, 3.75, 90), ("G1", "S", 2.53, 14.43, 90), ("4", "Tall", 1.505, 8.30, 90),
+    # ("G3", "Tall", 1.975, 10.95, 90), ("8", "SF", 9.30, 3.75, -90), ("7", "S", 9.47, 14.43, -90),
+    # ("6", "Tall", 10.495, 8.30, -90), ("G2", "Tall", 10.025, 10.95, -90)
     # r18 cases round: ("G1", "S", 2.50, 14.30), ("4", "Tall", 1.555, 8.35), ("G3", "Tall", 1.575, 12.45) and east mirrored
     # rear dais (2026-09-28): the hero table on the +0.90 deck, 15 cm behind the deck edge (Y 14.55-15.45; was 14.85)
     # b4 (judge delta 3: from the entrance the table's base sat right on the top lit band; reference 2 shows a strip of
@@ -1524,6 +1567,8 @@ CASE_TABLE = [
     # r20: 0.65 m in front of the back wall as before (Y 18.90-19.80; was 15.35 on the 16 m room): 1.30 m of deck in
     # front of it (b9 judge: "the deck strip in front of the table is thin", was 0.50 m)
     ("10", "Hero", 6.0, ROOM_L - 0.65, 0),
+    # r19 b (NEW, after the hero so the CaseLight_NN numbering above is unchanged): the near cases of the rear pairs
+    ("G4", "Tall", 3.06, 8.36, 0), ("G5", "Tall", 8.84, 8.45, 0),
 ]
 # genkan (2026-09-28): the entry pair stands on the sunken genkan floor just in front of the black step beam, either
 # side of the mat. Entryfix (2026-09-28, the user: "lantern is fine... just keep it the same natural shape as you've
@@ -1964,7 +2009,13 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     # its aisle face), the aim 5 cm nearer and a 65 mm lens, so the slab fills the frame (y ~100-767 of 900, x ~260-1340)
     # and the card stands wholly above its top edge (projected: its foot at y < 0); the near rail (+0.85) is ~0.4 m
     # under the sight line to the tray's front edge
-    ("C4_ShurikenTray", (8.80, 3.75, 1.85), (9.28, 3.75, 0.43), 65),  # item 1: looking down into case 8   # r18: (8.70, 3.75, 1.85) -> (9.33, 3.75, 0.43), 50
+    # r19 (reference order): case 8 moves with its tray from (9.30, 3.75) to (9.06, 3.30); the camera keeps the same
+    # place relative to it (0.10 m off its aisle face, X 8.66)
+    # r19 b: case 8 is the compact 0.70 x 0.66 m SF at (8.80, 3.13) (aisle face X 8.47): the camera 0.07 m off that
+    # face at +1.90, the aim on the tray centre, 75 mm (tried 50 / 58 / 65 / 72 on 16-sample previews): the slab fills
+    # the frame between the case's two side posts, the lit reflection card stays above the frame (as r18 final), the
+    # brass plate at the bottom edge; the near rail (+0.85) is 0.35 m under the sight line to the tray's front edge
+    ("C4_ShurikenTray", (8.40, 3.13, 1.90), (8.80, 3.13, 0.43), 75),   # r19 a: (8.56, 3.30, 1.85) -> (9.04, 3.30, 0.43)  # item 1: looking down into case 8   # r18 final: (8.80, 3.75, 1.85) -> (9.28, 3.75, 0.43); r18: (8.70, 3.75, 1.85) -> (9.33, 3.75, 0.43), 50
     # r20 (12 x 20): C3 / C5 follow cases 3 / 4, C10 / CX the back wall (+4.0), CW's aim the flight (+3.2)
     ("C3_Case3", (6.0, 11.30, 1.50), (6.0, 13.40, 0.95), 28),        # r20 fix round: follows case 3 (Y 13.40)
     # r17 cases round: case 4 at (2.75, 7.25); from the aisle behind it (1.85 m in, 1.35 m back), clear of case 2 (X 5.1)
@@ -1973,12 +2024,23 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     # r18 cases round: case 4 at (1.555, 8.35); the same 3.6 m view from the aisle in front of case 2 (X 4.90, 0.20 m
     # outboard of its west face), the whole 2.2 m case in frame (26 mm: at 28 mm the plinth foot sat 7 px off the frame)
     # r18 final fix: case 4 at (1.505, 8.30)
-    ("C5_CloakCase", (4.90, 7.05, 1.60), (1.505, 8.30, 1.10), 26),
+    # r19 (reference order): the cloak case 4 is second from the entry at (3.15, 5.02); from the aisle mouth (0.40 m
+    # outboard of case 1's west face, Y 2.45), 3.1 m off, the whole 2.2 m case in frame (projected y ~70-855 of 900),
+    # the scroll case and the rear tall beside it on the right, the low kunai case in the near left corner, case 1 out
+    # of frame (a first try from X 5.55 caught its glass in the lower right)
+    ("C5_CloakCase", (4.70, 2.45, 1.80), (3.10, 5.05, 1.10), 21),   # r18: (4.90, 7.05, 1.60) -> (1.505, 8.30, 1.10), 26
     ("C10_Hero", (6.0, 14.90, 2.30), (6.0, 19.90, 1.85), 26),
     # r17 fix round: the west aisle is X 4.62 (was 4.05). r18 cases round (r17 judge: G1's glass filled the foreground;
     # from Y 2.9 case 1's west face and case 5 also flank the frame): G1 has moved to the rear, the aisle is X 3.10-5.10,
     # and the camera stands in its middle just past the front pair (backs Y 4.35 / 4.65), so the near frame is floor
-    ("CW_WestAisle", (4.10, 5.10, 1.60), (3.6, 16.2, 1.2), 24),
+    # r19 (reference order): the west aisle is X 3.67-5.10 past the scroll case; the camera stands in it between the
+    # cloak case (back Y 5.40) and the scroll case (front 6.58), looking down the aisle to the flight: the rear tall G3
+    # wholly in frame on the left (its plinth and emblem), case 2 / 3 on the right, the aisle floor clear
+    # r19 b (r19 a judge delta 6: the rear tall dominated the left foreground; the rear slot is now a pair): from the
+    # aisle mouth behind case 1 (back Y 4.65; the camera 0.35 m off its west face line) down the aisle: the scroll case,
+    # the rear pair and the stair-foot lantern recede on the left, case 2 on the right; the cloak case and case 1 stay
+    # just outside the frame (43 / 45 deg off the axis against the 24 mm lens's 37)
+    ("CW_WestAisle", (4.75, 4.30, 1.75), (4.1, 16.2, 0.95), 24),   # r19 a: (4.60, 6.00, 1.70) -> (4.2, 16.2, 0.9)   # r18: (4.10, 5.10, 1.60) -> (3.6, 16.2, 1.2), 24
     ("CX_FromPlatform", (6.0, 19.4, 2.4), (6.0, 1.0, 0.8), 24),
     EXT.CAMERA,   # exterior stage: CG_Garden, the courtyard and the entrance
 ]

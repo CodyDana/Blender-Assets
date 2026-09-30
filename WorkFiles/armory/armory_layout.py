@@ -39,6 +39,7 @@ CONTENT = {
     "8": "shuriken assortment: six forms + spike",
     "10": "hero (table on the platform): Snow Flower sheathed",
     "G1": "growth slot (empty)", "G2": "growth slot (empty)", "G3": "growth slot (empty)",
+    "G4": "growth slot (empty)", "G5": "growth slot (empty)",   # r19 b: the near cases of the rear tall pairs
 }
 
 # piece prefix -> (ascii char, svg fill, legend text); first match wins; None = not drawn

@@ -2151,3 +2151,83 @@ boucle nubs rather than flat woven sisal rows, the black border reads thinner th
 the step beam's brass specular streak pulls the eye; in CX the two talls on each side (4 / G3, 6 / G2) overlap on screen;
 CW cuts the foreground tall through its plinth emblem. Needs the user's decision: the C4 tray's centre-bottom manji
 (hooked-cross) shuriken reads as a swastika in the hero close-up (a Fab listing risk); the rules keep the tray as it is.
+
+## 2026-09-30: r19 round made live (night_r19) + Unreal night rebuild
+
+User: "ok copy the reference order. leave the shuriken". The chosen r19 state is test copy `hero/room_preview/r19/b`
+(r19 b judge 8/10, no blockers). Each side row now follows reference 2's order and its C1 screen placement. West from
+the entry: 5 the low kunai case (S), 4 the tall cloak case, G1 the scroll case (S), then the rear tall pair G4 (near)
+/ G3 (far). East: 8 the compact shuriken case (SF 0.70 x 0.66 m, holding the tray, which is unchanged including the
+manji), 7 the boots case (S), 6 the hat case (the new "MT" type: 0.80 x 0.75 m, plinth 0.60, glass 0.95), then the
+rear tall pair G5 (near) / G2 (far). The S glass is 0.70 -> 0.60, and C4, C5 and CW are re-aimed. The scripts were
+already live in `Scripts/armory/`. The state was built live under the ArmoryKit lock (claimed 12:55, released 13:01,
+before Unreal). No MCP.
+
+**Textures.** The round adds no textures. The r19 b preview and the live blend each use 143 images, all resolving:
+125 in `Exports/ArmoryKit/Textures` and 18 (the tray's shuriken sets) in `Exports/Shuriken/Textures`.
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 116 pieces, hard fails 0; 116 FBX exported (new:
+`SM_AK_Case_MT_Plinth`, `SM_AK_Case_MT_Glass`); `ArmoryKit.blend` saved with 618 instances. No orphaned FBX:
+Exports/ArmoryKit holds exactly the 116 layout pieces, so nothing went to the Recycle Bin. Log:
+`renders/night_r19/build_log.txt`.
+
+**Walk check (live blend):** passed. All 39 routes are clear (the r19 routes: the east entry slant bends at (8.60, 2.38)
+round case 8, the cross walks are at Y 6.05 / 11.1, routes run between the front case and the case behind it at
+Y 4.18 / 4.25 and between the rear pair at Y 9.25 / 9.27, and a rear-floor walk at Y 13.3). Both controls are blocked:
+case 1 at (6.0, 3.0) and the stone lantern at (7.58, -7.3). entry_steps_ok; the largest step up is 0.15 m. Log:
+`renders/night_r19/walk_log.txt`.
+
+**Drawing:** `WorkFiles/armory/ARMORY_LAYOUT.svg/.txt` regenerated; `armory_layout.py` gained the G4 / G5 content
+entries (growth slots); `ARMORY_SITE` is unchanged. Side cases: west 5 S (2.90, 3.31), 4 Tall (3.15, 5.02), G1 S
+(3.27, 7.08), G4 Tall (3.06, 8.36), G3 Tall (3.16, 10.13); east 8 SF (8.80, 3.13), 7 S (9.26, 5.10), 6 MT (8.98, 7.30),
+G5 Tall (8.84, 8.45), G2 Tall (8.82, 10.09).
+
+**Renders** (Cycles, night, `night_r19/render.sh`): `renders/night_r19/` C1, CX, C10, C3, C5, CW, C4, CG and
+CN_WestNiche at 1600 x 900, with CN from the r18 camera via `night_r19/layout_cams.json`; `night_r19/ref_aspect/` C1 at
+1448 x 1086. Sheets (`night_r19/compare.py`): `compare/C1_ref_vs_night_r18_vs_night_r19.png` (+ `_1600x900`) and
+`<cam>_night_r18_vs_night_r19.png`, CN_WestNiche included.
+
+Whole-frame mean display luminance, night_r18 -> night_r19 (reference 2 is 0.328):
+
+| View | night_r18 | night_r19 | Note |
+|---|---|---|---|
+| C1 ref aspect | 0.135 | 0.151 | |
+| C1 | 0.146 | 0.166 | |
+| CX | 0.106 | 0.096 | |
+| C10 | 0.153 | 0.153 | |
+| C3 | 0.179 | 0.165 | |
+| C5 | 0.117 | 0.163 | re-aimed, not like for like |
+| CW | 0.108 | 0.115 | re-aimed, not like for like |
+| C4 | 0.106 | 0.199 | re-aimed, not like for like |
+| CG | 0.116 | 0.116 | |
+| CN | 0.128 | 0.127 | |
+
+### Unreal night rebuild (13:01-13:05, all steps exit 0 after one fix)
+No UnrealEditor and no other commandlet was running. The first run stopped at **level** (exit 8): the two new talls'
+case lights (CaseLight_13 / 14, G4 / G5) raised the shadow-casting local lights to 14, against the plan's budget of 12.
+Fix, in Unreal only (`ak_common.py` `UE_SHADOW_OFF_LIGHTS`, following the alcove spots' precedent): the two near talls,
+which are empty growth slots tucked behind the scroll and hat cases, give up their shadows. Blender still shadows all 14.
+The rerun from level onward passed. The `ak_image_stats.py` / `ak_compare_sheet.py` baseline is now `renders/night_r19`,
+fallback `night_r18`.
+
+| Step | Result |
+|---|---|
+| import | 116 meshes, 107 textures; no stale assets |
+| materials | 10 masters, 132 instances, 116 meshes; 0 unmatched slots |
+| level | 618 actors; bounds gate max 0.0049 cm; 114 local lights, 12 shadowed |
+| verify (fresh process) | Gates 1-7 all pass |
+| manny / character / walk | Pass |
+| capture | all layout cameras + C1 ref aspect (`unreal/captures/`) |
+| stats / compare | `unreal/capture_stats.json`; sheets rerun by hand (`py -3 ak_compare_sheet.py`): `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+Whole-frame mean (Unreal / Blender night_r19): C1 ref aspect 0.152 / 0.151, C1 0.164 / 0.166, C10 0.183 / 0.153,
+C3 0.154 / 0.165, C4 0.271 / 0.199, C5 0.181 / 0.163, CW 0.119 / 0.115, CX 0.109 / 0.096, CG 0.139 / 0.116.
+
+**Open (r19 b judge, 8/10, on this state):**
+- The four rear talls stand about 35-39 px taller in C1 than reference 2's, because they use the user's 1.70 m glass.
+- The near talls G5 / G4 read wider than the reference's (136 / 25 px), and their visible feet sit higher.
+- The cloak case 4 is about 19 px taller and 17 px wider; case 8 sits about 13-17 px lower and further left. Both are
+  minor.
+- C4 in Unreal is brighter than in Blender (0.271 against 0.199): the slate reads lighter and the case's side posts
+  glow amber.
+- At golden hour, C4 is sunlit and the slate washes out. Night, the default, is fine.

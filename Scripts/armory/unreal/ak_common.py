@@ -128,6 +128,11 @@ UE_SPEC_OFF_ROLES = {"lantern"}
 # Blender shadows 12 case lights and the 4 rear-alcove spots (f2); in Unreal the alcove spots light an empty rack
 # fixture against its own back board, so they give up their shadows and the 12 case lights keep theirs.
 UE_SHADOW_OFF_ROLES = {"alcove"}
+# r19 b (2026-09-30): the rear tall pairs added G4 / G5 (CaseLight_13 / 14, appended after the hero so the other
+# numbers hold), 14 shadowed case lights against the budget of 12. Unreal-only, like the alcove spots: the two NEAR
+# talls (empty growth slots, tucked straight behind the scroll / hat cases, their feet hidden from C1) give up their
+# shadows; the other 12 case lights keep theirs. Blender still shadows all 14.
+UE_SHADOW_OFF_LIGHTS = {"CaseLight_13", "CaseLight_14"}
 # Unreal-only post-process grade on the level's unbound PPV (key = FPostProcessSettings property; ak_level sets its
 # override_ flag too). Blender blooms lightly (render_armory.py BLOOM: threshold 2.0, strength 0.2); Unreal's default
 # bloom (0.675 on everything) veils the dark room.
@@ -267,7 +272,8 @@ def directional_specs(layout=None):
 
 
 def light_shadows(L):
-    return bool(L.get("shadows", False)) and L.get("role") not in UE_SHADOW_OFF_ROLES
+    return (bool(L.get("shadows", False)) and L.get("role") not in UE_SHADOW_OFF_ROLES
+            and L.get("name") not in UE_SHADOW_OFF_LIGHTS)
 
 
 def is_interior_piece(piece):
