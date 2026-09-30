@@ -87,9 +87,14 @@ ROUTES = {
     # 2.30-3.10 / 3.05-4.15 / 1.15-2.00 / 1.15-2.00 at Y 3.15-4.35 / 4.85-6.25 / 7.60-8.60 / 12.40-13.40, east 8 / 7 /
     # 6 / G2 X 8.90-9.70 / 7.85-8.95 / 10.00-10.85 / 10.00-10.85 at the same Y. The aisles run straight at X 4.62 / 7.38
     # (0.47 m clear of the S cases G1 / 7, 0.48 m of cases 1 / 2, 0.58 m of case 3) from the step beam to the flight
-    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 2.3), (4.62, 2.75), (4.62, 15.45),
+    # r18 cases round (build_armory_kit CASE_TABLE: each row one diagonal on screen): west 5 / 4 / G3 / G1 plinths X
+    # 2.30-3.10 / 1.13-1.98 / 1.15-2.00 / 2.05-2.95 at Y 3.15-4.35 / 7.85-8.85 / 11.95-12.95 / 13.70-14.90, east 8 / 6 /
+    # G2 / 7 X 8.90-9.70 / 10.02-10.87 / 10.00-10.85 / 9.05-9.95 at the same Y. The aisles are X 3.10-5.10 / 6.90-8.90:
+    # the routes run up their middles, X 4.10 / 7.90 (1.00 m clear of the front pair, 1.00 m of cases 1 / 2, 1.10 m of
+    # case 3, 1.15 m of the S cases at the rear)
+    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 2.3), (4.10, 2.75), (4.10, 15.45),
                                    (4.3, 15.45), (4.3, 17.42)],
-    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 2.3), (7.38, 2.75), (7.38, 15.45),
+    "mat_to_east_aisle_to_steps": [(6.0, 1.2), (7.2, 1.1), (9.0, 1.1), (9.0, 2.3), (7.90, 2.75), (7.90, 15.45),
                                    (7.7, 15.45), (7.7, 17.42)],
     # r20 rear round: to 0.38 m before the wing plinth's face (Y 16.43; was the b7 cabinet front 16.76)
     "west_wall_walk_along_niches": [(3.0, 1.5), (0.75, 1.5), (0.75, 16.05)],       # behind the west side cases
@@ -117,17 +122,26 @@ ROUTES = {
     # r17 cases round: the gap behind the front pair is Y 4.35-6.75 (was 4.2-5.0)
     # r17 fix round: behind the front case (Y 4.35), round the outer side of the S case (X 3.05 / 8.95) and on to the
     # aisle behind it, then down the aisle to the step beam
-    "west_wall_behind_case5_round_G1_to_aisle": [(0.75, 5.55), (2.6, 5.55), (2.6, 6.95), (4.62, 6.95), (4.62, 2.9)],
-    "east_wall_behind_case8_round_case7_to_aisle": [(11.25, 5.55), (9.4, 5.55), (9.4, 6.95), (7.38, 6.95), (7.38, 2.9)],
+    # r18 cases round: nothing stands behind the front case now: straight across behind it (its back Y 4.35) to the aisle
+    "west_wall_behind_case5_to_aisle": [(0.75, 5.55), (4.10, 5.55), (4.10, 2.9)],
+    "east_wall_behind_case8_to_aisle": [(11.25, 5.55), (7.90, 5.55), (7.90, 2.9)],
     # r17 (NEW): into the rows' own gaps from the aisle to the wall walk: behind case 4 / 7 and behind G1 / 6
     # r17 fix round: behind the wall talls 4 / 6 (to Y 8.60), in front of the back talls G3 / G2 (from 12.40) and
     # behind them (to 13.40)
-    "west_aisle_behind_case4_to_wall": [(4.62, 9.6), (0.75, 9.6)],
-    "east_aisle_behind_case6_to_wall": [(7.38, 9.6), (11.25, 9.6)],
-    "west_aisle_before_G3_to_wall": [(4.62, 11.4), (0.75, 11.4)],
-    "east_aisle_before_G2_to_wall": [(7.38, 11.4), (11.25, 11.4)],
-    "west_aisle_behind_G3_to_wall": [(4.62, 14.3), (0.75, 14.3)],
-    "east_aisle_behind_G2_to_wall": [(7.38, 14.3), (11.25, 14.3)],
+    # r18 cases round: behind the talls 4 / 6 (backs Y 8.85), in front of the back talls G3 / G2 (fronts 11.95), and
+    # through the 0.75 m gap between G3 / G2 (backs 12.95) and the S cases G1 / 7 (fronts 13.70); behind the S cases
+    # (backs 14.90) the cross walk at Y 15.3 passes
+    "west_aisle_behind_case4_to_wall": [(4.10, 9.6), (0.75, 9.6)],
+    "east_aisle_behind_case6_to_wall": [(7.90, 9.6), (11.25, 9.6)],
+    # r18 final fix (build_armory_kit CASE_TABLE / CASES: talls 0.90 x 0.75, S 1.0 x 0.8): west 4 / G3 / G1 plinths X
+    # 1.13-1.88 / 1.60-2.35 / 2.13-2.93 at Y 7.85-8.75 / 10.50-11.40 / 13.93-14.93, the front SF 5 Y 3.25-4.25; east
+    # mirrored. Behind case 4 (Y 9.6, 0.85 / 0.90 m clear), behind the back tall G3 / G2 (Y 12.1) and between it and the
+    # S case (Y 13.3, 0.63 m clear of the S front); "before G3" (Y 11.4) is now inside G3's footprint, replaced by
+    # "behind G3". The cross walk at Y 15.3 passes 0.37 m behind the S cases (backs 14.93)
+    "west_aisle_behind_G3_to_wall": [(4.10, 12.1), (0.75, 12.1)],
+    "east_aisle_behind_G2_to_wall": [(7.90, 12.1), (11.25, 12.1)],
+    "west_aisle_between_G3_and_G1_to_wall": [(4.10, 13.3), (0.75, 13.3)],
+    "east_aisle_between_G2_and_case7_to_wall": [(7.90, 13.3), (11.25, 13.3)],
     # rear dais: case 3's back is Y 11.8 (X 5.2-6.8); up the flight on a slant onto the landing, the hero table front
     # at Y 14.55 on the +0.90 deck
     "aisle_up_the_steps_to_hero_table": [(9.0, 15.45), (7.7, 15.45), (6.0, 17.42), (6.0, 18.45)],   # r20 fix round
@@ -163,8 +177,8 @@ ROUTES = {
     "landing_onto_east_wing_deck": [(7.0, 17.42), (11.2, 17.42)],
     # r20 rear round (NEW): past the stair-foot lanterns on their stands (X 3.12-3.42 / 8.58-8.88, Y 15.55-15.85) along
     # the wing plinth's face to the wall walk (0.38 m clear of the face, Y 16.05)
-    "aisle_past_west_foot_lantern_to_wall": [(4.62, 15.45), (2.5, 15.45), (2.5, 16.05), (0.75, 16.05)],
-    "aisle_past_east_foot_lantern_to_wall": [(7.38, 15.45), (9.5, 15.45), (9.5, 16.05), (11.25, 16.05)],
+    "aisle_past_west_foot_lantern_to_wall": [(4.10, 15.45), (2.5, 15.45), (2.5, 16.05), (0.75, 16.05)],
+    "aisle_past_east_foot_lantern_to_wall": [(7.90, 15.45), (9.5, 15.45), (9.5, 16.05), (11.25, 16.05)],
     # r20 (NEW): the 1.30 m deck strip in front of the hero table (front 18.887), the deck lanterns (18.893) and the
     # plum vases, across the deck from the west to the east rear alcove
     "deck_strip_in_front_of_hero_table": [(6.0, 15.45), (6.0, 18.45), (2.4, 18.45), (9.6, 18.45)],

@@ -2091,3 +2091,63 @@ wall) rather than the reference's single diagonal; CW_WestAisle is obstructed by
 or move the camera); the mat's nubs are about 25-30 % coarser than the reference's (tile about 1.3x, lower the height
 contrast) and the black binding is about half the reference's width (widen to the r17-merge width or more); the corner
 niche cabinet fronts have little contrast against the dark wall at golden.
+
+## 2026-09-30: r18 round made live (night_r18) + Unreal night rebuild
+
+User: "addresss the open items". The r18 fix-round state (test copy `hero/room_preview/r18/final`: side cases 4 / 6 at
+the wall and G3 / G1 stepped in, walk routes re-cut round G3, wall-bay verticals on the faint side-lining glow, the mat
+`HEntSisalN` nubs + plain black `HEntBraidP` binding with the far binding widened to 7.5 cm, the niche cabinets' proud
+brass inlays and 22 cm pulls, C4 re-aimed onto the slate; scripts already live in `Scripts/armory/`) was built live
+under the ArmoryKit lock (claimed 11:49, released 11:53, before the renders and Unreal). No MCP.
+
+**Textures.** Generated into `Exports/ArmoryKit/Textures` by their own script: `tex_entrance.py HEntSisalN HEntBraidP`
+(the mat `M_AK_HEntMat` now uses HEntSisalN, tint 0.22, spec 0.08; the binding `M_AK_HBinding` HEntBraidP, tint 0.25).
+All 18 files in `r18/final/Textures` (HEntSisalN / R / T, HEntBraidP / D / C) are byte-identical (md5) in Exports. The
+live blend's 143 images all resolve (125 in Exports/ArmoryKit, 18 the tray's shuriken sets in Exports/Shuriken). The
+round's superseded sets (HEntSisalT / R, HEntBraidC / D) stay in Exports but are unused.
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 114 pieces, hard fails 0; 114 FBX exported;
+`ArmoryKit.blend` saved with 614 instances. No orphaned FBX (Exports/ArmoryKit holds exactly the 114 layout pieces;
+nothing went to the Recycle Bin). Log: `renders/night_r18/build_log.txt`.
+
+**Walk check (live blend):** passed; 39 / 39 routes clear; both controls blocked (case 1 at (6.0, 3.0), stone lantern at
+(7.58, -7.3)); entry_steps_ok; largest step up 0.15 m. Log: `renders/night_r18/walk_log.txt`.
+
+**Drawing:** `WorkFiles/armory/ARMORY_LAYOUT.svg/.txt` and `ARMORY_SITE.svg/.txt` regenerated. Side cases: west 5 SF
+(2.70, 3.75), 4 Tall (1.50, 8.30), G3 Tall (1.98, 10.95), G1 S (2.53, 14.43); east 8 SF (9.30, 3.75), 6 Tall
+(10.49, 8.30), G2 Tall (10.03, 10.95), 7 S (9.47, 14.43).
+
+**Renders** (Cycles, night, `night_r18/render.sh`): `renders/night_r18/` C1, CX, C10, C3, C5, CW, C4, CG at 1600 x 900,
+plus the west corner niche close-up CN_WestNiche (the r18 round's camera, via `night_r18/layout_cams.json`);
+`night_r18/ref_aspect/` C1 at 1448 x 1086. Sheets (`night_r18/compare.py`): `compare/C1_ref_vs_night_r17_vs_night_r18.png`
+(+ `_1600x900`), `<cam>_night_r17_vs_night_r18.png`. Whole-frame mean display luminance, night_r17 -> night_r18: C1 ref
+aspect 0.143 -> 0.135, C1 0.157 -> 0.146, CX 0.097 -> 0.106, C10 0.153 -> 0.153, C3 0.166 -> 0.179, C5 0.129 -> 0.117,
+CW 0.114 -> 0.108, C4 0.194 -> 0.106 (re-aimed onto the slate, the lit reflection card cropped out), CG 0.116 -> 0.116;
+CN_WestNiche 0.128 (reference 2 is 0.328).
+
+### Unreal night rebuild (11:55-11:59, all steps exit 0)
+No UnrealEditor or other commandlet was running. `ak_image_stats.py` / `ak_compare_sheet.py` baseline is now
+`renders/night_r18`, fallback `night_r17`.
+
+| Step | Result |
+|---|---|
+| import | 114 meshes, 107 textures; stale deleted: `T_AK_HEntBraidL_*`, `T_AK_HEntSisalW_*` |
+| materials | 10 masters, 132 instances, 114 meshes |
+| level | 614 actors; bounds gate max 0.0049 cm; 110 lights |
+| verify (fresh process) | Gates 1-7 all pass |
+| manny / character / walk | Pass (walk: every route clear, both controls blocked) |
+| capture | all layout cameras + C1 ref aspect (`unreal/captures/`) |
+| stats / compare | `unreal/capture_stats.json`; sheets rerun by hand (`py -3 ak_compare_sheet.py`): `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+Whole-frame mean (Unreal / Blender night_r18): C1 ref aspect 0.133 / 0.135, C1 0.143 / 0.146, C10 0.182 / 0.153,
+C3 0.175 / 0.179, C4 0.135 / 0.106, C5 0.137 / 0.117, CW 0.118 / 0.108, CX 0.126 / 0.106, CG 0.138 / 0.116.
+
+**Open (r18 fix-round judge, 7.3/10, on this state; blocker on check b):** each side row is a dog-leg, not one inward
+diagonal: the front SF cases (X 2.70 / 9.30) sit inboard of the first talls (4 / 6 at 1.50 / 10.49), so in C1 they
+stack vertically before the diagonal starts (judge: move 4 / 6 to about X 2.1 / 9.9, or 5 / 8 outward, and re-check C1
+for overlaps); the reference ends each row with the talls by the stairs and has the side rows reaching about halfway to
+the central cases (r18 ends with the S cases G1 / 7 and leaves a wide empty band); up close the mat reads as round
+boucle nubs rather than flat woven sisal rows, the black border reads thinner than the reference's at C1 distance, and
+the step beam's brass specular streak pulls the eye; in CX the two talls on each side (4 / G3, 6 / G2) overlap on screen;
+CW cuts the foreground tall through its plinth emblem. Needs the user's decision: the C4 tray's centre-bottom manji
+(hooked-cross) shuriken reads as a swastika in the hero close-up (a Fab listing risk); the rules keep the tray as it is.

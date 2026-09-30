@@ -609,11 +609,30 @@ CASES = {  # type: (width along local X, depth along local Y, plinth height, gla
     # S case a lower plinth under taller glass, 0.90 + 0.45 -> 0.55 + 0.70 (top +1.35 -> +1.25: the back tall behind
     # it then stands wholly above it in C1; b1 at 0.80 hid the tall's plinth foot); the front SF pair keeps its 0.90
     # plinth (the shuriken tray in case 8 sits on it unchanged) under 0.45 -> 0.65 m glass (top +1.55)
-    "S": (1.4, 1.1, 0.55, 0.70), "Tall": (1.0, 0.85, 0.50, 1.70), "Hero": (2.4, 0.9, 0.52, 0.0),
+    # r18 cases round (r17 judge: the side rows zig-zag; one diagonal wanted): the S case is now the LAST case of each
+    # row, inboard of the back tall at the rear, where the C1 room between that tall (x <= 348 / >= 1100) and the
+    # stair-foot lantern (x 489 / 959) takes at most 0.9 m of depth: 1.4 x 1.1 -> 1.2 x 0.9 m (heights kept; its
+    # glass 0.70 still about as tall as it is deep)
+    # r18 final fix (the r18 combined judge 8/10, deltas 1-2: the rows still not one even inward diagonal, and from C1
+    # only ~20 px of floor between neighbouring cases, "any camera or FOV change would bring the overlap back"). Solved
+    # on the C1 projection with the cases' real silhouettes (WorkFiles/armory/hero/room_preview/r18/final/work/
+    # solve_row*.py, local2.py): with the 1.0 x 0.85 talls NO placement gives even 20 px between every pair (the
+    # front tall must stand wholly above the low front case, the back tall wholly beside it and left of the lit corner
+    # niche); the talls' footprint 1.0 x 0.85 -> 0.90 x 0.75 m (the 1.70 m glass kept: user decision; still room for a
+    # mannequin) and the S case 1.2 x 0.9 -> 1.0 x 0.8 m open 30-35 px between every pair
+    "S": (1.0, 0.8, 0.55, 0.70), "Tall": (0.9, 0.75, 0.50, 1.70), "Hero": (2.4, 0.9, 0.52, 0.0),   # r18: "S" (1.2, 0.9, ...), "Tall" (1.0, 0.85, ...)
     # r20 round 3 (blind judge 7/10, delta 2: the front side cases were cut by both C1 frame edges; reference 2's kunai
     # and shuriken cases are small and sit fully inside it): the front pair's own smaller footprint, 1.20 x 0.80 m (the
     # same plinth and glass heights as "S"; the shuriken tray, 0.54 x 0.44 m with its card, still fits case 8)
-    "SF": (1.2, 0.8, 0.90, 0.65),
+    # r18 cases round (r17 judge: from C1 the front SF's +1.55 top rail landed on the plinth of the tall case behind it,
+    # the two read as one stacked object; reference 2's front kunai case is LOW, its top ~+1.0-1.1 through the C1 fit):
+    # 0.90 + 0.65 -> 0.40 + 0.50 (top +0.90, glass taller than the plinth). Through C1 its top edge falls to y 557, 16 px
+    # under the cloak tall's foot (y 540); a +1.00 top would need that tall 0.7 m further back, into the niche's x band.
+    # The tray follows the plinth (armory_items.tray_instance: deck +0.404, card top +0.63, 0.27 m under the glass top)
+    # r18 final fix: 1.2 -> 1.0 m wide (along world Y; the centre and the tray unchanged: the 0.54 m tray still fits)
+    # and the glass 0.50 -> 0.45 (top +0.85; the tray card top +0.63): through C1 its top edge drops from y 557 to 572,
+    # 33 px above the tall behind it
+    "SF": (1.0, 0.8, 0.40, 0.45),   # r18 cases round: (1.2, 0.8, 0.40, 0.50)
 }
 
 
@@ -1463,9 +1482,42 @@ CASE_TABLE = [
     # talls of a row are 114 px apart (r17: one behind the other). The aisles move to X 4.62 / 7.38 (0.47 m clear of
     # the S cases, 0.48 m of cases 1 / 2); walk routes re-laid in walk_check.py (cross walks Y 6.95 / 10.0 / 15.3, the
     # rows' own gaps Y 9.6 / 11.4 / 14.3)
-    ("5", "SF", 2.70, 3.75, 90), ("G1", "S", 3.60, 5.55, 90), ("4", "Tall", 1.575, 8.10, 90), ("G3", "Tall", 1.575, 12.90, 90),
-    ("8", "SF", 9.30, 3.75, -90), ("7", "S", 8.40, 5.55, -90), ("6", "Tall", 10.425, 8.10, -90),
-    ("G2", "Tall", 10.425, 12.90, -90),
+    # r18 cases round (r17 judge 7/10 on r17/final: (1) from C1 the front SF's top rail landed on the plinth of the tall
+    # behind it, one stacked object; (2) the rows zig-zagged on screen (5 at the wall, G1 inward, 4 back out, G3 out)
+    # where reference 2's side row is ONE diagonal stepping inward as it recedes; (3) G1's glass filled CW's
+    # foreground). Solved on the C1 projection (work/solve*.py in WorkFiles/armory/hero/room_preview/r18/cases): each
+    # row's four case boxes (plinth + glass, whole footprint) must step up AND inward on screen (foot y falling, both x
+    # edges rising, west), 10+ px apart, the back ones clear of the lit corner niche (x 365-413, y 165-232), the rear
+    # alcove, the stair-foot lantern (x 489-521, y 280-359) and the deck lantern (east mirrored: x' = 1448 - x). Two
+    # rules fall out of the projection: a case behind a 2.2 m tall can never stand above it on screen (its foot would
+    # have to be over y ~230), so it must stand wholly inboard of it; and the back tall must end left of the niche
+    # (x <= 355), so it is pinned near X 1.15-2.0, Y ~12-13. So each row runs: the LOW front SF (5 / 8, unchanged in
+    # plan, now +0.90: see CASES), the cloak / hat tall (4 / 6) at the wall walk 3.5 m behind it, standing wholly above
+    # it on screen, the back tall (G3 / G2) further back beside it on screen, and the S (G1 / 7) last, inboard at the
+    # rear, beside the back tall. C1 boxes (x0, x1, y0, y1; solver, whole footprints): 5 (40, 177, 557, 831), 4 (73,
+    # 228, 234, 540), G3 (240, 348, 199, 425), G1 (369, 467, 267, 392); east mirrored. Gaps: 5-4 16 px (y), 4-G3 13
+    # px (x), G3-G1 20 px (x); G3 17 px from the niche, G1 22 px from the stair-foot lantern. Reference 2's row (the
+    # same measure): kunai (28, 195, 545, 855), cloak (130, 312, 325, 700), scrolls (258, 407, 400, 590), tall (287,
+    # 450, 255, 470), overlapping by 90-150 px where ours keep clear; its scroll case is third (ours is last: third,
+    # behind a tall, it would have to stand inboard of that tall and push the back tall into the niche). Plan: 5 X
+    # 2.30-3.10, Y 3.15-4.35; 4 X 1.13-1.98, Y 7.85-8.85; G3 X 1.15-2.00, Y 11.95-12.95; G1 X 2.05-2.95, Y 13.70-14.90
+    # (gaps 3.50 / 3.10 / 0.75 m); the aisles widen to X 3.10-5.10 / 6.90-8.90 (walk routes at X 4.10 / 7.90).
+    # (The table keeps its old label order, so the CaseLight_NN numbering is unchanged.)
+    # r18 final fix (the r18 combined judge 8/10, delta 1: "the rear tall case and the rear short case then jump inward
+    # and sit almost side by side, with their bottoms 25 px apart"; delta 2: more margin): the smaller talls / S (see
+    # CASES), the back tall G3 / G2 forward and inward to Y 10.50-11.40, X 1.60-2.35, the S G1 / 7 back to Y
+    # 13.93-14.93 (0.37 m before the cross walk at Y 15.3), X 2.13-2.93. Through C1 (1448 x 1086) the inner
+    # plinth edges (x @ foot y) run 5 (171, 821), 4 (211, 540), G3 (347, 459), G1 (466, 388): 4 -> G3 -> G1 one straight
+    # line in two even steps ((136, -81), (119, -71); r18: (120, -115), (119, -33)); silhouette gaps 5-4 33, 4-G3 30,
+    # G3-G1 33 px (r18: 18 / 13 / 20), G3 21 px from the lit niche, G1 23 px from the stair-foot lantern. The first step
+    # (5 -> 4, 40 px inward) cannot open further without the cases overlapping: the front tall has to stand wholly above
+    # the low front case, and the back tall wholly beside it and left of the niche. From CX the S / back-tall overlap
+    # (-173 px) is gone; the back tall and the front tall overlap there by ~50 px instead (no layout clears both)
+    ("5", "SF", 2.70, 3.75, 90), ("G1", "S", 2.53, 14.43, 90), ("4", "Tall", 1.505, 8.30, 90),
+    ("G3", "Tall", 1.975, 10.95, 90),
+    ("8", "SF", 9.30, 3.75, -90), ("7", "S", 9.47, 14.43, -90), ("6", "Tall", 10.495, 8.30, -90),
+    ("G2", "Tall", 10.025, 10.95, -90),
+    # r18 cases round: ("G1", "S", 2.50, 14.30), ("4", "Tall", 1.555, 8.35), ("G3", "Tall", 1.575, 12.45) and east mirrored
     # rear dais (2026-09-28): the hero table on the +0.90 deck, 15 cm behind the deck edge (Y 14.55-15.45; was 14.85)
     # b4 (judge delta 3: from the entrance the table's base sat right on the top lit band; reference 2 shows a strip of
     # platform in front of it): 35 cm further back, Y 14.90-15.80 (10 cm in front of the painting base)
@@ -1903,15 +1955,30 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     # out in the aisle at the same Y, looking down onto the tray (deck +0.904)
     # r17 fix round: the SF glass is 0.20 m taller (top +1.55), so the camera rises 1.62 -> 1.78 to keep looking down
     # over the near top rail into the tray
-    ("C4_ShurikenTray", (8.10, 3.75, 1.78), (9.30, 3.75, 0.95), 50),  # item 1: looking down into case 8
+    # r18 cases round: the SF case is low (plinth +0.40, glass top +0.90; the tray deck +0.404), so the camera leans in
+    # over it (0.20 m off the case's aisle face, +1.85) and looks steeply down through the top glass onto the tray: the
+    # sight line to the tray's front edge (X 9.11, +0.43) clears the near top rail (X 8.96, +0.90) by 5 cm (from 0.45 m
+    # off at +1.75 the rail crossed the front row)
+    # r18 final fix (the r18 combined judge, delta 6: "the blank white backboard in C4 is blown out and dominates the top
+    # third of the frame"; the tray and its reflection card stay as they are): 0.10 m further over the case (0.10 m off
+    # its aisle face), the aim 5 cm nearer and a 65 mm lens, so the slab fills the frame (y ~100-767 of 900, x ~260-1340)
+    # and the card stands wholly above its top edge (projected: its foot at y < 0); the near rail (+0.85) is ~0.4 m
+    # under the sight line to the tray's front edge
+    ("C4_ShurikenTray", (8.80, 3.75, 1.85), (9.28, 3.75, 0.43), 65),  # item 1: looking down into case 8   # r18: (8.70, 3.75, 1.85) -> (9.33, 3.75, 0.43), 50
     # r20 (12 x 20): C3 / C5 follow cases 3 / 4, C10 / CX the back wall (+4.0), CW's aim the flight (+3.2)
     ("C3_Case3", (6.0, 11.30, 1.50), (6.0, 13.40, 0.95), 28),        # r20 fix round: follows case 3 (Y 13.40)
     # r17 cases round: case 4 at (2.75, 7.25); from the aisle behind it (1.85 m in, 1.35 m back), clear of case 2 (X 5.1)
     # r17 fix round (judge delta b: the camera cut off the glass top and the plinth foot): case 4 at (1.575, 8.10);
     # from beside case 2's front corner in the aisle, 3.6 m off (was 2.3 m), so the whole 2.2 m case stands in the frame
-    ("C5_CloakCase", (4.95, 6.95, 1.60), (1.575, 8.10, 1.05), 28),
+    # r18 cases round: case 4 at (1.555, 8.35); the same 3.6 m view from the aisle in front of case 2 (X 4.90, 0.20 m
+    # outboard of its west face), the whole 2.2 m case in frame (26 mm: at 28 mm the plinth foot sat 7 px off the frame)
+    # r18 final fix: case 4 at (1.505, 8.30)
+    ("C5_CloakCase", (4.90, 7.05, 1.60), (1.505, 8.30, 1.10), 26),
     ("C10_Hero", (6.0, 14.90, 2.30), (6.0, 19.90, 1.85), 26),
-    ("CW_WestAisle", (4.62, 2.9, 1.60), (3.6, 16.2, 1.2), 24),        # r17 fix round: the west aisle is X 4.62 (was 4.05)
+    # r17 fix round: the west aisle is X 4.62 (was 4.05). r18 cases round (r17 judge: G1's glass filled the foreground;
+    # from Y 2.9 case 1's west face and case 5 also flank the frame): G1 has moved to the rear, the aisle is X 3.10-5.10,
+    # and the camera stands in its middle just past the front pair (backs Y 4.35 / 4.65), so the near frame is floor
+    ("CW_WestAisle", (4.10, 5.10, 1.60), (3.6, 16.2, 1.2), 24),
     ("CX_FromPlatform", (6.0, 19.4, 2.4), (6.0, 1.0, 0.8), 24),
     EXT.CAMERA,   # exterior stage: CG_Garden, the courtyard and the entrance
 ]

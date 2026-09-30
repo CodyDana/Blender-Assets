@@ -933,7 +933,7 @@ def braid_dark(w=2048, hgt=256):
 
 
 def braid_black(w=2048, hgt=256, seed=541, name="HEntBraidK", lanes=3, pitch=0.0125, crease="#030303",
-                crown="#0F0E0E", stitch="#1E1C1A", nstrength=6.0):
+                crown="#0F0E0E", stitch="#1E1C1A", nstrength=6.0, bind_w=0.08):
     """r17 mat b2 (blind judge 6/10, delta 3: "the reference border is a textured binding: a braided, nubbly black edge
     with a faint row of stitch dots along its inner edge and a slightly raised, rounded profile. Ours is a flat, smooth
     black strip ... fine nubbly or stitch normal in near-black (not pure 0) so it catches a faint sheen"): the binding
@@ -954,7 +954,7 @@ def braid_black(w=2048, hgt=256, seed=541, name="HEntBraidK", lanes=3, pitch=0.0
     pl = lv - li                                 # 0..1 across a lane
     inband = (v > b0) & (v < b1)
     sgn = np.where(li % 2 == 0, 1.0, -1.0)
-    lane_w = (b1 - b0) / lanes * 0.08            # a lane's width in metres (BIND_W 8 cm; HEntBraidL's 5 cm reads close)
+    lane_w = (b1 - b0) / lanes * bind_w          # a lane's width in metres (BIND_W 8 cm; HEntBraidL's 5 cm reads close)
     t = x * npitch + sgn * (pl - 0.5) * (lane_w / pitch) * 0.9 + li * 0.5
     ti = np.floor(t).astype(int) % npitch
     pt = t % 1.0
@@ -975,6 +975,244 @@ def braid_black(w=2048, hgt=256, seed=541, name="HEntBraidK", lanes=3, pitch=0.0
     rough = np.clip(0.95 - 0.23 * bead - 0.15 * dot + 0.02 * fuzz, 0.68, 0.98)
     ao = np.clip(0.45 + 0.55 * np.maximum(bead, dot), 0, 1)
     return MT.save_set(name, bc, h, nstrength, rough, ao)
+
+
+def sisal_twist(n=2048, seed=561, name="HEntSisalT", nc=36, nr=30, groove="#4E382C", crown="#98796A", gw=0.14,
+                pinch=0.45, slant=0.06, stag=0.0, stag_j=0.22, wob=0.10, wj=0.04, aj=0.18, tone_j=0.14, col_tone=0.07,
+                fib_k=0.10, fib_f=3.0, fuzz_k=0.05, band_k=0.08, mott_k=0.08, nstrength=45.0, k0=0.22, prof_p=1.7,
+                bead=1.0, bead_p=4.0, seg_p=0.7, rough0=0.95, rough_k=0.10):
+    """r18 mat (r17 judge: HEntSisalW's nubs ~25-30 % coarser than reference 2's, "felt balls or pebbles rather than a
+    fine weave" at golden; "the reference weave has continuous ribs running toward the hall with slight fibre
+    irregularity"): continuous sisal ribs carrying round nubs. Reference 2 at C1 (1448 x 1086) measured by 2D FFT on
+    the field (WorkFiles/armory/hero/room_preview/r18/mat/work/mstats.py): rib period 7.31 / 7.76 / 7.21 px in three
+    patches (HEntSisalW 8.98 / 8.98 / 8.53 at 30 per metre), so nc = 36 per metre (2.78 cm; renders 7.53 / 7.64 / 7.01);
+    the along-rib period ~5.5-6 px on screen (nr = 30 per metre, 3.3 cm); the rib band holds 0.22 of the spectral
+    energy and the rows 0.14 (HEntSisalW the reverse, 0.13 / 0.21: pebbles in a grid). Ribs along U (hero_entrance maps
+    U to world Y, toward the hall), nc across V. Per rib: a rounded cord (cross-section power prof_p, a narrow soft
+    groove gw of the pitch) pinched to (1 - pinch) between segments, and on each segment a round dome (bead, soft max
+    power bead_p) so every nub carries its own highlight while the rib stays continuous; the segment creases nearly
+    square across (slant), each rib's phase random (+-stag_j of a segment, stag = 0: the nubs half line up side to
+    side, as the reference's faint rows); per nub height and tone jitter (aj, tone_j), fine fibre strands across each
+    nub (fib_k, fib_f), stray-fibre fuzz, the ribs wandering sideways (wob of a pitch, +-wj width), per-rib tone
+    (col_tone), faint cross bands (band_k), soft mottle. A warm tan-brown, less saturated than HEntSisalW (crown
+    #98796A, groove #4E382C, shallow cavity k0) so the warm golden and lantern light render it tan rather than orange;
+    matte (rough ~0.9; hero_entrance sets the specular level low). Trials in r18/mat/work (T2-T9). 1 m tile at 2048 px,
+    periodic (whole ribs and nubs, periodic noise)."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    cf = vv * nc / n + wob * MT.pnoise(n, n, 3.4, seed + 1)             # the ribs wander a little sideways
+    c = np.floor(cf).astype(int)
+    cm = c % nc
+    x = cf - c - 0.5                                                     # -0.5 .. 0.5 across a rib
+    wc = 1 + rng.uniform(-wj, wj, nc)
+    ph = np.where(np.arange(nc) % 2 == 1, stag, 0.0) + rng.uniform(-stag_j, stag_j, nc)
+    r = np.abs(x) / (0.5 * (1 - 0.5 * gw) * wc[cm])                      # 0 at the rib's crown, 1 at the groove
+    prof = np.sqrt(np.clip(1 - np.clip(r, 0, 1) ** prof_p, 0, 1))
+    a = uu * nr / n + ph[cm] + slant * 2 * x + 0.06 * MT.pnoise(n, n, 3.0, seed + 2)
+    j = np.floor(a).astype(int)
+    jm = j % nr
+    t = a - j - 0.5                                                      # -0.5 .. 0.5 along a segment
+    amp = (1 + rng.uniform(-aj, aj, (nc, nr)))[cm, jm]
+    tone = rng.uniform(-1, 1, (nc, nr))[cm, jm]
+    ctone = rng.uniform(-1, 1, nc)[cm]
+    fph = rng.uniform(0, 1, (nc, nr))[cm, jm]
+    fib = 0.5 + 0.5 * np.cos(2 * np.pi * (fib_f * (t + 0.9 * 2 * x) + fph))   # fibre strands across each nub
+    fuzz = MT.pnoise(n, n, 0.2, seed + 3)
+    band = MT.pnoise(n, n, 2.6, seed + 4, stretch_v=0.15)                   # faint bands across the mat
+    mott = MT.pnoise(n, n, 2.2, seed + 5)
+    if bead > 0:   # a round dome per segment on the pinched rib (soft max): each nub its own round highlight
+        dome = np.sqrt(np.clip(1 - (np.clip(r, 0, 1.5) ** 2 + (2 * t) ** 2), 0, 1)) * bead * amp
+        body = (np.maximum(prof * (1 - pinch), 0) ** bead_p + dome ** bead_p) ** (1 / bead_p)
+    else:          # plain twisted segments (the T2-T6 trials)
+        seg = np.clip(1 - (2 * t) ** 2, 0, 1) ** seg_p
+        body = prof * (1 - pinch + pinch * seg) * amp
+    h = body + 0.035 * fib * prof + 0.012 * fuzz
+    Hn = np.clip(body / max(float(np.percentile(body, 99.5)), 1e-6), 0, 1)
+    occ = np.clip(Hn / 0.75, 0, 1) ** 1.1                                   # cavity: 0 in the grooves, 1 on the crowns
+    k = np.clip(k0 + (1 - k0) * occ ** 0.8 + tone_j * tone * occ + col_tone * ctone + band_k * band + mott_k * mott
+                + fib_k * (fib - 0.5) * occ + fuzz_k * np.clip(fuzz, -2, 2) * (1 - occ), 0, 1.1)[..., None]
+    g, cr = MT.srgb(groove), MT.srgb(crown)
+    bc = g * (1 - k) + cr * k
+    rough = np.clip(rough0 - rough_k * occ + 0.03 * fuzz, 0.70, 0.99)
+    ao = np.clip(0.35 + 0.65 * occ, 0, 1)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, nstrength, rough, ao)
+
+
+def braid_charcoal(w=2048, hgt=256):
+    """r18 mat (r17 judge: the black border about half reference 2's width and not one even band): the binding braid
+    for the 6 cm binding on all four sides (hero_entrance BIND_W = BIND_NEAR): three slanted lanes of small beads
+    9 mm apart (the reference's fine braided texture at ~16 px), charcoal-black crowns (#302C29) over black creases
+    (#070606), faint stitch dots (#3A3531) along the inner edge; hero_entrance darkens it further with a tint so the
+    band stays charcoal-black in the golden sun."""
+    return braid_black(w, hgt, seed=547, name="HEntBraidC", lanes=3, pitch=0.009, crease="#070606", crown="#302C29",
+                       stitch="#3A3531", nstrength=7.0, bind_w=0.060)
+
+
+def MT_blur(img, sigma):
+    """Periodic gaussian blur (FFT) of a 2D map, sigma in pixels (r18 mat second pass: soft sisal loops)."""
+    if sigma <= 0:
+        return img
+    fy = np.fft.fftfreq(img.shape[0])[:, None]
+    fx = np.fft.fftfreq(img.shape[1])[None, :]
+    g = np.exp(-2 * (np.pi * sigma) ** 2 * (fx * fx + fy * fy))
+    return np.real(np.fft.ifft2(np.fft.fft2(img) * g))
+
+
+def sisal_cord(n=2048, seed=571, name="HEntSisalR", nc=36, seg=0.026, seg_j=0.45, groove="#635449", crown="#978679",
+               k0=0.42, gw=0.30, pinch=0.60, slant=0.08, wob=0.08, wj=0.06, aj=0.20, tone_j=0.18, col_tone=0.06,
+               fib_k=0.08, fib_f=2.5, band_k=0.05, mott_k=0.14, nstrength=24.0, rough0=0.93, rough_k=0.06, blur=2.0,
+               dye_u=0.5, dye_w=0.040, dye_col="#2E2825", dye_k=0.90):
+    """r18 mat, second pass (the r18 judge 5.5/10 on HEntSisalT: "the field weave reads as a rigid ribbed grid, not the
+    soft sisal / coir loops in the reference": a strong regular row period of 5.0-5.7 px at C1 that reference 2 lacks,
+    continuous dark grooves between the columns, relative contrast 0.21-0.25 against the reference's 0.13, an even grid
+    of dots at night, too orange). Soft twisted sisal cords running along U (hero_entrance maps U to world Y, toward the
+    hall), nc per metre across V (2.78 cm: reference 2's C1 column period 7.1-8.0 px measured by FFT in 12 patches is
+    2.65-2.85 cm on the mat plane, mean 2.74). Along each cord a chain of soft, nearly square-on loops of RANDOM
+    length (seg +-seg_j: 1.4-3.8 cm, each cord's chain made periodic on its own), so no along-cord period survives the
+    averaging over cords (reference 2's along spectrum is weak and irregular); smooth cosine sections across the cord
+    and along each loop, the height map blurred (blur px) so there are no creases; the grooves between cords soft and
+    only moderately dark (k0), the cords wander and vary in width (wob, wj) so the grooves are not ruled lines; per
+    loop tone jitter and a large soft mottle (mott_k) for reference 2's darker patches. A greyer warm tan (crown
+    #978679, groove #635449; R/B ~1.25 at the texture: the golden and lantern light add ~1.35x, so the render lands
+    near reference 2's R/B 1.65), a low normal strength (the r18 HEntSisalT ran 45) so the lanterns' grazing night
+    light shows soft cords, not a dot grid. Matte (rough ~0.9). One dyed band per tile: dye_w wide cords centred on
+    U dye_u blended dye_k toward dye_col (reference 2's dark woven cross band near the mat's near end, ~0.36x the
+    field's brightness; hero_entrance offsets the field's U so the band lands on STRIPE_Y). Trials in
+    WorkFiles/armory/hero/room_preview/r18/mat/work2 (SisR2, SisR3). 1 m tile at 2048 px, periodic."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    cf = vv * nc / n + wob * MT.pnoise(n, n, 3.4, seed + 1)             # the cords wander a little sideways
+    c = np.floor(cf).astype(int)
+    cm = c % nc
+    x = cf - c - 0.5                                                     # -0.5 .. 0.5 across a cord
+    wc = (1 + rng.uniform(-wj, wj, nc))[cm]
+    prof = (0.5 + 0.5 * np.cos(2 * np.pi * np.clip(x / wc, -0.5, 0.5))) ** 0.55   # a smooth round cord section
+    upos = uu / n + slant * seg * np.sign(np.arange(nc) % 2 - 0.5)[cm] * 2 * x \
+        + 0.004 * MT.pnoise(n, n, 3.0, seed + 2)                          # the loops slant (alternately per cord)
+    t = np.zeros((n, n))
+    j = np.zeros((n, n), dtype=int)
+    for ci in range(nc):                                                 # each cord: its own random-length loop chain
+        L = []
+        while sum(L) < 1.0:
+            L.append(seg * (1 + rng.uniform(-seg_j, seg_j)))
+        L = np.array(L) / sum(L)                                         # exactly 1 m: periodic along U
+        edges = np.concatenate([[0.0], np.cumsum(L)])
+        ph = rng.uniform(0, 1)
+        m = cm == ci
+        up = (upos[m] + ph) % 1.0
+        k = np.clip(np.searchsorted(edges, up, side="right") - 1, 0, len(L) - 1)
+        t[m] = (up - edges[k]) / L[k] - 0.5
+        j[m] = k + 97 * ci
+    rj = np.random.default_rng(seed + 9).uniform(-1, 1, (4096 * 2,))
+    rj2 = np.random.default_rng(seed + 10).uniform(-1, 1, (4096 * 2,))
+    rj3 = np.random.default_rng(seed + 11).uniform(0, 1, (4096 * 2,))
+    jj = j % 8192
+    amp = 1 + aj * rj[jj]
+    tone = rj2[jj]
+    ctone = rng.uniform(-1, 1, nc)[cm]
+    loop = (0.5 + 0.5 * np.cos(2 * np.pi * t)) ** 0.7                  # a soft loop along the cord (0 at its ends)
+    body = prof * (1 - pinch + pinch * loop * amp)
+    fib = 0.5 + 0.5 * np.cos(2 * np.pi * (fib_f * (t + 1.2 * x) + rj3[jj]))   # fibre strands along each loop's twist
+    fuzz = MT.pnoise(n, n, 0.2, seed + 3)
+    band = MT.pnoise(n, n, 2.6, seed + 4, stretch_v=0.15)
+    mott = MT.pnoise(n, n, 2.2, seed + 5)
+    h = MT_blur(0.45 + 0.55 * body + 0.015 * fib * prof * loop + 0.012 * fuzz, blur)
+    occ = np.clip(body / max(float(np.percentile(body, 99.0)), 1e-6), 0, 1)
+    kk = np.clip(k0 + (1 - k0) * occ + tone_j * tone * occ * loop + col_tone * ctone + band_k * band + mott_k * mott
+                 + fib_k * (fib - 0.5) * occ * loop + 0.04 * np.clip(fuzz, -2, 2), 0, 1.1)[..., None]
+    g, cr = MT.srgb(groove), MT.srgb(crown)
+    bc = g * (1 - kk) + cr * kk
+    if dye_k > 0:   # the dyed cross band: its edges wander ~2 mm and soften over ~3 mm
+        du = np.abs(((uu / n + 0.002 * MT.pnoise(n, n, 2.0, seed + 6) - dye_u + 0.5) % 1.0) - 0.5)
+        dye = np.clip((0.5 * dye_w - du) / 0.003 + 0.5, 0, 1)[..., None] * dye_k
+        bc = bc * (1 - dye) + MT.srgb(dye_col) * (0.75 + 0.5 * kk) * dye
+    rough = np.clip(rough0 - rough_k * occ + 0.03 * fuzz, 0.70, 0.99)
+    ao = np.clip(0.70 + 0.30 * occ, 0, 1)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, nstrength, rough, ao)
+
+
+def braid_soft(w=2048, hgt=256):
+    """r18 mat, second pass (the r18 judge: "in shade the top and bottom read as flat black bands ... at night the whole
+    border renders as pure black (0), so no braid is readable"; reference 2's binding reads L ~36-64 on its sunlit west
+    side, ~26-43 on the shaded east side and ~15-22 under the beam, against a field of ~90): the binding braid for the
+    5.5 cm binding (hero_entrance BIND_W): three slanted lanes of 9 mm beads, a lifted charcoal crown (#4A4541) over
+    near-black creases (#0A0908) so the braid reads as a dark TEXTURED band, lighter than the black slot outside it."""
+    return braid_black(w, hgt, seed=549, name="HEntBraidD", lanes=3, pitch=0.009, crease="#0A0908", crown="#4A4541",
+                       stitch="#524C47", nstrength=6.0, bind_w=0.055)
+
+
+def sisal_nub(n=2048, seed=581, name="HEntSisalN", nc=36, seg=0.026, seg_j=0.22, groove="#5E4F44", crown="#9A897C",
+              k0=0.42, rx=0.48, ry=0.50, base=0.42, gw=0.35, wob=0.07, wj=0.05, aj=0.18, sj=0.10, tone_j=0.16,
+              col_tone=0.05, fib_k=0.07, fib_f=2.0, band_k=0.05, mott_k=0.14, nstrength=26.0, rough0=0.93,
+              rough_k=0.06, blur=2.2, dye_u=0.5, dye_w=0.040, dye_col="#2E2825", dye_k=0.90):
+    """r18 final fix (the r18 combined judge 8/10, delta 4: "the r18 weave reads as long chain-stitch columns, where the
+    reference shows round nubby bumps"; the weave pitch (column period 7.38 vs 7.26 px at C1), the row spectrum and the
+    shaded mean colour already matched): the same cords (nc per metre across V, 2.78 cm; the loops seg +-seg_j along
+    U, each cord's chain periodic on its own and its phase random, so the rows only half line up as reference 2's), but
+    each loop is now a ROUND dome (an ellipse rx x ry of the pitch / loop, soft-max'ed over a low cord base) instead of
+    the separable cord-times-loop cushion whose continuous crowns read as chain columns: a deep pinch between loops
+    (base 0.30 of the dome) and a soft groove between cords, so every nub carries its own round highlight. Per nub
+    size / height / tone jitter (sj, aj, tone_j), a faint fibre twist across each nub, large soft mottle; the colours
+    and the dyed cross band as HEntSisalR (the shaded C1 mean then stays near reference 2's). 1 m tile, periodic."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    cf = vv * nc / n + wob * MT.pnoise(n, n, 3.4, seed + 1)
+    c = np.floor(cf).astype(int)
+    cm = c % nc
+    x = cf - c - 0.5                                                     # -0.5 .. 0.5 across a cord
+    wc = (1 + rng.uniform(-wj, wj, nc))[cm]
+    prof = (0.5 + 0.5 * np.cos(2 * np.pi * np.clip(x / (wc * (1 - 0.5 * gw) * 2 * 0.5), -0.5, 0.5))) ** 0.6
+    upos = uu / n + 0.003 * MT.pnoise(n, n, 3.0, seed + 2)
+    t = np.zeros((n, n))
+    j = np.zeros((n, n), dtype=int)
+    for ci in range(nc):
+        L = []
+        while sum(L) < 1.0:
+            L.append(seg * (1 + rng.uniform(-seg_j, seg_j)))
+        L = np.array(L) / sum(L)
+        edges = np.concatenate([[0.0], np.cumsum(L)])
+        ph = rng.uniform(0, 1)
+        m = cm == ci
+        up = (upos[m] + ph) % 1.0
+        k = np.clip(np.searchsorted(edges, up, side="right") - 1, 0, len(L) - 1)
+        t[m] = (up - edges[k]) / L[k] - 0.5
+        j[m] = k + 97 * ci
+    jj = j % 8192
+    rj = np.random.default_rng(seed + 9).uniform(-1, 1, (8192, 5))
+    amp = 1 + aj * rj[jj, 0]
+    size = 1 + sj * rj[jj, 1]
+    tone = rj[jj, 2]
+    ox, oy = 0.05 * rj[jj, 3], 0.05 * rj[jj, 4]                          # each nub a little off its cell centre
+    ctone = rng.uniform(-1, 1, nc)[cm]
+    rr = np.sqrt(((x - ox) / (rx * wc * size)) ** 2 + ((t - oy) / (ry * size)) ** 2)
+    dome = np.sqrt(np.clip(1 - rr ** 2, 0, 1)) * amp                    # a round nub per loop
+    body = (dome ** 4 + (base * prof) ** 4) ** 0.25                      # soft max over the low cord base
+    fib = 0.5 + 0.5 * np.cos(2 * np.pi * (fib_f * (t + 1.0 * x) + 0.37 * (jj % 7)))
+    fuzz = MT.pnoise(n, n, 0.2, seed + 3)
+    band = MT.pnoise(n, n, 2.6, seed + 4, stretch_v=0.15)
+    mott = MT.pnoise(n, n, 2.2, seed + 5)
+    h = MT_blur(0.40 + 0.60 * body + 0.012 * fib * dome + 0.010 * fuzz, blur)
+    occ = np.clip(body / max(float(np.percentile(body, 99.0)), 1e-6), 0, 1)
+    kk = np.clip(k0 + (1 - k0) * occ ** 1.4 + tone_j * tone * occ + col_tone * ctone + band_k * band + mott_k * mott
+                 + fib_k * (fib - 0.5) * occ + 0.04 * np.clip(fuzz, -2, 2), 0, 1.1)[..., None]
+    g, cr = MT.srgb(groove), MT.srgb(crown)
+    bc = g * (1 - kk) + cr * kk
+    if dye_k > 0:
+        du = np.abs(((uu / n + 0.002 * MT.pnoise(n, n, 2.0, seed + 6) - dye_u + 0.5) % 1.0) - 0.5)
+        dye = np.clip((0.5 * dye_w - du) / 0.003 + 0.5, 0, 1)[..., None] * dye_k
+        bc = bc * (1 - dye) + MT.srgb(dye_col) * (0.75 + 0.5 * kk) * dye
+    rough = np.clip(rough0 - rough_k * occ + 0.03 * fuzz, 0.70, 0.99)
+    ao = np.clip(0.62 + 0.38 * occ, 0, 1)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, nstrength, rough, ao)
+
+
+def braid_plain(w=2048, hgt=256):
+    """r18 final fix (the r18 combined judge, delta 4: "the border is a herringbone braid plus a black band rather than
+    a plain solid black band"): the binding as ONE plain near-black band: the same three lanes of 9 mm beads, but
+    crowns barely above the creases (#1C1A18 over #0C0B0A) and a soft normal, so it reads as a solid black cloth edge
+    with only a fine nubbly sheen, merging with the black slot outside it instead of showing a lighter braid."""
+    return braid_black(w, hgt, seed=553, name="HEntBraidP", lanes=3, pitch=0.009, crease="#0C0B0A", crown="#1C1A18",
+                       stitch="#1E1C1A", nstrength=3.0, bind_w=0.055)
 
 
 def brushed(n=1024, seed=391):
@@ -1010,7 +1248,8 @@ SETS = {"HEntTimber": timber, "HEntMat": mat, "HEntRush": rush, "HEntTimberW": t
         "HEntNub": nub_weave, "HEntRib": rib_weave, "HEntRopeB": rope_black, "HEntTimberMR": timber_board_matte,
         "HEntCoirB": coir_bump, "HEntCoirL": coir_loop, "HEntTimberP": timber_polished, "HEntTimberF": timber_face,
         "HEntSisalV": sisal_rib, "HEntRopeN": rope_navy, "HEntSisalK": knit_bead, "HEntBraidK": braid_black,
-        "HEntSisalW": knit_loop, "HEntBraidL": braid_dark}
+        "HEntSisalW": knit_loop, "HEntBraidL": braid_dark, "HEntSisalT": sisal_twist, "HEntBraidC": braid_charcoal,
+        "HEntSisalR": sisal_cord, "HEntBraidD": braid_soft, "HEntSisalN": sisal_nub, "HEntBraidP": braid_plain}
 
 if __name__ == "__main__":
     # r4: name the sets to write (e.g. `tex_entrance.py HEntRush`); an existing set is never rewritten by accident
