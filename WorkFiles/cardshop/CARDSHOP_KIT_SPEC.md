@@ -388,7 +388,7 @@ and a mask `_M` (R = tier-tint region, G = foil region, B = holo pattern, A = ro
 
 | Atlas | BC / M size | Cells | Density | Contents (v1) |
 |---|---|---|---|---|
-| `T_CSK_Cards` | 4096² / 2048² | 8 × 8 of 512² | 5 px/mm (card = 315 × 440 px) | 48 fronts (3 lines × 16 arts), 4 backs, 4 sleeve-back patterns, 2 blank frames, 6 spare |
+| `T_CSK_Cards_<Line>` ×3 + `T_CSK_Cards_Backs` | 4096² / 2048² each | 4 × 4 of 1024² | 8 px/mm (card = 504 × 704 px; was one 8 × 8 atlas at 5 px/mm, raised with the packs 2026-09-29) | a line atlas: its 16 fronts; the backs atlas: 4 backs, 4 sleeve-back patterns, 2 blank frames, 6 spare. The Print master's Front / Back Texture are separate, so a card takes its front from its line atlas and its back from the backs atlas |
 | `T_CSK_Packs` | 4096² / 2048² | 4 × 4 of 1024² | 8 px/mm (a face = 536 × 936 px; was 3 px/mm, too soft close up in Unreal, 2026-09-29) | 3 lines × 2 designs × front and back = 12, 4 spare |
 | `T_CSK_Boxes` | 4096² / 2048² | 4 × 4 of 1024² | 2 px/mm (S dieline 2 × (140 + 80) × (125 + 2 × 80) = 440 × 285 mm = 880 × 570 px, D) | 3 S boxes, 3 tuck boxes, 1 blister back, 8 retail items, 1 spare |
 | `T_CSK_BoxesL` | 4096² / 2048² | 2 × 4 of 2048 × 1024 | 2 px/mm (L wrap 532 × 292 mm = 1064 × 584 px; Collector base wrap 558 × 165 + lid 250 × 149 mm = 1116 × 628 px, D) | 3 L boxes, 3 collector boxes, 2 spare |
