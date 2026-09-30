@@ -22,6 +22,9 @@ TEX_DEST = "/Game/CardShopKit/G1/Textures"
 MAT_DEST = "/Game/CardShopKit/G1/Materials"
 LEVEL = "/Game/CardShopKit/G1/Maps/L_CSK_G1"
 STRESS_LEVEL = "/Game/CardShopKit/G1/Maps/L_CSK_G1_Stress"
+SHOP_LEVEL = "/Game/CardShopKit/Maps/L_CSK_Shop"                # the showcase room (spec 5.2), csk_shop.py
+SHOP_TAG = "CSK_SHOP"
+SHOP_OUT = ROOT / "WorkFiles" / "cardshop" / "shop"            # shop reports + captures
 MANAGED_TAG = "CSK_G1"
 
 G1_MESHES = ["SM_CSK_Card_Std", "SM_CSK_TopLoader_35pt", "SM_CSK_TopLoader_130pt", "SM_CSK_Slab_Std",
@@ -83,7 +86,7 @@ MESHES = G1_MESHES + [n for names in FAMILY_MESHES.values() for n in names]
 SHOWCASE = "SM_CSK_Showcase_Full_1778"
 TEXTURES = ["T_CSK_G1_Cards_BC", "T_CSK_G1_Packs_BC", "T_CSK_G1_Labels_BC", "T_CSK_G1_CardFront_BC",
             "T_CSK_G1_CardBack_BC", "T_CSK_G1_PackFront_BC", "T_CSK_G1_PackBack_BC", "T_CSK_G1_Label_BC",
-            "T_CSK_G1_BoxDieline_BC"]
+            "T_CSK_G1_BoxDieline_BC", "T_CSK_G1_BoxDieline_Lumenfold_BC", "T_CSK_G1_BoxDieline_Rimvault_BC"]
 
 SEAT_TOL_CM = 0.1          # G1 test 2: seat error <= 1 mm
 SOCKET_LIMIT = 40          # G1 test 2: <= 40 sockets on the showcase

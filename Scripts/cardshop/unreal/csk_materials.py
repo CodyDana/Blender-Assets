@@ -262,7 +262,8 @@ def instances():
     for part, (rgb, rough, metal) in SURFACE.items():
         I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Surface", {"Roughness": rough, "Metallic": metal}, {"Base Colour": rgb}, {})
     for part, (rgb, emit, intensity) in EMISSIVE.items():
-        I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Surface", {"Roughness": 0.2, "Emissive Intensity": intensity},
+        rough = 0.7 if part == "LED_Panel" else 0.2           # a panel's diffuser is matte, not a mirror
+        I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Surface", {"Roughness": rough, "Emissive Intensity": intensity},
                                   {"Base Colour": rgb, "Emissive Colour": emit}, {})
     for part, (opacity, edge, rough, rgb) in CLEAR.items():
         I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Glass", {"Opacity": opacity, "Edge Opacity": edge, "Roughness": rough},
@@ -270,6 +271,11 @@ def instances():
     for part, (front, back, label, np_rgb) in PRINT_PLAIN.items():
         I[f"MI_CSK_G1_{part}"] = ("M_CSK_G1_Print", plain_face, {"Non Print Colour": np_rgb},
                                   {"Front Texture": front, "Back Texture": back, "Label Texture": label})
+    for line in ("Lumenfold", "Rimvault"):    # box colourways (per-actor overrides, e.g. the shop room)
+        tex = f"T_CSK_G1_BoxDieline_{line}_BC"
+        for part in ("BoxPrint_Plain", "BoxPrintL"):
+            I[f"MI_CSK_G1_{part}_{line}"] = ("M_CSK_G1_Print", plain_face, {"Non Print Colour": (0.8, 0.78, 0.72)},
+                                             {"Front Texture": tex, "Back Texture": tex, "Label Texture": tex})
     return I
 
 
@@ -307,6 +313,7 @@ SURFACE = {  # part: (base colour, roughness, metallic)
 EMISSIVE = {  # part: (base colour, emissive colour, intensity)
     "Screen": ((0.01, 0.01, 0.012), (0.2, 0.35, 0.6), 2.0), "ScanWindow": ((0.3, 0.0, 0.0), (1.0, 0.05, 0.05), 3.0),
     "SignLit": ((0.9, 0.9, 0.9), (1.0, 0.97, 0.9), 4.0),     # G1 Print has no emissive: a lit flat panel for now
+    "LED_Panel": ((0.9, 0.9, 0.9), (1.0, 0.97, 0.92), 60.0),  # variant: a ceiling panel's diffuser (the strip MI is 8)
 }
 CLEAR = {  # part: (opacity, edge opacity, roughness, base colour)
     "MagHolderWindow": (0.08, 0.35, 0.03, (1, 1, 1)), "FilmStack": (0.6, 0.8, 0.4, (0.95, 0.95, 0.97)),

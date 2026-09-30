@@ -3,7 +3,8 @@ is rewritten only when its content differs, and nothing outside the CardShopKit 
 
 - CardShopKit.uproject: EngineAssociation 5.8, Blueprint-only, PythonScriptPlugin + EditorScriptingUtilities.
 - Config/DefaultEngine.ini: Substrate OFF (the house validation setting, spec 4.5), the legacy FBX importer (house rule:
-  UCX hulls are keyed to the node name, measured on UE 5.8.2), and the G1 map as the editor start-up map.
+  UCX hulls are keyed to the node name, measured on UE 5.8.2), Lumen with hardware ray tracing (DX12 SM6), and the showcase room
+  (L_CSK_Shop) as the editor start-up map.
 - Config/DefaultGame.ini: the project name.
 
 Run: py -3 Scripts/cardshop/unreal/make_project.py
@@ -26,12 +27,27 @@ UPROJECT = {
     ],
 }
 
-MAP = C.LEVEL + "." + C.LEVEL.rsplit("/", 1)[1]
+MAP = C.SHOP_LEVEL + "." + C.SHOP_LEVEL.rsplit("/", 1)[1]      # the showcase room opens at start-up
 ENGINE_INI = "\n".join([
     "; CardShopKit validation project, written by Scripts/cardshop/unreal/make_project.py",
     "[/Script/Engine.RendererSettings]",
     "r.Substrate=False",
     "r.AllowStaticLighting=False",
+    "; Lumen GI + reflections, virtual shadow maps (the ArmoryLab set)",
+    "r.GenerateMeshDistanceFields=True",
+    "r.DynamicGlobalIlluminationMethod=1",
+    "r.ReflectionMethod=1",
+    "r.Shadow.Virtual.Enable=1",
+    "r.DefaultFeature.AutoExposure.ExtendDefaultLuminanceRange=True",
+    "; hardware ray tracing for Lumen (as ArmoryLab): software Lumen had no mesh cards in the short offscreen captures",
+    "r.SkinCache.CompileShaders=True",
+    "r.RayTracing=True",
+    "r.RayTracing.RayTracingProxies.ProjectEnabled=True",
+    "",
+    "[/Script/WindowsTargetPlatform.WindowsTargetSettings]",
+    "DefaultGraphicsRHI=DefaultGraphicsRHI_DX12",
+    "-D3D12TargetedShaderFormats=PCD3D_SM5",
+    "+D3D12TargetedShaderFormats=PCD3D_SM6",
     "",
     "[/Script/EngineSettings.GameMapsSettings]",
     f"EditorStartupMap={MAP}",

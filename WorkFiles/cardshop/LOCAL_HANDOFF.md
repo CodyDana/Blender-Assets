@@ -10,6 +10,19 @@ in the cloud commits the family builders' progress every 10 minutes (commits tit
 - `References/CardShop/REFERENCE_LOG.md` (all 37 reference sheets, 0-36, with notes and decisions);
 - `Scripts/cardshop/csk_lib/FAMILY_GUIDE.md` (how a family is built).
 
+## 000. Showcase room (2026-09-30)
+
+`L_CSK_Shop` (spec 5.2), built by code from the imported kit: `bash Scripts/cardshop/run_shop.sh` (project, shop,
+capture; the G1 run's import + materials first). 14 x 8 x 3 m from the J1 shell: a sales floor (counter line with the
+POS devices, lit wall cases, oak wall units, towers, the wall slab case, two gondola runs, slatwall with hooks, box tier,
+wire rack, card tables, a countertop case, a play area) and a back room (warehouse racks, workbench, hand truck, bins,
+cartons); 2,489 actors, every case and shelf stocked from its own slot grids. Lighting: 600 panels + rect lights, a
+track over the counter line, pendants, daylight through the storefront, Lumen with hardware ray tracing (the project is
+now DX12 SM6, like ArmoryLab), exposure fixed at EV100 7.6. Ten cameras; renders in `Renders/CardShopKit/Shop/`.
+It is the editor start-up map. Lessons: software Lumen had no mesh cards in short offscreen runs (black ceiling), and
+thin wide meshes get a two-sided, finer distance field at import (`csk_import.thin_distance_field`). The offscreen
+editor segfaults at shutdown after writing the captures (harmless so far).
+
 ## 00. Local session on the PC (2026-09-29, branch `claude/cardshop-build-integration-5227b4`)
 
 Steps 1-6 below are done. **The G1 Unreal run passes end to end** (`bash Scripts/cardshop/run_g1.sh`, UE 5.8, verify
