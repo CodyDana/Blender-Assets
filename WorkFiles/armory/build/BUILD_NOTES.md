@@ -2037,3 +2037,57 @@ cases behind them), so the east 8 / 7 / 6 cluster still overlaps in C1; the mat 
 pebble-like HEntCoirB, not re-judged); the golden-hour wall-bay backs read amber (night is right; in Unreal night the
 bays read warmer and lighter than in Blender); the corner niches lack a sill or plinth; the room reads sparser than the
 reference; the east tall case 6 and G2 are two same-height frames.
+
+## 2026-09-29: r17 round made live (night_r17) + Unreal night rebuild
+
+User: "yes run all your recommendations". The r17 fix-round state (test copy `hero/room_preview/r17/final`: side cases
+staggered, C4 / C5 / CW re-aimed, the mat and binding, the corner-niche cabinets; scripts already live in
+`Scripts/armory/`) was built live under the ArmoryKit lock (claimed 23:19, released about 23:25, before Unreal). No MCP.
+
+**Textures.** Generated into `Exports/ArmoryKit/Textures` by their own script: `tex_entrance.py HEntSisalW HEntBraidL`
+(the mat `M_AK_HEntMat` now uses HEntSisalW, tint 0.18; the binding `M_AK_HBinding` HEntBraidL). All 12 files in
+`r17/final/Textures` are byte-identical (md5) in Exports. The live blend's 143 images all resolve. The mat rounds'
+superseded sets (HEntSisalK, HEntBraidK, HEntRopeN, HEntSisalV) stay in Exports but are unused.
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 114 pieces, hard fails 0; 114 FBX exported;
+`ArmoryKit.blend` saved with 614 instances. No orphaned FBX (Exports/ArmoryKit holds exactly the 114 layout pieces;
+nothing went to the Recycle Bin). Log: `renders/night_r17/build_log.txt`.
+
+**Walk check (live blend):** passed; 37 / 37 routes clear; both controls blocked (case 1 at (6.0, 3.0), stone lantern at
+(7.58, -7.3)); entry_steps_ok; largest step up 0.15 m. Log: `renders/night_r17/walk_log.txt`.
+
+**Drawing:** `WorkFiles/armory/ARMORY_LAYOUT.svg/.txt` and `ARMORY_SITE.svg/.txt` regenerated. Side cases: west 5 SF
+(2.70, 3.75), G1 S (3.60, 5.55), 4 Tall (1.57, 8.10), G3 Tall (1.57, 12.90); east 8 SF (9.30, 3.75), 7 S (8.40, 5.55),
+6 Tall (10.43, 8.10), G2 Tall (10.43, 12.90).
+
+**Renders** (Cycles, night, `night_r17/render.sh`): `renders/night_r17/` C1, CX, C10, C3, C5, CW, C4, CG at 1600 x 900;
+`night_r17/ref_aspect/` C1 at 1448 x 1086. Sheets (`night_r17/compare.py`): `compare/C1_ref_vs_night_r16_vs_night_r17.png`
+(+ `_1600x900`), `<cam>_night_r16_vs_night_r17.png`. Whole-frame mean display luminance, night_r16 -> night_r17: C1 ref
+aspect 0.131 -> 0.143, C1 0.141 -> 0.157, CX 0.097 -> 0.097, C10 0.180 -> 0.153, C3 0.170 -> 0.166, C5 0.131 -> 0.129,
+CW 0.111 -> 0.114, C4 0.205 -> 0.194, CG 0.116 -> 0.116 (C4 / C5 / CW are re-aimed, so not like for like; reference 2
+is 0.328).
+
+### Unreal night rebuild (23:30-23:35, all steps exit 0)
+No ArmoryLab editor was open; a DojoLab game capture (another chat) finished at about 23:30, before the run.
+`ak_image_stats.py` / `ak_compare_sheet.py` baseline is now `renders/night_r17`, fallback `night_r16`.
+
+| Step | Result |
+|---|---|
+| import | 114 meshes, 107 textures; stale deleted: `T_AK_HEntCoirL_*`, `T_AK_HEntRopeB_*`, `T_AK_HEntTimberMR_*` |
+| materials | 10 masters, 130 instances, 114 meshes |
+| level | 614 actors; bounds gate max 0.0049 cm; 110 lights |
+| verify (fresh process) | Gates 1-7 all pass |
+| manny / character / walk | Pass |
+| capture | all layout cameras + C1 ref aspect (`unreal/captures/`) |
+| stats / compare | `unreal/capture_stats.json`; sheets rerun by hand (`py -3 ak_compare_sheet.py`): `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+Whole-frame mean (Unreal / Blender night_r17): C1 ref aspect 0.139 / 0.143, C1 0.151 / 0.157, C10 0.181 / 0.153,
+C3 0.154 / 0.166, C4 0.202 / 0.194, C5 0.142 / 0.129, CW 0.121 / 0.114, CX 0.110 / 0.097, CG 0.138 / 0.116.
+
+**Open (r17 fix-round judge, 7/10, on this state):** from C1 the front-wall SF cases 5 / 8 still overlap on screen with
+the tall cases 4 / 6 behind them (the 1.55 m top rail lands on the tall case's plinth; the judge suggests a low plinth
+for 5 / 8 or moving 4 / 6 about 0.8-1.0 m further back); the west row zig-zags (5 at the wall, G1 inward, 4 back at the
+wall) rather than the reference's single diagonal; CW_WestAisle is obstructed by G1's glass in the foreground (re-aim
+or move the camera); the mat's nubs are about 25-30 % coarser than the reference's (tile about 1.3x, lower the height
+contrast) and the black binding is about half the reference's width (widen to the r17-merge width or more); the corner
+niche cabinet fronts have little contrast against the dark wall at golden.

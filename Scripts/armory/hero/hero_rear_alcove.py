@@ -85,7 +85,9 @@ MATERIALS = {
     # niche read a dim ochre box behind the tall case's glass; reference 2's is hot at the head, graded down): 0.12 ->
     # 0.08 and no longer unlit, so the niche spot under the head grades it (base colour on; at 0.16 AgX bleached it to
     # a pale cream, C1 golden mean 0.83 against the reference's 0.55 amber)
-    "M_AK_HShowcasePanel": ("HShowcasePanel", None, {"emit_image": True, "emit": 0.08}),
+    # r17 fix round (blind judge 7/10 on r17/final, delta d: "the reference alcove is ... lit over the full height of
+    # its back panel; r17 lights only the upper half"): 0.08 -> 0.12, with a second (fill) spot on the lower half
+    "M_AK_HShowcasePanel": ("HShowcasePanel", None, {"emit_image": True, "emit": 0.12}),   # r17 fix round: 0.08
     # b7 (judge delta 5): the niche's lining (side returns, floor, shelf top): a warm pale satin that the soffit spot
     # grades from bright at the head to shadow at the counter, so the recess depth reads
     "M_AK_HShowcaseLining": (None, 1.0, {"color": "#A57D50", "rough": 0.5}),   # b9: #8C6A44 -> #A57D50
@@ -511,16 +513,39 @@ def pieces(G):
 # 3.5 cm proud) with a brass bead round its sides and head; a lacquer plinth under it (12 cm tall, projecting 8 cm,
 # 2 cm past the frame each side, its top the warm lining so it reads as a lit ledge, a brass nose line) whose top is the
 # niche floor. The 0.10 m pilaster (with the frame in it) stays between the opening and the rack alcove's post. EMPTY.
+# r17 niche round (2026-09-29, room judge: the framed r16 niches float high on the pier with no sill or plinth under
+# them and little visible depth, so they read as lightboxes; reference 2 shows a lit shelf and a black lacquer cabinet
+# under each corner alcove): the 12 cm lacquer plinth is replaced by
+#   * a SILL SHELF in the casing's warm timber (NF), 4.5 cm thick, its top the warm lining (the lit niche floor), running
+#     from the niche back out 8 cm past the block face (world Y 19.32: walk_check's niche routes reach 19.30) and 2 cm
+#     past the frame each side; a brass nose line on its front edge; the frame stiles stand on it
+#   * a BLACK LACQUER BASE CABINET under it, deck to the shelf, the frame's outer width (0.62 m), its front 4 cm proud of
+#     the block face, set into a 1.5 cm shadow-gap bay cut 5 cm into the block: a recessed toe kick with a soft warm
+#     under-glow on the deck, stiles and rails round a shallow drawer and a door field, each with a thin brass inlay
+#     line, and the slim brass line on its top slab (as the rack alcove's tansu); no emblem (the tansu carries it)
+#   * visible DEPTH: the recess 0.30 -> 0.38 m; the returns and soffit in the casing's warm timber (was the pale lining,
+#     so they merged with the back), with a dark-bronze inner reveal (1.2 cm, 2 cm deep) round the sides and head just
+#     behind the frame (as the rack alcove's), replacing the r16 gold LED arris lines that outlined it like a lightbox;
+#     only the hidden glow line at the back panel's head and the head spot stay, so the back is hot at the head and
+#     falls off toward the shelf
 NB_W, NB_D, NB_H = 1.16, 0.545, 3.20
 NB_X = (1.50, 11.66)               # instance x (rot 180: the piece spans x - NB_W .. x): X 0.34-1.50 / 10.50-11.66
 NB_BACK_Y = 19.945                 # the back face: 5 cm clear of the north wall's upper base rail (Y 19.95-20.0)
-NO_W, NO_PIL = 0.50, 0.10          # the niche opening's width; the pilaster between it and the alcove (frame inside it)
+# r17 fix round (blind judge 7/10 on r17/final, delta d: in CN_WestNiche_golden "the frame and cabinet stand out from
+# the wall panel like a hutch rather than sitting recessed into it. Pull the surround flush with the wall so only the
+# interior depth shows. The reference alcove is also a little wider"): the opening 0.50 -> 0.58 m wide; the casing frame
+# flush with the block face (FR_P 0.035 -> 0), the sill shelf a 2 cm lip (PL_P 0.08 -> 0.02), the base cabinet's face
+# 8 mm INSIDE its shadow-gap bay (CB_P 0.04 -> -0.008): nothing stands proud of the wall but the lip
+NO_W, NO_PIL = 0.58, 0.10          # the niche opening's width (r17 fix round: 0.50); the pilaster beside the alcove
 NO_H_MAX, NO_H_MIN = 0.88, 0.85    # the opening's height (niche_z)
 HEAD_BELOW_BANNER = 0.20           # the head sits this far under the banners' tassel foot (BANNER_Z), world
-NO_DEPTH = 0.30                    # sunk into the block (its back panel at local y NB_D - NO_DEPTH)
-FR, FR_P = 0.06, 0.035             # the casing frame's face width and how far it stands proud of the block face
-PL_H, PL_P, PL_X = 0.12, 0.08, 0.02  # the plinth: height, projection past the block face (walk_check's niche routes
-                                    # stop 0.45 m before the face with a 0.35 m capsule), overhang past the frame
+NO_DEPTH = 0.38                    # sunk into the block (its back panel at local y NB_D - NO_DEPTH); r17: 0.30 -> 0.38
+FR, FR_P = 0.06, 0.0               # the casing frame's face width and how far it stands proud of the block face (r17 fix: 0.035)
+PL_H, PL_P, PL_X = 0.045, 0.02, 0.02  # r17: the sill shelf: thickness (was the 12 cm plinth), projection past the block (r17 fix: 0.08)
+                                    # face (walk_check's niche routes stop 0.45 m before the face with a 0.35 m capsule,
+                                    # so 0.10 m is the limit), overhang past the frame each side
+CB_P, CB_GAP, CB_BAY = -0.008, 0.015, 0.05   # r17 base cabinet: front vs the block face (r17 fix: 0.04 proud), shadow gap, bay depth
+CB_KICK, CB_KICK_IN = 0.07, 0.025          # its recessed toe kick: height, set-back
 LIN = "M_AK_HShowcaseLining"
 LITS = "M_AK_HShowcasePanel"
 NF = "M_AK_HNicheFrame"            # r16 fix round: the casing frame's warm mid-brown timber
@@ -547,53 +572,91 @@ def niche_z(G):
 def corner_niche(G, side):
     P = G["Piece"]("SM_AK_H_CornerNiche_" + side)
     assert abs(G["ROOM_L"] - 0.055 - NB_BACK_Y) < 1e-6, "hero_rear_alcove: NB_BACK_Y must follow ROOM_L (r20)"
-    assert abs(G["REAR_ALCOVE_X"][0] - NB_X[0]) < 1e-6 and abs(G["REAR_ALCOVE_X"][1] + 1.8 - (NB_X[1] - NB_W)) < 1e-6,         "hero_rear_alcove: the niche blocks must meet the rear alcoves (REAR_ALCOVE_X)"
+    assert abs(G["REAR_ALCOVE_X"][0] - NB_X[0]) < 1e-6 and abs(G["REAR_ALCOVE_X"][1] + 1.8 - (NB_X[1] - NB_W)) < 1e-6, \
+        "hero_rear_alcove: the niche blocks must meet the rear alcoves (REAR_ALCOVE_X)"
     assert NO_PIL >= FR + 0.03, "hero_rear_alcove: the frame must fit inside the pilaster beside the alcove"
+    assert PL_P <= 0.10 and CB_P < PL_P, "hero_rear_alcove: the sill and cabinet must stay clear of the niche routes"
     W, D, H = NB_W, NB_D, NB_H
     (x0, x1), (z0, z1) = niche_x(side), niche_z(G)
-    assert z0 - PL_H > 0.15, "hero_rear_alcove: the plinth must stand clear of the deck"
+    zs = z0 - PL_H                                                                           # the shelf's underside
+    assert zs > 0.45, "hero_rear_alcove: the base cabinet must be a cabinet, not a step"
     yb = D - NO_DEPTH                                                                        # the niche's back plane
-    zp = z0 - PL_H                                                                           # the plinth's underside
-    # the dark block round the opening: two pilasters (full height), the part over the head, the base under the plinth
-    box(G, P, 0.0, x0, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
-    box(G, P, x1, W, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
+    ox0, ox1 = x0 - FR, x1 + FR                                                              # the frame's outer edges
+    sx0, sx1 = ox0 - PL_X, ox1 + PL_X                                                        # the sill shelf
+    cx0, cx1 = ox0, ox1                                                                      # the base cabinet
+    bx0, bx1 = cx0 - CB_GAP, cx1 + CB_GAP                                                    # its shadow-gap bay
+    assert bx0 > 0.0 and bx1 < W, "hero_rear_alcove: the cabinet bay must stay inside the block"
+    # ---- the dark block: full-height piers outside the bay, the pier strips between the bay edge and the opening
+    # above the shelf, the part over the head, the bay's set-back wall under the shelf, the fill behind the back panel
+    box(G, P, 0.0, bx0, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
+    box(G, P, bx1, W, 0.0, D, 0.0, H, T, bev=0.004, grain=2)
+    box(G, P, bx0 - 0.001, x0, 0.0, D, zs, H, T, bev=0.004, grain=2)
+    box(G, P, x1, bx1 + 0.001, 0.0, D, zs, H, T, bev=0.004, grain=2)
     box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, z1, H, T, bev=0.004, grain=0)
-    box(G, P, x0 - 0.001, x1 + 0.001, 0.0, D, 0.0, zp + 0.002, T, bev=0.004, grain=0)
-    box(G, P, x0, x1, 0.0, yb, z0, z1, T, grain=2)                                           # fill behind the back
-    # the backlit cream panel (one quad, unique 0-1 UV: T_AK_HShowcasePanel), a glow line along its head
+    box(G, P, bx0 - 0.001, bx1 + 0.001, 0.0, D - CB_BAY, 0.0, zs + 0.002, T, grain=0)       # bay wall (set back)
+    box(G, P, x0, x1, 0.0, yb, zs, z1, T, grain=2)                                           # fill behind the back
+    # ---- the backlit cream panel (one quad, unique 0-1 UV: T_AK_HShowcasePanel), a hidden glow line along its head
     P.mesh([(x0, yb + 0.001, z0), (x1, yb + 0.001, z0), (x1, yb + 0.001, z1), (x0, yb + 0.001, z1)], [[0, 3, 2, 1]],
            [[(0.0, 0.0), (0.0, 1.0), (1.0, 1.0), (1.0, 0.0)]], LITS)
     box(G, P, x0 + 0.01, x1 - 0.01, yb, yb + 0.012, z1 - 0.016, z1 - 0.004, LE, grain=0)      # glow line at the head
-    # the lining: both returns and the soffit, warm pale satin (the head spot grades it); the floor is the plinth top
-    box(G, P, x0, x0 + 0.008, yb, D, z0, z1, LIN, grain=2)
-    box(G, P, x1 - 0.008, x1, yb, D, z0, z1, LIN, grain=2)
-    box(G, P, x0, x1, yb, D, z1 - 0.004, z1, LIN, grain=0)
+    # ---- r17: the returns and the soffit in the casing's warm timber (they take the head spot's graze and fall into
+    # shadow toward the front, so the recess depth reads against the lit back), a dark-bronze inner reveal just behind
+    # the frame round the sides and head
+    box(G, P, x0, x0 + 0.008, yb, D, z0, z1, NF, grain=2)
+    box(G, P, x1 - 0.008, x1, yb, D, z0, z1, NF, grain=2)
+    box(G, P, x0, x1, yb, D, z1 - 0.006, z1, NF, grain=0)
+    box(G, P, x0 + 0.006, x0 + 0.018, D - 0.030, D - 0.008, z0, z1 - 0.004, BZ, bev=0.002, grain=2)
+    box(G, P, x1 - 0.018, x1 - 0.006, D - 0.030, D - 0.008, z0, z1 - 0.004, BZ, bev=0.002, grain=2)
+    box(G, P, x0 + 0.018, x1 - 0.018, D - 0.030, D - 0.008, z1 - 0.018, z1 - 0.004, BZ, bev=0.002, grain=0)
     # the lens under the head, 12 cm in front of the back panel
-    P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0085, z1 - 0.002, 0.030, BR, 12)
-    P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0125, z1 - 0.008, 0.021, LED, 12)
-    # the plinth: a black lacquer block from the niche's back out 8 cm past the block face, 2 cm past the frame each
-    # side, its top the lining (the niche floor and a lit ledge in front of the opening), a brass nose line under its top
-    px0, px1 = x0 - FR - PL_X, x1 + FR + PL_X
-    box(G, P, px0, px1, 0.0, D + PL_P, zp, z0, LQ, bev=0.004, grain=0, front=("+z", LIN))
-    box(G, P, px0 + 0.006, px1 - 0.006, D + PL_P - 0.001, D + PL_P + 0.0025, z0 - 0.030, z0 - 0.021, BR, grain=0)
-    # the casing frame: two stiles standing on the plinth and a head rail across them (butt joints, no overlapping faces)
-    # r16 fix round: the casing in the warm mid-brown NF (was black lacquer), the bead 8 -> 12 mm
-    for a0, a1 in ((x0 - FR, x0), (x1, x1 + FR)):
+    P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0125, z1 - 0.005, 0.030, BR, 12)
+    P.cyl((x0 + x1) / 2, yb + 0.12, z1 - 0.0165, z1 - 0.012, 0.021, LED, 12)
+    # ---- r17: the sill shelf in the casing timber, its top the warm lining (the lit niche floor and the ledge in front
+    # of the opening), from the back panel out PL_P past the block face; a brass nose line on its front edge
+    box(G, P, sx0, sx1, yb, D + PL_P, zs, z0, NF, bev=0.004, grain=0, front=("+z", LIN))
+    box(G, P, sx0 + 0.006, sx1 - 0.006, D + PL_P - 0.001, D + PL_P + 0.0025, zs + 0.016, zs + 0.026, BR, grain=0)
+    # ---- r17: the black lacquer base cabinet in its bay, deck to the shelf (as the rack alcove's tansu: toe kick,
+    # carcass, top slab with the slim brass line, stiles and rails round recessed fields with a brass inlay line)
+    yf = D + CB_P                                                                            # the cabinet's face
+    yc = D - CB_BAY                                                                          # its back (the bay wall)
+    zt = zs - 0.003                                                                          # its top, under the shelf
+    box(G, P, cx0 + CB_KICK_IN, cx1 - CB_KICK_IN, yc, yf - CB_KICK_IN, 0.0, CB_KICK, LQ, grain=0)   # recessed toe kick
+    # (no toe-kick under-glow: at LE's emission it mirrored in the glossy deck as a hard gold line from C1)
+    # a hidden LED strip under the shelf, just behind its nose: it washes down the cabinet's top slab, brass line and
+    # fields, so the cabinet reads under the lit shelf (the shelf's underside never shows from C1)
+    box(G, P, cx0 + 0.02, cx1 - 0.02, D + PL_P - 0.024, D + PL_P - 0.012, zs - 0.005, zs - 0.001, LE, grain=0)
+    box(G, P, cx0, cx1, yc, yf - 0.018, CB_KICK, zt - 0.032, LQ, grain=0)                  # carcass
+    box(G, P, cx0 - 0.004, cx1 + 0.004, yc, yf + 0.004, zt - 0.032, zt, LQ, bev=0.004, grain=0)   # top slab
+    box(G, P, cx0 + 0.004, cx1 - 0.004, yf + 0.0035, yf + 0.0065, zt - 0.022, zt - 0.011, BR, grain=0)  # brass top line
+    box(G, P, cx0, cx1, yf - 0.02, yf, CB_KICK, CB_KICK + 0.035, LQ, bev=0.003, grain=0)   # bottom rail
+    box(G, P, cx0 + 0.04, cx1 - 0.04, yf - 0.02, yf, zt - 0.070, zt - 0.032, LQ, bev=0.003, grain=0)   # top rail
+    for a0, a1 in ((cx0, cx0 + 0.04), (cx1 - 0.04, cx1)):
+        box(G, P, a0, a1, yf - 0.02, yf, CB_KICK + 0.034, zt - 0.031, LQ, bev=0.003, grain=2)   # stiles
+    # a shallow drawer over a door field, split by a mid rail; each field recessed 4 mm with a brass inlay line
+    zd0, zd1 = CB_KICK + 0.035, zt - 0.070                                                  # between the rails
+    zm = zd1 - 0.13                                                                          # the mid rail's top
+    box(G, P, cx0 + 0.039, cx1 - 0.039, yf - 0.02, yf, zm - 0.03, zm, LQ, bev=0.003, grain=0)   # mid rail
+    fx0, fx1 = cx0 + 0.04, cx1 - 0.04
+    for f0, f1 in ((zd0, zm - 0.03), (zm, zd1)):
+        box(G, P, fx0, fx1, yf - 0.022, yf - 0.004, f0, f1, LQ, grain=0)                   # recessed field
+        e0, e1, g0, g1 = fx0 + 0.022, fx1 - 0.022, f0 + 0.022, f1 - 0.022
+        box(G, P, e0, e1, yf - 0.0045, yf - 0.002, g0, g0 + 0.004, BR, grain=0)
+        box(G, P, e0, e1, yf - 0.0045, yf - 0.002, g1 - 0.004, g1, BR, grain=0)
+        box(G, P, e0, e0 + 0.004, yf - 0.0045, yf - 0.002, g0 + 0.004, g1 - 0.004, BR, grain=2)
+        box(G, P, e1 - 0.004, e1, yf - 0.0045, yf - 0.002, g0 + 0.004, g1 - 0.004, BR, grain=2)
+    # ---- the casing frame: two stiles standing on the shelf and a head rail across them (warm mid-brown NF)
+    for a0, a1 in ((ox0, x0), (x1, ox1)):
         box(G, P, a0, a1, D - 0.010, D + FR_P, z0, z1, NF, bev=0.004, grain=2)
-    box(G, P, x0 - FR, x1 + FR, D - 0.010, D + FR_P, z1, z1 + FR, NF, bev=0.004, grain=0)
+    box(G, P, ox0, ox1, D - 0.010, D + FR_P, z1, z1 + FR, NF, bev=0.004, grain=0)
     # a brass bead on the frame's face along its inner edge (both stiles and the head)
     bz = D + FR_P
     box(G, P, x0 - 0.018, x0 - 0.006, bz - 0.001, bz + 0.002, z0 + 0.006, z1 + 0.018, BR, grain=2)
     box(G, P, x1 + 0.006, x1 + 0.018, bz - 0.001, bz + 0.002, z0 + 0.006, z1 + 0.018, BR, grain=2)
     box(G, P, x0 - 0.006, x1 + 0.006, bz - 0.001, bz + 0.002, z1 + 0.006, z1 + 0.018, BR, grain=0)
-    # r16 fix round: a gold LED line (8 mm) on the lining at the opening's front arrises and under its head, so the
-    # opening reads as a framed, edge-lit alcove from C1 (on the linings, 2 mm proud; the frame's inner faces cover
-    # their front ends)
-    box(G, P, x0 + 0.008, x0 + 0.010, D - 0.022, D - 0.014, z0, z1 - 0.004, LE, grain=2)
-    box(G, P, x1 - 0.010, x1 - 0.008, D - 0.022, D - 0.014, z0, z1 - 0.004, LE, grain=2)
-    box(G, P, x0 + 0.010, x1 - 0.010, D - 0.022, D - 0.014, z1 - 0.006, z1 - 0.004, LE, grain=0)
     P.col(0, W, 0, D, 0, H)
-    P.col(px0, px1, D, D + PL_P, zp, z0)
+    P.col(sx0, sx1, D, D + PL_P, zs, z0)
+    if yf + 0.004 > D + 0.001:                    # r17 fix round: a cabinet set into its bay adds no collision
+        P.col(cx0, cx1, D, yf + 0.004, 0.0, zs)
     return P
 
 
@@ -620,4 +683,10 @@ def lights():
                     round(z + z1 - 0.02, 3)], "angle_deg": 90, "blend": 0.6, "kelvin": 2500, "role": "alcove",
                     "shadows": True, "power_scale": 0.5, "aim": [round(xc, 3), round(yb - 0.01, 3),
                                                                   round(z + z0, 3)]})
+        # r17 fix round (delta d: the back panel lit over its full height, as reference 2's): a fill spot hidden just
+        # behind the frame head, aimed at the lower half of the back panel
+        out.append({"type": "spot", "name": f"NicheFill_{side}", "loc": [round(xc, 3), round(NB_BACK_Y - NB_D + 0.04, 3),
+                    round(z + z1 - 0.03, 3)], "angle_deg": 60, "blend": 0.8, "kelvin": 2500, "role": "alcove",
+                    "shadows": False, "power_scale": 0.35, "aim": [round(xc, 3), round(yb - 0.01, 3),
+                                                                    round(z + z0 + 0.22 * (z1 - z0), 3)]})
     return out

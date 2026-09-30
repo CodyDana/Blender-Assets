@@ -649,7 +649,7 @@ def rib_weave(n=2048, seed=491):
     return nub_weave(n, seed, name="HEntRib", offset=0.0, sx=1.6, tone_k=0.35)
 
 
-def rope_black(n=2048, seed=481, name="HEntRopeB", ncord=64, twist=120):
+def rope_black(n=2048, seed=481, name="HEntRopeB", ncord=64, twist=120, gap="#050404", crown="#110F0E", nstrength=3.0):
     """r20 mat (judge 7/10: "the border must be solid near-BLACK with a fine rope texture, an even width, crisp edges (it
     reads speckled grey in golden light)"): the binding as fine twisted black cords laid ALONG the border (hero_entrance
     maps U along each border strip, V across it). A 1 m tile at 2048 px: ncord cords across V (1.56 cm, ~4 across the
@@ -670,11 +670,20 @@ def rope_black(n=2048, seed=481, name="HEntRopeB", ncord=64, twist=120):
     k = np.clip(0.25 + 0.55 * cord * (0.7 + 0.3 * ply) + 0.04 * mott + 0.03 * np.clip(fuzz, -2, 2), 0, 1)[..., None]
     # b2: b1 (#171412 crowns, roughness 0.86, normal 8) lit up as grey-white cord lines in the golden sun: darker, matte,
     # a gentle normal (the rope reads up close, not as glints)
-    g, cr = MT.srgb("#050404"), MT.srgb("#110F0E")
+    g, cr = MT.srgb(gap), MT.srgb(crown)
     bc = g * (1 - k) + cr * k
     rough = np.clip(0.95 - 0.02 * cord + 0.02 * fuzz, 0.85, 1.0)
     ao = np.clip(0.55 + 0.45 * cord, 0, 1)
-    return MT.save_set(name, bc, h, 3.0, rough, ao)
+    return MT.save_set(name, bc, h, nstrength, rough, ao)
+
+
+def rope_navy(n=2048, seed=487):
+    """r17 mat (blind judge delta 6: "the binding is flat, pure black; the reference binding is a very dark navy-black
+    with a subtle woven or stitched texture along its length"): HEntRopeB's twisted cords laid along the binding, a touch
+    lifted and cooler (#060709 creases to #14151B crowns, was #050404 / #110F0E; b1 #1A1C25 read lavender-grey in the
+    golden sun) and a firmer cord normal (5, was 3) so
+    the weave shows along the strip; still matte (roughness ~0.95)."""
+    return rope_black(n, seed, name="HEntRopeN", ncord=64, twist=120, gap="#060709", crown="#14151B", nstrength=5.0)
 
 
 def timber_board_matte(n=2048, seed=451):
@@ -758,6 +767,52 @@ def coir_loop(n=2048):
                      jit=0.12, rad_r=(0.50, 0.62), amp_r=(0.70, 1.0), row_shift=0.5, wander=0.06)
 
 
+def sisal_rib(n=2048, seed=521, name="HEntSisalV", nc=36, nr=34, groove="#564636", crown="#8C7864", pinch=0.35,
+              rib_pow=1.0, slant=0.08, nstrength=12.0, bead_pow=1.0, k0=0.20, mott_k=0.06):
+    """r17 mat (blind judge 3/10 on HEntCoirL: "the weave reads as cobbles, pebbles or brick ... staggered horizontal rows
+    of fat rounded lozenges with deep near-black gaps"; reference 2 / entry_foreground_crop.png: "a fine, even, low-relief
+    ribbed weave: tight nubbly columns that run front-to-back, with only faint cross-banding", a warm grey-tan): a flat
+    woven sisal of RIBS running along U (hero_entrance maps U to world Y, toward the hall), nc per metre across V (world
+    X). Reference 2's C1 column period measured by FFT on 480-980 px: 7.1 px at y 960 to 8.3 px at y 1060, i.e. 2.8 cm
+    at the mat's C1 scale (HEntCoirL's 3.33 cm rendered 8.5-9.4 px), so nc = 36. Each rib is a chain of low nubs
+    (nr per metre, 2.9 cm: reference 2's faint cross-banding at ~4.5 px vertical), every rib at its own phase so no row
+    grid lines up, the nub crests slanting a little (alternately left / right: a plied cord) and only a shallow pinch
+    (0.35) between nubs, so the column grooves dominate (b1's pinch 0.60 / flat-topped ribs read as a grid of small
+    rectangles, and at night as a herringbone). Soft rounded ribs (rib_pow 1.0), the relief low (normal 12: mean
+    tilt ~1/3 of HEntCoirL's 38 deg), the albedo from groove #564636 to crown #8C7864 (a desaturated warm grey-tan;
+    HEntCoirL's #7A5C42 over #140C07 pockets read rust and near-black at night), a soft large-scale mottle, fine fibre
+    strands along each rib, a faint stray-fibre fuzz, matte fibre roughness ~0.79. C1 test copy (r17/mat): night
+    nub:gap p90/p10 ~1.7 (HEntCoirL 7.1), golden ~1.3 (reference 2 1.5). 1 m tile at 2048 px, periodic."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    cf = vv * nc / n + MT.pnoise(n, n, 3.2, seed + 1) * 0.035           # across (rib units), a faint wander
+    ci = np.floor(cf).astype(int) % nc
+    pc = cf % 1.0
+    across = np.clip(1 - (2 * pc - 1) ** 2, 0, 1) ** rib_pow            # a flat-topped rib, a narrow soft groove
+    ph = rng.uniform(0, 1, nc)[ci]
+    sl = (slant * np.where(np.arange(nc) % 2 == 0, 1.0, -1.0) * rng.uniform(0.7, 1.3, nc))[ci]
+    a = uu * nr / n + ph + sl * (pc - 0.5) + MT.pnoise(n, n, 3.0, seed + 2) * 0.05
+    na = np.floor(a).astype(int) % nr
+    pa = a % 1.0
+    bead = np.clip(1 - (2 * pa - 1) ** 2, 0, 1) ** bead_pow             # a rounded nub along the rib
+    nub_amp = rng.uniform(0.85, 1.0, (nc, nr))[ci, na]
+    nub_tone = rng.normal(0, 1, (nc, nr))[ci, na]
+    rib_tone = rng.normal(0, 1, nc)[ci]
+    strand = 0.5 + 0.5 * np.cos(2 * np.pi * (pc * 5 + 0.35 * pa))       # 5 fibre strands along each rib
+    fuzz = MT.pnoise(n, n, 0.25, seed + 3)
+    mott = MT.pnoise(n, n, 2.2, seed + 4)
+    h = across * (1 - pinch + pinch * bead * nub_amp) * (0.94 + 0.06 * strand) + 0.015 * fuzz
+    # albedo: groove -> crown by the relief, soft (the groove only ~0.75x the crown's value)
+    k = np.clip(k0 + (1 - k0) * np.clip(h, 0, 1) ** 0.8 + 0.05 * (strand - 0.5) + 0.03 * np.clip(fuzz, -2, 2)
+                + 0.03 * nub_tone + 0.04 * rib_tone + mott_k * mott, 0, 1.1)[..., None]
+    g, cr = MT.srgb(groove), MT.srgb(crown)
+    bc = g * (1 - k) + cr * k
+    bc = bc * (1 + np.array([0.008, 0.0, -0.008]) * rib_tone[..., None])  # a faint warmer / cooler rib to rib
+    rough = np.clip(0.82 - 0.05 * np.clip(h, 0, 1) + 0.03 * fuzz, 0.65, 0.95)
+    ao = np.clip(0.55 + 0.45 * np.clip(h, 0, 1), 0, 1)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, nstrength, rough, ao)
+
+
 def timber_polished(n=2048, seed=433):
     """r16 entry (the crop: "a thick polished near-black beam with a visible front face"): the step beam's TOP and its
     rounded nosing: the knot-free near-black bar timber (T_AK_HEntTimberN's colours, a little lighter grain so the
@@ -774,6 +829,152 @@ def timber_face(n=2048, seed=437):
     (#2A1F17-#5A4533) at a satin finish (~0.34), so the lanterns' and the mat's light shows the face as timber."""
     return timber_ebony(n, seed, name="HEntTimberF", dark="#2A1F17", mid="#3A2C21", lite="#5A4533", rough0=0.34,
                         nknots=0)
+
+
+def knit_bead(n=2048, seed=531, name="HEntSisalK", nc=36, nr=32, groove="#4A3C30", crown="#8E7C6A", rx=0.50,
+              ry=0.66, sq=2.0, dome_pow=0.70, occ_s=0.70, nstrength=38.0, jit=0.05, size_j=0.07, amp_j=0.08,
+              tone_j=0.10, drift=0.22, band_k=0.10, fuzz_k=0.05, k0=0.06, mott_k=0.09, col_shift=0.0):
+    """r17 mat b2 (blind judge 6/10 on HEntSisalV: "continuous smooth ribs with dark grooves ... corduroy or tatami rush";
+    reference 2 / entry_foreground_crop.png: "columns of separate, near-round nubs, each with its own bright dome
+    highlight ... the nubs also line up side to side ... a nubbly loop or knit weave"): a knit-bead sisal. Columns along
+    U (hero_entrance maps U to world Y, toward the hall), nc per metre across V (2.78 cm: reference 2's C1 column period
+    7.1-8.4 px, kept from HEntSisalV), each column a chain of rounded beads, nr per metre along it (3.1 cm, 1.13:1 long
+    to wide; reference 2's C1 cross period 4.6 px at y 960-1000 against HEntSisalV's 34 per metre at 4.3 px). Every bead
+    is its own elliptical dome (radii rx across, ry along, in cell units; superellipse power sq) joined to its neighbours
+    by a soft max, so the grooves between columns are narrow V creases and a PINCHED neck, a little shallower, parts
+    the beads along the column (reference 2's column / cross gradient ratio 0.65; C1 golden b2 0.76, HEntSisalV 0.65
+    with no beads); the beads line up side to side, the rows drifting a little (a
+    large-scale wander of +-drift bead) so faint irregular cross bands show, as in the reference. Per bead: position
+    (+-jit), size (+-size_j), height (+-amp_j) and albedo (+-tone_j) jitter; a faint low-frequency banding of the rows
+    (band_k) and a soft blotchy mottle (mott_k); per-bead cavity AO in the albedo (Blender's review material does not wire ORM.R) and in ORM.R; fine fibre
+    strands slanting across each bead and a stray-fibre fuzz on the rims (normal, roughness and a lighter fuzz tone on
+    the rims: the soft sisal sheen); crowns a touch smoother (0.70) than the creases (0.92) so each nub catches its own
+    highlight. Albedo from a warm grey-brown crease (#4A3C30) to a warm grey-tan crown (#8E7C6A, a touch greyer and
+    cooler than HEntSisalV's #8C7864). Trials in r17/mat/work2 (C1 1448 x 1086): b1 (rx 0.50 / ry 0.53, sq 2) read as
+    separate discs on a dark ground in the texture; sq 2.6 as square cobbles; K2-K7 as below, the chosen one the
+    highest-relief K6 (golden local contrast / mean 0.23 on the field against reference 2's 0.175 and HEntSisalV's
+    0.10) with stronger banding and mottle. 1 m tile at 2048 px, periodic (whole cells, periodic noise)."""
+    uu, vv = np.meshgrid(np.arange(n), np.arange(n))
+    rng = np.random.default_rng(seed)
+    # across: column coordinate from V; along: bead coordinate from U with a large-scale drift (rows wander)
+    cf = vv * nc / n + MT.pnoise(n, n, 3.2, seed + 1) * 0.03
+    af = uu * nr / n + MT.pnoise(n, n, 3.0, seed + 2, stretch_u=0.6) * drift
+    cj = rng.uniform(-jit, jit, (nc, nr))
+    aj = rng.uniform(-jit, jit, (nc, nr))
+    sz = 1 + rng.uniform(-size_j, size_j, (nc, nr))
+    amp = 1 + rng.uniform(-amp_j, amp_j, (nc, nr))
+    tone = rng.uniform(-1, 1, (nc, nr))
+    slant = np.where(rng.random((nc, nr)) < 0.5, -1.0, 1.0) * rng.uniform(0.25, 0.55, (nc, nr))
+    fph = rng.uniform(0, 1, (nc, nr))
+    # r17 fix round (knit_loop): each column slides along itself by its own amount, so the beads no longer line up
+    # side to side in a regular grid (0 for HEntSisalK: its random stream is unchanged, drawn after the others)
+    csh = rng.uniform(-col_shift, col_shift, nc) if col_shift else np.zeros(nc)
+    c0 = np.floor(cf).astype(int)
+    E = np.zeros((n, n)); W = np.zeros((n, n)); T = np.zeros((n, n)); F = np.zeros((n, n)); R = np.zeros((n, n))
+    for dc in (-1, 0, 1):
+        c = c0 + dc
+        cm = c % nc
+        afs = af - csh[cm]                                                  # this column's own slide
+        a0 = np.floor(afs).astype(int)
+        for da in (-1, 0, 1):
+            a = a0 + da
+            am = a % nr
+            dx = cf - (c + 0.5 + cj[cm, am])
+            dy = afs - (a + 0.5 + aj[cm, am])
+            s = sz[cm, am]
+            q = np.abs(dx / (rx * s)) ** sq + np.abs(dy / (ry * s)) ** sq      # a cushion (superellipse sq)
+            dome = np.clip(1 - q, 0, 1) ** dome_pow * amp[cm, am]            # a round dome per bead
+            fib = 0.5 + 0.5 * np.cos(2 * np.pi * (4.0 * (dx * slant[cm, am] * 2.2 - dy) + fph[cm, am]))
+            w = np.exp(30 * dome) * (dome > 0)
+            E += np.exp(14 * dome) - 1                                      # soft max: creases and necks, no outlines
+            W += w; T += w * tone[cm, am]; F += w * fib; R += w * np.sqrt(np.clip(q, 0, 1))
+    H = np.log1p(E) / 14
+    W = np.maximum(W, 1e-9)
+    T, F, R = T / W, F / W, R / W                                           # R: 0 at a bead's centre, 1 at its rim
+    Hn = np.clip(H / max(float(np.percentile(H, 99.5)), 1e-6), 0, 1)
+    rim = np.clip(R, 0, 1) ** 2 * (Hn > 0.02)
+    fuzz = MT.pnoise(n, n, 0.15, seed + 3)                                  # stray fibres (high frequency)
+    band = MT.pnoise(n, n, 2.6, seed + 4, stretch_v=0.15)                   # faint bands across the mat (rows)
+    mott = MT.pnoise(n, n, 2.2, seed + 5)
+    h = Hn * (0.92 + 0.08 * F) + 0.018 * fuzz * (0.4 + rim)
+    occ = np.clip(Hn / occ_s, 0, 1) ** 1.2                                   # cavity: 0 in the creases, 1 on the crowns
+    k = np.clip(k0 + (1 - k0) * occ ** 0.85 + 0.05 * (F - 0.5) * occ + tone_j * T + band_k * band
+                + mott_k * mott + fuzz_k * np.clip(fuzz, -2, 2) * rim + 0.05 * rim * occ, 0, 1.15)[..., None]
+    g, cr = MT.srgb(groove), MT.srgb(crown)
+    bc = g * (1 - k) + cr * k
+    bc = bc * (1 + np.array([0.010, 0.0, -0.010]) * T[..., None])           # a faint warmer / cooler bead to bead
+    rough = np.clip(0.92 - 0.22 * occ * (1 - rim) + 0.03 * fuzz + 0.04 * rim, 0.62, 0.97)
+    ao = np.clip(0.35 + 0.65 * occ, 0, 1)
+    return MT.save_set(name, np.clip(bc, 0, 0.9), h, nstrength, rough, ao)
+
+
+def knit_loop(n=2048):
+    """r17 fix round (blind judge 7/10 on r17/final, delta c: HEntSisalK "is a regular, even grid that reads as tatami
+    or basketweave; the reference is coarser and irregular with rounded loops", and "grey-beige against the reference's
+    warm tan ... in golden the mat reads nearly white"): the knit-bead sisal made coarser (30 columns x 27 loops per
+    metre: 3.3 x 3.7 cm, was 2.78 x 3.1), each loop rounder (rx 0.52 / ry 0.58, was 0.50 / 0.66) and irregular: every
+    column slides along itself by up to +-0.28 loop (the side-to-side rows break up), more position / size / height /
+    tone jitter (0.08 / 0.10 / 0.16 / 0.14), stronger row drift (0.40) and mottle; loops that meet along and across the
+    columns (rx 0.56 / ry 0.64, shallower creases k0 0.16: a trial with 0.45 slides and wide dark creases read as
+    pebbles); warm tan albedo (crease #4A301E, crown #9C7450: R/G 1.35 like reference 2's field, was the grey #4A3C30 /
+    #8E7C6A)."""
+    return knit_bead(n, seed=551, name="HEntSisalW", nc=30, nr=27, groove="#4A301E", crown="#9C7450", rx=0.56, ry=0.64,
+                     sq=2.0, dome_pow=0.62, occ_s=0.66, nstrength=40.0, jit=0.08, size_j=0.10, amp_j=0.16,
+                     tone_j=0.14, drift=0.40, band_k=0.08, fuzz_k=0.06, k0=0.16, mott_k=0.12, col_shift=0.28)
+
+
+def braid_dark(w=2048, hgt=256):
+    """r17 fix round (delta c3: "the black border is a wide solid band; the reference border is a thinner braided dark
+    edge"): the binding braid for the narrower 5 cm binding (hero_entrance BIND_W): two slanted lanes of beads (was
+    three), the bead crowns a lifted charcoal (#2A2521, was the near-black #0F0E0E) over black creases, so the braid
+    reads as a textured dark edge rather than a solid black band; the stitch dots a warm grey (#3C3530)."""
+    return braid_black(w, hgt, seed=543, name="HEntBraidL", lanes=2, pitch=0.011, crease="#040303", crown="#2A2521",
+                       stitch="#3C3530", nstrength=8.0)
+
+
+def braid_black(w=2048, hgt=256, seed=541, name="HEntBraidK", lanes=3, pitch=0.0125, crease="#030303",
+                crown="#0F0E0E", stitch="#1E1C1A", nstrength=6.0):
+    """r17 mat b2 (blind judge 6/10, delta 3: "the reference border is a textured binding: a braided, nubbly black edge
+    with a faint row of stitch dots along its inner edge and a slightly raised, rounded profile. Ours is a flat, smooth
+    black strip ... fine nubbly or stitch normal in near-black (not pure 0) so it catches a faint sheen"): the binding
+    as a flat braid. NOT a square tile: U (2048 px) runs 1 m along the strip, V (256 px) spans the binding's whole
+    width (hero_entrance maps V 0 at the outer edge to 1 at the field, BIND_W across). Across V 0.06-0.84 `lanes` lanes
+    of slanted beads (a herringbone: the lanes slant alternately), beads `pitch` apart along the strip (1.25 cm, the
+    reference's border dots ~3-4 px at C1); at V 0.90 a row of small round stitch dots (8 mm apart) a touch lighter
+    (#1E1C1A, faint); the creases #030303, the bead crowns #0F0E0E (near-black, neutral: b1's #1B1A1F crowns read
+    purple-brown in the golden sun), crowns a little smoother (0.72) than the creases (0.95). Periodic along U."""
+    uu, vv = np.meshgrid(np.arange(w), np.arange(hgt))
+    rng = np.random.default_rng(seed)
+    x = uu / w                                   # metres along the strip (1 m tile)
+    v = 1.0 - (vv + 0.5) / hgt                   # 0 at the outer edge .. 1 at the field (image rows run down = V up)
+    npitch = round(1.0 / pitch)
+    b0, b1 = 0.06, 0.84
+    lv = (v - b0) / (b1 - b0) * lanes
+    li = np.clip(np.floor(lv), 0, lanes - 1).astype(int)
+    pl = lv - li                                 # 0..1 across a lane
+    inband = (v > b0) & (v < b1)
+    sgn = np.where(li % 2 == 0, 1.0, -1.0)
+    lane_w = (b1 - b0) / lanes * 0.08            # a lane's width in metres (BIND_W 8 cm; HEntBraidL's 5 cm reads close)
+    t = x * npitch + sgn * (pl - 0.5) * (lane_w / pitch) * 0.9 + li * 0.5
+    ti = np.floor(t).astype(int) % npitch
+    pt = t % 1.0
+    bead = np.clip(1 - (2 * pt - 1) ** 2, 0, 1) ** 0.6 * np.clip(1 - (2 * pl - 1) ** 2, 0, 1) ** 0.45
+    bj = rng.uniform(0.85, 1.0, (lanes, npitch))[li, ti]
+    bead = bead * bj * inband
+    # the stitch dots along the inner edge
+    sp = 0.008
+    sx = (x / sp) % 1.0 - 0.5
+    sv = (v - 0.905) / 0.035
+    dot = np.clip(1 - ((sx * sp / 0.0028) ** 2 + sv ** 2), 0, 1) ** 0.5
+    fuzz = MT.pnoise(hgt, w, 0.3, seed + 1)
+    h = 0.85 * bead + 0.45 * dot + 0.03 * fuzz
+    k = np.clip(0.10 + 0.80 * bead + 0.04 * np.clip(fuzz, -2, 2), 0, 1)[..., None]
+    bc = MT.srgb(crease) * (1 - k) + MT.srgb(crown) * k
+    dk = np.clip(dot * 1.3, 0, 1)[..., None]
+    bc = bc * (1 - dk) + MT.srgb(stitch) * dk
+    rough = np.clip(0.95 - 0.23 * bead - 0.15 * dot + 0.02 * fuzz, 0.68, 0.98)
+    ao = np.clip(0.45 + 0.55 * np.maximum(bead, dot), 0, 1)
+    return MT.save_set(name, bc, h, nstrength, rough, ao)
 
 
 def brushed(n=1024, seed=391):
@@ -807,7 +1008,9 @@ SETS = {"HEntTimber": timber, "HEntMat": mat, "HEntRush": rush, "HEntTimberW": t
         "HEntSisal": sisal, "HEntTimberG": timber_weathered, "HEntRushK": rush_knit, "HEntTimberL": timber_lacquer, "HEntWeave": weave,
         "HEntKnot": knot_weave, "HEntKnotB": knot_weave_black, "HEntTimberN": timber_bar, "HEntTimberM": timber_board,
         "HEntNub": nub_weave, "HEntRib": rib_weave, "HEntRopeB": rope_black, "HEntTimberMR": timber_board_matte,
-        "HEntCoirB": coir_bump, "HEntCoirL": coir_loop, "HEntTimberP": timber_polished, "HEntTimberF": timber_face}
+        "HEntCoirB": coir_bump, "HEntCoirL": coir_loop, "HEntTimberP": timber_polished, "HEntTimberF": timber_face,
+        "HEntSisalV": sisal_rib, "HEntRopeN": rope_navy, "HEntSisalK": knit_bead, "HEntBraidK": braid_black,
+        "HEntSisalW": knit_loop, "HEntBraidL": braid_dark}
 
 if __name__ == "__main__":
     # r4: name the sets to write (e.g. `tex_entrance.py HEntRush`); an existing set is never rewritten by accident

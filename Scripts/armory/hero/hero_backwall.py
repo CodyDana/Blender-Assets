@@ -131,7 +131,11 @@ MATERIALS = {
     # calibration pass 1 (room judge: the platform deck read glossy near-white; reference 2's is a mid-tone warm tan satin
     # inside a dark surround): #AD9F8C rough 0.03 coat 1.0 -> #857A70 rough 0.35 coat 0.3 (a greige: the room's warm light makes it the reference's tan)
     # calibration pass 2 (room judge: the dais deck read pale cold grey-white in C10 / C3; reference 2 warm tan): #857A70 -> #6E5A48 (#7A5E46 read saturated orange in C1; #8E8376 and #7C6754 near-white / cream in C10 under the table downlight)
-    "M_AK_HDeck": (None, 1.0, {"color": "#6E5A48", "rough": 0.35, "coat": 0.3}),
+    # r17 fix round (blind judge 7/10 on r17/final, minor: "the platform floor in the CN niche renders reads as flat
+    # beige with no visible planks"; it was a flat colour by design, no texture was lost): the deck panels in the hall
+    # floor's satin walnut (T_AK_HPlank at the floor's FLOOR_TINT 1.80, hero_shared), as reference 2's dais reads the
+    # same warm wood as the hall
+    "M_AK_HDeck": ("HPlank", 4.0, {"tint": 1.80}),   # r17 fix round: (None, 1.0, {"color": "#6E5A48", "rough": 0.35, "coat": 0.3})
     # amber LEDs (~2700 K) over a near-black base: #FFAA00 renders warm gold under the preview studio
     "M_AK_HLEDAmber": (None, 1.0, {"color": "#140A02", "emit_color": "#FFAA00", "emit": 1.5}),
     # r4: the step lines (one crisp bright line under each nosing) and the LED posts' brighter coves; final r1: brighter

@@ -2,7 +2,7 @@
 
 1. Tone: display-value luminance (Rec.709 weights on the 8-bit sRGB values / 255) mean, p10, p50, p90, share below 0.2,
    cream share (L > 0.6 and HSV saturation < 0.35), mean HSV saturation (pixels with max > 0.02), for every Unreal capture,
-   the matching Blender render of the preset (env AK_PRESET, default night: renders/night_r16, fallback night_20m; golden:
+   the matching Blender render of the preset (env AK_PRESET, default night: renders/night_r17, fallback night_r16; golden:
    renders/hero_live; key "blender") and the LOOK reference.
 2. Exposure sweep (captures/diag/<cam>_bias_*.png): the bias whose frame mean / p50 best matches the Blender golden render.
 3. Convergence: mean absolute difference (8-bit levels) between successive checkpoints of each camera's capture sequence,
@@ -24,13 +24,14 @@ CAP = OUT / "captures"
 PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # night + genkan (2026-09-28)
 # the Blender renders of the same preset: night = renders/night_live2 (the live entry-fix round 2 build; was night_live); golden =
 # renders/hero_live (hero round: the live hero build; was stage_f2, fix1 before)
+# r17 round live (2026-09-29): night = renders/night_r17 (all eight views), fallback night_r16
 # r16 round live (2026-09-29): night = renders/night_r16 (all eight views), fallback night_20m
 # 12 x 20 m hall live (2026-09-29): night = renders/night_20m (all eight views), fallback night_live4
 # rear dais live (2026-09-28): night = renders/night_live4 (C1, CX, C10, C3, CW, CG); views it lacks (C4, C5) fall back
 # to night_live2 via bl_file()
 _RENDERS = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory\build\renders")
-BL = _RENDERS / ("night_r16" if PRESET == "night" else "hero_live")
-BL_FALLBACK = _RENDERS / "night_20m" if PRESET == "night" else None
+BL = _RENDERS / ("night_r17" if PRESET == "night" else "hero_live")
+BL_FALLBACK = _RENDERS / "night_r16" if PRESET == "night" else None
 
 
 def bl_file(rel):
