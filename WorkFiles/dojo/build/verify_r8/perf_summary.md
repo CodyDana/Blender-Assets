@@ -1,0 +1,14 @@
+| view | output @ screen % | frames | FrameTime mean / p95 | GPUTime mean / median / p95 | GT mean | RT mean | top GPU passes (mean ms) |
+|---|---|---|---|---|---|---|---|
+| CAM_PlayerEyeSand | 1920x1080 @ 100 | 795 | 11.22 / 19.16 | 9.47 / 7.64 / 16.2 | 3.76 | 11.19 | TemporalSuperResolution 1.629, VolumetricFog 1.02, ShadowDepths 0.866, Unaccounted 0.666, ShadowProjection 0.586, RenderDeferredLighting 0.568 |
+| CAM_PlayerEyeSand | 2560x1440 @ 100 | 643 | 13.91 / 23.36 | 12.87 / 11.64 / 21.52 | 6.76 | 0.0 | TemporalSuperResolution 2.515, VolumetricFog 1.64, RenderDeferredLighting 1.031, ShadowProjection 0.872, ShadowDepths 0.838, Unaccounted 0.63 |
+| CAM_PlayerEyeSand | 2560x1440 @ 75 | 758 | 11.83 / 20.77 | 10.14 / 8.47 / 17.44 | 6.55 | 0.0 | TemporalSuperResolution 1.994, VolumetricFog 1.011, ShadowDepths 0.827, Unaccounted 0.63, ShadowProjection 0.569, NaniteVisBuffer 0.535 |
+| CAM_PlayerEyeSand | 2560x1440 @ 67 | 807 | 11.13 / 19.45 | 9.13 / 7.63 / 15.88 | 6.53 | 0.0 | TemporalSuperResolution 1.744, ShadowDepths 0.775, VolumetricFog 0.72, Unaccounted 0.617, NaniteVisBuffer 0.521, SlateUI 0.481 |
+| CAM_Overview | 1920x1080 @ 100 | 703 | 12.73 / 21.18 | 10.61 / 8.43 / 18.05 | 6.57 | 0.0 | TemporalSuperResolution 1.672, VolumetricFog 1.029, ShadowDepths 0.972, ShadowProjection 0.775, RenderDeferredLighting 0.753, NaniteVisBuffer 0.679 |
+| CAM_Overview | 2560x1440 @ 100 | 593 | 15.12 / 24.11 | 13.76 / 12.54 / 20.35 | 6.66 | 0.0 | TemporalSuperResolution 2.592, VolumetricFog 1.6, RenderDeferredLighting 1.421, ShadowProjection 1.148, ShadowDepths 0.996, NaniteVisBuffer 0.708 |
+| CAM_Overview | 2560x1440 @ 75 | 723 | 12.4 / 20.03 | 10.32 / 9.15 / 15.52 | 6.83 | 0.0 | TemporalSuperResolution 1.895, VolumetricFog 0.934, ShadowDepths 0.905, ShadowProjection 0.714, RenderDeferredLighting 0.698, NaniteVisBuffer 0.651 |
+| CAM_Overview | 2560x1440 @ 67 | 755 | 11.88 / 19.78 | 9.15 / 8.15 / 14.2 | 6.93 | 0.0 | TemporalSuperResolution 1.727, ShadowDepths 0.85, VolumetricFog 0.716, Unaccounted 0.589, NaniteVisBuffer 0.588, ShadowProjection 0.581 |
+| PAWN | 1920x1080 @ 100 | 786 | 11.41 / 18.08 | 8.62 / 7.71 / 12.63 | 7.0 | 0.0 | TemporalSuperResolution 1.455, ShadowDepths 0.799, VolumetricFog 0.777, Unaccounted 0.622, NaniteVisBuffer 0.474, SlateUI 0.465 |
+| PAWN | 2560x1440 @ 100 | 632 | 14.22 / 22.54 | 12.53 / 11.03 / 18.95 | 7.08 | 0.0 | TemporalSuperResolution 2.636, VolumetricFog 1.397, RenderDeferredLighting 1.025, ShadowDepths 0.905, Unaccounted 0.678, NaniteVisBuffer 0.586 |
+| PAWN | 2560x1440 @ 75 | 884 | 10.16 / 14.96 | 8.69 / 8.04 / 11.12 | 6.24 | 0.0 | TemporalSuperResolution 1.758, ShadowDepths 0.752, VolumetricFog 0.741, Unaccounted 0.574, NaniteVisBuffer 0.465, SlateUI 0.438 |
+| PAWN | 2560x1440 @ 67 | 893 | 10.05 / 15.16 | 8.26 / 7.54 / 10.73 | 6.32 | 0.0 | TemporalSuperResolution 1.628, ShadowDepths 0.767, Unaccounted 0.589, VolumetricFog 0.571, NaniteVisBuffer 0.464, SlateUI 0.448 |

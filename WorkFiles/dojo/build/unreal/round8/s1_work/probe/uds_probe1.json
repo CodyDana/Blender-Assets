@@ -1,0 +1,648 @@
+{
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "open": true,
+ "class": "/Game/UltraDynamicSky/Blueprints/Ultra_Dynamic_Sky.Ultra_Dynamic_Sky_C",
+ "props": {
+  "Time of Day": [
+   "Time of Day",
+   "960.0",
+   "float"
+  ],
+  "Animate Time of Day": [
+   "Animate Time of Day",
+   "False",
+   "bool"
+  ],
+  "Dawn Time": [
+   "Dawn Time",
+   "600.0",
+   "float"
+  ],
+  "Dusk Time": [
+   "Dusk Time",
+   "1800.0",
+   "float"
+  ],
+  "Sun Yaw": [
+   "Sun Yaw",
+   "0.0",
+   "float"
+  ],
+  "Simulate Real Sun": [
+   "Simulate Real Sun",
+   "False",
+   "bool"
+  ],
+  "Manually Position Sun Target": [
+   "Manually Position Sun Target",
+   "False",
+   "bool"
+  ],
+  "Apply Exposure Settings": [
+   "Apply Exposure Settings",
+   "True",
+   "bool"
+  ],
+  "Exposure Metering Mode": [
+   "Exposure Metering Mode",
+   "<AutoExposureMethod.AEM_HISTOGRAM: 0>",
+   "AutoExposureMethod"
+  ],
+  "Sky Mode": [
+   "Sky Mode",
+   "<UDS_SkyMode.VOLUMETRIC_CLOUDS: 0>",
+   "UDS_SkyMode"
+  ],
+  "Project Mode": [
+   "Project Mode",
+   "<UDS_Project_Mode.GAME_REAL_TIME_NON_VR: 0>",
+   "UDS_Project_Mode"
+  ],
+  "Volumetric Cloud Rendering Mode": [
+   "Volumetric Cloud Rendering Mode",
+   "<UDS_VolRT_Mode.FIDELITY_PERFORMANCE: 0>",
+   "UDS_VolRT_Mode"
+  ],
+  "Cloud Coverage": [
+   "Cloud Coverage",
+   "3.8",
+   "float"
+  ],
+  "Cloud Speed": [
+   "Cloud Speed",
+   "0.35",
+   "float"
+  ],
+  "Color Mode": [
+   "Color Mode",
+   "<UDS_ColorMode.SKY_ATMOSPHERE: 0>",
+   "UDS_ColorMode"
+  ],
+  "Sky Light Mode": [
+   "Sky Light Mode",
+   "<UDS_SkyLightMode.CAPTURE_BASED: 0>",
+   "UDS_SkyLightMode"
+  ],
+  "Sun Light Intensity": [
+   "Sun Light Intensity",
+   "5.0",
+   "float"
+  ],
+  "Sun Source Angle Scale": [
+   "Sun Source Angle Scale",
+   "1.0",
+   "float"
+  ],
+  "Half Rate Tick": [
+   "Half Rate Tick",
+   "True",
+   "bool"
+  ],
+  "Randomize Cloud Formation on Run": [
+   "Randomize Cloud Formation on Run",
+   "True",
+   "bool"
+  ],
+  "Clouds Move with Time of Day": [
+   "Clouds Move with Time of Day",
+   "False",
+   "bool"
+  ],
+  "Fog": [
+   "Fog",
+   "1.0",
+   "float"
+  ],
+  "Dust Amount": [
+   "Dust Amount",
+   "0.0",
+   "float"
+  ],
+  "Base Fog Density": [
+   "Base Fog Density",
+   "0.0055",
+   "float"
+  ],
+  "Lighting Brightness (Dawn/Dusk)": [
+   "Lighting Brightness (Dawn/Dusk)",
+   "1.0",
+   "float"
+  ],
+  "Lighting Brightness (Day)": [
+   "Lighting Brightness (Day)",
+   "1.0",
+   "float"
+  ],
+  "Volumetric Fog": [
+   null,
+   "Actor: Failed to find property 'volumetric_fog' for attribute 'volumetric_fog' on 'Ultra_Dynamic_Sky_C'",
+   null
+  ],
+  "Use Sky Mode Scalability Map": [
+   "Use Sky Mode Scalability Map",
+   "False",
+   "bool"
+  ],
+  "Sun Lens Flare": [
+   null,
+   "Actor: Failed to find property 'sun_lens_flare' for attribute 'sun_lens_flare' on 'Ultra_Dynamic_Sky_C'",
+   null
+  ],
+  "Exposure Bias Dawn/Dusk": [
+   "Exposure Bias Dawn/Dusk",
+   "0.0",
+   "float"
+  ],
+  "Exposure Brightness Range": [
+   "Exposure Brightness Range",
+   "<Struct 'FloatRange' (0x000001E7859C4780) {lower_bound: {type: Exclusive, value: -10.000000}, upper_bound: {type: Exclus",
+   "FloatRange"
+  ],
+  "Contrast": [
+   "Contrast",
+   "0.1",
+   "float"
+  ],
+  "Saturation": [
+   "Saturation",
+   "1.0",
+   "float"
+  ],
+  "Cloud Phase": [
+   "Cloud Phase",
+   "0.0",
+   "float"
+  ],
+  "Bottom Altitude": [
+   "Bottom Altitude",
+   "0.6",
+   "float"
+  ],
+  "Volumetric Clouds Scale": [
+   "Volumetric Clouds Scale",
+   "1.0",
+   "float"
+  ],
+  "Sky Light Intensity": [
+   "Sky Light Intensity",
+   "1.0",
+   "float"
+  ],
+  "Sun Contact Shadow Length": [
+   null,
+   "Actor: Failed to find property 'sun_contact_shadow_length' for attribute 'sun_contact_shadow_length' on 'Ultra_Dynamic_S",
+   null
+  ]
+ },
+ "components": [
+  "BillboardComponent:BillboardComponent_4",
+  "BillboardComponent:BillboardComponent_5",
+  "BillboardComponent:BillboardComponent_6",
+  "BillboardComponent:BillboardComponent_7",
+  "DirectionalLightComponent:Moon",
+  "DirectionalLightComponent:Sun",
+  "ExponentialHeightFogComponent:HeightFog",
+  "PostProcessComponent:NODE_AddPostProcessComponent-5",
+  "PostProcessComponent:NODE_AddPostProcessComponent-6",
+  "SceneComponent:Moon Parent",
+  "SceneComponent:SkyRoot",
+  "SceneComponent:Sun Parent",
+  "SkyAtmosphereComponent:SkyAtmosphere",
+  "SkyLightComponent:Captured Scene Sky Light",
+  "SkyLightComponent:Cubemap Sky Light",
+  "StaticMeshComponent:ClockDisk",
+  "StaticMeshComponent:Compass",
+  "StaticMeshComponent:E",
+  "StaticMeshComponent:Moon Handle",
+  "StaticMeshComponent:N",
+  "StaticMeshComponent:S",
+  "StaticMeshComponent:Sky_Sphere",
+  "StaticMeshComponent:Sun Handle",
+  "StaticMeshComponent:UDS Label",
+  "StaticMeshComponent:W",
+  "UDS_InterfaceActorArrayManager_C:Cloud Paint Actors Manager",
+  "UDS_PlayerOcclusion_C:UDS_PlayerOcclusion",
+  "UDS_Utility_Opener_C:UDS_Utility_Opener",
+  "VolumetricCloudComponent:VolumetricCloud"
+ ],
+ "sun_default": [
+  {
+   "name": "Sun",
+   "fwd": [
+    0.4045,
+    -0.5878,
+    -0.7006
+   ],
+   "elev_deg": 44.48,
+   "az_to_sun_ue_deg": 124.54,
+   "az_to_sun_blender_deg": -124.54,
+   "intensity": 5.0,
+   "visible": true,
+   "source_angle": 1.0
+  },
+  {
+   "name": "Moon",
+   "fwd": [
+    -0.4764,
+    0.6035,
+    0.6394
+   ],
+   "elev_deg": -39.74,
+   "az_to_sun_ue_deg": -51.71,
+   "az_to_sun_blender_deg": 51.71,
+   "intensity": 0.0,
+   "visible": true,
+   "source_angle": 0.95
+  }
+ ],
+ "rerun_err": "'Actor' object has no attribute 'rerun_construction_scripts'",
+ "sweep": [
+  {
+   "tod": 1200.0,
+   "yaw": 0.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      0.5,
+      0.0,
+      -0.866
+     ],
+     "elev_deg": 60.0,
+     "az_to_sun_ue_deg": -180.0,
+     "az_to_sun_blender_deg": 180.0,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      -0.5928,
+      0.0,
+      0.8053
+     ],
+     "elev_deg": -53.64,
+     "az_to_sun_ue_deg": -0.0,
+     "az_to_sun_blender_deg": 0.0,
+     "intensity": 0.0,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1700.0,
+   "yaw": 0.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      0.1294,
+      0.9659,
+      -0.2241
+     ],
+     "elev_deg": 12.95,
+     "az_to_sun_ue_deg": -97.63,
+     "az_to_sun_blender_deg": 97.63,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      -0.1496,
+      -0.9734,
+      0.1733
+     ],
+     "elev_deg": -9.98,
+     "az_to_sun_ue_deg": 81.26,
+     "az_to_sun_blender_deg": -81.26,
+     "intensity": 0.0,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1800.0,
+   "yaw": 0.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "elev_deg": -0.0,
+     "az_to_sun_ue_deg": -90.0,
+     "az_to_sun_blender_deg": 90.0,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      0.0,
+      -0.9992,
+      -0.04
+     ],
+     "elev_deg": 2.29,
+     "az_to_sun_ue_deg": 90.0,
+     "az_to_sun_blender_deg": -90.0,
+     "intensity": 0.15,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1830.0,
+   "yaw": 0.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      -0.0392,
+      0.9969,
+      0.0679
+     ],
+     "elev_deg": -3.9,
+     "az_to_sun_ue_deg": -87.75,
+     "az_to_sun_blender_deg": 87.75,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      0.0449,
+      -0.9936,
+      -0.1039
+     ],
+     "elev_deg": 5.96,
+     "az_to_sun_ue_deg": 92.58,
+     "az_to_sun_blender_deg": -92.58,
+     "intensity": 0.15,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1900.0,
+   "yaw": 0.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      -0.1294,
+      0.9659,
+      0.2241
+     ],
+     "elev_deg": -12.95,
+     "az_to_sun_ue_deg": -82.37,
+     "az_to_sun_blender_deg": 82.37,
+     "intensity": 0.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      0.1471,
+      -0.9571,
+      -0.2497
+     ],
+     "elev_deg": 14.46,
+     "az_to_sun_ue_deg": 98.74,
+     "az_to_sun_blender_deg": -98.74,
+     "intensity": 0.15,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1200.0,
+   "yaw": 90.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      0.0,
+      0.5,
+      -0.866
+     ],
+     "elev_deg": 60.0,
+     "az_to_sun_ue_deg": -90.0,
+     "az_to_sun_blender_deg": 90.0,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      -0.5928,
+      0.0,
+      0.8053
+     ],
+     "elev_deg": -53.64,
+     "az_to_sun_ue_deg": -0.0,
+     "az_to_sun_blender_deg": 0.0,
+     "intensity": 0.0,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1700.0,
+   "yaw": 90.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      -0.9659,
+      0.1294,
+      -0.2241
+     ],
+     "elev_deg": 12.95,
+     "az_to_sun_ue_deg": -7.63,
+     "az_to_sun_blender_deg": 7.63,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      -0.1496,
+      -0.9734,
+      0.1733
+     ],
+     "elev_deg": -9.98,
+     "az_to_sun_ue_deg": 81.26,
+     "az_to_sun_blender_deg": -81.26,
+     "intensity": 0.0,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1800.0,
+   "yaw": 90.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "elev_deg": -0.0,
+     "az_to_sun_ue_deg": -0.0,
+     "az_to_sun_blender_deg": 0.0,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      0.0,
+      -0.9992,
+      -0.04
+     ],
+     "elev_deg": 2.29,
+     "az_to_sun_ue_deg": 90.0,
+     "az_to_sun_blender_deg": -90.0,
+     "intensity": 0.15,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1830.0,
+   "yaw": 90.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      -0.9969,
+      -0.0392,
+      0.0679
+     ],
+     "elev_deg": -3.9,
+     "az_to_sun_ue_deg": 2.25,
+     "az_to_sun_blender_deg": -2.25,
+     "intensity": 5.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      0.0449,
+      -0.9936,
+      -0.1039
+     ],
+     "elev_deg": 5.96,
+     "az_to_sun_ue_deg": 92.58,
+     "az_to_sun_blender_deg": -92.58,
+     "intensity": 0.15,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  },
+  {
+   "tod": 1900.0,
+   "yaw": 90.0,
+   "sun": [
+    {
+     "name": "Sun",
+     "fwd": [
+      -0.9659,
+      -0.1294,
+      0.2241
+     ],
+     "elev_deg": -12.95,
+     "az_to_sun_ue_deg": 7.63,
+     "az_to_sun_blender_deg": -7.63,
+     "intensity": 0.0,
+     "visible": true,
+     "source_angle": 1.0
+    },
+    {
+     "name": "Moon",
+     "fwd": [
+      0.1471,
+      -0.9571,
+      -0.2497
+     ],
+     "elev_deg": 14.46,
+     "az_to_sun_ue_deg": 98.74,
+     "az_to_sun_blender_deg": -98.74,
+     "intensity": 0.15,
+     "visible": true,
+     "source_angle": 0.95
+    }
+   ]
+  }
+ ],
+ "component_values": {
+  "HeightFog": {
+   "fog_density": "0.005510000046342611",
+   "fog_height_falloff": "0.05999999865889549",
+   "enable_volumetric_fog": "False",
+   "start_distance": "7348.03369140625"
+  },
+  "SkyAtmosphere": {
+   "sky_luminance_factor": "<Struct 'LinearColor' (0x000001E6A8471B10) {r: 1.000000, g: 1.000000, b: 1.00000",
+   "height_fog_contribution": "2.075671911239624",
+   "transform_mode": "<SkyAtmosphereTransformMode.PLANET_TOP_AT_COMPONENT_TRANSFORM: 1>"
+  },
+  "Cubemap Sky Light": {
+   "intensity": "1.0",
+   "real_time_capture": "False",
+   "source_type": "<SkyLightSourceType.SLS_SPECIFIED_CUBEMAP: 1>",
+   "mobility": "<ComponentMobility.MOVABLE: 2>"
+  },
+  "VolumetricCloud": {
+   "layer_bottom_altitude": "0.6000000238418579",
+   "layer_height": "0.699999988079071",
+   "material": "<Object '/Game/Dojo/Maps/L_Dojo.L_Dojo:PersistentLevel.Ultra_Dynamic_Sky_C_0.MID",
+   "visible": "True"
+  },
+  "Captured Scene Sky Light": {
+   "intensity": "1.0",
+   "real_time_capture": "True",
+   "source_type": "<SkyLightSourceType.SLS_CAPTURED_SCENE: 0>",
+   "mobility": "<ComponentMobility.MOVABLE: 2>"
+  },
+  "NODE_AddPostProcessComponent-5": {
+   "unbound": "True",
+   "priority": "1.0",
+   "override_ae_method": "False",
+   "ae_method": "<AutoExposureMethod.AEM_HISTOGRAM: 0>",
+   "override_bias": "False",
+   "bias": "1.0"
+  },
+  "NODE_AddPostProcessComponent-6": {
+   "unbound": "True",
+   "priority": "1.0",
+   "override_ae_method": "True",
+   "ae_method": "<AutoExposureMethod.AEM_HISTOGRAM: 0>",
+   "override_bias": "True",
+   "bias": "0.0"
+  }
+ }
+}

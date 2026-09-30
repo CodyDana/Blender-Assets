@@ -1,0 +1,33 @@
+{
+ "rule": "judge-steer rule (study 6.6 + the stage brief): a judge delta is applied only where the reference crop confirms it; the owner's reading outranks the judge",
+ "reference_crops_checked": [
+  "References/Dojo/dojo_landscape_ref.png box 230,930-510,1070 at 4x (the lower terrace wall under the gate apron)",
+  "References/Dojo/dojo_landscape_ref.png box 380,930-520,1010 at 6x (the traced part of the same wall)",
+  "References/Dojo/dojo_landscape_ref.png box 0,1050-320,1536 at 2x (the left cliff stair path: lower flight, middle flight, rails, lanterns, kerbs)",
+  "renders/f2/refcrops/ref_close_stone_faces.png, ref_rail_joint.png, ref_lantern_close.png, ref_close_step_nosing.png"
+ ],
+ "accepted": {
+  "wall_A_packing": "ACCEPTED. The reference stones fit each other (thin dark joints, outlines following neighbours, Y-junctions); f2 had 1.6-2.2 cm rims plus a dark triangle at every T-junction. Method change (study P38): stone_layout.coursed_fitted turns every T into a Y; rims 1.1-1.5 cm.",
+  "wall_B_rigid_rows": "ACCEPTED (partly met). The reference beds wander and stones span courses; measured bed continuity (stone_measure.joint_stats, tol 0.12 x h) ref 0.31 vs f2-style coursing 0.72-0.78. f3: wandering beds +-12 cm, 30 % tall-stone chances, sliver slots merged instead of skipped; measured 0.62-0.65 in the sim (still above the reference: see open issues).",
+  "wall_1_close_joints": "ACCEPTED, same as A (the owner's 2-4 cm visible joints kept: rims 1.1-1.5 cm plus the rounded shoulders).",
+  "wall_2_break_rows": "ACCEPTED, same as B; the slivers and stacked small-slab clusters are gone (min stone 0.14 m wide, broken-course splits 1.5 %).",
+  "wall_3_scale": "ACCEPTED for size: the reference's near end of the lower terrace wall (beside the ~0.17 m gate risers) shows courses about 0.4-0.55 m; f3 course table 0.34 + 0.03 s, stones ~0.34 x 0.42 m (f2 +30 %). REJECTED for 'flatter crowns': see rejected.",
+  "wall_4_moss": "ACCEPTED for moss in the joints and on the cap tops (the owner's reading too): geometric moss cushions (M_DKT_MossPad) in the bed joints and across cap-top joints. Colour: see rejected.",
+  "step_5_nosing_gaps": "ACCEPTED in part: end joints closed to 0.8 cm (f2 1.2), a softer rounded nosing (3.0 cm radius).",
+  "step_7_sett_scale": "ACCEPTED within the owner's 3-5 blocks a tread: the reference's lower flight shows near-cubic setts ~0.30-0.40 m; f3 uses 4 / 5 blocks (0.30 / 0.36 m) on even steps and 3 / 4 (0.40 / 0.45 m) on odd steps.",
+  "kerb_8_underside": "ACCEPTED as a scene fix: the 'spike' was the stand-in slope cutting away from the kerb's buried end (the kerb meshes' lowest points are all at -0.25 m, measured); the f3 stair scene seats every kerb in a soil bank. Kerbs raised to +0.09 (the reference's lower-path kerbs stand about 8-10 cm proud).",
+  "rail_9_joint": "ACCEPTED in part: slimmer posts (9.6 cm, f2 11), darker weathered timber; the rails were already housed into the posts (f2) and stay so.",
+  "lantern_10": "ACCEPTED in part: steeper, straighter pyramid roof with a smaller eave flare, the finial ~1.9 x taller, a taller light box (h/w ~1.2) - all visible in the reference lantern crop."
+ },
+ "rejected": {
+  "flatter_crowns": "rejected delta: 'make faces flatter-crowned' because the reference shows strongly lit crowns and shaded lower rims: its form contrast p90/p50 is 2.04 against f2's 1.77 (daylight gate rig), so flattening would move away from it; crowns kept at 8-22 % of the short side.",
+  "colour_toward_warm_grey_sat_017": "rejected delta: 'push the albedo to hue ~30 deg, saturation ~0.17' because the owner's reading is MID-GREY granite, not beige or brown, and f2 round 2 measured that the warmer tint which meets the daylight saturation reads tan-brown under the dojo sunset (study P50); f2's tint kept.",
+  "grass_tufts": "not built here: the reference's joint tufts are grass (the pines chat's tuft units); only moss cushions are ours. Open issue.",
+  "step_5_long_slabs": "rejected delta: 'fewer and longer tread stones, 1-2 joints across, on the upper flights' because the owner's reading is 3-5 SHORT squared blocks per tread (the reference's lower flight shows them; the study 3.4 notes the middle flight differs) - the long-slab flight is the owner's open decision 8.5.",
+  "step_5_overhang_2cm": "rejected delta: 'about a 2 cm nosing overhang' because the reference shows solid block steps with a small worn rounded nosing and only a thin shadow line (study 3.4 / 4.7: no overhang unless traced); f2's 1.4 cm lip under a rounder 3 cm nosing kept.",
+  "step_6_stringer": "rejected delta (deferred): 'a sloped stone stringer under the rail with the posts on it' because at the reference's resolution the strip beside the middle flight is not resolvable as stone edging vs soil / grass, and the owner's reading asks only for kerbs and a low cheek (both exist: Stair_Kerb_*, Stair_Cheek_Low_*). Open issue.",
+  "rail_9_square_posts": "rejected delta: 'slimmer SQUARE-ish posts with slightly rounded tops' because the owner's reading is ROUND timber posts with rounded tops, and the reference rail crop shows round posts.",
+  "lantern_10_top_rail": "rejected delta: 'a horizontal rail near the top of the box' because the reference lantern crop does not resolve one; the box keeps its head rail and middle mullion.",
+  "wall_C_exposed_core": "rejected delta (partly): 'the dark core shows at module sides / backs' because the side views in KIT_SHEET_wall_ends show the joining end of each module (hidden when modules chain on the teeth); the returns of Wall_EndL/R already carry stone faces. Not changed; noted for the sheets."
+ }
+}

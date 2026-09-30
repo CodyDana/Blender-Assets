@@ -1,0 +1,10292 @@
+{
+ "date": "2026-09-29",
+ "stage": "round 6: the 1v1 rear seal (pocket fences + 1v1-only blockers) and the far background (impostor far town, jagged ridge rings, edge row); round 5 outside + background (vegetation later)",
+ "units": "m, grey-box world frame (X east, Y north, Z up; Unreal (x*100, -y*100, z*100), yaw = -rot_z)",
+ "material_library": "Scripts/dojo/materials (M_DJ_*) for stone, timber, plaster, tile, glass; this track's instances (recipes below) on the showcase's existing masters: M_DJ_GroundXY_Master (road, verge, lanes) and M_DJ_Flat_Master (water, mountains, far ground)",
+ "materials": {
+  "M_DKX_RoadCobble": {
+   "master": "M_DJ_GroundXY_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {
+    "Base Colour Map": "T_DKX_Cobble_BC",
+    "ORM Map": "T_DKX_Cobble_ORM",
+    "Normal Map": "T_DKX_Cobble_N",
+    "Macro Map": "T_DKG_Macro_M"
+   },
+   "scalars": {
+    "Macro Tint": 0.1,
+    "Macro Rough": 0.05,
+    "Macro Dirt": 0.06,
+    "Tile cm": 400.0,
+    "Saturation": 1.0,
+    "ValueMult": 1.0
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "switches": {},
+   "note": "the approach road: rounded granite cobbles with dark sandy joints (dojo1_reference1's grey stony road); T_DKX_Cobble (ox_tex.py) on world XY / 4 m"
+  },
+  "M_DKX_VergeSoil": {
+   "master": "M_DJ_GroundXY_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {
+    "Base Colour Map": "T_DKG_Soil_BC",
+    "ORM Map": "T_DKG_Soil_ORM",
+    "Normal Map": "T_DKG_Soil_N",
+    "Macro Map": "T_DKG_Macro_M"
+   },
+   "scalars": {
+    "Macro Tint": 0.14,
+    "Macro Rough": 0.05,
+    "Macro Dirt": 0.05,
+    "Tile cm": 400.0,
+    "Saturation": 0.85,
+    "ValueMult": 0.8
+   },
+   "vectors": {
+    "Tint": [
+     0.98,
+     1.0,
+     0.97
+    ]
+   },
+   "switches": {},
+   "note": "wall-foot verges and the outside ground: the ground kit's soil, darker (dojo1_reference1's dark verge strip and outside ground, sRGB (46-61, 40-54, 26-54) at dusk); grass comes with the vegetation pass"
+  },
+  "M_DKX_LaneEarth": {
+   "master": "M_DJ_GroundXY_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {
+    "Base Colour Map": "T_DKG_Soil_BC",
+    "ORM Map": "T_DKG_Soil_ORM",
+    "Normal Map": "T_DKG_Soil_N",
+    "Macro Map": "T_DKG_Macro_M"
+   },
+   "scalars": {
+    "Macro Tint": 0.1,
+    "Macro Rough": 0.05,
+    "Macro Dirt": 0.0,
+    "Tile cm": 400.0,
+    "Saturation": 0.55,
+    "ValueMult": 1.25
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.04
+    ]
+   },
+   "switches": {},
+   "note": "packed-earth lanes (the side lanes and the lower lane): the ground kit's soil, desaturated and lifted (the shed's packed-earth recipe values, as this track's own instance)"
+  },
+  "M_DKX_Water": {
+   "master": "M_DJ_Flat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 0.06,
+    "Metallic": 0.0,
+    "Specular": 0.5
+   },
+   "vectors": {
+    "Base Colour": [
+     0.01033,
+     0.01298,
+     0.01298
+    ]
+   },
+   "switches": {},
+   "note": "the canal under the terrace wall (dojo1_reference1: dark water): dark, glossy; Lumen reflects the sky"
+  },
+  "M_DKX_MountainNear": {
+   "master": "M_DJ_Flat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Metallic": 0.0,
+    "Specular": 0.2
+   },
+   "vectors": {
+    "Base Colour": [
+     0.02732,
+     0.03434,
+     0.04519
+    ]
+   },
+   "switches": {},
+   "note": "near ridge ring (0.9-1.3 km): a dark blue-grey forested ridge; the level's ExponentialHeightFog (density 0.02, falloff 0.12) lays the haze on it, as dojo1_reference2's horizon"
+  },
+  "M_DKX_MountainFar": {
+   "master": "M_DJ_Flat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Metallic": 0.0,
+    "Specular": 0.2
+   },
+   "vectors": {
+    "Base Colour": [
+     0.06125,
+     0.07227,
+     0.10224
+    ]
+   },
+   "switches": {},
+   "note": "far ridge ring (1.6-2.2 km, inside the 2.4 km cloud dome): paler blue-grey"
+  },
+  "M_DKX_Kawara": {
+   "master": "M_DJ_Lib_Opaque",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {
+    "BC": "T_DKX_Kawara_BC",
+    "ORM": "T_DKX_Kawara_ORM",
+    "N": "T_DKX_Kawara_N",
+    "WearMask": "T_DJ_WearMask_M"
+   },
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ]
+   },
+   "switches": {
+    "UseWear": false
+   },
+   "note": "the town roofs' tile field: the shared library's RoofTile maps with kawara courses every 0.2667 m (ox_tex.kawara), on geometry rolls at the same pitch (UVs aligned by the builder); the ridges and hip rolls keep M_DJ_RoofTile"
+  },
+  "M_DKX_FarGround": {
+   "master": "M_DJ_Flat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Metallic": 0.0,
+    "Specular": 0.3
+   },
+   "vectors": {
+    "Base Colour": [
+     0.02519,
+     0.02315,
+     0.01764
+    ]
+   },
+   "switches": {},
+   "note": "round 5 f1: the ground under the far town (dark earth between the roof clusters) out to the first ridge's foot; no longer a visible plain"
+  },
+  "M_DKX_Ridge1": {
+   "master": "M_DJ_EmissiveFlat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Emissive Intensity": 1.0
+   },
+   "vectors": {
+    "Base Colour": [
+     0.005,
+     0.005,
+     0.006
+    ],
+    "Emissive Colour": [
+     6.0,
+     6.6,
+     8.6
+    ]
+   },
+   "switches": {},
+   "note": "round 5 f1 ridge ring: flat emissive to read as sRGB (58, 64, 82) before the haze (value and saturation fall off with distance, the farthest near the sky colour)"
+  },
+  "M_DKX_Ridge2": {
+   "master": "M_DJ_EmissiveFlat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Emissive Intensity": 1.0
+   },
+   "vectors": {
+    "Base Colour": [
+     0.005,
+     0.005,
+     0.006
+    ],
+    "Emissive Colour": [
+     8.4,
+     8.9,
+     11.4
+    ]
+   },
+   "switches": {},
+   "note": "round 5 f1 ridge ring: flat emissive to read as sRGB (78, 82, 104) before the haze (value and saturation fall off with distance, the farthest near the sky colour)"
+  },
+  "M_DKX_Ridge3": {
+   "master": "M_DJ_EmissiveFlat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Emissive Intensity": 1.0
+   },
+   "vectors": {
+    "Base Colour": [
+     0.005,
+     0.005,
+     0.006
+    ],
+    "Emissive Colour": [
+     11.2,
+     11.2,
+     14.0
+    ]
+   },
+   "switches": {},
+   "note": "round 5 f1 ridge ring: flat emissive to read as sRGB (102, 102, 126) before the haze (value and saturation fall off with distance, the farthest near the sky colour)"
+  },
+  "M_DKX_Ridge4": {
+   "master": "M_DJ_EmissiveFlat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Emissive Intensity": 1.0
+   },
+   "vectors": {
+    "Base Colour": [
+     0.005,
+     0.005,
+     0.006
+    ],
+    "Emissive Colour": [
+     14.2,
+     13.8,
+     17.8
+    ]
+   },
+   "switches": {},
+   "note": "round 5 f1 ridge ring: flat emissive to read as sRGB (128, 124, 148) before the haze (value and saturation fall off with distance, the farthest near the sky colour)"
+  },
+  "M_DKX_FarFacade": {
+   "master": "M_DJ_Lib_Opaque",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {
+    "BC": "T_DKX_FarFacade_BC",
+    "ORM": "T_DKX_FarFacade_ORM",
+    "N": "T_DKX_FarFacade_N",
+    "WearMask": "T_DJ_WearMask_M"
+   },
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 0.0,
+    "ValueMult": 0.92
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ]
+   },
+   "switches": {
+    "UseWear": false
+   },
+   "note": "round 6: the far town's impostor walls: an albedo atlas of this track's own house fronts and sides (House_A..E, baked by ox_facade.py under a uniform white sky, so the eaves' occlusion is in it), UV0 = the tile's rectangle per wall"
+  },
+  "M_DKX_FarKawara": {
+   "master": "M_DJ_Lib_Opaque",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {
+    "BC": "T_DKX_Kawara_BC",
+    "ORM": "T_DKX_Kawara_ORM",
+    "N": "T_DKX_Kawara_N",
+    "WearMask": "T_DJ_WearMask_M"
+   },
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0,
+    "ValueMult": 0.62,
+    "Saturation": 0.8
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ]
+   },
+   "switches": {
+    "UseWear": false
+   },
+   "note": "round 6: the far town's roofs: the town's kawara tile set (T_DKX_Kawara, courses every 0.2667 m in tile units) darker and greyer for distance (ref 1 / 2: dark tiled roofs fading into the haze; the height fog lays the haze on)"
+  },
+  "M_DKX_Blocker1v1": {
+   "master": "M_DJ_Flat_Master",
+   "kit": "outside",
+   "ue_dir": "/Game/DojoKit/Outside/Materials",
+   "textures": {},
+   "scalars": {
+    "Roughness": 1.0,
+    "Metallic": 0.0,
+    "Specular": 0.0
+   },
+   "vectors": {
+    "Base Colour": [
+     0.52712,
+     0.04092,
+     0.02416
+    ]
+   },
+   "switches": {},
+   "note": "round 6: the 1v1-only invisible blockers (class 'boundary': hidden in game, Pawn only); red so they read in the editor, as SM_DGB_Boundary_1v1"
+  }
+ },
+ "textures": {
+  "T_DKX_Cobble_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_Cobble_BC.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "BC"
+  },
+  "T_DKX_Cobble_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_Cobble_N.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "N"
+  },
+  "T_DKX_Cobble_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_Cobble_ORM.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "ORM"
+  },
+  "T_DKX_Kawara_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_Kawara_BC.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "BC"
+  },
+  "T_DKX_Kawara_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_Kawara_N.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "N"
+  },
+  "T_DKX_Kawara_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_Kawara_ORM.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "ORM"
+  },
+  "T_DKX_FarFacade_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_FarFacade_BC.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "BC"
+  },
+  "T_DKX_FarFacade_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_FarFacade_N.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "N"
+  },
+  "T_DKX_FarFacade_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Outside\\Textures\\T_DKX_FarFacade_ORM.png",
+   "ue_dir": "/Game/DojoKit/Outside/Textures",
+   "kind": "ORM"
+  }
+ },
+ "textures_reused": {
+  "T_DKG_Soil_BC": "ground",
+  "T_DKG_Soil_ORM": "ground",
+  "T_DKG_Soil_N": "ground",
+  "T_DKG_Macro_M": "ground",
+  "T_DJ_WearMask_M": "library"
+ },
+ "export_dir": "Exports/DojoKit/Outside",
+ "ue_root": "/Game/DojoKit/Outside",
+ "pieces": {
+  "SM_DKX_Road_W": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "cobble road X -86.0..18.8, Y -2.85..-7.75: crowned -0.10 at the edges to -0.05 on the centre line (M_DKX_RoadCobble, world XY)",
+   "ucx": 13,
+   "tris": 1918,
+   "slots": [
+    "M_DKX_RoadCobble"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Road_W.fbx",
+   "pivot_world": [
+    -33.6,
+    -5.3,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "x": [
+     -86.0,
+     18.8
+    ],
+    "y": [
+     -2.85,
+     -7.75
+    ],
+    "edge_z": -0.1,
+    "crown_z": -0.05
+   }
+  },
+  "SM_DKX_Road_Gate": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "cobble road X 18.8..25.2, Y -2.4..-7.75: crowned -0.10 at the edges to -0.05 on the centre line (M_DKX_RoadCobble, world XY)",
+   "ucx": 1,
+   "tris": 152,
+   "slots": [
+    "M_DKX_RoadCobble"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Road_Gate.fbx",
+   "pivot_world": [
+    22.0,
+    -5.075,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "x": [
+     18.8,
+     25.2
+    ],
+    "y": [
+     -2.4,
+     -7.75
+    ],
+    "edge_z": -0.1,
+    "crown_z": -0.05
+   }
+  },
+  "SM_DKX_Road_E": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "cobble road X 25.2..130.0, Y -2.85..-7.75: crowned -0.10 at the edges to -0.05 on the centre line (M_DKX_RoadCobble, world XY)",
+   "ucx": 13,
+   "tris": 1918,
+   "slots": [
+    "M_DKX_RoadCobble"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Road_E.fbx",
+   "pivot_world": [
+    77.6,
+    -5.3,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "x": [
+     25.2,
+     130.0
+    ],
+    "y": [
+     -2.85,
+     -7.75
+    ],
+    "edge_z": -0.1,
+    "crown_z": -0.05
+   }
+  },
+  "SM_DKX_Verge_W": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "wall-foot verge X -86.0..22.0, Y -0.96..-2.3: soil, 0.00 at the wall foot to -0.01 at the kerb; packed earth across the side-lane mouths",
+   "ucx": 14,
+   "tris": 464,
+   "slots": [
+    "M_DKX_VergeSoil",
+    "M_DKX_LaneEarth"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Verge_W.fbx",
+   "pivot_world": [
+    -32.0,
+    -1.63,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_Verge_E": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "wall-foot verge X 22.0..130.0, Y -0.96..-2.3: soil, 0.00 at the wall foot to -0.01 at the kerb; packed earth across the side-lane mouths",
+   "ucx": 14,
+   "tris": 464,
+   "slots": [
+    "M_DKX_VergeSoil",
+    "M_DKX_LaneEarth"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Verge_E.fbx",
+   "pivot_world": [
+    76.0,
+    -1.63,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_FarVerge_W": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "terrace-edge strip X -86.0..14.4, Y -7.95..-9.2 at 0.00 (soil): the poles, street lamps and the rail fence stand here",
+   "ucx": 13,
+   "tris": 304,
+   "slots": [
+    "M_DKX_VergeSoil"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_FarVerge_W.fbx",
+   "pivot_world": [
+    -35.8,
+    -8.575,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_FarVerge_E": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "terrace-edge strip X 29.6..130.0, Y -7.95..-9.2 at 0.00 (soil): the poles, street lamps and the rail fence stand here",
+   "ucx": 13,
+   "tris": 304,
+   "slots": [
+    "M_DKX_VergeSoil"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_FarVerge_E.fbx",
+   "pivot_world": [
+    79.8,
+    -8.575,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_Kerb_8m": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "granite kerb run 8.0 m: dressed stones 0.7-1.3 m long, 0.20 wide, 0.28 deep, rounded arrises (M_DJ_Granite)",
+   "ucx": 1,
+   "tris": 352,
+   "slots": [
+    "M_DJ_Granite"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Kerb_8m.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "stones": 8,
+    "length": 8.0
+   }
+  },
+  "SM_DKX_Kerb_4m": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "granite kerb run 4.0 m: dressed stones 0.7-1.3 m long, 0.20 wide, 0.28 deep, rounded arrises (M_DJ_Granite)",
+   "ucx": 1,
+   "tris": 176,
+   "slots": [
+    "M_DJ_Granite"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Kerb_4m.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "stones": 4,
+    "length": 4.0
+   }
+  },
+  "SM_DKX_Gutter_8m": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "granite gutter channel 8.0 m: dished stones about 1 m long, 0.35 wide, lips at the road edge level, 4.5 cm dip (M_DJ_Granite)",
+   "ucx": 1,
+   "tris": 288,
+   "slots": [
+    "M_DJ_Granite"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Gutter_8m.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "stones": 8,
+    "length": 8.0,
+    "dip_m": 0.045
+   }
+  },
+  "SM_DKX_Gutter_4m": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "granite gutter channel 4.0 m: dished stones about 1 m long, 0.35 wide, lips at the road edge level, 4.5 cm dip (M_DJ_Granite)",
+   "ucx": 1,
+   "tris": 144,
+   "slots": [
+    "M_DJ_Granite"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Gutter_4m.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "stones": 4,
+    "length": 4.0,
+    "dip_m": 0.045
+   }
+  },
+  "SM_DKX_Landing": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "granite slab landing X 14.4..29.6, Y -7.75..-9.2 at +0.02 between the street lamps (dojo1_reference1): a course of long dressed edge stones on the road side, then slab rows",
+   "ucx": 1,
+   "tris": 2860,
+   "slots": [
+    "M_DJ_Granite"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Landing.fbx",
+   "pivot_world": [
+    22.0,
+    -8.475,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "x": [
+     14.4,
+     29.6
+    ],
+    "y": [
+     -7.75,
+     -9.2
+    ],
+    "top": 0.02
+   }
+  },
+  "SM_DKX_RailFence_4m": {
+   "class": "thin",
+   "folder": "Outside/Street",
+   "note": "timber post-and-rail fence, 4 m module (dojo1_reference1's terrace-edge fence): 0.10 m posts at 0 and 2 m, 1.0 m tall with a pyramid top, a top rail and a mid rail through the posts (M_DJ_TimberDark)",
+   "ucx": 1,
+   "tris": 184,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_RailFence_4m.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "height": 1.02,
+    "posts_x": [
+     0.0,
+     2.0
+    ],
+    "rails_z": [
+     [
+      0.84,
+      0.91
+     ],
+     [
+      0.44,
+      0.5
+     ]
+    ]
+   }
+  },
+  "SM_DKX_Terrace_8m": {
+   "class": "building",
+   "folder": "Outside/Street",
+   "note": "terrace edge, 8 m: granite coping Y -9.2..-9.5 top +0.04, rubble retaining wall down to -2.45 at Y -9.75 (M_DJ_GraniteRubble on the face)",
+   "ucx": 1,
+   "tris": 948,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_GraniteRubble"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Terrace_8m.fbx",
+   "pivot_world": [
+    0.0,
+    -9.2,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "coping_top": 0.04,
+    "face_bottom": [
+     -9.75,
+     -2.45
+    ],
+    "batter_deg": 6.12
+   }
+  },
+  "SM_DKX_Canal_8m": {
+   "class": "ground",
+   "folder": "Outside/Street",
+   "note": "canal module, 8 m: soil bed at -2.45 (Y -9.75..-11.4), the far bank's rubble wall up to -1.46 with granite coping",
+   "ucx": 2,
+   "tris": 672,
+   "slots": [
+    "M_DKX_VergeSoil",
+    "M_DJ_GraniteRubble",
+    "M_DJ_Granite"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Canal_8m.fbx",
+   "pivot_world": [
+    0.0,
+    -9.2,
+    0.0
+   ],
+   "local_pivot": true
+  },
+  "SM_DKX_Water": {
+   "class": "nocollision",
+   "folder": "Outside/Street",
+   "note": "canal water plane X -86.0..130.0, Y -9.68..-11.43 at -2.05 (M_DKX_Water): no collision (token UCX)",
+   "ucx": 1,
+   "tris": 54,
+   "slots": [
+    "M_DKX_Water"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Water.fbx",
+   "pivot_world": [
+    22.0,
+    -10.555,
+    -2.05
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_Ground_South": {
+   "class": "ground",
+   "folder": "Outside/Ground",
+   "note": "the lower level X -86.0..130.0, Y -11.75..-34.0: the lower lane (packed earth, -1.5) and the house plots beyond (soil, a gentle undulation)",
+   "ucx": 81,
+   "tris": 2852,
+   "slots": [
+    "M_DKX_LaneEarth",
+    "M_DKX_VergeSoil"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ground_South.fbx",
+   "pivot_world": [
+    22.0,
+    -22.875,
+    -1.5
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_BoardFence_4m": {
+   "class": "building",
+   "folder": "Outside/Street",
+   "note": "board fence, 4 m module, 1.8 m (dojo1_reference1's lower-lane fence): posts at 0 and 2 m, two back rails, vertical boards facing the lane (+Y), a cap board (M_DJ_TimberDark)",
+   "ucx": 1,
+   "tris": 1408,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_BoardFence_4m.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true
+  },
+  "SM_DKX_Ground_W": {
+   "class": "ground",
+   "folder": "Outside/Ground",
+   "note": "outside ground X -86.0..-0.96, Y -0.96..76.0: soil within 0.05 m of the courtyard level for 4 m round the walls, then a gentle undulation (+-0.3 m); packed-earth lanes (replaces SM_DGB_Ground_Outside)",
+   "ucx": 72,
+   "tris": 3940,
+   "slots": [
+    "M_DKX_VergeSoil",
+    "M_DKX_LaneEarth"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ground_W.fbx",
+   "pivot_world": [
+    -43.48,
+    37.52,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_Ground_E": {
+   "class": "ground",
+   "folder": "Outside/Ground",
+   "note": "outside ground X 44.96..130.0, Y -0.96..76.0: soil within 0.05 m of the courtyard level for 4 m round the walls, then a gentle undulation (+-0.3 m); packed-earth lanes (replaces SM_DGB_Ground_Outside)",
+   "ucx": 72,
+   "tris": 3940,
+   "slots": [
+    "M_DKX_VergeSoil",
+    "M_DKX_LaneEarth"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ground_E.fbx",
+   "pivot_world": [
+    87.48,
+    37.52,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_Ground_N": {
+   "class": "ground",
+   "folder": "Outside/Ground",
+   "note": "outside ground X -0.96..44.96, Y 36.96..76.0: soil within 0.05 m of the courtyard level for 4 m round the walls, then a gentle undulation (+-0.3 m); packed-earth lanes (replaces SM_DGB_Ground_Outside)",
+   "ucx": 20,
+   "tris": 1192,
+   "slots": [
+    "M_DKX_VergeSoil",
+    "M_DKX_LaneEarth"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ground_N.fbx",
+   "pivot_world": [
+    22.0,
+    56.48,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_AlleyFence_W": {
+   "class": "building",
+   "folder": "Boundary_1v1",
+   "note": "rear-alley fence (spec 4.6, 1v1 only): dark vertical boards on the courtyard face, back rails, a cap board, end posts, and a braced wicket gate (0.9 m) at the veranda level with iron strap hinges and a ring pull; collision = the grey-box's 2.5 x 0.1 x 2.0 m box exactly",
+   "ucx": 1,
+   "tris": 1864,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_AlleyFence_W.fbx",
+   "pivot_world": [
+    10.5,
+    34.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "hull_local": [
+     0.0,
+     2.5,
+     0.0,
+     0.1,
+     0.0,
+     2.0
+    ],
+    "pivot_world": [
+     10.5,
+     34.0,
+     0.0
+    ],
+    "hull_world": [
+     10.5,
+     13.0,
+     34.0,
+     34.1,
+     0.0,
+     2.0
+    ],
+    "gate_local_x": [
+     0.755,
+     1.645
+    ],
+    "gate_sill_z": 0.5,
+    "visual_x_local": [
+     0.0,
+     2.37
+    ]
+   }
+  },
+  "SM_DKX_AlleyFence_E": {
+   "class": "building",
+   "folder": "Boundary_1v1",
+   "note": "rear-alley fence (spec 4.6, 1v1 only): dark vertical boards on the courtyard face, back rails, a cap board, end posts, and a braced wicket gate (0.9 m) at the veranda level with iron strap hinges and a ring pull; collision = the grey-box's 2.5 x 0.1 x 2.0 m box exactly",
+   "ucx": 1,
+   "tris": 1864,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_AlleyFence_E.fbx",
+   "pivot_world": [
+    31.0,
+    34.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "hull_local": [
+     0.0,
+     2.5,
+     0.0,
+     0.1,
+     0.0,
+     2.0
+    ],
+    "pivot_world": [
+     31.0,
+     34.0,
+     0.0
+    ],
+    "hull_world": [
+     31.0,
+     33.5,
+     34.0,
+     34.1,
+     0.0,
+     2.0
+    ],
+    "gate_local_x": [
+     0.855,
+     1.745
+    ],
+    "gate_sill_z": 0.5,
+    "visual_x_local": [
+     0.13,
+     2.5
+    ]
+   }
+  },
+  "SM_DKX_PocketFence_W": {
+   "class": "building",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (opens in the BR): the pocket fence behind the corridor (spec 4.6), a board fence in the alley fence's style from the corridor's last post to the alley fence, 2.0 m, with a return panel to the post; collision = the fence box and the return box",
+   "ucx": 2,
+   "tris": 968,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_PocketFence_W.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "placement": {
+     "loc": [
+      10.6,
+      32.24,
+      0.0
+     ],
+     "rot_z": 90.0
+    },
+    "hull_world_min_max": [
+     [
+      10.5,
+      32.24,
+      0.0,
+      10.6,
+      34.0,
+      2.0
+     ],
+     [
+      10.14,
+      32.24,
+      0.0,
+      10.5,
+      32.34,
+      2.0
+     ]
+    ],
+    "length_m": 1.76,
+    "height_m": 1.98,
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_PocketFence_E": {
+   "class": "building",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (opens in the BR): the pocket fence behind the corridor (spec 4.6), a board fence in the alley fence's style from the corridor's last post to the alley fence, 2.0 m, with a return panel to the post; collision = the fence box and the return box",
+   "ucx": 2,
+   "tris": 924,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_PocketFence_E.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "placement": {
+     "loc": [
+      33.4,
+      32.24,
+      0.0
+     ],
+     "rot_z": 90.0
+    },
+    "hull_world_min_max": [
+     [
+      33.4,
+      32.24,
+      0.0,
+      33.5,
+      34.0,
+      2.0
+     ],
+     [
+      33.5,
+      32.24,
+      0.0,
+      33.86,
+      32.34,
+      2.0
+     ]
+    ],
+    "length_m": 1.76,
+    "height_m": 1.98,
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_PocketSide_W": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the pocket's open side along the hall's lower-roof eave line: full height from the corridor's north edge to the alley fence (behind the visible pocket fence and over its top), and above +2.75 from the corridor ridge (the gap X 10.30-10.50 between the corridor roof and the hall's lower side roof, and the lower roof's eave)",
+   "ucx": 2,
+   "tris": 24,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_PocketSide_W.fbx",
+   "pivot_world": [
+    10.45,
+    33.16,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      10.4,
+      10.5,
+      32.22,
+      34.1,
+      0.0,
+      20.0
+     ],
+     [
+      10.4,
+      10.5,
+      31.0,
+      32.23,
+      2.75,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_PocketSide_E": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the pocket's open side along the hall's lower-roof eave line: full height from the corridor's north edge to the alley fence (behind the visible pocket fence and over its top), and above +2.75 from the corridor ridge (the gap X 10.30-10.50 between the corridor roof and the hall's lower side roof, and the lower roof's eave) (mirrored about X 22)",
+   "ucx": 2,
+   "tris": 24,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_PocketSide_E.fbx",
+   "pivot_world": [
+    33.55,
+    33.16,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      33.5,
+      33.6,
+      32.22,
+      34.1,
+      0.0,
+      20.0
+     ],
+     [
+      33.5,
+      33.6,
+      31.0,
+      32.23,
+      2.75,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_CorridorRoof_W": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the corridor ridge from the storehouse wall to the eave-line curtain (the north slope drops into the pocket) and the link along the storehouse's east wall up to its roof cut (the grey-box set left a 0.6 m slot between them)",
+   "ucx": 2,
+   "tris": 24,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_CorridorRoof_W.fbx",
+   "pivot_world": [
+    8.75,
+    31.05,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      7.0,
+      10.5,
+      31.0,
+      31.1,
+      2.75,
+      20.0
+     ],
+     [
+      6.99,
+      7.1,
+      31.0,
+      31.8,
+      2.75,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_CorridorRoof_E": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the corridor ridge from the storehouse wall to the eave-line curtain (the north slope drops into the pocket) and the link along the storehouse's east wall up to its roof cut (the grey-box set left a 0.6 m slot between them) (mirrored about X 22)",
+   "ucx": 2,
+   "tris": 24,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_CorridorRoof_E.fbx",
+   "pivot_world": [
+    35.25,
+    31.05,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      33.5,
+      37.0,
+      31.0,
+      31.1,
+      2.75,
+      20.0
+     ],
+     [
+      36.9,
+      37.01,
+      31.0,
+      31.8,
+      2.75,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_OutbuildingRoof_W": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the storehouse roof cut at Y 31.7 (its north half and the north-west wall-top corner behind it are part of the sealed area; routes 2 and 3 stay south of it)",
+   "ucx": 1,
+   "tris": 12,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_OutbuildingRoof_W.fbx",
+   "pivot_world": [
+    3.05,
+    31.75,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      -1.0,
+      7.1,
+      31.7,
+      31.8,
+      2.0,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_OutbuildingRoof_E": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the storehouse roof cut at Y 31.7 (its north half and the north-west wall-top corner behind it are part of the sealed area; routes 2 and 3 stay south of it) (mirrored about X 22)",
+   "ucx": 1,
+   "tris": 12,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_OutbuildingRoof_E.fbx",
+   "pivot_world": [
+    40.95,
+    31.75,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      36.9,
+      45.0,
+      31.7,
+      31.8,
+      2.0,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_HallRear": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the strip's south face: the hall's rear wall line from eave curtain to eave curtain, full height (over both alley fences, the lower side roofs' north ends and the upper roof's rear overhang)",
+   "ucx": 1,
+   "tris": 12,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_HallRear.fbx",
+   "pivot_world": [
+    22.0,
+    34.05,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      10.4,
+      33.6,
+      34.0,
+      34.1,
+      0.0,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_HallUpperRear": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the upper roof's rear half: the ridge (spec 5.4) plus both hip eaves from the ridge to the rear wall line (from the lower side roofs a double jump reached the hips' rear halves); z0 +5.45 is at the upper eave, so the lower roof keeps every walkable metre",
+   "ucx": 3,
+   "tris": 36,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_HallUpperRear.fbx",
+   "pivot_world": [
+    22.0,
+    29.05,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      12.0,
+      32.0,
+      29.0,
+      29.1,
+      5.3,
+      20.0
+     ],
+     [
+      12.0,
+      12.1,
+      28.99,
+      34.1,
+      5.45,
+      20.0
+     ],
+     [
+      31.9,
+      32.0,
+      28.99,
+      34.1,
+      5.45,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_1v1_NorthWallTop": {
+   "class": "boundary",
+   "folder": "Boundary_1v1",
+   "note": "round 6, 1v1 ONLY (the BR drops it): invisible Pawn-only blocker, hidden in game, up to the 1v1 ceiling +20.0 - the north wall top (spec 5.2, 1v1 only), the whole length: the strip's and both pockets' north side above the wall",
+   "ucx": 1,
+   "tris": 12,
+   "slots": [
+    "M_DKX_Blocker1v1"
+   ],
+   "nanite": false,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_1v1_NorthWallTop.fbx",
+   "pivot_world": [
+    22.0,
+    36.5,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "boxes_world": [
+     [
+      -1.0,
+      45.0,
+      36.0,
+      37.0,
+      2.0,
+      20.0
+     ]
+    ],
+    "onev1_only": true
+   }
+  },
+  "SM_DKX_House_A": {
+   "class": "building",
+   "folder": "Outside/Town",
+   "note": "two-storey town house (machiya): gable roof along the frontage, a pent roof between the storeys, lattice front, slatted upper windows",
+   "ucx": 1,
+   "tris": 5552,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DKX_Kawara",
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_House_A.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "W": 7.2,
+    "D": 9.0,
+    "storeys": 2,
+    "roof": "gable",
+    "eave": 5.2
+   }
+  },
+  "SM_DKX_House_B": {
+   "class": "building",
+   "folder": "Outside/Town",
+   "note": "one-storey house with a hipped roof (earthen plaster)",
+   "ucx": 1,
+   "tris": 8190,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterEarth",
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DKX_Kawara",
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_House_B.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "W": 10.0,
+    "D": 7.0,
+    "storeys": 1,
+    "roof": "hip",
+    "eave": 3.1
+   }
+  },
+  "SM_DKX_House_C": {
+   "class": "building",
+   "folder": "Outside/Town",
+   "note": "two-storey plastered storehouse, gable to the front",
+   "ucx": 1,
+   "tris": 4478,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDark",
+    "M_DKX_Kawara",
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_House_C.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "W": 5.6,
+    "D": 7.0,
+    "storeys": 2,
+    "roof": "gable_front",
+    "eave": 5.0
+   }
+  },
+  "SM_DKX_House_D": {
+   "class": "building",
+   "folder": "Outside/Town",
+   "note": "long one-and-a-half-storey row house, gable roof along the frontage",
+   "ucx": 1,
+   "tris": 6882,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterEarth",
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DKX_Kawara",
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_House_D.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "W": 14.0,
+    "D": 6.2,
+    "storeys": 1,
+    "roof": "gable",
+    "eave": 3.6
+   }
+  },
+  "SM_DKX_House_E": {
+   "class": "building",
+   "folder": "Outside/Town",
+   "note": "large two-storey house with a hipped roof and a front pent roof",
+   "ucx": 1,
+   "tris": 10768,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DKX_Kawara",
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_House_E.fbx",
+   "pivot_world": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "local_pivot": true,
+   "extra": {
+    "W": 11.0,
+    "D": 8.4,
+    "storeys": 2,
+    "roof": "hip",
+    "eave": 5.6
+   }
+  },
+  "SM_DKX_FarGround": {
+   "class": "nocollision",
+   "folder": "Outside/Far",
+   "note": "the ground under the far town from the town rectangle's edge (0.3 m under it) out under the first ridge ring's foot (M_DKX_FarGround); no collision (token UCX)",
+   "ucx": 1,
+   "tris": 960,
+   "slots": [
+    "M_DKX_FarGround"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_FarGround.fbx",
+   "pivot_world": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "local_pivot": false
+  },
+  "SM_DKX_FarTown": {
+   "class": "nocollision",
+   "folder": "Outside/Far",
+   "note": "round 6: the far town (impostor houses to 430 m, about 20 tris a house, plus an edge row closing the town rectangle): walls in M_DKX_FarFacade (an atlas baked from this track's own House_A..E), roofs in M_DKX_FarKawara; no collision (token UCX)",
+   "ucx": 1,
+   "tris": 35866,
+   "slots": [
+    "M_DKX_FarFacade",
+    "M_DKX_FarKawara"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_FarTown.fbx",
+   "pivot_world": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "houses": 1966,
+    "edge_row_houses": 74,
+    "radius_m": 430.0,
+    "materials": [
+     "M_DKX_FarFacade",
+     "M_DKX_FarKawara"
+    ],
+    "facade_atlas": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\round6\\build\\facade_tiles\\tiles_atlas.json"
+   }
+  },
+  "SM_DKX_Ridge1": {
+   "class": "nocollision",
+   "folder": "Outside/Far",
+   "note": "round 5 f1 ridge ring 1 of 4 (0.45-0.83 km, ridge 14-46 m): its own flat emissive colour, lighter and bluer with distance (the far ridge near the sky colour), the height fog on top; no collision (token UCX)",
+   "ucx": 1,
+   "tris": 8640,
+   "slots": [
+    "M_DKX_Ridge1"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ridge1.fbx",
+   "pivot_world": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "radius_m": [
+     450.0,
+     560.0,
+     830.0
+    ],
+    "ridge_m": [
+     14.0,
+     46.0
+    ],
+    "elevation_deg_from_centre": [
+     1.43,
+     4.7
+    ],
+    "samples": 1440,
+    "max_silhouette_slope": 0.97,
+    "sharp_peaks": 17,
+    "normals": "custom, toward the compound centre, tilted 12 deg up (no crest rim)",
+    "custom_normal_z_range": [
+     0.2053,
+     0.2056
+    ]
+   }
+  },
+  "SM_DKX_Ridge2": {
+   "class": "nocollision",
+   "folder": "Outside/Far",
+   "note": "round 5 f1 ridge ring 2 of 4 (0.80-1.33 km, ridge 28-88 m): its own flat emissive colour, lighter and bluer with distance (the far ridge near the sky colour), the height fog on top; no collision (token UCX)",
+   "ucx": 1,
+   "tris": 8640,
+   "slots": [
+    "M_DKX_Ridge2"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ridge2.fbx",
+   "pivot_world": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "radius_m": [
+     800.0,
+     980.0,
+     1330.0
+    ],
+    "ridge_m": [
+     28.0,
+     88.0
+    ],
+    "elevation_deg_from_centre": [
+     1.64,
+     5.13
+    ],
+    "samples": 1440,
+    "max_silhouette_slope": 1.45,
+    "sharp_peaks": 14,
+    "normals": "custom, toward the compound centre, tilted 12 deg up (no crest rim)",
+    "custom_normal_z_range": [
+     0.2052,
+     0.2056
+    ]
+   }
+  },
+  "SM_DKX_Ridge3": {
+   "class": "nocollision",
+   "folder": "Outside/Far",
+   "note": "round 5 f1 ridge ring 3 of 4 (1.30-1.88 km, ridge 50-150 m): its own flat emissive colour, lighter and bluer with distance (the far ridge near the sky colour), the height fog on top; no collision (token UCX)",
+   "ucx": 1,
+   "tris": 8640,
+   "slots": [
+    "M_DKX_Ridge3"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ridge3.fbx",
+   "pivot_world": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "radius_m": [
+     1300.0,
+     1520.0,
+     1880.0
+    ],
+    "ridge_m": [
+     50.0,
+     150.0
+    ],
+    "elevation_deg_from_centre": [
+     1.88,
+     5.64
+    ],
+    "samples": 1440,
+    "max_silhouette_slope": 1.28,
+    "sharp_peaks": 13,
+    "normals": "custom, toward the compound centre, tilted 12 deg up (no crest rim)",
+    "custom_normal_z_range": [
+     0.2052,
+     0.2056
+    ]
+   }
+  },
+  "SM_DKX_Ridge4": {
+   "class": "nocollision",
+   "folder": "Outside/Far",
+   "note": "round 5 f1 ridge ring 4 of 4 (1.85-2.25 km, ridge 85-225 m): its own flat emissive colour, lighter and bluer with distance (the far ridge near the sky colour), the height fog on top; no collision (token UCX)",
+   "ucx": 1,
+   "tris": 8640,
+   "slots": [
+    "M_DKX_Ridge4"
+   ],
+   "nanite": true,
+   "kit": "outside",
+   "fbx": "Exports/DojoKit/Outside/SM_DKX_Ridge4.fbx",
+   "pivot_world": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "local_pivot": false,
+   "extra": {
+    "radius_m": [
+     1850.0,
+     2080.0,
+     2250.0
+    ],
+    "ridge_m": [
+     85.0,
+     225.0
+    ],
+    "elevation_deg_from_centre": [
+     2.34,
+     6.17
+    ],
+    "samples": 1440,
+    "max_silhouette_slope": 1.37,
+    "sharp_peaks": 7,
+    "normals": "custom, toward the compound centre, tilted 12 deg up (no crest rim)",
+    "custom_normal_z_range": [
+     0.2053,
+     0.2056
+    ]
+   }
+  }
+ },
+ "instances": [
+  {
+   "piece": "SM_DKX_Road_W",
+   "loc": [
+    -33.6,
+    -5.3,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -7.75,
+    -0.3,
+    18.8,
+    -2.85,
+    -0.0463
+   ]
+  },
+  {
+   "piece": "SM_DKX_Road_Gate",
+   "loc": [
+    22.0,
+    -5.075,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    18.8,
+    -7.75,
+    -0.3,
+    25.2,
+    -2.4,
+    -0.0461
+   ]
+  },
+  {
+   "piece": "SM_DKX_Road_E",
+   "loc": [
+    77.6,
+    -5.3,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    25.2,
+    -7.75,
+    -0.3,
+    130.0,
+    -2.85,
+    -0.0461
+   ]
+  },
+  {
+   "piece": "SM_DKX_Verge_W",
+   "loc": [
+    -32.0,
+    -1.63,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -2.3,
+    -0.24,
+    22.0,
+    -0.96,
+    0.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_Verge_E",
+   "loc": [
+    76.0,
+    -1.63,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    22.0,
+    -2.3,
+    -0.24,
+    130.0,
+    -0.96,
+    0.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_FarVerge_W",
+   "loc": [
+    -35.8,
+    -8.575,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -9.2,
+    -0.2,
+    14.4,
+    -7.95,
+    0.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_FarVerge_E",
+   "loc": [
+    79.8,
+    -8.575,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    29.6,
+    -9.2,
+    -0.2,
+    130.0,
+    -7.95,
+    0.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_Landing",
+   "loc": [
+    22.0,
+    -8.475,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    14.406,
+    -9.193,
+    -0.3,
+    29.594,
+    -7.75,
+    0.0219
+   ]
+  },
+  {
+   "piece": "SM_DKX_Water",
+   "loc": [
+    22.0,
+    -10.555,
+    -2.05
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "nocollision",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -11.43,
+    -2.05,
+    130.0,
+    -9.68,
+    -2.05
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ground_South",
+   "loc": [
+    22.0,
+    -22.875,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Ground",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -34.0,
+    -1.8756,
+    130.0,
+    -11.75,
+    -1.4003
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ground_W",
+   "loc": [
+    -43.48,
+    37.52,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Ground",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -0.96,
+    -0.4614,
+    -0.96,
+    76.0,
+    0.2823
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ground_E",
+   "loc": [
+    87.48,
+    37.52,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Ground",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    44.96,
+    -0.96,
+    -0.4587,
+    130.0,
+    76.0,
+    0.2856
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ground_N",
+   "loc": [
+    22.0,
+    56.48,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Ground",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -0.96,
+    36.96,
+    -0.4758,
+    44.96,
+    76.0,
+    0.2729
+   ]
+  },
+  {
+   "piece": "SM_DKX_AlleyFence_W",
+   "loc": [
+    10.5,
+    34.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.5,
+    33.996,
+    -0.0,
+    12.87,
+    34.1,
+    1.98
+   ]
+  },
+  {
+   "piece": "SM_DKX_AlleyFence_E",
+   "loc": [
+    31.0,
+    34.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    31.13,
+    33.996,
+    -0.0,
+    33.5,
+    34.1,
+    1.98
+   ]
+  },
+  {
+   "piece": "SM_DKX_PocketFence_W",
+   "loc": [
+    10.6,
+    32.24,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.26,
+    32.24,
+    -0.0,
+    10.6,
+    34.0,
+    1.98
+   ]
+  },
+  {
+   "piece": "SM_DKX_PocketFence_E",
+   "loc": [
+    33.4,
+    32.24,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    33.4,
+    32.24,
+    -0.0,
+    33.74,
+    34.0,
+    1.98
+   ]
+  },
+  {
+   "piece": "SM_DKX_FarGround",
+   "loc": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Far",
+   "collision_class": "nocollision",
+   "kit": "outside",
+   "bbox_min_max": [
+    -448.0,
+    -452.0,
+    -4.0,
+    492.0,
+    488.0,
+    -0.125
+   ]
+  },
+  {
+   "piece": "SM_DKX_FarTown",
+   "loc": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Far",
+   "collision_class": "nocollision",
+   "kit": "outside",
+   "bbox_min_max": [
+    -401.4819,
+    -397.6579,
+    -4.199,
+    438.5649,
+    444.7107,
+    7.4983
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ridge1",
+   "loc": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Far",
+   "collision_class": "nocollision",
+   "kit": "outside",
+   "bbox_min_max": [
+    -808.0,
+    -812.0,
+    -14.0,
+    852.0,
+    848.0,
+    46.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ridge2",
+   "loc": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Far",
+   "collision_class": "nocollision",
+   "kit": "outside",
+   "bbox_min_max": [
+    -1308.0,
+    -1312.0,
+    -14.0,
+    1352.0,
+    1348.0,
+    88.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ridge3",
+   "loc": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Far",
+   "collision_class": "nocollision",
+   "kit": "outside",
+   "bbox_min_max": [
+    -1858.0,
+    -1862.0,
+    -14.0,
+    1902.0,
+    1898.0,
+    150.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_Ridge4",
+   "loc": [
+    22.0,
+    18.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Far",
+   "collision_class": "nocollision",
+   "kit": "outside",
+   "bbox_min_max": [
+    -2228.0,
+    -2232.0,
+    -14.0,
+    2272.0,
+    2268.0,
+    225.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_PocketSide_W",
+   "loc": [
+    10.45,
+    33.16,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.4,
+    31.0,
+    0.0,
+    10.5,
+    34.1,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_PocketSide_E",
+   "loc": [
+    33.55,
+    33.16,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    33.5,
+    31.0,
+    0.0,
+    33.6,
+    34.1,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_CorridorRoof_W",
+   "loc": [
+    8.75,
+    31.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    6.99,
+    31.0,
+    2.75,
+    10.5,
+    31.8,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_CorridorRoof_E",
+   "loc": [
+    35.25,
+    31.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    33.5,
+    31.0,
+    2.75,
+    37.01,
+    31.8,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_OutbuildingRoof_W",
+   "loc": [
+    3.05,
+    31.75,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    -1.0,
+    31.7,
+    2.0,
+    7.1,
+    31.8,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_OutbuildingRoof_E",
+   "loc": [
+    40.95,
+    31.75,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    36.9,
+    31.7,
+    2.0,
+    45.0,
+    31.8,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_HallRear",
+   "loc": [
+    22.0,
+    34.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.4,
+    34.0,
+    0.0,
+    33.6,
+    34.1,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_HallUpperRear",
+   "loc": [
+    22.0,
+    29.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    12.0,
+    28.99,
+    5.3,
+    32.0,
+    34.1,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_1v1_NorthWallTop",
+   "loc": [
+    22.0,
+    36.5,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Boundary_1v1",
+   "collision_class": "boundary",
+   "kit": "outside",
+   "bbox_min_max": [
+    -1.0,
+    36.0,
+    2.0,
+    45.0,
+    37.0,
+    20.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -86.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -85.996,
+    -2.5,
+    -0.25,
+    -78.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -78.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -77.996,
+    -2.5,
+    -0.25,
+    -70.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -70.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -69.996,
+    -2.5,
+    -0.25,
+    -62.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -62.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -61.996,
+    -2.5,
+    -0.25,
+    -54.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -54.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -53.996,
+    -2.5,
+    -0.25,
+    -46.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -46.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -45.996,
+    -2.5,
+    -0.25,
+    -38.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -38.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -37.996,
+    -2.5,
+    -0.25,
+    -30.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -30.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -29.996,
+    -2.5,
+    -0.25,
+    -22.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -22.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -21.996,
+    -2.5,
+    -0.25,
+    -14.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -14.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -13.996,
+    -2.5,
+    -0.25,
+    -6.004,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -6.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -5.996,
+    -2.5,
+    -0.25,
+    1.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    2.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    2.004,
+    -2.5,
+    -0.25,
+    9.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    10.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.004,
+    -2.5,
+    -0.25,
+    17.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    18.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    18.004,
+    -2.5,
+    -0.25,
+    25.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    26.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    26.004,
+    -2.5,
+    -0.25,
+    33.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    34.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    34.004,
+    -2.5,
+    -0.25,
+    41.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    42.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    42.004,
+    -2.5,
+    -0.25,
+    49.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    50.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    50.004,
+    -2.5,
+    -0.25,
+    57.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    58.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    58.004,
+    -2.5,
+    -0.25,
+    65.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    66.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    66.004,
+    -2.5,
+    -0.25,
+    73.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    74.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    74.004,
+    -2.5,
+    -0.25,
+    81.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    82.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    82.004,
+    -2.5,
+    -0.25,
+    89.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    90.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    90.004,
+    -2.5,
+    -0.25,
+    97.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    98.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    98.004,
+    -2.5,
+    -0.25,
+    105.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    106.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    106.004,
+    -2.5,
+    -0.25,
+    113.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    114.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    114.004,
+    -2.5,
+    -0.25,
+    121.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    122.0,
+    -2.4,
+    0.03
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    122.004,
+    -2.5,
+    -0.25,
+    129.996,
+    -2.3,
+    0.0315
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    14.4,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    6.404,
+    -7.95,
+    -0.26,
+    14.396,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    6.4,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -1.596,
+    -7.95,
+    -0.26,
+    6.396,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -1.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -9.596,
+    -7.95,
+    -0.26,
+    -1.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -9.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -17.596,
+    -7.95,
+    -0.26,
+    -9.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -17.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -25.596,
+    -7.95,
+    -0.26,
+    -17.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -25.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -33.596,
+    -7.95,
+    -0.26,
+    -25.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -33.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -41.596,
+    -7.95,
+    -0.26,
+    -33.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -41.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -49.596,
+    -7.95,
+    -0.26,
+    -41.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -49.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -57.596,
+    -7.95,
+    -0.26,
+    -49.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -57.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -65.596,
+    -7.95,
+    -0.26,
+    -57.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -65.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -73.596,
+    -7.95,
+    -0.26,
+    -65.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    -73.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -81.596,
+    -7.95,
+    -0.26,
+    -73.604,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_4m",
+   "loc": [
+    -81.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -85.596,
+    -7.95,
+    -0.26,
+    -81.604,
+    -7.75,
+    0.0226
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    29.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    29.604,
+    -7.95,
+    -0.26,
+    37.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    37.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    37.604,
+    -7.95,
+    -0.26,
+    45.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    45.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    45.604,
+    -7.95,
+    -0.26,
+    53.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    53.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    53.604,
+    -7.95,
+    -0.26,
+    61.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    61.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    61.604,
+    -7.95,
+    -0.26,
+    69.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    69.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    69.604,
+    -7.95,
+    -0.26,
+    77.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    77.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    77.604,
+    -7.95,
+    -0.26,
+    85.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    85.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    85.604,
+    -7.95,
+    -0.26,
+    93.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    93.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    93.604,
+    -7.95,
+    -0.26,
+    101.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    101.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    101.604,
+    -7.95,
+    -0.26,
+    109.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    109.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    109.604,
+    -7.95,
+    -0.26,
+    117.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_8m",
+   "loc": [
+    117.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    117.604,
+    -7.95,
+    -0.26,
+    125.596,
+    -7.75,
+    0.0215
+   ]
+  },
+  {
+   "piece": "SM_DKX_Kerb_4m",
+   "loc": [
+    125.6,
+    -7.85,
+    0.02
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    125.604,
+    -7.95,
+    -0.26,
+    129.596,
+    -7.75,
+    0.0226
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    18.9,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.905,
+    -2.85,
+    -0.32,
+    18.895,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    10.9,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    2.905,
+    -2.85,
+    -0.32,
+    10.895,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    2.9,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -5.095,
+    -2.85,
+    -0.32,
+    2.895,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -5.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -13.095,
+    -2.85,
+    -0.32,
+    -5.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -13.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -21.095,
+    -2.85,
+    -0.32,
+    -13.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -21.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -29.095,
+    -2.85,
+    -0.32,
+    -21.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -29.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -37.095,
+    -2.85,
+    -0.32,
+    -29.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -37.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -45.095,
+    -2.85,
+    -0.32,
+    -37.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -45.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -53.095,
+    -2.85,
+    -0.32,
+    -45.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -53.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -61.095,
+    -2.85,
+    -0.32,
+    -53.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -61.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -69.095,
+    -2.85,
+    -0.32,
+    -61.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -69.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -77.095,
+    -2.85,
+    -0.32,
+    -69.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    -77.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -85.095,
+    -2.85,
+    -0.32,
+    -77.105,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    25.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    25.105,
+    -2.85,
+    -0.32,
+    33.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    33.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    33.105,
+    -2.85,
+    -0.32,
+    41.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    41.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    41.105,
+    -2.85,
+    -0.32,
+    49.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    49.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    49.105,
+    -2.85,
+    -0.32,
+    57.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    57.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    57.105,
+    -2.85,
+    -0.32,
+    65.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    65.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    65.105,
+    -2.85,
+    -0.32,
+    73.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    73.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    73.105,
+    -2.85,
+    -0.32,
+    81.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    81.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    81.105,
+    -2.85,
+    -0.32,
+    89.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    89.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    89.105,
+    -2.85,
+    -0.32,
+    97.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    97.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    97.105,
+    -2.85,
+    -0.32,
+    105.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    105.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    105.105,
+    -2.85,
+    -0.32,
+    113.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    113.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    113.105,
+    -2.85,
+    -0.32,
+    121.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_Gutter_8m",
+   "loc": [
+    121.1,
+    -2.675,
+    -0.1
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    121.105,
+    -2.85,
+    -0.32,
+    129.095,
+    -2.5,
+    -0.0987
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    14.4,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.4,
+    -9.1,
+    -0.05,
+    14.45,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    10.4,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    6.4,
+    -9.1,
+    -0.05,
+    10.45,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    6.4,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    2.4,
+    -9.1,
+    -0.05,
+    6.45,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    2.4,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -1.6,
+    -9.1,
+    -0.05,
+    2.45,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -1.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -5.6,
+    -9.1,
+    -0.05,
+    -1.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -5.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -9.6,
+    -9.1,
+    -0.05,
+    -5.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -9.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -13.6,
+    -9.1,
+    -0.05,
+    -9.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -13.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -17.6,
+    -9.1,
+    -0.05,
+    -13.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -17.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -21.6,
+    -9.1,
+    -0.05,
+    -17.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -21.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -25.6,
+    -9.1,
+    -0.05,
+    -21.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -25.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -29.6,
+    -9.1,
+    -0.05,
+    -25.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -29.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -33.6,
+    -9.1,
+    -0.05,
+    -29.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -33.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -37.6,
+    -9.1,
+    -0.05,
+    -33.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -37.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -41.6,
+    -9.1,
+    -0.05,
+    -37.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -41.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -45.6,
+    -9.1,
+    -0.05,
+    -41.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -45.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -49.6,
+    -9.1,
+    -0.05,
+    -45.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -49.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -53.6,
+    -9.1,
+    -0.05,
+    -49.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -53.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -57.6,
+    -9.1,
+    -0.05,
+    -53.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -57.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -61.6,
+    -9.1,
+    -0.05,
+    -57.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -61.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -65.6,
+    -9.1,
+    -0.05,
+    -61.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -65.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -69.6,
+    -9.1,
+    -0.05,
+    -65.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -69.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -73.6,
+    -9.1,
+    -0.05,
+    -69.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -73.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -77.6,
+    -9.1,
+    -0.05,
+    -73.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -77.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -81.6,
+    -9.1,
+    -0.05,
+    -77.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    -81.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    -85.6,
+    -9.1,
+    -0.05,
+    -81.55,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    29.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    29.55,
+    -9.1,
+    -0.05,
+    33.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    33.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    33.55,
+    -9.1,
+    -0.05,
+    37.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    37.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    37.55,
+    -9.1,
+    -0.05,
+    41.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    41.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    41.55,
+    -9.1,
+    -0.05,
+    45.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    45.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    45.55,
+    -9.1,
+    -0.05,
+    49.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    49.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    49.55,
+    -9.1,
+    -0.05,
+    53.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    53.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    53.55,
+    -9.1,
+    -0.05,
+    57.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    57.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    57.55,
+    -9.1,
+    -0.05,
+    61.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    61.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    61.55,
+    -9.1,
+    -0.05,
+    65.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    65.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    65.55,
+    -9.1,
+    -0.05,
+    69.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    69.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    69.55,
+    -9.1,
+    -0.05,
+    73.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    73.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    73.55,
+    -9.1,
+    -0.05,
+    77.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    77.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    77.55,
+    -9.1,
+    -0.05,
+    81.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    81.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    81.55,
+    -9.1,
+    -0.05,
+    85.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    85.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    85.55,
+    -9.1,
+    -0.05,
+    89.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    89.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    89.55,
+    -9.1,
+    -0.05,
+    93.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    93.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    93.55,
+    -9.1,
+    -0.05,
+    97.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    97.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    97.55,
+    -9.1,
+    -0.05,
+    101.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    101.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    101.55,
+    -9.1,
+    -0.05,
+    105.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    105.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    105.55,
+    -9.1,
+    -0.05,
+    109.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    109.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    109.55,
+    -9.1,
+    -0.05,
+    113.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    113.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    113.55,
+    -9.1,
+    -0.05,
+    117.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    117.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    117.55,
+    -9.1,
+    -0.05,
+    121.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    121.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    121.55,
+    -9.1,
+    -0.05,
+    125.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_RailFence_4m",
+   "loc": [
+    125.6,
+    -9.05,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "thin",
+   "kit": "outside",
+   "bbox_min_max": [
+    125.55,
+    -9.1,
+    -0.05,
+    129.6,
+    -9.0,
+    1.02
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -86.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -9.75,
+    -2.45,
+    -78.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -86.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -11.75,
+    -2.65,
+    -78.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -78.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -78.0,
+    -9.75,
+    -2.45,
+    -70.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -78.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -78.0,
+    -11.75,
+    -2.65,
+    -70.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -70.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -70.0,
+    -9.75,
+    -2.45,
+    -62.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -70.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -70.0,
+    -11.75,
+    -2.65,
+    -62.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -62.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -62.0,
+    -9.75,
+    -2.45,
+    -54.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -62.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -62.0,
+    -11.75,
+    -2.65,
+    -54.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -54.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -54.0,
+    -9.75,
+    -2.45,
+    -46.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -54.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -54.0,
+    -11.75,
+    -2.65,
+    -46.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -46.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -46.0,
+    -9.75,
+    -2.45,
+    -38.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -46.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -46.0,
+    -11.75,
+    -2.65,
+    -38.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -38.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -38.0,
+    -9.75,
+    -2.45,
+    -30.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -38.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -38.0,
+    -11.75,
+    -2.65,
+    -30.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -30.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -30.0,
+    -9.75,
+    -2.45,
+    -22.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -30.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -30.0,
+    -11.75,
+    -2.65,
+    -22.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -22.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -22.0,
+    -9.75,
+    -2.45,
+    -14.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -22.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -22.0,
+    -11.75,
+    -2.65,
+    -14.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -14.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -14.0,
+    -9.75,
+    -2.45,
+    -6.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -14.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -14.0,
+    -11.75,
+    -2.65,
+    -6.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    -6.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -6.0,
+    -9.75,
+    -2.45,
+    2.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    -6.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    -6.0,
+    -11.75,
+    -2.65,
+    2.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    2.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    2.0,
+    -9.75,
+    -2.45,
+    10.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    2.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    2.0,
+    -11.75,
+    -2.65,
+    10.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    10.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.0,
+    -9.75,
+    -2.45,
+    18.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    10.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.0,
+    -11.75,
+    -2.65,
+    18.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    18.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    18.0,
+    -9.75,
+    -2.45,
+    26.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    18.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    18.0,
+    -11.75,
+    -2.65,
+    26.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    26.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    26.0,
+    -9.75,
+    -2.45,
+    34.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    26.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    26.0,
+    -11.75,
+    -2.65,
+    34.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    34.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    34.0,
+    -9.75,
+    -2.45,
+    42.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    34.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    34.0,
+    -11.75,
+    -2.65,
+    42.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    42.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    42.0,
+    -9.75,
+    -2.45,
+    50.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    42.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    42.0,
+    -11.75,
+    -2.65,
+    50.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    50.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    50.0,
+    -9.75,
+    -2.45,
+    58.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    50.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    50.0,
+    -11.75,
+    -2.65,
+    58.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    58.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    58.0,
+    -9.75,
+    -2.45,
+    66.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    58.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    58.0,
+    -11.75,
+    -2.65,
+    66.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    66.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    66.0,
+    -9.75,
+    -2.45,
+    74.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    66.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    66.0,
+    -11.75,
+    -2.65,
+    74.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    74.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    74.0,
+    -9.75,
+    -2.45,
+    82.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    74.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    74.0,
+    -11.75,
+    -2.65,
+    82.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    82.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    82.0,
+    -9.75,
+    -2.45,
+    90.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    82.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    82.0,
+    -11.75,
+    -2.65,
+    90.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    90.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    90.0,
+    -9.75,
+    -2.45,
+    98.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    90.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    90.0,
+    -11.75,
+    -2.65,
+    98.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    98.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    98.0,
+    -9.75,
+    -2.45,
+    106.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    98.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    98.0,
+    -11.75,
+    -2.65,
+    106.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    106.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    106.0,
+    -9.75,
+    -2.45,
+    114.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    106.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    106.0,
+    -11.75,
+    -2.65,
+    114.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    114.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    114.0,
+    -9.75,
+    -2.45,
+    122.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    114.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    114.0,
+    -11.75,
+    -2.65,
+    122.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_Terrace_8m",
+   "loc": [
+    122.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    122.0,
+    -9.75,
+    -2.45,
+    130.0,
+    -9.2,
+    0.0408
+   ]
+  },
+  {
+   "piece": "SM_DKX_Canal_8m",
+   "loc": [
+    122.0,
+    -9.2,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "ground",
+   "kit": "outside",
+   "bbox_min_max": [
+    122.0,
+    -11.75,
+    -2.65,
+    130.0,
+    -9.73,
+    -1.4588
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -86.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -86.0,
+    -16.81,
+    -1.55,
+    -82.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -82.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -82.0,
+    -16.81,
+    -1.55,
+    -78.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -78.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -78.0,
+    -16.81,
+    -1.55,
+    -74.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -74.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -74.0,
+    -16.81,
+    -1.55,
+    -70.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -70.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -70.0,
+    -16.81,
+    -1.55,
+    -66.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -62.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -62.0,
+    -16.81,
+    -1.55,
+    -58.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -58.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -58.0,
+    -16.81,
+    -1.55,
+    -54.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -54.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -54.0,
+    -16.81,
+    -1.55,
+    -50.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -50.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -50.0,
+    -16.81,
+    -1.55,
+    -46.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -46.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -46.0,
+    -16.81,
+    -1.55,
+    -42.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -38.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -38.0,
+    -16.81,
+    -1.55,
+    -34.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -34.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -34.0,
+    -16.81,
+    -1.55,
+    -30.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -30.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -30.0,
+    -16.81,
+    -1.55,
+    -26.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -26.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -26.0,
+    -16.81,
+    -1.55,
+    -22.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -22.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -22.0,
+    -16.81,
+    -1.55,
+    -18.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -14.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -14.0,
+    -16.81,
+    -1.55,
+    -10.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -10.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -10.0,
+    -16.81,
+    -1.55,
+    -6.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -6.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -6.0,
+    -16.81,
+    -1.55,
+    -2.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    -2.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -2.0,
+    -16.81,
+    -1.55,
+    2.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    2.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    2.0,
+    -16.81,
+    -1.55,
+    6.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    10.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    10.0,
+    -16.81,
+    -1.55,
+    14.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    14.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    14.0,
+    -16.81,
+    -1.55,
+    18.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    18.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    18.0,
+    -16.81,
+    -1.55,
+    22.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    22.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    22.0,
+    -16.81,
+    -1.55,
+    26.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    26.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    26.0,
+    -16.81,
+    -1.55,
+    30.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    34.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    34.0,
+    -16.81,
+    -1.55,
+    38.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    38.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    38.0,
+    -16.81,
+    -1.55,
+    42.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    42.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    42.0,
+    -16.81,
+    -1.55,
+    46.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    46.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    46.0,
+    -16.81,
+    -1.55,
+    50.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    50.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    50.0,
+    -16.81,
+    -1.55,
+    54.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    58.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    58.0,
+    -16.81,
+    -1.55,
+    62.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    62.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    62.0,
+    -16.81,
+    -1.55,
+    66.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    66.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    66.0,
+    -16.81,
+    -1.55,
+    70.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    70.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    70.0,
+    -16.81,
+    -1.55,
+    74.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    74.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    74.0,
+    -16.81,
+    -1.55,
+    78.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    82.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    82.0,
+    -16.81,
+    -1.55,
+    86.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    86.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    86.0,
+    -16.81,
+    -1.55,
+    90.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    90.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    90.0,
+    -16.81,
+    -1.55,
+    94.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    94.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    94.0,
+    -16.81,
+    -1.55,
+    98.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    98.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    98.0,
+    -16.81,
+    -1.55,
+    102.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    106.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    106.0,
+    -16.81,
+    -1.55,
+    110.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    110.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    110.0,
+    -16.81,
+    -1.55,
+    114.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    114.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    114.0,
+    -16.81,
+    -1.55,
+    118.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    118.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    118.0,
+    -16.81,
+    -1.55,
+    122.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_BoardFence_4m",
+   "loc": [
+    122.0,
+    -16.74,
+    -1.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Outside/Street",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    122.0,
+    -16.81,
+    -1.55,
+    126.0,
+    -16.67,
+    0.3
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    -17.5,
+    2.8844,
+    -0.001
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    1.209,
+    1.0,
+    0.93
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -21.5,
+    -1.2794,
+    -0.373,
+    -13.0238,
+    7.0481,
+    6.3467
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    -17.5,
+    13.4655,
+    -0.028
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    1.063,
+    1.0,
+    0.905
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -21.6626,
+    7.4461,
+    -0.39,
+    -13.3373,
+    19.4849,
+    4.7249
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    -17.1,
+    28.9735,
+    -0.021
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    1.189,
+    1.0,
+    1.107
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -20.844,
+    20.056,
+    -0.4638,
+    -13.3561,
+    37.891,
+    6.1398
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    -17.5,
+    48.0377,
+    -0.138
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    0.963,
+    1.0,
+    0.952
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -21.5,
+    44.7212,
+    -0.5188,
+    -13.0238,
+    51.3542,
+    6.3598
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    -17.1,
+    59.4563,
+    -0.147
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    0.88,
+    1.0,
+    0.912
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -20.844,
+    52.8563,
+    -0.5118,
+    -13.3561,
+    66.0563,
+    4.9286
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    -35.5,
+    6.5874,
+    -0.046
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    0.924,
+    1.0,
+    0.956
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -39.5,
+    3.4052,
+    -0.4284,
+    -31.0238,
+    9.7696,
+    6.4792
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "loc": [
+    -36.2,
+    22.2211,
+    -0.16
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    1.205,
+    1.0,
+    0.981
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -41.0626,
+    14.7951,
+    -0.5524,
+    -31.0239,
+    29.6471,
+    7.7648
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "loc": [
+    -36.5,
+    36.0018,
+    -0.055
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    0.872,
+    1.0,
+    1.018
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -41.644,
+    32.4266,
+    -0.4622,
+    -31.0239,
+    39.577,
+    7.9039
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    -35.5,
+    49.9829,
+    -0.183
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    0.916,
+    1.0,
+    0.899
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -39.6626,
+    44.7959,
+    -0.5426,
+    -31.3373,
+    55.1699,
+    4.5384
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    -35.5,
+    62.9655,
+    -0.119
+   ],
+   "rot_z": 90.0,
+   "scale": [
+    0.971,
+    1.0,
+    1.007
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -39.5,
+    59.6214,
+    -0.5218,
+    -31.0238,
+    66.3096,
+    6.7543
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "loc": [
+    62.5,
+    3.8573,
+    -0.169
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    1.21,
+    1.0,
+    0.93
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    57.0239,
+    -1.1037,
+    -0.541,
+    67.644,
+    8.8183,
+    7.1019
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    61.5,
+    15.6311,
+    -0.151
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    1.158,
+    1.0,
+    0.958
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    57.3373,
+    9.0737,
+    -0.5342,
+    65.6627,
+    22.1884,
+    4.8803
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    61.5,
+    27.8495,
+    -0.107
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    1.203,
+    1.0,
+    1.111
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    57.0238,
+    23.7064,
+    -0.5514,
+    65.5,
+    31.9926,
+    7.4761
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    61.5,
+    48.5272,
+    0.097
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    1.149,
+    1.0,
+    0.918
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    57.0238,
+    44.5701,
+    -0.2702,
+    65.5,
+    52.4843,
+    6.3628
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    61.1,
+    61.5097,
+    -0.102
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    1.054,
+    1.0,
+    0.902
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    57.3561,
+    53.6047,
+    -0.4628,
+    64.844,
+    69.4147,
+    4.9179
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "loc": [
+    80.5,
+    6.2916,
+    -0.007
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    0.914,
+    1.0,
+    0.907
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    75.0239,
+    2.5442,
+    -0.3698,
+    85.644,
+    10.039,
+    7.0841
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    79.1,
+    24.1941,
+    -0.153
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    0.869,
+    1.0,
+    0.909
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    75.3561,
+    17.6766,
+    -0.5166,
+    82.844,
+    30.7116,
+    4.9059
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    79.5,
+    48.8989,
+    -0.076
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    0.875,
+    1.0,
+    0.979
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    75.0238,
+    45.8854,
+    -0.4676,
+    83.5,
+    51.9124,
+    6.6061
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    79.5,
+    63.3666,
+    -0.195
+   ],
+   "rot_z": -90.0,
+   "scale": [
+    1.134,
+    1.0,
+    1.126
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    75.3373,
+    56.9451,
+    -0.6454,
+    83.6627,
+    69.788,
+    5.7186
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "loc": [
+    -1.9988,
+    50.7,
+    -0.086
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    0.909
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -8.1614,
+    45.5239,
+    -0.4496,
+    4.1639,
+    55.5626,
+    7.2572
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    12.5177,
+    50.0,
+    -0.026
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    1.159,
+    1.0,
+    0.954
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    5.9547,
+    45.8373,
+    -0.4076,
+    19.0807,
+    54.1626,
+    4.9843
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    24.8996,
+    50.0,
+    -0.09
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    1.175,
+    1.0,
+    1.133
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    20.8529,
+    45.5238,
+    -0.5432,
+    28.9463,
+    54.0,
+    7.6433
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "loc": [
+    33.9122,
+    51.0,
+    -0.07
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    0.938,
+    1.0,
+    0.913
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    30.0664,
+    45.5239,
+    -0.4352,
+    37.758,
+    56.144,
+    7.068
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    -1.8684,
+    64.0,
+    0.015
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    0.826,
+    1.0,
+    0.878
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -6.5457,
+    59.8373,
+    -0.3362,
+    2.809,
+    68.1626,
+    4.6261
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    10.5206,
+    64.0,
+    0.119
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    0.843,
+    1.0,
+    0.992
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    7.6173,
+    59.5238,
+    -0.2778,
+    13.4239,
+    68.0,
+    6.8899
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    22.4285,
+    64.0,
+    -0.106
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    0.852,
+    1.0,
+    1.045
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    19.4942,
+    59.5238,
+    -0.524,
+    25.3628,
+    68.0,
+    7.0266
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    40.0144,
+    63.6,
+    -0.149
+   ],
+   "rot_z": 0.0,
+   "scale": [
+    1.18,
+    1.0,
+    1.147
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    31.1644,
+    59.8561,
+    -0.6078,
+    48.8644,
+    67.344,
+    6.2344
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    -74.1497,
+    -21.7,
+    -1.524
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.17,
+    1.0,
+    1.0
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -80.775,
+    -25.8626,
+    -1.924,
+    -67.5244,
+    -17.5373,
+    3.7279
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    -56.9736,
+    -21.3,
+    -1.547
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.199,
+    1.0,
+    1.144
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -65.9661,
+    -25.044,
+    -2.0046,
+    -47.9811,
+    -17.5561,
+    4.8197
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    -44.5422,
+    -21.7,
+    -1.502
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    0.859,
+    1.0,
+    0.895
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -47.5006,
+    -25.7,
+    -1.86,
+    -41.5838,
+    -17.2238,
+    4.6068
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "loc": [
+    -31.7015,
+    -22.4,
+    -1.543
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.139,
+    1.0,
+    0.973
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -38.7208,
+    -27.2626,
+    -1.9322,
+    -24.6823,
+    -17.2239,
+    6.3172
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    -15.7577,
+    -21.7,
+    -1.567
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.179,
+    1.0,
+    0.935
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -22.434,
+    -25.8626,
+    -1.941,
+    -9.0814,
+    -17.5373,
+    3.3435
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    -1.0994,
+    -21.7,
+    -1.551
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    0.918,
+    1.0,
+    1.045
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    -6.2977,
+    -25.8626,
+    -1.969,
+    4.0989,
+    -17.5373,
+    3.9372
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    9.5149,
+    -21.7,
+    -1.471
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    0.97,
+    1.0,
+    0.916
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    6.1743,
+    -25.7,
+    -1.8374,
+    12.8556,
+    -17.2238,
+    4.7811
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "loc": [
+    22.0409,
+    -22.4,
+    -1.516
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.069,
+    1.0,
+    0.95
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    15.453,
+    -27.2626,
+    -1.896,
+    28.6288,
+    -17.2239,
+    6.1584
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    39.335,
+    -21.3,
+    -1.516
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.162,
+    1.0,
+    1.001
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    30.62,
+    -25.044,
+    -1.9164,
+    48.05,
+    -17.5561,
+    4.0549
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "loc": [
+    52.2084,
+    -21.7,
+    -1.513
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.056,
+    1.0,
+    1.153
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    48.5716,
+    -25.7,
+    -1.9742,
+    55.8452,
+    -17.2238,
+    6.3568
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "loc": [
+    61.4666,
+    -21.7,
+    -1.484
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    0.841,
+    1.0,
+    1.044
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    56.7043,
+    -25.8626,
+    -1.9016,
+    66.2289,
+    -17.5373,
+    3.9989
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "loc": [
+    74.0178,
+    -21.3,
+    -1.519
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    0.911,
+    1.0,
+    0.993
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    67.1853,
+    -25.044,
+    -1.9162,
+    80.8503,
+    -17.5561,
+    4.0074
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "loc": [
+    87.7119,
+    -22.7,
+    -1.517
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    1.034,
+    1.0,
+    1.06
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    83.4725,
+    -27.844,
+    -1.941,
+    91.9513,
+    -17.2239,
+    6.7702
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "loc": [
+    99.8626,
+    -22.4,
+    -1.537
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    0.903,
+    1.0,
+    0.909
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    94.2977,
+    -27.2626,
+    -1.9006,
+    105.4275,
+    -17.2239,
+    5.8062
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "loc": [
+    110.6003,
+    -22.7,
+    -1.511
+   ],
+   "rot_z": 180.0,
+   "scale": [
+    0.863,
+    1.0,
+    1.146
+   ],
+   "folder": "Outside/Town",
+   "collision_class": "building",
+   "kit": "outside",
+   "bbox_min_max": [
+    107.062,
+    -27.844,
+    -1.9694,
+    114.1386,
+    -17.2239,
+    7.4486
+   ]
+  }
+ ],
+ "replaces_greybox": [
+  "SM_DGB_Ground_Outside",
+  "SM_DGB_AlleyFence"
+ ],
+ "modern_instances": [
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    -65.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    -40.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    -15.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    9.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    34.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    59.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    84.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_UtilityPole",
+   "loc": [
+    109.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the terrace-edge strip (Y -8.55), 25 m spans, crossarms across the line",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_PoleTransformer",
+   "loc": [
+    9.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: on the X 9.5 pole (feeds the drop)",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_PoleGuy",
+   "loc": [
+    -65.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: west end pole, guy aimed west",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_PoleGuy",
+   "loc": [
+    109.5,
+    -8.55,
+    0.0
+   ],
+   "rot_z": -90.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    -90.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: east end pole, guy aimed east",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -65.3458,
+    -9.4,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_A, pole X -65.5 -> -40.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -65.3458,
+    -9.0,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_B, pole X -65.5 -> -40.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -65.3458,
+    -8.1,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_C, pole X -65.5 -> -40.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -65.3458,
+    -7.7,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_D, pole X -65.5 -> -40.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Telecom25",
+   "loc": [
+    -65.4978,
+    -8.8255,
+    4.96
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: telecom bundle, pole X -65.5 -> -40.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -40.3458,
+    -9.4,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_A, pole X -40.5 -> -15.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -40.3458,
+    -9.0,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_B, pole X -40.5 -> -15.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -40.3458,
+    -8.1,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_C, pole X -40.5 -> -15.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -40.3458,
+    -7.7,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_D, pole X -40.5 -> -15.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Telecom25",
+   "loc": [
+    -40.4978,
+    -8.8255,
+    4.96
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: telecom bundle, pole X -40.5 -> -15.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -15.3458,
+    -9.4,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_A, pole X -15.5 -> 9.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -15.3458,
+    -9.0,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_B, pole X -15.5 -> 9.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -15.3458,
+    -8.1,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_C, pole X -15.5 -> 9.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    -15.3458,
+    -7.7,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_D, pole X -15.5 -> 9.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Telecom25",
+   "loc": [
+    -15.4978,
+    -8.8255,
+    4.96
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: telecom bundle, pole X -15.5 -> 9.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    9.6542,
+    -9.4,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_A, pole X 9.5 -> 34.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    9.6542,
+    -9.0,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_B, pole X 9.5 -> 34.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    9.6542,
+    -8.1,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_C, pole X 9.5 -> 34.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    9.6542,
+    -7.7,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_D, pole X 9.5 -> 34.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Telecom25",
+   "loc": [
+    9.5022,
+    -8.8255,
+    4.96
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: telecom bundle, pole X 9.5 -> 34.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    34.6542,
+    -9.4,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_A, pole X 34.5 -> 59.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    34.6542,
+    -9.0,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_B, pole X 34.5 -> 59.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    34.6542,
+    -8.1,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_C, pole X 34.5 -> 59.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    34.6542,
+    -7.7,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_D, pole X 34.5 -> 59.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Telecom25",
+   "loc": [
+    34.5022,
+    -8.8255,
+    4.96
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: telecom bundle, pole X 34.5 -> 59.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    59.6542,
+    -9.4,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_A, pole X 59.5 -> 84.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    59.6542,
+    -9.0,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_B, pole X 59.5 -> 84.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    59.6542,
+    -8.1,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_C, pole X 59.5 -> 84.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    59.6542,
+    -7.7,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_D, pole X 59.5 -> 84.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Telecom25",
+   "loc": [
+    59.5022,
+    -8.8255,
+    4.96
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: telecom bundle, pole X 59.5 -> 84.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    84.6542,
+    -9.4,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_A, pole X 84.5 -> 109.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    84.6542,
+    -9.0,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_B, pole X 84.5 -> 109.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    84.6542,
+    -8.1,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_C, pole X 84.5 -> 109.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Span25",
+   "loc": [
+    84.6542,
+    -7.7,
+    7.532
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: conductor Wire_D, pole X 84.5 -> 109.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Telecom25",
+   "loc": [
+    84.5022,
+    -8.8255,
+    4.96
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: telecom bundle, pole X 84.5 -> 109.5",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_Wire_Drop12",
+   "loc": [
+    9.5069,
+    -8.2972,
+    6.2
+   ],
+   "rot_z": 40.2171,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    40.2171
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: service drop from the X 9.5 pole's moved rack to the gatehouse west side (same end point (17.90, -1.20, 3.20))",
+   "scale": [
+    0.91598,
+    1.0,
+    1.0
+   ],
+   "collision_class": "nocollision"
+  },
+  {
+   "piece": "SM_DKP_Modern_StreetLamp_B",
+   "loc": [
+    14.0,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: street lamp B at the landing's west end on the terrace-edge strip, lantern toward the gate axis (dojo1_reference1's left lamp)",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  },
+  {
+   "piece": "SM_DKP_Modern_StreetLamp_A",
+   "loc": [
+    30.0,
+    -8.55,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "rot_xyz_deg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "folder": "Props/Modern",
+   "kit": "modern",
+   "note": "round 5 outside: street lamp A at the landing's east end, lantern toward the gate axis (reference 1's right lamp)",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "collision_class": "thin"
+  }
+ ],
+ "modern_replaces": {
+  "pieces": [
+   "SM_DKP_Modern_StreetLamp_A",
+   "SM_DKP_Modern_StreetLamp_B",
+   "SM_DKP_Modern_UtilityPole",
+   "SM_DKP_Modern_PoleTransformer",
+   "SM_DKP_Modern_PoleGuy",
+   "SM_DKP_Modern_Wire_Span25",
+   "SM_DKP_Modern_Wire_Telecom25",
+   "SM_DKP_Modern_Wire_Drop12"
+  ],
+  "showcase_rows": [
+   554,
+   555,
+   556,
+   557,
+   558,
+   559,
+   560,
+   561,
+   562,
+   563,
+   564,
+   565,
+   566,
+   567,
+   568,
+   569,
+   570,
+   571,
+   572,
+   573,
+   574,
+   575,
+   576,
+   577,
+   578,
+   579,
+   580,
+   581,
+   582,
+   583,
+   584,
+   585,
+   586,
+   587,
+   588,
+   589,
+   590
+  ],
+  "rule": "drop EVERY showcase instance of these modern pieces and place modern_instances instead (the modern kit's own files and layout_modern.json are not touched; lights follow the lamp instances through compose_showcase.lamp_lights)"
+ },
+ "onev1_only": {
+  "rule": "1v1 ONLY: the duel level places these; the battle-royale copy drops every piece listed here (the rear alley, both pockets, the north wall top and the upper roof's rear half open; the alley and pocket fences go, the rear wicket gate in the north wall becomes the back way in). Unreal: folder Dojo/Boundary_1v1 (actor tag 'Dojo/Boundary_1v1'); the invisible ones are class 'boundary' (Pawn block, Camera / Visibility ignore, hidden in game, no shadow)",
+  "ue_tag": "Dojo/Boundary_1v1",
+  "visible": [
+   {
+    "piece": "SM_DKX_AlleyFence_W",
+    "closes": "the veranda's rear end, west (round 5, the grey-box hull)"
+   },
+   {
+    "piece": "SM_DKX_AlleyFence_E",
+    "closes": "the veranda's rear end, east (round 5, the grey-box hull)"
+   },
+   {
+    "piece": "SM_DKX_PocketFence_W",
+    "closes": "round 6: the west pocket's side from the corridor's last post to the alley fence (the verify_r5 gap)"
+   },
+   {
+    "piece": "SM_DKX_PocketFence_E",
+    "closes": "round 6: the east pocket's side, mirrored"
+   }
+  ],
+  "invisible": [
+   {
+    "piece": "SM_DKX_1v1_PocketSide_W",
+    "boxes_world": [
+     [
+      10.4,
+      10.5,
+      32.22,
+      34.1,
+      0.0,
+      20.0
+     ],
+     [
+      10.4,
+      10.5,
+      31.0,
+      32.23,
+      2.75,
+      20.0
+     ]
+    ],
+    "closes": "the pocket's open side along the hall's lower-roof eave line: full height from the corridor's north edge to the alley fence (behind the visible pocket fence and over its top), and above +2.75 from the corridor ridge (the gap X 10.30-10.50 between the corridor roof and the hall's lower side roof, and the lower roof's eave)"
+   },
+   {
+    "piece": "SM_DKX_1v1_PocketSide_E",
+    "boxes_world": [
+     [
+      33.5,
+      33.6,
+      32.22,
+      34.1,
+      0.0,
+      20.0
+     ],
+     [
+      33.5,
+      33.6,
+      31.0,
+      32.23,
+      2.75,
+      20.0
+     ]
+    ],
+    "closes": "the pocket's open side along the hall's lower-roof eave line: full height from the corridor's north edge to the alley fence (behind the visible pocket fence and over its top), and above +2.75 from the corridor ridge (the gap X 10.30-10.50 between the corridor roof and the hall's lower side roof, and the lower roof's eave) (mirrored about X 22)"
+   },
+   {
+    "piece": "SM_DKX_1v1_CorridorRoof_W",
+    "boxes_world": [
+     [
+      7.0,
+      10.5,
+      31.0,
+      31.1,
+      2.75,
+      20.0
+     ],
+     [
+      6.99,
+      7.1,
+      31.0,
+      31.8,
+      2.75,
+      20.0
+     ]
+    ],
+    "closes": "the corridor ridge from the storehouse wall to the eave-line curtain (the north slope drops into the pocket) and the link along the storehouse's east wall up to its roof cut (the grey-box set left a 0.6 m slot between them)"
+   },
+   {
+    "piece": "SM_DKX_1v1_CorridorRoof_E",
+    "boxes_world": [
+     [
+      33.5,
+      37.0,
+      31.0,
+      31.1,
+      2.75,
+      20.0
+     ],
+     [
+      36.9,
+      37.01,
+      31.0,
+      31.8,
+      2.75,
+      20.0
+     ]
+    ],
+    "closes": "the corridor ridge from the storehouse wall to the eave-line curtain (the north slope drops into the pocket) and the link along the storehouse's east wall up to its roof cut (the grey-box set left a 0.6 m slot between them) (mirrored about X 22)"
+   },
+   {
+    "piece": "SM_DKX_1v1_OutbuildingRoof_W",
+    "boxes_world": [
+     [
+      -1.0,
+      7.1,
+      31.7,
+      31.8,
+      2.0,
+      20.0
+     ]
+    ],
+    "closes": "the storehouse roof cut at Y 31.7 (its north half and the north-west wall-top corner behind it are part of the sealed area; routes 2 and 3 stay south of it)"
+   },
+   {
+    "piece": "SM_DKX_1v1_OutbuildingRoof_E",
+    "boxes_world": [
+     [
+      36.9,
+      45.0,
+      31.7,
+      31.8,
+      2.0,
+      20.0
+     ]
+    ],
+    "closes": "the storehouse roof cut at Y 31.7 (its north half and the north-west wall-top corner behind it are part of the sealed area; routes 2 and 3 stay south of it) (mirrored about X 22)"
+   },
+   {
+    "piece": "SM_DKX_1v1_HallRear",
+    "boxes_world": [
+     [
+      10.4,
+      33.6,
+      34.0,
+      34.1,
+      0.0,
+      20.0
+     ]
+    ],
+    "closes": "the strip's south face: the hall's rear wall line from eave curtain to eave curtain, full height (over both alley fences, the lower side roofs' north ends and the upper roof's rear overhang)"
+   },
+   {
+    "piece": "SM_DKX_1v1_HallUpperRear",
+    "boxes_world": [
+     [
+      12.0,
+      32.0,
+      29.0,
+      29.1,
+      5.3,
+      20.0
+     ],
+     [
+      12.0,
+      12.1,
+      28.99,
+      34.1,
+      5.45,
+      20.0
+     ],
+     [
+      31.9,
+      32.0,
+      28.99,
+      34.1,
+      5.45,
+      20.0
+     ]
+    ],
+    "closes": "the upper roof's rear half: the ridge (spec 5.4) plus both hip eaves from the ridge to the rear wall line (from the lower side roofs a double jump reached the hips' rear halves); z0 +5.45 is at the upper eave, so the lower roof keeps every walkable metre"
+   },
+   {
+    "piece": "SM_DKX_1v1_NorthWallTop",
+    "boxes_world": [
+     [
+      -1.0,
+      45.0,
+      36.0,
+      37.0,
+      2.0,
+      20.0
+     ]
+    ],
+    "closes": "the north wall top (spec 5.2, 1v1 only), the whole length: the strip's and both pockets' north side above the wall"
+   }
+  ],
+  "grey_box_boundary": "SM_DGB_Boundary_1v1 (the duel level's outer ring on the wall top's outer edge, the +20 m ceiling and the grey-box ridge rects) stays as it is; this set meets the ring at Y 37.0 and the ceiling at +20.0 and repeats its rear rects, so it seals on its own",
+  "checks": "WorkFiles/dojo/build/round6/build/checks/alley_seal.json (ox_alley_seal.py: a flying-capsule flood of the whole compound, 1v1 and BR, and the CONTROL paths)"
+ },
+ "tree_slots": [
+  {
+   "x": -4.5,
+   "y": 5.0,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "west band outside the wall (reference 1: trees along the west wall)",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": -6.0,
+   "y": 13.0,
+   "z": 0.0,
+   "canopy_m": 6.5,
+   "note": "west band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": -4.5,
+   "y": 21.0,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "west band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": -6.0,
+   "y": 32.0,
+   "z": 0.0,
+   "canopy_m": 6.5,
+   "note": "west band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": -5.0,
+   "y": 39.5,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "west band, NW corner",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 48.5,
+   "y": 5.0,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "east band outside the wall (reference 1: trees along the east wall)",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 50.0,
+   "y": 13.0,
+   "z": 0.0,
+   "canopy_m": 6.5,
+   "note": "east band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 48.5,
+   "y": 21.0,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "east band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 50.0,
+   "y": 32.0,
+   "z": 0.0,
+   "canopy_m": 6.5,
+   "note": "east band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 49.0,
+   "y": 39.5,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "east band, NE corner",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 4.0,
+   "y": 39.3,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "north band behind the storehouse (reference 2: trees beyond the north wall)",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 14.0,
+   "y": 39.5,
+   "z": 0.0,
+   "canopy_m": 6.5,
+   "note": "north band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 29.0,
+   "y": 39.5,
+   "z": 0.0,
+   "canopy_m": 6.5,
+   "note": "north band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 40.0,
+   "y": 39.3,
+   "z": 0.0,
+   "canopy_m": 6.0,
+   "note": "north band",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 16.9,
+   "y": -1.75,
+   "z": 0.0,
+   "canopy_m": 1.4,
+   "note": "shrub bed west of the gate apron on the verge (reference 1: shrubs flanking the gate)",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 27.1,
+   "y": -1.75,
+   "z": 0.0,
+   "canopy_m": 1.4,
+   "note": "shrub bed east of the gate apron",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 4.0,
+   "y": -14.0,
+   "z": -1.5,
+   "canopy_m": 5.0,
+   "note": "lower lane, beyond the terrace (reference 1: trees below the terrace)",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 11.5,
+   "y": -14.5,
+   "z": -1.5,
+   "canopy_m": 5.5,
+   "note": "lower lane",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 33.0,
+   "y": -14.5,
+   "z": -1.5,
+   "canopy_m": 5.5,
+   "note": "lower lane",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 41.0,
+   "y": -14.0,
+   "z": -1.5,
+   "canopy_m": 5.0,
+   "note": "lower lane",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 3.5,
+   "y": 16.0,
+   "z": 0.0,
+   "canopy_m": 6.4,
+   "note": "COURTYARD tree W (spec 4.3; the grey-box SM_DGB_Tree stays until then, not this track's)",
+   "status": "EMPTY - vegetation pass"
+  },
+  {
+   "x": 40.5,
+   "y": 16.0,
+   "z": 0.0,
+   "canopy_m": 6.4,
+   "note": "COURTYARD tree E (spec 4.3; grey-box stays)",
+   "status": "EMPTY - vegetation pass"
+  }
+ ],
+ "houses": [
+  {
+   "piece": "SM_DKX_House_C",
+   "x": -17.5,
+   "y": 2.884,
+   "rot_z": 90.0,
+   "scale": [
+    1.209,
+    1.0,
+    0.93
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": -17.5,
+   "y": 13.465,
+   "rot_z": 90.0,
+   "scale": [
+    1.063,
+    1.0,
+    0.905
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": -17.1,
+   "y": 28.973,
+   "rot_z": 90.0,
+   "scale": [
+    1.189,
+    1.0,
+    1.107
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": -17.5,
+   "y": 48.038,
+   "rot_z": 90.0,
+   "scale": [
+    0.963,
+    1.0,
+    0.952
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": -17.1,
+   "y": 59.456,
+   "rot_z": 90.0,
+   "scale": [
+    0.88,
+    1.0,
+    0.912
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": -35.5,
+   "y": 6.587,
+   "rot_z": 90.0,
+   "scale": [
+    0.924,
+    1.0,
+    0.956
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "x": -36.2,
+   "y": 22.221,
+   "rot_z": 90.0,
+   "scale": [
+    1.205,
+    1.0,
+    0.981
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "x": -36.5,
+   "y": 36.002,
+   "rot_z": 90.0,
+   "scale": [
+    0.872,
+    1.0,
+    1.018
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": -35.5,
+   "y": 49.983,
+   "rot_z": 90.0,
+   "scale": [
+    0.916,
+    1.0,
+    0.899
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": -35.5,
+   "y": 62.966,
+   "rot_z": 90.0,
+   "scale": [
+    0.971,
+    1.0,
+    1.007
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "x": 62.5,
+   "y": 3.857,
+   "rot_z": -90.0,
+   "scale": [
+    1.21,
+    1.0,
+    0.93
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": 61.5,
+   "y": 15.631,
+   "rot_z": -90.0,
+   "scale": [
+    1.158,
+    1.0,
+    0.958
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 61.5,
+   "y": 27.849,
+   "rot_z": -90.0,
+   "scale": [
+    1.203,
+    1.0,
+    1.111
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 61.5,
+   "y": 48.527,
+   "rot_z": -90.0,
+   "scale": [
+    1.149,
+    1.0,
+    0.918
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": 61.1,
+   "y": 61.51,
+   "rot_z": -90.0,
+   "scale": [
+    1.054,
+    1.0,
+    0.902
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "x": 80.5,
+   "y": 6.292,
+   "rot_z": -90.0,
+   "scale": [
+    0.914,
+    1.0,
+    0.907
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": 79.1,
+   "y": 24.194,
+   "rot_z": -90.0,
+   "scale": [
+    0.869,
+    1.0,
+    0.909
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 79.5,
+   "y": 48.899,
+   "rot_z": -90.0,
+   "scale": [
+    0.875,
+    1.0,
+    0.979
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": 79.5,
+   "y": 63.367,
+   "rot_z": -90.0,
+   "scale": [
+    1.134,
+    1.0,
+    1.126
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "x": -1.999,
+   "y": 50.7,
+   "rot_z": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    0.909
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": 12.518,
+   "y": 50.0,
+   "rot_z": 0.0,
+   "scale": [
+    1.159,
+    1.0,
+    0.954
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 24.9,
+   "y": 50.0,
+   "rot_z": 0.0,
+   "scale": [
+    1.175,
+    1.0,
+    1.133
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "x": 33.912,
+   "y": 51.0,
+   "rot_z": 0.0,
+   "scale": [
+    0.938,
+    1.0,
+    0.913
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": -1.868,
+   "y": 64.0,
+   "rot_z": 0.0,
+   "scale": [
+    0.826,
+    1.0,
+    0.878
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 10.521,
+   "y": 64.0,
+   "rot_z": 0.0,
+   "scale": [
+    0.843,
+    1.0,
+    0.992
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 22.428,
+   "y": 64.0,
+   "rot_z": 0.0,
+   "scale": [
+    0.852,
+    1.0,
+    1.045
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": 40.014,
+   "y": 63.6,
+   "rot_z": 0.0,
+   "scale": [
+    1.18,
+    1.0,
+    1.147
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": -74.15,
+   "y": -21.7,
+   "rot_z": 180.0,
+   "scale": [
+    1.17,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": -56.974,
+   "y": -21.3,
+   "rot_z": 180.0,
+   "scale": [
+    1.199,
+    1.0,
+    1.144
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": -44.542,
+   "y": -21.7,
+   "rot_z": 180.0,
+   "scale": [
+    0.859,
+    1.0,
+    0.895
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "x": -31.702,
+   "y": -22.4,
+   "rot_z": 180.0,
+   "scale": [
+    1.139,
+    1.0,
+    0.973
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": -15.758,
+   "y": -21.7,
+   "rot_z": 180.0,
+   "scale": [
+    1.179,
+    1.0,
+    0.935
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": -1.099,
+   "y": -21.7,
+   "rot_z": 180.0,
+   "scale": [
+    0.918,
+    1.0,
+    1.045
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 9.515,
+   "y": -21.7,
+   "rot_z": 180.0,
+   "scale": [
+    0.97,
+    1.0,
+    0.916
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "x": 22.041,
+   "y": -22.4,
+   "rot_z": 180.0,
+   "scale": [
+    1.069,
+    1.0,
+    0.95
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": 39.335,
+   "y": -21.3,
+   "rot_z": 180.0,
+   "scale": [
+    1.162,
+    1.0,
+    1.001
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_C",
+   "x": 52.208,
+   "y": -21.7,
+   "rot_z": 180.0,
+   "scale": [
+    1.056,
+    1.0,
+    1.153
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_B",
+   "x": 61.467,
+   "y": -21.7,
+   "rot_z": 180.0,
+   "scale": [
+    0.841,
+    1.0,
+    1.044
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_D",
+   "x": 74.018,
+   "y": -21.3,
+   "rot_z": 180.0,
+   "scale": [
+    0.911,
+    1.0,
+    0.993
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "x": 87.712,
+   "y": -22.7,
+   "rot_z": 180.0,
+   "scale": [
+    1.034,
+    1.0,
+    1.06
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_E",
+   "x": 99.863,
+   "y": -22.4,
+   "rot_z": 180.0,
+   "scale": [
+    0.903,
+    1.0,
+    0.909
+   ]
+  },
+  {
+   "piece": "SM_DKX_House_A",
+   "x": 110.6,
+   "y": -22.7,
+   "rot_z": 180.0,
+   "scale": [
+    0.863,
+    1.0,
+    1.146
+   ]
+  }
+ ],
+ "numbers": {
+  "town_rectangle": [
+   -86.0,
+   130.0,
+   -34.0,
+   76.0
+  ],
+  "street_y": {
+   "verge": [
+    -0.96,
+    -2.3
+   ],
+   "kerb_near": [
+    -2.3,
+    -2.5,
+    0.03
+   ],
+   "gutter": [
+    -2.5,
+    -2.85
+   ],
+   "road": [
+    -2.85,
+    -7.75
+   ],
+   "kerb_far": [
+    -7.75,
+    -7.95,
+    0.02
+   ],
+   "far_verge": [
+    -7.95,
+    -9.2
+   ],
+   "coping": [
+    -9.2,
+    -9.5
+   ],
+   "terrace_foot": [
+    -9.75,
+    -2.45
+   ],
+   "canal_bank": [
+    -11.4,
+    -1.46
+   ],
+   "water_z": -2.05,
+   "lower_lane": [
+    -11.75,
+    -16.6
+   ],
+   "lower_z": -1.5
+  },
+  "road_z": {
+   "edge": -0.1,
+   "crown": -0.05
+  },
+  "gate_apron_junction": {
+   "kit1_apron_x": [
+    18.1,
+    25.9
+   ],
+   "kit1_front_step_x": [
+    18.8,
+    25.2
+   ],
+   "kit1_front_step": "Y -2.50..-3.00 top +0.05; the road meets its face at Y -3.00 (a 0.14 m step), the kerb and verge butt the apron's sides at X 18.10 / 25.90, the gutter runs in front of the apron's corners and ends at the step's ends (X 18.80 / 25.20)"
+  },
+  "landing": {
+   "x": [
+    14.4,
+    29.6
+   ],
+   "lamps": {
+    "B": [
+     14.0,
+     -8.55,
+     0.0
+    ],
+    "A": [
+     30.0,
+     -8.55,
+     0.0
+    ]
+   }
+  },
+  "poles": {
+   "x": [
+    -65.5,
+    -40.5,
+    -15.5,
+    9.5,
+    34.5,
+    59.5,
+    84.5,
+    109.5
+   ],
+   "y": -8.55,
+   "spans_m": 25.0
+  },
+  "lanes": {
+   "west_x": [
+    -12.0,
+    -9.0
+   ],
+   "east_x": [
+    53.0,
+    56.0
+   ],
+   "north_y": [
+    41.5,
+    44.5
+   ]
+  },
+  "alley_fences": {
+   "W": {
+    "pivot": [
+     10.5,
+     34.0,
+     0.0
+    ],
+    "hull": [
+     10.5,
+     13.0,
+     34.0,
+     34.1,
+     0.0,
+     2.0
+    ]
+   },
+   "E": {
+    "pivot": [
+     31.0,
+     34.0,
+     0.0
+    ],
+    "hull": [
+     31.0,
+     33.5,
+     34.0,
+     34.1,
+     0.0,
+     2.0
+    ]
+   }
+  },
+  "mountains": "a far MESH ring (not an Unreal landscape): the showcase pipeline imports FBX static meshes in one commandlet step with every other piece (dj_sc_import) and places them from this layout (dj_sc_level); a Landscape needs a heightmap import through the editor's landscape tools, which no step of the commandlet pipeline has and which is not verifiable in the same fresh process as the meshes. The rings sit inside the 2.4 km cloud dome (look_r3.ENV sky_dome) and take the level's ExponentialHeightFog as their haze"
+ }
+}

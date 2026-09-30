@@ -1,0 +1,1333 @@
+# graph TryTraversalAction from AC_TraversalLogic.t3d
+
+[K2Node_FunctionEntry_0] TryTraversalAction 
+   -> then  links K2Node_ExecutionSequence_0
+   -> Inputs
+   -> DebugType = None
+
+[K2Node_CallFunction_21] CapsuleTraceSingle 
+   <- execute  links K2Node_Knot_0
+   -> then  links K2Node_IfThenElse_4
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- Start = 0, 0, 0  links K2Node_PromotableOperator_3
+   <- End = 0, 0, 0  links K2Node_PromotableOperator_0
+   <- Radius = 0.0  links K2Node_VariableGet_67
+   <- HalfHeight = 0.0  links K2Node_VariableGet_67
+   <- TraceChannel = TraceTypeQuery3
+   <- bTraceComplex = false
+   <- ActorsToIgnore
+   <- DrawDebugType = None  links K2Node_Select_5
+   -> OutHit
+   -> OutHit_bBlockingHit = false  links K2Node_IfThenElse_4
+   -> OutHit_bInitialOverlap = false
+   -> OutHit_Time = 0.0
+   -> OutHit_Distance = 0.0
+   -> OutHit_Location = 0, 0, 0
+   -> OutHit_ImpactPoint = 0, 0, 0  links K2Node_Knot_10
+   -> OutHit_Normal = 0, 0, 0
+   -> OutHit_ImpactNormal = 0, 0, 0
+   -> OutHit_PhysMat
+   -> OutHit_HitActor  links K2Node_DynamicCast_2
+   -> OutHit_HitComponent  links K2Node_SetFieldsInStruct_2
+   -> OutHit_HitBoneName = None
+   -> OutHit_BoneName = None
+   -> OutHit_HitItem = 0
+   -> OutHit_ElementIndex = 0
+   -> OutHit_FaceIndex = 0
+   -> OutHit_TraceStart = 0, 0, 0
+   -> OutHit_TraceEnd = 0, 0, 0
+   <- bIgnoreSelf = true
+   <- TraceColor = (R=0.000000,G=0.000000,B=0.000000,A=1.000000)
+   <- TraceHitColor = (R=0.000000,G=0.000000,B=0.000000,A=1.000000)
+   <- DrawTime = 5.000000  links K2Node_VariableGet_17
+   -> ReturnValue = false
+
+[K2Node_PromotableOperator_0] Add_VectorVector 
+   <- A  links K2Node_PromotableOperator_3
+   <- B  links K2Node_PromotableOperator_1
+   -> ReturnValue  links K2Node_CallFunction_21
+   <- C  links K2Node_VariableGet_67
+
+[K2Node_PromotableOperator_1] Multiply_VectorVector 
+   <- A  links K2Node_VariableGet_67
+   <- B  links K2Node_VariableGet_67
+   -> ReturnValue  links K2Node_PromotableOperator_0
+
+[K2Node_IfThenElse_4]  
+   <- execute  links K2Node_CallFunction_21
+   <- Condition = true  links K2Node_CallFunction_21
+   -> then  links K2Node_DynamicCast_2
+   -> else  links K2Node_Knot_7
+
+[K2Node_DynamicCast_2]  
+   <- execute  links K2Node_IfThenElse_4
+   -> then  links K2Node_SetFieldsInStruct_2
+   -> CastFailed  links K2Node_FunctionResult_3
+   <- Object  links K2Node_CallFunction_21
+   -> AsLevel Block Traversable  links K2Node_Knot_8
+   -> bSuccess
+
+[K2Node_ExecutionSequence_0]  
+   <- execute  links K2Node_FunctionEntry_0
+   -> then_0  links K2Node_Knot_3
+   -> then_1  links K2Node_Knot_0
+   -> then_2  links K2Node_Knot_2
+   -> then_3  links K2Node_Knot_1
+   -> then_4  links K2Node_Knot_5
+
+[K2Node_Knot_0]  
+   <- InputPin  links K2Node_ExecutionSequence_0
+   -> OutputPin  links K2Node_CallFunction_21
+
+[K2Node_CallFunction_11] GetLedgeTransforms 
+   <- execute  links K2Node_SetFieldsInStruct_2
+   -> then  links K2Node_IfThenElse_12
+   <- self  links K2Node_Knot_8
+   <- HitLocation = 0, 0, 0  links K2Node_Knot_9
+   <- ActorLocation = 0, 0, 0  links K2Node_VariableGet_25
+   <- TraversalTraceResultInOut  links K2Node_VariableGet_31
+
+[K2Node_VariableGet_31] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_CallFunction_11
+
+[K2Node_IfThenElse_12]  
+   <- execute  links K2Node_CallFunction_11
+   <- Condition = true  links K2Node_PromotableOperator_2
+   -> then  links K2Node_IfThenElse_3
+   -> else
+
+[K2Node_VariableGet_3] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_7
+
+[K2Node_BreakStruct_7]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_3
+   -> HasFrontLedge  links K2Node_IfThenElse_3
+   -> FrontLedgeLocation  links K2Node_CallFunction_19
+
+[K2Node_IfThenElse_3]  
+   <- execute  links K2Node_IfThenElse_12
+   <- Condition = true  links K2Node_BreakStruct_7
+   -> then  links K2Node_CallFunction_19
+   -> else
+
+[K2Node_VariableGet_43] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_5
+
+[K2Node_BreakStruct_5]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_43
+   -> HasBackLedge  links K2Node_IfThenElse_2
+   -> BackLedgeLocation  links K2Node_CallFunction_18
+
+[K2Node_IfThenElse_2]  
+   <- execute  links K2Node_CallFunction_19
+   <- Condition = true  links K2Node_BreakStruct_5
+   -> then  links K2Node_CallFunction_18
+   -> else
+
+[EdGraphNode_Comment_0]  // "Step 2.1: Perform a trace in the actor\'s forward direction to find a Traversable Level Block. If found, set the Hit Component, if not, exit the function."
+
+[EdGraphNode_Comment_1]  // "DEBUG: Draw Debug shapes at ledge locations."
+
+[K2Node_IfThenElse_7]  
+   <- execute  links K2Node_Knot_2
+   <- Condition = true  links K2Node_BreakStruct_17
+   -> then  links K2Node_VariableSet_6
+   -> else  links K2Node_FunctionResult_0
+
+[K2Node_VariableGet_65] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_17
+
+[K2Node_BreakStruct_17]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_65
+   -> HasFrontLedge  links K2Node_IfThenElse_7
+
+[K2Node_Knot_2]  
+   <- InputPin  links K2Node_ExecutionSequence_0
+   -> OutputPin  links K2Node_IfThenElse_7
+
+[EdGraphNode_Comment_2]  // "Step 2.2: If a traversable level block was found, get the front and back ledge transforms from it (using its own internal function)."
+
+[K2Node_VariableGet_63] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_11
+
+[K2Node_BreakStruct_11]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_63
+   -> FrontLedgeLocation  links K2Node_PromotableOperator_21
+   -> FrontLedgeNormal  links K2Node_PromotableOperator_22
+   -> ChosenMontage
+   -> StartTime
+   -> PlayRate
+
+[K2Node_PromotableOperator_21] Add_VectorVector 
+   <- A  links K2Node_BreakStruct_11
+   <- B  links K2Node_PromotableOperator_22
+   -> ReturnValue  links K2Node_VariableSet_6
+   <- C
+   <- X = 0.0
+   <- Y = 0.0
+   <- Z = 0.0  links K2Node_PromotableOperator_24
+
+[K2Node_PromotableOperator_22] Multiply_VectorVector 
+   <- A  links K2Node_BreakStruct_11
+   <- B  links K2Node_PromotableOperator_23
+   -> ReturnValue  links K2Node_PromotableOperator_21
+
+[K2Node_CallFunction_13] CapsuleTraceSingle 
+   <- execute  links K2Node_VariableSet_6
+   -> then  links K2Node_IfThenElse_5
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- Start = 0, 0, 0  links K2Node_VariableGet_28
+   <- End = 0, 0, 0  links K2Node_VariableGet_18
+   <- Radius = 0.0  links K2Node_VariableGet_34
+   <- HalfHeight = 0.0  links K2Node_VariableGet_35
+   <- TraceChannel = TraceTypeQuery1
+   <- bTraceComplex = false
+   <- ActorsToIgnore
+   <- DrawDebugType = None  links K2Node_Select_6
+   -> OutHit
+   -> OutHit_bBlockingHit = false  links K2Node_CallFunction_16
+   -> OutHit_bInitialOverlap = false  links K2Node_CallFunction_16
+   -> OutHit_Time = 0.0
+   -> OutHit_Distance = 0.0
+   -> OutHit_Location = 0, 0, 0
+   -> OutHit_ImpactPoint = 0, 0, 0
+   -> OutHit_Normal = 0, 0, 0
+   -> OutHit_ImpactNormal = 0, 0, 0
+   -> OutHit_PhysMat
+   -> OutHit_HitActor
+   -> OutHit_HitComponent
+   -> OutHit_HitBoneName = None
+   -> OutHit_BoneName = None
+   -> OutHit_HitItem = 0
+   -> OutHit_ElementIndex = 0
+   -> OutHit_FaceIndex = 0
+   -> OutHit_TraceStart = 0, 0, 0
+   -> OutHit_TraceEnd = 0, 0, 0
+   <- bIgnoreSelf = true
+   <- TraceColor = (R=1.000000,G=0.000000,B=0.000000,A=1.000000)
+   <- TraceHitColor = (R=0.000000,G=1.000000,B=0.000000,A=1.000000)
+   <- DrawTime = 5.000000  links K2Node_VariableGet_20
+   -> ReturnValue = false
+
+[K2Node_IfThenElse_5]  
+   <- execute  links K2Node_CallFunction_13
+   <- Condition = true  links K2Node_CallFunction_16
+   -> then  links K2Node_SetFieldsInStruct_8
+   -> else  links K2Node_SetFieldsInStruct_5
+
+[K2Node_CallFunction_16] BooleanNOR 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- A = false  links K2Node_CallFunction_13
+   <- B = false  links K2Node_CallFunction_13
+   -> ReturnValue = false  links K2Node_IfThenElse_5
+
+[K2Node_CallFunction_48] CapsuleTraceSingle 
+   <- execute  links K2Node_VariableSet_11
+   -> then  links K2Node_VariableSet_10
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- Start = 0, 0, 0  links K2Node_VariableGet_29
+   <- End = 0, 0, 0  links K2Node_VariableGet_33
+   <- Radius = 0.0  links K2Node_VariableGet_36
+   <- HalfHeight = 0.0  links K2Node_VariableGet_37
+   <- TraceChannel = TraceTypeQuery1
+   <- bTraceComplex = false
+   <- ActorsToIgnore
+   <- DrawDebugType = None  links K2Node_Select_7
+   -> OutHit  links K2Node_VariableSet_10
+   <- bIgnoreSelf = true
+   <- TraceColor = (R=1.000000,G=0.000000,B=0.000000,A=1.000000)
+   <- TraceHitColor = (R=0.000000,G=1.000000,B=0.000000,A=1.000000)
+   <- DrawTime = 5.000000  links K2Node_VariableGet_26
+   -> ReturnValue = false  links K2Node_CallFunction_15
+
+[K2Node_IfThenElse_6]  
+   <- execute  links K2Node_VariableSet_10
+   <- Condition = true  links K2Node_CallFunction_15
+   -> then  links K2Node_SetFieldsInStruct_4
+   -> else  links K2Node_Knot_4
+
+[K2Node_VariableGet_45] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_8
+
+[K2Node_BreakStruct_8]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_45
+   -> FrontLedgeLocation  links K2Node_PromotableOperator_10
+   -> BackLedgeLocation  links K2Node_PromotableOperator_10
+   -> ChosenMontage
+   -> StartTime
+   -> PlayRate
+
+[K2Node_PromotableOperator_10] Subtract_VectorVector 
+   <- A  links K2Node_BreakStruct_8
+   <- B  links K2Node_BreakStruct_8
+   -> ReturnValue  links K2Node_CallFunction_56
+
+[K2Node_CallFunction_15] Not_PreBool 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- A = false  links K2Node_CallFunction_48
+   -> ReturnValue = false  links K2Node_IfThenElse_6
+
+[K2Node_VariableGet_5] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_6
+
+[K2Node_BreakStruct_6]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_5
+   -> FrontLedgeLocation  links K2Node_PromotableOperator_15
+
+[K2Node_PromotableOperator_15] Subtract_VectorVector 
+   <- A  links K2Node_CallFunction_53
+   <- B  links K2Node_BreakStruct_6
+   -> ReturnValue  links K2Node_CallFunction_39
+
+[K2Node_CallFunction_39] VSizeXY 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- A = 0, 0, 0  links K2Node_PromotableOperator_15
+   -> ReturnValue = 0.0  links K2Node_SetFieldsInStruct_3
+
+[K2Node_CallFunction_8] CapsuleTraceSingle 
+   <- execute  links K2Node_SetFieldsInStruct_4
+   -> then  links K2Node_IfThenElse_8
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- Start = 0, 0, 0  links K2Node_VariableGet_50
+   <- End = 0, 0, 0  links K2Node_PromotableOperator_35
+   <- Radius = 0.0  links K2Node_VariableGet_56
+   <- HalfHeight = 0.0  links K2Node_VariableGet_69
+   <- TraceChannel = TraceTypeQuery1
+   <- bTraceComplex = false
+   <- ActorsToIgnore
+   <- DrawDebugType = None  links K2Node_Select_4
+   -> OutHit
+   -> OutHit_bBlockingHit = false  links K2Node_IfThenElse_8
+   -> OutHit_bInitialOverlap = false
+   -> OutHit_Time = 0.0
+   -> OutHit_Distance = 0.0
+   -> OutHit_Location = 0, 0, 0
+   -> OutHit_ImpactPoint = 0, 0, 0  links K2Node_SetFieldsInStruct_6,K2Node_PromotableOperator_37
+   -> OutHit_Normal = 0, 0, 0
+   -> OutHit_ImpactNormal = 0, 0, 0
+   -> OutHit_PhysMat
+   -> OutHit_HitActor
+   -> OutHit_HitComponent
+   -> OutHit_HitBoneName = None
+   -> OutHit_BoneName = None
+   -> OutHit_HitItem = 0
+   -> OutHit_ElementIndex = 0
+   -> OutHit_FaceIndex = 0
+   -> OutHit_TraceStart = 0, 0, 0
+   -> OutHit_TraceEnd = 0, 0, 0
+   <- bIgnoreSelf = true
+   <- TraceColor = (R=1.000000,G=0.000000,B=0.000000,A=1.000000)
+   <- TraceHitColor = (R=0.000000,G=1.000000,B=0.000000,A=1.000000)
+   <- DrawTime = 5.000000  links K2Node_VariableGet_40
+   -> ReturnValue = false
+
+[EdGraphNode_Comment_3]  // "Step 3.1 If the traversable level block has a valid front ledge, continue the function. If not, exit early."
+
+[EdGraphNode_Comment_4]  // "Step 3.2: Perform a trace from the actors location up to the front ledge location to determine if there is room for the actor to move up to it. If so, continue the function. If not, exit early."
+
+[K2Node_VariableGet_58] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_5
+
+[K2Node_SetFieldsInStruct_5]  
+   <- execute  links K2Node_IfThenElse_5
+   -> then  links K2Node_FunctionResult_1
+   <- StructRef  links K2Node_VariableGet_58
+   -> StructOut
+   <- HasFrontLedge = False
+
+[K2Node_PromotableOperator_23] Add_DoubleDouble 
+   <- A  links K2Node_VariableGet_48
+   <- B = 2.000000
+   -> ReturnValue  links K2Node_PromotableOperator_22
+
+[K2Node_PromotableOperator_24] Add_DoubleDouble 
+   <- A  links K2Node_VariableGet_32
+   <- B = 2.000000
+   -> ReturnValue  links K2Node_PromotableOperator_21
+
+[K2Node_VariableSet_6] HasRoomCheck_FrontLedgeLocation 
+   <- execute  links K2Node_IfThenElse_7
+   -> then  links K2Node_CallFunction_13
+   <- HasRoomCheck_FrontLedgeLocation = 0, 0, 0  links K2Node_PromotableOperator_21
+   -> Output_Get = 0, 0, 0
+
+[K2Node_VariableGet_18] HasRoomCheck_FrontLedgeLocation 
+   -> HasRoomCheck_FrontLedgeLocation = 0, 0, 0  links K2Node_CallFunction_13
+
+[K2Node_VariableSet_2] CapsuleRadius 
+   <- execute  links K2Node_VariableSet_4
+   -> then  links K2Node_VariableSet_3
+   <- CapsuleRadius = 0.0  links K2Node_VariableGet_1
+   -> Output_Get = 0.0
+
+[K2Node_VariableSet_3] CapsuleHalfHeight 
+   <- execute  links K2Node_VariableSet_2
+   -> then  links K2Node_CallFunction_1
+   <- CapsuleHalfHeight = 0.0  links K2Node_VariableGet_2
+   -> Output_Get = 0.0
+
+[K2Node_CallFunction_22] K2_GetActorLocation 
+   <- self  links K2Node_CallFunction_26
+   -> ReturnValue = 0, 0, 0  links K2Node_VariableSet_4
+
+[K2Node_VariableSet_4] ActorLocation 
+   <- execute  links K2Node_VariableSet_5
+   -> then  links K2Node_VariableSet_2
+   <- ActorLocation = 0, 0, 0  links K2Node_CallFunction_22
+   -> Output_Get = 0, 0, 0
+
+[K2Node_Knot_3]  
+   <- InputPin  links K2Node_ExecutionSequence_0
+   -> OutputPin  links K2Node_Message_0
+
+[K2Node_VariableGet_23] ActorLocation 
+   -> ActorLocation = 0, 0, 0  links K2Node_PromotableOperator_3
+
+[K2Node_VariableGet_25] ActorLocation 
+   -> ActorLocation = 0, 0, 0  links K2Node_CallFunction_11
+
+[EdGraphNode_Comment_5]  // "Step 1: Cache some important values for use later in the function."
+
+[K2Node_VariableGet_32] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_PromotableOperator_24
+
+[K2Node_VariableGet_28] ActorLocation 
+   -> ActorLocation = 0, 0, 0  links K2Node_CallFunction_13
+
+[K2Node_VariableGet_29] HasRoomCheck_FrontLedgeLocation 
+   -> HasRoomCheck_FrontLedgeLocation = 0, 0, 0  links K2Node_CallFunction_48
+
+[K2Node_VariableGet_52] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_13
+
+[K2Node_BreakStruct_13]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_52
+   -> BackLedgeLocation  links K2Node_PromotableOperator_31
+   -> BackLedgeNormal  links K2Node_PromotableOperator_32
+   -> ChosenMontage
+   -> StartTime
+   -> PlayRate
+
+[K2Node_PromotableOperator_31] Add_VectorVector 
+   <- A  links K2Node_BreakStruct_13
+   <- B  links K2Node_PromotableOperator_32
+   -> ReturnValue  links K2Node_VariableSet_11
+   <- C
+   <- X = 0.0
+   <- Y = 0.0
+   <- Z = 0.0  links K2Node_PromotableOperator_34
+
+[K2Node_PromotableOperator_32] Multiply_VectorVector 
+   <- A  links K2Node_BreakStruct_13
+   <- B  links K2Node_PromotableOperator_36
+   -> ReturnValue  links K2Node_PromotableOperator_31
+
+[K2Node_PromotableOperator_36] Add_DoubleDouble 
+   <- A  links K2Node_VariableGet_57
+   <- B = 2.000000
+   -> ReturnValue  links K2Node_PromotableOperator_32
+
+[K2Node_PromotableOperator_34] Add_DoubleDouble 
+   <- A  links K2Node_VariableGet_53
+   <- B = 2.000000
+   -> ReturnValue  links K2Node_PromotableOperator_31
+
+[K2Node_VariableSet_11] HasRoomCheck_BackLedgeLocation 
+   <- execute  links K2Node_SetFieldsInStruct_8
+   -> then  links K2Node_CallFunction_48
+   <- HasRoomCheck_BackLedgeLocation = 0, 0, 0  links K2Node_PromotableOperator_31
+   -> Output_Get = 0, 0, 0
+
+[K2Node_VariableGet_53] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_PromotableOperator_34
+
+[K2Node_VariableGet_33] HasRoomCheck_BackLedgeLocation 
+   -> HasRoomCheck_BackLedgeLocation = 0, 0, 0  links K2Node_CallFunction_48
+
+[K2Node_VariableGet_34] CapsuleRadius 
+   -> CapsuleRadius = 0.0  links K2Node_CallFunction_13
+
+[K2Node_VariableGet_35] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_CallFunction_13
+
+[K2Node_VariableGet_36] CapsuleRadius 
+   -> CapsuleRadius = 0.0  links K2Node_CallFunction_48
+
+[K2Node_VariableGet_37] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_CallFunction_48
+
+[EdGraphNode_Comment_6]  // "Step 3.4: Perform a trace across the top of the obstacle from the front ledge to the back ledge to see if theres room for the actor to move across it."
+
+[K2Node_VariableSet_10] TopSweepResult 
+   <- execute  links K2Node_CallFunction_48
+   -> then  links K2Node_IfThenElse_6
+   <- TopSweepResult  links K2Node_CallFunction_48
+   -> Output_Get
+
+[K2Node_VariableGet_46] TopSweepResult 
+   -> TopSweepResult  links K2Node_CallFunction_53
+
+[K2Node_CallFunction_53] BreakHitResult 
+   <- self = /Script/Engine.Default__GameplayStatics
+   <- Hit  links K2Node_VariableGet_46
+   -> bBlockingHit = false
+   -> bInitialOverlap = false
+   -> Time = 0.0
+   -> Distance = 0.0
+   -> Location = 0, 0, 0
+   -> ImpactPoint = 0, 0, 0  links K2Node_PromotableOperator_15
+   -> Normal = 0, 0, 0
+   -> ImpactNormal = 0, 0, 0
+   -> PhysMat
+   -> HitActor
+   -> HitComponent
+   -> HitBoneName = None
+   -> BoneName = None
+   -> HitItem = 0
+   -> ElementIndex = 0
+   -> FaceIndex = 0
+   -> TraceStart = 0, 0, 0
+   -> TraceEnd = 0, 0, 0
+
+[K2Node_VariableGet_47] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_4
+
+[K2Node_SetFieldsInStruct_4]  
+   <- execute  links K2Node_IfThenElse_6
+   -> then  links K2Node_CallFunction_8
+   <- StructRef  links K2Node_VariableGet_47
+   -> StructOut
+   <- ObstacleDepth = 0.000000  links K2Node_CallFunction_56
+
+[K2Node_VariableGet_14] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_3
+
+[K2Node_SetFieldsInStruct_3]  
+   <- execute  links K2Node_Knot_4
+   -> then  links K2Node_SetFieldsInStruct_1
+   <- StructRef  links K2Node_VariableGet_14
+   -> StructOut
+   <- ObstacleDepth = 0.000000  links K2Node_CallFunction_39
+
+[K2Node_VariableGet_48] CapsuleRadius 
+   -> CapsuleRadius = 0.0  links K2Node_PromotableOperator_23
+
+[K2Node_VariableGet_57] CapsuleRadius 
+   -> CapsuleRadius = 0.0  links K2Node_PromotableOperator_36
+
+[K2Node_CallFunction_56] VSizeXY 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- A = 0, 0, 0  links K2Node_PromotableOperator_10
+   -> ReturnValue = 0.0  links K2Node_SetFieldsInStruct_4
+
+[K2Node_Knot_4]  
+   <- InputPin  links K2Node_IfThenElse_6
+   -> OutputPin  links K2Node_SetFieldsInStruct_3
+
+[EdGraphNode_Comment_12]  // "Step 3.5: If there is room, save the obstacle depth using the difference between the front and back ledge locations."
+
+[EdGraphNode_Comment_8]  // "Step 3.5: If there is not room, save the obstacle depth using the difference between the front ledge and the trace impact point, and invalidate the back ledge."
+
+[K2Node_VariableGet_50] HasRoomCheck_BackLedgeLocation 
+   -> HasRoomCheck_BackLedgeLocation = 0, 0, 0  links K2Node_CallFunction_8
+
+[K2Node_VariableGet_59] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_14
+
+[K2Node_BreakStruct_14]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_59
+   -> BackLedgeLocation  links K2Node_PromotableOperator_5
+   -> BackLedgeNormal  links K2Node_PromotableOperator_6
+   -> ObstacleHeight  links K2Node_PromotableOperator_41
+   -> ChosenMontage
+   -> StartTime
+   -> PlayRate
+
+[K2Node_PromotableOperator_5] Add_VectorVector 
+   <- A  links K2Node_BreakStruct_14
+   <- B  links K2Node_PromotableOperator_6
+   -> ReturnValue  links K2Node_PromotableOperator_35
+
+[K2Node_PromotableOperator_6] Multiply_VectorVector 
+   <- A  links K2Node_BreakStruct_14
+   <- B  links K2Node_PromotableOperator_33
+   -> ReturnValue  links K2Node_PromotableOperator_5
+
+[K2Node_PromotableOperator_35] Subtract_VectorVector 
+   <- A  links K2Node_PromotableOperator_5
+   <- B
+   <- X = 0.0
+   <- Y = 0.0
+   <- Z = 50.000000
+   -> ReturnValue  links K2Node_CallFunction_8
+
+[K2Node_VariableGet_69] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_CallFunction_8
+
+[K2Node_VariableGet_56] CapsuleRadius 
+   -> CapsuleRadius = 0.0  links K2Node_CallFunction_8
+
+[K2Node_PromotableOperator_33] Add_DoubleDouble 
+   <- A  links K2Node_VariableGet_54
+   <- B = 2.000000
+   -> ReturnValue  links K2Node_PromotableOperator_6
+
+[K2Node_VariableGet_54] CapsuleRadius 
+   -> CapsuleRadius = 0.0  links K2Node_PromotableOperator_33
+
+[K2Node_IfThenElse_8]  
+   <- execute  links K2Node_CallFunction_8
+   <- Condition = true  links K2Node_CallFunction_8
+   -> then  links K2Node_SetFieldsInStruct_6
+   -> else  links K2Node_SetFieldsInStruct_7
+
+[K2Node_VariableGet_11] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_1
+
+[K2Node_SetFieldsInStruct_1]  
+   <- execute  links K2Node_SetFieldsInStruct_3
+   <- StructRef  links K2Node_VariableGet_11
+   -> StructOut
+   <- HasBackLedge = False
+
+[K2Node_VariableGet_60] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_7
+
+[K2Node_SetFieldsInStruct_7]  
+   <- execute  links K2Node_IfThenElse_8
+   <- StructRef  links K2Node_VariableGet_60
+   -> StructOut
+   <- HasBackFloor = False
+
+[K2Node_VariableGet_39] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_6
+
+[K2Node_SetFieldsInStruct_6]  
+   <- execute  links K2Node_IfThenElse_8
+   <- StructRef  links K2Node_VariableGet_39
+   -> StructOut
+   <- HasBackFloor = true
+   <- BackFloorLocation = 0.000000,0.000000,0.000000  links K2Node_CallFunction_8
+   <- BackLedgeHeight = 0.000000  links K2Node_CallFunction_62
+
+[K2Node_VariableGet_61] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_15
+
+[K2Node_BreakStruct_15]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_61
+   -> BackLedgeLocation  links K2Node_PromotableOperator_37
+
+[K2Node_PromotableOperator_37] Subtract_VectorVector 
+   <- A  links K2Node_CallFunction_8
+   <- B  links K2Node_BreakStruct_15
+   -> ReturnValue
+   -> X = 0.0
+   -> Y = 0.0
+   -> Z = 0.0  links K2Node_CallFunction_62
+
+[K2Node_CallFunction_62] Abs 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- A = 0.0  links K2Node_PromotableOperator_37
+   -> ReturnValue = 0.0  links K2Node_SetFieldsInStruct_6
+
+[K2Node_CallFunction_80] PrintString 
+   <- execute  links K2Node_IfThenElse_1
+   -> then  links K2Node_CallFunction_23
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- InString = Hello  links K2Node_CommutativeAssociativeBinaryOperator_1
+   <- bPrintToScreen = true
+   <- bPrintToLog = false
+   <- TextColor = (R=0.000000,G=0.660000,B=1.000000,A=1.000000)
+   <- Duration = 2.000000
+   <- Key = Traversal 1
+
+[K2Node_CommutativeAssociativeBinaryOperator_1] Concat_StrStr 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- A = Has Front Ledge: 
+   <- B  links K2Node_CallFunction_66
+   -> ReturnValue  links K2Node_CallFunction_80
+   <- C = \r\n
+   <- D = Has Back Ledge: 
+   <- E  links K2Node_CallFunction_67
+   <- F = \r\n
+   <- G = Has Back Floor:
+   <- H  links K2Node_CallFunction_68
+   <- I = \r\n
+   <- J = Obstacle Height: 
+   <- K  links K2Node_CallFunction_69
+   <- L = \r\n
+   <- M = Obstacle Depth: 
+   <- N  links K2Node_CallFunction_70
+   <- O = \r\n
+   <- P = Back Ledge Height: 
+   <- Q  links K2Node_CallFunction_71
+
+[K2Node_VariableGet_62] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_16
+
+[K2Node_BreakStruct_16]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_62
+   -> HasFrontLedge  links K2Node_CallFunction_66
+   -> HasBackLedge  links K2Node_CallFunction_67
+   -> HasBackFloor  links K2Node_CallFunction_68
+   -> ObstacleHeight  links K2Node_CallFunction_69
+   -> ObstacleDepth  links K2Node_CallFunction_70
+   -> BackLedgeHeight  links K2Node_CallFunction_71
+
+[K2Node_VariableGet_41] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_8
+
+[K2Node_SetFieldsInStruct_8]  
+   <- execute  links K2Node_IfThenElse_5
+   -> then  links K2Node_VariableSet_11
+   <- StructRef  links K2Node_VariableGet_41
+   -> StructOut
+   <- ObstacleHeight = 0.000000  links K2Node_CallFunction_65
+
+[K2Node_VariableGet_64] ActorLocation 
+   -> ActorLocation = 0, 0, 0  links K2Node_PromotableOperator_39
+
+[K2Node_PromotableOperator_38] Subtract_VectorVector 
+   <- A  links K2Node_PromotableOperator_39
+   <- B  links K2Node_BreakStruct_9
+   -> ReturnValue
+   -> X = 0.0
+   -> Y = 0.0
+   -> Z = 0.0  links K2Node_CallFunction_65
+
+[K2Node_VariableGet_15] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_9
+
+[K2Node_BreakStruct_9]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_15
+   -> FrontLedgeLocation  links K2Node_PromotableOperator_38
+
+[K2Node_CallFunction_65] Abs 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- A = 0.0  links K2Node_PromotableOperator_38
+   -> ReturnValue = 0.0  links K2Node_SetFieldsInStruct_8
+
+[EdGraphNode_Comment_9]  // "Step 3.3: save the height of the obstacle using the delta between the actor and front ledge transform."
+
+[K2Node_CallFunction_66] Conv_BoolToString 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- InBool = false  links K2Node_BreakStruct_16
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_1
+
+[K2Node_CallFunction_67] Conv_BoolToString 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- InBool = false  links K2Node_BreakStruct_16
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_1
+
+[K2Node_CallFunction_68] Conv_BoolToString 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- InBool = false  links K2Node_BreakStruct_16
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_1
+
+[K2Node_CallFunction_69] Conv_DoubleToString 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- InDouble = 0.0  links K2Node_BreakStruct_16
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_1
+
+[K2Node_CallFunction_70] Conv_DoubleToString 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- InDouble = 0.0  links K2Node_BreakStruct_16
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_1
+
+[K2Node_CallFunction_71] Conv_DoubleToString 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- InDouble = 0.0  links K2Node_BreakStruct_16
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_1
+
+[K2Node_Knot_5]  
+   <- InputPin  links K2Node_ExecutionSequence_0
+   -> OutputPin  links K2Node_IfThenElse_0
+
+[EdGraphNode_Comment_10]  // "Step 3.6: Trace downward from the back ledge location (using the height of the obstacle for the distance) to find the floor. If there is a floor, save its location and the back ledges height (using the distance between the back ledge and the floor). If no floor was found, invalidate the back floor.
+
+[K2Node_PromotableOperator_39] Subtract_VectorVector 
+   <- A  links K2Node_VariableGet_64
+   <- B
+   <- X = 0.0
+   <- Y = 0.0
+   <- Z = 0.0  links K2Node_VariableGet_66
+   -> ReturnValue  links K2Node_PromotableOperator_38
+
+[K2Node_VariableGet_66] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_PromotableOperator_39
+
+[K2Node_PromotableOperator_41] Subtract_DoubleDouble 
+   <- A  links K2Node_BreakStruct_14
+   <- B  links K2Node_VariableGet_55
+   -> ReturnValue  links K2Node_PromotableOperator_42
+
+[K2Node_VariableGet_55] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_PromotableOperator_41
+
+[K2Node_PromotableOperator_42] Add_DoubleDouble 
+   <- A  links K2Node_PromotableOperator_41
+   <- B = 50.000000
+   -> ReturnValue
+
+[K2Node_CallFunction_23] PrintString 
+   <- execute  links K2Node_CallFunction_80
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- InString = Hello  links K2Node_CommutativeAssociativeBinaryOperator_0
+   <- bPrintToScreen = true
+   <- bPrintToLog = false
+   <- TextColor = (R=1.000000,G=0.000000,B=0.824021,A=1.000000)
+   <- Duration = 2.000000
+   <- Key = Traversal 2
+
+[K2Node_VariableGet_44] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_10
+
+[K2Node_BreakStruct_10]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_44
+   -> ActionType  links K2Node_GetEnumeratorNameAsString_0
+
+[K2Node_GetEnumeratorNameAsString_0]  
+   <- Enumerator  links K2Node_BreakStruct_10
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_0
+
+[K2Node_CallFunction_1] GetConsoleVariableIntValue 
+   <- execute  links K2Node_VariableSet_3
+   -> then  links K2Node_VariableSet_0
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- VariableName = DDCvar.Traversal.DrawDebugLevel
+   -> ReturnValue = 0  links K2Node_VariableSet_0
+
+[K2Node_CallFunction_2] GetConsoleVariableFloatValue 
+   <- execute  links K2Node_VariableSet_0
+   -> then  links K2Node_VariableSet_1
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- VariableName = DDCvar.Traversal.DrawDebugDuration
+   -> ReturnValue = 0.0  links K2Node_VariableSet_1
+
+[K2Node_VariableSet_0] DrawDebugLevel 
+   <- execute  links K2Node_CallFunction_1
+   -> then  links K2Node_CallFunction_2
+   <- DrawDebugLevel = 0  links K2Node_CallFunction_1
+   -> Output_Get = 0
+
+[K2Node_VariableSet_1] DrawDebugDuration 
+   <- execute  links K2Node_CallFunction_2
+   <- DrawDebugDuration = 0.0  links K2Node_CallFunction_2
+   -> Output_Get = 0.0
+
+[K2Node_VariableGet_16] DrawDebugLevel 
+   -> DrawDebugLevel = 0  links K2Node_PromotableOperator_8
+
+[K2Node_VariableGet_17] DrawDebugDuration 
+   -> DrawDebugDuration = 0.0  links K2Node_CallFunction_21
+
+[K2Node_Select_5]  
+   <- Option 0 = None
+   <- Option 1 = None  links K2Node_VariableGet_24
+   <- Index = false  links K2Node_PromotableOperator_8
+   -> ReturnValue  links K2Node_CallFunction_21
+
+[K2Node_PromotableOperator_8] GreaterEqual_IntInt 
+   <- A  links K2Node_VariableGet_16
+   <- B = 2
+   -> ReturnValue  links K2Node_Select_5
+   <- ErrorTolerance
+
+[K2Node_VariableGet_79] DrawDebugLevel 
+   -> DrawDebugLevel = 0  links K2Node_PromotableOperator_2
+
+[K2Node_PromotableOperator_2] GreaterEqual_IntInt 
+   <- A  links K2Node_VariableGet_79
+   <- B = 1
+   -> ReturnValue  links K2Node_IfThenElse_12
+   <- ErrorTolerance
+
+[K2Node_VariableGet_13] DrawDebugDuration 
+   -> DrawDebugDuration = 0.0  links K2Node_CallFunction_19
+
+[K2Node_CallFunction_19] DrawDebugSphere 
+   <- execute  links K2Node_IfThenElse_3
+   -> then  links K2Node_IfThenElse_2
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- Center = 0, 0, 0  links K2Node_BreakStruct_7
+   <- Radius = 10.000000
+   <- Segments = 12
+   <- LineColor = (R=0.000000,G=1.000000,B=0.000000,A=1.000000)
+   <- Duration = 0.000000  links K2Node_VariableGet_13
+   <- Thickness = 1.000000
+   <- DepthPriority = World
+
+[K2Node_VariableGet_12] DrawDebugDuration 
+   -> DrawDebugDuration = 0.0  links K2Node_CallFunction_18
+
+[K2Node_CallFunction_18] DrawDebugSphere 
+   <- execute  links K2Node_IfThenElse_2
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- WorldContextObject
+   <- Center = 0, 0, 0  links K2Node_BreakStruct_5
+   <- Radius = 10.000000
+   <- Segments = 12
+   <- LineColor = (R=0.000000,G=0.639368,B=1.000000,A=1.000000)
+   <- Duration = 0.000000  links K2Node_VariableGet_12
+   <- Thickness = 1.000000
+   <- DepthPriority = World
+
+[K2Node_VariableGet_19] DrawDebugLevel 
+   -> DrawDebugLevel = 0  links K2Node_PromotableOperator_9
+
+[K2Node_Select_6]  
+   <- Option 0 = None
+   <- Option 1 = None  links K2Node_VariableGet_38
+   <- Index = false  links K2Node_PromotableOperator_9
+   -> ReturnValue  links K2Node_CallFunction_13
+
+[K2Node_PromotableOperator_9] GreaterEqual_IntInt 
+   <- A  links K2Node_VariableGet_19
+   <- B = 3
+   -> ReturnValue  links K2Node_Select_6
+   <- ErrorTolerance
+
+[K2Node_VariableGet_20] DrawDebugDuration 
+   -> DrawDebugDuration = 0.0  links K2Node_CallFunction_13
+
+[K2Node_VariableGet_21] DrawDebugLevel 
+   -> DrawDebugLevel = 0  links K2Node_PromotableOperator_11
+
+[K2Node_Select_7]  
+   <- Option 0 = None
+   <- Option 1 = None  links K2Node_VariableGet_80
+   <- Index = false  links K2Node_PromotableOperator_11
+   -> ReturnValue  links K2Node_CallFunction_48
+
+[K2Node_PromotableOperator_11] GreaterEqual_IntInt 
+   <- A  links K2Node_VariableGet_21
+   <- B = 3
+   -> ReturnValue  links K2Node_Select_7
+   <- ErrorTolerance
+
+[K2Node_VariableGet_26] DrawDebugDuration 
+   -> DrawDebugDuration = 0.0  links K2Node_CallFunction_48
+
+[K2Node_VariableGet_49] DrawDebugLevel 
+   -> DrawDebugLevel = 0  links K2Node_PromotableOperator_7
+
+[K2Node_Select_4]  
+   <- Option 0 = None
+   <- Option 1 = None  links K2Node_VariableGet_22
+   <- Index = false  links K2Node_PromotableOperator_7
+   -> ReturnValue  links K2Node_CallFunction_8
+
+[K2Node_PromotableOperator_7] GreaterEqual_IntInt 
+   <- A  links K2Node_VariableGet_49
+   <- B = 3
+   -> ReturnValue  links K2Node_Select_4
+   <- ErrorTolerance
+
+[K2Node_VariableGet_40] DrawDebugDuration 
+   -> DrawDebugDuration = 0.0  links K2Node_CallFunction_8
+
+[K2Node_VariableGet_42] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_2
+
+[K2Node_SetFieldsInStruct_2]  
+   <- execute  links K2Node_DynamicCast_2
+   -> then  links K2Node_CallFunction_11
+   <- StructRef  links K2Node_VariableGet_42
+   -> StructOut
+   <- HitComponent = None  links K2Node_CallFunction_21
+
+[EdGraphNode_Comment_11]  // "Step 4.2: Evaluate a chooser with a PoseMatch Column to select the best montages that match the conditions of the traversal check (Inside the Chooser, the Posematch Column is at the far right).\r\nThe chooser outputs the best montage with the right entry frame (start time) based on the distance to 
+
+[K2Node_MakeStruct_1]  
+   -> S_CHT_TraversalMontages_IN  links K2Node_EvaluateChooser2_1,K2Node_EvaluateChooser2_0
+   <- ActionType = NewEnumerator0  links K2Node_BreakStruct_22
+   <- HasFrontLedge = False  links K2Node_BreakStruct_22
+   <- HasBackLedge = False  links K2Node_BreakStruct_22
+   <- HasBackFloor = False  links K2Node_BreakStruct_22
+   <- ObstacleHeight = 0.000000  links K2Node_BreakStruct_22
+   <- ObstacleDepth = 0.000000  links K2Node_BreakStruct_22
+   <- BackLedgeHeight = 0.000000  links K2Node_BreakStruct_22
+   <- DistanceToLedge = 0.000000  links K2Node_CallFunction_27
+   <- MovementMode = NewEnumerator4  links K2Node_BreakStruct_24
+   <- Gait = NewEnumerator0  links K2Node_BreakStruct_24
+   <- Speed = 0.000000  links K2Node_BreakStruct_24
+   <- PoseHistory = ()  links K2Node_Message_1
+
+[K2Node_VariableGet_4] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_4
+
+[K2Node_BreakStruct_4]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_4
+   -> ActionType  links K2Node_EnumInequality_0
+
+[K2Node_EnumInequality_0]  
+   -> ReturnValue  links K2Node_IfThenElse_0
+   <- A  links K2Node_BreakStruct_4
+   <- B = NewEnumerator0
+
+[K2Node_IfThenElse_0]  
+   <- execute  links K2Node_Knot_5
+   <- Condition = true  links K2Node_EnumInequality_0
+   -> then  links K2Node_VariableSet_7
+   -> else  links K2Node_FunctionResult_2
+
+[K2Node_FunctionResult_2] TryTraversalAction 
+   <- execute  links K2Node_IfThenElse_0
+   <- TraversalCheckFailed = true
+   <- MontageSelectionFailed = false
+
+[K2Node_FunctionResult_0] TryTraversalAction 
+   <- execute  links K2Node_IfThenElse_7
+   <- TraversalCheckFailed = true
+   <- MontageSelectionFailed = false
+
+[K2Node_FunctionResult_1] TryTraversalAction 
+   <- execute  links K2Node_SetFieldsInStruct_5
+   <- TraversalCheckFailed = true
+   <- MontageSelectionFailed = false
+
+[EdGraphNode_Comment_13]  // "Step 5.1: Continue if there is a valid action type. If none of the conditions were met, no action can be performed, therefore exit the function."
+
+[K2Node_VariableGet_68] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_VariableSet_7
+
+[EdGraphNode_Comment_15]  // "Step 5.2: Finally, if the check was a success and a montage was found, trigger the Traversal Event"
+
+[K2Node_BreakStruct_22]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_6
+   -> ActionType  links K2Node_MakeStruct_1
+   -> HasFrontLedge  links K2Node_MakeStruct_1
+   -> FrontLedgeLocation  links K2Node_CallFunction_27
+   -> HasBackLedge  links K2Node_MakeStruct_1
+   -> HasBackFloor  links K2Node_MakeStruct_1
+   -> ObstacleHeight  links K2Node_MakeStruct_1
+   -> ObstacleDepth  links K2Node_MakeStruct_1
+   -> BackLedgeHeight  links K2Node_MakeStruct_1
+
+[K2Node_VariableGet_6] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_22
+
+[K2Node_IfThenElse_1]  
+   <- execute  links K2Node_Knot_6
+   <- Condition = true  links K2Node_PromotableOperator_4
+   -> then  links K2Node_CallFunction_80
+   -> else
+
+[K2Node_VariableGet_81] DrawDebugLevel 
+   -> DrawDebugLevel = 0  links K2Node_PromotableOperator_4
+
+[K2Node_PromotableOperator_4] GreaterEqual_IntInt 
+   <- A  links K2Node_VariableGet_81
+   <- B = 1
+   -> ReturnValue  links K2Node_IfThenElse_1
+   <- ErrorTolerance
+
+[EdGraphNode_Comment_18]  // "DEBUG: Print out the resulting conditions and parameters."
+
+[K2Node_FunctionResult_3] TryTraversalAction 
+   <- execute  links K2Node_DynamicCast_2,K2Node_Knot_7
+   <- TraversalCheckFailed = true
+   <- MontageSelectionFailed = false
+
+[K2Node_Knot_7]  
+   <- InputPin  links K2Node_IfThenElse_4
+   -> OutputPin  links K2Node_FunctionResult_3
+
+[K2Node_Knot_8]  
+   <- InputPin  links K2Node_DynamicCast_2
+   -> OutputPin  links K2Node_CallFunction_11
+
+[K2Node_Knot_9]  
+   <- InputPin  links K2Node_Knot_10
+   -> OutputPin  links K2Node_CallFunction_11
+
+[K2Node_Knot_10]  
+   <- InputPin  links K2Node_CallFunction_21
+   -> OutputPin  links K2Node_Knot_9
+
+[K2Node_FunctionResult_4] TryTraversalAction 
+   <- execute  links K2Node_CallFunction_33
+   <- TraversalCheckFailed = false
+   <- MontageSelectionFailed = false
+
+[K2Node_VariableSet_7] TraversalResult 
+   <- execute  links K2Node_IfThenElse_0
+   -> then  links K2Node_CallFunction_30
+   <- TraversalResult  links K2Node_VariableGet_68
+   -> Output_Get
+   <- self
+
+[K2Node_BreakStruct_1]  
+   <- S_CHT_TraversalMontages_OUT  links K2Node_EvaluateChooser2_1
+   -> ActionType  links K2Node_SetFieldsInStruct_9
+   -> MontageStartTime  links K2Node_SetFieldsInStruct_9
+
+[K2Node_VariableGet_27] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_9
+
+[K2Node_SetFieldsInStruct_9]  
+   <- execute  links K2Node_MacroInstance_0
+   -> then  links K2Node_Knot_6
+   <- StructRef  links K2Node_VariableGet_27
+   -> StructOut
+   <- ActionType = NewEnumerator0  links K2Node_BreakStruct_1
+   <- ChosenMontage = None  links K2Node_EvaluateChooser2_1
+   <- StartTime = 0.000000  links K2Node_BreakStruct_1
+   <- PlayRate = 1.000000
+
+[K2Node_Knot_1]  
+   <- InputPin  links K2Node_ExecutionSequence_0
+   -> OutputPin  links K2Node_DynamicCast_1
+
+[K2Node_VariableGet_67] Inputs 
+   -> Inputs
+   -> Inputs_TraceForwardDirection_5_84E06003419F502C44036B9424B39047  links K2Node_PromotableOperator_1
+   -> Inputs_TraceForwardDistance_2_07F489F3465D510BFC123689985564DC  links K2Node_PromotableOperator_1
+   -> Inputs_TraceOriginOffset_7_2757E2FF43A7611D7F46EE9AAA15F8C0  links K2Node_PromotableOperator_3
+   -> Inputs_TraceEndOffset_15_35E488F2478DA8D4D7E69FB93494661B  links K2Node_PromotableOperator_0
+   -> Inputs_TraceRadius_10_FF044CA546FFD12BAA4D4E93460A273A  links K2Node_CallFunction_21
+   -> Inputs_TraceHalfHeight_12_019A16DE47BB8535C3C0CF8AA6E355EB  links K2Node_CallFunction_21
+
+[K2Node_PromotableOperator_3] Add_VectorVector 
+   <- A  links K2Node_VariableGet_23
+   <- B  links K2Node_VariableGet_67
+   -> ReturnValue  links K2Node_CallFunction_21,K2Node_PromotableOperator_0
+
+[K2Node_VariableGet_24] DebugType 
+   -> DebugType = None  links K2Node_Select_5
+
+[K2Node_VariableGet_38] DebugType 
+   -> DebugType = None  links K2Node_Select_6
+
+[K2Node_VariableGet_80] DebugType 
+   -> DebugType = None  links K2Node_Select_7
+
+[K2Node_VariableGet_22] DebugType 
+   -> DebugType = None  links K2Node_Select_4
+
+[K2Node_VariableGet_0] TraversalResult 
+   -> TraversalResult  links K2Node_CallFunction_33
+   <- self
+
+[K2Node_VariableGet_7] CharacterProperties 
+   -> CharacterProperties  links K2Node_BreakStruct_3
+   <- self
+
+[K2Node_BreakStruct_3]  
+   <- S_CharacterPropertiesForTraversal  links K2Node_VariableGet_7
+   -> Capsule  links K2Node_VariableGet_1,K2Node_VariableGet_2
+
+[K2Node_CallFunction_26] GetOwner 
+   <- self
+   -> ReturnValue  links K2Node_CallFunction_22,K2Node_Message_0
+
+[K2Node_Message_0] Get_PropertiesForTraversal 
+   <- execute  links K2Node_Knot_3
+   -> then  links K2Node_VariableSet_5
+   <- self  links K2Node_CallFunction_26
+   -> ReturnValue  links K2Node_VariableSet_5
+
+[K2Node_VariableSet_5] CharacterProperties 
+   <- execute  links K2Node_Message_0
+   -> then  links K2Node_VariableSet_4
+   <- CharacterProperties  links K2Node_Message_0
+   -> Output_Get
+   <- self
+
+[K2Node_VariableGet_9] CharacterProperties 
+   -> CharacterProperties  links K2Node_BreakStruct_24
+   <- self
+
+[K2Node_BreakStruct_24]  
+   <- S_CharacterPropertiesForTraversal  links K2Node_VariableGet_9
+   -> MovementMode  links K2Node_MakeStruct_1
+   -> Gait  links K2Node_MakeStruct_1
+   -> Speed  links K2Node_MakeStruct_1
+
+[K2Node_CallFunction_30] PerformTraversalAction 
+   <- execute  links K2Node_VariableSet_7
+   -> then  links K2Node_CallFunction_33
+   <- self
+
+[K2Node_VariableGet_1] CapsuleRadius 
+   -> CapsuleRadius = 0.0  links K2Node_VariableSet_2
+   <- self  links K2Node_BreakStruct_3
+
+[K2Node_VariableGet_2] CapsuleHalfHeight 
+   -> CapsuleHalfHeight = 0.0  links K2Node_VariableSet_3
+   <- self  links K2Node_BreakStruct_3
+
+[K2Node_CallFunction_33] PerformTraversalAction_Server 
+   <- execute  links K2Node_CallFunction_30
+   -> then  links K2Node_FunctionResult_4
+   <- self
+   <- TraversalResult  links K2Node_VariableGet_0
+
+[EdGraphNode_Comment_17]  // "Step 4.1: Send the front ledge location to the Anim BP using an interface. This transform will be used for a custom channel within the following Motion Matching search."
+
+[K2Node_CallFunction_3] MakeRotFromZ 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- Z = 0, 0, 0  links K2Node_BreakStruct_0
+   -> ReturnValue = 0, 0, 0  links K2Node_CallFunction_31
+
+[K2Node_CallFunction_31] MakeTransform 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- Location = 0, 0, 0  links K2Node_BreakStruct_0
+   <- Rotation = 0, 0, 0  links K2Node_CallFunction_3
+   <- Scale = 1.000000,1.000000,1.000000
+   -> ReturnValue  links K2Node_CallFunction_17
+
+[K2Node_BreakStruct_0]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_78
+   -> FrontLedgeLocation  links K2Node_CallFunction_31
+   -> FrontLedgeNormal  links K2Node_CallFunction_3
+
+[K2Node_CallFunction_43] GetAnimInstance 
+   <- self  links K2Node_BreakStruct_19
+   -> ReturnValue  links K2Node_DynamicCast_1
+
+[K2Node_VariableGet_78] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_0
+
+[K2Node_VariableGet_30] CharacterProperties 
+   -> CharacterProperties  links K2Node_BreakStruct_19
+   <- self
+
+[K2Node_BreakStruct_19]  
+   <- S_CharacterPropertiesForTraversal  links K2Node_VariableGet_30
+   -> Mesh  links K2Node_CallFunction_43
+   -> Speed
+
+[K2Node_EvaluateChooser2_1]  
+   <- execute  links K2Node_IfThenElse_9
+   -> execute  links K2Node_MacroInstance_0
+   <- AnimInstance  links K2Node_CallFunction_98
+   <- S_CHT_TraversalMontages_IN  links K2Node_MakeStruct_1
+   -> S_CHT_TraversalMontages_OUT  links K2Node_BreakStruct_1
+   -> Result  links K2Node_SetFieldsInStruct_9,K2Node_MacroInstance_0
+
+[K2Node_VariableGet_71] CharacterProperties 
+   -> CharacterProperties  links K2Node_BreakStruct_21
+   <- self
+
+[K2Node_BreakStruct_21]  
+   <- S_CharacterPropertiesForTraversal  links K2Node_VariableGet_71
+   -> Mesh  links K2Node_CallFunction_98,K2Node_CallFunction_28
+
+[K2Node_CallFunction_98] GetAnimInstance 
+   <- self  links K2Node_BreakStruct_21
+   -> ReturnValue  links K2Node_EvaluateChooser2_1,K2Node_Message_1,K2Node_EvaluateChooser2_0
+
+[K2Node_CallFunction_27] Vector_Distance 
+   <- self = /Script/Engine.Default__KismetMathLibrary
+   <- V1 = 0, 0, 0  links K2Node_BreakStruct_22
+   <- V2 = 0, 0, 0  links K2Node_CallFunction_28
+   -> ReturnValue = 0.0  links K2Node_MakeStruct_1
+
+[K2Node_CallFunction_28] K2_GetComponentLocation 
+   <- self  links K2Node_BreakStruct_21
+   -> ReturnValue = 0, 0, 0  links K2Node_CallFunction_27
+
+[K2Node_DynamicCast_1]  
+   <- execute  links K2Node_Knot_1
+   -> then  links K2Node_CallFunction_17
+   -> CastFailed
+   <- Object  links K2Node_CallFunction_43
+   -> AsBPI Sandbox Character ABP  links K2Node_CallFunction_17
+   -> bSuccess
+
+[K2Node_CallFunction_17] Set_InteractionTransform 
+   <- execute  links K2Node_DynamicCast_1
+   -> then  links K2Node_Message_1
+   <- self  links K2Node_DynamicCast_1
+   <- InteractionTransform  links K2Node_CallFunction_31
+
+[K2Node_Message_1] Get_PoseHistory 
+   <- execute  links K2Node_CallFunction_17
+   -> then  links K2Node_IfThenElse_9
+   <- self  links K2Node_CallFunction_98
+   -> ReturnValue  links K2Node_MakeStruct_1
+
+[K2Node_IfThenElse_9]  
+   <- execute  links K2Node_Message_1
+   <- Condition = true  links K2Node_VariableGet_10
+   -> then  links K2Node_EvaluateChooser2_1
+   -> else  links K2Node_EvaluateChooser2_0
+
+[K2Node_VariableGet_10] IsMoverCharacter 
+   -> IsMoverCharacter = false  links K2Node_IfThenElse_9
+   <- self
+
+[K2Node_EvaluateChooser2_0]  
+   <- execute  links K2Node_IfThenElse_9
+   -> execute  links K2Node_MacroInstance_1
+   <- AnimInstance  links K2Node_CallFunction_98
+   <- S_CHT_TraversalMontages_IN  links K2Node_MakeStruct_1
+   -> S_CHT_TraversalMontages_OUT  links K2Node_BreakStruct_23
+   -> Result  links K2Node_SetFieldsInStruct_0,K2Node_MacroInstance_1
+
+[K2Node_BreakStruct_23]  
+   <- S_CHT_TraversalMontages_OUT  links K2Node_EvaluateChooser2_0
+   -> ActionType  links K2Node_SetFieldsInStruct_0
+   -> MontageStartTime  links K2Node_SetFieldsInStruct_0
+
+[K2Node_VariableGet_8] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_SetFieldsInStruct_0
+
+[K2Node_SetFieldsInStruct_0]  
+   <- execute  links K2Node_MacroInstance_1
+   -> then  links K2Node_Knot_6
+   <- StructRef  links K2Node_VariableGet_8
+   -> StructOut
+   <- ActionType = NewEnumerator0  links K2Node_BreakStruct_23
+   <- ChosenMontage = None  links K2Node_EvaluateChooser2_0
+   <- StartTime = 0.000000  links K2Node_BreakStruct_23
+   <- PlayRate = 1.000000
+
+[K2Node_Knot_6]  
+   <- InputPin  links K2Node_SetFieldsInStruct_9,K2Node_SetFieldsInStruct_0
+   -> OutputPin  links K2Node_IfThenElse_1
+
+[K2Node_VariableGet_70] TraversalCheckResult 
+   -> TraversalCheckResult  links K2Node_BreakStruct_20
+
+[K2Node_BreakStruct_20]  
+   <- S_TraversalCheckResult  links K2Node_VariableGet_70
+   -> ChosenMontage  links K2Node_CallFunction_266
+
+[K2Node_CallFunction_266] GetDisplayName 
+   <- self = /Script/Engine.Default__KismetSystemLibrary
+   <- Object  links K2Node_BreakStruct_20
+   -> ReturnValue  links K2Node_CommutativeAssociativeBinaryOperator_0
+
+[K2Node_CommutativeAssociativeBinaryOperator_0] Concat_StrStr 
+   <- self = /Script/Engine.Default__KismetStringLibrary
+   <- A  links K2Node_GetEnumeratorNameAsString_0
+   <- B = \r\n
+   -> ReturnValue  links K2Node_CallFunction_23
+   <- C  links K2Node_CallFunction_266
+   <- D = \r\n
+
+[K2Node_MacroInstance_1]  
+   <- exec  links K2Node_EvaluateChooser2_0
+   <- InputObject  links K2Node_EvaluateChooser2_0
+   -> Is Valid  links K2Node_SetFieldsInStruct_0
+   -> Is Not Valid  links K2Node_FunctionResult_5
+
+[K2Node_MacroInstance_0]  
+   <- exec  links K2Node_EvaluateChooser2_1
+   <- InputObject  links K2Node_EvaluateChooser2_1
+   -> Is Valid  links K2Node_SetFieldsInStruct_9
+   -> Is Not Valid  links K2Node_FunctionResult_5
+
+[K2Node_FunctionResult_5] TryTraversalAction 
+   <- execute  links K2Node_MacroInstance_0,K2Node_MacroInstance_1
+   <- TraversalCheckFailed = false
+   <- MontageSelectionFailed = true

@@ -1,0 +1,1730 @@
+{
+ "kit": "DojoKit",
+ "set": "DojoPines",
+ "round": "v2f (fix round on v2 + rock stage)",
+ "prefix": "SM_DKN_ / T_DKN_",
+ "species": "Pinus thunbergii (niwaki)",
+ "scale_note": "Heights are measured from the sheet's 1.8 m figure (v2). Instance scale may go to ~1.3x in Unreal for a bigger tree; needles then reach ~12 cm on A/B/D (C: keep <= 1.05x for needles <= 12 cm). D (rock stage): the owner shrank the rock to ~0.65 x its sheet size relative to the tree and the tree sits lower on it, so D stands ~3.2 m instead of the sheet's 3.6-3.9 m; ~1.15-1.2x restores the sheet height (rock included).",
+ "budgets": {
+  "study_8.7": {
+   "trunk_tris": 80000,
+   "foliage_tris": 150000,
+   "foliage_tris_if_judge_needs_density": 250000
+  },
+  "note": "Nanite meshes; over-budget items are listed per item (measure in Unreal, G15/G18, before cutting)"
+ },
+ "base_mounds": {
+  "SM_DKN_BaseMound_A": {
+   "file": "Exports\\DojoKit\\Pines\\SM_DKN_BaseMound_A.fbx",
+   "sha256": "1fbfc4d0a87cbf9c5bd006e9f8f285389b6322b412f24b4eacf02f8801d29291",
+   "warnings": [],
+   "objects": [
+    "SM_DKN_BaseMound_A",
+    "UCX_SM_DKN_BaseMound_A_00"
+   ]
+  },
+  "SM_DKN_BaseMound_B": {
+   "file": "Exports\\DojoKit\\Pines\\SM_DKN_BaseMound_B.fbx",
+   "sha256": "af55caf78101b8c9e8d7c9164d19c405d7970d2fe09a7ed9d362025a1056a44f",
+   "warnings": [],
+   "objects": [
+    "SM_DKN_BaseMound_B",
+    "UCX_SM_DKN_BaseMound_B_00"
+   ]
+  },
+  "SM_DKN_BaseMound_C": {
+   "file": "Exports\\DojoKit\\Pines\\SM_DKN_BaseMound_C.fbx",
+   "sha256": "6bbc3c7a2ff3937b24699c58359153049c57c162d5e275b1177ff34382ccb406",
+   "warnings": [],
+   "objects": [
+    "SM_DKN_BaseMound_C",
+    "UCX_SM_DKN_BaseMound_C_00"
+   ]
+  },
+  "SM_DKN_BaseMound_D": {
+   "file": "Exports\\DojoKit\\Pines\\SM_DKN_BaseMound_D.fbx",
+   "sha256": "bf3cc62dd487b8bd31cf76983225bc3bbd5328b7dd0d945e8d56bc8e9ac3aa98",
+   "warnings": [],
+   "objects": [
+    "SM_DKN_BaseMound_D",
+    "UCX_SM_DKN_BaseMound_D_00"
+   ]
+  }
+ },
+ "reference": "References/Dojo/dojo_japanese_pine_ref.png (AI-generated sheet: measured and traced only; no pixel of it is in any texture). Record AI-reference use for Fab (ASSET_GUIDELINES 11).",
+ "study": "TREE_BUILDING_STUDY.md",
+ "generator": "Scripts/vegetation/ (reusable) + Scripts/dojo/pines/",
+ "shared_textures": {
+  "T_DKN_Bark_BC.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Bark_BC.png",
+   "sha256": "0e82151de6ea4986961e5c00fddfd7c775d61dad91bb20a1579261f9ff3c8368"
+  },
+  "T_DKN_Bark_N.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Bark_N.png",
+   "sha256": "98d60fbdf489fd3af4a63e4b23ffee30b881a820f4a61eef1ba9756070e89c29"
+  },
+  "T_DKN_Bark_ORM.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Bark_ORM.png",
+   "sha256": "6c14e514b54e47c71f0bd2c330729ac627f7a00fa9457f43cdcdbdd6c75953c2"
+  },
+  "T_DKN_Moss_BC.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Moss_BC.png",
+   "sha256": "bb75dc3fba36b9b458cf17b9454ebb09c9463d062f67e5f9e4734591b869323c"
+  },
+  "T_DKN_Moss_N.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Moss_N.png",
+   "sha256": "b1a7a2d591fc9f17954eebcb2137433fcf724a91a23773fb070ac4c45a248b6b"
+  },
+  "T_DKN_Moss_ORM.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Moss_ORM.png",
+   "sha256": "998f4f8491eccad6ecbbcc46b890a1df098d174a89809fce934ab8f1e6e554d3"
+  },
+  "T_DKN_Needle_BC.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Needle_BC.png",
+   "sha256": "088c9e445696a60f3603cf371fd54434923a186f40c7c0cda813eadcd79e311d"
+  },
+  "T_DKN_Needle_N.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Needle_N.png",
+   "sha256": "0f4811ff509a9e46a04b2ced0b8a3e36279511c507b8d6200dc256ddb79fa220"
+  },
+  "T_DKN_Needle_ORM.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Needle_ORM.png",
+   "sha256": "1fd1ad052b36f4cd3bcab10ef977adcda19a141079a1c879f9ee8a1809116775"
+  },
+  "T_DKN_Needle_SSS.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Needle_SSS.png",
+   "sha256": "b06b85a2af8a65c2307dafa6c030a4ad80ddfbd414fcbae1a7dd7c5703495553"
+  },
+  "T_DKN_RockOverlay_M.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_RockOverlay_M.png",
+   "sha256": "6b68ac439fb5aa28204fc88d1c79b2c21aad7e7643e4b18b1297348c7a4daa71"
+  },
+  "T_DKN_Soil_BC.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Soil_BC.png",
+   "sha256": "a9a6529c8372f7123ab086a30b14144876d7b4b12100ae6db33bdcf0c8122ffd"
+  },
+  "T_DKN_Soil_N.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Soil_N.png",
+   "sha256": "1cc4d1ae9366e82d70da9ec945ba94229f72b6c2a3125b3a9a91ed781ffd68a8"
+  },
+  "T_DKN_Soil_ORM.png": {
+   "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_Soil_ORM.png",
+   "sha256": "983d395927589a2a57b75ef1a70872f4efa9f3036883b8df27227e69a73bdebc"
+  }
+ },
+ "unreal": {
+  "route": "A: static Nanite meshes + Pivot Painter 2 WPO wind (study 5.1); no Unreal step was run in this build",
+  "import": {
+   "importer": "legacy FBX (house setting)",
+   "normals": "Import Normals + MikkTSpace",
+   "convert_scene": true,
+   "convert_scene_unit": true,
+   "uniform_scale": 1.0,
+   "materials": "Do Not Create Material",
+   "auto_generate_collision": false,
+   "one_convex_hull_per_ucx": true,
+   "import_mesh_lods": true,
+   "generate_lightmap_uvs": false,
+   "vertex_color_import_option": "Replace (the static default Ignore drops every mask)",
+   "build_nanite": true,
+   "nanite": {
+    "_Trunk": {
+     "shape_preservation": "None",
+     "lerp_uvs": true
+    },
+    "_Rock": {
+     "shape_preservation": "None",
+     "lerp_uvs": true
+    },
+    "_Foliage": {
+     "shape_preservation": "Voxelize",
+     "lerp_uvs": false,
+     "why": "UV2 carries the PP2 element index; lerping it tears triangles (study 4.13)"
+    }
+   },
+   "textures": {
+    "_BC": "sRGB, Default",
+    "_N": "Normalmap, no green flip (maps are DirectX)",
+    "_ORM": "linear, Masks",
+    "_SSS": "linear, Grayscale, full mips",
+    "_PivotPos.exr": "HDR 16-bit, sRGB off, NoMipMaps, Filter Nearest",
+    "_XVector.png": "sRGB off, NoMipMaps, Filter Nearest, VectorDisplacementmap (uncompressed)"
+   },
+   "collision": {
+    "_Trunk": "UCX hulls (2-4 per trunk); BlockAll base; Visibility/Camera per study 5.7",
+    "_Rock": "UCX hulls, one per lobe (D1 3, D2 2); BlockAll; no traversal marker: the top is the tree's root plate (no flat landing >= 0.49 m free of the trunk; stone study 4.13)",
+    "_Foliage": "NoCollision on the component (no hulls)"
+   }
+  },
+  "materials": {
+   "M_DKN_Bark (master; MI_DKN_<Variant>_Bark per tree)": {
+    "model": "Substrate Slab, opaque",
+    "inputs": "TexCoord[0]: T_DKN_Bark_BC/_N/_ORM (1 m tiles, 10.24 px/cm); TexCoord[2]: T_DKN_<Variant>_Trunk_ORM (unique AO bake, R channel) multiplied into AO; VertexColor.R junction weight (fade the unique AO into the tiling bark), .G moss mask (lerp to MossTint 0.10/0.12/0.03 linear), .B branch AO (multiply AO)",
+    "params": [
+     "Tint",
+     "MossTint",
+     "MossAmount",
+     "NormalStrength (1.0)",
+     "RoughMult (1.0)"
+    ],
+    "wpo": "none (niwaki are stiff; trunk shadows stay cached)"
+   },
+   "M_DKN_Needle": {
+    "model": "Substrate Slab, Sub-Surface Type = Two-Sided Wrap (one closure), two-sided, opaque",
+    "inputs": "TexCoord[0]: T_DKN_Needle_BC/_N/_ORM/_SSS (every needle has its own cell of the tiling needle image); TexCoord[3].x = canopy AO (multiply base colour and subsurface, remap 0.8-1 as in Blender or tune); SubsurfaceTint = BC * (1.0, 1.15, 0.55); translucency = SSS * TranslucencyStrength (0.3 in Blender, where 0.5 darkened front-lit pads; the Unreal Two-Sided Wrap adds back-light without that loss, so tune it at the sunset camera)",
+    "params": [
+     "HueJitter",
+     "ValueJitter (PerInstanceRandom, HZD formula)",
+     "SubsurfaceTint",
+     "TranslucencyStrength",
+     "WindStrength",
+     "PadSwayAmp",
+     "TuftFlutterAmp",
+     "MaxWPO",
+     "PP2_UVIndex = 2"
+    ]
+   },
+   "MI_DKN_<D1|D2>_Rock (rock slot 0, rock stage v3)": "the stone study's M_ST_RockUnique recipe (4.9.5 a) on the shared library granite: M_DJ_Granite (UseWear on, Tint (0.60, 0.565, 0.515)) tiled on TexCoord[0] * (S / 4) with S = the rock's metres per UV0 unit (item 'rock.m_per_uv0'), under the rock's unique maps on TexCoord[0]: T_DKN_<V>_Rock_N (DirectX; replaces the library's 3.5 / 9 cm facet normal, study rule 10), T_DKN_<V>_Rock_ORM (baked AO in R, roughness G), T_DKN_<V>_Rock_M (linear, Masks: R moss -> lerp to the moss BC tiled at S / 2, G lichen -> lerp to ochre (0.30, 0.155, 0.06) / yellow-grey (0.34, 0.32, 0.18) / pale (0.50, 0.49, 0.44) picked by a ~30 cm noise, x0.8, B dirt -> lerp to soil (0.075, 0.058, 0.042), x0.55); grain micro relief = a 0.1 bump of the albedo (Blender) or the library's detail normal at 0.15-0.3 (Unreal). The rock's 'Wear' vertex colours: R grime (clefts, cracks, weathering mottle), G edge wear, B foot dirt. Not built in Unreal in this run",
+   "MI_DKN_<D1|D2>_RockMoss (rock slot 1)": "the moss cushions on the rock top: M_DKN_Moss on TexCoord[0] * (S / 2)",
+   "MI_DKN_PineRock (BaseMound_D stones)": "the v2 tiling granite + T_DKN_RockOverlay_M, kept for the mound's small stones only",
+   "MI_DKN_Groundcover (foliage slot 1)": "instance of M_DKN_Needle with a Tint multiply (1.25, 1.12, 0.62): the grass / fern tufts at the tree bases use the needle texture set",
+   "M_DKN_Moss": "Opaque: T_DKN_Moss_BC/_N/_ORM on TexCoord[0] * 2 (2 m moss tile on the granite's 4 m box UVs)"
+  },
+  "wind": {
+   "method": "PivotPainter2FoliageShader on the foliage mesh only",
+   "hierarchy": "trunk (0) -> scaffold limb (1) -> sub-limb (2) -> pad; per-tuft flutter from vertex colour B",
+   "data": "UV2 = pad element texel; T_DKN_<Variant>_PivotPos.exr (RGB pivot in UE cm, A parent index as Int as float) + T_DKN_<Variant>_XVector.png (RGB axis, A extent/2048 cm); SM_DKN_<Variant>.wind.json",
+   "character": "gentle pad bob about each pad pivot, weighted by vertex colour R (0 at the pivot, 1 at the needle tips), phase = G per pad; needle shimmer phase = B per tuft; never whole-tree rocking",
+   "suggested": {
+    "PadSwayAmp_cm": 2.0,
+    "PadSwayFreq_hz": 0.35,
+    "TuftFlutterAmp_cm": 0.6,
+    "TuftFlutterFreq_hz": 2.2,
+    "MaxWPO_cm": 6
+   },
+   "component": {
+    "wpo_disable_distance_cm": "4000-6000, capped at the measured voxel takeover (study 5.2)",
+    "shadow_cache_invalidation": "Rigid",
+    "vsm_lodbias_test": [
+     3,
+     4,
+     5
+    ],
+    "per_instance": "PerInstanceRandom hue/value and wind phase"
+   },
+   "unverified": [
+    "PP2 Int-as-float decode default in 5.8",
+    "Y flip with a one-vertex test mesh",
+    "XVector extent scale",
+    "voxel takeover distance per tree"
+   ]
+  }
+ },
+ "items": [
+  {
+   "variant": "PineA1",
+   "pine": "small S-curve garden pine (~2.2-2.5 m from the sheet's 1.8 m figure; cloud pads, rounded crown)",
+   "variant_of_two": 1,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P1F",
+    "side_panel": "P1S",
+    "m_per_px_front": 0.01169,
+    "m_per_px_side": 0.01169
+   },
+   "height_m": 2.244,
+   "meshes": {
+    "trunk": {
+     "tris": 42024
+    },
+    "foliage": {
+     "tris": 109948
+    },
+    "mound": {
+     "tris": 43589
+    }
+   },
+   "tufts": 780,
+   "pads": 6,
+   "wind_elements": 12,
+   "flare_ratio": 2.773,
+   "fork_exponents": {
+    "forks": 233,
+    "share_in_band": 0.876,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 3.078,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.04,
+    11.07
+   ],
+   "min_twig_r_mm": 3.57,
+   "u_texel_px_per_cm_by_order": {
+    "0": 10.24,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true,
+    "mound": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.3,
+   "rosettes_per_pad": [
+    103,
+    100,
+    170,
+    170,
+    122,
+    115
+   ],
+   "over_budget": {},
+   "base_mound": "SM_DKN_BaseMound_A (optional, shared by PineA1/PineA2, same origin)",
+   "files": {
+    "SM_DKN_PineA1_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineA1_Trunk.fbx",
+     "sha256": "6da0c26727c9656edf28ed6af39996d7217d4514a8623f56c24986cc94b10a56",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineA1_Trunk",
+      "UCX_SM_DKN_PineA1_Trunk_00",
+      "UCX_SM_DKN_PineA1_Trunk_01",
+      "UCX_SM_DKN_PineA1_Trunk_02",
+      "UCX_SM_DKN_PineA1_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineA1_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineA1_Foliage.fbx",
+     "sha256": "b58d04e6282e47457f2b2b14888b3d77e2867834a3ec51e0fc614220a0e52cdb",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineA1_Foliage"
+     ]
+    },
+    "T_DKN_PineA1_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineA1_PivotPos.exr",
+     "sha256": "b43237ff5ab11b6705308dabff1c7325d23bd44ea4fbf3fe26bdba3d287c8b59"
+    },
+    "T_DKN_PineA1_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineA1_Trunk_ORM.png",
+     "sha256": "c028f99d81f3e5d12883a6f640f358b5b43122857a655436bdc8f98a34f5ea20"
+    },
+    "T_DKN_PineA1_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineA1_XVector.png",
+     "sha256": "334f7346b8cd3fad8a13295f8b4eb9fcd37caa9a24a5d0641bca10ca52688223"
+    },
+    "SM_DKN_PineA1.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineA1.wind.json",
+     "sha256": "35d473feb99ebe6c73193ea23ad3e8b79f530aaef48008e51c1e37540be1d867"
+    }
+   },
+   "measured_views": {
+    "PineA1_front": {
+     "ref_panel": "P1F",
+     "iou": 0.677,
+     "width_err": 0.195,
+     "crown_w_m": [
+      2.349,
+      2.376
+     ],
+     "row_fill": [
+      0.554,
+      0.66
+     ]
+    },
+    "PineA1_side": {
+     "ref_panel": "P1S",
+     "iou": 0.58,
+     "width_err": 0.728,
+     "crown_w_m": [
+      1.403,
+      1.413
+     ],
+     "row_fill": [
+      0.7,
+      0.801
+     ]
+    },
+    "PineA1_3q": {
+     "ref_panel": "P1Q",
+     "iou": 0.454,
+     "width_err": 0.39,
+     "crown_w_m": [
+      2.735,
+      1.959
+     ],
+     "row_fill": [
+      0.509,
+      0.74
+     ]
+    }
+   }
+  },
+  {
+   "variant": "PineA2",
+   "pine": "small S-curve garden pine (~2.2-2.5 m from the sheet's 1.8 m figure; cloud pads, rounded crown)",
+   "variant_of_two": 2,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P1Q",
+    "side_panel": "P1S",
+    "m_per_px_front": 0.01169,
+    "m_per_px_side": 0.01169
+   },
+   "height_m": 2.478,
+   "meshes": {
+    "trunk": {
+     "tris": 49758
+    },
+    "foliage": {
+     "tris": 136217
+    }
+   },
+   "tufts": 969,
+   "pads": 7,
+   "wind_elements": 14,
+   "flare_ratio": 2.406,
+   "fork_exponents": {
+    "forks": 260,
+    "share_in_band": 0.846,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 3.18,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.04,
+    11.07
+   ],
+   "min_twig_r_mm": 3.0,
+   "u_texel_px_per_cm_by_order": {
+    "0": 10.24,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.3,
+   "rosettes_per_pad": [
+    73,
+    170,
+    170,
+    168,
+    48,
+    170,
+    170
+   ],
+   "over_budget": {},
+   "base_mound": "SM_DKN_BaseMound_A (optional, shared by PineA1/PineA2, same origin)",
+   "files": {
+    "SM_DKN_PineA2_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineA2_Trunk.fbx",
+     "sha256": "00d637444e4db888de782868e48faee4ad046629ee7114500feeef93208130f9",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineA2_Trunk",
+      "UCX_SM_DKN_PineA2_Trunk_00",
+      "UCX_SM_DKN_PineA2_Trunk_01",
+      "UCX_SM_DKN_PineA2_Trunk_02",
+      "UCX_SM_DKN_PineA2_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineA2_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineA2_Foliage.fbx",
+     "sha256": "ffec27c623bb2e42e51fda0759b27aa50f9d269bd630b308e850000ba1aeb34e",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineA2_Foliage"
+     ]
+    },
+    "T_DKN_PineA2_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineA2_PivotPos.exr",
+     "sha256": "f3de82e0f1a4964dd66d631a6a5a1ae531e89b347e8aaf5c60c7dead55cfe543"
+    },
+    "T_DKN_PineA2_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineA2_Trunk_ORM.png",
+     "sha256": "7b8a8039814dc318e514e4cb5a054e981d40c87a66eb240ead637f1c1b6daf64"
+    },
+    "T_DKN_PineA2_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineA2_XVector.png",
+     "sha256": "9a298ac02af4176a1404a502a70142c64e0e1482a744950059ee4bcd96033f6c"
+    },
+    "SM_DKN_PineA2.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineA2.wind.json",
+     "sha256": "9cafe6c1ffcf57350f5150442c7114b27ef37959f149fca9d8d2c32cd35c14e0"
+    }
+   },
+   "measured_views": {
+    "PineA2_front": {
+     "ref_panel": "P1Q",
+     "iou": 0.708,
+     "width_err": 0.227,
+     "crown_w_m": [
+      2.735,
+      2.745
+     ],
+     "row_fill": [
+      0.509,
+      0.674
+     ]
+    },
+    "PineA2_side": {
+     "ref_panel": "P1S",
+     "iou": 0.66,
+     "width_err": 0.513,
+     "crown_w_m": [
+      1.403,
+      1.346
+     ],
+     "row_fill": [
+      0.7,
+      0.8
+     ]
+    },
+    "PineA2_3q": {
+     "ref_panel": "P1F",
+     "iou": 0.398,
+     "width_err": 0.264,
+     "crown_w_m": [
+      2.349,
+      2.158
+     ],
+     "row_fill": [
+      0.554,
+      0.71
+     ]
+    }
+   }
+  },
+  {
+   "variant": "PineB1",
+   "pine": "tall layered pine (~3.4-3.6 m; S trunk, 9 tiers of pads)",
+   "variant_of_two": 1,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P2F",
+    "side_panel": "P2S",
+    "m_per_px_front": 0.01169,
+    "m_per_px_side": 0.01169
+   },
+   "height_m": 3.577,
+   "meshes": {
+    "trunk": {
+     "tris": 74806
+    },
+    "foliage": {
+     "tris": 189253
+    },
+    "mound": {
+     "tris": 43717
+    }
+   },
+   "tufts": 1349,
+   "pads": 9,
+   "wind_elements": 18,
+   "flare_ratio": 1.824,
+   "fork_exponents": {
+    "forks": 372,
+    "share_in_band": 0.911,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 2.976,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.04,
+    11.07
+   ],
+   "min_twig_r_mm": 3.45,
+   "u_texel_px_per_cm_by_order": {
+    "0": 10.24,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true,
+    "mound": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.3,
+   "rosettes_per_pad": [
+    130,
+    122,
+    117,
+    130,
+    170,
+    170,
+    170,
+    170,
+    170
+   ],
+   "over_budget": {
+    "foliage": 189253
+   },
+   "base_mound": "SM_DKN_BaseMound_B (optional, shared by PineB1/PineB2, same origin)",
+   "files": {
+    "SM_DKN_PineB1_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineB1_Trunk.fbx",
+     "sha256": "11d613c146eb57bca0139d022e46231cd6a2850192d3c03dee44410a714b757c",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineB1_Trunk",
+      "UCX_SM_DKN_PineB1_Trunk_00",
+      "UCX_SM_DKN_PineB1_Trunk_01",
+      "UCX_SM_DKN_PineB1_Trunk_02",
+      "UCX_SM_DKN_PineB1_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineB1_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineB1_Foliage.fbx",
+     "sha256": "1f3d146154f86f299e6522b89a552302801bfb13831d4473073bb0ae8ffda585",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineB1_Foliage"
+     ]
+    },
+    "T_DKN_PineB1_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineB1_PivotPos.exr",
+     "sha256": "4d45910cf863a90649a19f1ac47d593e65ccb09c04de07b1a98c0760cb6529c1"
+    },
+    "T_DKN_PineB1_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineB1_Trunk_ORM.png",
+     "sha256": "a5e158358d2323fc9f938d70535c14e1642d00699c1f151163421f755677fa06"
+    },
+    "T_DKN_PineB1_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineB1_XVector.png",
+     "sha256": "f846164b782b9166f4ff0630158b1f628c4008a9b8ed91c46ca4da10410c54d6"
+    },
+    "SM_DKN_PineB1.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineB1.wind.json",
+     "sha256": "5ea8844027a9df2bf7ecdbf822e0d94c7fc628871df57f04f1b234d3311d1908"
+    }
+   },
+   "measured_views": {
+    "PineB1_front": {
+     "ref_panel": "P2F",
+     "iou": 0.668,
+     "width_err": 0.204,
+     "crown_w_m": [
+      2.794,
+      2.804
+     ],
+     "row_fill": [
+      0.486,
+      0.64
+     ]
+    },
+    "PineB1_side": {
+     "ref_panel": "P2S",
+     "iou": 0.518,
+     "width_err": 0.503,
+     "crown_w_m": [
+      1.496,
+      1.54
+     ],
+     "row_fill": [
+      0.625,
+      0.801
+     ]
+    },
+    "PineB1_3q": {
+     "ref_panel": "P2Q",
+     "iou": 0.348,
+     "width_err": 0.36,
+     "crown_w_m": [
+      2.758,
+      2.634
+     ],
+     "row_fill": [
+      0.524,
+      0.696
+     ]
+    }
+   }
+  },
+  {
+   "variant": "PineB2",
+   "pine": "tall layered pine (~3.4-3.6 m; S trunk, 9 tiers of pads)",
+   "variant_of_two": 2,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P2Q",
+    "side_panel": "P2S",
+    "m_per_px_front": 0.01169,
+    "m_per_px_side": 0.01169
+   },
+   "height_m": 3.401,
+   "meshes": {
+    "trunk": {
+     "tris": 70110
+    },
+    "foliage": {
+     "tris": 181040
+    }
+   },
+   "tufts": 1288,
+   "pads": 9,
+   "wind_elements": 18,
+   "flare_ratio": 1.915,
+   "fork_exponents": {
+    "forks": 352,
+    "share_in_band": 0.886,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 3.03,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.04,
+    11.07
+   ],
+   "min_twig_r_mm": 3.57,
+   "u_texel_px_per_cm_by_order": {
+    "0": 10.24,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.3,
+   "rosettes_per_pad": [
+    122,
+    130,
+    170,
+    156,
+    161,
+    170,
+    39,
+    170,
+    170
+   ],
+   "over_budget": {
+    "foliage": 181040
+   },
+   "base_mound": "SM_DKN_BaseMound_B (optional, shared by PineB1/PineB2, same origin)",
+   "files": {
+    "SM_DKN_PineB2_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineB2_Trunk.fbx",
+     "sha256": "e3ff50b919a82c8c0c2b29dc983606a4d88b70eb14b060cce87e4048882ac949",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineB2_Trunk",
+      "UCX_SM_DKN_PineB2_Trunk_00",
+      "UCX_SM_DKN_PineB2_Trunk_01",
+      "UCX_SM_DKN_PineB2_Trunk_02",
+      "UCX_SM_DKN_PineB2_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineB2_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineB2_Foliage.fbx",
+     "sha256": "8252bff3466e56aa553e3d202e07f7ec664ca5e853b5c0e69a31c4f593eef4f9",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineB2_Foliage"
+     ]
+    },
+    "T_DKN_PineB2_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineB2_PivotPos.exr",
+     "sha256": "76a24a0e0558d63f66ee7662d8d860599a34aa9134b08305c04b0d599e780f87"
+    },
+    "T_DKN_PineB2_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineB2_Trunk_ORM.png",
+     "sha256": "5e3515f2baf38d6360fa1094b28ae3e5123b15c3c883973e49dc5fc07092114d"
+    },
+    "T_DKN_PineB2_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineB2_XVector.png",
+     "sha256": "087a1379ec5ac5c9c87ab407462f2b2b68fd44f7ede9edbb82c1502f45302b34"
+    },
+    "SM_DKN_PineB2.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineB2.wind.json",
+     "sha256": "2238a546390b1cfa2cdc85c9372a6ae4c52de487fe219913b78d7030aff10676"
+    }
+   },
+   "measured_views": {
+    "PineB2_front": {
+     "ref_panel": "P2Q",
+     "iou": 0.581,
+     "width_err": 0.252,
+     "crown_w_m": [
+      2.758,
+      2.764
+     ],
+     "row_fill": [
+      0.524,
+      0.644
+     ]
+    },
+    "PineB2_side": {
+     "ref_panel": "P2S",
+     "iou": 0.503,
+     "width_err": 0.509,
+     "crown_w_m": [
+      1.496,
+      1.592
+     ],
+     "row_fill": [
+      0.625,
+      0.75
+     ]
+    },
+    "PineB2_3q": {
+     "ref_panel": "P2F",
+     "iou": 0.394,
+     "width_err": 0.4,
+     "crown_w_m": [
+      2.794,
+      1.928
+     ],
+     "row_fill": [
+      0.486,
+      0.715
+     ]
+    }
+   }
+  },
+  {
+   "variant": "PineC1",
+   "pine": "big leaning pine (~4.3-4.5 m; massive twisted trunk, the long reaching limb, a broken stub)",
+   "variant_of_two": 1,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P3F",
+    "side_panel": "P3S",
+    "m_per_px_front": 0.01241,
+    "m_per_px_side": 0.01241
+   },
+   "height_m": 4.531,
+   "meshes": {
+    "trunk": {
+     "tris": 102132
+    },
+    "foliage": {
+     "tris": 239115
+    },
+    "mound": {
+     "tris": 63921
+    }
+   },
+   "tufts": 1699,
+   "pads": 11,
+   "wind_elements": 22,
+   "flare_ratio": 1.797,
+   "fork_exponents": {
+    "forks": 500,
+    "share_in_band": 0.886,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 3.022,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.48,
+    11.76
+   ],
+   "min_twig_r_mm": 3.57,
+   "u_texel_px_per_cm_by_order": {
+    "0": 12.88,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true,
+    "mound": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.05,
+   "rosettes_per_pad": [
+    143,
+    145,
+    157,
+    194,
+    185,
+    181,
+    104,
+    148,
+    184,
+    151,
+    107
+   ],
+   "over_budget": {
+    "trunk": 102132,
+    "foliage": 239115
+   },
+   "base_mound": "SM_DKN_BaseMound_C (optional, shared by PineC1/PineC2, same origin)",
+   "files": {
+    "SM_DKN_PineC1_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineC1_Trunk.fbx",
+     "sha256": "9e81aeb0ab30858308a6400f18182bb7ee2b435d194b803482335612867919f5",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineC1_Trunk",
+      "UCX_SM_DKN_PineC1_Trunk_00",
+      "UCX_SM_DKN_PineC1_Trunk_01",
+      "UCX_SM_DKN_PineC1_Trunk_02",
+      "UCX_SM_DKN_PineC1_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineC1_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineC1_Foliage.fbx",
+     "sha256": "d962c1f4df6e06c9f81dd9f04948b72ace60bc4ee276fc20e99fb1ee94c8c67e",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineC1_Foliage"
+     ]
+    },
+    "T_DKN_PineC1_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineC1_PivotPos.exr",
+     "sha256": "69b13f6ebca6da42935340be9ddfb687f2c762db3fb39ab8d3861d92b2880ab7"
+    },
+    "T_DKN_PineC1_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineC1_Trunk_ORM.png",
+     "sha256": "5d9480dab1ac6e5d48e469b960dbf73139704bc6d677ca8aa0e1afafdc5c135f"
+    },
+    "T_DKN_PineC1_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineC1_XVector.png",
+     "sha256": "2e56c9bc589e5643189c09d68930f2276ee6d15e4052413ab985feec7089307a"
+    },
+    "SM_DKN_PineC1.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineC1.wind.json",
+     "sha256": "2d6e3915676564257eb4f7f2d120a661773ef358d78516efe79783c9b92c39b6"
+    }
+   },
+   "measured_views": {
+    "PineC1_front": {
+     "ref_panel": "P3F",
+     "iou": 0.614,
+     "width_err": 0.192,
+     "crown_w_m": [
+      5.363,
+      5.085
+     ],
+     "row_fill": [
+      0.428,
+      0.634
+     ]
+    },
+    "PineC1_side": {
+     "ref_panel": "P3S",
+     "iou": 0.642,
+     "width_err": 0.416,
+     "crown_w_m": [
+      1.663,
+      1.676
+     ],
+     "row_fill": [
+      0.624,
+      0.778
+     ]
+    },
+    "PineC1_3q": {
+     "ref_panel": "P3Q",
+     "iou": 0.339,
+     "width_err": 0.442,
+     "crown_w_m": [
+      3.215,
+      4.337
+     ],
+     "row_fill": [
+      0.559,
+      0.657
+     ]
+    }
+   }
+  },
+  {
+   "variant": "PineC2",
+   "pine": "big leaning pine (~4.3-4.5 m; massive twisted trunk, the long reaching limb, a broken stub)",
+   "variant_of_two": 2,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P3Q",
+    "side_panel": "P3S",
+    "m_per_px_front": 0.01241,
+    "m_per_px_side": 0.01241
+   },
+   "height_m": 4.32,
+   "meshes": {
+    "trunk": {
+     "tris": 76126
+    },
+    "foliage": {
+     "tris": 182660
+    }
+   },
+   "tufts": 1308,
+   "pads": 8,
+   "wind_elements": 16,
+   "flare_ratio": 1.896,
+   "fork_exponents": {
+    "forks": 412,
+    "share_in_band": 0.961,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 2.61,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.48,
+    11.76
+   ],
+   "min_twig_r_mm": 3.52,
+   "u_texel_px_per_cm_by_order": {
+    "0": 8.75,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.05,
+   "rosettes_per_pad": [
+    130,
+    113,
+    112,
+    232,
+    132,
+    155,
+    300,
+    134
+   ],
+   "over_budget": {
+    "foliage": 182660
+   },
+   "base_mound": "SM_DKN_BaseMound_C (optional, shared by PineC1/PineC2, same origin)",
+   "files": {
+    "SM_DKN_PineC2_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineC2_Trunk.fbx",
+     "sha256": "fbbe5e9350c0017841a8d5ab503680efe4d210c337f5c117106bbdff1057ddc1",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineC2_Trunk",
+      "UCX_SM_DKN_PineC2_Trunk_00",
+      "UCX_SM_DKN_PineC2_Trunk_01",
+      "UCX_SM_DKN_PineC2_Trunk_02",
+      "UCX_SM_DKN_PineC2_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineC2_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineC2_Foliage.fbx",
+     "sha256": "9c173c67da51f98df3a8d6df0c9c304ea6e05429fec6ab9b6b3cb8fe43287b4e",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineC2_Foliage"
+     ]
+    },
+    "T_DKN_PineC2_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineC2_PivotPos.exr",
+     "sha256": "2e87a72b00f668e38047ae99a2ebcd196baa99a0e71eef4b0ff8f1b89fb50cbd"
+    },
+    "T_DKN_PineC2_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineC2_Trunk_ORM.png",
+     "sha256": "f3b6dcdc94ccb3213296816973f2f37625994f43812f81bc328474ab6666086a"
+    },
+    "T_DKN_PineC2_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineC2_XVector.png",
+     "sha256": "1c00ec597a13e5a5ae4ed0f2981257c0e36a466d3bb5e0478012e020f9f8c08d"
+    },
+    "SM_DKN_PineC2.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineC2.wind.json",
+     "sha256": "b53497a9b0ff96f76ea8e6b3eb5ca11d3e5ca6da7c703ce25a2f91cef31ec9e8"
+    }
+   },
+   "measured_views": {
+    "PineC2_front": {
+     "ref_panel": "P3Q",
+     "iou": 0.698,
+     "width_err": 0.185,
+     "crown_w_m": [
+      3.215,
+      3.15
+     ],
+     "row_fill": [
+      0.559,
+      0.705
+     ]
+    },
+    "PineC2_side": {
+     "ref_panel": "P3S",
+     "iou": 0.439,
+     "width_err": 0.59,
+     "crown_w_m": [
+      1.663,
+      1.599
+     ],
+     "row_fill": [
+      0.624,
+      0.824
+     ]
+    },
+    "PineC2_3q": {
+     "ref_panel": "P3F",
+     "iou": 0.27,
+     "width_err": 0.504,
+     "crown_w_m": [
+      5.363,
+      2.538
+     ],
+     "row_fill": [
+      0.428,
+      0.759
+     ]
+    }
+   }
+  },
+  {
+   "variant": "PineD1",
+   "pine": "cliff pine on a granite boulder (rock stage: ~3.2 m incl. a ~1.1-1.25 m rock at 0.65 x the sheet's relative size, owner; 10 roots over the rock into its clefts)",
+   "variant_of_two": 1,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P4F",
+    "side_panel": "P4S",
+    "m_per_px_front": 0.01241,
+    "m_per_px_side": 0.01241
+   },
+   "height_m": 3.079,
+   "meshes": {
+    "trunk": {
+     "tris": 43538
+    },
+    "foliage": {
+     "tris": 87631
+    },
+    "rock": {
+     "tris": 109799
+    },
+    "mound": {
+     "tris": 48911
+    }
+   },
+   "tufts": 627,
+   "pads": 6,
+   "wind_elements": 12,
+   "flare_ratio": 1.932,
+   "fork_exponents": {
+    "forks": 186,
+    "share_in_band": 0.683,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 4.7,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.04,
+    11.07
+   ],
+   "min_twig_r_mm": 3.53,
+   "u_texel_px_per_cm_by_order": {
+    "0": 10.24,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true,
+    "mound": true,
+    "rock": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.3,
+   "rosettes_per_pad": [
+    170,
+    130,
+    170,
+    34,
+    111,
+    12
+   ],
+   "over_budget": {},
+   "base_mound": "SM_DKN_BaseMound_D (optional, shared by PineD1/PineD2, same origin)",
+   "rock_status": "rock stage (2026-09-30): rebuilt with STONE_BUILDING_STUDY.md 4.9 / 8.3 (SDF corestone lobes, per-lobe opening, cracks, unique UV0 + bakes) at 0.65 x the v2 rock (owner); tree moved onto it (make_spec d_rock_v3); roots refitted. v2f: ONE fused broad boulder (lobes overlap, 5.5 cm SDF closing, domed tops; visible width / height 1.24 / 1.28), trunk 0.26 / 0.30 m at the rock (about 1/5 of the rock width), 13 roots + forks draping the left flank, fern / shrub skirt on BaseMound_D",
+   "trunk_base_r_m": 0.13,
+   "rock": {
+    "sdf": {
+     "voxel": 0.005,
+     "band": 32,
+     "seconds": 45.88,
+     "tris": 503840
+    },
+    "lobes": 3,
+    "cutters": 3,
+    "cracks": [
+     "face",
+     "back"
+    ],
+    "arris_r_m": [
+     0.13,
+     0.1,
+     0.12
+    ],
+    "seconds": 78.7,
+    "tris": 109799,
+    "rock_tris": 92032,
+    "cushion_tris": 17767,
+    "dense_tris": 503840,
+    "verts_per_tri": 0.506,
+    "uv_tries": [
+     [
+      "charts0",
+      49,
+      23
+     ],
+     [
+      "charts1",
+      73,
+      0
+     ],
+     [
+      "final_sat",
+      0
+     ]
+    ],
+    "uv0_scale_k": 0.738,
+    "uv0_fill_packed": 0.6534,
+    "texel_px_cm": 5.4,
+    "m_per_uv0": 3.7926,
+    "texel_target_px_cm": 5.4,
+    "map_px": 2048,
+    "bake_s": 6.2,
+    "plane_fraction": 0.504,
+    "sharp_crease_share": 0.0141,
+    "arris_r_share_of_short_axis": [
+     0.171,
+     0.139,
+     0.194
+    ],
+    "moss_share_area": 0.198,
+    "lichen_share": 0.025,
+    "ao_p50": 1.0,
+    "bbox": [
+     [
+      -0.674,
+      -0.431,
+      -0.124
+     ],
+     [
+      0.671,
+      0.423,
+      1.086
+     ]
+    ],
+    "trunk_base_z_spec": 1.055,
+    "rock_surface_under_base": 1.0806328058242798,
+    "roots_primary": 13,
+    "roots_forks": 19
+   },
+   "tree_shift_m": [
+    -0.0044,
+    -0.0839,
+    -0.5464
+   ],
+   "height_sheet_m": 3.625,
+   "files": {
+    "SM_DKN_PineD1_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD1_Trunk.fbx",
+     "sha256": "a2840d748d6403190d1eaf301d2875756feb436c1d78a0fbc3ab1b8616358c35",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineD1_Trunk",
+      "UCX_SM_DKN_PineD1_Trunk_00",
+      "UCX_SM_DKN_PineD1_Trunk_01",
+      "UCX_SM_DKN_PineD1_Trunk_02",
+      "UCX_SM_DKN_PineD1_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineD1_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD1_Foliage.fbx",
+     "sha256": "532d86b1a7204ca4e55d582bf5a902d7c83b1323863f74a59fcd5793bfec4412",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineD1_Foliage"
+     ]
+    },
+    "SM_DKN_PineD1_Rock": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD1_Rock.fbx",
+     "sha256": "2dfd123bdfcdc1fb4551cbc1466c971af6a8fa6cbe4c899ce0c467659535b57c",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineD1_Rock",
+      "UCX_SM_DKN_PineD1_Rock_00",
+      "UCX_SM_DKN_PineD1_Rock_01",
+      "UCX_SM_DKN_PineD1_Rock_02"
+     ]
+    },
+    "T_DKN_PineD1_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD1_PivotPos.exr",
+     "sha256": "96c6815773182caf40c3d9cd52947d1f32597798b18127853eb61704f34cbd25"
+    },
+    "T_DKN_PineD1_Rock_M.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD1_Rock_M.png",
+     "sha256": "39254200327184135f8ba9ffdb064bfd27a5991285f43055f990230631f0fddb"
+    },
+    "T_DKN_PineD1_Rock_N.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD1_Rock_N.png",
+     "sha256": "3debb70fa763a9f8b95744ef27632c9c5d184729862a35d30ca85d7235db0d69"
+    },
+    "T_DKN_PineD1_Rock_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD1_Rock_ORM.png",
+     "sha256": "5f6bdad4d82774b39e9f40f402de19abcc841ecc1c749fbc1c67193c750c1dfd"
+    },
+    "T_DKN_PineD1_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD1_Trunk_ORM.png",
+     "sha256": "111188e9f1a1cd784e0ce7871e041acc4ccca0e3800aef77a50c5dcf44b6cf14"
+    },
+    "T_DKN_PineD1_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD1_XVector.png",
+     "sha256": "0f7da31776d76b6336164a9a595895256439be9edf6dbf569e98f286b1378363"
+    },
+    "SM_DKN_PineD1.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD1.wind.json",
+     "sha256": "610d6feb24aaee0c9b7b67742d23ce2d8ff14f37a872ff9aa04cbac035e9d308"
+    }
+   },
+   "measured_views": {
+    "PineD1_front": {
+     "ref_panel": "P4F",
+     "iou": 0.419,
+     "width_err": 0.332,
+     "crown_w_m": [
+      2.793,
+      2.912
+     ],
+     "row_fill": [
+      0.368,
+      0.685
+     ]
+    },
+    "PineD1_side": {
+     "ref_panel": "P4S",
+     "iou": 0.584,
+     "width_err": 0.628,
+     "crown_w_m": [
+      1.589,
+      1.33
+     ],
+     "row_fill": [
+      0.489,
+      0.72
+     ]
+    },
+    "PineD1_3q": {
+     "ref_panel": "P4Q",
+     "iou": 0.402,
+     "width_err": 0.423,
+     "crown_w_m": [
+      2.57,
+      2.634
+     ],
+     "row_fill": [
+      0.317,
+      0.672
+     ]
+    }
+   }
+  },
+  {
+   "variant": "PineD2",
+   "pine": "cliff pine on a granite boulder (rock stage: ~3.2 m incl. a ~1.1-1.25 m rock at 0.65 x the sheet's relative size, owner; 10 roots over the rock into its clefts)",
+   "variant_of_two": 2,
+   "traced_from": {
+    "sheet": "References/Dojo/dojo_japanese_pine_ref.png",
+    "front_panel": "P4Q",
+    "side_panel": "P4S",
+    "m_per_px_front": 0.01241,
+    "m_per_px_side": 0.01241
+   },
+   "height_m": 3.208,
+   "meshes": {
+    "trunk": {
+     "tris": 45544
+    },
+    "foliage": {
+     "tris": 105797
+    },
+    "rock": {
+     "tris": 134479
+    }
+   },
+   "tufts": 749,
+   "pads": 6,
+   "wind_elements": 12,
+   "flare_ratio": 1.873,
+   "fork_exponents": {
+    "forks": 234,
+    "share_in_band": 0.885,
+    "band": [
+     1.8,
+     3.0
+    ],
+    "median_n": 2.6,
+    "p10_n": 2.6,
+    "p90_n": 3.059,
+    "child_thicker_than_parent": 0
+   },
+   "needle_len_cm": [
+    7.04,
+    11.07
+   ],
+   "min_twig_r_mm": 3.24,
+   "u_texel_px_per_cm_by_order": {
+    "0": 10.24,
+    "1": 10.24,
+    "2": 10.24,
+    "3": 10.24
+   },
+   "qa_passed": {
+    "trunk": true,
+    "foliage": true,
+    "rock": true
+   },
+   "pp2_roundtrip_ok": true,
+   "instance_scale_max": 1.3,
+   "rosettes_per_pad": [
+    170,
+    130,
+    170,
+    26,
+    170,
+    83
+   ],
+   "over_budget": {},
+   "base_mound": "SM_DKN_BaseMound_D (optional, shared by PineD1/PineD2, same origin)",
+   "rock_status": "rock stage (2026-09-30): rebuilt with STONE_BUILDING_STUDY.md 4.9 / 8.3 (SDF corestone lobes, per-lobe opening, cracks, unique UV0 + bakes) at 0.65 x the v2 rock (owner); tree moved onto it (make_spec d_rock_v3); roots refitted. v2f: ONE fused broad boulder (lobes overlap, 5.5 cm SDF closing, domed tops; visible width / height 1.24 / 1.28), trunk 0.26 / 0.30 m at the rock (about 1/5 of the rock width), 13 roots + forks draping the left flank, fern / shrub skirt on BaseMound_D",
+   "trunk_base_r_m": 0.15,
+   "rock": {
+    "sdf": {
+     "voxel": 0.005,
+     "band": 30,
+     "seconds": 44.2,
+     "tris": 606744
+    },
+    "lobes": 2,
+    "cutters": 3,
+    "cracks": [
+     "face",
+     "back"
+    ],
+    "arris_r_m": [
+     0.12,
+     0.1
+    ],
+    "seconds": 74.4,
+    "tris": 134479,
+    "rock_tris": 112696,
+    "cushion_tris": 21783,
+    "dense_tris": 606744,
+    "verts_per_tri": 0.505,
+    "uv_tries": [
+     [
+      "charts0",
+      48,
+      0
+     ],
+     [
+      "final_sat",
+      0
+     ]
+    ],
+    "uv0_scale_k": 0.83,
+    "uv0_fill_packed": 0.6319,
+    "texel_px_cm": 5.4,
+    "m_per_uv0": 3.7926,
+    "texel_target_px_cm": 5.4,
+    "map_px": 2048,
+    "bake_s": 7.0,
+    "plane_fraction": 0.549,
+    "sharp_crease_share": 0.0153,
+    "arris_r_share_of_short_axis": [
+     0.15,
+     0.125
+    ],
+    "moss_share_area": 0.205,
+    "lichen_share": 0.025,
+    "ao_p50": 1.0,
+    "bbox": [
+     [
+      -0.746,
+      -0.46,
+      -0.123
+     ],
+     [
+      0.73,
+      0.541,
+      1.158
+     ]
+    ],
+    "trunk_base_z_spec": 1.11,
+    "rock_surface_under_base": 1.1011765003204346,
+    "roots_primary": 13,
+    "roots_forks": 13
+   },
+   "tree_shift_m": [
+    -0.0683,
+    -0.175,
+    -0.6652
+   ],
+   "height_sheet_m": 3.873,
+   "files": {
+    "SM_DKN_PineD2_Trunk": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD2_Trunk.fbx",
+     "sha256": "a29c6c8f54430fdb2f8dbc6932b10b7313bb82f98e9c6f0266d8d6de71b29998",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineD2_Trunk",
+      "UCX_SM_DKN_PineD2_Trunk_00",
+      "UCX_SM_DKN_PineD2_Trunk_01",
+      "UCX_SM_DKN_PineD2_Trunk_02",
+      "UCX_SM_DKN_PineD2_Trunk_03"
+     ]
+    },
+    "SM_DKN_PineD2_Foliage": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD2_Foliage.fbx",
+     "sha256": "01a3bd35bdc4a5c7c8aa4dc394c01946d3acc08614189d7ff9f05b6c1f7c2ec7",
+     "warnings": [
+      "no UCX_/SOCKET_ helper children were found for this static export"
+     ],
+     "objects": [
+      "SM_DKN_PineD2_Foliage"
+     ]
+    },
+    "SM_DKN_PineD2_Rock": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD2_Rock.fbx",
+     "sha256": "7d447cd9768c78171f1d3e0479af53ad2ddd220d639f7d24f301bea21f52a7b5",
+     "warnings": [],
+     "objects": [
+      "SM_DKN_PineD2_Rock",
+      "UCX_SM_DKN_PineD2_Rock_00",
+      "UCX_SM_DKN_PineD2_Rock_01"
+     ]
+    },
+    "T_DKN_PineD2_PivotPos.exr": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD2_PivotPos.exr",
+     "sha256": "4440fad806b196d7e1fadbe470a3fcadecd181daeb0f2855cd5864f7240bf2f6"
+    },
+    "T_DKN_PineD2_Rock_M.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD2_Rock_M.png",
+     "sha256": "9869f60dea46dd8c17b93fff0bdca091e9dbe3ef3c8835469fe9536c27b336a1"
+    },
+    "T_DKN_PineD2_Rock_N.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD2_Rock_N.png",
+     "sha256": "f6e9df0437316129de097f6b3dfa58cb99b57d95cfc22c1116ef6d8afc5e6303"
+    },
+    "T_DKN_PineD2_Rock_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD2_Rock_ORM.png",
+     "sha256": "8d8a796a160178086f3dd7a57f5144c1fa167c0763a831b876e26b5d715c856e"
+    },
+    "T_DKN_PineD2_Trunk_ORM.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD2_Trunk_ORM.png",
+     "sha256": "14131813a57d4c2991b0f96c956a9f15fabb4ae5cf2993ea618989cfa4923c8f"
+    },
+    "T_DKN_PineD2_XVector.png": {
+     "file": "Exports\\DojoKit\\Pines\\Textures\\T_DKN_PineD2_XVector.png",
+     "sha256": "2d034ec01eadb1c1ca98293f4ac649b77738e3cfa897d1320d1cb40cd62bbb36"
+    },
+    "SM_DKN_PineD2.wind.json": {
+     "file": "Exports\\DojoKit\\Pines\\SM_DKN_PineD2.wind.json",
+     "sha256": "dd3c18d10b8fbf1e5dee064378142a7f650c72d5db43d4b314a21dc7483fec30"
+    }
+   },
+   "measured_views": {
+    "PineD2_front": {
+     "ref_panel": "P4Q",
+     "iou": 0.557,
+     "width_err": 0.558,
+     "crown_w_m": [
+      2.57,
+      2.594
+     ],
+     "row_fill": [
+      0.317,
+      0.723
+     ]
+    },
+    "PineD2_side": {
+     "ref_panel": "P4S",
+     "iou": 0.522,
+     "width_err": 0.527,
+     "crown_w_m": [
+      1.589,
+      1.367
+     ],
+     "row_fill": [
+      0.489,
+      0.78
+     ]
+    },
+    "PineD2_3q": {
+     "ref_panel": "P4F",
+     "iou": 0.498,
+     "width_err": 0.394,
+     "crown_w_m": [
+      2.793,
+      2.32
+     ],
+     "row_fill": [
+      0.368,
+      0.764
+     ]
+    }
+   }
+  }
+ ],
+ "qa_notes": [
+  "foliage: require_ucx=False by design (study 4.10: canopies must not block wall-top runs and climbs; set the component to NoCollision in Unreal)",
+  "UV0 overlap test RUN on every mesh (not skipped): trunk UV0 is whole-tile packed and foliage UV0 gives every needle its own cell, so the study 4.12 skip is not needed"
+ ],
+ "tuft_unit_qa": [
+  {
+   "unit": "SM_DKN_RosetteUnitA",
+   "tris": 137,
+   "needles": 132,
+   "fascicles": 66,
+   "across_cm": 18.4,
+   "across_p90_cm": 15.6,
+   "height_cm": 12.3,
+   "needle_len_cm": [
+    8.0,
+    9.4
+   ],
+   "passed": true,
+   "fails": []
+  },
+  {
+   "unit": "SM_DKN_RosetteUnitB",
+   "tris": 165,
+   "needles": 160,
+   "fascicles": 80,
+   "across_cm": 18.9,
+   "across_p90_cm": 15.1,
+   "height_cm": 13.5,
+   "needle_len_cm": [
+    8.0,
+    9.5
+   ],
+   "passed": true,
+   "fails": []
+  },
+  {
+   "unit": "SM_DKN_RosetteUnitC",
+   "tris": 113,
+   "needles": 108,
+   "fascicles": 54,
+   "across_cm": 16.3,
+   "across_p90_cm": 13.8,
+   "height_cm": 11.8,
+   "needle_len_cm": [
+    8.0,
+    9.0
+   ],
+   "passed": true,
+   "fails": []
+  },
+  {
+   "unit": "SM_DKN_RosetteUnitD",
+   "tris": 145,
+   "needles": 140,
+   "fascicles": 70,
+   "across_cm": 18.1,
+   "across_p90_cm": 16.4,
+   "height_cm": 11.6,
+   "needle_len_cm": [
+    8.0,
+    9.2
+   ],
+   "passed": true,
+   "fails": []
+  },
+  {
+   "unit": "SM_DKN_RosetteUnitE",
+   "tris": 137,
+   "needles": 132,
+   "fascicles": 66,
+   "across_cm": 17.6,
+   "across_p90_cm": 12.7,
+   "height_cm": 15.0,
+   "needle_len_cm": [
+    8.0,
+    9.5
+   ],
+   "passed": true,
+   "fails": []
+  },
+  {
+   "unit": "SM_DKN_RosetteUnitF",
+   "tris": 149,
+   "needles": 144,
+   "fascicles": 72,
+   "across_cm": 14.8,
+   "across_p90_cm": 13.0,
+   "height_cm": 14.0,
+   "needle_len_cm": [
+    8.0,
+    9.2
+   ],
+   "passed": true,
+   "fails": []
+  }
+ ]
+}

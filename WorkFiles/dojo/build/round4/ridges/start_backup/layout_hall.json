@@ -1,0 +1,2807 @@
+{
+ "date": "2026-09-28",
+ "stage": "kits 3 + 4: hall + shared roof system, round 3 look pass",
+ "units": "m, grey-box world frame (X east, Y north, Z up; Unreal (x*100, -y*100, z*100))",
+ "roof_kit": {
+  "module": "Scripts/dojo/roof/roof_kit.py",
+  "version": "1.2.0"
+ },
+ "material_library": "Scripts/dojo/materials (M_DJ_*), textures Exports/DojoKit/Materials/Textures",
+ "pieces": {
+  "SM_DKH_StepBand": {
+   "class": "ground",
+   "folder": "Hall",
+   "note": "continuous low granite plinth course along the hall front (top +0.15, 0.60 m deep) X 11-33 under the deck fascia, and the central three-step granite stair X 20-24 (risers 0.167 m, treads 0.40 m); walk up anywhere (user 2026-10-02): 0.15 then 0.35 to the deck",
+   "ucx": 5,
+   "tris": 968,
+   "slots": [
+    "M_DJ_Granite"
+   ],
+   "nanite": false,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    22.0,
+    0.0
+   ]
+  },
+  "SM_DKH_Veranda": {
+   "class": "ground",
+   "folder": "Hall",
+   "note": "veranda (engawa) +0.5, 2 m wide along the front and both sides: deck boards, edge beams, sleepers, short posts on footing stones, rubble-granite curb along the sides; the boards run to the wall's skirting face on all three sides (no slot at the wall foot)",
+   "ucx": 1,
+   "tris": 13068,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_TimberDark",
+    "M_DJ_GraniteRubble",
+    "M_DJ_Granite",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_VerandaFrame": {
+   "class": "thin",
+   "folder": "Hall",
+   "note": "veranda posts 0.21 m on the 2 m bays (thin uprights: block the pawn, ignore camera and visibility), capital blocks, eave beams (keta) under the lower roof, hip rafters",
+   "ucx": 24,
+   "tris": 3388,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "extra": {
+    "posts": 24,
+    "keta_top": 3.0476,
+    "keta_bottom": 2.8076,
+    "veranda_headroom_at_the_edge_beam_m": 2.308
+   }
+  },
+  "SM_DKH_Frame": {
+   "class": "building",
+   "folder": "Hall",
+   "note": "hall frame: 0.24 m posts on the 2 m bays, rubble-granite foundation, ground sills, skirting, wall plates, lower-roof ledgers (the upper roof's closely spaced capped rafters cantilever from the plates: no bracket arms); collision = the closed body (interior closed, user 2026-10-02)",
+   "ucx": 1,
+   "tris": 5192,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_GraniteRubble",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "extra": {
+    "plate_top": 5.6872,
+    "plate_bottom": 5.4472,
+    "ledger_top": 3.8543,
+    "centre_plate": [
+     5.62,
+     5.86
+    ],
+    "posts": 28
+   }
+  },
+  "SM_DKH_Bay_Plaster": {
+   "class": "building",
+   "folder": "Hall/Bays",
+   "note": "2 m wall bay, floor to head beam: sill, a plain dark vertical-board wainscot (koshi-ita), rail, cream plaster panel, head track (kamoi), full-depth head beam (nageshi)",
+   "ucx": 1,
+   "tris": 748,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "hall",
+   "pivot_world": null
+  },
+  "SM_DKH_Bay_Lattice": {
+   "class": "building",
+   "folder": "Hall/Bays",
+   "note": "2 m lattice bay (the sheet's lit lattice bays between the plaster bays): two full-height sliding lattice panels, each a board foot, a low small-grid lattice strip, a rail and a tall square lattice (kumiko) with lit paper behind (closed, opaque); head track and head beam",
+   "ucx": 1,
+   "tris": 3528,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": null
+  },
+  "SM_DKH_Bay_Door": {
+   "class": "building",
+   "folder": "Hall/Bays",
+   "note": "2 m door bay: two full-height sliding lattice doors (square kumiko over about 70 % of the height with lit paper behind, a mid rail, a board foot), iron pulls, closed (the hall interior is closed in the 1v1), head track and head beam",
+   "ucx": 1,
+   "tris": 2820,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": null
+  },
+  "SM_DKH_Bay_Transom": {
+   "class": "building",
+   "folder": "Hall/Bays",
+   "note": "plaster band from the head beam to the band between the roofs (behind the lower roof on the front and sides)",
+   "ucx": 1,
+   "tris": 88,
+   "slots": [
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "hall",
+   "pivot_world": null
+  },
+  "SM_DKH_Bay_ClerePlaster": {
+   "class": "building",
+   "folder": "Hall/Bays",
+   "note": "the band between the lower roof and the upper eave: sill rail, dark vertical boarding, a rail and a thin cream plaster strip directly under the wall plate",
+   "ucx": 1,
+   "tris": 660,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "hall",
+   "pivot_world": null
+  },
+  "SM_DKH_Bay_ClereFrieze": {
+   "class": "building",
+   "folder": "Hall/Bays",
+   "note": "the band under the upper roof's raised centre eave: sill rail, cream plaster, and a lit lattice frieze (ranma) strip up to the raised centre wall plate, 14 x 3 small squares with lit paper behind (the sheet's only lit element between the roofs; round 3: it rises above the outer bays' wall plate, framed by the raised centre eave)",
+   "ucx": 1,
+   "tris": 1366,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "hall",
+   "pivot_world": null
+  },
+  "SM_DKH_RoofUpper_Front": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "upper hip-and-gable roof, front slope: the outer wings on the main plane (eave +5.5 at Y 23.1, 30 deg); between two banded, strapped diagonal ridges from the ridge ends, the raised centre plane X 17-27 (its eave 0.45 m behind and 0.45 m above the outer eave, on the same ridge line) over the lit frieze, tile cheeks under the diagonals, a small block at each diagonal's foot; verge overhangs, banded verges, bargeboards, soffit, closely spaced rafters with X-marked iron caps, frieze boards over the wall line, fascia",
+   "ucx": 8,
+   "tris": 170859,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofUpper_Back": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "upper roof, back slope: the plain main slope (no centre recess; the references never show the back)",
+   "ucx": 2,
+   "tris": 164144,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofUpper_End": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "upper roof end: the hip slope, both hips (banded strapped caps, stepped disc end blocks), the gable-foot flashing and the gable (cream plaster in a timber frame: tie beam, beam, studs, king post); placed twice (west, and turned 180 deg for the east)",
+   "ucx": 2,
+   "tris": 59529,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofUpper_Ridge": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "upper roof ridge (roof sheet panel b): bed, two flat noshi, a banded half-round, a flat band, a banded round crown with a riveted iron strap every 0.40 m; the ridge ends are the sheet's column of chamfered blocks with an arched, disc-faced top and two round roll ends",
+   "ucx": 3,
+   "tris": 18164,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_Iron"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofLower_Front": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "lower (veranda) roof, front: eave +3.0 at Y 21.5, 25 deg to +4.166 at the wall, banded strapped hips with disc end blocks at the corners, wall flashing, soffit + capped rafters, the front gutter",
+   "ucx": 1,
+   "tris": 109598,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofLower_SideW": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "lower roof, west side: eave +3.0 at X 10.5, verge + end board at the back, wall flashing, the gutter",
+   "ucx": 1,
+   "tris": 57531,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofLower_SideE": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "lower roof, east side (mirror of the west)",
+   "ucx": 1,
+   "tris": 57531,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofChidori_W": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "chidori-hafu on the west lower roof over the side door (Y 26-28): a 35 deg front-facing gable, plaster tympanum in a timber frame, bargeboards with a hanging board, banded verges with discs, a small ridge with a stepped disc end, iron valley flashings; one walkable hull",
+   "ucx": 1,
+   "tris": 14340,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_RoofChidori_E": {
+   "class": "roof",
+   "folder": "Hall/Roof",
+   "note": "chidori-hafu on the east lower roof (the west one mirrored about X 22)",
+   "ucx": 1,
+   "tris": 14340,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "hall",
+   "pivot_world": [
+    22.0,
+    29.0,
+    0.0
+   ]
+  },
+  "SM_DKH_Downpipe": {
+   "class": "thin",
+   "folder": "Hall",
+   "note": "round downpipe from the side gutter outlet, a two-bend swan neck to the corner post, wall clamps, a shoe at the ground (front and rear corners)",
+   "ucx": 1,
+   "tris": 876,
+   "slots": [
+    "M_DJ_Iron"
+   ],
+   "nanite": false,
+   "kit": "hall",
+   "pivot_world": null,
+   "extra": {
+    "outlet_local": [
+     -0.54,
+     0.0,
+     2.7825
+    ]
+   }
+  },
+  "SM_DKH_EaveLanding": {
+   "class": "landing",
+   "folder": "Hall",
+   "note": "route-4 landing at the lower eave: a flat timber eave deck, top +3.0, 1.2 x 0.75 m in front of the eave (GASP cannot mantle onto a 25 deg edge; GASP_TRAVERSAL.md 4), on two cantilever joists over the gutter",
+   "ucx": 1,
+   "tris": 616,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": false,
+   "kit": "hall",
+   "pivot_world": null,
+   "extra": {
+    "deck_top": 3.0,
+    "depth": 0.75,
+    "width": 1.2
+   }
+  }
+ },
+ "instances": [
+  {
+   "piece": "SM_DKH_StepBand",
+   "loc": [
+    22.0,
+    22.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "ground",
+   "kit": "hall",
+   "bbox_min_max": [
+    11.0035,
+    20.85,
+    -0.06,
+    32.9965,
+    22.05,
+    0.5
+   ]
+  },
+  {
+   "piece": "SM_DKH_Veranda",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "ground",
+   "kit": "hall",
+   "bbox_min_max": [
+    11.0,
+    22.0,
+    -0.05,
+    33.0,
+    34.0,
+    0.5
+   ]
+  },
+  {
+   "piece": "SM_DKH_VerandaFrame",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "thin",
+   "kit": "hall",
+   "bbox_min_max": [
+    10.4245,
+    21.4245,
+    0.1,
+    33.5755,
+    34.08,
+    3.8866
+   ]
+  },
+  {
+   "piece": "SM_DKH_Frame",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.7,
+    23.7,
+    -0.05,
+    31.3,
+    34.3,
+    5.86
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofLower_Front",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    10.3656,
+    21.3306,
+    2.731,
+    33.6344,
+    24.0598,
+    4.3657
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofLower_SideW",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    10.3306,
+    21.41,
+    2.6425,
+    13.0545,
+    34.0,
+    4.1894
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofLower_SideE",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.9455,
+    21.41,
+    2.6425,
+    33.6694,
+    34.0,
+    4.1894
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofChidori_W",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    10.6561,
+    24.4899,
+    3.027,
+    12.9239,
+    29.5101,
+    5.1969
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofChidori_E",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    31.0762,
+    24.4899,
+    3.027,
+    33.3439,
+    29.5101,
+    5.1969
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofUpper_Front",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.1,
+    22.9534,
+    5.0777,
+    31.9,
+    29.15,
+    9.0007
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofUpper_Back",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.1,
+    28.85,
+    5.2251,
+    31.9,
+    34.9588,
+    8.9692
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofUpper_End",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    11.9568,
+    22.9568,
+    5.2251,
+    14.8399,
+    35.0432,
+    8.7292
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofUpper_End",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.1601,
+    22.9568,
+    5.2251,
+    32.0432,
+    35.0432,
+    8.7292
+   ]
+  },
+  {
+   "piece": "SM_DKH_RoofUpper_Ridge",
+   "loc": [
+    22.0,
+    29.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Roof",
+   "collision_class": "roof",
+   "kit": "hall",
+   "bbox_min_max": [
+    14.068,
+    28.704,
+    8.7764,
+    29.932,
+    29.296,
+    9.6064
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    13.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    13.0,
+    23.83,
+    0.48,
+    15.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    13.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    13.108,
+    23.94,
+    2.66,
+    14.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    13.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    13.0,
+    23.92,
+    4.2,
+    15.0,
+    24.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    31.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.0,
+    33.92,
+    0.48,
+    31.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    31.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.108,
+    33.94,
+    2.66,
+    30.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    31.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.0,
+    33.92,
+    4.2,
+    31.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Lattice",
+   "loc": [
+    15.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    15.0,
+    23.83,
+    0.48,
+    17.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    15.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    15.108,
+    23.94,
+    2.66,
+    16.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    15.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    15.0,
+    23.92,
+    4.2,
+    17.0,
+    24.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Lattice",
+   "loc": [
+    29.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    27.0,
+    33.92,
+    0.48,
+    29.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    29.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    27.108,
+    33.94,
+    2.66,
+    28.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    29.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    27.0,
+    33.92,
+    4.2,
+    29.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    17.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    17.0,
+    23.83,
+    0.48,
+    19.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    17.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    17.108,
+    23.94,
+    2.66,
+    18.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClereFrieze",
+   "loc": [
+    17.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    17.0,
+    23.92,
+    4.2,
+    19.0,
+    24.08,
+    5.628
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    27.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    25.0,
+    33.92,
+    0.48,
+    27.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    27.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    25.108,
+    33.94,
+    2.66,
+    26.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    27.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    25.0,
+    33.92,
+    4.2,
+    27.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Door",
+   "loc": [
+    19.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    19.0,
+    23.83,
+    0.48,
+    21.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    19.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    19.108,
+    23.94,
+    2.66,
+    20.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClereFrieze",
+   "loc": [
+    19.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    19.0,
+    23.92,
+    4.2,
+    21.0,
+    24.08,
+    5.628
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    25.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    23.0,
+    33.92,
+    0.48,
+    25.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    25.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    23.108,
+    33.94,
+    2.66,
+    24.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    25.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    23.0,
+    33.92,
+    4.2,
+    25.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Door",
+   "loc": [
+    21.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    21.0,
+    23.83,
+    0.48,
+    23.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    21.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    21.108,
+    23.94,
+    2.66,
+    22.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClereFrieze",
+   "loc": [
+    21.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    21.0,
+    23.92,
+    4.2,
+    23.0,
+    24.08,
+    5.628
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Door",
+   "loc": [
+    23.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    21.0,
+    33.92,
+    0.48,
+    23.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    23.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    21.108,
+    33.94,
+    2.66,
+    22.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    23.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    21.0,
+    33.92,
+    4.2,
+    23.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Door",
+   "loc": [
+    23.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    23.0,
+    23.83,
+    0.48,
+    25.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    23.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    23.108,
+    23.94,
+    2.66,
+    24.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClereFrieze",
+   "loc": [
+    23.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    23.0,
+    23.92,
+    4.2,
+    25.0,
+    24.08,
+    5.628
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    21.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    19.0,
+    33.92,
+    0.48,
+    21.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    21.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    19.108,
+    33.94,
+    2.66,
+    20.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    21.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    19.0,
+    33.92,
+    4.2,
+    21.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    25.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    25.0,
+    23.83,
+    0.48,
+    27.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    25.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    25.108,
+    23.94,
+    2.66,
+    26.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClereFrieze",
+   "loc": [
+    25.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    25.0,
+    23.92,
+    4.2,
+    27.0,
+    24.08,
+    5.628
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    19.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    17.0,
+    33.92,
+    0.48,
+    19.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    19.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    17.108,
+    33.94,
+    2.66,
+    18.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    19.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    17.0,
+    33.92,
+    4.2,
+    19.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Lattice",
+   "loc": [
+    27.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    27.0,
+    23.83,
+    0.48,
+    29.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    27.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    27.108,
+    23.94,
+    2.66,
+    28.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    27.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    27.0,
+    23.92,
+    4.2,
+    29.0,
+    24.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Lattice",
+   "loc": [
+    17.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    15.0,
+    33.92,
+    0.48,
+    17.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    17.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    15.108,
+    33.94,
+    2.66,
+    16.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    17.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    15.0,
+    33.92,
+    4.2,
+    17.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    29.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.0,
+    23.83,
+    0.48,
+    31.0,
+    24.08,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    29.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.108,
+    23.94,
+    2.66,
+    30.892,
+    24.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    29.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.0,
+    23.92,
+    4.2,
+    31.0,
+    24.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    15.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    13.0,
+    33.92,
+    0.48,
+    15.0,
+    34.17,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    15.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    13.108,
+    33.94,
+    2.66,
+    14.892,
+    34.06,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    15.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    13.0,
+    33.92,
+    4.2,
+    15.0,
+    34.08,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    13.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.83,
+    32.0,
+    0.48,
+    13.08,
+    34.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    13.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.94,
+    32.108,
+    2.66,
+    13.06,
+    33.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    13.0,
+    34.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.92,
+    32.0,
+    4.2,
+    13.08,
+    34.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    31.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    24.0,
+    0.48,
+    31.17,
+    26.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    31.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.94,
+    24.108,
+    2.66,
+    31.06,
+    25.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    31.0,
+    24.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    24.0,
+    4.2,
+    31.08,
+    26.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    13.0,
+    32.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.83,
+    30.0,
+    0.48,
+    13.08,
+    32.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    13.0,
+    32.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.94,
+    30.108,
+    2.66,
+    13.06,
+    31.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    13.0,
+    32.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.92,
+    30.0,
+    4.2,
+    13.08,
+    32.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Door",
+   "loc": [
+    31.0,
+    26.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    26.0,
+    0.48,
+    31.17,
+    28.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    31.0,
+    26.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.94,
+    26.108,
+    2.66,
+    31.06,
+    27.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    31.0,
+    26.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    26.0,
+    4.2,
+    31.08,
+    28.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    13.0,
+    30.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.83,
+    28.0,
+    0.48,
+    13.08,
+    30.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    13.0,
+    30.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.94,
+    28.108,
+    2.66,
+    13.06,
+    29.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    13.0,
+    30.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.92,
+    28.0,
+    4.2,
+    13.08,
+    30.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    31.0,
+    28.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    28.0,
+    0.48,
+    31.17,
+    30.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    31.0,
+    28.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.94,
+    28.108,
+    2.66,
+    31.06,
+    29.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    31.0,
+    28.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    28.0,
+    4.2,
+    31.08,
+    30.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Door",
+   "loc": [
+    13.0,
+    28.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.83,
+    26.0,
+    0.48,
+    13.08,
+    28.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    13.0,
+    28.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.94,
+    26.108,
+    2.66,
+    13.06,
+    27.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    13.0,
+    28.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.92,
+    26.0,
+    4.2,
+    13.08,
+    28.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    31.0,
+    30.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    30.0,
+    0.48,
+    31.17,
+    32.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    31.0,
+    30.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.94,
+    30.108,
+    2.66,
+    31.06,
+    31.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    31.0,
+    30.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    30.0,
+    4.2,
+    31.08,
+    32.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    13.0,
+    26.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.83,
+    24.0,
+    0.48,
+    13.08,
+    26.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    13.0,
+    26.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.94,
+    24.108,
+    2.66,
+    13.06,
+    25.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    13.0,
+    26.0,
+    0.5
+   ],
+   "rot_z": -90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    12.92,
+    24.0,
+    4.2,
+    13.08,
+    26.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Plaster",
+   "loc": [
+    31.0,
+    32.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    32.0,
+    0.48,
+    31.17,
+    34.0,
+    2.682
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_Transom",
+   "loc": [
+    31.0,
+    32.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.94,
+    32.108,
+    2.66,
+    31.06,
+    33.892,
+    4.212
+   ]
+  },
+  {
+   "piece": "SM_DKH_Bay_ClerePlaster",
+   "loc": [
+    31.0,
+    32.0,
+    0.5
+   ],
+   "rot_z": 90.0,
+   "folder": "Hall/Bays",
+   "collision_class": "building",
+   "kit": "hall",
+   "bbox_min_max": [
+    30.92,
+    32.0,
+    4.2,
+    31.08,
+    34.0,
+    5.4592
+   ]
+  },
+  {
+   "piece": "SM_DKH_Downpipe",
+   "loc": [
+    10.95,
+    22.15,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "thin",
+   "kit": "hall",
+   "bbox_min_max": [
+    10.354,
+    22.055,
+    -0.005,
+    11.069,
+    22.245,
+    2.7825
+   ]
+  },
+  {
+   "piece": "SM_DKH_Downpipe",
+   "loc": [
+    33.05,
+    22.15,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall",
+   "collision_class": "thin",
+   "kit": "hall",
+   "bbox_min_max": [
+    32.931,
+    22.055,
+    -0.005,
+    33.646,
+    22.245,
+    2.7825
+   ]
+  },
+  {
+   "piece": "SM_DKH_Downpipe",
+   "loc": [
+    10.95,
+    33.85,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "thin",
+   "kit": "hall",
+   "bbox_min_max": [
+    10.354,
+    33.755,
+    -0.005,
+    11.069,
+    33.945,
+    2.7825
+   ]
+  },
+  {
+   "piece": "SM_DKH_Downpipe",
+   "loc": [
+    33.05,
+    33.85,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "folder": "Hall",
+   "collision_class": "thin",
+   "kit": "hall",
+   "bbox_min_max": [
+    32.931,
+    33.755,
+    -0.005,
+    33.646,
+    33.945,
+    2.7825
+   ]
+  },
+  {
+   "piece": "SM_DKH_EaveLanding",
+   "loc": [
+    13.65,
+    21.5,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "landing",
+   "kit": "hall",
+   "bbox_min_max": [
+    13.005,
+    20.705,
+    2.85,
+    14.295,
+    21.62,
+    3.005
+   ]
+  },
+  {
+   "piece": "SM_DKH_EaveLanding",
+   "loc": [
+    30.35,
+    21.5,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "folder": "Hall",
+   "collision_class": "landing",
+   "kit": "hall",
+   "bbox_min_max": [
+    29.705,
+    20.705,
+    2.85,
+    30.995,
+    21.62,
+    3.005
+   ]
+  }
+ ],
+ "replaces_greybox": [
+  "SM_DGB_Hall_Veranda",
+  "SM_DGB_Hall_StepBand",
+  "SM_DGB_Hall_Body",
+  "SM_DGB_Hall_RoofLower",
+  "SM_DGB_Hall_RoofUpper",
+  "SM_DGB_Landing_EavePad"
+ ],
+ "numbers": {
+  "floor": 0.5,
+  "body": [
+   13.0,
+   31.0,
+   24.0,
+   34.0
+  ],
+  "veranda": [
+   11.0,
+   33.0,
+   22.0,
+   34.0
+  ],
+  "step_band": {
+   "f1_plinth": {
+    "y": [
+     21.45,
+     22.05
+    ],
+    "top": 0.15
+   },
+   "stair_x": [
+    20.0,
+    24.0
+   ],
+   "stair_treads": [
+    {
+     "y": [
+      20.85,
+      22.05
+     ],
+     "top": 0.1667
+    },
+    {
+     "y": [
+      21.25,
+      22.05
+     ],
+     "top": 0.3333
+    },
+    {
+     "y": [
+      21.65,
+      22.05
+     ],
+     "top": 0.5
+    }
+   ]
+  },
+  "lower_roof": {
+   "eave": 3.0,
+   "eave_lines": {
+    "front_y": 21.5,
+    "west_x": 10.5,
+    "east_x": 33.5
+   },
+   "at_wall": 4.1658,
+   "pitch_deg": 25.0,
+   "plane": "z = 3.0 + (y - 21.5) * tan 25 (front); z = 3.0 + (x - 10.5) * tan 25 (west)"
+  },
+  "upper_roof": {
+   "eave": 5.5,
+   "rect": [
+    12.1,
+    31.9,
+    23.1,
+    34.9
+   ],
+   "pitch_deg": 30.0,
+   "planes_meet": 8.9064,
+   "ridge_cap_top": 9.3649,
+   "ridge_end_top": 9.6064,
+   "ridge_end_above_cap_m": 0.242,
+   "ridge_x": [
+    14.35,
+    29.65
+   ],
+   "ridge_to_eave_length": 0.773,
+   "gable_face_x": [
+    14.6,
+    29.4
+   ],
+   "verge_x": [
+    14.15,
+    29.849999999999998
+   ],
+   "gable_foot_z": 6.9434,
+   "gable_base_y": [
+    25.6,
+    32.4
+   ],
+   "courses_per_gable_run": 10,
+   "course_m": 0.2887,
+   "corner_upturn_m": 0.12,
+   "gable_style": "plaster",
+   "gable_frame": true,
+   "rafter_spacing_m": 0.3,
+   "rafter_caps": true,
+   "eave_blocking": true,
+   "front_recess": {
+    "mode": "raised centre plane",
+    "x_a": 17.0,
+    "x_b": 27.0,
+    "rise_above_outer_eave_m": 0.45,
+    "setback_m": 0.45,
+    "centre_eave_y": 23.55,
+    "centre_eave_z": 5.95,
+    "centre_plane_pitch_deg": 28.478,
+    "wing_pitch_deg": 30.0,
+    "step_at_centre_eave_corner_m": 0.1902,
+    "cheek_height_at_foot_m": [
+     0.261,
+     0.261
+    ],
+    "centre_courses": [
+     0.2844,
+     21
+    ],
+    "diagonal_left": [
+     [
+      17.2163,
+      23.1
+     ],
+     [
+      17.0,
+      23.55
+     ],
+     [
+      14.5,
+      28.75
+     ]
+    ],
+    "diagonal_right": [
+     [
+      26.7837,
+      23.1
+     ],
+     [
+      27.0,
+      23.55
+     ],
+     [
+      29.5,
+      28.75
+     ]
+    ],
+    "diagonal_ramp_hull": "1.05 m wide: the wing plane on its outer edge 0.75 m out, 0.10 m over the centre plane on the diagonal, the centre plane 0.30 m in (faces under 38 deg)"
+   }
+  },
+  "keta": {
+   "top": 3.0476,
+   "bottom": 2.8076
+  },
+  "veranda_edge_headroom_m": 2.308,
+  "r5_headroom_exceptions": {
+   "status": "ACCEPTED EXCEPTION (round 3, 2026-09-28)",
+   "note": "R5 asks 2.5 m wherever a player walks; the spec's fixed lower eave (+3.0 at Y 21.5, route 4) leaves less at the veranda's outer edge and over the step band: the lower roof plane is +3.303 at the post line (Y 22.15), so a 0.24 m eave beam under 0.245 m of tiles, sarking and rafters cannot clear 3.0; moving the post line back to Y 22.6 would still leave the step band under the eave at 2.2-2.5 m. Inside the post line the headroom is 2.68 m or more.",
+   "veranda_keta_line_m": 2.308,
+   "step_band_under_the_lower_eave_m": [
+    2.219,
+    2.469
+   ],
+   "capital_blocks_m": 2.228,
+   "measured_round3": {
+    "source": "WorkFiles/dojo/build/hall/measure_r3.json (rays up to the first hall mesh, X 12-22)",
+    "keta_line_Y22.06-22.24_m": 2.308,
+    "capital_blocks_m": 2.228,
+    "step_band_upper_tread_m": [
+     2.387,
+     2.523
+    ],
+    "step_band_lower_tread_m": [
+     2.497,
+     2.548
+    ],
+    "deck_Y22.3_m": [
+     2.608,
+     2.73
+    ],
+    "deck_Y22.6_m": [
+     2.748,
+     2.864
+    ],
+    "deck_Y23.0_min_m": 2.808
+   }
+  },
+  "side_door_bay_y": [
+   26.0,
+   28.0
+  ],
+  "chidori_hafu": {
+   "w": {
+    "face_x": 11.05,
+    "verge_x": 10.700000000000001,
+    "centre_y": 27.0,
+    "pitch_deg": 35.0,
+    "plane_at_ridge": 4.7969,
+    "ridge_cap_top": 5.0734,
+    "ridge_end_top": 5.1969,
+    "width_at_verge_foot": 4.866,
+    "width_at_wall": 1.963,
+    "tympanum_base_z": 3.2765,
+    "tympanum_width": 3.816
+   },
+   "e": {
+    "face_x": 32.95,
+    "verge_x": 33.3,
+    "centre_y": 27.0,
+    "pitch_deg": 35.0,
+    "plane_at_ridge": 4.7969,
+    "ridge_cap_top": 5.0734,
+    "ridge_end_top": 5.1969,
+    "width_at_verge_foot": 4.866,
+    "width_at_wall": 1.963,
+    "tympanum_base_z": 3.2765,
+    "tympanum_width": 3.816
+   }
+  },
+  "frieze": {
+   "bays_x": [
+    17.0,
+    27.0
+   ],
+   "z": [
+    5.12,
+    5.57
+   ]
+  },
+  "upper_centre_plane": {
+   "x": [
+    17.0,
+    27.0
+   ],
+   "eave_y": 23.55,
+   "eave_z": 5.95,
+   "pitch_deg": 28.478,
+   "wall_plate": [
+    5.62,
+    5.86
+   ]
+  },
+  "wall_plate": [
+   5.4472,
+   5.6872
+  ],
+  "door_head_world": 2.4,
+  "gutter_rim_z": 2.8225,
+  "eave_landings": {
+   "W": [
+    13.05,
+    14.25,
+    20.75,
+    21.5,
+    3.0
+   ],
+   "E": [
+    29.75,
+    30.95,
+    20.75,
+    21.5,
+    3.0
+   ]
+  },
+  "ac_zones": {
+   "note": "the modern kit's SM_DKP_Modern_ACUnit_Roof stands here on the lower roof plane (its front feet at Y 22.0, +3.2332); casing top +5.10 (route 5); nothing of the hall (gutter, flashing, brackets) stands in these zones or in the stance in front",
+   "W": [
+    15.0,
+    16.2,
+    21.98,
+    23.1
+   ],
+   "E": [
+    27.8,
+    29.0,
+    21.98,
+    23.1
+   ],
+   "top": 5.1,
+   "stance": {
+    "W": [
+     15.6,
+     21.66
+    ],
+    "E": [
+     28.4,
+     21.66
+    ],
+    "floor_z": 3.0746
+   }
+  },
+  "upper_eave_step": {
+   "y": 23.1,
+   "z": 5.5,
+   "rise_from_ac_top": 0.4,
+   "note": "the walkable upper eave: the roof slab's edge at +5.5 over Y 23.1 is a 0.40 m CMC walk-up step from the AC top (step height 0.45)"
+  }
+ }
+}

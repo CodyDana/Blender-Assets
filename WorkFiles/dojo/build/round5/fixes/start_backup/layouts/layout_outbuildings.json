@@ -1,0 +1,1317 @@
+{
+ "date": "2026-09-29",
+ "stage": "round 4 fix f1: storehouse + residence GABLE-FRONT (kit 5, SM_DKO_*)",
+ "materials": {
+  "M_DKO_SteelGrey": {
+   "master": "M_DJ_Lib_Opaque",
+   "kit": "outbuildings",
+   "ue_dir": "/Game/DojoKit/Outbuildings/Materials",
+   "textures": {
+    "BC": "T_DJ_Iron_BC",
+    "ORM": "T_DJ_Iron_ORM",
+    "N": "T_DJ_Iron_N",
+    "WearMask": "T_DJ_WearMask_M"
+   },
+   "scalars": {
+    "RoughMult": 1.3,
+    "NormalStrength": 0.6,
+    "FlattenToMean": 0.75
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "MeanColour": [
+     0.34,
+     0.345,
+     0.37
+    ],
+    "TileM": [
+     2.0,
+     2.0,
+     0.0,
+     0.0
+    ]
+   },
+   "switches": {
+    "UseWear": false
+   },
+   "note": "f1: the storehouse door's grey steel leaves (the sheet: mid-grey steel double door with a centre seam and two pulls): the library Iron on the door's rust-free UV band (clean_iron_uv), pulled 75 % to a mid steel grey (the galvanised set's oxide spots read as white blotches in UE)"
+  }
+ },
+ "units": "m, grey-box world frame (X east, Y north, Z up; Unreal (x*100, -y*100, z*100), yaw = -rot_z)",
+ "roof_kit": {
+  "module": "Scripts/dojo/roof/roof_kit.py",
+  "version": "1.3.0"
+ },
+ "material_library": "Scripts/dojo/materials (M_DJ_*), textures Exports/DojoKit/Materials/Textures",
+ "pieces": {
+  "SM_DKO_Store_Wall_N": {
+   "class": "building",
+   "folder": "Outbuildings/Storehouse",
+   "note": "storehouse EAVE wall 7.02 m between the gables (the corridor side, 0.6 m eave): two courses of hewn granite to +1.0 (proud 4 cm, staggered, pitched faces), cream plaster to the wall plate, plastered plate + frieze between the rafters; face at local y 0 (outward -y), 0.25 m thick",
+   "ucx": 1,
+   "tris": 1142,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "length": 7.02,
+    "face_y": 0.0,
+    "plate_top": 3.2757,
+    "eave_overhang": 0.6
+   }
+  },
+  "SM_DKO_Store_Wall_F": {
+   "class": "building",
+   "folder": "Outbuildings/Storehouse",
+   "note": "storehouse EAVE wall 7.02 m between the gables (the perimeter-wall side, 1.0 m eave): two courses of hewn granite to +1.0 (proud 4 cm, staggered, pitched faces), cream plaster to the wall plate, plastered plate + frieze between the rafters; face at local y 0 (outward -y), 0.25 m thick",
+   "ucx": 1,
+   "tris": 1096,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "length": 7.02,
+    "face_y": 0.0,
+    "plate_top": 3.4617,
+    "eave_overhang": 1.0
+   }
+  },
+  "SM_DKO_Store_GableFront": {
+   "class": "building",
+   "folder": "Outbuildings/Storehouse",
+   "note": "storehouse FRONT gable (the courtyard face, gable-front as the sheet), full body width incl. both corners: the granite band wrapping the corners either side of the door, cream plaster up to the roof underside, the door frame (jambs, lintel), threshold and wide granite step centred under the apex, the small framed gable vent near the apex; local x 0..7 (x 0 = the perimeter-wall corner), face at y 0 (outward -y); the steel leaves are SM_DKO_Door_Steel, the hood SM_DKO_Canopy_2p8",
+   "ucx": 3,
+   "tris": 1786,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "apex_x": 3.3,
+    "apex_under_sarking": 5.0956,
+    "vent_centre_z": 4.316,
+    "door_opening_x": [
+     2.35,
+     4.25
+    ],
+    "door_opening_z": [
+     0.15,
+     2.35
+    ],
+    "step_top": 0.15,
+    "leaves_at_local": [
+     2.35,
+     0.0,
+     0.15
+    ],
+    "profile_overhangs": [
+     1.0,
+     0.6
+    ]
+   }
+  },
+  "SM_DKO_Store_GableRear": {
+   "class": "building",
+   "folder": "Outbuildings/Storehouse",
+   "note": "storehouse REAR gable (the north pocket), full body width incl. both corners: the granite band wrapping both corners, cream plaster to the roof underside, the framed gable vent (sheet's rear elevation); local x 0..7 (x 0 = the corridor-side corner), face at y 0 (outward -y)",
+   "ucx": 2,
+   "tris": 1564,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "apex_x": 3.7,
+    "vent_centre_z": 4.316,
+    "profile_overhangs": [
+     0.6,
+     1.0
+    ]
+   }
+  },
+  "SM_DKO_Res_Wall_N": {
+   "class": "building",
+   "folder": "Outbuildings/Residence",
+   "note": "residence EAVE wall 7.02 m between the gables (the corridor side, 0.6 m eave): granite foundation course, sill beam, dark board-and-batten wainscot to +0.95, rail, cream plaster, timber wall plate + frieze; face at local y 0 (outward -y)",
+   "ucx": 1,
+   "tris": 3580,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_TimberDark",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "length": 7.02,
+    "plate_top": 3.2757,
+    "eave_overhang": 0.6
+   }
+  },
+  "SM_DKO_Res_Wall_F": {
+   "class": "building",
+   "folder": "Outbuildings/Residence",
+   "note": "residence EAVE wall 7.02 m between the gables (the perimeter-wall side, 1.0 m eave): granite foundation course, sill beam, dark board-and-batten wainscot to +0.95, rail, cream plaster, timber wall plate + frieze; face at local y 0 (outward -y)",
+   "ucx": 1,
+   "tris": 3580,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_TimberDark",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "length": 7.02,
+    "plate_top": 3.4617,
+    "eave_overhang": 1.0
+   }
+  },
+  "SM_DKO_Res_GableFront": {
+   "class": "building",
+   "folder": "Outbuildings/Residence",
+   "note": "residence FRONT gable (the courtyard face, gable-front as the sheet), full body width: corner posts, the granite course + sill beam, the board-and-batten wainscot and rail, the door bay (jamb posts, lintel, granite step) and the lattice-window bay (posts, proud sill, head rail) grouped under the apex, cream plaster, the tie beam across at the eave line over the hoods (the sheet's nuki), the plaster triangle with a slatted vent and purlin ends under the verge; local x 0..7 (x 0 = the corridor-side corner); leaves SM_DKO_Door_Wood, window SM_DKO_Window_Lattice, hoods SM_DKO_Canopy_2p2 / _Window, meter SM_DKO_MeterBox",
+   "ucx": 3,
+   "tris": 4362,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_TimberDark",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "apex_x": 3.7,
+    "door_opening_x": [
+     1.73,
+     3.3699999999999997
+    ],
+    "door_opening_z": [
+     0.27,
+     2.22
+    ],
+    "window_opening_x": [
+     4.03,
+     5.67
+    ],
+    "window_opening_z": [
+     1.03,
+     2.25
+    ],
+    "tie_beam": [
+     3.1157,
+     3.2757
+    ],
+    "purlin_protrusion": 0.47,
+    "profile_overhangs": [
+     0.6,
+     1.0
+    ]
+   }
+  },
+  "SM_DKO_Res_GableRear": {
+   "class": "building",
+   "folder": "Outbuildings/Residence",
+   "note": "residence REAR gable (the north pocket), full body width: corner posts, the base, the tie beam at the eave line, the plaster triangle with the slatted vent, purlin ends under the verge (the sheet's rear elevation); local x 0..7 (x 0 = the perimeter-wall corner)",
+   "ucx": 2,
+   "tris": 4088,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_TimberDark",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "apex_x": 3.3,
+    "purlin_protrusion": 0.47,
+    "profile_overhangs": [
+     1.0,
+     0.6
+    ]
+   }
+  },
+  "SM_DKO_Door_Steel": {
+   "class": "building",
+   "folder": "Outbuildings/Storehouse",
+   "note": "storehouse steel double door (closed): two flat leaves with a narrow raised border, a centre meeting stile, two round knob pulls, hinge knuckles; local x 0..1.9, z 0..2.2, face 5 cm behind the wall face",
+   "ucx": 1,
+   "tris": 996,
+   "slots": [
+    "M_DKO_SteelGrey"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "w": 1.9,
+    "h": 2.2
+   }
+  },
+  "SM_DKO_Door_Wood": {
+   "class": "building",
+   "folder": "Outbuildings/Residence",
+   "note": "residence wooden double door (closed): each leaf vertical boards in a frame with a mid rail, iron pull plates and strap hinges; local x 0..1.64, z 0..1.95, face 3 cm behind the post faces",
+   "ucx": 1,
+   "tris": 1372,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_Iron",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "w": 1.6400000000000001,
+    "h": 1.9500000000000002
+   }
+  },
+  "SM_DKO_Window_Lattice": {
+   "class": "building",
+   "folder": "Outbuildings/Residence",
+   "note": "residence lattice window (closed): a frame, a square lattice (kumiko) 6 x 8 in front of lit paper (GlassAmber, opaque; the interior stays closed) and a dark board behind; local x 0..1.64, z 0..1.22",
+   "ucx": 1,
+   "tris": 794,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_GlassAmber",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "w": 1.64,
+    "h": 1.22,
+    "grid": [
+     7,
+     8
+    ]
+   }
+  },
+  "SM_DKO_Canopy_2p8": {
+   "class": "building",
+   "folder": "Outbuildings/Canopies",
+   "note": "storehouse door canopy 2.8 x 0.72 m (sheet: a small tiled lean-to over the door on two brackets): tiles with eave discs, verge rolls, wall flashing, soffit + rafters, fascia, ledger, front beam, two bracket arms with struts; BR-reusable",
+   "ucx": 1,
+   "tris": 9848,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "w": 2.8,
+    "depth": 0.72,
+    "pitch_deg": 25.0,
+    "eave_z_local": 0.0,
+    "wall_z_local": 0.3357,
+    "bracket_x": 1.01,
+    "lowest_local": -0.877
+   }
+  },
+  "SM_DKO_Canopy_2p2": {
+   "class": "building",
+   "folder": "Outbuildings/Canopies",
+   "note": "residence door canopy 2.2 x 0.66 m (sheet), same build as the storehouse canopy",
+   "ucx": 1,
+   "tris": 7820,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "w": 2.2,
+    "depth": 0.66,
+    "pitch_deg": 25.0,
+    "eave_z_local": 0.0,
+    "wall_z_local": 0.3078,
+    "bracket_x": 0.82,
+    "lowest_local": -0.877
+   }
+  },
+  "SM_DKO_Canopy_Window": {
+   "class": "building",
+   "folder": "Outbuildings/Canopies",
+   "note": "residence window hood 2.05 x 0.46 m, lower than the door canopy (sheet)",
+   "ucx": 1,
+   "tris": 6612,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "w": 2.05,
+    "depth": 0.46,
+    "pitch_deg": 22.0,
+    "eave_z_local": 0.0,
+    "wall_z_local": 0.1859,
+    "bracket_x": 0.82,
+    "lowest_local": -0.884
+   }
+  },
+  "SM_DKO_MeterBox": {
+   "class": "thin",
+   "folder": "Outbuildings/Residence",
+   "note": "the residence sheet's electric meter box: a grey steel box with a small meter window and a hood, on a mounting plate, two conduits up to the wall plate and one down into the ground, clamps; its own asset (face at local y 0, outward -y; local z = world height)",
+   "ucx": 1,
+   "tris": 618,
+   "slots": [
+    "M_DJ_Iron"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "box_centre_z": 1.45
+   }
+  },
+  "SM_DKO_Roof_Slope": {
+   "class": "roof",
+   "folder": "Outbuildings/Roof",
+   "note": "outbuilding gable roof, ONE plain slope (built as the south slope in the storehouse frame; placed turned -90 as the storehouse's west slope and +90 as the residence's east slope, over the perimeter wall): tiles (pans + round tiles, eave discs), sarking, rafters with X-capped tails, the fascia, verges (tile stack + roll + end disc, bargeboard) at both gables; 8.6 m long, eave +3.25, the planes meet +5.25 over the roof centre (the grey-box slope, 24.944 deg); collision = the grey-box slab",
+   "ucx": 1,
+   "tris": 66540,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": [
+    3.3,
+    31.7,
+    0.0
+   ]
+  },
+  "SM_DKO_Roof_SlopeNear_Store": {
+   "class": "roof",
+   "folder": "Outbuildings/Roof",
+   "note": "the storehouse's NEAR (east, corridor side) slope: the plain slope turned to the east with the notch under the west corridor's roof (everything under the corridor's two roof planes removed; the corridor roof runs into this slope, valleys + flashings are the corridor kit's); collision = the full grey-box slab",
+   "ucx": 1,
+   "tris": 62904,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": [
+    3.3,
+    31.7,
+    0.0
+   ]
+  },
+  "SM_DKO_Roof_SlopeNear_Res": {
+   "class": "roof",
+   "folder": "Outbuildings/Roof",
+   "note": "the residence's NEAR (west, corridor side) slope: the storehouse's near slope mirrored about X 22 (its own mesh), with the notch under the east corridor's roof",
+   "ucx": 1,
+   "tris": 62904,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": [
+    40.7,
+    31.7,
+    0.0
+   ]
+  },
+  "SM_DKO_Roof_Ridge": {
+   "class": "roof",
+   "folder": "Outbuildings/Roof",
+   "note": "outbuilding ridge (roof_kit 1.3.0 defaults; placed turned 90: the ridge runs N-S, gable-front): bed, three courses of real noshi tiles, the round cap-tile row with tile collars, the plain onigawara at both gables (bullnose tiers, arched tile with a plain round crest, cap-end disc and two lobes; no faces, creatures or symbols)",
+   "ucx": 1,
+   "tris": 15456,
+   "slots": [
+    "M_DJ_RoofTile"
+   ],
+   "nanite": true,
+   "kit": "outbuildings",
+   "pivot_world": [
+    3.3,
+    31.7,
+    0.0
+   ]
+  },
+  "SM_DKO_Gutter_S": {
+   "class": "thin",
+   "folder": "Outbuildings/Roof",
+   "note": "half-round gutter 1.85 m on hooked strap brackets (roof sheet panel f), capped both ends; local x 0..L along the eave, rim centre line at local y 0 z 0, fascia side +y (placed at the eave line - 0.09 m, rim +3.073); the near eave south of the corridor roof",
+   "ucx": 1,
+   "tris": 544,
+   "slots": [
+    "M_DJ_Iron"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "length": 1.85
+   }
+  },
+  "SM_DKO_Gutter_N": {
+   "class": "thin",
+   "folder": "Outbuildings/Roof",
+   "note": "half-round gutter 3.25 m on hooked strap brackets (roof sheet panel f), capped both ends; local x 0..L along the eave, rim centre line at local y 0 z 0, fascia side +y (placed at the eave line - 0.09 m, rim +3.073); the near eave north of the corridor roof",
+   "ucx": 1,
+   "tris": 796,
+   "slots": [
+    "M_DJ_Iron"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "length": 3.25
+   }
+  },
+  "SM_DKO_Gutter_F": {
+   "class": "thin",
+   "folder": "Outbuildings/Roof",
+   "note": "half-round gutter 8.33 m on hooked strap brackets (roof sheet panel f), capped both ends; local x 0..L along the eave, rim centre line at local y 0 z 0, fascia side +y (placed at the eave line - 0.09 m, rim +3.073); the far eave (over the perimeter wall)",
+   "ucx": 1,
+   "tris": 1988,
+   "slots": [
+    "M_DJ_Iron"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "length": 8.33
+   }
+  },
+  "SM_DKO_Downpipe": {
+   "class": "thin",
+   "folder": "Outbuildings/Roof",
+   "note": "round downpipe from the near eave's gutter at a gable corner, a two-bend swan neck back to the wall, wall clamps, a shoe; local origin = the pipe foot on its axis, 0.105 m in front of the plaster face (local +y = the wall), outlet 0.585 m out at the gutter (the 0.6 m near eave)",
+   "ucx": 1,
+   "tris": 876,
+   "slots": [
+    "M_DJ_Iron"
+   ],
+   "nanite": false,
+   "kit": "outbuildings",
+   "pivot_world": null,
+   "extra": {
+    "outlet_local": [
+     0.0,
+     -0.585,
+     3.0326
+    ]
+   }
+  }
+ },
+ "instances": [
+  {
+   "piece": "SM_DKO_Store_GableFront",
+   "loc": [
+    0.0,
+    27.94,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "building": "store",
+   "folder": "Outbuildings/Storehouse",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    -0.0528,
+    27.4603,
+    -0.0008,
+    7.0512,
+    28.1905,
+    5.0956
+   ]
+  },
+  {
+   "piece": "SM_DKO_Door_Steel",
+   "loc": [
+    2.35,
+    27.94,
+    0.15
+   ],
+   "rot_z": 0.0,
+   "building": "store",
+   "folder": "Outbuildings/Storehouse",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    2.354,
+    27.92,
+    0.156,
+    4.246,
+    28.035,
+    2.346
+   ]
+  },
+  {
+   "piece": "SM_DKO_Canopy_2p8",
+   "loc": [
+    3.3,
+    27.94,
+    2.66
+   ],
+   "rot_z": 0.0,
+   "building": "store",
+   "folder": "Outbuildings/Canopies",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    1.9,
+    27.1548,
+    1.7831,
+    4.7,
+    27.9823,
+    3.0168
+   ]
+  },
+  {
+   "piece": "SM_DKO_Store_GableRear",
+   "loc": [
+    7.0,
+    35.46,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "building": "store",
+   "folder": "Outbuildings/Storehouse",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    -0.0511,
+    35.2095,
+    -0.001,
+    7.0521,
+    35.535,
+    5.0956
+   ]
+  },
+  {
+   "piece": "SM_DKO_Store_Wall_N",
+   "loc": [
+    7.0,
+    28.19,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "building": "store",
+   "folder": "Outbuildings/Storehouse",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    6.7496,
+    28.1894,
+    -0.0009,
+    7.0584,
+    35.2102,
+    3.3584
+   ]
+  },
+  {
+   "piece": "SM_DKO_Store_Wall_F",
+   "loc": [
+    0.0,
+    35.21,
+    0.0
+   ],
+   "rot_z": -90.0,
+   "building": "store",
+   "folder": "Outbuildings/Storehouse",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    -0.059,
+    28.1894,
+    -0.0007,
+    0.2505,
+    35.2107,
+    3.5444
+   ]
+  },
+  {
+   "piece": "SM_DKO_Res_GableFront",
+   "loc": [
+    37.0,
+    27.94,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "building": "res",
+   "folder": "Outbuildings/Residence",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.9457,
+    27.47,
+    -0.0001,
+    44.0501,
+    28.1904,
+    5.0956
+   ]
+  },
+  {
+   "piece": "SM_DKO_Door_Wood",
+   "loc": [
+    38.73,
+    27.94,
+    0.27
+   ],
+   "rot_z": 0.0,
+   "building": "res",
+   "folder": "Outbuildings/Residence",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    38.734,
+    27.926,
+    0.275,
+    40.366,
+    28.005,
+    2.216
+   ]
+  },
+  {
+   "piece": "SM_DKO_Canopy_2p2",
+   "loc": [
+    39.55,
+    27.94,
+    2.56
+   ],
+   "rot_z": 0.0,
+   "building": "res",
+   "folder": "Outbuildings/Canopies",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    38.45,
+    27.2148,
+    1.6831,
+    40.65,
+    27.9823,
+    2.8888
+   ]
+  },
+  {
+   "piece": "SM_DKO_Window_Lattice",
+   "loc": [
+    41.03,
+    27.94,
+    1.03
+   ],
+   "rot_z": 0.0,
+   "building": "res",
+   "folder": "Outbuildings/Residence",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    41.03,
+    27.952,
+    1.03,
+    42.67,
+    28.01,
+    2.25
+   ]
+  },
+  {
+   "piece": "SM_DKO_Canopy_Window",
+   "loc": [
+    41.85,
+    27.94,
+    2.44
+   ],
+   "rot_z": 0.0,
+   "building": "res",
+   "folder": "Outbuildings/Canopies",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    40.825,
+    27.4254,
+    1.5559,
+    42.875,
+    27.9745,
+    2.6586
+   ]
+  },
+  {
+   "piece": "SM_DKO_MeterBox",
+   "loc": [
+    43.3,
+    27.94,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "building": "res",
+   "folder": "Outbuildings/Residence",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    43.09,
+    27.77,
+    0.02,
+    43.51,
+    27.94,
+    3.1057
+   ]
+  },
+  {
+   "piece": "SM_DKO_Res_GableRear",
+   "loc": [
+    44.0,
+    35.46,
+    0.0
+   ],
+   "rot_z": 180.0,
+   "building": "res",
+   "folder": "Outbuildings/Residence",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.9467,
+    35.2096,
+    -0.0002,
+    44.0509,
+    35.93,
+    5.0956
+   ]
+  },
+  {
+   "piece": "SM_DKO_Res_Wall_N",
+   "loc": [
+    37.0,
+    35.21,
+    0.0
+   ],
+   "rot_z": -90.0,
+   "building": "res",
+   "folder": "Outbuildings/Residence",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.954,
+    28.189,
+    -0.0002,
+    37.2504,
+    35.2101,
+    3.3584
+   ]
+  },
+  {
+   "piece": "SM_DKO_Res_Wall_F",
+   "loc": [
+    44.0,
+    28.19,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "building": "res",
+   "folder": "Outbuildings/Residence",
+   "collision_class": "building",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    43.7496,
+    28.1896,
+    -0.0002,
+    44.0456,
+    35.2106,
+    3.5444
+   ]
+  },
+  {
+   "piece": "SM_DKO_Roof_Slope",
+   "loc": [
+    3.3,
+    31.7,
+    0.0
+   ],
+   "rot_z": -90.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "roof",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    -1.0815,
+    27.4,
+    2.9469,
+    3.2908,
+    36.0,
+    5.279
+   ]
+  },
+  {
+   "piece": "SM_DKO_Roof_SlopeNear_Store",
+   "loc": [
+    3.3,
+    31.7,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "roof",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    3.3092,
+    27.4,
+    2.9469,
+    7.6814,
+    36.0,
+    5.279
+   ]
+  },
+  {
+   "piece": "SM_DKO_Roof_Ridge",
+   "loc": [
+    3.3,
+    31.7,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "roof",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    3.025,
+    27.318,
+    5.12,
+    3.575,
+    36.082,
+    5.772
+   ]
+  },
+  {
+   "piece": "SM_DKO_Roof_Slope",
+   "loc": [
+    40.7,
+    31.7,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "roof",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    40.7092,
+    27.4,
+    2.9469,
+    45.0815,
+    36.0,
+    5.279
+   ]
+  },
+  {
+   "piece": "SM_DKO_Roof_SlopeNear_Res",
+   "loc": [
+    40.7,
+    31.7,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "roof",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.3186,
+    27.4,
+    2.9469,
+    40.6908,
+    36.0,
+    5.279
+   ]
+  },
+  {
+   "piece": "SM_DKO_Roof_Ridge",
+   "loc": [
+    40.7,
+    31.7,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "roof",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    40.425,
+    27.318,
+    5.12,
+    40.975,
+    36.082,
+    5.772
+   ]
+  },
+  {
+   "piece": "SM_DKO_Gutter_S",
+   "loc": [
+    7.69,
+    27.45,
+    3.0726
+   ],
+   "rot_z": 90.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    7.554,
+    27.446,
+    2.9933,
+    7.7693,
+    29.304,
+    3.1426
+   ]
+  },
+  {
+   "piece": "SM_DKO_Gutter_S",
+   "loc": [
+    36.31,
+    29.3,
+    3.0726
+   ],
+   "rot_z": -90.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.2307,
+    27.446,
+    2.9933,
+    36.446,
+    29.304,
+    3.1426
+   ]
+  },
+  {
+   "piece": "SM_DKO_Gutter_N",
+   "loc": [
+    7.69,
+    32.7,
+    3.0726
+   ],
+   "rot_z": 90.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    7.554,
+    32.696,
+    2.9932,
+    7.7693,
+    35.954,
+    3.1426
+   ]
+  },
+  {
+   "piece": "SM_DKO_Gutter_N",
+   "loc": [
+    36.31,
+    35.95,
+    3.0726
+   ],
+   "rot_z": -90.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.2307,
+    32.696,
+    2.9932,
+    36.446,
+    35.954,
+    3.1426
+   ]
+  },
+  {
+   "piece": "SM_DKO_Gutter_F",
+   "loc": [
+    -1.09,
+    35.95,
+    3.0726
+   ],
+   "rot_z": -90.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    -1.1694,
+    27.616,
+    2.9932,
+    -0.954,
+    35.954,
+    3.1426
+   ]
+  },
+  {
+   "piece": "SM_DKO_Gutter_F",
+   "loc": [
+    45.09,
+    27.62,
+    3.0726
+   ],
+   "rot_z": 90.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    44.954,
+    27.616,
+    2.9932,
+    45.1694,
+    35.954,
+    3.1426
+   ]
+  },
+  {
+   "piece": "SM_DKO_Downpipe",
+   "loc": [
+    7.105,
+    28.05,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    6.986,
+    27.955,
+    -0.005,
+    7.746,
+    28.145,
+    3.0326
+   ]
+  },
+  {
+   "piece": "SM_DKO_Downpipe",
+   "loc": [
+    36.895,
+    28.05,
+    0.0
+   ],
+   "rot_z": -90.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.254,
+    27.955,
+    -0.005,
+    37.014,
+    28.145,
+    3.0326
+   ]
+  },
+  {
+   "piece": "SM_DKO_Downpipe",
+   "loc": [
+    7.105,
+    35.35,
+    0.0
+   ],
+   "rot_z": 90.0,
+   "building": "store",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    6.986,
+    35.255,
+    -0.005,
+    7.746,
+    35.445,
+    3.0326
+   ]
+  },
+  {
+   "piece": "SM_DKO_Downpipe",
+   "loc": [
+    36.895,
+    35.35,
+    0.0
+   ],
+   "rot_z": -90.0,
+   "building": "res",
+   "folder": "Outbuildings/Roof",
+   "collision_class": "thin",
+   "kit": "outbuildings",
+   "bbox_min_max": [
+    36.254,
+    35.255,
+    -0.005,
+    37.014,
+    35.445,
+    3.0326
+   ]
+  }
+ ],
+ "replaces_greybox": [
+  "SM_DGB_Storehouse",
+  "SM_DGB_Storehouse_Roof",
+  "SM_DGB_Residence",
+  "SM_DGB_Residence_Roof"
+ ],
+ "numbers": {
+  "roof": {
+   "pitch_deg": 24.9439,
+   "planes_meet": 5.25,
+   "ridge_cap_top": 5.5715,
+   "course_m": 0.284,
+   "courses": 16,
+   "roof_x": [
+    -1.0,
+    7.6
+   ],
+   "roof_y": [
+    27.4,
+    36.0
+   ],
+   "ridge_runs": "N-S (Y), over X 3.3 / 40.7",
+   "gutter_rim_z": 3.0726,
+   "plate_top_near": 3.2757,
+   "plate_top_far": 3.4617,
+   "corridor_notch": {
+    "planes": {
+     "eave": 3.0,
+     "ys": 29.5,
+     "yn": 32.5,
+     "cy": 31.0,
+     "tn": 0.4663076581549986
+    },
+    "clip_under_m": 0.06
+   }
+  },
+  "eave": 3.25,
+  "ridge_planes": 5.25,
+  "roof_x": {
+   "store": [
+    -1.0,
+    7.6
+   ],
+   "res": [
+    36.4,
+    45.0
+   ]
+  },
+  "roof_y": [
+   27.4,
+   36.0
+  ],
+  "body_x": {
+   "store": [
+    0.0,
+    7.0
+   ],
+   "res": [
+    37.0,
+    44.0
+   ]
+  },
+  "faces_y": {
+   "south": 27.94,
+   "north": 35.46
+  },
+  "wall_thickness": 0.25,
+  "plates": {
+   "near": {
+    "ov": 0.6,
+    "top": 3.2757,
+    "bot": 3.1157,
+    "frieze": 3.3584
+   },
+   "far": {
+    "ov": 1.0,
+    "top": 3.4617,
+    "bot": 3.3017,
+    "frieze": 3.5444
+   }
+  },
+  "gable_front": "south faces Y 27.94 (the courtyard), apex over X 3.3 / 40.7",
+  "store_band_top": 1.0,
+  "res_base": {
+   "foundation": 0.15,
+   "sill": 0.27,
+   "rail": [
+    0.95,
+    1.03
+   ]
+  },
+  "canopy_eave_z": {
+   "store": 2.66,
+   "res_door": 2.56,
+   "res_win": 2.44
+  },
+  "gutter_rim_z": 3.0726,
+  "route2": "kit 1's SM_DK_Wall_StepPier (flat top +3.25, X -1..0 / 44..45, Y 26.4..27.4) -> north onto the FAR slope over the perimeter wall (+3.25 at its eave X -1 / 45, +3.48 at X -0.5 / 44.5): a 0.23 m step up at the stance (was 0.0 onto the E-W eave), under the 0.45 m step",
+  "route3": "near (corridor-side) slope, down toward its eave, onto the corridor roof that runs into it (the valley): a continuous walk / small step down (spec 4.5: 'walk (small step down)'), then the corridor's 0.51 m drop onto the hall's lower roof (unchanged)",
+  "prop_faces": {
+   "note": "other kits' props placed on the grey-box south faces (Y 27.94), now the FRONT GABLES: our plaster face is Y 27.94 (storehouse; the granite band stands 4 cm proud to 27.90, the residence posts 2.8 cm proud, its plaster at 27.94)",
+   "store_plaster": 27.94,
+   "store_band": 27.9,
+   "res_plaster": 27.94,
+   "res_posts": 27.912
+  }
+ }
+}

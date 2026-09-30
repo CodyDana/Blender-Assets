@@ -1,0 +1,56 @@
+{
+ "round": "r3 look pass, ground + shared material library (2026-09-28)",
+ "reimport_textures_same_names": {
+  "library (Exports/DojoKit/Materials/Textures, /Game/DojoKit/Materials/Textures)": [
+   "T_DJ_TimberDark_{BC,N,ORM}", "T_DJ_TimberDarkEnd_{BC,N,ORM}", "T_DJ_TimberAged_{BC,N,ORM}",
+   "T_DJ_TimberAgedEnd_{BC,N,ORM}", "T_DJ_Granite_{BC,N,ORM}", "T_DJ_PlasterCream_{BC,N,ORM}",
+   "T_DJ_PlasterEarth_{BC,N,ORM}", "T_DJ_RoofTile_{BC,N,ORM}", "T_DJ_Lacquer_{BC,N,ORM}"],
+  "ground (Exports/DojoKit/Ground/Textures)": [
+   "T_DKG_SandRaked_{BC,N,ORM}", "T_DKG_SandEdge_{BC,N,ORM}", "T_DKG_Gravel_{BC,N,ORM}",
+   "T_DKG_GravelCoarse_{BC,N,ORM}"],
+  "import_settings_unchanged": "BC sRGB TC_Default; ORM TC_Masks linear; N TC_Normalmap, no green flip (DirectX); power of two, full mips"
+ },
+ "meshes": {
+  "new": ["SM_DKG_PaverCourse_2x0p42_A", "B", "C", "D", "E", "F", "G", "H"],
+  "retired (moved to Exports/DojoKit/Ground/_superseded_r2; delete from DojoLab after the re-import)": [
+   "SM_DKG_PathSlab_100x60_A", "SM_DKG_PathSlab_100x60_B", "SM_DKG_PathSlab_100x80_A", "SM_DKG_PathSlab_100x80_B",
+   "SM_DKG_PathSlab_100x100_A", "SM_DKG_PathSlab_100x100_B", "SM_DKG_PathSlab_100x120_A", "SM_DKG_PathSlab_100x120_B"],
+  "now_with_trivial_UCX_keep_NoCollision": ["SM_DKG_Tuft_Grass", "SM_DKG_Tuft_Moss", "SM_DKG_Pebbles_Stray"],
+  "all_68_ground_fbx_re_exported": true,
+  "paver_vertex_colour": "'Wear' layer: R = baked grime + a per-paver offset 0-0.40 (per-paver tone through the library wear maths), G = 0 (no bleached arris), B = 0"
+ },
+ "material_instances": {
+  "M_DKG_Granite (M_DJ_Lib_Opaque, T_DJ_Granite)": {"Tint": [1.45, 1.38, 1.25], "InstanceTint": 0.0,
+   "HueWarm": [1.0, 1.0, 1.0], "HueCool": [1.0, 1.0, 1.0], "UseWear": true, "UseInstanceVar": "true (neutral values)",
+   "note": "compose_showcase reads these from layout_ground.json; r2 was Tint (1.66, 1.92, 2.60) = the lilac path"},
+  "M_DKG_SandRaked / M_DKG_SandEdge (M_DJ_Ground_Master)": {
+   "NEW_normal_fade": "N = lerp(N, (0, 0, 1), (1 - 0.35) * saturate((PixelDepth - 1200) / (3500 - 1200)))",
+   "params": {"start_cm": 1200.0, "end_cm": 3500.0, "far_strength": 0.35},
+   "source": "layout_ground.json materials.M_DKG_Sand*.normal_fade (dj_sc_materials.py needs the fade added: not this track's file)"},
+  "every other slot": "unchanged recipes; only the texture pixels changed"
+ },
+ "unreal_capture_targets_srgb_median": {
+  "sand lit (CAM_EstablishingRef2, box 1000-1350 x 700-860)": {"target": [200, 172, 140], "tol": 12, "sat": [0.26, 0.34], "hue": [25, 33], "r2": [202, 184, 167]},
+  "path pavers lit (CAM_EstablishingRef2, box 600-840 x 900-1080)": {"target": [145, 135, 125], "tol": 15, "sat": [0.10, 0.20], "hue": [20, 38], "r_over_b": [1.08, 1.25], "r2": [154, 147, 171]},
+  "surround gravel lit": {"target": [150, 132, 112], "tol": 15, "sat": [0.20, 0.30], "hue": [28, 36], "rule": "darker than the lit sand (luma ratio 0.70-0.85)"},
+  "rake spacing in CAM_EstablishingRef2 (measure_rake_r3.py method)": {"main_m": 0.095, "fine_m": 0.048, "r2_m": 0.178},
+  "timber veranda deck / posts (CAM_HallVeranda)": {"sat": [0.45, 0.60], "hue": [20, 25], "r2": "deck (103, 42, 15) s0.85, post (94, 29, 9) s0.90",
+   "model_prediction": "log-chroma gain 2.4-3.0 x (r2 measured) on the new albedo R/B 1.37 -> s 0.53-0.61"},
+  "wall-cap and gate tiles": {"r_over_b": [0.90, 1.10], "sat_max": 0.20, "r2": "wall cap 1.88, gate 1.28",
+   "model_prediction": "the r2 shift is additive in log R/B (+0.68 wall cap, +0.30 gate): the bluer glaze (albedo R/B 0.95 -> 0.865) buys only ~0.09, so expect wall cap ~1.7, gate ~1.17 unless the lighting (bounce off warm plaster, 2400 K gate lamps) is also addressed"},
+  "hall plaster cream in shade": {"sat_max": 0.50, "hue": [25, 35], "r2": "(72, 19, 3) s0.96",
+   "model_prediction": "texture chroma cut 0.42 -> 0.27 plus the greyer timber (less coloured bounce); if the shade still reads s > 0.6 the cause is Lumen bounce between warm surfaces + lamps (lighting step), not the albedo"},
+  "lantern / well granite (M_DJ_Granite_Tri)": {"sat_max": 0.20, "r_over_b": [1.00, 1.20], "look": "weathered grey, fine grain, dark crevices, no terrazzo speckle"}
+ },
+ "albedo_medians_srgb_new_vs_r2": {
+  "T_DJ_TimberDark": {"r3": [74, 62, 54], "r2": [84, 57, 38], "sat": [0.27, 0.548]},
+  "T_DJ_TimberAged": {"r3": [87, 73, 61], "r2": [103, 71, 47], "sat": [0.299, 0.544]},
+  "T_DJ_Granite": {"r3": [115, 111, 106], "r2": [112, 105, 98], "speckle_hp_std_rel": [0.162, 0.283]},
+  "T_DJ_RoofTile": {"r3": [64, 67, 74], "r2": [73, 74, 77], "r_over_b": [0.865, 0.95]},
+  "T_DJ_PlasterCream": {"r3": [192, 169, 140], "r2": [185, 144, 108], "sat": [0.271, 0.416]},
+  "T_DJ_PlasterEarth": {"r3": [192, 170, 144], "r2": [194, 165, 130], "sat": [0.25, 0.33]},
+  "T_DJ_Lacquer": {"r3": [102, 69, 63], "r2": [110, 52, 40], "sat": [0.382, 0.636], "roughness_base": [0.46, 0.30]},
+  "T_DKG_SandRaked (mean)": {"r3": [202, 176, 137], "r2": [209, 190, 158]},
+  "T_DKG_Gravel (mean)": {"r3": [157, 141, 122], "r2": [168, 162, 155]}
+ }
+}

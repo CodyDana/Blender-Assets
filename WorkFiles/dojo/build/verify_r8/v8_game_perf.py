@@ -1,0 +1,204 @@
+"""VERIFY r8 (independent verifier): GPU frame time of L_Dojo in a real -game frame (UnrealEditor-Cmd -game
+-RenderOffscreen -dx12, launched by run_v8_game_perf.ps1 as -ExecCmds="py <this file>"). Read-only for the project
+content: writes only verify_r8/game_perf.json (+ the engine's own CSV profiles in DojoLab/Saved/Profiling/CSV and its log).
+
+Per view (CAM_PlayerEyeSand, CAM_Overview, and the GASP pawn's own camera) and per output config (1920x1080 @100 %,
+2560x1440 @100 / 75 / 67 %): r.setres + r.ScreenPercentage, set view target, settle, then sample every frame's delta
+(Slate post-tick) for SAMPLE_S with `csvprofile start/stop` around it (GPU stats on), then one `ProfileGPU` (log dump).
+Also records the RUNTIME environment twice (start and end): every directional / sky light / fog / atmosphere / cloud /
+point light component, the UDS Time of Day and the Sun direction (time-of-day lock check).
+Gameplay preset: `scalability 3` (Epic, research 5.1), t.MaxFPS 0, no vsync; everything else as the level/PPV sets it.
+"""
+import json
+import math
+import os
+import time
+import traceback
+from pathlib import Path
+
+import unreal
+
+OUT = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\dojo\build\verify_r8\game_perf.json")
+WARM_S, WARM_PER_S, SETTLE_S, SAMPLE_S, PROF_S = 35.0, 6.0, 9.0, 9.0, 4.0
+VIEWS = ["CAM_PlayerEyeSand", "CAM_Overview", "PAWN"]
+CONFIGS = [(1920, 1080, 100), (2560, 1440, 100), (2560, 1440, 75), (2560, 1440, 67)]
+CVARS = ["scalability 3", "t.MaxFPS 0", "r.VSync 0", "r.GPUCsvStatsEnabled 1", "r.GPUStatsEnabled 1"]
+REP = {"engine": unreal.SystemLibrary.get_engine_version(), "segments": [], "events": [], "cvars": CVARS,
+       "views": VIEWS, "configs": CONFIGS}
+ST = {"phase": "wait_world", "t": time.time(), "t0": time.time(), "i": 0, "pc": None, "cams": {}, "handle": None, "dts": []}
+PLAN = [(v, c) for v in VIEWS for c in CONFIGS]
+
+
+def log(msg):
+    REP["events"].append(f"{time.time() - ST['t0']:.1f}s {msg}")
+    unreal.log(f"V8PERF {msg}")
+
+
+def cmd(c):
+    unreal.SystemLibrary.execute_console_command(ST["pc"], c, ST["pc"])
+
+
+def cv(name):
+    try:
+        return unreal.SystemLibrary.get_console_variable_float_value(name)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def find_pc():
+    for pc in unreal.ObjectIterator(unreal.PlayerController):
+        try:
+            if pc.get_name().startswith("Default__") or pc.get_world() is None:
+                continue
+            return pc
+        except Exception:  # noqa: BLE001
+            continue
+    return None
+
+
+def env_state():
+    kinds = {"directional": unreal.DirectionalLightComponent, "skylight": unreal.SkyLightComponent,
+             "fog": unreal.ExponentialHeightFogComponent, "atmosphere": unreal.SkyAtmosphereComponent,
+             "cloud": unreal.VolumetricCloudComponent, "point": unreal.PointLightComponent,
+             "rect": unreal.RectLightComponent, "postprocess": unreal.PostProcessComponent}
+    out = {k: [] for k in kinds}
+    uds = None
+    for a in unreal.GameplayStatics.get_all_actors_of_class(ST["pc"], unreal.Actor):
+        if a.get_class().get_name() == "Ultra_Dynamic_Sky_C":
+            uds = a
+        for k, cls in kinds.items():
+            for c in a.get_components_by_class(cls):
+                r = {"actor": a.get_name(), "comp": c.get_name()}
+                for p in ("intensity", "visible", "affects_world", "cast_shadows", "enabled", "unbound", "priority"):
+                    try:
+                        v = c.get_editor_property(p)
+                        r[p] = round(v, 4) if isinstance(v, float) else v if isinstance(v, bool) else str(v)
+                    except Exception:  # noqa: BLE001
+                        pass
+                if k == "directional":
+                    f = c.get_forward_vector()
+                    r["elev_deg"] = round(math.degrees(math.asin(max(-1.0, min(1.0, -f.z)))), 4)
+                    r["az_from_x_blender_deg"] = round(math.degrees(math.atan2(f.y, -f.x)) % 360, 4)
+                out[k].append(r)
+    for k in ("Time of Day", "Animate Time of Day", "Apply Exposure Settings", "Project Mode", "Sky Mode"):
+        try:
+            out.setdefault("uds", {})[k] = str(uds.get_editor_property(k)) if uds else None
+        except Exception as e:  # noqa: BLE001
+            out.setdefault("uds", {})[k] = "ERR " + str(e)[:60]
+    out["active"] = {k: sum(1 for r in v if r.get("visible", True) and r.get("affects_world", True) is not False
+                            and (r.get("intensity", 1.0) or 0) > 0)
+                     for k, v in out.items() if isinstance(v, list)}
+    out["t_s"] = round(time.time() - ST["t0"], 1)
+    return out
+
+
+def view(name, w, h, sp):
+    cmd(f"r.setres {w}x{h}w")
+    cmd(f"r.ScreenPercentage {sp}")
+    tgt = ST["pc"].get_controlled_pawn() if name == "PAWN" else ST["cams"].get(name)
+    if tgt is None:
+        return False
+    ST["pc"].set_view_target_with_blend(tgt, 0.0)
+    return True
+
+
+def stats(d):
+    d = sorted(d)
+    n = len(d)
+    if not n:
+        return None
+    return {"n": n, "mean_ms": round(1000 * sum(d) / n, 3), "median_ms": round(1000 * d[n // 2], 3),
+            "p95_ms": round(1000 * d[min(n - 1, int(0.95 * n))], 3), "p99_ms": round(1000 * d[min(n - 1, int(0.99 * n))], 3),
+            "max_ms": round(1000 * d[-1], 3), "fps_mean": round(n / sum(d), 2)}
+
+
+def finish(ok):
+    REP["passed_run"] = ok
+    REP["sec"] = round(time.time() - ST["t0"], 1)
+    OUT.write_text(json.dumps(REP, indent=1, default=str), encoding="utf-8")
+    unreal.log(f"V8PERF_DONE ok={ok} segments={len(REP['segments'])}")
+    if ST["handle"] is not None:
+        unreal.unregister_slate_post_tick_callback(ST["handle"])
+        ST["handle"] = None
+    try:
+        cmd("quit")
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def tick(dt):
+    try:
+        now = time.time()
+        el = now - ST["t"]
+        ph = ST["phase"]
+        if ph == "wait_world":
+            pc = find_pc()
+            if pc is not None and el > 2.0:
+                ST["pc"] = pc
+                for a in unreal.GameplayStatics.get_all_actors_of_class(pc, unreal.CineCameraActor):
+                    ST["cams"][a.get_actor_label()] = a
+                REP["missing_cams"] = [v for v in VIEWS if v != "PAWN" and v not in ST["cams"]]
+                for c in CVARS:
+                    cmd(c)
+                pc.set_ignore_move_input(True)
+                pc.set_ignore_look_input(True)
+                REP["env_start"] = env_state()
+                log(f"world ready, cams {len(ST['cams'])}, missing {REP['missing_cams']}")
+                ST["phase"], ST["t"], ST["i"] = "warm0", now, 0
+            elif el > 180:
+                log("no PlayerController")
+                finish(False)
+        elif ph == "warm0":
+            if el >= WARM_S:
+                ST["phase"], ST["t"], ST["i"] = "warm", now, 0
+                view(VIEWS[0], 2560, 1440, 100)
+        elif ph == "warm":
+            if el >= WARM_PER_S:
+                ST["i"] += 1
+                ST["t"] = now
+                if ST["i"] >= len(VIEWS):
+                    ST["phase"], ST["i"] = "aim", 0
+                else:
+                    view(VIEWS[ST["i"]], 2560, 1440, 100)
+        elif ph == "aim":
+            if ST["i"] >= len(PLAN):
+                REP["env_end"] = env_state()
+                finish(True)
+                return
+            v, (w, h, sp) = PLAN[ST["i"]]
+            ok = view(v, w, h, sp)
+            log(f"segment {ST['i']} {v} {w}x{h}@{sp} view_ok={ok}")
+            ST["phase"], ST["t"] = "settle", now
+        elif ph == "settle":
+            if el >= SETTLE_S:
+                v, (w, h, sp) = PLAN[ST["i"]]
+                ST["dts"] = []
+                cmd("csvprofile start")
+                log(f"SAMPLE_START {ST['i']} {v} {w}x{h}@{sp}")
+                ST["phase"], ST["t"] = "sample", now
+                ST["seg_t0"] = now
+        elif ph == "sample":
+            ST["dts"].append(float(dt))
+            if el >= SAMPLE_S:
+                cmd("csvprofile stop")
+                v, (w, h, sp) = PLAN[ST["i"]]
+                seg = {"i": ST["i"], "view": v, "res": [w, h], "screen_pct": sp,
+                       "cvar_screen_pct": cv("r.ScreenPercentage"), "wall_s": round(now - ST["seg_t0"], 2),
+                       "frames": stats(ST["dts"][2:]), "t_s": round(now - ST["t0"], 1)}
+                REP["segments"].append(seg)
+                log(f"SAMPLE_END {ST['i']} {v} {w}x{h}@{sp} {seg['frames']}")
+                log(f"PROFILEGPU_BEGIN {ST['i']} {v} {w}x{h}@{sp}")
+                cmd("ProfileGPU")
+                ST["phase"], ST["t"] = "prof", now
+        elif ph == "prof":
+            if el >= PROF_S:
+                log(f"PROFILEGPU_END {ST['i']}")
+                ST["i"] += 1
+                ST["phase"], ST["t"] = "aim", now
+    except Exception:  # noqa: BLE001
+        REP["error"] = traceback.format_exc()[-3000:]
+        finish(False)
+
+
+ST["handle"] = unreal.register_slate_post_tick_callback(tick)
+log("registered")

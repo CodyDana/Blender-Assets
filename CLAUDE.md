@@ -15,7 +15,7 @@ headless Blender, then verified in Unreal. This file is for any session, local o
 | `References/<Item>/` | The user's reference images and measured specs (plain git, so they're available without LFS). |
 | `WorkFiles/<item>/` | Reports, specs, study notes, check scripts. Heavy scratch (bakes, caches, test builds, images) is NOT in git. |
 | `Backups/` | Local safety copies; only two verified baselines are in git. |
-| `ASSET_GUIDELINES.md`, `FAB_ASSET_STUDY.md` | The standards: read before building anything. |
+| `ASSET_GUIDELINES.md`, `FAB_ASSET_STUDY.md`, `TREE_BUILDING_STUDY.md`, `STONE_BUILDING_STUDY.md` | The standards: read before building anything. `TREE_BUILDING_STUDY.md` is the reference for any tree, plant or vegetation build (build or buy, pipeline, Unreal setup, gates). `STONE_BUILDING_STUDY.md` is the reference for any stone, masonry or rock build (walls, steps, paving, lanterns and carved stone, boulders; build or buy, pipeline, Unreal setup, gates). |
 
 ## Rules that matter
 

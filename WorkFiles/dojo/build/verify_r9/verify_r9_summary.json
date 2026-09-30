@@ -1,0 +1,17 @@
+{
+ "date": "2026-09-30",
+ "verifier": "independent round-9 verifier (verify_r9): fresh headless Blender + fresh read-only UE commandlets + one -game perf run, one at a time, none left running; outputs only here",
+ "level_state_verified": "the live DojoLab = round-9 RESTORE of s1 (it4 look), L_Dojo.umap md5 6598865e...; config/uproject md5 = restore_s1 backup; unchanged by this verifier",
+ "result": "PASS (gates 1-4); look reported with misses",
+ "1_functional": {
+  "fbx_audit": "253 pieces, 0 errors, every piece has UCX with valid names, 0 pieces differ from verify_r8; 55 new unlisted exports (Pines, StoneKit) are not in the level",
+  "blender_traversal": "walk PASS (r0.30 + r0.35), climb PASS, gate/hall/outbuilding/corridor/shed/pavilion roof walks PASS, clearance + ground holes: 0 leaf diffs vs verify_r8 in all 11 JSONs",
+  "ue_verify": "14/14 gates; vs verify_r8 the only differences are the 7_env lighting values (bias 1.5->1.2, Cloud Coverage 2.6->3.6, sun source angle 0.53->3.0, sun 11.47->6.42, sky light, lamp intensities); meshes, 1110 instances, transforms, collision, decals 86/86, 24 TRV markers, GASP trace 23/23, in-engine walk 47 routes, alley ring, 1v1 group 14/14 identical",
+  "emblem": "T_DKD_Emblem_BC/N/ORM pixel-identical to T_AK_Emblem_*; emblem_pixels.json byte-identical to verify_r8",
+  "alley_own": "own lattice (shifted to X -0.97 / Y 23.03 / z +0.08) flood 1v1 r30 3,133,789 / r35 3,104,841 cells reached, 0 target cells; mantles 1,257 GASP-valid, 0 leaks; arcs (0.3 m grid, 30 headings, 300/450/650 cm/s): first pass 1,050 entries all from 4 launch points at X 10.4 Y 34.5-35.4 = inside my own 7 cm target-box seam (pocket_W x1 10.38 / strip x0 10.45) in the sealed rear, unreachable by the flood (northmost reached Y 33.63 at X 10-12); rerun with the seam closed: 1v1 r30 0 / 793,260, r35 0 / 783,540; BR opens all 9 targets (group separable)"
+ },
+ "2_uds": "1 UDS actor, 0 engine env actors, 1 active directional / sky light / fog / atmosphere / cloud, no dome, no fills; exposure owner PPV PostProcess_Dojo only (manual, bias 1.2); UDS Apply Exposure False; Animate Time of Day False, Time of Day 1730 at t=2 s and t=253 s in -game; Sun 9.0804 deg elevation, azimuth 187.29 deg from +X = from the west (Sun Yaw 268), 0.000/0.004 deg from the layout",
+ "3_plugins": "ProceduralVegetationEditor in DojoLab.uproject (added 08:24 by the stopped run); PVE + DynamicWind mount and load; r.Nanite.ProjectEnabled/Foliage=True, RayTracingProxies on; L_Dojo loads with 0 errors, 394 warnings = the same warning set as verify_r8 (before PVE); DemoGame_1 / DemoGame_1_private2b / GameAnimationSample: 0 files written after 08:00; ArmoryLab writes 13:01-13:03 are the armory chat's",
+ "4_perf": "see perf_summary.md; configured screen % confirmed from the TSR input size (1080p -> 1920x1080, 1440p -> 1920x1080 = 75 %); GPUTime mean/median/p95 1080p 7.11-7.71 / 7.09-7.68 / 7.33-7.92 ms, 1440p configured 7.66-8.26 / 7.64-8.23 / 7.88-8.48 ms, 1440p@100 10.09-11.33 / - / 10.33-11.61 ms; FrameTime p95 <= 12.55 ms everywhere (target 16.7); volumetric fog 0.24-0.40 ms (r8 1.0-1.6 ms at 8/128) so the DefaultScalability override is live",
+ "5_look": "look_ref2.json, crops/look_boxes_*.png, capture_health.json (it3), stills_luma_it3.json"
+}

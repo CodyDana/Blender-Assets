@@ -1,0 +1,303 @@
+{
+ "cycles_bake_types": [
+  "COMBINED",
+  "AO",
+  "SHADOW",
+  "POSITION",
+  "NORMAL",
+  "UV",
+  "ROUGHNESS",
+  "EMIT",
+  "ENVIRONMENT",
+  "DIFFUSE",
+  "GLOSSY",
+  "TRANSMISSION"
+ ],
+ "add_rock": "missing: 'get_rna_type(\"OBJECT_OT_add_rock\") not found'",
+ "cell_fracture": "missing",
+ "GeometryNodeMeshBevel": {
+  "in": [
+   [
+    "Mesh",
+    "GEOMETRY"
+   ],
+   [
+    "Selection",
+    "BOOLEAN"
+   ],
+   [
+    "Affect Kind",
+    "MENU"
+   ],
+   [
+    "Start Left Offset",
+    "VALUE"
+   ],
+   [
+    "Start Right Offset",
+    "VALUE"
+   ],
+   [
+    "End Left Offset",
+    "VALUE"
+   ],
+   [
+    "End Right Offset",
+    "VALUE"
+   ],
+   [
+    "Offset",
+    "VALUE"
+   ],
+   [
+    "Miter",
+    "BOOLEAN"
+   ],
+   [
+    "Spread",
+    "VALUE"
+   ],
+   [
+    "Segments",
+    "INT"
+   ],
+   [
+    "Shape",
+    "VALUE"
+   ],
+   [
+    "Profile",
+    "GEOMETRY"
+   ]
+  ],
+  "out": [
+   "Mesh",
+   "Vertex Face",
+   "Edge Face",
+   "Outer Edge",
+   "Mid Edge"
+  ],
+  "props": []
+ },
+ "GeometryNodeMeshToSDFGrid": {
+  "in": [
+   [
+    "Mesh",
+    "GEOMETRY"
+   ],
+   [
+    "Voxel Size",
+    "VALUE"
+   ],
+   [
+    "Band Width",
+    "INT"
+   ]
+  ],
+  "out": [
+   "SDF Grid"
+  ],
+  "props": []
+ },
+ "GeometryNodeGridToMesh": {
+  "in": [
+   [
+    "Grid",
+    "VALUE"
+   ],
+   [
+    "Threshold",
+    "VALUE"
+   ],
+   [
+    "Adaptivity",
+    "VALUE"
+   ]
+  ],
+  "out": [
+   "Mesh"
+  ],
+  "props": []
+ },
+ "GeometryNodeSDFGridBoolean": {
+  "in": [
+   [
+    "Grid 1",
+    "VALUE"
+   ],
+   [
+    "Grid 2",
+    "VALUE"
+   ]
+  ],
+  "out": [
+   "Grid"
+  ],
+  "props": [
+   "operation"
+  ]
+ },
+ "GeometryNodeSDFGridFillet": {
+  "in": [
+   [
+    "Grid",
+    "VALUE"
+   ],
+   [
+    "Iterations",
+    "INT"
+   ]
+  ],
+  "out": [
+   "Grid"
+  ],
+  "props": []
+ },
+ "GeometryNodeSDFGridOffset": {
+  "in": [
+   [
+    "Grid",
+    "VALUE"
+   ],
+   [
+    "Distance",
+    "VALUE"
+   ]
+  ],
+  "out": [
+   "Grid"
+  ],
+  "props": []
+ },
+ "GeometryNodeMeshBoolean": {
+  "in": [
+   [
+    "Mesh 1",
+    "GEOMETRY"
+   ],
+   [
+    "Mesh 2",
+    "GEOMETRY"
+   ],
+   [
+    "Self Intersection",
+    "BOOLEAN"
+   ],
+   [
+    "Hole Tolerant",
+    "BOOLEAN"
+   ]
+  ],
+  "out": [
+   "Mesh",
+   "Intersecting Edges"
+  ],
+  "props": [
+   "operation",
+   "solver"
+  ]
+ },
+ "GeometryNodeUVUnwrap": {
+  "in": [
+   [
+    "Selection",
+    "BOOLEAN"
+   ],
+   [
+    "Seam",
+    "BOOLEAN"
+   ],
+   [
+    "Margin",
+    "VALUE"
+   ],
+   [
+    "Fill Holes",
+    "BOOLEAN"
+   ],
+   [
+    "Method",
+    "MENU"
+   ],
+   [
+    "Iterations",
+    "INT"
+   ],
+   [
+    "No Flip",
+    "BOOLEAN"
+   ]
+  ],
+  "out": [
+   "UV"
+  ],
+  "props": []
+ },
+ "GeometryNodeUVPackIslands": {
+  "in": [
+   [
+    "UV",
+    "VECTOR"
+   ],
+   [
+    "Selection",
+    "BOOLEAN"
+   ],
+   [
+    "Margin",
+    "VALUE"
+   ],
+   [
+    "Rotate",
+    "BOOLEAN"
+   ],
+   [
+    "Method",
+    "MENU"
+   ],
+   [
+    "Bottom Left",
+    "VECTOR"
+   ],
+   [
+    "Top Right",
+    "VECTOR"
+   ]
+  ],
+  "out": [
+   "UV"
+  ],
+  "props": []
+ },
+ "GeometryNodeSDFGridMeanCurvature": {
+  "in": [
+   [
+    "Grid",
+    "VALUE"
+   ],
+   [
+    "Iterations",
+    "INT"
+   ]
+  ],
+  "out": [
+   "Grid"
+  ],
+  "props": []
+ },
+ "bevel_cube_faces": 98,
+ "bool_chip": {
+  "EXACT": [
+   141,
+   0.013
+  ],
+  "MANIFOLD": [
+   141,
+   0.007
+  ],
+  "FLOAT": [
+   91,
+   0.001
+  ]
+ }
+}

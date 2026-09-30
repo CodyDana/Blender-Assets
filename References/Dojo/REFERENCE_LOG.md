@@ -107,3 +107,42 @@ No symbols, faces or text on any of the three sheets (the pavilion finial is a p
     - a junction box.
   - The views are small, so model from them plus the style guide.
   - Both boards carry dimension TEXT labels. That's fine for reference, but nothing from them goes into a texture. The boards also re-show pieces 1-10 with the SPEC numbers written on them. They're useful as a one-page summary, but they're labels, not measurements.
+
+## Landscape reference (2026-09-30)
+`dojo_landscape_ref.png` (1024x1536, converted from the user's webp; sha256 6114ad0a...). Supplied by the user in chat as the new target for the surroundings ("pivot for the landscape/surrounding area"). Provenance not stated; it looks AI-generated, so treat it as a look reference only.
+Shows:
+- the dojo compound on a raised terrace with a tall dressed-stone (ishigaki-style) retaining wall;
+- a turquoise mountain river with white-water rapids and big rounded granite boulders along one side below the terrace;
+- a stone stair path with wooden handrails and stone lanterns climbing the rocky, mossy cliff from the lower left up to the gate;
+- cherry trees in full blossom everywhere (a big hero cherry in the foreground, along the river banks, around the compound);
+- sculpted pines by the compound, conifer forest on the slopes;
+- two snow-capped peaks beyond forested ridges;
+- falling petals;
+- a bright daytime sky with cumulus.
+Replaces the wheat-field brief.
+
+## Japanese pine sheet (2026-09-30)
+`dojo_japanese_pine_ref.png` (ChatGPT, from the niwaki pine prompt with dojo_landscape_ref attached; sha256 00d7b60f...). Four niwaki black pines, each with front + side + 3/4 views and the 1.8 m silhouette:
+1. small garden pine, ~2.5 m, curved trunk, 5-7 cloud pads;
+2. medium, ~4.5 m, S-curved trunk, layered pads;
+3. large leaning pine, ~7 m, long horizontal limb reaching out;
+4. cliff pine on a granite boulder, roots gripping the rock.
+Close-ups: dark plated/fissured bark with warm orange-brown in the cracks; a side view of a cloud pad (dense needle tufts on a flat, domed pad with the zig-zag branch structure under it); a pad from above (radiating needle rosettes); the branch fork structure. No text or symbols.
+
+## Cherry petal sheet (2026-09-30)
+`dojo_petals_ref.png` (1448x1086, ChatGPT from the petals prompt with dojo_landscape_ref attached; sha256 cf30b5a8...). FX reference for falling and fallen Yoshino petals. Shows:
+- six single petals, front + back: broad obovate, a shallow V-notch at the tip, fine veins, pale pink to near-white with a stronger pink claw at the base; two curled, one folded (tube);
+- the same six edge-on / 3/4, showing the thin cupped curve;
+- a sunset-backlit drift of petals with rim glow and depth-of-field bokeh;
+- a 3-5 blossom cluster on a dark twig (5 petals, yellow-tipped stamens, a pink bud) for scale and colour;
+- fallen petals on grey granite pavers, on moss against a boulder, and on raked pale gravel, with browned old petals mixed in (roughly 1 in 8).
+No text or symbols.
+
+## River mist sheet (2026-09-30)
+`dojo_mist_ref.png` (1448x1086, ChatGPT from the mist prompt with dojo_landscape_ref attached; sha256 c2587183...). FX reference for the river. Shows:
+- low mist hanging over white-water rapids among rounded granite boulders, backlit gold/peach by a low sun, cherries and pines on the banks;
+- a high-shutter spray burst against a boulder: large separate droplets and sheets, backlit;
+- the same spray further back blurring into soft white mist;
+- a thin haze layer drifting along the river surface at dusk, thinning with height;
+- cut-outs on black: three soft mist wisps and two spray bursts (edge softness and density study).
+Note: the water is turquoise-grey with white foam, which matches the landscape reference. No text, people or buildings.

@@ -1,0 +1,61 @@
+{
+  "fbx": "SM_DKP_Modern_StreetLamp_B.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [
+    {
+      "socket": "Wire_L",
+      "fbx_node": "SOCKET_SM_DKP_Modern_StreetLamp_B_LOD0_Wire_L",
+      "mesh": "SM_DKP_Modern_StreetLamp_B_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": false,
+      "location_cm": [
+        -19.0,
+        0.0,
+        246.4
+      ],
+      "rotation_deg": {
+        "roll": 180.0,
+        "pitch": 0.0,
+        "yaw": 180.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Wire_R",
+      "fbx_node": "SOCKET_SM_DKP_Modern_StreetLamp_B_LOD0_Wire_R",
+      "mesh": "SM_DKP_Modern_StreetLamp_B_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": false,
+      "location_cm": [
+        19.0,
+        0.0,
+        246.4
+      ],
+      "rotation_deg": {
+        "roll": 180.0,
+        "pitch": 0.0,
+        "yaw": 180.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    }
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.5,
+    0.25
+  ]
+}

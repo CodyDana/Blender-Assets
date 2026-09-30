@@ -1,0 +1,14 @@
+{
+  "fbx": "SM_DKO_Store_Wall_N.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [],
+  "lod_screen_sizes": [
+    1.0,
+    0.5,
+    0.25
+  ]
+}

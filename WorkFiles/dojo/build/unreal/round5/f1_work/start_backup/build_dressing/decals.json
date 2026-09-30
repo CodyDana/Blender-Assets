@@ -1,0 +1,6429 @@
+{
+ "date": "2026-09-29",
+ "units": "m, grey-box world frame (X east, Y north, Z up; Unreal (x*100, -y*100, z*100), yaw = -rot_z)",
+ "convention": {
+  "centre": "a point ON the receiving surface (ray-cast); the decal box is centred there",
+  "normal": "the surface's outward normal; the decal projects along -normal",
+  "up / right": "the texture's up (image top) and right on the surface; right = up x normal",
+  "size_m": "[width along right, height along up]",
+  "depth_m": "box depth along the normal (centred)",
+  "flip_u": "mirror the texture across (variation); in Unreal: actor scale Y = -1",
+  "ue.rotation_deg": "UE rotator for local +X = -normal (projection), local +Z = up",
+  "ue.decal_size_cm": "UDecalComponent.DecalSize = HALF extents (depth, width, height) / 2 in cm",
+  "verify": "texture orientation in Unreal (which of the decal's local Y / Z is the image's U / V) is not measured here: check one wall decal (MossFoot_01: the moss must sit at the wall FOOT) in the first capture and flip up / right globally if needed"
+ },
+ "master": {
+  "name": "M_DKD_Decal_Master",
+  "domain": "DeferredDecal",
+  "blend": "Translucent (DBuffer: colour, normal, roughness)",
+  "graph": {
+   "BaseColor": "BC.rgb * Tint",
+   "Normal": "lerp((0,0,1), N (DirectX, TC_Normalmap), NormalStrength)",
+   "Roughness": "ORM.g * RoughMult",
+   "Metallic": 0,
+   "Specular": 0.5,
+   "Opacity": "saturate(M.r * Opacity) * DecalLifetimeOpacity"
+  },
+  "note": "one master, one instance per decal type; DBuffer decals render on Nanite and non-Nanite meshes (r.DBuffer 1, the UE 5.8 default); set bReceivesDecals false on the player character's meshes so a player walking through a wall-foot box is not stained"
+ },
+ "materials": {
+  "M_DKD_Decal_MossFoot": {
+   "parent": "M_DKD_Decal_Master",
+   "ue_dir": "/Game/DojoKit/Dressing/Materials",
+   "textures": {
+    "BC": "T_DKD_Decal_MossFoot_BC",
+    "N": "T_DKD_Decal_MossFoot_N",
+    "ORM": "T_DKD_Decal_MossFoot_ORM",
+    "M": "T_DKD_Decal_MossFoot_M"
+   },
+   "scalars": {
+    "Opacity": 1.0,
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nominal_size_m": [
+    4.0,
+    1.0
+   ],
+   "use": "moss cushions + damp at a wall foot / the rubble footing (texture bottom row at the ground)",
+   "count": 14
+  },
+  "M_DKD_Decal_RainStreak": {
+   "parent": "M_DKD_Decal_Master",
+   "ue_dir": "/Game/DojoKit/Dressing/Materials",
+   "textures": {
+    "BC": "T_DKD_Decal_RainStreak_BC",
+    "N": "T_DKD_Decal_RainStreak_N",
+    "ORM": "T_DKD_Decal_RainStreak_ORM",
+    "M": "T_DKD_Decal_RainStreak_M"
+   },
+   "scalars": {
+    "Opacity": 0.9,
+    "RoughMult": 1.0,
+    "NormalStrength": 0.5
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nominal_size_m": [
+    2.0,
+    1.0
+   ],
+   "use": "runoff streaks hanging from a drip line: under the wall caps and eaves (top row at the drip)",
+   "count": 14
+  },
+  "M_DKD_Decal_Grime": {
+   "parent": "M_DKD_Decal_Master",
+   "ue_dir": "/Game/DojoKit/Dressing/Materials",
+   "textures": {
+    "BC": "T_DKD_Decal_Grime_BC",
+    "N": "T_DKD_Decal_Grime_N",
+    "ORM": "T_DKD_Decal_Grime_ORM",
+    "M": "T_DKD_Decal_Grime_M"
+   },
+   "scalars": {
+    "Opacity": 0.85,
+    "RoughMult": 1.0,
+    "NormalStrength": 0.7
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nominal_size_m": [
+    1.0,
+    1.0
+   ],
+   "use": "splash-back grime at post bases (bottom row at the post foot) and door thresholds (bottom row at the door, projected down)",
+   "count": 37
+  },
+  "M_DKD_Decal_Lichen": {
+   "parent": "M_DKD_Decal_Master",
+   "ue_dir": "/Game/DojoKit/Dressing/Materials",
+   "textures": {
+    "BC": "T_DKD_Decal_Lichen_BC",
+    "N": "T_DKD_Decal_Lichen_N",
+    "ORM": "T_DKD_Decal_Lichen_ORM",
+    "M": "T_DKD_Decal_Lichen_M"
+   },
+   "scalars": {
+    "Opacity": 0.8,
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nominal_size_m": [
+    1.0,
+    1.0
+   ],
+   "use": "crustose lichen on roof tiles, wall caps and the stone lanterns",
+   "count": 19
+  },
+  "M_DKD_Decal_WaterStain": {
+   "parent": "M_DKD_Decal_Master",
+   "ue_dir": "/Game/DojoKit/Dressing/Materials",
+   "textures": {
+    "BC": "T_DKD_Decal_WaterStain_BC",
+    "N": "T_DKD_Decal_WaterStain_N",
+    "ORM": "T_DKD_Decal_WaterStain_ORM",
+    "M": "T_DKD_Decal_WaterStain_M"
+   },
+   "scalars": {
+    "Opacity": 0.9,
+    "RoughMult": 1.0,
+    "NormalStrength": 0.6
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nominal_size_m": [
+    1.0,
+    1.0
+   ],
+   "use": "the ground stain under a downpipe shoe (bottom row at the shoe, up = the outflow)",
+   "count": 10
+  },
+  "M_DKD_Decal_WornPath": {
+   "parent": "M_DKD_Decal_Master",
+   "ue_dir": "/Game/DojoKit/Dressing/Materials",
+   "textures": {
+    "BC": "T_DKD_Decal_WornPath_BC",
+    "N": "T_DKD_Decal_WornPath_N",
+    "ORM": "T_DKD_Decal_WornPath_ORM",
+    "M": "T_DKD_Decal_WornPath_M"
+   },
+   "scalars": {
+    "Opacity": 0.8,
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0
+   },
+   "vectors": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "nominal_size_m": [
+    1.5,
+    1.5
+   ],
+   "use": "trodden gravel where feet leave the paving (hall stair, gate)",
+   "count": 7
+  }
+ },
+ "textures": {
+  "T_DKD_Decal_Grime_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Grime_BC.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "BC"
+  },
+  "T_DKD_Decal_Grime_M": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Grime_M.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "M"
+  },
+  "T_DKD_Decal_Grime_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Grime_N.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "N"
+  },
+  "T_DKD_Decal_Grime_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Grime_ORM.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "ORM"
+  },
+  "T_DKD_Decal_Lichen_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Lichen_BC.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "BC"
+  },
+  "T_DKD_Decal_Lichen_M": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Lichen_M.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "M"
+  },
+  "T_DKD_Decal_Lichen_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Lichen_N.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "N"
+  },
+  "T_DKD_Decal_Lichen_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_Lichen_ORM.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "ORM"
+  },
+  "T_DKD_Decal_MossFoot_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_MossFoot_BC.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "BC"
+  },
+  "T_DKD_Decal_MossFoot_M": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_MossFoot_M.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "M"
+  },
+  "T_DKD_Decal_MossFoot_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_MossFoot_N.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "N"
+  },
+  "T_DKD_Decal_MossFoot_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_MossFoot_ORM.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "ORM"
+  },
+  "T_DKD_Decal_RainStreak_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_RainStreak_BC.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "BC"
+  },
+  "T_DKD_Decal_RainStreak_M": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_RainStreak_M.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "M"
+  },
+  "T_DKD_Decal_RainStreak_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_RainStreak_N.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "N"
+  },
+  "T_DKD_Decal_RainStreak_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_RainStreak_ORM.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "ORM"
+  },
+  "T_DKD_Decal_WaterStain_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WaterStain_BC.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "BC"
+  },
+  "T_DKD_Decal_WaterStain_M": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WaterStain_M.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "M"
+  },
+  "T_DKD_Decal_WaterStain_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WaterStain_N.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "N"
+  },
+  "T_DKD_Decal_WaterStain_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WaterStain_ORM.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "ORM"
+  },
+  "T_DKD_Decal_WornPath_BC": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WornPath_BC.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "BC"
+  },
+  "T_DKD_Decal_WornPath_M": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WornPath_M.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "M"
+  },
+  "T_DKD_Decal_WornPath_N": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WornPath_N.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "N"
+  },
+  "T_DKD_Decal_WornPath_ORM": {
+   "png": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Exports\\DojoKit\\Dressing\\Textures\\T_DKD_Decal_WornPath_ORM.png",
+   "ue_dir": "/Game/DojoKit/Dressing/Textures",
+   "kind": "ORM"
+  }
+ },
+ "placements": [
+  {
+   "id": "MossFoot_01",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    10.0,
+    -0.08,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (10.0, -0.08, 0.25), ground 0.0 (SM_DKG_GravelCoarse_4x2)",
+   "ue": {
+    "location_cm": [
+     1000.0,
+     8.0,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1353
+  },
+  {
+   "id": "MossFoot_02",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    15.8,
+    0.0121,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    3.2,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (15.8, 0.012, 0.25), ground 0.0 (SM_DKG_GravelCoarse_2x2)",
+   "ue": {
+    "location_cm": [
+     1580.0,
+     -1.21,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     160.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1088
+  },
+  {
+   "id": "MossFoot_03",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    28.2,
+    -0.08,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    3.2,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (28.2, -0.08, 0.25), ground 0.0 (SM_DKG_GravelCoarse_4x2)",
+   "ue": {
+    "location_cm": [
+     2820.0,
+     8.0,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     160.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1088
+  },
+  {
+   "id": "MossFoot_04",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    34.0,
+    -0.08,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (34.0, -0.08, 0.25), ground 0.0 (SM_DKG_GravelCoarse_2x2)",
+   "ue": {
+    "location_cm": [
+     3400.0,
+     8.0,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1353
+  },
+  {
+   "id": "MossFoot_05",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    0.042,
+    8.5,
+    0.4855
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (0.042, 8.5, 0.25), ground 0.04 (SM_DKG_Bed_WallFoot8_W)",
+   "ue": {
+    "location_cm": [
+     4.2,
+     -850.0,
+     48.55
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1350
+  },
+  {
+   "id": "MossFoot_06",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    0.0185,
+    19.0,
+    0.4791
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    3.6,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (0.018, 19.0, 0.25), ground 0.034 (SM_DKG_Bed_WallFoot12_W)",
+   "ue": {
+    "location_cm": [
+     1.85,
+     -1900.0,
+     47.91
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     180.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1224
+  },
+  {
+   "id": "MossFoot_07",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    -0.08,
+    24.8,
+    0.4738
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    3.6,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_2m at (-0.08, 24.8, 0.25), ground 0.029 (SM_DKG_Bed_WallFoot12_W)",
+   "ue": {
+    "location_cm": [
+     -8.0,
+     -2480.0,
+     47.38
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     180.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1144
+  },
+  {
+   "id": "MossFoot_08",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    44.08,
+    8.5,
+    0.4885
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (44.08, 8.5, 0.25), ground 0.043 (SM_DKG_Bed_WallFoot8_E)",
+   "ue": {
+    "location_cm": [
+     4408.0,
+     -850.0,
+     48.85
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1350
+  },
+  {
+   "id": "MossFoot_09",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    44.08,
+    19.0,
+    0.4814
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    3.6,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_4m at (44.08, 19.0, 0.25), ground 0.036 (SM_DKG_Bed_WallFoot12_E)",
+   "ue": {
+    "location_cm": [
+     4408.0,
+     -1900.0,
+     48.14
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     20.0,
+     180.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1224
+  },
+  {
+   "id": "MossFoot_10",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    43.9738,
+    24.8,
+    0.4724
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    3.6,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "courtyard wall foot; face SM_DK_WallFooting_2m at (43.974, 24.8, 0.25), ground 0.027 (SM_DKG_Bed_WallFoot12_E)",
+   "ue": {
+    "location_cm": [
+     4397.38,
+     -2480.0,
+     47.24
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     20.0,
+     180.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1212
+  },
+  {
+   "id": "MossFoot_11",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    3.5,
+    -0.92,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "street wall foot; face SM_DK_WallFooting_4m at (3.5, -0.92, 0.25), ground 0.0 (SM_DGB_Ground_Outside)",
+   "ue": {
+    "location_cm": [
+     350.0,
+     92.0,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1360
+  },
+  {
+   "id": "MossFoot_12",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    12.0,
+    -1.0004,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "street wall foot; face SM_DK_WallFooting_4m at (12.0, -1.0, 0.25), ground 0.0 (SM_DGB_Ground_Outside)",
+   "ue": {
+    "location_cm": [
+     1200.0,
+     100.04,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1360
+  },
+  {
+   "id": "MossFoot_13",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    32.0,
+    -1.0004,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "street wall foot; face SM_DK_WallFooting_4m at (32.0, -1.0, 0.25), ground 0.0 (SM_DGB_Ground_Outside)",
+   "ue": {
+    "location_cm": [
+     3200.0,
+     100.04,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1360
+  },
+  {
+   "id": "MossFoot_14",
+   "material": "M_DKD_Decal_MossFoot",
+   "centre": [
+    40.5,
+    -1.0506,
+    0.445
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.0,
+    0.85
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "street wall foot; face SM_DK_WallFooting_4m at (40.5, -1.051, 0.25), ground 0.0 (SM_DGB_Ground_Outside)",
+   "ue": {
+    "location_cm": [
+     4050.0,
+     105.06,
+     44.5
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     200.0,
+     42.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1360
+  },
+  {
+   "id": "RainStreak_01",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    12.0,
+    -0.005,
+    1.1641
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.4,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "under the wall cap, courtyard face; face SM_DK_WallBody_4m_T200 at (12.0, -0.005, 1.1), drip 1.704 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     1200.0,
+     0.5,
+     116.41
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     120.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1008
+  },
+  {
+   "id": "RainStreak_02",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    31.5,
+    -0.0,
+    1.1622
+   ],
+   "normal": [
+    -0.0,
+    1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.0,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "under the wall cap, courtyard face; face SM_DK_WallBody_4m_T200 at (31.5, -0.0, 1.1), drip 1.702 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     3150.0,
+     0.0,
+     116.22
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     100.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 840
+  },
+  {
+   "id": "RainStreak_03",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    -0.005,
+    12.0,
+    1.1641
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    2.4,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "under the wall cap, courtyard face; face SM_DK_WallBody_4m_T200 at (-0.005, 12.0, 1.1), drip 1.704 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     -0.5,
+     -1200.0,
+     116.41
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -180.0
+    },
+    "decal_size_cm": [
+     15.0,
+     120.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1008
+  },
+  {
+   "id": "RainStreak_04",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    -0.0,
+    21.8,
+    1.1622
+   ],
+   "normal": [
+    1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    2.0,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "under the wall cap, courtyard face; face SM_DK_WallBody_4m_T200 at (-0.0, 21.8, 1.1), drip 1.702 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     -0.0,
+     -2180.0,
+     116.22
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -180.0
+    },
+    "decal_size_cm": [
+     15.0,
+     100.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 840
+  },
+  {
+   "id": "RainStreak_05",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    44.0,
+    12.6,
+    1.1622
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    2.4,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the wall cap, courtyard face; face SM_DK_WallBody_4m_T200 at (44.0, 12.6, 1.1), drip 1.702 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     4400.0,
+     -1260.0,
+     116.22
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     15.0,
+     120.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1008
+  },
+  {
+   "id": "RainStreak_06",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    44.0,
+    22.2,
+    1.1622
+   ],
+   "normal": [
+    -1.0,
+    -0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    2.0,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the wall cap, courtyard face; face SM_DK_WallBody_4m_T200 at (44.0, 22.2, 1.1), drip 1.702 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     4400.0,
+     -2220.0,
+     116.22
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     15.0,
+     100.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 840
+  },
+  {
+   "id": "RainStreak_07",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    5.5,
+    -1.0,
+    1.1622
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.4,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "under the wall cap, street face; face SM_DK_WallBody_4m_T200 at (5.5, -1.0, 1.1), drip 1.702 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     550.0,
+     100.0,
+     116.22
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     120.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1008
+  },
+  {
+   "id": "RainStreak_08",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    15.0,
+    -1.0,
+    1.1622
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.0,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the wall cap, street face; face SM_DK_WallBody_4m_T200 at (15.0, -1.0, 1.1), drip 1.702 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     1500.0,
+     100.0,
+     116.22
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     100.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 840
+  },
+  {
+   "id": "RainStreak_09",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    29.5,
+    -1.0,
+    1.1622
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.2,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the wall cap, street face; face SM_DK_WallBody_4m_T200 at (29.5, -1.0, 1.1), drip 1.702 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     2950.0,
+     100.0,
+     116.22
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     110.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 924
+  },
+  {
+   "id": "RainStreak_10",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    38.0,
+    -0.995,
+    1.1641
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.4,
+    1.05
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the wall cap, street face; face SM_DK_WallBody_4m_T200 at (38.0, -0.995, 1.1), drip 1.704 (SM_DK_WallCap_4m)",
+   "ue": {
+    "location_cm": [
+     3800.0,
+     99.5,
+     116.41
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     120.0,
+     52.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1008
+  },
+  {
+   "id": "RainStreak_11",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    0.9,
+    27.94,
+    3.104
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.2,
+    1.5
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the storehouse eave corner; face SM_DKO_Store_GableFront at (0.9, 27.94, 2.0), drip 3.869 (SM_DKO_Roof_Slope)",
+   "ue": {
+    "location_cm": [
+     90.0,
+     -2794.0,
+     310.4
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     60.0,
+     75.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 705
+  },
+  {
+   "id": "RainStreak_12",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    6.7,
+    27.94,
+    2.6389
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.2,
+    1.5
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the storehouse eave corner; face SM_DKO_Store_GableFront at (6.7, 27.94, 2.0), drip 3.404 (SM_DKO_Roof_SlopeNear_Store)",
+   "ue": {
+    "location_cm": [
+     670.0,
+     -2794.0,
+     263.89
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     60.0,
+     75.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 531
+  },
+  {
+   "id": "RainStreak_13",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    37.3,
+    27.94,
+    2.3577
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.2,
+    1.5
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the residence eave corner; face SM_DKO_Res_GableFront at (37.3, 27.94, 2.0), drip 3.123 (SM_DKO_Res_GableFront)",
+   "ue": {
+    "location_cm": [
+     3730.0,
+     -2794.0,
+     235.77
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     60.0,
+     75.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 542
+  },
+  {
+   "id": "RainStreak_14",
+   "material": "M_DKD_Decal_RainStreak",
+   "centre": [
+    43.1,
+    27.94,
+    2.3577
+   ],
+   "normal": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.2,
+    1.5
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "under the residence eave corner; face SM_DKO_Res_GableFront at (43.1, 27.94, 2.0), drip 3.123 (SM_DKO_Res_GableFront)",
+   "ue": {
+    "location_cm": [
+     4310.0,
+     -2794.0,
+     235.77
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     60.0,
+     75.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 720
+  },
+  {
+   "id": "Grime_01",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    18.8,
+    -0.68,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.52,
+    0.6
+   ],
+   "depth_m": 0.48,
+   "flip_u": false,
+   "source": "gate post (SM_DK_Gate_Frame) 0.36 x 0.36 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     1880.0,
+     68.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     24.0,
+     26.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    18.8,
+    -0.5
+   ],
+   "preview_faces": 122
+  },
+  {
+   "id": "Grime_02",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    25.2,
+    -0.68,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.52,
+    0.6
+   ],
+   "depth_m": 0.48,
+   "flip_u": false,
+   "source": "gate post (SM_DK_Gate_Frame) 0.36 x 0.36 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     2520.0,
+     68.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     24.0,
+     26.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    25.2,
+    -0.5
+   ],
+   "preview_faces": 122
+  },
+  {
+   "id": "Grime_03",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    25.2,
+    -1.93,
+    0.88
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.52,
+    0.6
+   ],
+   "depth_m": 0.48,
+   "flip_u": true,
+   "source": "gate post (SM_DK_Gate_Frame) 0.36 x 0.36 m, foot +0.62",
+   "ue": {
+    "location_cm": [
+     2520.0,
+     193.0,
+     88.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     24.0,
+     26.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    25.2,
+    -1.75
+   ],
+   "preview_faces": 84
+  },
+  {
+   "id": "Grime_04",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    25.2,
+    1.93,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    0.52,
+    0.6
+   ],
+   "depth_m": 0.48,
+   "flip_u": true,
+   "source": "gate post (SM_DK_Gate_Frame) 0.36 x 0.36 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     2520.0,
+     -193.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     24.0,
+     26.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    25.2,
+    1.75
+   ],
+   "preview_faces": 84
+  },
+  {
+   "id": "Grime_05",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    18.8,
+    -1.93,
+    0.88
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.52,
+    0.6
+   ],
+   "depth_m": 0.48,
+   "flip_u": true,
+   "source": "gate post (SM_DK_Gate_Frame) 0.36 x 0.36 m, foot +0.62",
+   "ue": {
+    "location_cm": [
+     1880.0,
+     193.0,
+     88.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     24.0,
+     26.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    18.8,
+    -1.75
+   ],
+   "preview_faces": 84
+  },
+  {
+   "id": "Grime_06",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    18.8,
+    1.93,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    0.52,
+    0.6
+   ],
+   "depth_m": 0.48,
+   "flip_u": false,
+   "source": "gate post (SM_DK_Gate_Frame) 0.36 x 0.36 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     1880.0,
+     -193.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     24.0,
+     26.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    18.8,
+    1.75
+   ],
+   "preview_faces": 84
+  },
+  {
+   "id": "Grime_07",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    18.72,
+    -0.26,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.6,
+    0.6
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "gate post (SM_DK_Gate_Frame) 0.44 x 0.28 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     1872.0,
+     26.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     30.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    18.72,
+    -0.12
+   ],
+   "preview_faces": 115
+  },
+  {
+   "id": "Grime_08",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    25.28,
+    -1.02,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.6,
+    0.6
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "gate post (SM_DK_Gate_Frame) 0.44 x 0.28 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     2528.0,
+     102.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     30.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    25.28,
+    -0.88
+   ],
+   "preview_faces": 120
+  },
+  {
+   "id": "Grime_09",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    18.72,
+    -1.02,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.6,
+    0.6
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "gate post (SM_DK_Gate_Frame) 0.44 x 0.28 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     1872.0,
+     102.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     30.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    18.72,
+    -0.88
+   ],
+   "preview_faces": 120
+  },
+  {
+   "id": "Grime_10",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    25.28,
+    -0.26,
+    0.71
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.6,
+    0.6
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "gate post (SM_DK_Gate_Frame) 0.44 x 0.28 m, foot +0.45",
+   "ue": {
+    "location_cm": [
+     2528.0,
+     26.0,
+     71.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     20.0,
+     30.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    25.28,
+    -0.12
+   ],
+   "preview_faces": 115
+  },
+  {
+   "id": "Grime_11",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    11.15,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     1115.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    11.15,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_12",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    32.85,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     3285.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    32.85,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_13",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    13.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": true,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     1300.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    13.0,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_14",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    15.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     1500.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    15.0,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_15",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    17.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     1700.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    17.0,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_16",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    19.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     1900.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    19.0,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_17",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    21.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     2100.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    21.0,
+    22.15
+   ],
+   "preview_faces": 80
+  },
+  {
+   "id": "Grime_18",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    23.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": true,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     2300.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    23.0,
+    22.15
+   ],
+   "preview_faces": 80
+  },
+  {
+   "id": "Grime_19",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    25.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": true,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     2500.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    25.0,
+    22.15
+   ],
+   "preview_faces": 58
+  },
+  {
+   "id": "Grime_20",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    27.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     2700.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    27.0,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_21",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    29.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": false,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     2900.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    29.0,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_22",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    31.0,
+    22.045,
+    0.36
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.37,
+    0.6
+   ],
+   "depth_m": 0.33,
+   "flip_u": true,
+   "source": "hall veranda front post (SM_DKH_VerandaFrame) 0.21 x 0.21 m, foot +0.1",
+   "ue": {
+    "location_cm": [
+     3100.0,
+     -2204.5,
+     36.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     16.5,
+     18.5,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    31.0,
+    22.15
+   ],
+   "preview_faces": 60
+  },
+  {
+   "id": "Grime_23",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    36.7,
+    29.76,
+    0.51
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.34,
+    0.6
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "corridor post (open courtyard side) (SM_DKC_PostFrame) 0.18 x 0.18 m, foot +0.25",
+   "ue": {
+    "location_cm": [
+     3670.0,
+     -2976.0,
+     51.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     17.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    36.7,
+    29.85
+   ],
+   "preview_faces": 52
+  },
+  {
+   "id": "Grime_24",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    36.7,
+    32.06,
+    0.51
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.34,
+    0.6
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "corridor post (open courtyard side) (SM_DKC_PostFrame) 0.18 x 0.18 m, foot +0.25",
+   "ue": {
+    "location_cm": [
+     3670.0,
+     -3206.0,
+     51.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     17.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    36.7,
+    32.15
+   ],
+   "preview_faces": 80
+  },
+  {
+   "id": "Grime_25",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    10.05,
+    29.76,
+    0.51
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.34,
+    0.6
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "corridor post (open courtyard side) (SM_DKC_PostFrame) 0.18 x 0.18 m, foot +0.25",
+   "ue": {
+    "location_cm": [
+     1005.0,
+     -2976.0,
+     51.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     17.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    10.05,
+    29.85
+   ],
+   "preview_faces": 52
+  },
+  {
+   "id": "Grime_26",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    10.05,
+    32.06,
+    0.51
+   ],
+   "normal": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    0.34,
+    0.6
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "corridor post (open courtyard side) (SM_DKC_PostFrame) 0.18 x 0.18 m, foot +0.25",
+   "ue": {
+    "location_cm": [
+     1005.0,
+     -3206.0,
+     51.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     15.0,
+     17.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    10.05,
+    32.15
+   ],
+   "preview_faces": 66
+  },
+  {
+   "id": "Grime_27",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    39.39,
+    1.55,
+    1.61
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    0.48,
+    0.6
+   ],
+   "depth_m": 0.44,
+   "flip_u": false,
+   "source": "pavilion post (SM_DKV_Frame) 0.32 x 0.32 m, foot +1.35",
+   "ue": {
+    "location_cm": [
+     3939.0,
+     -155.0,
+     161.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     22.0,
+     24.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    39.55,
+    1.55
+   ],
+   "preview_faces": 74
+  },
+  {
+   "id": "Grime_28",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    42.45,
+    1.71,
+    1.61
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    0.48,
+    0.6
+   ],
+   "depth_m": 0.44,
+   "flip_u": true,
+   "source": "pavilion post (SM_DKV_Frame) 0.32 x 0.32 m, foot +1.35",
+   "ue": {
+    "location_cm": [
+     4245.0,
+     -171.0,
+     161.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     22.0,
+     24.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    42.45,
+    1.55
+   ],
+   "preview_faces": 72
+  },
+  {
+   "id": "Grime_29",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    39.39,
+    4.45,
+    1.61
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    0.48,
+    0.6
+   ],
+   "depth_m": 0.44,
+   "flip_u": true,
+   "source": "pavilion post (SM_DKV_Frame) 0.32 x 0.32 m, foot +1.35",
+   "ue": {
+    "location_cm": [
+     3939.0,
+     -445.0,
+     161.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     22.0,
+     24.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    39.55,
+    4.45
+   ],
+   "preview_faces": 72
+  },
+  {
+   "id": "Grime_30",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    42.45,
+    4.61,
+    1.61
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    0.48,
+    0.6
+   ],
+   "depth_m": 0.44,
+   "flip_u": false,
+   "source": "pavilion post (SM_DKV_Frame) 0.32 x 0.32 m, foot +1.35",
+   "ue": {
+    "location_cm": [
+     4245.0,
+     -461.0,
+     161.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     22.0,
+     24.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    42.45,
+    4.45
+   ],
+   "preview_faces": 74
+  },
+  {
+   "id": "Grime_31",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    5.58,
+    4.907,
+    0.572
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    0.274,
+    0.6
+   ],
+   "depth_m": 0.234,
+   "flip_u": false,
+   "source": "shed post (SM_DKS_Post) 0.114 x 0.114 m, foot +0.312",
+   "ue": {
+    "location_cm": [
+     558.0,
+     -490.7,
+     57.2
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     11.7,
+     13.7,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    5.58,
+    4.85
+   ],
+   "preview_faces": 22
+  },
+  {
+   "id": "Grime_32",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    0.42,
+    4.907,
+    0.572
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    0.274,
+    0.6
+   ],
+   "depth_m": 0.234,
+   "flip_u": false,
+   "source": "shed post (SM_DKS_Post) 0.114 x 0.114 m, foot +0.312",
+   "ue": {
+    "location_cm": [
+     42.0,
+     -490.7,
+     57.2
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 90.0
+    },
+    "decal_size_cm": [
+     11.7,
+     13.7,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "post_centre": [
+    0.42,
+    4.85
+   ],
+   "preview_faces": 22
+  },
+  {
+   "id": "Grime_33",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    22.0,
+    -1.2,
+    0.0965
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    3.4,
+    0.9
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "gate threshold, street side; floor SM_DK_Gate_Paving at z 0.096",
+   "ue": {
+    "location_cm": [
+     2200.0,
+     120.0,
+     9.65
+    ],
+    "rotation_deg": {
+     "roll": 90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     170.0,
+     45.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1214
+  },
+  {
+   "id": "Grime_34",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    22.0,
+    -0.05,
+    0.0268
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    3.4,
+    0.8
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "gate threshold, courtyard side; floor SM_DK_Gate_Paving at z 0.027",
+   "ue": {
+    "location_cm": [
+     2200.0,
+     5.0,
+     2.68
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     170.0,
+     40.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 790
+  },
+  {
+   "id": "Grime_35",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    22.0,
+    23.55,
+    0.5
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    6.0,
+    0.9
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "hall main doors, on the veranda boards; floor SM_DKH_Veranda at z 0.5",
+   "ue": {
+    "location_cm": [
+     2200.0,
+     -2355.0,
+     50.0
+    ],
+    "rotation_deg": {
+     "roll": 90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     300.0,
+     45.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 2160
+  },
+  {
+   "id": "Grime_36",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    3.3,
+    27.4275,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.292,
+    0.9
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "SM_DKO_Door_Steel threshold; floor SM_DKG_Gravel_4x0p25 at z 0.0",
+   "ue": {
+    "location_cm": [
+     330.0,
+     -2742.75,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     114.6,
+     45.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 828
+  },
+  {
+   "id": "Grime_37",
+   "material": "M_DKD_Decal_Grime",
+   "centre": [
+    39.55,
+    27.4155,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    2.032,
+    0.9
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "SM_DKO_Door_Wood threshold; floor SM_DKG_Gravel_4x0p25 at z 0.0",
+   "ue": {
+    "location_cm": [
+     3955.0,
+     -2741.55,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     101.6,
+     45.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 738
+  },
+  {
+   "id": "Lichen_01",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    12.3,
+    22.3,
+    3.2911
+   ],
+   "normal": [
+    -0.1604,
+    -0.3413,
+    0.9262
+   ],
+   "up": [
+    0.3939,
+    0.8382,
+    0.3771
+   ],
+   "right": [
+    0.905,
+    -0.4253,
+    -0.0
+   ],
+   "size_m": [
+    1.4,
+    1.1
+   ],
+   "depth_m": 0.5,
+   "flip_u": false,
+   "source": "hall lower roof; surface SM_DKH_RoofLower_Front at (12.3, 22.3, 3.291), slope 22.2 deg",
+   "ue": {
+    "location_cm": [
+     1230.0,
+     -2230.0,
+     329.11
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -67.846,
+     "yaw": -64.829
+    },
+    "decal_size_cm": [
+     25.0,
+     70.0,
+     55.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 616
+  },
+  {
+   "id": "Lichen_02",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    18.4,
+    22.4,
+    3.3946
+   ],
+   "normal": [
+    0.6492,
+    -0.2392,
+    0.722
+   ],
+   "up": [
+    -0.6775,
+    0.2496,
+    0.6919
+   ],
+   "right": [
+    0.3457,
+    0.9383,
+    0.0
+   ],
+   "size_m": [
+    1.4,
+    1.1
+   ],
+   "depth_m": 0.5,
+   "flip_u": false,
+   "source": "hall lower roof; surface SM_DKH_RoofLower_Front at (18.4, 22.4, 3.395), slope 43.8 deg",
+   "ue": {
+    "location_cm": [
+     1840.0,
+     -2240.0,
+     339.46
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -46.222,
+     "yaw": -159.775
+    },
+    "decal_size_cm": [
+     25.0,
+     70.0,
+     55.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 361
+  },
+  {
+   "id": "Lichen_03",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    25.8,
+    22.2,
+    3.2272
+   ],
+   "normal": [
+    -0.1652,
+    -0.3428,
+    0.9248
+   ],
+   "up": [
+    0.4014,
+    0.8331,
+    0.3805
+   ],
+   "right": [
+    0.9009,
+    -0.4341,
+    0.0
+   ],
+   "size_m": [
+    1.4,
+    1.1
+   ],
+   "depth_m": 0.5,
+   "flip_u": false,
+   "source": "hall lower roof; surface SM_DKH_RoofLower_Front at (25.8, 22.2, 3.227), slope 22.4 deg",
+   "ue": {
+    "location_cm": [
+     2580.0,
+     -2220.0,
+     322.72
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -67.637,
+     "yaw": -64.273
+    },
+    "decal_size_cm": [
+     25.0,
+     70.0,
+     55.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 616
+  },
+  {
+   "id": "Lichen_04",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    31.8,
+    22.5,
+    3.3652
+   ],
+   "normal": [
+    -0.1696,
+    -0.3401,
+    0.925
+   ],
+   "up": [
+    0.4128,
+    0.8277,
+    0.38
+   ],
+   "right": [
+    0.8949,
+    -0.4463,
+    0.0
+   ],
+   "size_m": [
+    1.4,
+    1.1
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "hall lower roof; surface SM_DKH_RoofLower_Front at (31.8, 22.5, 3.365), slope 22.3 deg",
+   "ue": {
+    "location_cm": [
+     3180.0,
+     -2250.0,
+     336.52
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -67.665,
+     "yaw": -63.493
+    },
+    "decal_size_cm": [
+     25.0,
+     70.0,
+     55.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 611
+  },
+  {
+   "id": "Lichen_05",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    20.4,
+    -1.7,
+    3.5819
+   ],
+   "normal": [
+    0.6516,
+    -0.2241,
+    0.7247
+   ],
+   "up": [
+    -0.6853,
+    0.2357,
+    0.6891
+   ],
+   "right": [
+    0.3253,
+    0.9456,
+    0.0
+   ],
+   "size_m": [
+    1.2,
+    1.0
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "gate roof; surface SM_DK_Gate_Roof at (20.4, -1.7, 3.582), slope 43.6 deg",
+   "ue": {
+    "location_cm": [
+     2040.0,
+     170.0,
+     358.19
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -46.445,
+     "yaw": -161.016
+    },
+    "decal_size_cm": [
+     25.0,
+     60.0,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 321
+  },
+  {
+   "id": "Lichen_06",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    23.7,
+    1.6,
+    3.5467
+   ],
+   "normal": [
+    0.1656,
+    0.3263,
+    0.9307
+   ],
+   "up": [
+    -0.4212,
+    -0.8299,
+    0.3659
+   ],
+   "right": [
+    -0.8917,
+    0.4525,
+    0.0
+   ],
+   "size_m": [
+    1.2,
+    1.0
+   ],
+   "depth_m": 0.5,
+   "flip_u": false,
+   "source": "gate roof; surface SM_DK_Gate_Roof at (23.7, 1.6, 3.547), slope 21.5 deg",
+   "ue": {
+    "location_cm": [
+     2370.0,
+     -160.0,
+     354.67
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -68.538,
+     "yaw": 116.907
+    },
+    "decal_size_cm": [
+     25.0,
+     60.0,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 480
+  },
+  {
+   "id": "Lichen_07",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    -0.5,
+    9.4,
+    2.12
+   ],
+   "normal": [
+    -0.1327,
+    -0.0,
+    0.9912
+   ],
+   "up": [
+    0.9912,
+    0.0,
+    0.1327
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    1.0,
+    0.8
+   ],
+   "depth_m": 0.5,
+   "flip_u": false,
+   "source": "wall cap; surface SM_DK_WallCap_4m at (-0.5, 9.4, 2.12), slope 7.6 deg",
+   "ue": {
+    "location_cm": [
+     -50.0,
+     -940.0,
+     212.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -82.375,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     25.0,
+     50.0,
+     40.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 196
+  },
+  {
+   "id": "Lichen_08",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    44.5,
+    12.8,
+    2.12
+   ],
+   "normal": [
+    0.1327,
+    -0.0,
+    0.9912
+   ],
+   "up": [
+    -0.9912,
+    0.0,
+    0.1327
+   ],
+   "right": [
+    0.0,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    1.0,
+    0.8
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "wall cap; surface SM_DK_WallCap_4m at (44.5, 12.8, 2.12), slope 7.6 deg",
+   "ue": {
+    "location_cm": [
+     4450.0,
+     -1280.0,
+     212.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -82.375,
+     "yaw": -180.0
+    },
+    "decal_size_cm": [
+     25.0,
+     50.0,
+     40.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 196
+  },
+  {
+   "id": "Lichen_09",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    6.8,
+    -0.5,
+    2.12
+   ],
+   "normal": [
+    0.0,
+    -0.1327,
+    0.9912
+   ],
+   "up": [
+    0.0,
+    0.9912,
+    0.1327
+   ],
+   "right": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "size_m": [
+    1.0,
+    0.8
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "wall cap; surface SM_DK_WallCap_4m at (6.8, -0.5, 2.12), slope 7.6 deg",
+   "ue": {
+    "location_cm": [
+     680.0,
+     50.0,
+     212.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -82.375,
+     "yaw": -90.0
+    },
+    "decal_size_cm": [
+     25.0,
+     50.0,
+     40.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 196
+  },
+  {
+   "id": "Lichen_10",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    35.5,
+    -0.5,
+    2.0179
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.0,
+    0.8
+   ],
+   "depth_m": 0.5,
+   "flip_u": false,
+   "source": "wall cap; surface SM_DK_WallCap_4m at (35.5, -0.5, 2.018), slope 0.0 deg",
+   "ue": {
+    "location_cm": [
+     3550.0,
+     50.0,
+     201.79
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     25.0,
+     50.0,
+     40.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 320
+  },
+  {
+   "id": "Lichen_11",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    -0.5,
+    23.0,
+    2.12
+   ],
+   "normal": [
+    -0.1327,
+    -0.0,
+    0.9912
+   ],
+   "up": [
+    0.9912,
+    0.0,
+    0.1327
+   ],
+   "right": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    1.0,
+    0.8
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "wall cap; surface SM_DK_WallCap_4m at (-0.5, 23.0, 2.12), slope 7.6 deg",
+   "ue": {
+    "location_cm": [
+     -50.0,
+     -2300.0,
+     212.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -82.375,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     25.0,
+     50.0,
+     40.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 196
+  },
+  {
+   "id": "Lichen_12",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    44.5,
+    20.5,
+    2.12
+   ],
+   "normal": [
+    -0.1327,
+    0.0,
+    0.9912
+   ],
+   "up": [
+    0.9912,
+    -0.0,
+    0.1327
+   ],
+   "right": [
+    -0.0,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    1.0,
+    0.8
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "wall cap; surface SM_DK_WallCap_4m at (44.5, 20.5, 2.12), slope 7.6 deg",
+   "ue": {
+    "location_cm": [
+     4450.0,
+     -2050.0,
+     212.0
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -82.375,
+     "yaw": 0.0
+    },
+    "decal_size_cm": [
+     25.0,
+     50.0,
+     40.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 201
+  },
+  {
+   "id": "Lichen_13",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    3.2,
+    29.5,
+    5.425
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.4,
+    1.1
+   ],
+   "depth_m": 0.5,
+   "flip_u": false,
+   "source": "outbuilding roof; surface SM_DKO_Roof_Ridge at (3.2, 29.5, 5.425), slope 0.0 deg",
+   "ue": {
+    "location_cm": [
+     320.0,
+     -2950.0,
+     542.5
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     25.0,
+     70.0,
+     55.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 168
+  },
+  {
+   "id": "Lichen_14",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    40.8,
+    29.5,
+    5.425
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.4,
+    1.1
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "outbuilding roof; surface SM_DKO_Roof_Ridge at (40.8, 29.5, 5.425), slope 0.0 deg",
+   "ue": {
+    "location_cm": [
+     4080.0,
+     -2950.0,
+     542.5
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     25.0,
+     70.0,
+     55.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 168
+  },
+  {
+   "id": "Lichen_15",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    39.6,
+    2.2,
+    3.7253
+   ],
+   "normal": [
+    -0.3508,
+    0.1651,
+    0.9218
+   ],
+   "up": [
+    0.834,
+    -0.3925,
+    0.3877
+   ],
+   "right": [
+    -0.4258,
+    -0.9048,
+    0.0
+   ],
+   "size_m": [
+    1.2,
+    1.0
+   ],
+   "depth_m": 0.5,
+   "flip_u": true,
+   "source": "pavilion roof; surface SM_DKV_RoofQuarter at (39.6, 2.2, 3.725), slope 22.8 deg",
+   "ue": {
+    "location_cm": [
+     3960.0,
+     -220.0,
+     372.53
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -67.186,
+     "yaw": 25.201
+    },
+    "decal_size_cm": [
+     25.0,
+     60.0,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 478
+  },
+  {
+   "id": "Lichen_16",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    19.12,
+    19.65,
+    1.8017
+   ],
+   "normal": [
+    0.9996,
+    -0.0003,
+    0.0268
+   ],
+   "up": [
+    -0.0268,
+    0.0,
+    0.9996
+   ],
+   "right": [
+    0.0003,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    0.55,
+    0.55
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "lantern cap; surface SM_DKP_Stone_LanternTall at (19.12, 19.65, 1.802), slope 88.5 deg",
+   "ue": {
+    "location_cm": [
+     1912.0,
+     -1965.0,
+     180.17
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -1.537,
+     "yaw": -179.984
+    },
+    "decal_size_cm": [
+     15.0,
+     27.5,
+     27.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 21
+  },
+  {
+   "id": "Lichen_17",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    19.28,
+    19.45,
+    0.2919
+   ],
+   "normal": [
+    0.0251,
+    0.012,
+    0.9996
+   ],
+   "up": [
+    -0.9019,
+    -0.431,
+    0.0278
+   ],
+   "right": [
+    -0.4312,
+    0.9023,
+    0.0
+   ],
+   "size_m": [
+    0.6,
+    0.6
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "lantern base; surface SM_DKP_Stone_LanternTall at (19.28, 19.45, 0.292), slope 1.6 deg",
+   "ue": {
+    "location_cm": [
+     1928.0,
+     -1945.0,
+     29.19
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -88.406,
+     "yaw": 154.458
+    },
+    "decal_size_cm": [
+     15.0,
+     30.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 52
+  },
+  {
+   "id": "Lichen_18",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    25.12,
+    19.65,
+    1.8017
+   ],
+   "normal": [
+    0.9996,
+    -0.0003,
+    0.0268
+   ],
+   "up": [
+    -0.0268,
+    0.0,
+    0.9996
+   ],
+   "right": [
+    0.0003,
+    1.0,
+    -0.0
+   ],
+   "size_m": [
+    0.55,
+    0.55
+   ],
+   "depth_m": 0.3,
+   "flip_u": false,
+   "source": "lantern cap; surface SM_DKP_Stone_LanternTall at (25.12, 19.65, 1.802), slope 88.5 deg",
+   "ue": {
+    "location_cm": [
+     2512.0,
+     -1965.0,
+     180.17
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -1.537,
+     "yaw": -179.984
+    },
+    "decal_size_cm": [
+     15.0,
+     27.5,
+     27.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 21
+  },
+  {
+   "id": "Lichen_19",
+   "material": "M_DKD_Decal_Lichen",
+   "centre": [
+    25.28,
+    19.45,
+    0.2919
+   ],
+   "normal": [
+    0.0251,
+    0.012,
+    0.9996
+   ],
+   "up": [
+    -0.9019,
+    -0.431,
+    0.0278
+   ],
+   "right": [
+    -0.4312,
+    0.9023,
+    0.0
+   ],
+   "size_m": [
+    0.6,
+    0.6
+   ],
+   "depth_m": 0.3,
+   "flip_u": true,
+   "source": "lantern base; surface SM_DKP_Stone_LanternTall at (25.28, 19.45, 0.292), slope 1.6 deg",
+   "ue": {
+    "location_cm": [
+     2528.0,
+     -1945.0,
+     29.19
+    ],
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": -88.406,
+     "yaw": 154.458
+    },
+    "decal_size_cm": [
+     15.0,
+     30.0,
+     30.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 52
+  },
+  {
+   "id": "WaterStain_01",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    33.63,
+    33.8952,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    1.0,
+    0.0003,
+    0.0
+   ],
+   "right": [
+    0.0003,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "SM_DKH_Downpipe shoe outlet (33.21, 33.895, 0.04), outflow (1.0, 0.0, 0.0); floor SM_DKG_Gravel_2x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     3363.0,
+     -3389.52,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -179.982,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_02",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    10.37,
+    33.8048,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -1.0,
+    -0.0004,
+    0.0
+   ],
+   "right": [
+    -0.0004,
+    1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "SM_DKH_Downpipe shoe outlet (10.79, 33.805, 0.04), outflow (-1.0, -0.0, 0.0); floor SM_DKG_Gravel_1x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     1037.0,
+     -3380.48,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 0.026,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_03",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    33.63,
+    22.1952,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    1.0,
+    0.0004,
+    0.0
+   ],
+   "right": [
+    0.0004,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "SM_DKH_Downpipe shoe outlet (33.21, 22.195, 0.04), outflow (1.0, 0.0, 0.0); floor SM_DKG_Gravel_2x4 at z 0.0",
+   "ue": {
+    "location_cm": [
+     3363.0,
+     -2219.52,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -179.976,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_04",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    10.37,
+    22.1048,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -1.0,
+    -0.0004,
+    0.0
+   ],
+   "right": [
+    -0.0004,
+    1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "SM_DKH_Downpipe shoe outlet (10.79, 22.105, 0.04), outflow (-1.0, -0.0, 0.0); floor SM_DKG_Gravel_1x4 at z 0.0",
+   "ue": {
+    "location_cm": [
+     1037.0,
+     -2210.48,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 0.022,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_05",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    36.315,
+    35.3049,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -1.0,
+    -0.0001,
+    0.0
+   ],
+   "right": [
+    -0.0001,
+    1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "SM_DKO_Downpipe shoe outlet (36.735, 35.305, 0.04), outflow (-1.0, -0.0, 0.0); floor SM_DKG_Gravel_1x1 at z 0.0",
+   "ue": {
+    "location_cm": [
+     3631.5,
+     -3530.49,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 0.007,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_06",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    7.685,
+    35.305,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    1.0,
+    -0.0001,
+    0.0
+   ],
+   "right": [
+    -0.0001,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "SM_DKO_Downpipe shoe outlet (7.265, 35.305, 0.04), outflow (1.0, -0.0, 0.0); floor SM_DKG_Gravel_2x1 at z 0.0",
+   "ue": {
+    "location_cm": [
+     768.5,
+     -3530.5,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 179.996,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_07",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    36.315,
+    28.0049,
+    -0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -1.0,
+    -0.0003,
+    0.0
+   ],
+   "right": [
+    -0.0003,
+    1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "SM_DKO_Downpipe shoe outlet (36.735, 28.005, 0.04), outflow (-1.0, -0.0, 0.0); floor SM_DKG_Gravel_0p25x2 at z -0.0",
+   "ue": {
+    "location_cm": [
+     3631.5,
+     -2800.49,
+     -0.0
+    ],
+    "rotation_deg": {
+     "roll": 0.015,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_08",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    7.685,
+    28.0951,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    1.0,
+    0.0002,
+    0.0
+   ],
+   "right": [
+    0.0002,
+    -1.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "SM_DKO_Downpipe shoe outlet (7.265, 28.095, 0.04), outflow (1.0, 0.0, 0.0); floor SM_DKG_Gravel_0p25x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     768.5,
+     -2809.51,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -179.991,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_09",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    36.745,
+    29.0,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "SM_DKC_Downpipe shoe outlet (36.745, 29.42, 0.04), outflow (0.0, -1.0, 0.0); floor SM_DKG_Gravel_0p5x0p5 at z 0.0",
+   "ue": {
+    "location_cm": [
+     3674.5,
+     -2900.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WaterStain_10",
+   "material": "M_DKD_Decal_WaterStain",
+   "centre": [
+    7.2549,
+    29.0,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    -0.0002,
+    -1.0,
+    0.0
+   ],
+   "right": [
+    -1.0,
+    0.0002,
+    0.0
+   ],
+   "size_m": [
+    0.95,
+    1.0
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "SM_DKC_Downpipe shoe outlet (7.255, 29.42, 0.04), outflow (-0.0, -1.0, 0.0); floor SM_DKG_Gravel_0p5x0p5 at z 0.0",
+   "ue": {
+    "location_cm": [
+     725.49,
+     -2900.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 89.991,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     47.5,
+     50.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 380
+  },
+  {
+   "id": "WornPath_01",
+   "material": "M_DKD_Decal_WornPath",
+   "centre": [
+    20.45,
+    20.25,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.3,
+    1.7
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "beside the hall stair; floor SM_DKG_Gravel_1x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     2045.0,
+     -2025.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     65.0,
+     85.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 884
+  },
+  {
+   "id": "WornPath_02",
+   "material": "M_DKD_Decal_WornPath",
+   "centre": [
+    23.55,
+    20.25,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.3,
+    1.7
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "beside the hall stair; floor SM_DKG_Gravel_4x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     2355.0,
+     -2025.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     65.0,
+     85.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 884
+  },
+  {
+   "id": "WornPath_03",
+   "material": "M_DKD_Decal_WornPath",
+   "centre": [
+    16.2,
+    20.65,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.5,
+    0.95
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "along the hall front (stair to the veranda ends); floor SM_DKG_Gravel_4x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     1620.0,
+     -2065.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     225.0,
+     47.5
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1710
+  },
+  {
+   "id": "WornPath_04",
+   "material": "M_DKD_Decal_WornPath",
+   "centre": [
+    27.8,
+    20.65,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.5,
+    0.95
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "along the hall front (stair to the veranda ends); floor SM_DKG_Gravel_4x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     2780.0,
+     -2065.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     225.0,
+     47.5
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 1710
+  },
+  {
+   "id": "WornPath_05",
+   "material": "M_DKD_Decal_WornPath",
+   "centre": [
+    16.9,
+    1.0,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.7,
+    1.4
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "beside the gate apron; floor SM_DKG_GravelCoarse_2x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     1690.0,
+     -100.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     85.0,
+     70.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 952
+  },
+  {
+   "id": "WornPath_06",
+   "material": "M_DKD_Decal_WornPath",
+   "centre": [
+    27.1,
+    1.0,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "right": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    1.7,
+    1.4
+   ],
+   "depth_m": 0.4,
+   "flip_u": false,
+   "source": "beside the gate apron; floor SM_DKG_GravelCoarse_4x2 at z 0.0",
+   "ue": {
+    "location_cm": [
+     2710.0,
+     -100.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": -90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     85.0,
+     70.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 952
+  },
+  {
+   "id": "WornPath_07",
+   "material": "M_DKD_Decal_WornPath",
+   "centre": [
+    22.0,
+    -3.3,
+    0.0
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "size_m": [
+    4.6,
+    1.6
+   ],
+   "depth_m": 0.4,
+   "flip_u": true,
+   "source": "street, in front of the gate apron (lands on whatever the outside track's ground is); floor SM_DGB_Ground_Outside at z 0.0",
+   "ue": {
+    "location_cm": [
+     2200.0,
+     330.0,
+     0.0
+    ],
+    "rotation_deg": {
+     "roll": 90.0,
+     "pitch": -90.0,
+     "yaw": 180.0
+    },
+    "decal_size_cm": [
+     20.0,
+     230.0,
+     80.0
+    ],
+    "scale": [
+     1.0,
+     -1.0,
+     1.0
+    ]
+   },
+   "preview_faces": 2944
+  }
+ ],
+ "skipped": [],
+ "posts_measured": {
+  "SM_DK_Gate_Frame": [
+   [
+    18.8,
+    -0.5,
+    0.36,
+    0.36,
+    0.45
+   ],
+   [
+    25.2,
+    -0.5,
+    0.36,
+    0.36,
+    0.45
+   ],
+   [
+    25.2,
+    -1.75,
+    0.36,
+    0.36,
+    0.62
+   ],
+   [
+    25.2,
+    1.75,
+    0.36,
+    0.36,
+    0.45
+   ],
+   [
+    18.8,
+    -1.75,
+    0.36,
+    0.36,
+    0.62
+   ],
+   [
+    18.8,
+    1.75,
+    0.36,
+    0.36,
+    0.45
+   ],
+   [
+    18.72,
+    -0.12,
+    0.44,
+    0.28,
+    0.45
+   ],
+   [
+    25.28,
+    -0.88,
+    0.44,
+    0.28,
+    0.45
+   ],
+   [
+    18.72,
+    -0.88,
+    0.44,
+    0.28,
+    0.45
+   ],
+   [
+    25.28,
+    -0.12,
+    0.44,
+    0.28,
+    0.45
+   ]
+  ],
+  "SM_DKH_VerandaFrame": [
+   [
+    11.15,
+    32.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    11.15,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    32.85,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    13.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    15.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    17.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    19.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    21.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    23.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    25.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    27.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    29.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    31.0,
+    22.15,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    11.15,
+    24.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    11.15,
+    26.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    11.15,
+    28.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    11.15,
+    30.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    11.15,
+    33.85,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    32.85,
+    24.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    32.85,
+    26.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    32.85,
+    28.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    32.85,
+    30.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    32.85,
+    32.0,
+    0.21,
+    0.21,
+    0.1
+   ],
+   [
+    32.85,
+    33.85,
+    0.21,
+    0.21,
+    0.1
+   ]
+  ],
+  "SM_DKH_Frame": [
+   [
+    17.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    19.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    21.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    23.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    25.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    27.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    29.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    31.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    31.0,
+    26.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    31.0,
+    28.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    31.0,
+    30.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    13.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    15.0,
+    24.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    13.0,
+    26.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    13.0,
+    28.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    13.0,
+    30.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    13.0,
+    32.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    17.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    19.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    21.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    23.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    25.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    27.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    29.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    31.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    31.0,
+    32.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    13.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ],
+   [
+    15.0,
+    34.0,
+    0.24,
+    0.24,
+    0.35
+   ]
+  ],
+  "SM_DKC_PostFrame": [
+   [
+    36.7,
+    29.85,
+    0.18,
+    0.18,
+    0.25
+   ],
+   [
+    36.7,
+    32.15,
+    0.18,
+    0.18,
+    0.25
+   ],
+   [
+    10.05,
+    29.85,
+    0.18,
+    0.18,
+    0.25
+   ],
+   [
+    10.05,
+    32.15,
+    0.18,
+    0.18,
+    0.25
+   ]
+  ],
+  "SM_DKV_Frame": [
+   [
+    39.55,
+    1.55,
+    0.32,
+    0.32,
+    1.35
+   ],
+   [
+    42.45,
+    1.55,
+    0.32,
+    0.32,
+    1.35
+   ],
+   [
+    39.55,
+    4.45,
+    0.32,
+    0.32,
+    1.35
+   ],
+   [
+    42.45,
+    4.45,
+    0.32,
+    0.32,
+    1.35
+   ]
+  ],
+  "SM_DKS_Post": [
+   [
+    5.58,
+    4.85,
+    0.114,
+    0.114,
+    0.312
+   ],
+   [
+    0.42,
+    4.85,
+    0.114,
+    0.114,
+    0.312
+   ]
+  ]
+ },
+ "counts": {
+  "placements": 101,
+  "skipped": 0,
+  "preview_objects": 101
+ }
+}

@@ -1,0 +1,11 @@
+| view | output @ screen % | frames | FrameTime mean / p95 | GPUTime mean / median / p95 | GT mean | RT mean | top GPU passes (mean ms) |
+|---|---|---|---|---|---|---|---|
+| CAM_PlayerEyeSand | 1920x1080 @ 0 | 1176 | 7.64 / 8.53 | 7.11 / 7.09 / 7.33 | 2.97 | 7.64 | TemporalSuperResolution 1.239, ShadowDepths 0.678, ShadowProjection 0.536, Unaccounted 0.527, NaniteVisBuffer 0.432, NaniteBasePass 0.393 |
+| CAM_PlayerEyeSand | 2560x1440 @ 0 | 1052 | 8.53 / 9.44 | 8.0 / 7.98 / 8.23 | 4.6 | 0.0 | TemporalSuperResolution 1.6, ShadowDepths 0.676, ShadowProjection 0.538, Unaccounted 0.524, NaniteVisBuffer 0.444, NaniteBasePass 0.396 |
+| CAM_PlayerEyeSand | 2560x1440 @ 100 | 794 | 11.29 / 12.06 | 10.75 / 10.72 / 10.99 | 4.24 | 0.0 | TemporalSuperResolution 2.298, RenderDeferredLighting 0.87, ShadowProjection 0.869, ShadowDepths 0.754, Unaccounted 0.548, NaniteBasePass 0.531 |
+| CAM_Overview | 1920x1080 @ 0 | 1090 | 8.24 / 9.79 | 7.71 / 7.68 / 7.92 | 5.01 | 0.0 | TemporalSuperResolution 1.249, ShadowDepths 0.765, ShadowProjection 0.67, RenderDeferredLighting 0.532, Unaccounted 0.529, NaniteVisBuffer 0.507 |
+| CAM_Overview | 2560x1440 @ 0 | 1022 | 8.78 / 10.15 | 8.26 / 8.23 / 8.48 | 5.12 | 0.0 | TemporalSuperResolution 1.611, ShadowDepths 0.768, ShadowProjection 0.675, RenderDeferredLighting 0.552, NaniteVisBuffer 0.536, Unaccounted 0.529 |
+| CAM_Overview | 2560x1440 @ 100 | 755 | 11.88 / 12.55 | 11.33 / 11.3 / 11.61 | 4.42 | 0.0 | TemporalSuperResolution 2.358, RenderDeferredLighting 1.215, ShadowProjection 1.124, ShadowDepths 0.887, NaniteBasePass 0.668, NaniteVisBuffer 0.624 |
+| PAWN | 1920x1080 @ 0 | 1162 | 7.73 / 9.32 | 7.18 / 7.16 / 7.4 | 5.16 | 0.0 | TemporalSuperResolution 1.223, ShadowDepths 0.71, Unaccounted 0.528, NaniteVisBuffer 0.42, ShadowProjection 0.41, SlateUI 0.394 |
+| PAWN | 2560x1440 @ 0 | 1098 | 8.18 / 9.68 | 7.66 / 7.64 / 7.88 | 5.3 | 0.0 | TemporalSuperResolution 1.576, ShadowDepths 0.713, Unaccounted 0.529, NaniteVisBuffer 0.434, ShadowProjection 0.411, SlateUI 0.393 |
+| PAWN | 2560x1440 @ 100 | 843 | 10.64 / 11.29 | 10.09 / 10.06 / 10.33 | 4.7 | 0.0 | TemporalSuperResolution 2.25, ShadowDepths 0.821, RenderDeferredLighting 0.712, ShadowProjection 0.647, Unaccounted 0.552, NaniteVisBuffer 0.493 |

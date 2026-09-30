@@ -1,0 +1,862 @@
+{
+ "date": "2026-09-29",
+ "stage": "round 4: the two covered corridors (bay modules)",
+ "units": "m, grey-box world frame (X east, Y north, Z up; Unreal (x*100, -y*100, z*100), yaw = -rot_z)",
+ "roof_kit": {
+  "module": "Scripts/dojo/roof/roof_kit.py",
+  "version": "1.3.0"
+ },
+ "material_library": "Scripts/dojo/materials (M_DJ_*), textures Exports/DojoKit/Materials/Textures",
+ "module_rule": "a corridor = EndWall_<c>_Base + EndWall_<c>_Roof at its outbuilding end, n x (Bay_Floor + Bay_Frame + Bay_Wall + Bay_Roof) every 2.75 m from its west post line, one PostFrame at the last post line, EndGable_<c>_Floor + EndGable_<c>_Roof at the hall end, a Downpipe at the outbuilding-end post; both grey-box gaps take n = 1",
+ "pieces": {
+  "SM_DKC_Bay_Floor": {
+   "class": "ground",
+   "folder": "Corridors",
+   "note": "BAY MODULE floor (2.75 m, post line to post line): plank deck +0.5 on the open side's edge beam and the closed side's sill, joists, a centre beam on two short posts and footing stones, cut granite paving at grade",
+   "ucx": 1,
+   "tris": 3696,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_TimberDark",
+    "M_DJ_Granite",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    7.3,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_Bay_Frame": {
+   "class": "thin",
+   "folder": "Corridors",
+   "note": "BAY MODULE frame: the post frame at local x 0 (two 0.18 m posts on granite pedestals, tie beam, king post, the open side's bracket arm), eave beams (keta) on both post lines, the ridge purlin, and the open side's low square-lattice rail between the posts (thin uprights: block the pawn, ignore camera and visibility)",
+   "ucx": 5,
+   "tris": 1540,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "corridors",
+   "pivot_world": [
+    7.3,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_Bay_Wall": {
+   "class": "building",
+   "folder": "Corridors",
+   "note": "BAY MODULE closed side (the alley side) between the posts: bottom rail, vertical-board wainscot with battens, a proud rail, cream plaster, head beam under the eave beam; both faces alike",
+   "ucx": 1,
+   "tris": 2376,
+   "slots": [
+    "M_DJ_TimberDark",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    7.3,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_Bay_Roof": {
+   "class": "roof",
+   "folder": "Corridors",
+   "note": "BAY MODULE roof segment (2.75 m): both 25 deg slopes (eaves +3.0 at Y 29.5 / 32.5, the planes meet at +3.70), kawara tiles on the kit-wide 0.25 m roll lines, sarking, plain rafter ends, fascia, the ridge (two courses of real noshi tiles + the cap-tile row, open ends meeting the next module), the open eave's half-round gutter on hooked brackets; one flat collision slab per slope + the ridge box",
+   "ucx": 3,
+   "tris": 19660,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    7.3,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_PostFrame": {
+   "class": "thin",
+   "folder": "Corridors",
+   "note": "the post frame that closes a run of bays (as the bay's own at x 0): two posts on granite pedestals, tie beam, king post, bracket arm",
+   "ucx": 4,
+   "tris": 352,
+   "slots": [
+    "M_DJ_Granite",
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": false,
+   "kit": "corridors",
+   "pivot_world": [
+    10.05,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndWall_W_Base": {
+   "class": "building",
+   "folder": "Corridors",
+   "note": "END piece at the outbuilding: the floor strip from the first post to the outbuilding's gable wall (2 cm off it) and the closed wall's strip there (west corridor)",
+   "ucx": 2,
+   "tris": 1628,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_TimberDark",
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": false,
+   "kit": "corridors",
+   "pivot_world": [
+    7.3,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndWall_E_Base": {
+   "class": "building",
+   "folder": "Corridors",
+   "note": "END piece at the outbuilding: the floor strip from the first post to the outbuilding's gable wall (2 cm off it) and the closed wall's strip there (east corridor: the west piece mirrored about X 22, its own mesh)",
+   "ucx": 2,
+   "tris": 1628,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_TimberDark",
+    "M_DJ_Granite",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": false,
+   "kit": "corridors",
+   "pivot_world": [
+    36.7,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndWall_W_Roof": {
+   "class": "roof",
+   "folder": "Corridors",
+   "note": "END piece at the outbuilding: the roof strip that tucks under the outbuilding's verge to its gable wall (noshi flashing up each slope against the wall, the ridge capped at the wall, the gutter's end), the eave beam and ridge purlin stubs into the wall (west corridor)",
+   "ucx": 3,
+   "tris": 3330,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    7.3,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndWall_E_Roof": {
+   "class": "roof",
+   "folder": "Corridors",
+   "note": "END piece at the outbuilding: the roof strip that tucks under the outbuilding's verge to its gable wall (noshi flashing up each slope against the wall, the ridge capped at the wall, the gutter's end), the eave beam and ridge purlin stubs into the wall (east corridor: the west piece mirrored about X 22, its own mesh)",
+   "ucx": 3,
+   "tris": 3330,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    36.7,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndGable_W_Floor": {
+   "class": "ground",
+   "folder": "Corridors",
+   "note": "END piece at the hall: the deck from the last post to the hall veranda's edge (X 11.0), an end joist, short posts on footing stones, paving (west corridor)",
+   "ucx": 1,
+   "tris": 2024,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_TimberDark",
+    "M_DJ_Granite",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    10.05,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndGable_E_Floor": {
+   "class": "ground",
+   "folder": "Corridors",
+   "note": "END piece at the hall: the deck from the last post to the hall veranda's edge (X 11.0), an end joist, short posts on footing stones, paving (east corridor: the west piece mirrored about X 22, its own mesh)",
+   "ucx": 1,
+   "tris": 2024,
+   "slots": [
+    "M_DJ_TimberAged",
+    "M_DJ_TimberDark",
+    "M_DJ_Granite",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    33.95,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndGable_W_Roof": {
+   "class": "roof",
+   "folder": "Corridors",
+   "note": "END piece at the hall: the open gable overhang (0.25 m past the last post, clear of the hall's side gutter): verges with round verge rolls, end discs and bargeboards, a plain onigawara (bullnose tiers, arched tile, plain round crest, cap-end disc, lobes: no face or symbol) on the ridge end, the gutter's end, the eave beam and ridge purlin ends (west corridor)",
+   "ucx": 3,
+   "tris": 7220,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    10.05,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_EndGable_E_Roof": {
+   "class": "roof",
+   "folder": "Corridors",
+   "note": "END piece at the hall: the open gable overhang (0.25 m past the last post, clear of the hall's side gutter): verges with round verge rolls, end discs and bargeboards, a plain onigawara (bullnose tiers, arched tile, plain round crest, cap-end disc, lobes: no face or symbol) on the ridge end, the gutter's end, the eave beam and ridge purlin ends (east corridor: the west piece mirrored about X 22, its own mesh)",
+   "ucx": 3,
+   "tris": 7220,
+   "slots": [
+    "M_DJ_RoofTile",
+    "M_DJ_TimberDark",
+    "M_DJ_Iron",
+    "M_DJ_TimberDarkEnd"
+   ],
+   "nanite": true,
+   "kit": "corridors",
+   "pivot_world": [
+    33.95,
+    31.0,
+    0.0
+   ]
+  },
+  "SM_DKC_Downpipe": {
+   "class": "thin",
+   "folder": "Corridors",
+   "note": "round downpipe from the open eave's gutter at the outbuilding-end post (the sheet's end view): outlet collar, a two-bend swan neck back toward the post, strap clamps, a shoe at the paving",
+   "ucx": 1,
+   "tris": 964,
+   "slots": [
+    "M_DJ_Iron"
+   ],
+   "nanite": false,
+   "kit": "corridors",
+   "pivot_world": null,
+   "extra": {
+    "outlet_local": [
+     0.0,
+     -0.17,
+     2.7825
+    ]
+   }
+  }
+ },
+ "instances": [
+  {
+   "piece": "SM_DKC_Bay_Floor",
+   "loc": [
+    7.3,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "ground",
+   "kit": "corridors",
+   "bbox_min_max": [
+    7.301,
+    29.364,
+    -0.05,
+    10.049,
+    32.636,
+    0.5
+   ]
+  },
+  {
+   "piece": "SM_DKC_Bay_Frame",
+   "loc": [
+    7.3,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "thin",
+   "kit": "corridors",
+   "bbox_min_max": [
+    7.06,
+    29.65,
+    -0.04,
+    10.049,
+    32.35,
+    3.444
+   ]
+  },
+  {
+   "piece": "SM_DKC_Bay_Wall",
+   "loc": [
+    7.3,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "building",
+   "kit": "corridors",
+   "bbox_min_max": [
+    7.378,
+    32.085,
+    0.5,
+    9.972,
+    32.224,
+    2.7058
+   ]
+  },
+  {
+   "piece": "SM_DKC_Bay_Roof",
+   "loc": [
+    7.3,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "roof",
+   "kit": "corridors",
+   "bbox_min_max": [
+    7.3,
+    29.3306,
+    2.731,
+    10.05,
+    32.5512,
+    3.9387
+   ]
+  },
+  {
+   "piece": "SM_DKC_PostFrame",
+   "loc": [
+    10.05,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "thin",
+   "kit": "corridors",
+   "bbox_min_max": [
+    9.81,
+    29.65,
+    -0.04,
+    10.29,
+    32.35,
+    3.274
+   ]
+  },
+  {
+   "piece": "SM_DKC_Bay_Floor",
+   "loc": [
+    33.95,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "ground",
+   "kit": "corridors",
+   "bbox_min_max": [
+    33.951,
+    29.364,
+    -0.05,
+    36.699,
+    32.636,
+    0.5
+   ]
+  },
+  {
+   "piece": "SM_DKC_Bay_Frame",
+   "loc": [
+    33.95,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "thin",
+   "kit": "corridors",
+   "bbox_min_max": [
+    33.71,
+    29.65,
+    -0.04,
+    36.699,
+    32.35,
+    3.444
+   ]
+  },
+  {
+   "piece": "SM_DKC_Bay_Wall",
+   "loc": [
+    33.95,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "building",
+   "kit": "corridors",
+   "bbox_min_max": [
+    34.028,
+    32.085,
+    0.5,
+    36.622,
+    32.224,
+    2.7058
+   ]
+  },
+  {
+   "piece": "SM_DKC_Bay_Roof",
+   "loc": [
+    33.95,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "roof",
+   "kit": "corridors",
+   "bbox_min_max": [
+    33.95,
+    29.3306,
+    2.731,
+    36.7,
+    32.5512,
+    3.9387
+   ]
+  },
+  {
+   "piece": "SM_DKC_PostFrame",
+   "loc": [
+    36.7,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "thin",
+   "kit": "corridors",
+   "bbox_min_max": [
+    36.46,
+    29.65,
+    -0.04,
+    36.94,
+    32.35,
+    3.274
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndWall_W_Base",
+   "loc": [
+    7.3,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "building",
+   "kit": "corridors",
+   "bbox_min_max": [
+    7.005,
+    29.364,
+    -0.05,
+    7.299,
+    32.636,
+    2.7057
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndWall_E_Base",
+   "loc": [
+    36.7,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "building",
+   "kit": "corridors",
+   "bbox_min_max": [
+    36.701,
+    29.364,
+    -0.05,
+    36.995,
+    32.636,
+    2.7057
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndWall_W_Roof",
+   "loc": [
+    7.3,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "roof",
+   "kit": "corridors",
+   "bbox_min_max": [
+    6.0246,
+    29.3307,
+    2.7077,
+    7.6913,
+    32.5512,
+    3.9387
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndWall_E_Roof",
+   "loc": [
+    36.7,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "roof",
+   "kit": "corridors",
+   "bbox_min_max": [
+    36.3087,
+    29.3307,
+    2.7077,
+    37.9754,
+    32.5512,
+    3.9387
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndGable_W_Floor",
+   "loc": [
+    10.05,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "ground",
+   "kit": "corridors",
+   "bbox_min_max": [
+    10.051,
+    29.364,
+    -0.05,
+    10.99,
+    32.636,
+    0.5
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndGable_E_Floor",
+   "loc": [
+    33.95,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "ground",
+   "kit": "corridors",
+   "bbox_min_max": [
+    33.01,
+    29.364,
+    -0.05,
+    33.949,
+    32.636,
+    0.5
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndGable_W_Roof",
+   "loc": [
+    10.05,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "roof",
+   "kit": "corridors",
+   "bbox_min_max": [
+    10.0282,
+    29.3307,
+    2.6062,
+    10.382,
+    32.5817,
+    3.9415
+   ]
+  },
+  {
+   "piece": "SM_DKC_EndGable_E_Roof",
+   "loc": [
+    33.95,
+    31.0,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "roof",
+   "kit": "corridors",
+   "bbox_min_max": [
+    33.618,
+    29.3307,
+    2.6062,
+    33.9718,
+    32.5817,
+    3.9415
+   ]
+  },
+  {
+   "piece": "SM_DKC_Downpipe",
+   "loc": [
+    7.3,
+    29.58,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "W",
+   "folder": "Corridors/W",
+   "collision_class": "thin",
+   "kit": "corridors",
+   "bbox_min_max": [
+    7.205,
+    29.354,
+    -0.005,
+    7.395,
+    29.764,
+    2.7826
+   ]
+  },
+  {
+   "piece": "SM_DKC_Downpipe",
+   "loc": [
+    36.7,
+    29.58,
+    0.0
+   ],
+   "rot_z": 0.0,
+   "corridor": "E",
+   "folder": "Corridors/E",
+   "collision_class": "thin",
+   "kit": "corridors",
+   "bbox_min_max": [
+    36.605,
+    29.354,
+    -0.005,
+    36.795,
+    29.764,
+    2.7826
+   ]
+  }
+ ],
+ "replaces_greybox": [
+  "SM_DGB_Corridor_W",
+  "SM_DGB_Corridor_W_Roof",
+  "SM_DGB_Corridor_E",
+  "SM_DGB_Corridor_E_Roof"
+ ],
+ "numbers": {
+  "floor": 0.5,
+  "eave": 3.0,
+  "eave_lines_y": [
+   29.5,
+   32.5
+  ],
+  "ridge_line_y": 31.0,
+  "planes_meet": 3.6995,
+  "pitch_deg": 25.0,
+  "ridge_cap_top": 3.9387,
+  "ridge_noshi_base": 3.6795,
+  "ridge_courses": 2,
+  "ridge_cap_r": 0.085,
+  "tile_course_m": 0.2913,
+  "courses": 5,
+  "bay_length": 2.75,
+  "post_lines_x_W": [
+   7.3,
+   10.05
+  ],
+  "post_lines_x_E": [
+   33.95,
+   36.7
+  ],
+  "post_lines_y": [
+   29.85,
+   32.15
+  ],
+  "post": 0.18,
+  "pedestal_top": 0.26,
+  "keta": [
+   2.7077,
+   2.9077
+  ],
+  "tie_beam": [
+   2.7077,
+   2.9077
+  ],
+  "ridge_purlin": [
+   3.264,
+   3.444
+  ],
+  "headroom_under_tie_beams_and_keta_m": 2.208,
+  "rail_top_above_floor_m": 0.69,
+  "wall": {
+   "sill": [
+    0.5,
+    0.56
+   ],
+   "boards": [
+    0.56,
+    1.4
+   ],
+   "rail": [
+    1.4,
+    1.48
+   ],
+   "plaster": [
+    1.47,
+    2.53
+   ],
+   "head": [
+    2.52,
+    2.708
+   ]
+  },
+  "roof_x_W": [
+   7.045,
+   10.3
+  ],
+  "roof_x_E": [
+   33.7,
+   36.955
+  ],
+  "roof_hull_x_W": [
+   7.045,
+   10.3
+  ],
+  "deck_x_W": [
+   7.045,
+   11.0
+  ],
+  "deck_x_E": [
+   33.0,
+   36.955
+  ],
+  "deck_y": [
+   29.77,
+   32.22
+  ],
+  "gutter": {
+   "rim_z": 2.8225,
+   "line_y": 29.41,
+   "x_W": [
+    7.0649999999999995,
+    10.280000000000001
+   ]
+  },
+  "downpipe_xy": {
+   "W": [
+    7.3,
+    29.58
+   ],
+   "E": [
+    36.7,
+    29.58
+   ]
+  },
+  "neighbours": {
+   "outbuilding_wall_x_W": 7.0,
+   "outbuilding_verge_x_W": 7.6,
+   "hall_side_eave_x_W": 10.5,
+   "hall_side_gutter_outer_face_x_W": 10.34,
+   "note": "grey-box storehouse/residence (their round-4 builds keep the grey-box body and roof planes) and the hall's layout_hall.json; the corridor ends 4 cm short of the hall's side gutter and runs under the outbuilding verge to its gable wall"
+  },
+  "greybox": {
+   "roof_x_W": [
+    7.6,
+    10.5
+   ],
+   "floor_x_W": [
+    7.0,
+    11.0
+   ],
+   "posts_y": [
+    29.5,
+    29.7
+   ],
+   "wall_y": [
+    32.3,
+    32.5
+   ]
+  }
+ }
+}

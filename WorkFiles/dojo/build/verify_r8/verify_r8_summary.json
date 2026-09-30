@@ -1,0 +1,21 @@
+{
+ "date": "2026-09-30",
+ "verifier": "independent round-8 verifier (verify_r8): fresh headless Blender + fresh read-only UE commandlets + one -game perf run, one at a time, none left running; outputs only here",
+ "result": "PASS (gates 1-3); perf and look reported",
+ "1_functional": {
+  "fbx_audit": "253 pieces, 0 errors, every SM_ has UCX; 0 pieces differ from verify_r6f's audit",
+  "layout": "layout_showcase.json vs the pre-round-8 backup: instances 1110, pieces 253, markers 24, climb 30, walk 47, decals 86, collision classes all identical; only lights (14 -> 10, the 4 Light_Fill_* gone), sun, materials, round3 differ",
+  "blender_traversal": "walk PASS (47 routes, 21 CONTROL, r0.30 + r0.35), climb PASS, gate/hall/outbuilding/corridor/shed/pavilion roof walks PASS, clearance + ground holes: 0 leaf diffs vs verify_r6f in all 11 JSONs",
+  "ue_verify": "14/14 gates (ue_verify.json): 253/253 meshes (97 Nanite, full fallback, 760 convex = FBX UCX), 1110 instances, 0 loc/rot/scale/collision errors, bounds err 0.0005 cm non-Nanite / 0.002 cm Nanite fallback, grey-box only SM_DGB_Tree x2 + hidden SM_DGB_Boundary_1v1, decals 86/86 = decals.json, 10 lights all on lamp meshes, street lamps outside only, 24 TRV markers + hall landings, GASP trace 23/23, in-engine walk 47 routes (21 CONTROL blocked), alley ring, 1v1 group 14/14",
+  "emblem": "T_DKD_Emblem_BC/N/ORM pixel-identical to T_AK_Emblem_* (sha256 same as verify_r6f); 3 plaques unmoved",
+  "alley_own": "flood 1v1 r30 / r35: 0 target cells (3,123,254 / 3,078,270 reached); arcs 1v1 r30 0 / 1,016,400 attempts, r35 0 / 998,160; mantles 1,257 GASP-valid, 0 leaks; BR mode opens all 9 targets (group separable)"
+ },
+ "2_uds": {
+  "editor_world": "1 Ultra_Dynamic_Sky_C at (2200,-1800,0); 0 DirectionalLight/SkyLight/ExponentialHeightFog/SkyAtmosphere/VolumetricCloud actors; active components: 1 directional (Sun 11.47; Moon intensity 0), 1 sky light (Captured Scene 2.44; Cubemap not visible), 1 fog, 1 atmosphere, 1 cloud; no painted dome, no fill lights; exposure owner = PPV PostProcess_Dojo only (manual, bias 1.5, priority 10); UDS PP component has no exposure overrides; UDS Apply Exposure False; no camera exposure overrides",
+  "runtime_game": "same counts at t=2 s and t=320 s; Time of Day 1730 both; Sun 9.0804 / 187.2945 deg both (locked)",
+  "sun_vs_layout_deg": [0.0, 0.004]
+ },
+ "3_demogame": "0 of 33,889 DemoGame_1 items and 0 of 7,791 DemoGame_1_private2b items written or created after 2026-09-29 21:00 (round start 21:29); UDS copy 848/848 files, 569,317,018 bytes, 79 dirs, 0 md5 differences; GameAnimationSample 0 writes; ArmoryLab writes 23:31-23:33 came from Scripts/armory/unreal/ak_*.py (the armory chat), not round 8",
+ "4_perf": "perf_summary.md / perf_summary.json / profilegpu_keys.json",
+ "5_look": "look_ref2.json, crops/look_boxes_*.png, stills_luma.txt, capture_health.json"
+}

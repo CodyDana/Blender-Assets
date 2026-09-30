@@ -1,0 +1,497 @@
+"""DojoLab SHOWCASE step (pythonscript commandlet, -nullrhi): the kit materials, built here and only here.
+
+Masters in /Game/DojoKit/Materials/Masters, rebuilt from scratch every run so the graphs always equal this file. Each is
+the Unreal side of the kits' own Blender materials (build_kit1.py build_material, build_ground_kit.py, the prop builders):
+  M_DJ_K1_Master          kit 1 on UV0: BC x Tint, ORM, N (DirectX); grime = vertex G x world noise (Blender Noise on
+                          position x (7, 7, 0.35), scale 2) x Grime -> multiply toward Grime Colour; moss = vertex R x
+                          the world-projected moss mask (box, 1.3 / m) mapped 0.10-0.40 -> #56613A; crest = vertex R:
+                          roughness x (1 - 0.38 Crest R), metallic + 0.30 Crest R (the round-tile sheen)
+  M_DJ_K1World_Master     kit 1 plaster / earth core: BC and ORM world-aligned (triplanar |N|^6 blend, tile 4 m) as the
+                          Blender material, so a wall of any height or length stays undistorted; grime as above
+  M_DJ_Ground_Master      kit 2 on UV0: macro variation (T_DKG_Macro_M on world XY / 32 m: albedo x (1 + tint (R-.5) 2)
+                          (1 - dirt max(B-.5, 0) 2), roughness + rough (G-.5) 2); granite: 'Wear' vertex R edge dark
+                          (wear_dark + R (1 - wear_dark)), crown gloss (roughness - k R), per-object tone and hue
+                          (Blender Object Info Random -> a hash of the actor position: the kit's pieces are actors)
+  M_DJ_GroundXY_Master    gravel / coarse gravel / soil sampled on world XY / 4 m (+ macro): panels join seamlessly
+  M_DJ_BedBlend_Master    gravel -> soil by vertex R, height-blended by the gravel's luminance (smoothstep 0.4-0.6)
+  M_DJ_Dressing_Master    tufts / pebbles: base colour = vertex colour, two-sided
+  M_DJ_Prop_Master        props on UV0: BC x Tint (x AO when AO To Base), ORM, N; the training kit's 'Wear' vertex
+                          colour (R grime, G edge wear -> bleached timber / bare iron, B ground dust) with its amounts
+  M_DJ_PropMasked_Master  masked two-sided (the AC fan grille): opacity mask = BC alpha
+  M_DJ_EmissiveTex_Master emissive = BC x Emissive Intensity (lantern panes, lamp glass, vending display); opaque
+  M_DJ_Flat_Master        flat colour, roughness, metallic, specular
+  M_DJ_EmissiveFlat_Master flat colour + Emissive Colour x Emissive Intensity (kit-1 lamp glow, bulbs, buttons)
+Emissive = Blender strength x K_LUX (100, the armory's photometric factor), carried in layout_showcase.json.
+Instances: one MaterialInstanceConstant per slot name in its kit's Materials folder, with the recipe from
+layout_showcase.json; every imported kit mesh then gets, per slot, the instance named like the slot (the grey-box slots
+of the drum-less pavilion take the existing M_DGB_* instances). Result: WorkFiles/dojo/build/unreal/showcase/materials.json
+"""
+import sys
+import time
+import traceback
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import unreal  # noqa: E402
+import dj_sc_common as S  # noqa: E402
+
+EAL = unreal.EditorAssetLibrary
+MEL = unreal.MaterialEditingLibrary
+AT = unreal.AssetToolsHelpers.get_asset_tools()
+MP = unreal.MaterialProperty
+ST = unreal.MaterialSamplerType
+L = S.load()
+DEF_TEX = {"BC": "T_DK_Timber_BC", "ORM": "T_DK_Timber_ORM", "N": "T_DK_Timber_N", "M": "T_DKG_Macro_M"}
+
+
+def lc(v):
+    v = list(v) + [1.0] * (4 - len(v))
+    return unreal.LinearColor(*[float(x) for x in v[:4]])
+
+
+def get_or_create(path, cls, factory):
+    if EAL.does_asset_exist(path):
+        a = unreal.load_asset(path)
+        if not isinstance(a, cls):
+            raise TypeError(f"{path} exists as {type(a).__name__}, not {cls.__name__}: refusing to touch it")
+        return a, False
+    folder, name = path.rsplit("/", 1)
+    a = AT.create_asset(name, folder, cls, factory)
+    if a is None:
+        raise RuntimeError(f"could not create {path}")
+    return a, True
+
+
+class G:
+    def __init__(self, mat):
+        self.m, self.n = mat, 0
+
+    def node(self, cls, **props):
+        self.n += 1
+        e = MEL.create_material_expression(self.m, cls, -400 - 260 * (self.n // 10), 140 * (self.n % 10))
+        for k, v in props.items():
+            e.set_editor_property(k, v)
+        return e
+
+    def link(self, a, a_out, b, b_in):
+        if not MEL.connect_material_expressions(a, a_out, b, b_in):
+            raise RuntimeError(f"connect {a.get_name()}.{a_out!r} -> {b.get_name()}.{b_in!r} failed")
+
+    def out(self, a, a_out, prop):
+        if not MEL.connect_material_property(a, a_out, prop):
+            raise RuntimeError(f"connect {a.get_name()}.{a_out!r} -> {prop} failed")
+
+    # values -------------------------------------------------------------------------------------------------------
+    def scalar(self, name, v, group="Surface"):
+        return (self.node(unreal.MaterialExpressionScalarParameter, parameter_name=name, default_value=float(v), group=group), "")
+
+    def vector(self, name, v, group="Surface"):
+        return (self.node(unreal.MaterialExpressionVectorParameter, parameter_name=name, default_value=lc(v), group=group), "")
+
+    def const(self, v):
+        return (self.node(unreal.MaterialExpressionConstant, r=float(v)), "")
+
+    def const3(self, v):
+        return (self.node(unreal.MaterialExpressionConstant3Vector, constant=lc(v)), "")
+
+    # maths (operands are (node, output) pairs) ----------------------------------------------------------------------
+    def _bin(self, cls, a, b):
+        e = self.node(cls)
+        self.link(a[0], a[1], e, "A")
+        self.link(b[0], b[1], e, "B")
+        return (e, "")
+
+    def mul(self, a, b):
+        return self._bin(unreal.MaterialExpressionMultiply, a, b)
+
+    def add(self, a, b):
+        return self._bin(unreal.MaterialExpressionAdd, a, b)
+
+    def sub(self, a, b):
+        return self._bin(unreal.MaterialExpressionSubtract, a, b)
+
+    def div(self, a, b):
+        return self._bin(unreal.MaterialExpressionDivide, a, b)
+
+    def mx(self, a, b):
+        return self._bin(unreal.MaterialExpressionMax, a, b)
+
+    def dot(self, a, b):
+        return self._bin(unreal.MaterialExpressionDotProduct, a, b)
+
+    def append(self, a, b):
+        return self._bin(unreal.MaterialExpressionAppendVector, a, b)
+
+    def lerp(self, a, b, t):
+        e = self.node(unreal.MaterialExpressionLinearInterpolate)
+        self.link(a[0], a[1], e, "A")
+        self.link(b[0], b[1], e, "B")
+        self.link(t[0], t[1], e, "Alpha")
+        return (e, "")
+
+    def un(self, cls, src, **props):
+        e = self.node(cls, **props)
+        self.link(src[0], src[1], e, "")
+        return (e, "")
+
+    def sat(self, a):
+        return self.un(unreal.MaterialExpressionSaturate, a)
+
+    def mask(self, a, chans):
+        return self.un(unreal.MaterialExpressionComponentMask, a, r="R" in chans, g="G" in chans, b="B" in chans,
+                       a="A" in chans)
+
+    def pow(self, a, e):
+        n = self.node(unreal.MaterialExpressionPower, const_exponent=float(e))
+        self.link(a[0], a[1], n, "Base")
+        return (n, "")
+
+    def maprange(self, a, lo, hi):
+        return self.sat(self.div(self.sub(a, self.const(lo)), self.const(hi - lo)))
+
+    def smoothstep(self, a, lo, hi):
+        x = self.maprange(a, lo, hi)
+        return self.mul(self.mul(x, x), self.sub(self.const(3.0), self.mul(self.const(2.0), x)))
+
+    # sources ------------------------------------------------------------------------------------------------------
+    def tex(self, pname, kind, uv, group="Textures"):
+        st = {"BC": ST.SAMPLERTYPE_COLOR, "ORM": ST.SAMPLERTYPE_MASKS, "M": ST.SAMPLERTYPE_MASKS,
+              "N": ST.SAMPLERTYPE_NORMAL}[kind]
+        t = self.node(unreal.MaterialExpressionTextureSampleParameter2D, parameter_name=pname, sampler_type=st,
+                      texture=unreal.load_asset(S.tex_path(L, DEF_TEX[kind])), group=group)
+        if uv is not None:
+            self.link(uv[0], uv[1], t, "UVs")
+        return t
+
+    def uv0(self, scale_param="UV Scale"):
+        tc = (self.node(unreal.MaterialExpressionTextureCoordinate, coordinate_index=0), "")
+        return self.mul(tc, self.scalar(scale_param, 1.0, "UV"))
+
+    def wp(self):
+        return (self.node(unreal.MaterialExpressionWorldPosition), "")
+
+    def vc(self):
+        return self.node(unreal.MaterialExpressionVertexColor)
+
+    def world_xy(self, tile_cm):
+        return self.div(self.mask(self.wp(), "RG"), tile_cm)
+
+    def triplanar(self, pname, kind, tile_cm, out="RGB"):
+        """Blender's three-axis world projection: X faces (y, z), Y faces (x, z), Z faces (x, y) / tile, weights |N|^6
+        (Unreal V runs down and Y is mirrored, so the projected V axes are negated to keep the image upright)."""
+        p = self.wp()
+        X, Y, Z = self.mask(p, "R"), self.mask(p, "G"), self.mask(p, "B")
+        neg = self.const(-1.0)
+        uvs = [self.div(self.append(self.mul(Y, neg), self.mul(Z, neg)), tile_cm),
+               self.div(self.append(X, self.mul(Z, neg)), tile_cm),
+               self.div(self.append(X, Y), tile_cm)]
+        nrm = (self.node(unreal.MaterialExpressionVertexNormalWS), "")
+        w = self.pow(self.un(unreal.MaterialExpressionAbs, nrm), 6.0)
+        ws = [self.mask(w, c) for c in ("R", "G", "B")]
+        acc = None
+        for uv, wi in zip(uvs, ws):
+            s = (self.tex(pname, kind, uv), out)
+            term = self.mul(s, wi)
+            acc = term if acc is None else self.add(acc, term)
+        return self.div(acc, self.add(self.add(ws[0], ws[1]), ws[2]))
+
+    def macro(self, col, rough):
+        """kit 2 macro variation, world XY / 32 m."""
+        m = self.tex("Macro Map", "M", self.world_xy(self.const(3200.0)))
+        half = self.const(0.5)
+        two = self.const(2.0)
+        tint = self.add(self.const(1.0), self.mul(self.mul(self.scalar("Macro Tint", 0.0, "Macro"),
+                                                           self.sub((m, "R"), half)), two))
+        dirt = self.sub(self.const(1.0), self.mul(self.mul(self.scalar("Macro Dirt", 0.0, "Macro"),
+                                                           self.mx(self.sub((m, "B"), half), self.const(0.0))), two))
+        col = self.mul(col, self.mul(tint, dirt))
+        rough = self.add(rough, self.mul(self.mul(self.scalar("Macro Rough", 0.0, "Macro"), self.sub((m, "G"), half)), two))
+        return col, rough
+
+    def grime_k1(self, col, vc):
+        """kit 1: vertex G x noise mask x Grime, multiplied toward Grime Colour (Blender MULTIPLY mix)."""
+        pos = self.mul(self.wp(), self.const3((0.07, 0.07, 0.007)))
+        nz = self.node(unreal.MaterialExpressionNoise, scale=1.0, levels=4, output_min=0.0, output_max=1.0,
+                       quality=1, turbulence=False)
+        names = []
+        try:
+            names = [str(x) for x in MEL.get_material_expression_input_names(nz)]
+        except Exception:  # noqa: BLE001
+            pass
+        for pin in ["Position"] + names + [""]:
+            if MEL.connect_material_expressions(pos[0], pos[1], nz, pin):
+                break
+        else:
+            raise RuntimeError(f"noise position pin not found (inputs {names})")
+        # the noise only modulates the vertex grime (x 0.75-1.0, half the Blender frequency across): Unreal's simplex noise has a wider spread than
+        # Blender's fBm, and the full 0.35-0.65 map-range drew hard vertical stripes over the whole wall (capture r1)
+        mask = self.lerp(self.const(0.75), self.const(1.0), self.maprange((nz, ""), 0.35, 0.65))
+        fac = self.mul(self.mul((vc, "G"), mask), self.scalar("Grime", 0.0, "Weathering"))
+        return self.lerp(col, self.mul(col, self.vector("Grime Colour", (0.40, 0.33, 0.25), "Weathering")), fac)
+
+
+def reset(mat, blend=unreal.BlendMode.BLEND_OPAQUE, two_sided=False):
+    MEL.delete_all_material_expressions(mat)
+    mat.set_editor_property("blend_mode", blend)
+    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_DEFAULT_LIT)
+    mat.set_editor_property("two_sided", two_sided)
+    mat.set_editor_property("use_material_attributes", False)
+    for k in ("used_with_nanite", "used_with_static_lighting"):
+        try:
+            mat.set_editor_property(k, k == "used_with_nanite")
+        except Exception:  # noqa: BLE001
+            pass
+
+
+def tint(g, col):
+    return g.mul(col, g.vector("Tint", (1, 1, 1)))
+
+
+def build_k1(mat):
+    reset(mat)
+    g = G(mat)
+    uv = g.uv0()
+    bc, orm, nm = g.tex("Base Colour Map", "BC", uv), g.tex("ORM Map", "ORM", uv), g.tex("Normal Map", "N", uv)
+    vc = g.vc()
+    col = g.grime_k1(tint(g, (bc, "RGB")), vc)
+    moss = g.triplanar("Moss Mask", "M", g.const(100.0 / 1.3), out="R")
+    mf = g.mul(g.maprange(g.mul((vc, "R"), moss), 0.10, 0.40), g.scalar("Moss", 0.0, "Weathering"))
+    col = g.lerp(col, g.vector("Moss Colour", (0.0931, 0.1195, 0.0423), "Weathering"), mf)   # #56613A linear
+    crest = g.mul((vc, "R"), g.scalar("Crest", 0.0, "Weathering"))
+    g.out(col[0], col[1], MP.MP_BASE_COLOR)
+    g.out(orm, "R", MP.MP_AMBIENT_OCCLUSION)
+    r = g.mul((orm, "G"), g.sub(g.const(1.0), g.mul(crest, g.const(0.38))))
+    g.out(r[0], r[1], MP.MP_ROUGHNESS)
+    m = g.sat(g.add((orm, "B"), g.mul(crest, g.const(0.30))))
+    g.out(m[0], m[1], MP.MP_METALLIC)
+    g.out(nm, "RGB", MP.MP_NORMAL)
+
+
+def build_k1_world(mat):
+    reset(mat)
+    g = G(mat)
+    T = g.scalar("Tile cm", 400.0, "UV")
+    col = g.triplanar("Base Colour Map", "BC", T)
+    orm = g.triplanar("ORM Map", "ORM", T)
+    col = g.grime_k1(tint(g, col), g.vc())
+    g.out(col[0], col[1], MP.MP_BASE_COLOR)
+    for ch, prop in (("R", MP.MP_AMBIENT_OCCLUSION), ("G", MP.MP_ROUGHNESS), ("B", MP.MP_METALLIC)):
+        c = g.mask(orm, ch)
+        g.out(c[0], c[1], prop)
+
+
+def build_ground(mat):
+    reset(mat)
+    g = G(mat)
+    uv = g.uv0()
+    bc, orm, nm = g.tex("Base Colour Map", "BC", uv), g.tex("ORM Map", "ORM", uv), g.tex("Normal Map", "N", uv)
+    vc = g.vc()
+    col, rough = g.macro(tint(g, (bc, "RGB")), (orm, "G"))
+    wd = g.scalar("Wear Dark", 1.0, "Stone")
+    wear = g.add(wd, g.mul((vc, "R"), g.sub(g.const(1.0), wd)))
+    col = g.mul(col, g.lerp(g.const(1.0), wear, g.scalar("Wear On", 0.0, "Stone")))
+    # per-object random (Blender Object Info Random on the instance; here a hash of the actor position)
+    h = g.un(unreal.MaterialExpressionFrac, g.mul(g.un(unreal.MaterialExpressionSine, g.dot(
+        (g.node(unreal.MaterialExpressionObjectPositionWS), ""), g.const3((0.129898, 0.78233, 0.37719))), period=1.0),
+        g.const(43758.5453)))
+    gain = g.add(g.const(1.0), g.mul(g.mul(g.scalar("Instance Tint", 0.0, "Stone"), g.sub(h, g.const(0.5))), g.const(2.0)))
+    hue = g.lerp(g.vector("Hue Warm", (1, 1, 1), "Stone"), g.vector("Hue Cool", (1, 1, 1), "Stone"),
+                 g.un(unreal.MaterialExpressionFrac, g.mul(h, g.const(17.31))))
+    hue = g.lerp(g.const3((1, 1, 1)), hue, g.scalar("Hue Var", 0.0, "Stone"))
+    col = g.mul(g.mul(col, gain), hue)
+    rough = g.sub(rough, g.mul((vc, "R"), g.scalar("Crown Gloss", 0.0, "Stone")))
+    g.out(col[0], col[1], MP.MP_BASE_COLOR)
+    g.out(orm, "R", MP.MP_AMBIENT_OCCLUSION)
+    g.out(rough[0], rough[1], MP.MP_ROUGHNESS)
+    g.out(orm, "B", MP.MP_METALLIC)
+    g.out(nm, "RGB", MP.MP_NORMAL)
+
+
+def build_ground_xy(mat):
+    reset(mat)
+    g = G(mat)
+    uv = g.world_xy(g.scalar("Tile cm", 400.0, "UV"))
+    bc, orm, nm = g.tex("Base Colour Map", "BC", uv), g.tex("ORM Map", "ORM", uv), g.tex("Normal Map", "N", uv)
+    col, rough = g.macro(tint(g, (bc, "RGB")), (orm, "G"))
+    g.out(col[0], col[1], MP.MP_BASE_COLOR)
+    g.out(orm, "R", MP.MP_AMBIENT_OCCLUSION)
+    g.out(rough[0], rough[1], MP.MP_ROUGHNESS)
+    g.out(orm, "B", MP.MP_METALLIC)
+    g.out(nm, "RGB", MP.MP_NORMAL)
+
+
+def build_bedblend(mat):
+    reset(mat)
+    g = G(mat)
+    uv = g.world_xy(g.scalar("Tile cm", 400.0, "UV"))
+    gb, go, gn = g.tex("Gravel BC", "BC", uv), g.tex("Gravel ORM", "ORM", uv), g.tex("Gravel N", "N", uv)
+    sb, so, sn = g.tex("Soil BC", "BC", uv), g.tex("Soil ORM", "ORM", uv), g.tex("Soil N", "N", uv)
+    lum = g.dot((gb, "RGB"), g.const3((0.2126, 0.7152, 0.0722)))
+    t = g.smoothstep(g.add((g.vc(), "R"), g.mul(g.scalar("Blend Contrast", 0.35, "Blend"), g.sub(g.const(0.5), lum))),
+                     0.4, 0.6)
+    col = g.lerp((gb, "RGB"), (sb, "RGB"), t)
+    orm = g.lerp((go, "RGB"), (so, "RGB"), t)
+    col, rough = g.macro(col, g.mask(orm, "G"))
+    g.out(col[0], col[1], MP.MP_BASE_COLOR)
+    a = g.mask(orm, "R")
+    g.out(a[0], a[1], MP.MP_AMBIENT_OCCLUSION)
+    g.out(rough[0], rough[1], MP.MP_ROUGHNESS)
+    n = g.lerp((gn, "RGB"), (sn, "RGB"), t)
+    g.out(n[0], n[1], MP.MP_NORMAL)
+
+
+def build_dressing(mat):
+    reset(mat, two_sided=True)
+    g = G(mat)
+    c = g.mask((g.vc(), ""), "RGB")
+    g.out(c[0], c[1], MP.MP_BASE_COLOR)
+    r = g.scalar("Roughness", 0.78)
+    g.out(r[0], r[1], MP.MP_ROUGHNESS)
+
+
+def build_prop(mat, masked=False):
+    reset(mat, blend=unreal.BlendMode.BLEND_MASKED if masked else unreal.BlendMode.BLEND_OPAQUE, two_sided=masked)
+    g = G(mat)
+    uv = g.uv0()
+    bc, orm, nm = g.tex("Base Colour Map", "BC", uv), g.tex("ORM Map", "ORM", uv), g.tex("Normal Map", "N", uv)
+    base = g.mul(tint(g, (bc, "RGB")), g.lerp(g.const(1.0), (orm, "R"), g.scalar("AO To Base", 0.0)))
+    if masked:
+        g.out(bc, "A", MP.MP_OPACITY_MASK)
+        g.out(base[0], base[1], MP.MP_BASE_COLOR)
+        g.out(orm, "R", MP.MP_AMBIENT_OCCLUSION)
+        g.out(orm, "G", MP.MP_ROUGHNESS)
+        g.out(orm, "B", MP.MP_METALLIC)
+        g.out(nm, "RGB", MP.MP_NORMAL)
+        return
+    vc = g.vc()
+    gf = g.mul((vc, "R"), g.scalar("VC Grime", 0.0, "Weathering"))
+    df = g.mul((vc, "B"), g.scalar("VC Dust", 0.0, "Weathering"))
+    wf = g.mul((vc, "G"), g.scalar("VC Wear", 0.0, "Weathering"))
+    lum = g.dot(base, g.const3((0.2126, 0.7152, 0.0722)))
+    bleach = g.sat(g.mul(g.lerp(lum, base, g.const(0.72)), g.const(2.1)))          # Blender HSV: sat 0.72, value 2.1
+    bare = g.lerp(base, g.vector("Worn Colour", (0.30, 0.29, 0.27), "Weathering"), g.const(0.6))
+    worn = g.lerp(bleach, bare, g.scalar("Worn Metal", 0.0, "Weathering"))
+    col = g.lerp(base, g.vector("Grime Colour", (0.012, 0.008, 0.005), "Weathering"), gf)
+    col = g.lerp(col, g.vector("Dust Colour", (0.16, 0.13, 0.10), "Weathering"), df)
+    col = g.lerp(col, worn, wf)
+    rough = g.sub(g.add((orm, "G"), g.mul((vc, "R"), g.scalar("Grime Rough", 0.0, "Weathering"))),
+                  g.mul((vc, "G"), g.scalar("Wear Rough", 0.0, "Weathering")))
+    g.out(col[0], col[1], MP.MP_BASE_COLOR)
+    g.out(orm, "R", MP.MP_AMBIENT_OCCLUSION)
+    g.out(rough[0], rough[1], MP.MP_ROUGHNESS)
+    g.out(orm, "B", MP.MP_METALLIC)
+    g.out(nm, "RGB", MP.MP_NORMAL)
+
+
+def build_emissive_tex(mat):
+    reset(mat)
+    g = G(mat)
+    uv = g.uv0()
+    bc, orm, nm = g.tex("Base Colour Map", "BC", uv), g.tex("ORM Map", "ORM", uv), g.tex("Normal Map", "N", uv)
+    g.out(bc, "RGB", MP.MP_BASE_COLOR)
+    g.out(orm, "R", MP.MP_AMBIENT_OCCLUSION)
+    g.out(orm, "G", MP.MP_ROUGHNESS)
+    g.out(orm, "B", MP.MP_METALLIC)
+    g.out(nm, "RGB", MP.MP_NORMAL)
+    e = g.mul((bc, "RGB"), g.scalar("Emissive Intensity", 1.0, "Emission"))
+    g.out(e[0], e[1], MP.MP_EMISSIVE_COLOR)
+
+
+def build_flat(mat):
+    reset(mat)
+    g = G(mat)
+    for name, v, prop in (("Base Colour", None, MP.MP_BASE_COLOR), ("Roughness", 0.5, MP.MP_ROUGHNESS),
+                          ("Metallic", 0.0, MP.MP_METALLIC), ("Specular", 0.5, MP.MP_SPECULAR)):
+        n = g.vector(name, (0.5, 0.5, 0.5)) if v is None else g.scalar(name, v)
+        g.out(n[0], n[1], prop)
+
+
+def build_emissive_flat(mat):
+    reset(mat)
+    g = G(mat)
+    b = g.vector("Base Colour", (0.5, 0.5, 0.5))
+    g.out(b[0], b[1], MP.MP_BASE_COLOR)
+    r = g.scalar("Roughness", 0.4)
+    g.out(r[0], r[1], MP.MP_ROUGHNESS)
+    e = g.mul(g.vector("Emissive Colour", (1, 1, 1), "Emission"), g.scalar("Emissive Intensity", 1.0, "Emission"))
+    g.out(e[0], e[1], MP.MP_EMISSIVE_COLOR)
+
+
+MASTERS = {"M_DJ_K1_Master": build_k1, "M_DJ_K1World_Master": build_k1_world, "M_DJ_Ground_Master": build_ground,
+           "M_DJ_GroundXY_Master": build_ground_xy, "M_DJ_BedBlend_Master": build_bedblend,
+           "M_DJ_Dressing_Master": build_dressing, "M_DJ_Prop_Master": build_prop,
+           "M_DJ_PropMasked_Master": lambda m: build_prop(m, masked=True),
+           "M_DJ_EmissiveTex_Master": build_emissive_tex, "M_DJ_Flat_Master": build_flat,
+           "M_DJ_EmissiveFlat_Master": build_emissive_flat}
+
+
+def main():
+    t0 = time.time()
+    rep = {"engine": unreal.SystemLibrary.get_engine_version(), "masters": {}, "instances": {}, "meshes": {}}
+    masters = {}
+    for name, fn in MASTERS.items():
+        e = {}
+        try:
+            mat, created = get_or_create(f"{S.MASTER_DIR}/{name}", unreal.Material, unreal.MaterialFactoryNew())
+            fn(mat)
+            MEL.layout_material_expressions(mat)
+            MEL.recompile_material(mat)
+            e = {"created": created, "expressions": int(MEL.get_num_material_expressions(mat)),
+                 "saved": bool(EAL.save_loaded_asset(mat, False))}
+            masters[name] = mat
+        except Exception:  # noqa: BLE001
+            e["error"] = traceback.format_exc()[-2000:]
+        rep["masters"][name] = e
+    mis = {}
+    for name, r in sorted(L["materials"].items()):
+        e = {"master": r["master"]}
+        try:
+            mi, created = get_or_create(f"{r['ue_dir']}/{name}", unreal.MaterialInstanceConstant,
+                                        unreal.MaterialInstanceConstantFactoryNew())
+            MEL.clear_all_material_instance_parameters(mi)
+            MEL.set_material_instance_parent(mi, masters[r["master"]])
+            for k, v in r["scalars"].items():
+                MEL.set_material_instance_scalar_parameter_value(mi, k, float(v))
+            for k, v in r["vectors"].items():
+                MEL.set_material_instance_vector_parameter_value(mi, k, lc(v))
+            for k, v in r["textures"].items():
+                t = unreal.load_asset(S.tex_path(L, v))
+                if t is None:
+                    raise RuntimeError(f"texture {v} missing")
+                MEL.set_material_instance_texture_parameter_value(mi, k, t)
+            MEL.update_material_instance(mi)
+            e.update({"created": created, "readback": {k: round(float(MEL.get_material_instance_scalar_parameter_value(mi, k)), 4)
+                                                       for k in r["scalars"]},
+                      "saved": bool(EAL.save_loaded_asset(mi, False))})
+            mis[name] = mi
+        except Exception:  # noqa: BLE001
+            e["error"] = traceback.format_exc()[-1500:]
+        rep["instances"][name] = e
+    for piece, p in sorted(L["pieces"].items()):
+        if p["kit"] == "greybox":
+            continue
+        e = {"slots": {}, "unmatched": []}
+        try:
+            mesh = unreal.load_asset(S.mesh_path(L, piece))
+            for i, s in enumerate(mesh.get_editor_property("static_materials")):
+                slot = str(s.get_editor_property("material_slot_name"))
+                mi = mis.get(slot) or (unreal.load_asset(S.mat_path(L, slot)) if slot.startswith("M_DGB_") else None)
+                if mi is None:
+                    e["unmatched"].append(slot)
+                    continue
+                mesh.set_material(i, mi)
+                e["slots"][slot] = mi.get_path_name()
+            e["saved"] = bool(EAL.save_loaded_asset(mesh, False))
+        except Exception:  # noqa: BLE001
+            e["error"] = traceback.format_exc()[-1500:]
+        rep["meshes"][piece] = e
+    rep["errors"] = [f"{sec}:{k}" for sec in ("masters", "instances", "meshes") for k, v in rep[sec].items() if v.get("error")]
+    rep["unmatched_slots"] = {k: v["unmatched"] for k, v in rep["meshes"].items() if v.get("unmatched")}
+    rep["passed"] = not rep["errors"] and not rep["unmatched_slots"] and len(mis) == len(L["materials"])
+    rep["sec"] = round(time.time() - t0, 1)
+    S.write_json(S.SC_OUT / "materials.json", rep)
+    unreal.log(f"DJ_STEP_DONE sc_materials passed={rep['passed']} masters={len(masters)} instances={len(mis)} "
+               f"meshes={len(rep['meshes'])} errors={len(rep['errors'])}")
+
+
+main()

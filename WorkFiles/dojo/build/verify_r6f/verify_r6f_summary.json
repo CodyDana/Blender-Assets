@@ -1,0 +1,31 @@
+{
+ "date": "2026-09-30",
+ "verifier": "independent final r6 verifier (verify_r6f): fresh headless Blender + fresh read-only UE commandlets, one at a time, none left running; outputs only here",
+ "blender": {
+  "fbx_audit": "253 pieces, 0 errors, every SM_ has UCX with valid names; changed vs verify_r6 only SM_DKX_FarTown + SM_DKX_Ridge1-4 (the f1 outside rebuild); outside qa_report 45 FBX, 0 hard fails",
+  "traversal": "walk PASS (47 routes, 21 CONTROL, r0.30 + r0.35, 1595 Pawn hulls), climb PASS, gate/hall/outbuilding/corridor/shed/pavilion roof walks PASS, clearance + ground holes: 0 leaf diffs vs verify_r6",
+  "climb_cm": {"wall": [198.1, 193.7], "pier": 123.1, "cistern": 122.3, "eave_pad": 172.9, "ac": 197.4, "shed_crate": 123.1, "shed_band": 122.9, "pav_crate": 122.3, "pav_pad": 197.9, "vending": 173.1, "plinth": 98.1, "veranda": 48.1, "hurdle": 111.8}
+ },
+ "unreal_verify": "ue_verify.json 13/13 gates: 253/253 meshes (97 Nanite, full fallback), 1110 instances, bounds err 0.0005 cm non-Nanite / 0.002 cm Nanite fallback, grey-box only SM_DGB_Tree x2 + hidden SM_DGB_Boundary_1v1, decals 86/86 = decals.json, 14 lights / street lamps outside only, 24 TRV markers + GASP trace, in-engine walk, group 14/14 tagged",
+ "emblem": "T_DKD_Emblem_BC/N/ORM pixel-identical to T_AK_Emblem_* (sha256 same as verify_r5); 3 plaques unmoved",
+ "alley_own": {
+  "flood_1v1_r30": "0 target cells, 3,123,254 reached (offset lattice 0.1 x 0.15 m)",
+  "flood_1v1_r35": "0 target cells, 3,078,270 reached",
+  "flood_br_r30": "all 9 targets reached (group separable)",
+  "arcs_1v1_r30": "0 entries / 1,016,400 attempts from 4,235 launch points (walk, jump, double, late double; 24 headings; 350/500/700)",
+  "arcs_1v1_r35": "0 entries / 998,160 attempts",
+  "arcs_br_r30": "52,674 entries into all 9 targets / 380,160 attempts",
+  "mantles": "1,257 GASP-valid mantle samples (24 markers, 0.25 m), 0 leaks (also 0 with the Pawn path ignored)",
+  "note": "ue_alley_own_arcs2_SEAM_ARTEFACT: 5,963 'entries' came from launch points at X 7.0 Y >= 32 inside a 14 cm seam between two of MY target boxes (the sealed area behind the storehouse roof cut, unreachable per both floods); seam closed, rerun arcs3 = 0"
+ },
+ "captures": {
+  "near_black_cells_over_10pct": {"CU_Lantern": [[2, 0, 0.132], [2, 1, 0.116]], "CU_Taiko": [[1, 3, 0.130]]},
+  "near_black_judgement": "true geometric shade: the enclosed void under the veranda deck; the crevices between the shaded wall-cap tile rolls",
+  "blown": "min channel >= 250: 4-5 px sun-disc specks in 4 sky views; nothing else",
+  "sky_banding": "12 sky boxes, 0 missing codes, 0 contour px",
+  "tiles_sunlit_RB": "brightest-30% of sunlit tile faces: gate 1.12-1.15, pavilion E 0.96-1.08, E wall cap sunlit part 1.14-1.20 (MARGINAL; its sunlit area median is 1.30-1.51, whole-cap tile box 1.22)",
+  "timber_sat": "sunlit 0.23-0.58 (max 0.64 whole-box on the pavilion E post); shaded pavilion top beam 0.72 (not gated)",
+  "gravel": "hue 18.9-26.4 deg (13 of 14 boxes below 25), sat 0.19-0.36, R/B 1.24-1.55: warm, not grey-white, but outside the 25-40 band; references measure 4-18 deg"
+ },
+ "failed": ["gravel hue band 25-40 (18.9-24.7 deg in 13/14 boxes)"]
+}

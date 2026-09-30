@@ -1,0 +1,2181 @@
+{
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "errors": [],
+ "traversal_assets": [
+  {
+   "path": "/Game/Blueprints/AC_TraversalLogic",
+   "class": "Blueprint"
+  },
+  {
+   "path": "/Game/Blueprints/AnimNotifies/E_TraversalBlendOutCondition",
+   "class": "UserDefinedEnum"
+  },
+  {
+   "path": "/Game/Blueprints/Data/E_TraversalActionType",
+   "class": "UserDefinedEnum"
+  },
+  {
+   "path": "/Game/Blueprints/Data/S_CharacterPropertiesForTraversal",
+   "class": "UserDefinedStruct"
+  },
+  {
+   "path": "/Game/Blueprints/Data/S_CHT_TraversalMontages_IN",
+   "class": "UserDefinedStruct"
+  },
+  {
+   "path": "/Game/Blueprints/Data/S_CHT_TraversalMontages_OUT",
+   "class": "UserDefinedStruct"
+  },
+  {
+   "path": "/Game/Blueprints/Data/S_TraversalCheckInputs",
+   "class": "UserDefinedStruct"
+  },
+  {
+   "path": "/Game/Blueprints/Data/S_TraversalCheckResult",
+   "class": "UserDefinedStruct"
+  },
+  {
+   "path": "/Game/Blueprints/Data/S_TraversalChooserInputs",
+   "class": "ObjectRedirector"
+  },
+  {
+   "path": "/Game/Blueprints/Data/S_TraversalChooserOutputs",
+   "class": "ObjectRedirector"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/ExperimentalStateMachineData/PSS_SM_Mover_TraversalTransitions",
+   "class": "PoseSearchSchema"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Channels/PSC_DistanceToTraversalObject",
+   "class": "Blueprint"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Channels/PSC_Traversal_Head",
+   "class": "Blueprint"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Channels/PSC_Traversal_Pos",
+   "class": "Blueprint"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Databases/PSD_Traversal",
+   "class": "PoseSearchDatabase"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Databases/Dense/PSD_Dense_Jumps_FromTraversal",
+   "class": "PoseSearchDatabase"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Databases/Dense/PSD_Dense_Stand_Run_FromTraversal",
+   "class": "PoseSearchDatabase"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Databases/Dense/PSD_Dense_Stand_Walk_FromTraversal",
+   "class": "PoseSearchDatabase"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Databases/Relaxed/PSD_Relaxed_Stand_Jumps_FromTraversal",
+   "class": "PoseSearchDatabase"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Databases/Relaxed/PSD_Relaxed_Stand_Run_FromTraversal",
+   "class": "PoseSearchDatabase"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Databases/Relaxed/PSD_Relaxed_Stand_Walk_FromTraversal",
+   "class": "PoseSearchDatabase"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Schemas/PSS_Traversal",
+   "class": "PoseSearchSchema"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/MotionMatchingData/Schemas/PSS_Traversal_Chooser",
+   "class": "PoseSearchSchema"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/CHT_TraversalAnims",
+   "class": "ChooserTable"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/CHT_TraversalAnims_PoseMatch",
+   "class": "ObjectRedirector"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/CHT_TraversalMontages_CMC",
+   "class": "ChooserTable"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/CHT_TraversalMontages_Mover",
+   "class": "ChooserTable"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Cliff/AM_M_Neutral_Traversal_Catch_Cliff_high_standF",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Cliff/AM_M_Relaxed_Traversal_Catch_Cliff_high_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Cliff/M_Neutral_Traversal_Catch_Cliff_high_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Cliff/M_Relaxed_Traversal_Catch_Cliff_high_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/AM_M_Neutral_Traversal_Catch_Hurdle_high_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/AM_M_Neutral_Traversal_Catch_Hurdle_low_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/AM_M_Neutral_Traversal_Catch_Hurdle_med_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/AM_M_Relaxed_Traversal_Catch_Hurdle_high_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/AM_M_Relaxed_Traversal_Catch_Hurdle_low_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/AM_M_Relaxed_Traversal_Catch_Hurdle_med_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_high_run",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_high_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_high_walk",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_low_run",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_low_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_low_walk",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_med_run",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_med_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Neutral_Traversal_Catch_Hurdle_med_walk",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Relaxed_Traversal_Catch_Hurdle_high_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Relaxed_Traversal_Catch_Hurdle_low_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Hurdle/M_Relaxed_Traversal_Catch_Hurdle_med_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/AM_M_Neutral_Traversal_Catch_Mantle_low_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/AM_M_Neutral_Traversal_Catch_Mantle_med_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/AM_M_Relaxed_Traversal_Catch_Mantle_low_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/AM_M_Relaxed_Traversal_Catch_Mantle_med_stand",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Neutral_Traversal_Catch_Mantle_low_run",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Neutral_Traversal_Catch_Mantle_low_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Neutral_Traversal_Catch_Mantle_low_walk",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Neutral_Traversal_Catch_Mantle_med_run",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Neutral_Traversal_Catch_Mantle_med_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Neutral_Traversal_Catch_Mantle_med_walk",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Relaxed_Traversal_Catch_Mantle_low_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Mantle/M_Relaxed_Traversal_Catch_Mantle_med_stand",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/AM_M_Neutral_Traversal_Catch_Vault_high",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/AM_M_Neutral_Traversal_Catch_Vault_low",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/AM_M_Neutral_Traversal_Catch_Vault_med",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/M_Neutral_Traversal_Catch_Vault_high",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/M_Neutral_Traversal_Catch_Vault_low",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/M_Neutral_Traversal_Catch_Vault_med",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/M_Relaxed_Traversal_Catch_Vault_high",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/M_Relaxed_Traversal_Catch_Vault_low",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Catch/Vault/M_Relaxed_Traversal_Catch_Vault_med",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Neutral_Traversal_Climb_Start_2_5_run_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Neutral_Traversal_Climb_Start_2_5_run_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Neutral_Traversal_Climb_Start_2_5_stand_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Neutral_Traversal_Climb_Start_2_5_stand_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Neutral_Traversal_Climb_Start_2_5_walk_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Neutral_Traversal_Climb_Start_2_5_walk_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Relaxed_Traversal_Climb_Start_2_5_run_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Relaxed_Traversal_Climb_Start_2_5_run_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Relaxed_Traversal_Climb_Start_2_5_stand_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Relaxed_Traversal_Climb_Start_2_5_stand_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Relaxed_Traversal_Climb_Start_2_5_walk_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/AM_M_Relaxed_Traversal_Climb_Start_2_5_walk_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Neutral_Traversal_Climb_Start_2_5_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Neutral_Traversal_Climb_Start_2_5_run_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Neutral_Traversal_Climb_Start_2_5_stand_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Neutral_Traversal_Climb_Start_2_5_stand_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Neutral_Traversal_Climb_Start_2_5_walk_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Neutral_Traversal_Climb_Start_2_5_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Relaxed_Traversal_Climb_Start_2_5_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Relaxed_Traversal_Climb_Start_2_5_run_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Relaxed_Traversal_Climb_Start_2_5_stand_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Relaxed_Traversal_Climb_Start_2_5_stand_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Relaxed_Traversal_Climb_Start_2_5_walk_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Climb/M_Relaxed_Traversal_Climb_Start_2_5_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_run_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_run_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_run_F_V2_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_run_F_V2_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_stand_F_V2_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_stand_F_V2_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_walk_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_walk_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_walk_F_V2_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Neutral_Traversal_Hurdle_1_0_walk_F_V2_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_run_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_run_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_run_F_V2_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_run_F_V2_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_stand_F_V2_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_stand_F_V2_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_walk_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_walk_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_walk_F_V2_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/AM_M_Relaxed_Traversal_Hurdle_1_0_walk_F_V2_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_run_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_run_F_V2_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_run_F_V2_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_stand_F_V2_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_stand_F_V2_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_walk_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_walk_F_V2_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Neutral_Traversal_Hurdle_1_0_walk_F_V2_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_run_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_run_F_V2_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_run_F_V2_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_stand_F_V2_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_stand_F_V2_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_walk_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_walk_F_V2_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Hurdle/M_Relaxed_Traversal_Hurdle_1_0_walk_F_V2_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Neutral_Traversal_Mantle_1_0_run_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Neutral_Traversal_Mantle_1_0_run_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Neutral_Traversal_Mantle_1_0_stand_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Neutral_Traversal_Mantle_1_0_stand_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Neutral_Traversal_Mantle_1_0_walk_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Neutral_Traversal_Mantle_1_0_walk_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Relaxed_Traversal_Mantle_1_0_run_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Relaxed_Traversal_Mantle_1_0_run_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Relaxed_Traversal_Mantle_1_0_stand_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Relaxed_Traversal_Mantle_1_0_stand_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Relaxed_Traversal_Mantle_1_0_walk_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/AM_M_Relaxed_Traversal_Mantle_1_0_walk_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Neutral_Traversal_Mantle_1_0_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Neutral_Traversal_Mantle_1_0_run_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Neutral_Traversal_Mantle_1_0_stand_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Neutral_Traversal_Mantle_1_0_stand_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Neutral_Traversal_Mantle_1_0_walk_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Neutral_Traversal_Mantle_1_0_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Relaxed_Traversal_Mantle_1_0_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Relaxed_Traversal_Mantle_1_0_run_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Relaxed_Traversal_Mantle_1_0_stand_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Relaxed_Traversal_Mantle_1_0_stand_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Relaxed_Traversal_Mantle_1_0_walk_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Mantle/M_Relaxed_Traversal_Mantle_1_0_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/AM_M_Neutral_Traversal_Vault_1_0_run_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/AM_M_Neutral_Traversal_Vault_1_0_stand_F_Lfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/AM_M_Neutral_Traversal_Vault_1_0_walk_F_Rfoot",
+   "class": "AnimMontage"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/M_Neutral_Traversal_Vault_1_0_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/M_Neutral_Traversal_Vault_1_0_stand_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/M_Neutral_Traversal_Vault_1_0_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/M_Relaxed_Traversal_Vault_1_0_run_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/M_Relaxed_Traversal_Vault_1_0_stand_F_Lfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/Vault/M_Relaxed_Traversal_Vault_1_0_walk_F_Rfoot",
+   "class": "AnimSequence"
+  },
+  {
+   "path": "/Game/Input/IA_Traverse",
+   "class": "InputAction"
+  },
+  {
+   "path": "/Game/Levels/LevelPrototyping/LevelBlock_Traversable",
+   "class": "Blueprint"
+  }
+ ],
+ "game_mode": {
+  "default_pawn_class": "/Game/Blueprints/SandboxCharacter_Mover.SandboxCharacter_Mover_C",
+  "player_controller_class": "/Game/Blueprints/PC_Sandbox.PC_Sandbox_C",
+  "hud_class": "/Script/Engine.HUD",
+  "game_state_class": "/Script/Engine.GameStateBase",
+  "player_state_class": "/Script/Engine.PlayerState",
+  "spectator_class": "/Script/Engine.SpectatorPawn",
+  "parent": "/Game/Blueprints/GM_Sandbox.GM_Sandbox",
+  "DefaultLevel_world_settings_game_mode": "/Game/Blueprints/GM_Sandbox.GM_Sandbox_C",
+  "DefaultLevel_actor_classes": {
+   "AmbientSound": 1,
+   "PlayerStart": 1,
+   "Teleporter_Destination_C": 7,
+   "Teleporter_Sender_C": 15,
+   "Landscape": 1,
+   "Teleporter_Level_C": 2,
+   "SpinningArrow_C": 1,
+   "LevelButton_C": 6,
+   "TargetDummy_C": 1,
+   "LevelVisuals_C": 1,
+   "LevelBlock_C": 33,
+   "LevelBlock_Traversable_C": 28,
+   "EUB_OpenWidget_C": 3
+  },
+  "DefaultLevel_traversable_blocks": [
+   {
+    "label": "LevelBlock_Traversable33",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     400.0,
+     120.0
+    ],
+    "bottom_z": 200.0,
+    "top_z": 320.0,
+    "scale": [
+     0.2,
+     4.0,
+     1.2
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable32",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     200.0
+    ],
+    "bottom_z": 367.2,
+    "top_z": 567.2,
+    "scale": [
+     0.2,
+     2.0,
+     2.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable35",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     120.0
+    ],
+    "bottom_z": 530.0,
+    "top_z": 650.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.2
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable36",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     200.0
+    ],
+    "bottom_z": 420.0,
+    "top_z": 620.0,
+    "scale": [
+     0.2,
+     2.0,
+     2.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable2",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     50.1,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 100.0,
+    "scale": [
+     0.5,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable4",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     400.4,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 100.0,
+    "scale": [
+     4.0,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable7",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 250.0,
+    "top_z": 350.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable8",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 100.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable11",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     50.1,
+     100.0,
+     100.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 100.0,
+    "scale": [
+     0.5,
+     1.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable12",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     700.7,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 100.0,
+    "scale": [
+     7.0,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable13",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     400.4,
+     200.0,
+     250.0
+    ],
+    "bottom_z": 100.0,
+    "top_z": 350.0,
+    "scale": [
+     4.0,
+     2.0,
+     2.5
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable14",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 350.0,
+    "top_z": 450.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable15",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 100.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable17",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     50.1,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 20.0,
+    "top_z": 120.0,
+    "scale": [
+     0.5,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable9",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 100.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     100.1,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 350.0,
+    "top_z": 450.0,
+    "scale": [
+     1.0,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable22",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     50.1,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 350.0,
+    "top_z": 450.0,
+    "scale": [
+     0.5,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable23",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     100.1,
+     200.0,
+     250.0
+    ],
+    "bottom_z": 450.0,
+    "top_z": 700.0,
+    "scale": [
+     1.0,
+     2.0,
+     2.5
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable24",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     600.6,
+     200.0,
+     250.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 250.0,
+    "scale": [
+     6.0,
+     2.0,
+     2.5
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable25",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     600.6,
+     200.0,
+     250.0
+    ],
+    "bottom_z": 0.0,
+    "top_z": 250.0,
+    "scale": [
+     6.0,
+     2.0,
+     2.5
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable19",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 400.0,
+    "top_z": 500.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable20",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     200.0
+    ],
+    "bottom_z": 400.0,
+    "top_z": 600.0,
+    "scale": [
+     0.2,
+     2.0,
+     2.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable21",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     220.0
+    ],
+    "bottom_z": 530.0,
+    "top_z": 750.0,
+    "scale": [
+     0.2,
+     2.0,
+     2.2
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable26",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 420.0,
+    "top_z": 520.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable27",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     200.0
+    ],
+    "bottom_z": 510.0,
+    "top_z": 710.0,
+    "scale": [
+     0.2,
+     2.0,
+     2.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable28",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     400.0,
+     200.0
+    ],
+    "bottom_z": 300.0,
+    "top_z": 500.0,
+    "scale": [
+     0.2,
+     4.0,
+     2.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable29",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     400.0,
+     100.0
+    ],
+    "bottom_z": 520.0,
+    "top_z": 620.0,
+    "scale": [
+     0.2,
+     4.0,
+     1.0
+    ],
+    "yaw": 0.0
+   },
+   {
+    "label": "LevelBlock_Traversable30",
+    "class": "LevelBlock_Traversable_C",
+    "size_cm": [
+     20.0,
+     200.0,
+     100.0
+    ],
+    "bottom_z": 530.0,
+    "top_z": 630.0,
+    "scale": [
+     0.2,
+     2.0,
+     1.0
+    ],
+    "yaw": 0.0
+   }
+  ],
+  "DefaultLevel_traversable_heights_cm": [
+   100.0,
+   120.0,
+   200.0,
+   220.0,
+   250.0
+  ]
+ },
+ "character": {
+  "capsule": {
+   "capsule_radius": 30.0,
+   "capsule_half_height": 86.0,
+   "collision_profile": "Custom"
+  },
+  "movement": {
+   "max_step_height": 45.0,
+   "walkable_floor_angle": 44.76508331298828,
+   "walkable_floor_z": 0.7099999785423279,
+   "jump_z_velocity": 500.0,
+   "gravity_scale": 1.0,
+   "max_walk_speed": 500.0,
+   "max_walk_speed_crouched": 300.0,
+   "max_acceleration": 500.0,
+   "air_control": 0.25,
+   "ledge_check_threshold": 4.0,
+   "perch_radius_threshold": 20.0,
+   "perch_additional_height": 40.0,
+   "can_walk_off_ledges": true,
+   "nav_agent_props": "<Struct 'NavAgentProperties' (0x00000236DD031570) {can_crouch: True, can_jump: True, can_walk: True, can_swim: True, can_fly: False, agent_radius: -1.000000, agent_height: -1.000000, agent_step_height: -1.000000, nav_walking_search_height_scale: 0.500000, preferred_nav_data: {}}>"
+  },
+  "jump_max_count": 1,
+  "jump_max_hold_time": 0.0,
+  "components": [
+   {
+    "name": "None",
+    "class": "SandboxCharacter_CMC_C"
+   },
+   {
+    "name": "SpringArm",
+    "class": "SpringArmComponent"
+   },
+   {
+    "name": "GameplayCamera",
+    "class": "GameplayCameraComponent"
+   },
+   {
+    "name": "VisualOverride",
+    "class": "ChildActorComponent"
+   },
+   {
+    "name": "Camera(NotUsedByDefault)",
+    "class": "CameraComponent"
+   },
+   {
+    "name": "Camera(NotUsedByDefault)",
+    "class": "CameraComponent"
+   },
+   {
+    "name": "CapsuleComponent",
+    "class": "CapsuleComponent"
+   },
+   {
+    "name": "ArrowComponent",
+    "class": "ArrowComponent"
+   },
+   {
+    "name": "Mesh",
+    "class": "SkeletalMeshComponent"
+   },
+   {
+    "name": "CharacterMovement",
+    "class": "CharacterMovementComponent"
+   },
+   {
+    "name": "AC_PreCMCTick",
+    "class": "AC_PreCMCTick_C"
+   },
+   {
+    "name": "AC_FoleyEvents",
+    "class": "AC_FoleyEvents_C"
+   },
+   {
+    "name": "MotionWarping",
+    "class": "MotionWarpingComponent"
+   },
+   {
+    "name": "AC_TraversalLogic",
+    "class": "AC_TraversalLogic_C"
+   },
+   {
+    "name": "BP_VisualOverrideManager",
+    "class": "AC_VisualOverrideManager_C"
+   },
+   {
+    "name": "AC_SmartObjectAnimation",
+    "class": "AC_SmartObjectAnimation_C"
+   }
+  ]
+ },
+ "traversable_block": {
+  "parent_class": null,
+  "cdo_vars": {
+   "min_ledge_width": null,
+   "MinLedgeWidth": 60.0,
+   "opposite_ledges": null,
+   "OppositeLedges": "{}",
+   "ledges": "[]",
+   "Ledges": "[]"
+  },
+  "components": [
+   {
+    "name": "None",
+    "class": "LevelBlock_Traversable_C"
+   },
+   {
+    "name": "Ledge_4",
+    "class": "SplineComponent",
+    "n_points": 2,
+    "points_local": [
+     [
+      100.0,
+      0.0,
+      100.0
+     ],
+     [
+      100.0,
+      100.0,
+      100.0
+     ]
+    ],
+    "tags": []
+   },
+   {
+    "name": "Ledge_3",
+    "class": "SplineComponent",
+    "n_points": 2,
+    "points_local": [
+     [
+      0.0,
+      0.0,
+      100.0
+     ],
+     [
+      0.0,
+      100.0,
+      100.0
+     ]
+    ],
+    "tags": []
+   },
+   {
+    "name": "Ledge_2",
+    "class": "SplineComponent",
+    "n_points": 2,
+    "points_local": [
+     [
+      0.0,
+      100.0,
+      100.0
+     ],
+     [
+      100.0,
+      100.0,
+      100.0
+     ]
+    ],
+    "tags": []
+   },
+   {
+    "name": "Ledge_1",
+    "class": "SplineComponent",
+    "n_points": 2,
+    "points_local": [
+     [
+      0.0,
+      0.0,
+      100.0
+     ],
+     [
+      100.0,
+      0.0,
+      100.0
+     ]
+    ],
+    "tags": []
+   },
+   {
+    "name": "StaticMesh",
+    "class": "StaticMeshComponent",
+    "mesh": "/Game/Levels/LevelPrototyping/Meshes/SM_Cube.SM_Cube",
+    "collision_profile": "BlockAllDynamic",
+    "relative_scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "relative_location": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "name": "TextRender",
+    "class": "TextRenderComponent"
+   },
+   {
+    "name": "TextRender",
+    "class": "TextRenderComponent"
+   },
+   {
+    "name": "StaticMesh",
+    "class": "StaticMeshComponent",
+    "mesh": "/Game/Levels/LevelPrototyping/Meshes/SM_Cube.SM_Cube",
+    "collision_profile": "BlockAllDynamic",
+    "relative_scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "relative_location": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "name": "DefaultSceneRoot",
+    "class": "SceneComponent"
+   }
+  ],
+  "t3d": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\LevelBlock_Traversable.t3d",
+  "spawn_tests": [
+   {
+    "scale": [
+     1,
+     1,
+     1
+    ],
+    "bounds_min": [
+     -0.1,
+     0.0,
+     0.0
+    ],
+    "bounds_max": [
+     100.0,
+     100.0,
+     100.0
+    ],
+    "splines": {
+     "Ledge_1": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_2": [
+      {
+       "loc": [
+        0.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_3": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        0.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_4": [
+      {
+       "loc": [
+        100.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    "meshes": [
+     {
+      "name": "StaticMesh",
+      "mesh": "/Game/Levels/LevelPrototyping/Meshes/SM_Cube.SM_Cube",
+      "profile": "TraversalObjectPreset",
+      "responses": {
+       "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+       "object_type": "<CollisionChannel.ECC_WORLD_DYNAMIC: 1>",
+       "ECC_CAMERA": "ECR_BLOCK: 2>",
+       "ECC_DESTRUCTIBLE": "ECR_BLOCK: 2>",
+       "ECC_MOUSE": "ECR_IGNORE: 0>",
+       "ECC_OBSTACLE": "ECR_IGNORE: 0>",
+       "ECC_PAWN": "ECR_BLOCK: 2>",
+       "ECC_PHYSICS_BODY": "ECR_BLOCK: 2>",
+       "ECC_TRAVERSABLE": "ECR_BLOCK: 2>",
+       "ECC_VEHICLE": "ECR_BLOCK: 2>",
+       "ECC_VISIBILITY": "ECR_BLOCK: 2>",
+       "ECC_WORLD_DYNAMIC": "ECR_BLOCK: 2>",
+       "ECC_WORLD_STATIC": "ECR_BLOCK: 2>"
+      }
+     }
+    ]
+   },
+   {
+    "scale": [
+     2,
+     1,
+     1
+    ],
+    "bounds_min": [
+     -0.2,
+     0.0,
+     0.0
+    ],
+    "bounds_max": [
+     200.0,
+     100.0,
+     100.0
+    ],
+    "splines": {
+     "Ledge_1": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        200.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_2": [
+      {
+       "loc": [
+        0.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        200.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_3": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        0.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_4": [
+      {
+       "loc": [
+        200.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        200.0,
+        100.0,
+        100.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    "meshes": [
+     {
+      "name": "StaticMesh",
+      "mesh": "/Game/Levels/LevelPrototyping/Meshes/SM_Cube.SM_Cube",
+      "profile": "TraversalObjectPreset",
+      "responses": {
+       "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+       "object_type": "<CollisionChannel.ECC_WORLD_DYNAMIC: 1>",
+       "ECC_CAMERA": "ECR_BLOCK: 2>",
+       "ECC_DESTRUCTIBLE": "ECR_BLOCK: 2>",
+       "ECC_MOUSE": "ECR_IGNORE: 0>",
+       "ECC_OBSTACLE": "ECR_IGNORE: 0>",
+       "ECC_PAWN": "ECR_BLOCK: 2>",
+       "ECC_PHYSICS_BODY": "ECR_BLOCK: 2>",
+       "ECC_TRAVERSABLE": "ECR_BLOCK: 2>",
+       "ECC_VEHICLE": "ECR_BLOCK: 2>",
+       "ECC_VISIBILITY": "ECR_BLOCK: 2>",
+       "ECC_WORLD_DYNAMIC": "ECR_BLOCK: 2>",
+       "ECC_WORLD_STATIC": "ECR_BLOCK: 2>"
+      }
+     }
+    ]
+   },
+   {
+    "scale": [
+     1,
+     3,
+     1
+    ],
+    "bounds_min": [
+     -0.1,
+     0.0,
+     0.0
+    ],
+    "bounds_max": [
+     100.0,
+     300.0,
+     100.0
+    ],
+    "splines": {
+     "Ledge_1": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_2": [
+      {
+       "loc": [
+        0.0,
+        300.0,
+        100.0
+       ],
+       "up_normal": [
+        0.0,
+        1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        300.0,
+        100.0
+       ],
+       "up_normal": [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_3": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        0.0,
+        300.0,
+        100.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_4": [
+      {
+       "loc": [
+        100.0,
+        0.0,
+        100.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        300.0,
+        100.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    "meshes": [
+     {
+      "name": "StaticMesh",
+      "mesh": "/Game/Levels/LevelPrototyping/Meshes/SM_Cube.SM_Cube",
+      "profile": "TraversalObjectPreset",
+      "responses": {
+       "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+       "object_type": "<CollisionChannel.ECC_WORLD_DYNAMIC: 1>",
+       "ECC_CAMERA": "ECR_BLOCK: 2>",
+       "ECC_DESTRUCTIBLE": "ECR_BLOCK: 2>",
+       "ECC_MOUSE": "ECR_IGNORE: 0>",
+       "ECC_OBSTACLE": "ECR_IGNORE: 0>",
+       "ECC_PAWN": "ECR_BLOCK: 2>",
+       "ECC_PHYSICS_BODY": "ECR_BLOCK: 2>",
+       "ECC_TRAVERSABLE": "ECR_BLOCK: 2>",
+       "ECC_VEHICLE": "ECR_BLOCK: 2>",
+       "ECC_VISIBILITY": "ECR_BLOCK: 2>",
+       "ECC_WORLD_DYNAMIC": "ECR_BLOCK: 2>",
+       "ECC_WORLD_STATIC": "ECR_BLOCK: 2>"
+      }
+     }
+    ]
+   },
+   {
+    "scale": [
+     1,
+     1,
+     2
+    ],
+    "bounds_min": [
+     -0.1,
+     0.0,
+     0.0
+    ],
+    "bounds_max": [
+     100.0,
+     100.0,
+     200.0
+    ],
+    "splines": {
+     "Ledge_1": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        200.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        0.0,
+        200.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_2": [
+      {
+       "loc": [
+        0.0,
+        100.0,
+        200.0
+       ],
+       "up_normal": [
+        0.0,
+        1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        100.0,
+        200.0
+       ],
+       "up_normal": [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_3": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        200.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        0.0,
+        100.0,
+        200.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_4": [
+      {
+       "loc": [
+        100.0,
+        0.0,
+        200.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        100.0,
+        100.0,
+        200.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    "meshes": [
+     {
+      "name": "StaticMesh",
+      "mesh": "/Game/Levels/LevelPrototyping/Meshes/SM_Cube.SM_Cube",
+      "profile": "TraversalObjectPreset",
+      "responses": {
+       "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+       "object_type": "<CollisionChannel.ECC_WORLD_DYNAMIC: 1>",
+       "ECC_CAMERA": "ECR_BLOCK: 2>",
+       "ECC_DESTRUCTIBLE": "ECR_BLOCK: 2>",
+       "ECC_MOUSE": "ECR_IGNORE: 0>",
+       "ECC_OBSTACLE": "ECR_IGNORE: 0>",
+       "ECC_PAWN": "ECR_BLOCK: 2>",
+       "ECC_PHYSICS_BODY": "ECR_BLOCK: 2>",
+       "ECC_TRAVERSABLE": "ECR_BLOCK: 2>",
+       "ECC_VEHICLE": "ECR_BLOCK: 2>",
+       "ECC_VISIBILITY": "ECR_BLOCK: 2>",
+       "ECC_WORLD_DYNAMIC": "ECR_BLOCK: 2>",
+       "ECC_WORLD_STATIC": "ECR_BLOCK: 2>"
+      }
+     }
+    ]
+   },
+   {
+    "scale": [
+     4,
+     1,
+     2.5
+    ],
+    "bounds_min": [
+     -0.4,
+     0.0,
+     0.0
+    ],
+    "bounds_max": [
+     400.0,
+     100.0,
+     250.0
+    ],
+    "splines": {
+     "Ledge_1": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        250.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        400.0,
+        0.0,
+        250.0
+       ],
+       "up_normal": [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_2": [
+      {
+       "loc": [
+        0.0,
+        100.0,
+        250.0
+       ],
+       "up_normal": [
+        0.0,
+        1.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        400.0,
+        100.0,
+        250.0
+       ],
+       "up_normal": [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_3": [
+      {
+       "loc": [
+        0.0,
+        0.0,
+        250.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        0.0,
+        100.0,
+        250.0
+       ],
+       "up_normal": [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      }
+     ],
+     "Ledge_4": [
+      {
+       "loc": [
+        400.0,
+        0.0,
+        250.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      },
+      {
+       "loc": [
+        400.0,
+        100.0,
+        250.0
+       ],
+       "up_normal": [
+        1.0,
+        -0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    "meshes": [
+     {
+      "name": "StaticMesh",
+      "mesh": "/Game/Levels/LevelPrototyping/Meshes/SM_Cube.SM_Cube",
+      "profile": "TraversalObjectPreset",
+      "responses": {
+       "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+       "object_type": "<CollisionChannel.ECC_WORLD_DYNAMIC: 1>",
+       "ECC_CAMERA": "ECR_BLOCK: 2>",
+       "ECC_DESTRUCTIBLE": "ECR_BLOCK: 2>",
+       "ECC_MOUSE": "ECR_IGNORE: 0>",
+       "ECC_OBSTACLE": "ECR_IGNORE: 0>",
+       "ECC_PAWN": "ECR_BLOCK: 2>",
+       "ECC_PHYSICS_BODY": "ECR_BLOCK: 2>",
+       "ECC_TRAVERSABLE": "ECR_BLOCK: 2>",
+       "ECC_VEHICLE": "ECR_BLOCK: 2>",
+       "ECC_VISIBILITY": "ECR_BLOCK: 2>",
+       "ECC_WORLD_DYNAMIC": "ECR_BLOCK: 2>",
+       "ECC_WORLD_STATIC": "ECR_BLOCK: 2>"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "choosers": {
+  "CHT_TraversalMontages_CMC": {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/CHT_TraversalMontages_CMC",
+   "class": "ChooserTable",
+   "t3d": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\CHT_TraversalMontages_CMC.t3d",
+   "py_attrs": [],
+   "props": {
+    "columns_structs": "[{}, {}, {}, {}, {}, {}]",
+    "context_data": "[{}, {}, {}]",
+    "output_object_type": "<Object '/Script/Engine.AnimMontage' (0x00007FF3F2C3FEF0) Class 'Class'>",
+    "result_type": "<ObjectChooserResultType.OBJECT_RESULT: 0>"
+   }
+  },
+  "CHT_TraversalMontages_Mover": {
+   "path": "/Game/Characters/UEFN_Mannequin/Animations/Traversal/CHT_TraversalMontages_Mover",
+   "class": "ChooserTable",
+   "t3d": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\CHT_TraversalMontages_Mover.t3d",
+   "py_attrs": [],
+   "props": {
+    "columns_structs": "[{}, {}, {}, {}, {}, {}]",
+    "context_data": "[{}, {}, {}]",
+    "output_object_type": "<Object '/Script/Engine.AnimMontage' (0x00007FF3F2C3FEF0) Class 'Class'>",
+    "result_type": "<ObjectChooserResultType.OBJECT_RESULT: 0>"
+   }
+  }
+ },
+ "t3d": {
+  "AC_TraversalLogic": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\AC_TraversalLogic.t3d",
+  "S_TraversalCheckInputs": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\S_TraversalCheckInputs.t3d",
+  "E_TraversalActionType": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\E_TraversalActionType.t3d",
+  "GM_Sandbox": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\GM_Sandbox.t3d",
+  "LevelBlock": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\LevelBlock.t3d",
+  "E_MovementMode": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\E_MovementMode.t3d",
+  "S_CharacterPropertiesForTraversal": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\WorkFiles\\dojo\\build\\unreal\\gasp_t3d\\S_CharacterPropertiesForTraversal.t3d"
+ },
+ "passed": true,
+ "sec": 12.0
+}

@@ -1,0 +1,382 @@
+{
+ "units": "metres, grey-box frame (DOJO_ARENA_SPEC section 1); UE: (x*100, -y*100, z*100), yaw = -rot_z",
+ "source_spec": "WorkFiles/world/DOJO_ARENA_SPEC.md 4.5 (drum pavilion plinth X 39-43, Y 1-5, top +1.0)",
+ "anchor": {
+  "pavilion_plinth_centre": [
+   41.0,
+   3.0
+  ],
+  "plinth_top_z": 1.0,
+  "rot_z_deg": 90.0,
+  "note": "drum axis north-south; ring-handle side faces the courtyard (west). The pavilion itself is not in this run. Sticks lean at the stand's +X/-Y corner (world north-west corner)."
+ },
+ "pieces": {
+  "SM_DKP_Taiko_Drum": {
+   "fbx": "Exports/DojoKit/Props/taiko/SM_DKP_Taiko_Drum.fbx",
+   "pivot": "drum centre (on the axis, mid-length)",
+   "lods": 3,
+   "materials": [
+    "M_DKP_Taiko_Hide",
+    "M_DKP_Taiko_HideCollar",
+    "M_DKP_Taiko_Lacquer",
+    "M_DJ_Iron"
+   ],
+   "collision": {
+    "class": "blocking prop, unwalkable (spec 5.2: 'the drum and its stand')",
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "block",
+    "gasp_traversal": "none",
+    "can_character_step_up_on": "No",
+    "walkable_slope_override": "Unwalkable",
+    "ucx": "one convex 16-gon prism around barrel + handles"
+   }
+  },
+  "SM_DKP_Taiko_Stand": {
+   "fbx": "Exports/DojoKit/Props/taiko/SM_DKP_Taiko_Stand.fbx",
+   "pivot": "base centre on the ground",
+   "lods": 3,
+   "materials": [
+    "M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd",
+    "M_DJ_Iron"
+   ],
+   "collision": {
+    "class": "blocking prop, unwalkable (thin-upright rules: camera and sight ignore)",
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "ignore",
+    "gasp_traversal": "none",
+    "can_character_step_up_on": "No",
+    "walkable_slope_override": "Unwalkable",
+    "ucx": "20 hulls: 2 sills, 4 stop blocks, 2 x 3 cradle (centre + 2 shoulders with the wedge blocks), 4 posts (with the strap legs), 4 rails (with the straps)"
+   }
+  },
+  "SM_DKP_Taiko_Stick": {
+   "fbx": "Exports/DojoKit/Props/taiko/SM_DKP_Taiko_Stick.fbx",
+   "pivot": "grip end, on the stick axis; stick along +X",
+   "lods": 3,
+   "materials": [
+    "M_DKP_Taiko_Hide"
+   ],
+   "collision": {
+    "class": "small dressing (lean-on prop)",
+    "pawn": "ignore",
+    "camera": "ignore",
+    "visibility": "ignore",
+    "gasp_traversal": "none",
+    "ucx": "one convex 8-gon prism (kept for physics / a later pickup)"
+   }
+  }
+ },
+ "instances": [
+  {
+   "piece": "SM_DKP_Taiko_Stand",
+   "name": "SM_DKP_Taiko_Stand__00",
+   "loc": [
+    41.0,
+    3.0,
+    1.0
+   ],
+   "rot_xyz_deg": [
+    0.0,
+    -0.0,
+    90.0
+   ],
+   "stand_local_matrix": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "bbox_min_max": [
+    40.2798,
+    2.2397,
+    0.9998,
+    41.7202,
+    3.7603,
+    1.8292
+   ],
+   "unreal_loc_cm": [
+    4100.0,
+    -300.0,
+    100.0
+   ]
+  },
+  {
+   "piece": "SM_DKP_Taiko_Drum",
+   "name": "SM_DKP_Taiko_Drum__00",
+   "loc": [
+    41.0,
+    3.0,
+    2.25
+   ],
+   "rot_xyz_deg": [
+    0.0,
+    -0.0,
+    90.0
+   ],
+   "stand_local_matrix": [
+    [
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0,
+     1.25
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "bbox_min_max": [
+    40.3606,
+    2.223,
+    1.65,
+    41.6394,
+    3.777,
+    2.85
+   ],
+   "unreal_loc_cm": [
+    4100.0,
+    -300.0,
+    225.0
+   ]
+  },
+  {
+   "piece": "SM_DKP_Taiko_Stick",
+   "name": "SM_DKP_Taiko_Stick__00",
+   "loc": [
+    41.585,
+    3.7485,
+    1.7682
+   ],
+   "rot_xyz_deg": [
+    -44.623,
+    79.0,
+    -0.0
+   ],
+   "stand_local_matrix": [
+    [
+     -0.0,
+     0.71175,
+     0.702433,
+     0.748469
+    ],
+    [
+     -0.190809,
+     0.689527,
+     -0.698673,
+     -0.585036
+    ],
+    [
+     -0.981627,
+     -0.134031,
+     0.135808,
+     0.768152
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "bbox_min_max": [
+    41.5506,
+    3.703,
+    1.0005,
+    41.7735,
+    3.7939,
+    1.7699
+   ],
+   "unreal_loc_cm": [
+    4158.5,
+    -374.85,
+    176.82
+   ],
+   "pose": {
+    "tilt_from_vertical_deg": 11.0,
+    "lean_toward_xy": [
+     0.0,
+     1.0
+    ],
+    "roll_rad": 0.6,
+    "contact_gap_m": 0.0005,
+    "contact_with": "stand",
+    "foot_gap_above_plinth_m": 0.0005,
+    "foot_xy_stand_local": [
+     0.745,
+     -0.7109
+    ],
+    "top_end_centre_stand_local": [
+     0.7485,
+     -0.585,
+     0.7682
+    ],
+    "strike_end_centre_stand_local": [
+     0.7485,
+     -0.7339,
+     0.0025
+    ],
+    "solver": "BVH: stick surface grid + obstacle vertices/edges, 1 mm samples; bisection on the slide distance"
+   }
+  },
+  {
+   "piece": "SM_DKP_Taiko_Stick",
+   "name": "SM_DKP_Taiko_Stick__01",
+   "loc": [
+    41.4089,
+    3.7449,
+    1.7606
+   ],
+   "rot_xyz_deg": [
+    -54.889,
+    104.0,
+    -98.531
+   ],
+   "stand_local_matrix": [
+    [
+     0.239245,
+     0.699644,
+     -0.673246,
+     0.744944
+    ],
+    [
+     -0.035887,
+     -0.686537,
+     -0.726209,
+     -0.408878
+    ],
+    [
+     -0.970296,
+     0.197903,
+     -0.139143,
+     0.760573
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "bbox_min_max": [
+    41.3701,
+    3.7116,
+    1.0005,
+    41.4814,
+    3.9699,
+    1.7634
+   ],
+   "unreal_loc_cm": [
+    4140.89,
+    -374.49,
+    176.06
+   ],
+   "pose": {
+    "tilt_from_vertical_deg": 14.0,
+    "lean_toward_xy": [
+     -0.989,
+     0.148
+    ],
+    "roll_rad": 2.3,
+    "contact_gap_m": 0.0005,
+    "contact_with": "stand",
+    "foot_gap_above_plinth_m": 0.0005,
+    "foot_xy_stand_local": [
+     0.9087,
+     -0.4338
+    ],
+    "top_end_centre_stand_local": [
+     0.7449,
+     -0.4089,
+     0.7606
+    ],
+    "strike_end_centre_stand_local": [
+     0.9316,
+     -0.4369,
+     0.0037
+    ],
+    "solver": "BVH: stick surface grid + obstacle vertices/edges, 1 mm samples; bisection on the slide distance"
+   }
+  }
+ ],
+ "materials": {
+  "M_DKP_Taiko_Lacquer": {
+   "texture_set": "T_DKP_Taiko_Lacquer",
+   "params": {
+    "kind": "UNIQUE hero lacquer on the library graph (M_DJ_Lib_Opaque, UseWear on, TileM 2,2)",
+    "finish": "satin (roughness ~0.5), no clear coat"
+   }
+  },
+  "M_DKP_Taiko_Hide": {
+   "texture_set": "T_DKP_Taiko_Hide",
+   "params": {
+    "kind": "UNIQUE on the library graph (UseWear on)"
+   }
+  },
+  "M_DKP_Taiko_HideCollar": {
+   "texture_set": "T_DKP_Taiko_Collar",
+   "params": {
+    "kind": "UNIQUE strip on the library graph (UseWear on)"
+   }
+  },
+  "M_DJ_TimberDark": {
+   "texture_set": "T_DJ_TimberDark (Exports/DojoKit/Materials/Textures)",
+   "params": {
+    "kind": "shared library: MI_DJ_TimberDark"
+   }
+  },
+  "M_DJ_TimberDarkEnd": {
+   "texture_set": "T_DJ_TimberDarkEnd (Exports/DojoKit/Materials/Textures)",
+   "params": {
+    "kind": "shared library: MI_DJ_TimberDarkEnd"
+   }
+  },
+  "M_DJ_Iron": {
+   "texture_set": "T_DJ_Iron (Exports/DojoKit/Materials/Textures)",
+   "params": {
+    "kind": "shared library: MI_DJ_Iron"
+   }
+  }
+ },
+ "tris": {
+  "SM_DKP_Taiko_Drum": 19256,
+  "SM_DKP_Taiko_Stand": 1712,
+  "SM_DKP_Taiko_Stick": 840
+ }
+}

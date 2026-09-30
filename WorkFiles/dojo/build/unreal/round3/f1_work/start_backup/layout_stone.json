@@ -1,0 +1,376 @@
+{
+ "units": "metres, grey-box frame (spec section 1: origin = inside SW corner, X east, Y north, Z up; UE: x*100, -y*100, z*100, yaw = -rot_z)",
+ "front": "every prop's front faces -Y (south, toward the fight floor) at rot_z 0",
+ "pieces": [
+  "SM_DKP_Stone_Cistern",
+  "SM_DKP_Stone_Crate",
+  "SM_DKP_Stone_CrateHalf",
+  "SM_DKP_Stone_LanternShort",
+  "SM_DKP_Stone_LanternTall",
+  "SM_DKP_Stone_Well",
+  "SM_DKP_Stone_WellBucket",
+  "SM_DKP_Stone_WellCover",
+  "SM_DKP_Stone_WellFrame",
+  "SM_DKP_Stone_WellFrameGable",
+  "SM_DKP_Stone_WellPulley",
+  "SM_DKP_Stone_WellRope"
+ ],
+ "instances": [
+  {
+   "piece": "SM_DKP_Stone_LanternTall",
+   "loc": [
+    19.0,
+    20.5,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "thin_upright",
+   "source": "spec 4.3: two stone lanterns in front of the hall (X 19 and 25); grey-box SM_DGB_StoneLantern"
+  },
+  {
+   "piece": "SM_DKP_Stone_LanternTall",
+   "loc": [
+    25.0,
+    20.5,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "thin_upright",
+   "source": "spec 4.3 (as above)"
+  },
+  {
+   "piece": "SM_DKP_Stone_Well",
+   "loc": [
+    41.0,
+    22.0,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "low_cover",
+   "source": "spec 4.3: a well in the east yard (41, 22); grey-box SM_DGB_Well"
+  },
+  {
+   "piece": "SM_DKP_Stone_WellFrame",
+   "loc": [
+    41.0,
+    22.0,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "thin_upright",
+   "source": "same origin as the well"
+  },
+  {
+   "piece": "SM_DKP_Stone_WellCover",
+   "loc": [
+    41.0,
+    22.0,
+    0.8
+   ],
+   "rot_z": 0,
+   "collision_class": "low_cover",
+   "source": "on the rim; its crossbeam butts against both frame posts"
+  },
+  {
+   "piece": "SM_DKP_Stone_WellPulley",
+   "loc": [
+    41.0,
+    22.0,
+    1.54
+   ],
+   "rot_z": 0,
+   "collision_class": "thin_upright",
+   "source": "axle 0.16 m under the tie beam (yoke head plate on its underside)"
+  },
+  {
+   "piece": "SM_DKP_Stone_WellBucket",
+   "loc": [
+    41.114,
+    22.0,
+    1.28
+   ],
+   "rot_z": 0,
+   "collision_class": "prop_small",
+   "source": "hanging from the rope"
+  },
+  {
+   "piece": "SM_DKP_Stone_WellRope",
+   "loc": [
+    41.0,
+    22.0,
+    1.654
+   ],
+   "rot_z": 0,
+   "collision_class": "no_collision",
+   "source": "top of the wheel groove"
+  },
+  {
+   "piece": "SM_DKP_Stone_Cistern",
+   "loc": [
+    13.65,
+    19.9,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "climb_prop",
+   "source": "spec 5.1 route 4: cistern at the west front corner of the hall; = grey-box SM_DGB_Cistern (see routes_note)"
+  },
+  {
+   "piece": "SM_DKP_Stone_Cistern",
+   "loc": [
+    30.35,
+    19.9,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "climb_prop",
+   "source": "spec 5.1 route 4: east front corner (see routes_note)"
+  },
+  {
+   "piece": "SM_DKP_Stone_Crate",
+   "loc": [
+    3.0,
+    5.8,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "climb_prop",
+   "source": "spec 5.1 route 7: crate at the training shed; = grey-box SM_DGB_Crate"
+  },
+  {
+   "piece": "SM_DKP_Stone_Crate",
+   "loc": [
+    36.85,
+    3.0,
+    0.0
+   ],
+   "rot_z": 0,
+   "collision_class": "climb_prop",
+   "source": "spec 5.1 route 7: crate at the drum pavilion; = grey-box Crate_Pavilion (see routes_note)"
+  }
+ ],
+ "routes_note": "f1 (measurer): the cistern back edges sit 1.0 m short of the lower-roof eave line (Y 21.5) and the pavilion crate 1.05 m short of the pavilion roof edge (X 38.4). NOT moved: these positions are the grey-box owner's own SM_DGB_Cistern (X 13.05-14.25 / 29.75-30.95, Y 19.3-20.5) and SM_DGB_Crate (X 36.35-37.35, Y 2.5-3.5) boxes, and the grey-box adds flat landing pads at the eaves (SM_DGB_Landing_EavePad Y 20.75-21.5 at +3.0; SM_DGB_Landing_PavilionPad X 37.65-38.4 at +3.25) because GASP cannot mantle onto a 25 deg eave. Its climb check (WorkFiles/dojo/build/climb_check_greybox.json, GASP's steps replayed on the UCX hulls) passes route 4 (cistern 125 cm, then pad 174.8 cm, depth 85.6) and route 7 (crate 125 cm, then pavilion pad 199.8 cm, depth 85.9). Gaps actually crossed: 0.25 m (cistern back edge 20.5 -> pad 20.75) and 0.30 m (crate 37.35 -> pad 37.65). Moving the pavilion crate to X 37.9 would put it under the pad and block the mantle. For the grey-box owner to confirm in Unreal (no Unreal in this run).",
+ "unplaced": {
+  "SM_DKP_Stone_LanternShort": "SPARE (user decision 2026-09-28: drop the invented lamps; no short lanterns inside the gate): imported, not placed. The r2 positions (20.6, 3.3) / (23.4, 3.3) are withdrawn",
+  "SM_DKP_Stone_WellFrameGable": "SPARE (user decision 2026-10-02: imported, not placed; for the BR village): swap for SM_DKP_Stone_WellFrame at the well origin (same pulley, bucket, rope and cover placements)",
+  "SM_DKP_Stone_CrateHalf": "dressing / stacking: on the ground (top +0.625) or two stacked = +1.25 (the route-7 height)"
+ },
+ "assembly_offsets_well_space": {
+  "well": [
+   [
+    "SM_DKP_Stone_Well",
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellFrame",
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellCover",
+    [
+     0,
+     0,
+     0.8
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellPulley",
+    [
+     0,
+     0,
+     1.54
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellBucket",
+    [
+     0.11399999999999999,
+     0,
+     1.28
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellRope",
+    [
+     0,
+     0,
+     1.654
+    ]
+   ]
+  ],
+  "well_gable": [
+   [
+    "SM_DKP_Stone_Well",
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellFrameGable",
+    [
+     0,
+     0,
+     0
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellCover",
+    [
+     0,
+     0,
+     0.8
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellPulley",
+    [
+     0,
+     0,
+     1.54
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellBucket",
+    [
+     0.11399999999999999,
+     0,
+     1.28
+    ]
+   ],
+   [
+    "SM_DKP_Stone_WellRope",
+    [
+     0,
+     0,
+     1.654
+    ]
+   ]
+  ]
+ },
+ "pivots": {
+  "SM_DKP_Stone_LanternTall": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_LanternShort": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_Well": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_WellFrame": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_WellFrameGable": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_WellCover": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_WellPulley": "axle centre",
+  "SM_DKP_Stone_WellBucket": "bail grip",
+  "SM_DKP_Stone_WellRope": "top of the wheel groove",
+  "SM_DKP_Stone_Cistern": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_Crate": "base centre on the ground (cover: its underside)",
+  "SM_DKP_Stone_CrateHalf": "base centre on the ground (cover: its underside)"
+ },
+ "collision_classes": {
+  "thin_upright": "Pawn block, Camera ignore, Visibility ignore, GASP: low items vault (spec 5.3 thin uprights)",
+  "climb_prop": "Pawn block, Camera ignore, Visibility block, GASP block; flat top >= 1.0 m deep (spec 5.3, R3)",
+  "low_cover": "block all (low cover <= 1.25 m, R8)",
+  "prop_small": "Pawn ignore (hanging bucket), Camera ignore, Visibility ignore",
+  "no_collision": "NoCollision in Unreal (rope; the UCX exists only because every SM_ must carry one)"
+ },
+ "materials": {
+  "M_DJ_Granite_Tri": {
+   "texture": "LIB",
+   "tile_m": 4.0,
+   "params": {
+    "lib": "M_DJ_Granite",
+    "projection": "BOX"
+   },
+   "note": "library granite, triplanar (round / carved stone)"
+  },
+  "M_DJ_Granite": {
+   "texture": "LIB",
+   "tile_m": 4.0,
+   "params": {
+    "lib": "M_DJ_Granite"
+   },
+   "note": "library granite, box UV (flat dressed stone)"
+  },
+  "M_DJ_TimberDark": {
+   "texture": "LIB",
+   "tile_m": 4.0,
+   "params": {
+    "lib": "M_DJ_TimberDark"
+   },
+   "note": "library dark weathered timber (side grain)"
+  },
+  "M_DJ_TimberDarkEnd": {
+   "texture": "LIB",
+   "tile_m": 2.0,
+   "params": {
+    "lib": "M_DJ_TimberDarkEnd"
+   },
+   "note": "library dark timber end grain"
+  },
+  "M_DJ_Iron": {
+   "texture": "LIB",
+   "tile_m": 2.0,
+   "params": {
+    "lib": "M_DJ_Iron"
+   },
+   "note": "library iron: bare metal 0.95-1.0, rust 0, no partial metal"
+  },
+  "M_DJ_Rope": {
+   "texture": "LIB",
+   "tile_m": [
+    0.2816,
+    1.0
+   ],
+   "params": {
+    "lib": "M_DJ_Rope"
+   },
+   "note": "library rope (tube UVs: U along, V once round)"
+  },
+  "M_DJ_GlassAmber": {
+   "texture": "LIB",
+   "tile_m": null,
+   "params": {
+    "lib": "M_DJ_GlassAmber"
+   },
+   "note": "library amber emissive glass, 0-1 per pane (hotspot core)"
+  },
+  "M_DKP_Stone_Moss": {
+   "texture": "Moss",
+   "tile_m": 1.0,
+   "params": {},
+   "note": "kit-own moss cushion surface (T_DKP_Stone_Moss, 1.0 m tile) on the modelled moss pads"
+  },
+  "M_DKP_Stone_Mortar": {
+   "texture": null,
+   "tile_m": 2.0,
+   "params": {
+    "color": "#2B2825",
+    "rough": 0.97
+   },
+   "note": "kit-own flat dark mortar / tank liner (r2: darker joints)"
+  },
+  "M_DKP_Stone_WellWater": {
+   "texture": null,
+   "tile_m": 2.0,
+   "params": {
+    "color": "#0A0D0C",
+    "rough": 0.06
+   },
+   "note": "kit-own flat dark well water"
+  },
+  "M_DKP_Stone_WellMortar": {
+   "texture": null,
+   "tile_m": 2.0,
+   "params": {
+    "color": "#7B766E",
+    "rough": 0.95
+   },
+   "note": "kit-own flat light lime mortar in the well-ring joints (r3)"
+  }
+ }
+}
