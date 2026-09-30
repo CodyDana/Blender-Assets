@@ -1,0 +1,232 @@
+{
+ "spec": "g1-1",
+ "fbx": "SM_CSK_Box_GradeReturn.fbx",
+ "fbx_sha256": "5ce02355813d039f2a1bed927ee14e355c7bf0afbba2d18139ac2c95c6e87314",
+ "sockets_json": "SM_CSK_Box_GradeReturn.sockets.json",
+ "sockets_sha256": "9236fd28ce148361568c8c6c5885f1a6c8f834a19019f2e9b24cfee4d1e2466f",
+ "class": "BoxGrade",
+ "pivot": "Seat: bottom-centre, +X right, +Y away from the customer, +Z up",
+ "render_aabb_mm": [
+  [
+   -75.0,
+   -62.5,
+   0.0
+  ],
+  [
+   75.0,
+   62.5,
+   166.0
+  ]
+ ],
+ "lods": {
+  "count": 3,
+  "triangles": [
+   304,
+   168,
+   40
+  ],
+  "screen_sizes": [
+   1.0,
+   0.056959,
+   0.022784
+  ],
+  "class": "medium",
+  "bounds_radius_mm": 128.142
+ },
+ "sockets": [
+  {
+   "name": "Seat",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Slab_01",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -53.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Slab_02",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -39.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Slab_03",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -25.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Slab_04",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    -11.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Slab_05",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    3.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Slab_06",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    17.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Slab_07",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    31.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Slab_08",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    45.0,
+    0.0,
+    97.0
+   ],
+   "rot_deg": [
+    90.0,
+    0.0,
+    90.0
+   ]
+  },
+  {
+   "name": "Lid",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    110.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "hulls": 1,
+ "footprint_mm": [
+  159.0,
+  134.0,
+  170.0
+ ],
+ "contain": {
+  "Slab": {
+   "sockets": [
+    "Slab_01",
+    "Slab_02",
+    "Slab_03",
+    "Slab_04",
+    "Slab_05",
+    "Slab_06",
+    "Slab_07",
+    "Slab_08"
+   ],
+   "cavity_mm": [
+    [
+     -53.5,
+     -43.5,
+     30.0
+    ],
+    [
+     53.5,
+     43.5,
+     166.0
+    ]
+   ],
+   "accepts": [
+    "Slab"
+   ],
+   "pose": "standing on the short edge in the foam slots, (90, 0, 90): face to +X; the Seat is the slab's back face, so a 7 mm slab sits 0.5 off the slot wall"
+  }
+ },
+ "parts": {
+  "Lid": {
+   "mesh": "SM_CSK_Box_GradeReturn_Lid",
+   "socket": "Lid",
+   "type": "slide",
+   "axis": "Z",
+   "range_mm": [
+    0,
+    70
+   ],
+   "note": "lift-off: past 56 the lid clears the base and comes off"
+  }
+ },
+ "reference": "References/CardShop/csk_grade_return.png (sheet 9)",
+ "notes": [
+  "Sheet 9: base 150 x 125 x 166 (the lid's 4 top board makes the 170), kraft inside; the lid telescopes over it (159 x 134 x 60). Foam top 20 under the rim; 8 slots 9 x 87 at 14 pitch, floor at 30, so a standing 134 slab tops out at 164, under the closed lid.",
+  "The sheet's single-slab cavity panel is a different product (AI drift): not built."
+ ]
+}

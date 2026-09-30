@@ -1,0 +1,450 @@
+"""Mesh building for the Card Shop Kit: a millimetre face list -> one Blender mesh object with the kit's UV layout.
+
+UV layout (CARDSHOP_KIT_SPEC.md 4.1):
+* UV0 ``UVMap``: every print face spans a full 0-1 tile: front (0,0), back (1,0), label (0,1). A face gets its UV0 from
+  its *region*'s planar projection. Region 0 faces (edges, insides, frames) are unwrapped automatically into the
+  U -1..0 tile when the mesh has print, or into 0-1 when it has none.
+* UV1 ``Lightmap``: a unique 0-1 layout of every face (lightmap + per-mesh ORM bake).
+
+Faces are authored counter-clockwise seen from outside (a cavity's faces point into the cavity), so no normal
+recalculation is run: ``recalc_face_normals`` would turn a void inside out. ``check_outward_rays`` verifies the winding
+of any closed shell (``check_outward``: convex shells only).
+"""
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass, field
+from typing import Callable, Dict, List, Optional, Sequence, Tuple
+
+import bmesh
+import bpy
+from mathutils import Matrix, Vector
+
+from .shapes import Builder, Face, Fill, chamfer_rect, rect, rounded_rect  # noqa: F401
+from .spec import MM
+
+Vec3 = Tuple[float, float, float]
+Projection = Callable[[float, float, float], Tuple[float, float]]
+REGION_LAYER = "csk_region"
+UE_MIN_TRI_MM2 = 0.005      # Unreal's degenerate-triangle cut: |cross|^2 <= 1e-8 cm^4, i.e. area <= 0.005 mm^2
+
+
+# --------------------------------------------------------------------------- to Blender
+
+def _material(name: str) -> "bpy.types.Material":
+    mat = bpy.data.materials.get(name)
+    if mat is None:
+        mat = bpy.data.materials.new(name)
+        mat.use_nodes = True
+    return mat
+
+
+def build_bmesh(b: Builder) -> "bmesh.types.BMesh":
+    bm = bmesh.new()
+    region = bm.faces.layers.int.new(REGION_LAYER)
+    bv = [bm.verts.new(Vector(p) * MM) for p in b.verts]
+    for f in b.faces:
+        face = bm.faces.new([bv[i] for i in f.verts])
+        face.material_index = f.mat
+        face[region] = f.region
+    for fl in b.fills:
+        edges = []
+        for loop in fl.loops:
+            for i in range(len(loop)):
+                a, c = bv[loop[i]], bv[loop[(i + 1) % len(loop)]]
+                e = bm.edges.get((a, c)) or bm.edges.new((a, c))
+                edges.append(e)
+        res = bmesh.ops.triangle_fill(bm, use_beauty=True, use_dissolve=False, edges=edges,
+                                      normal=Vector(fl.normal))
+        want = Vector(fl.normal)
+        for face in res["geom"]:
+            if not isinstance(face, bmesh.types.BMFace):
+                continue
+            face.normal_update()
+            if face.normal.dot(want) < 0:
+                face.normal_flip()
+            face.material_index = fl.mat
+            face[region] = fl.region
+    ngons = [f for f in bm.faces if len(f.verts) > 4]
+    if ngons:
+        bmesh.ops.triangulate(bm, faces=ngons)
+    bm.normal_update()
+    return bm
+
+
+def bevel_edges(bm: "bmesh.types.BMesh", width_mm: float, min_angle_deg: float = 60.0, segments: int = 1) -> int:
+    """Chamfer every edge sharper than ``min_angle_deg`` (1 segment); new faces become region 0. Returns the count."""
+    region = bm.faces.layers.int[REGION_LAYER]
+    edges = [e for e in bm.edges if e.is_manifold and len(e.link_faces) == 2
+             and math.degrees(e.calc_face_angle(0.0)) > min_angle_deg]
+    if not edges:
+        return 0
+    res = bmesh.ops.bevel(bm, geom=edges, offset=width_mm * MM, offset_type="OFFSET", segments=segments, profile=0.5,
+                          affect="EDGES", clamp_overlap=True)
+    for f in res["faces"]:
+        f[region] = 0
+    bm.normal_update()
+    return len(edges)
+
+
+def mark_sharp(bm: "bmesh.types.BMesh", angle_deg: float = 30.0) -> None:
+    for e in bm.edges:
+        e.smooth = not (len(e.link_faces) == 2 and math.degrees(e.calc_face_angle(0.0)) > angle_deg)
+
+
+def _select_faces(obj: "bpy.types.Object", pick: Callable[[int, int], bool]) -> int:
+    """Select faces by (index, region); return the count."""
+    me = obj.data
+    reg = me.attributes[REGION_LAYER].data
+    n = 0
+    for p in me.polygons:
+        p.select = bool(pick(p.index, reg[p.index].value))
+        n += p.select
+    return n
+
+
+def _uv_overlaps(obj: "bpy.types.Object", uv_name: str) -> int:
+    """Overlapping UV triangle pairs among the selected faces (the house qa_check test)."""
+    import numpy as np
+    from pipeline.qa_check import uv_overlap_sat
+    me = obj.data
+    uv = me.uv_layers[uv_name].data
+    tris = []
+    for p in me.polygons:
+        if not p.select:
+            continue
+        li = list(p.loop_indices)
+        for i in range(1, len(li) - 1):
+            tris.append([uv[li[0]].uv[:], uv[li[i]].uv[:], uv[li[i + 1]].uv[:]])
+    return uv_overlap_sat(np.array(tris)) if len(tris) > 1 else 0
+
+
+def _smart_project(obj: "bpy.types.Object", uv_name: str, margin: float) -> None:
+    """Smart project + pack. 66 degrees first; if a projection group folds faces onto each other (a boolean pocket's
+    inner wall facing the same way as an outer wall), retry with a tighter angle limit."""
+    me = obj.data
+    me.uv_layers.active = me.uv_layers[uv_name]
+    bpy.ops.object.select_all(action="DESELECT")
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    for angle in (66.0, 45.0, 30.0):
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_mode(type="FACE")
+        bpy.ops.uv.smart_project(angle_limit=math.radians(angle), island_margin=margin, correct_aspect=True,
+                                 scale_to_bounds=False)
+        bpy.ops.uv.select_all(action="SELECT")
+        bpy.ops.uv.pack_islands(margin=margin, rotate=True, shape_method="AABB")   # concave packing: ~10 s a call
+        bpy.ops.object.mode_set(mode="OBJECT")
+        if _uv_overlaps(obj, uv_name) == 0:
+            return
+
+
+def _apply_boolean(obj: "bpy.types.Object", operation: str, b: Builder) -> None:
+    """Apply an exact boolean with the closed shell ``b`` (mm). Face tags (region, material index) of the cutter's
+    faces carry over, so a cut face can be given its own region / material by the cutter's builder."""
+    bm = build_bmesh(b)
+    me = bpy.data.meshes.new("__csk_cutter")
+    bm.to_mesh(me)
+    bm.free()
+    cutter = bpy.data.objects.new("__csk_cutter", me)
+    bpy.context.scene.collection.objects.link(cutter)
+    mod = obj.modifiers.new("csk_bool", "BOOLEAN")
+    mod.operation = operation
+    mod.solver = "EXACT"
+    mod.object = cutter
+    try:
+        mod.material_mode = "INDEX"
+    except (AttributeError, TypeError):
+        pass
+    from pipeline.helpers import apply_modifier
+    slots = len(obj.data.materials)
+    apply_modifier(obj, mod)
+    # Blender 5.2 appends an empty slot per cutter even in INDEX mode (5.0 did not): drop the added slots; INDEX mode
+    # already maps cutter faces onto the object's own slots, so a face on an added slot is a real error.
+    used = max((p.material_index for p in obj.data.polygons), default=0)
+    if used >= slots:
+        raise RuntimeError(f"{obj.name}: boolean left faces on material slot {used} (only {slots} slots)")
+    while len(obj.data.materials) > slots:
+        obj.data.materials.pop()
+    bpy.data.objects.remove(cutter, do_unlink=True)
+    bpy.data.meshes.remove(me)
+
+
+def to_object(name: str, b: Builder, materials: Sequence[str], projections: Dict[int, Projection],
+              bevel_mm: Optional[float] = None, weighted_normals: bool = True,
+              collection: Optional["bpy.types.Collection"] = None,
+              ops: Sequence[Tuple[str, Builder]] = (), bevel_segments: int = 1,
+              bevel_angle: float = 60.0, bevel_first: bool = False,
+              extra: Optional[Builder] = None) -> "bpy.types.Object":
+    """Build ``name`` from ``b``: booleans (``ops``: ("DIFFERENCE" | "UNION", builder)), bevel, sharp edges, UV0
+    (print projections + auto), UV1 (unique), materials. ``bevel_first`` bevels the base shell before the booleans,
+    so cut edges stay crisp and the bevel never meets a cut (no collinear slivers). ``extra`` is joined after the bevel
+    and the booleans (small crisp parts, e.g. slotted standards)."""
+    bm = build_bmesh(b)
+    if bevel_mm and bevel_first:
+        bevel_edges(bm, bevel_mm, bevel_angle, bevel_segments)
+        ngons = [f for f in bm.faces if len(f.verts) > 4]
+        if ngons:
+            bmesh.ops.triangulate(bm, faces=ngons)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    for m in materials:
+        me.materials.append(_material(m))
+    obj = bpy.data.objects.new(name, me)
+    (collection or bpy.context.scene.collection).objects.link(obj)
+    for operation, cb in ops:
+        _apply_boolean(obj, operation, cb)
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    if REGION_LAYER not in bm.faces.layers.int:
+        bm.faces.layers.int.new(REGION_LAYER)
+    if bevel_mm and not bevel_first:
+        bevel_edges(bm, bevel_mm, bevel_angle, bevel_segments)
+    if extra is not None:                   # append the extra parts (BMesh.from_mesh adds to what is there)
+        eb = build_bmesh(extra)
+        tmp = bpy.data.meshes.new("__csk_extra")
+        eb.to_mesh(tmp)
+        eb.free()
+        bm.from_mesh(tmp)
+        bpy.data.meshes.remove(tmp)
+    for _ in range(3):              # bevel + boolean slivers: dissolve zero-area faces, re-triangulate what it merges
+        bmesh.ops.dissolve_degenerate(bm, dist=1e-6, edges=list(bm.edges))
+        ngons = [f for f in bm.faces if len(f.verts) > 4]
+        if ngons:
+            bmesh.ops.triangulate(bm, faces=ngons)
+        if not any(f.calc_area() < 1e-12 for f in bm.faces):
+            break
+    mark_sharp(bm)
+    bm.to_mesh(obj.data)
+    bm.free()
+    me = obj.data
+    me.polygons.foreach_set("use_smooth", [True] * len(me.polygons))
+
+    uv0 = me.uv_layers.new(name="UVMap")
+    me.uv_layers.new(name="Lightmap")
+    reg = me.attributes[REGION_LAYER].data
+    has_print = any(reg[p.index].value > 0 for p in me.polygons)
+    # region 0 first (smart project writes only the selected faces), then shift it to the U -1 tile
+    if _select_faces(obj, lambda i, r: r == 0):
+        _smart_project(obj, "UVMap", 0.02)
+        me = obj.data                                   # edit mode rebuilt the arrays: never reuse old handles
+        reg, uv0 = me.attributes[REGION_LAYER].data, me.uv_layers["UVMap"]
+        if has_print:
+            for p in me.polygons:
+                if reg[p.index].value == 0:
+                    for li in p.loop_indices:
+                        u, v = uv0.data[li].uv
+                        uv0.data[li].uv = (u - 1.0, v)
+    for p in me.polygons:
+        r = reg[p.index].value
+        if r == 0:
+            continue
+        proj = projections[r]
+        for li, vi in zip(p.loop_indices, p.vertices):
+            co = me.vertices[vi].co / MM
+            uv0.data[li].uv = proj(co.x, co.y, co.z)
+    _select_faces(obj, lambda i, r: True)
+    _smart_project(obj, "Lightmap", 0.01)
+    me = obj.data
+    me.uv_layers.active_index = 0
+    for layer in me.uv_layers:
+        layer.active_render = layer.name == "UVMap"
+    if weighted_normals:
+        mod = obj.modifiers.new("WeightedNormal", "WEIGHTED_NORMAL")
+        mod.keep_sharp = True
+        mod.weight = 50
+        from pipeline.helpers import apply_modifier
+        apply_modifier(obj, mod)
+    return obj
+
+
+def triangles(obj: "bpy.types.Object") -> int:
+    return sum(len(p.vertices) - 2 for p in obj.data.polygons)
+
+
+def aabb_mm(obj: "bpy.types.Object") -> Tuple[Vec3, Vec3]:
+    """Local-space render AABB in mm (the fit test uses render bounds, spec 4.2)."""
+    xs = [v.co for v in obj.data.vertices]
+    mn = tuple(min(c[i] for c in xs) / MM for i in range(3))
+    mx = tuple(max(c[i] for c in xs) / MM for i in range(3))
+    return mn, mx  # type: ignore[return-value]
+
+
+CLEAR_WORDS = ("glass", "pvc", "film", "acrylic", "window", "clear")     # slot names that are see-through
+
+
+def cavity_blocked(obj: "bpy.types.Object", box_mm: Tuple[Vec3, Vec3], n: int = 3, tol_mm: float = 0.05) -> int:
+    """Sample points of a placed item's box that sit inside OPAQUE geometry. The rays run along the box's thinnest
+    axis (a standing pack or card is thin across, not in height), from an n x n grid over the other two axes (inset
+    10 %) at mid depth: in empty space the first face hit (if any) faces back at the point; inside a solid it faces
+    away, or a face cuts through the box. Faces of see-through slots (CLEAR_WORDS) are ignored: an item inside clear
+    plastic is still seen."""
+    from mathutils.bvhtree import BVHTree
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.normal_update()
+    bm.faces.ensure_lookup_table()
+    slots = [(s.material.name.lower() if s.material else "") for s in obj.material_slots]
+    clear = {i for i, m in enumerate(slots) if any(w in m for w in CLEAR_WORDS)}
+    keep = [f for f in bm.faces if f.material_index not in clear]
+    if not keep:
+        bm.free()
+        return 0
+    tree = BVHTree.FromPolygons([v.co.copy() for v in bm.verts], [[v.index for v in f.verts] for f in keep])
+    lo, hi = box_mm
+    k = min(range(3), key=lambda a: hi[a] - lo[a])       # the ray axis
+    a, b = [ax for ax in range(3) if ax != k]
+    bad = 0
+    for i in range(n):
+        for j in range(n):
+            p = [0.0, 0.0, 0.0]
+            p[k] = (lo[k] + hi[k]) / 2
+            p[a] = lo[a] + (hi[a] - lo[a]) * (0.1 + 0.8 * i / (n - 1))
+            p[b] = lo[b] + (hi[b] - lo[b]) * (0.1 + 0.8 * j / (n - 1))
+            for sign, lim in ((1.0, hi[k]), (-1.0, lo[k])):
+                d = Vector((0.0, 0.0, 0.0))
+                d[k] = sign
+                loc, nrm, _i, _dist = tree.ray_cast(Vector(p) * MM, d)
+                if loc is None:
+                    continue
+                if nrm.dot(d) > 0 or (loc[k] / MM - lim) * sign < -tol_mm:
+                    bad += 1
+                    break
+    bm.free()
+    return bad
+
+
+def small_triangles(obj: "bpy.types.Object", min_mm2: float = UE_MIN_TRI_MM2) -> int:
+    """Triangles (as Blender triangulates) at or under ``min_mm2``: Unreal's import drops a triangle whose normal
+    cross product squared is <= 1e-8 cm^4 (area <= UE_MIN_TRI_MM2), so the imported count would not match. Measured
+    on the G1 run of 2026-09-29: exactly the 4 flagged triangles of SM_CSK_PriceGun went missing in Unreal."""
+    me = obj.data
+    me.calc_loop_triangles()
+    return sum(1 for t in me.loop_triangles if t.area / (MM * MM) <= min_mm2)
+
+
+def degenerate_uv_faces(obj: "bpy.types.Object", layer: str, min_area: float = 1e-9) -> int:
+    """Faces whose UV area on ``layer`` is ~0 (Unreal's tangent build warns on them; lightmaps smear)."""
+    me = obj.data
+    uv = me.uv_layers[layer].data
+    bad = 0
+    for p in me.polygons:
+        pts = [uv[li].uv for li in p.loop_indices]
+        area = 0.0
+        for i in range(len(pts)):
+            a, c = pts[i], pts[(i + 1) % len(pts)]
+            area += a[0] * c[1] - c[0] * a[1]
+        if abs(area) / 2 < min_area:
+            bad += 1
+    return bad
+
+
+def box_hull(parent: "bpy.types.Object", index: int, mn: Vec3, mx: Vec3) -> "bpy.types.Object":
+    """``UCX_<parent>_NN``: a closed box hull in the parent's space (mm in), as ``helpers.make_ucx_hull`` names and
+    parents it."""
+    name = f"UCX_{parent.name}_{index:02d}"
+    b = Builder()
+    b.box(mn, mx)
+    bm = build_bmesh(b)
+    bm.faces.layers.int.remove(bm.faces.layers.int[REGION_LAYER])
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    hull = bpy.data.objects.new(name, me)
+    for col in parent.users_collection:
+        col.objects.link(hull)
+    hull.parent = parent
+    hull.matrix_parent_inverse = Matrix.Identity(4)
+    hull.hide_render = True
+    hull.display_type = "WIRE"
+    hull["ue_collision"] = "UCX"
+    return hull
+
+
+def check_outward(obj: "bpy.types.Object") -> int:
+    """Faces that point toward the centre of their own loose part (a winding check for convex parts)."""
+    me = obj.data
+    parent = list(range(len(me.vertices)))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+
+    for e in me.edges:
+        ra, rb = find(e.vertices[0]), find(e.vertices[1])
+        if ra != rb:
+            parent[ra] = rb
+    sums = {}
+    for v in me.vertices:
+        r = find(v.index)
+        acc = sums.setdefault(r, [Vector(), 0])
+        acc[0] += v.co
+        acc[1] += 1
+    bad = 0
+    for p in me.polygons:
+        acc = sums[find(p.vertices[0])]
+        centre = acc[0] / acc[1]
+        if (p.center - centre).dot(p.normal) < -1e-9:
+            bad += 1
+    return bad
+
+
+def check_outward_rays(obj: "bpy.types.Object") -> int:
+    """Faces whose normal points into their solid, by ray parity: a ray leaving a face along its normal crosses the
+    face's own closed shell (its loose part) an even number of times when the face points out. Right for concave
+    shells too (pockets, holes, frames), unlike ``check_outward``; per loose part, so touching or overlapping parts
+    (a pane in its stiles) do not count each other. The ray is skewed a little off the normal so it never runs along
+    an edge."""
+    from mathutils.bvhtree import BVHTree
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.normal_update()
+    bm.faces.ensure_lookup_table()
+    bm.verts.ensure_lookup_table()
+    part = [-1] * len(bm.faces)                     # loose part per face (faces linked through shared verts)
+    parts = []
+    for f0 in bm.faces:
+        if part[f0.index] >= 0:
+            continue
+        k, stack, faces = len(parts), [f0], []
+        part[f0.index] = k
+        while stack:
+            f = stack.pop()
+            faces.append(f)
+            for v in f.verts:
+                for g in v.link_faces:
+                    if part[g.index] < 0:
+                        part[g.index] = k
+                        stack.append(g)
+        vid = {}
+        for f in faces:
+            for v in f.verts:
+                vid.setdefault(v.index, len(vid))
+        co = [None] * len(vid)
+        for i, j in vid.items():
+            co[j] = bm.verts[i].co.copy()
+        parts.append((faces, BVHTree.FromPolygons(co, [[vid[v.index] for v in f.verts] for f in faces])))
+    skew = Vector((1.3e-3, 2.1e-3, 3.4e-3))
+    step = 2e-6                                     # 2 um in Blender metres: past a hit, far below any feature
+    bad = 0
+    for faces, tree in parts:
+        for j, f in enumerate(faces):
+            n = f.normal
+            if n.length < 0.5:
+                continue
+            d = (n + skew).normalized()
+            o = f.calc_center_median() + d * step
+            hits = 0
+            for _ in range(256):
+                loc, _nrm, idx, _dist = tree.ray_cast(o, d)
+                if loc is None:
+                    break
+                hits += idx != j                    # a non-planar face can sit a hair in front of its own centre
+                o = loc + d * step
+            if hits % 2:
+                bad += 1
+    bm.free()
+    return bad

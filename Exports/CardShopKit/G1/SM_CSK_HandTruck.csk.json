@@ -1,0 +1,205 @@
+{
+ "spec": "g1-1",
+ "fbx": "SM_CSK_HandTruck.fbx",
+ "fbx_sha256": "6c8742cba01b90a0f6846e1b4c82437670fb649aa3c59857d3b65c16d35a653f",
+ "sockets_json": "SM_CSK_HandTruck.sockets.json",
+ "sockets_sha256": "9b0c38c9d682ff75d5a823a1f64fd89850f69cf575f00c853839c5fd9d836ba5",
+ "class": null,
+ "pivot": "bottom-centre of the footprint",
+ "render_aabb_mm": [
+  [
+   -225.0,
+   -250.0,
+   0.0
+  ],
+  [
+   225.0,
+   249.214,
+   1200.0
+  ]
+ ],
+ "lods": {
+  "count": 3,
+  "triangles": [
+   2172,
+   956,
+   356
+  ],
+  "screen_sizes": [
+   1.0,
+   0.152841,
+   0.061136
+  ],
+  "class": "fixture",
+  "bounds_radius_mm": 687.698
+ },
+ "sockets": [
+  {
+   "name": "Seat",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Nose",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    0.0,
+    -165.8,
+    5.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Nose_M",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    0.0,
+    -203.8,
+    5.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Nose_L",
+   "kind": "CONTAIN",
+   "loc_mm": [
+    0.0,
+    -254.3,
+    5.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Grip",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    67.3772,
+    1145.0383
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "name": "Axle",
+   "kind": "UTILITY",
+   "loc_mm": [
+    0.0,
+    125.0,
+    125.0
+   ],
+   "rot_deg": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "hulls": 3,
+ "footprint_mm": [
+  450.0,
+  499.2,
+  1200.0
+ ],
+ "pose": "upright",
+ "contain": {
+  "Nose": {
+   "socket": "Nose",
+   "cavity_mm": [
+    [
+     -320.0,
+     -520.0,
+     5.0
+    ],
+    [
+     320.0,
+     -50.8,
+     1305.0
+    ]
+   ],
+   "accepts": [
+    "Carton",
+    "BoxShipS"
+   ]
+  },
+  "NoseM": {
+   "socket": "Nose_M",
+   "cavity_mm": [
+    [
+     -320.0,
+     -520.0,
+     5.0
+    ],
+    [
+     320.0,
+     -50.8,
+     1305.0
+    ]
+   ],
+   "accepts": [
+    "BoxShipM"
+   ]
+  },
+  "NoseL": {
+   "socket": "Nose_L",
+   "cavity_mm": [
+    [
+     -320.0,
+     -520.0,
+     5.0
+    ],
+    [
+     320.0,
+     -50.8,
+     1305.0
+    ]
+   ],
+   "accepts": [
+    "BoxShipL"
+   ]
+  }
+ },
+ "stack": {
+  "on": [
+   "Nose",
+   "Nose_M",
+   "Nose_L"
+  ],
+  "max": 4,
+  "rule": "spec 4.3: 4 on the hand truck"
+ },
+ "tilt": {
+  "socket": "Axle",
+  "axis": "X",
+  "note": "tip the truck back about the axle to roll it"
+ },
+ "reference": "References/CardShop/csk_backroom.png (sheet 28 (3))",
+ "notes": [
+  "Sheet 28: blue \u00d8 28 tube rails turning back 40 deg at ~1000 into handles with black grips, 3 cross bars and a centre upright, the nose plate's back turned up 120, struts to the axle, \u00d8 250 pneumatic wheels with block tread and grey hubs.",
+  "Nose / Nose_M / Nose_L: the load stands against the flange, so each box depth has its own seat (Nose = Carton and BoxShipS; Nose_M, Nose_L = the M and L delivery boxes). The spec lists Nose only; the two extra seats keep every box's back on the flange."
+ ]
+}
