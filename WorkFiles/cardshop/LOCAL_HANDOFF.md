@@ -206,6 +206,6 @@ Family-specific notes the cloud gave:
 ## 4. Waiting on the user (unchanged)
 
 - The PC G1 run (`run_g1.sh`).
-- The USPTO screen of the brand names.
+- ~~The USPTO screen of the brand names.~~ Deferred by the user (2026-09-29): the kit is private for now; trademarks are for later, before any sale.
 - The card illustrations (`CARD_ART_BRIEF.md`).
 - The publisher name (spec D9).

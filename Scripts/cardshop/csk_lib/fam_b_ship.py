@@ -392,7 +392,8 @@ def _carton_common(state: str) -> Dict:
             "reference": "References/CardShop/csk_cartons.png (sheet 11)",
             "contain": {"BoxS": {"sockets": [f"Box_{i:02d}" for i in range(1, c["boxes"] + 1)], "cavity_mm": cav,
                                  "accepts": ["BoxS"],
-                                 "pose": "standing, turned 90 deg about Z (the box's 80 depth along the carton)"}}}
+                                 "pose": "standing, turned 90 deg about Z (the box's 80 depth along the carton)",
+                                 "hidden": state == "Closed"}}}
 
 
 def item_carton_closed() -> Item:
@@ -488,7 +489,7 @@ def _ship_common(size: str, state: str) -> Dict:
                                                      "Open": f"SM_CSK_Box_Ship_{size}_Open",
                                                      "Flat": "SM_CSK_Box_Ship_Flat"},
             "state_swap": "spec 5.3", "reference": "References/CardShop/csk_cartons.png (sheet 11)",
-            "contain": {"Contents": _ship_contents(L, W, H, SHIP_BD)}}
+            "contain": {"Contents": dict(_ship_contents(L, W, H, SHIP_BD), hidden=state == "Closed")}}
 
 
 def item_ship_closed(size: str) -> Item:

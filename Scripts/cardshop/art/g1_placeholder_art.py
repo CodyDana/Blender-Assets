@@ -9,7 +9,7 @@ or flipped face swaps the corner colours; a wrong atlas cell shows the wrong lin
     py -3 Scripts/cardshop/art/g1_placeholder_art.py [--src DIR] [--tex DIR]
 
 Writes the source faces to ``WorkFiles/cardshop/g1/art/`` and, into ``Exports/CardShopKit/G1/Textures/``:
-* atlases through ``tools/csk_pack_cards.py``: T_CSK_G1_Cards_BC (4096), T_CSK_G1_Packs_BC (2048),
+* atlases through ``tools/csk_pack_cards.py``: T_CSK_G1_Cards_BC (4096), T_CSK_G1_Packs_BC (4096),
   T_CSK_G1_Labels_BC (2048), each with its .json cell index
 * plain power-of-two textures for the plain-texture path: T_CSK_G1_{CardFront,CardBack,PackFront,PackBack,
   Label,BoxDieline}_BC

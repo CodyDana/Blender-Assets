@@ -190,6 +190,19 @@ def stage_kit_checks(built, out: Path, report) -> bool:
                 if not it:
                     continue
                 results += fit.check_contain(n, cav, [(sn, socks[sn].loc, socks[sn].rot) for sn in names], it, aabb[it])
+            # every placed item must sit in empty space (or clear plastic) in the LOD0 geometry, unless the container
+            # hides its contents (closed boxes, mailers): the numbers alone missed a slab well refilled by a boolean,
+            # which buried the slab's card in opaque body close up
+            if c.get("hidden"):
+                continue
+            it = next((by_class[a] for a in c["accepts"] if a in by_class), None)
+            if not it:
+                continue
+            blocked = {sn: mesh.cavity_blocked(h["objs"][0], fit.transform_box(aabb[it], socks[sn].loc, socks[sn].rot))
+                       for sn in names}
+            blocked = {k: v for k, v in blocked.items() if v}
+            results.append({"test": "contain_clear", "container": n, "cavity": key, "item": it,
+                            "passed": not blocked, "blocked": blocked})
     # level grids against every hull of the fixture and its glass
     for n, h in by_name.items():
         item = h["item"]

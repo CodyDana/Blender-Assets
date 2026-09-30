@@ -25,7 +25,7 @@ from typing import Dict, List, Sequence, Tuple
 
 from . import spec as S
 from .geom import (R_BACK, R_FRONT, R_LABEL, Item, Lod, Socket, _face_out, _planar, _prism_y, _slab_lod,
-                   _slab_openings)
+                   _slab_openings, add_slab_well)
 from .shapes import Builder, rect
 
 # =========================================================================== numbers
@@ -219,8 +219,7 @@ def item_slab_thick() -> Item:
     ww, wh, wd = s["well"]
     zf = s["well_floor_z"]
     lods = [_slab_lod(s, k, 0, 1, False) for k in range(3)]
-    lods[0].builder.box((-ww / 2, wcy - wh / 2, zf), (ww / 2, wcy + wh / 2, zf + wd), mat=0, inward=True,
-                        mats={"pz": 1, "nz": 1})
+    add_slab_well(lods[0], s, 0, 1)
     cw, ch = S.CARD_STD["w"], S.CARD_STD["h"]
     x_lug = w / 2 + s["lug"][2]
     return Item(

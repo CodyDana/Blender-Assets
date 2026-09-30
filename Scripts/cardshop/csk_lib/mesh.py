@@ -271,6 +271,50 @@ def aabb_mm(obj: "bpy.types.Object") -> Tuple[Vec3, Vec3]:
     return mn, mx  # type: ignore[return-value]
 
 
+CLEAR_WORDS = ("glass", "pvc", "film", "acrylic", "window", "clear")     # slot names that are see-through
+
+
+def cavity_blocked(obj: "bpy.types.Object", box_mm: Tuple[Vec3, Vec3], n: int = 3, tol_mm: float = 0.05) -> int:
+    """Sample points of a placed item's box that sit inside OPAQUE geometry. The rays run along the box's thinnest
+    axis (a standing pack or card is thin across, not in height), from an n x n grid over the other two axes (inset
+    10 %) at mid depth: in empty space the first face hit (if any) faces back at the point; inside a solid it faces
+    away, or a face cuts through the box. Faces of see-through slots (CLEAR_WORDS) are ignored: an item inside clear
+    plastic is still seen."""
+    from mathutils.bvhtree import BVHTree
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.normal_update()
+    bm.faces.ensure_lookup_table()
+    slots = [(s.material.name.lower() if s.material else "") for s in obj.material_slots]
+    clear = {i for i, m in enumerate(slots) if any(w in m for w in CLEAR_WORDS)}
+    keep = [f for f in bm.faces if f.material_index not in clear]
+    if not keep:
+        bm.free()
+        return 0
+    tree = BVHTree.FromPolygons([v.co.copy() for v in bm.verts], [[v.index for v in f.verts] for f in keep])
+    lo, hi = box_mm
+    k = min(range(3), key=lambda a: hi[a] - lo[a])       # the ray axis
+    a, b = [ax for ax in range(3) if ax != k]
+    bad = 0
+    for i in range(n):
+        for j in range(n):
+            p = [0.0, 0.0, 0.0]
+            p[k] = (lo[k] + hi[k]) / 2
+            p[a] = lo[a] + (hi[a] - lo[a]) * (0.1 + 0.8 * i / (n - 1))
+            p[b] = lo[b] + (hi[b] - lo[b]) * (0.1 + 0.8 * j / (n - 1))
+            for sign, lim in ((1.0, hi[k]), (-1.0, lo[k])):
+                d = Vector((0.0, 0.0, 0.0))
+                d[k] = sign
+                loc, nrm, _i, _dist = tree.ray_cast(Vector(p) * MM, d)
+                if loc is None:
+                    continue
+                if nrm.dot(d) > 0 or (loc[k] / MM - lim) * sign < -tol_mm:
+                    bad += 1
+                    break
+    bm.free()
+    return bad
+
+
 def small_triangles(obj: "bpy.types.Object", min_mm2: float = UE_MIN_TRI_MM2) -> int:
     """Triangles (as Blender triangulates) at or under ``min_mm2``: Unreal's import drops a triangle whose normal
     cross product squared is <= 1e-8 cm^4 (area <= UE_MIN_TRI_MM2), so the imported count would not match. Measured

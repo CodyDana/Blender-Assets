@@ -33,7 +33,8 @@ IMAGE_EXT = {".png", ".jpg", ".jpeg", ".tga", ".bmp", ".webp"}
 # 201 x 351; labels: 4 x 16 of 512 x 128 at 4 px/mm = 304 x 96; boxes: 4 x 4 of 1024 at 2 px/mm = 880 x 570)
 PRESETS = {
     "cards": {"size": 4096, "grid": (8, 8), "cell": (512, 512), "content": (315, 440), "px_per_mm": 5},
-    "packs": {"size": 2048, "grid": (4, 4), "cell": (512, 512), "content": (201, 351), "px_per_mm": 3},
+    # packs 8 px/mm (was 3: soft close up in Unreal, 2026-09-29); 16 faces of 67 x 117 mm in 1024 cells
+    "packs": {"size": 4096, "grid": (4, 4), "cell": (1024, 1024), "content": (536, 936), "px_per_mm": 8},
     "labels": {"size": 2048, "grid": (4, 16), "cell": (512, 128), "content": (304, 96), "px_per_mm": 4},
     "boxes": {"size": 4096, "grid": (4, 4), "cell": (1024, 1024), "content": (880, 570), "px_per_mm": 2},
 }

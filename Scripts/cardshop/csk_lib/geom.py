@@ -220,6 +220,19 @@ def _slab_lod(s, level: int, body: int, window: int, filled: bool) -> Lod:
     return Lod(b, bevel_mm=0.3 if level == 0 else None, ops=ops, bevel_segments=1, bevel_first=True)
 
 
+def add_slab_well(lod: Lod, s, body: int, window: int) -> None:
+    """LOD0's card well, a sealed cavity with window-material floor and ceiling. It is cut as the LAST boolean: the
+    parting-seam core that LOD0 unions back in (z t/2 +- 0.4) would otherwise refill the well, burying the card in
+    opaque body (seen in Unreal 2026-09-29: cards vanished close up, where LOD0 shows)."""
+    (_l, (_wx0, wy0, _wx1, wy1)) = _slab_openings(s)
+    wcy = (wy0 + wy1) / 2
+    ww, wh, wd = s["well"]
+    zf = s["well_floor_z"]
+    well = Builder()
+    well.box((-ww / 2, wcy - wh / 2, zf), (ww / 2, wcy + wh / 2, zf + wd), mat=body, mats={"pz": window, "nz": window})
+    lod.ops = list(lod.ops) + [("DIFFERENCE", well)]
+
+
 def _slab_item(filled: bool) -> Item:
     s = S.SLAB_STD
     w, h, t = s["w"], s["h"], s["t"]
@@ -229,9 +242,8 @@ def _slab_item(filled: bool) -> Item:
     zf = s["well_floor_z"]
     body, window = 0, (0 if filled else 1)
     lods = [_slab_lod(s, k, body, window, filled) for k in range(3)]
-    if not filled:              # LOD0: the card well, a sealed cavity (faces point inward)
-        lods[0].builder.box((-ww / 2, wcy - wh / 2, zf), (ww / 2, wcy + wh / 2, zf + wd), mat=body, inward=True,
-                            mats={"pz": window, "nz": window})
+    if not filled:
+        add_slab_well(lods[0], s, body, window)
     cw, ch = S.CARD_STD["w"], S.CARD_STD["h"]
     name = "SM_CSK_Slab_Std_Filled" if filled else "SM_CSK_Slab_Std"
     x_lug = w / 2 + s["lug"][2]

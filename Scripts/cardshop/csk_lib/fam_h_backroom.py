@@ -644,6 +644,8 @@ def item_mailer(size: str, opened: bool = False) -> Item:
     name = f"SM_CSK_Mailer_{size}" + ("_Open" if opened else "")
     b = _mailer_open(size) if opened else _mailer_sealed(size)
     contain, seat = _mailer_contain(W, L, T)
+    for c in contain.values():
+        c["hidden"] = True                      # the card rides inside the padded envelope, never seen
     ymax = L / 2 + (m["flap"] if opened else 0.0)
     zmax = T + (m["strip"][2] if opened else 0.0)
     mats = ["M_CSK_Kraft", "M_CSK_Bubble", "M_CSK_Paper"] if opened else ["M_CSK_Kraft"]
@@ -1201,9 +1203,11 @@ def item_handtruck() -> Item:
     seats = {"Nose": 152.0 + 77.0, "Nose_M": 305.0, "Nose_L": 406.0}
     socks = [Socket("Seat", (0, 0, 0))]
     for nm, depth in seats.items():
-        socks.append(Socket(nm, (0.0, y_back - depth / 2 - 0.5, nt), kind="CONTAIN"))
+        # 0.5 clear of the flange's real front face, which stands 0.8 proud of y_back (the box at line ~1159):
+        # seating on y_back put the L box 0.3 into the flange (build check contain_clear, 2026-09-29)
+        socks.append(Socket(nm, (0.0, y_back - 0.8 - depth / 2 - 0.5, nt), kind="CONTAIN"))
     socks += [Socket("Grip", (0.0, gc[1], gc[2])), Socket("Axle", (0.0, yA, R))]
-    cav = [[-320.0, y_back - 470.0, nt], [320.0, y_back, nt + 1300.0]]
+    cav = [[-320.0, y_back - 470.0, nt], [320.0, y_back - 0.8, nt + 1300.0]]   # to the flange front
     name = "SM_CSK_HandTruck"
     return Item(
         name=name, lods=lods, materials=["M_CSK_SteelBlue", "M_CSK_Rubber", "M_CSK_Metal"], projections={},
