@@ -82,7 +82,7 @@ ROLE_SCALE = dict(RC["PRESET_SCALE"][PRESET])       # the active preset's role s
 GOLDEN_SCALE = ROLE_SCALE                           # (old name, kept for the helper scripts)
 ROLE_KELVIN = dict(RC["PRESET_KELVIN"].get(PRESET, {}))   # night: absolute colour temperature per role (downlights 3500 K)
 MOON = RC["MOON"].get(PRESET)                       # night: the moon replaces the golden sun, the window fill is off
-SUN_W_M2 = float(RC["SUN"][PRESET])                 # golden 90 W/m2 (x power_scale: window fill 0.85); night: the moon 3
+SUN_W_M2 = float(RC["SUN"][PRESET])                 # golden 90 W/m2 (x power_scale: window fill 0.85); night: the moon 0.5 (r20 look; was 3)
 SUN_ANGLE_DEG = float(RC["SUN_ANGLE_DEG"])          # f1: 0.5 deg disc
 BLENDER_EXPOSURE_EV = float(RC["EXPOSURE"][PRESET])  # golden +2.4 EV, night +1.1 EV (AgX Very High Contrast)
 BLENDER_LOOK = RC["LOOK"]
@@ -155,7 +155,10 @@ UE_SKY_BY_PRESET = {"golden": {"sky_luminance_factor": (5.0, 3.5, 3.0)},
                     # display sRGB, Blender (0.011, 0.050, 0.105)): (1.0, 1.1, 1.9) gave a bright day sky, (0.08, 0.09,
                     # 0.16) (0.011, 0.036, 0.201), (0.08, 0.18, 0.04) (0.012, 0.123, 0.033), (0.06, 0.11, 0.10)
                     # (0.008, 0.057, 0.124)
-                    "night": {"sky_luminance_factor": (0.06, 0.11, 0.10)}}
+                    # r20 look (user: "lower the moon brightness by a lot so its darker outside"): the moon 300 -> 50
+                    # lux already darkens the physical sky (and the captured sky light) x1/6; Blender's camera sky went
+                    # x0.3 (NIGHT_SKY_CAM 1.0 -> 0.3), so the factor rises x1.8 to keep parity: (0.06, 0.11, 0.10) ->
+                    "night": {"sky_luminance_factor": (0.108, 0.198, 0.18)}}
 UE_SKY = UE_SKY_BY_PRESET[PRESET]
 # the real-time sky light (the shade fill of the Blender world's diffuse rays): golden 1.0; night 0.25 (Blender's diffuse
 # fill SKY["night"] is about a fifth of its camera sky where golden's is about half)
@@ -429,7 +432,10 @@ UE_OVERRIDES = {
     # the HPlank floor at Blender tint 1.8 read light grey oak (C1 floor_shade L 0.58 vs 0.36, floor_lo50 0.48 vs 0.30);
     # at bias -1.80: 0.9 went slightly dark, 1.0 matched the shaded boards (lo50 0.31 / 0.30, shadow_left 0.38 / 0.39);
     # the -1.58 bias (x1.165) then asks for 1.0 / 1.165 = 0.86
-    "M_AK_Plank": {"tint": 0.86},
+    # r20 look (2026-10-01, user: the floor reads grey): the dark walnut now lives in T_AK_HPlank_BC and the Blender tint
+    # is 1.0 (was 1.8); the Unreal / Blender albedo ratio stays 0.86 / 1.8 = 0.478, so the instance keeps the measured
+    # parity. A scalar (grey) Tint, so the hue and saturation are the map's: albedo sRGB (45, 27, 18), HSV 20 / 0.61 / 0.18 (was (53, 44, 38), 25 / 0.29 / 0.21)
+    "M_AK_Plank": {"tint": 0.48},
     # the unlit painting paper read bright (painting_centre L 0.57 vs 0.42): emission 0.1 -> 0.05 gave 0.42 / 0.42 at
     # bias -1.80; / 1.165 for the -1.58 bias
     "M_AK_HPaintingTall": {"emit": 0.043},

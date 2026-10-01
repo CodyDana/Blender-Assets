@@ -92,8 +92,14 @@ ROUTES = {
     # G2 / 7 X 8.90-9.70 / 10.02-10.87 / 10.00-10.85 / 9.05-9.95 at the same Y. The aisles are X 3.10-5.10 / 6.90-8.90:
     # the routes run up their middles, X 4.10 / 7.90 (1.00 m clear of the front pair, 1.00 m of cases 1 / 2, 1.10 m of
     # case 3, 1.15 m of the S cases at the rear)
-    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 2.3), (4.10, 2.75), (4.10, 15.45),
-                                   (4.3, 15.45), (4.3, 17.42)],
+    # r20 cases (build_armory_kit CASE_TABLE / SIDE_ROW_*: five cases per side in one straight row facing the aisle,
+    # all 1.10 x 0.90 m at rot +-90): west plinths X 2.50-3.40, east 8.60-9.50 (hulls ~1.3 cm larger), at Y 2.85-3.95,
+    # 5.50-6.60, 8.15-9.25, 10.80-11.90, 13.45-14.55 (1.55 m floor gaps, centred Y 4.725 / 7.375 / 10.025 / 12.675).
+    # The aisles keep X 4.10 / 7.90 (0.69 m clear of the rows' aisle faces, 0.99 m of cases 1 / 2). The west entry
+    # slant runs flatter, (3.0, 2.3) -> (4.10, 2.55), 0.43 m clear of the kunai case's front inner corner (3.41, 2.84)
+    # (r19 b: -> (4.10, 2.75), which would pass 0.30 m from it)
+    "mat_to_west_aisle_to_steps": [(6.0, 1.2), (4.8, 1.1), (3.0, 1.1), (3.0, 2.3), (4.10, 2.55), (4.10, 15.45),
+                                   (4.3, 15.45), (4.3, 17.42)],   # r19 b: ... (3.0, 2.3), (4.10, 2.75) ...
     # r19 (reference order, build_armory_kit CASE_TABLE): west 5 / 4 / G1 / G3 plinths X 2.40-3.40 / 2.70-3.60 /
     # 2.87-3.67 / 2.46-3.36 at Y 2.91-3.71 / 4.645-5.395 / 6.58-7.58 / 9.465-10.215; east 8 / 7 / 6 / G2 X 8.66-9.46 /
     # 8.76-9.76 / 8.58-9.38 / 8.52-9.42 at Y 2.80-3.80 / 4.70-5.50 / 6.925-7.675 / 9.525-10.275. The aisles keep X 4.10 /
@@ -124,8 +130,10 @@ ROUTES = {
     # case 2 (8.10): Y 6.95
     # r19: the cross walks behind the cloak / boots cases (backs 5.395 / 5.50) and before the scroll / hat cases (fronts
     # 6.58 / 6.925): Y 6.05; behind the rear talls (backs 10.215 / 10.275), before case 3 (12.90): Y 11.1
-    "centre_gap_case1_case2": [(0.75, 6.05), (11.25, 6.05)],   # r18: Y 6.95
-    "centre_gap_case2_case3": [(0.75, 11.1), (11.25, 11.1)],   # r18: Y 10.0 (now inside the rear talls)
+    # r20 cases: through the side rows' second gaps (Y 6.60-8.15) between case 1 (back 4.65) and case 2 (front 8.10),
+    # and their third gaps (Y 9.25-10.80) between case 2 (back 9.30) and case 3 (front 12.90)
+    "centre_gap_case1_case2": [(0.75, 7.38), (11.25, 7.38)],   # r19: Y 6.05; r18: Y 6.95
+    "centre_gap_case2_case3": [(0.75, 10.03), (11.25, 10.03)],   # r19: Y 11.1; r18: Y 10.0
     "centre_gap_case3_to_flight": [(0.75, 15.3), (11.25, 15.3)],
     # r20 round 3 (NEW): between case 5 / 8 and case 1 (X 3.45-5.10 / 6.90-8.55), from the wall walk to the centre gap
     # r16: through the 0.80 m gap between the front case and the second case (5 / 4, 8 / 7) onto the aisle
@@ -134,8 +142,9 @@ ROUTES = {
     # aisle behind it, then down the aisle to the step beam
     # r18 cases round: nothing stands behind the front case now: straight across behind it (its back Y 4.35) to the aisle
     # r19: through the 0.935 / 0.90 m gap between the front case and the cloak / boots case behind it
-    "west_wall_behind_case5_to_aisle": [(0.75, 4.18), (4.10, 4.18), (4.10, 2.9)],     # r18: Y 5.55
-    "east_wall_behind_case8_to_aisle": [(11.25, 4.25), (7.90, 4.25), (7.90, 2.9)],    # r18: Y 5.55
+    # r20 cases: through the rows' first gaps (Y 3.95-5.50), behind the kunai / shuriken case
+    "west_wall_behind_case5_to_aisle": [(0.75, 4.72), (4.10, 4.72), (4.10, 2.9)],     # r19: Y 4.18; r18: Y 5.55
+    "east_wall_behind_case8_to_aisle": [(11.25, 4.72), (7.90, 4.72), (7.90, 2.9)],    # r19: Y 4.25; r18: Y 5.55
     # r17 (NEW): into the rows' own gaps from the aisle to the wall walk: behind case 4 / 7 and behind G1 / 6
     # r17 fix round: behind the wall talls 4 / 6 (to Y 8.60), in front of the back talls G3 / G2 (from 12.40) and
     # behind them (to 13.40)
@@ -147,19 +156,23 @@ ROUTES = {
     # X 2.71-3.61, Y 9.755-10.505; east G5 X 8.39-9.29, Y 8.075-8.825 and G2 X 8.37-9.27, Y 9.715-10.465; 0.40 m of
     # floor (no route) between the scroll / hat case and the near tall. The r19 a routes at Y 8.52 / 8.60 now cross the
     # near talls: they move into the gap between the pair (1.02 / 0.89 m wide), Y 9.25 / 9.27
-    "west_aisle_between_G4_and_G3_to_wall": [(4.10, 9.25), (0.75, 9.25)],     # r19 a: between G1 and G3, Y 8.52
-    "east_aisle_between_G5_and_G2_to_wall": [(7.90, 9.27), (11.25, 9.27)],    # r19 a: between case 6 and G2, Y 8.60
+    # r20 cases: the rows' fourth gaps (Y 11.90-13.45), between G4 / G5 and the last cases G3 / G2
+    "west_aisle_between_G4_and_G3_to_wall": [(4.10, 12.68), (0.75, 12.68)],   # r19 b: Y 9.25; r19 a: Y 8.52
+    "east_aisle_between_G5_and_G2_to_wall": [(7.90, 12.68), (11.25, 12.68)],  # r19 b: Y 9.27; r19 a: Y 8.60
     # r18 final fix (build_armory_kit CASE_TABLE / CASES: talls 0.90 x 0.75, S 1.0 x 0.8): west 4 / G3 / G1 plinths X
     # 1.13-1.88 / 1.60-2.35 / 2.13-2.93 at Y 7.85-8.75 / 10.50-11.40 / 13.93-14.93, the front SF 5 Y 3.25-4.25; east
     # mirrored. Behind case 4 (Y 9.6, 0.85 / 0.90 m clear), behind the back tall G3 / G2 (Y 12.1) and between it and the
     # S case (Y 13.3, 0.63 m clear of the S front); "before G3" (Y 11.4) is now inside G3's footprint, replaced by
     # "behind G3". The cross walk at Y 15.3 passes 0.37 m behind the S cases (backs 14.93)
-    "west_aisle_behind_G3_to_wall": [(4.10, 12.1), (0.75, 12.1)],
-    "east_aisle_behind_G2_to_wall": [(7.90, 12.1), (11.25, 12.1)],
+    # r20 cases: behind the last cases G3 / G2 (backs Y 14.55), 0.44 m clear of their hulls
+    "west_aisle_behind_G3_to_wall": [(4.10, 15.0), (0.75, 15.0)],     # r19 b: Y 12.1
+    "east_aisle_behind_G2_to_wall": [(7.90, 15.0), (11.25, 15.0)],    # r19 b: Y 12.1
     # r19: nothing stands behind the rear talls any more; the r18 routes between G3 / G2 and the S cases (Y 13.3) now
     # cross open floor before case 3's flank
-    "west_aisle_rear_floor_to_wall": [(4.10, 13.3), (0.75, 13.3)],
-    "east_aisle_rear_floor_to_wall": [(7.90, 13.3), (11.25, 13.3)],
+    # r20 cases: Y 13.3 now crosses G3 / G2 (Y 13.45-14.55); the rear floor walk runs along case 3's flank instead,
+    # from the aisle mouth by the flight down the gap between the row and case 3 (X 4.10 / 7.90) to the fourth gap
+    "west_aisle_rear_floor_to_wall": [(4.10, 15.3), (4.10, 12.68), (0.75, 12.68)],   # r19 b: (4.10, 13.3) -> (0.75, 13.3)
+    "east_aisle_rear_floor_to_wall": [(7.90, 15.3), (7.90, 12.68), (11.25, 12.68)],
     # rear dais: case 3's back is Y 11.8 (X 5.2-6.8); up the flight on a slant onto the landing, the hero table front
     # at Y 14.55 on the +0.90 deck
     "aisle_up_the_steps_to_hero_table": [(9.0, 15.45), (7.7, 15.45), (6.0, 17.42), (6.0, 18.45)],   # r20 fix round

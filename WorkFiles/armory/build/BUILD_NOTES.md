@@ -2231,3 +2231,81 @@ C3 0.154 / 0.165, C4 0.271 / 0.199, C5 0.181 / 0.163, CW 0.119 / 0.115, CX 0.109
 - C4 in Unreal is brighter than in Blender (0.271 against 0.199): the slate reads lighter and the case's side posts
   glow amber.
 - At golden hour, C4 is sunlit and the slate washes out. Night, the default, is fine.
+
+## 2026-10-01: r20 round made live (night_r20) + Unreal night rebuild (Nanite fix, V first person)
+
+User: "all cases on the side should be facing inwards. also each side should have a total of 5 cases ... nanite job
+overflow error ... make each case sizeable and evenly spaced on the sides ... first person on the 'v' key ... the wood
+flooring should be like dark brown like the reference ... lower the moon brightness by a lot". The chosen state is test
+copy `hero/room_preview/r20/final2` (judge 7.5/10). The scripts were already live in `Scripts/armory/` (none newer than
+the final2 blend). Built live under the ArmoryKit lock (claimed 00:19, released 00:27, before the Unreal capture). No MCP.
+
+**What changed.** Five side cases per side in one straight row, all turned to face the aisle (west rot_z +90, east -90),
+every side case 1.10 x 0.90 m, centres at X 2.95 / 9.05 and Y 3.40, 6.05, 8.70, 11.35, 14.00 (2.65 m pitch, equal
+1.55 m clear gaps). West from the entry: 5 S, 4 Tall, G1 S, G4 MT, G3 Tall; east: 8 SF (the tray, unchanged, manji
+included), 7 S, 6 MT, G5 MT, G2 Tall. The floor: a dark walnut albedo baked into `T_AK_HPlank_BC` (tex_shared
+PLANK_TARGET, Blender FLOOR_TINT 1.80 -> 1.0; Unreal tint 0.48 keeps the measured parity). The moon: Blender 3.0 -> 0.5 W/m2,
+Unreal 300 -> 50 lux; the Blender night world fill 0.05 -> 0.015, camera sky 1.0 -> 0.3, scenery cards 0.012 -> 0.004. Unreal: Nanite on for 109 of 116 kit meshes (605 of 618
+actors; the 7 case-glass meshes stay non-Nanite) and the opaque masters marked "Used with Nanite"; the ArmoryLab C++
+module with the V view toggle.
+
+**Textures.** `tex_shared.py plank` regenerated `T_AK_HPlank_BC / _N / _ORM` into `Exports/ArmoryKit/Textures`; all three
+are byte-identical (md5) to `r20/final2/Textures` (only the BC changed from r19).
+
+**Live build with export** (`build_armory_kit.py`, no flags): QA 116 pieces, hard fails 0; 116 FBX exported;
+`ArmoryKit.blend` saved with 618 instances. `WorkFiles/armory/build/layout.json` is byte-identical to final2's. No
+orphaned FBX (Exports/ArmoryKit holds exactly the 116 layout pieces; nothing went to the Recycle Bin). Log:
+`renders/night_r20/build_log.txt`.
+
+**Walk check (live blend):** passed; 39 / 39 routes clear; both controls blocked (case 1 at (6.0, 3.0), stone lantern at
+(7.58, -7.3)); entry_steps_ok; largest step up 0.15 m. Log: `renders/night_r20/walk_log.txt`.
+
+**Drawing:** `WorkFiles/armory/ARMORY_LAYOUT.svg/.txt` regenerated (side cases as above); `ARMORY_SITE` unchanged.
+
+**Renders** (Cycles, night, `night_r20/render.sh`): `renders/night_r20/` C1, CX, C10, C3, C5, CW, C4, CG and
+CN_WestNiche (via `night_r20/layout_cams.json`) at 1600 x 900; `night_r20/ref_aspect/` C1 at 1448 x 1086. Sheets
+(`night_r20/compare.py`): `compare/C1_ref_vs_night_r19_vs_night_r20.png` (+ `_1600x900`), `<cam>_night_r19_vs_night_r20.png`.
+
+Whole-frame mean display luminance, night_r19 -> night_r20 (reference 2 is 0.328): C1 ref aspect 0.151 -> 0.121,
+C1 0.166 -> 0.131, CX 0.096 -> 0.081, C10 0.153 -> 0.153, C3 0.165 -> 0.158, C5 0.163 -> 0.102, CW 0.115 -> 0.101,
+C4 0.199 -> 0.111, CG 0.116 -> 0.023 (the darker moon), CN 0.127 -> 0.128. C4 / C5 / CW frame different cases now, so
+they are not like for like.
+
+### Unreal night rebuild (00:23-00:29, all steps exit 0)
+No UnrealEditor.exe and no ArmoryLab log activity; a DojoLab verify commandlet (another chat) ran at 00:26-00:27 and the
+capture waited for it. `run_armory_unreal.sh` with no arguments now runs: project bounds build import materials level
+manny firstperson verify character walk capture fptest stats. `ak_image_stats.py` / `ak_compare_sheet.py` baseline is
+now `renders/night_r20`, fallback `night_r19`.
+
+| Step | Result |
+|---|---|
+| build | ArmoryLabEditor Win64 Development: Succeeded (up to date) |
+| import | 116 meshes, 107 textures (HPlank_BC reimported, sha256 matches Exports); Nanite on 109 / off 7, wrong 0; no stale assets |
+| materials | 10 masters, 132 instances, 116 meshes; 0 unmatched slots |
+| level | 618 actors (605 Nanite, 13 non-Nanite glass); bounds gate max 0.0049 cm; Moon 50 lux; 114 local lights, 12 shadowed |
+| firstperson | IA_ToggleView + IMC_ArmoryView (V only) + one ViewToggle component on the character |
+| verify (fresh process) | Gates 1-8 all pass (8 = the view toggle) |
+| manny / character / walk | Pass |
+| capture | all layout cameras + C1 ref aspect; "[VSM] Non-Nanite Marking Job Queue overflow" 0 times in `logs/capture.log` |
+| fptest (offscreen game run) | passed: V -> first person (view 9.0 cm from the head), V -> third person (412.4 cm); the VSM overflow warning 0 times in `logs/fptest.log`; `fptest.json` |
+| stats / compare | `unreal/capture_stats.json`; sheets rerun by hand: `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+Whole-frame mean (Unreal / Blender night_r20): C1 ref aspect 0.123 / 0.121, C1 0.129 / 0.131, C10 0.183 / 0.153,
+C3 0.148 / 0.158, C4 0.153 / 0.111, C5 0.110 / 0.102, CW 0.107 / 0.101, CX 0.090 / 0.081, CG 0.031 / 0.023.
+
+**How to use V (first person).** Open ArmoryLab, open `/Game/Armory/Maps/L_Armory`, press Play. You start in the
+template's third-person view. Press **V** to switch to first person (a camera at the character's eyes; the body is hidden
+from you but still casts its shadow; the character turns with the mouse). Press **V** again to go back to third person,
+exactly as before. The key lives in `/Game/ArmoryLab/Input/IMC_ArmoryView` (IA_ToggleView); change the key there. The
+component is `ArmoryViewToggleComponent` ("ViewToggle") on the ArmoryLab copy of BP_ThirdPersonCharacter; its C++ source
+is `Scripts/armory/unreal/cpp/Source` (make_project.py copies it into the project, the "build" step compiles it). After
+pulling new sources, let the editor rebuild the module or run `run_armory_unreal.sh project build`.
+
+**Open:**
+- The fptest game run is 17.7 s (walk in, look round in both views); the user's PIE warning came about 28 s in. A longer
+  PIE walk down both aisles with the shadowed case lights in view is the stronger proof; the user should watch for the
+  warning in their own play session.
+- C4 in Unreal: the tray slate reads lighter and bluer than Blender (0.153 vs 0.111, sat 0.18 vs 0.39). Pre-existing.
+- r20 final2 judge: in golden light the sun stripes on the floor go pale salmon and golden C1 is brighter than the
+  reference; the east row's height rhythm is not mirrored (west S / Tall / S / MT / Tall, east SF / S / MT / MT / Tall);
+  side cases could grow to about 1.3 m; the top of tall case 4 cuts the top-left of CW.

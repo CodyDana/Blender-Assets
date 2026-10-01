@@ -13,6 +13,7 @@ entrance.png, rear_alcove.png, ceiling_coffer.png (timber), banner.png (banner),
   M_AK_Glass   the kit's thin see-through pane with a faint neutral-grey tint and a stronger Fresnel reflection, so the
                panes read as glass (build_material's optional glass params "tint" and "refl"; kit defaults: clear, 0.02).
   M_AK_Plank   calibration pass 1 (2026-09-28, in the room): the floor in the satin copy T_AK_HPlank, stain x FLOOR_TINT.
+               r20 look (2026-10-01): a rich dark walnut albedo baked into T_AK_HPlank_BC (tex_shared PLANK_TARGET), tint 1.0.
   Not overridden here: M_AK_Mat, M_AK_LanternPaper (other passes own those looks).
 
 Pieces (same names, pivots, facing, bbox and col() as the scripted ones in build_armory_kit.kit()):
@@ -47,7 +48,7 @@ ENABLED = True   # the user reviews images of every change BEFORE anything goes 
 
 T = "M_AK_Timber"
 TILE_T = 2.0      # M_AK_Timber keeps the kit's 2 m tile (other modules read G["TILE"])
-FLOOR_TINT = 1.80   # calibration pass 2: 2.20 -> 1.80 (reference 2: a dark walnut, its C1 "front floor" 0.53 is a SHEEN reflection, not albedo). Pass 1: the kit's 1.0 -> 2.20
+FLOOR_TINT = 1.0   # r20 look (2026-10-01, user: the floor reads grey, the reference is dark brown): 1.80 -> 1.0, the dark walnut colour now lives in T_AK_HPlank_BC (tex_shared PLANK_TARGET #42291D: albedo sRGB (77, 65, 56) HSV 25 / 0.27 / 0.30 -> (66, 41, 29) HSV 20 / 0.56 / 0.26). Calibration pass 2: 2.20 -> 1.80 (reference 2: a dark walnut, its C1 "front floor" 0.53 is a SHEEN reflection, not albedo). Pass 1: the kit's 1.0 -> 2.20
 
 MATERIALS = {
     T: ("HTimber", TILE_T, {}),

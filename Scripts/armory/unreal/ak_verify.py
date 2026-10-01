@@ -26,6 +26,10 @@ Gates (all must pass; every count comes from the exports on disk or from layout.
  6 items       every layout.json item on display (pack asset, placement, +1 scale, sockets)
  7 hero        hero round: every layout.json hero piece is a mesh with all slots assigned, placed as often as layout.json
                places it (per hero module). The suns' forward shading priority (sun 1, window fill 0) is checked in gate 5.
+ 8 view        (2026-10-01) the V first-person toggle is wired: IA_ToggleView, IMC_ArmoryView mapping exactly V to it, and
+               ONE ArmoryViewToggleComponent on BP_ThirdPersonCharacter with both assigned (the runtime proof that V
+               switches the view is the fptest step). Gate 1 also checks Nanite per mesh (ak_nanite.want_nanite: on for
+               opaque meshes, off for the translucent case glass pieces).
 Result: WorkFiles/armory/build/unreal/verify.json
 """
 import json
@@ -38,6 +42,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import unreal  # noqa: E402
 import ak_common as C  # noqa: E402
+import ak_nanite as N  # noqa: E402
 
 EAL = unreal.EditorAssetLibrary
 EAS = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
@@ -47,6 +52,7 @@ TEX_WANT = {"BC": ("True", "TC_DEFAULT", None), "ORM": ("False", "TC_MASKS", Non
 
 def gate_meshes(bl):
     out, ok = {}, True
+    mats = C.blender_materials()
     for name, p in sorted(bl["pieces"].items()):
         m = unreal.load_asset(f"{C.MESH_DEST}/{name}")
         e = {}
@@ -67,7 +73,9 @@ def gate_meshes(bl):
         e["tris_lod0"] = int(m.get_num_triangles(0)) if hasattr(m, "get_num_triangles") else None
         e["tris_blender"] = p["tris"]
         e["nanite"] = str(m.get_editor_property("nanite_settings").get_editor_property("enabled"))
+        e["nanite_want"] = str(N.want_nanite(p["slots"], mats))   # VSM overflow fix: opaque meshes Nanite, case glass not
         e["ok"] = (e["convex"] == e["ucx_blender"] and e["other_simple"] == 0 and sorted(slots) == sorted(p["slots"])
+                   and e["nanite"] == e["nanite_want"]
                    and all(k == v for k, v in slots.items())
                    and (e["tris_lod0"] is None or e["tris_lod0"] == p["tris"]))
         ok &= e["ok"]
@@ -78,7 +86,8 @@ def gate_meshes(bl):
     ue = {p.split(".")[0].rsplit("/", 1)[-1] for p in EAL.list_assets(C.MESH_DEST, recursive=False, include_folder=False)}
     sets = {"blender_not_layout": sorted(set(bl["pieces"]) - lay), "layout_not_blender": sorted(lay - set(bl["pieces"])),
             "unreal_not_layout": sorted(ue - lay), "layout_not_unreal": sorted(lay - ue)}
-    return {"meshes": out, "n": len(out), "sets": sets,
+    nan = [k for k, v in out.items() if v.get("nanite") == "True"]
+    return {"meshes": out, "n": len(out), "sets": sets, "n_nanite": len(nan), "non_nanite": sorted(set(out) - set(nan)),
             "passed": ok and len(out) == C.n_meshes() and not any(sets.values())}
 
 
@@ -200,13 +209,13 @@ def gate_level(layout, bl):
             bad_channels.append(lab)
         if inst.get("cast_shadow") is False and bool(smc.get_editor_property("cast_shadow")):
             bad_shadow.append(lab)
-        o, e = a.get_actor_bounds(False)
-        u = [o.x - e.x, o.y - e.y, o.z - e.z, o.x + e.x, o.y + e.y, o.z + e.z]
+        umin, umax, basis, _render = N.actor_box(a)   # Nanite: the placed LOD0 source box (ak_nanite)
+        u = umin + umax
         b = bl["instances"][str(n)]
         wmin, wmax = C.bbox_bl_to_ue(b["min"], b["max"])
         err = max(abs(p - q) for p, q in zip(u, wmin + wmax))
         worst = max(worst, err)
-        rows[n] = {"label": lab, "err_cm": round(err, 4), "ue": [round(v, 3) for v in u],
+        rows[n] = {"label": lab, "err_cm": round(err, 4), "basis": basis, "ue": [round(v, 3) for v in u],
                    "blender_converted": [round(v, 3) for v in wmin + wmax]}
     door = next(n for n, i in enumerate(layout["instances"]) if i["piece"].startswith("SM_AK_Entrance_"))
     east = next(n for n, i in enumerate(layout["instances"])
@@ -385,6 +394,33 @@ def gate_lights(layout, actors):
     return res
 
 
+def gate_view():
+    """The V first-person toggle (ak_firstperson.py) as saved: assets, the V mapping, the component on the character."""
+    IA, IMC, CH = "/Game/ArmoryLab/Input/IA_ToggleView", "/Game/ArmoryLab/Input/IMC_ArmoryView",         "/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter"
+    res = {"module_loaded": hasattr(unreal, "ArmoryViewToggleComponent")}
+    imc = unreal.load_asset(IMC) if EAL.does_asset_exist(IMC) else None
+    res["ia"] = EAL.does_asset_exist(IA)
+    maps = []
+    if isinstance(imc, unreal.InputMappingContext):
+        for mp in imc.get_editor_property("default_key_mappings").get_editor_property("mappings"):
+            act = mp.get_editor_property("action")
+            maps.append([act.get_path_name().split(".")[0] if act else None,
+                         str(mp.get_editor_property("key").get_editor_property("key_name"))])
+    res["imc_mappings"] = maps
+    comps = []
+    if res["module_loaded"]:
+        sds = unreal.get_engine_subsystem(unreal.SubobjectDataSubsystem)
+        lib = unreal.SubobjectDataBlueprintFunctionLibrary
+        for h in sds.k2_gather_subobject_data_for_blueprint(unreal.load_asset(CH)):
+            o = lib.get_associated_object(lib.get_data(h))
+            if isinstance(o, unreal.ArmoryViewToggleComponent):
+                a, c = o.get_editor_property("toggle_view_action"), o.get_editor_property("toggle_view_context")
+                comps.append([a.get_path_name().split(".")[0] if a else None, c.get_path_name().split(".")[0] if c else None])
+    res["components"] = comps
+    res["passed"] = bool(res["module_loaded"] and res["ia"] and maps == [[IA, "V"]] and comps == [[IA, IMC]])
+    return res
+
+
 def main():
     t0 = time.time()
     rep = {"engine": unreal.SystemLibrary.get_engine_version(), "preset": C.PRESET}
@@ -398,8 +434,9 @@ def main():
         rep["5_lights"] = gate_lights(layout, actors)
         rep["6_items"] = gate_items(layout, actors)
         rep["7_hero"] = gate_hero(layout, actors)
+        rep["8_view"] = gate_view()
         rep["gates"] = {k: rep[k]["passed"] for k in ("1_meshes", "2_textures", "3_materials", "4_level", "5_lights",
-                                                        "6_items", "7_hero")}
+                                                        "6_items", "7_hero", "8_view")}
         rep["passed"] = all(rep["gates"].values())
     except Exception:  # noqa: BLE001
         rep["error"] = traceback.format_exc()[-3000:]

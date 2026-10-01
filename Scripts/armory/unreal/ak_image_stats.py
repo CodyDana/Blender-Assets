@@ -2,7 +2,7 @@
 
 1. Tone: display-value luminance (Rec.709 weights on the 8-bit sRGB values / 255) mean, p10, p50, p90, share below 0.2,
    cream share (L > 0.6 and HSV saturation < 0.35), mean HSV saturation (pixels with max > 0.02), for every Unreal capture,
-   the matching Blender render of the preset (env AK_PRESET, default night: renders/night_r19, fallback night_r18; golden:
+   the matching Blender render of the preset (env AK_PRESET, default night: renders/night_r20, fallback night_r19; golden:
    renders/hero_live; key "blender") and the LOOK reference.
 2. Exposure sweep (captures/diag/<cam>_bias_*.png): the bias whose frame mean / p50 best matches the Blender golden render.
 3. Convergence: mean absolute difference (8-bit levels) between successive checkpoints of each camera's capture sequence,
@@ -24,6 +24,7 @@ CAP = OUT / "captures"
 PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # night + genkan (2026-09-28)
 # the Blender renders of the same preset: night = renders/night_live2 (the live entry-fix round 2 build; was night_live); golden =
 # renders/hero_live (hero round: the live hero build; was stage_f2, fix1 before)
+# r20 round live (2026-10-01): night = renders/night_r20 (all eight views), fallback night_r19
 # r19 round live (2026-09-30): night = renders/night_r19 (all eight views), fallback night_r18
 # r18 round live (2026-09-30): night = renders/night_r18 (all eight views), fallback night_r17
 # r17 round live (2026-09-29): night = renders/night_r17 (all eight views), fallback night_r16
@@ -32,8 +33,8 @@ PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # nig
 # rear dais live (2026-09-28): night = renders/night_live4 (C1, CX, C10, C3, CW, CG); views it lacks (C4, C5) fall back
 # to night_live2 via bl_file()
 _RENDERS = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory\build\renders")
-BL = _RENDERS / ("night_r19" if PRESET == "night" else "hero_live")
-BL_FALLBACK = _RENDERS / "night_r18" if PRESET == "night" else None
+BL = _RENDERS / ("night_r20" if PRESET == "night" else "hero_live")
+BL_FALLBACK = _RENDERS / "night_r19" if PRESET == "night" else None
 
 
 def bl_file(rel):

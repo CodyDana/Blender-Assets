@@ -18,6 +18,9 @@ Night + genkan (2026-09-28): the lighting follows ak_common.PRESET (env AK_PRESE
 the golden-hour level). Night: ONE directional light, the moon (ak_common.directional_specs; SkyAtmosphere light,
 priority 1, no scattering), the night practical powers and downlight 3500 K, the night sky (UE_SKY_BY_PRESET,
 SKYLIGHT_INTENSITY), no height / volumetric fog, the night exposure bias; the scenery-card dimming is in the materials.
+Nanite (2026-10-01, the VSM "Non-Nanite Marking Job Queue overflow" warning): the import makes every opaque kit mesh
+Nanite (ak_nanite.py); this step marks the masters those meshes use "Used with Nanite" (saved), so no run has to
+discover and compile the usage on the fly, and reports how many placed mesh actors are Nanite.
 Result: WorkFiles/armory/build/unreal/level.json (in-process; ak_verify.py re-checks the saved level in a fresh process).
 Env: AK_PRESET night|golden; AK_EXPOSURE_BIAS overrides the exposure bias (EV).
 """
@@ -32,6 +35,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import unreal  # noqa: E402
 import ak_common as C  # noqa: E402
+import ak_nanite as N  # noqa: E402
 
 EAL = unreal.EditorAssetLibrary
 EAS = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
@@ -162,15 +166,18 @@ def place_items(layout):
 def bounds_gate(placed, layout):
     bb = json.loads(C.BLENDER_BOUNDS.read_text(encoding="utf-8"))["instances"]
     rows, worst = {}, 0.0
+    nanite_render_worst = 0.0
     for n, a in placed.items():
-        o, e = a.get_actor_bounds(False)
-        umin = [o.x - e.x, o.y - e.y, o.z - e.z]
-        umax = [o.x + e.x, o.y + e.y, o.z + e.z]
+        # Nanite meshes: the placed LOD0 source box (their render bounds include the coarse cluster levels, ak_nanite)
+        umin, umax, basis, (rmin, rmax) = N.actor_box(a)
         b = bb[str(n)]
         wmin, wmax = C.bbox_bl_to_ue(b["min"], b["max"])
         err = max(abs(p - q) for p, q in zip(umin + umax, wmin + wmax))
         worst = max(worst, err)
-        rows[n] = {"label": a.get_actor_label(), "err_cm": round(err, 4), "ue_min": [round(v, 3) for v in umin],
+        if basis != "render":
+            nanite_render_worst = max(nanite_render_worst, max(abs(p - q) for p, q in zip(rmin + rmax, wmin + wmax)))
+        rows[n] = {"label": a.get_actor_label(), "err_cm": round(err, 4), "basis": basis,
+                   "ue_min": [round(v, 3) for v in umin],
                    "ue_max": [round(v, 3) for v in umax], "blender_converted_min": [round(v, 3) for v in wmin],
                    "blender_converted_max": [round(v, 3) for v in wmax]}
     door = next(n for n, i in enumerate(layout["instances"]) if i["piece"].startswith("SM_AK_Entrance_"))
@@ -178,6 +185,8 @@ def bounds_gate(placed, layout):
                 if i["piece"] == "SM_AK_WallLower_2" and float(i["rot_z"]) == 90.0)
     gate = {"tolerance_cm": TOL_CM, "n_checked": len(rows), "n_layout": len(layout["instances"]),
             "max_err_cm_all": round(worst, 4), "door_piece": rows.get(door), "east_wall_piece": rows.get(east),
+            "n_nanite_source_basis": sum(1 for v in rows.values() if v["basis"] != "render"),
+            "nanite_render_bounds_max_dev_cm_info": round(nanite_render_worst, 3),
             "failures": {k: v for k, v in rows.items() if v["err_cm"] > TOL_CM}}
     gate["passed"] = (len(rows) == len(layout["instances"]) and not gate["failures"]
                       and rows.get(door, {}).get("err_cm", 99) <= TOL_CM and rows.get(east, {}).get("err_cm", 99) <= TOL_CM)
@@ -401,6 +410,33 @@ def cameras(layout):
     return out
 
 
+def nanite_material_usage():
+    """Every master an opaque (Nanite) kit mesh uses gets the Nanite material usage; recompiled and saved only when it
+    changes. Returns {master: state}."""
+    out = {}
+    for m in N.nanite_masters():
+        mat = unreal.load_asset(f"{C.MAT_DEST}/{m}") if EAL.does_asset_exist(f"{C.MAT_DEST}/{m}") else None
+        if not isinstance(mat, unreal.Material):
+            out[m] = "missing"
+            continue
+        if bool(mat.get_editor_property("used_with_nanite")):
+            out[m] = "already"
+            continue
+        if not setp(mat, "used_with_nanite", True):
+            out[m] = "set failed"
+            continue
+        unreal.MaterialEditingLibrary.recompile_material(mat)
+        out[m] = "set, saved" if EAL.save_loaded_asset(mat, False) else "set, NOT saved"
+    return out
+
+
+def nanite_census(placed):
+    on = sum(1 for a in placed.values()
+             if bool(a.static_mesh_component.get_editor_property("static_mesh")
+                     .get_editor_property("nanite_settings").get_editor_property("enabled")))
+    return {"mesh_actors": len(placed), "nanite": on, "non_nanite": len(placed) - on}
+
+
 def save():
     les = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
     ok = False
@@ -421,6 +457,8 @@ def main():
         placed = place_meshes(layout)
         REP["mesh_actors"] = len(placed)
         REP["bounds_gate"] = bounds_gate(placed, layout)
+        REP["nanite_material_usage"] = nanite_material_usage()
+        REP["nanite_actors"] = nanite_census(placed)
         lights = [L for L in layout["lights"] if L["type"] != "sun"]
         suns = C.directional_specs(layout)   # golden: the two layout suns; night: the moon alone
         REP["suns"] = [sun(S, i) for i, S in enumerate(suns)]
@@ -442,6 +480,7 @@ def main():
         REP["n_directional_want"] = len(suns)
         REP["forward_shading_priority_ok"] = all(sf.get("forward_shading_priority_ok") for sf in REP["suns"])
         REP["passed"] = (REP["bounds_gate"]["passed"] and REP["saved"] and sun_ok
+                         and all(v in ("already", "set, saved") for v in REP["nanite_material_usage"].values())
                          and REP["n_shadowed_local"] <= C.MAX_SHADOWED_LOCAL and not REP["setp_failed"]
                          and REP["forward_shading_priority_ok"] and REP["n_directional"] == REP["n_directional_want"])
     except Exception:  # noqa: BLE001

@@ -1,7 +1,10 @@
 """Create (or refresh) the ArmoryLab Unreal 5.8 project files. Plain Python, no Unreal. Idempotent: a file is only
 rewritten when its content differs, and nothing outside the ArmoryLab folder is written.
 
-- ArmoryLab.uproject: EngineAssociation 5.8, Blueprint-only (no Modules), PythonScriptPlugin + EditorScriptingUtilities.
+- ArmoryLab.uproject: EngineAssociation 5.8, PythonScriptPlugin + EditorScriptingUtilities, and (2026-10-01) one C++ game
+  module "ArmoryLab": the V first-person toggle (UArmoryViewToggleComponent). Its sources live in
+  Scripts/armory/unreal/cpp/Source and are copied into ArmoryLab/Source here (the repo copy is the source of truth);
+  run_armory_unreal.sh "build" compiles them with UnrealBuildTool, "firstperson" wires the component into the character.
 - Config/DefaultEngine.ini: the RENDER settings of DemoGame_1 (read-only source, parsed, never written), plus the legacy FBX
   importer flag and the armory map as the game/editor default map.
 - Config/DefaultGame.ini: project name.
@@ -121,6 +124,9 @@ UPROJECT = {
     "EngineAssociation": "5.8",
     "Category": "",
     "Description": "Armory gallery lab: the room and empty display cases (lean build).",
+    "Modules": [
+        {"Name": "ArmoryLab", "Type": "Runtime", "LoadingPhase": "Default"},   # the V first-person toggle
+    ],
     "Plugins": [
         {"Name": "PythonScriptPlugin", "Enabled": True},
         {"Name": "EditorScriptingUtilities", "Enabled": True},
@@ -130,6 +136,17 @@ UPROJECT = {
 
 GAME_INI = "\n".join(["[/Script/EngineSettings.GeneralProjectSettings]", "ProjectName=ArmoryLab",
                       "Description=Armory gallery lab (lean build)", ""])
+
+
+CPP_SOURCE = Path(__file__).resolve().parent / "cpp" / "Source"
+
+
+def sync_cpp(report):
+    """Copy the game module's sources (Scripts/armory/unreal/cpp/Source) into ArmoryLab/Source. Only files that differ
+    are rewritten (so UnrealBuildTool's up-to-date check holds); nothing else in Source is touched."""
+    for f in sorted(CPP_SOURCE.rglob("*")):
+        if f.is_file():
+            put(C.PROJECT_DIR / "Source" / f.relative_to(CPP_SOURCE), f.read_text(encoding="utf-8"), report)
 
 
 def put(path, text, report):
@@ -149,6 +166,7 @@ def main():
     text, copied = engine_ini()
     put(C.PROJECT_DIR / "Config" / "DefaultEngine.ini", text, rep["files"])
     put(C.PROJECT_DIR / "Config" / "DefaultGame.ini", GAME_INI, rep["files"])
+    sync_cpp(rep["files"])
     (C.PROJECT_DIR / "Content").mkdir(parents=True, exist_ok=True)
     rep["template_content"] = {}
     for src, rel in TEMPLATE_COPIES:

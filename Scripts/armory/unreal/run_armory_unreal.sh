@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
 # ArmoryLab Unreal assembly (lean build), ONE Unreal process at a time machine-wide, each step its own fresh process.
-#   run_armory_unreal.sh [steps...]     default: project bounds import materials level verify manny character walk capture stats
+#   run_armory_unreal.sh [steps...]     default: project bounds build import materials level manny firstperson verify character walk capture fptest stats
 # steps:
-#   project    (no Unreal) write/refresh the ArmoryLab .uproject + Config from DemoGame_1's render settings (read-only)
+#   project    (no Unreal) write/refresh the ArmoryLab .uproject + Config from DemoGame_1's render settings (read-only),
+#              and copy the C++ game module (Scripts/armory/unreal/cpp/Source) into ArmoryLab/Source
+#   build      (UnrealBuildTool, no editor) compile the ArmoryLab module (ArmoryLabEditor Win64 Development): the V
+#              first-person toggle component; every Unreal step after it needs these binaries
 #   bounds     (Blender -b) dump the Blender AABBs + slot names the gates compare against
 #   import     commandlet -nullrhi: meshes + textures into /Game/ArmoryKit
 #   materials  commandlet -nullrhi: masters + one MI per Blender slot name, assigned by slot name
 #   level      commandlet -nullrhi: /Game/Armory/Maps/L_Armory from layout.json + the Blender->UE bounds gate, saved
 #   verify     commandlet -nullrhi, FRESH process: reload the saved assets + level, every gate again (authoritative)
 #   manny      commandlet: our copy of the template BP_ThirdPersonCharacter uses SKM_Manny_Simple
+#   firstperson commandlet: IA_ToggleView + IMC_ArmoryView (V) and the ArmoryViewToggleComponent on that character
 #   character  commandlet, fresh: default game mode -> Manny, no missing references, PlayerStart inside facing in
 #   walk       (Blender -b) Manny-sized capsule clearance along the walking routes against the UCX hulls
 #   capture    offscreen editor (real D3D12 RHI, -RenderOffscreen), tick-driven: every layout.json camera (+ C1 at the
 #              reference's 1448 x 1086), repeated captures; then ak_crop.py (system Python) crops the shift-lens views
+#   fptest     offscreen GAME run of L_Armory (ak_fptest.ps1): presses V, view 3rd -> 1st -> 3rd person measured at the
+#              head, walks in and looks round; passes only with 0 "[VSM] Non-Nanite Marking Job Queue overflow" warnings
 #   stats      (system Python, Pillow) ak_image_stats.py: tone / colour vs the Blender renders of the preset and the reference
 # Lighting preset (night + genkan, 2026-09-28): env AK_PRESET, default "night" (the moon, night practicals, no fog, night
 # exposure; Blender baseline renders/night_live4, fallback night_live2). AK_PRESET=golden rebuilds the golden-hour level (baseline hero_live).
@@ -23,7 +29,7 @@
 # Never touches another project, UnrealEditor.exe, or another session's UnrealEditor-Cmd; kills only its own process on timeout.
 set -u
 export MSYS_NO_PATHCONV=1
-STEPS="${*:-project bounds import materials level verify manny character walk capture stats}"
+STEPS="${*:-project bounds build import materials level manny firstperson verify character walk capture fptest stats}"
 export AK_PRESET="${AK_PRESET:-night}"
 echo "preset: $AK_PRESET"
 HERE="C:/Users/Cody/Desktop/Blender_Projects/Scripts/armory/unreal"
@@ -61,7 +67,13 @@ for step in $STEPS; do
     bounds)
       "$BLENDER" -b --factory-startup "$ROOT/Assets/Armory/ArmoryKit.blend" --python "$HERE/blender_bounds.py" > "$OUT/logs/bounds.log" 2>&1; code=$?
       grep -q "BLENDER_BOUNDS" "$OUT/logs/bounds.log" || code=9 ;;
-    import|materials|level|verify|manny|character)
+    build)
+      editor_guard
+      wait_free
+      stamp "start build"
+      powershell -NoProfile -Command "& 'C:/Program Files/Epic Games/UE_5.8/Engine/Build/BatchFiles/Build.bat' ArmoryLabEditor Win64 Development '-Project=$PROJ' -WaitMutex -NoHotReloadFromIDE" > "$OUT/logs/build.log" 2>&1; code=$?
+      grep -q "Result: Succeeded" "$OUT/logs/build.log" || { [ $code -eq 0 ] && code=8; } ;;
+    import|materials|level|verify|manny|firstperson|character)
       editor_guard
       wait_free
       stamp "start $step"
@@ -82,13 +94,20 @@ for step in $STEPS; do
         py -3 "$HERE/ak_crop.py" > "$OUT/logs/crop.log" 2>&1 || code=7
         grep -q "AK_STEP_DONE crop passed=True" "$OUT/logs/crop.log" || { [ $code -eq 0 ] && code=7; }
       fi ;;
+    fptest)
+      editor_guard
+      wait_free
+      stamp "start fptest"
+      powershell -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$HERE/ak_fptest.ps1" 2>/dev/null || echo "$HERE/ak_fptest.ps1")" > "$OUT/logs/fptest_runner.log" 2>&1; code=$?
+      grep -q "AK_STEP_DONE fptest passed=True" "$OUT/logs/fptest.log" 2>/dev/null || { [ $code -eq 0 ] && code=8; }
+      grep -q '"passed": *true' "$OUT/fptest.json" 2>/dev/null || { [ $code -eq 0 ] && code=9; } ;;
     stats)
       py -3 "$HERE/ak_image_stats.py" > "$OUT/logs/stats.log" 2>&1; code=$? ;;
     *) echo "unknown step $step"; exit 2 ;;
   esac
   t1=$(date +%s)
   stamp "$step [$AK_PRESET] exit $code in $((t1 - t0)) s |$(grep -o 'AK_STEP_DONE.*' "$OUT/logs/$step.log" 2>/dev/null | head -1)"
-  if [ "$step" != "project" ] && [ "$step" != "bounds" ] && [ "$step" != "stats" ]; then
+  if [ "$step" != "project" ] && [ "$step" != "bounds" ] && [ "$step" != "stats" ] && [ "$step" != "build" ]; then
     echo "    errors: $(grep -c 'Error:' "$OUT/logs/$step.log" 2>/dev/null)  warnings: $(grep -c 'Warning:' "$OUT/logs/$step.log" 2>/dev/null)"
   fi
   if [ $code -ne 0 ]; then echo "STOP: $step failed (exit $code), see $OUT/logs/$step.log"; exit 1; fi

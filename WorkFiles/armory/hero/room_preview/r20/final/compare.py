@@ -1,63 +1,106 @@
-"""r20 final side-by-sides (PIL): reference 2 | ours (golden C1 1448x1086, also night), the user's entry crop over
-ours (C1 bottom strip y 830-1086, golden and night). Usage: compare.py"""
+"""r20 final (combined): side-by-sides reference 2 | night_r19 (live) | r20 final for C1 (1448 x 1086 and 1600 x 900;
+night and golden), night_r19 | r20 final for CX / CW / C10 / C3 / C4 / C5, the neutral-light floor swatch sheet
+(r19 floor | r20 final floor), and whole-frame mean display luminance. Usage: py -3 compare.py"""
+import json
 from pathlib import Path
+
+import numpy as np
 from PIL import Image, ImageDraw
+
 HERE = Path(__file__).resolve().parent
-REF = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory\reference")
-out = HERE / "compare"
-out.mkdir(exist_ok=True)
-ref = Image.open(REF / "armory3_reference2.png").convert("RGB")
-crop = Image.open(REF / "entry_foreground_crop.png").convert("RGB")
+ROOT = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory")
+REF = ROOT / "reference" / "armory3_reference2.png"
+R19 = ROOT / "build" / "renders" / "night_r19"
+LOOK = ROOT / "hero" / "room_preview" / "r20" / "look"
+OUT = HERE / "compare"
+OUT.mkdir(exist_ok=True)
+CAMS = ("C1_EntryReveal", "CX_FromPlatform", "CW_WestAisle", "C10_Hero", "C3_Case3", "C4_ShurikenTray", "C5_CloakCase")
 
 
-def pair(a, b, path, la, lb, vertical=False):
-    if vertical:
-        w = max(a.width, b.width)
-        a = a.resize((w, round(a.height * w / a.width)), Image.LANCZOS)
-        b = b.resize((w, round(b.height * w / b.width)), Image.LANCZOS)
-        im = Image.new("RGB", (w, a.height + b.height + 56), (20, 20, 20))
-        im.paste(a, (0, 28)); im.paste(b, (0, a.height + 56))
-        d = ImageDraw.Draw(im); d.text((6, 6), la, fill=(230, 230, 230)); d.text((6, a.height + 34), lb, fill=(230, 230, 230))
-    else:
-        h = min(a.height, b.height)
-        a = a.resize((round(a.width * h / a.height), h)); b = b.resize((round(b.width * h / b.height), h))
-        im = Image.new("RGB", (a.width + b.width + 16, h + 28), (20, 20, 20))
-        im.paste(a, (0, 28)); im.paste(b, (a.width + 16, 28))
-        d = ImageDraw.Draw(im); d.text((6, 6), la, fill=(230, 230, 230)); d.text((a.width + 22, 6), lb, fill=(230, 230, 230))
-    im.save(path)
-    print("wrote", path.name, im.size)
+def lum(p, box=None):
+    a = np.asarray(Image.open(p).convert("RGB"), dtype=np.float32) / 255.0
+    if box:
+        a = a[box[1]:box[3], box[0]:box[2]]
+    return round(float((a @ np.array([0.2126, 0.7152, 0.0722])).mean()), 3)
 
 
-for P in ("golden", "night"):
-    p = HERE / P / "ref_aspect" / f"C1_EntryReveal_{P}.png"
-    if not p.exists():
-        cands = list((HERE / P / "ref_aspect").glob("C1_EntryReveal*.png"))
-        p = cands[0] if cands else p
-    ours = Image.open(p).convert("RGB")
-    pair(ref, ours, out / f"C1_ref_vs_r20_{P}.png", "reference 2", f"ours r20 {P} C1 1448x1086")
-    # the crop is reference 2's bottom strip (463 x 82 of 1448 wide = y ~830-1086)
-    pair(crop, ours.crop((0, 830, 1448, 1086)), out / f"entry_crop_vs_r20_{P}.png",
-         "user crop (entry_foreground_crop.png)", f"ours r20 {P} C1 (y 830-1086)", vertical=True)
+def side(paths, labels, out):
+    ims = [Image.open(p).convert("RGB") for p in paths]
+    h = min(i.height for i in ims)
+    ims = [i.resize((round(i.width * h / i.height), h), Image.LANCZOS) for i in ims]
+    im = Image.new("RGB", (sum(i.width for i in ims) + 16 * (len(ims) - 1), h + 26), (20, 20, 20))
+    d = ImageDraw.Draw(im)
+    x = 0
+    for i, lab, p in zip(ims, labels, paths):
+        d.text((x + 6, 6), f"{lab}  (mean L {lum(p)})", fill=(230, 230, 230))
+        im.paste(i, (x, 26))
+        x += i.width + 16
+    im.save(out)
+    print("wrote", out.name, im.size)
 
-# r20 fix round (2026-09-29): the judged 7/10 set (prev_7of10/) against the fixed set, per view and preset, and the
-# reference's rear zoom (x 380-1070, y 180-420) / mat zoom (x 350-850, y 900-1040) against both C1s
-PREV = HERE / "prev_7of10"
-for P in ("golden", "night"):
-    for cam in ("C3_Case3", "C10_Hero", "CW_WestAisle", "CX_FromPlatform", "CE_EntryDown", "CG_Garden"):
-        a, b = PREV / P / f"{cam}_{P}.png", HERE / P / f"{cam}_{P}.png"
-        if a.exists() and b.exists():
-            pair(Image.open(a).convert("RGB"), Image.open(b).convert("RGB"), out / f"{cam}_7of10_vs_fix_{P}.png",
-                 f"judged 7/10 {cam} {P}", f"fix round {cam} {P}")
-    a = Image.open(PREV / P / "ref_aspect" / f"C1_EntryReveal_{P}.png").convert("RGB")
-    b = Image.open(HERE / P / "ref_aspect" / f"C1_EntryReveal_{P}.png").convert("RGB")
-    pair(a, b, out / f"C1_7of10_vs_fix_{P}.png", f"judged 7/10 C1 {P}", f"fix round C1 {P}")
-    for tag, box in (("rear", (380, 180, 1070, 420)), ("mat", (350, 900, 850, 1040))):
-        cr = [im.crop(box) for im in (ref, a, b)]
-        w, h = cr[0].size
-        sheet = Image.new("RGB", (w * 2, (h * 2 + 28) * 3), (20, 20, 20))
-        d = ImageDraw.Draw(sheet)
-        for i, (im, lab) in enumerate(zip(cr, ("reference 2", f"judged 7/10 ({P})", f"fix round ({P})"))):
-            sheet.paste(im.resize((w * 2, h * 2), Image.LANCZOS), (0, i * (h * 2 + 28) + 28))
-            d.text((6, i * (h * 2 + 28) + 8), lab, fill=(230, 230, 230))
-        sheet.save(out / f"C1_{tag}_zoom_ref_7of10_fix_{P}.png")
-        print("wrote", f"C1_{tag}_zoom_ref_7of10_fix_{P}.png", sheet.size)
+
+for P in ("night", "golden"):
+    side([REF, R19 / "ref_aspect" / "C1_EntryReveal_night.png", HERE / "ref_aspect" / f"C1_EntryReveal_{P}.png"],
+         ["reference 2", "night_r19 (live, night)", f"r20 final ({P})"], OUT / f"C1_ref_vs_night_r19_vs_r20final_{P}.png")
+    side([REF, R19 / "C1_EntryReveal_night.png", HERE / f"C1_EntryReveal_{P}.png"],
+         ["reference 2", "night_r19 (live, night)", f"r20 final ({P})"],
+         OUT / f"C1_ref_vs_night_r19_vs_r20final_{P}_1600x900.png")
+for cam in CAMS[1:]:
+    side([R19 / f"{cam}_night.png", HERE / f"{cam}_night.png"], ["night_r19 (live, night)", "r20 final (night)"],
+         OUT / f"{cam}_night_r19_vs_r20final.png")
+
+# neutral-light floor swatch: reference 2 floor crops | r19 floor (look/swatch/old_r19, M_AK_Plank as live: old BC x 1.8)
+# | r20 final floor (the combined build's M_AK_Plank as built, no overrides)
+ref = Image.open(REF).convert("RGB")
+crops = [("reference 2: sunlit + shaded boards", ref.crop((300, 560, 700, 810)).resize((400, 250))),
+         ("reference 2: shaded boards (sheen)", ref.crop((940, 720, 1240, 900)).resize((400, 250)))]
+cols = [("r19 floor (live)", LOOK / "swatch" / "old_r19_albedo.png", LOOK / "swatch" / "old_r19_studio.png"),
+        ("r20 final floor", HERE / "swatch" / "r20final_albedo.png", HERE / "swatch" / "r20final_studio.png")]
+
+
+def lin(c):
+    return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+def srgb(v):
+    v = np.clip(v, 0, 1)
+    return np.where(v <= 0.0031308, v * 12.92, 1.055 * v ** (1 / 2.4) - 0.055)
+
+
+W = 20 + 400 + 20 + len(cols) * (250 + 400 + 30)
+sheet = Image.new("RGB", (W, 600), (24, 24, 24))
+d = ImageDraw.Draw(sheet)
+y = 30
+for lab, im in crops:
+    sheet.paste(im, (20, y)); d.text((22, y - 16), lab, fill=(230, 230, 230)); y += 280
+x = 440
+swatch_stats = {}
+for lab, ap, sp in cols:
+    a = np.asarray(Image.open(ap).convert("RGB")).astype(float)[16:496, 16:496] / 255
+    m = srgb(lin(a).reshape(-1, 3).mean(0))
+    r, g, b = [int(round(float(v) * 255)) for v in m]
+    import colorsys
+    h, s, v = colorsys.rgb_to_hsv(*[float(t) for t in m])
+    swatch_stats[lab] = {"albedo_srgb255": [r, g, b], "hsv": [round(h * 360, 1), round(s, 3), round(v, 3)]}
+    sheet.paste(Image.open(ap).convert("RGB").resize((250, 250)), (x, 30))
+    sheet.paste(Image.open(sp).convert("RGB").resize((400, 250)), (x + 255, 30))
+    d.text((x, 14), f"{lab}: albedo (neutral white, no spec) | studio white key", fill=(230, 230, 230))
+    d.text((x, 290), f"albedo sRGB ({r}, {g}, {b})  HSV {h * 360:.0f} deg / {s:.2f} / {v:.2f}", fill=(230, 230, 230))
+    d.rectangle((x, 310, x + 120, 400), fill=(r, g, b))
+    x += 680
+sheet.save(OUT / "floor_swatch_neutral_r19_vs_r20final.png")
+print("wrote floor_swatch_neutral_r19_vs_r20final.png")
+
+stats = {"reference2": lum(REF), "night_r19/ref_aspect/C1": lum(R19 / "ref_aspect" / "C1_EntryReveal_night.png")}
+for cam in CAMS:
+    stats[f"night_r19/{cam}"] = lum(R19 / f"{cam}_night.png")
+for P in ("night", "golden"):
+    stats[f"r20final/ref_aspect/C1_{P}"] = lum(HERE / "ref_aspect" / f"C1_EntryReveal_{P}.png")
+    for cam in CAMS:
+        stats[f"r20final/{cam}_{P}"] = lum(HERE / f"{cam}_{P}.png")
+# exterior through the entrance in CX (the door opening box used by r20 look)
+stats["CX door opening night_r19 / r20final"] = [lum(R19 / "CX_FromPlatform_night.png", (700, 290, 900, 460)),
+                                                 lum(HERE / "CX_FromPlatform_night.png", (700, 290, 900, 460))]
+stats["floor_swatch"] = swatch_stats
+(OUT / "luminance.json").write_text(json.dumps(stats, indent=1))
+print(json.dumps(stats, indent=1))

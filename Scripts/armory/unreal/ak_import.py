@@ -7,8 +7,10 @@ lack fails the step.
 Meshes: every layout.json piece's Exports/ArmoryKit/<piece>.fbx (SM_AK_ room kit + SM_AKX_ exterior) -> /Game/ArmoryKit/Meshes, legacy FBX importer (Interchange.FeatureFlags.Import.FBX
 0), FbxImportUI as the proven SnowFlower v4 pass 1 (Import Mesh LODs ON, no auto collision, one convex hull per UCX, imported
 normals, no materials/textures), except Generate Lightmap UVs OFF: the project has AllowStaticLighting False, so lightmap
-UVs are unused and the FBX's own UV1 is kept. Nanite stays off (the pre-hero kit maxed at 552 tris; the
-hero kit's largest pieces are 4-7k tris, e.g. SM_AK_Entrance_12 7184, layout.json "tris": still small for classic LODs).
+UVs are unused and the FBX's own UV1 is kept. Nanite (2026-10-01, the VSM "Non-Nanite Marking Job Queue overflow"
+warning): ON for every mesh whose slots are all opaque / masked, OFF for the case glass pieces (translucent pane), with a
+100 % fallback so LOD0 keeps Blender's triangles (ak_nanite.py). It is applied after the import to EVERY layout mesh,
+including ones skipped as unchanged, so an existing project converts without a forced reimport.
 Textures: every Exports/ArmoryKit/Textures/T_AK_*_{BC,N,ORM}.png -> /Game/ArmoryKit/Textures with the pack importer's measured
 flags: BC sRGB TC_Default; ORM linear TC_Masks; N linear TC_Normalmap, no green flip (the maps are DirectX).
 
@@ -26,6 +28,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import unreal  # noqa: E402
 import ak_common as C  # noqa: E402
+import ak_nanite as N  # noqa: E402
 
 EAL = unreal.EditorAssetLibrary
 AT = unreal.AssetToolsHelpers.get_asset_tools()
@@ -73,6 +76,36 @@ def mesh_options():
     return ui
 
 
+def _enum(cls_name, member):
+    cls = getattr(unreal, cls_name, None)
+    return getattr(cls, member) if cls is not None and hasattr(cls, member) else None
+
+
+def set_nanite(mesh, want):
+    """Nanite on (100 % fallback, always generated) or off; returns the settings changed ({} when already right).
+    set_editor_property notifies the mesh (PostEditChange), which rebuilds it synchronously in this commandlet
+    (Editor.AsyncStaticMeshCompilation=0)."""
+    ns = mesh.get_editor_property("nanite_settings")
+    target = {"enabled": bool(want)}
+    if want:
+        target["fallback_percent_triangles"] = N.FALLBACK_PERCENT
+        for k, cls_name, member in (("fallback_target", "NaniteFallbackTarget", "PERCENT_TRIANGLES"),
+                                    ("generate_fallback", "NaniteGenerateFallback", "ENABLED")):
+            v = _enum(cls_name, member)
+            if v is not None:
+                target[k] = v
+    changed = {}
+    for k, v in target.items():
+        cur = ns.get_editor_property(k)
+        same = abs(float(cur) - float(v)) < 1e-6 if isinstance(v, float) else str(cur) == str(v)
+        if not same:
+            ns.set_editor_property(k, v)
+            changed[k] = [str(cur), str(v)]
+    if changed:
+        mesh.set_editor_property("nanite_settings", ns)
+    return changed
+
+
 def run_task(filename, dest, name, factory=None, options=None):
     task = unreal.AssetImportTask()
     task.set_editor_property("filename", str(filename))
@@ -117,6 +150,7 @@ def main():
     rep = {"engine": unreal.SystemLibrary.get_engine_version(), "force": FORCE, "meshes": {}, "textures": {}}
     layout = C.load_layout()
     pieces = C.layout_pieces(layout)   # hero round: every piece layout.json lists (generic), not a folder glob
+    mats = C.blender_materials(layout)
     rep["fbx_not_in_layout"] = sorted({f.stem for f in C.EXPORTS.glob("SM_AK*.fbx")} - set(pieces))
     for name in pieces:
         fbx = C.EXPORTS / f"{name}.fbx"
@@ -140,7 +174,12 @@ def main():
             if not isinstance(mesh, unreal.StaticMesh):
                 raise RuntimeError(f"{path} is not a StaticMesh after import")
             e.update(mesh_info(mesh))
-            if "imported" in e:
+            e["nanite_want"] = N.want_nanite(e["slots"], mats)
+            e["nanite_changed"] = set_nanite(mesh, e["nanite_want"])
+            e["nanite"] = bool(mesh.get_editor_property("nanite_settings").get_editor_property("enabled"))
+            if e["nanite_changed"]:
+                e["tris_lod0_after_nanite"] = int(mesh.get_num_triangles(0))
+            if "imported" in e or e["nanite_changed"]:
                 e["saved"] = bool(EAL.save_loaded_asset(mesh, False))
                 if e["saved"]:
                     man[path] = h
@@ -179,6 +218,11 @@ def main():
     rep["n_meshes"] = len(rep["meshes"])
     rep["n_textures"] = len(rep["textures"])
     rep["errors"] = [k for k, v in list(rep["meshes"].items()) + list(rep["textures"].items()) if v.get("error")]
+    rep["nanite"] = {"on": sorted(k for k, v in rep["meshes"].items() if v.get("nanite")),
+                     "off": sorted(k for k, v in rep["meshes"].items() if not v.get("nanite")),
+                     "changed_this_run": sorted(k for k, v in rep["meshes"].items() if v.get("nanite_changed")),
+                     "wrong": sorted(k for k, v in rep["meshes"].items()
+                                     if "nanite_want" in v and v.get("nanite") != v["nanite_want"])}
     # look2: remove our own stale meshes (pieces the kit no longer exports), so the level and gates see only the kit
     stems = set(pieces)
     rep["stale_deleted"] = []
@@ -193,7 +237,7 @@ def main():
         if base.rsplit("/", 1)[-1] not in tstems and EAL.delete_asset(base):
             rep["stale_deleted"].append(base)
     rep["passed"] = (rep["n_meshes"] == C.n_meshes() and rep["n_textures"] == C.n_textures()
-                     and not rep["errors"])
+                     and not rep["errors"] and not rep["nanite"]["wrong"])
     rep["sec"] = round(time.time() - t0, 1)
     C.write_json(C.OUT / "import.json", rep)
     unreal.log(f"AK_STEP_DONE import passed={rep['passed']} meshes={rep['n_meshes']} textures={rep['n_textures']}")

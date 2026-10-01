@@ -646,6 +646,16 @@ CASES = {  # type: (width along local X, depth along local Y, plinth height, gla
     # is the smallest that keeps >= 1.5 cm round the tray and its card); plinth and glass heights kept (the tray deck)
     "SF": (0.70, 0.66, 0.40, 0.45),   # r19 a / r18: (1.0, 0.8, 0.40, 0.45); r18 cases round: (1.2, 0.8, 0.40, 0.50)
 }
+# r20 cases (USER 2026-10-01: "all cases on the side should be facing inwards ... each side should have a total of 5
+# cases ... make each case sizeable and evenly spaced on the sides"): every side type (S, SF, MT, Tall) takes ONE
+# generous footprint, SIDE_W along the row (local X: the cases stand at rot +-90, so it runs along world Y) by SIDE_D
+# deep (local Y, across the row: the plinth's emblem front and back face the aisle and the wall), so the equal centre
+# intervals give equal floor gaps and every case's aisle face lies on one line. Heights per type are unchanged (the
+# shuriken tray still sits on the SF deck at +0.404, under the +0.85 glass top, centred, with far more room round it).
+# r19 footprints: S 1.0 x 0.8, Tall 0.9 x 0.75, MT 0.8 x 0.75, SF 0.70 x 0.66
+SIDE_W, SIDE_D = 1.10, 0.90
+for _t in ("S", "SF", "MT", "Tall"):
+    CASES[_t] = (SIDE_W, SIDE_D) + CASES[_t][2:]
 
 
 # ---- building stage: mesh generators (welded parts for Piece.mesh; outward winding checked by hand, see notes)
@@ -1427,6 +1437,11 @@ WEST_CLOSED_Y0 = ()
 # (every odd post sits at a window centre and stops under the sill)
 # building stage: the displays, re-laid for the 12 x 16 m hall (spirit of reference 1). (label, type, x, y, rot).
 # Centre row on the axis X 6; side rows face the aisles at X 1.75 / 10.25 (aisles 2.7-2.9 m; r20 b3: X 2.50 / 9.50). G1-G3 are EMPTY growth slots.
+# r20 cases: the two side rows (see CASE_TABLE): centre X per side, five centre Y at equal intervals, first to last
+SIDE_ROW_X = (2.95, round(ROOM_W - 2.95, 4))
+SIDE_ROW_Y0, SIDE_ROW_Y1 = 3.40, 14.00
+SIDE_ROW_DY = (SIDE_ROW_Y1 - SIDE_ROW_Y0) / 4                                   # 2.65 m: gaps 2.65 - SIDE_W = 1.55 m
+SIDE_ROW_Y = tuple(round(SIDE_ROW_Y0 + k * SIDE_ROW_DY, 4) for k in range(5))  # 3.40, 6.05, 8.70, 11.35, 14.00
 CASE_TABLE = [
     # r20 (12 x 20 m): case 1, the genkan and the front side cases (5, 8) stay (the C1 foreground is unchanged); case 2
     # 7.6 -> 8.80, case 3 11.3 -> 13.60; the side rows spread to end at Y 12.70 (0.635 L, the plan's side-display band):
@@ -1552,10 +1567,26 @@ CASE_TABLE = [
     # 1.70 m glass = 2.20 m, which reference 2's cloak case measures, ~0.53 + 1.63 m); its rear talls measure ~1.85 m.
     # (delta 2) case 8 is the compact SF (see CASES) at (8.80, 3.13): C1 (1243, 1408, 623, 868), raw right edge 1448
     # (r19 a 1522) against reference 2's (1260, 1407, 627, 855); the tray moves with it, unchanged
-    ("5", "S", 2.90, 3.31, 0), ("G1", "S", 3.27, 7.08, 90), ("4", "Tall", 3.15, 5.02, 0),
-    ("G3", "Tall", 3.16, 10.13, 0),
-    ("8", "SF", 8.80, 3.13, -90), ("7", "S", 9.26, 5.10, 0), ("6", "MT", 8.98, 7.30, 0),
-    ("G2", "Tall", 8.82, 10.09, 0),
+    # r20 cases (USER 2026-10-01: side cases face inward, 5 per side, sizeable, evenly spaced): each side is ONE
+    # straight row parallel to its wall at SIDE_ROW_X, five cases centred at equal SIDE_ROW_DY intervals from just
+    # behind the entry lanterns to the stair foot (SIDE_ROW_Y), all SIDE_W x SIDE_D (CASES), so the floor gaps are equal
+    # too. Every side case turns to face the centre aisle: west rot +90 (the plinth's emblem front, local -Y, faces +X),
+    # east rot -90 (faces -X; case 8 already stood at -90, so the tray keeps its orientation in the case and moves with
+    # it). The reference order front to back, both rows balanced (each 2 low, 1 MT, 2 Tall): west 5 the low kunai case
+    # (S), 4 the tall cloak case, G1 the scroll case (S), G4 a medium case (MT; was the near rear tall), G3 a tall case;
+    # east 8 the low shuriken case (SF, the tray), 7 the boots case (S), 6 the hat case (MT), G5 a tall case, G2 a tall
+    # case. Plan: rows X 2.50-3.40 / 8.60-9.50 (the wall walk to the display bays' front X 0.294 / 11.706 is 2.21 m, the
+    # aisle to the centre column X 5.10 / 6.90 1.70 m); cases Y 2.85-3.95, 5.50-6.60, 8.15-9.25, 10.80-11.90,
+    # 13.45-14.55: four 1.55 m floor gaps per row; the last back 1.30 m before the flight's foot (15.85).
+    # r19 b: ("5", "S", 2.90, 3.31, 0), ("G1", "S", 3.27, 7.08, 90), ("4", "Tall", 3.15, 5.02, 0), ("G3", "Tall", 3.16,
+    # 10.13, 0), ("8", "SF", 8.80, 3.13, -90), ("7", "S", 9.26, 5.10, 0), ("6", "MT", 8.98, 7.30, 0), ("G2", "Tall",
+    # 8.82, 10.09, 0), ("G4", "Tall", 3.06, 8.36, 0), ("G5", "Tall", 8.84, 8.45, 0)
+    ("5", "S", SIDE_ROW_X[0], SIDE_ROW_Y[0], 90), ("G1", "S", SIDE_ROW_X[0], SIDE_ROW_Y[2], 90),
+    ("4", "Tall", SIDE_ROW_X[0], SIDE_ROW_Y[1], 90),
+    ("G3", "Tall", SIDE_ROW_X[0], SIDE_ROW_Y[4], 90),
+    ("8", "SF", SIDE_ROW_X[1], SIDE_ROW_Y[0], -90), ("7", "S", SIDE_ROW_X[1], SIDE_ROW_Y[1], -90),
+    ("6", "MT", SIDE_ROW_X[1], SIDE_ROW_Y[2], -90),
+    ("G2", "Tall", SIDE_ROW_X[1], SIDE_ROW_Y[4], -90),
     # r19 a: ("G3", "Tall", 2.91, 9.84, 0), ("8", "SF", 9.06, 3.30, -90), ("G2", "Tall", 8.97, 9.90, 0)
     # r18 final fix: ("5", "SF", 2.70, 3.75, 90), ("G1", "S", 2.53, 14.43, 90), ("4", "Tall", 1.505, 8.30, 90),
     # ("G3", "Tall", 1.975, 10.95, 90), ("8", "SF", 9.30, 3.75, -90), ("7", "S", 9.47, 14.43, -90),
@@ -1568,7 +1599,11 @@ CASE_TABLE = [
     # front of it (b9 judge: "the deck strip in front of the table is thin", was 0.50 m)
     ("10", "Hero", 6.0, ROOM_L - 0.65, 0),
     # r19 b (NEW, after the hero so the CaseLight_NN numbering above is unchanged): the near cases of the rear pairs
-    ("G4", "Tall", 3.06, 8.36, 0), ("G5", "Tall", 8.84, 8.45, 0),
+    # r20 cases: the fourth case of each row (G4 the west medium MT, G5 the east tall)
+    # r20 final2 (judge minor delta: the east end stacked two talls, the rows read as different silhouettes): G5 Tall ->
+    # MT, so the rear pair mirrors across the aisle (MT at 11.35, Tall at 14.00 both sides); same footprint, so no walk
+    # or camera change. CaseLight_14 runs at full MT power (its Unreal shadow stays off, ak_common UE_SHADOW_OFF_LIGHTS)
+    ("G4", "MT", SIDE_ROW_X[0], SIDE_ROW_Y[3], 90), ("G5", "MT", SIDE_ROW_X[1], SIDE_ROW_Y[3], -90),
 ]
 # genkan (2026-09-28): the entry pair stands on the sunken genkan floor just in front of the black step beam, either
 # side of the mat. Entryfix (2026-09-28, the user: "lantern is fine... just keep it the same natural shape as you've
@@ -2015,7 +2050,12 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     # face at +1.90, the aim on the tray centre, 75 mm (tried 50 / 58 / 65 / 72 on 16-sample previews): the slab fills
     # the frame between the case's two side posts, the lit reflection card stays above the frame (as r18 final), the
     # brass plate at the bottom edge; the near rail (+0.85) is 0.35 m under the sight line to the tray's front edge
-    ("C4_ShurikenTray", (8.40, 3.13, 1.90), (8.80, 3.13, 0.43), 75),   # r19 a: (8.56, 3.30, 1.85) -> (9.04, 3.30, 0.43)  # item 1: looking down into case 8   # r18 final: (8.80, 3.75, 1.85) -> (9.28, 3.75, 0.43); r18: (8.70, 3.75, 1.85) -> (9.33, 3.75, 0.43), 50
+    # r20 cases: case 8 is the 1.10 x 0.90 m SF at (9.05, 3.40), rot -90 (aisle face X 8.60): the same place relative
+    # to it as r19 b (0.07 m off the aisle face at +1.90, the aim on the tray centre, 75 mm)
+    ("C4_ShurikenTray", (round(SIDE_ROW_X[1] - SIDE_D / 2 - 0.07, 4), SIDE_ROW_Y[0], 1.90),
+     (SIDE_ROW_X[1], SIDE_ROW_Y[0], 0.43), 75),   # item 1: looking down into case 8
+    # (r19 b: (8.40, 3.13, 1.90) -> (8.80, 3.13, 0.43); r19 a: (8.56, 3.30, 1.85) -> (9.04, 3.30, 0.43); r18 final:
+    # (8.80, 3.75, 1.85) -> (9.28, 3.75, 0.43); r18: (8.70, 3.75, 1.85) -> (9.33, 3.75, 0.43), 50)
     # r20 (12 x 20): C3 / C5 follow cases 3 / 4, C10 / CX the back wall (+4.0), CW's aim the flight (+3.2)
     ("C3_Case3", (6.0, 11.30, 1.50), (6.0, 13.40, 0.95), 28),        # r20 fix round: follows case 3 (Y 13.40)
     # r17 cases round: case 4 at (2.75, 7.25); from the aisle behind it (1.85 m in, 1.35 m back), clear of case 2 (X 5.1)
@@ -2028,7 +2068,10 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     # outboard of case 1's west face, Y 2.45), 3.1 m off, the whole 2.2 m case in frame (projected y ~70-855 of 900),
     # the scroll case and the rear tall beside it on the right, the low kunai case in the near left corner, case 1 out
     # of frame (a first try from X 5.55 caught its glass in the lower right)
-    ("C5_CloakCase", (4.70, 2.45, 1.80), (3.10, 5.05, 1.10), 21),   # r18: (4.90, 7.05, 1.60) -> (1.505, 8.30, 1.10), 26
+    # r20 cases: the cloak case 4 at (2.95, 6.05) now faces the aisle (+X); the camera stands in the floor between
+    # case 1 (back Y 4.65) and case 2 (front 8.10), 0.75 m behind case 1's back, and looks at the case front from the
+    # front-right, ~3 m off, the whole 2.2 m case in frame
+    ("C5_CloakCase", (5.90, 5.30, 1.75), (SIDE_ROW_X[0], SIDE_ROW_Y[1], 1.10), 21),   # r19 b: (4.70, 2.45, 1.80) -> (3.10, 5.05, 1.10); r18: (4.90, 7.05, 1.60) -> (1.505, 8.30, 1.10), 26
     ("C10_Hero", (6.0, 14.90, 2.30), (6.0, 19.90, 1.85), 26),
     # r17 fix round: the west aisle is X 4.62 (was 4.05). r18 cases round (r17 judge: G1's glass filled the foreground;
     # from Y 2.9 case 1's west face and case 5 also flank the frame): G1 has moved to the rear, the aisle is X 3.10-5.10,
@@ -2040,7 +2083,10 @@ CAMERAS = [  # name, location (m), look-at (m), lens mm
     # aisle mouth behind case 1 (back Y 4.65; the camera 0.35 m off its west face line) down the aisle: the scroll case,
     # the rear pair and the stair-foot lantern recede on the left, case 2 on the right; the cloak case and case 1 stay
     # just outside the frame (43 / 45 deg off the axis against the 24 mm lens's 37)
-    ("CW_WestAisle", (4.75, 4.30, 1.75), (4.1, 16.2, 0.95), 24),   # r19 a: (4.60, 6.00, 1.70) -> (4.2, 16.2, 0.9)   # r18: (4.10, 5.10, 1.60) -> (3.6, 16.2, 1.2), 24
+    # r20 cases: the west aisle is X 3.40-5.10 the whole way; the camera stands in its middle in the floor gap behind
+    # the kunai case and case 1 (backs Y 3.95 / 4.65) and looks down the aisle to the flight: the row's inward faces
+    # recede on the left, cases 2 / 3 on the right, the aisle floor clear
+    ("CW_WestAisle", (4.25, 4.85, 1.75), (4.1, 16.2, 0.95), 24),   # r19 b: (4.75, 4.30, 1.75)   # r19 a: (4.60, 6.00, 1.70) -> (4.2, 16.2, 0.9)   # r18: (4.10, 5.10, 1.60) -> (3.6, 16.2, 1.2), 24
     ("CX_FromPlatform", (6.0, 19.4, 2.4), (6.0, 1.0, 0.8), 24),
     EXT.CAMERA,   # exterior stage: CG_Garden, the courtyard and the entrance
 ]

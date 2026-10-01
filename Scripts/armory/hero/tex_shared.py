@@ -18,7 +18,8 @@ armory3_reference2.png, entrance.png, rear_alcove.png, ceiling_coffer.png, banne
                                 gold worked as fine embroidery: satin stitches of metallic gold thread laid ACROSS each
                                 element (radial on the ring, across the border lines, across each petal), a couched darker
                                 outline round every element, a raised padded relief. No noise streaks in the gold.
-  T_AK_HPlank_BC / _ORM / _N    (calibration pass 2: the BC mixed PLANK_DESAT toward its own luminance, roughness +0.06)
+  T_AK_HPlank_BC / _ORM / _N    (r20 look: the BC re-coloured to PLANK_TARGET, a dark walnut, desaturation off; calibration
+                                pass 2: the BC mixed PLANK_DESAT toward its own luminance, roughness +0.06)
                                 calibration pass 1 (2026-09-28, the room judge: the floor read mirror-like with specular
                                 streaks; reference 2's floor is matte to satin): the kit's own walnut floor (make_armory_
                                 textures.plank, same seed, boards, joints and colour, so BC and N are the kit's pixels) with
@@ -31,6 +32,7 @@ Never overwrites another set: it writes only T_AK_HTimber_*, T_AK_HBanner_* and 
 
 Run (Git Bash, from the project root):
   "/c/Program Files/Blender Foundation/Blender 5.2/5.2/python/bin/python.exe" Scripts/armory/hero/tex_shared.py [timber] [banner] [plank]
+      [--out DIR] [--plank-target #RRGGBB]
 """
 import json
 import sys
@@ -200,8 +202,25 @@ def banner(w=1024, h=4096, seed=491):
 
 # calibration pass 2 (reference 2's floor out of the sun reads a cool dark brown, C1 (0.37, 0.29, 0.28): its sheen
 # reflects the bright windows; under the room's warm lights the kit walnut went orange at any brightness)
-PLANK_DESAT = 0.30
+# r20 look (2026-10-01, the user: "the wood flooring should be like dark brown like the reference.. looks kinda grayish
+# right now ... with the light on its gray"): judged by ALBEDO, not by the night renders. Pass 2's floor albedo (this BC
+# x M_AK_Plank tint 1.8) was sRGB (77, 65, 56), HSV 25 deg / 0.27 / 0.30: a taupe grey-brown. Reference 2's shaded
+# floor samples read mauve (hue ~340, sat 0.10-0.17) only because its satin sheen mirrors the bright sky; its sunlit
+# boards (sat 0.35-0.40, hue 28-29 under a warm sun) and the read of the image are a dark walnut. So the desaturation is
+# gone (PLANK_DESAT 0.30 -> 0) and the BC is RE-COLOURED to PLANK_TARGET: every pixel keeps its own linear luminance
+# ratio to the mean (grain, board-to-board tint, seams and joints unchanged) and takes the target's chroma, so the mean
+# linear albedo is exactly PLANK_TARGET. hero_shared FLOOR_TINT 1.8 -> 1.0 (the colour now lives in the map).
+PLANK_DESAT = 0.0
+PLANK_TARGET = "#3E2D25"   # r20 final2 (judge delta: #42291D overshot to orange-mahogany, golden floor S 0.44-0.79): chroma cut ~30 % at the same value, sRGB (62, 45, 37), HSV 19 deg / 0.40 / 0.24, linear lum 0.030. Was #42291D, r20 look: a rich dark walnut, sRGB (66, 41, 29), HSV 20 deg / 0.56 / 0.26, linear lum 0.029 (tried #4A3022: read chestnut under a white key)
 PLANK_ROUGH_ADD = 0.06   # calibration pass 2: 0.14 -> 0.06 (boards ~0.22: reference 2 is a dark walnut with a satin sheen that mirrors the glows; pass 1 went matte). Pass 1: 0.16 -> 0.30
+
+
+def _lin(c):
+    return np.where(c <= 0.04045, c / 12.92, ((np.clip(c, 0, 1) + 0.055) / 1.055) ** 2.4)
+
+
+def _srgb(lin):
+    return np.where(lin <= 0.0031308, lin * 12.92, 1.055 * np.power(np.clip(lin, 0, None), 1 / 2.4) - 0.055)
 
 
 def plank():
@@ -211,11 +230,16 @@ def plank():
 
     def redirect(name, bc, height, nstrength, rough, ao=None, metal=0.0):
         assert name == "Plank", name
+        lin = _lin(bc)
+        W = np.array([0.2126, 0.7152, 0.0722])
         if PLANK_DESAT:   # calibration pass 2: a cooler, less saturated walnut (mixed toward its own luminance, linear)
-            lin = np.where(bc <= 0.04045, bc / 12.92, ((np.clip(bc, 0, 1) + 0.055) / 1.055) ** 2.4)
-            lum = (lin * np.array([0.2126, 0.7152, 0.0722])).sum(-1, keepdims=True)
+            lum = (lin * W).sum(-1, keepdims=True)
             lin = lin * (1 - PLANK_DESAT) + lum * PLANK_DESAT
-            bc = np.where(lin <= 0.0031308, lin * 12.92, 1.055 * np.power(np.clip(lin, 0, None), 1 / 2.4) - 0.055)
+        if PLANK_TARGET:   # r20 look: the target's chroma at each pixel's own luminance ratio (the pattern is untouched)
+            lum = (lin * W).sum(-1, keepdims=True)
+            tgt = _lin(np.array([int(PLANK_TARGET[i:i + 2], 16) / 255.0 for i in (1, 3, 5)]))
+            lin = tgt[None, None, :] * (lum / lum.mean())
+        bc = _srgb(lin)
         return orig("HPlank", bc, height, nstrength, np.clip(rough + PLANK_ROUGH_ADD, 0.02, 1.0), ao)   # (not _save: it calls MT.save_set)
     MT.save_set = redirect
     try:
@@ -225,7 +249,18 @@ def plank():
 
 
 if __name__ == "__main__":
-    which = sys.argv[1:] or ["timber", "banner"]
+    args = sys.argv[1:]
+    # r20 look: --out DIR writes the sets into a test copy's Textures folder (build_armory_kit --preview-dir prefers
+    # <preview dir>/Textures), so a trial never lands in Exports/ArmoryKit/Textures; --plank-target #RRGGBB for a trial
+    if "--out" in args:
+        i = args.index("--out")
+        MT.OUT = Path(args[i + 1])
+        del args[i:i + 2]
+    if "--plank-target" in args:
+        i = args.index("--plank-target")
+        PLANK_TARGET = args[i + 1]
+        del args[i:i + 2]
+    which = args or ["timber", "banner"]
     rep = []
     if "timber" in which:
         rep.append(timber())

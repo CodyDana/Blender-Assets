@@ -29,6 +29,10 @@ these; ak_common reads the same literals):
     alcove     12      x1.00    x1.00   12             rear-alcove spots
     banner     60      x1.00    x0.80   48             banner grazers
     sill       14      x1.00    x0.40    5.6           sill-vase spots
+  r20 look (2026-10-01, the user: "lower the moon brightness by a lot so its darker outside"): the moon 3.0 -> 0.5 W/m2
+    (Unreal 50 lux), the camera sky NIGHT_SKY_CAM strength 1.0 -> 0.3 and the diffuse fill 0.05 -> 0.015, the scenery
+    cards' night emission 0.012 -> 0.004; still in through the west windows only; the interior lights are unchanged.
+    The numbers below are the 2026-09-28 originals.
   Sun / moon (coordinator change 2026-09-28: a dim cool moon in through the WEST windows only): Sun_GoldenHour becomes
     the MOON, the only directional light: 3.0 W/m2 (golden sun 90; x K_LUX 100 = 300 lux in Unreal), 7500 K pale blue,
     38 deg up, heading 35 deg (travel dir (0.646, -0.452, -0.616) Blender = (0.646, 0.452, -0.616) Unreal: it enters the
@@ -80,9 +84,9 @@ PRESET_SCALE = {
     "golden": {"down": 1.3, "case": 0.8, "panel": 0.85},   # building r4: case 0.85 -> 0.6 (decks read pink); f1: down 0.6 -> 0.9, case 0.6 -> 0.8 (black decks; C1 mid-tones)
     "gallery": {},
 }
-SUN = {"night": 3.0, "golden": 90.0, "gallery": 0.0}   # night: the moon (see MOON)   # look3: 60 -> 90 (the salmon patches came from the pink floor, fixed)   # f2: 100 -> 60 (two suns, broader patches; C1 p90 0.83 against 0.71, and the hot patches tone-mapped salmon-white)         # W/m2: the floor albedo is about 0.05 (linear), so the lattice patch needs a strong key
+SUN = {"night": 0.5, "golden": 90.0, "gallery": 0.0}   # night: the moon (see MOON)   # r20 look (2026-10-01, user: "lower the moon brightness by a lot so its darker outside"): 3.0 -> 0.5 (a sixth; Unreal 300 -> 50 lux)   # look3: 60 -> 90 (the salmon patches came from the pink floor, fixed)   # f2: 100 -> 60 (two suns, broader patches; C1 p90 0.83 against 0.71, and the hot patches tone-mapped salmon-white)         # W/m2: the floor albedo is about 0.05 (linear), so the lattice patch needs a strong key
 SKY = {  # colour, strength of the world seen through the windows
-    "night": ((0.10, 0.14, 0.28), 0.05),   # night: a faint blue-black fill (diffuse rays); the camera sky is NIGHT_SKY_CAM
+    "night": ((0.10, 0.14, 0.28), 0.015),   # night: a faint blue-black fill (diffuse rays); the camera sky is NIGHT_SKY_CAM   # r20 look: 0.05 -> 0.015 (x0.3, with the camera sky)
     "golden": ((0.90, 0.86, 0.80), 2.2),   # building stage: less orange fill (was 1.0, 0.66, 0.38); f1: cooler still
     "gallery": ((0.55, 0.62, 0.75), 0.35),
 }
@@ -104,11 +108,11 @@ EXPOSURE = {"night": 1.1, "golden": 2.4, "gallery": 2.4}
 MOON = {"night": {"elev_deg": 38.0, "heading_deg": 35.0, "kelvin": 7500, "angle_deg": 0.5}}
 # night: the camera / glossy-ray sky behind the windows: (sin elevation, linear colour) stops, cloud colour, strength
 NIGHT_SKY_CAM = {"stops": ((0.0, (0.030, 0.045, 0.085)), (0.25, (0.012, 0.020, 0.045)), (1.0, (0.004, 0.007, 0.018))),
-                 "cloud": (0.035, 0.045, 0.075), "strength": 1.0}
+                 "cloud": (0.035, 0.045, 0.075), "strength": 0.3}   # r20 look (user: darker outside): 1.0 -> 0.3
 # night: the painted, unlit far-scenery cards (emission is their only light) are dimmed and cooled so the tree line, the
 # hills and the mountains read as faint silhouettes (Unreal: the same factor on their Emissive Intensity, and the tint)
-NIGHT_EMIT = {"scale": {"M_AKX_TreeLine": 0.012, "M_AKX_TreeLineFar": 0.012, "M_AKX_Hills": 0.012,
-                        "M_AKX_Mountains": 0.012},
+NIGHT_EMIT = {"scale": {"M_AKX_TreeLine": 0.004, "M_AKX_TreeLineFar": 0.004, "M_AKX_Hills": 0.004,   # r20 look: 0.012 -> 0.004
+                        "M_AKX_Mountains": 0.004},
               "tint": (0.30, 0.45, 1.0)}
 # night (entryfix 2026-09-28: through the open entrance CX showed the moonlit courtyard pale against the dark hall, and
 # the lawn through the gate as a green panel): the lit exterior ground and walls get a darker, cooler base colour at
