@@ -22,10 +22,29 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parents[1]))           # Scripts/ (for pipeline.ue_import_sockets)
 import csk_common as C  # noqa: E402
-from pipeline.ue_import_sockets import apply_sidecar  # noqa: E402
+from pipeline.ue_import_sockets import _static_mesh_editor_subsystem, apply_sidecar  # noqa: E402
 
 EAL = unreal.EditorAssetLibrary
 AT = unreal.AssetToolsHelpers.get_asset_tools()
+
+
+def thin_distance_field(name, mesh):
+    """Thin, wide meshes (the 20 mm ceiling and floor modules, slatwall, posters, panels): a two-sided, finer mesh
+    distance field. With the default one-sided field a 2 x 2 m module 2 cm thick reads as solid at Lumen's trace
+    start, so its faces got no bounce light (the shop room's ceiling rendered black, 2026-09-30)."""
+    (x0, y0, z0), (x1, y1, z1) = C.csk(name)["render_aabb_mm"]
+    ext = sorted((x1 - x0, y1 - y0, z1 - z0))
+    if not (ext[0] <= 25.0 and ext[2] >= 600.0):
+        return None
+    sms = _static_mesh_editor_subsystem()          # None from get_editor_subsystem in a commandlet
+    done = []
+    for lod in range(mesh.get_num_lods()):
+        bs = sms.get_lod_build_settings(mesh, lod)
+        bs.set_editor_property("generate_distance_field_as_if_two_sided", True)
+        bs.set_editor_property("distance_field_resolution_scale", 4.0)
+        sms.set_lod_build_settings(mesh, lod, bs)
+        done.append(lod)
+    return {"two_sided": True, "resolution_scale": 4.0, "lods": done}
 
 
 def mesh_options():
@@ -90,6 +109,7 @@ def main():
             mesh = unreal.load_asset(path)
             if not isinstance(mesh, unreal.StaticMesh):
                 raise RuntimeError(f"{path} is not a StaticMesh after import")
+            e["distance_field"] = thin_distance_field(name, mesh)
             e["saved"] = bool(EAL.save_loaded_asset(mesh, False))
             side = C.sidecar(name)
             if side is not None:

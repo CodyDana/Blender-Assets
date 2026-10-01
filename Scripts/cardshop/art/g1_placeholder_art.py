@@ -163,6 +163,8 @@ def main(argv=None) -> int:
     pot(Image.open(packs[1]), (512, 1024)).save(tex / "T_CSK_G1_PackBack_BC.png")
     pot(Image.open(labels[0]), (1024, 256)).save(tex / "T_CSK_G1_Label_BC.png")
     pot(die, (2048, 1024)).save(tex / "T_CSK_G1_BoxDieline_BC.png")
+    for line in ("LUMENFOLD", "RIMVAULT"):          # the other two lines' colourways (box variety in the shop room)
+        pot(dieline(line), (2048, 1024)).save(tex / f"T_CSK_G1_BoxDieline_{line.title()}_BC.png")
     print(f"CSK_G1_ART done: {len(list(tex.glob('*.png')))} textures in {tex}")
     return 0
 
