@@ -2327,3 +2327,200 @@ pulling new sources, let the editor rebuild the module or run `run_armory_unreal
 - From now on: every session that touches the armory starts with `py -3 -B WorkFiles/shared/armory_hall/tools/check_sync.py
   --side armory`; every ArmoryLab sync = our steps (incl. `level`), then the shell tool LAST, then check_sync exit 0.
   No ak_* Unreal step after the shell tool. Interior changes follow SYNC.md section 12 (regen_interior.py, bump).
+
+## 2026-10-02: ArmoryLab performance (hall variant)
+
+Owner report (forwarded from the dojo chat): "ArmoryLab feels super laggy since the hall sync"; the owner's PIE ran about
+10 fps (309 frames in 31 s) and logged 50 PSO creation hitches at start, none precached. Measured on L_Armory as saved
+by the shell tool (rev-4 hall variant, 2026-10-01 17:14), RTX 4070 SUPER, i7-14700K, Epic scalability.
+
+**Measurement tool (re-runnable, read-only):**
+`powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/armory/unreal/ak_perf.ps1 -Label <label> -Mode both -Ab "shell_hidden,shell_noshadow,local_shadows_off,shadows_off,atten_8m,atten_6m,local_lights_off,rt_off,lumen_hwrt_off,lumen_gi_refl_off,translucency_off"`
+- `game`: one fresh offscreen `-game` run of L_Armory at 1600 x 900 (r.SetRes; TSR 1336 x 751 -> 1600 x 900, the
+  owner's screen percentage); `pie`: an offscreen editor that presses Play on L_Armory (PIE in its 1083 x 550 level
+  viewport; `AK_PERF_PIE_FLOAT=1` would open a 1630 x 910 window, not used for the pair below).
+- `Scripts/armory/unreal/ak_perf.py` (the in-engine probe), `ak_perf_parse.py` (log + CSV -> perf.json),
+  `ak_perf_compare.py <before> <after>` (segments + the C1 / C10 shots). 20 s warm-up, then 10 s CSV-profiler segments
+  per view (spawn = the player's start in the courtyard, C1_EntryReveal, C10_Hero) with NO stat overlay on screen
+  (stat gpu's overlay alone added ~1800 Slate draws per frame in the first trial), HighResShots of C1 / C10, runtime
+  A/B toggles (never saved), then a stat unit + stat gpu screenshot, the stat scenerendering / initviews / rhi dump and
+  one ProfileGPU per view. Results: `WorkFiles/armory/build/unreal/perf/<label>/{game,pie}/{perf.log, csv/, shots/,
+  probe.json, perf.json, profile_<view>.txt}` + `summary.json`.
+- Guards: waits while any UnrealEditor-Cmd runs, stops if an editor has ArmoryLab open, needs >= 6 GB RAM, and waits for
+  the GPU (<= 20 %) and CPU (<= 25 %) to be idle. This matters: the first trial (`perf/before_trial_lowres`, 888 x 500,
+  stat overlays on, another chat's Blender renders on the machine) read 31-45 fps for the same level.
+- The pie run copies the project's `Saved/Config/WindowsEditor/EditorPerProjectUserSettings.ini` first and puts it back
+  if the editor rewrote it on exit (it did at 06:12; restored).
+
+**Before** (`perf/before`, clean machine, 03:19-03:33):
+
+| Run / view | fps | frame ms | game | render | RHI | GPU ms | draws | shadow-depth draws |
+|---|---|---|---|---|---|---|---|---|
+| game spawn | 83.9 | 11.72 | 2.30 | 11.72 | 3.27 | 8.15 | 1558 | 1032 |
+| game C1 | 92.1 | 10.86 | 2.33 | 10.86 | 3.05 | 6.03 | 1409 | 1068 |
+| game C10 | 91.5 | 10.93 | 2.37 | 10.34 | 2.91 | 9.55 | 1397 | 1082 |
+| PIE spawn | 77.7 | 12.90 | - | - | - | 8.26 | 3730 | 1033 |
+| PIE C1 | 84.2 | 11.88 | - | - | - | 5.52 | 3588 | 1068 |
+| PIE C10 | 85.5 | 11.70 | - | - | - | 7.19 | 3571 | 1095 |
+
+(PIE: the CSV render-thread column reads 0 in the editor; PIE draws include the editor UI.) PSO: 0 "Waited for PSO
+creation" lines and no LogPSOHitching summary in either fresh run; VSM overflow warnings 0. GPU passes (game spawn /
+C10, CSV means): Lights 2.56 / 4.37 ms, ShadowDepths 1.15 / 0.81, TSR 0.71 / 0.79, Lumen reflections 0.32 / 0.39,
+Lumen scene update 0.20 / 0.22, ray-tracing scene ~0.13.
+
+**What dominates.**
+- The owner's 10 fps is not the level's steady state. His session (`ArmoryLab/Saved/Logs/ArmoryLab.log`): editor opened
+  01:43:28, Play pressed 01:43:39, 11 s later, while the editor was still starting (asset registry scan finished at
+  frame 1, 3 x "Waited for PSO creation 100 ms" at frame 2, the path-tracing RTPSO compile requested, a 4-min DDC
+  maintenance scan of 19.7 GB running); the 50 PSO hitches were all logged by frame 8, 0.2 s into PIE. Later in that
+  same editor (02:14) a GPU timeout fired while another chat's ~15 Blender Cycles renders held the GPU at 100 % and
+  11.8 of 12 GB VRAM. In a fresh clean process the same level runs 78-92 fps with no PSO hitches. So: other load on
+  the machine and a Play pressed during editor start-up, not the hall.
+- In the level itself the frame is render-thread bound (render thread = frame time, 10.3-11.7 ms; GPU 6-9.5 ms; game
+  2.3 ms). Its biggest avoidable part was the shadow-depth work of the 12 shadowed case lights: ~1030 shadow-depth
+  draws per frame, about half of them the hall shell's 139 non-Nanite actors (15 of its 32 pieces), drawn into the case
+  lights' cube virtual shadow maps because every light has a 20 m radius (A/B: shell hidden -> 469 shadow draws).
+  GPU: the deferred Lights pass (114 local lights, 20 m radius each) is the largest pass (2.6 ms spawn, 4.4 ms C10).
+- Not the cause (A/B in the same process): ray tracing off and Lumen HW RT off gave nothing; translucency (the case
+  glass) nothing; Niagara: there is no Niagara component in L_Armory (inventory 0); Lumen GI + reflections off saved
+  ~2 ms but is the look; all shadows off ~2 ms (moon included, the look).
+- Shadow budget: 12 shadowed local lights (CaseLight_01..12) of 114 visible, budget 12, OK. The shell's 10
+  BackerLight_* are unshadowed, 0 cd and invisible (AH_BACKER_CD default 0), so they cost nothing and are not in the
+  budget.
+- Inventory: 950 actors; shell 180 (170 visible meshes, ~1.21 M triangles of LOD0 / Nanite fallback, the roofs
+  Rear_Roof 283 k, RoofUpper_Front 189 k, BackValley 139 k), ours 470 visible meshes (~317 k), 165 hidden exterior.
+  Config: r.RayTracing 1 (on demand), Lumen HW RT 1 (surface-cache lighting), VSM on, PSO precaching on, no bundled PSO
+  cache (r.ShaderPipelineCache.Enabled 0), MegaLights off.
+
+**Fix (ours, survives every rebuild):**
+- `ak_common.py`: `UE_CHANNEL1_ONLY_ROLES = {"case"}` + `light_channels()`: the 14 case lights light and shadow only
+  lighting channel 1 (room kit SM_AK_ and items are on 0 + 1). The shell (channel 0) and the hidden exterior leave the
+  case lights' shadow maps; nothing the case lights can reach changes (the shell is outside the room). Also the hook
+  `UE_ATTEN_CM_BY_ROLE` / `light_atten_cm()` (empty: every light keeps 2000 cm). Tried and rejected: glow 6 m / panel
+  8 m / lantern 6 m / down 12 m darkened C1 by 11 %; shell cast-shadow off lit C1 by +755 % (the roof no longer shades
+  the moon).
+- `ak_level.py` applies both per light; `ak_verify.py` gate 5 checks both on every local light.
+- NEW `ak_hallperf.py` (`bash Scripts/armory/unreal/run_armory_unreal.sh hallperf`, not in the default list), the
+  post-shell step: applies the same light settings to the saved hall variant (no level rebuild needed) and puts the
+  shell tool's 8 floor tiles (AKI_9001..9008, SM_AK_ pieces it places on channel 0) on channels 0 + 1 like every other
+  room-kit piece. It touches no shell mesh / transform / material / light / shared file and writes only
+  `unreal/hallperf.json`, never level.json or armory_hall_sync/, so check_sync's hall-variant check is unaffected.
+  **Order from now on, every ArmoryLab sync:** our steps (`run_armory_unreal.sh ... level ...`), the shell tool,
+  `run_armory_unreal.sh hallperf`, `check_sync.py --side armory`.
+- Ran 05:17-05:33 on the current hall variant (L_Armory backed up first to `Backups/ArmoryLab_pre_hallperf_2026-10-02/`):
+  `AK_STEP_DONE hallperf passed=True lights=114/114 tiles=8 changed=22 saved=True`. The level step, verify and the shell
+  tool were NOT re-run: layout.json and Exports hold the r21 state that is not yet in Unreal (check_sync fails on the
+  r21 FBX shas, so the shell tool must not run either); level.json / shell.json are untouched (17:14).
+
+**After** (`perf/after`, same command, 06:00-06:12):
+
+| Run / view | fps | frame ms | render | GPU ms | draws | shadow-depth draws |
+|---|---|---|---|---|---|---|
+| game spawn | 83.9 -> 90.8 | 11.72 -> 11.01 | 11.72 -> 11.01 | 8.15 -> 7.69 | 1558 -> 1019 | 1032 -> 498 |
+| game C1 | 92.1 -> 91.2 | 10.86 -> 11.37 | 10.86 -> 11.36 | 6.03 -> 8.47 * | 1409 -> 834 | 1068 -> 492 |
+| game C10 | 91.5 -> 99.4 | 10.93 -> 10.06 | 10.34 -> 9.51 | 9.55 -> 9.20 | 1397 -> 740 | 1082 -> 435 |
+| PIE spawn | 77.7 -> 84.0 | 12.90 -> 12.23 | - | 8.26 -> 7.12 | 3730 -> 3193 | 1033 -> 497 |
+| PIE C1 | 84.2 -> 87.4 | 11.88 -> 11.45 | - | 5.52 -> 5.15 | 3588 -> 3014 | 1068 -> 494 |
+| PIE C10 | 85.5 -> 80.5 * | 11.70 -> 12.42 | - | 7.19 -> 9.29 * | 3571 -> 2913 | 1095 -> 437 |
+
+\* contaminated segments: every GPU pass rose together (TSR 0.82 -> 1.19 ms in game C1), i.e. another process used the
+GPU then; the change cannot touch TSR. The interleaved A/B in one process (`perf/diag_case_ch1_abab`, 4 x on / 5 x off)
+is the cleaner read: spawn frame 12.70 -> 11.97 ms, GPU 9.98 -> 8.57; C10 frame 11.73 -> 10.94, GPU 10.77 -> 9.75.
+Net: shadow-depth draws -52 %, all draws -35 % (game spawn) / -47 % (C10), about 0.7-0.9 ms off the render-thread-bound
+frame and about 1 ms GPU. Run-to-run noise on this busy machine is about +-1 ms, so the draw counts are the firm number.
+
+**Visual check** (HighResShot, same camera, before vs after): game C1 mean luminance 0.0279 -> 0.0278 (-0.09 %), C10
+0.4007 -> 0.4007 (0.00 %); PIE C1 -0.05 %, C10 +0.01 %. Mean |pixel difference| 0.0006 (C1) / 0.0015 (C10), the TAA
+noise level. Nothing visibly changed. Only the third-person character (channel 0) is no longer lit or shadowed by the
+case lights' spill.
+
+**Open / for the owner and the dojo chat:**
+- Play only after the editor has finished starting (no shader / DDC progress in the bottom-right) and with no other GPU
+  job running; the first Play of a session still compiles PSOs (no bundled PSO cache exists for ArmoryLab).
+- Dojo chat: nothing in the shared files needs to change for ArmoryLab. FYI: 15 of the shell's 32 pieces (139 of its
+  161 placed actors: Bay_Transom x38, Bay_Plaster x29, Rear_Bay_ClerePlaster x17, Bay_ClerePlaster x16 ...) are
+  non-Nanite with LODs; every shadowed local light within reach draws them into its virtual shadow maps (here ~530
+  draws per frame before the fix). If DojoLab has shadowed lights near the hall, Nanite on those pieces (or keeping
+  such lights' radius / lighting channels off the shell) is the lever. The Niagara ray-tracing fix does not apply here.
+- The r21 Unreal run (pending): `level` now builds the channel settings itself and `verify` checks them; after the shell
+  tool, run `run_armory_unreal.sh hallperf` before `check_sync.py --side armory`.
+
+## 2026-10-02: r21 round made live (night_r21) + Unreal night rebuild + armory_hall rev 5
+
+Owner: "remove the tatami mat from the front. re-mplement the windows on the top rows where the plants are". The chosen
+state is test copy `hero/room_preview/r21/a` (judge 8.5/10). Built live under the ArmoryKit + ArmoryHall locks (claimed
+02:04, re-claimed 06:15 by the same agent after the first run stopped; released after the record-sync). No MCP.
+
+**What changed.**
+- Entry mat removed: `ENTRY_MAT_ON = False` in `build_armory_kit.py` (neither built nor placed); `hero_entrance.py`
+  still models it and drops it, so the step beam / jamb post / sconce stay byte-identical. Mesh `SM_AK_EntryMat`
+  retired in the shared manifest (owner asked for its removal); its four materials (M_AK_HBinding, HEntMat, HMatBoard,
+  HMatLip) left the layout; their textures stay in Exports as orphans.
+- Upper windows backlit: new `SM_AK_Window_Paper_35_W` / `_E` (10 instances), a 1 cm emissive shoji sheet ~9 cm behind
+  each top-row lattice, no shadow (`cast_shadow: false`), inside the hall envelope (x -0.245..-0.235 / 12.235..12.245).
+  Materials `M_AK_HWinPaperW` / `E` (unlit emissive picture), texture `T_AK_HWinPaper_BC/_N/_ORM` (`tex_walls.py --
+  --winpaper`); night scale in `render_armory.py` NIGHT_EMIT (0.70 W / 0.73 E; ak_common reads it).
+
+**Live build with export:** QA 117 pieces, hard fails 0; 117 FBX exported (`SM_AK_EntryMat.fbx` gone); ArmoryKit.blend
+saved with 627 instances (618 - 1 + 10). Walk check passed: 39 / 39 routes clear (the `*_mat*` routes keep their
+names, they cross the bare genkan floor), both controls blocked, entry_steps_ok. Logs `renders/night_r21/{build,walk,tex}_log.txt`.
+
+**Renders** (`night_r21/render.sh`, all 10): C1 ref aspect 1448 x 1086, C1 / CX / C10 / C3 / C5 / CW / C4 / CG at
+1600 x 900, CN_WestNiche. Sheets `night_r21/compare/` (`C1_ref_vs_night_r20_vs_night_r21.png` + `_1600x900`,
+`<cam>_night_r20_vs_night_r21.png`). Whole-frame mean, night_r20 -> night_r21: C1 ref aspect 0.121 -> 0.129, C1 0.131
+-> 0.132, CX 0.081 -> 0.098, C10 0.153 -> 0.154, C3 0.158 -> 0.159, C5 0.102 -> 0.132, CW 0.101 -> 0.112, C4 0.111 ->
+0.111, CG 0.023 -> 0.024, CN 0.128 -> 0.128. The paper reads cool blue-grey at night (moon tint); the reference is a
+day scene with warm windows.
+
+### Unreal night rebuild (06:16-06:25, all steps exit 0 after one fix)
+`run_armory_unreal.sh` full default list; baselines `ak_image_stats.py` / `ak_compare_sheet.py` = `renders/night_r21`,
+fallback `night_r20`.
+
+| Step | Result |
+|---|---|
+| build | up to date, Succeeded |
+| import | 117 meshes, 102 textures; Nanite on 110 / off 7 (glass), wrong 0 |
+| materials | 10 masters, 130 instances (132 - 4 mat + 2 paper), 117 meshes, 0 unmatched |
+| level | 627 actors (614 Nanite, 13 non-Nanite glass); bounds gate max 0.0049 cm; Moon 50 lux; 114 local lights, 12 shadowed; case lights on lighting channel 1 only (the perf fix) |
+| verify (fresh) | gates 1-8 pass (5 now also checks attenuation + channels) |
+| manny / firstperson / character / walk | pass |
+| capture | all layout cameras + C1 ref aspect; VSM overflow warning 0 |
+| fptest | passed: third 412.7 cm, first 9.0 cm, back 412.4 cm; VSM overflow 0 |
+| stats / compare | `unreal/capture_stats.json`; sheets rerun: `unreal/compare/reference_blender_unreal_C1.png`, `<cam>_blender_vs_unreal.png` |
+
+**FIX in `ak_level.py`** (found in this run): it removed only its own `AK_Managed` actors, so after the first hall sync
+the 180 actors of the shared shell tool (tag `AH_Shell`: 161 shell pieces, 10 BackerLight_*, the 8 floor tiles
+AKI_9001..9008, AH_CourtyardGround_StandIn) stayed in the "standalone" level, and every ak_* gate after `level` ran with
+the hall around the room: the first pass captured C1_EntryReveal black (mean 0.000; the camera stood under the hall's
+lower roof). `ak_level.py` now also destroys every `AH_Shell` actor (`level.json` `hall_variant_actors_removed`, 180 this
+run; `unmanaged_actors_kept` now empty); the shell tool re-places them (idempotent on its tag). Re-ran level .. stats:
+all pass.
+
+Whole-frame mean (Unreal / Blender night_r21): C1 ref aspect 0.126 / 0.129, C1 0.130 / 0.132, C10 0.183 / 0.154,
+C3 0.149 / 0.159, C4 0.154 / 0.111, C5 0.150 / 0.132, CW 0.121 / 0.112, CX 0.112 / 0.098, CG 0.031 / 0.024. The
+upper-window paper is lit in Unreal as in Blender (CW, CX); one far west window shows lattice moire in the Unreal capture.
+
+### armory_hall rev 5 (SYNC.md section 12)
+- `regen_interior.py`: 10 ids added (AKI_0618..0627, the papers), 1 retired (AKI_0335, the mat), 0 moved; envelope 0
+  violations; the lifted set 5 -> 4 (lanterns AKI_0612 / AKI_0613 now layout_index 611 / 612, + their 2 lights).
+  `lights_design.json`: the ArmoryLab per-level values (`ue_armorylab_night`) now carry `atten_cm` (all 2000) and
+  `channels` (the perf change; per level only, no design change).
+- `bump_manifest.py --chat armory --retire SM_AK_EntryMat`: revision 4 -> 5, sync_needed DojoLab 5 / ArmoryLab 5.
+- Shell tool last: `AH_SHELL_DONE passed=True placed=161/161 bounds_max_cm=0.0055 hidden=165/165`, tiles 8, lifted 4,
+  lifted_missing empty (log `unreal/logs/armory_hall_shell_r21.log`).
+- `run_armory_unreal.sh hallperf` after the tool (06:42): `passed=True lights=114/114 tiles=8 changed=8 saved=True` (the
+  lights were already right from `level`; the 8 floor tiles moved to channels 0 + 1).
+- `check_sync.py --side armory` exit 0; `bump_manifest.py --record-sync ArmoryLab` -> last_synced.ArmoryLab = 5; locks
+  ArmoryHall + ArmoryKit released.
+- Retired name: `SM_AK_EntryMat` (rev 5). armory_hall revision 5 (interior) is waiting for the dojo chat (DojoLab needs
+  rev 5: the mat gone, 10 papers, M_AK_HWinPaperW / E; its `dj_armory_look.py` emissive scaling should be eyeballed on
+  the paper).
+- Process note: the shell-tool commandlet (06:26) overlapped a DojoLab `-game` perf run of the dojo chat
+  (`dj_ninja_perf.py`, started the same second); their perf_ninja_1 numbers may carry our CPU load. hallperf waited for
+  the dojo runs (queued 06:26-06:41).
+
+**Open:**
+- One far west upper window shows lattice moire in the Unreal CW capture (the paper behind the fine bars).
+- C4 tray lighter / bluer in Unreal than Blender (0.154 vs 0.111), pre-existing.
+
+armory_hall synced rev 5

@@ -131,6 +131,17 @@ MATERIALS = {
     "M_AK_ScreenPanel": (None, 1.0, {"color": "#3A332C", "rough": 0.8}),
     # building r3: the closed shoji panes of the three south bays of the west wall (warm glowing paper, blocks the sun)
     "M_AK_ShojiLit": (None, 1.0, {"color": "#CCBC9E", "emit": 0.9, "emit_color": "#FFD9A0"}),
+    # r21 (2026-10-02, the user: "re-implement the windows on the top rows where the plants are"; armory3_reference2.png:
+    # the upper side bays are bright lattice windows with the red plum branches in front of them): a backlit shoji paper
+    # panel behind every upper lattice window (SM_AK_Window_Paper_35_W / _E, WINDOW_PAPER below), so the windows glow
+    # from the INTERIOR side of the design, also inside the dojo hall (no openings behind them there, the shell's
+    # backers off). An unlit emissive picture (T_AK_HWinPaper, hero/tex_walls.py win_paper: warm cream kozo paper, a
+    # soft glow falling off toward the reveals), so no room light, sun or moon washes it. The values here are the DAY
+    # (golden) paper; at night render_armory NIGHT_EMIT scales it and multiplies in the moon's cool tint, which turns
+    # the warm cream into a dim cool-neutral moonlit glow (Unreal: ak_common applies the same NIGHT_EMIT). The WEST
+    # row is a little brighter (the sun and the moon are both in the west)
+    "M_AK_HWinPaperW": ("HWinPaper", None, {"emit_image": True, "emit": 0.55, "unlit": True}),
+    "M_AK_HWinPaperE": ("HWinPaper", None, {"emit_image": True, "emit": 0.42, "unlit": True}),
 }
 # exterior stage (2026-09-27): the courtyard garden, roof, foundation and scenery live in build_armory_exterior.py
 # (pieces SM_AKX_*, materials M_AKX_*, textures T_AKX_* from make_exterior_textures.py). The flat garden backdrop cards
@@ -903,6 +914,14 @@ def kit():
         lat.box(0.04, WW - 0.04, -0.0125, 0.0125, zc - 0.012, zc + 0.012, T)
     lat.col(0, WW, -0.02, 0.02, 0, H)
     pieces.append(lat)
+    # r21: the backlit shoji paper behind each upper lattice window (see M_AK_HWinPaperW): a 1 cm sheet filling the clear
+    # opening (WW x H, the lattice's own frame and pivot), PAPER_Y behind the lattice in the wall thickness, its room
+    # face (+Y) mapped 0-1 onto the glow picture. A free mesh (not boxes), so the micro growth of every other piece is
+    # unchanged. Separate pieces (not part of the lattice or the wall piece): the lattice keeps its name and bbox
+    # (armory_hall SYNC.md section 9), and the paper casts no shadow (NO_SHADOW), so the golden sun and the moon still
+    # draw their lattice patches on the floor of the standalone armory
+    for side, pm in (("W", "M_AK_HWinPaperW"), ("E", "M_AK_HWinPaperE")):
+        pieces.append(paper_sheet(f"{WINDOW_PAPER}_{side}", WW, H, pm))
     # building r3: a closed paper pane behind the lattice (the west wall's three south bays, Y 0-6): with a 22 deg sun
     # from the north-west these windows would throw their lattice patches onto the entry mat and lanterns, which reference
     # 2 keeps in shade; closed, they glow like the reference's paper ranma. Outside the lattice, in the wall thickness.
@@ -1264,12 +1283,13 @@ def kit():
                              (0, bx1 - bx0, by, ENTRY_BAND_Y1)):
         eb.box(xa, xb, ya, yb, -0.10, 0, PL, uv="y", uvoff=(bx0 % 4.0, 0, 0)).col(xa, xb, ya, yb, -0.10, 0)
     pieces.append(eb)
-    B = MAT_BOARD
-    mw, md = ENTRY_MAT[2] - ENTRY_MAT[0], ENTRY_MAT[3] - ENTRY_MAT[1]
-    em = Piece("SM_AK_EntryMat").box(B, B + mw, B, B + md, 0, MAT_TOP, "M_AK_Mat", uv="x", unique="+z")
-    em.box(0, B, 0, B + md, 0, MAT_BOARD_TOP, T).box(B + mw, 2 * B + mw, 0, B + md, 0, MAT_BOARD_TOP, T)
-    em.box(B, B + mw, 0, B, 0, MAT_BOARD_TOP, T)
-    pieces.append(em.col(0, 2 * B + mw, 0, B + md, 0, MAT_BOARD_TOP))
+    if ENTRY_MAT_ON:   # r21: the mat is removed (ENTRY_MAT_ON)
+        B = MAT_BOARD
+        mw, md = ENTRY_MAT[2] - ENTRY_MAT[0], ENTRY_MAT[3] - ENTRY_MAT[1]
+        em = Piece("SM_AK_EntryMat").box(B, B + mw, B, B + md, 0, MAT_TOP, "M_AK_Mat", uv="x", unique="+z")
+        em.box(0, B, 0, B + md, 0, MAT_BOARD_TOP, T).box(B + mw, 2 * B + mw, 0, B + md, 0, MAT_BOARD_TOP, T)
+        em.box(B, B + mw, 0, B, 0, MAT_BOARD_TOP, T)
+        pieces.append(em.col(0, 2 * B + mw, 0, B + md, 0, MAT_BOARD_TOP))
     # exterior stage: SM_AK_Ext_Ground and SM_AK_Ext_Backdrop are replaced by the SM_AKX_ garden (build_armory_exterior)
     for t, (W, D, H, G) in CASES.items():
         hw, hd = W / 2, D / 2
@@ -1430,6 +1450,24 @@ SHORT_POSTS_Y = tuple(y for y in range(1, int(ROOM_L)) if y % WIN_BAY)
 WALL_DISPLAY_Y = tuple(float(y0 + WIN_BAY // 2) for y0, _L, _p in UPPER_RUN if y0 + WIN_BAY <= WING_Y)
 DISPLAY_W = WIN_BAY - 0.15   # 3.85 (was 1.85: one 2 m post interval)
 WINDOW_LATTICE = "SM_AK_Window_Lattice" if WIN_BAY == 2 else f"SM_AK_Window_Lattice_{round((WIN_BAY - 0.5) * 10)}"
+# r21: the backlit paper behind each upper lattice window (kit(): SM_AK_Window_Paper_35_W / _E), in the lattice's frame:
+# local Y PAPER_Y (8.5-9.5 cm behind the lattice centre: world X -0.235 to -0.245 on the west wall, 12.235-12.245 on the
+# east; the wall's outer face is X -0.30 / 12.30, the armory_hall envelope with_walls)
+WINDOW_PAPER = WINDOW_LATTICE.replace("_Lattice", "_Paper")
+PAPER_Y = (-0.095, -0.085)
+NO_SHADOW = set(EXT.NO_SHADOW) | {f"{WINDOW_PAPER}_W", f"{WINDOW_PAPER}_E"}   # Blender visible_shadow / Unreal cast_shadow off
+
+
+def paper_sheet(name, w, h, mat):
+    """r21: a closed 1 cm sheet x 0-w, z 0-h at PAPER_Y as a free mesh; its room face (+Y) carries the 0-1 UV of the
+    glow picture (U along X, V up), every other face samples one texel near the picture's dim corner."""
+    y0, y1 = PAPER_Y
+    v = [(0, y0, 0), (w, y0, 0), (w, y1, 0), (0, y1, 0), (0, y0, h), (w, y0, h), (w, y1, h), (0, y1, h)]
+    faces = [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (2, 3, 7, 6), (3, 0, 4, 7), (1, 2, 6, 5)]
+    corner = [(0.004, 0.004)] * 4
+    uvs = [corner] * 6
+    uvs[3] = [(v[i][0] / w, v[i][2] / h) for i in faces[3]]   # the room face (+Y)
+    return Piece(name).mesh(v, faces, uvs, mat).col(0, w, y0, y1, 0, h)
 # building r3: west bays with a closed shoji pane (no sun patches in the entry zone). f1: none: every window is open, as in
 # reference 2 (its near-left windows are open and hot), and at the f1 sun (30 deg up, heading 30) the south bays' patches
 # land on the floor by the entry, where reference 2 also shows lattice sun (zoom of its bottom-left lantern)
@@ -1732,6 +1770,10 @@ ENTRY_BAND_Y1 = 4.0
 # longer mat (the r2 MAT_STRIPE is gone): the mat ends there (0.88 m deep, 2.44 wide; the plan armory3_reference.png
 # also shows a shallow mat, ~4.7:1), its surround boards with it; the sunken genkan floor lies in front of it
 ENTRY_MAT = (4.78, 1.47, 7.22, 2.35)  # world x0, y0, x1, y1: the woven mat (with its binding), its far end on the beam
+# r21 (2026-10-02, the user: "remove the tatami mat from the front"): the entry mat (SM_AK_EntryMat: the rush field, its
+# black binding and the dark board surround, all one piece) is no longer built or placed; the genkan floor, the black
+# step beam, the sill and the entry lanterns stay. ENTRY_MAT / MAT_BOARD stay as the record of where it lay
+ENTRY_MAT_ON = False
 MAT_BOARD = 0.11                      # the dark board surround down both sides and across the near end (r4: 0.20 ->
                                       # 0.15; entryfix r2: 0.11)
 MAT_TOP, MAT_BOARD_TOP = 0.022, 0.030  # above GENKAN_Z: the mat, the surround boards (+3 cm: not a step)
@@ -1866,7 +1908,8 @@ def layout():
     add("SM_AK_GenkanFloor", GENKAN[0], 0)
     add("SM_AK_StepBeam", GENKAN[0], 0)
     add("SM_AK_Floor_Plank_EntryBand", ENTRY_BAND_X[0], 0)
-    add("SM_AK_EntryMat", ENTRY_MAT[0] - MAT_BOARD, ENTRY_MAT[1] - MAT_BOARD, GENKAN_Z)
+    if ENTRY_MAT_ON:   # r21: the mat is removed
+        add("SM_AK_EntryMat", ENTRY_MAT[0] - MAT_BOARD, ENTRY_MAT[1] - MAT_BOARD, GENKAN_Z)
     # layout 2 (entrance.png): the heavy jamb posts at the OUTER ENDS of the entrance frame, on the south wall line
     # (were the f1/f2 vestibule posts 1 m inside the entrance); r3: 50 x 80 cm, back face on the wall, Y 0-0.80
     for (x, y) in JAMB_POSTS:
@@ -1885,6 +1928,11 @@ def layout():
         add("SM_AK_Lantern", x, y, z)
     for (x, y, z, k) in LANTERNS:      # b7: the scaled andons, no stands
         add(LANTERN_PIECE[k], round(x, 4), round(y, 4), z)
+    # r21: the backlit paper behind every upper lattice window, placed exactly as its lattice (last, so the layout
+    # indices of the pieces placed before them only move by the removed entry mat)
+    for y0, L, up in UPPER_RUN:
+        add(f"{WINDOW_PAPER}_W", -0.15, y0 + L - 0.25, 2.5 + WIN_SILL, -90)
+        add(f"{WINDOW_PAPER}_E", ROOM_W + 0.15, y0 + 0.25, 2.5 + WIN_SILL, 90)
     return I, cases
 
 
@@ -2130,7 +2178,7 @@ def main():
         pts = [o.matrix_world @ v.co for v in o.data.vertices]
         bboxes.append([round(min(q[i] for q in pts), 4) for i in range(3)] +
                       [round(max(q[i] for q in pts), 4) for i in range(3)])
-        if piece in EXT.NO_SHADOW:   # exterior stage: the scenery never shades the windows or the courtyard
+        if piece in NO_SHADOW:   # exterior stage: the scenery never shades the windows or the courtyard (r21: nor the window paper)
             o.visible_shadow = False
 
     WORK.mkdir(parents=True, exist_ok=True)
@@ -2138,7 +2186,7 @@ def main():
     data = {"units": "metres, Blender frame (UE: x*100, -y*100, z*100, yaw = -rot_z)",
             "pieces": sorted(objs),
             "instances": [dict({"piece": p, "loc": l, "rot_z": r, "bbox_min_max": b},
-                               **({"cast_shadow": False} if p in EXT.NO_SHADOW else {}))
+                               **({"cast_shadow": False} if p in NO_SHADOW else {}))
                           for (p, l, r), b in zip(inst, bboxes)],
             # exterior stage: the player starts in the courtyard on the path, facing the entrance (rot_z 90 = +Y)
             "player_start": EXT.PLAYER_START,

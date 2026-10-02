@@ -1,7 +1,7 @@
 """Comparison sheets for the Unreal captures (system Python with Pillow: `py -3 ak_compare_sheet.py`).
 
 For every capture in WorkFiles/armory/build/unreal/captures/<name>.png: Blender render of the preset (env AK_PRESET,
-default night: renders/night_r20, fallback night_r19; golden: renders/hero_live) | Unreal
+default night: renders/night_r21, fallback night_r20; golden: renders/hero_live) | Unreal
 capture, same height, labelled; C1 at the reference aspect also gets the LOOK reference on the left. Out:
 WorkFiles/armory/build/unreal/compare/<name>_blender_vs_unreal.png (C1 ref aspect: reference_blender_unreal_C1.png).
 """
@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw
 ROOT = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\armory")
 CAP = ROOT / "build" / "unreal" / "captures"
 PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # night + genkan (2026-09-28)
+# r21 round live (2026-10-02): night = renders/night_r21 (all eight views), fallback night_r20
 # r20 round live (2026-10-01): night = renders/night_r20 (all eight views), fallback night_r19
 # r19 round live (2026-09-30): night = renders/night_r19 (all eight views), fallback night_r18
 # r18 round live (2026-09-30): night = renders/night_r18 (all eight views), fallback night_r17
@@ -20,8 +21,8 @@ PRESET = os.environ.get("AK_PRESET", "night").strip().lower() or "night"   # nig
 # r16 round live (2026-09-29): night = renders/night_r16 (all eight views), fallback night_20m
 # 12 x 20 m hall live (2026-09-29): night = renders/night_20m (all eight views), fallback night_live4
 # rear dais live (2026-09-28): night = renders/night_live4; views it lacks (C4, C5) fall back to night_live2
-BL = ROOT / "build" / "renders" / ("night_r20" if PRESET == "night" else "hero_live")   # golden: hero round (was stage_f2)
-BL_FALLBACK = ROOT / "build" / "renders" / "night_r19" if PRESET == "night" else None
+BL = ROOT / "build" / "renders" / ("night_r21" if PRESET == "night" else "hero_live")   # golden: hero round (was stage_f2)
+BL_FALLBACK = ROOT / "build" / "renders" / "night_r20" if PRESET == "night" else None
 
 
 def bl_file(rel):

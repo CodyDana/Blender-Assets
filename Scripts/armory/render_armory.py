@@ -111,8 +111,13 @@ NIGHT_SKY_CAM = {"stops": ((0.0, (0.030, 0.045, 0.085)), (0.25, (0.012, 0.020, 0
                  "cloud": (0.035, 0.045, 0.075), "strength": 0.3}   # r20 look (user: darker outside): 1.0 -> 0.3
 # night: the painted, unlit far-scenery cards (emission is their only light) are dimmed and cooled so the tree line, the
 # hills and the mountains read as faint silhouettes (Unreal: the same factor on their Emissive Intensity, and the tint)
+# r21 (2026-10-02, the user: "re-implement the windows on the top rows where the plants are"): the backlit paper of the
+# upper lattice windows (build_armory_kit M_AK_HWinPaperW / E, emit 0.55 / 0.42 by day) is the moonlit paper at night:
+# its emission scaled down and the same cool tint multiplied into its warm cream picture (= a dim cool-neutral glow),
+# the west row a little brighter (the moon is in the west). Unreal: ak_common applies this table as it is
 NIGHT_EMIT = {"scale": {"M_AKX_TreeLine": 0.004, "M_AKX_TreeLineFar": 0.004, "M_AKX_Hills": 0.004,   # r20 look: 0.012 -> 0.004
-                        "M_AKX_Mountains": 0.004},
+                        "M_AKX_Mountains": 0.004,
+                        "M_AK_HWinPaperW": 0.70, "M_AK_HWinPaperE": 0.73},   # r21: the window paper at night (east 0.80x the west)
               "tint": (0.30, 0.45, 1.0)}
 # night (entryfix 2026-09-28: through the open entrance CX showed the moonlit courtyard pale against the dark hall, and
 # the lawn through the gate as a green panel): the lit exterior ground and walls get a darker, cooler base colour at

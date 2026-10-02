@@ -47,7 +47,8 @@ ENTRY_STEP_MAX = 0.18   # genkan: the largest single step allowed on the entry r
 ROUTES = {
     # genkan (2026-09-28): over the low sill (Y -0.435 to -0.30, +0.04) down onto the sunken genkan floor (-0.12, X
     # 2.17-9.83, Y 0-2.56, the doorway X 4-8 back to the sill) and the rush mat lying on it (X 4.75-7.25, Y 0.18-2.56,
-    # +2.2 cm; its board surround +3 cm)
+    # +2.2 cm; its board surround +3 cm). r21 (2026-10-02, the user: "remove the tatami mat from the front"): the mat is
+    # gone; these routes keep their names (stable logs) and now run over the bare genkan floor (no route needed the mat)
     "outside_through_entrance_to_mat": [(6.0, -2.0), (6.0, 0.45)],
     # up the black step beam (Y 2.56-2.72, flush with the hall floor: one 12 cm step) onto the hall, toward case 1's
     # west corner (plinth X 5.1-6.9 from Y 3.05; entryfix: the entry lanterns are the andon SM_AK_Lantern on the genkan

@@ -1346,8 +1346,13 @@ def wall_sconce(G):
 
 def pieces(G):
     _N[0] = 0
-    return [entrance(G), door_leaf(G, "SM_AK_DoorLeaf", +1), door_leaf(G, "SM_AK_DoorLeaf_R", -1), threshold(G),
-            entry_mat(G), step_beam(G), jamb_post(G), wall_sconce(G)]
+    # r21 (2026-10-02, the user: "remove the tatami mat from the front"): the kit no longer builds or places
+    # SM_AK_EntryMat (build_armory_kit ENTRY_MAT_ON False). The mat is still modelled and dropped, so the part counter
+    # (_N, every part's micro growth and grain offsets) runs on exactly as before and the step beam, jamb post and
+    # sconce after it stay byte-identical
+    out = [entrance(G), door_leaf(G, "SM_AK_DoorLeaf", +1), door_leaf(G, "SM_AK_DoorLeaf_R", -1), threshold(G),
+           entry_mat(G), step_beam(G), jamb_post(G), wall_sconce(G)]   # (the original build order)
+    return [p for p in out if p.name != "SM_AK_EntryMat" or G.get("ENTRY_MAT_ON", True)]
 
 
 def instances():

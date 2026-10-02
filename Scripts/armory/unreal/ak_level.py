@@ -21,6 +21,9 @@ SKYLIGHT_INTENSITY), no height / volumetric fog, the night exposure bias; the sc
 Nanite (2026-10-01, the VSM "Non-Nanite Marking Job Queue overflow" warning): the import makes every opaque kit mesh
 Nanite (ak_nanite.py); this step marks the masters those meshes use "Used with Nanite" (saved), so no run has to
 discover and compile the usage on the fly, and reports how many placed mesh actors are Nanite.
+Performance (2026-10-02, BUILD_NOTES "ArmoryLab performance (hall variant)"): local lights take their attenuation
+radius from ak_common.light_atten_cm and their lighting channels from ak_common.light_channels (the case lights on
+channel 1 only, so the hall shell stays out of their shadow maps); after the shell tool, ak_hallperf.py.
 Result: WorkFiles/armory/build/unreal/level.json (in-process; ak_verify.py re-checks the saved level in a fresh process).
 Env: AK_PRESET night|golden; AK_EXPOSURE_BIAS overrides the exposure bias (EV).
 """
@@ -39,10 +42,11 @@ import ak_nanite as N  # noqa: E402
 
 EAL = unreal.EditorAssetLibrary
 EAS = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+HALL_VARIANT_TAG = "AH_Shell"   # every actor WorkFiles/shared/armory_hall/tools/ue_armorylab_shell.py places (its TAG)
 REP = {"engine": unreal.SystemLibrary.get_engine_version(), "preset": C.PRESET, "notes": [], "setp_failed": []}
 BIAS = float(os.environ.get("AK_EXPOSURE_BIAS", str(round(C.EXPOSURE_BIAS, 3))))
 TOL_CM = 1.0
-ATTEN_CM = 2000.0
+ATTEN_CM = C.UE_ATTEN_CM_DEFAULT   # per role: ak_common.light_atten_cm (performance, 2026-10-02)
 
 
 def rot(pitch=0.0, yaw=0.0, roll=0.0):
@@ -83,11 +87,21 @@ def open_level():
     REP["open_ok"] = bool(ok)
     REP["world"] = world().get_path_name()
     removed = 0
+    hall_removed = 0
     for a in EAS.get_all_level_actors():
-        if unreal.Name(C.MANAGED_TAG) in list(a.tags):
+        tags = list(a.tags)
+        if unreal.Name(C.MANAGED_TAG) in tags:
             EAS.destroy_actor(a)
             removed += 1
+        elif unreal.Name(HALL_VARIANT_TAG) in tags:
+            # r21: the shared shell tool's actors (hall shell, backer lights, floor tiles AKI_9001..9008, courtyard
+            # stand-in) all carry AH_Shell. Remove them so the level is the standalone armory again (SYNC.md 3.2 step
+            # 2); the shell tool, run last, re-places them (it is idempotent on its tag). Before r21 they were kept,
+            # so after the first hall sync every ak_* gate ran with the hall around the room (C1 captured black).
+            EAS.destroy_actor(a)
+            hall_removed += 1
     REP["managed_actors_removed"] = removed
+    REP["hall_variant_actors_removed"] = hall_removed
     REP["unmanaged_actors_kept"] = sorted(a.get_actor_label() for a in EAS.get_all_level_actors())
 
 
@@ -213,7 +227,10 @@ def local_light(L):
     setp(comp, "intensity_units", unreal.LightUnits.CANDELAS)
     setp(comp, "intensity", cd)
     comp.set_light_color(color_of(C.light_kelvin(L)), True)   # night: the downlights at 3500 K (PRESET_KELVIN)
-    setp(comp, "attenuation_radius", ATTEN_CM)
+    # performance (2026-10-02, ak_common): the attenuation radius per role and the case lights on lighting channel 1 only
+    setp(comp, "attenuation_radius", C.light_atten_cm(L))
+    ch0, ch1 = C.light_channels(L)
+    setp(comp, "lighting_channels", channels(ch0, ch1))
     setp(comp, "cast_shadows", C.light_shadows(L))   # Unreal-only: the alcove spots give up theirs (shadow budget 12)
     setp(comp, "volumetric_scattering_intensity", 0.0)      # Blender: only the sun scatters in the haze
     if L["role"] in ("glow", "panel", "rack", "case") or L["role"] in C.UE_SPEC_OFF_ROLES:
@@ -250,7 +267,7 @@ def local_light(L):
     tag(a, L["name"], folder)
     return {"name": L["name"], "type": t, "role": L["role"], "candela": round(cd, 2), "kelvin": C.light_kelvin(L),
             "barn_door_cm": round(C.light_barn_door_cm(L), 3) if t == "rect" else None,
-            "shadows": C.light_shadows(L),
+            "shadows": C.light_shadows(L), "atten_cm": C.light_atten_cm(L), "channels": list(C.light_channels(L)),
             "loc_cm": [round(v, 2) for v in loc], "pitch": round(pitch, 3), "yaw": round(yaw, 3)}
 
 

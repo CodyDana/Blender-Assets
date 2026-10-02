@@ -333,6 +333,12 @@ def gate_lights(layout, actors):
             shadowed.append(L["name"])
         if bool(comp.get_editor_property("cast_shadows")) != C.light_shadows(L):
             bad.append(("shadows", L["name"]))
+        # performance (2026-10-02): attenuation radius per role, case lights on lighting channel 1 only
+        if abs(float(comp.get_editor_property("attenuation_radius")) - C.light_atten_cm(L)) > 0.5:
+            bad.append(("attenuation_radius", L["name"], float(comp.get_editor_property("attenuation_radius"))))
+        lch = comp.get_editor_property("lighting_channels")
+        if (bool(lch.get_editor_property("channel0")), bool(lch.get_editor_property("channel1"))) != C.light_channels(L):
+            bad.append(("lighting_channels", L["name"]))
         if float(comp.get_editor_property("volumetric_scattering_intensity")) != 0.0:
             bad.append(("scatter", L["name"]))
     res["roles_want"], res["roles_got"] = dict(want_roles), dict(got_roles)

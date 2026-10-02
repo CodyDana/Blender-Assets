@@ -279,6 +279,34 @@ def light_shadows(L):
             and L.get("name") not in UE_SHADOW_OFF_LIGHTS)
 
 
+# ------------------------------------------------------------------------------------------------ performance (2026-10-02)
+# ArmoryLab performance, hall variant (BUILD_NOTES "ArmoryLab performance (hall variant)", measured with ak_perf.ps1).
+# Unreal-only, every preset. Blender has no equivalent (its lights have no cut-off and no channels), so nothing here
+# changes the Blender renders.
+# 1 The case lights (12 of them cast the level's only local shadows) light and shadow ONLY lighting channel 1: the room
+#   kit (SM_AK_ on channels 0 + 1) and the items. The hall shell (SM_DKH_, channel 0) and the armory's hidden exterior
+#   then stay out of their 12 cube virtual shadow maps: the shell's ~170 actors (15 of its 32 pieces non-Nanite) were
+#   about half of the ~1030 shadow-depth draws per frame. Nothing the case lights can reach changes: the shell stands
+#   outside the room's walls and ceiling. The hall variant's 8 floor tiles (placed by the shell tool, SM_AK_ pieces)
+#   are put on channels 0 + 1 by ak_hallperf.py, the post-shell step.
+UE_CHANNEL1_ONLY_ROLES = {"case"}
+# 2 Attenuation radius (cm), per role; every light keeps 2000 for now. Measured 2026-10-02: shorter radii (glow 600,
+#   panel 800, lantern 600, down 1200) cut the deferred "Lights" pass but darkened C1 by 11 % (Unreal's window
+#   (1 - (d / r)^4)^2 is close to 1 only for d < 0.3 r), so they are NOT applied; the table is the hook if a later
+#   round wants to trade look for GPU time (re-measure with ak_perf.ps1 and compare the C1 / C10 shots).
+UE_ATTEN_CM_DEFAULT = 2000.0
+UE_ATTEN_CM_BY_ROLE = {}
+
+
+def light_atten_cm(L):
+    return float(UE_ATTEN_CM_BY_ROLE.get(L.get("role"), UE_ATTEN_CM_DEFAULT))
+
+
+def light_channels(L):
+    """(channel0, channel1) of a local light."""
+    return (False, True) if L.get("role") in UE_CHANNEL1_ONLY_ROLES else (True, False)
+
+
 def is_interior_piece(piece):
     """The Blender Assembly collection (room kit) = SM_AK_ pieces; SM_AKX_ are AssemblyExterior."""
     return piece.startswith("SM_AK_")

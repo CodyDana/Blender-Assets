@@ -1,0 +1,5961 @@
+{
+ "mode": "game",
+ "probe_passed": true,
+ "errors": [],
+ "notes": [],
+ "t_world_s": 0.0,
+ "pso": {
+  "waited_lines": 0,
+  "waited_ms_total": 0,
+  "hitch_summaries": [],
+  "waited_lines_after_warmup": 0
+ },
+ "vsm_overflow_warnings": 0,
+ "gpu_timeouts": 0,
+ "log_errors": 0,
+ "segments": [
+  {
+   "name": "spawn",
+   "wall_s": 8.01,
+   "frames": 637,
+   "py_frame_ms_mean": 12.58,
+   "py_frame_ms_p95": 16.65,
+   "py_fps": 79.5,
+   "csv": {
+    "file": "Profile(20261002_043958).csv",
+    "frames": 628,
+    "frame_ms": {
+     "mean": 12.57,
+     "p95": 16.52,
+     "max": 19.0
+    },
+    "game_ms": {
+     "mean": 2.45,
+     "p95": 3.47,
+     "max": 5.31
+    },
+    "render_ms": {
+     "mean": 12.57,
+     "p95": 16.49,
+     "max": 18.94
+    },
+    "rhi_ms": {
+     "mean": 3.34,
+     "p95": 3.93,
+     "max": 4.7
+    },
+    "gpu_ms": {
+     "mean": 9.25,
+     "p95": 14.93,
+     "max": 17.11
+    },
+    "draw_calls": {
+     "mean": 1557.57,
+     "p95": 1637.0,
+     "max": 1702.0
+    },
+    "primitives": {
+     "mean": 394503.26,
+     "p95": 410636.0,
+     "max": 433756.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      2.951
+     ],
+     [
+      "ShadowDepths",
+      1.338
+     ],
+     [
+      "TemporalSuperResolution",
+      0.82
+     ],
+     [
+      "Unaccounted",
+      0.733
+     ],
+     [
+      "RenderDeferredLighting",
+      0.488
+     ],
+     [
+      "NaniteVisBuffer",
+      0.425
+     ],
+     [
+      "LumenReflections",
+      0.347
+     ],
+     [
+      "Postprocessing",
+      0.249
+     ],
+     [
+      "NaniteBasePass",
+      0.232
+     ],
+     [
+      "LumenSceneUpdate",
+      0.208
+     ],
+     [
+      "RayTracingScene",
+      0.179
+     ],
+     [
+      "SkyAtmosphere",
+      0.137
+     ],
+     [
+      "ShadowProjection",
+      0.114
+     ],
+     [
+      "Basepass",
+      0.108
+     ],
+     [
+      "NaniteReadback",
+      0.079
+     ],
+     [
+      "TranslucentLighting",
+      0.076
+     ],
+     [
+      "LightGrid",
+      0.073
+     ],
+     [
+      "Translucency",
+      0.066
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.053
+     ],
+     [
+      "MotionBlur",
+      0.051
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1019.503,
+     "DrawCall/Lights": 229.29,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 59.035,
+     "DrawCall/Prepass": 57.067,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 25.221,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 12.947,
+     "RenderThreadTime_CriticalPath": 12.569,
+     "DrawCall/Translucency": 11.963,
+     "Exclusive/GameThread/EventWait": 10.111,
+     "CPUUsage_Process": 5.384,
+     "Exclusive/RenderThread/RenderOther": 3.051,
+     "DrawCall/DistanceFieldShadows": 2.952,
+     "Exclusive/RenderThread/RenderLighting": 2.539,
+     "GameThreadTime_CriticalPath": 2.453,
+     "DrawCall/SlateUI": 1.968,
+     "DrawCall/RenderVelocities": 1.968,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.609,
+     "Exclusive/RenderThread/RDG_CollectResources": 1.031,
+     "Exclusive/RenderThread/RDG": 0.904,
+     "Exclusive/RenderThread/RenderShadows": 0.701,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.349,
+     "Exclusive/RenderThread/EventWait": 0.342,
+     "Exclusive/RenderThread/RenderThreadOther": 0.278,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.274,
+     "Exclusive/RenderThread/RDG_Execute": 0.246,
+     "Exclusive/RenderThread/RenderTranslucency": 0.235,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.23,
+     "Exclusive/GameThread/UI": 0.229,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.212,
+     "Exclusive/GameThread/Animation": 0.166,
+     "Exclusive/GameThread/TickActors": 0.16,
+     "Exclusive/GameThread/ViewportMisc": 0.157,
+     "Exclusive/RenderThread/InitViews_Scene": 0.156,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.114,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.099,
+     "Exclusive/GameThread/EngineTickMisc": 0.09,
+     "Exclusive/GameThread/CharacterMovement": 0.087,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.083,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.082,
+     "Exclusive/RenderThread/RenderBasePass": 0.08,
+     "Exclusive/GameThread/WorldTickMisc": 0.075,
+     "Exclusive/GameThread/DebugHUD": 0.073,
+     "Exclusive/GameThread/Tickables": 0.07,
+     "Exclusive/GameThread/DeferredTickTime": 0.067,
+     "Exclusive/GameThread/PlayerControllerTick": 0.062,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.051,
+     "Exclusive/GameThread/Effects": 0.045,
+     "Exclusive/GameThread/Physics": 0.045,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.045,
+     "Exclusive/RenderThread/Slate": 0.044,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.043,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.042,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.038,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.037,
+     "Exclusive/RenderThread/FXSystem": 0.034,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.03
+    },
+    "fps": 79.6
+   }
+  },
+  {
+   "name": "AB_base@spawn",
+   "wall_s": 8.01,
+   "frames": 640,
+   "py_frame_ms_mean": 12.52,
+   "py_frame_ms_p95": 16.32,
+   "py_fps": 79.9,
+   "csv": {
+    "file": "Profile(20261002_044012).csv",
+    "frames": 305,
+    "frame_ms": {
+     "mean": 12.86,
+     "p95": 18.83,
+     "max": 21.18
+    },
+    "game_ms": {
+     "mean": 2.47,
+     "p95": 3.69,
+     "max": 4.48
+    },
+    "render_ms": {
+     "mean": 12.86,
+     "p95": 18.8,
+     "max": 21.06
+    },
+    "rhi_ms": {
+     "mean": 3.33,
+     "p95": 3.84,
+     "max": 4.64
+    },
+    "gpu_ms": {
+     "mean": 9.68,
+     "p95": 16.14,
+     "max": 18.7
+    },
+    "draw_calls": {
+     "mean": 1558.9,
+     "p95": 1639.0,
+     "max": 1680.0
+    },
+    "primitives": {
+     "mean": 395143.17,
+     "p95": 411657.0,
+     "max": 426548.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      3.1
+     ],
+     [
+      "ShadowDepths",
+      1.382
+     ],
+     [
+      "TemporalSuperResolution",
+      0.862
+     ],
+     [
+      "Unaccounted",
+      0.775
+     ],
+     [
+      "RenderDeferredLighting",
+      0.524
+     ],
+     [
+      "NaniteVisBuffer",
+      0.463
+     ],
+     [
+      "LumenReflections",
+      0.353
+     ],
+     [
+      "Postprocessing",
+      0.266
+     ],
+     [
+      "NaniteBasePass",
+      0.244
+     ],
+     [
+      "LumenSceneUpdate",
+      0.215
+     ],
+     [
+      "RayTracingScene",
+      0.183
+     ],
+     [
+      "SkyAtmosphere",
+      0.16
+     ],
+     [
+      "ShadowProjection",
+      0.127
+     ],
+     [
+      "Basepass",
+      0.118
+     ],
+     [
+      "TranslucentLighting",
+      0.087
+     ],
+     [
+      "NaniteReadback",
+      0.082
+     ],
+     [
+      "LightGrid",
+      0.077
+     ],
+     [
+      "Translucency",
+      0.064
+     ],
+     [
+      "MotionBlur",
+      0.061
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.057
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1029.207,
+     "DrawCall/Lights": 231.472,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 59.738,
+     "DrawCall/Prepass": 57.751,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 27.197,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.134,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 12.861,
+     "DrawCall/Translucency": 12.141,
+     "Exclusive/GameThread/EventWait": 10.375,
+     "CPUUsage_Process": 5.316,
+     "Exclusive/RenderThread/RenderOther": 3.045,
+     "DrawCall/DistanceFieldShadows": 2.98,
+     "Exclusive/RenderThread/RenderLighting": 2.542,
+     "GameThreadTime_CriticalPath": 2.475,
+     "DrawCall/SlateUI": 1.987,
+     "DrawCall/RenderVelocities": 1.987,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.922,
+     "Exclusive/RenderThread/RDG_CollectResources": 1.029,
+     "Exclusive/RenderThread/RDG": 0.917,
+     "Exclusive/RenderThread/RenderShadows": 0.697,
+     "Exclusive/RenderThread/EventWait": 0.375,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.35,
+     "Exclusive/RenderThread/RenderThreadOther": 0.28,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.262,
+     "Exclusive/GameThread/UI": 0.256,
+     "Exclusive/RenderThread/RDG_Execute": 0.235,
+     "Exclusive/RenderThread/RenderTranslucency": 0.233,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.226,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.2,
+     "Exclusive/GameThread/Animation": 0.167,
+     "Exclusive/GameThread/ViewportMisc": 0.164,
+     "Exclusive/GameThread/TickActors": 0.16,
+     "Exclusive/RenderThread/InitViews_Scene": 0.149,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.112,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.098,
+     "Exclusive/GameThread/EngineTickMisc": 0.088,
+     "Exclusive/GameThread/CharacterMovement": 0.086,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.084,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.084,
+     "Exclusive/RenderThread/RenderBasePass": 0.08,
+     "Exclusive/GameThread/WorldTickMisc": 0.077,
+     "Exclusive/GameThread/DebugHUD": 0.072,
+     "Exclusive/GameThread/Tickables": 0.071,
+     "Exclusive/GameThread/DeferredTickTime": 0.066,
+     "Exclusive/GameThread/PlayerControllerTick": 0.062,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.051,
+     "Exclusive/GameThread/Physics": 0.046,
+     "Exclusive/GameThread/Effects": 0.045,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.045,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.044,
+     "Exclusive/RenderThread/Slate": 0.043,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.04,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.036,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.035,
+     "Exclusive/RenderThread/FXSystem": 0.034,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.03
+    },
+    "fps": 77.8
+   }
+  },
+  {
+   "name": "AB_case_ch1@spawn",
+   "wall_s": 8.0,
+   "frames": 603,
+   "py_frame_ms_mean": 13.27,
+   "py_frame_ms_p95": 18.76,
+   "py_fps": 75.3,
+   "csv": {
+    "file": "Profile(20261002_044026).csv",
+    "frames": 151,
+    "frame_ms": {
+     "mean": 12.94,
+     "p95": 21.04,
+     "max": 41.33
+    },
+    "game_ms": {
+     "mean": 2.57,
+     "p95": 3.21,
+     "max": 40.74
+    },
+    "render_ms": {
+     "mean": 12.68,
+     "p95": 19.27,
+     "max": 25.15
+    },
+    "rhi_ms": {
+     "mean": 3.11,
+     "p95": 3.58,
+     "max": 4.09
+    },
+    "gpu_ms": {
+     "mean": 9.81,
+     "p95": 18.27,
+     "max": 23.03
+    },
+    "draw_calls": {
+     "mean": 1022.42,
+     "p95": 1096.0,
+     "max": 1158.0
+    },
+    "primitives": {
+     "mean": 395089.84,
+     "p95": 409470.0,
+     "max": 428139.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      3.091
+     ],
+     [
+      "ShadowDepths",
+      0.985
+     ],
+     [
+      "TemporalSuperResolution",
+      0.9
+     ],
+     [
+      "Unaccounted",
+      0.828
+     ],
+     [
+      "RenderDeferredLighting",
+      0.57
+     ],
+     [
+      "NaniteVisBuffer",
+      0.496
+     ],
+     [
+      "LumenReflections",
+      0.44
+     ],
+     [
+      "Postprocessing",
+      0.303
+     ],
+     [
+      "NaniteBasePass",
+      0.271
+     ],
+     [
+      "LumenSceneUpdate",
+      0.225
+     ],
+     [
+      "RayTracingScene",
+      0.203
+     ],
+     [
+      "SkyAtmosphere",
+      0.193
+     ],
+     [
+      "ShadowProjection",
+      0.166
+     ],
+     [
+      "Basepass",
+      0.148
+     ],
+     [
+      "NaniteReadback",
+      0.093
+     ],
+     [
+      "LightGrid",
+      0.093
+     ],
+     [
+      "Translucency",
+      0.066
+     ],
+     [
+      "TranslucentLighting",
+      0.064
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.06
+     ],
+     [
+      "MotionBlur",
+      0.057
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 501.298,
+     "DrawCall/Lights": 234.543,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 60.589,
+     "DrawCall/Prepass": 58.576,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 26.51,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.291,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 12.682,
+     "DrawCall/Translucency": 12.285,
+     "Exclusive/GameThread/EventWait": 10.289,
+     "CPUUsage_Process": 5.115,
+     "DrawCall/DistanceFieldShadows": 3.02,
+     "Exclusive/RenderThread/RenderOther": 2.84,
+     "Exclusive/RenderThread/EventWait/Visibility": 2.767,
+     "GameThreadTime_CriticalPath": 2.571,
+     "Exclusive/RenderThread/RenderLighting": 2.396,
+     "DrawCall/SlateUI": 2.013,
+     "DrawCall/RenderVelocities": 2.013,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.957,
+     "Exclusive/RenderThread/RDG": 0.794,
+     "Exclusive/RenderThread/RenderShadows": 0.623,
+     "Exclusive/RenderThread/EventWait": 0.422,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.326,
+     "Exclusive/RenderThread/RenderThreadOther": 0.278,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.254,
+     "Exclusive/GameThread/UI": 0.233,
+     "Exclusive/RenderThread/RDG_Execute": 0.213,
+     "Exclusive/GameThread/GarbageCollection": 0.208,
+     "Exclusive/RenderThread/RenderTranslucency": 0.2,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.161,
+     "Exclusive/GameThread/Animation": 0.16,
+     "Exclusive/GameThread/TickActors": 0.151,
+     "Exclusive/GameThread/ViewportMisc": 0.146,
+     "Exclusive/GameThread/WorldTickMisc": 0.14,
+     "Exclusive/RenderThread/InitViews_Scene": 0.135,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.095,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.092,
+     "Exclusive/GameThread/EngineTickMisc": 0.087,
+     "Exclusive/GameThread/CharacterMovement": 0.083,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.077,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.076,
+     "Exclusive/RenderThread/RenderBasePass": 0.075,
+     "Exclusive/GameThread/DebugHUD": 0.07,
+     "Exclusive/GameThread/Tickables": 0.067,
+     "Exclusive/GameThread/DeferredTickTime": 0.064,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.047,
+     "Exclusive/GameThread/Physics": 0.045,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.043,
+     "Exclusive/RenderThread/Slate": 0.04,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.04,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.037,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.035,
+     "Exclusive/RenderThread/FXSystem": 0.03,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.03
+    },
+    "fps": 77.3
+   }
+  },
+  {
+   "name": "AB_noop@spawn",
+   "wall_s": 8.0,
+   "frames": 656,
+   "py_frame_ms_mean": 12.2,
+   "py_frame_ms_p95": 16.88,
+   "py_fps": 82.0,
+   "csv": {
+    "file": "Profile(20261002_044042).csv",
+    "frames": 529,
+    "frame_ms": {
+     "mean": 12.41,
+     "p95": 17.27,
+     "max": 20.93
+    },
+    "game_ms": {
+     "mean": 2.41,
+     "p95": 3.26,
+     "max": 4.33
+    },
+    "render_ms": {
+     "mean": 12.41,
+     "p95": 17.31,
+     "max": 20.92
+    },
+    "rhi_ms": {
+     "mean": 3.19,
+     "p95": 3.71,
+     "max": 4.85
+    },
+    "gpu_ms": {
+     "mean": 9.57,
+     "p95": 15.71,
+     "max": 17.9
+    },
+    "draw_calls": {
+     "mean": 1559.63,
+     "p95": 1632.0,
+     "max": 1689.0
+    },
+    "primitives": {
+     "mean": 394721.83,
+     "p95": 410879.0,
+     "max": 425840.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      3.129
+     ],
+     [
+      "ShadowDepths",
+      1.387
+     ],
+     [
+      "TemporalSuperResolution",
+      0.845
+     ],
+     [
+      "Unaccounted",
+      0.749
+     ],
+     [
+      "RenderDeferredLighting",
+      0.507
+     ],
+     [
+      "NaniteVisBuffer",
+      0.441
+     ],
+     [
+      "LumenReflections",
+      0.349
+     ],
+     [
+      "Postprocessing",
+      0.261
+     ],
+     [
+      "NaniteBasePass",
+      0.255
+     ],
+     [
+      "LumenSceneUpdate",
+      0.216
+     ],
+     [
+      "RayTracingScene",
+      0.203
+     ],
+     [
+      "SkyAtmosphere",
+      0.149
+     ],
+     [
+      "ShadowProjection",
+      0.117
+     ],
+     [
+      "Basepass",
+      0.109
+     ],
+     [
+      "NaniteReadback",
+      0.086
+     ],
+     [
+      "LightGrid",
+      0.083
+     ],
+     [
+      "TranslucentLighting",
+      0.083
+     ],
+     [
+      "Translucency",
+      0.065
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.059
+     ],
+     [
+      "MotionBlur",
+      0.054
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1022.291,
+     "DrawCall/Lights": 229.917,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 59.197,
+     "DrawCall/Prepass": 57.223,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 25.873,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 12.994,
+     "RenderThreadTime_CriticalPath": 12.41,
+     "DrawCall/Translucency": 12.008,
+     "Exclusive/GameThread/EventWait": 9.997,
+     "CPUUsage_Process": 5.312,
+     "DrawCall/DistanceFieldShadows": 2.96,
+     "Exclusive/RenderThread/RenderOther": 2.943,
+     "Exclusive/RenderThread/RenderLighting": 2.454,
+     "GameThreadTime_CriticalPath": 2.407,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.975,
+     "DrawCall/SlateUI": 1.974,
+     "DrawCall/RenderVelocities": 1.974,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.995,
+     "Exclusive/RenderThread/RDG": 0.866,
+     "Exclusive/RenderThread/RenderShadows": 0.659,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.34,
+     "Exclusive/RenderThread/RenderThreadOther": 0.272,
+     "Exclusive/RenderThread/EventWait": 0.271,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.259,
+     "Exclusive/GameThread/UI": 0.232,
+     "Exclusive/RenderThread/RDG_Execute": 0.216,
+     "Exclusive/RenderThread/RenderTranslucency": 0.215,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.208,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.183,
+     "Exclusive/GameThread/TickActors": 0.166,
+     "Exclusive/GameThread/Animation": 0.165,
+     "Exclusive/GameThread/ViewportMisc": 0.151,
+     "Exclusive/RenderThread/InitViews_Scene": 0.143,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.11,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.097,
+     "Exclusive/GameThread/EngineTickMisc": 0.086,
+     "Exclusive/GameThread/CharacterMovement": 0.085,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.083,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.079,
+     "Exclusive/RenderThread/RenderBasePass": 0.077,
+     "Exclusive/GameThread/WorldTickMisc": 0.074,
+     "Exclusive/GameThread/DebugHUD": 0.073,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.066,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/GameThread/Physics": 0.047,
+     "Exclusive/GameThread/Effects": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.044,
+     "Exclusive/RenderThread/Slate": 0.041,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.037,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.035,
+     "Exclusive/RenderThread/FXSystem": 0.032,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.029
+    },
+    "fps": 80.6
+   }
+  },
+  {
+   "name": "AB_case_ch1@spawn",
+   "wall_s": 8.01,
+   "frames": 680,
+   "py_frame_ms_mean": 11.77,
+   "py_frame_ms_p95": 15.08,
+   "py_fps": 84.9,
+   "csv": {
+    "file": "Profile(20261002_044058).csv",
+    "frames": 550,
+    "frame_ms": {
+     "mean": 11.88,
+     "p95": 15.59,
+     "max": 19.47
+    },
+    "game_ms": {
+     "mean": 2.4,
+     "p95": 3.26,
+     "max": 4.26
+    },
+    "render_ms": {
+     "mean": 11.88,
+     "p95": 15.49,
+     "max": 19.53
+    },
+    "rhi_ms": {
+     "mean": 3.18,
+     "p95": 3.67,
+     "max": 4.53
+    },
+    "gpu_ms": {
+     "mean": 8.94,
+     "p95": 14.19,
+     "max": 16.92
+    },
+    "draw_calls": {
+     "mean": 1019.64,
+     "p95": 1094.0,
+     "max": 1128.0
+    },
+    "primitives": {
+     "mean": 394381.72,
+     "p95": 410128.0,
+     "max": 429881.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      2.906
+     ],
+     [
+      "ShadowDepths",
+      0.896
+     ],
+     [
+      "TemporalSuperResolution",
+      0.875
+     ],
+     [
+      "Unaccounted",
+      0.752
+     ],
+     [
+      "RenderDeferredLighting",
+      0.515
+     ],
+     [
+      "NaniteVisBuffer",
+      0.452
+     ],
+     [
+      "LumenReflections",
+      0.398
+     ],
+     [
+      "NaniteBasePass",
+      0.272
+     ],
+     [
+      "Postprocessing",
+      0.267
+     ],
+     [
+      "LumenSceneUpdate",
+      0.224
+     ],
+     [
+      "RayTracingScene",
+      0.199
+     ],
+     [
+      "SkyAtmosphere",
+      0.159
+     ],
+     [
+      "ShadowProjection",
+      0.135
+     ],
+     [
+      "Basepass",
+      0.119
+     ],
+     [
+      "NaniteReadback",
+      0.092
+     ],
+     [
+      "LightGrid",
+      0.086
+     ],
+     [
+      "TranslucentLighting",
+      0.075
+     ],
+     [
+      "Translucency",
+      0.064
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.059
+     ],
+     [
+      "FrontLayerTranslucencyGBuffer",
+      0.054
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 496.189,
+     "DrawCall/Lights": 232.153,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 59.713,
+     "DrawCall/Prepass": 57.72,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 25.762,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.085,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/Translucency": 12.089,
+     "RenderThreadTime_CriticalPath": 11.882,
+     "Exclusive/GameThread/EventWait": 9.474,
+     "CPUUsage_Process": 5.346,
+     "DrawCall/DistanceFieldShadows": 2.989,
+     "Exclusive/RenderThread/RenderOther": 2.907,
+     "Exclusive/RenderThread/RenderLighting": 2.448,
+     "GameThreadTime_CriticalPath": 2.402,
+     "DrawCall/SlateUI": 1.993,
+     "DrawCall/RenderVelocities": 1.993,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.747,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.987,
+     "Exclusive/RenderThread/RDG": 0.844,
+     "Exclusive/RenderThread/RenderShadows": 0.638,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.338,
+     "Exclusive/RenderThread/RenderThreadOther": 0.284,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.259,
+     "Exclusive/RenderThread/EventWait": 0.244,
+     "Exclusive/GameThread/UI": 0.229,
+     "Exclusive/RenderThread/RDG_Execute": 0.215,
+     "Exclusive/RenderThread/RenderTranslucency": 0.213,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.18,
+     "Exclusive/GameThread/Animation": 0.164,
+     "Exclusive/GameThread/TickActors": 0.16,
+     "Exclusive/GameThread/ViewportMisc": 0.152,
+     "Exclusive/RenderThread/InitViews_Scene": 0.147,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.096,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.094,
+     "Exclusive/GameThread/EngineTickMisc": 0.088,
+     "Exclusive/GameThread/CharacterMovement": 0.085,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.08,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.079,
+     "Exclusive/RenderThread/RenderBasePass": 0.076,
+     "Exclusive/GameThread/WorldTickMisc": 0.074,
+     "Exclusive/GameThread/DebugHUD": 0.072,
+     "Exclusive/GameThread/Tickables": 0.07,
+     "Exclusive/GameThread/DeferredTickTime": 0.066,
+     "Exclusive/GameThread/PlayerControllerTick": 0.06,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.05,
+     "Exclusive/GameThread/Physics": 0.046,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/RenderThread/Slate": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.039,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.036,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.034,
+     "Exclusive/RenderThread/FXSystem": 0.032,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.031,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.028
+    },
+    "fps": 84.2
+   }
+  },
+  {
+   "name": "AB_noop@spawn",
+   "wall_s": 8.0,
+   "frames": 685,
+   "py_frame_ms_mean": 11.68,
+   "py_frame_ms_p95": 16.4,
+   "py_fps": 85.6,
+   "csv": {
+    "file": "Profile(20261002_044114).csv",
+    "frames": 685,
+    "frame_ms": {
+     "mean": 11.68,
+     "p95": 16.48,
+     "max": 20.81
+    },
+    "game_ms": {
+     "mean": 2.31,
+     "p95": 3.02,
+     "max": 6.61
+    },
+    "render_ms": {
+     "mean": 11.68,
+     "p95": 16.45,
+     "max": 20.88
+    },
+    "rhi_ms": {
+     "mean": 3.0,
+     "p95": 3.37,
+     "max": 5.58
+    },
+    "gpu_ms": {
+     "mean": 9.16,
+     "p95": 15.25,
+     "max": 18.33
+    },
+    "draw_calls": {
+     "mean": 1558.79,
+     "p95": 1631.0,
+     "max": 1694.0
+    },
+    "primitives": {
+     "mean": 394681.32,
+     "p95": 410094.0,
+     "max": 432679.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      3.006
+     ],
+     [
+      "ShadowDepths",
+      1.329
+     ],
+     [
+      "TemporalSuperResolution",
+      0.81
+     ],
+     [
+      "Unaccounted",
+      0.714
+     ],
+     [
+      "RenderDeferredLighting",
+      0.482
+     ],
+     [
+      "NaniteVisBuffer",
+      0.417
+     ],
+     [
+      "LumenReflections",
+      0.341
+     ],
+     [
+      "Postprocessing",
+      0.237
+     ],
+     [
+      "NaniteBasePass",
+      0.229
+     ],
+     [
+      "LumenSceneUpdate",
+      0.214
+     ],
+     [
+      "RayTracingScene",
+      0.179
+     ],
+     [
+      "SkyAtmosphere",
+      0.127
+     ],
+     [
+      "ShadowProjection",
+      0.12
+     ],
+     [
+      "Basepass",
+      0.107
+     ],
+     [
+      "NaniteReadback",
+      0.082
+     ],
+     [
+      "TranslucentLighting",
+      0.082
+     ],
+     [
+      "LightGrid",
+      0.074
+     ],
+     [
+      "Translucency",
+      0.063
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.059
+     ],
+     [
+      "MotionBlur",
+      0.052
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1019.364,
+     "DrawCall/Lights": 229.258,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 58.98,
+     "DrawCall/Prepass": 57.012,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 25.822,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 12.939,
+     "DrawCall/Translucency": 11.955,
+     "RenderThreadTime_CriticalPath": 11.678,
+     "Exclusive/GameThread/EventWait": 9.356,
+     "CPUUsage_Process": 5.411,
+     "DrawCall/DistanceFieldShadows": 2.952,
+     "Exclusive/RenderThread/RenderOther": 2.795,
+     "Exclusive/RenderThread/RenderLighting": 2.374,
+     "GameThreadTime_CriticalPath": 2.317,
+     "DrawCall/RenderVelocities": 1.968,
+     "DrawCall/SlateUI": 1.962,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.845,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.938,
+     "Exclusive/RenderThread/RDG": 0.799,
+     "Exclusive/RenderThread/RenderShadows": 0.628,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.321,
+     "Exclusive/RenderThread/RenderThreadOther": 0.258,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.254,
+     "Exclusive/RenderThread/EventWait": 0.216,
+     "Exclusive/GameThread/UI": 0.213,
+     "Exclusive/RenderThread/RDG_Execute": 0.208,
+     "Exclusive/RenderThread/RenderTranslucency": 0.195,
+     "Exclusive/GameThread/Animation": 0.16,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.158,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.157,
+     "Exclusive/GameThread/TickActors": 0.151,
+     "Exclusive/GameThread/ViewportMisc": 0.145,
+     "Exclusive/RenderThread/InitViews_Scene": 0.136,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.102,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.094,
+     "Exclusive/GameThread/EngineTickMisc": 0.084,
+     "Exclusive/GameThread/CharacterMovement": 0.083,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.079,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.073,
+     "Exclusive/RenderThread/RenderBasePass": 0.073,
+     "Exclusive/GameThread/WorldTickMisc": 0.071,
+     "Exclusive/GameThread/DebugHUD": 0.071,
+     "Exclusive/GameThread/Tickables": 0.067,
+     "Exclusive/GameThread/DeferredTickTime": 0.062,
+     "Exclusive/GameThread/PlayerControllerTick": 0.059,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.047,
+     "Exclusive/GameThread/Physics": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.043,
+     "Exclusive/GameThread/Effects": 0.042,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.04,
+     "Exclusive/RenderThread/Slate": 0.038,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.037,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.034,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.031,
+     "Exclusive/RenderThread/FXSystem": 0.028,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.026
+    },
+    "fps": 85.6
+   }
+  },
+  {
+   "name": "AB_case_ch1@spawn",
+   "wall_s": 8.0,
+   "frames": 666,
+   "py_frame_ms_mean": 12.02,
+   "py_frame_ms_p95": 15.05,
+   "py_fps": 83.2,
+   "csv": {
+    "file": "Profile(20261002_044130).csv",
+    "frames": 406,
+    "frame_ms": {
+     "mean": 11.9,
+     "p95": 13.11,
+     "max": 51.53
+    },
+    "game_ms": {
+     "mean": 2.64,
+     "p95": 3.71,
+     "max": 51.48
+    },
+    "render_ms": {
+     "mean": 11.81,
+     "p95": 13.11,
+     "max": 15.23
+    },
+    "rhi_ms": {
+     "mean": 3.27,
+     "p95": 3.87,
+     "max": 4.96
+    },
+    "gpu_ms": {
+     "mean": 7.78,
+     "p95": 8.54,
+     "max": 8.74
+    },
+    "draw_calls": {
+     "mean": 1021.64,
+     "p95": 1099.0,
+     "max": 1125.0
+    },
+    "primitives": {
+     "mean": 395016.06,
+     "p95": 410895.0,
+     "max": 428727.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      2.513
+     ],
+     [
+      "ShadowDepths",
+      0.742
+     ],
+     [
+      "TemporalSuperResolution",
+      0.73
+     ],
+     [
+      "Unaccounted",
+      0.64
+     ],
+     [
+      "RenderDeferredLighting",
+      0.452
+     ],
+     [
+      "NaniteVisBuffer",
+      0.377
+     ],
+     [
+      "LumenReflections",
+      0.34
+     ],
+     [
+      "NaniteBasePass",
+      0.207
+     ],
+     [
+      "LumenSceneUpdate",
+      0.207
+     ],
+     [
+      "Postprocessing",
+      0.206
+     ],
+     [
+      "RayTracingScene",
+      0.15
+     ],
+     [
+      "ShadowProjection",
+      0.108
+     ],
+     [
+      "SkyAtmosphere",
+      0.096
+     ],
+     [
+      "Basepass",
+      0.092
+     ],
+     [
+      "NaniteReadback",
+      0.074
+     ],
+     [
+      "LightGrid",
+      0.065
+     ],
+     [
+      "TranslucentLighting",
+      0.063
+     ],
+     [
+      "Translucency",
+      0.062
+     ],
+     [
+      "MotionBlur",
+      0.05
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.046
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 495.547,
+     "DrawCall/Lights": 231.852,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 59.83,
+     "DrawCall/Prepass": 57.84,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 26.7,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.133,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/Translucency": 12.138,
+     "RenderThreadTime_CriticalPath": 11.806,
+     "Exclusive/GameThread/EventWait": 9.259,
+     "CPUUsage_Process": 5.534,
+     "Exclusive/RenderThread/RenderOther": 3.019,
+     "DrawCall/DistanceFieldShadows": 2.985,
+     "GameThreadTime_CriticalPath": 2.637,
+     "Exclusive/RenderThread/RenderLighting": 2.538,
+     "DrawCall/SlateUI": 1.99,
+     "DrawCall/RenderVelocities": 1.99,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.151,
+     "Exclusive/RenderThread/RDG_CollectResources": 1.036,
+     "Exclusive/RenderThread/RDG": 0.881,
+     "Exclusive/RenderThread/RenderShadows": 0.674,
+     "Exclusive/RenderThread/EventWait": 0.43,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.352,
+     "Exclusive/RenderThread/RenderThreadOther": 0.283,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.274,
+     "Exclusive/GameThread/UI": 0.249,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.243,
+     "Exclusive/RenderThread/RenderTranslucency": 0.23,
+     "Exclusive/RenderThread/RDG_Execute": 0.22,
+     "Exclusive/GameThread/Animation": 0.164,
+     "Exclusive/RenderThread/InitViews_Scene": 0.156,
+     "Exclusive/GameThread/TickActors": 0.155,
+     "Exclusive/GameThread/ViewportMisc": 0.154,
+     "Exclusive/GameThread/WorldTickMisc": 0.107,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.1,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.1,
+     "Exclusive/GameThread/GarbageCollection": 0.091,
+     "Exclusive/GameThread/EngineTickMisc": 0.088,
+     "Exclusive/GameThread/CharacterMovement": 0.084,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.08,
+     "Exclusive/RenderThread/RenderBasePass": 0.079,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.077,
+     "Exclusive/GameThread/DebugHUD": 0.073,
+     "Exclusive/GameThread/Tickables": 0.07,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.067,
+     "Exclusive/GameThread/DeferredTickTime": 0.066,
+     "Exclusive/GameThread/PlayerControllerTick": 0.06,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.051,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.045,
+     "Exclusive/GameThread/Effects": 0.044,
+     "Exclusive/GameThread/Physics": 0.044,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.043,
+     "Exclusive/RenderThread/Slate": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.041,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.037,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.037,
+     "Exclusive/RenderThread/FXSystem": 0.033
+    },
+    "fps": 84.0
+   }
+  },
+  {
+   "name": "AB_noop@spawn",
+   "wall_s": 8.01,
+   "frames": 592,
+   "py_frame_ms_mean": 13.52,
+   "py_frame_ms_p95": 19.7,
+   "py_fps": 73.9,
+   "csv": {
+    "file": "Profile(20261002_044146).csv",
+    "frames": 505,
+    "frame_ms": {
+     "mean": 13.86,
+     "p95": 19.77,
+     "max": 22.1
+    },
+    "game_ms": {
+     "mean": 2.38,
+     "p95": 3.24,
+     "max": 4.29
+    },
+    "render_ms": {
+     "mean": 13.87,
+     "p95": 19.74,
+     "max": 22.09
+    },
+    "rhi_ms": {
+     "mean": 3.18,
+     "p95": 3.68,
+     "max": 4.83
+    },
+    "gpu_ms": {
+     "mean": 11.46,
+     "p95": 17.63,
+     "max": 19.34
+    },
+    "draw_calls": {
+     "mean": 1557.42,
+     "p95": 1628.0,
+     "max": 1677.0
+    },
+    "primitives": {
+     "mean": 394233.57,
+     "p95": 408296.0,
+     "max": 437473.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      3.698
+     ],
+     [
+      "ShadowDepths",
+      1.66
+     ],
+     [
+      "TemporalSuperResolution",
+      1.057
+     ],
+     [
+      "Unaccounted",
+      0.938
+     ],
+     [
+      "RenderDeferredLighting",
+      0.577
+     ],
+     [
+      "NaniteVisBuffer",
+      0.53
+     ],
+     [
+      "LumenReflections",
+      0.401
+     ],
+     [
+      "Postprocessing",
+      0.36
+     ],
+     [
+      "NaniteBasePass",
+      0.305
+     ],
+     [
+      "LumenSceneUpdate",
+      0.248
+     ],
+     [
+      "RayTracingScene",
+      0.237
+     ],
+     [
+      "SkyAtmosphere",
+      0.231
+     ],
+     [
+      "Basepass",
+      0.158
+     ],
+     [
+      "ShadowProjection",
+      0.141
+     ],
+     [
+      "LightGrid",
+      0.116
+     ],
+     [
+      "TranslucentLighting",
+      0.108
+     ],
+     [
+      "NaniteReadback",
+      0.091
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.068
+     ],
+     [
+      "FrontLayerTranslucencyGBuffer",
+      0.068
+     ],
+     [
+      "Translucency",
+      0.066
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1031.897,
+     "DrawCall/Lights": 232.077,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 59.543,
+     "DrawCall/Prepass": 57.55,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 25.246,
+     "RenderThreadTime_CriticalPath": 13.866,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.069,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/Translucency": 12.073,
+     "Exclusive/GameThread/EventWait": 11.479,
+     "CPUUsage_Process": 5.025,
+     "Exclusive/RenderThread/EventWait/Visibility": 3.57,
+     "DrawCall/DistanceFieldShadows": 2.988,
+     "Exclusive/RenderThread/RenderOther": 2.933,
+     "Exclusive/RenderThread/RenderLighting": 2.433,
+     "GameThreadTime_CriticalPath": 2.381,
+     "DrawCall/SlateUI": 1.992,
+     "DrawCall/RenderVelocities": 1.992,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.975,
+     "Exclusive/RenderThread/RDG": 0.828,
+     "Exclusive/RenderThread/RenderShadows": 0.649,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.339,
+     "Exclusive/RenderThread/RenderThreadOther": 0.273,
+     "Exclusive/RenderThread/RDG_Execute": 0.255,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.249,
+     "Exclusive/RenderThread/EventWait": 0.248,
+     "Exclusive/GameThread/UI": 0.225,
+     "Exclusive/RenderThread/RenderTranslucency": 0.209,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.174,
+     "Exclusive/GameThread/Animation": 0.163,
+     "Exclusive/GameThread/TickActors": 0.156,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.156,
+     "Exclusive/GameThread/ViewportMisc": 0.15,
+     "Exclusive/RenderThread/InitViews_Scene": 0.142,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.109,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.097,
+     "Exclusive/GameThread/EngineTickMisc": 0.086,
+     "Exclusive/GameThread/CharacterMovement": 0.085,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.083,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.082,
+     "Exclusive/RenderThread/RenderBasePass": 0.077,
+     "Exclusive/GameThread/WorldTickMisc": 0.073,
+     "Exclusive/GameThread/DebugHUD": 0.071,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.065,
+     "Exclusive/GameThread/PlayerControllerTick": 0.06,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.051,
+     "Exclusive/GameThread/Physics": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/Slate": 0.041,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.04,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.034,
+     "Exclusive/RenderThread/FXSystem": 0.033,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.028
+    },
+    "fps": 72.2
+   }
+  },
+  {
+   "name": "AB_case_ch1@spawn",
+   "wall_s": 8.01,
+   "frames": 720,
+   "py_frame_ms_mean": 11.12,
+   "py_frame_ms_p95": 12.84,
+   "py_fps": 89.9,
+   "csv": {
+    "file": "Profile(20261002_044202).csv",
+    "frames": 273,
+    "frame_ms": {
+     "mean": 11.16,
+     "p95": 12.51,
+     "max": 14.28
+    },
+    "game_ms": {
+     "mean": 2.41,
+     "p95": 3.42,
+     "max": 4.02
+    },
+    "render_ms": {
+     "mean": 11.16,
+     "p95": 12.59,
+     "max": 14.19
+    },
+    "rhi_ms": {
+     "mean": 3.1,
+     "p95": 3.56,
+     "max": 4.02
+    },
+    "gpu_ms": {
+     "mean": 7.76,
+     "p95": 8.49,
+     "max": 8.8
+    },
+    "draw_calls": {
+     "mean": 1020.96,
+     "p95": 1081.0,
+     "max": 1125.0
+    },
+    "primitives": {
+     "mean": 394968.57,
+     "p95": 409068.0,
+     "max": 420444.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      2.507
+     ],
+     [
+      "ShadowDepths",
+      0.761
+     ],
+     [
+      "TemporalSuperResolution",
+      0.731
+     ],
+     [
+      "Unaccounted",
+      0.64
+     ],
+     [
+      "RenderDeferredLighting",
+      0.457
+     ],
+     [
+      "NaniteVisBuffer",
+      0.38
+     ],
+     [
+      "LumenReflections",
+      0.339
+     ],
+     [
+      "NaniteBasePass",
+      0.209
+     ],
+     [
+      "Postprocessing",
+      0.208
+     ],
+     [
+      "LumenSceneUpdate",
+      0.205
+     ],
+     [
+      "RayTracingScene",
+      0.149
+     ],
+     [
+      "ShadowProjection",
+      0.109
+     ],
+     [
+      "SkyAtmosphere",
+      0.102
+     ],
+     [
+      "Basepass",
+      0.092
+     ],
+     [
+      "NaniteReadback",
+      0.074
+     ],
+     [
+      "LightGrid",
+      0.062
+     ],
+     [
+      "Translucency",
+      0.062
+     ],
+     [
+      "TranslucentLighting",
+      0.057
+     ],
+     [
+      "MotionBlur",
+      0.05
+     ],
+     [
+      "FrontLayerTranslucencyGBuffer",
+      0.048
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 498.0,
+     "DrawCall/Lights": 233.0,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 60.022,
+     "DrawCall/Prepass": 58.022,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 26.674,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.187,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/Translucency": 12.187,
+     "RenderThreadTime_CriticalPath": 11.165,
+     "Exclusive/GameThread/EventWait": 8.747,
+     "CPUUsage_Process": 5.667,
+     "DrawCall/DistanceFieldShadows": 3.0,
+     "Exclusive/RenderThread/RenderOther": 2.887,
+     "Exclusive/RenderThread/RenderLighting": 2.421,
+     "GameThreadTime_CriticalPath": 2.408,
+     "DrawCall/SlateUI": 2.0,
+     "DrawCall/RenderVelocities": 2.0,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.146,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.974,
+     "Exclusive/RenderThread/RDG": 0.796,
+     "Exclusive/RenderThread/RenderShadows": 0.634,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.338,
+     "Exclusive/RenderThread/RenderThreadOther": 0.28,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.249,
+     "Exclusive/RenderThread/RDG_Execute": 0.243,
+     "Exclusive/RenderThread/EventWait": 0.231,
+     "Exclusive/GameThread/UI": 0.229,
+     "Exclusive/RenderThread/RenderTranslucency": 0.205,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.202,
+     "Exclusive/GameThread/TickActors": 0.168,
+     "Exclusive/GameThread/Animation": 0.162,
+     "Exclusive/GameThread/ViewportMisc": 0.15,
+     "Exclusive/RenderThread/InitViews_Scene": 0.142,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.097,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.095,
+     "Exclusive/GameThread/EngineTickMisc": 0.085,
+     "Exclusive/GameThread/CharacterMovement": 0.084,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.078,
+     "Exclusive/RenderThread/RenderBasePass": 0.076,
+     "Exclusive/GameThread/DebugHUD": 0.074,
+     "Exclusive/GameThread/WorldTickMisc": 0.073,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.072,
+     "Exclusive/GameThread/Tickables": 0.068,
+     "Exclusive/GameThread/DeferredTickTime": 0.064,
+     "Exclusive/GameThread/PlayerControllerTick": 0.06,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.052,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.047,
+     "Exclusive/GameThread/Physics": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/RenderThread/Slate": 0.042,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.04,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.035,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.034,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.032,
+     "Exclusive/RenderThread/FXSystem": 0.031,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.027
+    },
+    "fps": 89.6
+   }
+  },
+  {
+   "name": "AB_noop@spawn",
+   "wall_s": 8.01,
+   "frames": 655,
+   "py_frame_ms_mean": 12.22,
+   "py_frame_ms_p95": 15.84,
+   "py_fps": 81.8,
+   "csv": {
+    "file": "Profile(20261002_044218).csv",
+    "frames": 288,
+    "frame_ms": {
+     "mean": 12.69,
+     "p95": 18.1,
+     "max": 21.07
+    },
+    "game_ms": {
+     "mean": 2.37,
+     "p95": 2.96,
+     "max": 4.39
+    },
+    "render_ms": {
+     "mean": 12.69,
+     "p95": 18.11,
+     "max": 21.22
+    },
+    "rhi_ms": {
+     "mean": 3.24,
+     "p95": 3.81,
+     "max": 4.36
+    },
+    "gpu_ms": {
+     "mean": 10.04,
+     "p95": 16.3,
+     "max": 18.61
+    },
+    "draw_calls": {
+     "mean": 1559.33,
+     "p95": 1618.0,
+     "max": 1684.0
+    },
+    "primitives": {
+     "mean": 394952.01,
+     "p95": 409151.0,
+     "max": 426175.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      3.266
+     ],
+     [
+      "ShadowDepths",
+      1.476
+     ],
+     [
+      "TemporalSuperResolution",
+      0.895
+     ],
+     [
+      "Unaccounted",
+      0.795
+     ],
+     [
+      "RenderDeferredLighting",
+      0.528
+     ],
+     [
+      "NaniteVisBuffer",
+      0.466
+     ],
+     [
+      "LumenReflections",
+      0.347
+     ],
+     [
+      "Postprocessing",
+      0.292
+     ],
+     [
+      "NaniteBasePass",
+      0.255
+     ],
+     [
+      "LumenSceneUpdate",
+      0.234
+     ],
+     [
+      "RayTracingScene",
+      0.203
+     ],
+     [
+      "SkyAtmosphere",
+      0.173
+     ],
+     [
+      "ShadowProjection",
+      0.135
+     ],
+     [
+      "Basepass",
+      0.127
+     ],
+     [
+      "NaniteReadback",
+      0.085
+     ],
+     [
+      "LightGrid",
+      0.085
+     ],
+     [
+      "TranslucentLighting",
+      0.081
+     ],
+     [
+      "Translucency",
+      0.067
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.059
+     ],
+     [
+      "FrontLayerTranslucencyGBuffer",
+      0.055
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1036.0,
+     "DrawCall/Lights": 233.0,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 60.111,
+     "DrawCall/Prepass": 58.111,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 26.753,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.194,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 12.685,
+     "DrawCall/Translucency": 12.194,
+     "Exclusive/GameThread/EventWait": 10.307,
+     "CPUUsage_Process": 5.406,
+     "DrawCall/DistanceFieldShadows": 3.0,
+     "Exclusive/RenderThread/RenderOther": 2.958,
+     "Exclusive/RenderThread/RenderLighting": 2.467,
+     "GameThreadTime_CriticalPath": 2.369,
+     "Exclusive/RenderThread/EventWait/Visibility": 2.187,
+     "DrawCall/SlateUI": 2.0,
+     "DrawCall/RenderVelocities": 2.0,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.997,
+     "Exclusive/RenderThread/RDG": 0.844,
+     "Exclusive/RenderThread/RenderShadows": 0.664,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.344,
+     "Exclusive/RenderThread/EventWait": 0.279,
+     "Exclusive/RenderThread/RenderThreadOther": 0.275,
+     "Exclusive/RenderThread/RDG_Execute": 0.258,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.252,
+     "Exclusive/GameThread/UI": 0.229,
+     "Exclusive/RenderThread/RenderTranslucency": 0.215,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.178,
+     "Exclusive/GameThread/Animation": 0.164,
+     "Exclusive/GameThread/TickActors": 0.16,
+     "Exclusive/GameThread/ViewportMisc": 0.155,
+     "Exclusive/RenderThread/InitViews_Scene": 0.151,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.143,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.11,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.097,
+     "Exclusive/GameThread/EngineTickMisc": 0.086,
+     "Exclusive/GameThread/CharacterMovement": 0.086,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.082,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.08,
+     "Exclusive/RenderThread/RenderBasePass": 0.078,
+     "Exclusive/GameThread/WorldTickMisc": 0.074,
+     "Exclusive/GameThread/DebugHUD": 0.072,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.066,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.05,
+     "Exclusive/GameThread/Physics": 0.045,
+     "Exclusive/GameThread/Effects": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/RenderThread/Slate": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.041,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.037,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.034,
+     "Exclusive/RenderThread/FXSystem": 0.032,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.029
+    },
+    "fps": 78.8
+   }
+  },
+  {
+   "name": "AB_base_end@spawn",
+   "wall_s": 8.0,
+   "frames": 558,
+   "py_frame_ms_mean": 14.35,
+   "py_frame_ms_p95": 24.93,
+   "py_fps": 69.7,
+   "csv": {
+    "file": "Profile(20261002_044234).csv",
+    "frames": 543,
+    "frame_ms": {
+     "mean": 14.44,
+     "p95": 25.08,
+     "max": 36.89
+    },
+    "game_ms": {
+     "mean": 2.4,
+     "p95": 2.99,
+     "max": 36.55
+    },
+    "render_ms": {
+     "mean": 14.4,
+     "p95": 25.06,
+     "max": 28.0
+    },
+    "rhi_ms": {
+     "mean": 3.1,
+     "p95": 3.66,
+     "max": 4.7
+    },
+    "gpu_ms": {
+     "mean": 11.9,
+     "p95": 22.16,
+     "max": 25.56
+    },
+    "draw_calls": {
+     "mean": 1558.99,
+     "p95": 1612.0,
+     "max": 1659.0
+    },
+    "primitives": {
+     "mean": 394583.66,
+     "p95": 409996.0,
+     "max": 439904.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      3.812
+     ],
+     [
+      "ShadowDepths",
+      1.725
+     ],
+     [
+      "TemporalSuperResolution",
+      1.118
+     ],
+     [
+      "Unaccounted",
+      0.977
+     ],
+     [
+      "RenderDeferredLighting",
+      0.581
+     ],
+     [
+      "NaniteVisBuffer",
+      0.561
+     ],
+     [
+      "LumenReflections",
+      0.451
+     ],
+     [
+      "Postprocessing",
+      0.366
+     ],
+     [
+      "NaniteBasePass",
+      0.33
+     ],
+     [
+      "LumenSceneUpdate",
+      0.272
+     ],
+     [
+      "SkyAtmosphere",
+      0.259
+     ],
+     [
+      "RayTracingScene",
+      0.239
+     ],
+     [
+      "Basepass",
+      0.172
+     ],
+     [
+      "ShadowProjection",
+      0.168
+     ],
+     [
+      "TranslucentLighting",
+      0.129
+     ],
+     [
+      "LightGrid",
+      0.121
+     ],
+     [
+      "FrontLayerTranslucencyGBuffer",
+      0.094
+     ],
+     [
+      "NaniteReadback",
+      0.088
+     ],
+     [
+      "MotionBlur",
+      0.075
+     ],
+     [
+      "Translucency",
+      0.065
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1030.276,
+     "DrawCall/Lights": 231.713,
+     "LightCount/All": 115.0,
+     "LightCount/Batched": 102.0,
+     "DrawCall/Basepass": 59.534,
+     "DrawCall/Prepass": 57.545,
+     "MaxFrameTime": 33.333,
+     "DrawCall/BeginOcclusionTests": 25.645,
+     "RenderThreadTime_CriticalPath": 14.396,
+     "DrawCall/FrontLayerTranslucencyGBuffer": 13.074,
+     "LightCount/Unbatched": 13.0,
+     "DrawCall/Translucency": 12.079,
+     "Exclusive/GameThread/EventWait": 12.033,
+     "CPUUsage_Process": 4.936,
+     "Exclusive/RenderThread/EventWait/Visibility": 4.378,
+     "DrawCall/DistanceFieldShadows": 2.983,
+     "Exclusive/RenderThread/RenderOther": 2.864,
+     "GameThreadTime_CriticalPath": 2.397,
+     "Exclusive/RenderThread/RenderLighting": 2.395,
+     "DrawCall/SlateUI": 1.989,
+     "DrawCall/RenderVelocities": 1.989,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.952,
+     "Exclusive/RenderThread/RDG": 0.813,
+     "Exclusive/RenderThread/RenderShadows": 0.636,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.328,
+     "Exclusive/RenderThread/RenderThreadOther": 0.265,
+     "Exclusive/RenderThread/EventWait": 0.25,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.248,
+     "Exclusive/RenderThread/RDG_Execute": 0.232,
+     "Exclusive/GameThread/UI": 0.216,
+     "Exclusive/RenderThread/RenderTranslucency": 0.201,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.166,
+     "Exclusive/GameThread/Animation": 0.162,
+     "Exclusive/GameThread/TickActors": 0.154,
+     "Exclusive/GameThread/ViewportMisc": 0.146,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.143,
+     "Exclusive/RenderThread/InitViews_Scene": 0.141,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.104,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.095,
+     "Exclusive/GameThread/WorldTickMisc": 0.092,
+     "Exclusive/GameThread/CharacterMovement": 0.085,
+     "Exclusive/GameThread/EngineTickMisc": 0.084,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.082,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.082,
+     "Exclusive/RenderThread/RenderBasePass": 0.076,
+     "Exclusive/GameThread/DebugHUD": 0.07,
+     "Exclusive/GameThread/Tickables": 0.068,
+     "Exclusive/GameThread/DeferredTickTime": 0.064,
+     "Exclusive/GameThread/PlayerControllerTick": 0.06,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/GameThread/GarbageCollection": 0.045,
+     "Exclusive/GameThread/Physics": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.043,
+     "Exclusive/GameThread/Effects": 0.042,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/Slate": 0.04,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.038,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.032,
+     "Exclusive/RenderThread/FXSystem": 0.031
+    },
+    "fps": 69.3
+   }
+  },
+  {
+   "name": "AB_base@C10_Hero",
+   "wall_s": 8.0,
+   "frames": 703,
+   "py_frame_ms_mean": 11.38,
+   "py_frame_ms_p95": 17.69,
+   "py_fps": 87.9,
+   "csv": {
+    "file": "Profile(20261002_044248).csv",
+    "frames": 703,
+    "frame_ms": {
+     "mean": 11.38,
+     "p95": 17.56,
+     "max": 21.94
+    },
+    "game_ms": {
+     "mean": 2.39,
+     "p95": 3.12,
+     "max": 6.46
+    },
+    "render_ms": {
+     "mean": 11.38,
+     "p95": 17.47,
+     "max": 21.87
+    },
+    "rhi_ms": {
+     "mean": 3.07,
+     "p95": 3.5,
+     "max": 4.76
+    },
+    "gpu_ms": {
+     "mean": 10.09,
+     "p95": 16.91,
+     "max": 19.89
+    },
+    "draw_calls": {
+     "mean": 1396.0,
+     "p95": 1455.0,
+     "max": 1483.0
+    },
+    "primitives": {
+     "mean": 132028.6,
+     "p95": 141775.0,
+     "max": 173833.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.556
+     ],
+     [
+      "ShadowDepths",
+      0.867
+     ],
+     [
+      "TemporalSuperResolution",
+      0.846
+     ],
+     [
+      "Unaccounted",
+      0.729
+     ],
+     [
+      "RenderDeferredLighting",
+      0.466
+     ],
+     [
+      "LumenReflections",
+      0.416
+     ],
+     [
+      "NaniteVisBuffer",
+      0.344
+     ],
+     [
+      "NaniteBasePass",
+      0.323
+     ],
+     [
+      "Postprocessing",
+      0.231
+     ],
+     [
+      "LumenSceneUpdate",
+      0.229
+     ],
+     [
+      "RayTracingScene",
+      0.207
+     ],
+     [
+      "SkyAtmosphere",
+      0.12
+     ],
+     [
+      "LightGrid",
+      0.081
+     ],
+     [
+      "NaniteReadback",
+      0.076
+     ],
+     [
+      "ShadowProjection",
+      0.071
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.057
+     ],
+     [
+      "MotionBlur",
+      0.052
+     ],
+     [
+      "DistanceFieldShadows",
+      0.045
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.03
+     ],
+     [
+      "HZB",
+      0.022
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1078.851,
+     "DrawCall/Lights": 197.855,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 11.38,
+     "Exclusive/GameThread/EventWait": 8.98,
+     "CPUUsage_Process": 5.456,
+     "DrawCall/DistanceFieldShadows": 2.953,
+     "Exclusive/RenderThread/RenderOther": 2.888,
+     "GameThreadTime_CriticalPath": 2.395,
+     "Exclusive/RenderThread/RenderLighting": 2.196,
+     "DrawCall/SlateUI": 1.963,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.832,
+     "DrawCall/BeginOcclusionTests": 0.984,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.897,
+     "Exclusive/RenderThread/RDG": 0.769,
+     "Exclusive/RenderThread/RenderShadows": 0.669,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.338,
+     "Exclusive/RenderThread/RenderThreadOther": 0.265,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.26,
+     "Exclusive/RenderThread/EventWait": 0.231,
+     "Exclusive/GameThread/UI": 0.224,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.201,
+     "Exclusive/GameThread/Animation": 0.167,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.163,
+     "Exclusive/GameThread/TickActors": 0.158,
+     "Exclusive/GameThread/ViewportMisc": 0.151,
+     "Exclusive/RenderThread/InitViews_Scene": 0.116,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.108,
+     "Exclusive/RenderThread/RDG_Execute": 0.105,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.096,
+     "Exclusive/GameThread/EngineTickMisc": 0.086,
+     "Exclusive/GameThread/CharacterMovement": 0.086,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.08,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.078,
+     "Exclusive/GameThread/WorldTickMisc": 0.075,
+     "Exclusive/RenderThread/RenderBasePass": 0.071,
+     "Exclusive/GameThread/DebugHUD": 0.071,
+     "Exclusive/GameThread/Tickables": 0.07,
+     "Exclusive/GameThread/DeferredTickTime": 0.065,
+     "Exclusive/GameThread/PlayerControllerTick": 0.062,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/GameThread/Physics": 0.046,
+     "Exclusive/GameThread/Effects": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/RenderThread/RenderTranslucency": 0.044,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.04,
+     "Exclusive/RenderThread/Slate": 0.039,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.037,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.036,
+     "Exclusive/RenderThread/FXSystem": 0.03,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.028,
+     "Exclusive/GameThread/SyncBodies": 0.026,
+     "Exclusive/GameThread/Camera": 0.026,
+     "Exclusive/GameThread/QueueTicks": 0.024,
+     "Exclusive/GameThread/PostProcessSettings": 0.017,
+     "Exclusive/GameThread/Input": 0.016
+    },
+    "fps": 87.9
+   }
+  },
+  {
+   "name": "AB_case_ch1@C10_Hero",
+   "wall_s": 8.0,
+   "frames": 709,
+   "py_frame_ms_mean": 11.28,
+   "py_frame_ms_p95": 17.75,
+   "py_fps": 88.6,
+   "csv": {
+    "file": "Profile(20261002_044302).csv",
+    "frames": 709,
+    "frame_ms": {
+     "mean": 11.28,
+     "p95": 17.76,
+     "max": 22.31
+    },
+    "game_ms": {
+     "mean": 2.38,
+     "p95": 3.03,
+     "max": 5.95
+    },
+    "render_ms": {
+     "mean": 11.28,
+     "p95": 17.79,
+     "max": 22.17
+    },
+    "rhi_ms": {
+     "mean": 3.07,
+     "p95": 3.57,
+     "max": 4.61
+    },
+    "gpu_ms": {
+     "mean": 10.17,
+     "p95": 16.42,
+     "max": 19.9
+    },
+    "draw_calls": {
+     "mean": 741.57,
+     "p95": 798.0,
+     "max": 810.0
+    },
+    "primitives": {
+     "mean": 132355.65,
+     "p95": 139751.0,
+     "max": 172109.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.684
+     ],
+     [
+      "TemporalSuperResolution",
+      0.859
+     ],
+     [
+      "ShadowDepths",
+      0.842
+     ],
+     [
+      "Unaccounted",
+      0.712
+     ],
+     [
+      "RenderDeferredLighting",
+      0.502
+     ],
+     [
+      "LumenReflections",
+      0.429
+     ],
+     [
+      "NaniteVisBuffer",
+      0.349
+     ],
+     [
+      "NaniteBasePass",
+      0.317
+     ],
+     [
+      "Postprocessing",
+      0.236
+     ],
+     [
+      "LumenSceneUpdate",
+      0.231
+     ],
+     [
+      "RayTracingScene",
+      0.211
+     ],
+     [
+      "SkyAtmosphere",
+      0.125
+     ],
+     [
+      "NaniteReadback",
+      0.077
+     ],
+     [
+      "LightGrid",
+      0.075
+     ],
+     [
+      "ShadowProjection",
+      0.074
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.064
+     ],
+     [
+      "MotionBlur",
+      0.052
+     ],
+     [
+      "DistanceFieldShadows",
+      0.046
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.028
+     ],
+     [
+      "HZB",
+      0.027
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 434.047,
+     "DrawCall/Lights": 198.732,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 11.284,
+     "Exclusive/GameThread/EventWait": 8.902,
+     "CPUUsage_Process": 5.298,
+     "DrawCall/DistanceFieldShadows": 2.966,
+     "Exclusive/RenderThread/RenderOther": 2.856,
+     "GameThreadTime_CriticalPath": 2.378,
+     "Exclusive/RenderThread/RenderLighting": 2.18,
+     "Exclusive/RenderThread/EventWait/Visibility": 2.029,
+     "DrawCall/SlateUI": 1.972,
+     "DrawCall/BeginOcclusionTests": 0.989,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.893,
+     "Exclusive/RenderThread/RDG": 0.788,
+     "Exclusive/RenderThread/RenderShadows": 0.638,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.338,
+     "Exclusive/RenderThread/RenderThreadOther": 0.279,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.249,
+     "Exclusive/GameThread/UI": 0.229,
+     "Exclusive/RenderThread/EventWait": 0.2,
+     "Exclusive/GameThread/Animation": 0.165,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.16,
+     "Exclusive/GameThread/TickActors": 0.156,
+     "Exclusive/GameThread/ViewportMisc": 0.152,
+     "Exclusive/RenderThread/InitViews_Scene": 0.115,
+     "Exclusive/RenderThread/RDG_Execute": 0.104,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.096,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.092,
+     "Exclusive/GameThread/EngineTickMisc": 0.087,
+     "Exclusive/GameThread/CharacterMovement": 0.086,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.078,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.077,
+     "Exclusive/GameThread/WorldTickMisc": 0.074,
+     "Exclusive/GameThread/DebugHUD": 0.071,
+     "Exclusive/RenderThread/RenderBasePass": 0.07,
+     "Exclusive/GameThread/Tickables": 0.07,
+     "Exclusive/GameThread/DeferredTickTime": 0.065,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.048,
+     "Exclusive/GameThread/Physics": 0.046,
+     "Exclusive/RenderThread/RenderTranslucency": 0.045,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.045,
+     "Exclusive/GameThread/Effects": 0.044,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.043,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.04,
+     "Exclusive/RenderThread/Slate": 0.04,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.034,
+     "Exclusive/RenderThread/FXSystem": 0.031,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.029,
+     "Exclusive/GameThread/Camera": 0.026,
+     "Exclusive/GameThread/SyncBodies": 0.025,
+     "Exclusive/GameThread/QueueTicks": 0.024,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.02,
+     "Exclusive/GameThread/PostProcessSettings": 0.017,
+     "Exclusive/GameThread/Input": 0.016
+    },
+    "fps": 88.7
+   }
+  },
+  {
+   "name": "AB_noop@C10_Hero",
+   "wall_s": 8.01,
+   "frames": 654,
+   "py_frame_ms_mean": 12.25,
+   "py_frame_ms_p95": 23.27,
+   "py_fps": 81.6,
+   "csv": {
+    "file": "Profile(20261002_044319).csv",
+    "frames": 654,
+    "frame_ms": {
+     "mean": 12.25,
+     "p95": 23.39,
+     "max": 30.36
+    },
+    "game_ms": {
+     "mean": 2.39,
+     "p95": 3.13,
+     "max": 6.2
+    },
+    "render_ms": {
+     "mean": 12.25,
+     "p95": 23.47,
+     "max": 30.33
+    },
+    "rhi_ms": {
+     "mean": 3.04,
+     "p95": 3.46,
+     "max": 4.2
+    },
+    "gpu_ms": {
+     "mean": 10.94,
+     "p95": 22.53,
+     "max": 27.67
+    },
+    "draw_calls": {
+     "mean": 1397.36,
+     "p95": 1451.0,
+     "max": 1466.0
+    },
+    "primitives": {
+     "mean": 132301.99,
+     "p95": 139933.0,
+     "max": 170915.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.899
+     ],
+     [
+      "ShadowDepths",
+      0.948
+     ],
+     [
+      "TemporalSuperResolution",
+      0.921
+     ],
+     [
+      "Unaccounted",
+      0.755
+     ],
+     [
+      "RenderDeferredLighting",
+      0.525
+     ],
+     [
+      "LumenReflections",
+      0.463
+     ],
+     [
+      "NaniteVisBuffer",
+      0.375
+     ],
+     [
+      "NaniteBasePass",
+      0.359
+     ],
+     [
+      "Postprocessing",
+      0.267
+     ],
+     [
+      "LumenSceneUpdate",
+      0.239
+     ],
+     [
+      "RayTracingScene",
+      0.228
+     ],
+     [
+      "SkyAtmosphere",
+      0.152
+     ],
+     [
+      "LightGrid",
+      0.086
+     ],
+     [
+      "ShadowProjection",
+      0.086
+     ],
+     [
+      "NaniteReadback",
+      0.077
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.07
+     ],
+     [
+      "MotionBlur",
+      0.052
+     ],
+     [
+      "DistanceFieldShadows",
+      0.051
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.032
+     ],
+     [
+      "HZB",
+      0.028
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1077.566,
+     "DrawCall/Lights": 197.619,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 12.247,
+     "Exclusive/GameThread/EventWait": 9.847,
+     "CPUUsage_Process": 5.263,
+     "DrawCall/DistanceFieldShadows": 2.95,
+     "Exclusive/RenderThread/RenderOther": 2.876,
+     "Exclusive/RenderThread/EventWait/Visibility": 2.703,
+     "GameThreadTime_CriticalPath": 2.395,
+     "Exclusive/RenderThread/RenderLighting": 2.181,
+     "DrawCall/SlateUI": 1.96,
+     "DrawCall/BeginOcclusionTests": 0.983,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.89,
+     "Exclusive/RenderThread/RDG": 0.768,
+     "Exclusive/RenderThread/RenderShadows": 0.663,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.338,
+     "Exclusive/RenderThread/RenderThreadOther": 0.26,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.25,
+     "Exclusive/RenderThread/EventWait": 0.244,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.242,
+     "Exclusive/GameThread/UI": 0.226,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.168,
+     "Exclusive/GameThread/Animation": 0.164,
+     "Exclusive/GameThread/TickActors": 0.16,
+     "Exclusive/GameThread/ViewportMisc": 0.15,
+     "Exclusive/RenderThread/InitViews_Scene": 0.116,
+     "Exclusive/RenderThread/RDG_Execute": 0.108,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.106,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.096,
+     "Exclusive/GameThread/EngineTickMisc": 0.088,
+     "Exclusive/GameThread/CharacterMovement": 0.088,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.078,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.078,
+     "Exclusive/GameThread/WorldTickMisc": 0.074,
+     "Exclusive/GameThread/DebugHUD": 0.072,
+     "Exclusive/RenderThread/RenderBasePass": 0.071,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.065,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/GameThread/Physics": 0.044,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/RenderThread/RenderTranslucency": 0.044,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/Slate": 0.039,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.038,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.037,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/FXSystem": 0.029,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.028,
+     "Exclusive/GameThread/SyncBodies": 0.025,
+     "Exclusive/GameThread/Camera": 0.025,
+     "Exclusive/GameThread/QueueTicks": 0.024,
+     "Exclusive/GameThread/Input": 0.016,
+     "Exclusive/GameThread/PostProcessSettings": 0.016
+    },
+    "fps": 81.6
+   }
+  },
+  {
+   "name": "AB_case_ch1@C10_Hero",
+   "wall_s": 8.0,
+   "frames": 726,
+   "py_frame_ms_mean": 11.03,
+   "py_frame_ms_p95": 14.85,
+   "py_fps": 90.7,
+   "csv": {
+    "file": "Profile(20261002_044335).csv",
+    "frames": 630,
+    "frame_ms": {
+     "mean": 10.59,
+     "p95": 11.98,
+     "max": 40.72
+    },
+    "game_ms": {
+     "mean": 2.5,
+     "p95": 3.28,
+     "max": 39.76
+    },
+    "render_ms": {
+     "mean": 10.54,
+     "p95": 12.02,
+     "max": 13.99
+    },
+    "rhi_ms": {
+     "mean": 3.11,
+     "p95": 3.61,
+     "max": 4.57
+    },
+    "gpu_ms": {
+     "mean": 9.18,
+     "p95": 9.85,
+     "max": 10.4
+    },
+    "draw_calls": {
+     "mean": 740.72,
+     "p95": 787.0,
+     "max": 805.0
+    },
+    "primitives": {
+     "mean": 132271.97,
+     "p95": 140245.0,
+     "max": 156789.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.281
+     ],
+     [
+      "TemporalSuperResolution",
+      0.76
+     ],
+     [
+      "ShadowDepths",
+      0.737
+     ],
+     [
+      "Unaccounted",
+      0.644
+     ],
+     [
+      "RenderDeferredLighting",
+      0.424
+     ],
+     [
+      "LumenReflections",
+      0.389
+     ],
+     [
+      "NaniteVisBuffer",
+      0.312
+     ],
+     [
+      "NaniteBasePass",
+      0.295
+     ],
+     [
+      "LumenSceneUpdate",
+      0.225
+     ],
+     [
+      "Postprocessing",
+      0.21
+     ],
+     [
+      "RayTracingScene",
+      0.166
+     ],
+     [
+      "SkyAtmosphere",
+      0.089
+     ],
+     [
+      "NaniteReadback",
+      0.075
+     ],
+     [
+      "ShadowProjection",
+      0.068
+     ],
+     [
+      "LightGrid",
+      0.06
+     ],
+     [
+      "MotionBlur",
+      0.051
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.046
+     ],
+     [
+      "DistanceFieldShadows",
+      0.039
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.027
+     ],
+     [
+      "DistanceFields",
+      0.023
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 433.425,
+     "DrawCall/Lights": 198.448,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 10.541,
+     "Exclusive/GameThread/EventWait": 8.076,
+     "CPUUsage_Process": 5.565,
+     "DrawCall/DistanceFieldShadows": 2.962,
+     "Exclusive/RenderThread/RenderOther": 2.913,
+     "GameThreadTime_CriticalPath": 2.506,
+     "Exclusive/RenderThread/RenderLighting": 2.226,
+     "DrawCall/SlateUI": 1.975,
+     "Exclusive/RenderThread/EventWait/Visibility": 0.992,
+     "DrawCall/BeginOcclusionTests": 0.987,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.92,
+     "Exclusive/RenderThread/RDG": 0.814,
+     "Exclusive/RenderThread/RenderShadows": 0.655,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.348,
+     "Exclusive/RenderThread/EventWait": 0.311,
+     "Exclusive/RenderThread/RenderThreadOther": 0.28,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.276,
+     "Exclusive/GameThread/UI": 0.228,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.186,
+     "Exclusive/GameThread/Animation": 0.166,
+     "Exclusive/GameThread/TickActors": 0.158,
+     "Exclusive/GameThread/ViewportMisc": 0.153,
+     "Exclusive/RenderThread/InitViews_Scene": 0.121,
+     "Exclusive/RenderThread/RDG_Execute": 0.116,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.099,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.095,
+     "Exclusive/GameThread/WorldTickMisc": 0.093,
+     "Exclusive/GameThread/EngineTickMisc": 0.087,
+     "Exclusive/GameThread/CharacterMovement": 0.086,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.078,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.077,
+     "Exclusive/GameThread/DebugHUD": 0.073,
+     "Exclusive/RenderThread/RenderBasePass": 0.072,
+     "Exclusive/GameThread/Tickables": 0.07,
+     "Exclusive/GameThread/DeferredTickTime": 0.066,
+     "Exclusive/GameThread/PlayerControllerTick": 0.062,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/RenderThread/RenderTranslucency": 0.046,
+     "Exclusive/GameThread/Physics": 0.046,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.045,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.044,
+     "Exclusive/GameThread/Effects": 0.044,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/GameThread/GarbageCollection": 0.042,
+     "Exclusive/RenderThread/Slate": 0.041,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.036,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.035,
+     "Exclusive/RenderThread/FXSystem": 0.03,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.03,
+     "Exclusive/GameThread/SyncBodies": 0.027,
+     "Exclusive/GameThread/Camera": 0.026,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.025,
+     "Exclusive/GameThread/QueueTicks": 0.024,
+     "Exclusive/GameThread/Input": 0.017
+    },
+    "fps": 94.4
+   }
+  },
+  {
+   "name": "AB_noop@C10_Hero",
+   "wall_s": 8.0,
+   "frames": 750,
+   "py_frame_ms_mean": 10.68,
+   "py_frame_ms_p95": 12.6,
+   "py_fps": 93.7,
+   "csv": {
+    "file": "Profile(20261002_044351).csv",
+    "frames": 750,
+    "frame_ms": {
+     "mean": 10.67,
+     "p95": 12.19,
+     "max": 24.6
+    },
+    "game_ms": {
+     "mean": 2.37,
+     "p95": 2.99,
+     "max": 6.17
+    },
+    "render_ms": {
+     "mean": 10.66,
+     "p95": 12.1,
+     "max": 20.39
+    },
+    "rhi_ms": {
+     "mean": 3.02,
+     "p95": 3.44,
+     "max": 4.84
+    },
+    "gpu_ms": {
+     "mean": 9.44,
+     "p95": 10.05,
+     "max": 19.9
+    },
+    "draw_calls": {
+     "mean": 1397.19,
+     "p95": 1440.0,
+     "max": 1466.0
+    },
+    "primitives": {
+     "mean": 132183.18,
+     "p95": 140337.0,
+     "max": 155690.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.26
+     ],
+     [
+      "ShadowDepths",
+      0.799
+     ],
+     [
+      "TemporalSuperResolution",
+      0.79
+     ],
+     [
+      "Unaccounted",
+      0.664
+     ],
+     [
+      "RenderDeferredLighting",
+      0.435
+     ],
+     [
+      "LumenReflections",
+      0.389
+     ],
+     [
+      "NaniteVisBuffer",
+      0.314
+     ],
+     [
+      "NaniteBasePass",
+      0.3
+     ],
+     [
+      "LumenSceneUpdate",
+      0.223
+     ],
+     [
+      "Postprocessing",
+      0.212
+     ],
+     [
+      "RayTracingScene",
+      0.173
+     ],
+     [
+      "SkyAtmosphere",
+      0.092
+     ],
+     [
+      "NaniteReadback",
+      0.077
+     ],
+     [
+      "ShadowProjection",
+      0.066
+     ],
+     [
+      "LightGrid",
+      0.061
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.053
+     ],
+     [
+      "MotionBlur",
+      0.051
+     ],
+     [
+      "DistanceFieldShadows",
+      0.04
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.029
+     ],
+     [
+      "HZB",
+      0.022
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1074.08,
+     "DrawCall/Lights": 196.98,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 10.656,
+     "Exclusive/GameThread/EventWait": 8.283,
+     "CPUUsage_Process": 5.641,
+     "DrawCall/DistanceFieldShadows": 2.94,
+     "Exclusive/RenderThread/RenderOther": 2.847,
+     "GameThreadTime_CriticalPath": 2.369,
+     "Exclusive/RenderThread/RenderLighting": 2.166,
+     "DrawCall/SlateUI": 1.952,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.21,
+     "DrawCall/BeginOcclusionTests": 0.98,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.883,
+     "Exclusive/RenderThread/RDG": 0.755,
+     "Exclusive/RenderThread/RenderShadows": 0.658,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.331,
+     "Exclusive/RenderThread/RenderThreadOther": 0.258,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.247,
+     "Exclusive/RenderThread/EventWait": 0.228,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.227,
+     "Exclusive/GameThread/UI": 0.219,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.171,
+     "Exclusive/GameThread/Animation": 0.165,
+     "Exclusive/GameThread/TickActors": 0.157,
+     "Exclusive/GameThread/ViewportMisc": 0.149,
+     "Exclusive/RenderThread/InitViews_Scene": 0.116,
+     "Exclusive/RenderThread/RDG_Execute": 0.109,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.105,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.095,
+     "Exclusive/GameThread/EngineTickMisc": 0.086,
+     "Exclusive/GameThread/CharacterMovement": 0.086,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.084,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.074,
+     "Exclusive/GameThread/WorldTickMisc": 0.074,
+     "Exclusive/GameThread/DebugHUD": 0.073,
+     "Exclusive/RenderThread/RenderBasePass": 0.07,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.065,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.048,
+     "Exclusive/GameThread/Physics": 0.047,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/RenderThread/RenderTranslucency": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.041,
+     "Exclusive/RenderThread/Slate": 0.039,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.034,
+     "Exclusive/RenderThread/FXSystem": 0.028,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.027,
+     "Exclusive/GameThread/Camera": 0.025,
+     "Exclusive/GameThread/QueueTicks": 0.024,
+     "Exclusive/GameThread/SyncBodies": 0.024,
+     "Exclusive/GameThread/Input": 0.016,
+     "Exclusive/GameThread/PostProcessSettings": 0.016
+    },
+    "fps": 93.7
+   }
+  },
+  {
+   "name": "AB_case_ch1@C10_Hero",
+   "wall_s": 8.01,
+   "frames": 717,
+   "py_frame_ms_mean": 11.17,
+   "py_frame_ms_p95": 16.48,
+   "py_fps": 89.5,
+   "csv": {
+    "file": "Profile(20261002_044407).csv",
+    "frames": 717,
+    "frame_ms": {
+     "mean": 11.17,
+     "p95": 16.73,
+     "max": 22.15
+    },
+    "game_ms": {
+     "mean": 2.45,
+     "p95": 3.24,
+     "max": 6.02
+    },
+    "render_ms": {
+     "mean": 11.17,
+     "p95": 16.96,
+     "max": 22.08
+    },
+    "rhi_ms": {
+     "mean": 3.11,
+     "p95": 3.6,
+     "max": 4.46
+    },
+    "gpu_ms": {
+     "mean": 9.94,
+     "p95": 15.3,
+     "max": 21.23
+    },
+    "draw_calls": {
+     "mean": 739.22,
+     "p95": 783.0,
+     "max": 798.0
+    },
+    "primitives": {
+     "mean": 132091.68,
+     "p95": 137869.0,
+     "max": 157858.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.59
+     ],
+     [
+      "TemporalSuperResolution",
+      0.837
+     ],
+     [
+      "ShadowDepths",
+      0.826
+     ],
+     [
+      "Unaccounted",
+      0.695
+     ],
+     [
+      "RenderDeferredLighting",
+      0.48
+     ],
+     [
+      "LumenReflections",
+      0.417
+     ],
+     [
+      "NaniteVisBuffer",
+      0.333
+     ],
+     [
+      "NaniteBasePass",
+      0.323
+     ],
+     [
+      "LumenSceneUpdate",
+      0.234
+     ],
+     [
+      "Postprocessing",
+      0.229
+     ],
+     [
+      "RayTracingScene",
+      0.198
+     ],
+     [
+      "SkyAtmosphere",
+      0.114
+     ],
+     [
+      "NaniteReadback",
+      0.079
+     ],
+     [
+      "ShadowProjection",
+      0.072
+     ],
+     [
+      "LightGrid",
+      0.069
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.068
+     ],
+     [
+      "MotionBlur",
+      0.051
+     ],
+     [
+      "DistanceFieldShadows",
+      0.043
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.028
+     ],
+     [
+      "HZB",
+      0.025
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 432.265,
+     "DrawCall/Lights": 197.916,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 11.166,
+     "Exclusive/GameThread/EventWait": 8.715,
+     "CPUUsage_Process": 5.354,
+     "DrawCall/DistanceFieldShadows": 2.954,
+     "Exclusive/RenderThread/RenderOther": 2.898,
+     "GameThreadTime_CriticalPath": 2.446,
+     "Exclusive/RenderThread/RenderLighting": 2.211,
+     "DrawCall/SlateUI": 1.964,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.723,
+     "DrawCall/BeginOcclusionTests": 0.985,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.909,
+     "Exclusive/RenderThread/RDG": 0.807,
+     "Exclusive/RenderThread/RenderShadows": 0.65,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.343,
+     "Exclusive/RenderThread/RenderThreadOther": 0.282,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.244,
+     "Exclusive/RenderThread/EventWait": 0.226,
+     "Exclusive/GameThread/UI": 0.226,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.214,
+     "Exclusive/GameThread/Animation": 0.166,
+     "Exclusive/GameThread/TickActors": 0.162,
+     "Exclusive/GameThread/ViewportMisc": 0.154,
+     "Exclusive/RenderThread/InitViews_Scene": 0.121,
+     "Exclusive/RenderThread/RDG_Execute": 0.113,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.098,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.094,
+     "Exclusive/GameThread/EngineTickMisc": 0.088,
+     "Exclusive/GameThread/CharacterMovement": 0.086,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.079,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.076,
+     "Exclusive/GameThread/WorldTickMisc": 0.075,
+     "Exclusive/GameThread/DebugHUD": 0.073,
+     "Exclusive/RenderThread/RenderBasePass": 0.072,
+     "Exclusive/GameThread/Tickables": 0.072,
+     "Exclusive/GameThread/DeferredTickTime": 0.067,
+     "Exclusive/GameThread/PlayerControllerTick": 0.062,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.046,
+     "Exclusive/RenderThread/RenderTranslucency": 0.045,
+     "Exclusive/GameThread/Physics": 0.045,
+     "Exclusive/GameThread/Effects": 0.044,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.042,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/Slate": 0.041,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.036,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.036,
+     "Exclusive/RenderThread/FXSystem": 0.031,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.029,
+     "Exclusive/GameThread/Camera": 0.026,
+     "Exclusive/GameThread/QueueTicks": 0.025,
+     "Exclusive/GameThread/SyncBodies": 0.025,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.019,
+     "Exclusive/GameThread/Input": 0.017,
+     "Exclusive/GameThread/PostProcessSettings": 0.017
+    },
+    "fps": 89.5
+   }
+  },
+  {
+   "name": "AB_noop@C10_Hero",
+   "wall_s": 8.01,
+   "frames": 597,
+   "py_frame_ms_mean": 13.41,
+   "py_frame_ms_p95": 23.2,
+   "py_fps": 74.6,
+   "csv": {
+    "file": "Profile(20261002_044423).csv",
+    "frames": 597,
+    "frame_ms": {
+     "mean": 13.41,
+     "p95": 23.14,
+     "max": 31.12
+    },
+    "game_ms": {
+     "mean": 2.41,
+     "p95": 3.35,
+     "max": 6.07
+    },
+    "render_ms": {
+     "mean": 13.41,
+     "p95": 23.12,
+     "max": 31.14
+    },
+    "rhi_ms": {
+     "mean": 3.06,
+     "p95": 3.48,
+     "max": 6.3
+    },
+    "gpu_ms": {
+     "mean": 12.13,
+     "p95": 21.28,
+     "max": 29.34
+    },
+    "draw_calls": {
+     "mean": 1397.95,
+     "p95": 1439.0,
+     "max": 1448.0
+    },
+    "primitives": {
+     "mean": 132322.37,
+     "p95": 137805.0,
+     "max": 157540.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      5.384
+     ],
+     [
+      "TemporalSuperResolution",
+      1.053
+     ],
+     [
+      "ShadowDepths",
+      1.04
+     ],
+     [
+      "Unaccounted",
+      0.857
+     ],
+     [
+      "RenderDeferredLighting",
+      0.596
+     ],
+     [
+      "LumenReflections",
+      0.518
+     ],
+     [
+      "NaniteVisBuffer",
+      0.435
+     ],
+     [
+      "NaniteBasePass",
+      0.412
+     ],
+     [
+      "Postprocessing",
+      0.306
+     ],
+     [
+      "LumenSceneUpdate",
+      0.274
+     ],
+     [
+      "RayTracingScene",
+      0.267
+     ],
+     [
+      "SkyAtmosphere",
+      0.208
+     ],
+     [
+      "LightGrid",
+      0.103
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.096
+     ],
+     [
+      "ShadowProjection",
+      0.096
+     ],
+     [
+      "NaniteReadback",
+      0.078
+     ],
+     [
+      "DistanceFieldShadows",
+      0.055
+     ],
+     [
+      "MotionBlur",
+      0.051
+     ],
+     [
+      "HZB",
+      0.045
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.028
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1079.477,
+     "DrawCall/Lights": 197.97,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "RenderThreadTime_CriticalPath": 13.408,
+     "LightCount/Unbatched": 13.0,
+     "Exclusive/GameThread/EventWait": 10.991,
+     "CPUUsage_Process": 4.893,
+     "Exclusive/RenderThread/EventWait/Visibility": 3.942,
+     "DrawCall/DistanceFieldShadows": 2.955,
+     "Exclusive/RenderThread/RenderOther": 2.851,
+     "GameThreadTime_CriticalPath": 2.411,
+     "Exclusive/RenderThread/RenderLighting": 2.166,
+     "DrawCall/SlateUI": 1.963,
+     "DrawCall/BeginOcclusionTests": 0.985,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.885,
+     "Exclusive/RenderThread/RDG": 0.763,
+     "Exclusive/RenderThread/RenderShadows": 0.654,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.333,
+     "Exclusive/RenderThread/RenderThreadOther": 0.262,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.259,
+     "Exclusive/RenderThread/EventWait": 0.239,
+     "Exclusive/GameThread/UI": 0.226,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.223,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.191,
+     "Exclusive/GameThread/Animation": 0.163,
+     "Exclusive/GameThread/TickActors": 0.157,
+     "Exclusive/GameThread/ViewportMisc": 0.147,
+     "Exclusive/RenderThread/RDG_Execute": 0.117,
+     "Exclusive/RenderThread/InitViews_Scene": 0.114,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.105,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.098,
+     "Exclusive/GameThread/EngineTickMisc": 0.087,
+     "Exclusive/GameThread/CharacterMovement": 0.085,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.081,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.079,
+     "Exclusive/GameThread/WorldTickMisc": 0.073,
+     "Exclusive/GameThread/DebugHUD": 0.071,
+     "Exclusive/RenderThread/RenderBasePass": 0.07,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.065,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/GameThread/Physics": 0.044,
+     "Exclusive/RenderThread/RenderTranslucency": 0.043,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.039,
+     "Exclusive/RenderThread/Slate": 0.038,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.034,
+     "Exclusive/RenderThread/FXSystem": 0.03,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.028,
+     "Exclusive/GameThread/SyncBodies": 0.026,
+     "Exclusive/GameThread/QueueTicks": 0.025,
+     "Exclusive/GameThread/Camera": 0.025,
+     "Exclusive/GameThread/Input": 0.017,
+     "Exclusive/GameThread/PostProcessSettings": 0.016
+    },
+    "fps": 74.6
+   }
+  },
+  {
+   "name": "AB_case_ch1@C10_Hero",
+   "wall_s": 8.0,
+   "frames": 747,
+   "py_frame_ms_mean": 10.72,
+   "py_frame_ms_p95": 14.88,
+   "py_fps": 93.3,
+   "csv": {
+    "file": "Profile(20261002_044439).csv",
+    "frames": 747,
+    "frame_ms": {
+     "mean": 10.71,
+     "p95": 13.9,
+     "max": 22.39
+    },
+    "game_ms": {
+     "mean": 2.34,
+     "p95": 3.02,
+     "max": 6.45
+    },
+    "render_ms": {
+     "mean": 10.71,
+     "p95": 13.72,
+     "max": 22.3
+    },
+    "rhi_ms": {
+     "mean": 3.02,
+     "p95": 3.47,
+     "max": 4.14
+    },
+    "gpu_ms": {
+     "mean": 9.69,
+     "p95": 13.24,
+     "max": 20.66
+    },
+    "draw_calls": {
+     "mean": 740.47,
+     "p95": 779.0,
+     "max": 789.0
+    },
+    "primitives": {
+     "mean": 132242.26,
+     "p95": 137565.0,
+     "max": 156697.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.471
+     ],
+     [
+      "TemporalSuperResolution",
+      0.824
+     ],
+     [
+      "ShadowDepths",
+      0.796
+     ],
+     [
+      "Unaccounted",
+      0.679
+     ],
+     [
+      "RenderDeferredLighting",
+      0.456
+     ],
+     [
+      "LumenReflections",
+      0.414
+     ],
+     [
+      "NaniteVisBuffer",
+      0.325
+     ],
+     [
+      "NaniteBasePass",
+      0.315
+     ],
+     [
+      "LumenSceneUpdate",
+      0.228
+     ],
+     [
+      "Postprocessing",
+      0.221
+     ],
+     [
+      "RayTracingScene",
+      0.191
+     ],
+     [
+      "SkyAtmosphere",
+      0.108
+     ],
+     [
+      "NaniteReadback",
+      0.078
+     ],
+     [
+      "ShadowProjection",
+      0.069
+     ],
+     [
+      "LightGrid",
+      0.066
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.057
+     ],
+     [
+      "MotionBlur",
+      0.051
+     ],
+     [
+      "DistanceFieldShadows",
+      0.04
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.031
+     ],
+     [
+      "HZB",
+      0.023
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 436.062,
+     "DrawCall/Lights": 199.655,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 10.706,
+     "Exclusive/GameThread/EventWait": 8.358,
+     "CPUUsage_Process": 5.432,
+     "DrawCall/DistanceFieldShadows": 2.98,
+     "Exclusive/RenderThread/RenderOther": 2.798,
+     "GameThreadTime_CriticalPath": 2.343,
+     "Exclusive/RenderThread/RenderLighting": 2.15,
+     "DrawCall/SlateUI": 1.979,
+     "Exclusive/RenderThread/EventWait/Visibility": 1.615,
+     "DrawCall/BeginOcclusionTests": 0.993,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.872,
+     "Exclusive/RenderThread/RDG": 0.736,
+     "Exclusive/RenderThread/RenderShadows": 0.626,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.332,
+     "Exclusive/RenderThread/RenderThreadOther": 0.273,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.258,
+     "Exclusive/RenderThread/EventWait": 0.231,
+     "Exclusive/GameThread/UI": 0.22,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.169,
+     "Exclusive/GameThread/Animation": 0.163,
+     "Exclusive/GameThread/TickActors": 0.155,
+     "Exclusive/GameThread/ViewportMisc": 0.15,
+     "Exclusive/RenderThread/InitViews_Scene": 0.114,
+     "Exclusive/RenderThread/RDG_Execute": 0.105,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.095,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.091,
+     "Exclusive/GameThread/EngineTickMisc": 0.085,
+     "Exclusive/GameThread/CharacterMovement": 0.084,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.077,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.075,
+     "Exclusive/GameThread/WorldTickMisc": 0.075,
+     "Exclusive/GameThread/DebugHUD": 0.071,
+     "Exclusive/RenderThread/RenderBasePass": 0.07,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.064,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/GameThread/Physics": 0.045,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.044,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.042,
+     "Exclusive/GameThread/Effects": 0.042,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.042,
+     "Exclusive/RenderThread/RenderTranslucency": 0.042,
+     "Exclusive/RenderThread/Slate": 0.038,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.034,
+     "Exclusive/RenderThread/FXSystem": 0.029,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.028,
+     "Exclusive/GameThread/Camera": 0.026,
+     "Exclusive/GameThread/QueueTicks": 0.024,
+     "Exclusive/GameThread/SyncBodies": 0.023,
+     "Exclusive/GameThread/PostProcessSettings": 0.017,
+     "Exclusive/GameThread/Input": 0.016,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.015
+    },
+    "fps": 93.4
+   }
+  },
+  {
+   "name": "AB_noop@C10_Hero",
+   "wall_s": 8.01,
+   "frames": 733,
+   "py_frame_ms_mean": 10.93,
+   "py_frame_ms_p95": 12.85,
+   "py_fps": 91.5,
+   "csv": {
+    "file": "Profile(20261002_044455).csv",
+    "frames": 733,
+    "frame_ms": {
+     "mean": 10.93,
+     "p95": 12.27,
+     "max": 14.67
+    },
+    "game_ms": {
+     "mean": 2.47,
+     "p95": 3.51,
+     "max": 6.11
+    },
+    "render_ms": {
+     "mean": 10.93,
+     "p95": 12.25,
+     "max": 14.65
+    },
+    "rhi_ms": {
+     "mean": 3.18,
+     "p95": 3.72,
+     "max": 4.39
+    },
+    "gpu_ms": {
+     "mean": 9.21,
+     "p95": 9.9,
+     "max": 10.28
+    },
+    "draw_calls": {
+     "mean": 1397.4,
+     "p95": 1434.0,
+     "max": 1455.0
+    },
+    "primitives": {
+     "mean": 132252.0,
+     "p95": 138159.0,
+     "max": 147875.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      4.162
+     ],
+     [
+      "TemporalSuperResolution",
+      0.765
+     ],
+     [
+      "ShadowDepths",
+      0.763
+     ],
+     [
+      "Unaccounted",
+      0.635
+     ],
+     [
+      "RenderDeferredLighting",
+      0.42
+     ],
+     [
+      "LumenReflections",
+      0.374
+     ],
+     [
+      "NaniteVisBuffer",
+      0.308
+     ],
+     [
+      "NaniteBasePass",
+      0.29
+     ],
+     [
+      "LumenSceneUpdate",
+      0.227
+     ],
+     [
+      "Postprocessing",
+      0.209
+     ],
+     [
+      "RayTracingScene",
+      0.158
+     ],
+     [
+      "SkyAtmosphere",
+      0.089
+     ],
+     [
+      "NaniteReadback",
+      0.074
+     ],
+     [
+      "ShadowProjection",
+      0.065
+     ],
+     [
+      "LightGrid",
+      0.057
+     ],
+     [
+      "MotionBlur",
+      0.051
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.046
+     ],
+     [
+      "DistanceFieldShadows",
+      0.04
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.029
+     ],
+     [
+      "DistanceFields",
+      0.021
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1073.572,
+     "DrawCall/Lights": 196.887,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "LightCount/Unbatched": 13.0,
+     "RenderThreadTime_CriticalPath": 10.929,
+     "Exclusive/GameThread/EventWait": 8.452,
+     "CPUUsage_Process": 5.671,
+     "Exclusive/RenderThread/RenderOther": 2.988,
+     "DrawCall/DistanceFieldShadows": 2.939,
+     "GameThreadTime_CriticalPath": 2.472,
+     "Exclusive/RenderThread/RenderLighting": 2.275,
+     "DrawCall/SlateUI": 1.954,
+     "DrawCall/BeginOcclusionTests": 0.98,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.935,
+     "Exclusive/RenderThread/EventWait/Visibility": 0.893,
+     "Exclusive/RenderThread/RDG": 0.816,
+     "Exclusive/RenderThread/RenderShadows": 0.705,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.349,
+     "Exclusive/RenderThread/EventWait": 0.301,
+     "Exclusive/RenderThread/RenderThreadOther": 0.274,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.259,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.247,
+     "Exclusive/GameThread/UI": 0.24,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.238,
+     "Exclusive/GameThread/Animation": 0.167,
+     "Exclusive/GameThread/TickActors": 0.159,
+     "Exclusive/GameThread/ViewportMisc": 0.156,
+     "Exclusive/RenderThread/InitViews_Scene": 0.12,
+     "Exclusive/RenderThread/RDG_Execute": 0.115,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.108,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.098,
+     "Exclusive/GameThread/EngineTickMisc": 0.089,
+     "Exclusive/GameThread/CharacterMovement": 0.087,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.08,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.079,
+     "Exclusive/GameThread/WorldTickMisc": 0.076,
+     "Exclusive/RenderThread/RenderBasePass": 0.074,
+     "Exclusive/GameThread/DebugHUD": 0.073,
+     "Exclusive/GameThread/Tickables": 0.071,
+     "Exclusive/GameThread/DeferredTickTime": 0.067,
+     "Exclusive/GameThread/PlayerControllerTick": 0.063,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.049,
+     "Exclusive/RenderThread/RenderTranslucency": 0.047,
+     "Exclusive/GameThread/Effects": 0.045,
+     "Exclusive/GameThread/Physics": 0.045,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.045,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.043,
+     "Exclusive/RenderThread/Slate": 0.041,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.037,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.037,
+     "Exclusive/RenderThread/FXSystem": 0.032,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.03,
+     "Exclusive/GameThread/Camera": 0.026,
+     "Exclusive/GameThread/QueueTicks": 0.025,
+     "Exclusive/GameThread/SyncBodies": 0.025,
+     "Exclusive/GameThread/Input": 0.017,
+     "Exclusive/GameThread/PostProcessSettings": 0.017
+    },
+    "fps": 91.5
+   }
+  },
+  {
+   "name": "AB_base_end@C10_Hero",
+   "wall_s": 8.01,
+   "frames": 572,
+   "py_frame_ms_mean": 14.02,
+   "py_frame_ms_p95": 21.52,
+   "py_fps": 71.3,
+   "csv": {
+    "file": "Profile(20261002_044511).csv",
+    "frames": 572,
+    "frame_ms": {
+     "mean": 14.0,
+     "p95": 21.43,
+     "max": 23.51
+    },
+    "game_ms": {
+     "mean": 2.31,
+     "p95": 2.84,
+     "max": 6.14
+    },
+    "render_ms": {
+     "mean": 13.99,
+     "p95": 21.41,
+     "max": 23.49
+    },
+    "rhi_ms": {
+     "mean": 3.08,
+     "p95": 3.5,
+     "max": 4.05
+    },
+    "gpu_ms": {
+     "mean": 12.95,
+     "p95": 20.12,
+     "max": 21.64
+    },
+    "draw_calls": {
+     "mean": 1397.52,
+     "p95": 1432.0,
+     "max": 1455.0
+    },
+    "primitives": {
+     "mean": 132280.33,
+     "p95": 139719.0,
+     "max": 146207.0
+    },
+    "gpu_passes_top": [
+     [
+      "Lights",
+      5.747
+     ],
+     [
+      "TemporalSuperResolution",
+      1.123
+     ],
+     [
+      "ShadowDepths",
+      1.121
+     ],
+     [
+      "Unaccounted",
+      0.925
+     ],
+     [
+      "RenderDeferredLighting",
+      0.638
+     ],
+     [
+      "LumenReflections",
+      0.557
+     ],
+     [
+      "NaniteVisBuffer",
+      0.46
+     ],
+     [
+      "NaniteBasePass",
+      0.446
+     ],
+     [
+      "Postprocessing",
+      0.318
+     ],
+     [
+      "RayTracingScene",
+      0.307
+     ],
+     [
+      "LumenSceneUpdate",
+      0.282
+     ],
+     [
+      "SkyAtmosphere",
+      0.245
+     ],
+     [
+      "SkyAtmosphereLUTs",
+      0.109
+     ],
+     [
+      "ShadowProjection",
+      0.105
+     ],
+     [
+      "LightGrid",
+      0.104
+     ],
+     [
+      "NaniteReadback",
+      0.079
+     ],
+     [
+      "DistanceFieldShadows",
+      0.063
+     ],
+     [
+      "MotionBlur",
+      0.05
+     ],
+     [
+      "HZB",
+      0.035
+     ],
+     [
+      "RayTracingDynamicGeometry",
+      0.031
+     ]
+    ],
+    "other_stats": {
+     "DrawCall/ShadowDepths": 1090.252,
+     "DrawCall/Lights": 199.946,
+     "LightCount/All": 99.0,
+     "LightCount/Batched": 86.0,
+     "MaxFrameTime": 33.333,
+     "RenderThreadTime_CriticalPath": 13.987,
+     "LightCount/Unbatched": 13.0,
+     "Exclusive/GameThread/EventWait": 11.671,
+     "CPUUsage_Process": 4.703,
+     "Exclusive/RenderThread/EventWait/Visibility": 4.605,
+     "DrawCall/DistanceFieldShadows": 2.984,
+     "Exclusive/RenderThread/RenderOther": 2.871,
+     "GameThreadTime_CriticalPath": 2.312,
+     "Exclusive/RenderThread/RenderLighting": 2.166,
+     "DrawCall/SlateUI": 1.979,
+     "DrawCall/BeginOcclusionTests": 0.995,
+     "Exclusive/RenderThread/RDG_CollectResources": 0.884,
+     "Exclusive/RenderThread/RDG": 0.744,
+     "Exclusive/RenderThread/RenderShadows": 0.649,
+     "Exclusive/RenderThread/RenderPostProcessing": 0.333,
+     "Exclusive/RenderThread/RenderThreadOther": 0.26,
+     "Exclusive/RenderThread/EventWait": 0.243,
+     "Exclusive/GameThread/EventWait/EndPhysics": 0.233,
+     "Exclusive/GameThread/UI": 0.225,
+     "Exclusive/GameThread/Animation": 0.163,
+     "Exclusive/GameThread/TickActors": 0.156,
+     "Exclusive/GameThread/EventWait/PostPhysics": 0.155,
+     "Exclusive/GameThread/ViewportMisc": 0.148,
+     "Exclusive/RenderThread/EventWait/Shadows": 0.133,
+     "Exclusive/RenderThread/InitViews_Scene": 0.114,
+     "Exclusive/RenderThread/ShadowInitDynamic": 0.105,
+     "Exclusive/RenderThread/RDG_Execute": 0.104,
+     "Exclusive/RenderThread/SkyAtmosphere": 0.095,
+     "Exclusive/RenderThread/STAT_SkinningSceneExtension": 0.088,
+     "Exclusive/GameThread/EngineTickMisc": 0.085,
+     "Exclusive/GameThread/CharacterMovement": 0.085,
+     "Exclusive/RenderThread/ComputeLightGrid": 0.079,
+     "Exclusive/GameThread/WorldTickMisc": 0.073,
+     "Exclusive/GameThread/DebugHUD": 0.071,
+     "Exclusive/RenderThread/RenderBasePass": 0.07,
+     "Exclusive/GameThread/Tickables": 0.069,
+     "Exclusive/GameThread/DeferredTickTime": 0.064,
+     "Exclusive/GameThread/PlayerControllerTick": 0.061,
+     "Exclusive/RenderThread/UpdateGPUScene": 0.05,
+     "Exclusive/GameThread/Physics": 0.045,
+     "Exclusive/RenderThread/RenderTranslucency": 0.043,
+     "Exclusive/GameThread/Effects": 0.043,
+     "Exclusive/GameThread/EndOfFrameUpdates": 0.043,
+     "Exclusive/GameThread/RenderAssetStreaming": 0.043,
+     "Exclusive/RenderThread/RayTracing_FinishGatherInstances": 0.041,
+     "Exclusive/RenderThread/Slate": 0.039,
+     "Exclusive/RenderThread/RenderOpaqueFX": 0.036,
+     "Exclusive/RenderThread/PrepareDistanceFieldScene": 0.035,
+     "Exclusive/RenderThread/FXSystem": 0.034,
+     "Exclusive/RenderThread/STAT_RDG_FlushResourcesRHI": 0.029,
+     "Exclusive/GameThread/Camera": 0.025,
+     "Exclusive/GameThread/QueueTicks": 0.024,
+     "Exclusive/GameThread/SyncBodies": 0.024,
+     "Exclusive/GameThread/Input": 0.016,
+     "Exclusive/GameThread/PostProcessSettings": 0.016
+    },
+    "fps": 71.4
+   }
+  }
+ ],
+ "profilegpu": {
+  "spawn": {
+   "frame_gpu_ms": 8.681,
+   "frame_draws": 1700,
+   "passes": [
+    {
+     "ms": 0.382,
+     "name": "Nanite::VisBuffer",
+     "draws": 16,
+     "children": []
+    },
+    {
+     "ms": 0.069,
+     "name": "ComputeLightGrid",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.06,
+     "name": "NaniteBasePass",
+     "draws": 2,
+     "children": []
+    },
+    {
+     "ms": 0.054,
+     "name": "SkyAtmosphereLUTs",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.04,
+     "name": "RenderVelocities(Opaque)",
+     "draws": 2,
+     "children": []
+    },
+    {
+     "ms": 0.032,
+     "name": "PrePass DDM_AllOpaqueNoVelocity (Forced by Nanite)",
+     "draws": 58,
+     "children": []
+    },
+    {
+     "ms": 0.027,
+     "name": "CaptureConvolveSkyEnvMap",
+     "draws": 2,
+     "children": []
+    },
+    {
+     "ms": 0.02,
+     "name": "HZB",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.012,
+     "name": "Nanite::VisBuffer",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.011,
+     "name": "BuildRenderingCommandsDeferred(Culling=On)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.006,
+     "name": "SceneCulling_ComputeExplicitChunkBounds",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.006,
+     "name": "FVirtualShadowMapArray::UpdatePhysicalPageAddresses",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.006,
+     "name": "HZB",
+     "draws": 29,
+     "children": []
+    },
+    {
+     "ms": 0.004,
+     "name": "GPUSceneUpdate",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.004,
+     "name": "ClearDepthStencil (SceneDepthZ)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "ScatterUpload (Resource: SceneCulling.Items)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "NaniteSkinningUpdateViewDataChunks",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "NaniteSkinningUpdateViewData",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "ClearIndirectDispatchArgs",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "VSMUpdateViewInstanceState",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.002,
+     "name": "ClearBuffer(Shadow.Virtual.CacheInstanceAsDynamic Size=160bytes)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.002,
+     "name": "ClearBuffer(Substrate.SubstrateTileDrawIndirectBuffer Size=144bytes)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.001,
+     "name": "FXSystemPreRender",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.001,
+     "name": "Shadow.Virtual.ProcessInvalidationsGPU",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "ScatterUpload (Resource: SceneCulling.ItemChunks)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "ClearIndirectDispatchArgs",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "AccessModePass[Graphics] (Textures: 1, Buffers: 1)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "LightFunctionAtlasGeneration",
+     "draws": 0,
+     "children": []
+    }
+   ],
+   "scene_ms": 7.999
+  },
+  "C10_Hero": {
+   "frame_gpu_ms": 8.613,
+   "frame_draws": 3507,
+   "passes": [
+    {
+     "ms": 0.314,
+     "name": "Nanite::VisBuffer",
+     "draws": 16,
+     "children": []
+    },
+    {
+     "ms": 0.084,
+     "name": "NaniteBasePass",
+     "draws": 2,
+     "children": []
+    },
+    {
+     "ms": 0.056,
+     "name": "ComputeLightGrid",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.049,
+     "name": "SkyAtmosphereLUTs",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.029,
+     "name": "CaptureConvolveSkyEnvMap",
+     "draws": 2,
+     "children": []
+    },
+    {
+     "ms": 0.025,
+     "name": "HZB",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.01,
+     "name": "Nanite::VisBuffer",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.01,
+     "name": "HZB",
+     "draws": 1,
+     "children": []
+    },
+    {
+     "ms": 0.006,
+     "name": "SceneCulling_ComputeExplicitChunkBounds",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.005,
+     "name": "FVirtualShadowMapArray::UpdatePhysicalPageAddresses",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.004,
+     "name": "GPUSceneUpdate",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "ScatterUpload (Resource: SceneCulling.Items)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "NaniteSkinningUpdateViewDataChunks",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "NaniteSkinningUpdateViewData",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.003,
+     "name": "ClearDepthStencil (SceneDepthZ)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.002,
+     "name": "ClearBuffer(Shadow.Virtual.CacheInstanceAsDynamic Size=160bytes)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.002,
+     "name": "VSMUpdateViewInstanceState",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.002,
+     "name": "ClearBuffer(Substrate.SubstrateTileDrawIndirectBuffer Size=144bytes)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.001,
+     "name": "FXSystemPreRender",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.001,
+     "name": "ClearIndirectDispatchArgs",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.001,
+     "name": "Shadow.Virtual.ProcessInvalidationsGPU",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.001,
+     "name": "AccessModePass[Graphics] (Textures: 1, Buffers: 1)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "ScatterUpload (Resource: SceneCulling.ItemChunks)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "ClearIndirectDispatchArgs",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "PrePass DDM_AllOpaqueNoVelocity (Forced by Nanite)",
+     "draws": 0,
+     "children": []
+    },
+    {
+     "ms": 0.0,
+     "name": "LightFunctionAtlasGeneration",
+     "draws": 0,
+     "children": []
+    }
+   ],
+   "scene_ms": 7.615
+  }
+ },
+ "stat_dumpframe": {
+  "spawn": {
+   "InitViews": [
+    1.251,
+    1
+   ]
+  },
+  "C10_Hero": {
+   "InitViews": [
+    0.132,
+    1
+   ]
+  }
+ },
+ "resolution": [
+  "1336x751 -> 1600x900"
+ ],
+ "viewport": [
+  1600,
+  900
+ ],
+ "inventory": {
+  "actors": 950,
+  "local_lights": [
+   {
+    "actor": "CaseLight_01",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_01",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 2368.226,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_02",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_02",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 2291.831,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_03",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_03",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1986.254,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_04",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_04",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_05",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_05",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_06",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 343.775,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_06",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_07",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 343.775,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_07",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_08",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 61.115,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_08",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_09",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_09",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_10",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_10",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_11",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 343.775,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_11",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_12",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_12",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 2521.014,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_13",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_13",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "CaseLight_14",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 763.944,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "UnderGlow_14",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 1527.887,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "RackLight_W",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 143.239,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "AlcoveSpot_Wa",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 95.493,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "AlcoveSpot_Wb",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 95.493,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "RackLight_E",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 143.239,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "AlcoveSpot_Ea",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 95.493,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "AlcoveSpot_Eb",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 95.493,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W2a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E2a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W2b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E2b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W2c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E2c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W2d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E2d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W6a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E6a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W6b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E6b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W6c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E6c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W6d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E6d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W10a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E10a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W10b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E10b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W10c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E10c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W10d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E10d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W14a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E14a",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W14b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E14b",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W14c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E14c",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_W14d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "PanelLight_E14d",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 66.845,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Lantern_3.76_1.8",
+    "class": "PointLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 44.563,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Lantern_8.24_1.8",
+    "class": "PointLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 44.563,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Lantern_3.5_19.1",
+    "class": "PointLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 36.096,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Lantern_8.5_19.1",
+    "class": "PointLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 36.096,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Lantern_3.248_16.05",
+    "class": "PointLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 25.067,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Lantern_8.752_16.05",
+    "class": "PointLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 25.067,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "NicheSpot_W",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 47.746,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "NicheFill_W",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 33.423,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "NicheSpot_E",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 47.746,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "NicheFill_E",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 33.423,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_3",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_5",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_7",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_9",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_11",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_13",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_15",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_17",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_3_19",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_5_3",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_5_5",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_5_7",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_5_9",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_5_13",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_5_15",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_7_3",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_7_5",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_7_7",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_7_9",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_7_13",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_7_15",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_3",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_5",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_7",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_9",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_11",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_13",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_15",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_17",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Down_9_19",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 190.986,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "BannerSpot_1.51",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 381.972,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "BannerSpot_10.49",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 381.972,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "SillSpot_W3.0",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 44.563,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "SillSpot_E3.0",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 44.563,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "SillSpot_W11.0",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 44.563,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "SillSpot_E11.0",
+    "class": "SpotLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 44.563,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Painting_Wash",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 57.296,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "Landing_Wash",
+    "class": "RectLightComponent",
+    "visible": true,
+    "cast_shadows": false,
+    "intensity": 326.013,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 2000.0
+   },
+   {
+    "actor": "BackerLight_W0",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_W4",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_W8",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_W12",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_W16",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_E0",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_E4",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_E8",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_E12",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   },
+   {
+    "actor": "BackerLight_E16",
+    "class": "RectLightComponent",
+    "visible": false,
+    "cast_shadows": false,
+    "intensity": 0.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": true,
+    "attenuation_cm": 1000.0
+   }
+  ],
+  "directional": [
+   {
+    "actor": "Moon",
+    "class": "DirectionalLightComponent",
+    "visible": true,
+    "cast_shadows": true,
+    "intensity": 50.0,
+    "mobility": "<ComponentMobility.MOVABLE: 2>",
+    "shell": false,
+    "attenuation_cm": 0.0
+   }
+  ],
+  "niagara": [],
+  "shell": {
+   "actors": 180,
+   "visible_mesh_actors": 170,
+   "tris_lod0": 1214231,
+   "nanite_actors": 0,
+   "rt_visible": 170,
+   "cast_shadow": 170,
+   "df_lighting": 170,
+   "lights": 10,
+   "lights_visible": 0,
+   "lights_shadowed": 0
+  },
+  "ours": {
+   "visible_mesh_actors": 470,
+   "tris_lod0": 317378,
+   "nanite_actors": 0,
+   "rt_visible": 470,
+   "hidden_exterior": 165,
+   "translucent_mesh_actors": 13
+  },
+  "local_light_summary": {
+   "total": 124,
+   "visible": 114,
+   "visible_nonzero": 114,
+   "shadowed_visible": 12,
+   "shadowed_names": [
+    "CaseLight_01",
+    "CaseLight_02",
+    "CaseLight_03",
+    "CaseLight_04",
+    "CaseLight_05",
+    "CaseLight_06",
+    "CaseLight_07",
+    "CaseLight_08",
+    "CaseLight_09",
+    "CaseLight_10",
+    "CaseLight_11",
+    "CaseLight_12"
+   ],
+   "shell_backers": 10,
+   "shell_backers_visible": 0,
+   "shell_backers_shadowed": 0
+  },
+  "top_meshes_by_total_tris": [
+   {
+    "mesh": "SM_DKH_Rear_Roof",
+    "tris_lod0": 283366,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 283366
+   },
+   {
+    "mesh": "SM_DKH_RoofUpper_Front",
+    "tris_lod0": 188931,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 188931
+   },
+   {
+    "mesh": "SM_DKH_RoofUpper_BackValley",
+    "tris_lod0": 139134,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 139134
+   },
+   {
+    "mesh": "SM_DKH_RoofUpper_End",
+    "tris_lod0": 67041,
+    "nanite": null,
+    "actors": 2,
+    "shell": true,
+    "total": 134082
+   },
+   {
+    "mesh": "SM_DKH_RoofLower_Front",
+    "tris_lod0": 124206,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 124206
+   },
+   {
+    "mesh": "SM_DKH_RoofLower_SideW",
+    "tris_lod0": 64491,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 64491
+   },
+   {
+    "mesh": "SM_DKH_RoofLower_SideE",
+    "tris_lod0": 64491,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 64491
+   },
+   {
+    "mesh": "SM_CineCam",
+    "tris_lod0": 6252,
+    "nanite": null,
+    "actors": 9,
+    "shell": false,
+    "total": 56268
+   },
+   {
+    "mesh": "SM_DKH_Rear_RoofRidge",
+    "tris_lod0": 28140,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 28140
+   },
+   {
+    "mesh": "SM_DKH_RoofUpper_Ridge",
+    "tris_lod0": 27756,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 27756
+   },
+   {
+    "mesh": "SM_AK_Ceiling_Lattice_2x2",
+    "tris_lod0": 4412,
+    "nanite": null,
+    "actors": 6,
+    "shell": false,
+    "total": 26472
+   },
+   {
+    "mesh": "SM_DKH_Bay_Plaster",
+    "tris_lod0": 748,
+    "nanite": null,
+    "actors": 29,
+    "shell": true,
+    "total": 21692
+   },
+   {
+    "mesh": "SM_AK_H_Ceiling_Downlight",
+    "tris_lod0": 672,
+    "nanite": null,
+    "actors": 30,
+    "shell": false,
+    "total": 20160
+   },
+   {
+    "mesh": "SM_DKH_RoofChidori_W",
+    "tris_lod0": 19986,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 19986
+   },
+   {
+    "mesh": "SM_DKH_RoofChidori_E",
+    "tris_lod0": 19986,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 19986
+   },
+   {
+    "mesh": "SM_AK_Vase_Plum_S",
+    "tris_lod0": 4958,
+    "nanite": null,
+    "actors": 4,
+    "shell": false,
+    "total": 19832
+   },
+   {
+    "mesh": "SM_AK_Ceiling_Coffer_2x2",
+    "tris_lod0": 304,
+    "nanite": null,
+    "actors": 54,
+    "shell": false,
+    "total": 16416
+   },
+   {
+    "mesh": "SM_DKH_Bay_Lattice",
+    "tris_lod0": 3748,
+    "nanite": null,
+    "actors": 4,
+    "shell": true,
+    "total": 14992
+   },
+   {
+    "mesh": "SM_DKH_Veranda",
+    "tris_lod0": 13068,
+    "nanite": null,
+    "actors": 1,
+    "shell": true,
+    "total": 13068
+   },
+   {
+    "mesh": "SM_AK_Vase_Plum_L",
+    "tris_lod0": 6195,
+    "nanite": null,
+    "actors": 2,
+    "shell": false,
+    "total": 12390
+   },
+   {
+    "mesh": "SM_AK_WallPanel_LitWide",
+    "tris_lod0": 1540,
+    "nanite": null,
+    "actors": 8,
+    "shell": false,
+    "total": 12320
+   },
+   {
+    "mesh": "SM_AK_RearAlcove",
+    "tris_lod0": 6032,
+    "nanite": null,
+    "actors": 2,
+    "shell": false,
+    "total": 12064
+   },
+   {
+    "mesh": "SM_DKH_Rear_Bay_ClerePlaster",
+    "tris_lod0": 660,
+    "nanite": null,
+    "actors": 17,
+    "shell": true,
+    "total": 11220
+   },
+   {
+    "mesh": "SM_DKH_Bay_ClerePlaster",
+    "tris_lod0": 660,
+    "nanite": null,
+    "actors": 16,
+    "shell": true,
+    "total": 10560
+   },
+   {
+    "mesh": "SM_AK_WallUpper_Window_4",
+    "tris_lod0": 1020,
+    "nanite": null,
+    "actors": 10,
+    "shell": false,
+    "total": 10200
+   }
+  ]
+ },
+ "cvars": {
+  "r.RayTracing": 1,
+  "r.RayTracing.Enable": 1,
+  "r.RayTracing.EnableOnDemand": 1,
+  "r.Lumen.HardwareRayTracing": 1,
+  "r.Lumen.HardwareRayTracing.LightingMode": 0,
+  "r.Lumen.TraceMeshSDFs": 0,
+  "r.DynamicGlobalIlluminationMethod": 1,
+  "r.ReflectionMethod": 1,
+  "r.Shadow.Virtual.Enable": 1,
+  "r.PSOPrecaching": 1,
+  "r.PSOPrecache.Components": 1,
+  "r.PSOPrecache.ProxyCreationWhenPSOReady": 1,
+  "r.ShaderPipelineCache.Enabled": 0,
+  "r.Nanite": 1,
+  "r.MegaLights.Enable": 0,
+  "r.Lumen.DiffuseIndirect.Allow": 1,
+  "r.Lumen.Reflections.Allow": 1,
+  "r.RayTracing.Shadows": 0,
+  "r.Lumen.ScreenProbeGather.ScreenTraces": 1,
+  "r.Lumen.Reflections.HardwareRayTracing": 1,
+  "r.Lumen.HardwareRayTracing.HitLighting.Allowed": 1,
+  "r.RayTracing.Geometry.SkeletalMeshes": 1,
+  "r.RayTracing.Nanite.Mode": 0,
+  "r.Lumen.DirectLighting.MaxLightsPerTile": 0,
+  "r.Lumen.SurfaceCache.CardCaptureRefreshFraction": 0,
+  "sg.ResolutionQuality": 0,
+  "sg.ViewDistanceQuality": 3,
+  "sg.AntiAliasingQuality": 3,
+  "sg.ShadowQuality": 3,
+  "sg.GlobalIlluminationQuality": 3,
+  "sg.ReflectionQuality": 3,
+  "sg.PostProcessQuality": 3,
+  "sg.TextureQuality": 3,
+  "sg.EffectsQuality": 3,
+  "sg.FoliageQuality": 3,
+  "sg.ShadingQuality": 3,
+  "r.VSync": 0,
+  "t.MaxFPS": 0,
+  "r.Shadow.Virtual.Cache": 1,
+  "r.GPUCsvStatsEnabled": 1,
+  "r.TextureStreaming": 1,
+  "r.AntiAliasingMethod": 4,
+  "r.Lumen.TranslucencyReflections.FrontLayer.Allow": 1,
+  "r.ScreenPercentage": 0.0,
+  "r.Lumen.ScreenProbeGather.DownsampleFactor": 16.0
+ }
+}

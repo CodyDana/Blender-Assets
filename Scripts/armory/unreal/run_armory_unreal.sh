@@ -20,6 +20,9 @@
 #   fptest     offscreen GAME run of L_Armory (ak_fptest.ps1): presses V, view 3rd -> 1st -> 3rd person measured at the
 #              head, walks in and looks round; passes only with 0 "[VSM] Non-Nanite Marking Job Queue overflow" warnings
 #   stats      (system Python, Pillow) ak_image_stats.py: tone / colour vs the Blender renders of the preset and the reference
+#   hallperf   commandlet -nullrhi, NOT in the default list: the post-shell performance step (ak_hallperf.py). Run it
+#              AFTER the shared shell tool (SYNC.md 3.2 step 3), every sync: run_armory_unreal.sh hallperf, then
+#              check_sync.py --side armory. Never before the shell tool (it re-places the hall-variant floor tiles).
 # Lighting preset (night + genkan, 2026-09-28): env AK_PRESET, default "night" (the moon, night practicals, no fog, night
 # exposure; Blender baseline renders/night_live4, fallback night_live2). AK_PRESET=golden rebuilds the golden-hour level (baseline hero_live).
 # Run materials, level, verify, capture and stats with the SAME preset (the scenery-card dimming lives in the materials).
@@ -73,7 +76,7 @@ for step in $STEPS; do
       stamp "start build"
       powershell -NoProfile -Command "& 'C:/Program Files/Epic Games/UE_5.8/Engine/Build/BatchFiles/Build.bat' ArmoryLabEditor Win64 Development '-Project=$PROJ' -WaitMutex -NoHotReloadFromIDE" > "$OUT/logs/build.log" 2>&1; code=$?
       grep -q "Result: Succeeded" "$OUT/logs/build.log" || { [ $code -eq 0 ] && code=8; } ;;
-    import|materials|level|verify|manny|firstperson|character)
+    import|materials|level|verify|manny|firstperson|character|hallperf)
       editor_guard
       wait_free
       stamp "start $step"

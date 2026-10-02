@@ -28,7 +28,8 @@ T_AK_HBayBoard_BC / _ORM / _N  (r16 walls round, 2026-09-29: M_AK_HBayBoard, the
   armory3_reference2.png's side-wall displays: a matte dark warm taupe hemp cloth board, 1 m tile (bay_board()).
 
 Writes only its own sets (never overwrites another set's textures). -- --out DIR writes into DIR (a test copy's
-<preview dir>/Textures); -- --board writes only T_AK_HBayBoard.
+<preview dir>/Textures); -- --board writes only T_AK_HBayBoard; -- --winpaper only T_AK_HWinPaper (r21, the backlit
+upper-window paper, win_paper()).
 Run (Git Bash, from the project root):
   "/c/Program Files/Blender Foundation/Blender 5.2/blender.exe" -b --factory-startup --python Scripts/armory/hero/tex_walls.py
   (-- --room: only the pass-2 room sets)
@@ -81,10 +82,12 @@ def blur(a, sigma_px_x, sigma_px_y):
     return np.real(np.fft.ifft2(np.fft.fft2(a) * g))
 
 
-def fibres(rng, n, len_m, width_px, amp, pw, ph):
-    """Long thin wandering kozo fibres, splatted bilinearly in metre space (panel pw x ph m), then softened."""
-    acc = np.zeros((H_PX, W_PX), np.float64)
-    sx, sy = W_PX / pw, H_PX / ph
+def fibres(rng, n, len_m, width_px, amp, pw, ph, hpx=None, wpx=None):
+    """Long thin wandering kozo fibres, splatted bilinearly in metre space (panel pw x ph m), then softened.
+    hpx / wpx (r21): another picture size than the niche sets' H_PX x W_PX (the window paper)."""
+    hpx, wpx = hpx or H_PX, wpx or W_PX
+    acc = np.zeros((hpx, wpx), np.float64)
+    sx, sy = wpx / pw, hpx / ph
     for _ in range(n):
         x, y = rng.uniform(0, pw), rng.uniform(0, ph)
         ang = rng.uniform(0, np.pi)
@@ -95,7 +98,7 @@ def fibres(rng, n, len_m, width_px, amp, pw, ph):
         px = x + np.cumsum(np.cos(a)) * (L / steps)
         py = y + np.cumsum(np.sin(a)) * (L / steps)
         u, v = px * sx, py * sy
-        ok = (u >= 0) & (u < W_PX - 1) & (v >= 0) & (v < H_PX - 1)
+        ok = (u >= 0) & (u < wpx - 1) & (v >= 0) & (v < hpx - 1)
         u, v = u[ok], v[ok]
         if not len(u):
             continue
@@ -329,6 +332,61 @@ def bay_board():
     print("BAY BOARD written", sets["BC"], "mean sRGB", [round(float(c) * 255) for c in bc.reshape(-1, 3).mean(0)])
 
 
+# ------------------------------------------------------------------ backlit window paper (r21, 2026-10-02)
+# The user: "re-implement the windows on the top rows where the plants are" (armory3_reference2.png: the upper side bays
+# are bright lattice windows with the red plum branches in front of them). build_armory_kit puts a 1 cm paper sheet
+# (SM_AK_Window_Paper_35_W / _E) 9 cm behind each upper lattice, its room face mapped 0-1 onto this picture; the
+# materials M_AK_HWinPaperW / E read the BC as an unlit emissive picture (emit_image + unlit). The picture is the paper
+# as a light source: warm cream kozo paper (the day / golden colour; at night render_armory NIGHT_EMIT multiplies in the
+# moon's cool tint (0.30, 0.45, 1.0), so WP_BASE x tint = (0.30, 0.33, 0.37): a cool-neutral glow), even over the field
+# with a soft cloudy formation and fine fibres (backlit washi), a little brighter toward the top (the sky side), falling
+# off over the last few cm into the dark reveals (the lining's shade). No pattern of its own: the dark lattice bars and
+# the plum branches in front of it make the pattern.
+WP_SET = "HWinPaper"
+WP_W, WP_H = 3.50, 1.45            # the clear opening (build_armory_kit WIN_BAY - 0.5 x WIN_HEAD - WIN_SILL), metres
+WP_PX = (2048, 1024)               # (width, height) power of two: 1.7 x 1.4 mm per texel
+WP_BASE = (1.00, 0.74, 0.37)       # linear: warm cream (sRGB ~(255, 222, 163))
+WP_PEAK = 0.92                     # the brightest texel's level (BC stays under 1: the emission strength scales it)
+WP_EDGE = 0.07                     # m: the fall-off into each reveal
+OWN = OWN + (f"T_AK_{WP_SET}_",)
+
+
+def win_paper():
+    rng = np.random.default_rng(SEED + 47)
+    wpx, hpx = WP_PX
+    x = (np.arange(wpx) + 0.5) / wpx * WP_W
+    z = (1.0 - (np.arange(hpx) + 0.5) / hpx) * WP_H     # row 0 = the top of the opening
+    X, Z = np.meshgrid(x, z)
+    # the field: a gentle rise toward the top, the edges falling off into the reveals (smooth, ~35 % at the very edge)
+    d = np.minimum(np.minimum(X, WP_W - X), np.minimum(Z, WP_H - Z))
+    t = np.clip(d / WP_EDGE, 0, 1)
+    edge = 0.35 + 0.65 * t * t * (3 - 2 * t)
+    vert = 0.86 + 0.14 * (Z / WP_H) ** 1.5
+    # backlit washi: a soft cloudy formation (thicker / thinner paper), fibres and a fine grain, low contrast
+    sx, sz = wpx / WP_W, hpx / WP_H
+    form = blur(rng.normal(0, 1, X.shape), 0.025 * sx, 0.025 * sz)
+    form = 0.035 * form / (form.std() + 1e-9)
+    fine = blur(rng.normal(0, 1, X.shape), 0.004 * sx, 0.004 * sz)
+    fine = 0.02 * fine / (fine.std() + 1e-9)
+    fib = (fibres(rng, 9000, 0.05, 0.8, 0.010, WP_W, WP_H, hpx, wpx)
+           + fibres(rng, 1500, 0.12, 1.4, 0.014, WP_W, WP_H, hpx, wpx))
+    grain = 0.010 * rng.normal(0, 1, X.shape)
+    m = np.exp(form + fine + fib + grain)
+    lin = np.array(WP_BASE)[None, None, :] * (edge * vert * m)[..., None]
+    lin = lin * (WP_PEAK / np.percentile(lin[..., 0], 99.0))
+    bc = lin_to_srgb(lin)
+    sets = {k: TEX / f"T_AK_{WP_SET}_{k}.png" for k in ("BC", "ORM", "N")}
+    save(sets["BC"], bc)
+    orm = np.zeros(X.shape + (3,))
+    orm[..., 0], orm[..., 1], orm[..., 2] = 1.0, 0.9, 0.0
+    save(sets["ORM"], orm, noncolor=True)
+    save(sets["N"], normal_from_height(blur(fib + 0.3 * form, 1.0, 1.0), 2.0), noncolor=True)
+    c = bc[hpx // 2, wpx // 2]
+    print("WINDOW PAPER written", sets["BC"], "mid sRGB", [round(float(v) * 255) for v in c],
+          "mean sRGB", [round(float(v) * 255) for v in bc.reshape(-1, 3).mean(0)],
+          "edge sRGB", [round(float(v) * 255) for v in bc[hpx // 2, 2]])
+
+
 if __name__ == "__main__":
     import sys
     _a = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
@@ -336,6 +394,9 @@ if __name__ == "__main__":
         TEX = Path(_a[_a.index("--out") + 1])
         TEX.mkdir(parents=True, exist_ok=True)
         OAK = {k: TEX / f"T_AK_HWallOak_{k}.png" for k in ("BC", "ORM", "N")}
+    if "--winpaper" in _a:   # r21: only the backlit window paper (T_AK_HWinPaper)
+        win_paper()
+        sys.exit(0)
     if "--board" in _a:   # r16 walls round: only the dark bay backboard set
         bay_board()
         sys.exit(0)
