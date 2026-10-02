@@ -1,0 +1,2931 @@
+{
+ "revision": 1,
+ "date": "2026-10-01",
+ "units": "metres; hall-local unless a key says world",
+ "frames": {
+  "hall_local": "origin = the hall's centre door threshold (the door-bay sill centre line, world X 22.0 / Y 24.0) at finished floor level (world +0.50); +X east, +Y north into the hall, +Z up",
+  "hall_local_to_dojo_world": "world = hall_local + (22.0, 24.0, 0.5); Unreal cm = (x*100, -y*100, z*100), yaw = -rot_z",
+  "armory_frame_to_hall_local": "hall_local = armory + (-6.0, 0.0, 0.0) (pure translation; rotations unchanged)",
+  "hall_local_to_armorylab": "to keep ArmoryLab's interior where it is: armorylab_world = hall_local + (6.0, 0.0, 0.0); the hall's courtyard grade is then at armorylab z -0.50"
+ },
+ "floor_levels": {
+  "hall_ffl_world": 0.5,
+  "armory_floor": "armory z 0.00 = hall-local 0.00 = world +0.50 (the armory planks' tops)",
+  "approach_world": {
+   "courtyard": 0.0,
+   "step_band_plinth_top": 0.15,
+   "stair_treads_X20-24": [
+    0.1667,
+    0.3333,
+    0.5
+   ],
+   "veranda_deck": 0.5,
+   "door_sill_top": 0.545,
+   "armory_floor": 0.5
+  },
+  "genkan": "NOT used: the armory's sunken genkan (-0.12), its step beam and its +0.04 exterior sill are dropped; the hall's step band + veranda + door sill are the entry; largest step inside the door = the sill 0.045",
+  "lifted_pieces": "the two entry floor lanterns and the entry mat stood on the genkan floor: lifted +0.12 onto the floor (the mat's top is then +0.084, decision D3)",
+  "rear_dais": {
+   "flight_foot_y": 15.85,
+   "risers": 4,
+   "riser_m": 0.15,
+   "deck_z": 0.6,
+   "deck_front_y": 16.9,
+   "deck_world_z": 1.1
+  }
+ },
+ "envelope": {
+  "inner_faces": {
+   "west_x": -6.0,
+   "east_x": 6.0,
+   "south_y": 0.0,
+   "north_y": 20.0
+  },
+  "with_walls": {
+   "x": [
+    -6.3,
+    6.3
+   ],
+   "y": [
+    0.0,
+    20.3
+   ],
+   "z": [
+    -0.12,
+    5.0
+   ]
+  },
+  "floor_z": 0.0,
+  "ceiling_z": 4.8,
+  "coffer_underside_z": 4.635,
+  "beam_underside_z": 4.4,
+  "top_z": 5.0,
+  "rule": "every interior piece and light stays inside 'with_walls' (tolerance 0.012); the shell stays outside it except the listed intrusions",
+  "shell_intrusions": [
+   {
+    "what": "front wall infill / posts / sill",
+    "x": [
+     -6.3,
+     6.3
+    ],
+    "y": [
+     -0.12,
+     0.12
+    ],
+    "z": [
+     -0.02,
+     5.36
+    ],
+    "note": "rev 1 stage 2 (measured on the built meshes): x widened from +-6.0 to +-6.3: the existing lower front roof's wall flashing (y <= 0.055, z 3.43-3.52) and the lattice bays' infill (y <= 0.02) reach into the armory side walls' thickness (x +-6.0..6.3), hidden inside them"
+   },
+   {
+    "what": "parked door leaves (D1-A)",
+    "x": [
+     -4.96,
+     -3.04
+    ],
+    "y": [
+     0.13,
+     0.22
+    ],
+    "z": [
+     0.0,
+     1.86
+    ],
+    "mirror": "x [3.04, 4.96]",
+    "note": "rev 1 stage 2: the built leaves stand ON the floor (z 0-1.86, 0.922 x 0.035 + the iron pull 13 mm proud); the outer layer's pulls reach y 0.218"
+   },
+   {
+    "what": "front wall plate (outer bays) over the armory side walls / south coffers: hidden 5.3 cm overlap inside the wall",
+    "x": [
+     -6.3,
+     -5.0
+    ],
+    "y": [
+     0.0,
+     0.12
+    ],
+    "z": [
+     4.947,
+     5.0
+    ],
+    "mirror": "x [5.0, 6.3]"
+   }
+  ],
+  "measured_clearances": {
+   "extension_cavity_m": 0.58,
+   "extension_rear_cavity_m": 0.58,
+   "side_strip_clear_m": 2.58,
+   "rear_roof_rafters_over_armory_min_m": 0.0213,
+   "main_rear_plate_beam": "raised to 5.52-5.687 world over the opening (SM_DKH_Frame_Open): 0.02 over the coffer tops",
+   "main_roof_rafters_over_armory_min_m": 0.0213,
+   "rafters_note": "rev 1 stage 2, measured on the built meshes (measure_hall_armory.py): both roofs' rafter ends at the valley line had their lower corners at +5.500 / +5.512 against the armory top +5.5007; those 84 + 84 vertices over the armory's plan were raised to +5.522 (rafter floor = armory top + 0.02). Lowest shell vertex over the armory: +5.522"
+  }
+ },
+ "door_openings": {
+  "bays_x": [
+   [
+    -3.0,
+    -1.0
+   ],
+   [
+    -1.0,
+    1.0
+   ],
+   [
+    1.0,
+    3.0
+   ]
+  ],
+  "clear_x": [
+   [
+    -2.88,
+    -1.12
+   ],
+   [
+    -0.88,
+    0.88
+   ],
+   [
+    1.12,
+    2.88
+   ]
+  ],
+  "posts_x": [
+   -3.0,
+   -1.0,
+   1.0,
+   3.0
+  ],
+  "post_w": 0.24,
+  "sill": {
+   "y": [
+    -0.08,
+    0.08
+   ],
+   "top_z": 0.045
+  },
+  "head_track_underside_z": 1.888,
+  "clear_height_over_sill_m": 1.843,
+  "clear_width_each_m": 1.76,
+  "state": "open: leaves lifted out and parked (D1-A)",
+  "entry_apron": {
+   "x": [
+    -3.12,
+    3.12
+   ],
+   "y": [
+    0.0,
+    1.2
+   ],
+   "rule": "the interior keeps it free of pieces"
+  },
+  "gasp_capsule": {
+   "radius": 0.3,
+   "height": 1.72,
+   "headroom_margin_m": 0.123
+  }
+ },
+ "sun_through_the_doors": {
+  "sun": {
+   "elev_deg": 9.08,
+   "azimuth_deg_from_x": 187.29,
+   "travel_dir": [
+    0.97949,
+    0.1253,
+    -0.15781
+   ]
+  },
+  "result": "grazing: the sunset travels east-north-east at 7.3 deg to the front wall; the lower front roof (eave +3.0 at Y 21.5) and the veranda keep it off the door band except low rays from the west along the veranda, which land within ~0.4 m inside the sills; the interior is lit by the design lights and sky / bounce through the doors (check in engine at the relight stage)"
+ },
+ "bays_the_interior_may_touch": {
+  "front_wall_inner_face": [
+   {
+    "bay_x": [
+     -7.0,
+     -5.0
+    ],
+    "type": "Lattice (closed; dark board inside)",
+    "interior_may_dress": "x -6.0..-5.0"
+   },
+   {
+    "bay_x": [
+     -5.0,
+     -3.0
+    ],
+    "type": "Plaster",
+    "interior_may_dress": "no (parked leaves, D1-A)"
+   },
+   {
+    "bay_x": [
+     -3.0,
+     3.0
+    ],
+    "type": "DoorOpen x3",
+    "interior_may_dress": "no (entry apron)"
+   },
+   {
+    "bay_x": [
+     3.0,
+     5.0
+    ],
+    "type": "Plaster",
+    "interior_may_dress": "no (parked leaves, D1-A)"
+   },
+   {
+    "bay_x": [
+     5.0,
+     7.0
+    ],
+    "type": "Lattice",
+    "interior_may_dress": "x 5.0..6.0"
+   }
+  ],
+  "main_rear_wall_line_y10": "opened over x -7..7 (posts at x -5..5 removed): the interior runs through",
+  "extension_walls": "never touched (0.58 m cavity on three sides)",
+  "side_strips": "never touched (closed shell volumes x -9..-6.30 and 6.30..9 for y 0..10)",
+  "ceiling": "nothing of the shell below z 5.02 over the envelope except the front plate overlap"
+ },
+ "window_backers": {
+  "armory_windows_y": [
+   [
+    0.25,
+    3.75
+   ],
+   [
+    4.25,
+    7.75
+   ],
+   [
+    8.25,
+    11.75
+   ],
+   [
+    12.25,
+    15.75
+   ],
+   [
+    16.25,
+    19.75
+   ]
+  ],
+  "window_z": [
+   2.65,
+   4.1
+  ],
+  "backer_x": [
+   -6.45,
+   6.45
+  ],
+  "backers": [
+   {
+    "light": "BackerLight_W0",
+    "loc_m": [
+     -6.45,
+     2.0,
+     3.375
+    ],
+    "faces": "+x"
+   },
+   {
+    "light": "BackerLight_W4",
+    "loc_m": [
+     -6.45,
+     6.0,
+     3.375
+    ],
+    "faces": "+x"
+   },
+   {
+    "light": "BackerLight_W8",
+    "loc_m": [
+     -6.45,
+     10.0,
+     3.375
+    ],
+    "faces": "+x"
+   },
+   {
+    "light": "BackerLight_W12",
+    "loc_m": [
+     -6.45,
+     14.0,
+     3.375
+    ],
+    "faces": "+x"
+   },
+   {
+    "light": "BackerLight_W16",
+    "loc_m": [
+     -6.45,
+     18.0,
+     3.375
+    ],
+    "faces": "+x"
+   },
+   {
+    "light": "BackerLight_E0",
+    "loc_m": [
+     6.45,
+     2.0,
+     3.375
+    ],
+    "faces": "-x"
+   },
+   {
+    "light": "BackerLight_E4",
+    "loc_m": [
+     6.45,
+     6.0,
+     3.375
+    ],
+    "faces": "-x"
+   },
+   {
+    "light": "BackerLight_E8",
+    "loc_m": [
+     6.45,
+     10.0,
+     3.375
+    ],
+    "faces": "-x"
+   },
+   {
+    "light": "BackerLight_E12",
+    "loc_m": [
+     6.45,
+     14.0,
+     3.375
+    ],
+    "faces": "-x"
+   },
+   {
+    "light": "BackerLight_E16",
+    "loc_m": [
+     6.45,
+     18.0,
+     3.375
+    ],
+    "faces": "-x"
+   }
+  ],
+  "owner": "shell (hall_shell_layout.json, lights BackerLight_*)"
+ },
+ "gameplay": {
+  "collision_classes": {
+   "ground": {
+    "pawn": "block",
+    "camera": "block",
+    "visibility": "block"
+   },
+   "building": {
+    "pawn": "block",
+    "camera": "block",
+    "visibility": "block"
+   },
+   "roof": {
+    "pawn": "block",
+    "camera": "block",
+    "visibility": "block"
+   },
+   "climbprop": {
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "block"
+   },
+   "landing": {
+    "pawn": "block",
+    "camera": "block",
+    "visibility": "block"
+   },
+   "thin": {
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "ignore"
+   },
+   "tree": {
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "ignore"
+   },
+   "boundary": {
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "ignore",
+    "hidden_in_game": true
+   },
+   "propblock": {
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "block",
+    "note": "blocking prop, unwalkable (the taiko drum): camera ignore so it never yanks the camera"
+   },
+   "lowcover": {
+    "pawn": "block",
+    "camera": "block",
+    "visibility": "block",
+    "note": "low cover <= 1.25 m (R8): the well"
+   },
+   "nocollision": {
+    "pawn": "ignore",
+    "camera": "ignore",
+    "visibility": "ignore",
+    "no_collision": true,
+    "note": "wires, rope, hanging bucket, drum sticks, ground dressing: NoCollision in Unreal"
+   },
+   "glass": {
+    "pawn": "block",
+    "camera": "ignore",
+    "visibility": "ignore",
+    "note": "PROPOSED for the display-case glass hoods: blocks the player, the camera and line-of-sight pass (see-through)"
+   }
+  },
+  "unwalkable_props": "display cases (plinth + glass), lanterns, vases: CanCharacterStepUpOn = No and an unwalkable slope override (decision D6: no standing on the cases)",
+  "interior_in_1v1": true,
+  "walk_routes_new_world": {
+   "ARM_mat_to_west_aisle_to_steps": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      25.2
+     ],
+     [
+      20.8,
+      25.1
+     ],
+     [
+      19.0,
+      25.1
+     ],
+     [
+      19.0,
+      26.3
+     ],
+     [
+      20.1,
+      26.55
+     ],
+     [
+      20.1,
+      39.45
+     ],
+     [
+      20.3,
+      39.45
+     ],
+     [
+      20.3,
+      41.42
+     ]
+    ],
+    "source": "armory walk_check.json 'mat_to_west_aisle_to_steps' (hall frame)"
+   },
+   "ARM_mat_to_east_aisle_to_steps": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      25.2
+     ],
+     [
+      23.2,
+      25.1
+     ],
+     [
+      25.0,
+      25.1
+     ],
+     [
+      25.0,
+      26.3
+     ],
+     [
+      24.6,
+      26.38
+     ],
+     [
+      23.9,
+      26.45
+     ],
+     [
+      23.9,
+      39.45
+     ],
+     [
+      23.7,
+      39.45
+     ],
+     [
+      23.7,
+      41.42
+     ]
+    ],
+    "source": "armory walk_check.json 'mat_to_east_aisle_to_steps' (hall frame)"
+   },
+   "ARM_west_wall_walk_along_niches": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      19.0,
+      25.5
+     ],
+     [
+      16.75,
+      25.5
+     ],
+     [
+      16.75,
+      40.05
+     ]
+    ],
+    "source": "armory walk_check.json 'west_wall_walk_along_niches' (hall frame)"
+   },
+   "ARM_east_wall_walk_along_niches": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      25.0,
+      25.5
+     ],
+     [
+      27.25,
+      25.5
+     ],
+     [
+      27.25,
+      40.05
+     ]
+    ],
+    "source": "armory walk_check.json 'east_wall_walk_along_niches' (hall frame)"
+   },
+   "ARM_centre_gap_case1_case2": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      16.75,
+      31.38
+     ],
+     [
+      27.25,
+      31.38
+     ]
+    ],
+    "source": "armory walk_check.json 'centre_gap_case1_case2' (hall frame)"
+   },
+   "ARM_centre_gap_case2_case3": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      16.75,
+      34.03
+     ],
+     [
+      27.25,
+      34.03
+     ]
+    ],
+    "source": "armory walk_check.json 'centre_gap_case2_case3' (hall frame)"
+   },
+   "ARM_centre_gap_case3_to_flight": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      16.75,
+      39.3
+     ],
+     [
+      27.25,
+      39.3
+     ]
+    ],
+    "source": "armory walk_check.json 'centre_gap_case3_to_flight' (hall frame)"
+   },
+   "ARM_west_wall_behind_case5_to_aisle": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      16.75,
+      28.72
+     ],
+     [
+      20.1,
+      28.72
+     ],
+     [
+      20.1,
+      26.9
+     ]
+    ],
+    "source": "armory walk_check.json 'west_wall_behind_case5_to_aisle' (hall frame)"
+   },
+   "ARM_east_wall_behind_case8_to_aisle": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      27.25,
+      28.72
+     ],
+     [
+      23.9,
+      28.72
+     ],
+     [
+      23.9,
+      26.9
+     ]
+    ],
+    "source": "armory walk_check.json 'east_wall_behind_case8_to_aisle' (hall frame)"
+   },
+   "ARM_west_aisle_between_G4_and_G3_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      20.1,
+      36.68
+     ],
+     [
+      16.75,
+      36.68
+     ]
+    ],
+    "source": "armory walk_check.json 'west_aisle_between_G4_and_G3_to_wall' (hall frame)"
+   },
+   "ARM_east_aisle_between_G5_and_G2_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      23.9,
+      36.68
+     ],
+     [
+      27.25,
+      36.68
+     ]
+    ],
+    "source": "armory walk_check.json 'east_aisle_between_G5_and_G2_to_wall' (hall frame)"
+   },
+   "ARM_west_aisle_behind_G3_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      20.1,
+      39.0
+     ],
+     [
+      16.75,
+      39.0
+     ]
+    ],
+    "source": "armory walk_check.json 'west_aisle_behind_G3_to_wall' (hall frame)"
+   },
+   "ARM_east_aisle_behind_G2_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      23.9,
+      39.0
+     ],
+     [
+      27.25,
+      39.0
+     ]
+    ],
+    "source": "armory walk_check.json 'east_aisle_behind_G2_to_wall' (hall frame)"
+   },
+   "ARM_west_aisle_rear_floor_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      20.1,
+      39.3
+     ],
+     [
+      20.1,
+      36.68
+     ],
+     [
+      16.75,
+      36.68
+     ]
+    ],
+    "source": "armory walk_check.json 'west_aisle_rear_floor_to_wall' (hall frame)"
+   },
+   "ARM_east_aisle_rear_floor_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      23.9,
+      39.3
+     ],
+     [
+      23.9,
+      36.68
+     ],
+     [
+      27.25,
+      36.68
+     ]
+    ],
+    "source": "armory walk_check.json 'east_aisle_rear_floor_to_wall' (hall frame)"
+   },
+   "ARM_aisle_up_the_steps_to_hero_table": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      25.0,
+      39.45
+     ],
+     [
+      23.7,
+      39.45
+     ],
+     [
+      22.0,
+      41.42
+     ],
+     [
+      22.0,
+      42.45
+     ]
+    ],
+    "source": "armory walk_check.json 'aisle_up_the_steps_to_hero_table' (hall frame)"
+   },
+   "ARM_platform_to_west_rear_alcove": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      39.45
+     ],
+     [
+      22.0,
+      41.15
+     ],
+     [
+      20.3,
+      41.4
+     ],
+     [
+      18.4,
+      41.45
+     ],
+     [
+      18.4,
+      42.95
+     ]
+    ],
+    "source": "armory walk_check.json 'platform_to_west_rear_alcove' (hall frame)"
+   },
+   "ARM_platform_to_east_rear_alcove": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      39.45
+     ],
+     [
+      22.0,
+      41.15
+     ],
+     [
+      23.7,
+      41.4
+     ],
+     [
+      25.6,
+      41.45
+     ],
+     [
+      25.6,
+      42.95
+     ]
+    ],
+    "source": "armory walk_check.json 'platform_to_east_rear_alcove' (hall frame)"
+   },
+   "ARM_platform_to_west_corner_niche": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      39.45
+     ],
+     [
+      22.0,
+      41.15
+     ],
+     [
+      20.3,
+      41.4
+     ],
+     [
+      18.4,
+      41.45
+     ],
+     [
+      17.175,
+      42.95
+     ]
+    ],
+    "source": "armory walk_check.json 'platform_to_west_corner_niche' (hall frame)"
+   },
+   "ARM_platform_to_east_corner_niche": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      39.45
+     ],
+     [
+      22.0,
+      41.15
+     ],
+     [
+      23.7,
+      41.4
+     ],
+     [
+      25.6,
+      41.45
+     ],
+     [
+      26.825,
+      42.95
+     ]
+    ],
+    "source": "armory walk_check.json 'platform_to_east_corner_niche' (hall frame)"
+   },
+   "ARM_axis_up_the_flight_to_hero_table_front": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      39.45
+     ],
+     [
+      22.0,
+      42.5
+     ]
+    ],
+    "source": "armory walk_check.json 'axis_up_the_flight_to_hero_table_front' (hall frame)"
+   },
+   "ARM_landing_onto_west_wing_deck": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      21.0,
+      41.42
+     ],
+     [
+      16.8,
+      41.42
+     ]
+    ],
+    "source": "armory walk_check.json 'landing_onto_west_wing_deck' (hall frame)"
+   },
+   "ARM_landing_onto_east_wing_deck": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      23.0,
+      41.42
+     ],
+     [
+      27.2,
+      41.42
+     ]
+    ],
+    "source": "armory walk_check.json 'landing_onto_east_wing_deck' (hall frame)"
+   },
+   "ARM_aisle_past_west_foot_lantern_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      20.1,
+      39.45
+     ],
+     [
+      18.5,
+      39.45
+     ],
+     [
+      18.5,
+      40.05
+     ],
+     [
+      16.75,
+      40.05
+     ]
+    ],
+    "source": "armory walk_check.json 'aisle_past_west_foot_lantern_to_wall' (hall frame)"
+   },
+   "ARM_aisle_past_east_foot_lantern_to_wall": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      23.9,
+      39.45
+     ],
+     [
+      25.5,
+      39.45
+     ],
+     [
+      25.5,
+      40.05
+     ],
+     [
+      27.25,
+      40.05
+     ]
+    ],
+    "source": "armory walk_check.json 'aisle_past_east_foot_lantern_to_wall' (hall frame)"
+   },
+   "ARM_deck_strip_in_front_of_hero_table": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      39.45
+     ],
+     [
+      22.0,
+      42.45
+     ],
+     [
+      18.4,
+      42.45
+     ],
+     [
+      25.6,
+      42.45
+     ]
+    ],
+    "source": "armory walk_check.json 'deck_strip_in_front_of_hero_table' (hall frame)"
+   },
+   "HALL_veranda_through_centre_door_round_case1_to_west_aisle": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      23.0
+     ],
+     [
+      22.0,
+      25.2
+     ],
+     [
+      20.25,
+      26.4
+     ],
+     [
+      20.1,
+      39.0
+     ]
+    ]
+   },
+   "HALL_veranda_through_west_door_past_the_lantern": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      20.0,
+      23.0
+     ],
+     [
+      20.0,
+      24.9
+     ],
+     [
+      20.4,
+      25.3
+     ],
+     [
+      20.4,
+      27.0
+     ],
+     [
+      20.1,
+      30.0
+     ]
+    ]
+   },
+   "HALL_veranda_through_east_door_past_the_lantern": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      24.0,
+      23.0
+     ],
+     [
+      24.0,
+      24.9
+     ],
+     [
+      23.6,
+      25.3
+     ],
+     [
+      23.6,
+      27.0
+     ],
+     [
+      23.9,
+      30.0
+     ]
+    ]
+   },
+   "HALL_gate_path_steps_veranda_door_to_dais": {
+    "floor_z": 0.0,
+    "points": [
+     [
+      22.0,
+      0.5
+     ],
+     [
+      22.0,
+      21.0
+     ],
+     [
+      22.0,
+      23.0
+     ],
+     [
+      22.0,
+      25.2
+     ],
+     [
+      20.25,
+      26.4
+     ],
+     [
+      20.1,
+      39.45
+     ],
+     [
+      20.3,
+      39.45
+     ],
+     [
+      20.3,
+      41.42
+     ]
+    ],
+    "note": "ends on the dais deck +1.10"
+   }
+  },
+  "controls_new_world": {
+   "ARM_CONTROL_must_hit_case1": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      22.0,
+      25.2
+     ],
+     [
+      22.0,
+      27.6
+     ]
+    ],
+    "source": "armory walk_check.json 'CONTROL_must_hit_case1' (hall frame)"
+   },
+   "CONTROL_hall_front_lattice_bay_W": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      16.0,
+      23.0
+     ],
+     [
+      16.0,
+      25.5
+     ]
+    ]
+   },
+   "CONTROL_hall_front_lattice_bay_E": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      28.0,
+      23.0
+     ],
+     [
+      28.0,
+      25.5
+     ]
+    ]
+   },
+   "CONTROL_hall_front_plaster_bay_W": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      18.0,
+      23.0
+     ],
+     [
+      18.0,
+      25.5
+     ]
+    ]
+   },
+   "CONTROL_interior_into_west_strip": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      17.0,
+      30.5
+     ],
+     [
+      14.5,
+      30.5
+     ]
+    ]
+   },
+   "CONTROL_interior_into_east_strip": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      27.0,
+      30.5
+     ],
+     [
+      29.5,
+      30.5
+     ]
+    ]
+   },
+   "CONTROL_interior_into_west_cavity": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      17.0,
+      38.0
+     ],
+     [
+      14.0,
+      38.0
+     ]
+    ]
+   },
+   "CONTROL_interior_into_east_cavity": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      27.0,
+      38.0
+     ],
+     [
+      30.0,
+      38.0
+     ]
+    ]
+   },
+   "CONTROL_dais_through_the_north_wall": {
+    "floor_z": 1.1,
+    "points": [
+     [
+      22.0,
+      43.2
+     ],
+     [
+      22.0,
+      46.0
+     ]
+    ],
+    "note": "hits the hero table / painting wall first"
+   },
+   "CONTROL_veranda_W_corner_into_rear_yard": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      12.1,
+      33.2
+     ],
+     [
+      14.2,
+      36.0
+     ]
+    ]
+   },
+   "CONTROL_veranda_E_corner_into_rear_yard": {
+    "floor_z": 0.5,
+    "points": [
+     [
+      31.9,
+      33.2
+     ],
+     [
+      29.8,
+      36.0
+     ]
+    ]
+   }
+  },
+  "notes": [
+   "CONTROL_into_the_hall (22,23)->(22,26) passed through the closed body; it now PASSES (centre door): renamed to a walk route; new CONTROLs through the closed lattice bays X 15-17 / 27-29",
+   "every other walk / climb / alley / GASP number stays; the rear roof is out of the 1v1 (SM_DKX_1v1_RearRoof) and walkable in the BR (25 deg slabs)"
+  ]
+ },
+ "site": {
+  "frame": "dojo layout frame (world m)",
+  "extension_footprint": {
+   "posts_x": [
+    15.0,
+    29.0
+   ],
+   "posts_y": [
+    34.0,
+    45.0
+   ],
+   "outer_faces": {
+    "x": [
+     14.88,
+     29.12
+    ],
+    "y_north": 45.12
+   },
+   "foundation_band": {
+    "x": [
+     14.8,
+     29.2
+    ],
+    "y_north": 45.2
+   },
+   "roof_plan": {
+    "x": [
+     14.1,
+     29.9
+    ],
+    "y": [
+     34.4199,
+     45.9
+    ]
+   },
+   "depth_m": 11.0,
+   "width_m": 14.0
+  },
+  "north_wall": {
+   "shift_m": 11.0,
+   "old": {
+    "body": [
+     -1.0,
+     45.0,
+     36.0,
+     37.0
+    ],
+    "footing_y": [
+     35.94,
+     37.06
+    ],
+    "cap_y": [
+     35.76,
+     37.24
+    ]
+   },
+   "new": {
+    "body": [
+     -1.0,
+     45.0,
+     47.0,
+     48.0
+    ],
+    "footing_y": [
+     46.94,
+     48.06
+    ],
+    "cap_y": [
+     46.76,
+     48.24
+    ],
+    "walk_top_z": 2.0,
+    "cap_visual_top_z": 2.13
+   },
+   "why_11": "keeps the rear alley's section: old hall rear post face Y 34.12 -> wall Y 36.0 = 1.88 m; new extension rear post face Y 45.12 -> wall Y 47.0 = 1.88 m; the rear eave overhang (0.9 m) is the same",
+   "moved_instances": [
+    {
+     "showcase_index": 33,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      4.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      4.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 34,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      4.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      4.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 35,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      4.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      4.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 36,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      4.0,
+      37.0,
+      0.0
+     ],
+     "to": [
+      4.0,
+      48.0,
+      0.0
+     ],
+     "rot_z_deg": 0.0
+    },
+    {
+     "showcase_index": 37,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      8.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      8.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 38,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      8.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      8.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 39,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      12.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      12.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 40,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      12.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      12.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 41,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      12.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      12.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 42,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      12.0,
+      37.0,
+      0.0
+     ],
+     "to": [
+      12.0,
+      48.0,
+      0.0
+     ],
+     "rot_z_deg": 0.0
+    },
+    {
+     "showcase_index": 43,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      16.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      16.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 44,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      16.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      16.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 45,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      20.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      20.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 46,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      20.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      20.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 47,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      20.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      20.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 48,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      20.0,
+      37.0,
+      0.0
+     ],
+     "to": [
+      20.0,
+      48.0,
+      0.0
+     ],
+     "rot_z_deg": 0.0
+    },
+    {
+     "showcase_index": 49,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      24.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      24.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 50,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      24.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      24.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 51,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      28.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      28.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 52,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      28.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      28.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 53,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      28.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      28.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 54,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      28.0,
+      37.0,
+      0.0
+     ],
+     "to": [
+      28.0,
+      48.0,
+      0.0
+     ],
+     "rot_z_deg": 0.0
+    },
+    {
+     "showcase_index": 55,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      32.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      32.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 56,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      32.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      32.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 57,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      36.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      36.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 58,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      36.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      36.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 59,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      36.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      36.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 60,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      36.0,
+      37.0,
+      0.0
+     ],
+     "to": [
+      36.0,
+      48.0,
+      0.0
+     ],
+     "rot_z_deg": 0.0
+    },
+    {
+     "showcase_index": 61,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      40.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      40.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 62,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      40.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      40.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 63,
+     "piece": "SM_DK_WallFooting_4m",
+     "from": [
+      44.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      44.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 64,
+     "piece": "SM_DK_WallBody_4m_T200",
+     "from": [
+      44.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      44.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 65,
+     "piece": "SM_DK_WallCap_4m",
+     "from": [
+      44.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      44.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 138,
+     "piece": "SM_DK_WallFooting_Corner",
+     "from": [
+      44.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      44.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 139,
+     "piece": "SM_DK_WallBody_1m_T200",
+     "from": [
+      45.0,
+      36.0,
+      0.6
+     ],
+     "to": [
+      45.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 140,
+     "piece": "SM_DK_WallCap_Corner",
+     "from": [
+      44.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      44.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": 180.0
+    },
+    {
+     "showcase_index": 141,
+     "piece": "SM_DK_WallFooting_Corner",
+     "from": [
+      0.0,
+      36.0,
+      0.0
+     ],
+     "to": [
+      0.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": -90.0
+    },
+    {
+     "showcase_index": 142,
+     "piece": "SM_DK_WallBody_1m_T200",
+     "from": [
+      0.0,
+      37.0,
+      0.6
+     ],
+     "to": [
+      0.0,
+      48.0,
+      0.6
+     ],
+     "rot_z_deg": -90.0
+    },
+    {
+     "showcase_index": 143,
+     "piece": "SM_DK_WallCap_Corner",
+     "from": [
+      0.0,
+      36.0,
+      1.6248
+     ],
+     "to": [
+      0.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": -90.0
+    }
+   ],
+   "side_wall_additions": [
+    {
+     "piece": "SM_DK_WallFooting_4m",
+     "loc": [
+      0.0,
+      40.0,
+      0.0
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 36-40"
+    },
+    {
+     "piece": "SM_DK_WallFooting_4m",
+     "loc": [
+      44.0,
+      36.0,
+      0.0
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 36-40"
+    },
+    {
+     "piece": "SM_DK_WallBody_4m_T200",
+     "loc": [
+      0.0,
+      40.0,
+      0.6
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 36-40"
+    },
+    {
+     "piece": "SM_DK_WallBody_4m_T200",
+     "loc": [
+      44.0,
+      36.0,
+      0.6
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 36-40"
+    },
+    {
+     "piece": "SM_DK_WallCap_4m",
+     "loc": [
+      0.0,
+      40.0,
+      1.6248
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 36-40"
+    },
+    {
+     "piece": "SM_DK_WallCap_4m",
+     "loc": [
+      44.0,
+      36.0,
+      1.6248
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 36-40"
+    },
+    {
+     "piece": "SM_DK_WallFooting_4m",
+     "loc": [
+      0.0,
+      44.0,
+      0.0
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 40-44"
+    },
+    {
+     "piece": "SM_DK_WallFooting_4m",
+     "loc": [
+      44.0,
+      40.0,
+      0.0
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 40-44"
+    },
+    {
+     "piece": "SM_DK_WallBody_4m_T200",
+     "loc": [
+      0.0,
+      44.0,
+      0.6
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 40-44"
+    },
+    {
+     "piece": "SM_DK_WallBody_4m_T200",
+     "loc": [
+      44.0,
+      40.0,
+      0.6
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 40-44"
+    },
+    {
+     "piece": "SM_DK_WallCap_4m",
+     "loc": [
+      0.0,
+      44.0,
+      1.6248
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 40-44"
+    },
+    {
+     "piece": "SM_DK_WallCap_4m",
+     "loc": [
+      44.0,
+      40.0,
+      1.6248
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 40-44"
+    },
+    {
+     "piece": "SM_DK_WallFooting_2m",
+     "loc": [
+      0.0,
+      46.0,
+      0.0
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 44-46"
+    },
+    {
+     "piece": "SM_DK_WallFooting_2m",
+     "loc": [
+      44.0,
+      44.0,
+      0.0
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 44-46"
+    },
+    {
+     "piece": "SM_DK_WallBody_2m_T200",
+     "loc": [
+      0.0,
+      46.0,
+      0.6
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 44-46"
+    },
+    {
+     "piece": "SM_DK_WallBody_2m_T200",
+     "loc": [
+      44.0,
+      44.0,
+      0.6
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 44-46"
+    },
+    {
+     "piece": "SM_DK_WallCap_2m",
+     "loc": [
+      0.0,
+      46.0,
+      1.6248
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 44-46"
+    },
+    {
+     "piece": "SM_DK_WallCap_2m",
+     "loc": [
+      44.0,
+      44.0,
+      1.6248
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 44-46"
+    },
+    {
+     "piece": "SM_DK_WallFooting_1m",
+     "loc": [
+      0.0,
+      47.0,
+      0.0
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 46-47"
+    },
+    {
+     "piece": "SM_DK_WallFooting_1m",
+     "loc": [
+      44.0,
+      46.0,
+      0.0
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 46-47"
+    },
+    {
+     "piece": "SM_DK_WallBody_1m_T200",
+     "loc": [
+      0.0,
+      47.0,
+      0.6
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 46-47"
+    },
+    {
+     "piece": "SM_DK_WallBody_1m_T200",
+     "loc": [
+      44.0,
+      46.0,
+      0.6
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 46-47"
+    },
+    {
+     "piece": "SM_DK_WallCap_1m",
+     "loc": [
+      0.0,
+      47.0,
+      1.6248
+     ],
+     "rot_z_deg": -90.0,
+     "covers": "west wall X -1..0, Y 46-47"
+    },
+    {
+     "piece": "SM_DK_WallCap_1m",
+     "loc": [
+      44.0,
+      46.0,
+      1.6248
+     ],
+     "rot_z_deg": 90.0,
+     "covers": "east wall X 44..45, Y 46-47"
+    }
+   ],
+   "side_wall_note": "the kit1 run is footing + body (T200) + cap per module (4 / 2 / 1 m); the existing pieces keep their places; the NW / NE corner sets move +11 with the north wall (listed in moved_instances)"
+  },
+  "rear_alley": {
+   "old": {
+    "y": [
+     34.12,
+     36.0
+    ],
+    "x": [
+     10.5,
+     33.5
+    ]
+   },
+   "new": {
+    "y": [
+     45.12,
+     47.0
+    ],
+    "x": [
+     14.88,
+     29.12
+    ],
+    "note": "behind the extension; beside it the rear yards X 0-14.88 and 29.12-44, Y 34-47 (out of the 1v1, reachable in the BR)"
+   },
+   "gravel_copies": [
+    {
+     "showcase_index": 446,
+     "piece": "SM_DKG_Gravel_4x2",
+     "from": [
+      11.0,
+      34.0,
+      0.0
+     ],
+     "copy_to": [
+      11.0,
+      45.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 447,
+     "piece": "SM_DKG_Gravel_4x2",
+     "from": [
+      15.0,
+      34.0,
+      0.0
+     ],
+     "copy_to": [
+      15.0,
+      45.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 448,
+     "piece": "SM_DKG_Gravel_4x2",
+     "from": [
+      19.0,
+      34.0,
+      0.0
+     ],
+     "copy_to": [
+      19.0,
+      45.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 449,
+     "piece": "SM_DKG_Gravel_4x2",
+     "from": [
+      23.0,
+      34.0,
+      0.0
+     ],
+     "copy_to": [
+      23.0,
+      45.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 450,
+     "piece": "SM_DKG_Gravel_4x2",
+     "from": [
+      27.0,
+      34.0,
+      0.0
+     ],
+     "copy_to": [
+      27.0,
+      45.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 451,
+     "piece": "SM_DKG_Gravel_2x2",
+     "from": [
+      31.0,
+      34.0,
+      0.0
+     ],
+     "copy_to": [
+      31.0,
+      45.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 454,
+     "piece": "SM_DKG_Gravel_2x1",
+     "from": [
+      33.5,
+      34.5,
+      0.0
+     ],
+     "copy_to": [
+      33.5,
+      45.5,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 456,
+     "piece": "SM_DKG_Gravel_0p25x1",
+     "from": [
+      10.75,
+      35.0,
+      0.0
+     ],
+     "copy_to": [
+      10.75,
+      46.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 457,
+     "piece": "SM_DKG_Gravel_0p5x1",
+     "from": [
+      33.0,
+      35.0,
+      0.0
+     ],
+     "copy_to": [
+      33.0,
+      46.0,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 460,
+     "piece": "SM_DKG_Gravel_0p25x0p5",
+     "from": [
+      10.5,
+      35.5,
+      0.0
+     ],
+     "copy_to": [
+      10.5,
+      46.5,
+      0.0
+     ]
+    },
+    {
+     "showcase_index": 461,
+     "piece": "SM_DKG_Gravel_2x0p5",
+     "from": [
+      33.5,
+      35.5,
+      0.0
+     ],
+     "copy_to": [
+      33.5,
+      46.5,
+      0.0
+     ]
+    }
+   ],
+   "gravel_note": "the old alley strip stays (hidden under the extension where it is covered); its pieces are COPIED +11 m to the new alley; the new rear yards get landscape gravel / grass at z 0.0"
+  },
+  "closure_1v1": {
+   "rule": "the alley closure stays: everything north of the hall's rear line is out of the 1v1 except the hall interior, which now runs on into the extension; every 1v1 blocker is Pawn-only, hidden, to +20.0",
+   "unchanged": [
+    "SM_DKX_1v1_PocketSide_W",
+    "SM_DKX_1v1_PocketSide_E",
+    "SM_DKX_1v1_CorridorRoof_W",
+    "SM_DKX_1v1_CorridorRoof_E",
+    "SM_DKX_1v1_OutbuildingRoof_W",
+    "SM_DKX_1v1_OutbuildingRoof_E",
+    "SM_DKX_1v1_HallUpperRear",
+    "SM_DKX_AlleyFence_W",
+    "SM_DKX_AlleyFence_E",
+    "SM_DKX_PocketFence_W",
+    "SM_DKX_PocketFence_E"
+   ],
+   "SM_DKX_1v1_HallRear": {
+    "old_box": [
+     10.4,
+     34.0,
+     0.0,
+     33.6,
+     34.1,
+     20.0
+    ],
+    "new": [
+     {
+      "name": "SM_DKX_1v1_HallRear_W",
+      "box": [
+       10.4,
+       34.0,
+       0.0,
+       14.88,
+       34.1,
+       20.0
+      ]
+     },
+     {
+      "name": "SM_DKX_1v1_HallRear_E",
+      "box": [
+       29.12,
+       34.0,
+       0.0,
+       33.6,
+       34.1,
+       20.0
+      ]
+     }
+    ],
+    "why": "its middle X 14.88-29.12 would cut the interior; the extension's closed walls take over there"
+   },
+   "SM_DKX_1v1_RearRoof (new)": {
+    "box": [
+     13.9,
+     34.1,
+     5.128,
+     30.099999999999998,
+     46.1,
+     20.0
+    ],
+    "why": "caps the extension and its rear roof (out of the 1v1); bottom above the armory ceiling (world +5.30) and the interior"
+   },
+   "SM_DKX_1v1_NorthWallTop": {
+    "old_box": [
+     -1.0,
+     36.0,
+     2.0,
+     45.0,
+     37.0,
+     20.0
+    ],
+    "new_box": [
+     -1.0,
+     47.0,
+     2.0,
+     45.0,
+     48.0,
+     20.0
+    ]
+   },
+   "SM_DGB_Boundary_1v1 (ring, 11 UCX)": {
+    "old_bbox": [
+     -1.1005,
+     -1.1004,
+     -0.0003,
+     45.1005,
+     37.1004,
+     20.1
+    ],
+    "new_bbox": [
+     -1.1,
+     -1.1,
+     0.0,
+     45.1,
+     48.1,
+     20.1
+    ],
+    "how": "north hull +11 m, west / east hulls 11 m longer (mesh rebuild in the grey-box builder or two added box actors)"
+   },
+   "terrace_lines": [
+    {
+     "label": "Boundary1v1_B6_north_edge",
+     "old": {
+      "loc": [
+       21.0,
+       44.0,
+       3.0
+      ],
+      "rot_z_deg": 0.0,
+      "size_m": [
+       56.5,
+       0.5,
+       6.0
+      ]
+     },
+     "new": {
+      "loc": [
+       21.0,
+       56.0,
+       3.0
+      ],
+      "rot_z_deg": 0.0,
+      "size_m": [
+       56.5,
+       0.5,
+       6.0
+      ]
+     }
+    },
+    {
+     "label": "Boundary1v1_B5_east_edge",
+     "old": {
+      "loc": [
+       48.75,
+       20.625,
+       3.0
+      ],
+      "rot_z_deg": 90.0,
+      "size_m": [
+       47.25,
+       0.5,
+       6.0
+      ]
+     },
+     "new": {
+      "loc": [
+       48.75,
+       26.5,
+       3.0
+      ],
+      "rot_z_deg": 90.0,
+      "size_m": [
+       59.0,
+       0.5,
+       6.0
+      ]
+     }
+    },
+    {
+     "label": "Boundary1v1_B7_west_edge",
+     "old": {
+      "loc": [
+       -7.0,
+       20.5,
+       3.0
+      ],
+      "rot_z_deg": 90.0,
+      "size_m": [
+       47.5,
+       0.5,
+       6.0
+      ]
+     },
+     "new": {
+      "loc": [
+       -7.0,
+       26.375,
+       3.0
+      ],
+      "rot_z_deg": 90.0,
+      "size_m": [
+       59.25,
+       0.5,
+       6.0
+      ]
+     }
+    }
+   ],
+   "proof_needed": "1v1 CONTROLs: veranda corners into the rear yards (both sides), corridor / outbuilding roofs north, the extension walls from inside, the rear roof from the main roof and from the side lower roofs, the new alley ends"
+  },
+  "traversal_markers": {
+   "Wall_N": {
+    "old": [
+     -1,
+     45,
+     36,
+     37,
+     0,
+     2.0
+    ],
+    "new": [
+     -1,
+     45,
+     47,
+     48,
+     0,
+     2.0
+    ]
+   },
+   "Wall_W_N": {
+    "old": [
+     -1,
+     0,
+     27.4,
+     36,
+     0,
+     2.0
+    ],
+    "new": [
+     -1,
+     0,
+     27.4,
+     47,
+     0,
+     2.0
+    ]
+   },
+   "Wall_E_N": {
+    "old": [
+     44,
+     45,
+     27.4,
+     36,
+     0,
+     2.0
+    ],
+    "new": [
+     44,
+     45,
+     27.4,
+     47,
+     0,
+     2.0
+    ]
+   },
+   "climb_route_O_north": {
+    "old_stance": [
+     22.0,
+     37.45
+    ],
+    "new_stance": [
+     22.0,
+     48.45
+    ]
+   },
+   "all_others": "unchanged"
+  },
+  "terrace_and_terrain": {
+   "north_strip": {
+    "old_y": [
+     37.0,
+     44.0
+    ],
+    "new_y": [
+     48.0,
+     56.0
+    ],
+    "z": 0.0
+   },
+   "terrace_north_edge": {
+    "old_y": 44.0,
+    "new_y": 56.0,
+    "why_12_not_11": "the east terrace wall WR5 is built of 4 m / 2 m modules: + 4 + 4 + 2 + 2 m ends it at Y 56 (the closest whole-module edge that keeps the old 7 m strip behind the wall; Y 54 would leave 6 m)"
+   },
+   "compound_yards_new": {
+    "x": [
+     0.0,
+     44.0
+    ],
+    "y": [
+     37.0,
+     47.0
+    ],
+    "z": 0.0,
+    "under_the_extension": {
+     "x": [
+      14.6,
+      29.4
+     ],
+     "y": [
+      33.8,
+      45.4
+     ],
+     "z": -0.3
+    }
+   },
+   "LS_Valley_north_hill_spot_heights": {
+    "old": {
+     "44": 0,
+     "60": 6,
+     "100": 20,
+     "200": 45,
+     "400": 90
+    },
+    "new": {
+     "56": 0,
+     "72": 6,
+     "112": 20,
+     "200": 45,
+     "400": 90
+    }
+   },
+   "WR5_east_terrace_wall": {
+    "existing_north_end": [
+     {
+      "label": "WR2_WR3_WR4_WR5_27_Wall_4m_H3",
+      "loc": [
+       49.0,
+       34.0,
+       0.0
+      ]
+     },
+     {
+      "label": "WR2_WR3_WR4_WR5_28_Wall_4m_H3",
+      "loc": [
+       49.0,
+       38.0,
+       0.0
+      ]
+     },
+     {
+      "label": "WR2_WR3_WR4_WR5_29_Wall_2m_H3",
+      "loc": [
+       49.0,
+       42.0,
+       0.0
+      ]
+     },
+     {
+      "label": "WR2_WR3_WR4_WR5_30_Wall_EndR_H3",
+      "loc": [
+       49.0,
+       44.0,
+       0.0
+      ]
+     }
+    ],
+    "add": [
+     {
+      "piece": "SM_DKT_Wall_4m_H3",
+      "loc": [
+       49.0,
+       44.0,
+       0.0
+      ],
+      "rot_z_deg": 90.0
+     },
+     {
+      "piece": "SM_DKT_Wall_4m_H3",
+      "loc": [
+       49.0,
+       48.0,
+       0.0
+      ],
+      "rot_z_deg": 90.0
+     },
+     {
+      "piece": "SM_DKT_Wall_2m_H3",
+      "loc": [
+       49.0,
+       52.0,
+       0.0
+      ],
+      "rot_z_deg": 90.0
+     },
+     {
+      "piece": "SM_DKT_Wall_2m_H3",
+      "loc": [
+       49.0,
+       54.0,
+       0.0
+      ],
+      "rot_z_deg": 90.0
+     }
+    ],
+    "move": [
+     {
+      "label": "WR2_WR3_WR4_WR5_30_Wall_EndR_H3",
+      "from": [
+       49.0,
+       44.0,
+       0.0
+      ],
+      "to": [
+       49.0,
+       56.0,
+       0.0
+      ]
+     }
+    ],
+    "note": "the foot of the extension at x 49-58, y 44-56 is the river bank (rocks at -1.4..-3.5): H3 fits; re-check the bank rocks BankB_25 / 30 / 48 for intersection"
+   },
+   "cherry_slots": [
+    {
+     "label": "CherrySlot_CS19",
+     "from": [
+      40.0,
+      42.0,
+      0.0
+     ],
+     "to": [
+      40.0,
+      53.0,
+      0.0
+     ]
+    },
+    {
+     "label": "CherrySlot_CS20",
+     "from": [
+      12.0,
+      42.0,
+      0.0
+     ],
+     "to": [
+      12.0,
+      53.0,
+      0.0
+     ]
+    }
+   ],
+   "cypress_front_row": {
+    "old": [
+     {
+      "label": "Cypress_1",
+      "loc": [
+       5.0,
+       49.5,
+       2.2453
+      ]
+     },
+     {
+      "label": "Cypress_2",
+      "loc": [
+       16.0,
+       50.5,
+       2.9953
+      ]
+     },
+     {
+      "label": "Cypress_3",
+      "loc": [
+       28.0,
+       51.0,
+       3.1984
+      ]
+     },
+     {
+      "label": "Cypress_4",
+      "loc": [
+       38.0,
+       49.5,
+       1.6125
+      ]
+     },
+     {
+      "label": "Cypress_5",
+      "loc": [
+       46.0,
+       48.5,
+       -0.6141
+      ]
+     }
+    ],
+    "new_y": "old y + 12 (behind the new terrace edge; z re-snapped to LS_Valley)"
+   },
+   "forest_FZ1": {
+    "old_south_edge_y": 46.0,
+    "new_south_edge_y": 58.0,
+    "fir_instances_to_drop_or_reseat": 10,
+    "list": [
+     {
+      "ism": "Forest_SM_Fir_Tree_01",
+      "xy": [
+       -6.28,
+       54.85
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_02",
+      "xy": [
+       45.4,
+       58.81
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_03",
+      "xy": [
+       24.45,
+       56.48
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_04",
+      "xy": [
+       19.52,
+       55.88
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_06",
+      "xy": [
+       36.27,
+       57.44
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_06",
+      "xy": [
+       -8.8,
+       50.61
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_06",
+      "xy": [
+       6.88,
+       55.45
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_06",
+      "xy": [
+       40.44,
+       56.13
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_07",
+      "xy": [
+       46.99,
+       54.92
+      ]
+     },
+     {
+      "ism": "Forest_SM_Fir_Tree_08",
+      "xy": [
+       -2.58,
+       50.58
+      ]
+     }
+    ]
+   },
+   "grass_ism": {
+    "inside_the_extension_footprint_remove": 58,
+    "in_the_new_rear_yards_keep_or_thin": 173,
+    "new_north_strip": "re-scatter y 48-56 as the old strip"
+   },
+   "dead_BR_route_note": "BR_road_up_the_kerb_into_the_west_lane_north ends along y 43 into x 20: that leg now crosses the extended west wall (it is one of the dead routes through the removed town; mark it with the other four)"
+  },
+  "dojolab_cameras_to_reaim": {
+   "CU_R6_AlleyAbove": "+11 m in y (the alley moved)",
+   "CU_R6_PocketAboveW": "stands at (4, 39, 9): now over the new rear yard; re-aim or retire",
+   "CU_R5_AlleyFence": "unchanged (the fence stays)"
+  }
+ },
+ "decisions": [
+  {
+   "id": "D1",
+   "q": "the centre doors",
+   "rev1": "A: the six leaves lifted out of their tracks and parked in two layers against the inner face of plaster bays X 17-19 / 25-27: three clear 1.76 x 1.84 m openings",
+   "alt": "B: slid within each bay (both leaves stacked at one jamb): 0.85 m clear per bay, no parked leaves"
+  },
+  {
+   "id": "D2",
+   "q": "the armory's jamb posts + wall lanterns (SM_AK_Post_Jamb_480, SM_AK_H_WallSconce)",
+   "rev1": "not placed (they would stand in the parked leaves)",
+   "alt": "with D1-B or leaves stored out of view: place them at hall-local x +-3.83..4.45, y 0..0.86"
+  },
+  {
+   "id": "D3",
+   "q": "the entry mat (made for the sunken genkan)",
+   "rev1": "lifted +0.12 onto the floor (top +0.084)",
+   "alt": "drop it, or the armory chat makes a flush variant"
+  },
+  {
+   "id": "D4",
+   "q": "rear roof height",
+   "rev1": "eave +5.16, ridge +8.15 (0.76 under the main ridge)",
+   "alt": "eave +5.58 / ridge +8.57 (wall plates level with the main hall's 5.447-5.687, valley at Y 34.02): simpler walls, but the rear ridge then sits only 0.34 m under the main ridge; rejected for rev 1 (the owner asked for a LOWER rear roof)"
+  },
+  {
+   "id": "D5",
+   "q": "the armory's side windows (they face closed strips / cavities in the hall)",
+   "rev1": "lit backers behind each window (shell)",
+   "alt": "the armory chat closes the windows (its kit has west_closed_windows_y)"
+  },
+  {
+   "id": "D6",
+   "q": "standing on display cases",
+   "rev1": "no (unwalkable)",
+   "alt": "allow (parkour)"
+  },
+  {
+   "id": "D7",
+   "q": "interior shadow budget in DojoLab",
+   "rev1": "the armory's 12 shadowed case lights; DojoLab may switch more off per level (perf)",
+   "alt": "MegaLights"
+  }
+ ],
+ "change_log": [
+  {
+   "rev": 1,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "stage": "2 (Blender build)",
+   "summary": "INTERFACE CHANGED (rev 1, before release): shell_intrusions front-wall x +-6.3 and the parked-leaf box y 0.13-0.22 / z 0-1.86 from the built meshes; measured rafter clearance 0.0213 m (was an estimate)"
+  }
+ ]
+}

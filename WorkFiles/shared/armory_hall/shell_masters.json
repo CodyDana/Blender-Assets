@@ -1,0 +1,83 @@
+{
+ "about": "the exact graph code + parameters of the shell masters ArmoryLab builds (SYNC.md 11.4 and 15); written only by tools/master_snapshot.py --write; a change here is a shared change (bump)",
+ "generator": "WorkFiles/shared/armory_hall/tools/master_snapshot.py",
+ "sources": [
+  "Scripts/dojo/unreal/dj_sc_materials.py",
+  "Scripts/dojo/unreal/dj_sc_common.py",
+  "WorkFiles/dojo/build/showcase/layout_showcase.json"
+ ],
+ "graph_sha256": "04c9ecfbb3013a1127130e36d30c5c0acc259b89466977c0c8f1d623464c71b6",
+ "counts": {
+  "masters": 2,
+  "code_members": 48,
+  "code_lines": 195
+ },
+ "masters": {
+  "M_DJ_Lib_Emissive": {
+   "ue_path": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Emissive",
+   "builder": "build_lib_emissive"
+  },
+  "M_DJ_Lib_Opaque": {
+   "ue_path": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "builder": "build_lib_opaque"
+  }
+ },
+ "code": {
+  "dj_sc_common.py:SC_BUILD": "SC_BUILD = C.BUILD / \"showcase\"",
+  "dj_sc_common.py:SC_LAYOUT": "SC_LAYOUT = SC_BUILD / \"layout_showcase.json\"",
+  "dj_sc_common.py:load": "def load():\n    return json.loads(SC_LAYOUT.read_text(encoding=\"utf-8\"))",
+  "dj_sc_common.py:tex_path": "def tex_path(layout, name):\n    return f\"{layout['textures'][name]['ue_dir']}/{name}\"",
+  "dj_sc_materials.py:AT =": "AT = unreal.AssetToolsHelpers.get_asset_tools()",
+  "dj_sc_materials.py:DEF_TEX =": "DEF_TEX = {\"BC\": \"T_DJ_TimberDark_BC\", \"ORM\": \"T_DJ_TimberDark_ORM\", \"N\": \"T_DJ_TimberDark_N\", \"M\": \"T_DJ_WearMask_M\"}",
+  "dj_sc_materials.py:DUST_LIN =": "DUST_LIN = tuple((c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4) for c in (0.46, 0.41, 0.35))",
+  "dj_sc_materials.py:EAL =": "EAL = unreal.EditorAssetLibrary",
+  "dj_sc_materials.py:G.__init__": "    def __init__(self, mat):\n        self.m, self.n = mat, 0",
+  "dj_sc_materials.py:G._bin": "    def _bin(self, cls, a, b):\n        e = self.node(cls)\n        self.link(a[0], a[1], e, \"A\")\n        self.link(b[0], b[1], e, \"B\")\n        return (e, \"\")",
+  "dj_sc_materials.py:G.actor_hash": "    def actor_hash(self):\n        return self.un(unreal.MaterialExpressionFrac, self.mul(self.un(unreal.MaterialExpressionSine, self.dot(\n            (self.node(unreal.MaterialExpressionObjectPositionWS), \"\"), self.const3((0.129898, 0.78233, 0.37719))),\n            period=1.0), self.const(43758.5453)))",
+  "dj_sc_materials.py:G.add": "    def add(self, a, b):\n        return self._bin(unreal.MaterialExpressionAdd, a, b)",
+  "dj_sc_materials.py:G.const": "    def const(self, v):\n        return (self.node(unreal.MaterialExpressionConstant, r=float(v)), \"\")",
+  "dj_sc_materials.py:G.const3": "    def const3(self, v):\n        return (self.node(unreal.MaterialExpressionConstant3Vector, constant=lc(v)), \"\")",
+  "dj_sc_materials.py:G.div": "    def div(self, a, b):\n        return self._bin(unreal.MaterialExpressionDivide, a, b)",
+  "dj_sc_materials.py:G.dot": "    def dot(self, a, b):\n        return self._bin(unreal.MaterialExpressionDotProduct, a, b)",
+  "dj_sc_materials.py:G.instance_var": "    def instance_var(self, col):\n        h = self.actor_hash()\n        gain = self.add(self.const(1.0), self.mul(self.mul(self.scalar(\"InstanceTint\", 0.0, \"Variation\"),\n                                                           self.sub(h, self.const(0.5))), self.const(2.0)))\n        hue = self.lerp(self.vector(\"HueWarm\", (1, 1, 1), \"Variation\"), self.vector(\"HueCool\", (1, 1, 1), \"Variation\"),\n                        self.un(unreal.MaterialExpressionFrac, self.mul(h, self.const(17.31))))\n        return self.mul(self.mul(col, gain), hue)",
+  "dj_sc_materials.py:G.lerp": "    def lerp(self, a, b, t):\n        e = self.node(unreal.MaterialExpressionLinearInterpolate)\n        self.link(a[0], a[1], e, \"A\")\n        self.link(b[0], b[1], e, \"B\")\n        self.link(t[0], t[1], e, \"Alpha\")\n        return (e, \"\")",
+  "dj_sc_materials.py:G.lib_colour": "    def lib_colour(self, bc_rgb, vc):\n        col = self.mul(bc_rgb, self.vector(\"Tint\", (1, 1, 1)))\n        col = self.lerp(col, self.vector(\"MeanColour\", (0.18, 0.18, 0.18), \"Variation\"),\n                        self.scalar(\"FlattenToMean\", 0.0, \"Variation\"))\n        moss = self.lerp(col, self.vector(\"MossColour\", (0.085, 0.095, 0.034), \"Variation\"), (vc, \"A\"))\n        return self.switch(\"UseMoss\", moss, col)",
+  "dj_sc_materials.py:G.lib_finish": "    def lib_finish(self, col, rough, vc, m):\n        cw, rw = self.lib_wear(col, rough, vc, m)\n        col = self.switch(\"UseWear\", cw, col)\n        rough = self.switch(\"UseWear\", rw, rough)\n        col = self.switch(\"UseInstanceVar\", self.instance_var(col), col)\n        return self.look(col, top=True), rough",
+  "dj_sc_materials.py:G.lib_wear": "    def lib_wear(self, col, rough, vc, m):\n        c1 = self.mul(col, self.sub(self.const(1.0), self.mul((vc, \"R\"), self.const(0.40))))\n        e = self.sat(self.mul(self.sub(self.mul((vc, \"G\"), self.add(self.const(0.35), m)), self.const(0.55)),\n                              self.const(2.5)))\n        lum = self.dot(c1, self.const3((0.2126, 0.7152, 0.0722)))\n        worn = self.mul(self.lerp(lum, c1, self.const(0.65)), self.const(1.30))\n        c2 = self.lerp(c1, worn, self.mul(e, self.const(0.55)))\n        c3 = self.lerp(c2, self.const3(DUST_LIN), self.mul(self.mul((vc, \"B\"), m), self.const(0.45)))\n        r = self.sat(self.add(self.add(rough, self.mul(e, self.const(0.06))), self.mul((vc, \"B\"), self.const(0.08))))\n        return c3, r",
+  "dj_sc_materials.py:G.link": "    def link(self, a, a_out, b, b_in):\n        if not MEL.connect_material_expressions(a, a_out, b, b_in):\n            raise RuntimeError(f\"connect {a.get_name()}.{a_out!r} -> {b.get_name()}.{b_in!r} failed\")",
+  "dj_sc_materials.py:G.look": "    def look(self, col, top=False):\n        lum = self.dot(col, self.const3((0.2126, 0.7152, 0.0722)))\n        col = self.mul(self.lerp(lum, col, self.scalar(\"Saturation\", 1.0, \"Look\")), self.scalar(\"ValueMult\", 1.0, \"Look\"))\n        if top:\n            nz = self.sat(self.mask((self.node(unreal.MaterialExpressionVertexNormalWS), \"\"), \"B\"))\n            k = self.mul(self.smoothstep(nz, 0.55, 0.95), self.scalar(\"TopBleach\", 0.0, \"Look\"))\n            bleached = self.mul(self.mul(lum, self.const(1.25)), self.vector(\"TopBleachColour\", (1.0, 0.97, 0.92), \"Look\"))\n            col = self.lerp(col, bleached, k)\n        return col",
+  "dj_sc_materials.py:G.maprange": "    def maprange(self, a, lo, hi):\n        return self.sat(self.div(self.sub(a, self.const(lo)), self.const(hi - lo)))",
+  "dj_sc_materials.py:G.mask": "    def mask(self, a, chans):\n        return self.un(unreal.MaterialExpressionComponentMask, a, r=\"R\" in chans, g=\"G\" in chans, b=\"B\" in chans,\n                       a=\"A\" in chans)",
+  "dj_sc_materials.py:G.mul": "    def mul(self, a, b):\n        return self._bin(unreal.MaterialExpressionMultiply, a, b)",
+  "dj_sc_materials.py:G.node": "    def node(self, cls, **props):\n        self.n += 1\n        e = MEL.create_material_expression(self.m, cls, -400 - 260 * (self.n // 10), 140 * (self.n % 10))\n        for k, v in props.items():\n            e.set_editor_property(k, v)\n        return e",
+  "dj_sc_materials.py:G.out": "    def out(self, a, a_out, prop):\n        if not MEL.connect_material_property(a, a_out, prop):\n            raise RuntimeError(f\"connect {a.get_name()}.{a_out!r} -> {prop} failed\")",
+  "dj_sc_materials.py:G.sat": "    def sat(self, a):\n        return self.un(unreal.MaterialExpressionSaturate, a)",
+  "dj_sc_materials.py:G.scalar": "    def scalar(self, name, v, group=\"Surface\"):\n        return (self.node(unreal.MaterialExpressionScalarParameter, parameter_name=name, default_value=float(v), group=group), \"\")",
+  "dj_sc_materials.py:G.smoothstep": "    def smoothstep(self, a, lo, hi):\n        x = self.maprange(a, lo, hi)\n        return self.mul(self.mul(x, x), self.sub(self.const(3.0), self.mul(self.const(2.0), x)))",
+  "dj_sc_materials.py:G.sub": "    def sub(self, a, b):\n        return self._bin(unreal.MaterialExpressionSubtract, a, b)",
+  "dj_sc_materials.py:G.switch": "    def switch(self, name, a_true, a_false, default=False, group=\"Switches\"):\n        e = self.node(unreal.MaterialExpressionStaticSwitchParameter, parameter_name=name, default_value=bool(default),\n                      group=group)\n        self.link(a_true[0], a_true[1], e, \"True\")\n        self.link(a_false[0], a_false[1], e, \"False\")\n        return (e, \"\")",
+  "dj_sc_materials.py:G.tex": "    def tex(self, pname, kind, uv, group=\"Textures\"):\n        st = {\"BC\": ST.SAMPLERTYPE_COLOR, \"ORM\": ST.SAMPLERTYPE_MASKS, \"M\": ST.SAMPLERTYPE_MASKS,\n              \"N\": ST.SAMPLERTYPE_NORMAL}[kind]\n        t = self.node(unreal.MaterialExpressionTextureSampleParameter2D, parameter_name=pname, sampler_type=st,\n                      texture=unreal.load_asset(S.tex_path(L, DEF_TEX[kind])), group=group)\n        if uv is not None:\n            self.link(uv[0], uv[1], t, \"UVs\")\n        return t",
+  "dj_sc_materials.py:G.un": "    def un(self, cls, src, **props):\n        e = self.node(cls, **props)\n        self.link(src[0], src[1], e, \"\")\n        return (e, \"\")",
+  "dj_sc_materials.py:G.vc": "    def vc(self):\n        return self.node(unreal.MaterialExpressionVertexColor)",
+  "dj_sc_materials.py:G.vector": "    def vector(self, name, v, group=\"Surface\"):\n        return (self.node(unreal.MaterialExpressionVectorParameter, parameter_name=name, default_value=lc(v), group=group), \"\")",
+  "dj_sc_materials.py:L =": "L = S.load()",
+  "dj_sc_materials.py:MEL =": "MEL = unreal.MaterialEditingLibrary",
+  "dj_sc_materials.py:MP =": "MP = unreal.MaterialProperty",
+  "dj_sc_materials.py:ST =": "ST = unreal.MaterialSamplerType",
+  "dj_sc_materials.py:build_lib_emissive": "def build_lib_emissive(mat):\n    reset(mat)\n    g = G(mat)\n    uv = (g.node(unreal.MaterialExpressionTextureCoordinate, coordinate_index=0), \"\")\n    bc, orm, nm = g.tex(\"BC\", \"BC\", uv), g.tex(\"ORM\", \"ORM\", uv), g.tex(\"N\", \"N\", uv)\n    b = g.mul((bc, \"RGB\"), g.scalar(\"BaseMult\", 0.25))\n    g.out(b[0], b[1], MP.MP_BASE_COLOR)\n    g.out(orm, \"R\", MP.MP_AMBIENT_OCCLUSION)\n    r = g.mul((orm, \"G\"), g.scalar(\"RoughMult\", 1.0))\n    g.out(r[0], r[1], MP.MP_ROUGHNESS)\n    z = g.const(0.0)\n    g.out(z[0], z[1], MP.MP_METALLIC)\n    n = flat_normal(g, (nm, \"RGB\"))\n    g.out(n[0], n[1], MP.MP_NORMAL)\n    e = g.mul(g.mul((bc, \"RGB\"), g.scalar(\"EmissiveIntensity\", 1.0, \"Emission\")),\n              g.vector(\"EmissiveTint\", (1, 1, 1), \"Emission\"))\n    e = g.look(e)\n    g.out(e[0], e[1], MP.MP_EMISSIVE_COLOR)",
+  "dj_sc_materials.py:build_lib_opaque": "def build_lib_opaque(mat):\n    reset(mat)\n    g = G(mat)\n    uv = (g.node(unreal.MaterialExpressionTextureCoordinate, coordinate_index=0), \"\")\n    bc, orm, nm = g.tex(\"BC\", \"BC\", uv), g.tex(\"ORM\", \"ORM\", uv), g.tex(\"N\", \"N\", uv)\n    vc = g.vc()\n    m = (g.tex(\"WearMask\", \"M\", g.mul(uv, g.mask(g.vector(\"TileM\", (4, 4, 0, 0), \"Weathering\"), \"RG\"))), \"R\")\n    col = g.lib_colour((bc, \"RGB\"), vc)\n    rough = g.mul((orm, \"G\"), g.scalar(\"RoughMult\", 1.0))\n    col, rough = g.lib_finish(col, rough, vc, m)\n    g.out(col[0], col[1], MP.MP_BASE_COLOR)\n    ao = g.lerp(g.const(1.0), (orm, \"R\"), g.scalar(\"AOStrength\", 1.0, \"Look\"))\n    g.out(ao[0], ao[1], MP.MP_AMBIENT_OCCLUSION)\n    g.out(rough[0], rough[1], MP.MP_ROUGHNESS)\n    mt = g.mul((orm, \"B\"), g.scalar(\"MetallicMult\", 1.0, \"Look\"))\n    g.out(mt[0], mt[1], MP.MP_METALLIC)\n    sp = g.scalar(\"Specular\", 0.5, \"Look\")\n    g.out(sp[0], sp[1], MP.MP_SPECULAR)\n    n = flat_normal(g, (nm, \"RGB\"))\n    g.out(n[0], n[1], MP.MP_NORMAL)",
+  "dj_sc_materials.py:class G": "class G:",
+  "dj_sc_materials.py:flat_normal": "def flat_normal(g, nm_rgb):\n    return g.lerp(g.const3((0.0, 0.0, 1.0)), nm_rgb, g.scalar(\"NormalStrength\", 1.0))",
+  "dj_sc_materials.py:get_or_create": "def get_or_create(path, cls, factory):\n    if EAL.does_asset_exist(path):\n        a = unreal.load_asset(path)\n        if not isinstance(a, cls):\n            raise TypeError(f\"{path} exists as {type(a).__name__}, not {cls.__name__}: refusing to touch it\")\n        return a, False\n    folder, name = path.rsplit(\"/\", 1)\n    a = AT.create_asset(name, folder, cls, factory)\n    if a is None:\n        raise RuntimeError(f\"could not create {path}\")\n    return a, True",
+  "dj_sc_materials.py:lc": "def lc(v):\n    v = list(v) + [1.0] * (4 - len(v))\n    return unreal.LinearColor(*[float(x) for x in v[:4]])",
+  "dj_sc_materials.py:reset": "def reset(mat, blend=unreal.BlendMode.BLEND_OPAQUE, two_sided=False):\n    MEL.delete_all_material_expressions(mat)\n    mat.set_editor_property(\"blend_mode\", blend)\n    mat.set_editor_property(\"shading_model\", unreal.MaterialShadingModel.MSM_DEFAULT_LIT)\n    mat.set_editor_property(\"two_sided\", two_sided)\n    mat.set_editor_property(\"use_material_attributes\", False)\n    for k in (\"used_with_nanite\", \"used_with_static_lighting\"):\n        try:\n            mat.set_editor_property(k, k == \"used_with_nanite\")\n        except Exception:\n            pass"
+ },
+ "params": {
+  "sampler_default_textures": {
+   "BC": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_BC",
+   "M": "/Game/DojoKit/Materials/Textures/T_DJ_WearMask_M",
+   "N": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_N",
+   "ORM": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_ORM"
+  }
+ }
+}

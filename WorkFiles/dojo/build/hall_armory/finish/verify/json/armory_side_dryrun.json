@@ -1,0 +1,30 @@
+{
+ "role": "verifier acting as the armory chat, fresh start, using only SYNC.md + tools/ (no Unreal run, ArmoryLab not opened)",
+ "dry_run_results": {
+  "regen_interior.py (dry)": "exit 0: 0 content changes in interior_layout.json and lights_design.json, 0 metadata keys differing, ids added/removed/changed/moved 0, envelope 0 violations; nothing written",
+  "check_sync.py --side armory": "exit 2 (PASS, SYNC NEEDED): fail [], stale [], warn []; behind = ArmoryLab synced rev None vs manifest 3 (expected for first-time setup, SYNC.md 14.1)",
+  "check_sync.py --side dojo": "exit 0 (synced rev 3)"
+ },
+ "armorylab_plan": [
+  "0 check_sync --side armory -> exit 2 expected; no UnrealEditor has ArmoryLab open; no other commandlet; back up Content/Armory/Maps/L_Armory.umap",
+  "1 own steps: run_armory_unreal.sh import materials level (ak_level.py) as today",
+  "2 ONE commandlet: UnrealEditor-Cmd ArmoryLab.uproject -run=pythonscript -script=WorkFiles/shared/armory_hall/tools/ue_armorylab_shell.py (-nullrhi)",
+  "2a import 31 PNG -> /Game/DojoKit/Materials/Textures: 10 BC sRGB TC_Default, 10 ORM linear TC_Masks, 10 N linear TC_Normalmap no green flip, T_DJ_WearMask_M linear TC_Masks (sha256 = manifest shell_textures; all 31 verified on disk)",
+  "2b build masters /Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque + M_DJ_Lib_Emissive by exec of Scripts/dojo/unreal/dj_sc_materials.py (read-only); 10 MIs /Game/DojoKit/Materials/Materials/Library with shell_materials.json scalars/vectors/switches/textures; EmissiveIntensity x14.723 (parity) by default",
+  "2c import 32 SM_DKH FBX -> /Game/DojoKit/Hall/Meshes (legacy FBX, LODs ON, 1 hull per UCX, imported normals, vertex colours replaced, 17 Nanite with full-detail fallback, 15 non-Nanite); sockets sidecars on 9 pieces; slots -> MI by slot name (all 32 pieces' slots resolve; FBX sha256 = manifest, verified)",
+  "2d level L_Armory: destroy AH_Shell actors; place 161 shell instances (78 kept existing + 83 new) at ArmoryLab cm = ((hall-local+(6,0,0)) x100, y negated), yaw = -rot_z_deg; label <piece>__<DKH id>, tag AH_Shell, folder ArmoryHall/Shell, collision per interface.json classes (building 122, roof 14, thin 11, nocollision 10, ground 2, landing 2); parked leaves + backers get MI_AH_InteriorPaper (/Game/ArmoryHall/Materials)",
+  "2e 10 BackerLight_* rect lights (0 cd, invisible, no shadows); AH_CourtyardGround_StandIn plane 60 x 40 m at hall-local (0,-6,-0.5)",
+  "2f hide + keep 165 not-used armory actors (152 SM_AKX_*, 13 SM_AK_*) found by label <piece>__<nnn> (all 165 labels resolve against WorkFiles/armory/build/layout.json indices, ak_level.py labels this way): invisible, no collision, hidden in game, tag AH_ExteriorHidden, folder ArmoryHall_Reference/ArmoryExterior",
+  "2g hall variant: place AKI_9001..9008 (SM_AK_Floor_Plank_2x2_A..D from /Game/ArmoryKit/Meshes); lift SM_AK_EntryMat__335, SM_AK_Lantern__612, SM_AK_Lantern__613 and lights Lantern_3.76_1.8, Lantern_8.24_1.8 by +0.12 m (all labels present in ArmoryLab's level.json)",
+  "2h gates (161 placed, bounds <= 1 cm, 165 hidden, 8 tiles, lifted_missing empty), save, write WorkFiles/armory/build/unreal/armory_hall_sync/{shell.json, shell_import_manifest.json, synced_revision.json}",
+  "3 look (interior cameras; C1_EntryReveal is under the lower roof)",
+  "4 check_sync --side armory exit 0; lock claim ArmoryHall; bump_manifest.py --record-sync ArmoryLab; release; 'armory_hall synced rev 3' in WorkFiles/armory/build/BUILD_NOTES.md"
+ ],
+ "missing_or_ambiguous": [
+  "BLOCKING-AMBIGUOUS: SYNC.md says run the shell tool after ak_level.py, but the armory's own routine (run_armory_unreal.sh) runs verify / character / walk / capture / fptest / stats after level. ak_verify.py gate_level checks every <piece>__<nnn> actor's bounds against the Blender bounds at 1 cm: the tool lifts SM_AK_EntryMat__335 and SM_AK_Lantern__612/613 by 12 cm, so ak_verify fails (3 bounds failures) whenever it runs after the shell tool. SYNC.md does not say where verify/capture/fptest go relative to the tool, nor that these 3 labels are an expected exception; the armory chat's authoritative gate goes red after following SYNC.md.",
+  "AMBIGUOUS: ak_fptest / character steps start at the armory PlayerStart (armory (6,-10.4,0) = hall-local (0,-10.4,0)), now in front of the hall shell (steps, veranda, centre door); SYNC.md does not say whether the armory walk-in routes / fptest still apply or what to expect.",
+  "SYNC GAP: the two masters are built from Scripts/dojo/unreal/dj_sc_materials.py (+ dj_sc_common.py / layout_showcase.json) at run time, but neither file is hashed in manifest.json nor checked by check_sync.py: a dojo-side master change carries to ArmoryLab only by accident (no revision bump, check_sync stays 0).",
+  "UNEXPLAINED: the fresh masters compile with 115 / 22 expressions vs 228 / 42 in DojoLab's in-place masters (builder's own note); 'the SAME extended hall' look is asserted by MI readback only, not by an image on ArmoryLab.",
+  "MINOR: rev-3 change line's shared_files_changed lists hall_shell_layout.json / interface.json / lights_design.json though their bytes equal the rev-2 backup (first time shared_files was recorded); the change line's files list is correct."
+ ]
+}

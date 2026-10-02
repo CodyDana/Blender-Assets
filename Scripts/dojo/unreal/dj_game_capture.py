@@ -144,13 +144,16 @@ def probe_mat(spec):
 
 
 def probe_lamps(spec):
-    """{"<label prefix>": {"mult": x (on the level value), "radius_cm": r, "kelvin": k}}"""
+    """{"<label prefix>": {"mult": x (on the level value), "radius_cm": r, "kelvin": k}} (point, spot and rect lights)"""
     if "lamps" not in ST:
         ST["lamps"] = []
-        for a in _actors(unreal.PointLight):
-            c = a.get_component_by_class(unreal.PointLightComponent)
-            ST["lamps"].append([_label(a), c, float(c.get_editor_property("intensity")),
-                                float(c.get_editor_property("attenuation_radius"))])
+        for cls in (unreal.PointLight, unreal.SpotLight, unreal.RectLight):   # fix round 2026-10-01: every local light
+            for a in _actors(cls):
+                c = a.get_component_by_class(unreal.LocalLightComponent)
+                if c is None:
+                    continue
+                ST["lamps"].append([_label(a), c, float(c.get_editor_property("intensity")),
+                                    float(c.get_editor_property("attenuation_radius"))])
     rec = {}
     for pre, sp in spec.items():
         n = 0
@@ -167,10 +170,13 @@ def probe_lamps(spec):
 
 
 def probe_pp(spec):
-    """{"<PostProcessSettings field>": value} on the level's PostProcess_Dojo (override flag set)."""
-    ppv = next((a for a in _actors(unreal.PostProcessVolume) if _label(a) == "PostProcess_Dojo"), None)
+    """{"<PostProcessSettings field>": value} on the level's PostProcess_Dojo (override flag set); fix round: the key
+    "__label" picks another volume by label (e.g. "PostProcess_ArmoryHall", the bounded interior PPV)."""
+    spec = dict(spec)
+    want = spec.pop("__label", "PostProcess_Dojo")
+    ppv = next((a for a in _actors(unreal.PostProcessVolume) if _label(a) == want), None)
     if ppv is None:
-        return "no PostProcess_Dojo"
+        return "no " + want
     s = ppv.get_editor_property("settings")
     for k, v in spec.items():
         if isinstance(v, list):

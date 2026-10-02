@@ -1,0 +1,68 @@
+{
+ "fail": [],
+ "stale": [],
+ "behind": [
+  "revision: your project synced rev None, the manifest is at rev 3: run your sync (the armory sync + tools/ue_armorylab_shell.py)"
+ ],
+ "warn": [],
+ "info": {
+  "manifest_revision": 3,
+  "last_change": {
+   "rev": 3,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "summary": "finish stage (hall + armory round): the sync becomes self-sufficient for both chats and ArmoryLab shows the extended hall. NEW tools/ (check_sync.py = the section-8 checks for either side incl. mesh-level envelope checks on the FBX bytes; regen_interior.py = interior_layout.json + lights_design.json regenerated from the armory chat's own build data, stable AKI ids, the survey rules moved out of make_survey.py, reproduces rev 2 with zero content diff; bump_manifest.py; ue_armorylab_shell.py = the ArmoryLab commandlet that imports + places the shell, rebuilds its materials, hides the armory's own exterior and applies the hall-variant interior, proven on DojoLab in no-save test mode: 161 / 161 placed, bounds 0.0055 cm, 0 files written); NEW shell_materials.json (32 SM_DKH pieces, 10 material instances + 2 masters, 31 textures, import recipe; recipe = DojoLab readback, 0 mismatches); SYNC.md revision 3 (sections 0, 3, 11-14: ArmoryLab shows the extended hall, the interior / shell change flows, the session-start check, the ArmoryLab first-time setup); interior_layout.json: source metadata only (armory layout sha256, generator), no content change. No shell / interior geometry, light or interface change.",
+   "files": [
+    "SYNC.md",
+    "shell_materials.json",
+    "interior_layout.json",
+    "tools/*"
+   ],
+   "recomputed": {
+    "fbx": 34,
+    "shell_textures": 31
+   },
+   "shared_files_changed": [
+    "SYNC.md",
+    "hall_shell_layout.json",
+    "interface.json",
+    "interior_layout.json",
+    "lights_design.json",
+    "shell_materials.json",
+    "tools/ahcommon.py",
+    "tools/bump_manifest.py",
+    "tools/check_sync.py",
+    "tools/fbxlite.py",
+    "tools/regen_interior.py",
+    "tools/ue_armorylab_shell.py"
+   ]
+  },
+  "sha_entries_checked": 302,
+  "interior_instances": 461,
+  "shell_instances_placed": 161,
+  "envelope": {
+   "interior_vertices": 175137,
+   "interior_worst_out_m": 0.0007,
+   "interior_bbox_gt_2cm": 0,
+   "shell_vertices": 789415,
+   "shell_vertices_inside": 0,
+   "lowest_shell_vertex_over_the_envelope_plan_m": 4.9972
+  },
+  "shadowed_local_lights": {
+   "n": 12,
+   "budget": 12
+  },
+  "fresh_interior": {
+   "interior_layout_changes": 0,
+   "lights_design_changes": 0,
+   "envelope_violations_in_armory_data": 0
+  },
+  "project_synced_revision": {
+   "record": null,
+   "build_notes": null
+  },
+  "lock_ArmoryHall": "free"
+ },
+ "exit_code": 2,
+ "side": "armory"
+}

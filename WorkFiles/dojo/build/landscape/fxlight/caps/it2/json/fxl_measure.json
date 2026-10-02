@@ -1,0 +1,762 @@
+{
+ "landscape": {
+  "frame": [
+   1024,
+   1536
+  ],
+  "boxes": {
+   "sky": [
+    [
+     80,
+     150,
+     480,
+     400
+    ]
+   ],
+   "peaks": [
+    [
+     290,
+     445,
+     420,
+     530
+    ],
+    [
+     500,
+     480,
+     640,
+     560
+    ]
+   ],
+   "forest_slopes": [
+    [
+     60,
+     540,
+     250,
+     650
+    ],
+    [
+     640,
+     600,
+     900,
+     700
+    ]
+   ],
+   "river_water": [
+    [
+     480,
+     1180,
+     640,
+     1330
+    ],
+    [
+     420,
+     1330,
+     560,
+     1450
+    ]
+   ],
+   "foam": [
+    [
+     600,
+     960,
+     780,
+     1080
+    ],
+    [
+     640,
+     1080,
+     860,
+     1180
+    ]
+   ],
+   "terrace_wall": [
+    [
+     240,
+     950,
+     480,
+     1030
+    ],
+    [
+     450,
+     880,
+     640,
+     950
+    ]
+   ],
+   "compound": [
+    [
+     40,
+     820,
+     660,
+     900
+    ]
+   ]
+  },
+  "foam": {
+   "boxes": [
+    [
+     600,
+     960,
+     780,
+     1080
+    ],
+    [
+     640,
+     1080,
+     860,
+     1180
+    ]
+   ],
+   "reference": {
+    "foam_pct_of_water": 79.9,
+    "water_px": 38066
+   },
+   "ours": {
+    "foam_pct_of_water": 31.5,
+    "water_px": 18792
+   },
+   "rule": "foam = luma > 140 and HSV saturation < 0.28; water = foam or (G > R and B > R)"
+  },
+  "landscape_ref": {
+   "reference": {
+    "under40_pct": 8.95,
+    "mean": 140.4,
+    "p10": 42.3,
+    "p90": 232.3,
+    "clipped_pct": 3.06
+   },
+   "ours": {
+    "under40_pct": 7.03,
+    "mean": 87.0,
+    "p10": 44.6,
+    "p90": 137.2,
+    "clipped_pct": 0.02
+   },
+   "regions": {
+    "sky": {
+     "reference": {
+      "median_srgb": [
+       150.0,
+       186.0,
+       224.0
+      ],
+      "hue_deg": 210.8,
+      "sat": 0.544,
+      "light": 0.733,
+      "r_over_b": 0.67
+     },
+     "ours": {
+      "median_srgb": [
+       111.0,
+       84.0,
+       92.0
+      ],
+      "hue_deg": 342.2,
+      "sat": 0.138,
+      "light": 0.382,
+      "r_over_b": 1.207
+     }
+    },
+    "peaks": {
+     "reference": {
+      "median_srgb": [
+       221.0,
+       230.0,
+       240.0
+      ],
+      "hue_deg": 211.6,
+      "sat": 0.388,
+      "light": 0.904,
+      "r_over_b": 0.921
+     },
+     "ours": {
+      "median_srgb": [
+       156.0,
+       122.0,
+       118.0
+      ],
+      "hue_deg": 6.3,
+      "sat": 0.161,
+      "light": 0.537,
+      "r_over_b": 1.322
+     }
+    },
+    "forest_slopes": {
+     "reference": {
+      "median_srgb": [
+       141.0,
+       166.0,
+       195.0
+      ],
+      "hue_deg": 212.2,
+      "sat": 0.31,
+      "light": 0.659,
+      "r_over_b": 0.723
+     },
+     "ours": {
+      "median_srgb": [
+       116.0,
+       91.0,
+       45.0
+      ],
+      "hue_deg": 38.9,
+      "sat": 0.441,
+      "light": 0.316,
+      "r_over_b": 2.578
+     }
+    },
+    "river_water": {
+     "reference": {
+      "median_srgb": [
+       106.0,
+       114.0,
+       121.0
+      ],
+      "hue_deg": 208.0,
+      "sat": 0.066,
+      "light": 0.445,
+      "r_over_b": 0.876
+     },
+     "ours": {
+      "median_srgb": [
+       43.0,
+       72.0,
+       72.0
+      ],
+      "hue_deg": 180.0,
+      "sat": 0.252,
+      "light": 0.225,
+      "r_over_b": 0.597
+     }
+    },
+    "foam": {
+     "reference": {
+      "median_srgb": [
+       176.0,
+       194.0,
+       206.0
+      ],
+      "hue_deg": 204.0,
+      "sat": 0.234,
+      "light": 0.749,
+      "r_over_b": 0.854
+     },
+     "ours": {
+      "median_srgb": [
+       120.0,
+       112.0,
+       107.0
+      ],
+      "hue_deg": 23.1,
+      "sat": 0.057,
+      "light": 0.445,
+      "r_over_b": 1.121
+     }
+    },
+    "terrace_wall": {
+     "reference": {
+      "median_srgb": [
+       137.0,
+       119.0,
+       91.0
+      ],
+      "hue_deg": 36.5,
+      "sat": 0.202,
+      "light": 0.447,
+      "r_over_b": 1.505
+     },
+     "ours": {
+      "median_srgb": [
+       92.0,
+       67.0,
+       60.0
+      ],
+      "hue_deg": 13.1,
+      "sat": 0.211,
+      "light": 0.298,
+      "r_over_b": 1.533
+     }
+    },
+    "compound": {
+     "reference": {
+      "median_srgb": [
+       145.0,
+       116.0,
+       96.0
+      ],
+      "hue_deg": 24.5,
+      "sat": 0.203,
+      "light": 0.473,
+      "r_over_b": 1.51
+     },
+     "ours": {
+      "median_srgb": [
+       116.0,
+       87.0,
+       71.0
+      ],
+      "hue_deg": 21.3,
+      "sat": 0.241,
+      "light": 0.367,
+      "r_over_b": 1.634
+     }
+    }
+   }
+  },
+  "health": {
+   "CAM_Drum": {
+    "under40_pct": 46.44,
+    "mean": 54.1,
+    "p10": 1.6,
+    "p90": 123.4,
+    "clipped_pct": 0.0,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_EastYard": {
+    "under40_pct": 32.4,
+    "mean": 107.2,
+    "p10": 11.3,
+    "p90": 220.2,
+    "clipped_pct": 0.12,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_FromGateOut": {
+    "under40_pct": 7.28,
+    "mean": 115.8,
+    "p10": 48.9,
+    "p90": 170.5,
+    "clipped_pct": 0.0,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_HallVeranda": {
+    "under40_pct": 38.78,
+    "mean": 70.0,
+    "p10": 10.3,
+    "p90": 147.6,
+    "clipped_pct": 0.1,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_LandscapeRef": {
+    "under40_pct": 7.18,
+    "mean": 87.0,
+    "p10": 44.3,
+    "p90": 137.3,
+    "clipped_pct": 0.02,
+    "size": [
+     1280,
+     1920
+    ]
+   },
+   "CAM_Overview": {
+    "under40_pct": 12.48,
+    "mean": 86.8,
+    "p10": 36.8,
+    "p90": 157.6,
+    "clipped_pct": 0.06,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_PeaksOverHall": {
+    "under40_pct": 9.02,
+    "mean": 96.1,
+    "p10": 42.3,
+    "p90": 140.6,
+    "clipped_pct": 0.0,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_PlayerEyeSand": {
+    "under40_pct": 21.0,
+    "mean": 92.7,
+    "p10": 20.8,
+    "p90": 160.1,
+    "clipped_pct": 0.1,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_Ref2Match": {
+    "under40_pct": 13.88,
+    "mean": 104.2,
+    "p10": 31.9,
+    "p90": 160.2,
+    "clipped_pct": 0.09,
+    "size": [
+     1920,
+     1440
+    ]
+   },
+   "CAM_RiverRapids": {
+    "under40_pct": 0.15,
+    "mean": 110.7,
+    "p10": 71.3,
+    "p90": 150.6,
+    "clipped_pct": 0.0,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_StairPath": {
+    "under40_pct": 21.67,
+    "mean": 65.1,
+    "p10": 28.4,
+    "p90": 103.9,
+    "clipped_pct": 0.38,
+    "size": [
+     1920,
+     1080
+    ]
+   },
+   "CAM_TerraceWall": {
+    "under40_pct": 7.95,
+    "mean": 121.6,
+    "p10": 43.2,
+    "p90": 227.4,
+    "clipped_pct": 0.19,
+    "size": [
+     1920,
+     1080
+    ]
+   }
+  }
+ },
+ "extras": {
+  "landscape_top_sky_band": {
+   "srgb": [
+    85,
+    62,
+    70
+   ],
+   "luma": 67.5,
+   "hue": 339.1,
+   "sat": 0.156,
+   "r_over_b": 1.214
+  },
+  "landscape_sky_box": {
+   "srgb": [
+    111,
+    84,
+    92
+   ],
+   "luma": 90.3,
+   "hue": 342.2,
+   "sat": 0.138,
+   "r_over_b": 1.207
+  },
+  "ref2match": {
+   "luma_share_under_40_pct": 13.53,
+   "luma_mean": 104.2,
+   "luma_p10": 32.6,
+   "luma_p90": 159.4,
+   "sand_texture_highpass_std": 9.24,
+   "regions": {
+    "tiles_lit": {
+     "srgb": [
+      98,
+      84,
+      99
+     ],
+     "hue": 296.0,
+     "sat": 0.082,
+     "r_over_b": 0.99
+    },
+    "tiles_shade": {
+     "srgb": [
+      56,
+      49,
+      64
+     ],
+     "hue": 268.0,
+     "sat": 0.133,
+     "r_over_b": 0.875
+    },
+    "plaster": {
+     "srgb": [
+      137,
+      114,
+      107
+     ],
+     "hue": 14.0,
+     "sat": 0.123,
+     "r_over_b": 1.28
+    },
+    "sand_near": {
+     "srgb": [
+      168,
+      138,
+      117
+     ],
+     "hue": 24.7,
+     "sat": 0.227,
+     "r_over_b": 1.436
+    },
+    "sand_far": {
+     "srgb": [
+      183,
+      154,
+      133
+     ],
+     "hue": 25.2,
+     "sat": 0.258,
+     "r_over_b": 1.376
+    },
+    "gravel": {
+     "srgb": [
+      130,
+      103,
+      102
+     ],
+     "hue": 2.1,
+     "sat": 0.121,
+     "r_over_b": 1.275
+    },
+    "horizon_sky_behind_hall": {
+     "srgb": [
+      76,
+      58,
+      38
+     ],
+     "hue": 31.6,
+     "sat": 0.333,
+     "r_over_b": 2.0
+    },
+    "top_sky": {
+     "srgb": [
+      114,
+      87,
+      90
+     ],
+     "hue": 353.3,
+     "sat": 0.134,
+     "r_over_b": 1.267
+    },
+    "shoji_glow": {
+     "srgb": [
+      193,
+      118,
+      56
+     ],
+     "hue": 27.2,
+     "sat": 0.55,
+     "r_over_b": 3.446
+    },
+    "lantern_glow": {
+     "srgb": [
+      232,
+      182,
+      108
+     ],
+     "hue": 35.8,
+     "sat": 0.729,
+     "r_over_b": 2.148
+    },
+    "timber": {
+     "srgb": [
+      78,
+      52,
+      38
+     ],
+     "hue": 21.0,
+     "sat": 0.345,
+     "r_over_b": 2.053
+    }
+   }
+  },
+  "CAM_Drum": {
+   "under40_pct": 46.44,
+   "mean": 54.1,
+   "p10": 1.6,
+   "p90": 123.4,
+   "near_black_lt10_pct": 20.25
+  },
+  "CAM_HallVeranda": {
+   "under40_pct": 38.78,
+   "mean": 70.0,
+   "p10": 10.3,
+   "p90": 147.6,
+   "near_black_lt10_pct": 9.44
+  },
+  "CU_Lantern": {
+   "under40_pct": 24.86,
+   "mean": 84.9,
+   "p10": 16.9,
+   "p90": 153.6,
+   "near_black_lt10_pct": 4.09
+  },
+  "CU_HallUpperRoof": {
+   "under40_pct": 19.54,
+   "mean": 68.2,
+   "p10": 28.1,
+   "p90": 110.9,
+   "near_black_lt10_pct": 2.45,
+   "tiles_lit": {
+    "srgb": [
+     122,
+     108,
+     122
+    ],
+    "luma": 112.0,
+    "hue": 300.0,
+    "sat": 0.061,
+    "r_over_b": 1.0
+   },
+   "tiles_shade": {
+    "srgb": [
+     69,
+     63,
+     80
+    ],
+    "luma": 65.5,
+    "hue": 261.2,
+    "sat": 0.119,
+    "r_over_b": 0.863
+   }
+  },
+  "CAM_EastYard": {
+   "under40_pct": 32.4,
+   "mean": 107.2,
+   "p10": 11.3,
+   "p90": 220.2,
+   "near_black_lt10_pct": 8.87
+  }
+ },
+ "ref2_reference": {
+  "stats": {
+   "luma_share_under_40_pct": 13.69,
+   "luma_mean": 107.9,
+   "luma_p10": 34.4,
+   "luma_p90": 171.1,
+   "sand_texture_highpass_std": 11.68
+  },
+  "regions": {
+   "tiles_lit": {
+    "srgb": [
+     91,
+     84,
+     94
+    ],
+    "hue": 282.0,
+    "sat": 0.056,
+    "r_over_b": 0.968
+   },
+   "tiles_shade": {
+    "srgb": [
+     43,
+     39,
+     45
+    ],
+    "hue": 280.0,
+    "sat": 0.071,
+    "r_over_b": 0.956
+   },
+   "plaster": {
+    "srgb": [
+     148,
+     117,
+     106
+    ],
+    "hue": 15.7,
+    "sat": 0.165,
+    "r_over_b": 1.396
+   },
+   "sand_near": {
+    "srgb": [
+     182,
+     148,
+     125
+    ],
+    "hue": 24.2,
+    "sat": 0.281,
+    "r_over_b": 1.456
+   },
+   "sand_far": {
+    "srgb": [
+     189,
+     157,
+     136
+    ],
+    "hue": 23.8,
+    "sat": 0.286,
+    "r_over_b": 1.39
+   },
+   "gravel": {
+    "srgb": [
+     136,
+     106,
+     95
+    ],
+    "hue": 16.1,
+    "sat": 0.177,
+    "r_over_b": 1.432
+   },
+   "horizon_sky_behind_hall": {
+    "srgb": [
+     207,
+     153,
+     130
+    ],
+    "hue": 17.9,
+    "sat": 0.445,
+    "r_over_b": 1.592
+   },
+   "top_sky": {
+    "srgb": [
+     166,
+     147,
+     148
+    ],
+    "hue": 356.8,
+    "sat": 0.096,
+    "r_over_b": 1.122
+   },
+   "shoji_glow": {
+    "srgb": [
+     182,
+     118,
+     53
+    ],
+    "hue": 30.2,
+    "sat": 0.549,
+    "r_over_b": 3.434
+   },
+   "lantern_glow": {
+    "srgb": [
+     241,
+     180,
+     90
+    ],
+    "hue": 35.8,
+    "sat": 0.844,
+    "r_over_b": 2.678
+   },
+   "timber": {
+    "srgb": [
+     75,
+     49,
+     30
+    ],
+    "hue": 25.3,
+    "sat": 0.429,
+    "r_over_b": 2.5
+   }
+  }
+ }
+}

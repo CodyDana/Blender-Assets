@@ -139,9 +139,14 @@ def gate_level():
     missing, wrong, bad_col, bad_scale, rows, worst, worst_nan = [], [], [], [], {}, 0.0, 0.0
     fbox, infl = {}, {}
     per_class, per_kit = Counter(), Counter()
+    removed_present = []
     for n, inst in enumerate(L["instances"]):
         lab = S.label(inst, n)
         a = by_label.get(lab)
+        if inst.get("removed"):   # landscape round: must NOT be in the level
+            if a is not None:
+                removed_present.append(lab)
+            continue
         if a is None:
             missing.append(lab)
             continue
@@ -159,7 +164,8 @@ def gate_level():
         got = {"pawn": resp(smc, CH.ECC_PAWN), "camera": resp(smc, CH.ECC_CAMERA), "visibility": resp(smc, CH.ECC_VISIBILITY)}
         enabled = str(smc.get_collision_enabled()).split(".")[-1].split(":")[0]
         hidden = bool(a.get_editor_property("hidden"))
-        if (any(got[k] != want[k] for k in got) or hidden != bool(want.get("hidden_in_game", False))
+        if (any(got[k] != want[k] for k in got)
+                or hidden != (bool(want.get("hidden_in_game", False)) or bool(inst.get("hide_landscape")))
                 or (want.get("no_collision") and "NO_COLLISION" not in enabled.upper())
                 or (not want.get("no_collision") and "NO_COLLISION" in enabled.upper())):
             bad_col.append({"label": lab, "class": cls, "got": got, "enabled": enabled, "hidden": hidden})
@@ -188,7 +194,13 @@ def gate_level():
     # round 3 fix f1: the painted sky dome (tag DJ_SkyDome, look_r3.ENV sky_dome) is lighting, not a layout instance
     dome = [a for a in actors if unreal.Name("DJ_SkyDome") in list(a.tags)]
     res["sky_dome_actors"] = len(dome)
-    mesh_actors = [a for a in actors if a.get_class().get_name() == "StaticMeshActor" and a not in dome]
+    # landscape round: the world build's actors (tag DJ_Landscape) are gated by dj_ls_verify.py, not here
+    # landscape round FX + lighting: the FX actors (tag DJ_FXL: foam wakes, fallen-petal clusters) by dj_fxl_verify.py
+    # hall + armory round: the armory interior (tag DJ_ArmoryHall, dj_armory_sync.py) is gated by the sync + gate 9
+    mesh_actors = [a for a in actors if a.get_class().get_name() == "StaticMeshActor" and a not in dome
+                   and unreal.Name("DJ_Landscape") not in list(a.tags) and unreal.Name("DJ_FXL") not in list(a.tags)
+                   and unreal.Name("DJ_ArmoryHall") not in list(a.tags)]
+    n_active = sum(1 for i in L["instances"] if not i.get("removed"))
     stand_ins = sorted({a.static_mesh_component.get_editor_property("static_mesh").get_name() for a in mesh_actors
                         if a.static_mesh_component.get_editor_property("static_mesh") is not None
                         and a.static_mesh_component.get_editor_property("static_mesh").get_name() in L["replaced_greybox"]})
@@ -201,14 +213,17 @@ def gate_level():
                                "open": yaw is not None and abs(((yaw - C.yaw_deg(it["rot_z"])) + 180) % 360 - 180) < 0.01}
     res.update({"missing": missing, "wrong_mesh": wrong, "bad_scale": bad_scale, "collision_errors": bad_col,
                 "per_class": dict(per_class), "per_kit": dict(per_kit), "n_mesh_actors": len(mesh_actors),
-                "n_instances": len(L["instances"]), "bounds_max_err_cm": round(worst, 4),
+                "n_instances": len(L["instances"]), "n_active_instances": n_active,
+                "removed_but_present": removed_present, "bounds_max_err_cm": round(worst, 4),
                 "bounds_max_err_cm_nanite_geometry": round(worst_nan, 4),
                 "nanite_culling_bounds_inflation_cm_by_piece": dict(sorted(infl.items())),
-                "n_nanite_actors": sum(1 for i in L["instances"] if L["pieces"][i["piece"]]["nanite"]),
+                "n_nanite_actors": sum(1 for i in L["instances"] if L["pieces"][i["piece"]]["nanite"]
+                                       and not i.get("removed")),
                 "bounds_failures": {k: round(v, 3) for k, v in rows.items() if v > TOL},
                 "greybox_stand_ins_left": stand_ins, "gate_leaves": leaves})
     res["passed"] = (bool(loaded) and not missing and not wrong and not bad_scale and not bad_col
-                     and not res["bounds_failures"] and len(mesh_actors) == len(L["instances"]) and not stand_ins
+                     and not res["bounds_failures"] and len(mesh_actors) == n_active and not stand_ins
+                     and not removed_present
                      and all(v["open"] for v in leaves.values()))
     return res, actors
 
@@ -343,6 +358,16 @@ def gate_environment_uds(actors):
     env = {"lights": 0, "cameras": [], "uds_actors": 0, "conflicting_actors": []}
     for a in actors:
         cls = a.get_class().get_name()
+        if unreal.Name("DJ_Landscape") in list(a.tags) and cls not in ("DirectionalLight", "SkyAtmosphere", "SkyLight",
+                                                                         "ExponentialHeightFog", "VolumetricCloud"):
+            env["landscape_actors_skipped"] = env.get("landscape_actors_skipped", 0) + 1   # gated by dj_ls_verify.py
+            continue
+        if unreal.Name("DJ_FXL") in list(a.tags):   # landscape round FX actors: gated by dj_fxl_verify.py
+            env["fx_actors_skipped"] = env.get("fx_actors_skipped", 0) + 1
+            continue
+        if unreal.Name("DJ_ArmoryHall") in list(a.tags):   # hall + armory: interior lights / PPV, gated by gate 9
+            env["armory_hall_actors_skipped"] = env.get("armory_hall_actors_skipped", 0) + 1
+            continue
         if cls in ("DirectionalLight", "SkyAtmosphere", "SkyLight", "ExponentialHeightFog", "VolumetricCloud") or \
                 unreal.Name("DJ_SkyDome") in list(a.tags):
             env["conflicting_actors"].append(f"{cls}:{a.get_actor_label()}")
@@ -491,6 +516,66 @@ def _same(got, want):
     return str(got) == str(want)
 
 
+def gate_armory_hall(actors):
+    """Hall + armory round (2026-10-01): the armory interior as dj_armory_sync.py placed it from the shared jsons
+    (WorkFiles/shared/armory_hall): every interior instance + item a static mesh actor with its piece, every design /
+    backer light present, the interior PPV bounded and NOT owning exposure (PostProcess_Dojo stays the one exposure
+    owner), and the sync's own gates passed for the manifest's revision."""
+    import json as _json
+    from pathlib import Path as _P
+    sh = _P("C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/shared/armory_hall")
+    I = _json.loads((sh / "interior_layout.json").read_text(encoding="utf-8"))
+    D = _json.loads((sh / "lights_design.json").read_text(encoding="utf-8"))
+    H = _json.loads((sh / "hall_shell_layout.json").read_text(encoding="utf-8"))
+    M = _json.loads((sh / "manifest.json").read_text(encoding="utf-8"))
+    sync = _json.loads((C.OUT / "armory_sync" / "sync.json").read_text(encoding="utf-8"))
+    ak = [a for a in actors if unreal.Name("DJ_ArmoryHall") in list(a.tags)]
+    labels = {a.get_actor_label(): a for a in ak}
+    wrong = []
+    # finish stage (2026-10-01): a Nanite piece is one actor ISM_<piece> whose InstancedStaticMeshComponent holds its
+    # instances in interior_layout.json order (sync.json ism_ids); the glass pieces stay '<piece>__<id>' actors
+    ism_n = {}
+    for it in I["instances"]:
+        a = labels.get(f"{it['piece']}__{it['id']}")
+        if a is None and f"ISM_{it['piece']}" in labels:
+            if it["piece"] not in ism_n:
+                c = labels[f"ISM_{it['piece']}"].get_component_by_class(unreal.InstancedStaticMeshComponent)
+                sm = c.get_editor_property("static_mesh") if c else None
+                ok = (sm is not None and sm.get_name() == it["piece"]
+                      and int(c.get_instance_count()) == len(sync.get("ism_ids", {}).get(it["piece"], [])))
+                ism_n[it["piece"]] = ok
+            if not ism_n[it["piece"]] or it["id"] not in sync.get("ism_ids", {}).get(it["piece"], []):
+                wrong.append(it["id"])
+            continue
+        sm = a.static_mesh_component.get_editor_property("static_mesh") if a else None
+        if sm is None or sm.get_name() != it["piece"]:
+            wrong.append(it["id"])
+    items = [it["name"] for it in I["items"] if f"Item_{it['name']}" not in labels]
+    lights = [x["name"] for x in D["lights"] + H["lights"] if x["name"] not in labels]
+    ppv = [a for a in ak if a.get_class().get_name() == "PostProcessVolume"]
+    # fix round (2026-10-01): the interior PPV may carry an exposure OFFSET for the closed interior (dj_armory_look.PPV
+    # settings 'auto_exposure_bias'); it must then equal the look's value exactly, never switch the exposure method
+    # (PostProcess_Dojo stays the manual-exposure owner), and stay bounded
+    import sys as _sys
+    _sys.path.insert(0, str(_P(__file__).resolve().parent))
+    import dj_armory_look as _LOOK  # noqa: PLC0415
+    want_bias = ((_LOOK.PPV or {}).get("settings") or {}).get("auto_exposure_bias")
+    pp_ok = True
+    for a in ppv:
+        st = a.get_editor_property("settings")
+        ob = bool(st.get_editor_property("override_auto_exposure_bias"))
+        bias_ok = (not ob) if want_bias is None else (
+            ob and abs(float(st.get_editor_property("auto_exposure_bias")) - float(want_bias)) < 1e-4)
+        pp_ok = pp_ok and not bool(a.get_editor_property("unbound")) and bias_ok and not bool(
+            st.get_editor_property("override_auto_exposure_method"))
+    res = {"actors": len(ak), "instances_wrong_or_missing": wrong, "items_missing": items, "lights_missing": lights,
+           "ppv": len(ppv), "ppv_bounded_no_exposure": pp_ok, "ppv_interior_bias_want": want_bias, "sync_passed": bool(sync.get("passed")),
+           "sync_revision": sync.get("synced_revision"), "manifest_revision": M["revision"]}
+    res["passed"] = (not wrong and not items and not lights and pp_ok and res["sync_passed"]
+                     and res["sync_revision"] == M["revision"])
+    return res
+
+
 def gate_env_extras(actors):
     """round 5: the extra sun / sky atmosphere / sky light / fog / post values (look_r3.ENV) as saved."""
     by = {a.get_actor_label(): a for a in actors}
@@ -576,8 +661,10 @@ def main():
         rep["6_environment"]["extras"] = gate_env_extras(actors)   # round 5
         rep["6_environment"]["passed"] = rep["6_environment"]["passed"] and rep["6_environment"]["extras"]["passed"]
         rep["8_decals"] = gate_decals(actors)                     # round 5
+        rep["9_armory_hall"] = gate_armory_hall(actors)           # hall + armory round
         rep["gates"] = {k: bool(rep[k]["passed"]) for k in ("1_meshes", "2_textures", "3_level", "4_traversal",
-                                                           "5_gameplay", "6_environment", "7_gasp_trace", "8_decals")}
+                                                           "5_gameplay", "6_environment", "7_gasp_trace", "8_decals",
+                                                           "9_armory_hall")}
         rep["passed"] = all(rep["gates"].values())
     except Exception:  # noqa: BLE001
         rep["error"] = traceback.format_exc()[-3000:]

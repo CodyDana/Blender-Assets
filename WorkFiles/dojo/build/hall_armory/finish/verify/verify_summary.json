@@ -1,0 +1,23 @@
+{
+ "date": "2026-10-01",
+ "verifier": "independent FINISH-stage verifier (did not build); read-only except finish/verify/; one Unreal process at a time; ArmoryLab never opened",
+ "result": "FAIL on (1) only: (2)-(6) pass",
+ "1_armory_side": {
+  "regen_interior_dry": "exit 0, 0 content changes, 0 id changes, 0 envelope violations, nothing written",
+  "check_sync_armory": "exit 2 (fail/stale/warn empty; behind = ArmoryLab never synced, expected)",
+  "check_sync_dojo": "exit 0",
+  "plan_and_gaps": "json/armory_side_dryrun.json",
+  "blocking": "ak_verify.py gate_level (1 cm bounds on every <piece>__<nnn>) fails after ue_armorylab_shell.py lifts SM_AK_EntryMat__335 / SM_AK_Lantern__612 / __613 by 0.12 m; SYNC.md 3/14 place the tool after ak_level.py but say nothing about the armory's verify/character/walk/capture/fptest steps that follow level in run_armory_unreal.sh",
+  "sync_gap": "masters rebuilt from Scripts/dojo/unreal/dj_sc_materials.py + dj_sc_common.py (+ layout_showcase.json) which are not hashed in manifest.json nor checked by check_sync.py"
+ },
+ "2_idempotency": "sync run 1 + run 2 both passed level_kept=True dirty=False assets_saved=0 saved=skipped; DojoLab Content+Config+uproject 6251 files: 0 added/removed/md5/mtime changes S0->S1->S2 (and S0->S4 at the end of all checks); L_Dojo md5 e118ff65",
+ "3_ref2match": {
+  "first_shot_capture (Ref2 at 98.6 s)": "above roof 5.52 % of region static, almost all cloud layer: a capture-timing artefact (landscape round shot Ref2 6th at 267.2 s)",
+  "time_matched (landscape round's 16-shot list, Ref2 at 266.4 s)": "above main roof static 0.288 % of region (0.436 % without noise mask; forest/hill only 0.392 %); hall+courtyard outside the door box 0.057 %; door box 45.8 % changed (open centre doors)",
+  "files": "json/ref2_timed.json, caps/SHEET_timed_land_A_B_diff.jpg"
+ },
+ "4_perf": "perf/perf_summary.md, 1920x1080 configured % (r.ScreenPercentage 100, Desktop.Mode 1), 2 passes: FrameTime p95 PlayerEyeSand 12.21/12.24, WestAisle 12.50/12.32, RiverRapids 14.81/14.18, StairPath 11.69/10.92; GPU p95 11.00/10.95, 11.19/11.27, 13.03/13.09, 9.98/10.04 ms: all < 16.7",
+ "5_functional": "sc_verify 9/9 (GASP 23/23, traversal 24/24, armory_hall 593 actors rev 3); ls_verify 6/6 (stair BR both ways, CONTROL blocked by B3); boundary: 88 routes 0 not-as-expected, interior 3769/3769 r30 + 3644/3644 r35 0 leaks dais reached, rear roof pass, stair lanes r30 and r35 +0.0/+0.1/+0.3 clear both ways (r35 centre lane clear), min width 1.55 m, flood1v1 r30 1,043,633 / r35 583,870 0 leaks, ceiling 12.46; alley (ZB0 0.13): 1v1 floods r30 3,465,803 / r35 3,423,597 0 cells in 19 targets, arcs 0/1,014,000 + 0/996,000, mantles 1,540 GASP-valid 0 leaks (84 path-ignored stances at x -1.55/45.55 blocked by the ring), BR opens 10 targets",
+ "6_hygiene": "0 files newer than 02:30 in Scripts/armory, Exports/ArmoryKit, WorkFiles/armory, ArmoryLab (excl. Saved/Intermediate/DDC) or any other Unreal project; manifest rev 3 = SYNC.md rev 3, last change line rev 3 dated 2026-10-01; last_synced DojoLab 3 = synced_revision.json; ArmoryHall lock released (no lock file); shared folder md5 unchanged across this verification. Minor: rev-3 line shared_files_changed lists hall_shell_layout/interface/lights_design though byte-identical to the rev-2 backup (first shared_files record).",
+ "verifier_writes_outside_verify": "run_armory_sync.sh / run_showcase_unreal.sh rewrote their own reports (armory_sync/files.json, synced_revision.json date, showcase/verify.json) and appended their timings/logs; the three json reports were restored byte-for-byte from restore_backup/ (cp -p)."
+}

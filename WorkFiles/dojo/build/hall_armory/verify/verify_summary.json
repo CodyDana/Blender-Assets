@@ -1,0 +1,59 @@
+{
+ "date": "2026-10-01",
+ "verifier": "independent HALL + ARMORY verifier (did not build); fresh headless Blender + fresh read-only UE commandlets + one -game run; one Unreal process at a time; outputs only in hall_armory/verify/",
+ "level_state": "L_Dojo.umap md5 506a2cca (the fix-round final) before and after; DojoLab Content/Config/Plugins: 0 files changed by the verification (snapshot_before/after.json); DojoShowcase_HallArmory.blend md5 unchanged",
+ "result": "FAIL: (1) (4) (5) pass; (2) fails on the backdrop above the hall roof; (3) placement/sha/idempotency pass but SYNC.md is incomplete for the armory chat",
+ "1_functional": {
+  "blender": "blender/: walk 88 routes pass r0.30 + r0.35 (incl. 26 ARM + 4 HALL interior routes, 33 CONTROLs blocked), climb pass (route O moved), gate roof, hall roof 16, rear roof 13, outbuilding roof: pass",
+  "ue_routes_my_walker": "json/ue_boundary_walk.json: 88/88 as expected at r30 and r35 (CMC-like walker: flat move first, step-up clamped under the door head)",
+  "ue_interior_walking_flood": "courtyard -> step band -> veranda -> 3 doors -> interior: 3769/3769 free interior floor cells reached at r30 (3644/3644 r35), dais deck reached (feet 1.09), 0 cells in the hidden side strips / extension cavities / rear yards, no case/lantern/vase stood on",
+  "ingame_pawn_walk": "perf/game_perf.json walks: the real GASP pawn walked from the veranda through the W and E doors to the dais (y 42.82, feet ~1.1) and from the courtyard up the steps through door W to the dais; centre door stops at case 1 (y 27.05) as designed",
+  "alley_closure_own": "json/ue_alley2.json (lattice z0 0.13 so the 12.3 cm door window is resolved): 1v1 flood r30 3,465,803 / r35 3,423,597 cells, reaches the interior to y 43.6, 0 cells in 22 closed targets (alley, rear yards, strips, pockets, corridor slopes, outbuilding roofs, main upper rear half, rear roof, moved wall top, hall side strips, extension cavities); arcs 0/711,120 r30 + 0/694,080 r35 (exterior) and 0/649,200 + 0/627,600 launched from the interior floor; mantles 1,540 GASP-valid, 0 leaks (84 path-ignored stances are outside the ring at x -1.55 / 45.55, blocked by the ring); BR flood/arcs open every target (separable)",
+  "boundary": "json/ue_boundary_run1.json: ring footprint y to 48.1 (FBX audit), highest standable 9.606 -> ceiling 12.46; flood1v1 r30 1,043,345 cells 0 leaks outside ring/B-polygon (reaches y 43.57 = interior); arcs1v1 0/817,600; floodbr reaches outside the ring",
+  "stair": "stair passed: r30 lanes +0.0/+0.1/+0.3 clear both ways (centre lane now clear: lanterns 3/4/6 moved), r35 +0.1/+0.3; min clear width 0.95 m at L6 (Lantern_5 still in the r35 centre lane); 1v1 control stopped by B3",
+  "rear_roof": "BR walks back slope -> valley -> rear ridge -> north eave and back on x 17/22/27 clear; ridge W->E clear; 1v1 controls blocked by SM_DKX_1v1_HallUpperRear / RearRoof",
+  "ue_verify": "json/ue_verify.json: GASP trace 23/23, traversal 24 markers, level 0 missing/transform/collision/bounds errors (worst 0.0005 cm), 0 removed present; flagged gates are checker expectations, not defects: 1_meshes (Rear_WindowBacker is class nocollision), 6_walk (v9 line-trace seam artefact at x 11, as the landscape round), 7_env (bounded interior PPV PostProcess_ArmoryHall, priority 20, bias 0.6: a deliberate fix-round design), 8_lamps (PathLantern 3/4/6 moved 0.6 m = the carry-over), 16_group (expected list held the removed SM_DKX_1v1_HallRear; 24 live members tagged, 0 bad), 3_level/14_decals identical to the landscape verify",
+  "fbx_audit": "fbx_audit.json: 269 pieces, 0 errors; changed vs the landscape audit: SM_DGB_Boundary_1v1, SM_DKH_RoofLower_Front; 16 new pieces all UCX-named correctly",
+  "dead_br_routes": "5 town routes moved to layout retired_walk_routes with reasons",
+  "passed": true
+ },
+ "2_courtyard": {
+  "json": "json/courtyard_diff.json, json/ref2_regions.json, VDIFF_CAM_Ref2Match.png, crop_ref2_trees_before_after_noise.png",
+  "hall_and_courtyard": "rows 500-1440 outside my projected door box: 841 static px changed (0.03 % of the frame), mean abs diff 1.53: unchanged",
+  "door_box": "door box [823,615,1096,733]: 45.9 % of its pixels changed (open doors); mean luma 73.6 -> 85.8",
+  "backdrop": "rows 0-500 (forest / hill behind the hall roof): 96,845 static px changed = 3.50 % of the frame, 10.1 % of the backdrop, 15.0 % of the area directly above the main roof (x 660-1260): the tall pine left of the ridge and the fir band sank / moved with the terrain move; not live noise (identical in the noise run)",
+  "builder_figure": "the builder's 0.121 % excludes the top 30 % of the frame as 'sky', which in this view holds the forest backdrop",
+  "passed": false
+ },
+ "3_sync": {
+  "sha": "sha_check.json: 98 FBX + 6 item FBX + 4 site FBX + 63 texture PNG and DojoLab uasset copies match manifest.json",
+  "placement": "json/ue_state.json: 461/461 instances 0.000 mm / 0.000 deg (pitch/roll/scale exact), 6/6 items 0.000 mm, 114/114 design lights 0.000 mm, 84 shell ids 0.000 mm, mesh = ue_mesh for all, collision classes as interface.json (glass/propblock step-up No + unwalkable slope, hull count = UCX on all 64)",
+  "idempotency": "second Unreal stage run in memory (saves/deletes/imports recorded, never executed): 0 imports, 0 mesh saves, actor diff 0 changed / 0 added / 0 removed over 2,556 actors; file stage would copy 0 of 209 packages. Note: each real run re-saves L_Dojo and 33 MI_DJA unconditionally",
+  "sync_md": "rules, frames, lock, ownership, revision protocol present; missing for the armory chat: what ArmoryLab does with the hall shell / extension (owner: 'extended and in sync over there too'), which converter or schema produces interior_layout.json from the armory's own layout (only WorkFiles/dojo/build/hall_armory/survey/make_survey.py does it today), header still 'Revision 1' while the folder is at 2",
+  "passed": false
+ },
+ "4_no_foreign_writes": {
+  "detail": "0 files newer than 02:00 in Scripts/armory, Exports/ArmoryKit, WorkFiles/armory, ArmoryLab (incl. Saved/DDC), DemoGame_1, DemoGame_1_private2b, GameAnimationSample and every other UE project except DojoLab; no armory/armoryhall lock files; Scripts/unreal/materials untouched since 9/27; cardshopkit.json is deleted in the working tree but nothing in this round references it",
+  "passed": true
+ },
+ "5_perf": {
+  "json": "perf/perf_summary.md, perf/profilegpu.json",
+  "gpu_mean_ms_1080p_configured": {
+   "PlayerEyeSand": 10.4,
+   "Overview": 10.49,
+   "RiverRapids": 12.98,
+   "StairPath": 9.85,
+   "WestAisle": 11.1,
+   "DoorwayIn": 10.29,
+   "FromPlatform": 11.23,
+   "RearExtension": 10.69,
+   "LandscapeRef": 8.01,
+   "PAWN": 9.74
+  },
+  "max_gpu_p95_ms": "14.17 (RiverRapids 1440p configured)",
+  "top_costs": "outdoor: ShadowDepths 1.0-1.5, TSR 1.2-1.6, Nanite VisBuffer/BasePass 0.7-1.3; river: Translucency 2.1; interior: Lights 1.5, LumenReflections 1.1-1.3",
+  "frame_time_note": "render-thread bound: PlayerEyeSand FT mean 16.09 / p95 17.92 (RT 16.07), WestAisle FT p95 18.95 at 1080p",
+  "passed": true
+ },
+ "6_look": "json/look.json: Ref2Match ref2/ours under40 13.69/11.99 %, mean 107.9/107.5, p90 171.1/164.2 (landscape round ours 12.74/106.4); LandscapeRef ref/ours under40 8.95/9.53, mean 140.4/82.2; interior ours vs armory r20 log2 mean ratio: Entry +0.46, WestAisle +0.07, Case3 +0.29, Hero +0.34, Tray +0.24, Case1 -0.12, Cloak -0.22, FromPlatform +0.11"
+}

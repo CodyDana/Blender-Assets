@@ -378,3 +378,77 @@ Also decide Nanite vs LOD0-2 for every kit (taiko shipped LODs; stone, modern an
     - pines v2 trees continue now; the D-pine rock waits for the study;
     - DojoLab round 9 continues from its partial state;
     - verify at the end.
+- 2026-09-30: STEP 1 DONE (wf_d5f00786-6d9).
+  - STONE_BUILDING_STUDY.md at the root (2,028 lines, critic-revised; notes in WorkFiles/studies/stone/; CLAUDE.md row). The study notes the tracer/measurer tools (stone_trace.py, stone_measure.py) don't exist yet (~3-4 sessions) and gives a rock sourcing list.
+  - Stone kit: best f3 5.8 (paired judges; f2 6 vs r0 5). Still coursed beds (SG5 fails), soft pillows, tan in Blender; next method step = power-diagram layout.
+  - Pines: best v2f 5.6 (v2 5.5 vs f1 4.5). Rosette pads, mounds and the new D rock are in; the needles still read olive and brushed.
+  - DojoLab round 9: 5.5 vs r8 4.5 (s2 retune worse, restored s1). Sunset sky with clouds, Megaplants PVE + Nanite Foliage on, perf config in: GPU 7-8 ms at 75% on 1440p; all gates pass. Caveat: Saved GameUserSettings sg.ResolutionQuality=100 overrides the curve on this PC.
+- 2026-09-30: git checkpoint 5daa0d2 "Dojo checkpoint before the landscape round" on main (3,920 files, dojo paths only; ~2.3 GB LFS; not pushed).
+- 2026-09-30: STEP 3 LANDSCAPE ROUND running (wf_efa3b002-0bd):
+  - plan + owned-content inventory + gap list, in parallel with the FX assets in Blender;
+  - DojoLab world (Water plugin, town removed, stone kit + pines imported, Landscape terrace/cliff/river, peaks with snow, conifers, CHERRY SLOTS, 1v1 terrace boundary);
+  - FX (petals, mist, fog) + lighting rebalance;
+  - judge, fix, keep the better;
+  - verify.
+- 2026-09-30 ~19:00: USER decided WE build the rocks (boulders, river boulders, cobbles, cliff chunks); supplied References/Dojo/dojo_rocks_ref.png (logged). The rock kit workflow is running (wf_42b8775c-9fd, Blender only, SM_DKR_*): pilot (2 river boulders + 1 cliff chunk) -> blind judge, stop gate 7/10, one method fix -> the full set only if it passes. After the landscape round: an in-engine side-by-side of our rocks vs the owned rocks, then swap them into the boulder zones BF1-BF3/C1.
+- 2026-10-01: ROCK PILOT FAILED the gate: 3/10 (wf_42b8775c-9fd; no fix ran, below 4). Silhouettes matched (IoU 0.84-0.94) but: (1) the surface is painted speckle with no crystal-scale relief (local contrast 0.06 vs the sheet's 0.14); (2) RiverRound reads as a loaf/toaster (vertical sides, flat top); (3) the cliff is a grid of slabs that reads as masonry; (4) the wet band is a hard horizontal line. Proposed next: method change (corestone ellipsoids cut by joint planes; fracture-based cliff; real scanned CC0 granite surface maps) as a second pilot, or go back to sourcing. Waiting for the user. Landscape round: in its fix stage (judge ran at 22:14).
+- 2026-10-01: USER: option A for the rocks. Downloaded 4 Poly Haven CC0 2K sets (tiger_rock, rock_surface, granite_tile_03, mossy_rock; 49 MB JPG; md5 OK; SOURCE.md each) into Assets/Dojo/SourceTextures/PolyHaven/. Rock pilot 2 running (wf_d8db8927-9b6): corestone river boulders, fractured cliff chunk, scanned surfaces; gate 7/10.
+- 2026-10-01: USER DECISION: THE ARMORY GOES INSIDE THE MAIN HALL (option 1). Keep the hall front exactly as built. Extend the hall back about 11 m with a lower rear roof (temple rear-hall style) so the armory's 12 x 20 m interior (ceiling +4.8, door centred on its short south side) sits behind the hall's three centre door bays. Move the compound back wall, the rear alley 1v1 closure and the terrace back about 10 m. Read Exports/ArmoryKit + the armory chat's layout read-only (never edit armory files). Relight the armory from night to sunset through the open doors. Redo walk/climb/alley/GASP checks incl. the interior. Runs AFTER the landscape round. The user is briefing the armory chat (prompt given in chat): it will write WorkFiles/armory/ARMORY_HANDOFF_DOJO.md.
+- Hall facts: walls X 13.0-31.0, Y 24.0-34.0 (18 x 10 m), 2 m bays, front P W P D D D P W P, head beam +2.67, wall plate +5.37, upper eave +5.5, ridge +8.7; compound back wall at y ~37.
+- 2026-10-01: USER: after the hall extension, the armory must be "extended and in sync over there too": TWO-WAY SYNC between DojoLab (dojo hall) and ArmoryLab (armory chat). Any change the user makes in either chat must carry to the other.
+  The hall-extension round must build the sync system:
+  - shared source of truth: WorkFiles/shared/armory_hall/ with:
+    - SYNC.md (the rules);
+    - manifest.json (revision, date, chat, change log, FBX sha256 list);
+    - interior_layout.json (every armory interior piece in HALL-LOCAL coordinates: origin = the hall's centre door threshold at finished floor level, +Y into the hall);
+    - hall_shell_layout.json (the hall shell incl. the rear extension, SM_DKH_* + new SM_DKH_Rear*);
+    - lights_design.json (case lights, downlights and lanterns travel with the interior; sky/sun/time-of-day stay per level: DojoLab sunset UDS, ArmoryLab its own);
+    - interface.json (interior envelope: inside wall faces, floor level, ceiling, door openings, the bays the interior may touch).
+  - ownership: the interior contents are the armory chat's, the shell is the dojo chat's; either chat may edit either side when the user asks, under the lock WorkFiles/locks/armoryhall.json (Scripts/pipeline/lock.py). After an edit: re-export via Scripts/pipeline, update the layout json, bump manifest revision + a dated change line.
+  - each project gets a sync script that rebuilds placement from the shared jsons and re-imports changed FBX by sha (DojoLab: Scripts/dojo/unreal/; ArmoryLab: the armory chat's scripts).
+  - each chat, at the start of any armory/hall work, compares the manifest revision with its last-synced revision (stored in its own notes) and syncs first.
+  - git: commit the shared folder with the change.
+  The prompt for the armory chat was given to the user in chat on 2026-10-01; the user sends it after the extension is done.
+- 2026-10-01: LANDSCAPE ROUND DONE (wf_efa3b002-0bd).
+  - Judge 5 -> fx+light 3.5 vs fix 5.5 (fix kept).
+  - Matches the reference's layout: terrace + ishigaki wall, cliff stairs with lanterns, a river past the SE corner, forested slopes, peaks.
+  - Weak:
+    - the river reads calm with few in-stream boulders (our rocks pending);
+    - bare grey cliff/valley faces;
+    - small smooth snow cones vs the reference's broad massifs;
+    - no cherries (on hold);
+    - the wall stones read as rounded pebbles in engine.
+  - Verify: all gameplay gates pass; 338 town instances removed; the 1v1 terrace boundary holds; the stair is walkable.
+  - Perf OK at the main cameras (12-15 ms), but CAM_RiverRapids 22.7 ms and CAM_StairPath 19.1 ms (shadow depths from the firs).
+- 2026-10-01: HALL + ARMORY round launched (wf_ac6d2186-d40):
+  - survey (armory read-only from r20; the handoff file did not exist yet) + the sync design;
+  - Blender rear extension;
+  - DojoLab placement + relight + the sync script + carry-over fixes (stair lanterns, dead BR routes, shadow pass);
+  - judge/fix;
+  - verify.
+  Rock pilot 2 (wf_d8db8927-9b6) is still running in parallel.
+- 2026-10-01: ROCK PILOT 2 STOPPED at the gate: 4 -> 5/10 after its fix (pilot 1 was 3) (wf_d8db8927-9b6). Better: the granite grain is real, a soft wet zone, readable cliff blocks. Still CG tells: the river boulders read as smooth potato/soap blobs with slit cracks (no broad facet planes or lobes); the cliff has no horizontal bedding ledges or crisp jointed blocks; moss/lichen are flat decals. Agreed fallback = sourcing. Recommended: the user resumes the owned Electric Dreams Env download (23.9 of ~60 GB staged, idle since 2026-09-12; the likeliest owned granite rocks/cliffs). Our pilot rocks stay on disk as backups. Waiting for the user.
+- 2026-10-01: HALL + ARMORY DONE (wf_ac6d2186-d40). Judge 7 -> v1 6.4 vs fix 7.2 (fix kept).
+  - Hall extended 14 x 11 m back (posts X 15-29, Y 34-45), lower gable rear roof (ridge 0.76 m under the main ridge); invisible from the courtyard cameras (0.03% change outside the open doors).
+  - Centre doors lifted out (1.76 m clear per bay).
+  - Armory interior placed: 461 instances, 114 design lights, sunset relight with an interior PPV; matches the armory stills closely.
+  - North wall/alley/terrace moved +11 m; cherry slots CS19/20 and the cypress row moved.
+  - Verify: 88/88 walk routes incl. 26 interior, the GASP pawn walks in to the dais, alley + boundary floods 0 leaks, GPU under 16.7 ms everywhere (RiverRapids/StairPath fixed by the shadow pass).
+  - Fails: CAM_Ref2Match backdrop above the roof changed (trees moved by the terrain move); SYNC.md missing the ArmoryLab shell + regeneration instructions.
+  - Minor: the sync script re-saves on no-op; render-thread p95 17.9-19 ms; Lantern_5.
+- 2026-10-01: follow-up running (wf_858bf0ab-926):
+  - shared tools regen_interior.py / bump_manifest.py / check_sync.py;
+  - shell_materials.json;
+  - complete SYNC.md (ArmoryLab shows the extended hall);
+  - the no-op sync;
+  - backdrop restore, ISMs for render-thread cost, Lantern_5;
+  - verify incl. a dry-run as the armory chat.
+  The armory-chat prompt is sent only after this passes.
+- 2026-10-01: SYNC FINISH DONE (wf_858bf0ab-926).
+  - Shared tools (regen_interior / bump_manifest / check_sync / ue_armorylab_shell + an FBX reader), shell_materials.json, SYNC.md rev 3 (sections 0, 3, 11-14).
+  - The sync script is a true no-op on rerun; the backdrop is restored (0.29% change above the roof, time-matched).
+  - Frame time p95 now 11-15 ms everywhere: the big render-thread cost was Niagara in ray tracing (now off).
+  - Stair L6 moved (min width 1.55 m); all gameplay gates pass.
+  - ISMs need the armory chat to set used_with_instanced_static_meshes on its 7 masters (optional, small perf gain; the user's call).
+  - Verify failed only the armory-side dry run: (1) the armory chat's own ak_verify order vs the hall-variant lifts; (2) the shell master sources not hashed. A small agent is fixing both -> rev 4. Then the user sends the armory prompt.
+- 2026-10-01: SYNC rev 4 (SYNC.md 3.2 armory-side order: its own run_armory_unreal.sh first, then tools/ue_armorylab_shell.py last, then check_sync --side armory; section 15 shell-master snapshot + drift check; 3.4 per-project 'needs sync' revisions). check_sync dojo 0, armory 2 (expected). NOTE: the next DojoLab sc_verify needs run_armory_sync.sh first (records rev 4). The armory-chat prompt was given to the user.

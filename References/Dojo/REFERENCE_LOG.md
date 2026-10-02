@@ -146,3 +146,13 @@ No text or symbols.
 - a thin haze layer drifting along the river surface at dusk, thinning with height;
 - cut-outs on black: three soft mist wisps and two spray bursts (edge softness and density study).
 Note: the water is turquoise-grey with white foam, which matches the landscape reference. No text, people or buildings.
+
+## Granite rock sheet (2026-09-30)
+`dojo_rocks_ref.png` (1448x1086; pasted by the user in chat as webp and converted with Pillow; ChatGPT, from the rock prompt with dojo_landscape_ref attached; sha256 f127b647...). Reference for our own rock kit (the user chose to build boulders, river boulders, cobbles and cliff chunks rather than source them). Each row has a 1.8 m figure. Shows:
+- row 1: three large foot boulders, each a main view plus top and side views. Weathered grey-tan granite with fracture faces, softened edges and cracks, moss and grass on the tops and in the cracks.
+- row 2: five river boulders, each a main view plus two smaller views. Smoother and water-rounded, some long and low; darker wet lower bands and moss on the dry tops.
+- row 3: eight cobbles in mixed grey/tan/dark tones and a cobble pile with pebbles.
+- row 4: four cliff chunks, each a main view plus top and side views. Blocky jointed granite with flat fracture planes, stepped ledges and vertical cracks; moss and grass tufts on the ledges.
+- close-ups: granite grain (black/white/grey crystals); a fracture edge; moss and grass on rock; the wet-to-dry line at water; pale lichen rosettes.
+- a riverbank scene: boulders and cobbles in a turquoise stream with small rapids.
+The colour reads warmer and browner (tan staining) than dojo_landscape_ref's grey granite. Match the shapes to this sheet, and keep the tone in the family of the landscape reference and the dojo stone. No text or symbols.

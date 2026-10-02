@@ -47,7 +47,11 @@ for step in $STEPS; do
       stamp "start sc_prep"
       py -3 -B "C:/Users/Cody/Desktop/Blender_Projects/Scripts/dojo/showcase/apply_round2.py" > "$OUT/logs/prep.log" 2>&1; code=$?
       [ $code -eq 0 ] && { py -3 -B "C:/Users/Cody/Desktop/Blender_Projects/Scripts/dojo/showcase/apply_look_r3.py" >> "$OUT/logs/prep.log" 2>&1; code=$?; }
-      grep -q "^ROUND2 " "$OUT/logs/prep.log" && grep -q "^LOOK_R3 " "$OUT/logs/prep.log" || { [ $code -eq 0 ] && code=8; } ;;
+      # landscape round (2026-09-30): the town removal / hidden grey-box trees / new cameras (idempotent)
+      [ $code -eq 0 ] && { py -3 -B "C:/Users/Cody/Desktop/Blender_Projects/Scripts/dojo/landscape/apply_landscape.py" >> "$OUT/logs/prep.log" 2>&1; code=$?; }
+      # hall + armory round (2026-10-01): the camera moves / new cameras / retired dead BR routes (idempotent; runs last)
+      [ $code -eq 0 ] && { py -3 -B "C:/Users/Cody/Desktop/Blender_Projects/Scripts/dojo/hall/apply_hall_armory.py" >> "$OUT/logs/prep.log" 2>&1; code=$?; }
+      grep -q "^ROUND2 " "$OUT/logs/prep.log" && grep -q "^LOOK_R3 " "$OUT/logs/prep.log" && grep -q "^LANDSCAPE_PREP " "$OUT/logs/prep.log" && grep -q "^HALL_ARMORY_PREP " "$OUT/logs/prep.log" || { [ $code -eq 0 ] && code=8; } ;;
     import|materials|level|verify|perf)
       editor_guard
       wait_free

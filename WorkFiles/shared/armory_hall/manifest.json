@@ -1,0 +1,2298 @@
+{
+ "revision": 4,
+ "date": "2026-10-01",
+ "chat": "dojo",
+ "lock": "WorkFiles/locks/armoryhall.json (asset name ArmoryHall)",
+ "change_log": [
+  {
+   "rev": 1,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "summary": "created the shared armory_hall folder: the armory's r20 interior converted to hall-local (461 instances, 64 pieces, 114 design lights, 14 cases, 6 items), the hall shell with the rear extension design (83 new instances, 13 new SM_DKH pieces pending build), interface, SYNC rules",
+   "files": [
+    "SYNC.md",
+    "manifest.json",
+    "interior_layout.json",
+    "hall_shell_layout.json",
+    "lights_design.json",
+    "interface.json"
+   ]
+  },
+  {
+   "rev": 1,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "stage": "2 (Blender build)",
+   "summary": "built and exported the 13 new SM_DKH shell pieces (rear extension frame, bays, lower rear gable roof, ridge, gables, the back slope cut at the valley, the opened door bays, parked leaves, window backers) through Scripts/pipeline, qa_check 0 hard fails; hall_shell_layout.json now BUILT with measured numbers; INTERFACE CHANGED (rev 1, before release): shell_intrusions front-wall x +-6.3 and the parked-leaf box (y 0.13-0.22, z 0-1.86) from the built meshes, rafter clearance measured 0.0213 m; the 1v1 site pieces (HallRear_W/E, RearRoof, the ring +11 m) listed under site_fbx_dojolab_only",
+   "files": [
+    "manifest.json",
+    "hall_shell_layout.json",
+    "interface.json"
+   ]
+  },
+  {
+   "rev": 1,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "stage": "3 (DojoLab sync + relight)",
+   "summary": "DojoLab synced revision 1 with the new Scripts/dojo/unreal/dj_armory_sync.py (run_armory_sync.sh): 461 interior instances + 6 items + 114 design lights + 10 shell backer lights placed in L_Dojo from the shared jsons; SM_AK_* imported from Exports/ArmoryKit by FBX sha256 (64 meshes, 0 drift vs this manifest); the armory's materials, textures and the pack's shuriken file-copied from ArmoryLab at the same package paths (209 packages, byte-identical, 0 drift vs this manifest); gates: bounds 0.07 cm max, envelope 0 violations, 83/83 shell ids in L_Dojo. lights_design.json level_scale.DojoLab measured: 10.295 -> 0.06792 (exposure parity). No interface change.",
+   "files": [
+    "manifest.json",
+    "lights_design.json"
+   ]
+  },
+  {
+   "rev": 2,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "stage": "fix (shell)",
+   "summary": "fix round (judge deltas checked against the references): SHELL ONLY. SM_DKH_RoofLower_Front rebuilt with its wall flashing / rafter ends clamped to world y 24.04 (they poked 9.5 mm through the inner face of the front wall: the row of dashes seen from the interior); the extension's rear-wall centre bay X 21-23 DKH_N0022 (closed lattice door, glowing behind the hero painting) removed and replaced by DKH_N0084 (SM_DKH_Bay_Plaster); the backer lights' per-level state recorded (DojoLab: off, the windows read dark); lights_design.json level_only_not_travelling lists the DojoLab-only DJ_ThresholdFill. No interior piece, case, item or design light changed (interior_layout.json untouched); no interface change. ArmoryLab: nothing to re-import (the shell is not used there). DojoLab-only look, never synced (SYNC.md 6, Scripts/dojo/unreal/dj_armory_look.py): interior PPV exposure -0.6 EV + local exposure 1.0 / bloom 0.3 / shadow saturation 1.0, reflect-card emission x0.1, CaseLight_08 x0.5, parked-leaf paper unlit.",
+   "files": [
+    "manifest.json",
+    "hall_shell_layout.json",
+    "lights_design.json"
+   ]
+  },
+  {
+   "rev": 3,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "summary": "finish stage (hall + armory round): the sync becomes self-sufficient for both chats and ArmoryLab shows the extended hall. NEW tools/ (check_sync.py = the section-8 checks for either side incl. mesh-level envelope checks on the FBX bytes; regen_interior.py = interior_layout.json + lights_design.json regenerated from the armory chat's own build data, stable AKI ids, the survey rules moved out of make_survey.py, reproduces rev 2 with zero content diff; bump_manifest.py; ue_armorylab_shell.py = the ArmoryLab commandlet that imports + places the shell, rebuilds its materials, hides the armory's own exterior and applies the hall-variant interior, proven on DojoLab in no-save test mode: 161 / 161 placed, bounds 0.0055 cm, 0 files written); NEW shell_materials.json (32 SM_DKH pieces, 10 material instances + 2 masters, 31 textures, import recipe; recipe = DojoLab readback, 0 mismatches); SYNC.md revision 3 (sections 0, 3, 11-14: ArmoryLab shows the extended hall, the interior / shell change flows, the session-start check, the ArmoryLab first-time setup); interior_layout.json: source metadata only (armory layout sha256, generator), no content change. No shell / interior geometry, light or interface change.",
+   "files": [
+    "SYNC.md",
+    "shell_materials.json",
+    "interior_layout.json",
+    "tools/*"
+   ],
+   "recomputed": {
+    "fbx": 34,
+    "shell_textures": 31
+   },
+   "shared_files_changed": [
+    "SYNC.md",
+    "hall_shell_layout.json",
+    "interface.json",
+    "interior_layout.json",
+    "lights_design.json",
+    "shell_materials.json",
+    "tools/ahcommon.py",
+    "tools/bump_manifest.py",
+    "tools/check_sync.py",
+    "tools/fbxlite.py",
+    "tools/regen_interior.py",
+    "tools/ue_armorylab_shell.py"
+   ]
+  },
+  {
+   "rev": 4,
+   "date": "2026-10-01",
+   "chat": "dojo",
+   "summary": "sync gaps from the finish-stage verifier (WorkFiles/dojo/build/hall_armory/finish/verify/json/armory_side_dryrun.json); docs + tools only: no Unreal run, no geometry, light, interface or asset change. (1) ArmoryLab step order, SYNC.md 3.2: the armory chat's own run_armory_unreal.sh routine first and complete on its unmodified layout (verify, character, walk, capture, fptest, stats), tools/ue_armorylab_shell.py LAST, then check_sync.py --side armory as the hall-variant check (new check 'hall_variant': shell.json gates at the recorded revision with the counts the shared files give + level.json not newer than shell.json); no ak_* Unreal step after the tool (ak_verify gate_level would fail on SM_AK_EntryMat__335 / SM_AK_Lantern__612 / __613, lifted +0.12 m by design); an optional ak_verify exception rule for the armory chat's own code, derived from interior_layout.json z_shift_m; sections 12 and 14 follow it. (2) Shell master drift: NEW tools/master_snapshot.py + shell_masters.json (the call graph of build_lib_opaque / build_lib_emissive in Scripts/dojo/unreal/dj_sc_materials.py, the dj_sc_common.py members it reaches and the layout_showcase.json sampler defaults; comments and docstrings stripped; graph_sha256), manifest shell_master_graph, check_sync 'masters' (dojo side stale = 3, armory side fail = 1), SYNC.md 15: a master change is now snapshot + bump and puts ArmoryLab behind. (3) Revisions that need a sync: manifest sync_needed_rev per project, set by bump_manifest.py, read by check_sync.py (SYNC.md 3.4); a docs / plain-Python-tool revision needs no Unreal re-sync; this revision needs none (DojoLab 3, ArmoryLab 3). bump_manifest.py: files / sections recorded for the first time go to shared_files_added / first_recorded, not shared_files_changed; --correction; --sync-all. ue_armorylab_shell.py, regen_interior.py, fbxlite.py and every layout json unchanged.",
+   "files": [
+    "SYNC.md",
+    "shell_masters.json",
+    "tools/ahcommon.py",
+    "tools/bump_manifest.py",
+    "tools/check_sync.py",
+    "tools/master_snapshot.py"
+   ],
+   "recomputed": {},
+   "shared_files_changed": [
+    "SYNC.md",
+    "tools/ahcommon.py",
+    "tools/bump_manifest.py",
+    "tools/check_sync.py"
+   ],
+   "shared_files_added": [
+    "shell_masters.json",
+    "tools/master_snapshot.py"
+   ],
+   "first_recorded": [
+    "shell_master_graph"
+   ],
+   "sync_needed": [],
+   "corrections": [
+    "rev 3 shared_files_changed: rev 3 was the first record of shared_files, so its line listed all 12 files as changed. Against the rev-2 bytes (WorkFiles/dojo/build/hall_armory/finish/start_backup/shared_armory_hall_rev2): changed = SYNC.md, interior_layout.json (source metadata only); new at rev 3 = shell_materials.json, tools/ahcommon.py, tools/bump_manifest.py, tools/check_sync.py, tools/fbxlite.py, tools/regen_interior.py, tools/ue_armorylab_shell.py; unchanged = hall_shell_layout.json, interface.json, lights_design.json. The rev-3 'files' list was right."
+   ]
+  }
+ ],
+ "last_synced": {
+  "DojoLab": 4,
+  "ArmoryLab": 4,
+  "note": "each project records the revision it last synced in its own notes (SYNC.md 3)"
+ },
+ "sync_needed_rev": {
+  "DojoLab": 3,
+  "ArmoryLab": 3,
+  "rule": "per project, the last revision that changed what its Unreal sync reads (SYNC.md 3); check_sync.py: synced revision >= this = synced"
+ },
+ "shared_files": {
+  "SYNC.md": "d1f2f09bc287b9452e06fe3c06d224ff1c4060d7ab81f3686fa37c2d554c8eaa",
+  "interior_layout.json": "dc2d89bd41aa0d0facd49f4dfc925a86a2f8801281f66011a1e46018015b10de",
+  "lights_design.json": "ca9946eebbcdc451757439842eb4f770e2d3776b9421165e53971d3d131f6280",
+  "hall_shell_layout.json": "041e243c3f1eee1c0092e51cc5078b4233e337f111955acddd7fa3e28ad61185",
+  "interface.json": "eb54593dc9941da5ad7cf43aa0c95c4ac64bc1fde62ba16c2ceb0a87ce2f5711",
+  "shell_materials.json": "169f39cbd75c5921ff9e24b7b3118d58c57cc7246a0a6065daf50424c022e400",
+  "shell_masters.json": "6d677e34fffadad8204e92245861076f9bae93d60852b0bb15627d2907e94c44",
+  "tools/ahcommon.py": "9cf0a85a0c4cbd3b5feb79edca234ee12b1711b1a88d95e69441e9952ea323e2",
+  "tools/fbxlite.py": "72eb4e5ee7d54dd6e718b83f7312b58f9cae0969b73e60f4694a076db736d878",
+  "tools/regen_interior.py": "24e4d9b456ddfd1da17b725a28b14f22e464be33e3a5da22643c112bbe648539",
+  "tools/bump_manifest.py": "9d69beb4e87b1ad089d0b2cd32e1e6caab3ae93670463893b584ae73529fab47",
+  "tools/check_sync.py": "0b6d1ce65ea0438b6a36aaeda56f6ab0d5382f1b9882e213c0d9507aedb70b8d",
+  "tools/master_snapshot.py": "809e24b165123b9a79272cf6e57cb3ca027b8bdae7b23a36a85f8a4c08aa4d6d",
+  "tools/ue_armorylab_shell.py": "792a6dc36a457e1ee554da6d800bac0e8f854571ce720a8882f03e8b99e5fe1e"
+ },
+ "fbx": {
+  "SM_AK_Banner": {
+   "path": "Exports/ArmoryKit/SM_AK_Banner.fbx",
+   "sha256": "f23ccf33ac2595ba96e55f22045184cdf57bd50b8dad892fe79dace817e79eb6",
+   "bytes": 101628,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Banner"
+  },
+  "SM_AK_Case_Hero_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_Hero_Plinth.fbx",
+   "sha256": "355f3798385a13a5d287cc2acb72794c50d65047fc0d10c000bf9f046ee977b3",
+   "bytes": 97980,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_Hero_Plinth"
+  },
+  "SM_AK_Case_LN_Glass": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_LN_Glass.fbx",
+   "sha256": "97ce54868bebd710eb24dd6d9fb96a2c721ea9a5855bda49552fb98801fb5ae7",
+   "bytes": 61356,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_LN_Glass"
+  },
+  "SM_AK_Case_LN_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_LN_Plinth.fbx",
+   "sha256": "7b85f3a040b09fedc6f9d89ad4b1565dfca9b5ab98b3a00ce69075de404fa465",
+   "bytes": 132012,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_LN_Plinth"
+  },
+  "SM_AK_Case_L_Glass": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_L_Glass.fbx",
+   "sha256": "70c5970ac16b7f93ad72292aaa7e0354f0143c49bb3eb213a347f458e121cac6",
+   "bytes": 61628,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_L_Glass"
+  },
+  "SM_AK_Case_L_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_L_Plinth.fbx",
+   "sha256": "21550b175314b07e2c91c122ed73094135019778f2ac5aef26c3ad126b4b0e45",
+   "bytes": 142060,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_L_Plinth"
+  },
+  "SM_AK_Case_MT_Glass": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_MT_Glass.fbx",
+   "sha256": "e146a7017eb70ad18fe9086cbe1d21759e85b5197a4e51be7c880852643bbcc8",
+   "bytes": 60860,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_MT_Glass"
+  },
+  "SM_AK_Case_MT_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_MT_Plinth.fbx",
+   "sha256": "092cfa5694d2c80c5226d5cb18ff093029793296aa1073dcd044817f14bd0400",
+   "bytes": 120988,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_MT_Plinth"
+  },
+  "SM_AK_Case_M_Glass": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_M_Glass.fbx",
+   "sha256": "165b167e4a1be12bc3bfe5725f6c28c4f139650cf17914de41deb039bcce7546",
+   "bytes": 61916,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_M_Glass"
+  },
+  "SM_AK_Case_M_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_M_Plinth.fbx",
+   "sha256": "90dd9b702f5038ce94b0a8dda1f264f7c411b1bac0e54d540b8a8d1486701b06",
+   "bytes": 138700,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_M_Plinth"
+  },
+  "SM_AK_Case_SF_Glass": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_SF_Glass.fbx",
+   "sha256": "d966167a56da550efbc2ad43056164b6ea2bd74877f52cef4e3d56f508e91976",
+   "bytes": 61116,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_SF_Glass"
+  },
+  "SM_AK_Case_SF_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_SF_Plinth.fbx",
+   "sha256": "5796841243e1a314ba08b2df3d61e7fabb340c2defbe1898dacaf0488f72a4c4",
+   "bytes": 119292,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_SF_Plinth"
+  },
+  "SM_AK_Case_S_Glass": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_S_Glass.fbx",
+   "sha256": "7c45ac3bd95c93c3f8f4eea84d1a6dbca28b27c3ff86d87d9b1f452f4d9c5bc2",
+   "bytes": 61308,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_S_Glass"
+  },
+  "SM_AK_Case_S_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_S_Plinth.fbx",
+   "sha256": "dfbb06a3a85ca4d0a603708e0b23b5e66efd25ed61dcdda13e7c37bc514e9b9f",
+   "bytes": 121068,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_S_Plinth"
+  },
+  "SM_AK_Case_Tall_Glass": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_Tall_Glass.fbx",
+   "sha256": "fc60dcbe7cc73c7a33038844d2bab3965e019e08501c669195b07918b7b224ca",
+   "bytes": 60988,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_Tall_Glass"
+  },
+  "SM_AK_Case_Tall_Plinth": {
+   "path": "Exports/ArmoryKit/SM_AK_Case_Tall_Plinth.fbx",
+   "sha256": "aaa996d637f322e7cb29dc1662d569641d744623280d9677fff036bf521315ef",
+   "bytes": 122812,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Case_Tall_Plinth"
+  },
+  "SM_AK_Ceiling_Beam_4": {
+   "path": "Exports/ArmoryKit/SM_AK_Ceiling_Beam_4.fbx",
+   "sha256": "e45cac3ccb7ad4fc2d360af4d05a09cc75000b62f11cf78f574cd70948cd0252",
+   "bytes": 22748,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Ceiling_Beam_4"
+  },
+  "SM_AK_Ceiling_Coffer_2x2": {
+   "path": "Exports/ArmoryKit/SM_AK_Ceiling_Coffer_2x2.fbx",
+   "sha256": "82010f4ac6d65988bf3021d502d3012a47a324fb9664ddcaca20e7dc1defaab5",
+   "bytes": 34972,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Ceiling_Coffer_2x2"
+  },
+  "SM_AK_Ceiling_Lattice_2x2": {
+   "path": "Exports/ArmoryKit/SM_AK_Ceiling_Lattice_2x2.fbx",
+   "sha256": "f01964a7637cddf7732f586136624a80925c6b9be2e2948ad0747ae3479b18fc",
+   "bytes": 191196,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Ceiling_Lattice_2x2"
+  },
+  "SM_AK_Ceiling_Rib_2": {
+   "path": "Exports/ArmoryKit/SM_AK_Ceiling_Rib_2.fbx",
+   "sha256": "ee553352d45869a06f4894217909d6e56dbf7cd0e9f9842d20ca1bac40ea3a0e",
+   "bytes": 22780,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Ceiling_Rib_2"
+  },
+  "SM_AK_Corner_5": {
+   "path": "Exports/ArmoryKit/SM_AK_Corner_5.fbx",
+   "sha256": "fb34107d16bcb8a5012ac6eaf19a522c54c25edfa89161332c1dd900c39420ec",
+   "bytes": 21276,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Corner_5"
+  },
+  "SM_AK_DSP_ShurikenTray": {
+   "path": "Exports/ArmoryKit/SM_AK_DSP_ShurikenTray.fbx",
+   "sha256": "8c14bb948ccea55b9e7b47a4d8aa20c8d6f189e1a2c2dc4cef3a6e5f3e94144b",
+   "bytes": 24268,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_DSP_ShurikenTray"
+  },
+  "SM_AK_EmblemDisc_08": {
+   "path": "Exports/ArmoryKit/SM_AK_EmblemDisc_08.fbx",
+   "sha256": "38d01e65452c9663652f81346a68bf4201bbbca4fdcb1740354c1a5b62de5d15",
+   "bytes": 26204,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_EmblemDisc_08"
+  },
+  "SM_AK_EntryMat": {
+   "path": "Exports/ArmoryKit/SM_AK_EntryMat.fbx",
+   "sha256": "7bd7b071b1ffb6fcc12eb9d6f1cea810aba46c4e751d043a872daf533ea0fe83",
+   "bytes": 107788,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_EntryMat"
+  },
+  "SM_AK_Floor_Plank_2x2_A": {
+   "path": "Exports/ArmoryKit/SM_AK_Floor_Plank_2x2_A.fbx",
+   "sha256": "a79ec39124f42e16771ddf18aced9c71dbb87332adfa8ff12d5b842730eb2a60",
+   "bytes": 17884,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Floor_Plank_2x2_A"
+  },
+  "SM_AK_Floor_Plank_2x2_B": {
+   "path": "Exports/ArmoryKit/SM_AK_Floor_Plank_2x2_B.fbx",
+   "sha256": "ddc16c59407d6168dd65282e9bf637c6cd76b6873b05ef8afd7d0ab5279f45ed",
+   "bytes": 17916,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Floor_Plank_2x2_B"
+  },
+  "SM_AK_Floor_Plank_2x2_C": {
+   "path": "Exports/ArmoryKit/SM_AK_Floor_Plank_2x2_C.fbx",
+   "sha256": "1b4889e22857e19f4db7fca375478ff4e9cbcd2c23af53777aab131e4cc0ab4b",
+   "bytes": 17916,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Floor_Plank_2x2_C"
+  },
+  "SM_AK_Floor_Plank_2x2_D": {
+   "path": "Exports/ArmoryKit/SM_AK_Floor_Plank_2x2_D.fbx",
+   "sha256": "5c6847c93136482b942fee650c45dd052bc5c327c91c0f9d06dcc314b4621633",
+   "bytes": 17884,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Floor_Plank_2x2_D"
+  },
+  "SM_AK_H_Canopy": {
+   "path": "Exports/ArmoryKit/SM_AK_H_Canopy.fbx",
+   "sha256": "782b128a94ad17753168048a8494572c33491ffe80ddee4c25d7a24b2c83e53c",
+   "bytes": 44908,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_Canopy"
+  },
+  "SM_AK_H_CanopyWing_E": {
+   "path": "Exports/ArmoryKit/SM_AK_H_CanopyWing_E.fbx",
+   "sha256": "5baff60c27203fdeacf641773d6f10adbfd17ff0282b63f3db240160836c6d08",
+   "bytes": 30188,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_CanopyWing_E"
+  },
+  "SM_AK_H_CanopyWing_W": {
+   "path": "Exports/ArmoryKit/SM_AK_H_CanopyWing_W.fbx",
+   "sha256": "3d10c9f998cf7063b87cd6b35d1da2c9c71d414f29a16a8e45e5470ef9fe1da9",
+   "bytes": 30220,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_CanopyWing_W"
+  },
+  "SM_AK_H_Ceiling_Downlight": {
+   "path": "Exports/ArmoryKit/SM_AK_H_Ceiling_Downlight.fbx",
+   "sha256": "011b84d3764edcf544dd744e102ca34de55df12cf8c8fa9fba2341784f31606e",
+   "bytes": 44844,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_Ceiling_Downlight"
+  },
+  "SM_AK_H_Ceiling_Joint": {
+   "path": "Exports/ArmoryKit/SM_AK_H_Ceiling_Joint.fbx",
+   "sha256": "451c37096037ef2637efb79943494607574f2dc28e89c6a06e801f771f8bc6c8",
+   "bytes": 29196,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_Ceiling_Joint"
+  },
+  "SM_AK_H_CornerNiche_E": {
+   "path": "Exports/ArmoryKit/SM_AK_H_CornerNiche_E.fbx",
+   "sha256": "6bf498ccf599191e33b20cabf3607240ccccc01e7e718e3068ad48e0440c27c4",
+   "bytes": 93116,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_CornerNiche_E"
+  },
+  "SM_AK_H_CornerNiche_W": {
+   "path": "Exports/ArmoryKit/SM_AK_H_CornerNiche_W.fbx",
+   "sha256": "22eb0b7083b0b20923743fb0d24b5ffafcb629a7818d14d988431835f75e7d56",
+   "bytes": 93532,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_CornerNiche_W"
+  },
+  "SM_AK_H_Downlight": {
+   "path": "Exports/ArmoryKit/SM_AK_H_Downlight.fbx",
+   "sha256": "a3f018405a9308fecbf3ff1a43d6a91d5b73233123c015947171d85a4d897509",
+   "bytes": 28876,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_Downlight"
+  },
+  "SM_AK_H_DownlightBox": {
+   "path": "Exports/ArmoryKit/SM_AK_H_DownlightBox.fbx",
+   "sha256": "4ee823e2e3bd367b1c6fddece2bf5610e8dbd5bf73428d5e518637aca73cf143",
+   "bytes": 31884,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_DownlightBox"
+  },
+  "SM_AK_H_LanternStand": {
+   "path": "Exports/ArmoryKit/SM_AK_H_LanternStand.fbx",
+   "sha256": "9cbbbb9805cfda9a94ceab99a3a1a51a7297343dfe8b76a973b85273857af905",
+   "bytes": 41324,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_LanternStand"
+  },
+  "SM_AK_H_PaintingBase": {
+   "path": "Exports/ArmoryKit/SM_AK_H_PaintingBase.fbx",
+   "sha256": "905492b216e8d02a547a74f4c7713f4f740c39d17c9f2f133c538682b2eb2476",
+   "bytes": 32908,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_PaintingBase"
+  },
+  "SM_AK_H_TopBeam": {
+   "path": "Exports/ArmoryKit/SM_AK_H_TopBeam.fbx",
+   "sha256": "892b86d71cf2cc3433c9084abfaa1403588a4619bb23df60a5f6dbd9e964da18",
+   "bytes": 22524,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_H_TopBeam"
+  },
+  "SM_AK_Lantern": {
+   "path": "Exports/ArmoryKit/SM_AK_Lantern.fbx",
+   "sha256": "379d8d2d5cd6dfeae288f6c7ae4d9beec74fad963c4c481f53587ef88e977cd8",
+   "bytes": 98204,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Lantern"
+  },
+  "SM_AK_Lantern_M": {
+   "path": "Exports/ArmoryKit/SM_AK_Lantern_M.fbx",
+   "sha256": "8bc243519602a0e8172d7d816d86476b22f3baf5d671d7c1b8b77e7642a309a4",
+   "bytes": 97932,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Lantern_M"
+  },
+  "SM_AK_Lantern_S": {
+   "path": "Exports/ArmoryKit/SM_AK_Lantern_S.fbx",
+   "sha256": "ac0e7f0f6a57179b843ba5db2d34328d5bb5bcbef13264445ef151b226bd5757",
+   "bytes": 99036,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Lantern_S"
+  },
+  "SM_AK_PaintingPanel": {
+   "path": "Exports/ArmoryKit/SM_AK_PaintingPanel.fbx",
+   "sha256": "cda77611fa7c81a87ff128468db66dc766f0d155a6d8e6f62989dc1fd2863fec",
+   "bytes": 39116,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_PaintingPanel"
+  },
+  "SM_AK_Platform_2x1": {
+   "path": "Exports/ArmoryKit/SM_AK_Platform_2x1.fbx",
+   "sha256": "f1a1c4dd141bb32dd3b03c62658068dfcd564a3ca32f8888fe0a44d76e52fc81",
+   "bytes": 22364,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Platform_2x1"
+  },
+  "SM_AK_Platform_Edge_22": {
+   "path": "Exports/ArmoryKit/SM_AK_Platform_Edge_22.fbx",
+   "sha256": "c02b59f3d86196a4f08aa05e8b65b99d67ef0585414aa747a2d25f18306f6d91",
+   "bytes": 22444,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Platform_Edge_22"
+  },
+  "SM_AK_Platform_Side_19": {
+   "path": "Exports/ArmoryKit/SM_AK_Platform_Side_19.fbx",
+   "sha256": "0d2a9a69c60671356eedd696556419f1fd6c255f37d26297534545d0661ce95f",
+   "bytes": 56604,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Platform_Side_19"
+  },
+  "SM_AK_Post_260": {
+   "path": "Exports/ArmoryKit/SM_AK_Post_260.fbx",
+   "sha256": "be570e88a26428239369b870804ce0c88172ad1e87187a89358015e86231c736",
+   "bytes": 21340,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Post_260"
+  },
+  "SM_AK_Post_480": {
+   "path": "Exports/ArmoryKit/SM_AK_Post_480.fbx",
+   "sha256": "063ae051d8f105a2ac97e925e6188ecc45781a03d458a77aebe067cd40324e57",
+   "bytes": 21324,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Post_480"
+  },
+  "SM_AK_Post_Heavy_480": {
+   "path": "Exports/ArmoryKit/SM_AK_Post_Heavy_480.fbx",
+   "sha256": "3977fbc5b2df47fc49554a75620b48f8ae3c782ef824c527fcb22df7f6267683",
+   "bytes": 30684,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Post_Heavy_480"
+  },
+  "SM_AK_Post_LED_480": {
+   "path": "Exports/ArmoryKit/SM_AK_Post_LED_480.fbx",
+   "sha256": "a348b9cdd2ddcfd7afce59e4500a47a267bd1f6055968da6ddead278e4639e40",
+   "bytes": 24332,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Post_LED_480"
+  },
+  "SM_AK_RearAlcove": {
+   "path": "Exports/ArmoryKit/SM_AK_RearAlcove.fbx",
+   "sha256": "6b077158cd694a5b0f604d6e188ea276848282f7df22f2a253c689af6eb0aaf5",
+   "bytes": 244924,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_RearAlcove"
+  },
+  "SM_AK_RearScreen": {
+   "path": "Exports/ArmoryKit/SM_AK_RearScreen.fbx",
+   "sha256": "7a1c3cf50a05faf4966bf8edab48f6ff4d91672054da73c72a8734696fabd330",
+   "bytes": 26684,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_RearScreen"
+  },
+  "SM_AK_SillCaddy": {
+   "path": "Exports/ArmoryKit/SM_AK_SillCaddy.fbx",
+   "sha256": "f38640461cc4c2063245c084ca0c7c9513d17795caf14ce859901a5a9bdfce0c",
+   "bytes": 23836,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_SillCaddy"
+  },
+  "SM_AK_SillLedge_2": {
+   "path": "Exports/ArmoryKit/SM_AK_SillLedge_2.fbx",
+   "sha256": "0d85dfcc42de16d0a7d0384d59f4049f13557bcc2345847d653ae9a28636be0b",
+   "bytes": 23596,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_SillLedge_2"
+  },
+  "SM_AK_StairCheek": {
+   "path": "Exports/ArmoryKit/SM_AK_StairCheek.fbx",
+   "sha256": "7c84af4f8eeb04c75e9ac24889133483407333d1a0f7a7e0dc7118e3ea3dfb9b",
+   "bytes": 27660,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_StairCheek"
+  },
+  "SM_AK_Steps_22": {
+   "path": "Exports/ArmoryKit/SM_AK_Steps_22.fbx",
+   "sha256": "0d9326dd898874afee3ef06c50ff371ddf211d8200f1ac91aef54d951099f6b4",
+   "bytes": 41308,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Steps_22"
+  },
+  "SM_AK_Vase_Plum_L": {
+   "path": "Exports/ArmoryKit/SM_AK_Vase_Plum_L.fbx",
+   "sha256": "d0e6d7318dc181259b205c7bfde1149588258cd2198f6be35108b9cd606e0e8d",
+   "bytes": 391244,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Vase_Plum_L"
+  },
+  "SM_AK_Vase_Plum_S": {
+   "path": "Exports/ArmoryKit/SM_AK_Vase_Plum_S.fbx",
+   "sha256": "d8a57d5b2c0ee0e0db2944987621fa98c37babc8e085f82d14c16c8edeed071f",
+   "bytes": 296780,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Vase_Plum_S"
+  },
+  "SM_AK_WallLower_2": {
+   "path": "Exports/ArmoryKit/SM_AK_WallLower_2.fbx",
+   "sha256": "120c966a92ecc15d3c77a7977f1c81e1766da38e72a89b85c9910f2baeaf37b4",
+   "bytes": 22060,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_WallLower_2"
+  },
+  "SM_AK_WallPanel_LitWide": {
+   "path": "Exports/ArmoryKit/SM_AK_WallPanel_LitWide.fbx",
+   "sha256": "ef43efd3d7664fb6b422c71e2d28fc22881a2990b30773f8d89e3be711b35179",
+   "bytes": 84924,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_WallPanel_LitWide"
+  },
+  "SM_AK_WallUpper_Plain_2": {
+   "path": "Exports/ArmoryKit/SM_AK_WallUpper_Plain_2.fbx",
+   "sha256": "6ca21b76b8f7716ab1fb98a36748206c8cc4800885aee57cdbc3a3473807a7b5",
+   "bytes": 36252,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_WallUpper_Plain_2"
+  },
+  "SM_AK_WallUpper_Window_4": {
+   "path": "Exports/ArmoryKit/SM_AK_WallUpper_Window_4.fbx",
+   "sha256": "3957203ca8a1b9b448352472c98e191da52f57c9cff8487aac5ec1f5b2825bce",
+   "bytes": 62940,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_WallUpper_Window_4"
+  },
+  "SM_AK_Window_Lattice_35": {
+   "path": "Exports/ArmoryKit/SM_AK_Window_Lattice_35.fbx",
+   "sha256": "3afab7810dee2758e99abe749f1d2330d0902eb43ecbd25f1ca8f70069d6e1b0",
+   "bytes": 50236,
+   "owner": "armory",
+   "ue_mesh": "/Game/ArmoryKit/Meshes/SM_AK_Window_Lattice_35"
+  },
+  "SM_DKH_StepBand": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_StepBand.fbx",
+   "sha256": "8654e1da92629fc87dc7dc0e9ac69412e5c6fab5d6ab11a51a99afa8ad78d4f3",
+   "bytes": 119148,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_StepBand",
+   "sidecar_sha256": "d89eee9a414a738a5d975f926e918aecedebd4212808a65f436afe65b9171b63",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Veranda": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Veranda.fbx",
+   "sha256": "bafdac37c0a935b525b4275b20647860d73aa4f4a2622a70fb6e69a80ceb7258",
+   "bytes": 528764,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Veranda",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_VerandaFrame": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_VerandaFrame.fbx",
+   "sha256": "9127383fd781deb588de47bf7ff0a3ae82f2094d689800c354988d679b954a21",
+   "bytes": 203244,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_VerandaFrame",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Frame": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Frame.fbx",
+   "sha256": "7a7b7b4d6fa5fa0906f3f797ab48f678347a426880dbb499e5232130aaf2c6b3",
+   "bytes": 208892,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Frame",
+   "used_in_rev1": false,
+   "placed": false
+  },
+  "SM_DKH_Bay_Plaster": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Bay_Plaster.fbx",
+   "sha256": "c5a905cb4a8b053cd8e0deec1593f424b99bcb3d3ff83b9d76ef213dc9596cc4",
+   "bytes": 86908,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Plaster",
+   "sidecar_sha256": "bd9fd0f27ba0c6892b425fb75db9f97253934c27f92ce3c41efc86e42cf29dd6",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Bay_Lattice": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Bay_Lattice.fbx",
+   "sha256": "74d41bb585f2388b81a72e05234f3ab9c75b21e76a2dc2ec4f8648fddf72984e",
+   "bytes": 162380,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Lattice",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Bay_Door": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Bay_Door.fbx",
+   "sha256": "b0798d2c8d20ddce7b4dae728aec16d9a422189187057af939b3b5ee5d754065",
+   "bytes": 136460,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Door",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Bay_Transom": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Bay_Transom.fbx",
+   "sha256": "c3a367a5160ab3a6297cf6a272072d348a17595bc785aa4a5a002fa7399975aa",
+   "bytes": 23516,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Transom",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Bay_ClerePlaster": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Bay_ClerePlaster.fbx",
+   "sha256": "67a3a264872b90750ad40260fde4d2f95840e19615aee25b3a7aee9eea94984f",
+   "bytes": 80700,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_ClerePlaster",
+   "sidecar_sha256": "99f604f2c23467476ebb7fb213e993e7b0899362e448242dd94d8678ea76f069",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Bay_ClereFrieze": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Bay_ClereFrieze.fbx",
+   "sha256": "b683e583b8098554d450b624ad9c52c96af7811a8fa78b23d569a1c6af4417d3",
+   "bytes": 144956,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_ClereFrieze",
+   "sidecar_sha256": "bb0f1231cdcbcb149fe458068c74b6c717e73e269b0ef26172202703551d404f",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_RoofUpper_Front": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_Front.fbx",
+   "sha256": "9f0f8497c87ada0280868c28611dbb3b867176b46f4343cec2e6e170675ea0fd",
+   "bytes": 8622764,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_Front",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_RoofUpper_Back": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_Back.fbx",
+   "sha256": "2706d988dd2c388abb62d52a4804c6797e19ae3fdb3bc316f0170e7e90e6f198",
+   "bytes": 7471932,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_Back",
+   "used_in_rev1": false,
+   "placed": false
+  },
+  "SM_DKH_RoofUpper_End": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_End.fbx",
+   "sha256": "109700ffdf1bad4380e1a5809c136ec359c76de83eff2b1bbc3b401f7eb862d2",
+   "bytes": 3005020,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_End",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_RoofUpper_Ridge": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_Ridge.fbx",
+   "sha256": "a41efa6b8d0eb9653cf8d0978a10d213bdddcb999598237b98b82ec57c98ea78",
+   "bytes": 1074140,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_Ridge",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_RoofLower_Front": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofLower_Front.fbx",
+   "sha256": "49c138fb19d5501e2f6c49cd01ab2ad84713bc170aa9c4ba1b52c570092451f6",
+   "bytes": 5643036,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofLower_Front",
+   "used_in_rev1": true,
+   "rev2": "rebuilt: wall flashing clipped at the front wall's inner face (same name, bbox -1.98 cm, SYNC.md 9)",
+   "placed": true
+  },
+  "SM_DKH_RoofLower_SideW": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofLower_SideW.fbx",
+   "sha256": "f0e50f6eca35cea2f5b3d98cb7adef4b3470eab9060158e6aa867006726bc796",
+   "bytes": 2615660,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofLower_SideW",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_RoofLower_SideE": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofLower_SideE.fbx",
+   "sha256": "6ca031af1deaf494cacf5d09aa0291713423af433edb2885476d35527cfcbd88",
+   "bytes": 2600892,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofLower_SideE",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_RoofChidori_W": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofChidori_W.fbx",
+   "sha256": "c7292ebfd4123921206fe8d8fee42e810f55c463a7ebda12c05bd7ccda26f959",
+   "bytes": 844940,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofChidori_W",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_RoofChidori_E": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofChidori_E.fbx",
+   "sha256": "4f384542d7a67dfc21e8bbdda93a4d5bffbaca4707cfa48e30a84a5baddcc163",
+   "bytes": 850412,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofChidori_E",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Downpipe": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Downpipe.fbx",
+   "sha256": "9cfe53eb28d2970569ff12849b62555a7876ca7408432deb0be1927b9fe329e9",
+   "bytes": 111644,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Downpipe",
+   "sidecar_sha256": "1db3212f3a186dcbf8d6ac0abe3295eaf75de4c23cb7babe300a070e92863bc7",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_EaveLanding": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_EaveLanding.fbx",
+   "sha256": "5b997f088b40f60be10c7301923fe0c4395873c81be2d9ec79960af5dc949ced",
+   "bytes": 84684,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_EaveLanding",
+   "sidecar_sha256": "00ca3aa19d3c8f4756a3b3e08fdf0f9eb2edf437d937baa61e13071495366a7e",
+   "used_in_rev1": true,
+   "placed": true
+  },
+  "SM_DKH_Bay_DoorOpen": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Bay_DoorOpen.fbx",
+   "sha256": "6605b778d8a17be7f73aa1b4857457c516b4f1e67e11644c44756f9ba3de667b",
+   "bytes": 28012,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_DoorOpen",
+   "placed": true
+  },
+  "SM_DKH_DoorLeaf_Parked": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_DoorLeaf_Parked.fbx",
+   "sha256": "45255bc32dbff6bdf6659f40329021d517086caa240039be5a5bfb4cf8ffe9af",
+   "bytes": 143820,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_DoorLeaf_Parked",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_DoorLeaf_Parked.sockets.json",
+   "sidecar_sha256": "ff72c09eb9017f033a9c1f5cc45e33f19f79d04e4a83c6ff6124d060fcc5844e",
+   "placed": true
+  },
+  "SM_DKH_Frame_Open": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Frame_Open.fbx",
+   "sha256": "6df31016b289cbbd9ba94ad92f8b94918d9155762658cd180fa584fc1a4203f8",
+   "bytes": 199708,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Frame_Open",
+   "placed": true
+  },
+  "SM_DKH_RoofUpper_BackValley": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_BackValley.fbx",
+   "sha256": "ba3818ad45c7ff9e564b5218b85f90ac3c9b06dc764528d22f8497195c09831a",
+   "bytes": 6080028,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_BackValley",
+   "placed": true
+  },
+  "SM_DKH_Rear_Frame": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_Frame.fbx",
+   "sha256": "e9585934ea7933f6c7ff79d357cf2ff415a8a6a9cb9e3d1231fc6b306034d43a",
+   "bytes": 146764,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Frame",
+   "placed": true
+  },
+  "SM_DKH_Rear_Bay_ClerePlaster": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay_ClerePlaster.fbx",
+   "sha256": "286739f2751df470127727364894fe5067e9a796819255e3b151eb9af0153bb0",
+   "bytes": 80316,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay_ClerePlaster",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay_ClerePlaster.sockets.json",
+   "sidecar_sha256": "678d47c9289494da85ff5182b89f6fd88b642ece55dfd9fc1c371f0ff5905f3f",
+   "placed": true
+  },
+  "SM_DKH_Rear_Bay1_Plaster": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_Plaster.fbx",
+   "sha256": "2476b553b77d65abdb5525826c5ce7e70e0dbd003a170af06bdf5599eff1a4d5",
+   "bytes": 67388,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay1_Plaster",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_Plaster.sockets.json",
+   "sidecar_sha256": "0c888b03188781d8656dc6799382a0d4fc5c77d2e1b35b17d0ad0fc1e44136ce",
+   "placed": true
+  },
+  "SM_DKH_Rear_Bay1_Transom": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_Transom.fbx",
+   "sha256": "103a0da438a78cbe44020e05ae1f860946c9bb4e0aa201e55c2b64d5e8803264",
+   "bytes": 23708,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay1_Transom",
+   "placed": true
+  },
+  "SM_DKH_Rear_Bay1_ClerePlaster": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_ClerePlaster.fbx",
+   "sha256": "47b5718d9bba0ecc9a190474991e6c8b247ca0a55bdcf2424daafaaf138916c5",
+   "bytes": 35516,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay1_ClerePlaster",
+   "placed": true
+  },
+  "SM_DKH_Rear_Roof": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_Roof.fbx",
+   "sha256": "c906fd8b2cbd542bf56cc2bc739a07300d67411b8b29a915b1eb0485a2447b08",
+   "bytes": 11676636,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Roof",
+   "placed": true
+  },
+  "SM_DKH_Rear_RoofRidge": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_RoofRidge.fbx",
+   "sha256": "a782aaaebd8aa85a94a4a150c8f23c6703c050338c08abda73d5793762267c51",
+   "bytes": 1084972,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_RoofRidge",
+   "placed": true
+  },
+  "SM_DKH_Rear_RoofGable": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_RoofGable.fbx",
+   "sha256": "86f85627a7ab81a38214f7ac510337c883bfd3b3607c2328e1ee4550730d6970",
+   "bytes": 23052,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_RoofGable",
+   "placed": true
+  },
+  "SM_DKH_Rear_WindowBacker": {
+   "path": "Exports/DojoKit/Hall/SM_DKH_Rear_WindowBacker.fbx",
+   "sha256": "630ddec9cffb4b8ed9e256cabb1592d6afc992b38247d0db347bcab5923961b2",
+   "bytes": 34300,
+   "owner": "dojo",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_WindowBacker",
+   "placed": true
+  }
+ },
+ "item_fbx": {
+  "Shuriken_FourPoint": {
+   "path": "Exports/Shuriken/SM_Shuriken_FourPoint.fbx",
+   "sha256": "fc16a0fa7ca41b52952797f6cfe660a49f460911ba163ade0ed1195db1fc0672",
+   "ue_mesh": "/Game/NinjaPack/Meshes/SM_Shuriken_FourPoint"
+  },
+  "Shuriken_EightPoint": {
+   "path": "Exports/Shuriken/SM_Shuriken_EightPoint.fbx",
+   "sha256": "ced33071d0eda4dc8b25fd7e721cb9b658941ba44087d2caf319f041004676ec",
+   "ue_mesh": "/Game/NinjaPack/Meshes/SM_Shuriken_EightPoint"
+  },
+  "Shuriken_SixPoint": {
+   "path": "Exports/Shuriken/SM_Shuriken_SixPoint.fbx",
+   "sha256": "e711279e591f69ae74ae9a49f4f443d518d5cbc42a50af20b3048ceee3657edb",
+   "ue_mesh": "/Game/NinjaPack/Meshes/SM_Shuriken_SixPoint"
+  },
+  "Shuriken_SquarePlate": {
+   "path": "Exports/Shuriken/SM_Shuriken_SquarePlate.fbx",
+   "sha256": "066f33f355cc75efc365ffd3152d008eb71e1bfb8098c02ff143b633fe2789e5",
+   "ue_mesh": "/Game/NinjaPack/Meshes/SM_Shuriken_SquarePlate"
+  },
+  "Shuriken_HookedCross": {
+   "path": "Exports/Shuriken/SM_Shuriken_HookedCross.fbx",
+   "sha256": "bd42e4dac5d7a54f69c01c9d826895cd5320a04e8141cd3e42fa28696b31d4ee",
+   "ue_mesh": "/Game/NinjaPack/Meshes/SM_Shuriken_HookedCross"
+  },
+  "Shuriken_Spike": {
+   "path": "Exports/Shuriken/SM_Shuriken_Spike.fbx",
+   "sha256": "892a0ba3444e7e033068cb342d1c25e7d9e7579bbacaaa560f0e951a23c3affe",
+   "ue_mesh": "/Game/NinjaPack/Meshes/SM_Shuriken_Spike"
+  }
+ },
+ "names_ever": [
+  "SM_AK_Banner",
+  "SM_AK_Case_Hero_Plinth",
+  "SM_AK_Case_LN_Glass",
+  "SM_AK_Case_LN_Plinth",
+  "SM_AK_Case_L_Glass",
+  "SM_AK_Case_L_Plinth",
+  "SM_AK_Case_MT_Glass",
+  "SM_AK_Case_MT_Plinth",
+  "SM_AK_Case_M_Glass",
+  "SM_AK_Case_M_Plinth",
+  "SM_AK_Case_SF_Glass",
+  "SM_AK_Case_SF_Plinth",
+  "SM_AK_Case_S_Glass",
+  "SM_AK_Case_S_Plinth",
+  "SM_AK_Case_Tall_Glass",
+  "SM_AK_Case_Tall_Plinth",
+  "SM_AK_Ceiling_Beam_4",
+  "SM_AK_Ceiling_Coffer_2x2",
+  "SM_AK_Ceiling_Lattice_2x2",
+  "SM_AK_Ceiling_Rib_2",
+  "SM_AK_Corner_5",
+  "SM_AK_DSP_ShurikenTray",
+  "SM_AK_EmblemDisc_08",
+  "SM_AK_EntryMat",
+  "SM_AK_Floor_Plank_2x2_A",
+  "SM_AK_Floor_Plank_2x2_B",
+  "SM_AK_Floor_Plank_2x2_C",
+  "SM_AK_Floor_Plank_2x2_D",
+  "SM_AK_H_Canopy",
+  "SM_AK_H_CanopyWing_E",
+  "SM_AK_H_CanopyWing_W",
+  "SM_AK_H_Ceiling_Downlight",
+  "SM_AK_H_Ceiling_Joint",
+  "SM_AK_H_CornerNiche_E",
+  "SM_AK_H_CornerNiche_W",
+  "SM_AK_H_Downlight",
+  "SM_AK_H_DownlightBox",
+  "SM_AK_H_LanternStand",
+  "SM_AK_H_PaintingBase",
+  "SM_AK_H_TopBeam",
+  "SM_AK_Lantern",
+  "SM_AK_Lantern_M",
+  "SM_AK_Lantern_S",
+  "SM_AK_PaintingPanel",
+  "SM_AK_Platform_2x1",
+  "SM_AK_Platform_Edge_22",
+  "SM_AK_Platform_Side_19",
+  "SM_AK_Post_260",
+  "SM_AK_Post_480",
+  "SM_AK_Post_Heavy_480",
+  "SM_AK_Post_LED_480",
+  "SM_AK_RearAlcove",
+  "SM_AK_RearScreen",
+  "SM_AK_SillCaddy",
+  "SM_AK_SillLedge_2",
+  "SM_AK_StairCheek",
+  "SM_AK_Steps_22",
+  "SM_AK_Vase_Plum_L",
+  "SM_AK_Vase_Plum_S",
+  "SM_AK_WallLower_2",
+  "SM_AK_WallPanel_LitWide",
+  "SM_AK_WallUpper_Plain_2",
+  "SM_AK_WallUpper_Window_4",
+  "SM_AK_Window_Lattice_35",
+  "SM_DKH_Bay_ClereFrieze",
+  "SM_DKH_Bay_ClerePlaster",
+  "SM_DKH_Bay_Door",
+  "SM_DKH_Bay_DoorOpen",
+  "SM_DKH_Bay_Lattice",
+  "SM_DKH_Bay_Plaster",
+  "SM_DKH_Bay_Transom",
+  "SM_DKH_DoorLeaf_Parked",
+  "SM_DKH_Downpipe",
+  "SM_DKH_EaveLanding",
+  "SM_DKH_Frame",
+  "SM_DKH_Frame_Open",
+  "SM_DKH_Rear_Bay1_ClerePlaster",
+  "SM_DKH_Rear_Bay1_Plaster",
+  "SM_DKH_Rear_Bay1_Transom",
+  "SM_DKH_Rear_Bay_ClerePlaster",
+  "SM_DKH_Rear_Frame",
+  "SM_DKH_Rear_Roof",
+  "SM_DKH_Rear_RoofGable",
+  "SM_DKH_Rear_RoofRidge",
+  "SM_DKH_Rear_WindowBacker",
+  "SM_DKH_RoofChidori_E",
+  "SM_DKH_RoofChidori_W",
+  "SM_DKH_RoofLower_Front",
+  "SM_DKH_RoofLower_SideE",
+  "SM_DKH_RoofLower_SideW",
+  "SM_DKH_RoofUpper_Back",
+  "SM_DKH_RoofUpper_BackValley",
+  "SM_DKH_RoofUpper_End",
+  "SM_DKH_RoofUpper_Front",
+  "SM_DKH_RoofUpper_Ridge",
+  "SM_DKH_StepBand",
+  "SM_DKH_Veranda",
+  "SM_DKH_VerandaFrame"
+ ],
+ "retired": [],
+ "pending_fbx": {},
+ "materials": {
+  "source": "ArmoryLab/Content/ArmoryKit/Materials (file copy into DojoLab, never an edit)",
+  "masters": [
+   "M_AK_EmissiveTex_Master",
+   "M_AK_Emissive_Master",
+   "M_AK_FlatNoCoat_Master",
+   "M_AK_Flat_Master",
+   "M_AK_Glass_Master",
+   "M_AK_TexturedTwoSided_Master",
+   "M_AK_Textured_Master"
+  ],
+  "instances": [
+   "M_AK_Brass",
+   "M_AK_Bronze",
+   "M_AK_Emblem",
+   "M_AK_Glaze",
+   "M_AK_HAlcovePanel",
+   "M_AK_HAlcoveReturn",
+   "M_AK_HAmber",
+   "M_AK_HAmberHot",
+   "M_AK_HBackBrass",
+   "M_AK_HBannerSatin",
+   "M_AK_HBayBoard",
+   "M_AK_HBezel",
+   "M_AK_HBinding",
+   "M_AK_HBrass",
+   "M_AK_HBrassBrushed",
+   "M_AK_HBrassPolish",
+   "M_AK_HBronze",
+   "M_AK_HBronzeEdge",
+   "M_AK_HBronzeKick",
+   "M_AK_HCaseGlass",
+   "M_AK_HCaseGlassTall",
+   "M_AK_HCord",
+   "M_AK_HCoveLED",
+   "M_AK_HDeck",
+   "M_AK_HDeckSuede",
+   "M_AK_HEbony",
+   "M_AK_HEntMat",
+   "M_AK_HGlaze",
+   "M_AK_HGlazeRim",
+   "M_AK_HGoldCord",
+   "M_AK_HGoldCordDk",
+   "M_AK_HGrilleGlow",
+   "M_AK_HGrilleMetal",
+   "M_AK_HGroove",
+   "M_AK_HHalo",
+   "M_AK_HHookLacquer",
+   "M_AK_HKickGlow",
+   "M_AK_HLEDAmber",
+   "M_AK_HLEDDown",
+   "M_AK_HLEDEdge",
+   "M_AK_HLEDLine",
+   "M_AK_HLEDPost",
+   "M_AK_HLEDPostWash",
+   "M_AK_HLEDReturn",
+   "M_AK_HLacquer",
+   "M_AK_HLacquerEdge",
+   "M_AK_HLacquerGroove",
+   "M_AK_HLacquerSatin",
+   "M_AK_HLamp",
+   "M_AK_HLanternEdge",
+   "M_AK_HLanternLacquer",
+   "M_AK_HLatticeArris",
+   "M_AK_HLatticeBoss",
+   "M_AK_HLatticeGlow",
+   "M_AK_HLatticeKumiko",
+   "M_AK_HLatticeSlot",
+   "M_AK_HLatticeTimber",
+   "M_AK_HLedStrip",
+   "M_AK_HLens",
+   "M_AK_HLensCore",
+   "M_AK_HMatBoard",
+   "M_AK_HMatLip",
+   "M_AK_HMedallion",
+   "M_AK_HNicheFrame",
+   "M_AK_HNicheLED",
+   "M_AK_HNicheLacquer",
+   "M_AK_HNicheSide",
+   "M_AK_HPaintingTall",
+   "M_AK_HPlumBark",
+   "M_AK_HPlumBud",
+   "M_AK_HPlumCentre",
+   "M_AK_HPlumPetal",
+   "M_AK_HPlumStamen",
+   "M_AK_HPlumWhite",
+   "M_AK_HPuck",
+   "M_AK_HRackLacquer",
+   "M_AK_HRevealLED",
+   "M_AK_HSatinBlack",
+   "M_AK_HScreen",
+   "M_AK_HShowcaseLining",
+   "M_AK_HShowcasePanel",
+   "M_AK_HSoffitGlow",
+   "M_AK_HStepRiser",
+   "M_AK_HStepTread",
+   "M_AK_HTassel",
+   "M_AK_HTimberEdge",
+   "M_AK_HWallOak",
+   "M_AK_HWashi",
+   "M_AK_LED",
+   "M_AK_Lacquer",
+   "M_AK_Plank",
+   "M_AK_PlasterShade",
+   "M_AK_ReflectCard",
+   "M_AK_ScreenPanel",
+   "M_AK_Shoji",
+   "M_AK_Slate",
+   "M_AK_Timber"
+  ],
+  "assets": {
+   "M_AK_Brass": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Brass.uasset",
+    "sha256": "c7e292e011a8f83d46ac294e4db24cebf56468327a1ee8de1a23d7658e30fe06",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_Bronze": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Bronze.uasset",
+    "sha256": "7ad4d2daae46239b864512ef539763960abbef43e861f4f9a8d95f4503f13cd4",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_Emblem": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Emblem.uasset",
+    "sha256": "9457799a5a29f39b68db0acef9fb1ea74b82bad92902ccb10c3d32cb9ce3fbd7",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_Glaze": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Glaze.uasset",
+    "sha256": "e3eb73e320ad0567108abb439b5ffe035aad097fb185bf8cdb4081d9de3e995a",
+    "kind": "instance",
+    "master": "M_AK_Flat_Master"
+   },
+   "M_AK_HAlcovePanel": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HAlcovePanel.uasset",
+    "sha256": "5fc87d055dfc0b121be0270d0360626dd91ff4f0d3c8d2a69d1b5b50e3a0e2de",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HAlcoveReturn": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HAlcoveReturn.uasset",
+    "sha256": "d6405b46ec5f28abdaa2dc250ea2570c46ab68b2320c5548f561e852fe91bb18",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HAmber": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HAmber.uasset",
+    "sha256": "75da260e4574a40dfc953ad5ce5bbf38f32a83aabbbd9cfbb98867a182512c19",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HAmberHot": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HAmberHot.uasset",
+    "sha256": "bfcbea80c6d01963d8175adcc80910f90d5a9a01b494e96d8152c814b511ba05",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HBackBrass": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBackBrass.uasset",
+    "sha256": "a764dc666afb37fef4c8e7b56758f7ee0fa94d60b24e3e4806d5c91198f3837a",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HBannerSatin": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBannerSatin.uasset",
+    "sha256": "6b42699bb744001c2fc853a93e11c8e4b8d58e5eed433b703f070f9daa4fec04",
+    "kind": "instance",
+    "master": "M_AK_TexturedTwoSided_Master"
+   },
+   "M_AK_HBayBoard": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBayBoard.uasset",
+    "sha256": "b2cdd85f14710844430d5bf3bb67fca33d2284e6b2a8c907a5c67b254efc89c9",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HBezel": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBezel.uasset",
+    "sha256": "02fa63cca6de92299f1b007ab17a8470aed30e142f119011e2468cfba0ab05fd",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HBinding": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBinding.uasset",
+    "sha256": "199f9cec4d63499d5f33426e1af0cadde4384cbbbd0b5ff2a26ceef42c9b7449",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HBrass": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBrass.uasset",
+    "sha256": "5408a961c0ceee8857377f3ac938705d23a42bdecd7ef35f53e0930214b4e28c",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HBrassBrushed": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBrassBrushed.uasset",
+    "sha256": "3ee0c67819e282ce2c734ecc99a84bdd80cc194ded5f78e761f857ca0275ee36",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HBrassPolish": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBrassPolish.uasset",
+    "sha256": "f9cc05513533f7c0e826d184d142f6b6ff54f2e8f47ab61f9e727c7f4eb925a3",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HBronze": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBronze.uasset",
+    "sha256": "eb7da24fc25ac97fc4a71f09929e9e9c53538f9faa4ccc953989942fea874017",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HBronzeEdge": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBronzeEdge.uasset",
+    "sha256": "5bab608eea7b858ff08e49fe5f99d68dd1ae6cacb723f3003e5e2e90f4b85d85",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HBronzeKick": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HBronzeKick.uasset",
+    "sha256": "70cbaf32a93fd44d73ad36b4da8b104bc50b40fee366f6f9835a5775c266372e",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HCaseGlass": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HCaseGlass.uasset",
+    "sha256": "14d65a52dca3e7cc7f9c62d731452d80a5ffd6c86fba8f80538fac5b23d5ddc4",
+    "kind": "instance",
+    "master": "M_AK_Glass_Master"
+   },
+   "M_AK_HCaseGlassTall": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HCaseGlassTall.uasset",
+    "sha256": "85ce2ff2f4d1f400afb7ebab6b889879d83f8f7fa1825acfe67cf4ae768babf0",
+    "kind": "instance",
+    "master": "M_AK_Glass_Master"
+   },
+   "M_AK_HCord": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HCord.uasset",
+    "sha256": "9bd1c2e35b21659e220ca158bec517ba9aca4d2fde04f077c31abeb1939d59f8",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HCoveLED": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HCoveLED.uasset",
+    "sha256": "47ab81e13db1358f3f177e3f2680143b146d15bb051fa296ca877f7a8793ea71",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HDeck": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HDeck.uasset",
+    "sha256": "b3b69cc59b8c0ee4f4fd1ce1ea9cdda8903f17f961ed78b2cea194d0b75f3d8b",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HDeckSuede": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HDeckSuede.uasset",
+    "sha256": "df1334c54ac069c94cb2e489649cad64bb3fe34851855ca06460e0914c1f3eac",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HEbony": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HEbony.uasset",
+    "sha256": "0da3ac8ba3da76a78b1aab273a5f351ecbe92a1288ed3a8c8c670c8f1b2011d6",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HEntMat": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HEntMat.uasset",
+    "sha256": "62c3616be71820d8d5104986cae186088e89c327acaa43f0b18067b8df114ec7",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HGlaze": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HGlaze.uasset",
+    "sha256": "b5fe62c3c09741e0ebab633bdfa8054845d1a718a39880d26dc2249eaf54b9cd",
+    "kind": "instance",
+    "master": "M_AK_Flat_Master"
+   },
+   "M_AK_HGlazeRim": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HGlazeRim.uasset",
+    "sha256": "dd6f53c8e168b46e27a8662a54a71785c3aebfd4427a26070ac9b0744604446f",
+    "kind": "instance",
+    "master": "M_AK_Flat_Master"
+   },
+   "M_AK_HGoldCord": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HGoldCord.uasset",
+    "sha256": "060e22bcb7239dc6a467fcfdc8983e4b6b18c9e0b2255f8fa80e8dcdda124424",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HGoldCordDk": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HGoldCordDk.uasset",
+    "sha256": "203e7c78df98e6dad8d673e3ef69c582c513313df001a75c7553d4fdcbb667fc",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HGrilleGlow": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HGrilleGlow.uasset",
+    "sha256": "101c32f3a83fbd016c8a4cf113c8efbc77d211ec5ac9eadfb39eb6e644063e52",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HGrilleMetal": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HGrilleMetal.uasset",
+    "sha256": "787084982bf5a5b45a7c62428a3dd56dfddf1ffd8198a1f6b18fa1a0128a196a",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HGroove": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HGroove.uasset",
+    "sha256": "877ec3a99eb29abdda0292f544bcd59dfbd5978ac6a528bedd8d2e0260e2b7fc",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HHalo": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HHalo.uasset",
+    "sha256": "692c1b08f1cd688f6a8ae37161d63011a10810468df22b2d88a6c0e3334d8742",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HHookLacquer": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HHookLacquer.uasset",
+    "sha256": "29fa5b74b83075eb3a1bc6f6d3a43911ff876db335469df7dd00c6a3d0306728",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HKickGlow": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HKickGlow.uasset",
+    "sha256": "08574e3f393b70be9cc821763fbf2ec4315bcb4b87d54672c1858fabd261564a",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HLEDAmber": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLEDAmber.uasset",
+    "sha256": "8183d0a09de02c3f0d41a2591df91c98a18cc4d71ccf2788eea4c8d381157aed",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLEDDown": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLEDDown.uasset",
+    "sha256": "c377e477b50477d170d23c91fa759ca833aaf5a99134bc717dbc7ec1ff3692fc",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLEDEdge": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLEDEdge.uasset",
+    "sha256": "ccdae1e9692df552e3791c1672f2b7441755b0441705e4cb9d4bd8e9bed8d197",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLEDLine": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLEDLine.uasset",
+    "sha256": "bd5cfb14b44f22ddd48c590c9836264ee3c21e218fb302794a818ed3143c913d",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLEDPost": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLEDPost.uasset",
+    "sha256": "1ad2babf096c0baf988eb9ac90bd102814e6b537e819eb40200e00f728c37e8b",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLEDPostWash": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLEDPostWash.uasset",
+    "sha256": "cee3160cc0a49928d5bb9f6744afd600460d3961c80e293eea9f40660b7f603c",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLEDReturn": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLEDReturn.uasset",
+    "sha256": "a44ea9c39b8385f95c072877452998a5c27b265352eb8de0834c5d0f31080ff3",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLacquer": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLacquer.uasset",
+    "sha256": "14d178c87e701b9328f3b1974aacf33e75661500e026da57592b0bedf66f8a12",
+    "kind": "instance",
+    "master": "M_AK_Flat_Master"
+   },
+   "M_AK_HLacquerEdge": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLacquerEdge.uasset",
+    "sha256": "5eedcc8da48f630513eb54dd20bcebb8864689ce1d5a72324aadf04da8f07005",
+    "kind": "instance",
+    "master": "M_AK_Flat_Master"
+   },
+   "M_AK_HLacquerGroove": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLacquerGroove.uasset",
+    "sha256": "2a3c32b84c2155627dc065d49be94adbaa900118a62da2fd3583c9c2c13d7b4f",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HLacquerSatin": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLacquerSatin.uasset",
+    "sha256": "73c0b29f8b9fccb8569bb6a8b3b3034c2d8499733f6c2681aa4df6c8b26245f1",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HLamp": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLamp.uasset",
+    "sha256": "4cc7a10defa290c6931e2878dce59db5b2a0c2ee160e5c8342b88c0b6e08f372",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLanternEdge": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLanternEdge.uasset",
+    "sha256": "6983d90faa11d2f237823444e395f3ebdaf09978638521bd7bfd58513e60f1a2",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HLanternLacquer": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLanternLacquer.uasset",
+    "sha256": "546e6df5a0bf26d86e1300330eaf5a6bb1494c32d89bc616c51a5c5bed8559b7",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HLatticeArris": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLatticeArris.uasset",
+    "sha256": "0bfd815197d171205d24701a525be6bf953181cf9cbe4a3615c4c883b75b62f5",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HLatticeBoss": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLatticeBoss.uasset",
+    "sha256": "491d0d06d8a33595b6843576a6b339d698943d51e55f72dc74d15e4174eb10ba",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HLatticeGlow": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLatticeGlow.uasset",
+    "sha256": "9363c4052dfef5dd291aa15e8c809ccee578c44edb2290e951518a5aa62473d4",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HLatticeKumiko": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLatticeKumiko.uasset",
+    "sha256": "22dfcf6160f83b1e0481104d4357c2f4507386a10c427d1db3e9fc8a24debbd0",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HLatticeSlot": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLatticeSlot.uasset",
+    "sha256": "eaf2039f06bd645750be09bc7a202a0f34d2cc59d71eb331a70585c3294ad606",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HLatticeTimber": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLatticeTimber.uasset",
+    "sha256": "c5e536c4f40d7e76b853dff4b407645259f3b243848c93a845468fc6148a6ca3",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HLedStrip": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLedStrip.uasset",
+    "sha256": "2313b72b4e114f7f92e253e6543792511c8083c0eb95d2b778460b95fda11852",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLens": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLens.uasset",
+    "sha256": "27d591d435613b48c1224ec179ce999d9568e6a4a97a51bf695dc4b0c1fab135",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HLensCore": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HLensCore.uasset",
+    "sha256": "53aefc46e63f73e564683204ed83403eb0ddbd254c86bf9ec8a7e472583c7bd1",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HMatBoard": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HMatBoard.uasset",
+    "sha256": "a270b6e7b7d835698dfdd75212437669cfb5288a27d5e10e198a67acbc3131c3",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HMatLip": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HMatLip.uasset",
+    "sha256": "62727e56ff92f8677b7fb50d0f9aaaeef05583470615e5d0eafdbfc2174fba43",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HMedallion": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HMedallion.uasset",
+    "sha256": "b59c1567a23dc84b6838dd3f52e8a2b1ef2fb56540175f0f3813d843d3f8a1e2",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HNicheFrame": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HNicheFrame.uasset",
+    "sha256": "e98b0ccdde4caad64df0a87d535598c741e1217f6c2a1dc2b73f6405384c4131",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HNicheLED": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HNicheLED.uasset",
+    "sha256": "0a822f7508a46fd9f6e518eae231d086888daebbb5ca6489693493619e7f28ea",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HNicheLacquer": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HNicheLacquer.uasset",
+    "sha256": "00e3ba7161daaecedcd137cb621135fe90da9ccca1d1c2cadf88a0866b91168f",
+    "kind": "instance",
+    "master": "M_AK_Flat_Master"
+   },
+   "M_AK_HNicheSide": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HNicheSide.uasset",
+    "sha256": "7c164e76c2b5d9d33af47ceaa40aa27135ccf838e3a0f285927c51ab57cad56f",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HPaintingTall": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPaintingTall.uasset",
+    "sha256": "f0773f0d87d5e07cee09649b4a34fc0316d1071def345479319e90687f9a5c6b",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HPlumBark": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPlumBark.uasset",
+    "sha256": "70c4cf72726be1599a44198560a34bd88b3f281fb0d6500d0277c5b054e846f4",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HPlumBud": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPlumBud.uasset",
+    "sha256": "f8bed04bd1d985f325a87694ab9e3761da110ca59bfbe4c4b795b412665daefc",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HPlumCentre": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPlumCentre.uasset",
+    "sha256": "69436d9898c6f01c140d8f6c74abd32a494c9867d050a9c45d22ca78e8dbbfe5",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HPlumPetal": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPlumPetal.uasset",
+    "sha256": "090cd8a4826ebe3f933f76648f87f7532f56760b5a4f29ae07f379c81139c135",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HPlumStamen": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPlumStamen.uasset",
+    "sha256": "5bd2e6b5f978a3804d858dfd096b593754ae7fc804c63e5981f51989ca58b352",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HPlumWhite": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPlumWhite.uasset",
+    "sha256": "3abd29c9427b0537db36f0b664207b12870fdee8abcc3b60a7c242a32290c1e8",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HPuck": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HPuck.uasset",
+    "sha256": "fdc09971845587327ee2bcb2ebb0a42775e208b96406a227bac29496ea7a8963",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HRackLacquer": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HRackLacquer.uasset",
+    "sha256": "7fcba6d6151b137e52988dc0bc5badfeeaf1ebf01e0e3d42d22488e623a6fe21",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HRevealLED": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HRevealLED.uasset",
+    "sha256": "4aa0289b42e90b15b6526a60b981099e8cf8252a59c4f028b7b960385d18275b",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_HSatinBlack": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HSatinBlack.uasset",
+    "sha256": "e2e15a089cd815f57acd1e5522536b8ca80ad0656ae456ceb0e6ae07ca24f812",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HScreen": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HScreen.uasset",
+    "sha256": "e1f2827e49b758183b83431418a73d243642b0f4180c628fe7f43b8b69ed5057",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HShowcaseLining": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HShowcaseLining.uasset",
+    "sha256": "2011b797dded9ff3d37cfe42b199a9c6495909a6334d46e1e4dd2ed8b8ff28de",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HShowcasePanel": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HShowcasePanel.uasset",
+    "sha256": "a18e026f9a51e4c4a99795e9dde031eec02d0fbf3f16b04997d6253af1311d5f",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HSoffitGlow": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HSoffitGlow.uasset",
+    "sha256": "c740d6b44fe8aea9ba1bae7bdbb8860516ff326797064f508c715c1165b48113",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_HStepRiser": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HStepRiser.uasset",
+    "sha256": "eb71b90a7b53c63c8abb5a87284d5ae5f58c9767002a5a537b0bd284a9887098",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HStepTread": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HStepTread.uasset",
+    "sha256": "2da152499bec815cd98eca8e00ec0d715d4aa0aba0ba7159fba8df9f8baeb04a",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HTassel": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HTassel.uasset",
+    "sha256": "b37f6a313fbec2da9dadbd295b35a11c86eda622a49331c71ca91eaae9e21b36",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HTimberEdge": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HTimberEdge.uasset",
+    "sha256": "843bff16a4644582378d4bc64e598542f5ff9012d00e6b4482f62f3458e1c723",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_HWallOak": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HWallOak.uasset",
+    "sha256": "0b594bba13b229c68f0581225466e8d001f4380bdf193b89f2e21f8f61c00be0",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_HWashi": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_HWashi.uasset",
+    "sha256": "ae6e47a7f5d91efeb6abb72aa378d4dfac7fa8a1c8b5114e73ed3a00d4a51b22",
+    "kind": "instance",
+    "master": "M_AK_EmissiveTex_Master"
+   },
+   "M_AK_LED": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_LED.uasset",
+    "sha256": "91938ab0f63ea36926773958f21ab19bb895ee8eddad3ced8e2297179fdfc78b",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_Lacquer": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Lacquer.uasset",
+    "sha256": "c28acfff589d1c5ee6cf53528f6d6a04aae3337310061b43fce53360137f752e",
+    "kind": "instance",
+    "master": "M_AK_Flat_Master"
+   },
+   "M_AK_Plank": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Plank.uasset",
+    "sha256": "8e65078b112a832d4c71c67f6dbcae20e2d9d0af102b761391f740e1f4859d02",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_PlasterShade": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_PlasterShade.uasset",
+    "sha256": "a2fa3aaae78164d1e3fb8026ddfcc1d1791353fd4a5efdd419102ef43f4098fb",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_ReflectCard": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_ReflectCard.uasset",
+    "sha256": "ae12057ed5e4ab55288730bf8620a282e4ff3ed8224027151064a8582c3078eb",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_ScreenPanel": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_ScreenPanel.uasset",
+    "sha256": "19e3ffe7415f4efe0c905607b83334b883b1f20dba3e957035fc2a6f176d980c",
+    "kind": "instance",
+    "master": "M_AK_FlatNoCoat_Master"
+   },
+   "M_AK_Shoji": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Shoji.uasset",
+    "sha256": "3bfe0c947540f4380c97d825afbfe66dd6995ef7eb1d5c36bd4973bba5c9b7dc",
+    "kind": "instance",
+    "master": "M_AK_Emissive_Master"
+   },
+   "M_AK_Slate": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Slate.uasset",
+    "sha256": "43e243b63d989a538a9bf256b40586666ae962ebb17019d7b0b9d53037901633",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_Timber": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Timber.uasset",
+    "sha256": "4dc47b767254700ce419d167f84f073ee8dff4e3d1d3df2d9a38cec88b3a314d",
+    "kind": "instance",
+    "master": "M_AK_Textured_Master"
+   },
+   "M_AK_EmissiveTex_Master": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_EmissiveTex_Master.uasset",
+    "sha256": "8e174affffb770bd2f8b0dcfd7995c4f45cb117acdccb30738ca9e305a73c20d",
+    "kind": "master",
+    "master": null
+   },
+   "M_AK_Emissive_Master": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Emissive_Master.uasset",
+    "sha256": "44e057f43d1e80db59c0e1548788add71f4034e1f228833f49987a1fda662f24",
+    "kind": "master",
+    "master": null
+   },
+   "M_AK_FlatNoCoat_Master": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_FlatNoCoat_Master.uasset",
+    "sha256": "1173e1396e8b5baa8ba30bca119519ebedc5ecaca6455cd264d55ac0845911a5",
+    "kind": "master",
+    "master": null
+   },
+   "M_AK_Flat_Master": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Flat_Master.uasset",
+    "sha256": "a4c9361b7f77b1e69f5227679428ab225c75cd4d200094f186ddb18ac9cc5f8d",
+    "kind": "master",
+    "master": null
+   },
+   "M_AK_Glass_Master": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Glass_Master.uasset",
+    "sha256": "f9b816c5a75452baec4c7a01269faa31589326392858c73fe716d9155ca74eec",
+    "kind": "master",
+    "master": null
+   },
+   "M_AK_TexturedTwoSided_Master": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_TexturedTwoSided_Master.uasset",
+    "sha256": "5a3cd7ccf8e98077054f67ca0729334d9dfe6a1ca653fe860fafd1f5a879d0f0",
+    "kind": "master",
+    "master": null
+   },
+   "M_AK_Textured_Master": {
+    "armorylab_uasset": "ArmoryLab/Content/ArmoryKit/Materials/M_AK_Textured_Master.uasset",
+    "sha256": "046dd462ce8d08cea008842dfae1ef59d2caf8a07c08bb01df6e7de3817778d6",
+    "kind": "master",
+    "master": null
+   }
+  }
+ },
+ "textures": {
+  "T_AK_Emblem_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Emblem_BC.png",
+   "png_sha256": "115b5a50f38e2a5c7a558a42eda73035a51fd12abbc54c4e2843a01f18fd285d",
+   "armorylab_uasset_sha256": "32675d759d7e1963661db11b02f8c496ec55947f691426632d11f4b7276195a6"
+  },
+  "T_AK_Emblem_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Emblem_N.png",
+   "png_sha256": "f681926924c9124439e958629eeb9a4bf321316264872f9202e43c293457e5e2",
+   "armorylab_uasset_sha256": "50660a8aafc64852f4dbfe3f37787dfe9d260048d626570771631d7d68490804"
+  },
+  "T_AK_Emblem_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Emblem_ORM.png",
+   "png_sha256": "663ddcddb0dbd2d15c78b2726abfc64cfd03e4e73331eb94d7f7d6e146e33191",
+   "armorylab_uasset_sha256": "f7044999fd8d2b195d12112f1dd01f9532d7a99bd407ee42fb6a3011f191d264"
+  },
+  "T_AK_HAlcoveGrille_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HAlcoveGrille_BC.png",
+   "png_sha256": "2f18898d044c91978e8533ce1710c0c16a1685ad50be1e94c5923c6e56ab8692",
+   "armorylab_uasset_sha256": "a7e8017b256ef3b1ac12f4202c8fc091b78ce801c7cd9daaf429bedd0a341fab"
+  },
+  "T_AK_HAlcovePanel_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HAlcovePanel_BC.png",
+   "png_sha256": "1f9966d8c984bdb0ba44df7898f38743ae54bbd0ede1c216e220dbf2c94cabfa",
+   "armorylab_uasset_sha256": "bd0625ebe8da6d3eae5c0772f740d0a9296c0685f121d8a9729860d30dd13369"
+  },
+  "T_AK_HAlcoveReturn_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HAlcoveReturn_BC.png",
+   "png_sha256": "4e6648a66bbf3aadbb3a9ad4cbc801885592c15db7c71d2a53c7ed1760ecf73f",
+   "armorylab_uasset_sha256": "a046a977f4730b8c90e10cb68e2e3fbef2e96f7fa8e3a0c1db72e16824aeaf77"
+  },
+  "T_AK_HAlcoveReturn_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HAlcoveReturn_N.png",
+   "png_sha256": "bcd376c92acc82e1b518992de91d25093b8f0686b7d617e840cc3c3a3aadc44e",
+   "armorylab_uasset_sha256": "96c6a25606f0c4b1ad4d1ac96c74ff7ae893a2d7bbd780d7e17a93cf612bd080"
+  },
+  "T_AK_HAlcoveReturn_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HAlcoveReturn_ORM.png",
+   "png_sha256": "fd461ac6f92670678539dabe9dfbd23d5052121d9b990fd67916640bade82ba3",
+   "armorylab_uasset_sha256": "a7a5045e08e49d564b48914ed50713b88e438980f210f9fdd4c636745001854a"
+  },
+  "T_AK_HBannerSatin_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HBannerSatin_BC.png",
+   "png_sha256": "19578f746ae41de5812352692fa2d857668a5158bd835e3aea605ed02a6a2ec1",
+   "armorylab_uasset_sha256": "d6cded6b36352fcfdfec6ba8423e8bdb8c478f26915ba711b26869e81c3bc8e7"
+  },
+  "T_AK_HBannerSatin_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HBannerSatin_N.png",
+   "png_sha256": "a716d10cf6deb82ddf22da34c885a24e0e62fbfcb6acfd0b230aaca4aac42bc9",
+   "armorylab_uasset_sha256": "31526a312460877979ea5561f9ddae35d1b82a34c57832ad4eb247225197f265"
+  },
+  "T_AK_HBannerSatin_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HBannerSatin_ORM.png",
+   "png_sha256": "f8ee1d7f56404d90c10383539d7f610f3227b5813a194534193fdfb0a4afeed0",
+   "armorylab_uasset_sha256": "5b7ee732471464ba1695aed77c5e89b5c4e601d74b9f872a9a83628d721fa672"
+  },
+  "T_AK_HEntBraidP_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntBraidP_BC.png",
+   "png_sha256": "f83734cb87e697fd146324dca6f2219431c161e9f43d0150fad14df7205ff6c4",
+   "armorylab_uasset_sha256": "ae6d77f69ace1f61781d27e30004122d97e21f2a98c39a2f98bdba2da89c933f"
+  },
+  "T_AK_HEntBraidP_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntBraidP_N.png",
+   "png_sha256": "85fc2eef164f5c0475a0bec060c5012ff68bcc557c0c348dfb867f3ba14a54f1",
+   "armorylab_uasset_sha256": "4c4c7d4dd00623c28eba9f3b8fa29bc76951eb573c4fc42d2043b09d52ccddd0"
+  },
+  "T_AK_HEntBraidP_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntBraidP_ORM.png",
+   "png_sha256": "7d69586ab18e3b481bd549bdfa303650ca77970279b06a4f6021b3cffb71208f",
+   "armorylab_uasset_sha256": "8efc733c8fd03ea5f8930ae7f88e0c6f42ce5b666804704927bcc417487885ea"
+  },
+  "T_AK_HEntSisalN_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntSisalN_BC.png",
+   "png_sha256": "4c712b97895595e6167d974bbae66d0cb4d2b01ce5afbcdddd96557398813136",
+   "armorylab_uasset_sha256": "65f5295b4abe03c9197c11538615f96edfca3f5faaee8ef1e67b917d3f9bad94"
+  },
+  "T_AK_HEntSisalN_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntSisalN_N.png",
+   "png_sha256": "dd2077338b9b24fd30b622548dbb66b1df72fbb08c77018caccc360cc45d489f",
+   "armorylab_uasset_sha256": "018a05a951e1dc6a8b11dbab029c49c9492f5a51d77761ebe2bd39b500145dcd"
+  },
+  "T_AK_HEntSisalN_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntSisalN_ORM.png",
+   "png_sha256": "ae1582739bf053e86658572e959a6ee75ca82f247042df204b85f67849fd0d9e",
+   "armorylab_uasset_sha256": "b3e7a06ef9b1d3def0354b50afe1197b86231676565c8f7d4b1d047f5f5ebde3"
+  },
+  "T_AK_HEntTimberP_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntTimberP_BC.png",
+   "png_sha256": "5ca33b634001ab7a7185759a187c1526b1b3aa264b2d9714ea44444a458fc0cf",
+   "armorylab_uasset_sha256": "bebc2b5243be32f045eb8c5e42ac0d421dfbc6abe8b0d078f8a97c2ddee4e731"
+  },
+  "T_AK_HEntTimberP_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntTimberP_N.png",
+   "png_sha256": "fbb4d493ae4a3d6b9f5cc97e3a52d6ce8d0688fb4b72fa21b717586c596e7fd0",
+   "armorylab_uasset_sha256": "2bdb973450bd7d2be35be2ecb4f68a8ec78d6583af6f5b6af64a6a1314946db8"
+  },
+  "T_AK_HEntTimberP_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HEntTimberP_ORM.png",
+   "png_sha256": "7a69b18cf88177f05207732193964dfc3ed81e3205c41d6701891688ad92bd06",
+   "armorylab_uasset_sha256": "e7de37cb9252a42a32eb000589039781c79aa52101109c70fd74997073e5cb6f"
+  },
+  "T_AK_HHalo_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HHalo_BC.png",
+   "png_sha256": "eec7580d5da065accc28cea3b61f0d797150d23da67be9428c89e6f01258d77d",
+   "armorylab_uasset_sha256": "b59766e46a33c4cfdcdf398535be4022caaa5a1c720a61d015b77aa15e438793"
+  },
+  "T_AK_HKickGlow_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HKickGlow_BC.png",
+   "png_sha256": "4c7f042226ec899d71b0f8329a2acfe83514812ad6f575f2332f23508a365e9b",
+   "armorylab_uasset_sha256": "a0f068d5802d0fb576332cb655811a87026bc7ea4c69c1370f8ebf363b2fc8de"
+  },
+  "T_AK_HLacquer_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLacquer_BC.png",
+   "png_sha256": "2aefbc9dcb33483ca6841e6bee6f728137e05e0cd32e87062d5a9d7f5bb10058",
+   "armorylab_uasset_sha256": "78962d65a3c5e288aa36702b9a1a0b2c959f954dd7d65df909e9f3cde272b769"
+  },
+  "T_AK_HLacquer_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLacquer_N.png",
+   "png_sha256": "3621ea995d12d2c5e45f0d53a783403846e212b43c9d04c52c2995e413c940df",
+   "armorylab_uasset_sha256": "24bd2642dd9b21a9afa1cbbe9233b051a28bf8aa20d451e8aad862252fa35ecd"
+  },
+  "T_AK_HLacquer_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLacquer_ORM.png",
+   "png_sha256": "1cd49270dbf2cb5bd82e874c95c62453ebb7d792ef52b72a21b7a5b95fdd53d8",
+   "armorylab_uasset_sha256": "937c457a7ad6ad0247b2ab705a6cc10645deda084babd775e35b857396f7bfd5"
+  },
+  "T_AK_HLatticeBoss_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeBoss_BC.png",
+   "png_sha256": "65d583217b0bbe70eaa27633408d73a7ca6ca7cec11b6b4209798f131c6a6bd3",
+   "armorylab_uasset_sha256": "95522a68c72fbd72b66982e856ccc676d8a63f7f13110aa9b9d1ee649d13fbe3"
+  },
+  "T_AK_HLatticeBoss_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeBoss_N.png",
+   "png_sha256": "fba5635cc1be17c1fb4fe3ad6768815bf2f18d6f70fc5f8943ee519f0ef06232",
+   "armorylab_uasset_sha256": "fadcc18753b48c66cda25d51b59c4eb6e80f15ea67e2ca874fe9db34e7a7e109"
+  },
+  "T_AK_HLatticeBoss_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeBoss_ORM.png",
+   "png_sha256": "9353728f247fb6d84d05012c312a9c063c683b09d225d06382358ab6ec66074a",
+   "armorylab_uasset_sha256": "be4f10979bda5ec733947295980277e577196ea4f0c34e8848ca9c8f38acb0ef"
+  },
+  "T_AK_HLatticeGlow_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeGlow_BC.png",
+   "png_sha256": "63dd0045089973a5a9e5bf3e34138d9571612484875f6e89293cdad42fa3ded5",
+   "armorylab_uasset_sha256": "ae55c975749cbb18afd97157805ea2a7f41969c5b14826040ea9343cd71191d6"
+  },
+  "T_AK_HLatticeSlot_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeSlot_BC.png",
+   "png_sha256": "550df75a4e3e440b2ab7c044ca6a80cea52721c13c6bc2e40df05d8175766b61",
+   "armorylab_uasset_sha256": "b2ae7226a43f1132b3aa50ce7e025dff1dcb00311707014506ed70bd0452a6a2"
+  },
+  "T_AK_HLatticeTimber_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeTimber_BC.png",
+   "png_sha256": "bc5ce221921037a19c913d2cec6d3f765d5055d059e0b79aa87c0cd9adcaf64d",
+   "armorylab_uasset_sha256": "7d9b5ba83d147ebeefb5ae8bb838454859ebbdc83510007f942d6ed37de96878"
+  },
+  "T_AK_HLatticeTimber_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeTimber_N.png",
+   "png_sha256": "ac82719d74227eab1998426a3a75c555a4b82a7091de58388472ab0300654ac2",
+   "armorylab_uasset_sha256": "29514eae7f212c429af0e5d2c0b20e0d98a0867868ff446fc3495ac5e128c753"
+  },
+  "T_AK_HLatticeTimber_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HLatticeTimber_ORM.png",
+   "png_sha256": "1dd72bc9842f185ee32d11eec611ba426e4a9851e2be0bb12c1a526a5591dc36",
+   "armorylab_uasset_sha256": "1a3ecd263ae1749c8646dd894ac80ae4616b351e9109ad105df875b132b6e239"
+  },
+  "T_AK_HMedallion_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HMedallion_BC.png",
+   "png_sha256": "15515b42d59b2272db5ff43b30c02a1a8040052c6f77daf269d0519645a967e1",
+   "armorylab_uasset_sha256": "d038c76340500de13126c768e0a11a55f070b82c21b357685e3ffcc651a052c3"
+  },
+  "T_AK_HMedallion_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HMedallion_N.png",
+   "png_sha256": "1193f656d175ef352e0a1374461c45f8e3691b94084530cb861259188e4ed9f3",
+   "armorylab_uasset_sha256": "8177a25aba3a255a53b708f9357845133a21b96b66e523798be9802de58e826d"
+  },
+  "T_AK_HMedallion_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HMedallion_ORM.png",
+   "png_sha256": "59ffceced15c24eb24e39a6c69dbf871558b83f7f7f9b810e65294db1c24f93b",
+   "armorylab_uasset_sha256": "fbf3e19366cb537113297ae4f1688b6d3b83303e8c4b836e9f90ff80de871885"
+  },
+  "T_AK_HPaintingTall_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HPaintingTall_BC.png",
+   "png_sha256": "67c46dacb47dba2902df1cd3f8626473d785a1f004045ef2571d901d536ce4e2",
+   "armorylab_uasset_sha256": "5e49d073ed914a613f6727910ab4da48c42c72c5dabdc982bf86505f471cd313"
+  },
+  "T_AK_HPlank_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HPlank_BC.png",
+   "png_sha256": "c4a751a3d32e841e39d30cca8a534e007b71639d697a14f33168a52e1a0d2a81",
+   "armorylab_uasset_sha256": "da93fcf46c10c23949d300db4b469e45021a714cfc99b826e44d8624034e32ad"
+  },
+  "T_AK_HPlank_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HPlank_N.png",
+   "png_sha256": "fe37cc1db262e3b1d665572a76779e8f6cc117f183cdadfa4b0a36bcb901225f",
+   "armorylab_uasset_sha256": "3e9d02a43e947cc658c4fae64a27bffaea189cb10b42153d0dc55caf48700761"
+  },
+  "T_AK_HPlank_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HPlank_ORM.png",
+   "png_sha256": "5a7265591aa4f92c6de0f8b2690f898a25eb2559a1573f8806811a957ee1064f",
+   "armorylab_uasset_sha256": "3d102995f6f42e37adf295ebca484a1efeed00c2f2cb153ef5152b9fd2cda155"
+  },
+  "T_AK_HScreen_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HScreen_BC.png",
+   "png_sha256": "9d3d335f913b8048a2725b732db650bd91148720bd282e398dc3688b1715c556",
+   "armorylab_uasset_sha256": "64b5e48175b99950352b15dfe9dc0a025b5cebfac99bb2e76625225d9278cf81"
+  },
+  "T_AK_HScreen_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HScreen_N.png",
+   "png_sha256": "dbc3a861565b29e52fcaeedc6ba2da9ecf9fbd05e6d1b9ab7753dc0011a231e2",
+   "armorylab_uasset_sha256": "75f4b6c3ce3964bae80a423cda6837a2146cd57aad76a6f573402f74ea1b666c"
+  },
+  "T_AK_HScreen_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HScreen_ORM.png",
+   "png_sha256": "4335d392d968dcb61f816ef2e4a7ebd98ab2bb5047d320933e19f8e1ace93a58",
+   "armorylab_uasset_sha256": "4129892e281b07b3c90452cd950738730aaf2d5e65c1cedfd1ed22c5bc22ed0e"
+  },
+  "T_AK_HShowcasePanel_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HShowcasePanel_BC.png",
+   "png_sha256": "7800a0a19d1edd8a441bdf828fd97931637acdb719652b3563375a8085ada4f5",
+   "armorylab_uasset_sha256": "9b5513427f7a2ffd93df3626f5ebbc985cc4b2c9b04b67516ddc0912cbea345c"
+  },
+  "T_AK_HTassel_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HTassel_BC.png",
+   "png_sha256": "c1b3f035d64ec4d22d99b93c28a3db951a59ab5071dcfa4d492e700b3f8234fc",
+   "armorylab_uasset_sha256": "a7cadfa1adfd9fa722137821e0096bd3e9f9fea2a79b4b708a04b34a736bf674"
+  },
+  "T_AK_HTassel_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HTassel_N.png",
+   "png_sha256": "ebdb454dbcf434d0f5e6ca86e19e2e9d30d5d007f4e7619b48499a145f12d1ca",
+   "armorylab_uasset_sha256": "564fe68056f2c8c72f6ea1ea3b62e3d5f40a5d3e0cded178e77c24f12754ae40"
+  },
+  "T_AK_HTassel_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HTassel_ORM.png",
+   "png_sha256": "feeb9bc5967d18c79a99d894ab199458772a248ebe196993566a4841b14581af",
+   "armorylab_uasset_sha256": "0addd392f5a7aeb433b650702d329a26a8433710dfb629e5bb95b34265b356f0"
+  },
+  "T_AK_HTimber_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HTimber_BC.png",
+   "png_sha256": "fb4abab2f1e0c948d142dedcfe20e1992a301e70f066eca140b6d4c409e48c13",
+   "armorylab_uasset_sha256": "65ab4e470679d4e00df702eb50f1b649371c58e6c0acdd679f313dbb792fd267"
+  },
+  "T_AK_HTimber_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HTimber_N.png",
+   "png_sha256": "8a8e90f635627cde53b07934ead4d9ed3c24a0b44b0ddc82534beeda655f0daa",
+   "armorylab_uasset_sha256": "7c929e178e974bcb33bdd246020ff334876ddda92dba2f8d85126d4de97324f4"
+  },
+  "T_AK_HTimber_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HTimber_ORM.png",
+   "png_sha256": "6d6cb543236a1e0136d115c4fd3fdf2908c099f02d2cfd71a9eb75aeec8147bb",
+   "armorylab_uasset_sha256": "e9e0abdc69ee8d18eb687766882e3cbb599147cb1cda766416b6b88f6227c083"
+  },
+  "T_AK_HWallOak_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HWallOak_BC.png",
+   "png_sha256": "6307749d5ea4ecbae5d9e361ffc78dc889c47d20cf9587516580c354bb1b93c1",
+   "armorylab_uasset_sha256": "d095a4b5350e4f30f237f0cc7a51567605a23eb2162c86e872b841ed467a1edd"
+  },
+  "T_AK_HWallOak_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HWallOak_N.png",
+   "png_sha256": "ff93b8616103706bba21ceee19f4a6f60bf7a6bfa31bbbe5c8a40effeb3f8a69",
+   "armorylab_uasset_sha256": "d75a177905133737e579e79f1b9c695bbf51ec2ed712e8a19fa1d599253de67e"
+  },
+  "T_AK_HWallOak_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HWallOak_ORM.png",
+   "png_sha256": "4e0113420fa3c1e0613903a543763c37eb4885c3991ea60b9c9da178f6e2ef31",
+   "armorylab_uasset_sha256": "e533834960a31f3d961a12e1c7bb0138949c422d4360cd934f538fbb16326458"
+  },
+  "T_AK_HWashiRoom_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_HWashiRoom_BC.png",
+   "png_sha256": "1fc634529b020f61e77b5e48f057d0f261a78f99611c99543b075a6d25fab5a2",
+   "armorylab_uasset_sha256": "ae780a06c1f2d316c784f69fe133e0391f17b67a3ec4af2baed6d2dbde18c6cd"
+  },
+  "T_AK_Plaster_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Plaster_BC.png",
+   "png_sha256": "e1ba6effa8c40efe2f80346a14cb830031c3e6a1af41881437bb9cf9d9ddb372",
+   "armorylab_uasset_sha256": "5f79427868d6c51d49adbef3614efefccfeae7b6862a00e189714ac75861f59b"
+  },
+  "T_AK_Plaster_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Plaster_N.png",
+   "png_sha256": "930bbeea32379c56046d08a0b4627a330303b97f0c1a721b47cb407dbb39686f",
+   "armorylab_uasset_sha256": "1cdf74372b9033c1a5008e118ecd2406fdde3da26e66491d355afb674443ca3c"
+  },
+  "T_AK_Plaster_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Plaster_ORM.png",
+   "png_sha256": "3b1a8476ac62fc37cbacee6139fd8857f16627a193e6b5321e6492d8db7cb4c5",
+   "armorylab_uasset_sha256": "433ae901385c6d5da7322991a3291271376ac6ee606ca80e3d57e945fc8a4e8b"
+  },
+  "T_AK_Slate_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Slate_BC.png",
+   "png_sha256": "6395a0f7043b9f3355905e9a692cb3d428d52e99ca35c25830979dc68bcbc2c9",
+   "armorylab_uasset_sha256": "a78af9ac15a0e57c1b7a7ec0006091aac34d79d2cc78b38b9f605819e10d4a88"
+  },
+  "T_AK_Slate_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Slate_N.png",
+   "png_sha256": "fe394ea73d281138708f76eb06d1ea779f093e7cc4b7340b8e9eedaabd3e79c4",
+   "armorylab_uasset_sha256": "7fa2c3257c7ac863cc0f5e591ba8be804716b1863629aa9538eef4ad7711bc53"
+  },
+  "T_AK_Slate_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Slate_ORM.png",
+   "png_sha256": "2607290136ec96511b501412fcc6fddc83e23ee34fdd04f1a24a9c83b2e7ff48",
+   "armorylab_uasset_sha256": "d8d6bf576d8cf7fe2b4e8564442fcf851d32a1c8e135fa0e441f06bb24e8e382"
+  },
+  "T_AK_Timber_BC": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Timber_BC.png",
+   "png_sha256": "d7c2f9d6da022264e930eaf0c15f84cff3e3535f6362e61f54c41a00460b66ca",
+   "armorylab_uasset_sha256": "94bed274a664b034253d853587d8e7190c672486450ba6700033a25bf015a83b"
+  },
+  "T_AK_Timber_N": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Timber_N.png",
+   "png_sha256": "115288b43697a76d4e22dcc450cd51a509d0a010d4877d9ca93a8239b4bf76a0",
+   "armorylab_uasset_sha256": "06241445bee594c0540a08e7729431e4edf99677bd514488c1e1ba0087ad6acc"
+  },
+  "T_AK_Timber_ORM": {
+   "png": "Exports/ArmoryKit/Textures/T_AK_Timber_ORM.png",
+   "png_sha256": "cd42be947d5435334f6418efd3c36e9bfcd085f27a616a9d104a2b78d4f8989e",
+   "armorylab_uasset_sha256": "1fcc3aea953ee57cfe3f38d23a14519322b880d2c0f94d0f5e28891ab6951054"
+  }
+ },
+ "shell_textures": {
+  "T_DJ_GraniteRubble_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_GraniteRubble_BC.png",
+   "sha256": "759e858a74c95830040ffd249ae57cd0067c93334d60369fb1728dfec4ef8386",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_GraniteRubble_BC"
+  },
+  "T_DJ_GraniteRubble_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_GraniteRubble_N.png",
+   "sha256": "3c21eb711cc660feda767c0534d9b67f6867b8f29b64385390107bc7f80fb4d3",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_GraniteRubble_N"
+  },
+  "T_DJ_GraniteRubble_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_GraniteRubble_ORM.png",
+   "sha256": "c2b036d65b86ccc3a754e525f7ef44cca4f0d88552d3ab8a6b796dc591552208",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_GraniteRubble_ORM"
+  },
+  "T_DJ_Granite_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Granite_BC.png",
+   "sha256": "c9f4910bdf05a076dc21f0eb7c72fe6e6634866532c853a753c09d673a408b84",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Granite_BC"
+  },
+  "T_DJ_Granite_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Granite_N.png",
+   "sha256": "6917364cb3d122789298417a9a5ecc4f95e46c9b930e9ae5566153fc75062ccf",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Granite_N"
+  },
+  "T_DJ_Granite_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Granite_ORM.png",
+   "sha256": "351b1f4f533a8c6134fa9f7e7792867fcaafb341086029b93100d1cd04c0043f",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Granite_ORM"
+  },
+  "T_DJ_Iron_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Iron_BC.png",
+   "sha256": "5e39ed5383b69b0c7ff84cdb5e61df4b760d2218fec5ee3766f056880039448c",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Iron_BC"
+  },
+  "T_DJ_Iron_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Iron_N.png",
+   "sha256": "ea03a505dce215802b2e7351549a4b5cd072a81400f977a7060a464e48ce7aae",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Iron_N"
+  },
+  "T_DJ_Iron_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Iron_ORM.png",
+   "sha256": "2b39598b3ef8b16defc531b08c8410b166b00625a00e869f9fc982189c458ead",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Iron_ORM"
+  },
+  "T_DJ_PlasterCream_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_PlasterCream_BC.png",
+   "sha256": "5ed404280f9f66e11af3aae1e64e5cbfa92abef1455f84b4698ce29f20f45cd6",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_PlasterCream_BC"
+  },
+  "T_DJ_PlasterCream_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_PlasterCream_N.png",
+   "sha256": "f4215ba86a251188b94d53fbca421399b460e9438b4d0a65dd67b251d1f00b28",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_PlasterCream_N"
+  },
+  "T_DJ_PlasterCream_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_PlasterCream_ORM.png",
+   "sha256": "f2a09bd21a8541df6350d10568bc8a336b9a0a996a8b848fb2200b458f636161",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_PlasterCream_ORM"
+  },
+  "T_DJ_RoofTile_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_RoofTile_BC.png",
+   "sha256": "c28d9f816f775d2b457d46e859aa0278cadc56259e507aa7d0c26ca1ea8ce654",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_RoofTile_BC"
+  },
+  "T_DJ_RoofTile_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_RoofTile_N.png",
+   "sha256": "233f0df61a1e8e34b31801ab5e38627a8dac3e117f7ed13eb4ad253558e207c6",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_RoofTile_N"
+  },
+  "T_DJ_RoofTile_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_RoofTile_ORM.png",
+   "sha256": "1676cd1d8463c436bd067ccae8294c33753d179f702c0e01a227ca397c72c34d",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_RoofTile_ORM"
+  },
+  "T_DJ_ShojiPaper_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_ShojiPaper_BC.png",
+   "sha256": "4298010458634211020764ce78bedadb014aa56087d1c69d20621a120997b390",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_ShojiPaper_BC"
+  },
+  "T_DJ_ShojiPaper_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_ShojiPaper_N.png",
+   "sha256": "1cdffb0b3f1bee955190a007a8021a1bdbc26f796f64759896460bca8d94b8fd",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_ShojiPaper_N"
+  },
+  "T_DJ_ShojiPaper_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_ShojiPaper_ORM.png",
+   "sha256": "a8599ca7b9c395616187e0e64d92ed1993922a594ceb08d08dc04ea012e87436",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_ShojiPaper_ORM"
+  },
+  "T_DJ_TimberAgedEnd_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_BC.png",
+   "sha256": "50413a38630b1b75a15ad41a96ec6c3360ce998a2bf239df98db2487197c083f",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_BC"
+  },
+  "T_DJ_TimberAgedEnd_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_N.png",
+   "sha256": "59d6078d325022e51ec7020522f80e08dba7054698eb57b8932f2e4b9f4c9a8e",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_N"
+  },
+  "T_DJ_TimberAgedEnd_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_ORM.png",
+   "sha256": "ba9405768c9413ccb5fcba6b0361318d614a302c2281e8617c07f6c2332933bb",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_ORM"
+  },
+  "T_DJ_TimberAged_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAged_BC.png",
+   "sha256": "04250d713b20a9edfda8d64e23aeb2bbe59402d12c413b27e9d565b4188d0f08",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAged_BC"
+  },
+  "T_DJ_TimberAged_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAged_N.png",
+   "sha256": "c265117ddd04c4ec8e37056ab79f834ee4ea09d77eb0acc73be266d2fd5c0ab2",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAged_N"
+  },
+  "T_DJ_TimberAged_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAged_ORM.png",
+   "sha256": "eafe4a4277309f6421bb816a64b1b11eba0b5f1f5dfaa36959bbf49a0b9a7663",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAged_ORM"
+  },
+  "T_DJ_TimberDarkEnd_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_BC.png",
+   "sha256": "dfa618d97e418909506c48043e9351615592ce0759a94a23a11cd7e4aba9f352",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_BC"
+  },
+  "T_DJ_TimberDarkEnd_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_N.png",
+   "sha256": "38142d80a9136940c8e8e8c117b3d8e0dc1757ceb84fe81360c630380dac7973",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_N"
+  },
+  "T_DJ_TimberDarkEnd_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_ORM.png",
+   "sha256": "b103615b5c079c31ac24b4c1f15dd99174e59f390e5d963df601afc47400afb2",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_ORM"
+  },
+  "T_DJ_TimberDark_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDark_BC.png",
+   "sha256": "922e2e7577b6dc29f8d2a9851df4c13a2d069470a010ee54ecfd558e6aeab40d",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_BC"
+  },
+  "T_DJ_TimberDark_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDark_N.png",
+   "sha256": "87116bc3bb5a44475c4d4d13a8f55fc936ab0d302fb8fe1e1ce333488a914c46",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_N"
+  },
+  "T_DJ_TimberDark_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDark_ORM.png",
+   "sha256": "5fd9383612efbae8f62a6288fb8f1b47d0770cb38ea549c05e244ee2272e665c",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_ORM"
+  },
+  "T_DJ_WearMask_M": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_WearMask_M.png",
+   "sha256": "8704fb3c621234edbbc4c37f7dd13638f86d8226b2c74d9458e7f09264e92ee8",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_WearMask_M"
+  }
+ },
+ "shell_master_graph": {
+  "snapshot": "shell_masters.json",
+  "graph_sha256": "04c9ecfbb3013a1127130e36d30c5c0acc259b89466977c0c8f1d623464c71b6",
+  "masters": [
+   "M_DJ_Lib_Emissive",
+   "M_DJ_Lib_Opaque"
+  ],
+  "sources": [
+   "Scripts/dojo/unreal/dj_sc_materials.py",
+   "Scripts/dojo/unreal/dj_sc_common.py",
+   "WorkFiles/dojo/build/showcase/layout_showcase.json"
+  ],
+  "code_members": 48
+ },
+ "checks": {
+  "armorylab_import_sha_drift": [],
+  "shell_existing_fbx_sha_drift": []
+ },
+ "site_fbx_dojolab_only": {
+  "SM_DKX_1v1_HallRear_W": {
+   "path": "Exports/DojoKit/Outside/SM_DKX_1v1_HallRear_W.fbx",
+   "sha256": "3420a1f9c422229d4f199facab9834d1a10fa5da89bfc6ac2c30e9ee24fcbd81",
+   "bytes": 18012,
+   "ue_mesh": "/Game/DojoKit/Outside/Meshes/SM_DKX_1v1_HallRear_W",
+   "owner": "dojo",
+   "note": "DojoLab only (1v1 closure / ring); never placed in ArmoryLab"
+  },
+  "SM_DKX_1v1_HallRear_E": {
+   "path": "Exports/DojoKit/Outside/SM_DKX_1v1_HallRear_E.fbx",
+   "sha256": "b5d39e6774d54364f3b4a07823ea034ddfe9dae893c73539534e39d1c5a93cdb",
+   "bytes": 17980,
+   "ue_mesh": "/Game/DojoKit/Outside/Meshes/SM_DKX_1v1_HallRear_E",
+   "owner": "dojo",
+   "note": "DojoLab only (1v1 closure / ring); never placed in ArmoryLab"
+  },
+  "SM_DKX_1v1_RearRoof": {
+   "path": "Exports/DojoKit/Outside/SM_DKX_1v1_RearRoof.fbx",
+   "sha256": "3cc1d81984144773d26bc6f50195ae2d138ba7597b000a0abc502c21f12e9372",
+   "bytes": 17996,
+   "ue_mesh": "/Game/DojoKit/Outside/Meshes/SM_DKX_1v1_RearRoof",
+   "owner": "dojo",
+   "note": "DojoLab only (1v1 closure / ring); never placed in ArmoryLab"
+  },
+  "SM_DGB_Boundary_1v1": {
+   "path": "Exports/DojoKit/SM_DGB_Boundary_1v1.fbx",
+   "sha256": "95e9cd7e5e2ad94834899e34d6b40b9e75c163307702c8c95d872a124b75f0fb",
+   "bytes": 40172,
+   "ue_mesh": "/Game/DojoKit/Greybox/Meshes/SM_DGB_Boundary_1v1",
+   "owner": "dojo",
+   "note": "DojoLab only (1v1 closure / ring); never placed in ArmoryLab"
+  }
+ }
+}

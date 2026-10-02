@@ -1262,3 +1262,79 @@ ENV["exposure"] = dict(ENV["exposure"], bias_ev=1.2)
 ENV["grade_extra"] = dict(ENV["grade_extra"], color_saturation_shadows=(1.0, 1.0, 1.0, 0.8))
 LOOK["M_DJ_RoofTile"]["vectors"]["Tint"] = [1.02, 1.68, 2.28]
 LOOK["M_DJ_RoofTile"]["vectors"]["MeanColour"] = [0.053, 0.087, 0.115]
+# ================================================================================================ LANDSCAPE ROUND: FX + LIGHTING
+# 2026-09-30, the landscape round's lighting rebalance (the sun stays at 9.08 deg from the west: Time of Day 1730, Sun
+# Yaw 268). -game probes WorkFiles/dojo/build/landscape/fxlight/probe/pa..pe (UDS variables, PPV fields, MIDs, lamps set
+# at runtime; pe with the clouds frozen, Cloud Speed 0, so the sky reads are comparable), measured with probe/meas.py
+# (round 9's measure_r8 boxes on CAM_Ref2Match against dojo1_reference2) and the LandscapeRef sky / slope boxes:
+# - Upper sky (verify_r9: too dark and red): the cloud-ambient knobs leave the sky gaps unchanged (pe E0 -> E1: the
+#   LandscapeRef top band 41 -> 41); the Rayleigh colour set at runtime changed nothing; the lift comes from the post:
+#   a shallower toe (0.72 -> 0.64) with local-exposure shadow contrast 0.85 takes the top band 41 -> 55 (+0.5 EV) and
+#   its hue from 332 to 327, saturation 0.28 -> 0.18 (toward lavender); CAM_Drum near-black 35 % -> 17-21 %, the veranda
+#   timber out of the crush, CAM_Ref2Match under-40 23 % -> 14.5 % (ref 2 13.7 %)
+# - Valley haze graded by distance: a less red fog tint (14, 2.8, 1.1) -> (12, 3.0, 1.35) at Fog 2.2: the far forest
+#   slopes go from orange (137, 93, 24) s 0.70 toward a warm grey haze (131, 103, 51) s 0.44; the peaks keep their warm
+#   rim (the 9 deg sun)
+# - Cloud ambient a touch brighter and cooler (the deck's shaded undersides read plum-black next to the lit rims);
+#   it also cools the captured sky light, so the sand and kawara below are set against it
+ENV["uds"]["props"].update({"All Fog Colors Multiplier": [12.0, 3.0, 1.35], "Fog": 2.2,
+                            "Volumetric Cloud Ambient Light (Dawn/Dusk)": [1.2, 1.1, 1.4],
+                            "Cloud Dark Color (Dawn/Dusk)": [0.15, 0.14, 0.2]})
+_t = ENV["uds"]["props"].pop("Time of Day")             # keep the time last
+ENV["uds"]["props"]["Time of Day"] = _t
+ENV["grade_extra"] = dict(ENV["grade_extra"], film_toe=0.64)
+ENV["pp_extra"] = dict(ENV["pp_extra"], local_exposure_shadow_contrast_scale=0.85)
+# - Near sand (too orange: R/B 1.62 s 0.26 against ref 2's 1.46 / 0.28, and dark): Saturation 0.5 -> 0.46, value +0.15
+#   EV (0.88 -> 0.98). Rake relief (high-pass 7.6 against ref 2's 11.7): the instance knobs (NormalVar, the fade) moved it
+#   by < 0.4, so the ground master gets a NormalStrength (dj_sc_materials build_ground, default 1 = unchanged for every
+#   other ground) and the raked sand takes 1.8; the patchy shallow-rake variation is halved (NormalVar 0.35 -> 0.15)
+for _k in ("M_DKG_SandRaked", "M_DKG_SandEdge"):
+    LOOK[_k]["scalars"].update({"Saturation": 0.46, "ValueMult": 0.98})
+LOOK["M_DKG_SandRaked"]["scalars"].update({"NormalStrength": 1.8, "NormalVar": 0.15, "NormalFadeStart": 2500.0,
+                                           "NormalFarStrength": 0.8})
+# - Veranda timber (verify_r9: crushed (52, 26, 14) L30 against ref 2's (75, 49, 35)): value 1.5 -> 1.6 with the lifted
+#   toe, a less red tint; probe D measured (81, 55, 40) R/B 2.0 at 1.8
+for _k in ("M_DJ_TimberDark", "M_DJ_TimberDarkEnd", "M_DJ_TimberAged", "M_DJ_TimberAgedEnd"):
+    LOOK[_k]["scalars"].update({"ValueMult": 1.6, "Saturation": 0.34})
+    LOOK[_k]["vectors"]["Tint"] = [1.0, 0.84, 0.7]
+# - Shoji and lantern glass less bright and less saturated: shoji x 0.55 (probe D: (193, 119, 55) against ref 2's (182,
+#   118, 53); it read (214, 139, 50) R/B 4.3), the clerestory band with it; lantern glass x 0.8, saturation 0.9; the tall
+#   stone lanterns' pools x 0.85
+LOOK["M_DJ_ShojiPaper"] = {"scalars": {"EmissiveIntensity": round(45.0 * 0.55, 3), "Saturation": 1.0},
+                           "vectors": {"EmissiveTint": [1.0, 0.6, 0.32]}}
+EXTRA_MATERIALS["M_DJS_ShojiClere"]["scalars"]["EmissiveIntensity"] = round(29.25 * 0.55, 3)
+EXTRA_MATERIALS["M_DJS_ShojiClere"]["vectors"]["EmissiveTint"] = [1.0, 0.6, 0.32]
+LOOK["M_DJ_GlassAmber"] = {"scalars": {"EmissiveIntensity": round(133.0 * 0.8, 2), "Saturation": 0.9},
+                           "vectors": {"EmissiveTint": [1.0, 0.5, 0.22]}}
+LAMP_TUNE["SM_DKP_Stone_LanternTall"] = {"candela_mult": round(3.0 * 0.85, 3), "radius_m": 12.0}
+# - Kawara (verify_r9: sage in the close-ups; the landscape's blue sky light then took it to slate blue, lit R/B 0.79):
+#   the flatten target is 80 % of the colour, so the hue is set there: a neutral lavender-charcoal MeanColour, a near-
+#   neutral tint, value up (probe D: CAM_Ref2Match lit (93, 78, 87) R/B 1.07, shade (53, 44, 54); CU_HallUpperRoof lit
+#   (115, 99, 103), no green; ref 2 (91, 84, 94) / (43, 39, 45))
+LOOK["M_DJ_RoofTile"]["scalars"]["ValueMult"] = 2.6
+LOOK["M_DJ_RoofTile"]["vectors"]["Tint"] = [1.5, 1.3, 1.4]
+LOOK["M_DJ_RoofTile"]["vectors"]["MeanColour"] = [0.05, 0.057, 0.074]
+# ---- FX + lighting it2 (caps/it1 measured): the cooler sky light (the cloud ambient) took the warm albedos past ref 2
+#   (sand near R/B 1.34 against 1.46, plaster 1.24 against 1.40, gravel 1.22 against 1.43): their saturation back up;
+#   the timber a touch lighter than ref 2 ((82, 56, 42) L 62 against L 53): value 1.6 -> 1.35, saturation 0.42; the rake
+#   high-pass rose only 7.6 -> 8.1 at NormalStrength 1.8 (ref 2 11.7): 3.0
+for _k in ("M_DKG_SandRaked", "M_DKG_SandEdge"):
+    LOOK[_k]["scalars"]["Saturation"] = 0.58
+LOOK["M_DKG_SandRaked"]["scalars"]["NormalStrength"] = 3.0
+LOOK["M_DJ_PlasterCream"]["scalars"]["Saturation"] = 0.16
+for _k in ("M_DKG_Gravel", "M_DKG_GravelCoarse"):
+    LOOK[_k]["scalars"]["Saturation"] = 0.5
+for _k in ("M_DJ_TimberDark", "M_DJ_TimberDarkEnd", "M_DJ_TimberAged", "M_DJ_TimberAgedEnd"):
+    LOOK[_k]["scalars"].update({"ValueMult": 1.35, "Saturation": 0.42})
+# ---- LANDSCAPE FIX ROUND (2026-09-30; judge delta 13, CU_Lantern): the carved granite (the tall / short stone lanterns,
+#   the well: M_DJ_Granite_Tri) read lumpy and high-frequency (a styrofoam look) against ref 2's smooth weathered
+#   lanterns (x405-440, y300-345): the normal at about half strength (0.55 -> 0.3) and a finer world grain (the triplanar
+#   TextureSize 400 -> 250 cm); the modelled moss pads (M_DKP_Stone_Moss) read as stuck-on bright blobs: darker and less
+#   saturated so they sit in the stone (value 1.3 -> 0.95, saturation 0.6 -> 0.45)
+LOOK["M_DJ_Granite_Tri"]["scalars"].update({"NormalStrength": 0.3, "TextureSize": 250.0})
+LOOK["M_DKP_Stone_Moss"]["scalars"].update({"ValueMult": 0.95, "Saturation": 0.45})
+# - (judge delta 11, CAM_Drum / CAM_HallVeranda: the roof undersides and beams crush to black where ref 2's veranda
+#   soffits keep a soft bounce, ref 2 x240-750 y290-340): a small Lumen sky-light leak (0 -> 0.06) lifts only the deep,
+#   sky-occluded shade (round 5 measured 0.1 lifting the alley pockets without touching the open yards); the sun and the
+#   open courtyard values stay
+ENV["pp_extra"] = dict(ENV["pp_extra"], lumen_skylight_leaking=0.06)

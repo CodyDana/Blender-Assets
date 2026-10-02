@@ -4043,3 +4043,1316 @@ Folder: `unreal/round9/restore_s1/`.
   - the gravel strip where ref 2 has granite slabs, which waits for the stone study;
   - the hard building shadow on the foreground sand (the owner's 9 deg sun);
   - the exposure is darker overall.
+
+## LANDSCAPE ROUND - FX assets stage (2026-09-30)
+
+Blender only, no Unreal. Lock `DojoFX`. Full notes: `WorkFiles/dojo/build/fx/BUILD_NOTES.md`. Unreal recipe:
+`WorkFiles/dojo/build/fx/fx_catalog.json`. Assets: `Exports/DojoKit/FX/` (README).
+
+- **Petals.**
+  - Seven meshes: `SM_DKF_Petal_A`-`F` (the sheet's six petals: flat, cupped, curled, folded) and `SM_DKF_PetalOld_A`
+    (browned).
+  - Each is 56-84 triangles, two-sided masked, 12.5-14.5 mm long.
+  - `qa_check` passes on all seven.
+  - Three fallen drift clusters, `SM_DKF_PetalDrift_A`-`C`, with about 1 in 8 old petals. They fail only
+    `uv_no_overlap`, which is by design (shared UV0).
+  - The texture sets are Petal (front + back BC, N, ORM, SSS) and PetalOld.
+  - `T_DKF_PetalScatter_*` is a 2x2 decal atlas.
+  - Measured against the sheet:
+    - W/L 0.730 against 0.717;
+    - notch 0.077 against 0.075;
+    - front band colours within about 8 sRGB levels.
+- **River FX.**
+  - Six-way flipbooks (8x8, 4096): `MistPuff`, `MistWisp` and `SprayBurst`.
+  - The spray is a Mantaflow surge-into-boulder sim, a method change after the point-sprite spray failed.
+  - Also `T_DKF_Haze_M` (2048 x 1024) and a tileable `T_DKF_Foam_M` / `_N` (2048) for the Water river material.
+  - All colour-neutral.
+  - Texture QA: all 21 maps PASS (power of two, colour space by suffix, alpha, normals).
+- **Open:**
+  - the mist cores read darker than their rims under a single key, and the puff is too opaque. The next step is a
+    seventh ambient pass and a lower density;
+  - there is no dedicated rising-plume flipbook;
+  - the spray edge is harder and more gel-like than the sheet's foamy splash;
+  - these previews are Blender stand-ins: judge in Unreal under the UDS sun.
+
+## LANDSCAPE ROUND - world build stage in DojoLab (2026-09-30)
+
+Followed `landscape/plan/LANDSCAPE_PLAN.md`. Output folder: `WorkFiles/dojo/build/landscape/world/`. Code is in
+`Scripts/dojo/landscape/`.
+
+House rules kept:
+- no MCP tools;
+- one Unreal process on DojoLab at a time, and one commandlet machine-wide (the `tools/run_ue.sh` guards);
+- no DojoLab editor was open;
+- DemoGame_1, the GASP sample, ArmoryLab and every content source were only read;
+- owned content was FILE-COPIED (never migrated);
+- no downloads;
+- nothing was committed;
+- the armory chat was left alone.
+
+The sunset is unchanged: UDS 1730, sun at 9.08 deg from the west, the round-9 restore_s1 values.
+
+### Backups
+- `world/start_backup/`: L_Dojo.umap (md5 6598865e, the round-9 restore_s1 level), Config, uproject, every
+  dojo/unreal and showcase script, layout_showcase.json and blender_bounds.json. `MD5.txt` is in the folder.
+- `world/backup_pre_world/`: L_Dojo after the town removal (md5 f42a3e30), plus the config.
+- **Final L_Dojo md5: 87a2d1b5** (448 MB; the two 2017 x 2017 landscapes make up most of it).
+
+### 1. Water plugin
+- `"Water"` is enabled in DojoLab.uproject. Its dependencies (Landmass, Niagara, GeometryProcessing,
+  BlueprintMaterialTextureNodes) load with it.
+- First load: 0 errors (`json/probe_api.json`).
+
+### 2. Town removed
+`Scripts/dojo/landscape/apply_landscape.py` is a new prep patch, chained into `run_showcase_unreal.sh prep`.
+- It removed 338 instances: Outside/Street 237, Town 42, Ground 4, Far 6, and 49 modern props outside the walls
+  (poles, wires, the street lamps and their 2 lights).
+- It also dropped the WornPath_07 road decal and the 22 old tree_slots.
+- The two SM_DGB_Tree are now hidden in game but keep their trunk hull. These hulls are the CS01/CS02 collision.
+- Instances keep their indices, so every label and every check name is unchanged. The assets stay on disk.
+- `dj_sc_level.py` and `dj_sc_verify.py` were patched to:
+  - skip removed instances;
+  - check that removed instances are absent;
+  - gate the world-build actors (tag DJ_Landscape) separately, in `dj_ls_verify.py`.
+- Result: 772 compound meshes, bounds max error 0.0008 cm.
+
+### 3. Our assets imported (`dj_ls_import.py`; 136 meshes and 65 textures, 0 errors)
+**Stone kit (104 SM_DKT, f3)**
+- Legacy FBX import, UCX convex hulls, vertex colours set to Replace.
+- Nanite as the catalogue says, ShapePreservation NONE, fallback RELATIVE_ERROR 1.0 (STONE study 5.2).
+- Sidecar applied on the LOD pieces.
+
+**Stone kit material instances, measured mid-grey (`stone_tone.py`, `json/stone_tone.json`)**
+- Albedo through the Lib_Opaque maths. The f3 catalogue tone measured sRGB (106, 100, 94), saturation 0.116,
+  R/B 1.13 (the tan).
+- The UE MIs measure: WallGranite (124, 118, 113), saturation 0.082, R/B 1.09. Every slot is at saturation 0.08 and
+  R/B 1.09, with the step and riser ladder kept.
+- Moss comes from the Wear alpha.
+
+**Pines (SM_DKN, v2f)**
+- Nanite throughout. Trunks, rocks and mounds use ShapePreservation NONE. Foliage uses VOXELIZE with lerp_u_vs
+  False.
+- PP2 textures: PivotPos HDR and XVector VectorDisplacement, both Nearest, no mips.
+- New masters:
+  - M_DKN_Bark: UV2 unique AO, vertex G moss.
+  - M_DKN_Needle: Two Sided Foliage. PP2 wind rotates each pad about its pivot, weighted by vertex R. Flutter comes
+    from vertex B. Max WPO is 6 cm.
+  - M_DKN_RockUnique.
+- Foliage components: WPO disable distance 5000 cm, Rigid shadow cache, NoCollision.
+
+**FX** (meshes, textures and a petal MI) are imported for the FX stage.
+
+### 4. Owned content copied (`copy_owned.py`)
+- 200 files (996 MB). Each pack keeps its /Game path, and the copy follows each pack's dependency closure.
+- Fishermans_Cabin: firs and billboard, bushes, grass, rocks, small rocks, mountain, tiling ground and rock 4K.
+- Scenery_Tutorial: Megascans surfaces, T_MacroVariation, T_NoiseMask, T_Land_Mountain01/02 and Erosion00/01.
+- Megaplants: Tree_Japanese_Cypress_01 A-G.
+- **Not copied:** NiagaraExamples FX_Fog. Its packages reference the plugin mount /NiagaraExamples, so a /Game copy
+  cannot resolve.
+- **Changed in our copies only:** the 8 SM_Fir_Tree meshes now use Nanite VOXELIZE (plan 3.11). The VaultCache
+  source is untouched.
+
+### 5. World (`make_terrain.py` + `make_world_layout.py` produce the data; `dj_ls_world.py` builds it)
+**Landscape tool**
+- The UE 5.8 Python API cannot create landscape components. A small editor plugin does this,
+  `Scripts/dojo/unreal/DojoLandscapeTools` (ALandscapeProxy::Import, as New Landscape does).
+- It is built with RunUAT BuildPlugin and installed in DojoLab ONLY while `tools/run_world.sh` runs, then removed.
+  The level references nothing from it.
+- `landscape.Nanite.MultithreadBuild 0` makes the Nanite build finish inside the commandlet.
+
+**Two landscapes, both Nanite (256 components each)**
+- **LS_Valley:** 2017^2 vertices at 0.5 m, centre (22, 18). It is built in this order:
+  1. valley walls from the river (the far bank +2/+5/+20 at x 70/85/130), the north hill and the west ridge;
+  2. the C1 cliff;
+  3. the wall-foot ground (clamped to at least the water level + 0.4);
+  4. the channel carve;
+  5. the stair corridor;
+  6. the pads: terrace 0, forecourt -0.5, -0.30 under the compound.
+
+  Bank and hill relief come from the owned Erosion00 stamp.
+- **LS_Far:** 16 km at 8 m. It carries ridges M1/M2/F and the two peaks. The peaks come from the owned stamp
+  T_Land_Mountain02 (rotated, mirrored, raised to the power 1.6), which is plan option B.
+  - Peak A summit: 2057 m (plan 2078).
+  - Peak B summit: 1980 m (plan 2006).
+  - LS_Far sits 30 m under the valley inside the valley's footprint.
+- Valley probes traced against the heightmap: max error 0.03 cm.
+
+**Materials**
+- M_DJL_Valley: world-mask layers (T_DJL_ValleyMask 2048: dirt, forest floor, moss, river bed) plus slope rock.
+  Owned textures only; shared samplers. A canopy colour blends in beyond 130-320 m.
+- M_DJL_Far: forest canopy, rock and meadow, plus the height + slope snow blend (snow line 1120 m).
+
+**Ishigaki: 36 SM_DKT wall pieces**
+- WR1, plus a short WR1b (the forecourt's west drop), WR2, WR3, WR4, WR5 (H6, then H4, then H3, ending in EndR into
+  the hill), and the forecourt step course.
+- Deviation, measured on the kit's snaps: WR2 is at y -8.0, not the plan's -7.6. The CornerOut arm plus a 2 m module
+  plus the CornerIn arm put WR4's face exactly on y -3.0. The WR3/WR4 junction uses CornerIn_H6.
+
+**Stair path: 78 kit pieces**
+- 7 flights + the 2 gate flights, 9 landings / paths, 22 cheeks, 16 kerbs, 18 rail pieces.
+- 6 lanterns, each with a point light at 2550 K. Lanterns stand on the cliff side, which is the kit's own rule.
+
+**River: one WaterBodyRiver**
+- 222 points, 1.31 km (plan R0-R11 plus one extension point at each end so the water does not stop in view).
+- Per-point width and depth; a WaterZone; affects_landscape off (the channel is carved in the heightmap).
+- MI_DJL_River is turquoise.
+- The rapids velocities are doubled (520-750 cm/s). The engine material showed no foam at 250-350 cm/s.
+- **White water:** 17 foam strips over R4-R7 (M_DJL_RapidsFoam: the engine's T_WaterFlow_01 foam panning
+  downstream, broken up by our T_DKF_Foam_M).
+- A low Local Fog Volume sits over the rapids (44 x 18 x 4 m, extinction 0.03 / 0.08). The first build was a white
+  wall.
+
+**Rocks: 80 owned Fishermans rocks** (MI_DJL_Rocks_Granite, with the RVT blend switched off; with it on, the rocks
+rendered sRGB 0, 0, 0)
+- 21 hero targets from the plan;
+- 9 rapids stones;
+- 9 bank boulders;
+- 13 cliff-face chunks;
+- 8 cliff-top rocks;
+- 16 edge boulders;
+- 4 bed slabs.
+
+**Trees and cover**
+- Pines P01-P08: 26 actors (trunk, foliage, rock, mound).
+- 5 Megaplants cypress behind the hall.
+- Firs as ISMs, 1699 in all:
+  - FZ1: 407;
+  - FZ2: 316 (56 dropped by the sun corridor);
+  - FZ3: 944;
+  - FZ3b far bank: 32.
+
+  Their leaves use the child MI_DJL_FirLeaves (the pack's warm Color Multiply read yellow).
+- 53,450 fir billboards on the far hills.
+- 2511 grass, 85 bushes, 420 pebbles.
+
+**Markers and blockers**
+- 20 CherrySlots: hidden cylinders, sized height x canopy, no collision, tags CherrySlot / <id> / CherrySlotFX. No
+  cherry was imported.
+- Boundary_1v1 B1-B8: hidden cubes, 6 m tall, Pawn-only, tags Boundary_1v1 + TerraceEdge + Dojo/Boundary_1v1. The
+  BR drops them.
+- 3 mist FX anchors.
+- 4 SM_Mountain_01 far-ridge masses using MI_DJL_Mountain (the snow material).
+- 6 new cameras.
+
+**Sun corridor (the it6 measure found the regression)**
+- The plan's west ridge (+18 m at x -80) and the FZ2 firs blocked the owner's 9 deg west sun. CAM_Ref2Match fell to
+  mean luma 79.
+- Fix:
+  - the ridge stays under 0.12 x its distance;
+  - the near-bank ground in the corridor is capped;
+  - every tree that would cut the sun ray is dropped.
+- Result: terrain-only sun reaches 100 % of 98 sand points.
+
+### 6. Checks (fresh processes, final level 87a2d1b5)
+- **Showcase verify: 8/8.**
+  - 772 meshes;
+  - GASP trace 23/23;
+  - decals 85/85;
+  - 8 lamps;
+  - UDS read-back equal to restore_s1.
+- **dj_ls_verify: 6/6.**
+  - L1: landscapes 256 components, Nanite on, probes within 0.03 cm.
+  - L2: every actor and every ISM count.
+  - L3: B1-B8 hidden and Pawn-only, 20/20 slots, 28/28 thin uprights, foliage NoCollision with 5000 cm WPO.
+  - L4: river and zone.
+  - L5: GASP capsule stair walk.
+    - BR_stair_path_river_landing_to_gate and its reverse are CLEAR. Max step 10 cm, min floor normal z 0.895 (the
+      limit is 0.71).
+    - The 1v1 CONTROL is stopped by B3.
+  - L6: every B-line CONTROL hits its own blocker with the ring ignored, and passes in BR mode.
+- **UE alley (copies in `world/checks/ue/`):** replay 32/32 CONTROLs blocked and 10/10 POSITIVEs clear, BR 30/30
+  with no mismatch; flood 0 alley cells; pocket probes 0 / 0.
+- **Blender (`world/checks/blender/`):**
+  - walk 47 routes, PASS at r 0.30 and r 0.35;
+  - climb PASS;
+  - all roof walks, clearance and ground holes are identical to round-9 restore_s1. The walk and climb JSON are equal
+    in content to the git checkpoint.
+- BR_road_onto_the_gate_apron is retired with the road, as the plan says. It still passes in the Blender blend, which
+  keeps the road.
+
+### 7. Captures
+-game HighResShot, iterations it2-it10 in `caps/itN`. The final set (it10) is in `caps/`:
+- CAM_LandscapeRef at 1280 x 1920 (2:3, like the reference);
+- CAM_RiverRapids, CAM_StairPath, CAM_TerraceWall, CAM_FromGateOut, CAM_Overview, CAM_PlayerEyeSand and
+  CAM_PeaksOverHall at 1920 x 1080;
+- CAM_Ref2Match at 1920 x 1440;
+- LANDSCAPE_vs_OURS.png and REF2_vs_OURS.png.
+
+Numbers are in `caps/json/`.
+
+**CAM_LandscapeRef against the reference** (1024 x 1536, matched framing)
+
+| Metric | Reference (day) | Ours (sunset) |
+|---|---|---|
+| Share under luma 40 | 8.95 % | 26.96 % |
+| Mean | 140.4 | 73.1 |
+| p10 | 42.3 | 22.5 |
+| p90 | 232.3 | 133.3 |
+
+Region medians, sRGB (reference -> ours):
+
+| Region | Reference | Ours |
+|---|---|---|
+| Sky | (150, 186, 224) | (114, 77, 85) |
+| Peaks | (221, 230, 240) | (162, 118, 112) |
+| Forest slopes | (141, 166, 195) | (117, 79, 23) |
+| River water | (106, 114, 121) | (11, 45, 42) |
+| Foam | (176, 194, 206) | (71, 85, 78) |
+| Terrace wall | (137, 119, 91) | (74, 44, 34) |
+| Compound | (145, 116, 96) | (102, 72, 49) |
+
+The reference is daytime, so the difference is mostly the kept sunset.
+
+**Peaks**
+- Summit A at (348, 460) against the plan's (350, 457): 3.6 px.
+- Summit B at (566, 496) against (567, 493): 3.2 px.
+- Snow luma: A 126 and B 185, against 113 for the sky beside A.
+
+**Foam:** 13 % of the water in the rapids boxes, against the plan's target of 25-45 % (the reference box reads 80 %).
+NOT met.
+
+**Stone against the owned rock** (CAM_TerraceWall):
+- lit wall against rock A: dE76 2.5;
+- shaded wall against rock B: dE76 1.8.
+
+The rock is still the pack's tan.
+
+**CAM_Ref2Match (courtyard), round-9 restore_s1 -> landscape**
+- The sand is sunlit again: near (163, 125, 101) -> (166, 131, 105); far (179, 143, 113) -> (179, 146, 118).
+- Plaster, gravel, timber, shoji and lanterns are all within a few levels.
+- Share under luma 40 went from 11.6 % to 22.2 %, and the mean from 111 to 95. The cause is the background: dark
+  forest and hills now fill the old sky and town band.
+- The tiles read bluer: lit R/B 1.04 -> 0.79. The captured sky light now sees the valley. This is for the lighting
+  stage.
+
+### Open
+- **Foam** is under target. The reference's boulder-choked white water needs:
+  - the FX stage's spray and mist;
+  - more and bigger emergent boulders. The owned Fishermans rocks are the only ones available: gap 1 in the plan.
+- **The far bank** still reads as a smooth tan grass levee (the cherry row is on hold). Wanted:
+  - rounded granite boulders (gap 1);
+  - the cherries.
+- **Mid hills** carry billboards with tan grass or forest floor between them. The canopy blend is subtle at sunset.
+- **Megaplants cypress:** a RENDERING commandlet that loads a level already holding them asserts on a worker thread
+  (ShowFlags IsInGameThread). `run_world.sh` clears the world in a null-RHI process first. The -game and null-RHI
+  loads are fine.
+- Placing a water body after a landscape exists makes WaterEditor run LandscapeEditor UI code, which asserts in a
+  commandlet. The water is therefore built before the landscapes.
+- Water velocity in the rapids is a visual 520-750 cm/s. If BR swimming ever uses the water current, re-check it.
+- Not measured: GPU frame time with the forest. There are 55k ISM instances (1.7k Nanite voxel firs plus
+  billboards). Next: the perf verify.
+- The plan's Boundary_World at the map edge is still the owner's call. P09/P10 were not placed (optional).
+
+## LANDSCAPE ROUND - FX + LIGHTING stage in DojoLab (2026-09-30)
+
+Output folder: `WorkFiles/dojo/build/landscape/fxlight/`. Code: `Scripts/dojo/landscape/dj_fxl_assets.py`,
+`dj_fxl_place.py`, `dj_fxl_verify.py`, `measure_fxlight.py`; the editor helper `Scripts/dojo/unreal/DojoFXTools`; the
+look in `Scripts/dojo/showcase/look_r3.py` (section "LANDSCAPE ROUND: FX + LIGHTING" and its it2 block).
+
+House rules kept:
+- no MCP tools; headless Blender only (the functional checks);
+- one Unreal process at a time and one commandlet machine-wide (the runners wait on any UnrealEditor-Cmd and stop if a
+  DojoLab editor is open); none was left running;
+- DemoGame_1, the GASP sample, ArmoryLab and every content source were only read; no Migrate, no downloads;
+- `DojoFXTools` is installed into `DojoLab/Plugins` only while an FX step runs (`fxlight/tools/run_fx.sh`), then removed
+  (the Plugins folder is gone again); nothing references it;
+- nothing in `Scripts/unreal/materials` was touched; the other chats' files, locks and processes were left alone;
+- nothing was committed. The DojoKit lock (claude) was refreshed.
+
+The sunset is kept: UDS Time of Day 1730, Sun Yaw 268, sun 9.08 deg from the west (the read-back is unchanged).
+
+### Backups
+- `fxlight/start_backup/` (before any write): L_Dojo.umap md5 87a2d1b5 (the world-stage final), Config/*.ini, the
+  uproject, `materials.tar` (every DojoKit / DojoLandscape Materials folder + DojoKit/Showcase), `scripts/scripts.tar`
+  (Scripts/dojo/{unreal,showcase,landscape}, layout_showcase.json, world_layout.json). See RESTORE.txt.
+- `fxlight/backup_pre_light/`: L_Dojo after the FX placement, before the lighting build (md5 d7078859).
+- **Final L_Dojo md5: 7d73c3a4.**
+
+### 1. FX (from our DojoFX assets; recipe fx/fx_catalog.json)
+**Method.** UE 5.8's Python cannot edit Niagara emitters (the lightweight emitter, its modules and the distribution
+structs are not exposed). `DojoFXTools` adds generic reflection get/set (ExportText / ImportText by property path), a
+renderer swap and a system finalise + compile. Each system is a copy of the engine template
+`/Niagara/DefaultAssets/Templates/Systems/FountainLightweight` (one lightweight / stateless emitter: no per-particle
+state, evaluated on the GPU, no CPU sim), every module's enable flag and values written explicitly.
+
+**Materials** (`/Game/DojoKit/FX/Materials`):
+- `M_DKF_SixWayMist`: lit translucent sprite (volumetric per-vertex non-directional); both six-way maps through SubUV
+  (8 x 8, blended); key = the catalog's six-way formula with the UDS sun direction (written at build time from the
+  layout sun: the time is locked) in the camera basis; the engine's translucency lighting gives the colour and the
+  exposure; depth fade. MIs: MistPuff (opacity 0.25), MistWisp (0.22), SprayBurst (0.6).
+- `M_DKF_HazeSprite` + MI_DKF_RiverHaze (0.55); `M_DKF_Droplet`; `M_DKF_PetalScatterDecal` + MI cells 0-3 (DBuffer
+  decal, 2 x 2 atlas cell per MI); `M_DKF_FoamWake` + MI_DKF_FoamWake (0.95) / MI_DKF_FoamWakeSoft (0.5).
+- M_DKF_Petal: Niagara mesh particle + instanced static mesh usage confirmed on (read back).
+
+**Systems** (`/Game/DojoKit/FX/Niagara`):
+
+| System | Renderer | Spawn per actor | Life | Notes |
+|---|---|---|---|---|
+| NS_DKF_PetalDrift | mesh: Petal_A-F + PetalOld_A (weight 0.45) | 26-34 /s, 60 x 60 x 10 m box 6-16 m up | 10-14 s | gravity + drag 6 (fall ~0.95 m/s), wind 110 cm/s W->E as an acceleration, curl noise, tumble 300-420 deg/s, real scale 1.0-1.4; shrink over the last 15 % (stateless: no collision) |
+| NS_DKF_PetalCanopy | same | 2-5 /s, 3 m sphere | 7-10 s | one per CherrySlot |
+| NS_DKF_MistPuff | MI_DKF_MistPuff, 8 x 8 SubUV | 2-4 /s | 4-7 s | 4.2-9.8 m sprites (1.4 x the mist width), rise + down-stream |
+| NS_DKF_MistWisp | MI_DKF_MistWisp | 1-2 /s | 6-10 s | (11-20) x (6-10) m |
+| NS_DKF_RapidSpray | MI_DKF_SprayBurst | 0.55-1.25 /s | 0.64-0.9 s | 1.0-1.8 m (the catalog's 1.5-3 m read as white cut-outs from above), pivot (0.5, 0.96) |
+| NS_DKF_SprayDroplets | MI_DKF_Droplet, velocity-aligned | 50-90 /s | 0.6-0.9 s | cone 35 deg, 250-450 cm/s, gravity |
+| NS_DKF_RiverHaze | MI_DKF_RiverHaze, Z-locked | 0.12-0.2 /s | 25-40 s | 20-40 x 8-12 m |
+
+**Placement** (`dj_fxl_place.py`, tag DJ_FXL; re-run safe; the showcase level step and the world step never touch it):
+- Petal drift over the courtyard / terrace and over the cliff stair (active).
+- NS_DKF_PetalCanopy on all 20 CherrySlots at 0.6 x the slot height, tags CherrySlotFX + the slot id. Active now:
+  CS01, CS02 (the courtyard pair), CS03, CS04 (west strip) and CS09 (cliff top over the stair). The other 15 are placed
+  with auto-activate off, ready for the cherries.
+- Fallen petals under every slot canopy (line traces; sand, water, roofs, walls and slopes steeper than ~45 deg are
+  skipped): 140 scatter decals and 59 SM_DKF_PetalDrift clusters, NoCollision, shadowless. The two courtyard tree
+  beds (Bed_Tree W / E) now carry them.
+- River: only boulders that reach the water level get white water. The world stage's Rapids_01-09 stones all sit
+  0.15-0.3 m UNDER the surface (measured from the actor bounds), so: 7 emergent boulders get spray + droplets + a dense
+  wake; 16 pour-over stones get a soft wake only (a splash sheet on a hidden stone read as a white bird on open water);
+  16 mist puffs (3 anchors + boulders >= 1.4 m), 6 wisps along the fast reach, 15 haze sheets.
+- Totals: 73 Niagara actors, 82 static meshes, 140 decals.
+
+**Particle budget.** The estimated steady count of the active emitters (rate x mean life) is about 1654:
+- petal drift 720;
+- droplets 368;
+- mist puffs 264;
+- canopy 149;
+- haze 77;
+- wisps 72;
+- spray 5.
+
+The cap is 6000.
+
+**GPU cost** (`checks/perf/`). Same-session -game A/B, 1920 x 1080, scalability 3; frame time mean, FX on against FX
+hidden:
+- CAM_RiverRapids: 19.69 against 17.24 ms (+2.45; translucent mist close to the camera);
+- CAM_PlayerEyeSand: 13.48 against 13.02 (+0.46);
+- CAM_LandscapeRef: 9.11 against 8.41 (+0.70).
+
+The full perf table is `checks/perf/perf_summary.md`.
+- **Finding:** since verify_r9, ShadowDepths has grown from 0.68 ms to 2.5-8 ms (PlayerEyeSand GPU 7.1 -> 12.4 ms;
+  RiverRapids 19.3 ms is over 16.7).
+- That growth comes from the world build (forest, landscapes, cypress), not from the FX. The FX cast no shadows (the
+  renderers and components are off, the meshes are shadowless).
+
+### 2. Lighting rebalance (look_r3.py; -game probes `fxlight/probe/pa..pf`, measured)
+Probe pe froze the clouds (Cloud Speed 0). Earlier probes showed the cloud drift alone moves the sky reads by up to 25
+luma.
+- **Upper sky.** The cloud ambient / dark colour and the Rayleigh colour (set at runtime) left the sky gaps unchanged
+  (pe E0 -> E1 / E3: the LandscapeRef top band stayed at 41 luma). The lift comes from the post:
+  - film toe 0.72 -> 0.64;
+  - local-exposure shadow contrast 1.0 -> 0.85.
+
+  Final top band: (85, 62, 70), luma 67.5, hue 339, s 0.16. Before it was (55, 31, 42) / luma 41 / hue 332 / s 0.28
+  (about +0.6 EV and less red).
+- **Valley haze.** Fog tint (14, 2.8, 1.1) -> (12, 3.0, 1.35) at Fog 2.2. The forest-slope box went from orange
+  (137, 93, 24) s 0.70 to (116, 92, 45) s 0.44. The peaks keep a warm rim: (158, 124, 120).
+- **Cloud ambient.** Ambient (1.2, 1.1, 1.4) and dark colour (0.15, 0.14, 0.2). This cools the captured sky light, and
+  that is what lets the kawara read neutral with a near-neutral albedo.
+- **Sand.** Saturation 0.58 (against the sky light), value 0.88 -> 0.98 (+0.15 EV).
+  - Rake: a new `NormalStrength` in the ground master (`dj_sc_materials.build_ground`; default 1, so every other ground
+    is unchanged), set to 3.0 on the raked sand, with NormalVar 0.35 -> 0.15.
+- **Timber.** Value 1.35, saturation 0.42, tint (1, 0.84, 0.7).
+- **Shoji.** x 0.55, tint (1, 0.6, 0.32); the clerestory band with it.
+- **Lantern glass.** x 0.8, saturation 0.9, tint (1, 0.5, 0.22); the tall stone lanterns' lights x 0.85.
+- **Kawara.** The flatten target (80 % of the colour) is a neutral lavender-charcoal: MeanColour (0.05, 0.057, 0.074),
+  Tint (1.5, 1.3, 1.4), value 2.6.
+- **Plaster / gravel.** Saturation 0.16 / 0.5.
+- **Grey-box tree cylinders.** The two SM_DGB_Tree are hidden in game, with their trunk hulls kept for CS01 / CS02.
+  Their box centres (3.5, 16) and (40.5, 16) are exactly CherrySlots CS01 / CS02. Those now carry the canopy petal
+  emitters and the fallen petals on the tree beds. No grey-box cylinder shows in CAM_Overview or CAM_EastYard.
+
+**CAM_Ref2Match against ref 2** (round 9's measure_r8 boxes; world stage -> final, with ref 2 last):
+
+| Metric | World stage | Final | Ref 2 |
+|---|---|---|---|
+| Share under luma 40 | 22.4 % | 13.3 % | 13.7 % |
+| Mean | 94.8 | 104.4 | 107.9 |
+| p10 / p90 | - | 33.1 / 159.4 | 34.4 / 171.1 |
+| Sand near | (165, 129, 102) R/B 1.62 s 0.26 | (168, 138, 118) R/B 1.42 s 0.22 | (182, 148, 125) R/B 1.46 s 0.28 |
+| Sand high-pass | 7.7 | 9.1 | 11.7 |
+| Timber | (66, 36, 19) R/B 3.5 | (78, 52, 38) R/B 2.05 | (75, 49, 30) R/B 2.5 |
+| Tiles lit | (61, 64, 77) R/B 0.79 | (99, 84, 100) R/B 0.99 | (91, 84, 94) R/B 0.97 |
+| Tiles shade | - | (57, 50, 65) R/B 0.88 | (43, 39, 45) R/B 0.96 |
+| Shoji | (214, 139, 50) R/B 4.3 | (193, 118, 56) R/B 3.45 | (182, 118, 53) R/B 3.43 |
+| Lantern | - | (233, 181, 107) s 0.74 | (241, 180, 90) s 0.84 |
+| Plaster / gravel R/B | - | 1.27 / 1.27 | 1.40 / 1.43 |
+
+**CU_HallUpperRoof tiles:** lit (123, 109, 123) R/B 1.0, shade (70, 64, 82). Lavender-charcoal; no sage, G < R.
+
+**CAM_Drum:**
+- near-black (luma < 10) 35 % (probe base) -> 20.3 %;
+- share under 40: 65 % -> 46 %.
+
+**CAM_HallVeranda:** near-black 26 % -> 9.8 %.
+
+### 3. Functional checks (fresh processes, final level 7d73c3a4; copies in `fxlight/checks/`)
+- **Showcase verify: 8 / 8.**
+  - `dj_sc_verify.py` now leaves the DJ_FXL actors to dj_fxl_verify, as it does the DJ_Landscape ones (two filters).
+  - 772 compound meshes; bounds max error 0.0008 cm; GASP trace and decals pass; the UDS read-back matches look_r3.
+- **dj_ls_verify: 6 / 6** (stair walk, B-lines, collision).
+- **dj_fxl_verify: 4 / 4:**
+  - F1: 7 systems, petal scale 1.0-1.4;
+  - F2: 295 actors; every static mesh NoCollision and shadowless; 20 / 20 slot emitters, active exactly on the 5 slots;
+  - F3: materials;
+  - F4: budget.
+- **UE alley:**
+  - replay 32 / 32 CONTROLs blocked and 10 / 10 POSITIVEs clear, BR 30 / 30 with no mismatch;
+  - flood 0 alley cells;
+  - pocket probes 0 / 0.
+
+  All identical to the world stage. One pocket-probe profile names another actor at an equal-height seam (EndGable
+  floor against the Veranda); it is still clear.
+- **Blender** (headless, the world stage's runner): walk (r 0.30 / 0.35), climb and every roof walk PASS. Clearance,
+  ground holes, corridor and roof JSONs are identical in content to the world stage.
+- **layout_showcase.json** differs from the stage start only in materials, the round3 look record and the two tall
+  lantern candelas. Instances, collision classes, markers, routes and player starts are identical. No gameplay number,
+  collision, GASP marker, 1v1 closure or Boundary_1v1 changed.
+
+### 4. Captures (`fxlight/caps/`, -game HighResShot; iterations it1-it4; the final set = it4)
+- CAM_LandscapeRef 1280 x 1920;
+- CAM_RiverRapids, CAM_StairPath, CAM_TerraceWall, CAM_FromGateOut, CAM_Overview, CAM_PlayerEyeSand,
+  CAM_PeaksOverHall 1920 x 1080;
+- CAM_Ref2Match 1920 x 1440;
+- extras: CAM_Drum, CAM_HallVeranda, CU_HallUpperRoof, CU_Lantern, CAM_EastYard, CU_SandEye, CU_Training;
+- LANDSCAPE_vs_OURS.png, REF2_vs_OURS.png, BEFORE_AFTER.jpg (world stage | final, 8 cameras).
+
+Numbers are in `caps/json/fxl_measure.json` and `measure_landscape.json`.
+
+**CAM_LandscapeRef** (reference day -> world stage -> final):
+- share under 40: 8.95 % -> 26.96 % -> 7.85 %;
+- mean: 140.4 -> 73.1 -> 87.6;
+- p10 / p90: 42.3 / 232.3 -> 22.5 / 133.3 -> 43.3 / 138.3.
+
+Foam: 79.9 % (reference) -> 13.1 % (world stage) -> 32.9 % (final). The plan's target band is 25-45 %; met.
+
+Region medians (reference -> final):
+
+| Region | Reference | Final |
+|---|---|---|
+| Sky | (150, 186, 224) | (109, 83, 91) |
+| Peaks | (221, 230, 240) | (158, 124, 120) |
+| Forest slopes | (141, 166, 195) | (116, 92, 45) |
+| River water | (106, 114, 121) | (56, 77, 76) |
+| Foam | (176, 194, 206) | (126, 114, 108) |
+| Terrace wall | (137, 119, 91) | (91, 67, 61) |
+| Compound | (145, 116, 96) | (113, 85, 68) |
+
+The reference is daytime.
+
+**Health per camera** (share under 40 / mean, world stage -> final):
+
+| Camera | World stage | Final |
+|---|---|---|
+| CAM_RiverRapids | 21.9 / 82.6 | 1.6 / 105.7 |
+| CAM_StairPath | 48.5 / 49.9 | 20.7 / 65.8 |
+| CAM_TerraceWall | 36.6 / 100.1 | 8.4 / 122.8 |
+| CAM_FromGateOut | 14.4 / 107.4 | 7.3 / 115.7 |
+| CAM_Overview | 33.9 / 72.9 | 12.2 / 87.5 |
+| CAM_PlayerEyeSand | 29.6 / 84.6 | 21.0 / 92.7 |
+
+### Rejected deltas
+None. No judge ran in this stage. Petal scale follows the brief (real 12-15 mm), not the sheet.
+
+### Open
+- **Petals at real scale are sub-pixel beyond a few metres.** A x25 render test (`probe/pf`, never kept) proved the
+  systems emit, tumble and drift. At 1.0-1.4 they barely read in the gameplay views. Legible petals need about 3-4 x;
+  that is the owner's call.
+- **The rapids stones are submerged** (top 0.15-0.3 m under the water). Only 7 boulders break the surface. Raising them
+  or adding bigger rounded boulders is a world / asset job (gap 1). It would let the splashes, which are now
+  restricted, run on the whole reach.
+- **Mist cost at the water** (+2.45 ms at CAM_RiverRapids). The river view is already 17 ms without FX (ShadowDepths
+  8 ms from the world build). Next steps:
+  - mist sprites camera-distance fade or fewer puffs on Medium / Low;
+  - a shadow-cost pass on the world (VSM invalidation from the WPO foliage, cypress).
+- **Sky.** The sky gaps stay plum-lavender (hue 339). The UDS sky colour knobs did not move them at runtime; a
+  construction-time test of Rayleigh / sky-atmosphere values is the next lever.
+- **Far bank.** It still reads as smooth tan grass (M_DJL_Valley, the cherry row). Not touched here.
+- **The six-way mist uses a fixed sun direction**, valid while the time is locked. A time-of-day change needs the MPC
+  path from the catalog.
+- **Plaster / gravel** read a touch cool against ref 2 (R/B 1.27 against 1.40 / 1.43).
+
+## LANDSCAPE ROUND - LANDSCAPE FIX stage in DojoLab (2026-09-30 / 10-01): the judge's 5 blockers and 13 deltas
+
+Output folder: `WorkFiles/dojo/build/landscape/fix/`. Start state: the FX + LIGHTING stage final (L_Dojo md5 7d73c3a4).
+
+**Code changed.** Every change is commented "fix round" in place.
+- `Scripts/dojo/landscape/{ls_geo, make_terrain, make_world_layout, dj_ls_world, dj_ls_materials, dj_fxl_place,
+  dj_fxl_verify, dj_ls_verify}.py`.
+- A LANDSCAPE FIX ROUND block at the end of `Scripts/dojo/showcase/look_r3.py`.
+
+**New tools in `fix/tools/`.**
+- Runners: `run_ue.sh`, `run_world.sh`, `run_fx.sh`, `capture.sh`, `iterate.sh`, `run_checks.sh`.
+- Measurers: `measure_fix.py`, `peak_silhouette.py`, `proj.py`, `terrain_look.py`.
+- Read-only probes: `probe_fir.py`, `export_foam.py`.
+
+House rules kept:
+- no MCP tools; headless Blender only (the checks);
+- one Unreal process on DojoLab at a time and one commandlet machine-wide. Every runner waits on any UnrealEditor-Cmd and
+  stops if a DojoLab editor is open; none was open;
+- DemoGame_1, the GASP sample, ArmoryLab and every content source were only read;
+- no Migrate, no downloads, and no new owned content copied: everything placed was already in DojoLab;
+- nothing in `Scripts/unreal/materials`; no other chat's files, locks or processes were touched;
+- nothing was committed.
+
+The plugins (DojoLandscapeTools / DojoFXTools) were installed only for their steps and then removed; DojoLab/Plugins is
+gone. One slip: a typo in the first `run_fx.sh` left the DojoFXTools copy in place for about a minute, with no Unreal
+process running. It was removed by hand and the runner was fixed. The DojoKit lock (claude) was refreshed.
+
+The sunset is kept: UDS 1730, sun 9.08 deg from the west. The UDS sky, fog and exposure values are untouched.
+
+### Backups
+- `fix/start_backup/`, taken before any write (see RESTORE.txt):
+  - L_Dojo.umap (md5 7d73c3a4);
+  - Config/*.ini and the uproject;
+  - `materials.tar`: DojoLandscape and the DojoKit material / FX folders;
+  - `scripts/scripts.tar`: Scripts/dojo/{unreal,showcase,landscape}, layout_showcase.json, world_layout.json, the
+    terrain r16 / npy / mask and fxlight/json;
+  - `world_json/`.
+- **Final L_Dojo md5: bf999fc9** (411 MB).
+
+### Rejected and deferred deltas (judge-steer rule: I looked at the reference first)
+- **Rejected (delta 4, part): "posterized cloud banding with 8-bit steps".**
+  - Measured: the raw stills are smooth. CAM_LandscapeRef has 19k unique colours in its top quarter, CAM_FromGateOut 88k,
+    and full-resolution crops show smooth gradients.
+  - The steps appear only in a downscaled view of the side-by-side, and equally in the reference half.
+- **Rejected (delta 12, part): "lower the gravel albedo".**
+  - CAM_Ref2Match gravel measures (140, 114, 110) against ref 2's (136, 106, 95).
+  - The near-white gravel in CAM_EastYard is the 9 deg sun raking the yard toward the camera, not albedo.
+- **Deferred to the owner (delta 4, part): "warm and brighten the horizon band; the sky reads overcast mauve".**
+  - Ref 2 does show a warm peach horizon, but the owner keeps the round-9 UDS dusk.
+  - The "horizon behind the hall" the judge measured (76, 59, 39) is now forest from the landscape, not sky.
+  - The sky and fog values are untouched.
+- **Deferred to the owner (delta 7, gameplay rule): courtyard garden dressing** (clipped pines, round shrubs, boulders,
+  training posts on the sand margins).
+  - Ref 2 does show them, but they sit inside the 1v1 arena.
+  - Adding props there changes the playable space and collision that the brief keeps.
+- **Deferred (delta 9, part; the owner's earlier call): petal scale.**
+  - Petals stay at real scale, so they are sub-pixel beyond a few metres.
+  - The tint and the stair scatter were applied.
+
+### Applied, by blocker and delta
+
+**1. River (blocker 1, delta 1)**
+- **The rapids step down.** `ls_geo.stepped()` turns keys 4.0-7.4 into 7 level runs, each ending in a pour (22 % of the
+  step length); the total drop is unchanged.
+- **Spline and water texture.** The spline takes every 2 m sample through the rapids (256 points, was 222). The WaterZone
+  render target is 2048; the default 512 is 3.1 m per texel over 1.6 km.
+- **Narrower toward the camera:** R7 16 -> 13 m, R8 18 -> 12, R9 19 -> 14, R10 24 -> 19.
+- **38 new channel boulders** (`RapidsB_*`, owned Fishermans SM_Rocks_01-03, 1.5-2.7 m).
+  - Each is set by its TOP, 0.35-1.09 m over the local water (the new `top_z` in dj_ls_world). Its foot is checked to
+    reach the bed.
+  - 20 of them sit on the pour lips as boulder bars.
+- **Foam material** (M_DJL_RapidsFoam, rebuilt):
+  - Streaked along the flow (flow-aligned UVs, about 3.5:1). The Voronoi breakup only modulates at 25 m, so the
+    cracked-ice web is gone.
+  - Colour runs from an aerated turquoise-grey to white crests.
+- **Foam strips:**
+  - one pitched strip per 2 m: 64 strips (was 17 flat);
+  - MIs: MI_DJL_RapidsFoamDrop on the pours, MI_DJL_RapidsFoam on the runs, MI_DJL_RapidsFoamTail_0..5 fading out the
+    two ends;
+  - the white water now runs to key 8.3, where it4 measured the reference's rapids still reach (frame y ~1250), and
+    fades out by key 9.0;
+  - coverage was set from maths on the exported foam texture (`fix/probe`): run ~55 %, pour ~78 %.
+- **FX re-placed on the new world.** 37 emergent boulders get spray, droplets and a wake (was 7); 53 foam wakes in all.
+
+**2. Banks and hills (blocker 2, delta 2)**
+- **Forest:**
+  - every candidate kept, at 4.2 m Poisson spacing, on slopes to 40 deg;
+  - 3126 firs (was 1699). The 1370 within 160 m cast shadows; the 1756 beyond do not;
+  - the far bank is planted from 8 m off the water.
+- **Billboards.** The card is 4 x 4 m (probed), so they now scale x2.6-3.6, giving 10-14 m trees (was 4-5 m). 114,389 of
+  them, about 1 per 30 m2 at 230-900 m.
+- **LS_Valley material:**
+  - The canopy colour starts at 60 m and is full by 170 m (was 130 / 320 m). Inside the forest zones it takes 55 % from
+    the first metre. Canopy albedo (0.026, 0.044, 0.036).
+  - The forest floor is darker. Grass tint (0.40, 0.56, 0.30).
+  - A mossy band runs 0.5-20 m off the water.
+  - The Rock layer is now triplanar. It was projected in world XY, which caused the stretched cliff streaks of delta 8.
+    Tinted to mid-grey granite: linear (0.104, 0.093, 0.079), R/B 1.13.
+- **Bank relief** is non-repeating value noise. The mirrored stamp tiles made the diamond / ridge "striated dune"
+  pattern.
+- **Bank dressing:** 70 bank boulders (`BankB_*`, 0.8-2.6 m) and 70 bank bushes.
+
+**3. Peaks and depth (blocker 3, delta 3)**
+- Peak base x2.0 (was x1.25), power 1.0 (was 1.6). The summits are unchanged: A 2057 m, B 1980 m.
+- Silhouette widths, measured on the LS_Far heightmap through CAM_LandscapeRef, 40 / 80 px under the summit:
+
+  | Peak | World stage | Now | Reference (2x crop) |
+  |---|---|---|---|
+  | A | 71 / 128 | 172 / 318 | 155 / 290 |
+  | B (40 px only) | 51 | 131 | 100 |
+
+- M_DJL_Far:
+  - rock ribs and couloirs now break the snowfield on the steeper faces;
+  - aerial perspective in the albedo: 0-60 % toward a cool violet-blue (0.30, 0.34, 0.52) over 1.5-7.5 km.
+
+**4. West cliff (blocker 4, delta 5)**
+- The terrace was cut 6-8 m straight into the hill on the west (y > 24) and north sides.
+- `make_terrain.rim()` now rises from a 0.6 m verge at <= 26.6 deg, broken with noise, and the forest (FZ2 to x -10)
+  stands on it.
+- The sun-ray filter also protects the hall front and the west kura face.
+
+**5. Upstream plume (blocker 5, delta 6)**
+- The key-4.6 mist anchor at the bend is gone.
+- Haze sheets only over keys 4.8-8.5 (they reached 2.3 km upstream).
+- Mist puffs are capped at the 4 biggest emergent boulders; wisps every 22 m.
+- Local fog extinction halved (0.015 / 0.04).
+
+**6. Stair path (delta 8)**
+- The BF3 bank now falls from every path edge toward the river: at most walk level - 0.25 - 0.55 x the distance. It is
+  kept above the water and the WR2 foot.
+- The cliff-face chunks now stand at the foot of the face; one of them read as a boulder perched on the lip.
+- 86 grass / moss tufts along the step edges and 66 petal decals on the steps and landings.
+
+**7. Conifers (delta 10)**
+- The fir bounding boxes reach 4.2-6.4 m under the pivot, but the roots end 1.3-2.2 m under it (`probe_fir.json`). The ISM
+  placed them from the box, so the trunks floated 3.6-5.8 m in the air.
+- They are now placed by the pivot (`pivot_ground`), 0.25 m deep, at the lowest ground within 2.2 m.
+
+**8. Shadow fill (delta 11).** Lumen sky-light leaking 0 -> 0.06 (look_r3):
+- CAM_Drum near-black 20.3 -> 17.3 %;
+- CAM_HallVeranda near-black 9.8 -> 7.0 %;
+- the open courtyard moved toward ref 2 (see below).
+
+**9. Backdrop (delta 12)**
+- The west sun-corridor ground drops from 0.12 to 0.07 x the run. The terrain-only sun still lights 100 % of the 98 sand
+  points.
+- 55 shrubs stand in the corridor, each under the sun line.
+
+**10. Lantern (delta 13).** M_DJ_Granite_Tri NormalStrength 0.55 -> 0.3, TextureSize 400 -> 250 cm. The moss pads go to
+value 0.95, saturation 0.45.
+
+**11. Petals (delta 9).** M_DKF_Petal gets a Tint parameter. MI_DKF_Petal uses (0.96, 0.72, 0.82), which moves the pale
+(236, 211, 218) toward the reference's pink. The stair decals are listed under 6.
+
+### Measured
+The final set is it6, copied to `fix/caps/` (numbers in `caps/json/` and `caps/fxl_measure.txt`).
+
+**CAM_LandscapeRef**
+
+| Metric | Reference (day) | FX stage | Fix |
+|---|---|---|---|
+| Share under luma 40 | 8.95 % | 7.85 % | 11.76 % |
+| Mean | 140.4 | 87.6 | 84.1 |
+| p10 / p90 | 42.3 / 232.3 | 43.3 / 138.1 | 37.8 / 134.5 |
+
+**Foam** (the world stage's rule) in the rapids boxes: 32.9 % -> **80.8 %**. The reference is 79.9 % and the judge's
+target is 70-80 %.
+
+Regions, reference -> fix:
+
+| Region | Reference | Fix |
+|---|---|---|
+| Sky | (150, 186, 224) | (111, 85, 93) |
+| Peaks | (221, 230, 240) | (157, 125, 121) |
+| Forest slopes | (141, 166, 195) | (108, 90, 41) |
+| River water | (106, 114, 121) | (65, 75, 72) |
+| Foam | (176, 194, 206) | (140, 126, 118) |
+| Terrace wall | (137, 119, 91) | (67, 57, 58), saturation 0.08 (the owner's grey) |
+| Compound | (145, 116, 96) | (118, 91, 74) |
+
+The sky, peak and forest boxes are lit by the sunset, so the forest hue stays warm (44 deg) at 1730.
+
+**CAM_Ref2Match against ref 2** (FX stage -> fix, ref 2 last)
+
+| Metric | FX stage | Fix | Ref 2 |
+|---|---|---|---|
+| Share under 40 | 13.3 % | 12.7 % | 13.7 % |
+| Mean | 104.4 | 106.4 | 107.9 |
+| p10 / p90 | 33.1 / 159.4 | 34.7 / 163.7 | 34.4 / 171.1 |
+| Sand near | (168, 138, 118) | (175, 144, 124) | (182, 148, 125) |
+
+Tiles lit (110, 95, 106), R/B 1.04. Plaster / gravel R/B 1.27 / 1.27.
+
+**Camera health** (share under 40 / mean; FX stage -> fix)
+
+| Camera | FX stage | Fix | Note |
+|---|---|---|---|
+| RiverRapids | 1.6 / 105.7 | 0.1 / 120.5 | |
+| StairPath | 20.7 / 65.8 | 32.3 / 57.8 | the grey cliff in shade |
+| TerraceWall | 8.4 / 122.8 | 15.7 / 116.3 | |
+| FromGateOut | 7.3 / 115.7 | 14.1 / 95.2 | |
+| Overview | 12.2 / 87.5 | 19.7 / 85.8 | dark forest around the compound |
+| PlayerEyeSand | 21.0 / 92.7 | 18.3 / 97.4 | |
+
+**Perf** (`fix/checks/perf/perf_summary.md`; -game, scalability 3, GPU mean at 1080p; FX stage -> fix)
+
+| View | FX stage | Fix |
+|---|---|---|
+| PlayerEyeSand | 12.36 ms | 12.32 ms |
+| Overview | 10.76 ms | 11.43 ms |
+| PAWN | 10.60 ms | 9.90 ms |
+| LandscapeRef | 8.28 ms | 9.43 ms |
+| **RiverRapids** | **19.28 ms** | **22.84 ms** |
+
+RiverRapids is over budget: ShadowDepths went from 8.06 to 11.58 ms. Left open.
+
+### Functional checks
+Fresh processes on the final level (bf999fc9); copies in `fix/checks/`.
+- **Showcase verify: 8 / 8.**
+- **dj_ls_verify: 6 / 6.**
+  - Landscape probes within 0.03 cm; every layout actor and ISM count present.
+  - B1-B8 hidden and Pawn-only; 20 / 20 CherrySlots; 28 / 28 thin uprights; 256 water points.
+  - Stair walk: BR clear both ways (max step 8.3 / 10.0 cm, min floor nz 0.895). The 1v1 CONTROL is blocked by B3.
+  - Every B-line CONTROL hits its blocker.
+- **dj_fxl_verify: 4 / 4.** Particle estimate 3012, under the 6000 cap.
+- **UE alley:** replay 32 / 32 CONTROLs blocked, 10 / 10 POSITIVEs clear, BR 30 / 30 with no mismatch; flood passed;
+  pocket probes 0 / 0.
+- **Blender (headless):**
+  - walk, climb and every roof walk PASS;
+  - the clearance, ground-hole, corridor and roof JSONs are identical in content to the FX stage;
+  - the walk / climb JSONs are unchanged against git.
+- **layout_showcase.json against the stage start.**
+  - Identical: instances, collision classes, traversal markers, player starts, routes, lights, cameras and decals.
+  - Changed: two material looks only (M_DJ_Granite_Tri, M_DKP_Stone_Moss).
+  - No gameplay number, collision, GASP marker, 1v1 closure or Boundary_1v1 changed.
+
+### Captures
+`fix/caps/`, -game HighResShot; iterations it1-it6, final it6.
+- CAM_LandscapeRef at 1280 x 1920.
+- CAM_RiverRapids, CAM_StairPath, CAM_TerraceWall, CAM_FromGateOut, CAM_Overview, CAM_PlayerEyeSand and
+  CAM_PeaksOverHall at 1920 x 1080.
+- CAM_Ref2Match at 1920 x 1440.
+- Extras: CAM_Drum, CAM_HallVeranda, the CU_* close-ups and CAM_EastYard.
+- Sheets: LANDSCAPE_vs_OURS.png, REF2_vs_OURS.png, BEFORE_AFTER.jpg (FX stage | fix, 8 cameras).
+
+### Open
+- **CAM_RiverRapids GPU 22.8 ms** (ShadowDepths 11.6 ms). Next:
+  - a shadow pass: rocks beyond 40 m, and the VSM cache for the near firs' WPO;
+  - fewer shadow-casting firs within 160 m.
+- **Sourcing needs** (nothing owned fits):
+  - rounded granite river and bank boulders (gap 1). The Fishermans rocks are the only owned ones, and they read tan
+    in close-ups;
+  - Japanese slope conifers (the Nordic firs stand in);
+  - understorey shrubs (azalea / boxwood mounds) and moss cushions for the banks;
+  - 2-4K ground surfaces.
+- **Cherries (on hold).** The right bank and the stair foreground read bare without them. All 20 CherrySlots and their
+  petal emitters are waiting.
+- **Owner calls:** the warm horizon and sky (delta 4), the courtyard margin dressing (delta 7) and the petal scale.
+- **Leftovers:** the unused MIs `MI_DJL_RapidsFoamTail` and `MI_DJL_RapidsFoamTailSoft` (from it3) are still in
+  /Game/DojoLandscape/Materials. Nothing references them.
+
+## 2026-10-01 - HALL + ARMORY round, stage 2 (Blender): the rear extension, the opened doors, the moved closure
+
+Workflow wf_ac6d2186-d40. Blender only, headless; no Unreal, no commit. Nothing under Scripts/armory, Exports/ArmoryKit,
+WorkFiles/armory or ArmoryLab was written (the armory FBXs were only imported into a check blend).
+
+**Built** (Scripts/dojo/hall/build_hall_rear.py, which imports build_hall.py read-only; out: Assets/Dojo/DojoHallRear.blend):
+- 13 new SM_DKH pieces, exported through Scripts/pipeline. qa_check: 0 hard fails.
+  - Bay_DoorOpen, DoorLeaf_Parked, Frame_Open, RoofUpper_BackValley.
+  - Rear_Frame, Rear_Bay_ClerePlaster, Rear_Bay1_Plaster / _Transom / _ClerePlaster.
+  - Rear_Roof, Rear_RoofRidge, Rear_RoofGable, Rear_WindowBacker.
+- The 21 existing SM_DKH FBX are unchanged (sha256 checked).
+- 1v1 pieces: SM_DKX_1v1_HallRear_W / _E and SM_DKX_1v1_RearRoof. SM_DGB_Boundary_1v1 was rebuilt with its north side
+  moved +11 m (same name, material and pivot; the old FBX is in hall_armory/blender/start_backup).
+
+**Numbers (measured):**
+- Rear roof: 25 deg gable, eave +5.1617 at Y 45.9, valley Y 34.4199 / +5.7772, planes meet +8.1461, cap +8.6046,
+  onigawara ends +8.8461 (0.76 m under the main ridge's 9.3649 / 9.6064).
+- Extension wall plate +5.0279 to +5.2679. Main rear beam over the opening +5.52 to +5.687.
+- The regenerated main back slope matches the shipped SM_DKH_RoofUpper_Back tri for tri (169,936) before the valley cut.
+- The rafter ends at the valley touched the armory's coffer tops (+5.500 / +5.512 against +5.5007). 84 + 84 vertices
+  were raised to +5.522. Lowest shell vertex over the armory: +5.522 (0.0213 m clear). Envelope violations: 0.
+- Doors (ray-measured): 3 x 1.76 m clear, sill +0.545, head +2.388, 1.843 m clear (0.123 m over the GASP capsule).
+
+**Layout** (compose_hall_armory.py; layout_showcase.json updated IN PLACE, the start copy is in
+hall_armory/blender/start_backup):
+- 27 instances flagged removed: 'hall_armory_rev1' (21 rear-wall bays, 5 replaced, the old HallRear blocker).
+- 40 moved (the north wall +11 m, NorthWallTop). 121 added: 83 shell with shell_id, 24 side-wall pieces, 11 gravel
+  copies, 3 blockers.
+- Markers Wall_N / _W_N / _E_N, climb route O north and CU_R6_AlleyAbove moved +11 m.
+- CONTROL_into_the_hall became hall_front_centre_door_into_the_interior.
+- Walk routes added: the 26 interior routes, 11 CONTROLs and 5 BR rear-yard / alley routes.
+  - ARM_CONTROL_must_hit_case1 is renamed CONTROL_ARM_must_hit_case1, so walk_check treats it as a control.
+  - The two wing-deck routes start at +1.10.
+- BR_road_up_the_kerb_into_the_west_lane_north: its north leg moved Y 43 -> 54. It is still a dead town route
+  (carry-over).
+- The terrace-side moves are in hall_armory/blender/world_layout_hall_armory.json + world_layout_delta.json (B5/B6/B7,
+  WR5 +4+4+2+2 m and its end, CherrySlot CS19/20, the cypress row). Pending for the DojoLab stage: the LS_Valley spot
+  heights, FZ1 and the cypress z re-snap.
+
+**Checks** (Assets/Dojo/DojoShowcase_HallArmory.blend: the showcase + the shell + the 461 armory instances; the
+landscape round's 338 removed instances are taken out of the Assembly):
+- walk_check: 93 routes, passed at r 0.30 and r 0.35.
+- climb_check (hover 0.019): passed. Every 1v1 number is identical to the landscape verify; only route O moved.
+- gate roof_walk: passed. hall_roof_walk: 16/16 passed. hall_rear_roof_walk (new): 13/13 passed.
+  - BR over the valley and the rear ridge to the north eave.
+  - 1v1 CONTROLs blocked by RearRoof / HallRear_W / _E.
+
+**Courtyard silhouette:**
+- Hall masks before / after are identical (0 px) from CAM_Establishing, EstablishingRef2, Ref2Match, PlayerEyeSand
+  and HallVeranda.
+- The rear pieces show 0 px from those cameras plus the gate and peaks cameras.
+
+**Shared folder:** hall_shell_layout.json is BUILT, manifest.json has the sha256s and a stage-2 line, and interface.json
+was updated (INTERFACE CHANGED before release: the front-wall intrusion x +-6.3, the leaf box). The folder is still
+revision 1. armory_hall synced rev: none yet (DojoLab sync is the next stage).
+
+**Files:**
+- Renders: WorkFiles/dojo/build/hall_armory/blender/renders/.
+- Checks: hall_armory/blender/checks/.
+- Measurements: hall_armory/blender/{measure,silhouette,compose_report}.json.
+
+
+## 2026-10-01 - HALL + ARMORY round, stage 3 (DojoLab): sync, relight, landscape move, carry-over fixes, checks
+
+Workflow wf_ac6d2186-d40. Output folder `WorkFiles/dojo/build/hall_armory/ue/`. No MCP tools, headless Blender only, one
+Unreal process at a time (every runner waits on any UnrealEditor-Cmd and stops if a DojoLab editor is open; none was),
+nothing committed. Nothing under Scripts/armory, Exports/ArmoryKit, WorkFiles/armory or ArmoryLab was written; ArmoryLab
+was never opened (its .uasset files were only read and file-copied). No edit in Scripts/unreal/materials. DemoGame_1*,
+the GASP sample and other chats' files / locks untouched. The plugins (DojoLandscapeTools / DojoFXTools) were installed
+only for their steps and removed (DojoLab/Plugins absent). Config/*.ini unchanged (md5 as the start backup). The DojoKit
+lock (claude) was refreshed.
+
+armory_hall synced rev 1
+
+**Backups** (`ue/start_backup/`, before any write): L_Dojo.umap (md5 bf999fc9, the landscape fix final), Config,
+uproject, Saved GameUserSettings, layout_showcase.json + blender_bounds.json, world_layout.json + world/json, the
+terrain r16 / npy / mask, the SM_DGB_Boundary_1v1 uasset, scripts.tar (Scripts/dojo/{unreal,showcase,landscape,hall}).
+**Final L_Dojo md5 b2764fc1** (412 MB).
+
+### 1. Hall pieces, back wall, closure, boundary
+- Blender: `Scripts/dojo/hall/hall_armory_bounds.py` refreshed showcase/blender_bounds.json for the composed layout
+  (fresh FBX meta for the 17 hall-armory pieces + the rebuilt ring; the 1,069 unchanged instances re-derive with 0.0 m
+  deviation).
+- Unreal: dj_import (the rebuilt ring), sc_import (16 new meshes), sc_materials, dj_materials (the ring's M_DGB_Boundary:
+  the fresh reimport had left WorldGridMaterial), sc_level: 866 mesh actors (772 - 27 removed + 121 added), bounds gate
+  max 0.0008 cm, 24 markers.
+- Prep: `Scripts/dojo/hall/apply_hall_armory.py` (new, runs last in `run_showcase_unreal.sh prep`; idempotent): keeps
+  CU_R6_AlleyAbove +11 m (look_r3 re-creates the close-ups on every prep and had undone the Blender stage's move), adds
+  11 cameras (CAM_DoorwayIn, CAM_RearExtension, CAM_ArmoryEntry, CAM_ArmoryCeiling and 7 CAM_AK_* = the armory chat's
+  own ArmoryLab capture cameras converted exactly), and retires the 5 dead BR town routes.
+
+### 2. The armory interior: `Scripts/dojo/unreal/dj_armory_sync.py` + `run_armory_sync.sh` (+ `dj_armory_look.py`)
+- File stage (plain Python): the dependency closure (a string scan of each package's /Game/ imports) of the 97 slot
+  instances + the 6 shuriken meshes = 209 packages, copied from ArmoryLab to the SAME package paths
+  (/Game/ArmoryKit/{Materials,Textures}, /Game/NinjaPack/...): byte-identical, 0 drift against manifest.json, copied
+  only when the sha256 differs.
+- Unreal stage: 64 SM_AK_* imported from Exports/ArmoryKit by FBX sha256 (the ak_import recipe; slot = instance name;
+  Nanite unless a slot derives from M_AK_Glass_Master; fallback at full detail); 461 instances + 6 items + 114 design
+  lights + 10 shell backer lights placed (tag DJ_ArmoryHall, Outliner ArmoryHall/*). Gates: bounds against
+  interior_layout bbox_m max 0.0704 cm (0 fails), transforms 0.0, envelope 0 violations, every light inside the
+  envelope, 83 / 83 shell ids in L_Dojo, 12 shadowed local lights (budget 14), 0 FBX / package drift. Re-run safe;
+  it MUST run after every sc_level (it sets lighting channels on hall actors).
+- Collision: interface.json classes incl. 'glass' (pawn block, camera + visibility ignore); every SM_AK piece keeps its
+  UCX hulls (convex count = UCX count on all 64). D6: the propblock / glass pieces get CanCharacterStepUpOn No and an
+  unwalkable slope override on their BodySetup.
+- Floors: armory z 0 = hall-local 0 = world +0.50 = the hall's finished floor (veranda deck +0.50). The approach:
+  courtyard 0 -> step band +0.15 -> stair treads +0.167 / +0.333 / +0.50 -> veranda +0.50 -> door sill +0.545 (4.5 cm,
+  the largest step inside the door) -> armory floor +0.50. The armory's sunken genkan (-0.12), its step beam and its
+  exterior sill are not used; its two entry lanterns and the entry mat stand lifted +0.12 on the floor; the rear dais:
+  4 risers x 0.15 to the deck at +0.60 local = world +1.10.
+
+### 3. Relight (the DojoLab-only look in dj_armory_look.py; never synced)
+- Exposure parity, measured: both PPVs are manual without the physical camera; ArmoryLab bias -2.68, DojoLab +1.20, so
+  the lights and the emissives get x 2^-3.88 = 0.0679 (the emissive armory instances get DojoLab child MIs MI_DJA_* as
+  per-actor overrides, so the copies stay byte-identical). The survey's 10.295 (from the analytic -6.04 EV) is replaced
+  in lights_design.json (level_scale.DojoLab 0.06792, under the ArmoryHall lock, change line in manifest.json, still
+  revision 1; manifest last_synced.DojoLab = 1).
+- Lighting channels: the unshadowed design lights shone through the walls (look1: a lit band on the alley ground
+  outside the rear wall). They now light channel 1 only; the interior meshes, the items and the 28 shell actors facing
+  the interior (front-wall bays X 15-29, the open door bays, the parked leaves, the frame) are on 0 + 1. Band gone.
+- An interior PPV (bounded: the envelope + 0.3 m, priority 20) sets ONLY lumen_skylight_leaking 0; PostProcess_Dojo
+  stays the one exposure owner (sc_verify gate 9 checks it). Measured effect small (CW_WestAisle mean 61.8 -> 60.5).
+- Window backers (D5): paper emission x 0.4 (a child MI on the 10 backer actors only; the facade's shoji keep their
+  look), rects 3 cd.
+- Perf: per-role attenuation radii, about 3x each light's throw (20 m before): case 2.5, glow 2, panel 4, down 12,
+  alcove / rack / sill 6, banner / wash 7, lantern 3, backer 8 m. The 'Lights' pass went 9.4 -> 1.8 ms in the interior.
+- Sunset through the doors: grazing (the 9 deg sun runs 7 deg to the front wall), so no direct sun inside; the interior
+  reads by the design lights + the sky and bounce through the doors.
+
+### 4. Landscape move (a DELTA: `Scripts/dojo/landscape/hall_armory_world.py`)
+- `ls_geo.HALL_ARMORY`: TERRACE north 44 -> 56; hill spot heights 0 at 56, +6 at 72, +20 at 112, then the old profile;
+  WR5's face to 57.2; COMPOUND_LOW ends at 35.5 inside the last gravel row (the old wall that hid it has moved); -0.30
+  pads under the extension and under the moved alley gravel; CS19 / CS20 +11 m. make_terrain.py takes the hill from
+  G.TERRACE and the pads; make_world_layout.py's constants follow (B-lines, FZ1 / FZ2 from y 59, keepout, cypress +12,
+  lanterns). LS_Valley changed only north of y 36 (286,153 cells); LS_Far 14 cells at x -532.
+- Why a delta: make_world_layout draws everything from one seeded stream, so a re-run re-rolls every tree in the valley.
+  The delta keeps every record's and ISM row's x / y / yaw / scale and only rebuilds the deterministic groups (walls:
+  WR5 + 4 + 4 + 2 + 2, EndR to y 56; B5 / B6 / B7 to y 56; the cherry slots; the lanterns + their lights), moves the
+  cypresses +12 m, re-snaps z where the ground changed (firs 1,001 rows, billboards 291, grass 998), drops the 10 firs
+  in the new keepout and 157 grass tufts + 1 bush inside the new structures, and regenerates the valley mask.
+- World rebuilt (ls_clear 487, ls_world 491 actors; the plugin installed and removed), FX re-placed (426 actors: 2
+  fewer petal drift meshes from the traces). The back wall, alley gravel, side walls, closure and ring come from
+  sc_level (the layout).
+
+### 5. Carry-over fixes
+- Stair lanterns 3 / 4 / 6 off the 1.8 m tread to the cheek side: L2 / L3 onto the cliff-side low cheek (x 7.95, walk
+  + 0.117), L7 onto the west kerb (x 2.15, z -6.907); the lights follow. The UE stair walker's centre lane is now clear
+  at r 30 (lanes 0 / +0.1 / +0.3 both ways; before only +0.1 / +0.3); min clear width 0.90 -> 0.95 m, now at L6
+  (Lantern_5, not in the brief: it still snags the r 35 centre lane).
+- Dead BR routes: the 5 town routes moved to layout retired_walk_routes with the reason (walk routes 93 -> 88).
+- Shadow pass: Rigid VSM invalidation on every shadow-casting WPO ISM (8 near-fir ISMs, 10 bush ISMs) in dj_ls_world.
+  GPU at 1080p, configured %: RiverRapids 22.84 -> 12.87 ms (ShadowDepths 11.6 -> about 1.0), StairPath 19.1 -> 9.9 ms,
+  PlayerEyeSand 12.32 -> 10.39 ms. No shadow removed, so the look elsewhere is unchanged (BEFORE_AFTER).
+
+### 6. Checks (fresh processes on the final level; copies in ue/checks/)
+- sc_verify 9 / 9 (new gate 9_armory_hall: 592 actors, every instance / item / light, the PPV bounded without
+  exposure, sync rev 1; dj_sc_verify now leaves the DJ_ArmoryHall actors to gate 9). GASP trace 23 / 23, markers 24.
+- dj_ls_verify 6 / 6 (stair walk BR both ways, max step 10 cm, nz 0.895; the 1v1 CONTROL stopped by B3; B1-B8 hit).
+- dj_fxl_verify 4 / 4 (it needs the DojoFXTools plugin: tools/run_fx.sh).
+- r6 UE alley replay 32 / 32 CONTROLs blocked, 10 / 10 POSITIVEs, BR 30 / 30 with no mismatch; alley flood 0 cells
+  (max y 33.7); pocket probes 0 / 0 clear.
+- Own alley seal (`checks/ue/ha_ue_alley_own.py`, the verifier's v10 with the new targets: strips W / E to y 47, the
+  rear yards, the alley behind the extension, the rear roof, the moved wall top): 1v1 flood 3.46 M cells, 0 leaks;
+  arcs r30 0 / 610,680, r35 0 / 602,560; mantles 0 leaks (1,540 GASP-valid; its 'path-ignored' list is stances OUTSIDE
+  the ring at x -1.55 on the new side-wall run, blocked by the ring: not 1v1); the BR flood reaches all 14 targets.
+- Boundary (`checks/ue/ha_ue_boundary.py`): 88 / 88 walk routes as expected incl. the 26 interior routes and the 11
+  interface CONTROLs (33 CONTROLs blocked). The walker's step-up probe now clamps under a ceiling as the CMC does (the
+  door head is 12 cm over the capsule). flood1v1 r30 1.04 M cells, 0 leaks (incl. 0 in the hidden side strips / wall
+  cavities), reach y <= 43.57 = the interior; floodbr reaches outside the ring; highest standable 9.606 -> ceiling
+  12.46. (Its arcs1v1 with a 'y > 34.8' closure line reports 13,806 'leaks': all launched from the corridor north
+  slopes, which are closed targets in the alley test above, so they are not 1v1 positions; the alley test is the
+  authority.)
+- Blender (final layout, `checks/blender/`): walk 88 routes pass at r 0.30 and r 0.35, controls blocked; climb pass;
+  gate roof, hall roof (16) and rear roof (13) walks pass.
+
+### 7. Captures (ue/caps, -game HighResShot, 28 / 28; iteration 'final')
+- REF2_vs_OURS.png (Ref2Match under40 12.9 %, mean 105.0; the fix round 12.7 / 106.4); LANDSCAPE_vs_OURS.png (under40
+  11.0 %, mean 84.0). BEFORE_AFTER.jpg + DIFF_*.png: CAM_Ref2Match 0.14 % of the frame below the sky changed outside
+  the door band (24.6 % inside it); HallVeranda changes only in the door bays; the river / mist views differ by live FX.
+- ARMORY_vs_OURS.jpg + 9 pair sheets (entrance, aisle, case 3, hero, shuriken tray, case 1, cloak case, from the
+  platform, ceiling). Ours reads about 1.3-1.6x the armory's night mean (the sunset sky through the doors).
+- CAM_DoorwayIn, CAM_RearExtension, CAM_Overview, CAM_LandscapeRef and the landscape set.
+
+### Perf (`checks/perf/perf_summary.md`, 1080p configured %, GPU mean)
+PlayerEyeSand 10.39, Overview 14.17 (median 10.83; spikes), PAWN 9.28, LandscapeRef 8.08, RiverRapids 12.87, StairPath
+9.9, DoorwayIn 10.36, WestAisle 11.48, FromPlatform 13.41 (median 11.76), RearExtension 10.94 ms: all under 16.7.
+**Open: the frame time is render-thread bound** (PlayerEyeSand RT 20.5 ms = FT; the fix round 13.9): the 592 interior
+actors + 124 movable lights. Next: one ISM per piece for the interior (461 actors -> 64 components) and fewer glow /
+panel lights (MegaLights or emissive-only).
+
+### Open
+- Lantern_5 (L6) still stands 0.35 m inside the tread (it snags only the r 35 centre lane).
+- The render-thread-bound frame time (above). The interior reads brighter than the armory's night stills by design
+  (sunset); the judge may want it darker or more contrasted.
+- ArmoryLab is not synced (manifest last_synced.ArmoryLab null): the user sends the armory chat its prompt.
+
+
+## 2026-10-01 Hall + armory FIX round (DojoLab): judge deltas, shared revision 2
+
+Output folder `WorkFiles/dojo/build/hall_armory/fix/`. Headless Blender only, no MCP tools, one Unreal process at a time
+(each runner waited on any UnrealEditor-Cmd and checked that no DojoLab editor was open). Nothing committed. Nothing under
+Scripts/armory, Exports/ArmoryKit, WorkFiles/armory or ArmoryLab was written, and ArmoryLab was never opened. No edit in
+Scripts/unreal/materials. The ArmoryHall lock was claimed and released for each shared write, and the DojoHall lock was
+refreshed (claude). Config/*.ini are unchanged (md5 matches the start backup) and DojoLab/Plugins is absent. One stray
+log folder from my first probe (relative paths) went to Engine/Binaries/Win64/WorkFiles. I killed that probe's own
+process and deleted the folder.
+
+armory_hall synced rev 2
+
+**Backups** (`fix/start_backup/`): L_Dojo.umap (md5 b2764fc1), Config, uproject, layout_showcase.json and
+blender_bounds.json, the shared folder (rev 1), scripts.tar, and the old SM_DKH_RoofLower_Front.fbx.
+**Final L_Dojo md5 506a2cca.**
+
+### Judge deltas, each checked against the references first (JUDGE-STEER)
+1. **Sunset shafts through real openings: rejected.** The hall has no sun-side opening. Every side bay of the main hall
+   and the extension is plaster (hall_shell_layout.json), and the level's 9 deg sun runs 7 deg off the front wall, so
+   direct sun cannot reach the floor through the doors. A floor patch would need an invented opening. The armory's own
+   floor lattice comes from its per-level Sun_WindowFill, which has no source in the hall. The warm side of the delta is
+   met by the threshold fill (6).
+2. **Inside and outside disagree: accepted as "dark windows"**, which is what the armory's own night stills show. The 10
+   backer rects are off (visible False) and the backer paper is at x0.02. The rear wall's centre bay X 21-23 (DKH_N0022,
+   the old rear wall's closed lattice door, which glowed with the hero painting right behind it) is replaced by
+   DKH_N0084 SM_DKH_Bay_Plaster at the same place (apply_hall_armory.py, idempotent). The two corner lattice bays stay.
+3. **Dashes on the inner face of the front wall: accepted, measured.** fix/blender/probe_front_wall.py found 94 vertices
+   of SM_DKH_RoofLower_Front (rafter ends / wall flashing on the 0.30 m pitch) at y 24.0545, z 3.926, which is 9.5 mm
+   past the transom plaster face at 24.045. No other hall piece crosses that face. The new
+   `Scripts/dojo/hall/fix_lower_front_clip.py` rebuilds the piece with build_hall.roof_pieces(). It matches the shipped
+   mesh within 1e-6 m (75,361 vertices both) before any change, then clamps 124 vertices in z 3.80-4.10 to y 24.040.
+   The y max goes from 24.0598 to 24.040 (1.98 cm, so the name is kept per SYNC.md 9). qa_check: 0 hard fails. Exported
+   through Scripts/pipeline (sha 49c138fb). After the rebuild, 0 vertices are left past the face, and the dashes are
+   gone in CAM_AK_CX_FromPlatform.
+4. **Interior exposure: accepted, measured.** Probes fix/probe/p1 and p2 compared 7 CAM_AK views with the armory's r20
+   stills, using display luma log2(ours/armory) of mean / p50. As built: 0.62 / 0.83, with p10 up to 15.
+   - Fog off: no change.
+   - Indirect lighting intensity 0.5 or 0.25: no change.
+   - Sky light x0.25: 0.57 / 0.71.
+   - The armory's toe 0.4: lifted the darks (p10 5 -> 24), so rejected.
+   - -0.6 EV: 0.25 / 0.17.
+   - -0.6 EV plus local exposure contrast 1.0 / 1.0: 0.14 / -0.24, with p10 back to 0-2.8.
+   - -1.0 EV: too dark (p50 -0.83).
+
+   Chosen for the bounded interior PPV only: bias 0.6 (-0.6 EV), local exposure 1.0 / 1.0, plus the armory's own
+   bloom 0.3 and shadow saturation 1.0. Gate 9 now accepts the PPV's bias only when it equals dj_armory_look's value;
+   PostProcess_Dojo still owns manual exposure everywhere else. Final pairs (armory | ours, mean / p50):
+   - Hero 46.5 / 25.4 | 58.7 / 35.1
+   - Tray 39.0 / 50.9 | 46.0 / 54.1
+   - Case 1 34.4 / 24.0 | 31.7 / 19.2
+   - West aisle 27.3 / 4.7 | 28.7 / 4.3
+   - From the platform 23.0 / 5.3 | 24.8 / 4.9
+   - Cloak case 28.0 / 12.6 | 24.0 / 6.3
+
+   The p10 values are now 0-3.5, against 0-1.4 for the armory.
+5. **Shoji beside the open doors glow from inside: accepted.** These are the six parked door leaves, which stand against
+   the plaster bays with nothing behind them. They get an unlit paper MI (MI_DJA_ParkedLeafPaper: EmissiveIntensity 0,
+   BaseMult 1.0) and lighting channel 0 only, so only the sun, sky and bounce through the doors light them. The first
+   final pass still read orange because DJ_ThresholdFill lit them from 1.3 m away (caps/final_pass1).
+6. **Dark slot from the courtyard: accepted.** Reference 2 shows every front bay glowing. DJ_ThresholdFill is a
+   DojoLab-only rect light: 5.6 x 1.0 m at hall-local (0, 0.9, 2.3), pitch -55, 2700 K, 160 cd, channel 1, no shadow,
+   no specular. It is listed in lights_design.json level_only_not_travelling. Probe p3 (x0 / 1 / 2 / 4 / 8 on 30 cd)
+   moved the door-box mean in CAM_Ref2Match from 66.6 to 90.7. The CAM_Ref2Match frame outside the door box below the
+   sky changed only 0.14 % (0.121 % on static pixels).
+7. **A/B noise: accepted as a method.** The "before" stills belong to the landscape round's level and cannot be
+   re-shot. A second capture of the same final state (caps/noise, warm-up 150 s instead of 75 s) marks every pixel that
+   changes between two identical runs (> 24/255, dilated 3 px) as live noise. ha_sheets.py now also reports *_static
+   numbers on the remaining pixels. Ref2Match: live noise 1.3 %, static change outside the door box 0.121 %.
+   HallVeranda and CU_Lantern change only in the open door bays, which their boxes do not cover. RiverRapids and
+   TerraceWall keep 4-5 % static change: river mist / foam that both runs happened to share, plus the stage-3 terrace
+   move.
+8. **Bare rear extension, gegyo, plinth, gravel, pull it in: rejected.** The extension already uses the main hall's
+   language (build_hall_rear.py): gegyo under both verge apexes, a rubble-granite foundation (top +0.20), and a gravel
+   drip strip (the moved alley gravel). Its gable is "plaster in a timber frame" like the main gable. A vent lattice
+   would be invented. The 11 m depth is set by the armory's 20 m interior and the alley closure.
+9. **White card in CAM_DoorwayIn: accepted, measured** (probe p4, cumulative switches in its 90 x 100 px box). Base
+   p95 is 240 (5.2 % clipped). Reflect-card emission 0: 239. Adding CaseLight_08 + UnderGlow_08 off: 164. Adding sun
+   off: 160. So the tray's upright reflect card is lit by its own case light 19 cm above it. DojoLab-only changes:
+   CaseLight_08 x0.5 (LIGHT_TRIM) and reflect card emission x0.1.
+
+### Shared folder: revision 2 (`Scripts/dojo/hall/update_shared_hall_armory_fix.py`, ArmoryHall lock)
+- Shell only:
+  - hall_shell_layout.json: DKH_N0022 is "removed (rev 2)" and DKH_N0084 is added; rear_Y45 "23" is now Plaster;
+    DKH_S0604 has its new bbox; measured.front_wall_inner_face_rev2; the backers' per-level DojoLab state.
+  - lights_design.json: the DJ_ThresholdFill level-only record.
+  - manifest.json: the SM_DKH_RoofLower_Front sha, a rev-2 change line, and last_synced.DojoLab = 2.
+- interior_layout.json and interface.json are untouched: no interior piece, case, item or design light changed, and
+  there is no interface change.
+- ArmoryLab has nothing to re-import, because the shell is not used there.
+
+### Unreal (DojoLab)
+- Steps: sc_import (only RoofLower_Front re-imported), sc_materials, sc_level (866 meshes, bounds gate 0.0008 cm), then
+  run_armory_sync.sh at rev 2 (461 / 461 instances, bounds 0.0704 cm, 83 / 83 shell ids, 12 shadowed). sc_verify then
+  passes 9/9.
+- blender_bounds.json was refreshed by hall_armory_bounds.py, which now takes extra fresh pieces on its command line.
+  The 1,137 unchanged instances deviate 0.0 m.
+- dj_armory_sync.py now handles:
+  - removed shell ids;
+  - level-only lights (LOOK.LEVEL_LIGHTS);
+  - per-light trims (LOOK.LIGHT_TRIM);
+  - backers switched off;
+  - the parked-leaf MI and channel 0;
+  - PPV grade vectors.
+- dj_game_capture.py probes now cover every local light type and any PPV by label.
+
+### Checks (fresh processes on the final level; `fix/checks/`)
+- sc_verify 9/9: GASP trace 23/23, 24 markers, gate 9 at rev 2 with 593 actors.
+- dj_ls_verify 6/6 and dj_fxl_verify 4/4 (plugin installed for the run, then removed).
+- r6 alley replay: 32/32 CONTROLs, 10 POSITIVEs, BR 30/30, no mismatch. Alley flood: 0 cells. Pockets: 0 / 0.
+- Own alley seal (ha_ue_alley_own): 1v1 flood 3,460,860 cells with 0 leaks. Arcs: 0 of 1,016,400 at r30 and 0 of
+  998,160 at r35 (a finer 0.25 m grid than stage 3). Mantles: 0 leaks, with the same 84 path-ignored outside stances as
+  stage 3.
+- Boundary (ha_ue_boundary): 88/88 walk routes as expected, including the interior routes and CONTROLs. flood1v1 has
+  0 leaks at r30 and r35. Highest standable +9.606, ceiling 12.46. arcs1v1 reports the same 13,806 corridor-slope
+  launches as stage 3; the alley test is the authority there.
+- Collision is unchanged by this round: Bay_Plaster and Bay_Door have identical hulls, and the RoofLower_Front UCX is
+  untouched. So the Blender walk / climb / roof-walk checks of stage 2 still hold and were not re-run.
+
+### Perf (fix/checks/perf/perf_summary.md, GPU mean at 1080p and the configured %)
+
+| View | ms |
+|---|---|
+| PlayerEyeSand | 10.36 |
+| Overview | 10.50 |
+| LandscapeRef | 8.02 |
+| PAWN | 9.74 |
+| RiverRapids | 12.86 |
+| StairPath | 9.87 |
+| DoorwayIn | 10.23 |
+| WestAisle | 11.06 |
+| FromPlatform | 11.21 |
+| RearExtension | 10.68 |
+
+All are under 16.7. PlayerEyeSand frame time is 16.02 ms with RT 16.0 ms (stage 3: RT 20.5), with the 10 backer rects
+off.
+
+### Captures (fix/caps, -game HighResShot, 28/28 + 16 noise)
+- REF2_vs_OURS.png: Ref2Match under40 12.2 %, mean 107.5.
+- LANDSCAPE_vs_OURS.png: under40 9.6 %, mean 82.2.
+- BEFORE_AFTER.jpg and DIFF_*.png (blue = live noise).
+- ARMORY_vs_OURS.jpg and 9 pair sheets.
+- CAM_DoorwayIn, CAM_RearExtension, CAM_Overview, CAM_LandscapeRef, and the interior and landscape sets.
+
+### Open
+- The interior still reads a little hotter in highlights (p90 1.1-1.3x), and the entry views from outside the PPV
+  (CAM_ArmoryEntry, CAM_DoorwayIn) are 0.6 EV brighter than inside by design: the outside exposure owns them.
+- The render-thread cost of the 592 interior actors remains (ISM per piece is the next step).
+- Lantern_5 (L6) is still in the r35 centre lane.
+- ArmoryLab is not synced (last_synced.ArmoryLab null; rev 2 has nothing for it to import).
+
+
+## 2026-10-01 Hall + armory FINISH stage (DojoLab + the shared folder): the sync made self-sufficient, shared revision 3
+
+Output folder `WorkFiles/dojo/build/hall_armory/finish/`. Headless only, no MCP tools, one Unreal process at a time (every
+runner waited on any UnrealEditor-Cmd and stopped if a DojoLab editor was open). Nothing committed. Nothing under
+Scripts/armory, Exports/ArmoryKit, WorkFiles/armory or ArmoryLab was written and ArmoryLab was never opened (its files
+were only read: the armory build reports and the material / texture .uasset hashes). No edit in Scripts/unreal/materials.
+The ArmoryHall lock was held from the first shared write to the `--record-sync` and released; DojoKit and DojoHall were
+refreshed (claude). Config/*.ini unchanged; DojoLab/Plugins absent after every plugin run.
+
+armory_hall synced rev 3
+
+**Backups** (`finish/start_backup/`): L_Dojo.umap (md5 506a2cca), Config, uproject, Content/ArmoryHall,
+Content/DojoLandscape, the shared folder at rev 2, scripts.tar (Scripts/dojo + lock.py), the terrain (npy / r16 / mask),
+world_layout.json, layout_showcase.json, blender_bounds.json, BUILD_NOTES.md, the armory_sync outputs.
+**Final L_Dojo md5 e118ff65.**
+
+### A. Shared tools (`WorkFiles/shared/armory_hall/tools/`, plain Python 3 + numpy, run from the repo root)
+- `regen_interior.py`: interior_layout.json + lights_design.json from the armory chat's own data (its layout.json and
+  unreal/{import,materials,level}.json). The survey's rules moved out of make_survey.py: the frame (+(-6,0,0)), the
+  not-used list (all SM_AKX_*, Entrance_12, Threshold_4, GenkanFloor, StepBeam, EntryBand, the door leaves, the jamb
+  posts, the sconces, the two south corner posts), the genkan substitutions (8 tiles AKI_9001-9008, lanterns / mat and
+  their lights +0.12). Stable ids: piece + armory location + rotation, then the nearest same piece within 1 m (moved),
+  then a new number; vanished ids go to `retired_ids`. Envelope from interface.json (a violation stops the write).
+  Per-level values (level_scale, the `level` lights, case contents) carried over. Dry run prints the diff; `--write`
+  needs the lock. **Proof:** on today's armory data it reproduces revision 2 with **0 content changes** in both files
+  (461 / 461 ids, 0 moved / new / retired; only `source` metadata differs: the armory layout sha256 + the generator,
+  written once at rev 3). Synthetic test (an instance inserted at index 0, a coffer moved 0.3 m, a wall deleted): every
+  other id kept, the moved coffer kept AKI_0006, the new vase got AKI_0618, the deleted wall AKI_0188 went to
+  retired_ids.
+- `bump_manifest.py`: rebuilds the lists from the layouts and re-hashes every FBX (interior + shell + sidecars), item,
+  ArmoryLab material / texture .uasset, armory PNG, the shell textures of shell_materials.json, the DojoLab-only site
+  pieces and every shared file (`shared_files`); revision + 1 and a change line; `names_ever` + `--retire` for SYNC.md 9;
+  `--record-sync DojoLab|ArmoryLab`; refuses without the ArmoryHall lock.
+- `check_sync.py --side armory|dojo`: files (an edit without a bump fails), sha (275 entries), pieces / ids, envelope
+  measured on the FBX bytes with `fbxlite.py` (a 150-line binary FBX reader; its frame reproduces every recorded bbox:
+  shell 133 instances within 0.1 mm, interior 461 within 0.7 mm), names, light budget, freshness (the regen in memory;
+  dojo side also make_shell_materials), revision compare. Exit 0 synced / 2 behind / 3 stale interior / 1 failed.
+  Result now: **dojo 0, armory 2** (ArmoryLab not synced yet). Measured: interior 175,137 vertices, worst 0.7 mm past
+  with_walls (tol 12 mm); shell 789,415 vertices, **0 inside the envelope** outside the intrusions; 0 interior bboxes
+  off their FBX by > 2 cm; 12 shadowed lights (ArmoryLab budget 12, DojoLab 14).
+- `ue_armorylab_shell.py` (Unreal, ArmoryLab): imports the 32 SM_DKH FBX + 31 PNG by sha256, builds the two masters
+  from dj_sc_materials.py's graph code (exec without main()) and the 10 instances from shell_materials.json, places the
+  161 shell instances at hall-local + (6,0,0), the backer rects (default off), a courtyard stand-in, hides + keeps the
+  165 not-used armory instances (folder ArmoryHall_Reference/ArmoryExterior, tag AH_ExteriorHidden), places the 8
+  hall-variant tiles and lifts the genkan pieces; gates; writes synced_revision.json. **Proven on DojoLab in no-save
+  test mode** (`AH_TEST=1`, assets under /Game/_AHShellTest, L_Dojo loaded only): 31 textures + 32 meshes imported
+  (UCX hull counts = expected on all 32), masters built, the 10 MI readbacks equal DojoLab's own (0 mismatches), 161 /
+  161 placed, bounds max **0.0055 cm**, 8 tiles placed, **0 files changed in DojoLab Content / Config** (snapshot diff).
+  Note: the fresh masters compile with 115 / 22 expressions where DojoLab's materials.json reports 228 / 42 for the
+  masters it rebuilt in place (same functions; the in-place count is not explained here).
+
+### B. SYNC.md revision 3 + shell_materials.json
+- `shell_materials.json` (Scripts/dojo/hall/make_shell_materials.py): 32 pieces (fbx, sha256, sidecar, Nanite, UCX,
+  collision, slot -> instance), 10 instances (exact scalars incl. DojoLab's emissive scale, linear vectors, switches,
+  textures), 31 textures (kind, sRGB / compression / DirectX), the import recipe, the masters' recipe location, the
+  per-level emission values (ArmoryLab parity x14.72) and DojoLab's per-actor paper overrides. Readback vs DojoLab's
+  materials.json: 0 mismatches.
+- SYNC.md: section 0 (one command at session start, the exit-code table), 3 (both projects' sync incl. the ArmoryLab
+  commandlet line), 11 (ArmoryLab shows the extended hall: instances rule, offset, exact FBX / texture / material lists,
+  hidden exterior kept for reference, the hall-variant interior, what stays per level), 12 (interior change flow),
+  13 (shell change flow), 14 (first-time setup for ArmoryLab).
+- Manifest revision 3 (change line, chat dojo): tools, shell_materials, SYNC.md, interior_layout source metadata; no
+  geometry / light / interface change. ArmoryLab has the shell to import for the first time.
+
+### C. dj_armory_sync.py writes only what changed
+The level part is planned as pure data first; its sha256 is tagged on every actor (DJA_spec_<hash>). When the level
+holds exactly that plan and the transform / bounds / light gates pass, nothing is touched; MI_DJA_* are created / saved
+only when parent or value differ; the import manifest only when an import changed it; the shell channel / paper
+assignments only when they differ; L_Dojo is saved only when dirty. **Proof:** second run `level_kept=True dirty=False
+assets_saved=0`, `saved: skipped (no change)`; md5 + mtime of L_Dojo.umap and the 34 MI_DJA_* identical before / after,
+0 files in DojoLab Content / Config newer than the marker (json/idem_final_*.txt). (The first ISM trial run gave the same
+proof: json/idem_before/after.txt.)
+
+### D1. CAM_Ref2Match backdrop restored (terrain + trees)
+- ls_geo.HILL_RESTORE (56 -> 72): make_terrain.natural() blends the hill back to the landscape round's surface
+  (TERRACE_OLD / HILL_SPOTS_OLD) through a smoothstep band behind the moved terrace. Measured against the landscape
+  round's LS_Valley: y >= 80 **identical** (max |d| 0.000 m), y 72-80 mean -0.04 m; the terrace / extension / pads
+  unchanged (y < 56 max 0.0 vs the previous terrain).
+- hall_armory_world.py: the trees the camera sees where the ground is still lower (or that the keepout dropped, or the
+  cypresses) are re-seated along their CAM_Ref2Match view ray: position C + k (P - C), scale k s, same yaw, k solved so
+  the base meets the new ground (identical projection). 40 fir rows (k 1.00-1.44, median 1.11; 8 of them were dropped
+  before) and Cypress_1-4 (k 1.20-1.23); Cypress_5 (no root) keeps the stage-3 +12 m move.
+- World rebuilt (ls_clear 491 / ls_world 491, plugin installed and removed), FX re-placed (426).
+- Measured (finish/json/ref2_backdrop.json, the verifier's regions, live noise from a second run masked):
+
+| CAM_Ref2Match vs the landscape round | fix round final | finish final |
+|---|---|---|
+| backdrop rows 0-500, static change, % of frame | 3.50 | 1.48 |
+| above the main roof (x 660-1260, rows 0-345), % of region | 14.98 | 3.81 |
+| forest + hill pixels only (sky excluded), % of region | 11.39 | 3.90 |
+| forest + hill above the main roof, % | 19.23 | 4.07 |
+| hall + courtyard outside the door box, % of frame | 0.03 | 0.03 |
+
+  The residual is mostly the UDS cloud layer (it differs from the landscape round's capture in every later run) and
+  wind sway. Sheets: caps/BEFORE_AFTER_Ref2Match.jpg (landscape | fix | finish), caps/DIFF_CAM_Ref2Match_fix_vs_finish.png.
+
+### D2. Render-thread cost: measured cause = Niagara in the ray tracing scene (not the interior actors)
+- Probe 1 (finish/perf_probe/run1): hiding all 461 interior mesh actors changed the frame time by +0.65 ms
+  (PlayerEyeSand) / -0.05 ms (WestAisle); hiding the 124 interior lights -0.8 / -1.0 ms.
+- Probe 2 (cvars at runtime): `RayTracing_FinishGatherInstances` was 7.3-7.9 ms of render thread. Niagara RT geometry
+  off: frame time 16.05 -> 11.36 ms (p95 17.56 -> 12.30) at PlayerEyeSand, 15.68 -> 11.66 (p95 17.62 -> 12.89) at
+  WestAisle; ISMs / landscape / static meshes / water / WPO RT off changed nothing.
+- Fix (dj_fxl_place.py): every Niagara component `visible_in_ray_tracing = False` (main view and shadows unchanged).
+  Same-session A/B (perf_ab, the FX RT flag switched back on at runtime): PlayerEyeSand 14.9 / p95 18.6 (fix) against
+  28.7 / 36.0 (FX in RT); WestAisle 14.0 / 17.3 against 27.8 / 33.7.
+- **ISM conversion: implemented, then gated off by measurement.** dj_armory_sync.py builds one ISM_<piece> per Nanite
+  piece (57 ISMs / 448 instances + 13 glass actors; gates 461 / 461, bounds 0.0704 cm). In -game every ISM rendered
+  the DEFAULT material: `missing usage flag InstancedStaticMeshes` on 92 armory materials (caps/ism_trial). The flag is
+  on the masters, which are byte copies of ArmoryLab's packages and must stay byte-identical. So a piece uses an ISM
+  only when all its base materials carry `used_with_instanced_static_meshes`; today none do, so the interior stays 461
+  single actors (sc_verify gate 9 accepts both forms). Open request for the owner / armory chat below.
+- Final perf (finish/perf_cool, machine idle beforehand, no ProfileGPU, 1080p configured %):
+  frame time mean / p95, ms:
+
+  | run (state) | PlayerEyeSand | WestAisle |
+  |---|---|---|
+  | fix round (verify) | 16.09 / 17.92 | 16.19 / 18.95 |
+  | probe 2, FX RT off at runtime | 11.36 / 12.30 | 11.66 / 12.89 |
+  | finish, first segments of the ISM trial run | 11.68 / 12.07 | 10.81 / 11.57 |
+  | finish final level, perf_cool (two passes) | 14.97 / 17.81, 15.02 / 18.40 | 13.58 / 16.67, 13.83 / 17.31 |
+  | same session, FX back in RT | 29.13 / 35.53 | - |
+
+  GPU 10.5 / 10.8 ms throughout (not the limit). From 11:18 on every run (ISM or single actors, any view, after an
+  idle pause too) carries about +2.9 ms of render thread that the earlier runs did not: RenderOther +1.6, RenderLighting
+  1.35 -> 2.7. Toggle run perf_diag: hiding the interior (meshes + lights) gives 12.29 / 15.98 at PlayerEyeSand, so
+  most of the RenderLighting rise is the 124 interior lights; hiding Niagara 13.96 / 17.73, foliage 14.82 / 18.80,
+  water 14.68 / 18.71. Cause of the step not found (not thermal: desktop i7-14700K on High performance; not the ISM
+  change; not ProfileGPU).
+  The full-view runs (perf/run_with_profilegpu, perf/) show the same step on every view (13-16 ms mean); in the
+  first one the per-segment ProfileGPU dumps also grew GameThread/UI to 3.4 ms, so the final runs skip ProfileGPU.
+
+### D3. Stair lantern 5 (L6)
+make_world_layout.LANTERN_MOVES[5] = (2.15, -34.7, walk + 0.117): onto the west low cheek Cheek_21 (x 2.0-2.4), hull
+1.91-2.39 < the tread edge 2.4, light follows. Stair walker: r35 lanes 0 / +0.1 / +0.3 clear both ways (before: the
+r35 centre lane blocked at L6), min clear width 0.95 -> **1.55 m** (now at L3, x 9.1).
+
+### Checks (fresh processes on the final level; finish/checks/)
+- sc_verify **9/9**: GASP trace 23/23, 24 traversal markers, gate 9 (593 actors, rev 3).
+- dj_ls_verify 6/6 (stair walk BR both ways, max step 10 cm; the terrain probes within 0.3 mm; 1v1 CONTROL stopped by
+  B3), dj_fxl_verify 4/4.
+- Boundary (the verifier's v11 checker, `fin_ue_boundary.py`; its unwalkable rule normalises ISM labels): 88 walk
+  routes as expected (55 clear, 33 CONTROLs blocked); interior walking flood 3769 / 3769 free floor cells reached at r30
+  (3644 / 3644 r35), dais reached (+1.09), 0 leaks into strips / cavities, no case / lantern / vase stood on; rear roof
+  BR walks clear, 1v1 blocked; flood1v1 r30 1,043,633 / r35 583,870 cells, 0 leaks; highest standable +9.606, ceiling
+  12.46.
+- Alley (`fin_ue_alley.py`): 1v1 flood r30 3,131,839 / r35 3,102,552, 0 leaks; with the door window resolved (DJ_ZB0
+  0.13, the verifier's setting) 3,465,803 / 3,423,597 cells, 0 leaks (= the verifier's); arcs 0 / 1,014,000 (r30) and
+  0 / 996,000 (r35) from the exterior, 0 / 211,680 and 0 / 199,920 launched from the interior floor; mantles 1,540
+  GASP-valid, 0 leaks; BR opens every target.
+
+### Captures (finish/caps, -game HighResShot)
+final/: CAM_Ref2Match, CAM_LandscapeRef, CAM_DoorwayIn, CAM_AK_CW_WestAisle, CAM_AK_C10_Hero; noise/: Ref2Match,
+WestAisle, Hero. BEFORE_AFTER_Ref2Match.jpg + DIFF; FIX_vs_FINISH_<cam>.jpg: the interior is unchanged against the fix
+round (static change 0.22 % / 0.20 % / 0.22 %; means 26.9 / 26.8, 54.6 / 54.6).
+
+### Open
+- The interior ISMs wait on the armory masters' `used_with_instanced_static_meshes` (an armory-side change, owner's call;
+  then dj_armory_sync.py switches the pieces on its own). Measured benefit small (the actors are not the cost).
+- Frame time in the state measured since 11:18 is 13.6-15 ms mean / 16.7-18.4 ms p95; the clean early segments meet the target (12.1 / 11.6 ms p95). In the current state the target is met at WestAisle in one pass (16.67) and missed at PlayerEyeSand (17.8-18.4). Next levers, per level only: a max draw distance on the interior lights seen from the courtyard, fewer glow / panel lights, or MegaLights; and finding the +2.9 ms step.
+- ArmoryLab not synced yet: the owner sends the armory chat its prompt (SYNC.md sections 0 and 14).
+
+## 2026-10-01 armory_hall revision 4: the verifier's two sync gaps closed (docs + tools, no Unreal run)
+
+Shared folder only (WorkFiles/shared/armory_hall), under the ArmoryHall lock (claimed, released). SYNC.md rev 4:
+section 3.2 fixes the ArmoryLab order (the armory chat's own run_armory_unreal.sh routine first and complete on its
+unmodified layout, ue_armorylab_shell.py LAST, then check_sync --side armory as the hall-variant check; no ak_* Unreal
+step after the tool, since ak_verify's 1 cm gate would fail on SM_AK_EntryMat__335 / SM_AK_Lantern__612 / __613 lifted
++0.12 m); 3.4 which revisions need a sync (manifest sync_needed_rev); 15 the shell master graph. NEW
+tools/master_snapshot.py + shell_masters.json (the call graph of build_lib_opaque / build_lib_emissive, 48 members,
+graph_sha256 04c9ecfb), check_sync checks 'masters' and 'hall_variant', bump_manifest records first-time files as added
+and takes --correction (the rev-3 shared_files_changed correction is in the rev-4 line). check_sync --side dojo 0,
+--side armory 2 (ArmoryLab never synced); regen_interior dry run 0 changes. ue_armorylab_shell.py unchanged. Nothing
+under Scripts/armory, Exports/ArmoryKit, WorkFiles/armory or ArmoryLab written; no Unreal project opened; nothing
+committed. Follow-up: dj_sc_verify gate_armory_hall wants sync.json synced_revision == manifest revision, so the next
+DojoLab sc_verify needs a run_armory_sync.sh first (it records rev 4).
+
+armory_hall synced rev 4

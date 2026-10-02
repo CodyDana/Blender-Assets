@@ -424,7 +424,10 @@ def build_ground(mat):
     nv = g.tex("Macro Map", "M", g.world_xy(g.scalar("NormalVarTile", 600.0, "Rake")))
     kv = g.mx(k, g.mul(g.sat(g.mul(g.sub((nv, "R"), g.const(0.35)), g.const(2.0))), g.scalar("NormalVar", 0.0, "Rake")))
     k = g.switch("UseRakeVar", kv, k, group="Rake")
-    n = g.lerp((nm, "RGB"), g.const3((0.0, 0.0, 1.0)), k)
+    # landscape round FX + lighting (2026-09-30): NormalStrength scales the normal map's tilt before the distance fade
+    # (lerp from flat; > 1 deepens the rake grooves, the engine renormalises); default 1 = the graph's previous result
+    nm_s = g.lerp(g.const3((0.0, 0.0, 1.0)), (nm, "RGB"), g.scalar("NormalStrength", 1.0, "Look"))
+    n = g.lerp(nm_s, g.const3((0.0, 0.0, 1.0)), k)
     g.out(n[0], n[1], MP.MP_NORMAL)
 
 

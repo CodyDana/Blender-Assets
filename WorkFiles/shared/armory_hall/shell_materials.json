@@ -1,0 +1,1362 @@
+{
+ "revision": 3,
+ "date": "2026-10-01",
+ "owner": "dojo chat (shell)",
+ "written_by": "Scripts/dojo/hall/make_shell_materials.py",
+ "purpose": "ArmoryLab rebuilds the hall shell (every SM_DKH_* placed by hall_shell_layout.json) with its materials without DojoLab: import the FBX + PNG listed here, build the two masters, create one material instance per slot with these exact parameters, assign slot -> instance by slot name. tools/ue_armorylab_shell.py does all of it in one commandlet (SYNC.md section 11).",
+ "ue_paths": {
+  "meshes": "/Game/DojoKit/Hall/Meshes",
+  "masters": "/Game/DojoKit/Materials/Masters",
+  "instances": "/Game/DojoKit/Materials/Materials/Library",
+  "textures": "/Game/DojoKit/Materials/Textures",
+  "note": "the same package paths as DojoLab; nothing of the armory's own /Game/ArmoryKit is touched"
+ },
+ "import_recipe": {
+  "source": "Scripts/dojo/unreal/dj_sc_import.py mesh_options() / TEX_INTENT",
+  "mesh": {
+   "importer": "legacy FBX (console: Interchange.FeatureFlags.Import.FBX 0)",
+   "import_mesh_lods": true,
+   "auto_generate_collision": false,
+   "one_convex_hull_per_ucx": true,
+   "combine_meshes": false,
+   "generate_lightmap_uvs": false,
+   "normal_import_method": "FBXNIM_IMPORT_NORMALS",
+   "normal_generation_method": "MIKK_T_SPACE",
+   "vertex_color_import_option": "REPLACE",
+   "convert_scene": true,
+   "convert_scene_unit": true,
+   "force_front_x_axis": false,
+   "import_uniform_scale": 1.0,
+   "import_materials": false,
+   "import_textures": false,
+   "build_nanite": "per piece (pieces[*].nanite)",
+   "nanite_fallback": "fallback_target RELATIVE_ERROR, fallback_relative_error 0.0, fallback_percent_triangles 1.0 (full detail: the bounds stay exact)",
+   "sidecar": "Scripts/pipeline/ue_import_sockets.py apply_sidecar(<sidecar>, <ue_mesh>) when listed"
+  },
+  "texture": {
+   "BC": {
+    "srgb": true,
+    "compression": "TC_DEFAULT"
+   },
+   "ORM": {
+    "srgb": false,
+    "compression": "TC_MASKS"
+   },
+   "M": {
+    "srgb": false,
+    "compression": "TC_MASKS"
+   },
+   "N": {
+    "srgb": false,
+    "compression": "TC_NORMALMAP",
+    "flip_green_channel": false
+   },
+   "maps": "power-of-two PNG with full mips; normal maps are DirectX (no green flip)"
+  }
+ },
+ "masters": {
+  "M_DJ_Lib_Emissive": {
+   "ue_path": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Emissive",
+   "recipe": "Scripts/dojo/unreal/dj_sc_materials.py :: build_lib_emissive (the node graph as code; MEL.layout_material_expressions + recompile after)",
+   "usage": "used_with_nanite True (reset()); opaque, default lit, one-sided"
+  },
+  "M_DJ_Lib_Opaque": {
+   "ue_path": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "recipe": "Scripts/dojo/unreal/dj_sc_materials.py :: build_lib_opaque (the node graph as code; MEL.layout_material_expressions + recompile after)",
+   "usage": "used_with_nanite True (reset()); opaque, default lit, one-sided"
+  }
+ },
+ "pieces": {
+  "SM_DKH_Bay_ClereFrieze": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Bay_ClereFrieze.fbx",
+   "sha256": "b683e583b8098554d450b624ad9c52c96af7811a8fa78b23d569a1c6af4417d3",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_ClereFrieze",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Bay_ClereFrieze.sockets.json",
+   "sidecar_sha256": "bb0f1231cdcbcb149fe458068c74b6c717e73e269b0ef26172202703551d404f",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_ShojiPaper": "/Game/DojoKit/Materials/Materials/Library/M_DJ_ShojiPaper",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 5
+  },
+  "SM_DKH_Bay_ClerePlaster": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Bay_ClerePlaster.fbx",
+   "sha256": "67a3a264872b90750ad40260fde4d2f95840e19615aee25b3a7aee9eea94984f",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_ClerePlaster",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Bay_ClerePlaster.sockets.json",
+   "sidecar_sha256": "99f604f2c23467476ebb7fb213e993e7b0899362e448242dd94d8678ea76f069",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 16
+  },
+  "SM_DKH_Bay_Door": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Bay_Door.fbx",
+   "sha256": "b0798d2c8d20ddce7b4dae728aec16d9a422189187057af939b3b5ee5d754065",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Door",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_ShojiPaper": "/Game/DojoKit/Materials/Materials/Library/M_DJ_ShojiPaper",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 2
+  },
+  "SM_DKH_Bay_DoorOpen": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Bay_DoorOpen.fbx",
+   "sha256": "6605b778d8a17be7f73aa1b4857457c516b4f1e67e11644c44756f9ba3de667b",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_DoorOpen",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": false,
+   "lods": 1,
+   "ucx": 2,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 3
+  },
+  "SM_DKH_Bay_Lattice": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Bay_Lattice.fbx",
+   "sha256": "74d41bb585f2388b81a72e05234f3ab9c75b21e76a2dc2ec4f8648fddf72984e",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Lattice",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_ShojiPaper": "/Game/DojoKit/Materials/Materials/Library/M_DJ_ShojiPaper",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 4
+  },
+  "SM_DKH_Bay_Plaster": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Bay_Plaster.fbx",
+   "sha256": "c5a905cb4a8b053cd8e0deec1593f424b99bcb3d3ff83b9d76ef213dc9596cc4",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Plaster",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Bay_Plaster.sockets.json",
+   "sidecar_sha256": "bd9fd0f27ba0c6892b425fb75db9f97253934c27f92ce3c41efc86e42cf29dd6",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 29
+  },
+  "SM_DKH_Bay_Transom": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Bay_Transom.fbx",
+   "sha256": "c3a367a5160ab3a6297cf6a272072d348a17595bc785aa4a5a002fa7399975aa",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Bay_Transom",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": false,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 38
+  },
+  "SM_DKH_DoorLeaf_Parked": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_DoorLeaf_Parked.fbx",
+   "sha256": "45255bc32dbff6bdf6659f40329021d517086caa240039be5a5bfb4cf8ffe9af",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_DoorLeaf_Parked",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_DoorLeaf_Parked.sockets.json",
+   "sidecar_sha256": "ff72c09eb9017f033a9c1f5cc45e33f19f79d04e4a83c6ff6124d060fcc5844e",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "thin",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_ShojiPaper": "/Game/DojoKit/Materials/Materials/Library/M_DJ_ShojiPaper",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 6
+  },
+  "SM_DKH_Downpipe": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Downpipe.fbx",
+   "sha256": "9cfe53eb28d2970569ff12849b62555a7876ca7408432deb0be1927b9fe329e9",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Downpipe",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Downpipe.sockets.json",
+   "sidecar_sha256": "1db3212f3a186dcbf8d6ac0abe3295eaf75de4c23cb7babe300a070e92863bc7",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "thin",
+   "slots": {
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron"
+   },
+   "instances": 4
+  },
+  "SM_DKH_EaveLanding": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_EaveLanding.fbx",
+   "sha256": "5b997f088b40f60be10c7301923fe0c4395873c81be2d9ec79960af5dc949ced",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_EaveLanding",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_EaveLanding.sockets.json",
+   "sidecar_sha256": "00ca3aa19d3c8f4756a3b3e08fdf0f9eb2edf437d937baa61e13071495366a7e",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "landing",
+   "slots": {
+    "M_DJ_TimberAged": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberAged",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberAgedEnd"
+   },
+   "instances": 2
+  },
+  "SM_DKH_Frame_Open": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Frame_Open.fbx",
+   "sha256": "6df31016b289cbbd9ba94ad92f8b94918d9155762658cd180fa584fc1a4203f8",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Frame_Open",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 11,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_GraniteRubble": "/Game/DojoKit/Materials/Materials/Library/M_DJ_GraniteRubble",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_Rear_Bay1_ClerePlaster": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_ClerePlaster.fbx",
+   "sha256": "47b5718d9bba0ecc9a190474991e6c8b247ca0a55bdcf2424daafaaf138916c5",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay1_ClerePlaster",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": false,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 2
+  },
+  "SM_DKH_Rear_Bay1_Plaster": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_Plaster.fbx",
+   "sha256": "2476b553b77d65abdb5525826c5ce7e70e0dbd003a170af06bdf5599eff1a4d5",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay1_Plaster",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_Plaster.sockets.json",
+   "sidecar_sha256": "0c888b03188781d8656dc6799382a0d4fc5c77d2e1b35b17d0ad0fc1e44136ce",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 2
+  },
+  "SM_DKH_Rear_Bay1_Transom": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay1_Transom.fbx",
+   "sha256": "103a0da438a78cbe44020e05ae1f860946c9bb4e0aa201e55c2b64d5e8803264",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay1_Transom",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": false,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 2
+  },
+  "SM_DKH_Rear_Bay_ClerePlaster": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay_ClerePlaster.fbx",
+   "sha256": "286739f2751df470127727364894fe5067e9a796819255e3b151eb9af0153bb0",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Bay_ClerePlaster",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_Rear_Bay_ClerePlaster.sockets.json",
+   "sidecar_sha256": "678d47c9289494da85ff5182b89f6fd88b642ece55dfd9fc1c371f0ff5905f3f",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 17
+  },
+  "SM_DKH_Rear_Frame": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_Frame.fbx",
+   "sha256": "e9585934ea7933f6c7ff79d357cf2ff415a8a6a9cb9e3d1231fc6b306034d43a",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Frame",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 4,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "building",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_GraniteRubble": "/Game/DojoKit/Materials/Materials/Library/M_DJ_GraniteRubble",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_Rear_Roof": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_Roof.fbx",
+   "sha256": "c906fd8b2cbd542bf56cc2bc739a07300d67411b8b29a915b1eb0485a2447b08",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_Roof",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 2,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_Rear_RoofGable": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_RoofGable.fbx",
+   "sha256": "86f85627a7ab81a38214f7ac510337c883bfd3b3607c2328e1ee4550730d6970",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_RoofGable",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": false,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 2
+  },
+  "SM_DKH_Rear_RoofRidge": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_RoofRidge.fbx",
+   "sha256": "a782aaaebd8aa85a94a4a150c8f23c6703c050338c08abda73d5793762267c51",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_RoofRidge",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 3,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile"
+   },
+   "instances": 1
+  },
+  "SM_DKH_Rear_WindowBacker": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Rear_WindowBacker.fbx",
+   "sha256": "630ddec9cffb4b8ed9e256cabb1592d6afc992b38247d0db347bcab5923961b2",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Rear_WindowBacker",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": false,
+   "lods": 1,
+   "ucx": 0,
+   "vertex_colours": [],
+   "collision_class": "nocollision",
+   "slots": {
+    "M_DJ_ShojiPaper": "/Game/DojoKit/Materials/Materials/Library/M_DJ_ShojiPaper",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 10
+  },
+  "SM_DKH_RoofChidori_E": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofChidori_E.fbx",
+   "sha256": "4f384542d7a67dfc21e8bbdda93a4d5bffbaca4707cfa48e30a84a5baddcc163",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofChidori_E",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_RoofChidori_W": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofChidori_W.fbx",
+   "sha256": "c7292ebfd4123921206fe8d8fee42e810f55c463a7ebda12c05bd7ccda26f959",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofChidori_W",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_RoofLower_Front": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofLower_Front.fbx",
+   "sha256": "49c138fb19d5501e2f6c49cd01ab2ad84713bc170aa9c4ba1b52c570092451f6",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofLower_Front",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_RoofLower_SideE": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofLower_SideE.fbx",
+   "sha256": "6ca031af1deaf494cacf5d09aa0291713423af433edb2885476d35527cfcbd88",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofLower_SideE",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_RoofLower_SideW": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofLower_SideW.fbx",
+   "sha256": "f0e50f6eca35cea2f5b3d98cb7adef4b3470eab9060158e6aa867006726bc796",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofLower_SideW",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_RoofUpper_BackValley": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_BackValley.fbx",
+   "sha256": "ba3818ad45c7ff9e564b5218b85f90ac3c9b06dc764528d22f8497195c09831a",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_BackValley",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 4,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_RoofUpper_End": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_End.fbx",
+   "sha256": "109700ffdf1bad4380e1a5809c136ec359c76de83eff2b1bbc3b401f7eb862d2",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_End",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 2,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_PlasterCream": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 2
+  },
+  "SM_DKH_RoofUpper_Front": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_Front.fbx",
+   "sha256": "9f0f8497c87ada0280868c28611dbb3b867176b46f4343cec2e6e170675ea0fd",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_Front",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 8,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_RoofUpper_Ridge": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_RoofUpper_Ridge.fbx",
+   "sha256": "a41efa6b8d0eb9653cf8d0978a10d213bdddcb999598237b98b82ec57c98ea78",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_RoofUpper_Ridge",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 3,
+   "vertex_colours": [],
+   "collision_class": "roof",
+   "slots": {
+    "M_DJ_RoofTile": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile"
+   },
+   "instances": 1
+  },
+  "SM_DKH_StepBand": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_StepBand.fbx",
+   "sha256": "8654e1da92629fc87dc7dc0e9ac69412e5c6fab5d6ab11a51a99afa8ad78d4f3",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_StepBand",
+   "sidecar": "Exports/DojoKit/Hall/SM_DKH_StepBand.sockets.json",
+   "sidecar_sha256": "d89eee9a414a738a5d975f926e918aecedebd4212808a65f436afe65b9171b63",
+   "nanite": false,
+   "lods": 3,
+   "ucx": 5,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "ground",
+   "slots": {
+    "M_DJ_Granite": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Granite"
+   },
+   "instances": 1
+  },
+  "SM_DKH_Veranda": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_Veranda.fbx",
+   "sha256": "bafdac37c0a935b525b4275b20647860d73aa4f4a2622a70fb6e69a80ceb7258",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_Veranda",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 1,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "ground",
+   "slots": {
+    "M_DJ_TimberAged": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberAged",
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_GraniteRubble": "/Game/DojoKit/Materials/Materials/Library/M_DJ_GraniteRubble",
+    "M_DJ_Granite": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Granite",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd",
+    "M_DJ_TimberAgedEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberAgedEnd"
+   },
+   "instances": 1
+  },
+  "SM_DKH_VerandaFrame": {
+   "fbx": "Exports/DojoKit/Hall/SM_DKH_VerandaFrame.fbx",
+   "sha256": "9127383fd781deb588de47bf7ff0a3ae82f2094d689800c354988d679b954a21",
+   "ue_mesh": "/Game/DojoKit/Hall/Meshes/SM_DKH_VerandaFrame",
+   "sidecar": null,
+   "sidecar_sha256": null,
+   "nanite": true,
+   "lods": 1,
+   "ucx": 24,
+   "vertex_colours": [
+    "Wear"
+   ],
+   "collision_class": "thin",
+   "slots": {
+    "M_DJ_TimberDark": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+    "M_DJ_Iron": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+    "M_DJ_TimberDarkEnd": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd"
+   },
+   "instances": 1
+  }
+ },
+ "materials": {
+  "M_DJ_Granite": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Granite",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 0.55,
+    "FlattenToMean": 0.7,
+    "Saturation": 0.25,
+    "AOStrength": 0.3
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     0.86,
+     0.94,
+     1.02,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ],
+    "MeanColour": [
+     0.14706,
+     0.14946,
+     0.1479,
+     1.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": true
+   },
+   "textures": {
+    "BC": "T_DJ_Granite_BC",
+    "ORM": "T_DJ_Granite_ORM",
+    "N": "T_DJ_Granite_N",
+    "WearMask": "T_DJ_WearMask_M"
+   }
+  },
+  "M_DJ_GraniteRubble": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_GraniteRubble",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 0.7,
+    "AOStrength": 0.45
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": true
+   },
+   "textures": {
+    "BC": "T_DJ_GraniteRubble_BC",
+    "ORM": "T_DJ_GraniteRubble_ORM",
+    "N": "T_DJ_GraniteRubble_N",
+    "WearMask": "T_DJ_WearMask_M"
+   }
+  },
+  "M_DJ_Iron": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_Iron",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0,
+    "Saturation": 0.4
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "TileM": [
+     2.0,
+     2.0,
+     0.0,
+     0.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": false
+   },
+   "textures": {
+    "BC": "T_DJ_Iron_BC",
+    "ORM": "T_DJ_Iron_ORM",
+    "N": "T_DJ_Iron_N"
+   }
+  },
+  "M_DJ_PlasterCream": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_PlasterCream",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.7,
+    "ValueMult": 1.9,
+    "Saturation": 0.16
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     0.97,
+     0.95,
+     1.12,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": true
+   },
+   "textures": {
+    "BC": "T_DJ_PlasterCream_BC",
+    "ORM": "T_DJ_PlasterCream_ORM",
+    "N": "T_DJ_PlasterCream_N",
+    "WearMask": "T_DJ_WearMask_M"
+   }
+  },
+  "M_DJ_RoofTile": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_RoofTile",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 2.0,
+    "NormalStrength": 1.0,
+    "ValueMult": 2.6,
+    "Saturation": 1.0,
+    "FlattenToMean": 0.8,
+    "Specular": 0.3,
+    "AOStrength": 0.2
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     1.5,
+     1.3,
+     1.4,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ],
+    "MeanColour": [
+     0.05,
+     0.057,
+     0.074,
+     1.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": false
+   },
+   "textures": {
+    "BC": "T_DJ_RoofTile_BC",
+    "ORM": "T_DJ_RoofTile_ORM",
+    "N": "T_DJ_RoofTile_N"
+   }
+  },
+  "M_DJ_ShojiPaper": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_ShojiPaper",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Emissive",
+   "scalars": {
+    "EmissiveIntensity": 0.653137,
+    "BaseMult": 0.25,
+    "RoughMult": 1.0,
+    "NormalStrength": 0.3,
+    "Saturation": 1.0
+   },
+   "vectors_linear_rgba": {
+    "EmissiveTint": [
+     1.0,
+     0.6,
+     0.32,
+     1.0
+    ]
+   },
+   "static_switches": {},
+   "textures": {
+    "BC": "T_DJ_ShojiPaper_BC",
+    "ORM": "T_DJ_ShojiPaper_ORM",
+    "N": "T_DJ_ShojiPaper_N"
+   }
+  },
+  "M_DJ_TimberAged": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberAged",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0,
+    "ValueMult": 1.35,
+    "Saturation": 0.42,
+    "AOStrength": 0.15,
+    "FlattenToMean": 0.4
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     1.0,
+     0.84,
+     0.7,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ],
+    "MeanColour": [
+     0.1041,
+     0.05961,
+     0.033,
+     1.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": true
+   },
+   "textures": {
+    "BC": "T_DJ_TimberAged_BC",
+    "ORM": "T_DJ_TimberAged_ORM",
+    "N": "T_DJ_TimberAged_N",
+    "WearMask": "T_DJ_WearMask_M"
+   }
+  },
+  "M_DJ_TimberAgedEnd": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberAgedEnd",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0,
+    "ValueMult": 1.35,
+    "Saturation": 0.42,
+    "AOStrength": 0.15,
+    "FlattenToMean": 0.4
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     1.0,
+     0.84,
+     0.7,
+     1.0
+    ],
+    "TileM": [
+     2.0,
+     2.0,
+     0.0,
+     0.0
+    ],
+    "MeanColour": [
+     0.0752,
+     0.04248,
+     0.02455,
+     1.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": true
+   },
+   "textures": {
+    "BC": "T_DJ_TimberAgedEnd_BC",
+    "ORM": "T_DJ_TimberAgedEnd_ORM",
+    "N": "T_DJ_TimberAgedEnd_N",
+    "WearMask": "T_DJ_WearMask_M"
+   }
+  },
+  "M_DJ_TimberDark": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDark",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0,
+    "ValueMult": 1.35,
+    "Saturation": 0.42,
+    "AOStrength": 0.15,
+    "FlattenToMean": 0.4
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     1.0,
+     0.84,
+     0.7,
+     1.0
+    ],
+    "TileM": [
+     4.0,
+     4.0,
+     0.0,
+     0.0
+    ],
+    "MeanColour": [
+     0.0746,
+     0.04313,
+     0.02647,
+     1.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": true
+   },
+   "textures": {
+    "BC": "T_DJ_TimberDark_BC",
+    "ORM": "T_DJ_TimberDark_ORM",
+    "N": "T_DJ_TimberDark_N",
+    "WearMask": "T_DJ_WearMask_M"
+   }
+  },
+  "M_DJ_TimberDarkEnd": {
+   "ue_path": "/Game/DojoKit/Materials/Materials/Library/M_DJ_TimberDarkEnd",
+   "parent": "/Game/DojoKit/Materials/Masters/M_DJ_Lib_Opaque",
+   "scalars": {
+    "RoughMult": 1.0,
+    "NormalStrength": 1.0,
+    "ValueMult": 1.35,
+    "Saturation": 0.42,
+    "AOStrength": 0.15,
+    "FlattenToMean": 0.4
+   },
+   "vectors_linear_rgba": {
+    "Tint": [
+     1.0,
+     0.84,
+     0.7,
+     1.0
+    ],
+    "TileM": [
+     2.0,
+     2.0,
+     0.0,
+     0.0
+    ],
+    "MeanColour": [
+     0.0534,
+     0.03157,
+     0.01881,
+     1.0
+    ]
+   },
+   "static_switches": {
+    "UseWear": true
+   },
+   "textures": {
+    "BC": "T_DJ_TimberDarkEnd_BC",
+    "ORM": "T_DJ_TimberDarkEnd_ORM",
+    "N": "T_DJ_TimberDarkEnd_N",
+    "WearMask": "T_DJ_WearMask_M"
+   }
+  }
+ },
+ "textures": {
+  "T_DJ_GraniteRubble_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_GraniteRubble_BC.png",
+   "sha256": "759e858a74c95830040ffd249ae57cd0067c93334d60369fb1728dfec4ef8386",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_GraniteRubble_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_GraniteRubble_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_GraniteRubble_N.png",
+   "sha256": "3c21eb711cc660feda767c0534d9b67f6867b8f29b64385390107bc7f80fb4d3",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_GraniteRubble_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_GraniteRubble_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_GraniteRubble_ORM.png",
+   "sha256": "c2b036d65b86ccc3a754e525f7ef44cca4f0d88552d3ab8a6b796dc591552208",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_GraniteRubble_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_Granite_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Granite_BC.png",
+   "sha256": "c9f4910bdf05a076dc21f0eb7c72fe6e6634866532c853a753c09d673a408b84",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Granite_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_Granite_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Granite_N.png",
+   "sha256": "6917364cb3d122789298417a9a5ecc4f95e46c9b930e9ae5566153fc75062ccf",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Granite_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_Granite_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Granite_ORM.png",
+   "sha256": "351b1f4f533a8c6134fa9f7e7792867fcaafb341086029b93100d1cd04c0043f",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Granite_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_Iron_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Iron_BC.png",
+   "sha256": "5e39ed5383b69b0c7ff84cdb5e61df4b760d2218fec5ee3766f056880039448c",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Iron_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_Iron_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Iron_N.png",
+   "sha256": "ea03a505dce215802b2e7351549a4b5cd072a81400f977a7060a464e48ce7aae",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Iron_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_Iron_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_Iron_ORM.png",
+   "sha256": "2b39598b3ef8b16defc531b08c8410b166b00625a00e869f9fc982189c458ead",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_Iron_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_PlasterCream_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_PlasterCream_BC.png",
+   "sha256": "5ed404280f9f66e11af3aae1e64e5cbfa92abef1455f84b4698ce29f20f45cd6",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_PlasterCream_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_PlasterCream_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_PlasterCream_N.png",
+   "sha256": "f4215ba86a251188b94d53fbca421399b460e9438b4d0a65dd67b251d1f00b28",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_PlasterCream_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_PlasterCream_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_PlasterCream_ORM.png",
+   "sha256": "f2a09bd21a8541df6350d10568bc8a336b9a0a996a8b848fb2200b458f636161",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_PlasterCream_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_RoofTile_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_RoofTile_BC.png",
+   "sha256": "c28d9f816f775d2b457d46e859aa0278cadc56259e507aa7d0c26ca1ea8ce654",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_RoofTile_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_RoofTile_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_RoofTile_N.png",
+   "sha256": "233f0df61a1e8e34b31801ab5e38627a8dac3e117f7ed13eb4ad253558e207c6",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_RoofTile_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_RoofTile_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_RoofTile_ORM.png",
+   "sha256": "1676cd1d8463c436bd067ccae8294c33753d179f702c0e01a227ca397c72c34d",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_RoofTile_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_ShojiPaper_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_ShojiPaper_BC.png",
+   "sha256": "4298010458634211020764ce78bedadb014aa56087d1c69d20621a120997b390",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_ShojiPaper_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_ShojiPaper_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_ShojiPaper_N.png",
+   "sha256": "1cdffb0b3f1bee955190a007a8021a1bdbc26f796f64759896460bca8d94b8fd",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_ShojiPaper_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_ShojiPaper_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_ShojiPaper_ORM.png",
+   "sha256": "a8599ca7b9c395616187e0e64d92ed1993922a594ceb08d08dc04ea012e87436",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_ShojiPaper_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_TimberAgedEnd_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_BC.png",
+   "sha256": "50413a38630b1b75a15ad41a96ec6c3360ce998a2bf239df98db2487197c083f",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_TimberAgedEnd_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_N.png",
+   "sha256": "59d6078d325022e51ec7020522f80e08dba7054698eb57b8932f2e4b9f4c9a8e",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_TimberAgedEnd_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_ORM.png",
+   "sha256": "ba9405768c9413ccb5fcba6b0361318d614a302c2281e8617c07f6c2332933bb",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAgedEnd_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_TimberAged_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAged_BC.png",
+   "sha256": "04250d713b20a9edfda8d64e23aeb2bbe59402d12c413b27e9d565b4188d0f08",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAged_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_TimberAged_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAged_N.png",
+   "sha256": "c265117ddd04c4ec8e37056ab79f834ee4ea09d77eb0acc73be266d2fd5c0ab2",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAged_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_TimberAged_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberAged_ORM.png",
+   "sha256": "eafe4a4277309f6421bb816a64b1b11eba0b5f1f5dfaa36959bbf49a0b9a7663",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberAged_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_TimberDarkEnd_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_BC.png",
+   "sha256": "dfa618d97e418909506c48043e9351615592ce0759a94a23a11cd7e4aba9f352",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_TimberDarkEnd_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_N.png",
+   "sha256": "38142d80a9136940c8e8e8c117b3d8e0dc1757ceb84fe81360c630380dac7973",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_TimberDarkEnd_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_ORM.png",
+   "sha256": "b103615b5c079c31ac24b4c1f15dd99174e59f390e5d963df601afc47400afb2",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDarkEnd_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_TimberDark_BC": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDark_BC.png",
+   "sha256": "922e2e7577b6dc29f8d2a9851df4c13a2d069470a010ee54ecfd558e6aeab40d",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_BC",
+   "kind": "BC",
+   "srgb": true,
+   "compression": "TC_DEFAULT"
+  },
+  "T_DJ_TimberDark_N": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDark_N.png",
+   "sha256": "87116bc3bb5a44475c4d4d13a8f55fc936ab0d302fb8fe1e1ce333488a914c46",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_N",
+   "kind": "N",
+   "srgb": false,
+   "compression": "TC_NORMALMAP",
+   "flip_green_channel": false
+  },
+  "T_DJ_TimberDark_ORM": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_TimberDark_ORM.png",
+   "sha256": "5fd9383612efbae8f62a6288fb8f1b47d0770cb38ea549c05e244ee2272e665c",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_TimberDark_ORM",
+   "kind": "ORM",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  },
+  "T_DJ_WearMask_M": {
+   "png": "Exports/DojoKit/Materials/Textures/T_DJ_WearMask_M.png",
+   "sha256": "8704fb3c621234edbbc4c37f7dd13638f86d8226b2c74d9458e7f09264e92ee8",
+   "ue_path": "/Game/DojoKit/Materials/Textures/T_DJ_WearMask_M",
+   "kind": "M",
+   "srgb": false,
+   "compression": "TC_MASKS"
+  }
+ },
+ "level_values": {
+  "EmissiveIntensity": {
+   "DojoLab_scale_applied": 0.026389,
+   "ArmoryLab_parity_scale": 14.723,
+   "note": "materials[*].scalars carry DojoLab's value (layout recipe x DojoLab's EMISSIVE_SCALE). Emission is a per-level value (SYNC.md 6): at ArmoryLab's manual exposure (bias -2.68 against DojoLab's +1.20) the same look needs x 14.72; ArmoryLab chooses (the only emissive shell slot is M_DJ_ShojiPaper)."
+  },
+  "per_actor_overrides_dojolab": {
+   "SM_DKH_DoorLeaf_Parked": {
+    "slot": "M_DJ_ShojiPaper",
+    "child_mi": "MI_DJA_ParkedLeafPaper",
+    "scalars": {
+     "EmissiveIntensity": 0.0,
+     "BaseMult": 1.0
+    },
+    "why": "the six parked leaves stand against plaster inside the hall: reflective paper, not a lamp"
+   },
+   "SM_DKH_Rear_WindowBacker": {
+    "slot": "M_DJ_ShojiPaper",
+    "child_mi": "MI_DJA_BackerPaper",
+    "scalars": {
+     "EmissiveIntensity": "x 0.02 of M_DJ_ShojiPaper"
+    },
+    "why": "the windows read dark like the armory's own night stills; the backer rects are off"
+   },
+   "note": "recommended for ArmoryLab too (the interior faces these); per level, never synced"
+  }
+ },
+ "counts": {
+  "pieces": 32,
+  "instances": 161,
+  "materials": 10,
+  "textures": 31,
+  "masters": 2
+ },
+ "readback_check": {
+  "against": "WorkFiles/dojo/build/unreal/showcase/materials.json (DojoLab readback)",
+  "mismatches": []
+ }
+}

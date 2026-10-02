@@ -144,6 +144,8 @@ def place_meshes():
     REP["material_overrides"] = {}
     for n, inst in enumerate(L["instances"]):
         piece = inst["piece"]
+        if inst.get("removed"):   # landscape round: the town / outside v1 pieces leave the level (assets stay on disk)
+            continue
         if piece not in meshes:
             meshes[piece] = unreal.load_asset(S.mesh_path(L, piece))
         if meshes[piece] is None:
@@ -166,7 +168,8 @@ def place_meshes():
         if piece in S.NO_SHADOW_PIECES:   # round 3 fix f1: grey-box canopies cast no shadow (judge delta 4)
             setp(smc, "cast_shadow", False)
             REP.setdefault("no_shadow_actors", []).append(S.label(inst, n))
-        if L["collision_classes"][inst["collision_class"]].get("hidden_in_game"):
+        if L["collision_classes"][inst["collision_class"]].get("hidden_in_game") or inst.get("hide_landscape"):
+            # landscape round: hide_landscape = the grey-box trees, hidden with their trunk collision kept (CS01/CS02)
             a.set_actor_hidden_in_game(True)
             setp(smc, "cast_shadow", False)
         extra = ["DJK_" + inst["kit"], "DJC_" + inst["collision_class"]]
@@ -222,14 +225,15 @@ def bounds_gate(placed):
         rows[n] = {"label": a.get_actor_label(), "nanite": nanite, "bounds_err_cm": round(err, 4),
                    "t_err_cm": round(terr, 5), "r_err_deg": round(rerr, 5), "s_err": round(serr, 7), "ok": ok}
     fails = {k: v for k, v in rows.items() if not v["ok"]}
-    return {"tolerance_cm": TOL_CM, "n_checked": len(rows), "n_layout": len(L["instances"]),
+    n_active = sum(1 for i in L["instances"] if not i.get("removed"))   # landscape round: removed = not placed
+    return {"tolerance_cm": TOL_CM, "n_checked": len(rows), "n_layout": len(L["instances"]), "n_active": n_active,
             "max_err_cm_all": round(max(worst, worst_n), 4), "max_err_cm_non_nanite": round(worst, 4),
             "max_err_cm_nanite_geometry": round(worst_n, 4),
             "max_transform_err_cm": round(worst_t, 5), "n_nanite_actors": sum(1 for r in rows.values() if r["nanite"]),
             "nanite_culling_bounds_inflation_cm_by_piece": dict(sorted(infl.items())),
             "nanite_fallback_box_cm_by_piece": {k: [[round(x, 3) for x in v[0]], [round(x, 3) for x in v[1]]]
                                                 for k, v in sorted(fbox.items())},
-            "failures": fails, "passed": len(rows) == len(L["instances"]) and not fails}
+            "failures": fails, "passed": len(rows) == n_active and not fails}
 
 
 def expected_ledges(x0, x1, y0, y1, z1):
