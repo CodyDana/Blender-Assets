@@ -2309,3 +2309,21 @@ pulling new sources, let the editor rebuild the module or run `run_armory_unreal
 - r20 final2 judge: in golden light the sun stripes on the floor go pale salmon and golden C1 is brighter than the
   reference; the east row's height rhythm is not mirrored (west S / Tall / S / MT / Tall, east SF / S / MT / MT / Tall);
   side cases could grow to about 1.3 m; the top of tall case 4 cuts the top-left of CW.
+
+## 2026-10-01: armory_hall synced rev 4 (ArmoryLab shows the dojo hall around the interior)
+
+- First-time setup per WorkFiles/shared/armory_hall/SYNC.md section 14. L_Armory backed up to
+  Backups/ArmoryLab_pre_hall_sync_2026-10-01/. Full `run_armory_unreal.sh` (all 14 steps) passed on the standalone
+  armory; `tools/ue_armorylab_shell.py` last: AH_SHELL_DONE passed=True, 161/161 shell actors, bounds 0.0055 cm,
+  165/165 exterior hidden, 8 floor tiles, 5 lifted. `check_sync.py --side armory` exit 0; `bump_manifest.py
+  --record-sync ArmoryLab` -> last_synced.ArmoryLab = 4 (under the ArmoryHall lock, released).
+- FIX in `ak_materials.py`: it re-saved every master and instance each run, and every Unreal save stamps a new package
+  GUID into the .uasset header (same size, ~115 bytes differ), so all 104 manifest-tracked material .uassets failed
+  check_sync's sha check after a no-change run. Now a master / instance is rebuilt and saved only when its spec changed
+  (instances: master + parameters; masters: the graph code above main() + GLASS / default textures / K) or its file is
+  not the one this step last saved; fingerprints in `WorkFiles/armory/build/unreal/mi_state.json`
+  (`materials.json` instances_unchanged). The 104 re-saved files were put back byte-exact from DojoLab's synced copies
+  (content identical; the re-saved ones are in the backup folder), so no revision bump was needed.
+- From now on: every session that touches the armory starts with `py -3 -B WorkFiles/shared/armory_hall/tools/check_sync.py
+  --side armory`; every ArmoryLab sync = our steps (incl. `level`), then the shell tool LAST, then check_sync exit 0.
+  No ak_* Unreal step after the shell tool. Interior changes follow SYNC.md section 12 (regen_interior.py, bump).

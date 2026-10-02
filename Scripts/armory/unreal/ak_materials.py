@@ -23,6 +23,8 @@ Blender material (M_AK_Timber ...), with the Blender look values; then every kit
 name equals the slot name. Emissive values = Blender emission strength x K (ak_common: lux per Blender W/m2).
 Result: WorkFiles/armory/build/unreal/materials.json
 """
+import hashlib
+import json
 import sys
 import time
 import traceback
@@ -285,11 +287,33 @@ def main():
     t0 = time.time()
     rep = {"engine": unreal.SystemLibrary.get_engine_version(), "preset": C.PRESET, "K_lux_per_blender_unit": K, "masters": {},
            "instances": {}, "meshes": {}}
+    # armory_hall sync (WorkFiles/shared/armory_hall, 2026-10-01): manifest.json hashes these .uasset bytes, and every
+    # save stamps a new package GUID into the header, so a master or instance is rewritten only when its spec changed
+    # (or the file is not the one this step last saved); otherwise every run would read as a material change to the
+    # dojo side. A master's spec = the graph code of this file above main() + the defaults it reads.
+    state_path = C.OUT / "mi_state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
+    content = Path(unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_content_dir()))
+
+    def disk(path):
+        f = content / (path.replace("/Game/", "", 1) + ".uasset")
+        return hashlib.sha256(f.read_bytes()).hexdigest() if f.exists() else None
+    graph_src = Path(__file__).read_text(encoding="utf-8").split("\ndef main():")[0]
     masters = {}
     for name, fn in MASTERS.items():
         path = f"{C.MAT_DEST}/{name}"
         e = {}
         try:
+            spec = hashlib.sha256(json.dumps([name, graph_src, GLASS, TEX_OF_MASTER, K], sort_keys=True,
+                                             default=str).encode()).hexdigest()
+            prev = state.get(name, {})
+            if EAL.does_asset_exist(path) and prev.get("spec") == spec and prev.get("uasset") == disk(path):
+                mat = unreal.load_asset(path)
+                e = {"created": False, "unchanged": True, "saved": True,
+                     "expressions": int(MEL.get_num_material_expressions(mat))}
+                masters[name] = mat
+                rep["masters"][name] = e
+                continue
             mat, created = get_or_create(path, unreal.Material, unreal.MaterialFactoryNew())
             fn(mat)
             MEL.layout_material_expressions(mat)
@@ -297,6 +321,8 @@ def main():
             e["created"] = created
             e["expressions"] = int(MEL.get_num_material_expressions(mat))
             e["saved"] = bool(EAL.save_loaded_asset(mat, False))
+            if e["saved"]:
+                state[name] = {"spec": spec, "uasset": disk(path)}
             masters[name] = mat
         except Exception:  # noqa: BLE001
             e["error"] = traceback.format_exc()[-1500:]
@@ -307,6 +333,18 @@ def main():
         e = {}
         try:
             master, scal, vec, tex, notes = instance_spec(name)
+            spec = hashlib.sha256(json.dumps([master, scal, {k: list(v) for k, v in vec.items()}, tex],
+                                             sort_keys=True, default=str).encode()).hexdigest()
+            prev = state.get(name, {})
+            if EAL.does_asset_exist(path) and prev.get("spec") == spec and prev.get("uasset") == disk(path):
+                mi = unreal.load_asset(path)
+                e = {"created": False, "unchanged": True, "master": master, "scalars": scal,
+                     "vectors": {k: list(v) for k, v in vec.items()}, "textures": tex, "notes": notes,
+                     "readback": {k: round(float(MEL.get_material_instance_scalar_parameter_value(mi, k)), 5)
+                                  for k in scal}, "saved": True}
+                mis[name] = mi
+                rep["instances"][name] = e
+                continue
             mi, created = get_or_create(path, unreal.MaterialInstanceConstant, unreal.MaterialInstanceConstantFactoryNew())
             MEL.clear_all_material_instance_parameters(mi)
             MEL.set_material_instance_parent(mi, masters[master])
@@ -324,10 +362,14 @@ def main():
                 raise RuntimeError(f"textures not imported: {missing_tex}")
             e["readback"] = {k: round(float(MEL.get_material_instance_scalar_parameter_value(mi, k)), 5) for k in scal}
             e["saved"] = bool(EAL.save_loaded_asset(mi, False))
+            if e["saved"]:
+                state[name] = {"spec": spec, "uasset": disk(path)}
             mis[name] = mi
         except Exception:  # noqa: BLE001
             e["error"] = traceback.format_exc()[-1500:]
         rep["instances"][name] = e
+    state_path.write_text(json.dumps(state, indent=1, sort_keys=True), encoding="utf-8")
+    rep["instances_unchanged"] = sum(1 for v in rep["instances"].values() if v.get("unchanged"))
     used = set()
     for path in sorted(EAL.list_assets(C.MESH_DEST, recursive=False, include_folder=False)):
         mesh = unreal.load_asset(path.split(".")[0])
