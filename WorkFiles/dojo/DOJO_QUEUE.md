@@ -452,3 +452,37 @@ Also decide Nanite vs LOD0-2 for every kit (taiko shipped LODs; stone, modern an
   - ISMs need the armory chat to set used_with_instanced_static_meshes on its 7 masters (optional, small perf gain; the user's call).
   - Verify failed only the armory-side dry run: (1) the armory chat's own ak_verify order vs the hall-variant lifts; (2) the shell master sources not hashed. A small agent is fixing both -> rev 4. Then the user sends the armory prompt.
 - 2026-10-01: SYNC rev 4 (SYNC.md 3.2 armory-side order: its own run_armory_unreal.sh first, then tools/ue_armorylab_shell.py last, then check_sync --side armory; section 15 shell-master snapshot + drift check; 3.4 per-project 'needs sync' revisions). check_sync dojo 0, armory 2 (expected). NOTE: the next DojoLab sc_verify needs run_armory_sync.sh first (records rev 4). The armory-chat prompt was given to the user.
+- 2026-10-01: the ARMORY CHAT finished ArmoryLab first-time setup: synced at rev 4 (check_sync armory 0), shell placed 161/161, exterior hidden. It found that Unreal re-saves change .uasset sha (package GUID) and fixed ak_materials to save only on change. Our side checked: the manifest hashes only ArmoryLab's armory material/texture uassets and DojoLab's byte copies (dj_armory_sync copies files, saves only on change; 2nd-run md5 identical); the shell masters are tracked by a code snapshot, not uassets. check_sync dojo = PASS. Committed + pushed 763e0c0f (1,216 files; backup tars/start_backup excluded; no armory-chat or lock files).
+- 2026-10-02: USER: bring the DemoGame_1 player into DojoLab, LOOK + MOVEMENT + the JUTSU (not the air-jump flips, lock-on, stance, free look unless the jutsu needs them). Running (wf_2e814453-cf6):
+  - BP_NinjaGasp + BP_NinjaVisual + MH_PlayerDefault + CloakMH (Chaos cloth) + the centred camera;
+  - UNinjaJutsuComponent ported unchanged into a new DojoLab C++ module, with PORT_PROVENANCE.md (DemoGame_1 commit, sha256, re-sync steps);
+  - DemoGame_1 read-only; never MH_PlayerFemale/private.
+  Separately (user's earlier question): ArmoryLab ran ~10 fps in PIE (309 frames/31 s, 50 un-precached PSO hitches); the user was given a profiling prompt for the armory chat.
+- 2026-10-02: NINJA PORT BUILD DONE (build stage of wf_2e814453-cf6). DojoLab now plays BP_NinjaGasp (MetaHuman MH_PlayerDefault + CloakMH, centred camera, ninja run/sprint, the 4 jutsu on F/2/3/4) through the new GM_DojoNinja; GM_Dojo still gives SandboxCharacter_CMC (`?game=/Game/Dojo/Blueprints/GM_Dojo.GM_Dojo_C`).
+  - New C++ module Source/DojoLab (29 DemoGame_1 files byte-identical + the camera switch); DojoLab is now a C++ project: build the DLL (run_ninja_port.sh build) before any commandlet or -game run.
+  - 510 packages copied, 0 overwritten; headless check 6/6, -game probe: every jutsu fires, camera lateral 0 / 375 cm. Notes: BUILD_NOTES 'NINJA CHARACTER'; provenance: build/ninja_character/PORT_PROVENANCE.md.
+  - Open: D1 hair/brow/lash colour vs DemoGame_1 shots, perf delta, dj_sc_verify run (after run_armory_sync.sh). PRIVATE LAB ONLY (anime audio + Naruto names).
+- 2026-10-02: NINJA PORT PLAY TESTS DONE (play-test stage of wf_2e814453-cf6; BUILD_NOTES 'NINJA CHARACTER: play tests', results in build/ninja_character/test/RESULTS.json, OVERVIEW.jpg, videos per jutsu).
+  - Look: MetaHuman + cloak, silhouette vs DemoGame_1's own shots IoU 0.78-0.89; Chaos cloth live every frame (frozen control detected), no explosion, no T-pose (<= 7.5 cm vs the host).
+  - Movement: walk 200 / run 575 / sprint 1000, centred camera (lateral 0); all 15 traversal routes play the same GASP montages as SandboxCharacter_CMC.
+  - Jutsu: all 4, standing / walking / running: every seal on UpperBody, completes, clone / fireball / seal decal / Chidori spawn and resolve, audio + FX fire, 0 errors / ensures.
+  - Gameplay: 88/88 walk routes walked by the pawn (incl. 35 armory interior), 33/33 CONTROLs blocked, 0/12 1v1 escape attempts leaked; capsule = GASP's (r 30 / hh 86).
+  - FIX T1: removed the leftover plain double jump (BP_NinjaGasp jump_max_count 2 -> 1 = GASP's); documented in PORT_PROVENANCE.md.
+  - Open: 16.7 ms p95 missed at PlayerEyeSand / WestAisle by BOTH pawns (ninja 20.5 / 20.7, GASP 21.2 / 19.0); the ninja costs +1.9 / +3.3 ms mean in view. D1 hair colour not judged (lighting). PRIVATE LAB ONLY.
+- 2026-10-02: NINJA PORT DONE (wf_2e814453-cf6).
+  - BP_NinjaGasp is DojoLab's default pawn (GM_DojoNinja; GM_Dojo keeps SandboxCharacter_CMC). New C++ module DojoLab: 29 DemoGame_1 files byte-identical + DojoNinjaCameraSubsystem (a per-pawn camera cvar). 510 packages copied at DemoGame_1 paths; extra components removed; the IMC trimmed to the 8 jutsu rows. PORT_PROVENANCE.md (commits, sha256, re-sync steps).
+  - Tests: the MetaHuman + cloak with live cloth; GASP movement + 15 traversals; all 4 jutsu (ShadowClone, GreatFireball, Summoning, Chidori) standing/walking/running; 88/88 walk routes, alley/boundary 0 leaks, same capsule.
+  - Failed: frame time p95 17-21 ms for BOTH pawns (the machine was shared during the tests); dj_sc_verify gate 9 (the armory_hall sync is at rev 3 vs the armory chat's rev 5).
+  - IP: the jutsu use Naruto names and third-party anime audio (private lab only, never publish).
+  - Follow-up running (wf_66c8379f-e32): sync to rev 5 + gates, then an idle-machine perf profile with measured levers (no changes applied; the owner decides).
+- 2026-10-02: ARMORY CHAT rev 5 note (relayed by the user):
+  - Entry mat retired (SM_AK_EntryMat); 10 new backlit upper window papers SM_AK_Window_Paper_35_W/E (AKI_0618-0627; emissive M_AK_HWinPaperW/E); 4 mat materials unused; lights_design gets ArmoryLab-only atten/channels (not for DojoLab).
+  - They ask us to: sync + record; check the window-paper emissive by eye at our sunset (lit shoji, not a light box) and tune per level in dj_armory_look.py.
+  - ArmoryLab perf: 80-99 fps in -game; the user's 10 fps PIE was startup + GPU contention from ~15 Blender renders (VRAM 11.8/12 GB, a GPU timeout at 02:14). Their fix: case lights on lighting channel 1 only (the shell stays on 0), -52% shadow-depth draws.
+  - Lever for DojoLab: 15 of the shell's 32 pieces (139 actors) are non-Nanite and get pulled into shadowed local lights' shadow maps -> make them Nanite or keep shadowed lights off the shell via channels.
+  - Their ArmoryLab run overlapped our perf_ninja_1 (contaminated).
+  - The shared rev-5 files are uncommitted (the owner decides).
+  TODO after wf_66c8379f-e32: the window-paper look check/tune at sunset + test the channel/Nanite-shell lever.
+- 2026-10-02 USER:
+  - (1) commit the shared armory_hall rev-5 files with our sync (after wf_66c8379f-e32);
+  - (2) REMOVE THE JUTSU VOICE-OVERS COMPLETELY, in general, not just in DojoLab. In DojoLab: clear every jutsu's StartVoice on the BP_NinjaGasp copy, delete /Game/Ninja/Audio/Voice/SFX_Voice_GreatFireball + SFX_Voice_KageBunshin, and update PORT_PROVENANCE re-sync steps to never bring voices back. DemoGame_1: the same in its own project (its chat, or us on the user's say-so). The SFX (seal, release, Chidori, fireball) are not voices; they stay unless the user says otherwise (they are also third-party anime audio).

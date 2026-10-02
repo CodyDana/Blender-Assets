@@ -8,8 +8,9 @@ Gates (counts come from layout.json / blender_bounds.json / the exports on disk,
                Visibility), the 1v1 boundary hidden in game and Pawn-only
  3 traversal   one LevelBlock_Traversable per layout.json marker, hidden in game, collision = Traversable only, its four
                ledge splines on the marker box's top edges with outward normals; every climb route's marker present
- 4 gameplay    project default game mode GM_Dojo; its default pawn is GASP's SandboxCharacter_CMC; the level's world
-               settings use GM_Dojo, KillZ -1000; PlayerStart P1 / P2 at the spec spawns facing each other; the pawn's
+ 4 gameplay    project default game mode GM_Dojo (or, since the 2026-10-02 ninja port, GM_DojoNinja: GM_Dojo's child
+               whose pawn is BP_NinjaGasp); GM_Dojo's default pawn is GASP's SandboxCharacter_CMC; the level's world
+               settings use GM_Dojo or GM_DojoNinja, KillZ -1000; PlayerStart P1 / P2 at the spec spawns facing each other; the pawn's
                hard /Game dependencies all exist
  5 environment sun direction = layout.json sun, SkyAtmosphere, SkyLight real-time capture, height fog, unbound PPV, cameras
 Result: WorkFiles/dojo/build/unreal/verify.json
@@ -158,6 +159,28 @@ def deps(pkg, seen):
     return seen
 
 
+
+# 2026-10-02 ninja character port: the project default and L_Dojo's world override may be GM_DojoNinja (a child of GM_Dojo
+# whose default pawn is the ported BP_NinjaGasp). GM_Dojo itself must still give SandboxCharacter_CMC (the reference pawn).
+NINJA_GAME_MODE = "/Game/Dojo/Blueprints/GM_DojoNinja"
+
+
+def ninja_mode_check(ini, override):
+    """ini / world-override acceptance for GM_Dojo or GM_DojoNinja; GM_DojoNinja must be GM_Dojo's child with BP_NinjaGasp."""
+    rec = {"ini_gm_dojo": f"GlobalDefaultGameMode={C.DOJO_GAME_MODE}.GM_Dojo_C" in ini,
+           "ini_gm_ninja": f"GlobalDefaultGameMode={NINJA_GAME_MODE}.GM_DojoNinja_C" in ini,
+           "override": override.get_name() if override else None}
+    ok_ninja = True
+    if rec["ini_gm_ninja"] or rec["override"] == "GM_DojoNinja_C":
+        ncls = EAL.load_blueprint_class(NINJA_GAME_MODE)
+        ncdo = unreal.get_default_object(ncls) if ncls else None
+        npawn = ncdo.get_editor_property("default_pawn_class") if ncdo else None
+        rec["ninja_pawn"] = npawn.get_path_name() if npawn else None
+        rec["ninja_parent_is_gm_dojo"] = bool(ncls) and EAL.load_blueprint_class(C.DOJO_GAME_MODE) is not None and             unreal.MathLibrary.class_is_child_of(ncls, EAL.load_blueprint_class(C.DOJO_GAME_MODE))
+        ok_ninja = bool(npawn) and npawn.get_path_name().endswith("BP_NinjaGasp.BP_NinjaGasp_C") and             rec["ninja_parent_is_gm_dojo"]
+    rec["passed"] = (rec["ini_gm_dojo"] or rec["ini_gm_ninja"]) and rec["override"] in ("GM_Dojo_C", "GM_DojoNinja_C")         and ok_ninja
+    return rec
+
 def gate_gameplay(layout, actors):
     ini = (C.PROJECT_DIR / "Config" / "DefaultEngine.ini").read_text(encoding="utf-8")
     gm_cls = EAL.load_blueprint_class(C.DOJO_GAME_MODE)
@@ -165,7 +188,8 @@ def gate_gameplay(layout, actors):
     pawn = cdo.get_editor_property("default_pawn_class")
     ws = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world().get_world_settings()
     override = ws.get_editor_property("default_game_mode")
-    res = {"project_game_mode": f"GlobalDefaultGameMode={C.DOJO_GAME_MODE}.GM_Dojo_C" in ini,
+    nm = ninja_mode_check(ini, override)
+    res = {"project_game_mode": nm["ini_gm_dojo"] or nm["ini_gm_ninja"], "ninja_mode": nm,
            "project_default_map": f"GameDefaultMap={C.LEVEL}.L_Dojo" in ini and f"EditorStartupMap={C.LEVEL}.L_Dojo" in ini,
            "gm_parent": unreal.get_default_object(gm_cls).get_class().get_super_class().get_name()
            if hasattr(unreal.get_default_object(gm_cls).get_class(), "get_super_class") else None,
@@ -173,7 +197,7 @@ def gate_gameplay(layout, actors):
            "world_game_mode": override.get_path_name() if override else None,
            "kill_z": float(ws.get_editor_property("kill_z"))}
     seen = set()
-    for pkg in (C.DOJO_GAME_MODE, C.GASP_CHARACTER):
+    for pkg in (C.DOJO_GAME_MODE, C.GASP_CHARACTER) + ((NINJA_GAME_MODE,) if EAL.does_asset_exist(NINJA_GAME_MODE) else ()):
         deps(pkg, seen)
     res["n_dependencies"] = len(seen)
     res["missing_dependencies"] = sorted(p for p in seen if not EAL.does_asset_exist(p))
@@ -194,7 +218,7 @@ def gate_gameplay(layout, actors):
     res["facing_each_other"] = bool(p1 and p2 and p1["forward"][0] > 0.99 and p2["forward"][0] < -0.99)
     res["passed"] = (res["project_game_mode"] and res["project_default_map"] and bool(pawn)
                      and pawn.get_path_name().endswith("SandboxCharacter_CMC.SandboxCharacter_CMC_C")
-                     and bool(override) and override.get_name() == "GM_Dojo_C" and res["kill_z"] == -1000.0
+                     and bool(override) and nm["passed"] and res["kill_z"] == -1000.0
                      and not res["missing_dependencies"] and len(starts) == 2 and res["facing_each_other"]
                      and all(v["at_spawn"] and v["tag"] == k for k, v in res["player_starts"].items()))
     return res

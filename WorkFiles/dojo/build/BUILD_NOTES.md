@@ -5356,3 +5356,393 @@ committed. Follow-up: dj_sc_verify gate_armory_hall wants sync.json synced_revis
 DojoLab sc_verify needs a run_armory_sync.sh first (it records rev 4).
 
 armory_hall synced rev 4
+
+## 2026-10-02 - NINJA CHARACTER: the DemoGame_1 player ported into DojoLab (build stage)
+
+Owner request (2026-10-02): DemoGame_1's player in DojoLab, its LOOK, MOVEMENT and JUTSU; not the air-jump flips,
+lock-on, crouch-run / prone, free look or combat. Plan: `ninja_character/survey/PORT_PLAN.md`; provenance (DemoGame_1
+commit, every file with sha256, every change, re-sync steps): `ninja_character/PORT_PROVENANCE.md`.
+**PRIVATE LAB ONLY:** Naruto jutsu names and third-party anime audio (seal, release, Chidori, two voice lines) came
+along; nothing of this goes into anything sold or shared, and no footage with them is published (R7).
+
+### Source and guards
+- DemoGame_1 `metahuman-player` HEAD `7ea694afab7420f552879ce0f0a917901fbd07d7` (Source identical to HEAD); the male
+  player's BP_NinjaGasp / BP_NinjaVisual from the LFS blobs of `43fd6ce242b48c282e089e802d6f0c113f821c21` (today's
+  files carry the private female body / catwalk). Read only: file reads + `git --no-optional-locks`; `git status`,
+  HEAD and `.git/index` mtime identical before and after, no file under DemoGame_1 newer than the start snapshot.
+  Nothing female / Hiyuki / 2B / catwalk / Mocap copied (`private_blocked` 0).
+- check_sync --side dojo before and after: the same 25 `FAIL: sha` (Exports/ArmoryKit, owed by the armory chat) + 1
+  STALE (armory interior data); nothing owed by the dojo side; no shared file touched.
+- Lock `DojoNinjaPort` (claude) in WorkFiles/locks. Every Unreal step waited for no UnrealEditor-Cmd (an ArmoryLab
+  ak_perf run of another chat finished first) and checked that no editor had DojoLab open.
+- Backup before any write: `ninja_character/start_backup/` (uproject, Config/*.ini, L_Dojo.umap 44992f94...,
+  GM_Dojo.uasset, the two verify scripts; SHA256SUMS.txt).
+
+### What was built (run_ninja_port.sh build setup ini check; tools/port_copy.py)
+- **C++:** new module `Source/DojoLab` (+ DojoLab.Target.cs / DojoLabEditor.Target.cs, V7 / Unreal5_8; uproject
+  `Modules` entry; plugins unchanged). 29 files (15 classes) copied BYTE-IDENTICAL: jutsu (NinjaJutsuComponent,
+  NinjaJutsu, NinjaFireball, NinjaHandEffect, NinjaGroundSeal, NinjaVisual), look (NinjaVisualBodyComponent), movement
+  (NinjaTurnComponent, NinjaRunStyleComponent), compile/link only (Stance, LockOn + CameraModifier, Combat), load-clean
+  only (AirJump, FreeLook). `PublicDefinitions DEMOGAME_1_API=DOJOLAB_API` keeps every copied file unedited.
+  `[CoreRedirects] +PackageRedirects /Script/DemoGame_1 -> /Script/DojoLab` in DefaultEngine.ini. Build.bat
+  DojoLabEditor Win64 Development -NoHotReloadFromIDE: 22 actions, 0 warnings, 0 errors, 51 s ->
+  `Binaries/Win64/UnrealEditor-DojoLab.dll`. **DojoLab is now a C++ project: every commandlet / -game run needs this
+  DLL built (rebuild after any re-sync, editor closed).**
+- **Camera (D3, new code, `DojoNinjaCameraSubsystem`):** sets `DDCVar.NewGameplayCameraSystem.Enable` per spawned pawn
+  before possession: 0 for a ninja (has UNinjaJutsuComponent), the original 1 back for GASP's SandboxCharacter_*. The ini
+  keeps GASP's 1. `dojo.ninja.camera_switch 0` disables it.
+- **Content:** 510 packages, 955,262,255 bytes (473 core + 37 feature-only), all at DemoGame_1's /Game paths: no path
+  collision, so no remap and no redirector. Every source hash matched the survey; every destination was absent (no
+  DojoLab file overwritten); every copy re-hashed. The 13 DIFFERENT packages (MetaHumans/Common hair / lash materials,
+  skeletons, control rigs, GASP SK_Mannequin, IMC_Sandbox) were NOT copied: DojoLab's are kept (D1 option A).
+- **One commandlet (dj_ninja_setup.py, 51 s), after the module was built:**
+  - BP_NinjaGasp: SCS components NinjaAirJump, NinjaLockOn, NinjaStance, NinjaFreeLook, NinjaCombat removed (5 of 5),
+    compiled, saved. Left: NinjaJutsu (4 jutsu: ShadowClone, GreatFireball, Summoning, Chidori), NinjaRunStyle,
+    NinjaTurn, VisualOverride (BP_NinjaVisual -> BP_MH_PlayerDefault + CloakMH), SpringArm 375 / socket 0 / lag 12,
+    Camera(NotUsedByDefault) FOV 85 auto-activate on, GameplayCamera auto-activate off, GASP's own components.
+  - IMC_NinjaGasp: 24 rows -> the 8 jutsu rows (F / pad Y, Two / d-pad left, Three / d-pad up, Four / d-pad right); 11
+    actions unmapped (LMB, RMB, E, Q, C, Z, Tab, LeftAlt, 1, 5, F1 reach GASP's IMC_Sandbox again).
+  - New `/Game/Dojo/Blueprints/GM_DojoNinja` (child of GM_Dojo, DefaultPawnClass BP_NinjaGasp_C). GM_Dojo unchanged
+    (sha256 ad9def16..., still SandboxCharacter_CMC).
+  - L_Dojo World Settings GameMode GM_Dojo -> GM_DojoNinja, saved (L_Dojo sha256 now 3cd28a0e...). PlayerStarts P1
+    (1450, -1050, 95) yaw 0 and P2 (2950, -1050, 95) yaw 180 unchanged (measured before and after).
+  - Then (plain text) DefaultEngine.ini GlobalDefaultGameMode -> GM_DojoNinja.
+- Verify scripts: `dj_verify.py` gate 4 and `dj_sc_verify.py` gate 5 now accept GM_DojoNinja (GM_Dojo's child with
+  BP_NinjaGasp) as project default / world override and still require GM_Dojo -> SandboxCharacter_CMC (syntax-checked;
+  not run: the next sc_verify needs run_armory_sync.sh first, see rev 4 above).
+
+### Checks (measured)
+- **Headless load, fresh process (dj_ninja_check.py, -nullrhi): 6 / 6 gates PASS.** A: all 15 classes load as
+  /Script/DojoLab and through the old /Script/DemoGame_1 path. B: 510 / 510 ported packages load, 0 redirectors. C: the
+  hard /Game dependency closure of GM_DojoNinja, GM_Dojo, BP_NinjaGasp, BP_NinjaVisual, IMC_NinjaGasp and the 4
+  DA_Jutsu = 2,412 packages, 0 missing, 0 private. D: no unwanted component, no null class, 4 jutsu, turn + run style,
+  BP_NinjaVisual NinjaVisualBody / MetaHuman (BP_MH_PlayerDefault_C) / CloakMH, capsule r 30 / hh 86 = the
+  SandboxCharacter_CMC CDO, centred camera. E: ini + world override GM_DojoNinja, GM_Dojo -> CMC, 2 PlayerStarts
+  unchanged, 2,563 actors. F: 8 jutsu rows.
+- Log scan (tools/scan_log.py): 0 failed-to-load / missing / invalid-class / skeleton / compile lines on the ported
+  paths in the setup, check and -game logs; the other lines are the same as the earlier verify.log baseline
+  (4 profiler DLLs, 5 DDC pak notices, GASP LevelBlock construction-script warnings).
+- **-game probe, L_Dojo (dj_ninja_game_probe.py via run_ninja_probe.ps1, -RenderOffscreen, real keys through
+  `Input.+key`; a warm pass, then a measured pass with HighResShot stills):**
+  - Spawn: BP_NinjaGasp_C via GM_DojoNinja + PC_Sandbox at P2. `LogDojoNinja: camera switch ... 1 -> 0`. Camera:
+    cvar 0, SpringArm + Camera(NotUsedByDefault) active, GameplayCamera inactive, **lateral 0.0 cm, 375 cm behind,
+    70 cm above, FOV 85** (DemoGame_1's centred camera).
+  - Look: MetaHuman active, Body SKM_MH_PlayerDefault_BodyMesh visible with ABP_MH_NinjaBody, Manny host
+    (SKM_Manny_Simple) hidden, CloakMH (SKM_BlackCloak_MH) attached to Body as a Leader Pose follower and visible; 6
+    groom components visible, 3 with a groom (Hair, Eyebrows_M_SlightArch, Eyelashes_S_Fine; Fuzz / Mustache / Beard
+    empty, as the MetaHuman BP ships). Head bone 77.5 cm above the
+    capsule centre on the MetaHuman vs 72.3 on the hidden Manny (DemoGame_1 measured ~5 cm too).
+  - Movement: W 575 cm/s with `ninja run ON A_NinjaRun_InPlace (575 cm/s, rate 1.20)`; Shift+W 1000 cm/s with
+    `A_NinjaSprint_InPlace` (sprint probe, both key orders). The main probe's sprint step stayed at 575 (Shift pressed
+    1.5 s into the run, sampled 0.9 s later); the dedicated sprint probe reached 1000 both ways; cause not found.
+  - Jutsu, by real keys: F casts ShadowClone -> 2 BP_NinjaGasp_C at 2.4 s (clone with MetaHuman + cloak), back to 1 by
+    9 s; Two casts GreatFireball -> 1 BP_GreatFireball_C at 1.65 s, gone by 6.5 s; Three casts Summoning ->
+    BP_SummoningSeal_C decal at 2.45 s (seal visible on the gravel), gone by 9 s; Four casts Chidori -> finishing
+    DA_Jutsu_Chidori with 1 BP_ChidoriLightning_C from 1.55 to 3.55 s, gone by 7.5 s.
+  - GASP route (`L_Dojo?game=/Game/Dojo/Blueprints/GM_Dojo.GM_Dojo_C`): SandboxCharacter_CMC, cvar 1, GameplayCamera
+    active (lateral 50 cm, 180 cm behind, FOV 80: GASP's own rig), run 500 / sprint 700 cm/s. The reference pawn and its
+    camera are intact.
+  - Stills: `ninja_character/build/probe/shots/01..12*.png` (1920x1080), contact sheet `build/probe/sheet.png`.
+    Labels 01 "back" / 02 "front" are swapped in the stills: after the warm pass the body faced +X while the camera
+    looked -X.
+
+### Open
+- D1 not measured: hair / brow / lash colour vs DemoGame_1's male reference shots, framed the same (option B-hair only
+  if it fails). R4 (skin cache off project-wide): the hair sits on the head in the stills, not measured in motion.
+- C7 perf delta not measured (run_game_perf.ps1 with the ninja pawn).
+- dj_verify / dj_sc_verify edits not run in Unreal (sc_verify needs run_armory_sync.sh first).
+- Known DemoGame_1 gaps came along (R12): hand effects on Manny's bones, no face animation, skin through the cloak in
+  deep poses, jutsu and clones local only, foot-lock IK inert; the 37 feature-only packages are unreferenced after
+  B4 / B5 (kept for a later port, D4).
+- The probe's spring-arm close-up used set_editor_property, which re-ran BP_NinjaGasp's construction script and
+  re-created the visual child actor (harmless for the test); the probe now writes the attribute directly (untested).
+- Lock `DojoNinjaPort` still held by this chat for the follow-up stages. Nothing committed or pushed.
+
+## 2026-10-02 - NINJA CHARACTER: play tests in -game (L_Dojo, from the build)
+
+Output `WorkFiles/dojo/build/ninja_character/test/` (`RESULTS.json` / `RESULTS.md` = every number below,
+`OVERVIEW.jpg`, per-suite reports, frames, videos, logs and log scans). Every run was a separate offscreen
+`UnrealEditor-Cmd -game` process on L_Dojo (`run_ninja_playtest.ps1`: waits for any UnrealEditor-Cmd, stops if a DojoLab
+editor is open; another chat's ArmoryLab ak_perf run was waited out). Real keys through `Input.+key`, the camera moved
+by plain attribute writes (DemoGame_1's mh_cam.py rule), stills by HighResShot, frame sequences shot in slow motion
+(time dilation 0.25-0.35) and assembled to MP4 at real GAME speed (`tools/pt_media.py`, ffmpeg concat with the
+recorded game-time durations). Reference pawn runs: `L_Dojo?game=/Game/Dojo/Blueprints/GM_Dojo.GM_Dojo_C`
+(SandboxCharacter_CMC). check_sync --side dojo before: the same 25 `FAIL: sha` (Exports/ArmoryKit, owed by the armory
+chat) + 1 STALE as the build stage, nothing owed by the dojo side; no shared file touched. Nothing committed.
+**PRIVATE LAB ONLY (R7)**: the videos carry the Naruto jutsu (names, look); they are muted, but nothing here is to be
+published.
+
+### Harness (new, Scripts/dojo/unreal)
+- `dj_ninja_playtest.py` (suites look / move / jutsu / routes; a generator timeline in the Slate post-tick; a 10 Hz
+  recorder of speed, location, movement mode, jutsu state, the visual host's UpperBody / DefaultSlot activity + montage +
+  NinjaSealWeight, the GASP mesh montage, effect actors, cloak bounds + Chaos cloth interactor, MetaHuman-vs-Manny-host
+  bone deltas, camera offsets, ninja audio components playing, new Niagara systems near the pawn; the jutsu component's
+  own delegates OnJutsuSeal / Completed / Cancelled / HandPlanted / CloneSpawned), `dj_ninja_perf.py` (the finish
+  stage's fp_game_perf method with the pawn placed in view), `run_ninja_playtest.ps1` (-Sound keeps the audio device,
+  the probe mutes the output with `au.MuteAudio 1`), `dj_ninja_fixjump.py`. Tools in `ninja_character/tools/`:
+  `pt_media.py`, `pt_compare_demogame.py`, `pt_scan.py` (errors / ensures per test window from `DJ_PT_MARK` markers),
+  `pt_summary.py`.
+
+### 1. Look (suite look; `test/look/`)
+- Visible body = the MetaHuman (`Body` SKM_MH_PlayerDefault, Manny host hidden), cloak `CloakMH` visible, Leader Pose
+  on the body. Stills at DemoGame_1's own beauty framing (cloak_mh_test.ps1 Cam(): arm 300, pitch -8, FOV 70, no lag,
+  1600x900): front, side a, back, side b, close (face / cowl), three-quarter close; plus the gameplay camera.
+- **Against DemoGame_1's male shots** (`Saved/Claude/Shots/metahuman_cloak/final/b01-b06`, read only; the same
+  projection, so pixels compare 1:1; `look/compare/pairs_all.jpg`): character dark-mask IoU front 0.858, side a 0.870,
+  back 0.843, side b 0.782, close 0.809, three-quarter 0.894; box deltas a few px left / right (the top deltas of
+  front / side b / close are the dojo wall's dark coping touching the head in the mask, not the character). The
+  remaining difference is the cloth's momentary pose and the lighting (sunset dojo vs DemoGame_1's day field), which is
+  also why the hair colour (D1) is NOT judged from these pairs.
+- **Cloth simulates**: Chaos interactor 1 cloth, 2,547 dynamic + 873 kinematic particles every sample; the per-frame
+  solver time changes on 78-100 % of samples while live (1.5-3.5 ms) and is frozen on the SUSPENDED control (2 %, one
+  value) - the measurement can tell a frozen cloth. No explosion: the cloak bounds' half extents stay <= 100 / 73 / 98 cm
+  in every recording (run, sprint, stop, jumps, 15 traversals, 12 jutsu). Run -> stop slow-motion side view:
+  `look/video/look_run_stop_side.mp4` (the cloak flares behind and settles).
+- **No T-pose / reference pose**: MetaHuman hands / feet / head vs the Manny host <= 7.5 cm in every sample of every
+  suite (idle 5.3); MetaHuman hand span 66-111 cm (a T-pose is ~170). The one exception is a shadow clone's FIRST sample
+  (40-44 cm, 0.1 s) while it is hidden for CloneRevealDelay inside the smoke; the frames show it appear already posed
+  (`jutsu/video/clone_spawn_zoom.jpg`).
+
+### 2. Movement (suite move, ninja vs SandboxCharacter_CMC; `test/move*/`)
+- Capsule r 30 / half height 86 on both (the dojo's checks use exactly these). Step 45, walkable 44.765 deg, JumpZ 500.
+- Walk (LeftControl toggle) 200 / 200 cm/s; run 575 (ninja run clip) vs GASP 500; sprint 1000 (ninja sprint clip) vs
+  GASP 700, both key orders in all three ninja runs (W, then Shift 1.2 s later: 575 -> 1000 within 0.25 s). The build probe's
+  single 575 sample after Shift is not reproduced (cause not identified). The ninja's own speeds are DemoGame_1's run-style design.
+- Jump: standing 127.5 cm on both. **Found and fixed (T1)**: a second SpaceBar in the air gave the ninja a plain engine
+  double jump to 243-244 cm (GASP: 127.5). DemoGame_1's double jump is the removed UNinjaAirJumpComponent's flip PLUS
+  `jump_max_count` 2 written on the BP_NinjaGasp CDO by its setup_ninja_gasp.py; the build removed only the component.
+  `run_ninja_port.sh fixjump` (dj_ninja_fixjump.py) set the CDO to SandboxCharacter_CMC's value read live (1); backup
+  `test/backup_before_fixjump/` (BP sha256 0bfbdc23... -> 480ec955...); dj_ninja_setup.py applies it on a re-sync. After:
+  double press 127.5 cm standing and sprinting (move_run3), fresh headless `check` 6 / 6 gates, 0 errors.
+- Camera: ninja cvar 0, centred: lateral offset 0.0 cm at idle and over a whole run (max |lateral| 0.0); GASP's pawn
+  keeps its own rig (cvar 1, lateral 50, FOV 80).
+- **Traversal sample** (15 climb routes of the layout: 3 wall tops +2.0, both cisterns +1.25 and eave pads +3.0, both
+  crates +1.25, shed band +2.5, pavilion pad +3.25, vending +1.75, veranda +0.5, plinth +1.0, weapon-rack hurdle):
+  stance - 2 m, run in, SpaceBar. Ninja and GASP play the SAME GASP montages on every route (Catch_Cliff_high_standF,
+  Catch_Mantle_low_stand on the veranda, Mantle_1_0_run on the plinth, Catch_Hurdle_high_stand over the rack) and stand
+  on the same tops (10 / 15 on top; the other 5 carry on past the top: pads onto the roof, vending onto the wall top,
+  over the rack). Rise e.g. wall 199.5-200.3 cm, cistern 184 cm on both. Pose delta during traversals <= 7.2 cm.
+  Frames: `move/video/trav_Wall_S_W1.mp4`, `trav_WeaponRack_W.mp4`.
+
+### 3. Jutsu (suite jutsu; `test/jutsu/` frames + run 2 `test/jutsu_run2/` with the delegates and a clean log)
+Each of the 4 cast standing, walking (200 cm/s) and running (575 cm/s), by its real key; slow-motion frame sequences
+-> `jutsu/video/jutsu_<name>.mp4` (+ `_sheet.jpg`).
+
+| jutsu (key) | seals (OnJutsuSeal) on UpperBody | completed | result: first -> last seen (s) | audio | FX |
+|---|---|---|---|---|---|
+| ShadowClone (F) | 3 / 3 montages @UpperBody | yes, all 3 modes | clone (2nd BP_NinjaGasp, AIController, MetaHuman + cloak) 0.75 -> 5.6 | HandSeal, JutsuRelease, Voice_KageBunshin | NS_CloneSmoke |
+| GreatFireball (Two) | 6 / 6 | yes | BP_GreatFireball 1.15 -> 3.3-3.6 (bursts) | HandSeal, JutsuRelease, Voice_GreatFireball, FireballLaunch | NS_Fire, NS_Explosion_Small |
+| Summoning (Three) | 5 + the thumb-bite opening = 6 @UpperBody, palm slam @DefaultSlot | yes (HandPlanted at 1.46) | BP_SummoningSeal decal 1.5 -> 7.2 | HandSeal (releases silently by design) | decal (no Niagara) |
+| Chidori (Four) | 3 / 3, charge stance @DefaultSlot | yes | BP_ChidoriLightning on hand_r 0.97 -> 4.9 | HandSeal, SFX_Chidori | NS_ChidoriArcs |
+
+- UpperBody slot active on every casting sample (e.g. 10 / 10, 6 / 6), NinjaSealWeight 1.0; no cancel in 12 / 12 casts.
+- **Works while walking and running** (DemoGame_1: "you can walk and sprint while casting"): speed stays 200 / 575 for
+  the whole seal chain; the finishers (palm slam, Chidori stance) stop the ninja by design (SetFinisherLock).
+- `LogNinjaJutsu: voice ... (playing)` for both voice jutsu (the build probe ran -NoSound: "not spawned").
+- Log: 0 errors, 0 ensures, 0 LogNinja warnings in every run of this stage (pt_scan: only the known startup baseline,
+  GASP LevelBlock construction-script warnings and editor-UI factory notices). Jutsu run 1 had ONE ensure, caused by the
+  harness itself (`-dpcvars=au.MuteAudio=1`, a cheat cvar from a device profile, ConfigUtilities.cpp); the runner now
+  mutes by console command and run 2 is clean.
+- Known DemoGame_1 behaviour (unchanged): the fireball turns the ninja to the camera's yaw; the hand effects use Manny's
+  bones (R12).
+
+### 4. The dojo's gameplay checks with the new pawn (suite routes; `test/routes*/`)
+- **All 88 layout walk routes walked by the pawn itself** (walk gait, W + steering by the control yaw, capsule as
+  spawned): ninja 88 / 88 as expected after the walker fix (run 1 87 / 88: ARM_deck_strip_in_front_of_hero_table folds
+  back on itself and stalled BOTH pawns - a walker projection bug, fixed to waypoint order; re-walked: reached), incl.
+  the armory interior 35 / 35 (ARM_*, HALL_*, interior CONTROLs), 33 / 33 CONTROLs blocked (1v1 ring at the open gate,
+  wall top outside, alley fences, alley pockets, rear-yard corners, extension walls), 7 / 7 BR routes clear with the
+  Dojo/Boundary_1v1 group's collision off. Max deviation on clear routes 0.18 m (0.41 at the folded route's U-turn).
+  SandboxCharacter_CMC: the same outcome on every route (0 differences).
+- **1v1 escape attempts** (12: sprint / run jumps at the open-gate ring, mantle onto the W / S / E wall tops then jump
+  outward, jumps off the wall top, sprint jumps at both alley fences from the veranda, ground jumps at the fences,
+  veranda corners into the rear yard): **0 leaks** for the ninja (before and after T1) and for GASP's pawn. The ring
+  holds the capsule at y -0.70 / x -0.70 / x 44.70 (ring at -1.1 / 45.1); mantles onto the wall tops worked
+  (Climb_Start_2_5_run).
+- Capsule = SandboxCharacter_CMC's (r 30 / hh 86), so the offline floods / arcs of the finish stage (r 30, apex 2.55 m
+  double-jump ceiling, 650 cm/s arcs) still bound the ninja: its apex is now 1.28 m; its 1000 cm/s sprint is faster than
+  the arcs' 650 but the floods are speed-independent (flying-capsule superset) and the real sprint-jump attempts did not
+  leak.
+- dj_sc_verify.py (fresh, read-only; the canonical showcase/verify.json restored byte-identical afterwards, this run's
+  copy in `test/sc_verify/verify_ninja_pawn.json`): **8 / 9** - gate 5 gameplay PASS with the edited code (ini + world
+  override GM_DojoNinja -> BP_NinjaGasp, parent GM_Dojo; GM_Dojo still -> SandboxCharacter_CMC), gate 7 GASP trace 23 /
+  23; gate 9 FAIL only on the pre-existing armory-hall record (sync.json rev 3 vs manifest rev 4: run_armory_sync.sh
+  owed, see rev 4 above). 0 errors in the log.
+
+### 5. Frame time
+`dj_ninja_perf.py` (the finish stage's perf_cool method: scalability 3, t.MaxFPS 0, no vsync, 1920x1080 at the
+configured screen percentage r.ScreenPercentage 0, every frame's delta over 10 s after an 8 s settle, no ProfileGPU),
+with the controlled pawn placed IN VIEW: on the floor 450 cm in front of CAM_PlayerEyeSand / 350 cm in front of
+CAM_AK_CW_WestAisle, facing the camera; plus the pawn's own camera at P1. Alternating processes ninja, GASP, ninja, GASP;
+2 segments per view per process = 4 per view per pawn. **Idle machine** (gated: no blender.exe for 60 s, no other
+Unreal process; `perf/background_load.csv`: 0 Blender, CPU 22 % mean):
+
+| view | pawn | mean ms | p95 ms avg (min / max of 4) | vs 16.7 ms p95 |
+|---|---|---|---|---|
+| CAM_PlayerEyeSand | ninja | 17.15 | 20.53 (20.17 / 20.87) | miss |
+| CAM_PlayerEyeSand | SandboxCharacter_CMC | 15.25 | 21.19 (19.82 / 22.27) | miss |
+| CAM_AK_CW_WestAisle | ninja | 17.21 | 20.68 (20.23 / 21.58) | miss |
+| CAM_AK_CW_WestAisle | SandboxCharacter_CMC | 13.87 | 19.01 (17.99 / 20.59) | miss |
+| own camera (P1) | ninja | 13.22 | 17.10 (16.10 / 18.24) | miss |
+| own camera (P1) | SandboxCharacter_CMC | 12.71 | 17.72 (16.63 / 18.22) | miss |
+
+- **The ninja's cost, measured: +1.9 ms mean at PlayerEyeSand, +3.3 ms at WestAisle (close up, 3.5 m), +0.5 ms from
+  its own camera; p95 -0.7 / +1.7 / -0.6 ms** (the p95s overlap between the two pawns at PlayerEyeSand and the own
+  camera). It is a steady per-frame cost (MetaHuman body + grooms + Chaos cloak + the live retarget), not hitches.
+- **16.7 ms p95 is missed at both views by BOTH pawns** in today's level state: GASP's own pawn in view gives 21.2 /
+  19.0 ms p95 (the finish stage measured 17.8 / 16.7 without a pawn placed in the frame and in its "+2.9 ms after 11:18"
+  state). So the target needs the level-side levers already listed under the finish stage (interior light draw
+  distance, fewer glow lights / MegaLights, the +2.9 ms step), and for the ninja: MetaHuman body / groom LOD settings,
+  the cloak's cloth LOD or a sim-distance cull. Not changed here (port rules: report).
+- A first perf pass ran while another chat's Blender renders (up to 6 processes, GPU 70 % mean) were on the machine; it
+  is kept as `perf/contaminated_run1/` and NOT used (GASP p95 up to 30.7 ms there).
+
+### Changes to DojoLab in this stage
+- `Content/Ninja/Blueprints/BP_NinjaGasp.uasset`: T1 only (CDO jump_max_count 2 -> 1). PORT_PROVENANCE.md section 3.1 /
+  5a regenerated (`tools/write_provenance.py`; 508 / 510 packages still byte-identical, 29 / 29 C++ files). No C++, ini,
+  level, plugin or other asset changed.
+
+### Open
+- 16.7 ms p95 not met at PlayerEyeSand / WestAisle by either pawn (section 5); the ninja adds +1.9 / +3.3 ms mean in
+  view. Levers above; owner's call.
+- D1 hair / brow / lash colour vs DemoGame_1: not judged (the lighting differs: sunset dojo vs day field); a same-light
+  comparison (a neutral-lit spot or DemoGame_1's sky preset) would settle option B-hair. Silhouette match measured
+  (IoU 0.78-0.89).
+- R4 (skin cache off project-wide): grooms stay on the head through run / sprint / jumps / traversal / jutsu in the
+  frames; not measured numerically.
+- dj_sc_verify gate 9 needs run_armory_sync.sh to record rev 4 (pre-existing, not the port). dj_verify.py (grey-box
+  stage) not run.
+- Known DemoGame_1 gaps unchanged (R12): hand effects on Manny's bones, no face animation, jutsu and clones local only,
+  foot-lock IK inert. PRIVATE LAB ONLY (R7).
+- Lock DojoNinjaPort still held by this chat for any follow-up stage; release it when the port is closed.
+
+## 2026-10-02 - armory_hall revision 5 synced into DojoLab (perf2 round, SYNC stage; the C++ project)
+
+Rev 5 is the armory chat's (owner asked): entry mat removed (SM_AK_EntryMat / AKI_0335 retired), upper side windows
+backlit by SM_AK_Window_Paper_35_W/_E x10 (AKI_0618..0627; M_AK_HWinPaperW/E, T_AK_HWinPaper_BC), ArmoryLab-only light
+values, every other ArmoryKit FBX re-exported with the same geometry. Notes and numbers:
+`ninja_character/perf2/sync/` (SYNC_NOTES.md, RESULTS.json, logs, sc_verify, routes). Backup first:
+`perf2/sync/start_backup/` (L_Dojo.umap 3cd28a0e..., Content/ArmoryKit + ArmoryHall + NinjaPack, armory_sync jsons,
+manifest.json, verify.json, this file; SHA256SUMS.txt). No other Unreal process ran; nothing committed or pushed.
+
+- check_sync --side dojo at the start: exit 2 (synced 3, needs 5). DLL current: Build.bat DojoLabEditor -> "Target is up
+  to date", 0 actions, UnrealEditor-DojoLab.dll unchanged (sha256 18065c72...); run_armory_sync.sh needed no change
+  for the C++ module.
+- run_armory_sync.sh: files 198 packages, 10 copied (7 M_AK_* masters, M_AK_HWinPaperE/W, T_AK_HWinPaper_BC), 0
+  missing, 0 drift. Unreal 115 s: 65 / 65 SM_AK_* re-imported (0 FBX drift vs the manifest), 470 / 470 instances placed
+  (461 - 1 + 10), bounds max 0.070 cm, 0 gate failures, 0 envelope violations, 124 travelling + 1 level light, 12
+  shadowed <= 14, 83 / 83 shell ids; DJ_ArmoryHall actors 593 -> 602; new DojoLab children MI_DJA_AK_HWinPaperW / E
+  (the existing EMISSIVE_SCALE rule: 38.5 -> 2.615, 30.66 -> 2.082). 0 errors. L_Dojo sha256 now 30aff252...
+- check_sync --side dojo: exit 0. ArmoryHall lock claimed, `bump_manifest.py --record-sync DojoLab` (manifest diff:
+  last_synced.DojoLab 4 -> 5 only), released; check_sync exit 0 again.
+- dj_sc_verify (fresh): 9 / 9 gates PASS, incl. 5_gameplay (GM_DojoNinja -> BP_NinjaGasp; GM_Dojo ->
+  SandboxCharacter_CMC) and 9_armory_hall (sync rev 5 = manifest rev 5, 0 instances wrong / missing). Level actors
+  2,556 -> 2,565.
+- Interior walk routes in -game, the pawn itself (40: every ARM_*, HALL_*, interior CONTROL + the centre door):
+  ninja 40 / 40 as expected (31 reached, 9 blocked), SandboxCharacter_CMC 40 / 40, 0 differences, 0 errors / ensures.
+  Centre-door route ends with the feet at 0.522 m (0.603 before: the mat is gone). Max deviation 0.43 m on both pawns
+  = the play-test stage's waypoint-order walker metric (GASP 0.16 before that fix on the same routes), not a level change.
+- Open: the window paper casts shadows in L_Dojo (dj_armory_look.NO_SHADOW_PIECES is empty; the armory says no shadow
+  in ArmoryLab) - not changed (no look changes in this run). SM_AK_EntryMat.uasset stays in DojoLab, unreferenced. Lock
+  DojoNinjaPort kept: the port still has open items (16.7 ms p95 / ninja perf levers, D1, R4) and the perf2 round
+  continues.
+
+armory_hall synced rev 5
+
+## 2026-10-02 - NINJA CHARACTER: clean perf profile (perf2 round, PERF stage; measured, nothing applied)
+
+Output `ninja_character/perf2/` (RESULTS.json; `main/MAIN_TABLE.md`, `levers/LEVER_TABLE.md`, `levers/visual/`,
+`levers/profilegpu_PES_ninja.json`, `timeline/`, `contention/`, `tools/`). Harness: `Scripts/dojo/unreal/dj_ninja_perf2.py`
+(dj_ninja_perf.py's method + `csvprofile` per window with -csvGpuStats, runtime levers, HighResShot, ProfileGPU, jutsu by
+real key) via `perf2/tools/run_perf2.ps1` (one UnrealEditor-Cmd at a time, stops if DojoLab is open) and `tools/chain.sh`
+(idle gate + background monitor). Backup first: `perf2/start_backup/` (this file, Saved GameUserSettings.ini, SHA256SUMS of
+L_Dojo 30aff252..., BP_NinjaGasp, GM_Dojo, GM_DojoNinja, DefaultEngine/Game.ini, the DLL). After the stage all of them
+are byte-identical and no file under DojoLab Content / Config is newer: **no lever was applied to the project; every
+lever was a runtime change in a -game session, which is never saved.** No look change, nothing committed.
+
+### Machine
+- Idle gate before every chain (no blender.exe, no UnrealEditor*.exe, GPU < 40 % for 60 s): passed in 63 s each time; no
+  other Blender / Unreal process during any measured run (`*_background_load.csv`: CPU %, clock %, GPU, top-5 processes).
+- 1920x1080, `scalability 3`, t.MaxFPS 0, no vsync, r.ScreenPercentage 0. **Screen-percentage caveat (verify_r9):**
+  Saved GameUserSettings sg.ResolutionQuality=100 makes the -game start at r.ScreenPercentage 100; the run sets 0 (the
+  project curve), which is also 100 % at 1080p, so the numbers are the same either way here (ProfileGPU: TSR
+  1920x1080 -> 1920x1080). At 1440p and above the saved file would still override the 75 % curve.
+
+### 1. Clean profile (3 windows per view per pawn; processes alternated ninja, GASP x3, same view order; CSV = stat unit)
+| view (pawn in view) | pawn | FrameTime mean / median / p95 | GameThread mean | RenderThread busy | GPU mean / p95 |
+|---|---|---|---|---|---|
+| CAM_PlayerEyeSand | ninja | 11.99 / 11.92 / **12.84** | 4.86 | 9.64 | 11.13 / 11.39 |
+| CAM_PlayerEyeSand | GASP | 11.15 / 11.14 / **11.85** | 4.22 | 7.93 | 10.50 / 10.77 |
+| CAM_AK_CW_WestAisle | ninja | 13.28 / 13.28 / **14.23** | 5.21 | 10.04 | 12.42 / 12.66 |
+| CAM_AK_CW_WestAisle | GASP | 11.39 / 11.37 / **12.36** | 4.37 | 7.23 | 10.75 / 11.00 |
+| CAM_RiverRapids | ninja | 13.49 / 13.47 / **14.50** | 4.52 | 6.95 | 12.71 / 13.12 |
+| CAM_RiverRapids | GASP | 13.21 / 13.20 / **14.34** | 3.96 | 6.09 | 12.48 / 12.84 |
+| own camera at spawn | ninja | 10.76 / 10.76 / **11.72** | 4.62 | 7.68 | 10.06 / 10.32 |
+| own camera at spawn | GASP | 9.49 / 9.49 / **10.28** | 4.13 | 6.63 | 8.86 / 9.09 |
+
+- **16.7 ms p95 is met at every view by both pawns**; worst single window 14.67 ms; the 3 windows agree within 0.4 ms.
+  Ninja minus GASP: +0.84 / +1.89 / +0.28 / +1.27 ms mean (PES / WA / RR / own camera).
+- Timeline probe (ninja, PES, 30 back-to-back 10 s windows over 6 min, then RR, WA, PES again): 11.89-12.06 ms mean,
+  12.59-13.32 p95 the whole time; **no step over time and none after visiting other views**.
+
+### 2. Why the earlier 17-21 ms: machine state, not the level
+- The finish stage's +2.9 ms step (its CSVs of 2026-10-01 are still in DojoLab/Saved/Profiling/CSV; PES 11:17 vs 12:33):
+  the scene work is identical (124 lights, 13 unbatched, 1,215 vs 1,206 draw calls, GPU 10.58 vs 10.49 ms) while EVERY
+  CPU stat grew: game thread x1.60, RenderOther x1.82, RenderLighting x2.06, RDG x2.30, worker anim tasks x1.98. That is a
+  uniform CPU slowdown, not content (it also appeared mid-run at one camera change and stayed for every later run).
+- Reproduced in kind with this stage's own CPU load (busy-loop processes during the same profile, `contention/`):
+  8 loaders PES 13.30 / 14.76, 20 loaders 14.71 / 16.30 (clean 11.99 / 12.84) ms mean / p95, GPU unchanged,
+  RenderLighting x1.62, RDG x1.71, game thread x1.14, CPU clock 142 % -> 123 % of base. The play-test stage's gate checked
+  only Blender and GPU, not CPU, and its background log came out empty, so what loaded the CPU then is not known.
+- Reading: the earlier 17-21 ms are not a property of the level or the ninja. A perf gate needs a CPU-idle check too.
+
+### 3. Where the time goes (ninja at PES, clean): the render thread is the critical path
+- Render thread busy 9.6 ms (RenderOther 2.9, RenderLighting 2.1, RDG_CollectResources 0.9) plus waits; GPU 11.1 ms
+  (one ProfileGPU frame, 10.79 ms: RenderDeferredLighting 1.67 + 0.29, ShadowDepths 1.60, BasePass 0.91, Nanite VisBuffer
+  0.89, RayTracingScene 0.40, VolumetricCloud 0.29, TSR about 1.2; hair 0.13 ms as cards at 4.5 m). No single hot spot.
+
+### 4. Levers (scratch -game sessions, one at a time, A/B against the base window just before it; n = 2-3; visual cost
+from 1920x1080 HighResShots against the same-view base-to-base noise; `levers/LEVER_TABLE.md`, `levers/visual/pair_*.jpg`)
+| lever | gain mean / p95 ms | visual cost (measured) | verdict |
+|---|---|---|---|
+| interior lights max draw distance 25 m (+5 m fade), PES | 0.67 / 0.67 (lights drawn 124 -> 32) | hall interior through the door darker: doorway luma 59.8 -> 51.4 | owner's call; WA 0.07, RR 0.01 (no gain inside) |
+| all interior lights off (reference), PES | 0.98 / 1.02 | doorway luma 61.9 -> 43.9 | reference only |
+| interior shadows off (12 shadowed lights) | PES 0.12, WA 0.49 / 0.39 | WA: light leaks, frame luma 28.0 -> 30.6, 4.5 % px > 24 | not worth it |
+| rev-5 window paper (10 actors): shadows off / hidden | PES 0.08 / -0.01, WA -0.02 / -0.04 | hidden darkens WA (luma 28.0 -> 23.3) | **not a cost** |
+| Niagara RT cvars off (level) | -0.01 / 0.00 | none | the level FX are already out of RT (census: 0 of 110 Niagara components) |
+| r.RayTracing.Culling.Radius 30 m | 0.23 | frame luma 89.9 -> 95.6, 6.7 % px > 24 | reject |
+| ninja hidden (reference = the ninja's whole cost) | PES 0.85, WA 1.95, RR 0.49 | - | - |
+| **grooms (hair, brows, lashes) hidden** | PES 0.25, **WA 1.43**, own camera 0.22 | bald head | the ninja's main close-up cost |
+| hair cards instead of strands / r.HairStrands.MinLOD 2 or 4 | **WA 1.44-1.46**, PES 0, own camera 0 | at 3.5 m the hair DISAPPEARS (`levers/visual/WA_head_strands_cards_minlod2_hidden.jpg`); at 4.5 m it already renders as cards | not usable as is |
+| cloth suspended (CloakMH + the hidden Cloak) | 0.03-0.06 | cloak frozen | cloth is not a frame cost |
+| groom simulation off | 0.04 | within noise | no |
+| MetaHuman forced LOD 3 (all skeletal meshes) | 0.03-0.15 | within noise | no (body / face already LOD 1 at 4.5 m) |
+| skin cache off (r.SkinCache.Mode 0) | -0.01 | the skinned cypress trees change | no |
+| Niagara RT off during jutsu | Chidori 0.08-0.16, Fireball 0.15-0.5 | none | small; the jutsu FX are in RT by default (NS_ChidoriArcs, NS_Fire) |
+
+- Groom LOD from Python: `GroomComponent.SetForcedLOD` is not exposed, so the hair cvars above were used.
+
+### 5. Jutsu cost (cast by real key)
+- From the ninja's own camera (the gameplay case; no cast 10.18 / 11.15): Chidori 10.50 / 11.54, Fireball 10.84 / 11.95,
+  Summoning 10.25 / 11.29, ShadowClone 10.46 / 11.47 ms mean / p95. All far under 16.7.
+- Fireball flying INTO a camera (PES, the ninja placed facing the camera): p95 20.5-22.7 ms, a ~10-frame GPU burst up
+  to 49 ms while the flame fills the screen (translucent overdraw), not CPU. The FIRST fireball of a session also had one
+  121 ms hitch (shaders created 1128 -> 1149). Chidori at PES 13.8 / 15.0.
+
+### Recommendations (owner decides; nothing applied)
+1. No level or ninja lever is needed for 16.7 ms p95 at 1080p on an idle machine (worst views 12.8 / 14.2 / 14.5 / 11.7).
+2. Gate future perf runs on CPU load too (CPU % and clock), not only Blender / GPU; re-measure rather than lever when
+   numbers jump.
+3. If headroom is wanted: the interior-light draw distance (0.67 ms from the courtyard, darker doorway) is the only
+   level lever with a real gain; the window paper, Niagara RT and MetaHuman LOD are not costs.
+4. Ninja close-ups: the strand grooms cost 1.4 ms at 3.5 m. A cards fallback needs the groom's cards LOD fixed (it shows
+   nothing at close range today) before any LOD bias is worth trying.
+5. Fireball: a fade / size cap near the camera and a warm-up (PSO precache) of its systems would remove the in-camera
+   burst and the first-cast hitch.
+
+### Open
+- The play-test stage's 17-21 ms run: the cause of that day's CPU slowdown is not identified (no CPU log).
+- Harness note: one extra lever_3 session ran while this stage's own contention loaders were running (a chain left alive
+  by a background task); it is kept as `levers/lever_3_run2_underload*` (windows +0.4 to +1.9 ms) and not used in the
+  tables; the clean lever_3 data are `levers/lever_3_summary.json` (first block of lever_3.log.guard.txt).
+- Lock DojoNinjaPort kept (port items D1, R4 still open).

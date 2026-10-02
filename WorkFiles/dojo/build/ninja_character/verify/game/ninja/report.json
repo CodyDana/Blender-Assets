@@ -1,0 +1,1228 @@
+{
+ "cfg": {
+  "mode": "ninja",
+  "tag": "ninja",
+  "warm_s": 90
+ },
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "log": [
+  "0.00 registered",
+  "3.05 spawn {'pawn': '/Game/Ninja/Blueprints/BP_NinjaGasp.BP_NinjaGasp_C', 'game_mode': '/Game/Dojo/Blueprints/GM_DojoNinja.GM_DojoNinja_C', 'map': 'L_Dojo', 'loc': [2950.0, -1050.0, 88.2], 'yaw': 180.0}",
+  "103.06 perf spawn_0 {'frames': 774, 'mean_ms': 12.926, 'median_ms': 12.619, 'p95_ms': 17.309, 'p99_ms': 20.058, 'max_ms': 20.846}",
+  "114.07 perf spawn_1 {'frames': 769, 'mean_ms': 13.014, 'median_ms': 12.727, 'p95_ms': 17.998, 'p99_ms': 21.942, 'max_ms': 23.249}",
+  "125.08 perf spawn_2 {'frames': 756, 'mean_ms': 13.232, 'median_ms': 12.982, 'p95_ms': 18.288, 'p99_ms': 20.642, 'max_ms': 48.333}",
+  "139.57 gait run_W {'max_speed': 575.0, 'speed_last_held': [575.0], 'cam_lateral_abs_max_cm': 0.0, 'cam_behind_cm': 411.0}",
+  "143.90 gait sprint_Shift_W {'max_speed': 1000.0, 'speed_last_held': [1000.0], 'cam_lateral_abs_max_cm': 0.0, 'cam_behind_cm': 439.4}",
+  "148.60 gait walk_Ctrl_W {'max_speed': 200.0, 'speed_last_held': [200.0], 'cam_lateral_abs_max_cm': 0.0, 'cam_behind_cm': 383.1}",
+  "154.36 traversal Cistern_E {'marker_top_m': 1.25, 'end_feet_m': 1.271, 'rise_cm': 184.4, 'gasp_montages': ['AM_M_Neutral_Traversal_Catch_Cliff_high_standF'], 'modes': ['<MovementMode.MOVE_FALLING: 3>', '<MovementMode.MOVE_FLYING: 5>', '<MovementMode.MOVE_WALKING: 1>'], 'space_pressed': True, 'on_top': True}",
+  "159.47 traversal Wall_E_S {'marker_top_m': 2.0, 'end_feet_m': 2.021, 'rise_cm': 200.5, 'gasp_montages': ['AM_M_Neutral_Traversal_Catch_Cliff_high_standF'], 'modes': ['<MovementMode.MOVE_FLYING: 5>', '<MovementMode.MOVE_WALKING: 1>'], 'space_pressed': True, 'on_top': True}",
+  "166.18 traversal Pavilion_Plinth {'marker_top_m': 1.0, 'end_feet_m': 0.03, 'rise_cm': 0.0, 'gasp_montages': [], 'modes': ['<MovementMode.MOVE_WALKING: 1>'], 'space_pressed': False, 'on_top': False}",
+  "173.64 jutsu stand_ShadowClone: seals 3 completed True upper 48/48 max {'NinjaFireball': 0, 'NinjaGroundSeal': 0, 'NinjaHandEffect': 0, 'pawns_of_class': 2}",
+  "184.74 jutsu stand_GreatFireball: seals 6 completed True upper 68/80 max {'NinjaFireball': 1, 'NinjaGroundSeal': 0, 'NinjaHandEffect': 0, 'pawns_of_class': 1}",
+  "194.74 jutsu stand_Summoning: seals 5 completed True upper 73/85 max {'NinjaFireball': 0, 'NinjaGroundSeal': 1, 'NinjaHandEffect': 0, 'pawns_of_class': 1}",
+  "205.04 jutsu stand_Chidori: seals 3 completed True upper 46/46 max {'NinjaFireball': 0, 'NinjaGroundSeal': 0, 'NinjaHandEffect': 1, 'pawns_of_class': 1}",
+  "215.43 jutsu run_GreatFireball: seals 6 completed True upper 73/73 max {'NinjaFireball': 1, 'NinjaGroundSeal': 0, 'NinjaHandEffect': 0, 'pawns_of_class': 1}",
+  "223.30 jutsu run_ShadowClone: seals 3 completed True upper 43/43 max {'NinjaFireball': 0, 'NinjaGroundSeal': 0, 'NinjaHandEffect': 0, 'pawns_of_class': 2}"
+ ],
+ "res": {
+  "spawn": {
+   "pawn": "/Game/Ninja/Blueprints/BP_NinjaGasp.BP_NinjaGasp_C",
+   "game_mode": "/Game/Dojo/Blueprints/GM_DojoNinja.GM_DojoNinja_C",
+   "map": "L_Dojo",
+   "loc": [
+    2950.0,
+    -1050.0,
+    88.2
+   ],
+   "yaw": 180.0
+  },
+  "cmc_spawn": {
+   "class": "BP_NinjaGasp_C",
+   "capsule_r": 30.0,
+   "capsule_hh": 86.0,
+   "max_walk_speed": 575.0,
+   "jump_z_velocity": 500.0,
+   "max_step_height": 45.0,
+   "max_acceleration": 3000.0,
+   "braking_deceleration_walking": 6000.0,
+   "ground_friction": 20.0,
+   "gravity_scale": 1.0,
+   "air_control": 0.2,
+   "jump_max_count": 1
+  },
+  "cam_spawn": {
+   "lateral_cm": -0.0,
+   "behind_cm": 375.0,
+   "above_cm": 70.0,
+   "fov": 85.0,
+   "cvar": 0
+  },
+  "visual_spawn": {
+   "components": [
+    "AC_FoleyEvents:AC_FoleyEvents_C",
+    "AC_PreCMCTick:AC_PreCMCTick_C",
+    "AC_SmartObjectAnimation:AC_SmartObjectAnimation_C",
+    "AC_TraversalLogic:AC_TraversalLogic_C",
+    "Camera(NotUsedByDefault):CameraComponent",
+    "CameraProxyMeshComponent_0:CameraProxyMeshComponent",
+    "CameraProxyMeshComponent_1:CameraProxyMeshComponent",
+    "CharMoveComp:CharacterMovementComponent",
+    "CharacterMesh0:SkeletalMeshComponent",
+    "CollisionCylinder:CapsuleComponent",
+    "DrawFrustumComponent_0:DrawFrustumComponent",
+    "DrawFrustumComponent_1:DrawFrustumComponent",
+    "GameplayCamera:GameplayCameraComponent",
+    "MotionWarping:MotionWarpingComponent",
+    "NinjaJutsu:NinjaJutsuComponent",
+    "NinjaRunStyle:NinjaRunStyleComponent",
+    "NinjaTurn:NinjaTurnComponent",
+    "OutputCameraComponent:CineCameraComponent",
+    "PawnInputComponent0:EnhancedInputComponent",
+    "SpringArm:SpringArmComponent",
+    "VisualOverride:ChildActorComponent"
+   ],
+   "gasp_mesh_visible": false,
+   "gasp_mesh_hidden_in_game": false,
+   "child_actors": [
+    "VisualOverride->BP_NinjaVisual_C"
+   ],
+   "visual_actor": "BP_NinjaVisual_C",
+   "metahuman_active": true,
+   "host": {
+    "mesh": "SKM_Manny_Simple",
+    "visible": false,
+    "hidden_in_game": false
+   },
+   "body": {
+    "mesh": "SKM_MH_PlayerDefault_BodyMesh",
+    "visible": true,
+    "owner": "/Game/MetaHumans/MH_PlayerDefault/BP_MH_PlayerDefault.BP_MH_PlayerDefault_C",
+    "hidden_owner": false
+   },
+   "mh_skeletal": [
+    "Body:SKM_MH_PlayerDefault_BodyMesh:vis=True",
+    "Face:SKM_MH_PlayerDefault_FaceMesh:vis=True"
+   ],
+   "grooms": [
+    "Hair:GroomAsset_0:vis=True",
+    "Eyebrows:Eyebrows_M_SlightArch:vis=True",
+    "Fuzz:None:vis=True",
+    "Eyelashes:Eyelashes_S_Fine:vis=True",
+    "Mustache:None:vis=True",
+    "Beard:None:vis=True"
+   ],
+   "garments": [
+    {
+     "name": "CloakMH",
+     "mesh": "SKM_BlackCloak_MH",
+     "visible": true,
+     "leader": "Body",
+     "attach": "Body",
+     "cloth_suspended": false
+    }
+   ],
+   "jutsu_visual_mesh": "Manny:SKM_Manny_Simple"
+  },
+  "cloth_spawn": {
+   "p.ClothPhysics": 1,
+   "interactor": "ChaosClothingSimulationInteractor",
+   "num_cloths": 1.0,
+   "num_dynamic_particles": 2547.0,
+   "num_kinematic_particles": 873.0,
+   "simulation_time": 10.252,
+   "suspended": false
+  },
+  "bind": {
+   "on_jutsu_seal": true,
+   "on_jutsu_completed": true,
+   "on_jutsu_cancelled": true,
+   "on_jutsu_hand_planted": true,
+   "on_clone_spawned": true
+  },
+  "jutsu_list": [
+   "DA_Jutsu_ShadowClone:IA_Jutsu",
+   "DA_Jutsu_GreatFireball:IA_Jutsu_GreatFireball",
+   "DA_Jutsu_Summoning:IA_Jutsu_Summoning",
+   "DA_Jutsu_Chidori:IA_Jutsu_Chidori"
+  ],
+  "imc": [],
+  "cam_after_warm": {
+   "lateral_cm": -0.0,
+   "behind_cm": 375.0,
+   "above_cm": 70.0,
+   "fov": 85.0,
+   "cvar": 0
+  },
+  "perf": {
+   "spawn_0": {
+    "frames": 774,
+    "mean_ms": 12.926,
+    "median_ms": 12.619,
+    "p95_ms": 17.309,
+    "p99_ms": 20.058,
+    "max_ms": 20.846
+   },
+   "spawn_1": {
+    "frames": 769,
+    "mean_ms": 13.014,
+    "median_ms": 12.727,
+    "p95_ms": 17.998,
+    "p99_ms": 21.942,
+    "max_ms": 23.249
+   },
+   "spawn_2": {
+    "frames": 756,
+    "mean_ms": 13.232,
+    "median_ms": 12.982,
+    "p95_ms": 18.288,
+    "p99_ms": 20.642,
+    "max_ms": 48.333
+   }
+  },
+  "visual_after_warm": {
+   "components": [
+    "AC_FoleyEvents:AC_FoleyEvents_C",
+    "AC_PreCMCTick:AC_PreCMCTick_C",
+    "AC_SmartObjectAnimation:AC_SmartObjectAnimation_C",
+    "AC_TraversalLogic:AC_TraversalLogic_C",
+    "Camera(NotUsedByDefault):CameraComponent",
+    "CameraProxyMeshComponent_0:CameraProxyMeshComponent",
+    "CameraProxyMeshComponent_1:CameraProxyMeshComponent",
+    "CharMoveComp:CharacterMovementComponent",
+    "CharacterMesh0:SkeletalMeshComponent",
+    "CollisionCylinder:CapsuleComponent",
+    "DrawFrustumComponent_0:DrawFrustumComponent",
+    "DrawFrustumComponent_1:DrawFrustumComponent",
+    "GameplayCamera:GameplayCameraComponent",
+    "MotionWarping:MotionWarpingComponent",
+    "NinjaJutsu:NinjaJutsuComponent",
+    "NinjaRunStyle:NinjaRunStyleComponent",
+    "NinjaTurn:NinjaTurnComponent",
+    "OutputCameraComponent:CineCameraComponent",
+    "PawnInputComponent0:EnhancedInputComponent",
+    "SpringArm:SpringArmComponent",
+    "VisualOverride:ChildActorComponent"
+   ],
+   "gasp_mesh_visible": false,
+   "gasp_mesh_hidden_in_game": false,
+   "child_actors": [
+    "VisualOverride->BP_NinjaVisual_C"
+   ],
+   "visual_actor": "BP_NinjaVisual_C",
+   "metahuman_active": true,
+   "host": {
+    "mesh": "SKM_Manny_Simple",
+    "visible": false,
+    "hidden_in_game": false
+   },
+   "body": {
+    "mesh": "SKM_MH_PlayerDefault_BodyMesh",
+    "visible": true,
+    "owner": "/Game/MetaHumans/MH_PlayerDefault/BP_MH_PlayerDefault.BP_MH_PlayerDefault_C",
+    "hidden_owner": false
+   },
+   "mh_skeletal": [
+    "Body:SKM_MH_PlayerDefault_BodyMesh:vis=True",
+    "Face:SKM_MH_PlayerDefault_FaceMesh:vis=True"
+   ],
+   "grooms": [
+    "Hair:GroomAsset_0:vis=True",
+    "Eyebrows:Eyebrows_M_SlightArch:vis=True",
+    "Fuzz:None:vis=True",
+    "Eyelashes:Eyelashes_S_Fine:vis=True",
+    "Mustache:None:vis=True",
+    "Beard:None:vis=True"
+   ],
+   "garments": [
+    {
+     "name": "CloakMH",
+     "mesh": "SKM_BlackCloak_MH",
+     "visible": true,
+     "leader": "Body",
+     "attach": "Body",
+     "cloth_suspended": false
+    }
+   ],
+   "jutsu_visual_mesh": "Manny:SKM_Manny_Simple"
+  },
+  "cloth_idle": [
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.4086,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.0451,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.8648,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.6225,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.4469,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.5679,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.7176,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.8321,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.7485,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 4.9268,
+    "suspended": false
+   }
+  ],
+  "cloth_run": [
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.1963,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.0956,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.1657,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.297,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.3684,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.6254,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.785,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.999,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.9411,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.9743,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.9809,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.8503,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.7957,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.7977,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.9459,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 6.0915,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 6.0776,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 6.2095,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 6.192,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 6.1325,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 6.0459,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.9806,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.9459,
+    "suspended": false
+   },
+   {
+    "p.ClothPhysics": 1,
+    "interactor": "ChaosClothingSimulationInteractor",
+    "num_cloths": 1.0,
+    "num_dynamic_particles": 2547.0,
+    "num_kinematic_particles": 873.0,
+    "simulation_time": 5.8006,
+    "suspended": false
+   }
+  ],
+  "gaits": {
+   "run_W": {
+    "max_speed": 575.0,
+    "speed_last_held": [
+     575.0
+    ],
+    "cam_lateral_abs_max_cm": 0.0,
+    "cam_behind_cm": 411.0
+   },
+   "sprint_Shift_W": {
+    "max_speed": 1000.0,
+    "speed_last_held": [
+     1000.0
+    ],
+    "cam_lateral_abs_max_cm": 0.0,
+    "cam_behind_cm": 439.4
+   },
+   "walk_Ctrl_W": {
+    "max_speed": 200.0,
+    "speed_last_held": [
+     200.0
+    ],
+    "cam_lateral_abs_max_cm": 0.0,
+    "cam_behind_cm": 383.1
+   }
+  },
+  "traversal": {
+   "Cistern_E": {
+    "marker_top_m": 1.25,
+    "end_feet_m": 1.271,
+    "rise_cm": 184.4,
+    "gasp_montages": [
+     "AM_M_Neutral_Traversal_Catch_Cliff_high_standF"
+    ],
+    "modes": [
+     "<MovementMode.MOVE_FALLING: 3>",
+     "<MovementMode.MOVE_FLYING: 5>",
+     "<MovementMode.MOVE_WALKING: 1>"
+    ],
+    "space_pressed": true,
+    "on_top": true
+   },
+   "Wall_E_S": {
+    "marker_top_m": 2.0,
+    "end_feet_m": 2.021,
+    "rise_cm": 200.5,
+    "gasp_montages": [
+     "AM_M_Neutral_Traversal_Catch_Cliff_high_standF"
+    ],
+    "modes": [
+     "<MovementMode.MOVE_FLYING: 5>",
+     "<MovementMode.MOVE_WALKING: 1>"
+    ],
+    "space_pressed": true,
+    "on_top": true
+   },
+   "Pavilion_Plinth": {
+    "marker_top_m": 1.0,
+    "end_feet_m": 0.03,
+    "rise_cm": 0.0,
+    "gasp_montages": [],
+    "modes": [
+     "<MovementMode.MOVE_WALKING: 1>"
+    ],
+    "space_pressed": false,
+    "on_top": false
+   }
+  },
+  "jutsu": {
+   "stand_ShadowClone": {
+    "key": "F",
+    "run_keys": [],
+    "events": [
+     [
+      "seal",
+      "DA_Jutsu_ShadowClone",
+      0,
+      0.011
+     ],
+     [
+      "seal",
+      "DA_Jutsu_ShadowClone",
+      1,
+      0.162
+     ],
+     [
+      "seal",
+      "DA_Jutsu_ShadowClone",
+      2,
+      0.325
+     ],
+     [
+      "clone_spawned",
+      "BP_NinjaGasp_C_1",
+      -1,
+      1.107
+     ],
+     [
+      "completed",
+      "DA_Jutsu_ShadowClone",
+      -1,
+      1.107
+     ]
+    ],
+    "seal_events": 3,
+    "completed": true,
+    "cancelled": false,
+    "casting_rows": 48,
+    "casting_rows_seal_on_upper": 48,
+    "casting_rows_upper_active": 48,
+    "casting_rows_seal_on_default": 0,
+    "seal_assets_seen": [
+     "A_Seal_Ram",
+     "A_Seal_Snake",
+     "A_Seal_Tiger"
+    ],
+    "seal_w_max": 1.0,
+    "finish_rows": 0,
+    "finish_rows_on_default": 0,
+    "speed_while_casting": [
+     0.0,
+     0.0
+    ],
+    "counts_before": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "max_counts": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 2
+    },
+    "counts_end": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 2
+    },
+    "clones_end": [
+     {
+      "name": "BP_NinjaGasp_C_1",
+      "ctrl": "AIController",
+      "leader": "BP_NinjaGasp_C_0",
+      "loc": [
+       1600.0,
+       -1260.0,
+       88.0
+      ],
+      "mh_visible": true
+     }
+    ]
+   },
+   "stand_GreatFireball": {
+    "key": "Two",
+    "run_keys": [],
+    "events": [
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      0,
+      0.012
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      1,
+      0.174
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      2,
+      0.337
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      3,
+      0.497
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      4,
+      1.054
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      5,
+      1.212
+     ],
+     [
+      "completed",
+      "DA_Jutsu_GreatFireball",
+      -1,
+      1.681
+     ]
+    ],
+    "seal_events": 6,
+    "completed": true,
+    "cancelled": false,
+    "casting_rows": 80,
+    "casting_rows_seal_on_upper": 68,
+    "casting_rows_upper_active": 68,
+    "casting_rows_seal_on_default": 0,
+    "seal_assets_seen": [
+     "A_Seal_Boar",
+     "A_Seal_Monkey",
+     "A_Seal_Ram",
+     "A_Seal_Snake",
+     "A_Seal_Tiger"
+    ],
+    "seal_w_max": 1.0,
+    "finish_rows": 0,
+    "finish_rows_on_default": 0,
+    "speed_while_casting": [
+     0.0,
+     0.0
+    ],
+    "counts_before": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "max_counts": {
+     "NinjaFireball": 1,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "counts_end": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "clones_end": [],
+    "fireball_max_dist_cm": 895.4,
+    "fireball_rows": 45
+   },
+   "stand_Summoning": {
+    "key": "Three",
+    "run_keys": [],
+    "events": [
+     [
+      "seal",
+      "DA_Jutsu_Summoning",
+      0,
+      0.221
+     ],
+     [
+      "seal",
+      "DA_Jutsu_Summoning",
+      1,
+      0.374
+     ],
+     [
+      "seal",
+      "DA_Jutsu_Summoning",
+      2,
+      0.53
+     ],
+     [
+      "seal",
+      "DA_Jutsu_Summoning",
+      3,
+      1.062
+     ],
+     [
+      "seal",
+      "DA_Jutsu_Summoning",
+      4,
+      1.221
+     ],
+     [
+      "hand_planted",
+      "DA_Jutsu_Summoning",
+      [
+       1651.1,
+       -1385.3,
+       0.0
+      ],
+      1.798
+     ],
+     [
+      "completed",
+      "DA_Jutsu_Summoning",
+      -1,
+      1.799
+     ]
+    ],
+    "seal_events": 5,
+    "completed": true,
+    "cancelled": false,
+    "casting_rows": 85,
+    "casting_rows_seal_on_upper": 73,
+    "casting_rows_upper_active": 73,
+    "casting_rows_seal_on_default": 0,
+    "seal_assets_seen": [
+     "A_Seal_Bird",
+     "A_Seal_Boar",
+     "A_Seal_Dog",
+     "A_Seal_Ram"
+    ],
+    "seal_w_max": 1.0,
+    "finish_rows": 52,
+    "finish_rows_on_default": 51,
+    "speed_while_casting": [
+     0.0,
+     0.0
+    ],
+    "counts_before": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "max_counts": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 1,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "counts_end": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 1,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "clones_end": [],
+    "ground_seal_classes": [
+     "BP_SummoningSeal_C"
+    ],
+    "ground_seal_loc_first": [
+     1651.1,
+     -1385.3,
+     0.0
+    ]
+   },
+   "stand_Chidori": {
+    "key": "Four",
+    "run_keys": [],
+    "events": [
+     [
+      "seal",
+      "DA_Jutsu_Chidori",
+      0,
+      0.015
+     ],
+     [
+      "seal",
+      "DA_Jutsu_Chidori",
+      1,
+      0.167
+     ],
+     [
+      "seal",
+      "DA_Jutsu_Chidori",
+      2,
+      0.317
+     ],
+     [
+      "completed",
+      "DA_Jutsu_Chidori",
+      -1,
+      1.351
+     ]
+    ],
+    "seal_events": 3,
+    "completed": true,
+    "cancelled": false,
+    "casting_rows": 46,
+    "casting_rows_seal_on_upper": 46,
+    "casting_rows_upper_active": 46,
+    "casting_rows_seal_on_default": 0,
+    "seal_assets_seen": [
+     "A_Seal_Hare",
+     "A_Seal_Monkey",
+     "A_Seal_Ox"
+    ],
+    "seal_w_max": 1.0,
+    "finish_rows": 267,
+    "finish_rows_on_default": 237,
+    "speed_while_casting": [
+     0.0,
+     0.0
+    ],
+    "counts_before": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "max_counts": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 1,
+     "pawns_of_class": 1
+    },
+    "counts_end": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 1,
+     "pawns_of_class": 1
+    },
+    "clones_end": [],
+    "hand_effect_classes": [
+     "BP_ChidoriLightning_C"
+    ],
+    "hand_effect_parent": [
+     "BP_NinjaVisual_C",
+     "None"
+    ],
+    "hand_effect_rows": 294
+   },
+   "run_GreatFireball": {
+    "key": "Two",
+    "run_keys": [
+     "W"
+    ],
+    "events": [
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      0,
+      0.012
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      1,
+      0.175
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      2,
+      0.328
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      3,
+      0.478
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      4,
+      0.641
+     ],
+     [
+      "seal",
+      "DA_Jutsu_GreatFireball",
+      5,
+      0.79
+     ],
+     [
+      "completed",
+      "DA_Jutsu_GreatFireball",
+      -1,
+      1.1
+     ]
+    ],
+    "seal_events": 6,
+    "completed": true,
+    "cancelled": false,
+    "casting_rows": 73,
+    "casting_rows_seal_on_upper": 73,
+    "casting_rows_upper_active": 73,
+    "casting_rows_seal_on_default": 0,
+    "seal_assets_seen": [
+     "A_Seal_Boar",
+     "A_Seal_Horse",
+     "A_Seal_Monkey",
+     "A_Seal_Ram",
+     "A_Seal_Snake",
+     "A_Seal_Tiger"
+    ],
+    "seal_w_max": 1.0,
+    "finish_rows": 0,
+    "finish_rows_on_default": 0,
+    "speed_while_casting": [
+     575.0,
+     575.0
+    ],
+    "counts_before": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "max_counts": {
+     "NinjaFireball": 1,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "counts_end": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "clones_end": [],
+    "fireball_max_dist_cm": 2032.9,
+    "fireball_rows": 148
+   },
+   "run_ShadowClone": {
+    "key": "F",
+    "run_keys": [
+     "W"
+    ],
+    "events": [
+     [
+      "seal",
+      "DA_Jutsu_ShadowClone",
+      0,
+      0.017
+     ],
+     [
+      "seal",
+      "DA_Jutsu_ShadowClone",
+      1,
+      0.175
+     ],
+     [
+      "seal",
+      "DA_Jutsu_ShadowClone",
+      2,
+      0.33
+     ],
+     [
+      "clone_spawned",
+      "BP_NinjaGasp_C_2",
+      -1,
+      0.687
+     ],
+     [
+      "completed",
+      "DA_Jutsu_ShadowClone",
+      -1,
+      0.687
+     ]
+    ],
+    "seal_events": 3,
+    "completed": true,
+    "cancelled": false,
+    "casting_rows": 43,
+    "casting_rows_seal_on_upper": 43,
+    "casting_rows_upper_active": 43,
+    "casting_rows_seal_on_default": 0,
+    "seal_assets_seen": [
+     "A_Seal_Ram",
+     "A_Seal_Snake",
+     "A_Seal_Tiger"
+    ],
+    "seal_w_max": 1.0,
+    "finish_rows": 0,
+    "finish_rows_on_default": 0,
+    "speed_while_casting": [
+     575.0,
+     575.0
+    ],
+    "counts_before": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 1
+    },
+    "max_counts": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 2
+    },
+    "counts_end": {
+     "NinjaFireball": 0,
+     "NinjaGroundSeal": 0,
+     "NinjaHandEffect": 0,
+     "pawns_of_class": 2
+    },
+    "clones_end": [
+     {
+      "name": "BP_NinjaGasp_C_2",
+      "ctrl": "AIController",
+      "leader": "BP_NinjaGasp_C_0",
+      "loc": [
+       3909.7,
+       -1060.0,
+       88.2
+      ],
+      "mh_visible": true
+     }
+    ]
+   }
+  },
+  "clones_after_F": {
+   "NinjaFireball": 0,
+   "NinjaGroundSeal": 0,
+   "NinjaHandEffect": 0,
+   "pawns_of_class": 1,
+   "clones": [],
+   "fireball_locs": [],
+   "hand_effect": [],
+   "ground_seal": []
+  },
+  "counts_end": {
+   "NinjaFireball": 0,
+   "NinjaGroundSeal": 0,
+   "NinjaHandEffect": 0,
+   "pawns_of_class": 2,
+   "clones": [
+    {
+     "name": "BP_NinjaGasp_C_2",
+     "ctrl": "AIController",
+     "leader": "BP_NinjaGasp_C_0",
+     "loc": [
+      3909.7,
+      -1060.0,
+      88.2
+     ],
+     "mh_visible": true
+    }
+   ],
+   "fireball_locs": [],
+   "hand_effect": [],
+   "ground_seal": []
+  },
+  "cmc_end": {
+   "class": "BP_NinjaGasp_C",
+   "capsule_r": 30.0,
+   "capsule_hh": 86.0,
+   "max_walk_speed": 575.0,
+   "jump_z_velocity": 500.0,
+   "max_step_height": 45.0,
+   "max_acceleration": 3000.0,
+   "braking_deceleration_walking": 6000.0,
+   "ground_friction": 20.0,
+   "gravity_scale": 1.0,
+   "air_control": 0.2,
+   "jump_max_count": 1
+  },
+  "cam_end": {
+   "lateral_cm": 0.0,
+   "behind_cm": 369.4,
+   "above_cm": 135.1,
+   "fov": 85.0,
+   "cvar": 0
+  }
+ },
+ "shots": [
+  "C00_idle_back.png",
+  "C01_stop_0.25s_side.png",
+  "C02_stop_2.3s_side.png",
+  "T01_cistern_mid.png",
+  "J_ShadowClone_seal_front.png",
+  "J_ShadowClone_result.png",
+  "J_GreatFireball_seal_front.png",
+  "J_Summoning_seal_front.png",
+  "J_Summoning_result.png",
+  "J_Chidori_seal_front.png"
+ ],
+ "passed_run": true,
+ "sec": 223.3
+}
