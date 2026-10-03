@@ -41,6 +41,17 @@ The test render in section 7 proves this: the words `RING END` sit at the ring e
 
 1536 is not a power of two. Unreal's texture factory imports a non-power-of-two PNG with **Mip Gen Settings = NoMipmaps**, and setting Power Of Two Mode to Stretch afterwards does **not** reset it — measured twice in fresh UE 5.8.2 processes during the build's review. Without the mip setting the mask ships with a single mip, and lettering painted into it aliases and shimmers as soon as the kunai is more than a metre away (the 72 mm band is about 78 px wide at the LOD1 switch and 27 px at 2.5 m). `Scripts/shuriken/ue_import_textures.py` sets all five and its `verify` mode fails on NoMipmaps.
 
+**Why the source stays 1536 x 256 (checked 2026-10-02, UE 5.8.3).** Unreal's Stretch To Power Of Two resamples the image to 2048 x 256 when it builds the texture, so you author at square texels and the band keeps its exact 0..1 mapping (the material divides by the band rectangle, not by a pixel count). Shipping a 2048 x 256 PNG instead would make you draw text squashed by 3/4 along the band to come out right, and would change the documented size for nothing. Measured in fresh processes on `/Game/NinjaPack/Textures/Shuriken/T_Kunai_Lettering`:
+
+| | Built size | In memory | Mip levels |
+|---|---|---|---|
+| Shipped texture | 2048 x 256 | 720,896 bytes | **all 12** (2048 x 256 down to 1 x 1 is 699,055 bytes) |
+| A new PNG re-imported over the shipped texture | 2048 x 256 | 720,896 bytes | all 12: the settings survive the reimport |
+| The same texture with mips switched off (control) | 2048 x 256 | 524,288 bytes | 1 |
+| The same PNG imported as a NEW texture with Unreal's defaults | 1536 x 256 | one level | 1, plus sRGB on and Wrap |
+
+With test text in the band, the shipped mip chain keeps the lettering's error against an 8x-supersampled reference 13 / 19 / 35 % lower at 1 / 2.5 / 5 m, and its pixel shimmer under sub-pixel camera motion 40 % lower at 1 m and 22 % lower at 2.5 m. Without mips the thin strokes are skipped: the lettering keeps 35 % of its true energy at 1 m and 62 % at 2.5 m, and at 5 m it drops out of the frame entirely, then pops back in others. Evidence: `WorkFiles/kunai/lettering_mips/` (`lettering_mip_test.py`, `analyse_mips.py`, `mip_analysis.json`, `mip_compare_sheet.png`, `diag2/diag2_sheet.png`). The pack-materials `verify` step (`Scripts/unreal/materials/np_textures.py`) now gates the BUILT chain of every Lettering texture (power-of-two built size, memory >= the full chain), not just the flags.
+
 ## 4. The band's UV rectangle
 
 The kunai has two material slots. The steel (slot 0, `M_Shuriken_Master`) keeps its islands in UV tile u 0..1. The wrap (slot 1, `M_Kunai_Wrap`) keeps its islands in **UV tile u 1..2**, so the two layouts never overlap. Its maps (`T_Kunai_Wrap_BC / _ORM / _N`, 1024 px) are sampled with **Wrap** addressing, which is Unreal's default and reads u 1..2 from the same texels as u 0..1.
@@ -75,13 +86,13 @@ Normal    = T_Kunai_Wrap_N                                   // the ink follows 
 
 Suggested parameters: `InkColour` light worn paint (linear 0.62, 0.56, 0.44) on the dark wrap, or near-black on the undyed wrap (`T_Kunai_Wrap_Natural_BC`); `InkRoughness` 0.6. With the shipped blank mask `Ink` is 0 everywhere and the graph changes nothing.
 
-**Status:** the pack has no Unreal materials yet. The validation import runs with `import_materials=False` and both slots bind to WorldGridMaterial. This graph is the specification for the pack's material pass.
+**Status (2026-10-02):** built. The pack materials implement this graph as `MF_LetteringBand` inside `M_Fabric_Master`, switched on per instance by **Use Lettering** (see `Exports/Shuriken/MATERIALS_README.md`, "Kunai: lettering"). It was checked in Unreal with the test pattern: the text lands in the band, upright from the +Z face with the tip to the right, and a black mask changes nothing (`WorkFiles/kunai/lettering_mips/diag2/diag2_sheet.png`).
 
 ## 6. Swapping your lettering in
 
 1. Draw your text white on black in a **1536 x 256** greyscale image. It must be upright, left to right, and have a margin of about 10 px. Keep your own artwork: no traced or franchise text if the kunai goes to Fab (see the Fab note below).
 2. Save it over `Exports/Shuriken/Textures/T_Kunai_Lettering.png` with the same name, or save it as a new texture and point the material's `T_Kunai_Lettering` parameter at it.
-3. Unreal: reimport the texture, or import it with `ue_import_textures.py`. Check the five flags in section 3 — **Mip Gen Settings included**, or the text will shimmer at a distance.
+3. Unreal: the easy way is to reimport it **over** the shipped `T_Kunai_Lettering` (Content Browser: right-click > Reimport With New File, or drag the PNG onto it and Replace). Its settings survive, so you get the full mip chain (measured, section 3). If you import it as a new texture, set the five flags in section 3 yourself, **Power Of Two Mode and Mip Gen Settings included**, or it imports with no mips and the text shimmers at a distance. `ue_import_textures.py` sets all five too.
 4. Check it in Blender before Unreal:
 
    ```

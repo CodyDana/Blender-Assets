@@ -87,14 +87,24 @@ The grip has a blank band for your own text. To letter it:
 
 1. Paint white text on a black **1536 x 256** greyscale image (white = ink). Look at the band face-on with the tip to
    your right: the image reads left to right from the ring end towards the tip. For extreme close-ups use 3072 x 512.
-2. Import it with sRGB **off**, Compression **Grayscale**, Address X and Y **Clamp**, Power Of Two Mode **Stretch to
-   power of two**, and Mip Gen Settings **From Texture Group** (a 1536-wide image otherwise imports without mips and
-   shimmers at a distance).
+2. **Easiest: put it into the shipped texture.** In the Content Browser, right-click `T_Kunai_Lettering` > **Reimport
+   With New File** (or drag your PNG onto it and choose Replace). The shipped texture's settings stay, so you get a
+   full mip chain with nothing to set: Unreal stretches the 1536 x 256 image to 2048 x 256 internally and builds all
+   12 mip levels. The stretch is invisible because the band maps the whole image to 0..1, and it keeps the text from
+   shimmering at a distance.
+   **If you import it as a NEW texture instead**, Unreal's defaults are wrong for a mask (measured on UE 5.8.3: sRGB on,
+   Wrap, no stretch and **no mips at all**). Set five things in its details: sRGB **off**, Compression **Grayscale**,
+   Address X and Y **Clamp**, Power Of Two Mode **Stretch to power of two**, and Mip Gen Settings **From Texture
+   Group**. Without the last two the lettering shimmers and breaks up beyond about a metre.
 3. In `MI_Kunai_Plain_Wrap`: tick **05 Lettering > Use Lettering**, set **Lettering Mask** to your image, and pick
    **Lettering Colour** (a light worn paint `(0.62, 0.56, 0.44)` suits the dark grip) and **Lettering Roughness**.
+   The grip shows Unreal's grey checker for a few seconds after you tick the box, while the new shader compiles.
 
 Leave **Lettering Band UV** as it is: it is where the band sits on the kunai's UVs. The lettering options show on the
 other fabric items too but do nothing there.
+
+Keep the image at 6:1. 1536 x 256 (21 px/mm on the 72 x 12 mm band) is plenty for gameplay; 3072 x 512 is for
+extreme close-ups and takes the same settings (Unreal stretches it to 4096 x 512).
 
 ## Supported setups
 

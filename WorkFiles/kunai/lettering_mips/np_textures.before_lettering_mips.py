@@ -200,23 +200,6 @@ def run_import(plan: dict) -> dict:
     return report
 
 
-def _built_full_chain(tex, info: dict) -> bool:
-    """A single-channel (G8, one byte per texel) texture holds its FULL mip chain in memory: built size a power of two on
-    both axes and in-memory bytes >= the sum of every level down to 1 x 1. One level would be exactly w x h bytes."""
-    s = tex.blueprint_get_built_texture_size()
-    w, h = int(s.x), int(s.y)
-    mem = int(tex.blueprint_get_memory_size())
-    full, mw, mh = 0, w, h
-    while w and h:
-        full += mw * mh
-        if mw == 1 and mh == 1:
-            break
-        mw, mh = max(1, mw // 2), max(1, mh // 2)
-    info["built_size"], info["memory_bytes"], info["full_chain_bytes"] = [w, h], mem, full
-    pot = all(v > 0 and (v & (v - 1)) == 0 for v in (w, h))
-    return bool(pot and full and mem >= full)
-
-
 def verify(plan: dict) -> dict:
     want_by_kind = intents(plan["spec"])
     out = {"textures": {}}
@@ -233,12 +216,6 @@ def verify(plan: dict) -> dict:
             imported_from = [str(f) for f in aid.extract_filenames()] if aid else None
         except Exception:  # noqa: BLE001
             pass
-        if t["kind"] == "Lettering":
-            # the flags are not the mips: measure the BUILT texture (needs the RHI, as verify runs). The mask is a
-            # 1536 x 256 PNG that only gets a mip chain because it is stretched to 2048 x 256 - a fresh default import
-            # of an NPOT PNG builds ONE level (measured 2026-10-02, WorkFiles/kunai/lettering_mips).
-            m["built_mip_chain"] = _built_full_chain(tex, info)
-            m["all"] = all(v for k, v in m.items() if k != "all")
         out["textures"][asset] = {"kind": t["kind"], "png": t["png"], "flags": info, "matches": m,
                                   "source_files": imported_from}
     out["count"] = len(plan["textures"])
