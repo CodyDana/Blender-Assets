@@ -10,13 +10,17 @@
 #   check   commandlet -nullrhi, FRESH process: dj_ninja_check.py (load L_Dojo + every ported package; log scan)
 #   fixjump commandlet -nullrhi: dj_ninja_fixjump.py (play-test fix T1: BP_NinjaGasp CDO jump_max_count = GASP's
 #           SandboxCharacter_CMC value; DemoGame_1's setup wrote 2 for the removed air-jump flip)
+#   novoice commandlet -nullrhi: dj_ninja_novoice.py (owner rule 2026-10-02, NO jutsu voice-overs: StartVoice cleared on
+#           every jutsu, /Game/Ninja/Audio/Voice deleted when unreferenced; dj_ninja_setup.py re-applies it on a re-sync)
+# NINJA_OUT=<dir> sends the logs (and, through DJ_NINJA_OUT, the novoice / check reports) to another folder.
 # Guards (house rules): STOP (exit 3) if an UnrealEditor.exe has DojoLab open; wait while ANY UnrealEditor-Cmd runs
 # (one commandlet machine-wide; never ours to touch); the build also waits, so it never competes with another chat's run.
 set -u
 export MSYS_NO_PATHCONV=1
 STEPS="${*:-build setup ini check}"
 HERE="C:/Users/Cody/Desktop/Blender_Projects/Scripts/dojo/unreal"
-OUT="C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/dojo/build/ninja_character/build"
+OUT="${NINJA_OUT:-C:/Users/Cody/Desktop/Blender_Projects/WorkFiles/dojo/build/ninja_character/build}"
+export DJ_NINJA_OUT="$OUT"
 UE="C:/Program Files/Epic Games/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Cmd.exe"
 BUILD_BAT="C:/Program Files/Epic Games/UE_5.8/Engine/Build/BatchFiles/Build.bat"
 PROJ="C:/Users/Cody/Documents/Unreal Projects/DojoLab/DojoLab.uproject"
@@ -45,7 +49,7 @@ for step in $STEPS; do
       stamp "start build"
       powershell -NoProfile -Command "& '$(cygpath -w "$BUILD_BAT")' DojoLabEditor Win64 Development '-Project=$(cygpath -w "$PROJ")' -WaitMutex -NoHotReloadFromIDE; exit \$LASTEXITCODE" > "$OUT/logs/build.log" 2>&1; code=$?
       [ -f "C:/Users/Cody/Documents/Unreal Projects/DojoLab/Binaries/Win64/UnrealEditor-DojoLab.dll" ] || { [ $code -eq 0 ] && code=8; } ;;
-    setup|check|fixjump)
+    setup|check|fixjump|novoice)
       editor_guard; wait_free; editor_guard
       stamp "start $step"
       timeout 5400 "$UE" "$PROJ" -run=pythonscript -script="$HERE/dj_ninja_$step.py" $FLAGS $DPC > "$OUT/logs/$step.log" 2>&1; code=$?
@@ -69,7 +73,7 @@ PYEOF
   esac
   t1=$(date +%s)
   stamp "$step exit $code in $((t1 - t0)) s"
-  if [ "$step" = "setup" ] || [ "$step" = "check" ] || [ "$step" = "fixjump" ]; then
+  if [ "$step" = "setup" ] || [ "$step" = "check" ] || [ "$step" = "fixjump" ] || [ "$step" = "novoice" ]; then
     echo "    errors: $(grep -c 'Error:' "$OUT/logs/$step.log")  warnings: $(grep -c 'Warning:' "$OUT/logs/$step.log")"
   fi
   if [ $code -ne 0 ]; then echo "STOP: $step failed (exit $code), see $OUT/logs/$step.log"; exit 1; fi

@@ -486,3 +486,15 @@ Also decide Nanite vs LOD0-2 for every kit (taiko shipped LODs; stone, modern an
 - 2026-10-02 USER:
   - (1) commit the shared armory_hall rev-5 files with our sync (after wf_66c8379f-e32);
   - (2) REMOVE THE JUTSU VOICE-OVERS COMPLETELY, in general, not just in DojoLab. In DojoLab: clear every jutsu's StartVoice on the BP_NinjaGasp copy, delete /Game/Ninja/Audio/Voice/SFX_Voice_GreatFireball + SFX_Voice_KageBunshin, and update PORT_PROVENANCE re-sync steps to never bring voices back. DemoGame_1: the same in its own project (its chat, or us on the user's say-so). The SFX (seal, release, Chidori, fireball) are not voices; they stay unless the user says otherwise (they are also third-party anime audio).
+- 2026-10-02: perf2 DONE (wf_66c8379f-e32).
+  - DojoLab synced to armory_hall rev 5 and recorded; dj_sc_verify 9/9.
+  - CLEAN profile: FrameTime p95 11.7-14.5 ms for both pawns (ninja adds +0.3-1.9 ms mean; grooms cost 1.4 ms in WestAisle). The earlier 17-21 ms was CPU contention.
+  - Open: a fireball flying into the camera spikes p95 to 20-23 ms (GPU burst); the first fireball of a session has a 121 ms shader hitch (PSO warm-up candidate).
+  - Committed + pushed eb1f1d6d (405 files incl. the shared rev-5 files).
+  - Running wf_74c1de33-bc3: jutsu voices removed in DojoLab + the window-paper look at sunset + verify.
+- 2026-10-02: VOICES + WINDOW PAPER DONE (wf_74c1de33-bc3); verify 6/6 PASS.
+  - Voices were wired only via StartVoice on DA_Jutsu_ShadowClone/GreatFireball. Both cleared, /Game/Ninja/Audio/Voice deleted, 0 references. No C++ edit. The re-sync tooling blocks voice packages; PORT_PROVENANCE rule 6.
+  - All 16 jutsu casts complete, 0 voice components, 0 errors.
+  - Window paper: DojoLab-side tint (1,1,1) + scale 0.18/0.1726 W/E; now 0.92-1.04x the neighbouring shoji (was 1.24-1.31x, cold white), 0% clipped; no shadow.
+  - dj_sc_verify 9/9, check_sync dojo 0.
+  - Not committed yet. DemoGame_1 voices: needs its own chat (prompt given) or the user's go.

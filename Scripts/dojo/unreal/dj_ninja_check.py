@@ -14,8 +14,14 @@ gates, tools/scan_log.py -> scan.json):
   E gamemode    ini GlobalDefaultGameMode = GM_DojoNinja; GM_DojoNinja -> BP_NinjaGasp; GM_Dojo -> SandboxCharacter_CMC
                 (the reference route); L_Dojo world override = GM_DojoNinja; two PlayerStarts as before the port
   F input       IMC_NinjaGasp has exactly the 8 jutsu rows
+  G no_voice    (owner rule 2026-10-02, voices_paper stage) no jutsu has a StartVoice, /Game/Ninja/Audio/Voice and its two
+                packages are gone, nothing references them (registry) and no .uasset / .umap under Content names them
+                (byte scan); the five non-voice jutsu SFX still exist. Gate B expects the 510 ported packages minus
+                these two removed on purpose.
 """
 import json
+import os
+import sys
 import time
 import traceback
 from pathlib import Path
@@ -23,7 +29,10 @@ from pathlib import Path
 import unreal
 
 NC = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\dojo\build\ninja_character")
-OUT = NC / "build"
+SRC = NC / "build"   # the build stage's copy log / setup report (read)
+OUT = Path(os.environ.get("DJ_NINJA_OUT", str(SRC)))   # where check.json goes
+sys.path.insert(0, "C:/Users/Cody/Desktop/Blender_Projects/Scripts/dojo/unreal")
+import dj_ninja_voice_lib as VL  # noqa: E402
 PROJ = Path(r"C:\Users\Cody\Documents\Unreal Projects\DojoLab")
 EAL = unreal.EditorAssetLibrary
 AR = unreal.AssetRegistryHelpers.get_asset_registry()
@@ -70,8 +79,9 @@ def gate_modules():
 
 
 def gate_packages():
-    log = json.loads((OUT / "copy_log_content.json").read_text(encoding="utf-8"))
-    pkgs = sorted({f["package"] for f in log["files"]})
+    log = json.loads((SRC / "copy_log_content.json").read_text(encoding="utf-8"))
+    removed = list(VL.VOICE_PACKAGES)   # removed on purpose (owner rule 2026-10-02): gate G checks them
+    pkgs = sorted({f["package"] for f in log["files"]} - set(removed))
     failed, redirectors, classes = [], [], {}
     for p in pkgs:
         name = p.rsplit("/", 1)[1]
@@ -90,7 +100,7 @@ def gate_packages():
             redirectors.append(p)
     return {"n_packages": len(pkgs), "loaded": len(pkgs) - len(failed), "failed": failed, "redirectors": redirectors,
             "classes": dict(sorted(classes.items(), key=lambda kv: -kv[1])),
-            "passed": not failed and not redirectors and len(pkgs) == 510}
+            "removed_on_purpose": removed, "passed": not failed and not redirectors and len(pkgs) == 510 - len(removed)}
 
 
 def gate_deps():
@@ -200,7 +210,7 @@ def gate_gamemode():
         starts.append({"label": a.get_actor_label(), "tag": str(a.get_editor_property("player_start_tag")),
                        "loc": [round(l.x, 2), round(l.y, 2), round(l.z, 2)], "yaw": round(r.yaw, 2)})
     res["player_starts"] = sorted(starts, key=lambda s: s["label"])
-    before = json.loads((OUT / "setup.json").read_text(encoding="utf-8")).get("player_starts", [])
+    before = json.loads((SRC / "setup.json").read_text(encoding="utf-8")).get("player_starts", [])
     res["player_starts_unchanged"] = sorted(before, key=lambda s: s["label"]) == res["player_starts"]
     res["n_actors"] = len(unreal.GameplayStatics.get_all_actors_of_class(world, unreal.Actor))
     res["passed"] = (res["ini_global"] and res["ini_maps"] and res["ini_redirect"]
@@ -221,11 +231,31 @@ def gate_input():
     return {"rows": rows, "passed": len(rows) == 8 and {r[1] for r in rows} == want}
 
 
+def gate_no_voice():
+    ar = unreal.AssetRegistryHelpers.get_asset_registry()
+    ar.search_all_assets(True)
+    ar.wait_for_completion()
+    js = VL.jutsu_assets()
+    res = {"jutsu": {k: VL.jutsu_audio(v) for k, v in sorted(js.items())},
+           "voice_packages_exist": {p: EAL.does_asset_exist(p) for p in VL.VOICE_PACKAGES},
+           "voice_referencers": {p: VL.referencers(p) for p in VL.VOICE_PACKAGES},
+           "voice_dir": EAL.does_directory_exist(VL.VOICE_DIR) or (VL.CONTENT / "Ninja" / "Audio" / "Voice").exists(),
+           "byte_scan": VL.byte_scan(),
+           "keep_sfx": {p: EAL.does_asset_exist(p) for p in VL.KEEP_SFX}}
+    res["n_jutsu"] = len(js)
+    res["passed"] = (len(js) >= 4 and not any(v.get("start_voice") for v in res["jutsu"].values())
+                     and not any(res["voice_packages_exist"].values())
+                     and not any(res["voice_referencers"].values()) and not res["voice_dir"]
+                     and not res["byte_scan"] and all(res["keep_sfx"].values()))
+    return res
+
+
 def main():
     t0 = time.time()
     try:
         for name, fn in (("A_modules", gate_modules), ("B_packages", gate_packages), ("C_deps", gate_deps),
-                         ("D_character", gate_character), ("E_gamemode", gate_gamemode), ("F_input", gate_input)):
+                         ("D_character", gate_character), ("E_gamemode", gate_gamemode), ("F_input", gate_input),
+                         ("G_no_voice", gate_no_voice)):
             try:
                 REP[name] = fn()
             except Exception:  # noqa: BLE001
@@ -234,7 +264,7 @@ def main():
             unreal.log(f"DJ_NINJA gate {name} passed={REP['gates'][name]}")
     except Exception:  # noqa: BLE001
         REP["error"] = traceback.format_exc()[-3000:]
-    REP["passed"] = len(REP["gates"]) == 6 and all(REP["gates"].values())
+    REP["passed"] = len(REP["gates"]) == 7 and all(REP["gates"].values())
     REP["sec"] = round(time.time() - t0, 1)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "check.json").write_text(json.dumps(REP, indent=1, default=str), encoding="utf-8")

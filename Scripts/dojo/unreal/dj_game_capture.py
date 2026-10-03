@@ -193,6 +193,30 @@ def probe_pp(spec):
     return sorted(spec)
 
 
+def probe_pose(cam, sp):
+    """voices_paper stage: {"loc_cm": [x, y, z], "rot": [pitch, yaw], "fov": horizontal deg} moves the named
+    CineCameraActor at runtime (probe only, nothing is saved): views of the upper windows no level camera has."""
+    rec = {}
+    try:
+        root = cam.get_editor_property("root_component")
+        root.set_editor_property("mobility", unreal.ComponentMobility.MOVABLE)
+    except Exception as exc:  # noqa: BLE001
+        rec["mobility_err"] = str(exc)[:120]
+    r = unreal.Rotator()
+    r.pitch, r.yaw, r.roll = float(sp["rot"][0]), float(sp["rot"][1]), 0.0
+    cam.set_actor_location_and_rotation(unreal.Vector(*[float(v) for v in sp["loc_cm"]]), r, False, True)
+    if sp.get("fov"):
+        import math
+        cc = cam.get_cine_camera_component()
+        fb = cc.get_editor_property("filmback")
+        sw = float(fb.get_editor_property("sensor_width"))
+        cc.set_editor_property("current_focal_length", sw / 2.0 / math.tan(math.radians(float(sp["fov"]) / 2.0)))
+        rec["focal_mm"] = round(float(cc.get_editor_property("current_focal_length")), 3)
+    l = cam.get_actor_location()
+    rec["loc_now"] = [round(l.x, 1), round(l.y, 1), round(l.z, 1)]
+    return rec
+
+
 def read_cvars(names):
     out = {}
     for n in names:
@@ -229,6 +253,21 @@ def tick(_dt):
                         REP["pawn_hidden"] = pawn.get_name()
                     pc.set_ignore_move_input(True)
                     pc.set_ignore_look_input(True)
+                if CFG.get("census_prefixes"):   # voices_paper stage: read-only record of mesh actors as loaded
+                    cen = {}
+                    for x in unreal.GameplayStatics.get_all_actors_of_class(pc, unreal.Actor):
+                        lab = _label(x)
+                        if not any(lab.startswith(pf) for pf in CFG["census_prefixes"]):
+                            continue
+                        for c in x.get_components_by_class(unreal.StaticMeshComponent):
+                            mats = []
+                            for i in range(c.get_num_materials()):
+                                m = c.get_material(i)
+                                mats.append(m.get_name() if m else None)
+                            n = c.get_instance_count() if isinstance(c, unreal.InstancedStaticMeshComponent) else 1
+                            cen.setdefault(lab, []).append({"cast_shadow": bool(c.get_editor_property("cast_shadow")),
+                                                            "materials": mats, "instances": n})
+                    REP["census"] = cen
                 log(f"world ready, {len(ST['cams'])} cameras, missing {REP['missing']}")
                 ST["phase"], ST["t"], ST["i"] = "warm0", now, 0
             elif el > 180:
@@ -291,6 +330,8 @@ def tick(_dt):
                     except Exception as exc:  # noqa: BLE001
                         vals[k] = "ERR " + str(exc)[:80]
                 REP.setdefault("uds_read", {})[s.get("out", s["name"])] = vals
+            if s.get("pose") and s["name"] in ST["cams"]:
+                REP.setdefault("probe_pose", {})[s.get("out", s["name"])] = probe_pose(ST["cams"][s["name"]], s["pose"])
             if not view(s["name"], s["w"], s["h"]):
                 REP["shots"][s.get("out", s["name"])] = {"ok": False, "why": "camera missing"}
                 ST["i"] += 1

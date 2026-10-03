@@ -56,7 +56,20 @@ MODIFIED_AFTER_COPY = {
                                                     "859480a884361b51be679ea0bcff09a6e081cdde4c6330a4c259, backup "
                                                     "test/backup_before_fixjump/",
     "Content/Ninja/Input/IMC_NinjaGasp.uasset": "B5: trimmed from 24 rows to the 8 jutsu rows (dj_ninja_setup.py), saved",
+    "Content/Ninja/Jutsu/DA_Jutsu_ShadowClone.uasset": "NO VOICE (owner rule 2026-10-02): StartVoice SFX_Voice_KageBunshin -> None "
+                                                       "(dj_ninja_novoice.py), saved; section 5b",
+    "Content/Ninja/Jutsu/DA_Jutsu_GreatFireball.uasset": "NO VOICE (owner rule 2026-10-02): StartVoice SFX_Voice_GreatFireball -> "
+                                                         "None (dj_ninja_novoice.py), saved; section 5b",
 }
+# owner rule 2026-10-02: the jutsu voice-overs were deleted from DojoLab (never copy them again; section 5b)
+REMOVED = {
+    "Content/Ninja/Audio/Voice/SFX_Voice_GreatFireball.uasset": "REMOVED (owner rule 2026-10-02: no jutsu voice-overs; 5b)",
+    "Content/Ninja/Audio/Voice/SFX_Voice_KageBunshin.uasset": "REMOVED (owner rule 2026-10-02: no jutsu voice-overs; 5b)",
+}
+VP = NC / "voices_paper"
+novoice = load(VP / "novoice.json")
+vcheck = load(VP / "check.json")
+vjutsu = load(VP / "jutsu_after" / "report_ninja.json")
 NEW_FILES = [
     ("Source/DojoLab.Target.cs", "game target (BuildSettingsVersion.V7, Unreal5_8, ExtraModuleNames DojoLab)"),
     ("Source/DojoLabEditor.Target.cs", "editor target (same settings)"),
@@ -105,8 +118,11 @@ def main():
     con_rows, con_json = [], []
     for f in sorted(con_log.get("files", []), key=lambda r: r["package"]):
         now = sha(DOJO / f["rel"])
-        note = MODIFIED_AFTER_COPY.get(f["rel"])
-        state = "identical" if now == f["sha256"] else (f"modified: {now}" if note else f"DIFFERS: {now}")
+        note = MODIFIED_AFTER_COPY.get(f["rel"]) or REMOVED.get(f["rel"])
+        if f["rel"] in REMOVED and now is None:
+            state = REMOVED[f["rel"]]
+        else:
+            state = "identical" if now == f["sha256"] else (f"modified: {now}" if note else f"DIFFERS: {now}")
         origin = "43fd6ce LFS" if f["origin"].startswith("lfs:") else "working tree"
         con_rows.append([f"`{f['package']}`", f["copy_class"], origin, f["sha256"], f["bytes"], state])
         con_json.append({**f, "dojo_sha256_now": now, "modified_after_copy": note})
@@ -120,6 +136,21 @@ def main():
         k = "/".join(parts[:4]) if parts[2] in ("MetaHumans", "Ninja", "NiagaraExamples", "BareNinja_AnimSet") else "/".join(parts[:4])
         by_folder[k] = by_folder.get(k, 0) + 1
     unmod = sum(1 for r in con_json if r["dojo_sha256_now"] == r["sha256"])
+    n_mod = sum(1 for r in con_json if r["dojo_sha256_now"] and r["dojo_sha256_now"] != r["sha256"])
+    n_removed = sum(1 for r in con_json if r["rel"] in REMOVED and r["dojo_sha256_now"] is None)
+    bp_sha = sha(DOJO / "Content/Ninja/Blueprints/BP_NinjaGasp.uasset")
+    da_rows = [[f"`{k}`", (v.get("start_voice") or "-"), (novoice.get("jutsu_after", {}).get(k, {}).get("start_voice") or "None"),
+                sha(DOJO / ("Content" + k.split(".")[0][len("/Game"):] + ".uasset")) or "-"]
+               for k, v in sorted(novoice.get("jutsu_before", {}).items())]
+    jr = (vjutsu.get("results") or {}).get("jutsu") or {}
+    jt_rows = []
+    for name in ("ShadowClone", "GreatFireball", "Summoning", "Chidori"):
+        for mode in ("stand", "walk", "run"):
+            r = jr.get(f"{mode}_{name}")
+            if r:
+                jt_rows.append([f"{mode} {name}", "yes" if r.get("completed") else "NO", r.get("n_seal_events"),
+                                ", ".join(r.get("audio_components_seen") or []) or "-",
+                                ", ".join(r.get("voice_components") or []) or "none"])
     gm_dojo_sha = sha(DOJO / "Content/Dojo/Blueprints/GM_Dojo.uasset")
 
     md = f"""# Ninja character port: provenance (DemoGame_1 -> DojoLab)
@@ -129,9 +160,11 @@ Written {date.today().isoformat()} by `tools/write_provenance.py` from the surve
 `build/probe/*.json`) and the files on disk. Machine-readable twin: `build/provenance.json`.
 
 PRIVATE LAB ONLY (R7): the jutsu carry Naruto technique names (Chidori, Kage Bunshin, Goukakyuu) and
-`SFX_HandSeal`, `SFX_JutsuRelease`, `SFX_Chidori`, `SFX_Voice_KageBunshin` and `SFX_Voice_GreatFireball` are third-party
-anime audio. Nothing from this port may go into anything sold or shared, and no DojoLab footage with these sounds or names
-may be published, until they are replaced (DemoGame_1 has own-work fallbacks: `make_jutsu_sfx.py`, `SFX_ChidoriCharge`).
+`SFX_HandSeal`, `SFX_JutsuRelease` and `SFX_Chidori` are third-party anime audio. Nothing from this port may go into
+anything sold or shared, and no DojoLab footage with these sounds or names may be published, until they are replaced
+(DemoGame_1 has own-work fallbacks: `make_jutsu_sfx.py`, `SFX_ChidoriCharge`). **The two jutsu voice-overs
+(`SFX_Voice_KageBunshin`, `SFX_Voice_GreatFireball`) were REMOVED from DojoLab on 2026-10-02 (owner rule: no jutsu voices
+anywhere) and must never be copied or wired again (section 5b).**
 
 ## 1. Source
 
@@ -153,7 +186,8 @@ may be published, until they are replaced (DemoGame_1 has own-work fallbacks: `m
   "31 files" was a miscount: 15 classes = 14 .h/.cpp pairs + `NinjaJutsu.h` = 29 files.)
 - Content: **{len(con_rows)} packages** ({n_core} core + {n_feat} feature-only, {con_log.get('counts', {}).get('bytes', 0):,} bytes), all
   `.uasset`, at their DemoGame_1 `/Game` paths (no path collided, so nothing was remapped and no redirector was made).
-  {unmod} are byte-identical to the source; 2 were changed afterwards on purpose (section 3). No `.wav` / `.png` import
+  {unmod} are byte-identical to the source; {n_mod} were changed afterwards on purpose (sections 3 and 5b) and {n_removed}
+  were deleted on purpose (the jutsu voice-overs, section 5b). No `.wav` / `.png` import
   source was copied. No DojoLab file was overwritten (every destination was asserted absent first).
 - Kept as they were in DojoLab (not copied): the 38 identical GASP packages and the 13 packages that differ (D1: DojoLab's
   MetaHumans/Common hair / lash materials, skeletons and control rigs, GASP's `SK_Mannequin`, `IMC_Sandbox`).
@@ -229,6 +263,12 @@ the 43fd6ce BP.
    (`run_ninja_probe.ps1`) and the play tests (`run_ninja_playtest.ps1`, suites look / move / jutsu / routes, and
    `dj_ninja_perf.py`), then `py -3 -B tools/write_provenance.py`.
 5. Never resave a copied asset before the module is built and the CoreRedirect is in `DefaultEngine.ini`.
+6. **No jutsu voices (owner rule 2026-10-02):** never copy `/Game/Ninja/Audio/Voice` (or any `SFX_Voice_*`) and never set
+   a `StartVoice` (or `StartVoiceVolume` for one) on any jutsu. `closure2.py` marks them `VOICE_BLOCKED`, `port_copy.py`
+   refuses them, and `run_ninja_port.sh setup` (step_novoice) clears any `StartVoice` a re-synced DA_Jutsu brings and
+   deletes the folder if it reappears; `run_ninja_port.sh check` gate G fails on any voice. DojoLab's DA_Jutsu_ShadowClone
+   / GreatFireball now differ from DemoGame_1's, so step 3 lists them as `in_dojo_DIFFERENT` (never overwritten without
+   the owner's sign-off).
 
 ## 5a. Play-test stage (2026-10-02)
 
@@ -247,6 +287,34 @@ ConfigUtilities.cpp in jutsu run 1; the probe mutes with the console command ins
 waypoint order (a route that folds back on itself, ARM_deck_strip_in_front_of_hero_table, stalled both pawns).
 
 Re-sync note: `dj_ninja_setup.py` step_bp now applies T1 too (idempotent), so section 5 step 4 keeps it.
+
+## 5b. Jutsu voice-overs removed (voices_paper stage, 2026-10-02)
+
+Owner rule (2026-10-02): "remove the voice overs for the jutsu completely". Report: `voices_paper/novoice.json`, check
+`voices_paper/check.json`, -game re-test `voices_paper/jutsu_after/`; BUILD_NOTES section "2026-10-02 - NINJA CHARACTER:
+jutsu voices removed + window paper at sunset".
+
+- Where a voice was wired (measured): ONLY `UNinjaJutsu::StartVoice` on two data assets. The C++ spawns the sound only
+  when that property is set and names no sound itself (`NinjaJutsuComponent.cpp` BeginJutsu), so **no C++ file was
+  edited** (29 / 29 still byte-identical). BP_NinjaGasp's NinjaJutsu component only lists the four DA_Jutsu assets (no
+  per-instance voice), no montage / sequence sound notify and no level or Blueprint referenced the voices (asset registry
+  referencers, hard + soft, and a byte scan of every .uasset / .umap under Content).
+- Removed: `/Game/Ninja/Audio/Voice/SFX_Voice_GreatFireball`, `/Game/Ninja/Audio/Voice/SFX_Voice_KageBunshin` and the
+  folder; redirectors under /Game/Ninja afterwards: {len([r for r in novoice.get("redirectors_game_after", []) if r.startswith("/Game/Ninja")])} (the
+  {len(novoice.get("redirectors_game_after", []) or [])} elsewhere under /Game are GASP / sample-content redirectors that predate the port, untouched). Kept (non-voice SFX): SFX_HandSeal, SFX_JutsuRelease,
+  SFX_Chidori, SFX_FireballLaunch, SFX_FireballImpact, and the component's clone-dispel sound.
+- `BP_NinjaGasp.uasset` sha256 now **{bp_sha}** (not re-saved: it references the DA_Jutsu assets, not the voices).
+
+{md_table(da_rows, ["Jutsu asset", "StartVoice before", "StartVoice now", "sha256 now"])}
+
+Headless check (fresh process, `run_ninja_port.sh check`, gates A-G): {vcheck.get("gates")}.
+
+-game re-test by the real keys (F / Two / Three / Four), with the audio device on (`-Sound`, output muted), every
+AudioComponent in the world recorded at 10 Hz ("seen" includes finished components still alive from the cast before;
+the positive control before the removal, `voices_paper/jutsu_before/`, listed both voice components and 9 `voice ...
+(playing)` log lines with the same harness; after: none and 0):
+
+{md_table(jt_rows, ["cast", "completed", "seals", "audio components seen", "voice components"])}
 
 ## 6. C++ files (DemoGame_1 -> DojoLab, byte-identical)
 

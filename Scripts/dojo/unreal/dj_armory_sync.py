@@ -363,8 +363,9 @@ def unreal_stage():
     REP["assets_saved"] = []
     dja = {}
 
-    def child_mi(path, parent, scalars):
-        """A DojoLab child MI with these scalars; created / edited / saved ONLY when it differs (finish stage)."""
+    def child_mi(path, parent, scalars, vectors=None):
+        """A DojoLab child MI with these scalars (and vectors: {name: (r, g, b)}, voices_paper stage); created / edited /
+        saved ONLY when it differs (finish stage)."""
         child = unreal.load_asset(path)
         changed = False
         if child is None:
@@ -382,6 +383,16 @@ def unreal_stage():
                 cur = None
             if cur is None or abs(cur - float(v)) > 1e-6 * max(1.0, abs(float(v))):
                 MEL.set_material_instance_scalar_parameter_value(child, k, float(v))
+                changed = True
+        for k, v in (vectors or {}).items():
+            want_c = [float(c) for c in (list(v) + [1.0])[:4]]
+            try:
+                c = MEL.get_material_instance_vector_parameter_value(child, k)
+                cur = [c.r, c.g, c.b, c.a]
+            except Exception:  # noqa: BLE001
+                cur = None
+            if cur is None or max(abs(a - b) for a, b in zip(cur, want_c)) > 1e-5:
+                MEL.set_material_instance_vector_parameter_value(child, k, unreal.LinearColor(*want_c))
                 changed = True
         if changed:
             MEL.update_material_instance(child)
@@ -402,8 +413,11 @@ def unreal_stage():
         base = float(MEL.get_material_instance_scalar_parameter_value(mi, EMISSIVE_PARAM))
         want = base * LOOK.EMISSIVE_SCALE * LOOK.EMISSIVE_ROLE.get(slot, 1.0)
         path = f"{DJA_DIR}/MI_DJA_{slot[2:] if slot.startswith('M_') else slot}"
-        dja[slot] = child_mi(path, mi, {EMISSIVE_PARAM: want})
+        tint = getattr(LOOK, "EMISSIVE_TINT", {}).get(slot)   # voices_paper stage: per-level tint (dj_armory_look)
+        dja[slot] = child_mi(path, mi, {EMISSIVE_PARAM: want}, {"Emissive Tint": tint} if tint else None)
         REP["emissive_overrides"][slot] = {"mi": path, "armory": round(base, 4), "dojolab": round(want, 6)}
+        if tint:
+            REP["emissive_overrides"][slot]["tint"] = list(tint)
 
     # ---------------------------------------------------------------- 4. level: the PLAN (pure data), then place or keep
     # the ISM test reads the usage flags from disk BEFORE the level loads (an editor may set a missing usage flag in

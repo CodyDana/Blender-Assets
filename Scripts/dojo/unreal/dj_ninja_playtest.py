@@ -271,6 +271,27 @@ def audio_playing():
     return sorted(out)
 
 
+def audio_all():
+    """voices_paper stage (no jutsu voice-overs): EVERY AudioComponent in the game world, playing or not, with its sound;
+    'voice' = any whose sound is under /Game/Ninja/Audio/Voice or is named *Voice* (must stay empty)."""
+    seen, voice = [], []
+    try:
+        for a in unreal.ObjectIterator(unreal.AudioComponent):
+            try:
+                if a.get_world() is None or a.get_name().startswith("Default__"):
+                    continue
+                s = a.get_editor_property("sound")
+                path = s.get_path_name() if s is not None else None
+                seen.append(path.split(".")[-1] if path else None)
+                if path and ("/Audio/Voice/" in path or "voice" in path.lower()):
+                    voice.append(path)
+            except Exception:  # noqa: BLE001
+                continue
+    except Exception:  # noqa: BLE001
+        pass
+    return sorted({x for x in seen if x}), sorted(set(voice))
+
+
 def niagara_near(radius_cm=3000.0):
     p = pawn()
     pl = p.get_actor_location()
@@ -359,6 +380,7 @@ def snap(tag="", full=True):
             rec["cam"] = camera_state()
             rec["counts"] = {n: count(n) for n in CLASSES}
             rec["audio"] = audio_playing()
+            rec["audio_comps"], rec["voice_comps"] = audio_all()
             nn = niagara_near()
             rec["niagara_new"] = sorted(nn - G["niagara_base"])
             rec["clones"] = clone_states()
@@ -1021,6 +1043,8 @@ def summarize_jutsu(rows, t0, events, started, dur):
            "seal_weight_max": max([r["slots"].get("seal_w", 0) or 0 for r in rows if r.get("slots")] or [0]),
            "speed_while_casting_min_max": [min(moving_cast), max(moving_cast)] if moving_cast else None,
            "audio": sorted({a for r in rows for a in r.get("audio", [])}),
+           "audio_components_seen": sorted({a for r in rows for a in r.get("audio_comps", [])}),
+           "voice_components": sorted({a for r in rows for a in r.get("voice_comps", [])}),
            "niagara_new": sorted({a for r in rows for a in r.get("niagara_new", [])}),
            "max_counts": {n: max([(r.get("counts") or {}).get(n) or 0 for r in rows] or [0]) for n in CLASSES},
            "first_seen": {n: first(lambda r, n=n: ((r.get("counts") or {}).get(n) or 0) > (1 if n == "BP_NinjaGasp_C" else 0))

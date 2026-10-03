@@ -14,16 +14,23 @@ What it changes (all idempotent, every change recorded in the report):
      GM_Dojo itself is NOT changed (it still gives SandboxCharacter_CMC: the reference-pawn route).
   4. /Game/Dojo/Maps/L_Dojo: World Settings GameMode override GM_Dojo -> GM_DojoNinja. Nothing else in the level
      changes (the PlayerStarts P1 / P2 stay where they are). Saved.
+  5. NO JUTSU VOICE-OVERS (owner rule 2026-10-02; dj_ninja_voice_lib.py): StartVoice = None on every jutsu, the
+     /Game/Ninja/Audio/Voice packages deleted when nothing references them (a re-sync must never copy them: the survey /
+     copy tools block that folder), redirectors fixed up. Idempotent: nothing is saved when no jutsu has a voice.
 The project default (GlobalDefaultGameMode in Config/DefaultEngine.ini) is switched by the runner (plain text) after
 this step passes.
 Result: WorkFiles/dojo/build/ninja_character/build/setup.json
 """
 import json
+import sys
 import time
 import traceback
 from pathlib import Path
 
 import unreal
+
+sys.path.insert(0, "C:/Users/Cody/Desktop/Blender_Projects/Scripts/dojo/unreal")
+import dj_ninja_voice_lib as VL  # noqa: E402
 
 OUT = Path(r"C:\Users\Cody\Desktop\Blender_Projects\WorkFiles\dojo\build\ninja_character\build")
 EAL = unreal.EditorAssetLibrary
@@ -196,12 +203,17 @@ def step_level():
     return bool(REP["level_saved"]) and REP["world_game_mode_after"].endswith("GM_DojoNinja_C") and len(starts) == 2
 
 
+def step_novoice():
+    REP["novoice"] = {}
+    return VL.remove_voices(REP["novoice"], delete=True)
+
+
 def main():
     t0 = time.time()
     steps = {}
     try:
         for name, fn in (("module", step_module), ("bp", step_bp), ("imc", step_imc), ("gm", step_gm),
-                         ("level", step_level)):
+                         ("level", step_level), ("novoice", step_novoice)):
             steps[name] = bool(fn())
             unreal.log(f"DJ_NINJA step {name} ok={steps[name]}")
             if not steps[name]:
@@ -209,7 +221,7 @@ def main():
     except Exception:  # noqa: BLE001
         REP["error"] = traceback.format_exc()[-3000:]
     REP["steps"] = steps
-    REP["passed"] = len(steps) == 5 and all(steps.values()) and "error" not in REP
+    REP["passed"] = len(steps) == 6 and all(steps.values()) and "error" not in REP
     REP["sec"] = round(time.time() - t0, 1)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "setup.json").write_text(json.dumps(REP, indent=1), encoding="utf-8")

@@ -5,9 +5,11 @@ Written 2026-10-02 by `tools/write_provenance.py` from the survey (`survey/closu
 `build/probe/*.json`) and the files on disk. Machine-readable twin: `build/provenance.json`.
 
 PRIVATE LAB ONLY (R7): the jutsu carry Naruto technique names (Chidori, Kage Bunshin, Goukakyuu) and
-`SFX_HandSeal`, `SFX_JutsuRelease`, `SFX_Chidori`, `SFX_Voice_KageBunshin` and `SFX_Voice_GreatFireball` are third-party
-anime audio. Nothing from this port may go into anything sold or shared, and no DojoLab footage with these sounds or names
-may be published, until they are replaced (DemoGame_1 has own-work fallbacks: `make_jutsu_sfx.py`, `SFX_ChidoriCharge`).
+`SFX_HandSeal`, `SFX_JutsuRelease` and `SFX_Chidori` are third-party anime audio. Nothing from this port may go into
+anything sold or shared, and no DojoLab footage with these sounds or names may be published, until they are replaced
+(DemoGame_1 has own-work fallbacks: `make_jutsu_sfx.py`, `SFX_ChidoriCharge`). **The two jutsu voice-overs
+(`SFX_Voice_KageBunshin`, `SFX_Voice_GreatFireball`) were REMOVED from DojoLab on 2026-10-02 (owner rule: no jutsu voices
+anywhere) and must never be copied or wired again (section 5b).**
 
 ## 1. Source
 
@@ -29,7 +31,8 @@ may be published, until they are replaced (DemoGame_1 has own-work fallbacks: `m
   "31 files" was a miscount: 15 classes = 14 .h/.cpp pairs + `NinjaJutsu.h` = 29 files.)
 - Content: **510 packages** (473 core + 37 feature-only, 955,262,255 bytes), all
   `.uasset`, at their DemoGame_1 `/Game` paths (no path collided, so nothing was remapped and no redirector was made).
-  508 are byte-identical to the source; 2 were changed afterwards on purpose (section 3). No `.wav` / `.png` import
+  504 are byte-identical to the source; 4 were changed afterwards on purpose (sections 3 and 5b) and 2
+  were deleted on purpose (the jutsu voice-overs, section 5b). No `.wav` / `.png` import
   source was copied. No DojoLab file was overwritten (every destination was asserted absent first).
 - Kept as they were in DojoLab (not copied): the 38 identical GASP packages and the 13 packages that differ (D1: DojoLab's
   MetaHumans/Common hair / lash materials, skeletons and control rigs, GASP's `SK_Mannequin`, `IMC_Sandbox`).
@@ -42,6 +45,8 @@ may be published, until they are replaced (DemoGame_1 has own-work fallbacks: `m
 |---|---|
 | `Content/Ninja/Blueprints/BP_NinjaGasp.uasset` | B4: SCS components NinjaAirJump, NinjaLockOn, NinjaStance, NinjaFreeLook, NinjaCombat removed (dj_ninja_setup.py), compiled, saved. PLAY-TEST FIX T1 (2026-10-02): CDO jump_max_count 2 -> 1 = SandboxCharacter_CMC's (dj_ninja_fixjump.py; also applied by dj_ninja_setup.py from now on); before the fix sha256 0bfbdc23eb88859480a884361b51be679ea0bcff09a6e081cdde4c6330a4c259, backup test/backup_before_fixjump/ |
 | `Content/Ninja/Input/IMC_NinjaGasp.uasset` | B5: trimmed from 24 rows to the 8 jutsu rows (dj_ninja_setup.py), saved |
+| `Content/Ninja/Jutsu/DA_Jutsu_ShadowClone.uasset` | NO VOICE (owner rule 2026-10-02): StartVoice SFX_Voice_KageBunshin -> None (dj_ninja_novoice.py), saved; section 5b |
+| `Content/Ninja/Jutsu/DA_Jutsu_GreatFireball.uasset` | NO VOICE (owner rule 2026-10-02): StartVoice SFX_Voice_GreatFireball -> None (dj_ninja_novoice.py), saved; section 5b |
 
 No copied C++ file was edited.
 
@@ -51,7 +56,7 @@ No copied C++ file was edited.
 |---|---|---|---|
 | `DojoLab.uproject` | bd6bd165fe59bb609ee85f7014af1e9ea361ee6b02895b2cc3345d5484432471 | a5e92151359d2b24f253ea8519528643e88dcea87547bc1801f850c20dc47dfb | "Modules": [{"Name": "DojoLab", "Type": "Runtime", "LoadingPhase": "Default"}] added; plugins unchanged |
 | `Config/DefaultEngine.ini` | d91d7e8e7a9f2778e378bb0df3a228d3169e6ec77e5aa6323b8b760b02e5200d | 83c8689991e1e1a4df8968869347f8ca04013fe83731a1ee59fdac8b971cfc88 | [CoreRedirects] +PackageRedirects=(OldName="/Script/DemoGame_1",NewName="/Script/DojoLab") appended; GlobalDefaultGameMode GM_Dojo -> GM_DojoNinja. Nothing else (GASP's DDCvars, collision channels, PoseSearch, r.SkinCache.DefaultBehavior=0 unchanged) |
-| `Content/Dojo/Maps/L_Dojo.umap` | 44992f94e4d9eae8b497847948a871b4aeb94e3047620ca7565282ad55fcf8f5 | 3cd28a0e104a8b78ec30d6ed4374aae6dc11b51c74fb1b954936ef74c1b9acf2 | World Settings GameMode override GM_Dojo -> GM_DojoNinja (resaved by the commandlet; PlayerStarts P1 (1450, -1050, 95) yaw 0 and P2 (2950, -1050, 95) yaw 180 unchanged) |
+| `Content/Dojo/Maps/L_Dojo.umap` | 44992f94e4d9eae8b497847948a871b4aeb94e3047620ca7565282ad55fcf8f5 | 0be14fb5c7112d3fded56aedaa8e0ac6d2736f98f7b948dda37d94ea64031316 | World Settings GameMode override GM_Dojo -> GM_DojoNinja (resaved by the commandlet; PlayerStarts P1 (1450, -1050, 95) yaw 0 and P2 (2950, -1050, 95) yaw 180 unchanged) |
 
 `Content/Dojo/Blueprints/GM_Dojo.uasset` is unchanged (sha256 `ad9def160235886235f2a0fe10f612a1595ddb498ff198c99499ccf026c8adb3`; still DefaultPawnClass
 SandboxCharacter_CMC: the reference route).
@@ -122,6 +127,12 @@ the 43fd6ce BP.
    (`run_ninja_probe.ps1`) and the play tests (`run_ninja_playtest.ps1`, suites look / move / jutsu / routes, and
    `dj_ninja_perf.py`), then `py -3 -B tools/write_provenance.py`.
 5. Never resave a copied asset before the module is built and the CoreRedirect is in `DefaultEngine.ini`.
+6. **No jutsu voices (owner rule 2026-10-02):** never copy `/Game/Ninja/Audio/Voice` (or any `SFX_Voice_*`) and never set
+   a `StartVoice` (or `StartVoiceVolume` for one) on any jutsu. `closure2.py` marks them `VOICE_BLOCKED`, `port_copy.py`
+   refuses them, and `run_ninja_port.sh setup` (step_novoice) clears any `StartVoice` a re-synced DA_Jutsu brings and
+   deletes the folder if it reappears; `run_ninja_port.sh check` gate G fails on any voice. DojoLab's DA_Jutsu_ShadowClone
+   / GreatFireball now differ from DemoGame_1's, so step 3 lists them as `in_dojo_DIFFERENT` (never overwritten without
+   the owner's sign-off).
 
 ## 5a. Play-test stage (2026-10-02)
 
@@ -140,6 +151,52 @@ ConfigUtilities.cpp in jutsu run 1; the probe mutes with the console command ins
 waypoint order (a route that folds back on itself, ARM_deck_strip_in_front_of_hero_table, stalled both pawns).
 
 Re-sync note: `dj_ninja_setup.py` step_bp now applies T1 too (idempotent), so section 5 step 4 keeps it.
+
+## 5b. Jutsu voice-overs removed (voices_paper stage, 2026-10-02)
+
+Owner rule (2026-10-02): "remove the voice overs for the jutsu completely". Report: `voices_paper/novoice.json`, check
+`voices_paper/check.json`, -game re-test `voices_paper/jutsu_after/`; BUILD_NOTES section "2026-10-02 - NINJA CHARACTER:
+jutsu voices removed + window paper at sunset".
+
+- Where a voice was wired (measured): ONLY `UNinjaJutsu::StartVoice` on two data assets. The C++ spawns the sound only
+  when that property is set and names no sound itself (`NinjaJutsuComponent.cpp` BeginJutsu), so **no C++ file was
+  edited** (29 / 29 still byte-identical). BP_NinjaGasp's NinjaJutsu component only lists the four DA_Jutsu assets (no
+  per-instance voice), no montage / sequence sound notify and no level or Blueprint referenced the voices (asset registry
+  referencers, hard + soft, and a byte scan of every .uasset / .umap under Content).
+- Removed: `/Game/Ninja/Audio/Voice/SFX_Voice_GreatFireball`, `/Game/Ninja/Audio/Voice/SFX_Voice_KageBunshin` and the
+  folder; redirectors under /Game/Ninja afterwards: 0 (the
+  90 elsewhere under /Game are GASP / sample-content redirectors that predate the port, untouched). Kept (non-voice SFX): SFX_HandSeal, SFX_JutsuRelease,
+  SFX_Chidori, SFX_FireballLaunch, SFX_FireballImpact, and the component's clone-dispel sound.
+- `BP_NinjaGasp.uasset` sha256 now **480ec9558a74dae424b5f6420e8f881cf37915fb27fd5d5813222c45f4918927** (not re-saved: it references the DA_Jutsu assets, not the voices).
+
+| Jutsu asset | StartVoice before | StartVoice now | sha256 now |
+|---|---|---|---|
+| `/Game/Ninja/Jutsu/DA_Jutsu_Chidori.DA_Jutsu_Chidori` | - | None | 2a6bfce61dfd534908c84f2f78ecb3ca70d4425d39d39ac1d7968dc81931c7ee |
+| `/Game/Ninja/Jutsu/DA_Jutsu_GreatFireball.DA_Jutsu_GreatFireball` | /Game/Ninja/Audio/Voice/SFX_Voice_GreatFireball.SFX_Voice_GreatFireball | None | 318bb1c7f842390bcbf83cc4afad965ae2ccfdd2ba093e9a4725d621bfbe3a3a |
+| `/Game/Ninja/Jutsu/DA_Jutsu_ShadowClone.DA_Jutsu_ShadowClone` | /Game/Ninja/Audio/Voice/SFX_Voice_KageBunshin.SFX_Voice_KageBunshin | None | 22d1736b8edeb28c93adbb9eea05c776b00b42d7b4b202e5e21ef7afc4163a95 |
+| `/Game/Ninja/Jutsu/DA_Jutsu_Summoning.DA_Jutsu_Summoning` | - | None | befbc7a629396846b57420942131ac164f7f06b7d8a96f2cd222a84b18b69d20 |
+
+Headless check (fresh process, `run_ninja_port.sh check`, gates A-G): {'A_modules': True, 'B_packages': True, 'C_deps': True, 'D_character': True, 'E_gamemode': True, 'F_input': True, 'G_no_voice': True}.
+
+-game re-test by the real keys (F / Two / Three / Four), with the audio device on (`-Sound`, output muted), every
+AudioComponent in the world recorded at 10 Hz ("seen" includes finished components still alive from the cast before;
+the positive control before the removal, `voices_paper/jutsu_before/`, listed both voice components and 9 `voice ...
+(playing)` log lines with the same harness; after: none and 0):
+
+| cast | completed | seals | audio components seen | voice components |
+|---|---|---|---|---|
+| stand ShadowClone | yes | 3 | SFX_Chidori, SFX_HandSeal, SFX_JutsuRelease | none |
+| walk ShadowClone | yes | 3 | MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| run ShadowClone | yes | 3 | MSS_FoleySound_RunStrafe, MSS_FoleySound_Run_Soft, MSS_FoleySound_Scuff, MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_HandSeal, SFX_JutsuRelease | none |
+| stand GreatFireball | yes | 6 | SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| walk GreatFireball | yes | 6 | MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| run GreatFireball | yes | 6 | MSS_FoleySound_RunStrafe, MSS_FoleySound_Run_Soft, MSS_FoleySound_Scuff, MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| stand Summoning | yes | 5 | SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| walk Summoning | yes | 5 | MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| run Summoning | yes | 5 | MSS_FoleySound_RunStrafe, MSS_FoleySound_Run_Soft, MSS_FoleySound_Scuff, MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| stand Chidori | yes | 3 | SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
+| walk Chidori | yes | 3 | MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_HandSeal | none |
+| run Chidori | yes | 3 | MSS_FoleySound_RunStrafe, MSS_FoleySound_Run_Soft, MSS_FoleySound_Scuff, MSS_FoleySound_Walk, MSS_FoleySound_WalkBackwards, SFX_Chidori, SFX_FireballLaunch, SFX_HandSeal, SFX_JutsuRelease | none |
 
 ## 6. C++ files (DemoGame_1 -> DojoLab, byte-identical)
 
@@ -659,8 +716,8 @@ Not copied:
 | `/Game/Ninja/Audio/SFX_FireballLaunch` | core | working tree | 4cf816419f97eafaa69663dfa0fd175f5ddb3d53ea7bd4549fa5deef7f563b0e | 150938 | identical |
 | `/Game/Ninja/Audio/SFX_HandSeal` | core | working tree | e32e5fe489800a3aed8f574b17649df997336954f73f1ca5cc163f34bc3a5d0c | 30699 | identical |
 | `/Game/Ninja/Audio/SFX_JutsuRelease` | core | working tree | fb74624bebab1db55c3f2a89a7c8b5aac311d55d8a86eaddf9687512a5468815 | 76072 | identical |
-| `/Game/Ninja/Audio/Voice/SFX_Voice_GreatFireball` | core | working tree | 471e64cb279b3643c49a110f4cf8d34c3e27ba5e971a363854a64fc60939ebcc | 182860 | identical |
-| `/Game/Ninja/Audio/Voice/SFX_Voice_KageBunshin` | core | working tree | f091d6ef1d1368aef16d80d11f914bedc4d1acdab53f48534a353d90fe02b949 | 139841 | identical |
+| `/Game/Ninja/Audio/Voice/SFX_Voice_GreatFireball` | core | working tree | 471e64cb279b3643c49a110f4cf8d34c3e27ba5e971a363854a64fc60939ebcc | 182860 | REMOVED (owner rule 2026-10-02: no jutsu voice-overs; 5b) |
+| `/Game/Ninja/Audio/Voice/SFX_Voice_KageBunshin` | core | working tree | f091d6ef1d1368aef16d80d11f914bedc4d1acdab53f48534a353d90fe02b949 | 139841 | REMOVED (owner rule 2026-10-02: no jutsu voice-overs; 5b) |
 | `/Game/Ninja/Blueprints/BP_NinjaGasp` | core | 43fd6ce LFS | 017e4018029f60d3c8099a0f23df67b7d97538432f79ea68f0d42b49aa15542b | 1329521 | modified: 480ec9558a74dae424b5f6420e8f881cf37915fb27fd5d5813222c45f4918927 |
 | `/Game/Ninja/Blueprints/BP_NinjaVisual` | core | 43fd6ce LFS | 5ea028e27eda24a366efd898d40ebb09b08ff23d0b12bd5d6fdd823a3d5a2f95 | 58969 | identical |
 | `/Game/Ninja/Character/ABP_MH_NinjaBody` | core | working tree | 27c6272533f897c43fef67594fa7dfd98f1dafa0f9d5079a708f6c542c45a5a0 | 45932 | identical |
@@ -701,6 +758,6 @@ Not copied:
 | `/Game/Ninja/Jutsu/BP_GreatFireball` | core | working tree | 5607778029773ac4f3c3bd363fca5622ab37c67f169dbcdbbe8cd215514150b9 | 32478 | identical |
 | `/Game/Ninja/Jutsu/BP_SummoningSeal` | core | working tree | bc5a9a7cbe50d6dca61c53eb2eebc6942603dacd993834b7b34db40ecce5e9bf | 24497 | identical |
 | `/Game/Ninja/Jutsu/DA_Jutsu_Chidori` | core | working tree | 2a6bfce61dfd534908c84f2f78ecb3ca70d4425d39d39ac1d7968dc81931c7ee | 3200 | identical |
-| `/Game/Ninja/Jutsu/DA_Jutsu_GreatFireball` | core | working tree | 06ab26ae7a1fd43c7fe754b549dae43afb03c996ac8e333ecda3902b5633e9c7 | 3621 | identical |
-| `/Game/Ninja/Jutsu/DA_Jutsu_ShadowClone` | core | working tree | 1208c9217328ba6b0083c07342e05df8fa2316f1a1866af98c232fb5e589f7cc | 2865 | identical |
+| `/Game/Ninja/Jutsu/DA_Jutsu_GreatFireball` | core | working tree | 06ab26ae7a1fd43c7fe754b549dae43afb03c996ac8e333ecda3902b5633e9c7 | 3621 | modified: 318bb1c7f842390bcbf83cc4afad965ae2ccfdd2ba093e9a4725d621bfbe3a3a |
+| `/Game/Ninja/Jutsu/DA_Jutsu_ShadowClone` | core | working tree | 1208c9217328ba6b0083c07342e05df8fa2316f1a1866af98c232fb5e589f7cc | 2865 | modified: 22d1736b8edeb28c93adbb9eea05c776b00b42d7b4b202e5e21ef7afc4163a95 |
 | `/Game/Ninja/Jutsu/DA_Jutsu_Summoning` | core | working tree | befbc7a629396846b57420942131ac164f7f06b7d8a96f2cd222a84b18b69d20 | 3836 | identical |

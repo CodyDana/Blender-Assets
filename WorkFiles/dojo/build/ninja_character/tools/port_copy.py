@@ -23,6 +23,7 @@ OUT = NC / "build"
 DEMO = Path("C:/Users/Cody/Documents/Unreal Projects/DemoGame_1")
 DOJO = Path("C:/Users/Cody/Documents/Unreal Projects/DojoLab")
 PRIVATE = ("playerfemale", "hiyuki", "2b", "_private", "catwalk", "/mocap/")
+VOICE = ("/audio/voice/", "sfx_voice_")   # owner rule 2026-10-02: no jutsu voice-overs, never copied again
 
 
 def sha(p: Path) -> str:
@@ -45,6 +46,8 @@ def plan_content(cl):
         low = pkg.lower()
         if any(t in low for t in PRIVATE):
             raise SystemExit(f"private path in the copy set: {pkg}")
+        if any(t in low for t in VOICE):
+            raise SystemExit(f"jutsu voice in the copy set (owner rule 2026-10-02: never copy them): {pkg}")
         for f in v["files"]:
             rel = f["file"]
             if not rel.lower().endswith((".uasset", ".umap")):

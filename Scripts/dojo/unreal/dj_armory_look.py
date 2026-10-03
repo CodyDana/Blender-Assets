@@ -96,3 +96,18 @@ PARKED_LEAF_CHANNEL1 = False
 #   every slot's base material carries used_with_instanced_static_meshes; the copied armory masters do not yet, so all
 #   pieces stay single actors until the armory chat sets the flag on its masters).
 INTERIOR_ISM = True
+# ---- voices_paper stage (2026-10-02): the rev-5 window paper behind the upper lattices (SM_AK_Window_Paper_35_W/_E,
+# AKI_0618-0627) at the locked sunset. Measured in -game (WorkFiles/dojo/build/ninja_character/voices_paper/paper:
+# masks by switching the paper / the neighbouring lit paper off in the same process, 7 views): as synced the paper read
+# as a COLD light box: hue 210 deg, saturation 0.04 (the copied ArmoryLab MIs carry its NIGHT moon tint 0.30 / 0.45 / 1.0,
+# ak_common NIGHT_EMIT) and 1.24-1.31x the luminance of the transom shoji directly above it (hue 38, sat 0.40-0.55).
+# DojoLab is a sunset level, so it takes the armory's own DAY paper colour (tint 1 / 1 / 1 = build_armory_kit's warm
+# cream picture as authored) and its DAY west / east balance (emit 0.55 / 0.42 -> the night copies' 0.70 / 0.73 scale is
+# undone: E = W x 0.70 / 0.73). Sweep (day tint, x the synced value): 0.15 -> 0.85-0.94x the transom shoji, 0.20 ->
+# 0.98-1.06x, 0.25 -> 1.07-1.13x; 0 % clipped at every step. Chosen 0.18 (in family, a touch under the transom strip).
+EMISSIVE_ROLE["M_AK_HWinPaperW"] = 0.18
+EMISSIVE_ROLE["M_AK_HWinPaperE"] = round(0.18 * 0.70 / 0.73, 6)
+EMISSIVE_TINT = {"M_AK_HWinPaperW": (1.0, 1.0, 1.0), "M_AK_HWinPaperE": (1.0, 1.0, 1.0)}
+# - Shadows: the armory's rev-5 change line and interior_layout.json (cast_shadow False on AKI_0618-0627) say the paper
+#   casts no shadow; DojoLab follows (the perf2 lever test: no measurable cost either way).
+NO_SHADOW_PIECES = {"SM_AK_Window_Paper_35_W", "SM_AK_Window_Paper_35_E"}

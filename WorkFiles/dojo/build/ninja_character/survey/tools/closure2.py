@@ -9,6 +9,10 @@ DEMO = r"C:\Users\Cody\Documents\Unreal Projects\DemoGame_1"
 DOJO = r"C:\Users\Cody\Documents\Unreal Projects\DojoLab"
 LFS = os.path.join(DEMO, ".git", "lfs", "objects")
 PRIVATE = re.compile(r"PlayerFemale|Hiyuki|(^|/)2B(_|/|$)|_Private", re.I)
+# owner rule 2026-10-02: NO jutsu voice-overs in DojoLab (or anywhere): the voice lines are never copied again. A jutsu
+# data asset that still names one is copied only through the owner's sign-off (DojoLab's DA_Jutsu_* differ from
+# DemoGame_1's since the voices_paper stage) and dj_ninja_setup.py step_novoice clears its StartVoice.
+VOICE = re.compile(r"^/Game/Ninja/Audio/Voice/|SFX_Voice_", re.I)
 MALE_ERA = "43fd6ce"
 OVERRIDES = {  # package -> (LFS oid, why)
     "/Game/Ninja/Blueprints/BP_NinjaGasp": ("017e4018029f60d3c8099a0f23df67b7d97538432f79ea68f0d42b49aa15542b",
@@ -76,6 +80,8 @@ def walk(skip_features):
         seen[pkg] = rec
         if PRIVATE.search(pkg):
             rec["status"] = "PRIVATE_BLOCKED"; continue
+        if VOICE.search(pkg):
+            rec["status"] = "VOICE_BLOCKED"; continue
         feat = feature_of(pkg)
         if feat:
             rec["feature"] = feat
