@@ -124,3 +124,11 @@ The Blade and Fittings slots share one steel atlas, and the sheath's two slots s
 
 The user states the Snow Flower design is **original**. Only the name was inspired by a manhwa, and the user considers
 that name generic.
+
+## 9. Texture size for games (one setting, no re-import)
+
+The steel (sword) and sheath maps ship at 4096 so the ornament holds up in hero close-ups. For normal play you can load
+them at 2048 to cut their texture memory to about a quarter: open each 4096 texture (`T_SnowFlower_Steel_*`,
+`T_SnowFlower_Sheath_*`) and set **Maximum Texture Size** to `2048` (or **LOD Bias** to `1`), then save. The full 4096
+data stays in the asset, so you can set it back at any time; only extreme close-ups of the ornament look softer.
+Unreal's low texture-quality settings drop the top size automatically for players on weaker hardware.

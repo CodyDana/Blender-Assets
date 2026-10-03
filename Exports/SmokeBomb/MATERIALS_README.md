@@ -68,6 +68,17 @@ the Hex sRGB field is the one that matches colours from the web or from an image
   Changing them shifts the average colour and the detail.
 - The textures in **09 Textures**: swap a detail map only together with its matched 08 Advanced settings.
 
+## Texture size for games (one setting, no re-import)
+
+The colour and detail maps ship at 4096 for sharp close-ups and product shots. In a game the ball is rarely more than
+a few hundred pixels on screen, so 2048 looks the same at play distance and uses about a third of the texture memory
+(about 60 MB down to about 20 MB in total; the 16-bit `T_SmokeBomb_Detail16` alone is about 43 MB at 4096).
+
+To load them at 2048, open each texture in `Textures/SmokeBomb/` (including `T_SmokeBomb_Detail16`) and set
+**Maximum Texture Size** to `2048` (or **LOD Bias** to `1`), then save. The 4096 data stays in the asset, so you can
+set it back at any time. Only a full-screen close-up of the cloth looks slightly softer at 2048. Unreal's low
+texture-quality settings drop the top size automatically for players on weaker hardware.
+
 ## Supported setups
 
 | Setup | Status |
