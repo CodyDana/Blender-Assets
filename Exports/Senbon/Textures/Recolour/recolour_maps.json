@@ -1,0 +1,118 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "Senbon",
+ "generated": "2026-10-03",
+ "generator": {
+  "script": "Scripts/props/build_senbon.py",
+  "script_sha256": "8300227c87e7894c0fe18adf536872aa3d59eb2a155d551ccb1391f2402a5b22",
+  "module": "Scripts/props/props_lib/senbon_paint.py",
+  "module_sha256": "317c4f34160873417dce096dada1418d84f3014937ae9630573ba578cd555c49",
+  "version": "1.1.0",
+  "blender": "5.2.0 LTS"
+ },
+ "sidecar": {
+  "file": "Exports/Senbon/SM_Senbon_Heavy.sockets.json"
+ },
+ "maps": {
+  "T_Senbon_Heavy_Wrap_Detail16": {
+   "file": "Exports/Senbon/Textures/Recolour/T_Senbon_Heavy_Wrap_Detail16.png",
+   "sha256": "bc3997f5782da3e0bf5610ecc15027923babfef33b91fc7c80689d3c92e121f8",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "PNG, 16-bit greyscale, no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d (sRGB-decoded Detail8)",
+   "uv": "the wrap's UV tile u 1..2 (same texel grid as T_Senbon_Heavy_Wrap_BC; Wrap addressing)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "WorkFiles/senbon/build/T_Senbon_Heavy_Wrap_Detail_source8.png",
+    "sha256": "87a9824bf681b882924cd204380a490f34413c8964bbc84616ec19a3c695de49",
+    "stored_levels": 252
+   },
+   "recipe": "d16 = round(65535 * sRGBdecode(Detail8 / 255)); lossless (one code per 8-bit level)",
+   "gates": {
+    "lossless_back_to_8bit": true
+   }
+  }
+ },
+ "parts": {
+  "Heavy/Wrap": {
+   "slot_material": "M_Senbon_Heavy_Wrap",
+   "slot_index": 1,
+   "instance": "MI_Senbon_Heavy_Wrap",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Senbon_Heavy_Wrap_Detail16",
+   "switches": {
+    "Metal From ORM": false,
+    "Cloth Sheen": false,
+    "Use Lettering": false,
+    "Specular From ORM Alpha": false
+   },
+   "base_colour_map_reference": {
+    "file": "Exports/Senbon/Textures/T_Senbon_Heavy_Wrap_BC.png",
+    "sha256": "c025df5db34415455ac12a80f69cfd4c6e7718aeb8b2d31afa7556ddb0ee1aa5"
+   },
+   "params": {
+    "Colour": [
+     0.038204,
+     0.035601,
+     0.031897,
+     1.0
+    ],
+    "Detail Bias": 0.458533,
+    "Detail Scale": 0.801272,
+    "Detail Mean": 0.9999951273321687,
+    "Detail Highlight Ratio": 1.2455834346662873,
+    "Detail Moments Low": [
+     0.3952108675747893,
+     -0.06031629508987898,
+     0.008500375882407915,
+     -0.000817069005334764
+    ],
+    "Detail Moments High": [
+     0.6047891324252107,
+     0.04979228454801007,
+     0.002709154229582747,
+     0.0001266767673816782
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9,
+    "Specular Strength": 0.5
+   },
+   "n_range": [
+    0.45853310278454873,
+    1.259805580173155
+   ],
+   "fraction_n_le_1": 0.3952108675747893,
+   "covered_texels": 214068,
+   "param_notes": {
+    "Colour": "linear RGBA; the wrap's MEAN colour over its texels (default = the spec's #373532, the kunai grip colour)",
+    "switches": "as MI_Kunai_Plain_Wrap (Cloth Sheen OFF, Default Lit): the same cotton, the same colour"
+   },
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)); v1 fields over the covered wrap texels; recolour_constants.json (v2) is written by the finaliser under the materials lock"
+  }
+ },
+ "other_slots": {
+  "Needle/Steel": {
+   "slot_material": "M_Senbon_Needle_Steel",
+   "instance": "MI_Senbon_Needle_Steel",
+   "master": "M_Steel_Master",
+   "recolourable": false
+  },
+  "Heavy/Steel": {
+   "slot_material": "M_Senbon_Heavy_Steel",
+   "instance": "MI_Senbon_Heavy_Steel",
+   "master": "M_Steel_Master",
+   "recolourable": false
+  }
+ },
+ "pass": true
+}

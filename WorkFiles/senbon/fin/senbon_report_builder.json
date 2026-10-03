@@ -1,0 +1,7909 @@
+{
+ "asset": "Senbon",
+ "meshes": [
+  "SM_Senbon_Needle",
+  "SM_Senbon_Heavy"
+ ],
+ "library": "props_lib senbon 1.0.0",
+ "built": "2026-10-03T03:00:03",
+ "blender": "5.2.0 LTS",
+ "build_script": "Scripts/props/build_senbon.py",
+ "quick": false,
+ "build_to": {
+  "spec": "WorkFiles\\senbon\\senbon_spec.json",
+  "sheet": "WorkFiles\\senbon\\SENBON_DESIGN_SHEET.png",
+  "needle": {
+   "length_mm": 130.0,
+   "belly_d_mm": 2.8,
+   "shoulder_d_mm": 2.3,
+   "shoulder_abs_x_mm": 50.0,
+   "tip_radius_mm": 0.05,
+   "derived_mass_g": 4.615
+  },
+  "heavy": {
+   "length_mm": 170.0,
+   "tail_d_mm": 2.8,
+   "front_d_mm": 4.5,
+   "binding_d_mm": 4.6,
+   "wrap_d_mm": 4.2,
+   "point_mm": 22.0,
+   "ridges_start_s_mm": 159.0,
+   "derived_mass_g": 11.926,
+   "derived_com_from_butt_mm": 93.695
+  },
+  "lods": {
+   "needle": [
+    12,
+    8,
+    6
+   ],
+   "heavy": [
+    12,
+    9,
+    6
+   ]
+  },
+  "textures": {
+   "T_Senbon_Needle": {
+    "size": [
+     2048,
+     256
+    ],
+    "px_per_mm": 14.0
+   },
+   "T_Senbon_Heavy": {
+    "size": [
+     2048,
+     256
+    ],
+    "px_per_mm": 12.0
+   },
+   "T_Senbon_Heavy_Wrap": {
+    "size": [
+     1024,
+     256
+    ],
+    "px_per_mm": 16.0
+   }
+  }
+ },
+ "spec_sha256": "89ab70b5c334122e58be604b11b3095ef59a0d7e11e850a06d2398b17462261c",
+ "sheet_sha256": "e4e7b7d2125772c8c480a921ac4d8d69bbbd00d577460e8c826a302919186d00",
+ "frozen": {
+  "before": {
+   "baseline": "WorkFiles\\senbon\\regression\\pre_build\\SHA256SUMS.txt",
+   "identical": 202,
+   "differing_or_missing": []
+  },
+  "after": {
+   "baseline": "WorkFiles\\senbon\\regression\\pre_build\\SHA256SUMS.txt",
+   "identical": 202,
+   "differing_or_missing": []
+  }
+ },
+ "lods": {
+  "needle": [
+   {
+    "sides": 12,
+    "phase_deg": 0.0,
+    "note": "full profile: tip flats r 0.05, 12 swell stations, hard shoulder rings"
+   },
+   {
+    "sides": 8,
+    "phase_deg": 0.0,
+    "note": "swell at x = 0, +-25, +-50; sharp apex cones"
+   },
+   {
+    "sides": 6,
+    "phase_deg": 0.0,
+    "note": "belly ring + shoulder rings + apex cones"
+   }
+  ],
+  "heavy": [
+   {
+    "sides": 12,
+    "phase_deg": 0.0,
+    "note": "full profile: chamfered butt, rounded bindings, 48-column round point lands + three planar facets (12-gon body morphing to a 48-gon ring at s = 148)"
+   },
+   {
+    "sides": 9,
+    "phase_deg": 30.0,
+    "note": "plain butt, square-cornered bindings, facets as three planes on the 9-gon"
+   },
+   {
+    "sides": 6,
+    "phase_deg": 30.0,
+    "note": "wrap + bindings merged into one cylinder, three facets on the 6-gon"
+   }
+  ]
+ },
+ "layout": {
+  "needle": {
+   "texture": "needle",
+   "kind": "rev",
+   "U_mm": [
+    0.0,
+    130.182214
+   ],
+   "V_mm": [
+    -4.39823,
+    4.39823
+   ],
+   "u0_px": 112.725,
+   "vc_px": 128.0
+  },
+  "heavy_butt": {
+   "texture": "heavy",
+   "kind": "rev",
+   "U_mm": [
+    0.0,
+    7.224264
+   ],
+   "V_mm": [
+    -4.39823,
+    4.39823
+   ],
+   "u0_px": 202.631,
+   "vc_px": 128.0
+  },
+  "heavy_body": {
+   "texture": "heavy",
+   "kind": "rev",
+   "U_mm": [
+    57.142704,
+    162.146547
+   ],
+   "V_mm": [
+    -7.068583,
+    7.068583
+   ],
+   "u0_px": 305.323,
+   "vc_px": 128.0
+  },
+  "heavy_facet_90": {
+   "texture": "heavy",
+   "kind": "facet",
+   "U_mm": [
+    148.0,
+    170.0
+   ],
+   "V_mm": [
+    -1.948557,
+    1.948557
+   ],
+   "u0_px": 1581.369,
+   "vc_px": 65.235
+  },
+  "heavy_facet_210": {
+   "texture": "heavy",
+   "kind": "facet",
+   "U_mm": [
+    148.0,
+    170.0
+   ],
+   "V_mm": [
+    -1.948557,
+    1.948557
+   ],
+   "u0_px": 1581.369,
+   "vc_px": 128.0
+  },
+  "heavy_facet_330": {
+   "texture": "heavy",
+   "kind": "facet",
+   "U_mm": [
+    148.0,
+    170.0
+   ],
+   "V_mm": [
+    -1.948557,
+    1.948557
+   ],
+   "u0_px": 1581.369,
+   "vc_px": 190.765
+  },
+  "wrap": {
+   "texture": "wrap",
+   "kind": "rev",
+   "U_mm": [
+    7.224264,
+    57.142704
+   ],
+   "V_mm": [
+    -7.225663,
+    7.225663
+   ],
+   "u0_px": 112.652,
+   "vc_px": 128.0
+  }
+ },
+ "mass_model": {
+  "needle": {
+   "round_volume_mm3": 588.85067,
+   "round_com_x_mm": 0.0,
+   "mass_g": 4.622478,
+   "derived_mass_g": 4.615
+  },
+  "heavy": {
+   "steel_volume_mm3": 1490.47233,
+   "steel_com_mm": 94.92938,
+   "wrap_volume_mm3": 377.366538,
+   "wrap_com_mm": 30.000226,
+   "steel_mass_g": 11.700208,
+   "wrap_mass_g": 0.22642,
+   "mass_g": 11.926628,
+   "com_from_butt_mm": 93.696739,
+   "derived_mass_g": 11.926,
+   "derived_com_from_butt_mm": 93.695
+  },
+  "method": "as-built profile stations with a ROUND section (frustum sums / the Study's facet area law); the mesh is the inscribed 12-gon of that section (see mesh_volume)"
+ },
+ "pivots": {
+  "needle_com_mm": 0.0,
+  "heavy_com_mm": 93.696739,
+  "needle_mass_g": 4.622478,
+  "heavy_mass_g": 11.926628
+ },
+ "bake_device": "GPU",
+ "textures": {
+  "needle": {
+   "maps": {
+    "BC": "Exports/Senbon/Textures/T_Senbon_Needle_BC.png",
+    "ORM": "Exports/Senbon/Textures/T_Senbon_Needle_ORM.png",
+    "N": "Exports/Senbon/Textures/T_Senbon_Needle_N.png"
+   },
+   "sha256": {
+    "BC": "be4f939774904bc09e7a7001845472e31bffd56110883f20979186bbebd6c1f0",
+    "ORM": "249d7d311c3eb4c2d94c5ac0f3cf2aae727215f9bf83bc792ca0fd47d42ff078",
+    "N": "52896ee95844150502872ac82fb21cdb9ce9770caab216f223fa710f48d074de"
+   },
+   "size": [
+    2048,
+    256
+   ],
+   "power_of_two": true,
+   "colour_chunks": {
+    "BC": [],
+    "ORM": [],
+    "N": []
+   },
+   "covered_fraction": 0.3513,
+   "ao_covered": {
+    "mean": 1.0,
+    "min": 0.9844,
+    "p01": 1.0,
+    "unused_fill": 1.0
+   },
+   "roughness_covered": {
+    "mean": 0.3207,
+    "p01": 0.2113,
+    "p99": 0.345
+   },
+   "albedo_covered_mean_linear": [
+    0.13981,
+    0.13688,
+    0.14704
+   ],
+   "normal_tilt_deg_covered": {
+    "mean": 0.025,
+    "p99": 0.3637,
+    "max": 0.9166
+   },
+   "stats": {
+    "coat": {
+     "scratches": 46,
+     "specks": 57
+    },
+    "ground_fraction_island": 0.25213675213675213,
+    "wear_band_x_mm": [
+     0,
+     25
+    ],
+    "fade_mm": [
+     1.5,
+     2.5
+    ]
+   }
+  },
+  "heavy": {
+   "maps": {
+    "BC": "Exports/Senbon/Textures/T_Senbon_Heavy_BC.png",
+    "ORM": "Exports/Senbon/Textures/T_Senbon_Heavy_ORM.png",
+    "N": "Exports/Senbon/Textures/T_Senbon_Heavy_N.png"
+   },
+   "sha256": {
+    "BC": "fdad14b6c6406a95aa3e7f2775eacf430ffdb513507402c322ccae914df9a914",
+    "ORM": "222dcae094dcfb4fdb674b3d75ed4344a1ca84770c110685d0f960a83e30eff7",
+    "N": "e74f3b66bf5da4d0bb902876801dd148715e91b4c15bb363289b59622d23cc6a"
+   },
+   "size": [
+    2048,
+    256
+   ],
+   "power_of_two": true,
+   "colour_chunks": {
+    "BC": [],
+    "ORM": [],
+    "N": []
+   },
+   "covered_fraction": 0.3763,
+   "ao_covered": {
+    "mean": 0.9963,
+    "min": 0.4688,
+    "p01": 0.875,
+    "unused_fill": 0.9963
+   },
+   "roughness_covered": {
+    "mean": 0.3233,
+    "p01": 0.2115,
+    "p99": 0.3459
+   },
+   "albedo_covered_mean_linear": [
+    0.13992,
+    0.13704,
+    0.14712
+   ],
+   "normal_tilt_deg_covered": {
+    "mean": 0.0219,
+    "p99": 0.3286,
+    "max": 0.9066
+   },
+   "stats": {}
+  },
+  "wrap": {
+   "maps": {
+    "BC": "Exports/Senbon/Textures/T_Senbon_Heavy_Wrap_BC.png",
+    "ORM": "Exports/Senbon/Textures/T_Senbon_Heavy_Wrap_ORM.png",
+    "N": "Exports/Senbon/Textures/T_Senbon_Heavy_Wrap_N.png"
+   },
+   "sha256": {
+    "BC": "9774849a8a310b3318f8613ae90353e972b19906abd42b8370ab3a8c8ebcdfb5",
+    "ORM": "472a95085f339315d00216a8d878b6d88fc83785006f0c9eb0afb0301f599d7e",
+    "N": "3697227533c6cbf73af046cb04a869b6d66a6383c474db61752caa9ebcad5e91"
+   },
+   "size": [
+    1024,
+    256
+   ],
+   "power_of_two": true,
+   "colour_chunks": {
+    "BC": [],
+    "ORM": [],
+    "N": []
+   },
+   "covered_fraction": 0.6465,
+   "ao_covered": {
+    "mean": 0.9879,
+    "min": 0.4688,
+    "p01": 0.6719,
+    "unused_fill": 0.9879
+   },
+   "roughness_covered": {
+    "mean": 0.9133,
+    "p01": 0.8894,
+    "p99": 0.9593
+   },
+   "albedo_covered_mean_linear": [
+    0.0382,
+    0.0356,
+    0.0319
+   ],
+   "normal_tilt_deg_covered": {
+    "mean": 11.1896,
+    "p99": 29.9182,
+    "max": 37.6431
+   },
+   "stats": {
+    "thread_pitch_mm": 0.6,
+    "helix": "right-hand, single start",
+    "binding_turn_pitch_mm": 0.45,
+    "mean_gain": [
+     1.01546,
+     1.01546,
+     1.01546
+    ]
+   }
+  }
+ },
+ "recolour": {
+  "file": "Exports/Senbon/Textures/Recolour/recolour_maps.json",
+  "detail16": "Exports/Senbon/Textures/Recolour/T_Senbon_Heavy_Wrap_Detail16.png",
+  "lossless": true,
+  "colour_linear": [
+   0.038204,
+   0.035601,
+   0.031896,
+   1.0
+  ],
+  "colour_srgb8": [
+   55,
+   53,
+   50
+  ],
+  "spec_srgb8": [
+   55,
+   53,
+   50
+  ],
+  "detail_mean": 1.00001023924098
+ },
+ "collision_sockets": {
+  "needle": {
+   "hull": "UCX_SM_Senbon_Needle_LOD0_00",
+   "vertices": 24,
+   "faces": 44,
+   "triangles": 44,
+   "worst_outside_mm_per_lod": [
+    -0.0001,
+    -0.0001,
+    -0.0001
+   ],
+   "contains_every_lod": true,
+   "hull_volume_mm3": 717.444,
+   "lod0_mesh_volume_mm3": 562.311,
+   "volume_ratio_hull_over_lod0": 1.2759,
+   "hull_centroid_mm": [
+    -0.0,
+    -0.0,
+    -0.0
+   ],
+   "hull_com_offset_cm": [
+    -0.0,
+    -0.0,
+    -0.0
+   ],
+   "shape": "octagonal prism (inradius = belly 1.4 mm) over x -50..50 + 4-vertex tip flats at +-65 (0.05 mm half width)",
+   "sockets": [
+    {
+     "name": "Grip",
+     "position_mm": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "hand attach (inverse of the socket)"
+    },
+    {
+     "name": "Tip",
+     "position_mm": [
+      65.0,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "impact FX, embed, projectile root"
+    },
+    {
+     "name": "Trail",
+     "position_mm": [
+      -65.0,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "trail / ribbon VFX"
+    },
+    {
+     "name": "Throw",
+     "position_mm": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "launch point (= pivot)"
+    },
+    {
+     "name": "Embed",
+     "position_mm": [
+      50.0,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "put on the surface hit point: Tip - 15 mm"
+    }
+   ]
+  },
+  "heavy": {
+   "hull": "UCX_SM_Senbon_Heavy_LOD0_00",
+   "vertices": 17,
+   "faces": 30,
+   "triangles": 30,
+   "worst_outside_mm_per_lod": [
+    -2e-05,
+    -2e-05,
+    -2e-05
+   ],
+   "contains_every_lod": true,
+   "hull_volume_mm3": 2851.718,
+   "lod0_mesh_volume_mm3": 1822.044,
+   "volume_ratio_hull_over_lod0": 1.5651,
+   "hull_centroid_mm": [
+    -12.3428,
+    0.0,
+    0.0
+   ],
+   "hull_com_offset_cm": [
+    -1.2343,
+    0.0,
+    0.0
+   ],
+   "shape": "octagonal prism (inradius = binding 2.3 mm) over s 0..159 (where the ridges start) + the apex at s 170",
+   "sockets": [
+    {
+     "name": "Grip",
+     "position_mm": [
+      -63.696739,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "hand attach (inverse of the socket)"
+    },
+    {
+     "name": "Tip",
+     "position_mm": [
+      76.303261,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "impact FX, embed, projectile root"
+    },
+    {
+     "name": "Trail",
+     "position_mm": [
+      -93.696739,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "trail / ribbon VFX"
+    },
+    {
+     "name": "Throw",
+     "position_mm": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "launch point (= pivot)"
+    },
+    {
+     "name": "Embed",
+     "position_mm": [
+      61.303261,
+      0.0,
+      0.0
+     ],
+     "rotation_deg": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "use": "put on the surface hit point: Tip - 15 mm"
+    }
+   ]
+  }
+ },
+ "measure": {
+  "needle": {
+   "triangles": [
+    360,
+    80,
+    36
+   ],
+   "descending": true,
+   "lod0_within_budget": true,
+   "bounds_radius_mm_bbox_centre": 65.0,
+   "screen_sizes": [
+    1.0,
+    0.13,
+    0.0455
+   ],
+   "switch_distances_m": [
+    0.889,
+    2.54
+   ],
+   "bounds_mm": {
+    "min": [
+     -65.0,
+     -1.4,
+     -1.4
+    ],
+    "max": [
+     65.0,
+     1.4,
+     1.4
+    ]
+   },
+   "length_mm": 130.0,
+   "uv": {
+    "LOD0": {
+     "uv_u_range": [
+      0.055041,
+      0.944959
+     ],
+     "uv_v_range": [
+      0.259472,
+      0.740528
+     ],
+     "collapsed_uv_triangles": 0,
+     "mirrored_uv_triangles": 0,
+     "min_triangle_area_mm2": 0.000625,
+     "density_px_per_mm_area_weighted": {
+      "steel": {
+       "mean": 14.0805,
+       "p01": 14.0804,
+       "p99": 14.3273
+      }
+     }
+    },
+    "LOD1": {
+     "uv_u_range": [
+      0.055041,
+      0.944959
+     ],
+     "uv_v_range": [
+      0.259472,
+      0.740528
+     ],
+     "collapsed_uv_triangles": 0,
+     "mirrored_uv_triangles": 0,
+     "min_triangle_area_mm2": 6.617826,
+     "density_px_per_mm_area_weighted": {
+      "steel": {
+       "mean": 14.1849,
+       "p01": 14.182,
+       "p99": 14.2069
+      }
+     }
+    },
+    "LOD2": {
+     "uv_u_range": [
+      0.055041,
+      0.944959
+     ],
+     "uv_v_range": [
+      0.259472,
+      0.740528
+     ],
+     "collapsed_uv_triangles": 0,
+     "mirrored_uv_triangles": 0,
+     "min_triangle_area_mm2": 8.643988,
+     "density_px_per_mm_area_weighted": {
+      "steel": {
+       "mean": 14.3299,
+       "p01": 14.3266,
+       "p99": 14.3538
+      }
+     }
+    }
+   },
+   "closed_manifold": [
+    true,
+    true,
+    true
+   ],
+   "mesh_volume_mm3_lod0": 562.311,
+   "mesh_centroid_mm_lod0": [
+    -0.0,
+    0.0,
+    -0.0
+   ],
+   "lod_deviation": {
+    "LOD1": {
+     "p50": 0.0437,
+     "p99": 0.1055,
+     "max": 0.107,
+     "mm_per_px_at_switch_1080p": 0.9259,
+     "p99_px_at_switch": 0.114,
+     "max_px_at_switch": 0.1155,
+     "pass": true
+    },
+    "LOD2": {
+     "p50": 0.1034,
+     "p99": 0.232,
+     "max": 0.2333,
+     "mm_per_px_at_switch_1080p": 2.6455,
+     "p99_px_at_switch": 0.0877,
+     "max_px_at_switch": 0.0882,
+     "pass": true
+    }
+   },
+   "silhouette_lod0": {
+    "stations": 131,
+    "worst_abs_dev_mm": 0.0467,
+    "worst_at_mm": -64.0,
+    "excluded_stations_at_profile_steps": [
+     -65.0,
+     65.0
+    ],
+    "pass_0.05mm": "True",
+    "rows": [
+     {
+      "s_mm": -65.0,
+      "design": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "mesh": {
+       "+Y": 0.05,
+       "-Y": 0.05,
+       "+Z": 0.05,
+       "-Z": 0.05
+      },
+      "dev": {
+       "+Y": 0.05,
+       "-Y": 0.05,
+       "+Z": 0.05,
+       "-Z": 0.05
+      },
+      "excluded": true
+     },
+     {
+      "s_mm": -64.0,
+      "design": {
+       "+Y": 0.0767,
+       "-Y": 0.0767,
+       "+Z": 0.0767,
+       "-Z": 0.0767
+      },
+      "mesh": {
+       "+Y": 0.1233,
+       "-Y": 0.1233,
+       "+Z": 0.1233,
+       "-Z": 0.1233
+      },
+      "dev": {
+       "+Y": 0.0467,
+       "-Y": 0.0467,
+       "+Z": 0.0467,
+       "-Z": 0.0467
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -63.0,
+      "design": {
+       "+Y": 0.1533,
+       "-Y": 0.1533,
+       "+Z": 0.1533,
+       "-Z": 0.1533
+      },
+      "mesh": {
+       "+Y": 0.1967,
+       "-Y": 0.1967,
+       "+Z": 0.1967,
+       "-Z": 0.1967
+      },
+      "dev": {
+       "+Y": 0.0433,
+       "-Y": 0.0433,
+       "+Z": 0.0433,
+       "-Z": 0.0433
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -62.0,
+      "design": {
+       "+Y": 0.23,
+       "-Y": 0.23,
+       "+Z": 0.23,
+       "-Z": 0.23
+      },
+      "mesh": {
+       "+Y": 0.27,
+       "-Y": 0.27,
+       "+Z": 0.27,
+       "-Z": 0.27
+      },
+      "dev": {
+       "+Y": 0.04,
+       "-Y": 0.04,
+       "+Z": 0.04,
+       "-Z": 0.04
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -61.0,
+      "design": {
+       "+Y": 0.3067,
+       "-Y": 0.3067,
+       "+Z": 0.3067,
+       "-Z": 0.3067
+      },
+      "mesh": {
+       "+Y": 0.3433,
+       "-Y": 0.3433,
+       "+Z": 0.3433,
+       "-Z": 0.3433
+      },
+      "dev": {
+       "+Y": 0.0367,
+       "-Y": 0.0367,
+       "+Z": 0.0367,
+       "-Z": 0.0367
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -60.0,
+      "design": {
+       "+Y": 0.3833,
+       "-Y": 0.3833,
+       "+Z": 0.3833,
+       "-Z": 0.3833
+      },
+      "mesh": {
+       "+Y": 0.4167,
+       "-Y": 0.4167,
+       "+Z": 0.4167,
+       "-Z": 0.4167
+      },
+      "dev": {
+       "+Y": 0.0333,
+       "-Y": 0.0333,
+       "+Z": 0.0333,
+       "-Z": 0.0333
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -59.0,
+      "design": {
+       "+Y": 0.46,
+       "-Y": 0.46,
+       "+Z": 0.46,
+       "-Z": 0.46
+      },
+      "mesh": {
+       "+Y": 0.49,
+       "-Y": 0.49,
+       "+Z": 0.49,
+       "-Z": 0.49
+      },
+      "dev": {
+       "+Y": 0.03,
+       "-Y": 0.03,
+       "+Z": 0.03,
+       "-Z": 0.03
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -58.0,
+      "design": {
+       "+Y": 0.5367,
+       "-Y": 0.5367,
+       "+Z": 0.5367,
+       "-Z": 0.5367
+      },
+      "mesh": {
+       "+Y": 0.5633,
+       "-Y": 0.5633,
+       "+Z": 0.5633,
+       "-Z": 0.5633
+      },
+      "dev": {
+       "+Y": 0.0267,
+       "-Y": 0.0267,
+       "+Z": 0.0267,
+       "-Z": 0.0267
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -57.0,
+      "design": {
+       "+Y": 0.6133,
+       "-Y": 0.6133,
+       "+Z": 0.6133,
+       "-Z": 0.6133
+      },
+      "mesh": {
+       "+Y": 0.6367,
+       "-Y": 0.6367,
+       "+Z": 0.6367,
+       "-Z": 0.6367
+      },
+      "dev": {
+       "+Y": 0.0233,
+       "-Y": 0.0233,
+       "+Z": 0.0233,
+       "-Z": 0.0233
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -56.0,
+      "design": {
+       "+Y": 0.69,
+       "-Y": 0.69,
+       "+Z": 0.69,
+       "-Z": 0.69
+      },
+      "mesh": {
+       "+Y": 0.71,
+       "-Y": 0.71,
+       "+Z": 0.71,
+       "-Z": 0.71
+      },
+      "dev": {
+       "+Y": 0.02,
+       "-Y": 0.02,
+       "+Z": 0.02,
+       "-Z": 0.02
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -55.0,
+      "design": {
+       "+Y": 0.7667,
+       "-Y": 0.7667,
+       "+Z": 0.7667,
+       "-Z": 0.7667
+      },
+      "mesh": {
+       "+Y": 0.7833,
+       "-Y": 0.7833,
+       "+Z": 0.7833,
+       "-Z": 0.7833
+      },
+      "dev": {
+       "+Y": 0.0167,
+       "-Y": 0.0167,
+       "+Z": 0.0167,
+       "-Z": 0.0167
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -54.0,
+      "design": {
+       "+Y": 0.8433,
+       "-Y": 0.8433,
+       "+Z": 0.8433,
+       "-Z": 0.8433
+      },
+      "mesh": {
+       "+Y": 0.8567,
+       "-Y": 0.8567,
+       "+Z": 0.8567,
+       "-Z": 0.8567
+      },
+      "dev": {
+       "+Y": 0.0133,
+       "-Y": 0.0133,
+       "+Z": 0.0133,
+       "-Z": 0.0133
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -53.0,
+      "design": {
+       "+Y": 0.92,
+       "-Y": 0.92,
+       "+Z": 0.92,
+       "-Z": 0.92
+      },
+      "mesh": {
+       "+Y": 0.93,
+       "-Y": 0.93,
+       "+Z": 0.93,
+       "-Z": 0.93
+      },
+      "dev": {
+       "+Y": 0.01,
+       "-Y": 0.01,
+       "+Z": 0.01,
+       "-Z": 0.01
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -52.0,
+      "design": {
+       "+Y": 0.9967,
+       "-Y": 0.9967,
+       "+Z": 0.9967,
+       "-Z": 0.9967
+      },
+      "mesh": {
+       "+Y": 1.0033,
+       "-Y": 1.0033,
+       "+Z": 1.0033,
+       "-Z": 1.0033
+      },
+      "dev": {
+       "+Y": 0.0067,
+       "-Y": 0.0067,
+       "+Z": 0.0067,
+       "-Z": 0.0067
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -51.0,
+      "design": {
+       "+Y": 1.0733,
+       "-Y": 1.0733,
+       "+Z": 1.0733,
+       "-Z": 1.0733
+      },
+      "mesh": {
+       "+Y": 1.0767,
+       "-Y": 1.0767,
+       "+Z": 1.0767,
+       "-Z": 1.0767
+      },
+      "dev": {
+       "+Y": 0.0033,
+       "-Y": 0.0033,
+       "+Z": 0.0033,
+       "-Z": 0.0033
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -50.0,
+      "design": {
+       "+Y": 1.15,
+       "-Y": 1.15,
+       "+Z": 1.15,
+       "-Z": 1.15
+      },
+      "mesh": {
+       "+Y": 1.15,
+       "-Y": 1.15,
+       "+Z": 1.15,
+       "-Z": 1.15
+      },
+      "dev": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -49.0,
+      "design": {
+       "+Y": 1.1599,
+       "-Y": 1.1599,
+       "+Z": 1.1599,
+       "-Z": 1.1599
+      },
+      "mesh": {
+       "+Y": 1.1592,
+       "-Y": 1.1592,
+       "+Z": 1.1592,
+       "-Z": 1.1592
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -48.0,
+      "design": {
+       "+Y": 1.1696,
+       "-Y": 1.1696,
+       "+Z": 1.1696,
+       "-Z": 1.1696
+      },
+      "mesh": {
+       "+Y": 1.1683,
+       "-Y": 1.1683,
+       "+Z": 1.1683,
+       "-Z": 1.1683
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -47.0,
+      "design": {
+       "+Y": 1.1791,
+       "-Y": 1.1791,
+       "+Z": 1.1791,
+       "-Z": 1.1791
+      },
+      "mesh": {
+       "+Y": 1.1775,
+       "-Y": 1.1775,
+       "+Z": 1.1775,
+       "-Z": 1.1775
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -46.0,
+      "design": {
+       "+Y": 1.1884,
+       "-Y": 1.1884,
+       "+Z": 1.1884,
+       "-Z": 1.1884
+      },
+      "mesh": {
+       "+Y": 1.1867,
+       "-Y": 1.1867,
+       "+Z": 1.1867,
+       "-Z": 1.1867
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -45.0,
+      "design": {
+       "+Y": 1.1975,
+       "-Y": 1.1975,
+       "+Z": 1.1975,
+       "-Z": 1.1975
+      },
+      "mesh": {
+       "+Y": 1.1958,
+       "-Y": 1.1958,
+       "+Z": 1.1958,
+       "-Z": 1.1958
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -44.0,
+      "design": {
+       "+Y": 1.2064,
+       "-Y": 1.2064,
+       "+Z": 1.2064,
+       "-Z": 1.2064
+      },
+      "mesh": {
+       "+Y": 1.205,
+       "-Y": 1.205,
+       "+Z": 1.205,
+       "-Z": 1.205
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -43.0,
+      "design": {
+       "+Y": 1.2151,
+       "-Y": 1.2151,
+       "+Z": 1.2151,
+       "-Z": 1.2151
+      },
+      "mesh": {
+       "+Y": 1.2142,
+       "-Y": 1.2142,
+       "+Z": 1.2142,
+       "-Z": 1.2142
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -42.0,
+      "design": {
+       "+Y": 1.2236,
+       "-Y": 1.2236,
+       "+Z": 1.2236,
+       "-Z": 1.2236
+      },
+      "mesh": {
+       "+Y": 1.2233,
+       "-Y": 1.2233,
+       "+Z": 1.2233,
+       "-Z": 1.2233
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -41.0,
+      "design": {
+       "+Y": 1.2319,
+       "-Y": 1.2319,
+       "+Z": 1.2319,
+       "-Z": 1.2319
+      },
+      "mesh": {
+       "+Y": 1.2314,
+       "-Y": 1.2314,
+       "+Z": 1.2314,
+       "-Z": 1.2314
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -40.0,
+      "design": {
+       "+Y": 1.24,
+       "-Y": 1.24,
+       "+Z": 1.24,
+       "-Z": 1.24
+      },
+      "mesh": {
+       "+Y": 1.2389,
+       "-Y": 1.2389,
+       "+Z": 1.2389,
+       "-Z": 1.2389
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -39.0,
+      "design": {
+       "+Y": 1.2479,
+       "-Y": 1.2479,
+       "+Z": 1.2479,
+       "-Z": 1.2479
+      },
+      "mesh": {
+       "+Y": 1.2464,
+       "-Y": 1.2464,
+       "+Z": 1.2464,
+       "-Z": 1.2464
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -38.0,
+      "design": {
+       "+Y": 1.2556,
+       "-Y": 1.2556,
+       "+Z": 1.2556,
+       "-Z": 1.2556
+      },
+      "mesh": {
+       "+Y": 1.2539,
+       "-Y": 1.2539,
+       "+Z": 1.2539,
+       "-Z": 1.2539
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -37.0,
+      "design": {
+       "+Y": 1.2631,
+       "-Y": 1.2631,
+       "+Z": 1.2631,
+       "-Z": 1.2631
+      },
+      "mesh": {
+       "+Y": 1.2614,
+       "-Y": 1.2614,
+       "+Z": 1.2614,
+       "-Z": 1.2614
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -36.0,
+      "design": {
+       "+Y": 1.2704,
+       "-Y": 1.2704,
+       "+Z": 1.2704,
+       "-Z": 1.2704
+      },
+      "mesh": {
+       "+Y": 1.2689,
+       "-Y": 1.2689,
+       "+Z": 1.2689,
+       "-Z": 1.2689
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -35.0,
+      "design": {
+       "+Y": 1.2775,
+       "-Y": 1.2775,
+       "+Z": 1.2775,
+       "-Z": 1.2775
+      },
+      "mesh": {
+       "+Y": 1.2764,
+       "-Y": 1.2764,
+       "+Z": 1.2764,
+       "-Z": 1.2764
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -34.0,
+      "design": {
+       "+Y": 1.2844,
+       "-Y": 1.2844,
+       "+Z": 1.2844,
+       "-Z": 1.2844
+      },
+      "mesh": {
+       "+Y": 1.2839,
+       "-Y": 1.2839,
+       "+Z": 1.2839,
+       "-Z": 1.2839
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -33.0,
+      "design": {
+       "+Y": 1.2911,
+       "-Y": 1.2911,
+       "+Z": 1.2911,
+       "-Z": 1.2911
+      },
+      "mesh": {
+       "+Y": 1.2908,
+       "-Y": 1.2908,
+       "+Z": 1.2908,
+       "-Z": 1.2908
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -32.0,
+      "design": {
+       "+Y": 1.2976,
+       "-Y": 1.2976,
+       "+Z": 1.2976,
+       "-Z": 1.2976
+      },
+      "mesh": {
+       "+Y": 1.2967,
+       "-Y": 1.2967,
+       "+Z": 1.2967,
+       "-Z": 1.2967
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -31.0,
+      "design": {
+       "+Y": 1.3039,
+       "-Y": 1.3039,
+       "+Z": 1.3039,
+       "-Z": 1.3039
+      },
+      "mesh": {
+       "+Y": 1.3025,
+       "-Y": 1.3025,
+       "+Z": 1.3025,
+       "-Z": 1.3025
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -30.0,
+      "design": {
+       "+Y": 1.31,
+       "-Y": 1.31,
+       "+Z": 1.31,
+       "-Z": 1.31
+      },
+      "mesh": {
+       "+Y": 1.3083,
+       "-Y": 1.3083,
+       "+Z": 1.3083,
+       "-Z": 1.3083
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -29.0,
+      "design": {
+       "+Y": 1.3159,
+       "-Y": 1.3159,
+       "+Z": 1.3159,
+       "-Z": 1.3159
+      },
+      "mesh": {
+       "+Y": 1.3142,
+       "-Y": 1.3142,
+       "+Z": 1.3142,
+       "-Z": 1.3142
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -28.0,
+      "design": {
+       "+Y": 1.3216,
+       "-Y": 1.3216,
+       "+Z": 1.3216,
+       "-Z": 1.3216
+      },
+      "mesh": {
+       "+Y": 1.32,
+       "-Y": 1.32,
+       "+Z": 1.32,
+       "-Z": 1.32
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -27.0,
+      "design": {
+       "+Y": 1.3271,
+       "-Y": 1.3271,
+       "+Z": 1.3271,
+       "-Z": 1.3271
+      },
+      "mesh": {
+       "+Y": 1.3258,
+       "-Y": 1.3258,
+       "+Z": 1.3258,
+       "-Z": 1.3258
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -26.0,
+      "design": {
+       "+Y": 1.3324,
+       "-Y": 1.3324,
+       "+Z": 1.3324,
+       "-Z": 1.3324
+      },
+      "mesh": {
+       "+Y": 1.3317,
+       "-Y": 1.3317,
+       "+Z": 1.3317,
+       "-Z": 1.3317
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -25.0,
+      "design": {
+       "+Y": 1.3375,
+       "-Y": 1.3375,
+       "+Z": 1.3375,
+       "-Z": 1.3375
+      },
+      "mesh": {
+       "+Y": 1.3375,
+       "-Y": 1.3375,
+       "+Z": 1.3375,
+       "-Z": 1.3375
+      },
+      "dev": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -24.0,
+      "design": {
+       "+Y": 1.3424,
+       "-Y": 1.3424,
+       "+Z": 1.3424,
+       "-Z": 1.3424
+      },
+      "mesh": {
+       "+Y": 1.3417,
+       "-Y": 1.3417,
+       "+Z": 1.3417,
+       "-Z": 1.3417
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -23.0,
+      "design": {
+       "+Y": 1.3471,
+       "-Y": 1.3471,
+       "+Z": 1.3471,
+       "-Z": 1.3471
+      },
+      "mesh": {
+       "+Y": 1.3458,
+       "-Y": 1.3458,
+       "+Z": 1.3458,
+       "-Z": 1.3458
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -22.0,
+      "design": {
+       "+Y": 1.3516,
+       "-Y": 1.3516,
+       "+Z": 1.3516,
+       "-Z": 1.3516
+      },
+      "mesh": {
+       "+Y": 1.35,
+       "-Y": 1.35,
+       "+Z": 1.35,
+       "-Z": 1.35
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -21.0,
+      "design": {
+       "+Y": 1.3559,
+       "-Y": 1.3559,
+       "+Z": 1.3559,
+       "-Z": 1.3559
+      },
+      "mesh": {
+       "+Y": 1.3542,
+       "-Y": 1.3542,
+       "+Z": 1.3542,
+       "-Z": 1.3542
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -20.0,
+      "design": {
+       "+Y": 1.36,
+       "-Y": 1.36,
+       "+Z": 1.36,
+       "-Z": 1.36
+      },
+      "mesh": {
+       "+Y": 1.3583,
+       "-Y": 1.3583,
+       "+Z": 1.3583,
+       "-Z": 1.3583
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -19.0,
+      "design": {
+       "+Y": 1.3639,
+       "-Y": 1.3639,
+       "+Z": 1.3639,
+       "-Z": 1.3639
+      },
+      "mesh": {
+       "+Y": 1.3625,
+       "-Y": 1.3625,
+       "+Z": 1.3625,
+       "-Z": 1.3625
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -18.0,
+      "design": {
+       "+Y": 1.3676,
+       "-Y": 1.3676,
+       "+Z": 1.3676,
+       "-Z": 1.3676
+      },
+      "mesh": {
+       "+Y": 1.3667,
+       "-Y": 1.3667,
+       "+Z": 1.3667,
+       "-Z": 1.3667
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -17.0,
+      "design": {
+       "+Y": 1.3711,
+       "-Y": 1.3711,
+       "+Z": 1.3711,
+       "-Z": 1.3711
+      },
+      "mesh": {
+       "+Y": 1.3708,
+       "-Y": 1.3708,
+       "+Z": 1.3708,
+       "-Z": 1.3708
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -16.0,
+      "design": {
+       "+Y": 1.3744,
+       "-Y": 1.3744,
+       "+Z": 1.3744,
+       "-Z": 1.3744
+      },
+      "mesh": {
+       "+Y": 1.3739,
+       "-Y": 1.3739,
+       "+Z": 1.3739,
+       "-Z": 1.3739
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -15.0,
+      "design": {
+       "+Y": 1.3775,
+       "-Y": 1.3775,
+       "+Z": 1.3775,
+       "-Z": 1.3775
+      },
+      "mesh": {
+       "+Y": 1.3764,
+       "-Y": 1.3764,
+       "+Z": 1.3764,
+       "-Z": 1.3764
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -14.0,
+      "design": {
+       "+Y": 1.3804,
+       "-Y": 1.3804,
+       "+Z": 1.3804,
+       "-Z": 1.3804
+      },
+      "mesh": {
+       "+Y": 1.3789,
+       "-Y": 1.3789,
+       "+Z": 1.3789,
+       "-Z": 1.3789
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -13.0,
+      "design": {
+       "+Y": 1.3831,
+       "-Y": 1.3831,
+       "+Z": 1.3831,
+       "-Z": 1.3831
+      },
+      "mesh": {
+       "+Y": 1.3814,
+       "-Y": 1.3814,
+       "+Z": 1.3814,
+       "-Z": 1.3814
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -12.0,
+      "design": {
+       "+Y": 1.3856,
+       "-Y": 1.3856,
+       "+Z": 1.3856,
+       "-Z": 1.3856
+      },
+      "mesh": {
+       "+Y": 1.3839,
+       "-Y": 1.3839,
+       "+Z": 1.3839,
+       "-Z": 1.3839
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -11.0,
+      "design": {
+       "+Y": 1.3879,
+       "-Y": 1.3879,
+       "+Z": 1.3879,
+       "-Z": 1.3879
+      },
+      "mesh": {
+       "+Y": 1.3864,
+       "-Y": 1.3864,
+       "+Z": 1.3864,
+       "-Z": 1.3864
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -10.0,
+      "design": {
+       "+Y": 1.39,
+       "-Y": 1.39,
+       "+Z": 1.39,
+       "-Z": 1.39
+      },
+      "mesh": {
+       "+Y": 1.3889,
+       "-Y": 1.3889,
+       "+Z": 1.3889,
+       "-Z": 1.3889
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -9.0,
+      "design": {
+       "+Y": 1.3919,
+       "-Y": 1.3919,
+       "+Z": 1.3919,
+       "-Z": 1.3919
+      },
+      "mesh": {
+       "+Y": 1.3914,
+       "-Y": 1.3914,
+       "+Z": 1.3914,
+       "-Z": 1.3914
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -8.0,
+      "design": {
+       "+Y": 1.3936,
+       "-Y": 1.3936,
+       "+Z": 1.3936,
+       "-Z": 1.3936
+      },
+      "mesh": {
+       "+Y": 1.3933,
+       "-Y": 1.3933,
+       "+Z": 1.3933,
+       "-Z": 1.3933
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -7.0,
+      "design": {
+       "+Y": 1.3951,
+       "-Y": 1.3951,
+       "+Z": 1.3951,
+       "-Z": 1.3951
+      },
+      "mesh": {
+       "+Y": 1.3942,
+       "-Y": 1.3942,
+       "+Z": 1.3942,
+       "-Z": 1.3942
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -6.0,
+      "design": {
+       "+Y": 1.3964,
+       "-Y": 1.3964,
+       "+Z": 1.3964,
+       "-Z": 1.3964
+      },
+      "mesh": {
+       "+Y": 1.395,
+       "-Y": 1.395,
+       "+Z": 1.395,
+       "-Z": 1.395
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -5.0,
+      "design": {
+       "+Y": 1.3975,
+       "-Y": 1.3975,
+       "+Z": 1.3975,
+       "-Z": 1.3975
+      },
+      "mesh": {
+       "+Y": 1.3958,
+       "-Y": 1.3958,
+       "+Z": 1.3958,
+       "-Z": 1.3958
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -4.0,
+      "design": {
+       "+Y": 1.3984,
+       "-Y": 1.3984,
+       "+Z": 1.3984,
+       "-Z": 1.3984
+      },
+      "mesh": {
+       "+Y": 1.3967,
+       "-Y": 1.3967,
+       "+Z": 1.3967,
+       "-Z": 1.3967
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -3.0,
+      "design": {
+       "+Y": 1.3991,
+       "-Y": 1.3991,
+       "+Z": 1.3991,
+       "-Z": 1.3991
+      },
+      "mesh": {
+       "+Y": 1.3975,
+       "-Y": 1.3975,
+       "+Z": 1.3975,
+       "-Z": 1.3975
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -2.0,
+      "design": {
+       "+Y": 1.3996,
+       "-Y": 1.3996,
+       "+Z": 1.3996,
+       "-Z": 1.3996
+      },
+      "mesh": {
+       "+Y": 1.3983,
+       "-Y": 1.3983,
+       "+Z": 1.3983,
+       "-Z": 1.3983
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": -1.0,
+      "design": {
+       "+Y": 1.3999,
+       "-Y": 1.3999,
+       "+Z": 1.3999,
+       "-Z": 1.3999
+      },
+      "mesh": {
+       "+Y": 1.3992,
+       "-Y": 1.3992,
+       "+Z": 1.3992,
+       "-Z": 1.3992
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 0.0,
+      "design": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "mesh": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 1.0,
+      "design": {
+       "+Y": 1.3999,
+       "-Y": 1.3999,
+       "+Z": 1.3999,
+       "-Z": 1.3999
+      },
+      "mesh": {
+       "+Y": 1.3992,
+       "-Y": 1.3992,
+       "+Z": 1.3992,
+       "-Z": 1.3992
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 2.0,
+      "design": {
+       "+Y": 1.3996,
+       "-Y": 1.3996,
+       "+Z": 1.3996,
+       "-Z": 1.3996
+      },
+      "mesh": {
+       "+Y": 1.3983,
+       "-Y": 1.3983,
+       "+Z": 1.3983,
+       "-Z": 1.3983
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 3.0,
+      "design": {
+       "+Y": 1.3991,
+       "-Y": 1.3991,
+       "+Z": 1.3991,
+       "-Z": 1.3991
+      },
+      "mesh": {
+       "+Y": 1.3975,
+       "-Y": 1.3975,
+       "+Z": 1.3975,
+       "-Z": 1.3975
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 4.0,
+      "design": {
+       "+Y": 1.3984,
+       "-Y": 1.3984,
+       "+Z": 1.3984,
+       "-Z": 1.3984
+      },
+      "mesh": {
+       "+Y": 1.3967,
+       "-Y": 1.3967,
+       "+Z": 1.3967,
+       "-Z": 1.3967
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 5.0,
+      "design": {
+       "+Y": 1.3975,
+       "-Y": 1.3975,
+       "+Z": 1.3975,
+       "-Z": 1.3975
+      },
+      "mesh": {
+       "+Y": 1.3958,
+       "-Y": 1.3958,
+       "+Z": 1.3958,
+       "-Z": 1.3958
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 6.0,
+      "design": {
+       "+Y": 1.3964,
+       "-Y": 1.3964,
+       "+Z": 1.3964,
+       "-Z": 1.3964
+      },
+      "mesh": {
+       "+Y": 1.395,
+       "-Y": 1.395,
+       "+Z": 1.395,
+       "-Z": 1.395
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 7.0,
+      "design": {
+       "+Y": 1.3951,
+       "-Y": 1.3951,
+       "+Z": 1.3951,
+       "-Z": 1.3951
+      },
+      "mesh": {
+       "+Y": 1.3942,
+       "-Y": 1.3942,
+       "+Z": 1.3942,
+       "-Z": 1.3942
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 8.0,
+      "design": {
+       "+Y": 1.3936,
+       "-Y": 1.3936,
+       "+Z": 1.3936,
+       "-Z": 1.3936
+      },
+      "mesh": {
+       "+Y": 1.3933,
+       "-Y": 1.3933,
+       "+Z": 1.3933,
+       "-Z": 1.3933
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 9.0,
+      "design": {
+       "+Y": 1.3919,
+       "-Y": 1.3919,
+       "+Z": 1.3919,
+       "-Z": 1.3919
+      },
+      "mesh": {
+       "+Y": 1.3914,
+       "-Y": 1.3914,
+       "+Z": 1.3914,
+       "-Z": 1.3914
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 10.0,
+      "design": {
+       "+Y": 1.39,
+       "-Y": 1.39,
+       "+Z": 1.39,
+       "-Z": 1.39
+      },
+      "mesh": {
+       "+Y": 1.3889,
+       "-Y": 1.3889,
+       "+Z": 1.3889,
+       "-Z": 1.3889
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 11.0,
+      "design": {
+       "+Y": 1.3879,
+       "-Y": 1.3879,
+       "+Z": 1.3879,
+       "-Z": 1.3879
+      },
+      "mesh": {
+       "+Y": 1.3864,
+       "-Y": 1.3864,
+       "+Z": 1.3864,
+       "-Z": 1.3864
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 12.0,
+      "design": {
+       "+Y": 1.3856,
+       "-Y": 1.3856,
+       "+Z": 1.3856,
+       "-Z": 1.3856
+      },
+      "mesh": {
+       "+Y": 1.3839,
+       "-Y": 1.3839,
+       "+Z": 1.3839,
+       "-Z": 1.3839
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 13.0,
+      "design": {
+       "+Y": 1.3831,
+       "-Y": 1.3831,
+       "+Z": 1.3831,
+       "-Z": 1.3831
+      },
+      "mesh": {
+       "+Y": 1.3814,
+       "-Y": 1.3814,
+       "+Z": 1.3814,
+       "-Z": 1.3814
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 14.0,
+      "design": {
+       "+Y": 1.3804,
+       "-Y": 1.3804,
+       "+Z": 1.3804,
+       "-Z": 1.3804
+      },
+      "mesh": {
+       "+Y": 1.3789,
+       "-Y": 1.3789,
+       "+Z": 1.3789,
+       "-Z": 1.3789
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 15.0,
+      "design": {
+       "+Y": 1.3775,
+       "-Y": 1.3775,
+       "+Z": 1.3775,
+       "-Z": 1.3775
+      },
+      "mesh": {
+       "+Y": 1.3764,
+       "-Y": 1.3764,
+       "+Z": 1.3764,
+       "-Z": 1.3764
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 16.0,
+      "design": {
+       "+Y": 1.3744,
+       "-Y": 1.3744,
+       "+Z": 1.3744,
+       "-Z": 1.3744
+      },
+      "mesh": {
+       "+Y": 1.3739,
+       "-Y": 1.3739,
+       "+Z": 1.3739,
+       "-Z": 1.3739
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 17.0,
+      "design": {
+       "+Y": 1.3711,
+       "-Y": 1.3711,
+       "+Z": 1.3711,
+       "-Z": 1.3711
+      },
+      "mesh": {
+       "+Y": 1.3708,
+       "-Y": 1.3708,
+       "+Z": 1.3708,
+       "-Z": 1.3708
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 18.0,
+      "design": {
+       "+Y": 1.3676,
+       "-Y": 1.3676,
+       "+Z": 1.3676,
+       "-Z": 1.3676
+      },
+      "mesh": {
+       "+Y": 1.3667,
+       "-Y": 1.3667,
+       "+Z": 1.3667,
+       "-Z": 1.3667
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 19.0,
+      "design": {
+       "+Y": 1.3639,
+       "-Y": 1.3639,
+       "+Z": 1.3639,
+       "-Z": 1.3639
+      },
+      "mesh": {
+       "+Y": 1.3625,
+       "-Y": 1.3625,
+       "+Z": 1.3625,
+       "-Z": 1.3625
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 20.0,
+      "design": {
+       "+Y": 1.36,
+       "-Y": 1.36,
+       "+Z": 1.36,
+       "-Z": 1.36
+      },
+      "mesh": {
+       "+Y": 1.3583,
+       "-Y": 1.3583,
+       "+Z": 1.3583,
+       "-Z": 1.3583
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 21.0,
+      "design": {
+       "+Y": 1.3559,
+       "-Y": 1.3559,
+       "+Z": 1.3559,
+       "-Z": 1.3559
+      },
+      "mesh": {
+       "+Y": 1.3542,
+       "-Y": 1.3542,
+       "+Z": 1.3542,
+       "-Z": 1.3542
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 22.0,
+      "design": {
+       "+Y": 1.3516,
+       "-Y": 1.3516,
+       "+Z": 1.3516,
+       "-Z": 1.3516
+      },
+      "mesh": {
+       "+Y": 1.35,
+       "-Y": 1.35,
+       "+Z": 1.35,
+       "-Z": 1.35
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 23.0,
+      "design": {
+       "+Y": 1.3471,
+       "-Y": 1.3471,
+       "+Z": 1.3471,
+       "-Z": 1.3471
+      },
+      "mesh": {
+       "+Y": 1.3458,
+       "-Y": 1.3458,
+       "+Z": 1.3458,
+       "-Z": 1.3458
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 24.0,
+      "design": {
+       "+Y": 1.3424,
+       "-Y": 1.3424,
+       "+Z": 1.3424,
+       "-Z": 1.3424
+      },
+      "mesh": {
+       "+Y": 1.3417,
+       "-Y": 1.3417,
+       "+Z": 1.3417,
+       "-Z": 1.3417
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 25.0,
+      "design": {
+       "+Y": 1.3375,
+       "-Y": 1.3375,
+       "+Z": 1.3375,
+       "-Z": 1.3375
+      },
+      "mesh": {
+       "+Y": 1.3375,
+       "-Y": 1.3375,
+       "+Z": 1.3375,
+       "-Z": 1.3375
+      },
+      "dev": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 26.0,
+      "design": {
+       "+Y": 1.3324,
+       "-Y": 1.3324,
+       "+Z": 1.3324,
+       "-Z": 1.3324
+      },
+      "mesh": {
+       "+Y": 1.3317,
+       "-Y": 1.3317,
+       "+Z": 1.3317,
+       "-Z": 1.3317
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 27.0,
+      "design": {
+       "+Y": 1.3271,
+       "-Y": 1.3271,
+       "+Z": 1.3271,
+       "-Z": 1.3271
+      },
+      "mesh": {
+       "+Y": 1.3258,
+       "-Y": 1.3258,
+       "+Z": 1.3258,
+       "-Z": 1.3258
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 28.0,
+      "design": {
+       "+Y": 1.3216,
+       "-Y": 1.3216,
+       "+Z": 1.3216,
+       "-Z": 1.3216
+      },
+      "mesh": {
+       "+Y": 1.32,
+       "-Y": 1.32,
+       "+Z": 1.32,
+       "-Z": 1.32
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 29.0,
+      "design": {
+       "+Y": 1.3159,
+       "-Y": 1.3159,
+       "+Z": 1.3159,
+       "-Z": 1.3159
+      },
+      "mesh": {
+       "+Y": 1.3142,
+       "-Y": 1.3142,
+       "+Z": 1.3142,
+       "-Z": 1.3142
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 30.0,
+      "design": {
+       "+Y": 1.31,
+       "-Y": 1.31,
+       "+Z": 1.31,
+       "-Z": 1.31
+      },
+      "mesh": {
+       "+Y": 1.3083,
+       "-Y": 1.3083,
+       "+Z": 1.3083,
+       "-Z": 1.3083
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 31.0,
+      "design": {
+       "+Y": 1.3039,
+       "-Y": 1.3039,
+       "+Z": 1.3039,
+       "-Z": 1.3039
+      },
+      "mesh": {
+       "+Y": 1.3025,
+       "-Y": 1.3025,
+       "+Z": 1.3025,
+       "-Z": 1.3025
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 32.0,
+      "design": {
+       "+Y": 1.2976,
+       "-Y": 1.2976,
+       "+Z": 1.2976,
+       "-Z": 1.2976
+      },
+      "mesh": {
+       "+Y": 1.2967,
+       "-Y": 1.2967,
+       "+Z": 1.2967,
+       "-Z": 1.2967
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 33.0,
+      "design": {
+       "+Y": 1.2911,
+       "-Y": 1.2911,
+       "+Z": 1.2911,
+       "-Z": 1.2911
+      },
+      "mesh": {
+       "+Y": 1.2908,
+       "-Y": 1.2908,
+       "+Z": 1.2908,
+       "-Z": 1.2908
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 34.0,
+      "design": {
+       "+Y": 1.2844,
+       "-Y": 1.2844,
+       "+Z": 1.2844,
+       "-Z": 1.2844
+      },
+      "mesh": {
+       "+Y": 1.2839,
+       "-Y": 1.2839,
+       "+Z": 1.2839,
+       "-Z": 1.2839
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 35.0,
+      "design": {
+       "+Y": 1.2775,
+       "-Y": 1.2775,
+       "+Z": 1.2775,
+       "-Z": 1.2775
+      },
+      "mesh": {
+       "+Y": 1.2764,
+       "-Y": 1.2764,
+       "+Z": 1.2764,
+       "-Z": 1.2764
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 36.0,
+      "design": {
+       "+Y": 1.2704,
+       "-Y": 1.2704,
+       "+Z": 1.2704,
+       "-Z": 1.2704
+      },
+      "mesh": {
+       "+Y": 1.2689,
+       "-Y": 1.2689,
+       "+Z": 1.2689,
+       "-Z": 1.2689
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 37.0,
+      "design": {
+       "+Y": 1.2631,
+       "-Y": 1.2631,
+       "+Z": 1.2631,
+       "-Z": 1.2631
+      },
+      "mesh": {
+       "+Y": 1.2614,
+       "-Y": 1.2614,
+       "+Z": 1.2614,
+       "-Z": 1.2614
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 38.0,
+      "design": {
+       "+Y": 1.2556,
+       "-Y": 1.2556,
+       "+Z": 1.2556,
+       "-Z": 1.2556
+      },
+      "mesh": {
+       "+Y": 1.2539,
+       "-Y": 1.2539,
+       "+Z": 1.2539,
+       "-Z": 1.2539
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 39.0,
+      "design": {
+       "+Y": 1.2479,
+       "-Y": 1.2479,
+       "+Z": 1.2479,
+       "-Z": 1.2479
+      },
+      "mesh": {
+       "+Y": 1.2464,
+       "-Y": 1.2464,
+       "+Z": 1.2464,
+       "-Z": 1.2464
+      },
+      "dev": {
+       "+Y": -0.0015,
+       "-Y": -0.0015,
+       "+Z": -0.0015,
+       "-Z": -0.0015
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 40.0,
+      "design": {
+       "+Y": 1.24,
+       "-Y": 1.24,
+       "+Z": 1.24,
+       "-Z": 1.24
+      },
+      "mesh": {
+       "+Y": 1.2389,
+       "-Y": 1.2389,
+       "+Z": 1.2389,
+       "-Z": 1.2389
+      },
+      "dev": {
+       "+Y": -0.0011,
+       "-Y": -0.0011,
+       "+Z": -0.0011,
+       "-Z": -0.0011
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 41.0,
+      "design": {
+       "+Y": 1.2319,
+       "-Y": 1.2319,
+       "+Z": 1.2319,
+       "-Z": 1.2319
+      },
+      "mesh": {
+       "+Y": 1.2314,
+       "-Y": 1.2314,
+       "+Z": 1.2314,
+       "-Z": 1.2314
+      },
+      "dev": {
+       "+Y": -0.0005,
+       "-Y": -0.0005,
+       "+Z": -0.0005,
+       "-Z": -0.0005
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 42.0,
+      "design": {
+       "+Y": 1.2236,
+       "-Y": 1.2236,
+       "+Z": 1.2236,
+       "-Z": 1.2236
+      },
+      "mesh": {
+       "+Y": 1.2233,
+       "-Y": 1.2233,
+       "+Z": 1.2233,
+       "-Z": 1.2233
+      },
+      "dev": {
+       "+Y": -0.0003,
+       "-Y": -0.0003,
+       "+Z": -0.0003,
+       "-Z": -0.0003
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 43.0,
+      "design": {
+       "+Y": 1.2151,
+       "-Y": 1.2151,
+       "+Z": 1.2151,
+       "-Z": 1.2151
+      },
+      "mesh": {
+       "+Y": 1.2142,
+       "-Y": 1.2142,
+       "+Z": 1.2142,
+       "-Z": 1.2142
+      },
+      "dev": {
+       "+Y": -0.0009,
+       "-Y": -0.0009,
+       "+Z": -0.0009,
+       "-Z": -0.0009
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 44.0,
+      "design": {
+       "+Y": 1.2064,
+       "-Y": 1.2064,
+       "+Z": 1.2064,
+       "-Z": 1.2064
+      },
+      "mesh": {
+       "+Y": 1.205,
+       "-Y": 1.205,
+       "+Z": 1.205,
+       "-Z": 1.205
+      },
+      "dev": {
+       "+Y": -0.0014,
+       "-Y": -0.0014,
+       "+Z": -0.0014,
+       "-Z": -0.0014
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 45.0,
+      "design": {
+       "+Y": 1.1975,
+       "-Y": 1.1975,
+       "+Z": 1.1975,
+       "-Z": 1.1975
+      },
+      "mesh": {
+       "+Y": 1.1958,
+       "-Y": 1.1958,
+       "+Z": 1.1958,
+       "-Z": 1.1958
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 46.0,
+      "design": {
+       "+Y": 1.1884,
+       "-Y": 1.1884,
+       "+Z": 1.1884,
+       "-Z": 1.1884
+      },
+      "mesh": {
+       "+Y": 1.1867,
+       "-Y": 1.1867,
+       "+Z": 1.1867,
+       "-Z": 1.1867
+      },
+      "dev": {
+       "+Y": -0.0017,
+       "-Y": -0.0017,
+       "+Z": -0.0017,
+       "-Z": -0.0017
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 47.0,
+      "design": {
+       "+Y": 1.1791,
+       "-Y": 1.1791,
+       "+Z": 1.1791,
+       "-Z": 1.1791
+      },
+      "mesh": {
+       "+Y": 1.1775,
+       "-Y": 1.1775,
+       "+Z": 1.1775,
+       "-Z": 1.1775
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": -0.0016,
+       "-Z": -0.0016
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 48.0,
+      "design": {
+       "+Y": 1.1696,
+       "-Y": 1.1696,
+       "+Z": 1.1696,
+       "-Z": 1.1696
+      },
+      "mesh": {
+       "+Y": 1.1683,
+       "-Y": 1.1683,
+       "+Z": 1.1683,
+       "-Z": 1.1683
+      },
+      "dev": {
+       "+Y": -0.0013,
+       "-Y": -0.0013,
+       "+Z": -0.0013,
+       "-Z": -0.0013
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 49.0,
+      "design": {
+       "+Y": 1.1599,
+       "-Y": 1.1599,
+       "+Z": 1.1599,
+       "-Z": 1.1599
+      },
+      "mesh": {
+       "+Y": 1.1592,
+       "-Y": 1.1592,
+       "+Z": 1.1592,
+       "-Z": 1.1592
+      },
+      "dev": {
+       "+Y": -0.0007,
+       "-Y": -0.0007,
+       "+Z": -0.0007,
+       "-Z": -0.0007
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 50.0,
+      "design": {
+       "+Y": 1.15,
+       "-Y": 1.15,
+       "+Z": 1.15,
+       "-Z": 1.15
+      },
+      "mesh": {
+       "+Y": 1.15,
+       "-Y": 1.15,
+       "+Z": 1.15,
+       "-Z": 1.15
+      },
+      "dev": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 51.0,
+      "design": {
+       "+Y": 1.0733,
+       "-Y": 1.0733,
+       "+Z": 1.0733,
+       "-Z": 1.0733
+      },
+      "mesh": {
+       "+Y": 1.0767,
+       "-Y": 1.0767,
+       "+Z": 1.0767,
+       "-Z": 1.0767
+      },
+      "dev": {
+       "+Y": 0.0033,
+       "-Y": 0.0033,
+       "+Z": 0.0033,
+       "-Z": 0.0033
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 52.0,
+      "design": {
+       "+Y": 0.9967,
+       "-Y": 0.9967,
+       "+Z": 0.9967,
+       "-Z": 0.9967
+      },
+      "mesh": {
+       "+Y": 1.0033,
+       "-Y": 1.0033,
+       "+Z": 1.0033,
+       "-Z": 1.0033
+      },
+      "dev": {
+       "+Y": 0.0067,
+       "-Y": 0.0067,
+       "+Z": 0.0067,
+       "-Z": 0.0067
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 53.0,
+      "design": {
+       "+Y": 0.92,
+       "-Y": 0.92,
+       "+Z": 0.92,
+       "-Z": 0.92
+      },
+      "mesh": {
+       "+Y": 0.93,
+       "-Y": 0.93,
+       "+Z": 0.93,
+       "-Z": 0.93
+      },
+      "dev": {
+       "+Y": 0.01,
+       "-Y": 0.01,
+       "+Z": 0.01,
+       "-Z": 0.01
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 54.0,
+      "design": {
+       "+Y": 0.8433,
+       "-Y": 0.8433,
+       "+Z": 0.8433,
+       "-Z": 0.8433
+      },
+      "mesh": {
+       "+Y": 0.8567,
+       "-Y": 0.8567,
+       "+Z": 0.8567,
+       "-Z": 0.8567
+      },
+      "dev": {
+       "+Y": 0.0133,
+       "-Y": 0.0133,
+       "+Z": 0.0133,
+       "-Z": 0.0133
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 55.0,
+      "design": {
+       "+Y": 0.7667,
+       "-Y": 0.7667,
+       "+Z": 0.7667,
+       "-Z": 0.7667
+      },
+      "mesh": {
+       "+Y": 0.7833,
+       "-Y": 0.7833,
+       "+Z": 0.7833,
+       "-Z": 0.7833
+      },
+      "dev": {
+       "+Y": 0.0167,
+       "-Y": 0.0167,
+       "+Z": 0.0167,
+       "-Z": 0.0167
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 56.0,
+      "design": {
+       "+Y": 0.69,
+       "-Y": 0.69,
+       "+Z": 0.69,
+       "-Z": 0.69
+      },
+      "mesh": {
+       "+Y": 0.71,
+       "-Y": 0.71,
+       "+Z": 0.71,
+       "-Z": 0.71
+      },
+      "dev": {
+       "+Y": 0.02,
+       "-Y": 0.02,
+       "+Z": 0.02,
+       "-Z": 0.02
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 57.0,
+      "design": {
+       "+Y": 0.6133,
+       "-Y": 0.6133,
+       "+Z": 0.6133,
+       "-Z": 0.6133
+      },
+      "mesh": {
+       "+Y": 0.6367,
+       "-Y": 0.6367,
+       "+Z": 0.6367,
+       "-Z": 0.6367
+      },
+      "dev": {
+       "+Y": 0.0233,
+       "-Y": 0.0233,
+       "+Z": 0.0233,
+       "-Z": 0.0233
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 58.0,
+      "design": {
+       "+Y": 0.5367,
+       "-Y": 0.5367,
+       "+Z": 0.5367,
+       "-Z": 0.5367
+      },
+      "mesh": {
+       "+Y": 0.5633,
+       "-Y": 0.5633,
+       "+Z": 0.5633,
+       "-Z": 0.5633
+      },
+      "dev": {
+       "+Y": 0.0267,
+       "-Y": 0.0267,
+       "+Z": 0.0267,
+       "-Z": 0.0267
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 59.0,
+      "design": {
+       "+Y": 0.46,
+       "-Y": 0.46,
+       "+Z": 0.46,
+       "-Z": 0.46
+      },
+      "mesh": {
+       "+Y": 0.49,
+       "-Y": 0.49,
+       "+Z": 0.49,
+       "-Z": 0.49
+      },
+      "dev": {
+       "+Y": 0.03,
+       "-Y": 0.03,
+       "+Z": 0.03,
+       "-Z": 0.03
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 60.0,
+      "design": {
+       "+Y": 0.3833,
+       "-Y": 0.3833,
+       "+Z": 0.3833,
+       "-Z": 0.3833
+      },
+      "mesh": {
+       "+Y": 0.4167,
+       "-Y": 0.4167,
+       "+Z": 0.4167,
+       "-Z": 0.4167
+      },
+      "dev": {
+       "+Y": 0.0333,
+       "-Y": 0.0333,
+       "+Z": 0.0333,
+       "-Z": 0.0333
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 61.0,
+      "design": {
+       "+Y": 0.3067,
+       "-Y": 0.3067,
+       "+Z": 0.3067,
+       "-Z": 0.3067
+      },
+      "mesh": {
+       "+Y": 0.3433,
+       "-Y": 0.3433,
+       "+Z": 0.3433,
+       "-Z": 0.3433
+      },
+      "dev": {
+       "+Y": 0.0367,
+       "-Y": 0.0367,
+       "+Z": 0.0367,
+       "-Z": 0.0367
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 62.0,
+      "design": {
+       "+Y": 0.23,
+       "-Y": 0.23,
+       "+Z": 0.23,
+       "-Z": 0.23
+      },
+      "mesh": {
+       "+Y": 0.27,
+       "-Y": 0.27,
+       "+Z": 0.27,
+       "-Z": 0.27
+      },
+      "dev": {
+       "+Y": 0.04,
+       "-Y": 0.04,
+       "+Z": 0.04,
+       "-Z": 0.04
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 63.0,
+      "design": {
+       "+Y": 0.1533,
+       "-Y": 0.1533,
+       "+Z": 0.1533,
+       "-Z": 0.1533
+      },
+      "mesh": {
+       "+Y": 0.1967,
+       "-Y": 0.1967,
+       "+Z": 0.1967,
+       "-Z": 0.1967
+      },
+      "dev": {
+       "+Y": 0.0433,
+       "-Y": 0.0433,
+       "+Z": 0.0433,
+       "-Z": 0.0433
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 64.0,
+      "design": {
+       "+Y": 0.0767,
+       "-Y": 0.0767,
+       "+Z": 0.0767,
+       "-Z": 0.0767
+      },
+      "mesh": {
+       "+Y": 0.1233,
+       "-Y": 0.1233,
+       "+Z": 0.1233,
+       "-Z": 0.1233
+      },
+      "dev": {
+       "+Y": 0.0467,
+       "-Y": 0.0467,
+       "+Z": 0.0467,
+       "-Z": 0.0467
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 65.0,
+      "design": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "mesh": {
+       "+Y": 0.05,
+       "-Y": 0.05,
+       "+Z": 0.05,
+       "-Z": 0.05
+      },
+      "dev": {
+       "+Y": 0.05,
+       "-Y": 0.05,
+       "+Z": 0.05,
+       "-Z": 0.05
+      },
+      "excluded": true
+     }
+    ]
+   },
+   "symmetry": {
+    "LOD0": {
+     "rotation_deg": 30.0,
+     "max_dev_mm": 2e-06,
+     "mirror_x_max_dev_mm": 2e-06
+    },
+    "LOD1": {
+     "rotation_deg": 45.0,
+     "max_dev_mm": 2e-06,
+     "mirror_x_max_dev_mm": 2e-06
+    },
+    "LOD2": {
+     "rotation_deg": 60.0,
+     "max_dev_mm": 2e-06,
+     "mirror_x_max_dev_mm": 2e-06
+    }
+   },
+   "tip_vertex_x_mm": 64.999998,
+   "dimensions": {
+    "D_at_0_side_top": [
+     2.8,
+     2.8
+    ],
+    "D_at_+50": [
+     2.3,
+     2.3
+    ],
+    "D_at_-50": [
+     2.3,
+     2.3
+    ],
+    "tips_x_mm": [
+     -65.0,
+     65.0
+    ],
+    "tip_flat_diameter_mm": 0.1,
+    "spec": {
+     "D0": [
+      2.8,
+      0.02
+     ],
+     "D50": [
+      2.3,
+      0.02
+     ],
+     "tips": [
+      65.0,
+      0.1
+     ]
+    }
+   }
+  },
+  "heavy": {
+   "triangles": [
+    618,
+    198,
+    78
+   ],
+   "descending": true,
+   "lod0_within_budget": true,
+   "bounds_radius_mm_bbox_centre": 85.0071,
+   "screen_sizes": [
+    1.0,
+    0.17,
+    0.0595
+   ],
+   "switch_distances_m": [
+    0.889,
+    2.54
+   ],
+   "bounds_mm": {
+    "min": [
+     -93.6967,
+     -2.3,
+     -2.3
+    ],
+    "max": [
+     76.3033,
+     2.3,
+     2.3
+    ]
+   },
+   "length_mm": 170.0,
+   "uv": {
+    "LOD0": {
+     "uv_u_range": [
+      0.098941,
+      1.889988
+     ],
+     "uv_v_range": [
+      0.048396,
+      0.951604
+     ],
+     "collapsed_uv_triangles": 0,
+     "mirrored_uv_triangles": 0,
+     "min_triangle_area_mm2": 0.02625,
+     "density_px_per_mm_area_weighted": {
+      "steel": {
+       "mean": 12.0234,
+       "p01": 11.9688,
+       "p99": 12.2799
+      },
+      "wrap": {
+       "mean": 16.1019,
+       "p01": 16.0918,
+       "p99": 16.3737
+      }
+     }
+    },
+    "LOD1": {
+     "uv_u_range": [
+      0.098941,
+      1.889988
+     ],
+     "uv_v_range": [
+      0.048396,
+      0.951604
+     ],
+     "collapsed_uv_triangles": 0,
+     "mirrored_uv_triangles": 0,
+     "min_triangle_area_mm2": 0.134985,
+     "density_px_per_mm_area_weighted": {
+      "steel": {
+       "mean": 12.1026,
+       "p01": 11.9688,
+       "p99": 12.123
+      },
+      "wrap": {
+       "mean": 16.1361,
+       "p01": 15.1364,
+       "p99": 16.3453
+      }
+     }
+    },
+    "LOD2": {
+     "uv_u_range": [
+      0.098941,
+      1.889988
+     ],
+     "uv_v_range": [
+      0.087666,
+      0.912334
+     ],
+     "collapsed_uv_triangles": 0,
+     "mirrored_uv_triangles": 0,
+     "min_triangle_area_mm2": 0.424352,
+     "density_px_per_mm_area_weighted": {
+      "steel": {
+       "mean": 12.2472,
+       "p01": 11.9688,
+       "p99": 12.7748
+      },
+      "wrap": {
+       "mean": 16.4848,
+       "p01": 16.4614,
+       "p99": 17.5942
+      }
+     }
+    }
+   },
+   "closed_manifold": [
+    true,
+    true,
+    true
+   ],
+   "mesh_volume_mm3_lod0": 1822.044,
+   "mesh_centroid_mm_lod0": [
+    -11.0082,
+    -0.0,
+    0.0
+   ],
+   "lod_deviation": {
+    "LOD1": {
+     "p50": 0.0228,
+     "p99": 0.1323,
+     "max": 0.2389,
+     "mm_per_px_at_switch_1080p": 0.926,
+     "p99_px_at_switch": 0.1428,
+     "max_px_at_switch": 0.258,
+     "pass": true
+    },
+    "LOD2": {
+     "p50": 0.1772,
+     "p99": 0.4374,
+     "max": 0.4813,
+     "mm_per_px_at_switch_1080p": 2.6457,
+     "p99_px_at_switch": 0.1653,
+     "max_px_at_switch": 0.1819,
+     "pass": true
+    }
+   },
+   "silhouette_lod0": {
+    "stations": 171,
+    "worst_abs_dev_mm": 0.0038,
+    "worst_at_mm": 152.0,
+    "excluded_stations_at_profile_steps": [
+     0.0,
+     6.0,
+     54.0,
+     170.0
+    ],
+    "pass_0.05mm": true,
+    "rows": [
+     {
+      "s_mm": 0.0,
+      "design": {
+       "+Y": 1.1001,
+       "-Y": 1.1001,
+       "+Z": 1.1001,
+       "-Z": 1.1001
+      },
+      "mesh": {
+       "+Y": 1.1001,
+       "-Y": 1.1001,
+       "+Z": 1.1001,
+       "-Z": 1.1001
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": true
+     },
+     {
+      "s_mm": 1.0,
+      "design": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "mesh": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 2.0,
+      "design": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "mesh": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 3.0,
+      "design": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "mesh": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 4.0,
+      "design": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "mesh": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 5.0,
+      "design": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "mesh": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 6.0,
+      "design": {
+       "+Y": 2.3,
+       "-Y": 2.3,
+       "+Z": 2.3,
+       "-Z": 2.3
+      },
+      "mesh": {
+       "+Y": 1.4,
+       "-Y": 1.4,
+       "+Z": 1.4,
+       "-Z": 1.4
+      },
+      "dev": {
+       "+Y": -0.9,
+       "-Y": -0.9,
+       "+Z": -0.9,
+       "-Z": -0.9
+      },
+      "excluded": true
+     },
+     {
+      "s_mm": 7.0,
+      "design": {
+       "+Y": 2.3,
+       "-Y": 2.3,
+       "+Z": 2.3,
+       "-Z": 2.3
+      },
+      "mesh": {
+       "+Y": 2.3,
+       "-Y": 2.3,
+       "+Z": 2.3,
+       "-Z": 2.3
+      },
+      "dev": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 8.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 9.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 10.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 11.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 12.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 13.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 14.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 15.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 16.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 17.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 18.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 19.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 20.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 21.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 22.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 23.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 24.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 25.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 26.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 27.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 28.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 29.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 30.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 31.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 32.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 33.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 34.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 35.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 36.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 37.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 38.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 39.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 40.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 41.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 42.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 43.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 44.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 45.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 46.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 47.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 48.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 49.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 50.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 51.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 52.0,
+      "design": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "mesh": {
+       "+Y": 2.1,
+       "-Y": 2.1,
+       "+Z": 2.1,
+       "-Z": 2.1
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 53.0,
+      "design": {
+       "+Y": 2.3,
+       "-Y": 2.3,
+       "+Z": 2.3,
+       "-Z": 2.3
+      },
+      "mesh": {
+       "+Y": 2.3,
+       "-Y": 2.3,
+       "+Z": 2.3,
+       "-Z": 2.3
+      },
+      "dev": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 54.0,
+      "design": {
+       "+Y": 2.3,
+       "-Y": 2.3,
+       "+Z": 2.3,
+       "-Z": 2.3
+      },
+      "mesh": {
+       "+Y": 2.15,
+       "-Y": 2.15,
+       "+Z": 2.15,
+       "-Z": 2.15
+      },
+      "dev": {
+       "+Y": -0.15,
+       "-Y": -0.15,
+       "+Z": -0.15,
+       "-Z": -0.15
+      },
+      "excluded": true
+     },
+     {
+      "s_mm": 55.0,
+      "design": {
+       "+Y": 1.409,
+       "-Y": 1.409,
+       "+Z": 1.409,
+       "-Z": 1.409
+      },
+      "mesh": {
+       "+Y": 1.409,
+       "-Y": 1.409,
+       "+Z": 1.409,
+       "-Z": 1.409
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 56.0,
+      "design": {
+       "+Y": 1.4181,
+       "-Y": 1.4181,
+       "+Z": 1.4181,
+       "-Z": 1.4181
+      },
+      "mesh": {
+       "+Y": 1.4181,
+       "-Y": 1.4181,
+       "+Z": 1.4181,
+       "-Z": 1.4181
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 57.0,
+      "design": {
+       "+Y": 1.4271,
+       "-Y": 1.4271,
+       "+Z": 1.4271,
+       "-Z": 1.4271
+      },
+      "mesh": {
+       "+Y": 1.4271,
+       "-Y": 1.4271,
+       "+Z": 1.4271,
+       "-Z": 1.4271
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 58.0,
+      "design": {
+       "+Y": 1.4362,
+       "-Y": 1.4362,
+       "+Z": 1.4362,
+       "-Z": 1.4362
+      },
+      "mesh": {
+       "+Y": 1.4362,
+       "-Y": 1.4362,
+       "+Z": 1.4362,
+       "-Z": 1.4362
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 59.0,
+      "design": {
+       "+Y": 1.4452,
+       "-Y": 1.4452,
+       "+Z": 1.4452,
+       "-Z": 1.4452
+      },
+      "mesh": {
+       "+Y": 1.4452,
+       "-Y": 1.4452,
+       "+Z": 1.4452,
+       "-Z": 1.4452
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 60.0,
+      "design": {
+       "+Y": 1.4543,
+       "-Y": 1.4543,
+       "+Z": 1.4543,
+       "-Z": 1.4543
+      },
+      "mesh": {
+       "+Y": 1.4543,
+       "-Y": 1.4543,
+       "+Z": 1.4543,
+       "-Z": 1.4543
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 61.0,
+      "design": {
+       "+Y": 1.4633,
+       "-Y": 1.4633,
+       "+Z": 1.4633,
+       "-Z": 1.4633
+      },
+      "mesh": {
+       "+Y": 1.4633,
+       "-Y": 1.4633,
+       "+Z": 1.4633,
+       "-Z": 1.4633
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 62.0,
+      "design": {
+       "+Y": 1.4723,
+       "-Y": 1.4723,
+       "+Z": 1.4723,
+       "-Z": 1.4723
+      },
+      "mesh": {
+       "+Y": 1.4723,
+       "-Y": 1.4723,
+       "+Z": 1.4723,
+       "-Z": 1.4723
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 63.0,
+      "design": {
+       "+Y": 1.4814,
+       "-Y": 1.4814,
+       "+Z": 1.4814,
+       "-Z": 1.4814
+      },
+      "mesh": {
+       "+Y": 1.4814,
+       "-Y": 1.4814,
+       "+Z": 1.4814,
+       "-Z": 1.4814
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 64.0,
+      "design": {
+       "+Y": 1.4904,
+       "-Y": 1.4904,
+       "+Z": 1.4904,
+       "-Z": 1.4904
+      },
+      "mesh": {
+       "+Y": 1.4904,
+       "-Y": 1.4904,
+       "+Z": 1.4904,
+       "-Z": 1.4904
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 65.0,
+      "design": {
+       "+Y": 1.4995,
+       "-Y": 1.4995,
+       "+Z": 1.4995,
+       "-Z": 1.4995
+      },
+      "mesh": {
+       "+Y": 1.4995,
+       "-Y": 1.4995,
+       "+Z": 1.4995,
+       "-Z": 1.4995
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 66.0,
+      "design": {
+       "+Y": 1.5085,
+       "-Y": 1.5085,
+       "+Z": 1.5085,
+       "-Z": 1.5085
+      },
+      "mesh": {
+       "+Y": 1.5085,
+       "-Y": 1.5085,
+       "+Z": 1.5085,
+       "-Z": 1.5085
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 67.0,
+      "design": {
+       "+Y": 1.5176,
+       "-Y": 1.5176,
+       "+Z": 1.5176,
+       "-Z": 1.5176
+      },
+      "mesh": {
+       "+Y": 1.5176,
+       "-Y": 1.5176,
+       "+Z": 1.5176,
+       "-Z": 1.5176
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 68.0,
+      "design": {
+       "+Y": 1.5266,
+       "-Y": 1.5266,
+       "+Z": 1.5266,
+       "-Z": 1.5266
+      },
+      "mesh": {
+       "+Y": 1.5266,
+       "-Y": 1.5266,
+       "+Z": 1.5266,
+       "-Z": 1.5266
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 69.0,
+      "design": {
+       "+Y": 1.5356,
+       "-Y": 1.5356,
+       "+Z": 1.5356,
+       "-Z": 1.5356
+      },
+      "mesh": {
+       "+Y": 1.5356,
+       "-Y": 1.5356,
+       "+Z": 1.5356,
+       "-Z": 1.5356
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 70.0,
+      "design": {
+       "+Y": 1.5447,
+       "-Y": 1.5447,
+       "+Z": 1.5447,
+       "-Z": 1.5447
+      },
+      "mesh": {
+       "+Y": 1.5447,
+       "-Y": 1.5447,
+       "+Z": 1.5447,
+       "-Z": 1.5447
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 71.0,
+      "design": {
+       "+Y": 1.5537,
+       "-Y": 1.5537,
+       "+Z": 1.5537,
+       "-Z": 1.5537
+      },
+      "mesh": {
+       "+Y": 1.5537,
+       "-Y": 1.5537,
+       "+Z": 1.5537,
+       "-Z": 1.5537
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 72.0,
+      "design": {
+       "+Y": 1.5628,
+       "-Y": 1.5628,
+       "+Z": 1.5628,
+       "-Z": 1.5628
+      },
+      "mesh": {
+       "+Y": 1.5628,
+       "-Y": 1.5628,
+       "+Z": 1.5628,
+       "-Z": 1.5628
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 73.0,
+      "design": {
+       "+Y": 1.5718,
+       "-Y": 1.5718,
+       "+Z": 1.5718,
+       "-Z": 1.5718
+      },
+      "mesh": {
+       "+Y": 1.5718,
+       "-Y": 1.5718,
+       "+Z": 1.5718,
+       "-Z": 1.5718
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 74.0,
+      "design": {
+       "+Y": 1.5809,
+       "-Y": 1.5809,
+       "+Z": 1.5809,
+       "-Z": 1.5809
+      },
+      "mesh": {
+       "+Y": 1.5809,
+       "-Y": 1.5809,
+       "+Z": 1.5809,
+       "-Z": 1.5809
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 75.0,
+      "design": {
+       "+Y": 1.5899,
+       "-Y": 1.5899,
+       "+Z": 1.5899,
+       "-Z": 1.5899
+      },
+      "mesh": {
+       "+Y": 1.5899,
+       "-Y": 1.5899,
+       "+Z": 1.5899,
+       "-Z": 1.5899
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 76.0,
+      "design": {
+       "+Y": 1.5989,
+       "-Y": 1.5989,
+       "+Z": 1.5989,
+       "-Z": 1.5989
+      },
+      "mesh": {
+       "+Y": 1.5989,
+       "-Y": 1.5989,
+       "+Z": 1.5989,
+       "-Z": 1.5989
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 77.0,
+      "design": {
+       "+Y": 1.608,
+       "-Y": 1.608,
+       "+Z": 1.608,
+       "-Z": 1.608
+      },
+      "mesh": {
+       "+Y": 1.608,
+       "-Y": 1.608,
+       "+Z": 1.608,
+       "-Z": 1.608
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 78.0,
+      "design": {
+       "+Y": 1.617,
+       "-Y": 1.617,
+       "+Z": 1.617,
+       "-Z": 1.617
+      },
+      "mesh": {
+       "+Y": 1.617,
+       "-Y": 1.617,
+       "+Z": 1.617,
+       "-Z": 1.617
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 79.0,
+      "design": {
+       "+Y": 1.6261,
+       "-Y": 1.6261,
+       "+Z": 1.6261,
+       "-Z": 1.6261
+      },
+      "mesh": {
+       "+Y": 1.6261,
+       "-Y": 1.6261,
+       "+Z": 1.6261,
+       "-Z": 1.6261
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 80.0,
+      "design": {
+       "+Y": 1.6351,
+       "-Y": 1.6351,
+       "+Z": 1.6351,
+       "-Z": 1.6351
+      },
+      "mesh": {
+       "+Y": 1.6351,
+       "-Y": 1.6351,
+       "+Z": 1.6351,
+       "-Z": 1.6351
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 81.0,
+      "design": {
+       "+Y": 1.6441,
+       "-Y": 1.6441,
+       "+Z": 1.6441,
+       "-Z": 1.6441
+      },
+      "mesh": {
+       "+Y": 1.6441,
+       "-Y": 1.6441,
+       "+Z": 1.6441,
+       "-Z": 1.6441
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 82.0,
+      "design": {
+       "+Y": 1.6532,
+       "-Y": 1.6532,
+       "+Z": 1.6532,
+       "-Z": 1.6532
+      },
+      "mesh": {
+       "+Y": 1.6532,
+       "-Y": 1.6532,
+       "+Z": 1.6532,
+       "-Z": 1.6532
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 83.0,
+      "design": {
+       "+Y": 1.6622,
+       "-Y": 1.6622,
+       "+Z": 1.6622,
+       "-Z": 1.6622
+      },
+      "mesh": {
+       "+Y": 1.6622,
+       "-Y": 1.6622,
+       "+Z": 1.6622,
+       "-Z": 1.6622
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 84.0,
+      "design": {
+       "+Y": 1.6713,
+       "-Y": 1.6713,
+       "+Z": 1.6713,
+       "-Z": 1.6713
+      },
+      "mesh": {
+       "+Y": 1.6713,
+       "-Y": 1.6713,
+       "+Z": 1.6713,
+       "-Z": 1.6713
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 85.0,
+      "design": {
+       "+Y": 1.6803,
+       "-Y": 1.6803,
+       "+Z": 1.6803,
+       "-Z": 1.6803
+      },
+      "mesh": {
+       "+Y": 1.6803,
+       "-Y": 1.6803,
+       "+Z": 1.6803,
+       "-Z": 1.6803
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 86.0,
+      "design": {
+       "+Y": 1.6894,
+       "-Y": 1.6894,
+       "+Z": 1.6894,
+       "-Z": 1.6894
+      },
+      "mesh": {
+       "+Y": 1.6894,
+       "-Y": 1.6894,
+       "+Z": 1.6894,
+       "-Z": 1.6894
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 87.0,
+      "design": {
+       "+Y": 1.6984,
+       "-Y": 1.6984,
+       "+Z": 1.6984,
+       "-Z": 1.6984
+      },
+      "mesh": {
+       "+Y": 1.6984,
+       "-Y": 1.6984,
+       "+Z": 1.6984,
+       "-Z": 1.6984
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 88.0,
+      "design": {
+       "+Y": 1.7074,
+       "-Y": 1.7074,
+       "+Z": 1.7074,
+       "-Z": 1.7074
+      },
+      "mesh": {
+       "+Y": 1.7074,
+       "-Y": 1.7074,
+       "+Z": 1.7074,
+       "-Z": 1.7074
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 89.0,
+      "design": {
+       "+Y": 1.7165,
+       "-Y": 1.7165,
+       "+Z": 1.7165,
+       "-Z": 1.7165
+      },
+      "mesh": {
+       "+Y": 1.7165,
+       "-Y": 1.7165,
+       "+Z": 1.7165,
+       "-Z": 1.7165
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 90.0,
+      "design": {
+       "+Y": 1.7255,
+       "-Y": 1.7255,
+       "+Z": 1.7255,
+       "-Z": 1.7255
+      },
+      "mesh": {
+       "+Y": 1.7255,
+       "-Y": 1.7255,
+       "+Z": 1.7255,
+       "-Z": 1.7255
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 91.0,
+      "design": {
+       "+Y": 1.7346,
+       "-Y": 1.7346,
+       "+Z": 1.7346,
+       "-Z": 1.7346
+      },
+      "mesh": {
+       "+Y": 1.7346,
+       "-Y": 1.7346,
+       "+Z": 1.7346,
+       "-Z": 1.7346
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 92.0,
+      "design": {
+       "+Y": 1.7436,
+       "-Y": 1.7436,
+       "+Z": 1.7436,
+       "-Z": 1.7436
+      },
+      "mesh": {
+       "+Y": 1.7436,
+       "-Y": 1.7436,
+       "+Z": 1.7436,
+       "-Z": 1.7436
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 93.0,
+      "design": {
+       "+Y": 1.7527,
+       "-Y": 1.7527,
+       "+Z": 1.7527,
+       "-Z": 1.7527
+      },
+      "mesh": {
+       "+Y": 1.7527,
+       "-Y": 1.7527,
+       "+Z": 1.7527,
+       "-Z": 1.7527
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 94.0,
+      "design": {
+       "+Y": 1.7617,
+       "-Y": 1.7617,
+       "+Z": 1.7617,
+       "-Z": 1.7617
+      },
+      "mesh": {
+       "+Y": 1.7617,
+       "-Y": 1.7617,
+       "+Z": 1.7617,
+       "-Z": 1.7617
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 95.0,
+      "design": {
+       "+Y": 1.7707,
+       "-Y": 1.7707,
+       "+Z": 1.7707,
+       "-Z": 1.7707
+      },
+      "mesh": {
+       "+Y": 1.7707,
+       "-Y": 1.7707,
+       "+Z": 1.7707,
+       "-Z": 1.7707
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 96.0,
+      "design": {
+       "+Y": 1.7798,
+       "-Y": 1.7798,
+       "+Z": 1.7798,
+       "-Z": 1.7798
+      },
+      "mesh": {
+       "+Y": 1.7798,
+       "-Y": 1.7798,
+       "+Z": 1.7798,
+       "-Z": 1.7798
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 97.0,
+      "design": {
+       "+Y": 1.7888,
+       "-Y": 1.7888,
+       "+Z": 1.7888,
+       "-Z": 1.7888
+      },
+      "mesh": {
+       "+Y": 1.7888,
+       "-Y": 1.7888,
+       "+Z": 1.7888,
+       "-Z": 1.7888
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 98.0,
+      "design": {
+       "+Y": 1.7979,
+       "-Y": 1.7979,
+       "+Z": 1.7979,
+       "-Z": 1.7979
+      },
+      "mesh": {
+       "+Y": 1.7979,
+       "-Y": 1.7979,
+       "+Z": 1.7979,
+       "-Z": 1.7979
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 99.0,
+      "design": {
+       "+Y": 1.8069,
+       "-Y": 1.8069,
+       "+Z": 1.8069,
+       "-Z": 1.8069
+      },
+      "mesh": {
+       "+Y": 1.8069,
+       "-Y": 1.8069,
+       "+Z": 1.8069,
+       "-Z": 1.8069
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 100.0,
+      "design": {
+       "+Y": 1.816,
+       "-Y": 1.816,
+       "+Z": 1.816,
+       "-Z": 1.816
+      },
+      "mesh": {
+       "+Y": 1.816,
+       "-Y": 1.816,
+       "+Z": 1.816,
+       "-Z": 1.816
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 101.0,
+      "design": {
+       "+Y": 1.825,
+       "-Y": 1.825,
+       "+Z": 1.825,
+       "-Z": 1.825
+      },
+      "mesh": {
+       "+Y": 1.825,
+       "-Y": 1.825,
+       "+Z": 1.825,
+       "-Z": 1.825
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 102.0,
+      "design": {
+       "+Y": 1.834,
+       "-Y": 1.834,
+       "+Z": 1.834,
+       "-Z": 1.834
+      },
+      "mesh": {
+       "+Y": 1.834,
+       "-Y": 1.834,
+       "+Z": 1.834,
+       "-Z": 1.834
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 103.0,
+      "design": {
+       "+Y": 1.8431,
+       "-Y": 1.8431,
+       "+Z": 1.8431,
+       "-Z": 1.8431
+      },
+      "mesh": {
+       "+Y": 1.8431,
+       "-Y": 1.8431,
+       "+Z": 1.8431,
+       "-Z": 1.8431
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 104.0,
+      "design": {
+       "+Y": 1.8521,
+       "-Y": 1.8521,
+       "+Z": 1.8521,
+       "-Z": 1.8521
+      },
+      "mesh": {
+       "+Y": 1.8521,
+       "-Y": 1.8521,
+       "+Z": 1.8521,
+       "-Z": 1.8521
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 105.0,
+      "design": {
+       "+Y": 1.8612,
+       "-Y": 1.8612,
+       "+Z": 1.8612,
+       "-Z": 1.8612
+      },
+      "mesh": {
+       "+Y": 1.8612,
+       "-Y": 1.8612,
+       "+Z": 1.8612,
+       "-Z": 1.8612
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 106.0,
+      "design": {
+       "+Y": 1.8702,
+       "-Y": 1.8702,
+       "+Z": 1.8702,
+       "-Z": 1.8702
+      },
+      "mesh": {
+       "+Y": 1.8702,
+       "-Y": 1.8702,
+       "+Z": 1.8702,
+       "-Z": 1.8702
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 107.0,
+      "design": {
+       "+Y": 1.8793,
+       "-Y": 1.8793,
+       "+Z": 1.8793,
+       "-Z": 1.8793
+      },
+      "mesh": {
+       "+Y": 1.8793,
+       "-Y": 1.8793,
+       "+Z": 1.8793,
+       "-Z": 1.8793
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 108.0,
+      "design": {
+       "+Y": 1.8883,
+       "-Y": 1.8883,
+       "+Z": 1.8883,
+       "-Z": 1.8883
+      },
+      "mesh": {
+       "+Y": 1.8883,
+       "-Y": 1.8883,
+       "+Z": 1.8883,
+       "-Z": 1.8883
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 109.0,
+      "design": {
+       "+Y": 1.8973,
+       "-Y": 1.8973,
+       "+Z": 1.8973,
+       "-Z": 1.8973
+      },
+      "mesh": {
+       "+Y": 1.8973,
+       "-Y": 1.8973,
+       "+Z": 1.8973,
+       "-Z": 1.8973
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 110.0,
+      "design": {
+       "+Y": 1.9064,
+       "-Y": 1.9064,
+       "+Z": 1.9064,
+       "-Z": 1.9064
+      },
+      "mesh": {
+       "+Y": 1.9064,
+       "-Y": 1.9064,
+       "+Z": 1.9064,
+       "-Z": 1.9064
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 111.0,
+      "design": {
+       "+Y": 1.9154,
+       "-Y": 1.9154,
+       "+Z": 1.9154,
+       "-Z": 1.9154
+      },
+      "mesh": {
+       "+Y": 1.9154,
+       "-Y": 1.9154,
+       "+Z": 1.9154,
+       "-Z": 1.9154
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 112.0,
+      "design": {
+       "+Y": 1.9245,
+       "-Y": 1.9245,
+       "+Z": 1.9245,
+       "-Z": 1.9245
+      },
+      "mesh": {
+       "+Y": 1.9245,
+       "-Y": 1.9245,
+       "+Z": 1.9245,
+       "-Z": 1.9245
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 113.0,
+      "design": {
+       "+Y": 1.9335,
+       "-Y": 1.9335,
+       "+Z": 1.9335,
+       "-Z": 1.9335
+      },
+      "mesh": {
+       "+Y": 1.9335,
+       "-Y": 1.9335,
+       "+Z": 1.9335,
+       "-Z": 1.9335
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 114.0,
+      "design": {
+       "+Y": 1.9426,
+       "-Y": 1.9426,
+       "+Z": 1.9426,
+       "-Z": 1.9426
+      },
+      "mesh": {
+       "+Y": 1.9426,
+       "-Y": 1.9426,
+       "+Z": 1.9426,
+       "-Z": 1.9426
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 115.0,
+      "design": {
+       "+Y": 1.9516,
+       "-Y": 1.9516,
+       "+Z": 1.9516,
+       "-Z": 1.9516
+      },
+      "mesh": {
+       "+Y": 1.9516,
+       "-Y": 1.9516,
+       "+Z": 1.9516,
+       "-Z": 1.9516
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 116.0,
+      "design": {
+       "+Y": 1.9606,
+       "-Y": 1.9606,
+       "+Z": 1.9606,
+       "-Z": 1.9606
+      },
+      "mesh": {
+       "+Y": 1.9606,
+       "-Y": 1.9606,
+       "+Z": 1.9606,
+       "-Z": 1.9606
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 117.0,
+      "design": {
+       "+Y": 1.9697,
+       "-Y": 1.9697,
+       "+Z": 1.9697,
+       "-Z": 1.9697
+      },
+      "mesh": {
+       "+Y": 1.9697,
+       "-Y": 1.9697,
+       "+Z": 1.9697,
+       "-Z": 1.9697
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 118.0,
+      "design": {
+       "+Y": 1.9787,
+       "-Y": 1.9787,
+       "+Z": 1.9787,
+       "-Z": 1.9787
+      },
+      "mesh": {
+       "+Y": 1.9787,
+       "-Y": 1.9787,
+       "+Z": 1.9787,
+       "-Z": 1.9787
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 119.0,
+      "design": {
+       "+Y": 1.9878,
+       "-Y": 1.9878,
+       "+Z": 1.9878,
+       "-Z": 1.9878
+      },
+      "mesh": {
+       "+Y": 1.9878,
+       "-Y": 1.9878,
+       "+Z": 1.9878,
+       "-Z": 1.9878
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 120.0,
+      "design": {
+       "+Y": 1.9968,
+       "-Y": 1.9968,
+       "+Z": 1.9968,
+       "-Z": 1.9968
+      },
+      "mesh": {
+       "+Y": 1.9968,
+       "-Y": 1.9968,
+       "+Z": 1.9968,
+       "-Z": 1.9968
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 121.0,
+      "design": {
+       "+Y": 2.0059,
+       "-Y": 2.0059,
+       "+Z": 2.0059,
+       "-Z": 2.0059
+      },
+      "mesh": {
+       "+Y": 2.0059,
+       "-Y": 2.0059,
+       "+Z": 2.0059,
+       "-Z": 2.0059
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 122.0,
+      "design": {
+       "+Y": 2.0149,
+       "-Y": 2.0149,
+       "+Z": 2.0149,
+       "-Z": 2.0149
+      },
+      "mesh": {
+       "+Y": 2.0149,
+       "-Y": 2.0149,
+       "+Z": 2.0149,
+       "-Z": 2.0149
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 123.0,
+      "design": {
+       "+Y": 2.0239,
+       "-Y": 2.0239,
+       "+Z": 2.0239,
+       "-Z": 2.0239
+      },
+      "mesh": {
+       "+Y": 2.0239,
+       "-Y": 2.0239,
+       "+Z": 2.0239,
+       "-Z": 2.0239
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 124.0,
+      "design": {
+       "+Y": 2.033,
+       "-Y": 2.033,
+       "+Z": 2.033,
+       "-Z": 2.033
+      },
+      "mesh": {
+       "+Y": 2.033,
+       "-Y": 2.033,
+       "+Z": 2.033,
+       "-Z": 2.033
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 125.0,
+      "design": {
+       "+Y": 2.042,
+       "-Y": 2.042,
+       "+Z": 2.042,
+       "-Z": 2.042
+      },
+      "mesh": {
+       "+Y": 2.042,
+       "-Y": 2.042,
+       "+Z": 2.042,
+       "-Z": 2.042
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 126.0,
+      "design": {
+       "+Y": 2.0511,
+       "-Y": 2.0511,
+       "+Z": 2.0511,
+       "-Z": 2.0511
+      },
+      "mesh": {
+       "+Y": 2.0511,
+       "-Y": 2.0511,
+       "+Z": 2.0511,
+       "-Z": 2.0511
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 127.0,
+      "design": {
+       "+Y": 2.0601,
+       "-Y": 2.0601,
+       "+Z": 2.0601,
+       "-Z": 2.0601
+      },
+      "mesh": {
+       "+Y": 2.0601,
+       "-Y": 2.0601,
+       "+Z": 2.0601,
+       "-Z": 2.0601
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 128.0,
+      "design": {
+       "+Y": 2.0691,
+       "-Y": 2.0691,
+       "+Z": 2.0691,
+       "-Z": 2.0691
+      },
+      "mesh": {
+       "+Y": 2.0691,
+       "-Y": 2.0691,
+       "+Z": 2.0691,
+       "-Z": 2.0691
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 129.0,
+      "design": {
+       "+Y": 2.0782,
+       "-Y": 2.0782,
+       "+Z": 2.0782,
+       "-Z": 2.0782
+      },
+      "mesh": {
+       "+Y": 2.0782,
+       "-Y": 2.0782,
+       "+Z": 2.0782,
+       "-Z": 2.0782
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 130.0,
+      "design": {
+       "+Y": 2.0872,
+       "-Y": 2.0872,
+       "+Z": 2.0872,
+       "-Z": 2.0872
+      },
+      "mesh": {
+       "+Y": 2.0872,
+       "-Y": 2.0872,
+       "+Z": 2.0872,
+       "-Z": 2.0872
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 131.0,
+      "design": {
+       "+Y": 2.0963,
+       "-Y": 2.0963,
+       "+Z": 2.0963,
+       "-Z": 2.0963
+      },
+      "mesh": {
+       "+Y": 2.0963,
+       "-Y": 2.0963,
+       "+Z": 2.0963,
+       "-Z": 2.0963
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 132.0,
+      "design": {
+       "+Y": 2.1053,
+       "-Y": 2.1053,
+       "+Z": 2.1053,
+       "-Z": 2.1053
+      },
+      "mesh": {
+       "+Y": 2.1053,
+       "-Y": 2.1053,
+       "+Z": 2.1053,
+       "-Z": 2.1053
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 133.0,
+      "design": {
+       "+Y": 2.1144,
+       "-Y": 2.1144,
+       "+Z": 2.1144,
+       "-Z": 2.1144
+      },
+      "mesh": {
+       "+Y": 2.1144,
+       "-Y": 2.1144,
+       "+Z": 2.1144,
+       "-Z": 2.1144
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 134.0,
+      "design": {
+       "+Y": 2.1234,
+       "-Y": 2.1234,
+       "+Z": 2.1234,
+       "-Z": 2.1234
+      },
+      "mesh": {
+       "+Y": 2.1234,
+       "-Y": 2.1234,
+       "+Z": 2.1234,
+       "-Z": 2.1234
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 135.0,
+      "design": {
+       "+Y": 2.1324,
+       "-Y": 2.1324,
+       "+Z": 2.1324,
+       "-Z": 2.1324
+      },
+      "mesh": {
+       "+Y": 2.1324,
+       "-Y": 2.1324,
+       "+Z": 2.1324,
+       "-Z": 2.1324
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 136.0,
+      "design": {
+       "+Y": 2.1415,
+       "-Y": 2.1415,
+       "+Z": 2.1415,
+       "-Z": 2.1415
+      },
+      "mesh": {
+       "+Y": 2.1415,
+       "-Y": 2.1415,
+       "+Z": 2.1415,
+       "-Z": 2.1415
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 137.0,
+      "design": {
+       "+Y": 2.1505,
+       "-Y": 2.1505,
+       "+Z": 2.1505,
+       "-Z": 2.1505
+      },
+      "mesh": {
+       "+Y": 2.1505,
+       "-Y": 2.1505,
+       "+Z": 2.1505,
+       "-Z": 2.1505
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 138.0,
+      "design": {
+       "+Y": 2.1596,
+       "-Y": 2.1596,
+       "+Z": 2.1596,
+       "-Z": 2.1596
+      },
+      "mesh": {
+       "+Y": 2.1596,
+       "-Y": 2.1596,
+       "+Z": 2.1596,
+       "-Z": 2.1596
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 139.0,
+      "design": {
+       "+Y": 2.1686,
+       "-Y": 2.1686,
+       "+Z": 2.1686,
+       "-Z": 2.1686
+      },
+      "mesh": {
+       "+Y": 2.1686,
+       "-Y": 2.1686,
+       "+Z": 2.1686,
+       "-Z": 2.1686
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 140.0,
+      "design": {
+       "+Y": 2.1777,
+       "-Y": 2.1777,
+       "+Z": 2.1777,
+       "-Z": 2.1777
+      },
+      "mesh": {
+       "+Y": 2.1777,
+       "-Y": 2.1777,
+       "+Z": 2.1777,
+       "-Z": 2.1777
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 141.0,
+      "design": {
+       "+Y": 2.1867,
+       "-Y": 2.1867,
+       "+Z": 2.1867,
+       "-Z": 2.1867
+      },
+      "mesh": {
+       "+Y": 2.1867,
+       "-Y": 2.1867,
+       "+Z": 2.1867,
+       "-Z": 2.1867
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 142.0,
+      "design": {
+       "+Y": 2.1957,
+       "-Y": 2.1957,
+       "+Z": 2.1957,
+       "-Z": 2.1957
+      },
+      "mesh": {
+       "+Y": 2.1957,
+       "-Y": 2.1957,
+       "+Z": 2.1957,
+       "-Z": 2.1957
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 143.0,
+      "design": {
+       "+Y": 2.2048,
+       "-Y": 2.2048,
+       "+Z": 2.2048,
+       "-Z": 2.2048
+      },
+      "mesh": {
+       "+Y": 2.2048,
+       "-Y": 2.2048,
+       "+Z": 2.2048,
+       "-Z": 2.2048
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 144.0,
+      "design": {
+       "+Y": 2.2138,
+       "-Y": 2.2138,
+       "+Z": 2.2138,
+       "-Z": 2.2138
+      },
+      "mesh": {
+       "+Y": 2.2138,
+       "-Y": 2.2138,
+       "+Z": 2.2138,
+       "-Z": 2.2138
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 145.0,
+      "design": {
+       "+Y": 2.2229,
+       "-Y": 2.2229,
+       "+Z": 2.2229,
+       "-Z": 2.2229
+      },
+      "mesh": {
+       "+Y": 2.2229,
+       "-Y": 2.2229,
+       "+Z": 2.2229,
+       "-Z": 2.2229
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 146.0,
+      "design": {
+       "+Y": 2.2319,
+       "-Y": 2.2319,
+       "+Z": 2.2319,
+       "-Z": 2.2319
+      },
+      "mesh": {
+       "+Y": 2.2319,
+       "-Y": 2.2319,
+       "+Z": 2.2319,
+       "-Z": 2.2319
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 147.0,
+      "design": {
+       "+Y": 2.241,
+       "-Y": 2.241,
+       "+Z": 2.241,
+       "-Z": 2.241
+      },
+      "mesh": {
+       "+Y": 2.241,
+       "-Y": 2.241,
+       "+Z": 2.241,
+       "-Z": 2.241
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 148.0,
+      "design": {
+       "+Y": 2.25,
+       "-Y": 2.25,
+       "+Z": 2.25,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.25,
+       "-Y": 2.25,
+       "+Z": 2.25,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 149.0,
+      "design": {
+       "+Y": 2.25,
+       "-Y": 2.25,
+       "+Z": 2.1477,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.25,
+       "-Y": 2.25,
+       "+Z": 2.1477,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 150.0,
+      "design": {
+       "+Y": 2.25,
+       "-Y": 2.25,
+       "+Z": 2.0455,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.25,
+       "-Y": 2.25,
+       "+Z": 2.0455,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 151.0,
+      "design": {
+       "+Y": 2.25,
+       "-Y": 2.25,
+       "+Z": 1.9432,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.2494,
+       "-Y": 2.2494,
+       "+Z": 1.9432,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0006,
+       "-Y": -0.0006,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 152.0,
+      "design": {
+       "+Y": 2.2411,
+       "-Y": 2.2411,
+       "+Z": 1.8409,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.2373,
+       "-Y": 2.2373,
+       "+Z": 1.8409,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0038,
+       "-Y": -0.0038,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 153.0,
+      "design": {
+       "+Y": 2.2198,
+       "-Y": 2.2198,
+       "+Z": 1.7386,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.217,
+       "-Y": 2.217,
+       "+Z": 1.7386,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0028,
+       "-Y": -0.0028,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 154.0,
+      "design": {
+       "+Y": 2.1893,
+       "-Y": 2.1893,
+       "+Z": 1.6364,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.1868,
+       "-Y": 2.1868,
+       "+Z": 1.6364,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0025,
+       "-Y": -0.0025,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 155.0,
+      "design": {
+       "+Y": 2.1515,
+       "-Y": 2.1515,
+       "+Z": 1.5341,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.149,
+       "-Y": 2.149,
+       "+Z": 1.5341,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0025,
+       "-Y": -0.0025,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 156.0,
+      "design": {
+       "+Y": 2.1078,
+       "-Y": 2.1078,
+       "+Z": 1.4318,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.1053,
+       "-Y": 2.1053,
+       "+Z": 1.4318,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0025,
+       "-Y": -0.0025,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 157.0,
+      "design": {
+       "+Y": 2.059,
+       "-Y": 2.059,
+       "+Z": 1.3295,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.0574,
+       "-Y": 2.0574,
+       "+Z": 1.3295,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0016,
+       "-Y": -0.0016,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 158.0,
+      "design": {
+       "+Y": 2.0058,
+       "-Y": 2.0058,
+       "+Z": 1.2273,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 2.003,
+       "-Y": 2.003,
+       "+Z": 1.2273,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0028,
+       "-Y": -0.0028,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 159.0,
+      "design": {
+       "+Y": 1.9486,
+       "-Y": 1.9486,
+       "+Z": 1.125,
+       "-Z": 2.25
+      },
+      "mesh": {
+       "+Y": 1.9486,
+       "-Y": 1.9486,
+       "+Z": 1.125,
+       "-Z": 2.25
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 160.0,
+      "design": {
+       "+Y": 1.7714,
+       "-Y": 1.7714,
+       "+Z": 1.0227,
+       "-Z": 2.0455
+      },
+      "mesh": {
+       "+Y": 1.7714,
+       "-Y": 1.7714,
+       "+Z": 1.0227,
+       "-Z": 2.0455
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 161.0,
+      "design": {
+       "+Y": 1.5943,
+       "-Y": 1.5943,
+       "+Z": 0.9205,
+       "-Z": 1.8409
+      },
+      "mesh": {
+       "+Y": 1.5943,
+       "-Y": 1.5943,
+       "+Z": 0.9205,
+       "-Z": 1.8409
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 162.0,
+      "design": {
+       "+Y": 1.4171,
+       "-Y": 1.4171,
+       "+Z": 0.8182,
+       "-Z": 1.6364
+      },
+      "mesh": {
+       "+Y": 1.4171,
+       "-Y": 1.4171,
+       "+Z": 0.8182,
+       "-Z": 1.6364
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": 0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 163.0,
+      "design": {
+       "+Y": 1.24,
+       "-Y": 1.24,
+       "+Z": 0.7159,
+       "-Z": 1.4318
+      },
+      "mesh": {
+       "+Y": 1.24,
+       "-Y": 1.24,
+       "+Z": 0.7159,
+       "-Z": 1.4318
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 164.0,
+      "design": {
+       "+Y": 1.0628,
+       "-Y": 1.0628,
+       "+Z": 0.6136,
+       "-Z": 1.2273
+      },
+      "mesh": {
+       "+Y": 1.0628,
+       "-Y": 1.0628,
+       "+Z": 0.6136,
+       "-Z": 1.2273
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 165.0,
+      "design": {
+       "+Y": 0.8857,
+       "-Y": 0.8857,
+       "+Z": 0.5114,
+       "-Z": 1.0227
+      },
+      "mesh": {
+       "+Y": 0.8857,
+       "-Y": 0.8857,
+       "+Z": 0.5114,
+       "-Z": 1.0227
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 166.0,
+      "design": {
+       "+Y": 0.7086,
+       "-Y": 0.7086,
+       "+Z": 0.4091,
+       "-Z": 0.8182
+      },
+      "mesh": {
+       "+Y": 0.7086,
+       "-Y": 0.7086,
+       "+Z": 0.4091,
+       "-Z": 0.8182
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 167.0,
+      "design": {
+       "+Y": 0.5314,
+       "-Y": 0.5314,
+       "+Z": 0.3068,
+       "-Z": 0.6136
+      },
+      "mesh": {
+       "+Y": 0.5314,
+       "-Y": 0.5314,
+       "+Z": 0.3068,
+       "-Z": 0.6136
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 168.0,
+      "design": {
+       "+Y": 0.3543,
+       "-Y": 0.3543,
+       "+Z": 0.2045,
+       "-Z": 0.4091
+      },
+      "mesh": {
+       "+Y": 0.3543,
+       "-Y": 0.3543,
+       "+Z": 0.2045,
+       "-Z": 0.4091
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 169.0,
+      "design": {
+       "+Y": 0.1771,
+       "-Y": 0.1771,
+       "+Z": 0.1023,
+       "-Z": 0.2045
+      },
+      "mesh": {
+       "+Y": 0.1771,
+       "-Y": 0.1771,
+       "+Z": 0.1023,
+       "-Z": 0.2045
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": false
+     },
+     {
+      "s_mm": 170.0,
+      "design": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "mesh": {
+       "+Y": 0.0,
+       "-Y": 0.0,
+       "+Z": 0.0,
+       "-Z": 0.0
+      },
+      "dev": {
+       "+Y": -0.0,
+       "-Y": -0.0,
+       "+Z": -0.0,
+       "-Z": -0.0
+      },
+      "excluded": true
+     }
+    ]
+   },
+   "symmetry": {
+    "LOD0": {
+     "rotation_deg": 120.0,
+     "max_dev_mm": 3e-06
+    },
+    "LOD1": {
+     "rotation_deg": 120.0,
+     "max_dev_mm": 3e-06
+    },
+    "LOD2": {
+     "rotation_deg": 120.0,
+     "max_dev_mm": 3e-06
+    }
+   },
+   "tip_vertex_x_mm": 76.303259,
+   "dimensions": {
+    "wrap_D_at_30": 4.2,
+    "rear_binding_D_at_6.75": 4.6,
+    "front_binding_D_at_53.25": 4.6,
+    "steel_D_at_3": 2.8,
+    "steel_D_at_55": 2.8181,
+    "D_at_147.99": 4.4998,
+    "ridges_start_s_mm": [
+     159.0
+    ],
+    "tip_s_mm": 170.0,
+    "butt_s_mm": 0.0,
+    "spec": {
+     "wrap": [
+      4.2,
+      0.03
+     ],
+     "bindings": [
+      4.6,
+      0.03
+     ],
+     "steel_tail": [
+      2.8,
+      0.02
+     ],
+     "front_148": [
+      4.5,
+      0.02
+     ],
+     "ridges_start": [
+      159.0,
+      0.3
+     ],
+     "tip": [
+      170.0,
+      0.1
+     ]
+    }
+   }
+  }
+ },
+ "qa": {
+  "passed": true,
+  "per_mesh": {
+   "needle": {
+    "passed": true,
+    "checks": 72,
+    "failed": [],
+    "triangles": {
+     "SM_Senbon_Needle_LOD0": 360,
+     "SM_Senbon_Needle_LOD1": 80,
+     "SM_Senbon_Needle_LOD2": 36
+    },
+    "details": {
+     "no_zero_length_edges@SM_Senbon_Needle_LOD0": "0 edge(s) at or below 1e-06 of 540; shortest 2.58819e-05",
+     "no_degenerate_faces@SM_Senbon_Needle_LOD0": "0 face(s) at or below 1e-12 area of 360; smallest 6.25e-10",
+     "no_coincident_vertices@SM_Senbon_Needle_LOD0": "0 vertex pair(s) within 1e-06 of 182",
+     "texel_density@SM_Senbon_Needle_LOD0": "398.258 px/cm at 2048px on 'UVMap' (uv area 0.3514, mesh area 0.0009 m2); no target given",
+     "uv_no_overlap@SM_Senbon_Needle_LOD0": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh",
+     "ucx_present@SM_Senbon_Needle_LOD0": "UCX_SM_Senbon_Needle_LOD0_00",
+     "no_zero_length_edges@SM_Senbon_Needle_LOD1": "0 edge(s) at or below 1e-06 of 120; shortest 0.000880172",
+     "no_degenerate_faces@SM_Senbon_Needle_LOD1": "0 face(s) at or below 1e-12 area of 80; smallest 6.61782e-06",
+     "no_coincident_vertices@SM_Senbon_Needle_LOD1": "0 vertex pair(s) within 1e-06 of 42",
+     "texel_density@SM_Senbon_Needle_LOD1": "401.211 px/cm at 2048px on 'UVMap' (uv area 0.3476, mesh area 0.0009 m2); no target given",
+     "uv_no_overlap@SM_Senbon_Needle_LOD1": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh",
+     "no_zero_length_edges@SM_Senbon_Needle_LOD2": "0 edge(s) at or below 1e-06 of 54; shortest 0.00115",
+     "no_degenerate_faces@SM_Senbon_Needle_LOD2": "0 face(s) at or below 1e-12 area of 36; smallest 8.64399e-06",
+     "no_coincident_vertices@SM_Senbon_Needle_LOD2": "0 vertex pair(s) within 1e-06 of 20",
+     "texel_density@SM_Senbon_Needle_LOD2": "405.310 px/cm at 2048px on 'UVMap' (uv area 0.3403, mesh area 0.0009 m2); no target given",
+     "uv_no_overlap@SM_Senbon_Needle_LOD2": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+    }
+   },
+   "heavy": {
+    "passed": true,
+    "checks": 84,
+    "failed": [],
+    "triangles": {
+     "SM_Senbon_Heavy_LOD0": 618,
+     "SM_Senbon_Heavy_LOD1": 198,
+     "SM_Senbon_Heavy_LOD2": 78
+    },
+    "details": {
+     "no_zero_length_edges@SM_Senbon_Heavy_LOD0": "0 edge(s) at or below 1e-06 of 927; shortest 5e-05",
+     "no_degenerate_faces@SM_Senbon_Heavy_LOD0": "0 face(s) at or below 1e-12 area of 618; smallest 2.62498e-08",
+     "no_coincident_vertices@SM_Senbon_Heavy_LOD0": "0 vertex pair(s) within 1e-06 of 311",
+     "texel_density@SM_Senbon_Heavy_LOD0": "462.091 px/cm at 2048px on 'UVMap' (uv area 1.0132, mesh area 0.0020 m2); no target given",
+     "uv_no_overlap@SM_Senbon_Heavy_LOD0": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh",
+     "ucx_present@SM_Senbon_Heavy_LOD0": "UCX_SM_Senbon_Heavy_LOD0_00",
+     "no_zero_length_edges@SM_Senbon_Heavy_LOD1": "0 edge(s) at or below 1e-06 of 297; shortest 0.0002",
+     "no_degenerate_faces@SM_Senbon_Heavy_LOD1": "0 face(s) at or below 1e-12 area of 198; smallest 1.34985e-07",
+     "no_coincident_vertices@SM_Senbon_Heavy_LOD1": "0 vertex pair(s) within 1e-06 of 101",
+     "texel_density@SM_Senbon_Heavy_LOD1": "464.560 px/cm at 2048px on 'UVMap' (uv area 1.0132, mesh area 0.0020 m2); no target given",
+     "uv_no_overlap@SM_Senbon_Heavy_LOD1": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh",
+     "no_zero_length_edges@SM_Senbon_Heavy_LOD2": "0 edge(s) at or below 1e-06 of 117; shortest 0.0007",
+     "no_degenerate_faces@SM_Senbon_Heavy_LOD2": "0 face(s) at or below 1e-12 area of 78; smallest 4.24352e-07",
+     "no_coincident_vertices@SM_Senbon_Heavy_LOD2": "0 vertex pair(s) within 1e-06 of 41",
+     "texel_density@SM_Senbon_Heavy_LOD2": "471.183 px/cm at 2048px on 'UVMap' (uv area 1.0088, mesh area 0.0019 m2); no target given",
+     "uv_no_overlap@SM_Senbon_Heavy_LOD2": "0 overlapping triangle pair(s) on 'UVMap' (UV0); method: numpy separating-axis test on the evaluated mesh"
+    }
+   }
+  },
+  "settings": "budget 1000 (plan 5.2 cap), no texel target (non-square maps: measured separately in measure.uv), UV1 generated at import (plan 7.2), SAT overlap"
+ },
+ "blend": "Assets/Senbon.blend",
+ "blend_sha256": "3f3b6c790e3d2c179e1f2f5d9861e522cabb221bf8029153f831c0e6d38f97f6",
+ "export": {
+  "needle": {
+   "fbx": "Exports/Senbon/SM_Senbon_Needle.fbx",
+   "sidecar": "Exports/Senbon/SM_Senbon_Needle.sockets.json",
+   "objects": [
+    "SM_Senbon_Needle_LodGroup",
+    "SM_Senbon_Needle_LOD0",
+    "UCX_SM_Senbon_Needle_LOD0_00",
+    "SM_Senbon_Needle_LOD1",
+    "SM_Senbon_Needle_LOD2"
+   ],
+   "warnings": [
+    "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_Senbon_Needle_LOD0_Embed, SOCKET_SM_Senbon_Needle_LOD0_Grip, SOCKET_SM_Senbon_Needle_LOD0_Throw, SOCKET_SM_Senbon_Needle_LOD0_Tip, SOCKET_SM_Senbon_Needle_LOD0_Trail"
+   ],
+   "lod_screen_sizes": [
+    1.0,
+    0.13,
+    0.0455
+   ],
+   "sockets": [
+    {
+     "socket": "Embed",
+     "mesh": "SM_Senbon_Needle_LOD0"
+    },
+    {
+     "socket": "Grip",
+     "mesh": "SM_Senbon_Needle_LOD0"
+    },
+    {
+     "socket": "Throw",
+     "mesh": "SM_Senbon_Needle_LOD0"
+    },
+    {
+     "socket": "Tip",
+     "mesh": "SM_Senbon_Needle_LOD0"
+    },
+    {
+     "socket": "Trail",
+     "mesh": "SM_Senbon_Needle_LOD0"
+    }
+   ],
+   "sha256": {
+    "fbx": "5522836207c629bd6e3256f9f15dab6866814080f27afd63f59f4e9009d7cc4b",
+    "sidecar": "b678e37dda68aac6d004afc674bfffdab224b67885b7f2ae0938a62d99fb6e51"
+   },
+   "bytes": 38348
+  },
+  "heavy": {
+   "fbx": "Exports/Senbon/SM_Senbon_Heavy.fbx",
+   "sidecar": "Exports/Senbon/SM_Senbon_Heavy.sockets.json",
+   "objects": [
+    "SM_Senbon_Heavy_LodGroup",
+    "SM_Senbon_Heavy_LOD0",
+    "UCX_SM_Senbon_Heavy_LOD0_00",
+    "SM_Senbon_Heavy_LOD1",
+    "SM_Senbon_Heavy_LOD2"
+   ],
+   "warnings": [
+    "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_Senbon_Heavy_LOD0_Embed, SOCKET_SM_Senbon_Heavy_LOD0_Grip, SOCKET_SM_Senbon_Heavy_LOD0_Throw, SOCKET_SM_Senbon_Heavy_LOD0_Tip, SOCKET_SM_Senbon_Heavy_LOD0_Trail"
+   ],
+   "lod_screen_sizes": [
+    1.0,
+    0.17,
+    0.0595
+   ],
+   "sockets": [
+    {
+     "socket": "Embed",
+     "mesh": "SM_Senbon_Heavy_LOD0"
+    },
+    {
+     "socket": "Grip",
+     "mesh": "SM_Senbon_Heavy_LOD0"
+    },
+    {
+     "socket": "Throw",
+     "mesh": "SM_Senbon_Heavy_LOD0"
+    },
+    {
+     "socket": "Tip",
+     "mesh": "SM_Senbon_Heavy_LOD0"
+    },
+    {
+     "socket": "Trail",
+     "mesh": "SM_Senbon_Heavy_LOD0"
+    }
+   ],
+   "sha256": {
+    "fbx": "1494b4355a526f63bdb49d5ef2ad1d9f4983f18b57b5cf0c6238b99e3761a783",
+    "sidecar": "7c249bd5588daf69d02fc74802934f5ad86ad71aabc2ab931519e19d966dece6"
+   },
+   "bytes": 51548
+  }
+ },
+ "renders": {
+  "device": "GPU",
+  "samples": 160,
+  "files": {
+   "hero": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_hero.png",
+   "turntable_needle": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_turntable_needle.png",
+   "turntable_heavy": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_turntable_heavy.png",
+   "closeups": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_closeups.png",
+   "hand_scale": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_hand_scale.png",
+   "family": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_family.png",
+   "lods_needle": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_lods_needle.png",
+   "lods_heavy": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_lods_heavy.png",
+   "lod_points": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_lod_points.png",
+   "wire": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_wire.png",
+   "distance": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\Renders\\Senbon\\senbon_distance_strip.png"
+  },
+  "family_import": {
+   "SM_Shuriken_Spike": {
+    "length_mm": 150.0,
+    "materials": [
+     "FAM_T_Shuriken_Spike_0"
+    ]
+   },
+   "SM_Kunai_Plain": {
+    "length_mm": 280.0,
+    "materials": [
+     "FAM_T_Kunai_Plain_0",
+     "FAM_T_Kunai_Wrap_1"
+    ]
+   }
+  },
+  "distance_note": "640 x 360 at 90 deg hFOV (the 1080p geometry scaled 1/3: px widths are 1/3 of 1080p); centre crop x4 nearest; top to bottom: needle, heavy, spike; report-only (plan 11.3 asks for the Unreal TSR test, which is the finaliser's)",
+  "compare": {
+   "file": "WorkFiles/senbon/SENBON_DESIGN_COMPARE.png",
+   "panels": [
+    "needle_side_1to1",
+    "needle_top_1to1",
+    "heavy_side_1to1",
+    "heavy_top_1to1",
+    "D1_needle_point_5to1",
+    "D2_heavy_point_side_5to1",
+    "D2_heavy_point_top_5to1",
+    "D2_heavy_end_5to1",
+    "D3_heavy_tail_3to1"
+   ],
+   "method": "each panel: the design sheet crop (top) and ours (below) at the SAME px per mm, rendered by the sheet's own renderer settings (Workbench studio light, outline, cavity) with our baked BC; measured dimensions vs the spec are listed at the top"
+  }
+ },
+ "gates": {
+  "01_qa_check_both": true,
+  "02_needle_lod0_budget": true,
+  "03_needle_lods_descend": true,
+  "04_needle_closed": true,
+  "05_needle_uv_no_collapsed_or_mirrored": true,
+  "06_needle_lod_deviation_under_1px": true,
+  "07_needle_silhouette_0.05mm": true,
+  "08_needle_hull_contains_every_lod": true,
+  "09_needle_hull_le_24_verts": true,
+  "10_needle_five_sockets": true,
+  "11_needle_tip_socket_is_apex": true,
+  "02_heavy_lod0_budget": true,
+  "03_heavy_lods_descend": true,
+  "04_heavy_closed": true,
+  "05_heavy_uv_no_collapsed_or_mirrored": true,
+  "06_heavy_lod_deviation_under_1px": true,
+  "07_heavy_silhouette_0.05mm": true,
+  "08_heavy_hull_contains_every_lod": true,
+  "09_heavy_hull_le_24_verts": true,
+  "10_heavy_five_sockets": true,
+  "11_heavy_tip_socket_is_apex": true,
+  "12_maps_pot_no_colour_chunks": true,
+  "13_recolour_detail16_lossless": true,
+  "14_needle_mass_within_3pct": true,
+  "15_heavy_mass_within_3pct": true,
+  "16_heavy_com_within_1mm": true,
+  "17_needle_dims": true,
+  "18_heavy_dims": true,
+  "19_frozen_unchanged": true,
+  "20_no_franchise_string": true,
+  "_all": true
+ }
+}

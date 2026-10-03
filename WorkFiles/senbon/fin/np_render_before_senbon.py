@@ -109,8 +109,8 @@ def uv_jobs(plan: dict) -> list:
         tex = s["textures"]
         bc = next(t for t in plan["textures"].values() if t["asset"] == tex["Base Colour Map"])
         if s["master"] == "M_Steel_Master":
-            if "Spike" in inst or "Senbon" in inst:   # 2048 x 512 / 2048 x 256: not square, skipped (steel is
-                continue                               # report-only; verify/analyse_captures.py needs square maps)
+            if "Spike" in inst:          # 2048 x 512: not square, skipped (steel is report-only)
+                continue
             jobs.append({"name": f"uv_{inst}_default", "instance": s["instance_path"], "overrides": {},
                          "size": 2048 if "Wrap" not in inst else 1024, "slot": inst, "kind": "steel_default",
                          "reference_png": bc["png"]})

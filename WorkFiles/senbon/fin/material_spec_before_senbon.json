@@ -2265,139 +2265,6 @@
      "base_instance": "MI_Flashbang_Steel_Base"
     }
    ]
-  },
-  {
-   "item": "Senbon_Needle",
-   "mesh": "SM_Senbon_Needle",
-   "fbx": "Exports/Senbon/SM_Senbon_Needle.fbx",
-   "sidecar": "Exports/Senbon/SM_Senbon_Needle.sockets.json",
-   "note": "ADDED 2026-10-03 (the senbon finalise pass, lock owner senbon-wf). 130 mm double-pointed needle; one steel slot.",
-   "slots": [
-    {
-     "index": 0,
-     "slot_name": "M_Senbon_Needle_Steel",
-     "part": "Steel",
-     "instance": "MI_Senbon_Needle_Steel",
-     "master": "M_Steel_Master",
-     "recolourable": false,
-     "textures": {
-      "Base Colour Map": "Exports/Senbon/Textures/T_Senbon_Needle_BC.png",
-      "ORM Map": "Exports/Senbon/Textures/T_Senbon_Needle_ORM.png",
-      "Normal Map": "Exports/Senbon/Textures/T_Senbon_Needle_N.png"
-     },
-     "texture_kinds": {
-      "Base Colour Map": "BC",
-      "ORM Map": "ORM_rgb",
-      "Normal Map": "N"
-     },
-     "size": [
-      2048,
-      256
-     ],
-     "params": {},
-     "look_contract": {
-      "BaseColor": "T_Senbon_Needle_BC (sRGB) x Steel Tint (white = as shipped)",
-      "Metallic": "ORM.B",
-      "Roughness": "ORM.G",
-      "AO": "ORM.R",
-      "Normal": "T_Senbon_Needle_N (DirectX)"
-     },
-     "note": "blackened shaft, bright ground cones (their colour is in BC)",
-     "base_instance": "MI_Senbon_Needle_Steel_Base"
-    }
-   ]
-  },
-  {
-   "item": "Senbon_Heavy",
-   "mesh": "SM_Senbon_Heavy",
-   "fbx": "Exports/Senbon/SM_Senbon_Heavy.fbx",
-   "sidecar": "Exports/Senbon/SM_Senbon_Heavy.sockets.json",
-   "note": "ADDED 2026-10-03 (the senbon finalise pass). 170 mm heavy needle: steel slot + recolourable thread wrap.",
-   "slots": [
-    {
-     "index": 0,
-     "slot_name": "M_Senbon_Heavy_Steel",
-     "part": "Steel",
-     "instance": "MI_Senbon_Heavy_Steel",
-     "master": "M_Steel_Master",
-     "recolourable": false,
-     "textures": {
-      "Base Colour Map": "Exports/Senbon/Textures/T_Senbon_Heavy_BC.png",
-      "ORM Map": "Exports/Senbon/Textures/T_Senbon_Heavy_ORM.png",
-      "Normal Map": "Exports/Senbon/Textures/T_Senbon_Heavy_N.png"
-     },
-     "texture_kinds": {
-      "Base Colour Map": "BC",
-      "ORM Map": "ORM_rgb",
-      "Normal Map": "N"
-     },
-     "size": [
-      2048,
-      256
-     ],
-     "params": {},
-     "look_contract": {
-      "BaseColor": "T_Senbon_Heavy_BC (sRGB) x Steel Tint (white = as shipped)",
-      "Metallic": "ORM.B",
-      "Roughness": "ORM.G",
-      "AO": "ORM.R",
-      "Normal": "T_Senbon_Heavy_N (DirectX)"
-     },
-     "note": "blackened body, bright three-facet point (their colour is in BC)",
-     "base_instance": "MI_Senbon_Heavy_Steel_Base"
-    },
-    {
-     "index": 1,
-     "slot_name": "M_Senbon_Heavy_Wrap",
-     "part": "Wrap",
-     "instance": "MI_Senbon_Heavy_Wrap",
-     "master": "M_Fabric_Master",
-     "recolourable": true,
-     "tint_ready_shipped": true,
-     "textures": {
-      "Detail Map": "Exports/Senbon/Textures/Recolour/T_Senbon_Heavy_Wrap_Detail16.png (NEW: 16-bit linear tint-ready detail of the thread wrap, Scripts/props/build_senbon.py stage textures)",
-      "Base Colour Map": "Exports/Senbon/Textures/T_Senbon_Heavy_Wrap_BC.png",
-      "ORM Map": "Exports/Senbon/Textures/T_Senbon_Heavy_Wrap_ORM.png",
-      "Normal Map": "Exports/Senbon/Textures/T_Senbon_Heavy_Wrap_N.png"
-     },
-     "texture_kinds": {
-      "Detail Map": "Detail16",
-      "Base Colour Map": "BC",
-      "ORM Map": "ORM_rgb",
-      "Normal Map": "N"
-     },
-     "size": {
-      "BC": 1024,
-      "Detail": 1024,
-      "ORM": 1024,
-      "N": 1024
-     },
-     "uv_tile": "u 1..2 (Wrap addressing reads the same texels)",
-     "params": {
-      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
-      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
-      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
-      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
-      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
-      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
-      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
-      "Specular Strength": 0.5,
-      "Specular From ORM Alpha": false,
-      "Cloth Sheen": false,
-      "Use Lettering": false,
-      "Metal From ORM": false
-     },
-     "look_contract": {
-      "BaseColor": "saturate(Colour x (Detail Bias + Detail Scale x Detail)) (v2 MF_TintDetail): the cotton thread recolours; default Colour = #373532, the kunai grip's",
-      "Metallic": "0 (Metal From ORM off; ORM.B = 0)",
-      "Roughness": "ORM.G",
-      "AO": "ORM.R",
-      "Normal": "T_Senbon_Heavy_Wrap_N (DirectX)"
-     },
-     "note": "the cotton thread wrap and its two bindings (tail, s 6-54 mm); switches as MI_Kunai_Plain_Wrap (Cloth Sheen OFF, Default Lit)",
-     "base_instance": "MI_Senbon_Heavy_Wrap_Base"
-    }
-   ]
   }
  ],
  "new_maps": [
@@ -2857,8 +2724,7 @@
    "Fan": "Exports/Fan/Textures/Recolour/recolour_maps.json",
    "SnowFlower": "Exports/SnowFlower/v4/Textures/Recolour/recolour_maps.json",
    "SnowFlowerHeels": "Exports/SnowFlowerHeels/Textures/Recolour/recolour_maps.json",
-   "Flashbang": "Exports/Flashbang/Textures/Recolour/recolour_maps.json",
-   "Senbon": "Exports/Senbon/Textures/Recolour/recolour_maps.json"
+   "Flashbang": "Exports/Flashbang/Textures/Recolour/recolour_maps.json"
   },
   "not_imported": {
    "Exports/SmokeBomb/Textures/T_SmokeBomb_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_SmokeBomb_Detail16 (the sRGB G8 builds as BGRA8: ~85 MiB)",
@@ -2878,8 +2744,7 @@
    "Fan": "Exports/Fan/Textures/Recolour/recolour_constants.json",
    "SnowFlower": "Exports/SnowFlower/v4/Textures/Recolour/recolour_constants.json",
    "SnowFlowerHeels": "Exports/SnowFlowerHeels/Textures/Recolour/recolour_constants.json",
-   "Flashbang": "Exports/Flashbang/Textures/Recolour/recolour_constants.json",
-   "Senbon": "Exports/Senbon/Textures/Recolour/recolour_constants.json"
+   "Flashbang": "Exports/Flashbang/Textures/Recolour/recolour_constants.json"
   },
   "recolour_constants_note": "Scripts/unreal/materials/maps/derive_constants.py derives them from the Recolour maps; their params override recolour_maps.json. run_build.sh 'maps_check' verifies the sha256 chain.",
   "default_textures": {
@@ -3053,11 +2918,5 @@
   "what": "The flashbang (SM_Flashbang + _Body, _PullRing, _Lever) joins the pack (additions only): 4 instances (MI_Flashbang_Paint on M_Fabric_Master with Metal From ORM, MI_Flashbang_Steel on M_Steel_Master, each with its _Base) shared by the four meshes; group Flashbang's recolour maps (written by Scripts/props/build_flashbang.py) and constants (maps/derive_constants_flashbang.py).",
   "masters": "unchanged",
   "code": "none: one new script maps/derive_constants_flashbang.py (a copy of the heels' with the flashbang's group and paths); four mesh entries share the two slot instances (np_spec resolves each instance once)"
- },
- "changes_v7_senbon": {
-  "date": "2026-10-03",
-  "what": "The senbon needles (SM_Senbon_Needle, SM_Senbon_Heavy) join the pack (additions only): 6 instances (MI_Senbon_Needle_Steel and MI_Senbon_Heavy_Steel on M_Steel_Master, MI_Senbon_Heavy_Wrap on M_Fabric_Master, each with its _Base); group Senbon's recolour maps (written by Scripts/props/build_senbon.py) and constants (maps/derive_constants_senbon.py).",
-  "masters": "unchanged (the build plan's proposed 'Used with Niagara Mesh Particles' flag on M_Steel_Master was NOT applied: it needs the user's approval; see WorkFiles/senbon/SENBON_REPORT.md)",
-  "code": "one new script maps/derive_constants_senbon.py (a copy of the flashbang's with the senbon's group and paths); np_render.py: the UV-capture job list skips the senbon STEEL slots as it already skipped the spike's (non-square 2048 x 256 BC: verify/analyse_captures.py needs square maps; steel captures are report-only). Nothing else in the code changed."
  }
 }

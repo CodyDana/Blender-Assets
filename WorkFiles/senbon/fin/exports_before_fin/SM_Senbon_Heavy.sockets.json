@@ -1,0 +1,185 @@
+{
+  "fbx": "SM_Senbon_Heavy.fbx",
+  "axis": {
+    "forward": "-Y",
+    "up": "Z"
+  },
+  "note": "Unreal 5.8.2 drops FBX sockets from any file that contains a LodGroup, so recreate them after import with unreal.new_object(unreal.StaticMeshSocket, outer=mesh); the bare unreal.StaticMeshSocket() constructor is outered to /Engine/Transient and is silently lost on save. Locations are cm, rotations are Unreal rotator degrees. lod_screen_sizes must also be applied after import: an FBX LodGroup carries no thresholds, so Unreal computes its own (measured 2.0 / 0.75 / 0.5625 on a three-LOD group) and the asset sits on its lowest LOD almost always.",
+  "sockets": [
+    {
+      "socket": "Embed",
+      "fbx_node": "SOCKET_SM_Senbon_Heavy_LOD0_Embed",
+      "mesh": "SM_Senbon_Heavy_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        6.1303,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Grip",
+      "fbx_node": "SOCKET_SM_Senbon_Heavy_LOD0_Grip",
+      "mesh": "SM_Senbon_Heavy_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        -6.3697,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Throw",
+      "fbx_node": "SOCKET_SM_Senbon_Heavy_LOD0_Throw",
+      "mesh": "SM_Senbon_Heavy_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Tip",
+      "fbx_node": "SOCKET_SM_Senbon_Heavy_LOD0_Tip",
+      "mesh": "SM_Senbon_Heavy_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        7.6303,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    },
+    {
+      "socket": "Trail",
+      "fbx_node": "SOCKET_SM_Senbon_Heavy_LOD0_Trail",
+      "mesh": "SM_Senbon_Heavy_LOD0",
+      "node_type": "EMPTY",
+      "ue_correction": true,
+      "location_cm": [
+        -9.3697,
+        0.0,
+        0.0
+      ],
+      "rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "in_fbx": false
+    }
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.17,
+    0.0595
+  ],
+  "mass_kg": 0.01193,
+  "centre_of_mass_mm": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "hull_com_offset_cm": [
+    -1.2343,
+    0.0,
+    0.0
+  ],
+  "use_ccd": true,
+  "physics_note": "mass override = the as-built ROUND profile x 7.85 g/cm3 (+ cotton wrap 0.6 g/cm3 on the heavy); pivot = that centre of mass. Unreal derives the COM from the hull: set Center Of Mass Offset = -hull_com_offset_cm if it matters. CCD on, angular damping 0.5-1.0 for dropped needles only (plan 4.3)",
+  "embed": {
+    "default_depth_mm": 15.0,
+    "by_surface_mm": {
+      "wood": [
+        10,
+        20
+      ],
+      "straw_tatami": [
+        25,
+        40
+      ],
+      "cloth_flesh": [
+        20,
+        35
+      ],
+      "paper": "passes",
+      "stone_metal": 0
+    },
+    "max_incidence_deg": 70,
+    "direction": "along the incoming velocity, +-2 deg jitter"
+  },
+  "throw": {
+    "method": "direct (jiki-daho), point first, no spin",
+    "rotation_follows_velocity": true,
+    "volley": "single"
+  },
+  "material": {
+    "slots": [
+      "0 M_Senbon_Heavy_Steel -> MI_Senbon_Heavy_Steel (M_Steel_Master)",
+      "1 M_Senbon_Heavy_Wrap -> MI_Senbon_Heavy_Wrap (M_Fabric_Master, recolourable; UV tile u 1..2)"
+    ],
+    "textures": {
+      "BC": "T_Senbon_Heavy_BC (sRGB)",
+      "ORM": "T_Senbon_Heavy_ORM (linear)",
+      "N": "T_Senbon_Heavy_N (DirectX)",
+      "Wrap_BC": "T_Senbon_Heavy_Wrap_BC (sRGB)",
+      "Wrap_ORM": "T_Senbon_Heavy_Wrap_ORM (linear, B = 0)",
+      "Wrap_N": "T_Senbon_Heavy_Wrap_N (DirectX)",
+      "Wrap_Detail16": "Recolour/T_Senbon_Heavy_Wrap_Detail16 (linear G16)"
+    },
+    "wrap_default_colour_srgb": "#373532"
+  }
+}
