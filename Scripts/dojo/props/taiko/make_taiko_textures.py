@@ -88,6 +88,28 @@ def to_srgb(c):
     return np.where(c <= 0.0031308, c * 12.92, 1.055 * c ** (1 / 2.4) - 0.055)
 
 
+GOLD_HSV = (7.0, 0.85, 0.72)   # t7 (judge r6 item 3: the gold zone rendered a little dark and saturated, luminance about
+#   128 / s 0.41 against the photo's 157 / 0.32): saturation x 1.25 -> 0.85, value x 0.575 -> 0.72, tuned on the t7
+#   renders (t7/judge_style_metrics.json gold_front_centre, t7/gold_sample_*.json). t6 (judge t5 item 3):
+GOLD_TINT0 = 0.88   # t7: the gold's linear-light share where the ramp proper starts (0.12 d under the band): the
+#   photo's warm cream right under the band (rendered luminance about 200, saturation 0.10-0.14; tuned on t7 renders)
+#   (t6 note:) hue shift (deg), saturation and value factors for the gold. The
+#   judge's estimate (+6 deg, x 0.70, x 0.88) rendered (215, 199, 171), far too pale under the photo-studio light; these
+#   were found by re-rendering drum_front_standing_photo and sampling (t6/gold_sample.py; see gold_sample_*.json): mid gold vs
+#   the judge's photo sample (186, 158, 115), the classed gold band vs the photo's (172, 146, 107), both within +-8
+
+
+def gold_adj(lin, dh=None, ks=None, kv=None):
+    """t6: shift a linear RGB gold in sRGB HSV (hue + dh deg, saturation x ks, value x kv); returns linear RGB."""
+    import colorsys
+    dh = GOLD_HSV[0] if dh is None else dh
+    ks = GOLD_HSV[1] if ks is None else ks
+    kv = GOLD_HSV[2] if kv is None else kv
+    hh, ss, vv = colorsys.rgb_to_hsv(*[float(x) for x in to_srgb(lin)])
+    r_, g_, b_ = colorsys.hsv_to_rgb((hh + dh / 360.0) % 1.0, ss * ks, vv * kv)
+    return to_lin(np.array([r_, g_, b_]))
+
+
 def normal_dx(height_m, px_m):
     du = (np.roll(height_m, -1, 1) - np.roll(height_m, 1, 1)) / (2 * px_m)
     dv = -(np.roll(height_m, -1, 0) - np.roll(height_m, 1, 0)) / (2 * px_m)
@@ -312,29 +334,39 @@ def lacquer(n=2048, seed=1811):
     scr = tg._dashes(n, n, rng, 2400, (8, 60), 0.5, 1)
     scr = np.maximum(scr, 0.7 * tg._dashes(n, n, rng, 400, (6, 40), 1.2, 1))
     # position-aware wear (taiko_uv): collars at x = +-X_COLLAR, the bulge at x = 0
-    cu = [UVL.LAC_U0 + s_ * UVL.X_COLLAR / UVL.LAC_TILE for s_ in (1, -1)]
-    edge = np.maximum(col_gauss(n, cu[0], 0.020), col_gauss(n, cu[1], 0.020))
-    edge_n = np.clip(0.55 + 0.6 * pnoise(n, n, 1.3, seed + 8, fmin=0.08), 0, 1)
-    wear_edge = np.clip(edge * edge_n * 1.3, 0, 1)
+    cu = [UVL.lac_u(s_ * UVL.X_COLLAR) for s_ in (1, -1)]   # t4: U by arc length along the bulged profile
+    # t3 (judge round 3): the band sits at the new collar edge (X_COLLAR 0.600, the flap root; it was placed for the
+    # r2 torn edge at 0.612) and is a soft, even darkening (the shade under the flap), no longer a pale worn band
+    edge = np.maximum(col_gauss(n, cu[0], 0.012), col_gauss(n, cu[1], 0.012))
+    edge_n = np.clip(0.75 + 0.3 * pnoise(n, n, 1.6, seed + 8, fmin=0.05), 0, 1)
+    wear_edge = np.clip(edge * edge_n, 0, 1)
+    # t3: clean, glossy lacquer within 60 mm of each collar edge (fading out by 90 mm): no stave streaks, cracks or
+    # scratches there (the photo's barrel below the flap is clean). U distance = metres / LAC_TILE, periodic.
+    uu = (np.arange(n) + 0.5) / n
+    clean = np.zeros((1, n))
+    for c_ in cu:
+        du = np.abs((uu - c_ + 0.5) % 1.0 - 0.5) * UVL.LAC_TILE
+        clean = np.maximum(clean, 1.0 - smooth(0.095, 0.125, du)[None, :])   # 60 mm below the tab hems (0.565)
     bulge = col_gauss(n, UVL.LAC_U0, 0.085) * np.clip(tg.pnoise(n, n, 1.5, seed + 9, angle=0.0, aspect=2.5) * 0.8
                                                      - 0.1, 0, 1)
     # r3 (round-2 judge blocker 4 + delta 3: 'glossy red-brown lacquer with fine craquelure and a strong specular
     # highlight; ours reads as matte wood grain with scratch strokes'): the stave streaks almost gone, the pale
     # scratches cut to a faint few, the gloss up (roughness about 0.28 between the cracks)
-    stave = 0.35 * stave
-    scr = 0.30 * scr
+    stave = 0.35 * stave * (1 - clean)
+    scr = 0.30 * scr * (1 - clean)
+    crk = crk * (1 - clean)
     lum = 1.0 + 0.035 * stave + 0.02 * fine
     col = base[None, None, :] * lum[..., None]
     b = np.clip(0.60 * bulge, 0, 0.6)[..., None]
     col = col * (1 - b) + warm[None, None, :] * b * lum[..., None]
-    we = (0.55 * wear_edge)[..., None]
-    col = col * (1 - we) + wood[None, None, :] * we * lum[..., None]
+    we = (0.45 * wear_edge)[..., None]
+    col = col * (1 - we) + to_lin(srgb("#1E0904"))[None, None, :] * we * lum[..., None]   # t3: darkening
     sc_ = (0.45 * scr * (0.8 + 0.6 * np.clip(bulge + wear_edge, 0, 1)))[..., None]
     col = col * (1 - np.clip(sc_, 0, 0.8)) + pale[None, None, :] * np.clip(sc_, 0, 0.8)
     c = (0.88 * crk)[..., None]
     col = col * (1 - c) + dark[None, None, :] * c
     height = -0.00030 * crk - 0.00010 * scr + 0.00002 * stave - 0.00008 * wear_edge + 0.00001 * fine
-    rough = 0.27 + 0.02 * np.tanh(fine) + 0.22 * crk + 0.10 * scr + 0.14 * wear_edge - 0.05 * bulge
+    rough = 0.27 + 0.02 * np.tanh(fine) + 0.22 * crk + 0.10 * scr + 0.05 * wear_edge - 0.05 * bulge
     ao = ao_from_height(height, px, 4, 0.8)
     lum_img = to_srgb(col).mean(2)
     big = blur(lum_img, 24.0)
@@ -343,18 +375,21 @@ def lacquer(n=2048, seed=1811):
               "TileM 2,2)", "generator": "library dojo_tex_gen primitives, retuned (see docstring)",
               "large_scale_lum_std_srgb": round(float(big.std()) * 255, 2),
               "large_scale_lum_std_library_lacquer_note": "library T_DJ_Lacquer measured separately in BUILD_NOTES",
-              "crack_cover_frac": round(float((crk > 0.3).mean()), 4)})
+              "crack_cover_frac": round(float((crk > 0.3).mean()), 4),
+              "t3_collar_edge_x_m": UVL.X_COLLAR, "t3_clean_zone_m": [0.095, 0.125]})
 
 
 def hide(n=2048, seed=1201):
     """Pale cow-hide drumheads (f1): mottled, dirty and fibrous, a darker ring near the rim of each head and a dark
     rolled lip. Both heads are planar discs inside one 2 m tile (taiko_uv.HEAD_CENTRE); the lip rolls are U strips."""
     px = UVL.HIDE_TILE / n
-    base = to_lin(srgb("#D4B996"))          # sheet head face, de-lit (f1 t1: #CBB08F rendered 179 vs the sheet 201)
-    warm = to_lin(srgb("#B08A5A"))
-    grey = to_lin(srgb("#8F8676"))
-    stain = to_lin(srgb("#86633F"))
-    rimc = to_lin(srgb("#7E6446"))          # grimy rim band and lip
+    # t3 (judge round 3 on the user's photo): near-white rawhide, sRGB about 235,233,226, soft sheen (roughness about
+    # 0.45); the dark rim band, the tan mix and the stains are toned right down (r2-t2: #D4B996 pale tan)
+    base = to_lin(srgb("#EBE9E2"))
+    warm = to_lin(srgb("#E0D8C6"))
+    grey = to_lin(srgb("#C9C6BE"))
+    stain = to_lin(srgb("#CDBFA4"))
+    rimc = to_lin(srgb("#D8D3C8"))          # t3: the rim and the lip roll stay near white
     mott = pnoise(n, n, 1.7, seed, fmin=0.05)
     cloud = pnoise(n, n, 1.3, seed + 1, fmin=0.2)
     fib = pnoise(n, n, 0.5, seed + 2, stretch_u=2.5)
@@ -377,21 +412,23 @@ def hide(n=2048, seed=1201):
         rim = np.maximum(rim, smooth(0.39, 0.485, d + wob) * (d < 0.50))
         centre = np.maximum(centre, (1 - smooth(0.05, 0.22, d)) * (d < 0.3))
     for s, u0 in UVL.LIP_U0.items():
-        rim = np.maximum(rim, ((u > u0 - 0.004) & (u < u0 + UVL.LIP_UW + 0.004)).astype(np.float64) * 0.85)
+        # t2 (the user's photo: the hide wraps white over the head edge): the lip strips 0.85 -> 0.25 rim grime
+        rim = np.maximum(rim, ((u > u0 - 0.004) & (u < u0 + UVL.LIP_UW + 0.004)).astype(np.float64) * 0.25)
     rim = np.clip(rim * (0.75 + 0.35 * pnoise(n, n, 1.4, seed + 30, fmin=0.06)), 0, 1)
-    lum = 1.0 + 0.10 * mott + 0.05 * cloud + 0.035 * fib
+    lum = 1.0 + 0.035 * mott + 0.02 * cloud + 0.015 * fib       # t3: quieter (0.10 / 0.05 / 0.035)
     col = base[None, None, :] * lum[..., None]
-    wmix = np.clip(0.20 + 0.16 * mott, 0, 1)[..., None]
+    wmix = np.clip(0.10 + 0.10 * mott, 0, 1)[..., None]
     col = col * (1 - wmix) + warm[None, None, :] * wmix * lum[..., None]
     g = (0.20 * sm + 0.10 * centre)[..., None]
     col = col * (1 - g) + grey[None, None, :] * g
     col = col * (1 - 0.35 * st[..., None]) + stain[None, None, :] * 0.35 * st[..., None]
     r = (0.50 * rim)[..., None]
     col = col * (1 - r) + rimc[None, None, :] * r * lum[..., None]
-    col = col * (1 - 0.18 * vein[..., None]) * (1 - 0.06 * fibre[..., None]) * (1 - 0.35 * speck[..., None])
-    col = np.minimum(col, float(to_lin(0.80)))   # albedo cap 0.80 sRGB (STYLE_GUIDE 3, paper / plaster rule)
+    col = col * (1 - 0.06 * vein[..., None]) * (1 - 0.03 * fibre[..., None]) * (1 - 0.15 * speck[..., None])
+    # t3: albedo cap 0.92 sRGB (235: the STYLE_GUIDE's 'no pure white, about sRGB 240'; 0.80 is the plaster rule)
+    col = np.minimum(col, float(to_lin(0.92)))
     height = 0.00016 * fib + 0.00010 * fib2 + 0.00025 * blur(cloud, 3) + 0.00018 * vein
-    rough = 0.72 + 0.05 * fib + 0.06 * st - 0.05 * sm + 0.05 * rim
+    rough = 0.45 + 0.03 * fib + 0.03 * st - 0.02 * sm + 0.02 * rim     # t3: soft sheen (was 0.72)
     ao = ao_from_height(height, px, 5, 0.5)
     bc = to_srgb(col)
     # r3: the drumsticks' wood on an unused patch of this atlas (taiko_uv.BACHI_*)
@@ -403,11 +440,106 @@ def hide(n=2048, seed=1201):
     height[r0:r0 + hh, c0:c0 + ww] = ph
     rough[r0:r0 + hh, c0:c0 + ww] = pr
     ao[r0:r0 + hh, c0:c0 + ww] = pa
-    save_set("Hide", bc, height, rough, px, ao, 0.0,
-             {"use": "drumheads and lip rolls; r3: the drumsticks' wood patch (taiko_uv.BACHI_*)",
+    # t2 (2026-10-02): the tacks' glossy black patch and the stand's felt patch (taiko_uv.TACK_PATCH / FELT_PATCH)
+    extra_patches = {}
+    metal = np.zeros((n, n))
+    for key, rect, fn in (("tack_patch", UVL.TACK_PATCH, tack_patch), ("felt_patch", UVL.FELT_PATCH, felt_patch),
+                          ("brass_patch", UVL.BRASS_PATCH, brass_patch),    # t7: the ring washer's pale brass
+                          ("hwiron_patch", UVL.HWIRON_PATCH, hwiron_patch),    # t8: the ring hardware's black iron
+                          ("hwgloss_patch", UVL.HWGLOSS_PATCH, hwgloss_patch)):   # t8: its glossy edges / domes / ring
+        u0, v0, u1, v1 = rect
+        q0, q1 = int(round(u0 * n)), int(round(u1 * n))
+        s0, s1 = int(round((1.0 - v1) * n)), int(round((1.0 - v0) * n))
+        pb_, ph_, pr_, pa_, inf_ = fn(s1 - s0, q1 - q0, px)
+        bc[s0:s1, q0:q1] = pb_
+        height[s0:s1, q0:q1] = ph_
+        rough[s0:s1, q0:q1] = pr_
+        ao[s0:s1, q0:q1] = pa_
+        if key in ("tack_patch", "brass_patch", "hwiron_patch", "hwgloss_patch"):
+            metal[s0:s1, q0:q1] = TACK_METAL
+        extra_patches[key] = dict(inf_, rows=[s0, s1], cols=[q0, q1])
+    save_set("Hide", bc, height, rough, px, ao, metal,
+             {"use": "drumheads and lip rolls; r3: the drumsticks' wood patch (taiko_uv.BACHI_*); t2: the tacks' "
+                     "lacquered-black patch and the stand saddles' felt patch",
               "kind": "UNIQUE (head discs laid out per taiko_uv)", "bachi_patch": dict(info, rows=[r0, r0 + hh],
                                                                                         cols=[c0, c0 + ww]),
+              **extra_patches,
               "_patch_normals": (r0, c0, ph)})
+
+
+TACK_METAL = 1.0
+
+
+def tack_patch(h, w, px):
+    """t2 (judge round 2 on the user's photo): the byou are smooth, glossy jet-black domes with one clean highlight.
+    An even lacquered black: BC 0.012 linear, roughness 0.15 (small, crisp highlights), dielectric, flat normal
+    (height 0), AO 1."""
+    # t3 (judge round 3: black to the edge, F0 about 0.012, roughness 0.28-0.30): the library graph (Blender and
+    # M_DJ_Lib_Opaque) has no per-texel specular level, so the patch is METALLIC with base colour 0.012 linear, which
+    # gives F0 = 0.012 (a dielectric's 0.04 reflected the bright studio and hide as grey); the diffuse a 0.008
+    # dielectric would add is negligible
+    lin, rgh = 0.012, 0.29
+    bc = np.full((h, w, 3), float(to_srgb(lin)))
+    return bc, np.zeros((h, w)), np.full((h, w), rgh), np.ones((h, w)), {
+        "bc_linear": lin, "bc_srgb_8bit": int(round(float(to_srgb(lin)) * 255)), "roughness": rgh, "normal": "flat",
+        "metallic": TACK_METAL, "f0": lin}
+
+
+def hwiron_patch(h, w, px):
+    """t8 (judge r7 item 2): the ring hardware's glossy black iron (the photo's plate reads luminance 5-25 at our
+    exposure, ours rendered 32-42 on the tacks' patch): base colour sRGB 10/255 (metallic, so F0 = 0.003), roughness
+    0.27, flat normal. The highlights then come from the plate's rounded bevel, the rivets, the boss and the ring."""
+    lin, rgh = float(to_lin(10.0 / 255.0)), 0.27
+    bc = np.full((h, w, 3), 10.0 / 255.0)
+    return bc, np.zeros((h, w)), np.full((h, w), rgh), np.ones((h, w)), {
+        "bc_linear": round(lin, 5), "bc_srgb_8bit": 10, "roughness": rgh, "normal": "flat", "metallic": TACK_METAL}
+
+
+def hwgloss_patch(h, w, px):
+    """t8 (judge r7 item 2; first t8 renders: on the sRGB 10 patch the rivets, boss and ring lost the photo's bright
+    specular dots and the rod its streak): the hardware's curved parts (the plate's bevel and walls, rivets, boss,
+    ring) on a glossier black iron: base colour linear 0.008 (metallic, F0 0.008), roughness 0.16: tight, bright
+    highlights, a dark body."""
+    lin, rgh = 0.008, 0.16
+    bc = np.full((h, w, 3), float(to_srgb(lin)))
+    return bc, np.zeros((h, w)), np.full((h, w), rgh), np.ones((h, w)), {
+        "bc_linear": lin, "bc_srgb_8bit": int(round(float(to_srgb(lin)) * 255)), "roughness": rgh, "normal": "flat",
+        "metallic": TACK_METAL}
+
+
+def brass_patch(h, w, px, seed=3501):
+    """t7 (user: "also match the ring handle to the reference"): the chrysanthemum washer's pale brass (the photo's
+    washer renders a pale, slightly green gold, median sRGB 111,101,74 in shade, 137,126,98 lit). Metallic; base colour
+    = the brass F0 sRGB about 196,178,126 with a faint low-frequency patina; roughness 0.36-0.42; flat normal."""
+    # t8 (judge r7 item 2: ours rendered hue 39-40, saturation 0.28, the photo's 42-45 / about 0.2, and too bright and
+    # even): a paler, greener, less saturated and slightly darker brass (#605941: hue 46, saturation 0.32 in the base
+    # colour, as the render desaturates and warms it), roughness 0.35 (t7 0.45) so the domed, embossed petals spread
+    # their tones like the photo's; t8 renders: #605941 rendered the petals 125-155 against the photo's 99-144 (at our
+    # exposure): #544E38, roughness 0.30
+    base = to_lin(srgb("#544E38"))          # t7: #6E6040; t7 test renders: #C4B27E / #968250 rendered ivory / cream
+    patina = pnoise(h, w, 1.8, seed, fmin=0.08)
+    col = base[None, None, :] * (1.0 + 0.05 * patina[..., None])
+    rough = np.clip(0.30 + 0.03 * patina, 0.25, 0.37)
+    bc = to_srgb(col)
+    return bc, np.zeros((h, w)), rough, np.ones((h, w)), {"bc_srgb_8bit": [int(round(float(x) * 255)) for x in bc.reshape(-1, 3).mean(0)],
+                                                          "roughness_mean": round(float(rough.mean()), 3), "metallic": 1.0}
+
+
+def felt_patch(h, w, px, seed=3401):
+    """t2 (the user's stand question): the dark red wool felt that lines each cradle saddle. Deep red, a fine fuzz
+    and a soft cloud, fully rough, a very low fibre bump."""
+    base = to_lin(srgb("#47121A"))           # deep wine red (#5C1A1D rendered salmon-red)
+    fuzz = pnoise(h, w, 0.35, seed)
+    cloud = pnoise(h, w, 1.6, seed + 1, fmin=0.08)
+    pill = np.clip((pnoise(h, w, 0.6, seed + 2) - 1.8) * 1.5, 0, 1)
+    lum = 1.0 + 0.10 * fuzz + 0.07 * cloud + 0.10 * pill
+    col = base[None, None, :] * lum[..., None]
+    height = 0.00010 * fuzz + 0.00008 * blur(cloud, 2) + 0.00008 * pill
+    rough = np.clip(0.92 + 0.03 * fuzz, 0.85, 1.0)
+    ao = ao_from_height(height, px, 3, 0.5)
+    bc = to_srgb(col)
+    return bc, height, rough, ao, {"mean_srgb_8bit": [int(round(float(x) * 255)) for x in bc.reshape(-1, 3).mean(0)],
+                                   "rough_mean": round(float(rough.mean()), 3)}
 
 
 def bachi_patch(px):
@@ -455,8 +587,116 @@ def bachi_patch(px):
                                    "rough_mean": round(float(rough.mean()), 3)}
 
 
-def collar(h=2048, w=256, seed=1251):
-    """Hide collar lapped over the barrel (f1, blind judge): the head's pale cream about 12 % darker, dirtier toward
+def collar(h=2048, w=512, seed=1251):
+    """t2 (2026-10-02, judge round 2 on the user's photo References/Dojo/taiko_tacks_ref_user.webp): the hide is pale
+    (as near white as the 0.80 albedo cap allows, a touch less yellow than the head) over the tack band and above it,
+    with a soft tan flush down into the flap; the flap itself (U < taiko_uv.COLLAR_U_FLAP, the flared slit tabs) is
+    golden tan rawhide with darker creases running along the tab length and a slightly darker raw cut edge at the tab
+    tip (U ~0.03). Rows = V around the drum (2 whole tiles around), columns = U across the band (t4: 0.5 m, 512 px,
+    the same 0.98 mm / px; t2-t3: 0.25 m, 256 px).
+    t4 (judge round 3 item 4): the white-to-gold blend is ONE smooth ramp along U, GOLD_RAMP (0.4 d, 17 mm) long, from
+    taiko_uv.COLLAR_U_GOLD (0.5 d below the tack band) down to COLLAR_U_GOLD_FULL; its line waves only at low frequency
+    (about one gentle wave per flap, +-4 mm): no noise runs, no white wash, no high-frequency edge.
+    t5 (judge t4 item 1): the gold darkens down the continuous skirt, darkest on its rolled hem lip (taiko_uv
+    COLLAR_U_LIP_LO / HI, the last LIP_FADE = 1 d fading in), lightest just below the white ramp; 16 white streaks
+    run 25-60 mm down into the gold.
+    t6 (judge t5 items 2-3): the gold (every gold stop) shifted GOLD_HSV in sRGB HSV, tuned on renders (it rendered 216-221, 178-183, 139-141, hue 30 deg, s 0.50-0.54; the photo's mid gold 181-192,
+    153-164, 109-122, hue 36-37 deg, s 0.33-0.36); the gold zone carries low-frequency mottling only (the crease and
+    fibre streaks read as planks); the ramp's wave peak is taiko_uv.GOLD_WAVE (3 mm) and the ramp starts at least
+    15 mm below the skirt root (taiko_uv.X_GOLD), so the white runs onto the sheet and the streaks cross the root."""
+    px = UVL.COLLAR_TILE_U / w
+    pale = to_lin(srgb("#EBE9E2"))          # t3: the head's near-white hide (t2: #D2C6AE)
+    cream = to_lin(srgb("#E2DDD1"))
+    tan = to_lin(srgb("#906622"))           # t3: golden tan (#A27A3E rendered 210,178,143 under the t1 studio, too
+    tan_d = to_lin(srgb("#78521A"))         #     pale; the photo's flaps measure about 176,151,109; #C49E62 rendered
+    #                                             228,205,177; t2: #B98448)
+    grime = to_lin(srgb("#5A4630"))
+    tan, tan_d = gold_adj(tan), gold_adj(tan_d)       # t6
+    U = ((np.arange(w) + 0.5) / w)[None, :] * np.ones((h, 1))
+    uf = UVL.COLLAR_U_FLAP
+    mott = pnoise(h, w, 1.6, seed, fmin=0.05)
+    bump = pnoise(h, w, 1.1, seed + 1, fmin=0.12)
+    folds = pnoise(h, w, 1.4, seed + 2, stretch_u=5.0, fmin=0.08)
+    fib = pnoise(h, w, 0.5, seed + 3, stretch_u=3.0)
+    wob = 0.012 * pnoise(h, w, 1.5, seed + 6, fmin=0.1)
+    crease = pnoise(h, w, 1.4, seed + 7, stretch_v=6.0, fmin=0.08)   # (t3-t5 creases along U; t6: not in the gold)
+    mott_lf = pnoise(h, w, 2.0, seed + 10, fmax=2.5)   # t6: the gold's low-frequency mottling (patches >= ~10 cm)
+    # t3: the gold covers the flaps and the lower collar up to COLLAR_U_GOLD (0.5 tack diameters below the band) and
+    # fades into the white over about 12 mm, with soft white runs reaching down into it (the photo); no dark cut edge
+    ug = UVL.COLLAR_U_GOLD
+    ugf = UVL.COLLAR_U_GOLD_FULL
+    # t4: the blend line's low-frequency wave along V: whole cycles per tile (seamless), 12-17 cycles per tile (24-34
+    # round the drum, about one per flap) plus a slow 2-4 cycle undulation; peak +-4.3 mm (0.1 d)
+    rng_w = np.random.default_rng(seed + 8)
+    vv = (np.arange(h)[:, None] + 0.5) / h
+    wave = np.zeros((h, 1))
+    for k_, a_ in ((int(rng_w.integers(12, 18)), 1.0), (int(rng_w.integers(12, 18)), 0.6),
+                   (int(rng_w.integers(2, 5)), 0.8)):
+        wave += a_ * np.sin(2 * np.pi * (k_ * vv + rng_w.uniform()))
+    wave = wave / np.abs(wave).max() * (UVL.GOLD_WAVE / UVL.COLLAR_TILE_U)   # t6: 3.0 mm (t4/t5: 4.3)
+    # t7 (judge r6 item 3): the ramp starts right under the tack band (taiko_uv.X_GOLD, 0.12 d below its lower edge) and
+    # runs 2.0 d (GOLD_RAMP) down to full gold, mostly on the skirt sheet; its line breaks up in low-frequency mottled
+    # patches (the ramp position shifts +-0.3 of its length with a soft 2D noise, and a few soft white clouds reach down
+    # into the upper half of the gold); the t5/t6 vertical white "drip" streaks are gone
+    brk = pnoise(h, w, 2.2, seed + 11, fmax=3.0)
+    brk = brk / (np.abs(brk).max() + 1e-9)
+    clouds = np.clip((pnoise(h, w, 2.0, seed + 12, fmax=4.0) - 0.55) * 0.9, 0, 1)
+    # The photo, front centre, its fitted camera: right under the band the hide is already a warm cream (luminance about
+    # 200, saturation 0.08-0.14), deepening steadily to full gold (157 / 0.31) about 2 tack widths lower. Our pale hide
+    # renders near white (238) until about a third of its linear-light colour is gold, so: from the band's lower edge
+    # (U ug_b) the gold share rises within 0.12 d (to ug) to GOLD_TINT0, then eases on to full gold at ugf.
+    ug_b = UVL.collar_u(UVL.X_BAND_LO)
+    U_ = U - wave + 0.12 * (ug - ugf) * brk   # the ramp line wanders +-10 mm (low frequency)
+    on = smooth(ug_b, ug, U_)
+    t_r = np.clip((ug - U_) / (ug - ugf), 0, 1)
+    flap = on * (GOLD_TINT0 + (1 - GOLD_TINT0) * (1.0 - (1.0 - t_r) ** 1.5))
+    flap = flap * (1 - 0.45 * clouds * np.clip(1.6 * (1 - t_r), 0, 1))   # white clouds in the ramp's upper part only
+    edge = np.zeros_like(U)
+    lum = 1.0 + 0.03 * mott + 0.02 * bump * (1 - 0.5 * flap) + 0.015 * fib * (1 - flap)   # t6: no fibre streaks in the gold
+    m = np.clip(0.15 + 0.15 * mott, 0, 1)[..., None]
+    hide_c = pale[None, None, :] * (1 - m) + cream[None, None, :] * m
+    c = np.clip(0.18 + 0.12 * mott_lf, 0, 1)[..., None]   # t6: low-frequency mottling only (t3-t5: + 0.06 crease + 0.10 mott)   # t3: softer creases   # soft creases (0.30 read as wood grain)
+    # t5 (judge t4 item 1, colour): the gold is lightest just below the white ramp and darkens down the skirt, darkest
+    # on the rolled hem lip (U <= COLLAR_U_LIP_LO .. COLLAR_U_LIP_HI), the last LIP_FADE (1 d) above the lip fading in
+    g_top = 0.85 * tan + 0.15 * pale     # t6: 0.70 / 0.30 -> 0.85 / 0.15 (the gold zone is shorter: the light top stop read as
+    #                                     grey-white over most of it; an sRGB-space mix rendered the mid gold 9 too blue)
+    g_lip = gold_adj(to_lin(srgb("#6C4614")))   # t6: gold_adj
+    # t7: the rolled lip (U below COLLAR_U_LIP_HI) only a touch darker than the full gold (the photo's rolls read the same
+    # gold, darker only in their own shadow); full gold from the ramp's foot (ugf) down
+    lip_c = 0.65 * tan + 0.35 * g_lip
+    u_l1 = min(UVL.COLLAR_U_LIP_HI, ugf - 0.01)
+    stops_u = [0.0, UVL.COLLAR_U_LIP_LO, u_l1, 1.0]
+    stops_c = [lip_c, lip_c, tan, tan]          # t7: one gold (t6's lighter top stop g_top, 15 % pale in linear light, made a
+    #                                             hard step at the ramp's foot); the ramp alone brings the white in
+    gold = np.stack([np.interp(U[0], stops_u, [float(sc_[ch]) for sc_ in stops_c]) for ch in range(3)], -1)[None]
+    gold_d = gold * (np.asarray(tan_d) / np.asarray(tan))[None, None, :]
+    flap_c = gold * (1 - c) + gold_d * c
+    fl = flap[..., None]
+    col = (hide_c * (1 - fl) + flap_c * fl) * lum[..., None]
+    col = col * (1 - 0.35 * edge[..., None]) + grime[None, None, :] * 0.35 * edge[..., None]
+    col = np.minimum(col, float(to_lin(0.92)))    # t3: the hide's 0.92 cap (see hide())
+    # t3: creases 0.6 -> 0.2 mm; the flap's satin hide gets a quarter of the bump (it rendered crinkled)
+    height = (0.00030 * folds * (1 - flap) + 0.00012 * mott_lf * flap + 0.00025 * bump * (1 - 0.75 * flap)
+              + 0.00010 * fib * (1 - 0.5 * flap))
+    rough = 0.45 + 0.03 * fib * (1 - flap) + 0.17 * flap      # t6: the gold 0.55 -> 0.62 (its sheen washed the mid gold pale); t3: soft sheen (t2: 0.70); the gold flap a little more matte (0.55:
+    #                                              the big review softboxes washed it pale at 0.40)
+    ao = ao_from_height(height, px, 5, 0.8)
+    save_set("Collar", to_srgb(col), height, rough, px, ao, 0.0,
+             {"use": "hide collar over the barrel ends: pale hide (tack band) + the flared tan flap (tabs)",
+              "kind": "UNIQUE (strip: U across the band, V around)",
+              "layout": "rows = V around, 2 whole tiles; columns = U (%.2f m): the tabs by arc length below U %.2f, "
+                        "white above U %.4f, a smooth ramp to full golden tan at U %.4f" % (UVL.COLLAR_TILE_U, uf, ug,
+                                                                                         ugf),
+              "t4_gold_ramp_mm": round(1000 * UVL.GOLD_RAMP, 1), "t4_blend_wave_peak_mm": 4.3,
+              "t5_lip_u_lo_hi": [UVL.COLLAR_U_LIP_LO, UVL.COLLAR_U_LIP_HI], "t5_lip_fade_mm": 1000 * UVL.LIP_FADE,
+              "t5_white_streaks": 0, "t7_gold_ramp_top_U_full_U": [round(ug, 4), round(ugf, 4)], "t7_gold_ramp_mm_design": round(1000 * UVL.GOLD_RAMP, 1), "t6_gold_hsv_shift": GOLD_HSV, "t6_gold_wave_mm": 1000 * UVL.GOLD_WAVE,
+              "t6_gold_srgb_8bit": {"tan": [int(round(255 * float(x))) for x in to_srgb(tan)],
+                                    "tan_dark": [int(round(255 * float(x))) for x in to_srgb(tan_d)],
+                                    "lip": [int(round(255 * float(x))) for x in to_srgb(g_lip)]}})
+
+
+def collar_r2(h=2048, w=256, seed=1251):
+    """(r2-t1 collar with a torn edge, retired in t2) Hide collar lapped over the barrel (f1, blind judge): the head's pale cream about 12 % darker, dirtier toward
     the torn edge (U = 0), fibrous tatter at the edge, folds running across the band, bumpy tacked-down hide.
     Rows = V around the drum (2 whole tiles around), columns = U across the band (0.25 m)."""
     px = UVL.COLLAR_TILE_U / w
