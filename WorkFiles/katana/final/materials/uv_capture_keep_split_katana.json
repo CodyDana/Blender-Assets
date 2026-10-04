@@ -1,0 +1,380 @@
+{
+ "method": "Katana finaliser: Metal-From-ORM-aware analysis of the katana_1003 UV-plane base-colour captures (read-only on the\ncaptures; writes only WorkFiles/katana/final/materials/uv_capture_keep_split_katana.json).\n\n    blender -b --factory-startup --python fin_keep_split.py\n\nThe pack's analyse_captures.py has no Metal From ORM branch (the flashbang precedent). This reuses the katana copy of\nit (fin_analyse_captures_copy.py: twin + keep lerp, UV-probe geometry) and splits every MI_Katana_Grip capture by the\nmaster's keep weight k = max(ORM.B, sat((lum(BC) - 0.2) x 5)) sampled at each pixel:\n  tinted  k < 0.02   the recolourable cord: the gate is capture vs twin (default p99.9 <= 1, mean <= 0.3; stress\n                     p99.9 <= 2), and v3 (clip, banding, std ratio, Spearman vs the default) on these texels only\n  kept    k > 0.98   the ray skin keeps its baked colour: Unreal samples the BC1 (DXT1) compressed BC, the twin the PNG,\n                     so capture vs twin here is block-compression error (reported); the gate is that every stress\n                     capture equals the DEFAULT capture on these texels (the colour really is kept)\n  ramp    otherwise  reported only\nThe saya lacquer (Metal From ORM off) is re-reported from the same run for completeness.",
+ "captures": {
+  "uv_MI_Katana_Grip_default": {
+   "colour": [
+    0.009965878411406916,
+    0.009965878411406916,
+    0.01123724148022799
+   ],
+   "fractions": {
+    "tinted": 0.9304,
+    "kept": 0.0683,
+    "ramp": 0.0014
+   },
+   "tinted_vs_twin": {
+    "texels": 3902177,
+    "max": 2,
+    "mean": 0.0513,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 0
+   },
+   "kept_vs_twin": {
+    "texels": 286448,
+    "max": 74,
+    "mean": 2.6585,
+    "p99": 23.0,
+    "p99_9": 50.0,
+    "gt2": 46745
+   },
+   "ramp_vs_twin": {
+    "texels": 5679,
+    "max": 76,
+    "mean": 9.1729,
+    "p99": 56.0,
+    "p99_9": 67.32200000000103,
+    "gt2": 2516
+   },
+   "gate_tinted_vs_twin": true
+  },
+  "uv_MI_Katana_Grip_white_FFFFFF": {
+   "colour": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "fractions": {
+    "tinted": 0.9304,
+    "kept": 0.0683,
+    "ramp": 0.0014
+   },
+   "tinted_vs_twin": {
+    "texels": 3902177,
+    "max": 2,
+    "mean": 0.0265,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 0
+   },
+   "kept_vs_twin": {
+    "texels": 286448,
+    "max": 39,
+    "mean": 2.5301,
+    "p99": 21.0,
+    "p99_9": 28.0,
+    "gt2": 46658
+   },
+   "ramp_vs_twin": {
+    "texels": 5679,
+    "max": 33,
+    "mean": 6.9208,
+    "p99": 29.0,
+    "p99_9": 32.0,
+    "gt2": 2956
+   },
+   "gate_tinted_vs_twin": true,
+   "kept_vs_default_capture": {
+    "texels": 286448,
+    "max": 80,
+    "mean": 0.127,
+    "p99": 0.0,
+    "p99_9": 44.0,
+    "gt2": 1004
+   },
+   "gate_kept_equals_default": false,
+   "v3_tinted": {
+    "clip_frac": 0.0,
+    "max_gap_levels": 1,
+    "levels_used": 15,
+    "p1_p99_span_levels": 14.0,
+    "occupied_fraction_of_span": 1.0714,
+    "pass": true,
+    "std_ratio_logL": 0.8798,
+    "spearman_vs_default_capture": 0.78472,
+    "spearman_vs_detail_map": 0.98705,
+    "default_capture_levels_used": 9,
+    "mean_albedo": [
+     0.59769,
+     0.59769,
+     0.59769
+    ]
+   },
+   "gate_v3_tinted": true
+  },
+  "uv_MI_Katana_Grip_red_FF0000": {
+   "colour": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "fractions": {
+    "tinted": 0.9304,
+    "kept": 0.0683,
+    "ramp": 0.0014
+   },
+   "tinted_vs_twin": {
+    "texels": 3902177,
+    "max": 5,
+    "mean": 0.0265,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 3
+   },
+   "kept_vs_twin": {
+    "texels": 286448,
+    "max": 69,
+    "mean": 2.6428,
+    "p99": 23.0,
+    "p99_9": 47.0,
+    "gt2": 46806
+   },
+   "ramp_vs_twin": {
+    "texels": 5679,
+    "max": 72,
+    "mean": 9.7251,
+    "p99": 53.0,
+    "p99_9": 63.322000000001026,
+    "gt2": 3192
+   },
+   "gate_tinted_vs_twin": true,
+   "kept_vs_default_capture": {
+    "texels": 286448,
+    "max": 78,
+    "mean": 0.117,
+    "p99": 0.0,
+    "p99_9": 40.553000000014435,
+    "gt2": 1003
+   },
+   "gate_kept_equals_default": false,
+   "v3_tinted": {
+    "clip_frac": 0.0,
+    "max_gap_levels": 1,
+    "levels_used": 15,
+    "p1_p99_span_levels": 14.0,
+    "occupied_fraction_of_span": 1.0714,
+    "pass": true,
+    "std_ratio_logL": 0.8798,
+    "spearman_vs_default_capture": 0.78472,
+    "spearman_vs_detail_map": 0.98705,
+    "default_capture_levels_used": 9,
+    "mean_albedo": [
+     0.59769,
+     0.0,
+     0.0
+    ]
+   },
+   "gate_v3_tinted": true
+  },
+  "uv_MI_Katana_Grip_black_000000": {
+   "colour": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fractions": {
+    "tinted": 0.9304,
+    "kept": 0.0683,
+    "ramp": 0.0014
+   },
+   "tinted_vs_twin": {
+    "texels": 3902177,
+    "max": 2,
+    "mean": 0.0156,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 0
+   },
+   "kept_vs_twin": {
+    "texels": 286448,
+    "max": 74,
+    "mean": 2.6585,
+    "p99": 23.0,
+    "p99_9": 50.0,
+    "gt2": 46745
+   },
+   "ramp_vs_twin": {
+    "texels": 5679,
+    "max": 76,
+    "mean": 9.2511,
+    "p99": 56.0,
+    "p99_9": 67.32200000000103,
+    "gt2": 2516
+   },
+   "gate_tinted_vs_twin": true,
+   "kept_vs_default_capture": {
+    "texels": 286448,
+    "max": 1,
+    "mean": 0.0004,
+    "p99": 0.0,
+    "p99_9": 0.0,
+    "gt2": 0
+   },
+   "gate_kept_equals_default": true,
+   "v3_tinted": {
+    "clip_frac": 0.0,
+    "max_gap_levels": 1,
+    "levels_used": 4,
+    "p1_p99_span_levels": 3.0,
+    "occupied_fraction_of_span": 1.3333,
+    "pass": true,
+    "std_ratio_logL": 1.0177,
+    "spearman_vs_default_capture": 0.98241,
+    "spearman_vs_detail_map": 0.72862,
+    "default_capture_levels_used": 9,
+    "mean_albedo": [
+     0.00992,
+     0.00992,
+     0.00992
+    ]
+   },
+   "gate_v3_tinted": true
+  },
+  "uv_MI_Katana_Saya_Lacquer_default": {
+   "colour": [
+    0.012834717266652095,
+    0.012833717678079925,
+    0.014312109176318123
+   ],
+   "fractions": {
+    "tinted": 1.0,
+    "kept": 0.0,
+    "ramp": 0.0
+   },
+   "tinted_vs_twin": {
+    "texels": 4194304,
+    "max": 1,
+    "mean": 0.0571,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 0
+   },
+   "kept_vs_twin": null,
+   "ramp_vs_twin": null,
+   "gate_tinted_vs_twin": true
+  },
+  "uv_MI_Katana_Saya_Lacquer_white_FFFFFF": {
+   "colour": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "fractions": {
+    "tinted": 1.0,
+    "kept": 0.0,
+    "ramp": 0.0
+   },
+   "tinted_vs_twin": {
+    "texels": 4194304,
+    "max": 1,
+    "mean": 0.0244,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 0
+   },
+   "kept_vs_twin": null,
+   "ramp_vs_twin": null,
+   "gate_tinted_vs_twin": true,
+   "v3_tinted": {
+    "clip_frac": 0.0,
+    "max_gap_levels": 1,
+    "levels_used": 17,
+    "p1_p99_span_levels": 16.0,
+    "occupied_fraction_of_span": 1.0625,
+    "pass": true,
+    "std_ratio_logL": 0.9667,
+    "spearman_vs_default_capture": 0.98131,
+    "spearman_vs_detail_map": 0.93604,
+    "default_capture_levels_used": 60,
+    "mean_albedo": [
+     0.5995,
+     0.5995,
+     0.5995
+    ]
+   },
+   "gate_v3_tinted": true
+  },
+  "uv_MI_Katana_Saya_Lacquer_red_FF0000": {
+   "colour": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "fractions": {
+    "tinted": 1.0,
+    "kept": 0.0,
+    "ramp": 0.0
+   },
+   "tinted_vs_twin": {
+    "texels": 4194304,
+    "max": 1,
+    "mean": 0.0244,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 0
+   },
+   "kept_vs_twin": null,
+   "ramp_vs_twin": null,
+   "gate_tinted_vs_twin": true,
+   "v3_tinted": {
+    "clip_frac": 0.0,
+    "max_gap_levels": 1,
+    "levels_used": 17,
+    "p1_p99_span_levels": 16.0,
+    "occupied_fraction_of_span": 1.0625,
+    "pass": true,
+    "std_ratio_logL": 0.9667,
+    "spearman_vs_default_capture": 0.98131,
+    "spearman_vs_detail_map": 0.93604,
+    "default_capture_levels_used": 60,
+    "mean_albedo": [
+     0.5995,
+     0.0,
+     0.0
+    ]
+   },
+   "gate_v3_tinted": true
+  },
+  "uv_MI_Katana_Saya_Lacquer_black_000000": {
+   "colour": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fractions": {
+    "tinted": 1.0,
+    "kept": 0.0,
+    "ramp": 0.0
+   },
+   "tinted_vs_twin": {
+    "texels": 4194304,
+    "max": 1,
+    "mean": 0.015,
+    "p99": 1.0,
+    "p99_9": 1.0,
+    "gt2": 0
+   },
+   "kept_vs_twin": null,
+   "ramp_vs_twin": null,
+   "gate_tinted_vs_twin": true,
+   "v3_tinted": {
+    "clip_frac": 0.0,
+    "max_gap_levels": 1,
+    "levels_used": 4,
+    "p1_p99_span_levels": 3.0,
+    "occupied_fraction_of_span": 1.3333,
+    "pass": true,
+    "std_ratio_logL": 0.9956,
+    "spearman_vs_default_capture": 0.52592,
+    "spearman_vs_detail_map": 0.40443,
+    "default_capture_levels_used": 60,
+    "mean_albedo": [
+     0.00991,
+     0.00991,
+     0.00991
+    ]
+   },
+   "gate_v3_tinted": false
+  }
+ }
+}

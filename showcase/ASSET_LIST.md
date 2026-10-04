@@ -26,6 +26,7 @@ pictures for one asset. Made on 2026-10-02 from the inventory in `WorkFiles/show
 | [Fan](Fan/) | Black silk folding fan with 26 bamboo sticks, a leaf that really folds, and an optional tassel. Rigged and animated. | Finished | 2 | `Exports/Fan/`; `Assets/Fan.blend` | 12 |
 | [SnowFlower](SnowFlower/) | Ornate straight sword with a floral silver guard, and its black-lacquer sheath. | Finished in Unreal (v4); look-match to the reference not reached | 2 | `Exports/SnowFlower/v4/`; `Assets/SnowFlower/SnowFlower_Game_v4.blend` | 14 |
 | [Senbon](Senbon/) | Two original throwing needles: a 130 mm double-pointed volley needle and a 170 mm heavy needle with a three-facet point and a recolourable cotton-wrapped tail. | Finished, Unreal-verified (2026-10-03) | 2 | `Exports/Senbon/`; `Assets/Senbon.blend` | 17 |
+| [Katana](Katana/) | Plain, standard uchigatana (705 mm curved blade, frosted hamon, round iron tsuba, real-geometry diamond ito wrap) and its black-lacquer saya with horn fittings; sheathes and draws along the blade's arc; recolourable ito and lacquer. | Finished, Unreal-verified (2026-10-03) | 2 | `Exports/Katana/`; `Assets/Katana/Katana.blend`, `Assets/Katana/Saya.blend` | 18 |
 
 ## Clothing
 

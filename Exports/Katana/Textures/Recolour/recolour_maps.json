@@ -1,0 +1,229 @@
+{
+ "schema": "ninjapack.recolour_maps/1",
+ "item": "Katana",
+ "generated": "2026-10-03",
+ "generator": {
+  "script": "Scripts/Katana/katana_recolour.py",
+  "script_sha256": "89e6d1947eda494023a5c5febf37ffd1fabdd6149411028519bd685ab776070b",
+  "common_sha256": "f2fa2d3fc5472405ff47ed7e34461e3ff74b1669b8382b2c7bbda08d20a0f454",
+  "version": "1.0.0-katana",
+  "blender": "5.2.0 LTS"
+ },
+ "sidecar": {
+  "files": [
+   "Exports/Katana/SM_Katana.sockets.json",
+   "Exports/Katana/SM_Katana_Saya.sockets.json"
+  ]
+ },
+ "maps": {
+  "T_Katana_Grip_Detail16": {
+   "file": "Exports/Katana/Textures/Recolour/T_Katana_Grip_Detail16.png",
+   "sha256": "fb65eabc65a0a6ddf095574adf15ef9d6f44197699a9f13ec058b2a3e7a310c6",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "PNG, 16-bit greyscale, no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d",
+   "uv": "the part's UV0 grid (same layout as its BC at half resolution; Wrap addressing)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/Katana/Textures/T_Katana_Grip_BC.png",
+    "sha256": "f3d048645fb3f8cc6608753558e5083c3c56fce41b7e5a2b362d76e78d6ffb97"
+   },
+   "recipe": "d = clip((lum(BC_linear) - a_lo) / (a_hi - a_lo)) over the part's texels, 2x2 box mean over covered texels to 1024, 3 px edge extension, one fill constant elsewhere; value = round(65535 d)",
+   "gates": {
+    "png_roundtrip_exact": true
+   }
+  },
+  "T_Katana_Saya_Lacquer_Detail16": {
+   "file": "Exports/Katana/Textures/Recolour/T_Katana_Saya_Lacquer_Detail16.png",
+   "sha256": "620cef9bfaf660a9b0edfd08c9743caa385b87d8d854f05669a0372587831b80",
+   "size": [
+    1024,
+    1024
+   ],
+   "format": "PNG, 16-bit greyscale, no colour chunks, row 0 = top",
+   "encoding": "LINEAR: value / 65535 = the linear detail d",
+   "uv": "the part's UV0 grid (same layout as its BC at half resolution; Wrap addressing)",
+   "unreal_import": {
+    "srgb": false,
+    "compression": "TC_GRAYSCALE",
+    "expected_pc_format": "G16",
+    "sampler": "SAMPLERTYPE_LINEAR_GRAYSCALE",
+    "mips": "TMGS_FROM_TEXTURE_GROUP",
+    "address": "Wrap"
+   },
+   "source": {
+    "file": "Exports/Katana/Textures/T_Katana_Saya_BC.png",
+    "sha256": "4eb9ea8b6f70dd7c5cd468597b20bdbda52d38ecb5d5583fad9216ddbc126635"
+   },
+   "recipe": "d = clip((lum(BC_linear) - a_lo) / (a_hi - a_lo)) over the part's texels, 2x2 box mean over covered texels to 1024, 3 px edge extension, one fill constant elsewhere; value = round(65535 d)",
+   "gates": {
+    "png_roundtrip_exact": true
+   }
+  }
+ },
+ "parts": {
+  "Katana/Grip": {
+   "slot_material": "M_Katana_Grip",
+   "instance": "MI_Katana_Grip",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Katana_Grip_Detail16",
+   "switches": {
+    "Metal From ORM": true,
+    "Cloth Sheen": false,
+    "Use Lettering": false,
+    "Specular From ORM Alpha": false
+   },
+   "base_colour_map_reference": {
+    "file": "Exports/Katana/Textures/T_Katana_Grip_BC.png",
+    "sha256": "f3d048645fb3f8cc6608753558e5083c3c56fce41b7e5a2b362d76e78d6ffb97"
+   },
+   "params": {
+    "Colour": [
+     0.009916,
+     0.009916,
+     0.011181,
+     1.0
+    ],
+    "Detail Bias": 0.860282,
+    "Detail Scale": 0.244512,
+    "Detail Mean": 1.0050304047684178,
+    "Detail Highlight Ratio": 1.1047943827396813,
+    "Detail Moments Low": [
+     0.3209835042720574,
+     -0.013514830521844842,
+     0.0004304446802448868,
+     -1.0342460491509498e-05
+    ],
+    "Detail Moments High": [
+     0.6790164957279426,
+     0.017693831394258692,
+     0.00042278320431488395,
+     8.518471935538285e-06
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9,
+    "Specular Strength": 0.5
+   },
+   "n_range": [
+    0.8602822065171429,
+    1.1047943827396813
+   ],
+   "fraction_n_le_1": 0.3209835042720574,
+   "covered_texels": 827002,
+   "covered_texels_2048": 3032031,
+   "builder_constants": {
+    "a_lo": 0.008608985986745045,
+    "a_hi": 0.01105585967858912,
+    "colour_linear": [
+     0.00991584713759413,
+     0.00991584713759413,
+     0.011180637468604754
+    ],
+    "colour_srgb8": [
+     25,
+     25,
+     27
+    ]
+   },
+   "note": "the black ito (cord), the cord-dark core under its edge folds and the LOD2 shell's cord; the ivory same keeps its baked colour (Metal From ORM keep ramp, linear lum 0.2 -> 0.4)",
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)); v1 fields over the covered texels; recolour_constants.json (v2) by Scripts/unreal/materials/maps/derive_constants_katana.py"
+  },
+  "Saya/Lacquer": {
+   "slot_material": "M_Katana_Saya_Lacquer",
+   "instance": "MI_Katana_Saya_Lacquer",
+   "master": "M_Fabric_Master",
+   "detail_map": "T_Katana_Saya_Lacquer_Detail16",
+   "switches": {
+    "Metal From ORM": false,
+    "Cloth Sheen": false,
+    "Use Lettering": false,
+    "Specular From ORM Alpha": false
+   },
+   "base_colour_map_reference": {
+    "file": "Exports/Katana/Textures/T_Katana_Saya_BC.png",
+    "sha256": "4eb9ea8b6f70dd7c5cd468597b20bdbda52d38ecb5d5583fad9216ddbc126635"
+   },
+   "params": {
+    "Colour": [
+     0.01284,
+     0.012839,
+     0.014318,
+     1.0
+    ],
+    "Detail Bias": 0.199259,
+    "Detail Scale": 1.17823,
+    "Detail Mean": 0.9995890174230487,
+    "Detail Highlight Ratio": 1.2406720205203958,
+    "Detail Moments Low": [
+     0.5597425150877151,
+     -0.01925113950781754,
+     0.0018533416502246602,
+     -0.00036611859598290053
+    ],
+    "Detail Moments High": [
+     0.44025748491228495,
+     0.016701378964791607,
+     0.0006266951243670896,
+     2.485978746576134e-05
+    ],
+    "Dark Detail Follow": 0.5,
+    "Albedo Ceiling": 0.9,
+    "Specular Strength": 0.5
+   },
+   "n_range": [
+    0.1992594265066377,
+    1.3774894541059755
+   ],
+   "fraction_n_le_1": 0.5597425150877151,
+   "covered_texels": 661631,
+   "covered_texels_2048": 2569765,
+   "builder_constants": {
+    "a_lo": 0.0025796213817513465,
+    "a_hi": 0.01783303962701305,
+    "colour_linear": [
+     0.012840116125864597,
+     0.012839067086732206,
+     0.014317658262916462
+    ],
+    "colour_srgb8": [
+     30,
+     30,
+     32
+    ]
+   },
+   "note": "the black roiro lacquer of the saya body (with its wear) and the cavity",
+   "derivation": "BaseColor = saturate(Colour x (DetailBias + DetailScale x Detail)); v1 fields over the covered texels; recolour_constants.json (v2) by Scripts/unreal/materials/maps/derive_constants_katana.py"
+  }
+ },
+ "other_slots": {
+  "Katana/Blade": {
+   "slot_material": "M_Katana_Blade",
+   "instance": "MI_Katana_Blade",
+   "master": "M_Steel_Master",
+   "recolourable": false
+  },
+  "Katana/Fittings": {
+   "slot_material": "M_Katana_Fittings",
+   "instance": "MI_Katana_Fittings",
+   "master": "M_Steel_Master",
+   "recolourable": false
+  },
+  "Saya/Fittings": {
+   "slot_material": "M_Katana_Saya_Fittings",
+   "instance": "MI_Katana_Saya_Fittings",
+   "master": "M_Steel_Master",
+   "recolourable": false
+  }
+ },
+ "pass": true
+}
