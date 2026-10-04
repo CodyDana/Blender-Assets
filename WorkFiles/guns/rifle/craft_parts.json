@@ -1,0 +1,387 @@
+{
+  "asset": "Assault Rifle AR-01",
+  "meshes": ["SM_AR01", "SM_AR01_Mag"],
+  "reference": "References/Guns/Rifle/rifle_sheetAB.webp",
+  "study": "WorkFiles/guns/rifle/CRAFT_STUDY.md",
+  "date": "2026-10-04",
+  "scale": {
+    "overall_mm": 880,
+    "left_view_silhouette_px": [24, 746],
+    "mm_per_sheet_px": 1.219,
+    "bore_axis_sheet_y_left_view": 96.7,
+    "axes": "X = mm forward of the butt face along the bore; Z = mm above (+) / below (-) the bore axis",
+    "ruler_note": "sheet ruler reads ~97 cm; ignored",
+    "accuracy": "craft-level readings, about +/-4 mm; measure stage refines by tracing"
+  },
+  "panels": {
+    "LEFT": "top-left orthographic", "RIGHT": "top-right orthographic", "TOP": "middle-left orthographic",
+    "3/4": "middle-right, labelled FRONT RIGHT but drawn with the left-side orientation",
+    "c1": "receiver and selector (labelled right, drawn muzzle-right = mirrored)", "c2": "dust cover and rear sight (top-left)",
+    "c3": "front sight and muzzle (side)", "c4": "magazine left (mirrored curve)", "c5": "magazine front",
+    "c6": "pistol grip and trigger (left)", "c7": "butt plate end"
+  },
+  "parts": [
+    {
+      "name": "receiver",
+      "construction": "Stamped 1.0 mm sheet U-channel: flat vertical side walls, flat bottom, open top closed by the dust cover. Model as a solid outer form with real 1.0 mm wall reveals at the ejection port, magazine well and rear tang joint. Bottom corners R~1.5 mm with a thin ledge line at the bottom plate.",
+      "key_features": ["X 240-483 mm, Z -32 to +4 (side wall below the cover skirt, 36 mm)", "outer width ~33-38 mm (top view reads 38, shading inflates)", "about 9 domed rivets per side (~4 mm dia, 1 mm proud): rear 2, centre-low 2, mag-well 2, front trunnion 3", "oval pressed mag-well dimple ~18x11 mm, 1 mm deep, centre X~397 Z~-18, both sides", "magazine well opening X 372-429, ~29 mm wide, front lug recess, rear catch notch"],
+      "material": "blued_steel",
+      "wear": "edge wear on bottom edge and front/rear corners, bright rivet crowns, dense fine random scratches on the side flats",
+      "confidence": "high (form), medium (rivet positions, width)",
+      "panels": ["LEFT", "RIGHT", "3/4", "c1", "c2", "c6", "TOP"]
+    },
+    {
+      "name": "rear_tang_block",
+      "construction": "Short steel block at the receiver rear into which the stock wrist seats; vertical rear face, slightly taller than the wrist.",
+      "key_features": ["X 227-240 mm", "dark steel band between stock and receiver"],
+      "material": "blued_steel",
+      "wear": "corner edge wear",
+      "confidence": "medium",
+      "panels": ["LEFT", "RIGHT", "c1", "3/4"]
+    },
+    {
+      "name": "lower_handguard_rear_retainer",
+      "construction": "Thin steel cup at the receiver front face, slightly larger than the lower handguard section, receiving its rear end.",
+      "key_features": ["X ~483-487 mm"],
+      "material": "blued_steel",
+      "wear": "rim edge wear",
+      "confidence": "medium",
+      "panels": ["LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "dust_cover",
+      "construction": "Stamped sheet cover: smooth semicircular crown (radius ~ half the width) with straight vertical skirts overlapping the receiver side walls ~10 mm. NO transverse ribs. Subtle lengthwise shoulder where crown meets skirt. Rear end squared with a ~45 deg x 8 mm chamfer at the top rear corner and a rectangular hole for the recoil-spring-guide button. Front edge tucks under a groove in the rear sight block's rear face.",
+      "key_features": ["X 244-458 mm", "crown Z +33, skirt edge Z ~+4, height ~29 mm", "crisp 1 mm skirt edge with a shadow gap to the receiver"],
+      "material": "blued_steel (crown roughness 0.35)",
+      "wear": "strongest edge wear on the skirt edge and rear chamfer; long lengthwise highlight/wear band along the crown",
+      "confidence": "high",
+      "panels": ["TOP", "c2", "LEFT", "RIGHT", "c1", "3/4"]
+    },
+    {
+      "name": "recoil_spring_guide_button",
+      "construction": "Small rectangular tab ~8x6 mm with a rounded top, protruding ~3 mm through the hole at the rear of the dust cover.",
+      "key_features": ["at the dust cover rear end, top centre"],
+      "material": "blued_steel",
+      "wear": "bright top edge",
+      "confidence": "low (c1 draws it loop-like, TOP view as a squared tab)",
+      "panels": ["TOP", "c1"]
+    },
+    {
+      "name": "ejection_port_and_bolt_carrier",
+      "construction": "Horizontal opening in the right side wall just under the dust cover skirt, 1 mm wall reveal, dark interior; a flat steel carrier block visible in its forward two-thirds, face ~2 mm behind the wall, with a lengthwise highlight.",
+      "key_features": ["X ~345-458 mm", "~8 mm tall, Z ~+4 to -4"],
+      "material": "blued_steel (carrier slightly brighter, roughness 0.38)",
+      "wear": "carrier highlight, port edge wear",
+      "confidence": "medium (drawn on both sides, see inconsistencies)",
+      "panels": ["LEFT", "RIGHT", "c1", "3/4"]
+    },
+    {
+      "name": "charging_handle",
+      "construction": "Short rectangular tab ~20x10 mm, ~9 mm proud of the wall, flat top, rounded outer corners, at the front end of the ejection port just behind the rear sight block; part of the carrier. The classic round knob is NOT shown; build the tab as drawn.",
+      "key_features": ["X ~448-458 mm", "right side (TOP view tab)"],
+      "material": "blued_steel",
+      "wear": "edge wear on the outer face corners",
+      "confidence": "medium",
+      "panels": ["c1", "c2", "3/4", "TOP", "LEFT"]
+    },
+    {
+      "name": "selector_lever",
+      "construction": "Domed round pivot boss ~12 mm dia, 3 mm proud, at the rear; flat stamped lever plate ~3 mm thick standing ~1.5 mm off the wall, ~74 mm long, tapering ~14 mm to ~8 mm deep, with a pressed stiffening ridge along its length; front end steps up and bends outward ~25 deg into a ~12 mm finger tab with a small pin/dimple, sitting just under the port's lower edge. Posed up (safe), ~8 deg nose-up.",
+      "key_features": ["pivot X~283 Z~-8", "tab end X~357", "3-4 small notches on the upper front edge (low confidence)", "omit the stamped selector marks below the tip (no markings)"],
+      "material": "blued_steel",
+      "wear": "edges and tab bright, ridge crest worn",
+      "confidence": "high (shape), medium (side, see inconsistencies)",
+      "panels": ["RIGHT", "c1", "LEFT", "3/4", "c2"]
+    },
+    {
+      "name": "rear_sight_block",
+      "construction": "Steel block on the front trunnion, receiver width + ~2 mm, vertical front face, rear upper part steps down to the dust cover crown with a groove that seats the cover's front edge; two low curved cam rails along its top sides for the leaf.",
+      "key_features": ["X 450-523 mm", "top Z ~+37", "front recess receiving the upper handguard rear cap"],
+      "material": "blued_steel",
+      "wear": "corner edge wear",
+      "confidence": "high",
+      "panels": ["c2", "LEFT", "RIGHT", "TOP", "3/4"]
+    },
+    {
+      "name": "rear_sight_leaf_and_slider",
+      "construction": "Flat leaf hinged at the block front, lying rearward ~45 mm long x ~12 mm wide, raised centre strip with plain graduation ticks (no numerals); tall notch plate at its rear end with a square-bottomed U-notch; a slider box riding on the leaf with two spring catches on its sides.",
+      "key_features": ["notch plate top Z ~+48", "sheet glyphs read like text: replace with plain ticks"],
+      "material": "blued_steel",
+      "wear": "slider catches and notch edges bright",
+      "confidence": "medium",
+      "panels": ["c2", "TOP", "LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "handguard_retainer_lever",
+      "construction": "Flat steel arm ~22 mm long on the side of the rear sight block at ~45 deg, pivot at top front (round boss), rounded lower-rear end with a hole.",
+      "key_features": ["LEFT view shows the arm; RIGHT view only a round boss; real pattern has it on the right"],
+      "material": "blued_steel",
+      "wear": "edge wear",
+      "confidence": "low-medium",
+      "panels": ["LEFT", "RIGHT", "c2", "3/4"]
+    },
+    {
+      "name": "trigger",
+      "construction": "Curved stamped blade ~6 mm wide, forward-concave hook, ~35 mm visible below the receiver; separate object for animation.",
+      "key_features": ["X ~306-329 mm"],
+      "material": "blued_steel",
+      "wear": "face polished bright at the finger contact",
+      "confidence": "high",
+      "panels": ["c1", "c6", "LEFT", "RIGHT"]
+    },
+    {
+      "name": "trigger_guard",
+      "construction": "Steel strap ~10 mm wide x 3 mm thick: flat-bottomed loop with a large rounded rear corner (R~8 mm) and near-square front corner; rear riveted to the receiver bottom ahead of the grip; front rises into the mag-catch housing.",
+      "key_features": ["X 301-353 mm", "bottom Z ~-67"],
+      "material": "blued_steel",
+      "wear": "edge wear on the bottom run",
+      "confidence": "high",
+      "panels": ["c1", "c6", "LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "mag_catch",
+      "construction": "Flat paddle ~10 mm wide in front of the trigger guard, pinned at mid-height (round pin head), lower tip protruding ~5 mm below the guard as a short tab; top merges into a small housing block at the magazine's rear.",
+      "key_features": ["X 353-367 mm", "tip Z ~-70"],
+      "material": "blued_steel",
+      "wear": "tip edges bright",
+      "confidence": "high",
+      "panels": ["c1", "LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "pistol_grip",
+      "construction": "Wood grip: top ~54 mm fore-aft, bottom ~41 mm, ~95 mm tall below the receiver; rear edge raked ~13 deg, front edge ~22 deg; bottom slants so the front-bottom corner is the lowest point (small rounded toe/lip), rounded rear heel with slight bulge. Section rounded oblong ~30 mm wide, flatter sides, straps R 8-10 mm. Flat top against the receiver with a gap line.",
+      "key_features": ["top X 246-299 mm at Z -35", "bottom Z ~-130"],
+      "material": "wood (grain along the raked long axis)",
+      "wear": "lighter, rougher worn finish on front/back straps and toe; scratches on the upper side; grime in checkering",
+      "confidence": "high (profile), medium (section width: unseen)",
+      "panels": ["c6", "c1", "LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "grip_checkering",
+      "construction": "Patch boundary is REAL geometry: a 0.6 mm recess with crisp 0.3 mm border bevel. Diamond field inside: crisp tiled normal map + AO/cavity baked from a modelled pyramid tile (does not touch the silhouette). Optional hero LOD0: real pyramids (~18x50 cells per side, ~3.6k tris per side).",
+      "key_features": ["tall quadrilateral along the grip axis, raked top edge, corners R~3 mm", "starts ~25% below the top, ends ~12% above the bottom, inset ~4 mm from the front strap, ~40% of the fore-aft width (c6)", "diamonds elongated along the grip axis (~60/120 deg hatch), pitch 1.2-1.5 mm", "both sides; mirror c6 for the right (c1 places it rearward: inconsistency)"],
+      "material": "wood, cell interiors darker #4E2E1E",
+      "wear": "crests slightly flattened/lighter, grime in cells",
+      "confidence": "medium",
+      "panels": ["c6", "c1"]
+    },
+    {
+      "name": "buttstock",
+      "construction": "Solid wood stock (no laminate). Bottom line straight from the toe (0,-108) rising ~18.6 deg to the tang (~230,-35); comb nearly level from the heel (+2) to the comb nose at X~156 (+9), concave ~7 mm step down to the wrist, wrist top rising gently into the tang. Section rounded rectangle ~38 mm wide at the butt tapering to ~34 mm at the wrist, edges R 6-8 mm, sides slightly convex.",
+      "key_features": ["butt height ~110 mm", "comb nose step at X~156", "top tang screw head at X~219 (TOP view)", "right-side wrist: rearward-V inlet outline ~25x20 mm with two small screw/pin heads (RIGHT view only)"],
+      "material": "wood (grain along the stock axis, long dark streaks)",
+      "wear": "rounded-edge wear on comb, heel and toe; round ding left side ~X 100; C-shaped mark right side ~X 30-40",
+      "confidence": "high (profile), medium (section)",
+      "panels": ["LEFT", "RIGHT", "TOP", "3/4"]
+    },
+    {
+      "name": "butt_plate",
+      "construction": "Steel plate covering the whole butt end, stadium outline following the stock section (~110x38 mm), face slightly convex, wraparound skirt ~8 mm deep, rim rounded ~1 mm. Two countersunk slotted screws on the centre line near top and bottom. No trap door.",
+      "key_features": ["side views: 9-11 mm dark band", "c7 draws the screw slots as X: resolution cannot tell, use single slot unless the user prefers cross"],
+      "material": "steel #48484A, roughness 0.5",
+      "wear": "face densely covered in bright scratches, rim edges bright",
+      "confidence": "high (plate, screws), medium (skirt depth)",
+      "panels": ["c7", "LEFT", "RIGHT", "TOP"]
+    },
+    {
+      "name": "rear_sling_swivel",
+      "construction": "Small steel loop ~12 mm on a short base plate screwed to the stock bottom.",
+      "key_features": ["X ~72 mm on the bottom line"],
+      "material": "blued_steel",
+      "wear": "loop worn bright",
+      "confidence": "medium",
+      "panels": ["LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "lower_handguard",
+      "construction": "Wood, U-section (rounded bottom, slightly swelling sides), hollow barrel channel visible only at the ends. Top edge straight at Z~+12; bottom a shallow convex belly. Height 42 mm rear tapering to 34 mm front; width ~45 rear, ~40 front. Two shallow finger scallops per side cut into the top edge (~25-35 mm long, ~5 mm deep) at ~10-30% and ~45-65% of the length.",
+      "key_features": ["X 485-644 mm", "Z +12 to -30 (rear) / -20 (front)"],
+      "material": "wood (grain along the bore)",
+      "wear": "handling wear (lighter, rougher) on the sides and belly, rounded end edges",
+      "confidence": "high (profile), medium (scallop reading, section)",
+      "panels": ["LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "lower_handguard_front_ferrule",
+      "construction": "Steel ferrule cup at the lower handguard front, slightly proud of the wood, rolled rim; cleaning rod emerges beneath it.",
+      "key_features": ["X 641-648 mm"],
+      "material": "blued_steel",
+      "wear": "rim edge wear",
+      "confidence": "high",
+      "panels": ["LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "upper_handguard",
+      "construction": "Wood shell over the gas tube: half-round top with short vertical sides, ~30 mm wide, 27 mm tall; steel cap ring at the rear (entering the rear sight block) and steel ring at the front; small gap line to the lower handguard.",
+      "key_features": ["X 528-644 mm (rear cap 518-528)", "Z +14 to +41"],
+      "material": "wood (grain along the bore) + blued_steel rings",
+      "wear": "top highlight/wear, ring rims bright",
+      "confidence": "high",
+      "panels": ["LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "gas_tube",
+      "construction": "Steel tube dia ~16 mm, axis Z~+24, exposed between the upper handguard front ring and the gas block; 3 short oval vent slots (~6x3 mm) per side near its front.",
+      "key_features": ["exposed X 648-687 mm", "vent slot count low confidence (TOP suggests 2 rows of ~3)"],
+      "material": "blued_steel",
+      "wear": "slot edges and top highlight",
+      "confidence": "high (tube), low (vents)",
+      "panels": ["LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "gas_block",
+      "construction": "Short rectangular collar receiving the gas tube front end, sweeping down at ~45 deg as a flat-sided arm ~14 mm thick to a barrel collar ~20 mm dia; round pin boss on the arm side; small lug under the barrel collar (rod guide / bayonet lug ~10x8 mm).",
+      "key_features": ["X 687-736 mm"],
+      "material": "blued_steel",
+      "wear": "corner and collar edge wear",
+      "confidence": "high",
+      "panels": ["LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "barrel",
+      "construction": "Plain steel tube dia ~15 mm (side reads 12, top 17), essentially straight with very slight taper; bore 7.6 mm, ~30 mm deep dark bore at the muzzle.",
+      "key_features": ["visible X 648-687 and 736-808 mm", "real length ~410-415 mm incl. ~55 mm inside the trunnion"],
+      "material": "blued_steel",
+      "wear": "soft lengthwise highlight, light scratches",
+      "confidence": "high (form), medium (diameter)",
+      "panels": ["LEFT", "RIGHT", "3/4", "TOP", "c3"]
+    },
+    {
+      "name": "cleaning_rod",
+      "construction": "Steel rod dia ~5 mm from under the lower handguard ferrule to the front sight block lug, passing through the gas block lug; flat T-head at the front seated in the FSB lug.",
+      "key_features": ["X 647-836 mm", "Z ~-11"],
+      "material": "blued_steel (slightly brighter)",
+      "wear": "polished highlights",
+      "confidence": "high",
+      "panels": ["LEFT", "RIGHT", "3/4", "c3"]
+    },
+    {
+      "name": "front_sight_block",
+      "construction": "Cylindrical collar ~22 mm dia with a cross pin (round head ~4 mm) on the side, a small detent plunger at its top front retaining the brake, and a lug underneath holding the cleaning rod head.",
+      "key_features": ["X 808-840 mm"],
+      "material": "blued_steel",
+      "wear": "collar rims bright",
+      "confidence": "high",
+      "panels": ["c3", "LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "front_sight_ears_and_post",
+      "construction": "Two thin steel plates (~2.5 mm) standing on the collar's left and right edges (slightly wider than the collar), each with a vertical front edge, rear edge raked ~20 deg, flat top with rounded corners, a triangular lightening window in its lower half and a small round hole near the top. Between them a round windage drum (~8 mm disc) carrying a thin ~2 mm post slightly lower than the ears.",
+      "key_features": ["ear tops Z ~+49"],
+      "material": "blued_steel",
+      "wear": "ear edges strongly worn bright",
+      "confidence": "high (ears), medium (drum/post detail)",
+      "panels": ["c3", "LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "muzzle_brake",
+      "construction": "Cylinder dia ~20-22 mm screwed on (thin seam at the FSB face). Front cut by one slanted plane ~35-40 deg from vertical removing the TOP front, lower lip longer; the cut exposes the bore as an elongated oval with a rounded worn rim; a shallow scalloped side relief inside the cut (low confidence).",
+      "key_features": ["X 840-880 mm", "TOP view: cut face reads as an oval opening from above"],
+      "material": "blued_steel",
+      "wear": "rim and slant edge bright, soot not shown",
+      "confidence": "high (slant), low (side scallop)",
+      "panels": ["c3", "LEFT", "RIGHT", "3/4", "TOP"]
+    },
+    {
+      "name": "magazine_body",
+      "construction": "SEPARATE mesh SM_AR01_Mag. Two stamped halves welded at front and rear spines; rectangular section ~29 mm wide with rounded spine edges; depth 57 mm at the top to ~62 mm at the floor plate. Front and rear edges concentric arcs about a centre ~580 mm forward of the butt face, ~10 mm below the bore: rear (outer) R ~210 mm, front (inner) R ~150 mm, ~46 deg span; bends forward. Front/rear spines: centre channel with two raised lengthwise lines. Pivot at the front lug for a rock-in reload.",
+      "key_features": ["top X 372-429 at Z -32", "floor plate rear (449,-181), front (494,-137)", "~240 mm along the curve"],
+      "material": "magazine_steel",
+      "wear": "spine edges and floor plate rim bright",
+      "confidence": "high (form), medium (radius)",
+      "panels": ["c4", "c5", "LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "magazine_ribs",
+      "construction": "Per side: 4 raised pressed ribs parallel to the curve in the rear/middle zone, ~2.5 mm wide, ~1 mm proud, round crowns, rounded tips ~25 mm below the top and ~15 mm above the floor plate; plus a narrower rib along the front edge. Real geometry.",
+      "key_features": ["rib crests worn bright in every panel (strongest visual cue)"],
+      "material": "magazine_steel",
+      "wear": "crests bare steel",
+      "confidence": "high (count 4 + front rib)",
+      "panels": ["c4", "LEFT", "RIGHT", "3/4"]
+    },
+    {
+      "name": "magazine_top_plate_and_feed_lips",
+      "construction": "Flat smooth reinforcing plate (~45x30 mm) on each side above the ribs; feed lips folded inward at the top; plain dark follower plate inside (no cartridges unless a loaded variant is wanted).",
+      "key_features": ["c5 front view shows lips and follower"],
+      "material": "magazine_steel",
+      "wear": "plate edges bright",
+      "confidence": "medium",
+      "panels": ["c4", "c5"]
+    },
+    {
+      "name": "magazine_lugs",
+      "construction": "Front locking lug: hooked tab at the top front; rear catch lug: small block at the top rear engaging the mag catch.",
+      "key_features": ["front lug is the reload pivot"],
+      "material": "magazine_steel",
+      "wear": "edges bright",
+      "confidence": "medium",
+      "panels": ["c4", "c5"]
+    },
+    {
+      "name": "magazine_floor_plate",
+      "construction": "Separate flat plate sliding in rails at the bottom, ~1.5 mm lip proud all round, rounded front edge.",
+      "key_features": ["bottom of the magazine, angled with the curve"],
+      "material": "magazine_steel",
+      "wear": "rim strongly worn bright",
+      "confidence": "high",
+      "panels": ["c4", "c5", "3/4", "LEFT"]
+    }
+  ],
+  "materials": {
+    "blued_steel": {"base_srgb": "#3C3C3E", "metallic": 1.0, "roughness": 0.45, "roughness_range": [0.35, 0.55], "note": "neutral dark grey satin, no blue cast; +/-10% base variation"},
+    "magazine_steel": {"base_srgb": "#333334", "metallic": 1.0, "roughness": 0.50},
+    "butt_plate_steel": {"base_srgb": "#48484A", "metallic": 1.0, "roughness": 0.50},
+    "bare_steel_wear": {"base_srgb": "#A09E9A", "metallic": 1.0, "roughness": [0.25, 0.32]},
+    "grime": {"base_srgb": "#2A2826", "metallic": 0.0, "roughness": 0.80},
+    "wood": {"base_srgb": "#6B3C27", "metallic": 0.0, "roughness": 0.50, "roughness_range": [0.42, 0.60], "grain_dark_srgb": "#482C1B", "figure_light_srgb": "#965F46", "handling_wear_srgb": "#87573F", "handling_wear_roughness": 0.62, "checkering_cells_srgb": "#4E2E1E", "grain_direction": "stock: along the stock axis; handguards: along the bore; grip: along the raked long axis; solid wood, no laminate"},
+    "parkerized_option": {"base_srgb": "#3A3A3A", "metallic": 0.3, "roughness": 0.70, "note": "only if the user prefers matte phosphate; the sheet reads blued"},
+    "sampled_from_sheet_srgb": {"stock": [107, 60, 39], "wood_dark_p10": [72, 44, 27], "receiver_side": [60, 60, 62], "magazine": [53, 52, 51], "butt_plate": [78, 77, 77], "background": [126, 126, 126]}
+  },
+  "inconsistencies": [
+    "Selector, ejection port + carrier and charging tab drawn on BOTH sides (LEFT, 3/4, c1, c2 show them on the gun's left); TOP view puts the charging tab and selector boss on the right; real pattern and prompt: right only",
+    "3/4 view labelled FRONT RIGHT shows the left-side orientation",
+    "c1 labelled RIGHT is drawn muzzle-right (mirrored)",
+    "c4 magazine curve mirrored relative to the LEFT view",
+    "Rear sight retainer lever: arm on LEFT view, only a round boss on RIGHT view",
+    "RIGHT view shows an extra long pressed groove ahead of the oval mag-well dimple; LEFT and c2 do not",
+    "TOP view: ribbed plate (magazine-like) protruding from the left side over the mag well: artifact",
+    "Barrel diameter ~12 mm in side views vs ~17 mm in top view",
+    "Ruler reads ~97 cm",
+    "Rear sight leaf graduations and leaf-base mark read like text: omit (no markings)",
+    "Selector marks under the lever tip = real-pattern letters: omit",
+    "Recoil-spring-guide button loop-like in c1, squared tab in TOP",
+    "Checkering patch front half in c6, rear half in c1",
+    "Butt plate narrower than the stock end in c7 (perspective); full width in TOP",
+    "Butt plate screw slots drawn as X at low resolution"
+  ],
+  "unseen_surfaces": [
+    {"surface": "receiver bottom between grip and mag well and ahead of the well", "treatment": "flat steel bottom plate, two trigger-guard rivets"},
+    {"surface": "receiver left side (if controls are right-only)", "treatment": "plain wall, mirrored rivet pattern, oval dimple, no port or lever"},
+    {"surface": "inside the ejection port", "treatment": "carrier face 2 mm in, dark cavity, 1 mm wall reveal"},
+    {"surface": "inside the receiver", "treatment": "none (cover closed)"},
+    {"surface": "magazine well interior", "treatment": "25-30 mm deep dark cavity matched to the magazine top, front lug recess, rear catch notch"},
+    {"surface": "barrel bore and brake interior", "treatment": "7.6 mm bore ~30 mm deep, dark"},
+    {"surface": "magazine internals", "treatment": "feed lips + plain dark follower, no cartridges (optional loaded variant)"},
+    {"surface": "magazine rear spine", "treatment": "same as front spine: channel with two raised lines"},
+    {"surface": "pistol grip right side", "treatment": "checkering mirrored from c6"},
+    {"surface": "pistol grip bottom", "treatment": "plain flat wood end with small chamfer, no cap"},
+    {"surface": "stock left side wrist", "treatment": "plain (V inlet only on the right)"},
+    {"surface": "handguard insides", "treatment": "plain dark wood channel, visible only at the ends"},
+    {"surface": "lower handguard underside", "treatment": "smooth continuation of the belly"},
+    {"surface": "butt plate", "treatment": "plain, no trap"},
+    {"surface": "undersides of rear sight block, gas block, FSB", "treatment": "plain steel continuation of the visible forms"}
+  ],
+  "ip_options_not_applied": [
+    "Faceted (hex-flat) muzzle brake with two angled side ports instead of the slant brake",
+    "Dust cover with two lengthwise stiffening ribs and a stepped rear end",
+    "Lower handguard: one long palm swell with three shallow flutes; flat-sided front band with one screw",
+    "Grip: horizontal-groove or hex-stipple panel instead of diamond checkering, subtle finger swell",
+    "Buttstock: straight comb without the nose step, inset oval cheek panel, side sling swivel",
+    "Front sight: closed round hood, or ears with round windows",
+    "Gas block: angular with a vertical front face; round gas-tube vents in a 2-2 pattern",
+    "Receiver: original rivet layout and a long pressed reinforcement rib instead of the oval dimple",
+    "Selector: shorter, wider lever with a hooked finger tab",
+    "Magazine: two wide ribs plus one cross-rib near the top, stepped floor plate lip"
+  ]
+}
