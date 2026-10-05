@@ -1,0 +1,194 @@
+"""Assemble the AR-01 stage gate files from the measured results (plain Python):
+
+    py -3 -B Scripts/guns/rifle/rifle_gates.py --stage blockout|form
+
+blockout -> WorkFiles/guns/rifle/gates/blockout.json   (L1 + the magazine-thickness check on the solved 3/4 view)
+form     -> WorkFiles/guns/rifle/gates/form.json       (L2, L3, L4, B3, B6a, H1 early, budgets, closed solids,
+                                                         the early image-pair crops)
+Also writes render-vs-sheet comparison images (grey renders blended over the sheet panels) into review/<stage>/.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from datetime import datetime
+from pathlib import Path
+
+import numpy as np
+from PIL import Image
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from rifle_common import ROOT, SPEC, GATES, SCRATCH, REVIEW, RENDERS, SHEET, TRACE  # noqa: E402
+
+
+def load(p):
+    p = Path(p)
+    return json.loads(p.read_text()) if p.exists() else None
+
+
+def g(name, value, threshold, ok, note=""):
+    d = {"name": name, "value": value, "threshold": threshold, "pass": bool(ok)}
+    if note:
+        d["note"] = note
+    return d
+
+
+def rel(p):
+    return str(Path(p).resolve().relative_to(ROOT)).replace("\\", "/")
+
+
+def blend_images(stage):
+    """Grey render at panel scale over the sheet panel: side-by-side and a 50 % blend."""
+    out = []
+    sheet = Image.open(SHEET).convert("RGB")
+    for view, box_src in (("side", "LEFT"), ("top", "TOP"), ("q34", None)):
+        r = RENDERS / f"form_grey_{view}.png"
+        if not r.exists():
+            continue
+        if box_src:
+            box = json.loads((TRACE / f"{box_src}_outline.json").read_text())["panel_box_sheet_px"]
+        else:
+            box = (771, 322, 1528, 600)
+        P = sheet.crop((box[0], box[1], box[2] + 1, box[3] + 1))
+        R = Image.open(r).convert("RGB").resize((P.width * 2, P.height * 2), Image.LANCZOS)
+        P2 = P.resize((P.width * 2, P.height * 2), Image.LANCZOS)
+        both = Image.new("RGB", (P2.width, P2.height * 3 + 20), (255, 255, 255))
+        both.paste(P2, (0, 0))
+        both.paste(R, (0, P2.height + 10))
+        both.paste(Image.blend(P2, R, 0.5), (0, 2 * P2.height + 20))
+        o = REVIEW / stage / f"render_vs_sheet_{view}.png"
+        both.save(o)
+        out.append(rel(o))
+    return out
+
+
+def stage_blockout():
+    sil = load(SCRATCH / "sil_blockout.json")
+    q = load(REVIEW / "blockout" / "q34_result.json")
+    s, t = sil["views"]["side"], sil["views"]["top"]
+    gates = [g("L1 side IoU vs traced LEFT-labelled panel (similarity fit)", s["iou_fit"], ">= 0.95", s["iou_fit"] >= 0.95),
+             g("L1 top IoU vs traced TOP panel (excluded zones masked)", t["iou_fit_valid"], ">= 0.92",
+               t["iou_fit_valid"] >= 0.92, "excluded: TOP left-side bumps X 236-295 / 353-462 (spec excluded_zones) and "
+               "the charging-handle knob the TOP draws 25 mm forward; all-pixel IoU %.4f" % t["iou_identity_all_pixels"]),
+             g("L1 stop rule (change method below 0.90)", min(s["iou_fit"], t["iou_fit_valid"]), ">= 0.90",
+               min(s["iou_fit"], t["iou_fit_valid"]) >= 0.90)]
+    mt = q["magazine_thickness_check"]
+    info = {"magazine_thickness_check_on_solved_3q_view": mt,
+            "camera": q.get("camera"), "camera_landmark_rms_px": q.get("landmark_rms_px"),
+            "q34_iou_blockout": q.get("iou"),
+            "verdict": ("28.0 kept: the 3/4 panel prefers %.1f mm, but the effect (IoU %.4f at the best vs %.4f at 28) "
+                        "is smaller than the panel's own inconsistency (camera landmark residual %.1f px RMS, "
+                        "silhouette IoU ceiling ~0.90 for a rigid model); flagged for the stage-6 magazine build"
+                        % (mt["parabola_peak_mm"], max(mt["iou_in_mag_zone_by_thickness_mm"].values()),
+                           mt["iou_in_mag_zone_by_thickness_mm"].get("28", mt["iou_in_mag_zone_by_thickness_mm"].get(28, 0)),
+                           q.get("landmark_rms_px", 0)))}
+    res = {"stage": "1 blockout", "date": datetime.now().isoformat(timespec="seconds"),
+           "status": "pass" if all(x["pass"] for x in gates) else ("fail" if min(s["iou_fit"], t["iou_fit_valid"]) < 0.90 else "partial"),
+           "gates": gates, "details": {"silhouette": sil, "magazine_thickness": info},
+           "method": "primary volumes = the traced side profiles (spec side_profile_M, Douglas-Peucker 0.35 mm) extruded "
+                     "across their TOP widths; stock tapered by the TOP width profile; round parts as cylinders; "
+                     "magazine = the traced magazine ring at 28 mm. IoU on 4x supersampled rasters in the trace's own "
+                     "px<->mm frame (no camera error).",
+           "files": {"blend": rel(SCRATCH / "AR01_blockout.blend"), "overlays": [rel(p) for p in sorted((REVIEW / "blockout").glob("*.png"))]}}
+    (GATES / "blockout.json").write_text(json.dumps(res, indent=1))
+    print(json.dumps({"status": res["status"], "gates": gates}, indent=1))
+
+
+def stage_form():
+    sil = load(SCRATCH / "sil.json")
+    q = load(REVIEW / "form" / "q34_result.json")
+    b3 = load(SCRATCH / "b3_result.json")
+    b6 = load(SCRATCH / "b6a_result.json")
+    me = load(SCRATCH / "measure_result.json")
+    h1 = load(SCRATCH / "h1_result.json")
+    rep = load(SCRATCH / "form_build_report.json")
+    cl = load(SCRATCH / "closeup_cameras.json")
+    s, t, l = sil["views"]["side"], sil["views"]["top"], sil["views"]["left_vs_RIGHT_panel"]
+    gates = []
+    gates.append(g("L2 side IoU (authority, rifle + seated mag)", s["iou_fit"], ">= 0.96", s["iou_fit"] >= 0.96))
+    gates.append(g("L2 top IoU (excluded zones masked)", t["iou_fit_valid"], ">= 0.93", t["iou_fit_valid"] >= 0.93))
+    gates.append(g("L2 true-left vs RIGHT-labelled panel", l["iou_fit"], ">= 0.88", l["iou_fit"] >= 0.88))
+    parts = s["parts"]
+    bad = [k for k, v in parts.items() if not v["pass"]]
+    gates.append(g("L2 per part (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2 px)",
+                   "%d / %d parts pass" % (len(parts) - len(bad), len(parts)), "all", not bad,
+                   "failing: " + ", ".join("%s (IoU %.3f, P95 %s, max %s)" % (k, parts[k]["iou"], parts[k]["contour_p95_px"],
+                                                                       parts[k]["contour_max_px"]) for k in bad)))
+    gates.append(g("L2 3/4 view IoU (camera solved)", q["iou"], ">= 0.93", q["iou"] >= 0.93,
+                   "the rigid-model ceiling for this panel is ~0.90 (camera landmark residual %.1f px RMS)" %
+                   q.get("landmark_rms_px", float("nan")) if "landmark_rms_px" in q else ""))
+    gates.append(g("L2 3/4 view contour P95 (sheet px)", q["contour_px"]["p95"], "<= 3", q["contour_px"]["p95"] <= 3))
+    gates.append(g("L3 side contour P95 (sheet px)", s["contour_px"]["p95"], "<= 2", s["contour_px"]["p95"] <= 2))
+    l3bad = [f["feature"] for f in me["L3"] if not f["pass"]]
+    gates.append(g("L3 feature positions (<= 2 sheet px = %.2f mm)" % me["tol_mm_side"],
+                   "%d / %d" % (len(me["L3"]) - len(l3bad), len(me["L3"])), "all", not l3bad,
+                   ("failing: " + ", ".join(l3bad)) if l3bad else ""))
+    l4bad = [d for d in me["L4"] if not d["pass"]]
+    gates.append(g("L4 key dimensions (<= 0.05 mm)", "%d / %d" % (len(me["L4"]) - len(l4bad), len(me["L4"])), "all",
+                   not l4bad, "; ".join("%s %.3f vs %.3f" % (d["dimension"], d["measured"], d["spec"]) for d in l4bad)))
+    for grp, d in b3["groups"].items():
+        sm = d["summary"]
+        gates.append(g("B3 %s sweep %s..%s (step %.4f, %d steps)" % (grp, sm["range"][0], sm["range"][1], sm["step"], sm["steps"]),
+                       {"intersecting_steps": sm["intersecting_steps"], "min_clearance_mm": sm["min_clearance_mm"],
+                        "min_with": sm["min_with"], "rest_mm": sm["rest_clearance_mm"], "end_mm": sm["end_clearance_mm"]},
+                       "0 intersections; clearance in row %s" % sm["row_mm"], sm["pass"]))
+    gates.append(g("G5 static intersections between parts at rest (LOD0)", len(b3["static_intersections"]), "0",
+                   len(b3["static_intersections"]) == 0))
+    gaps = b3.get("contact_gaps", [])
+    zero = [x for x in gaps if x["min_gap_mm"] < 0.009]
+    gates.append(g("G5 butt-joint gaps (no vertex of one part within 1 micron of another; modelled 0.01-0.05)",
+                   "min %.4f mm over %d contact pairs" % (min(x["min_gap_mm"] for x in gaps), len(gaps)), ">= 0.01 (0.009 sampling)",
+                   not zero, ("below: " + ", ".join("%s/%s %.4f" % (x["a"], x["b"], x["min_gap_mm"]) for x in zero)) if zero else ""))
+    gates.append(g("B6a joined twin: qa_check topology + degenerate checks", b6["passed"], "all pass", b6["passed"],
+                   "; ".join("%s: %s" % (c["name"], c["detail"]) for c in b6["checks"]) + "; UV: " + b6["uv_checks"]))
+    gates.append(g("B10 tokenised gun deny list on every object name", b6["deny_list_clean"], "clean", b6["deny_list_clean"]))
+    closed = [k for k, v in rep.items() if v["boundary_edges"] or v["multi_face_edges"]]
+    gates.append(g("B7 closed manifold parts", "%d / %d closed" % (len(rep) - len(closed), len(rep)), "all", not closed,
+                   ", ".join(closed)))
+    tri_total = sum(v["triangles"] for v in rep.values())
+    tri_mag = sum(v["triangles"] for k, v in rep.items() if k.startswith("magazine"))
+    tri_rifle = tri_total - tri_mag
+    gates.append(g("B8 LOD0 triangles, rifle (target 30-45k, ceiling 50k)", tri_rifle, "<= 50000 (target <= 45000)",
+                   tri_rifle <= 50000, "above the 45k target" if tri_rifle > 45000 else ""))
+    gates.append(g("B8 magazine block-in triangles (target 4.5k, ceiling 7k)", tri_mag, "<= 7000", tri_mag <= 7000))
+    if h1:
+        gates.append(g("H1 early: grip girth vs the fit body's hand (power-grasp optimum +-15 %)",
+                       h1["girth"]["perimeter_mm"], "%s mm band" % h1["girth"]["band_mm"], h1["girth"]["pass"],
+                       "proxy rule (cylindrical-handle optimum 19.7 %% of hand length %.1f mm); the sheet's grip section is "
+                       "39.7 x 30 mm" % h1["hand"]["hand_length_mm"]))
+        gates.append(g("H1 early: trigger reach", h1["reach"]["reach_mm"], h1["reach"]["rule"], h1["reach"]["pass"],
+                       "hand web->DIP %.1f, web->pad %.1f mm (bone-joint estimate)" % (h1["reach"]["hand_web_to_DIP_mm"],
+                                                                                      h1["reach"]["hand_web_to_pad_mm"])))
+        gates.append(g("H1 early: provisional Grip 40 mm vs the hand (web line -> palm centre)",
+                       h1["grip40"]["hand_web_to_palm_centre_mm"], "within 10 mm of 40", h1["grip40"]["pass_within_10mm"],
+                       "estimate only; the posed H1 at the rig stage sets Grip and hand_offset (frames unchanged here)"))
+        gates.append(g("H1 early: SupportHand on the handguard underside, reachable", h1["support"]["offset_from_surface_mm"],
+                       "|offset| <= 1.5 mm", h1["support"]["pass"]))
+    else:
+        gates.append(g("H1 early", "blocked", "fit body available", False, "MH_PlayerDefault fit body not found"))
+    early = {"crops": {"ours": [rel(REVIEW / "early" / "ours_receiver.png"), rel(REVIEW / "early" / "ours_frontsight.png")],
+                       "reference": [rel(REVIEW / "early" / "ref_receiver.png"), rel(REVIEW / "early" / "ref_frontsight.png")]},
+             "cameras": cl,
+             "note": "the close-ups are stylised and not to scale (spec sheet_panels): weak-perspective cameras with the "
+                     "view angles set by eye and scale/shift fitted to landmarks; the blind judge runs in the next stage"}
+    hard = [x for x in gates if not x["pass"]]
+    lone = min(s["iou_fit"], t["iou_fit_valid"])
+    status = "pass" if not hard else ("fail" if lone < 0.90 else "partial")
+    res = {"stage": "2 form", "date": datetime.now().isoformat(timespec="seconds"), "status": status,
+           "failed": [x["name"] for x in hard], "gates": gates,
+           "details": {"silhouette": sil, "q34": q, "B3": b3, "B6a": b6, "measure": me, "H1": h1,
+                       "build_report": rep, "early_look": early},
+           "files": {"blend": rel(ROOT / "Assets" / "Guns" / "AR01.blend"),
+                     "renders": [rel(p) for p in sorted(RENDERS.glob("form_grey_*.png"))],
+                     "comparisons": blend_images("form") + [rel(p) for p in sorted((REVIEW / "form").glob("*overlay*.png"))]}}
+    (GATES / "form.json").write_text(json.dumps(res, indent=1, default=str))
+    print(json.dumps({"status": status, "failed": res["failed"]}, indent=1))
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--stage", default="form")
+    a = ap.parse_args()
+    {"blockout": stage_blockout, "form": stage_form}[a.stage]()
