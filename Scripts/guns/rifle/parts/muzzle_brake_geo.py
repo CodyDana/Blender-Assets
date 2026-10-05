@@ -30,7 +30,8 @@ from gunlib import mesh as MS
 
 def R_of(x, P):
     """Body radius at X: R0 at the rear face, convex flare to RF at XF (exponent PW), constant beyond."""
-    f = np.clip((np.asarray(x, float) - P["X0"]) / (P["XF"] - P["X0"]), 0.0, 1.0)
+    x_start = P.get("XS", P["X0"])                      # the flare starts at the body's step (round 2b) or the rear face
+    f = np.clip((np.asarray(x, float) - x_start) / (P["XF"] - x_start), 0.0, 1.0)
     return P["R0"] + (P["RF"] - P["R0"]) * f ** P["PW"]
 
 
@@ -63,6 +64,8 @@ def _cross(P, s, fn):
 def section(theta, P):
     """Closed (X, rho) profile at angle theta (y = rho cos theta, z = rho sin theta). P: parameter dict.
 
+    With P["FLAT"] (round 2b) the face is the same flat band with small rounds but the outer surface has no ring: the
+    body itself flares to the rim radius (no seam line behind the rim, nothing for the slot to notch).
     With P["LIP_R"] (integration round, 2026-10-05) the face is a FLAT band with small rounds (outer RO_F0..RO_F1 mm
     along the face, top -> chin; inner RI_F) and the outer surface steps up to a raised rim ring of radius LIP_R over
     the last LIP_L mm behind the face (a LIP_STEP ramp): c3's thick flat chamfered rim band standing proud of the
@@ -71,6 +74,7 @@ def section(theta, P):
     X0, c, XCH, RB = P["X0"], P["CH"], P["X_CH"], P["R_BORE"]
     R0 = float(R_of(X0, P))
     lip = "LIP_R" in P
+    flat = lip or bool(P.get("FLAT", False))           # flat face band with small rounds (with or without the ring)
     w = max(0.0, -s) ** 1.5                             # 1 at the bottom (the chin)
     if lip:
         xo = _cross(P, s, lambda x, P_: P_["LIP_R"])
@@ -82,7 +86,7 @@ def section(theta, P):
     ci = np.array([xi, float(RI_of(xi, P))])
     L = float(np.linalg.norm(ci - co))
     u = (ci - co) / L                                   # along the face, outer -> inner
-    if lip:
+    if flat:
         tf = min(P["RO_F0"] + (P["RO_F1"] - P["RO_F0"]) * w, 0.6 * L)
         ti = min(P["RI_F"], L - tf - 0.3)
     else:
@@ -91,16 +95,27 @@ def section(theta, P):
         tf, ti = fo * L, (1.0 - fo) * L - 1e-3
     tb = P["TB0"] + (P["TB1"] - P["TB0"]) * w
     xb = xo - tb
-    out = [(X0, R0 - c), (X0 + c, R0 + c * 0.0)]
-    x_start = X0 + c
+    if "XS" in P:
+        # round 2b: a rear shank (r RS, the FSB collar's radius, tiny rear chamfer so the joint reads as one collar),
+        # a groove (GW wide, GD deep) at the foot of the step, then the step face up to the body (chamfer c)
+        XS, RS, cs, GW, GD = P["XS"], P["RS"], P["CS"], P["GW"], P["GD"]
+        out = [(X0, RS - cs), (X0 + cs, RS), (XS - GW, RS), (XS - GW + 0.3, RS - GD), (XS - 0.08, RS - GD),
+               (XS, R0 - c), (XS + c, R0)]
+        x_start = XS + c
+    else:
+        out = [(X0, R0 - c), (X0 + c, R0 + c * 0.0)]
+        x_start = X0 + c
     k_out = P["K_OUT"]
     x_end = (xo - P["LIP_L"] - P["LIP_STEP"]) if lip else xb
     for j in range(1, k_out + 1):                       # flare samples (same count at every theta)
         x = x_start + (x_end - x_start) * j / (k_out + 1)
         out.append((x, float(R_of(x, P))))
     if lip:
-        out.append((x_end, float(R_of(x_end, P))))
-        out.append((x_end + P["LIP_STEP"], P["LIP_R"]))
+        r_a = float(R_of(x_end, P))
+        ns = int(P.get("LIP_SEG", 1))                    # detail fix: the step up to the rim band is a smoothstep
+        for j in range(ns + 1):
+            w = j / ns
+            out.append((x_end + P["LIP_STEP"] * w, r_a + (P["LIP_R"] - r_a) * (w * w * (3 - 2 * w))))
         p0 = np.array([xb, P["LIP_R"]])
     else:
         p0 = np.array([xb, float(R_of(xb, P))])
@@ -142,7 +157,50 @@ def miter_dirs(P):
     return out
 
 
-def rounded_side_slot(outline, radius_at, R_at, y_end=-0.5, phis=(30.0, 60.0, 90.0), lead=0.9, step=1.2):
+def periodic_spline(P, n_out=96) -> np.ndarray:
+    """Closed centripetal Catmull-Rom spline through the points P (in order), sampled evenly by arc length."""
+    P = np.asarray(P, float)
+    n = len(P)
+    dense = []
+    for i in range(n):
+        p0, p1, p2, p3 = P[i - 1], P[i], P[(i + 1) % n], P[(i + 2) % n]
+        t0 = 0.0
+        t1 = t0 + np.linalg.norm(p1 - p0) ** 0.5
+        t2 = t1 + np.linalg.norm(p2 - p1) ** 0.5
+        t3 = t2 + np.linalg.norm(p3 - p2) ** 0.5
+        for t in np.linspace(t1, t2, 24, endpoint=False):
+            a1 = (t1 - t) / (t1 - t0) * p0 + (t - t0) / (t1 - t0) * p1
+            a2 = (t2 - t) / (t2 - t1) * p1 + (t - t1) / (t2 - t1) * p2
+            a3 = (t3 - t) / (t3 - t2) * p2 + (t - t2) / (t3 - t2) * p3
+            b1 = (t2 - t) / (t2 - t0) * a1 + (t - t0) / (t2 - t0) * a2
+            b2 = (t3 - t) / (t3 - t1) * a2 + (t - t1) / (t3 - t1) * a3
+            dense.append((t2 - t) / (t2 - t1) * b1 + (t - t1) / (t2 - t1) * b2)
+    D = np.array(dense)
+    seg = np.linalg.norm(np.roll(D, -1, 0) - D, axis=1)
+    cs = np.r_[0.0, np.cumsum(seg)]
+    tgt = np.linspace(0.0, cs[-1], n_out, endpoint=False)
+    Dc = np.vstack([D, D[:1]])
+    return np.c_[np.interp(tgt, cs, Dc[:, 0]), np.interp(tgt, cs, Dc[:, 1])]
+
+
+def facet_y(x, z, R_at, n_facets, d=0.0):
+    """y (< 0, the -Y side) of the point at height z on the n-gon body (vertices at angles 2 pi k / n, as body_loft
+    builds it) of circumradius R_at(x), sunk d mm along the radius. The cutter rings follow the faceted surface, not
+    the true circle (a 32-gon sits up to 0.05 mm inside it: as deep as a 0.4 mm round's first step)."""
+    x = np.asarray(x, float)
+    z = np.asarray(z, float)
+    R = np.asarray(R_at(x), float)
+    h = math.pi / n_facets
+    th = math.pi - np.arcsin(np.clip(z / np.maximum(R, 1e-6), -1, 1))   # the -Y side: theta in (pi/2, 3 pi/2)
+    for _ in range(6):
+        dth = np.mod(th, 2 * h) - h                     # offset from the nearest facet centre (centres at odd h)
+        r = R * math.cos(h) / np.cos(dth) - d
+        y = -np.sqrt(np.maximum(r ** 2 - z ** 2, 1e-6))
+        th = np.mod(np.arctan2(z, y), 2 * math.pi)
+    return y
+
+
+def rounded_side_slot(outline, radius_at, R_at, y_end=-0.5, phis=(30.0, 60.0, 90.0), lead=0.9, step=1.2, n_facets=None):
     """Cutter for a slot through the wall of a body of revolution (radius R_at(x), axis X) on the -Y side, with its
     OUTER edge rounded by real geometry (no bevel modifier): a loft of the XZ outline offset outward by r(1 - sin phi)
     and sunk r(1 - cos phi) radially below the surface (per-vertex radius r = radius_at(x, z)); a lead ring outside
@@ -161,8 +219,11 @@ def rounded_side_slot(outline, radius_at, R_at, y_end=-0.5, phis=(30.0, 60.0, 90
 
     def ring(o, d):
         Q = P + M * o[:, None]
-        rr = np.maximum(R_at(Q[:, 0]) - d, 1e-3)
-        y = -np.sqrt(np.maximum(rr ** 2 - Q[:, 1] ** 2, 1e-6))
+        if n_facets:
+            y = facet_y(Q[:, 0], Q[:, 1], R_at, n_facets, d)
+        else:
+            rr = np.maximum(R_at(Q[:, 0]) - d, 1e-3)
+            y = -np.sqrt(np.maximum(rr ** 2 - Q[:, 1] ** 2, 1e-6))
         return np.c_[Q[:, 0], y, Q[:, 1]]
     ph = np.radians(np.asarray(phis, float))
     o1, d1 = r * (1 - math.sin(ph[0])), r * (1 - math.cos(ph[0]))

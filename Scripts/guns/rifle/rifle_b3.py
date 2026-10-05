@@ -22,12 +22,22 @@ from gunlib import fit as F  # noqa: E402
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 QUICK = "--quick" in argv
+SUFFIX = argv[argv.index("--suffix") + 1] if "--suffix" in argv else ""      # e.g. _LOD1: check a LOD's parts
+OUT = argv[argv.index("--out") + 1] if "--out" in argv else None
 
 ROWS = {"sliding": [0.15, 0.40], "hinge": [0.10, 0.30], "butt": [0.01, 0.05]}
 
-objs = [o for o in bpy.data.objects if o.type == "MESH" and not o.name.startswith("_")]
-G = F.geom(objs)
-rec = {o.name: json.loads(o["gun_part"]) for o in objs if "gun_part" in o}
+COLL = argv[argv.index("--collection") + 1] if "--collection" in argv else None     # e.g. AR01_Parts / AR01_LOD1
+objs = [o for o in (bpy.data.collections[COLL].objects if COLL else bpy.data.objects) if o.type == "MESH"
+        and not o.name.startswith("_") and o.name.endswith(SUFFIX) and not o.name.startswith(("SM_", "UCX_"))]
+
+
+def _base(n):
+    return n[:len(n) - len(SUFFIX)] if SUFFIX else n
+
+
+G = {_base(k): v for k, v in F.geom(objs).items()}
+rec = {_base(o.name): json.loads(o["gun_part"]) for o in objs if "gun_part" in o}
 
 
 def B(p):
@@ -97,16 +107,8 @@ for n, r in rec.items():
     par = r.get("joint", {}).get("parent")
     if par and par in G:
         contact.append((n, par))
-contact += [("pistol_grip", "trigger_guard"), ("pistol_grip", "receiver"), ("trigger_guard", "receiver"),
-            ("buttstock", "rear_trunnion"), ("buttstock", "butt_plate"), ("rear_sight_block", "receiver"),
-            ("rear_sight_block", "dust_cover"), ("upper_handguard", "lower_handguard"),
-            ("gas_tube_rear_cap", "rear_sight_block"), ("muzzle_brake", "front_sight_block"),
-            ("butt_screws", "butt_plate"), ("rivets", "receiver"), ("magazine", "receiver"),
-            ("magazine", "mag_catch"), ("selector", "receiver"), ("selector", "rivets"),
-            ("bolt_carrier", "receiver_rails"), ("bolt_carrier", "dust_cover"), ("bolt_carrier", "receiver"),
-            ("trigger", "receiver"), ("trigger", "trigger_guard"), ("mag_catch", "trigger_guard"),
-            ("rear_sight_leaf", "rear_sight_block"), ("rear_sight_slider", "rear_sight_leaf"),
-            ("sling_swivel_loop", "sling_swivel_base"), ("gas_piston", "gas_tube")]
+from rifle_common import CONTACT_PAIRS  # noqa: E402
+contact += CONTACT_PAIRS
 seen = set()
 cp = []
 for a, b in contact:
@@ -117,5 +119,6 @@ for a, b in contact:
 gaps = F.min_gaps(G, cp)
 out["contact_gaps"] = gaps
 print("[B3] gaps:", json.dumps(gaps))
-(SCRATCH / ("b3_result_quick.json" if QUICK else "b3_result.json")).write_text(json.dumps(out, indent=1))
+out["suffix"] = SUFFIX
+(Path(OUT) if OUT else SCRATCH / ("b3_result_quick.json" if QUICK else "b3_result.json")).write_text(json.dumps(out, indent=1))
 print("[B3] DONE")

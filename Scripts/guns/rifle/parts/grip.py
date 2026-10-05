@@ -17,6 +17,14 @@ with defined strap edges (front R 7, R 4 on the block, back R 9, crown 0.35); bo
 break as its own pass; the panel = the c6 corners alone, R 0.8, crisp 0.15 wall and a 0.7 flat border band; the cells
 = continuous diagonal ridges with shallow cross-notches (A 46 deg / 1.61, B -49 / 1.72); the bake-source field is
 clipped with bisect planes (manifold). Inspection: grip_overlay.py (silhouettes), grip_views.py (Workbench views).
+Detail round 2b (2026-10-05; round-1 judge tells still open: base, chunkier body, notch under the guard, embossed cells):
+the base is LOFTED, not cut: below Z -92.8 the rings turn until they run parallel to the bottom line (grip_chords), the
+sides flare out 2.0 mm per side over the last 12 mm and the base rolls under on a R 5 quarter circle (7 rings) to a flat
+cap, the chord ends following the trace's heel / toe rounds (no bottom boolean, no bottom bevel; 3126 triangles vs
+3974); rounder sides (crown 1.2); front strap on the block R 7 (round 2: R 4, which bulged beside the guard leg in the
+3/4 view); heel R 8 (grip_shape.HEEL_R; R 4 stood 4 c6 px proud); top rim round 1.2 (2 seg) outside the leg slot;
+the cells are gable-crested ridges with narrow steep A grooves and shallow B notches, crowns 0.25 under the border
+surface (cut, not embossed). Checker floor_fn handles the tilted rings.
 """
 from __future__ import annotations
 
@@ -27,6 +35,7 @@ import numpy as np
 
 from rifle_common import SPEC
 from gunlib import geo2d as G
+from gunlib import lod as LOD
 from gunlib import mesh as MS
 from rifle_parts import GAP
 
@@ -68,16 +77,18 @@ def grip_outline():
 #   panels  checkered panel border = real geometry: a 0.6 mm recess that follows the rounded side (panel prism
 #           minus the loft shrunk 0.6 in Y), border bevel 0.3; the diamonds go in the normal map.
 GRIP_RAKE = 22.35          # axis rake from vertical (spec)
-GRIP_W = float(SPEC.dims("pistol_grip")["width_Y"])   # section width Y (spec; real AK grips 30-36 mm, rifle_h1)
+GRIP_W = float(SPEC.dims("pistol_grip")["width_Y"]) + 1.6   # DETAIL FIX (user checklist 1: "a fuller, rounder grip
+                           # section"): 30 -> 31.6 (real-pattern grips 30-36 mm, H1 band [30, 36]; spec proposal R48)
 # detail round 2: flatter sides with defined edges where they meet the straps (c6; the round-1 judge read the R 9 /
 # R 13.5 straps as "evenly tapered, smoothly blended, almost like rubber"): front strap R 7, back strap R 9, crown
 # 0.35 (spec R 9 / R 13.5 / -: proposal in review/detail/grip/spec_proposal.json); H1 girth stays in its band
 GRIP_R = 9.0               # front strap R (integration round: 7.0 -> 9.0, the spec R33 value; at R 7 the solved 3/4 view
                            # read the front strap 10 px proud (region core 243 px, 3/4 IoU 0.9137 < 0.915); R 4 on the block stays)
 GRIP_R_BACK = 9.0
-GRIP_R_TOP = 4.0           # front strap radius on the block beside the guard leg (Z above R_TOP_Z0), ramped to GRIP_R by
+GRIP_R_TOP = 7.0           # front strap radius on the block beside the guard leg (Z above R_TOP_Z0), ramped to GRIP_R by
 R_TOP_Z0, R_TOP_Z1 = -50.0, -68.0   # R_TOP_Z1: c6 draws the block as a flat-sided wedge with a crisp front edge
-GRIP_CROWN = 0.35          # side crown at mid-depth (flatter sides where the checkering sits)
+GRIP_CROWN = 2.0          # side crown (DETAIL FIX 1.2 -> 2.0: a fuller, rounder section; peak toward the front = BELLY)
+GRIP_BELLY = 0.55         # DETAIL FIX: the crown's peak sits forward of mid-depth (a belly at the front of the section)
 GRIP_NR = 34               # vertices per ring (round 1: 30; the tighter strap radii need the samples)
 GRIP_Z_TOP = -34.82
 # heel / toe cut levels: the outline's rearmost heel point and foremost toe point (vertical tangents), from the
@@ -121,12 +132,14 @@ def grip_section(D, W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, n=GRIP_NR, Rb=None):
     s0, s1 = Rb, D - R
     u = (rr[:, 0] - 0.5 * (s0 + s1)) / max(0.5 * (s1 - s0), 1e-6)
     flat = (np.abs(u) < 1.0) & (np.abs(rr[:, 1]) > h - 1e-6)
-    rr[flat, 1] += np.sign(rr[flat, 1]) * crown * (1 - u[flat] ** 2) ** 2
+    uu = np.linspace(-1.0, 1.0, 2001)
+    norm = float(((1 - uu ** 2) ** 2 * (1 + GRIP_BELLY * uu)).max())
+    rr[flat, 1] += np.sign(rr[flat, 1]) * crown * (1 - u[flat] ** 2) ** 2 * (1 + GRIP_BELLY * u[flat]) / norm
     k = int(np.argmin(rr[:, 0] + 10 * np.abs(rr[:, 1])))          # back strap middle
     rr = np.roll(rr, -k, axis=0)
     Q = np.vstack([rr, rr[:1]])
     dd = np.r_[0, np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))]
-    t = np.linspace(0, dd[-1], n, endpoint=False)
+    t = np.linspace(0, dd[-1], LOD.ring(n), endpoint=False)          # LOD: fewer ring points (same on every ring)
     return np.c_[np.interp(t, dd, Q[:, 0]), np.interp(t, dd, Q[:, 1])]
 
 
@@ -135,6 +148,7 @@ def grip_levels(P, tol=0.12, max_gap=6.0):
     last kept level and the next by > tol mm (chordal error), at most max_gap apart. Form fix round 2: round 1 kept a
     level wherever the back/front MOVED 1.2 mm, which the 22 deg rake alone triggers every ~3 mm on straight runs
     (40 rings; the receiver's restored 0.3 mm arc bevel needs the triangles)."""
+    tol, max_gap = LOD.tol(tol), LOD.step(max_gap)                   # LOD: coarser chords
     zs = np.arange(GRIP_Z_TOP - 0.25, GRIP_Z_BACK_CUT + 0.2, -0.25)
     hits = {}
 
@@ -199,19 +213,157 @@ def grip_intervals(P):
     return out
 
 
-def grip_rings(W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, n=GRIP_NR, dy=0.0, dr=0.0, Rb=None):
-    """Rings in frame M. dy / dr shrink the half width / strap radius (the panel-recess inner loft)."""
+# ---- detail round 2b: LOFTED ROUNDED BASE on TILTED RINGS (round-1 judge: "B's base is a thicker, rounder flare and
+# blends more gently into the front strap"; c6 / c1 / 3/4 draw a flared, heavily rounded base with a ball-like toe).
+# Round 2 cut the loft flat with a boolean along the traced bottom and put a 2.5 mm bevel on it: a thin flat base with a
+# sharp toe lip. Horizontal rings cross the ~15 deg sloped bottom, so a profile along it needed ~1.3 mm ring spacing
+# (+1300 triangles) and still stair-stepped (2b iterations 1-2); a roll + bevel on the cut read as a chamfer (iteration 4).
+# Construction now: rings horizontal down to TILT_Z0, then TRANS_N rings turning progressively until they run parallel
+# to the BOTTOM LINE (least squares through the traced bottom chain); base rings at heights e above it (BASE_E), chord
+# ends = the outline hits (heel round / toe bulb); the last ROLL rings roll the sides under on a quarter circle of
+# radius ROLL_R (sides and strap radii inset by ROLL_R (1 - cos), height ROLL_R (1 - sin)) to a flat bottom cap; their
+# chord ends follow the trace's heel / toe rounds (the last two: inset by the remaining roll). No
+# bottom boolean, no bottom bevel: the round is modelled. Above the roll the sides flare out (Y only) by FLARE at the
+# bottom with a quadratic run-in from FLARE_H.
+FLARE = 2.0
+FLARE_H = 12.0
+ROLL_R = 5.0
+ROLL_SEG = 7
+ROLL_E_HIT = 0.9                       # roll rings at or above this height take the outline hits as chord ends
+TILT_Z0 = -92.82                       # last horizontal ring (a grip_levels level)
+TRANS_N = 3                            # rings turning from horizontal to the bottom slope
+BASE_E = (13.0, 9.0, 7.0)              # base rings above the roll (e = height above the bottom line, mm); kept >= 1 mm
+                                       # from the panel's bottom corners (rear e 12.0, front e 10.0)
+_BLINE = None
+
+
+def bottom_line():
+    """(point, forward unit direction, up unit normal) of the least-squares line through the traced bottom chain."""
+    global _BLINE
+    if _BLINE is None:
+        P = grip_outline()
+        sel = (P[:, 0] > 234.0) & (P[:, 0] < 262.5) & (P[:, 1] < -124.0)
+        c, d = _GS._fit_line(P[sel])
+        d = d if d[0] > 0 else -d
+        nrm = np.array([-d[1], d[0]])
+        nrm = nrm if nrm[1] > 0 else -nrm
+        _BLINE = (c, d, nrm)
+        # integration (r2b): the least-squares line runs below the traced bottom at its ends, so the flat cap's lowest
+        # chord end sat 0.26 under the key's bottom Z (L4 grip.bottom_Z / overall height). Lift the line until the
+        # lowest ring chord end is on the key (the rings are planar between their chord ends, so that is the bottom).
+        zb = SPEC.key["grip"]["bottom_Z"]
+        for _ in range(4):
+            low = min(min(A[1], B[1]) for A, B, _f, _r in grip_chords(P))
+            if low >= zb - 1e-4:
+                break
+            c = c + ((zb - low) / nrm[1]) * nrm
+            _BLINE = (c, d, nrm)
+    return _BLINE
+
+
+def base_e(x, z):
+    """Height (mm) of side-plane points above the bottom line."""
+    c, d, nrm = bottom_line()
+    return (np.c_[np.atleast_1d(x), np.atleast_1d(z)] - c) @ nrm
+
+
+def flare_of(e):
+    u = min(max(1.0 - e / FLARE_H, 0.0), 1.0)
+    return FLARE * u * u
+
+
+def roll_rings():
+    """(e, inset) of the roll-under rings: quarter circle of radius ROLL_R from e = ROLL_R (inset 0) to the cap."""
+    th = np.linspace(0.0, 0.5 * math.pi, LOD.count(ROLL_SEG, 2) + 1)
+    return [(float(ROLL_R * (1 - math.sin(t))), float(ROLL_R * (1 - math.cos(t)))) for t in th]
+
+
+def _line_hits(P, Q, u):
+    """Parameters t (Q + t u) where the line crosses the closed polygon P, with the crossing points."""
+    R = np.vstack([P, P[:1]])
+    a, b = R[:-1], R[1:]
+    e = b - a
+    den = e[:, 0] * u[1] - e[:, 1] * u[0]
+    ok = np.abs(den) > 1e-12
+    w = a - Q
+    dd = np.where(ok, den, 1.0)
+    s = np.where(ok, (w[:, 0] * u[1] - w[:, 1] * u[0]) / -dd, -1.0)     # along the edge: a + s e on the line
+    X = a + s[:, None] * e
+    t = (X - Q) @ u
+    m = ok & (s >= 0.0) & (s <= 1.0)
+    return t[m], X[m]
+
+
+def grip_chords(P):
+    """Per ring: (A_back, B_front, flare, roll) in the side plane. Horizontal rings: the outline's back / front hits.
+    Tilted rings: the extreme hits of the ring line with the outline; roll rings: the chord at e = ROLL_R moved down
+    to e and inset `roll` at both ends."""
+    out = []
+    for z in [z for z in grip_levels(P) if z >= TILT_Z0 - 1e-6]:
+        h = _hits_x(P, min(z, GRIP_Z_TOP - 1e-3))
+        out.append((np.array([h[0], z]), np.array([h[1], z]), 0.0, 0.0))
+    c, d, nrm = bottom_line()
+    a = math.radians(GRIP_RAKE)
+    ax0, axd = np.array([280.67, -36.0]), np.array([-math.sin(a), -math.cos(a)])   # the grip axis (grip_checker frame)
+
+    def on_axis(Q, u):
+        t = np.linalg.solve(np.c_[axd, -u], Q - ax0)
+        return ax0 + t[0] * axd
+
+    def chord(Q, u):
+        t, X = _line_hits(P, Q, u)
+        return X[np.argmin(t)], X[np.argmax(t)]
+    A0 = on_axis(np.array([250.0, TILT_Z0]), np.array([1.0, 0.0]))
+    A1 = on_axis(c + BASE_E[0] * nrm, d)
+    ang1 = math.atan2(d[1], d[0])
+    for k in range(1, TRANS_N + 1):
+        w = k / (TRANS_N + 1.0)
+        ang = (w * w * (3 - 2 * w)) * ang1
+        u = np.array([math.cos(ang), math.sin(ang)])
+        Ab, Bf = chord(A0 + w * (A1 - A0), u)
+        out.append((Ab, Bf, flare_of(float(base_e(*(0.5 * (Ab + Bf)))[0])), 0.0))
+    for e in BASE_E:
+        Ab, Bf = chord(c + e * nrm, d)
+        out.append((Ab, Bf, flare_of(e), 0.0))
+    # roll rings: the chord ends follow the trace's own heel round and toe curve (outline hits) down to ROLL_E_HIT; the
+    # last rings take that chord moved down and inset by the remaining roll (2b iteration 12: insetting the e = ROLL_R
+    # chord by the roll stood ~1.2 mm outside the traced heel and 1.5 mm below the toe and creased the toe)
+    Ah = Bh = eh = rh = None
+    for e, ins in roll_rings():
+        if e >= ROLL_E_HIT - 1e-9:
+            Ab, Bf = chord(c + e * nrm, d)
+            Ah, Bh, eh, rh = Ab, Bf, e, ins
+            out.append((Ab, Bf, flare_of(e), ins))
+        else:
+            sh = -(eh - e) * nrm
+            k = ins - rh
+            out.append((Ah + sh + k * d, Bh + sh - k * d, flare_of(e), ins))
+    return out
+
+
+def grip_rings(W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, n=GRIP_NR, dy=0.0, dr=0.0, Rb=None, base=True):
+    """Rings in frame M. dy / dr shrink the half width / strap radius (the panel-recess inner loft). Each ring is the
+    perpendicular section (depth D = chord . p, p = the axis-perpendicular) stretched along its chord; base rings add
+    the flare to the half width and inset the section by the roll (width, depth and strap radii)."""
     P = grip_outline()
-    c = math.cos(math.radians(GRIP_RAKE))
+    a = math.radians(GRIP_RAKE)
+    p = np.array([math.cos(a), -math.sin(a)])
     rings = []
-    for z, xb, xf in grip_intervals(P):
-        D = (xf - xb) * c
-        u = min(max((z - R_TOP_Z1) / (R_TOP_Z0 - R_TOP_Z1), 0.0), 1.0)
+    for A, B, fl, roll in grip_chords(P):
+        if not base:
+            fl, roll = 0.0, roll
+        D = float((B - A) @ p)
+        zc = 0.5 * (A[1] + B[1])
+        u = min(max((zc - R_TOP_Z1) / (R_TOP_Z0 - R_TOP_Z1), 0.0), 1.0)
         u = u * u * (3 - 2 * u)                        # smoothstep: 1 on the block, 0 below R_TOP_Z1
         Rz = min(R, R + u * (GRIP_R_TOP - R))
-        sec = grip_section(D, W - 2 * dy, Rz - dr, crown, n, (GRIP_R_BACK if Rb is None else Rb) - dr)
-        x = xb + sec[:, 0] / D * (xf - xb)
-        rings.append(np.c_[x, sec[:, 1], np.full(n, z)])
+        Wr = W - 2 * dy + 2 * (fl - roll)
+        rb = (GRIP_R_BACK if Rb is None else Rb) - dr - roll
+        sec = grip_section(D, Wr, max(Rz - dr - roll, 0.6), crown, n, max(rb, 0.6))
+        f = sec[:, 0] / D
+        x = A[0] + f * (B[0] - A[0])
+        z = A[1] + f * (B[1] - A[1])
+        rings.append(np.c_[x, sec[:, 1], z])
     return rings
 
 
@@ -239,7 +391,9 @@ def grip_panel_outline():
     return GC.panel_outline_xz()
 
 
-BORDER_BEVEL = 0.15        # panel recess wall / leg slot edges (round 1: 0.3; the judge read the rim as soft: "cut into
+BORDER_SEG = 2             # integration r2b: 0.15 x 1 -> 0.4 x 2 (judges r2 / r2b on c1 and c6: our panel had "a crisp raised
+                           # border lip", the reference's field is cut in and fades out without a raised border)
+BORDER_BEVEL = 0.4         # panel recess wall / leg slot edges (round 1: 0.3; the judge read the rim as soft: "cut into
                            # the surface, with a distinct border line" in the reference)
 GRIP_LEG = [(298.6, -34.0), (303.3, -34.0), (303.3, -60.0), (298.4, -60.0)]   # guard rear leg (cut back 0.02)
 GRIP_LEG_HALF_W = 5.0      # the guard loop's half width (trigger_guard.LOOP_W): detail round 1 cuts the leg slot only
@@ -280,21 +434,32 @@ def pred_grip_bottom(mid, d, n1, n2, dih):
     return 0.0
 
 
+TOP_ROUND = 2.6            # DETAIL FIX (user checklist 1: "a rounder shoulder where it meets the receiver"): 1.2 -> 2.6,
+TOP_SEG = 3                # 3 segments (2b: 1.2 x 2; round 2: a 0.5 break)
+
+
+def _in_slot_zone(mid):
+    return mid[0] > 297.0 and abs(mid[1]) < GRIP_LEG_HALF_W + 1.0
+
+
+def pred_grip_top(mid, d, n1, n2, dih):
+    return 1.0 if (dih >= 25 and mid[2] > GRIP_Z_TOP - 0.3 and not _in_slot_zone(mid)) else 0.0
+
+
 def pred_grip_flange(mid, d, n1, n2, dih):
-    return 1.0 if (dih >= 25 and mid[2] > GRIP_Z_TOP - 0.3) else 0.0   # flange joint: 0.5 mm break
+    return 1.0 if (dih >= 25 and mid[2] > GRIP_Z_TOP - 0.3 and _in_slot_zone(mid)) else 0.0   # slot top edges: 0.5 break
 
 
 def build_pistol_grip(coll, offset):
     import bpy
     from gunlib import bl
     ob = MS.loft(grip_rings()).to_object("pistol_grip", coll, offset, smooth_deg=35.0)
-    bl.boolean_many(ob, [MS.prism(grip_bottom_cutter(), -40.0, 40.0),
-                         MS.prism(G.offset(G.ccw(np.array(GRIP_LEG)), GAP), -GRIP_LEG_HALF_W - LEG_SIDE_GAP,
+    # 2b: the base is lofted and rounded (grip_chords); only the guard-leg slot is cut
+    bl.boolean_many(ob, [MS.prism(G.offset(G.ccw(np.array(GRIP_LEG)), GAP), -GRIP_LEG_HALF_W - LEG_SIDE_GAP,
                                   GRIP_LEG_HALF_W + LEG_SIDE_GAP)], "DIFFERENCE", offset=offset)
     bl.clean(ob)
-    bl.bevel_weighted(ob, BOTTOM_ROUND, 3, pred_grip_bottom, offset)
-    bl.bevel_weighted(ob, 0.5, 1, pred_grip_flange, offset)   # separate pass: a 0.25-weight share of the 3-segment
-                                                                # bottom bevel broke the flange edge into notches
+    bl.bevel_weighted(ob, TOP_ROUND, TOP_SEG, pred_grip_top, offset)   # top rim round (outside the guard-leg slot)
+    bl.bevel_weighted(ob, 0.5, 1, pred_grip_flange, offset)      # slot top edges: flange joint break
     # panel recess: panel prisms minus the loft shrunk RECESS in Y (the recess follows the rounded side)
     from parts import grip_checker as GC
     panel = grip_panel_outline()
@@ -306,7 +471,7 @@ def build_pistol_grip(coll, offset):
     bl.boolean(ob, cut, "DIFFERENCE")
     bpy.data.objects.remove(cut, do_unlink=True)
     bl.clean(ob)
-    bl.bevel(ob, BORDER_BEVEL, 1, 50.0)
+    bl.bevel(ob, BORDER_BEVEL, BORDER_SEG, 50.0)
     bl.finish(ob)
     bl.weighted_normals(ob)
     # form fix round 2: the boolean/bevel triangulation left shading blotches beside the checker panel under weighted
@@ -320,7 +485,8 @@ def build_pistol_grip(coll, offset):
     ob["gun_part"] = json.dumps({"bone": "body", "class": "W-round", "slot": "M_AR01_Furniture",
                                  "spec_id": "pistol_grip", "joint": {"type": "butt", "parent": "receiver",
                                                                      "gap_mm": [0.01, 0.05]},
-                                 "recipe": [[BOTTOM_ROUND, 3, "weighted bottom"], [0.5, 1, "weighted flange"], [BORDER_BEVEL, 1, 50.0]],
+                                 "recipe": [["lofted base roll R %.1f, %d seg" % (ROLL_R, ROLL_SEG)], [TOP_ROUND, 2, "weighted top rim"], [0.5, 1, "weighted slot top"], [BORDER_BEVEL, BORDER_SEG, 50.0]],
+                                 "base": {"flare_mm": FLARE, "flare_h_mm": FLARE_H, "roll_R": ROLL_R, "tilted_rings_from_Z": TILT_Z0},
                                  "section": {"construction": "loft of rounded sections", "width_Y": GRIP_W,
                                              "strap_R": GRIP_R, "strap_R_back": GRIP_R_BACK,
                                              "strap_R_block": [GRIP_R_TOP, R_TOP_Z0, R_TOP_Z1], "side_crown": GRIP_CROWN},

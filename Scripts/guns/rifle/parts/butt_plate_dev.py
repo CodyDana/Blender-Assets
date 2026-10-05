@@ -42,7 +42,9 @@ from gunlib import compare as C  # noqa: E402
 
 WIP = SCRATCH / "detail" / "butt_plate_wip"
 OUT = REVIEW / "detail" / "butt_plate"
-BASE_BLEND = WIP / "base_AR01.blend"
+import os  # noqa: E402
+# round 2b: the snapshot can be switched (BP_BASE=<file in WIP>); r2b uses a copy of the integrated Assets/Guns/AR01.blend
+BASE_BLEND = WIP / os.environ.get("BP_BASE", "base_AR01.blend")
 PLATE_OBJS = ["butt_plate", "butt_screws"]
 
 

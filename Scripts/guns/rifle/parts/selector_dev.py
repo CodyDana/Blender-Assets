@@ -292,8 +292,12 @@ def cmd_render(a):
     K = kit_for(a.tag, out_rest)
     shots_c1 = [K._shot("selector", "c1", tag)]
     shots_q = [K._shot("selector", "q34", tag)]
-    # c1 pose blend for the c1 shot, the rest pose for the 3/4 shot (the 3/4 view draws it up)
-    K.cfg["blend"] = str(out_posed)
+    # the rest blend for both shots: since the integration round the kit's c1 shot carries the c1 pose itself
+    # (rifle_detail.SEL_C1_POSE); the c1-posed blend would pose it twice
+    if not shots_c1[0].get("poses"):
+        K.cfg["blend"] = str(out_posed)
+    else:
+        K.cfg["blend"] = str(out_rest)
     K.run_blender(shots_c1, f"render_c1_{tag}")
     K.cfg["blend"] = str(out_rest)
     K.run_blender(shots_q, f"render_q34_{tag}")

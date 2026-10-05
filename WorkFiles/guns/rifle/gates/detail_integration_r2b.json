@@ -1,0 +1,719 @@
+{
+ "stage": "2 form - detail pass integration after round 2b",
+ "date": "2026-10-05T09:16:00",
+ "status": "pass",
+ "stage2_gates": "gates/form.json (pass, 26 gates; the 3/4 pair passes through the documented exception at IoU 0.9167)",
+ "spec": {
+  "version": "1.2",
+  "applied": "make_spec.py: dp2() round-2b block (every builder's round_2b proposal as built) + R45 (r2b integrated, supersedes R37's rim ring construction), R46 (butt_height 109.8 -> 110.5, inside its +-0.7), R47 (this round's focused fixes); design sheet regenerated",
+  "deferred": [
+   "R36 close-up proportions (front sight ears, brake length, magazine curve)",
+   "R40 port top Z 21.5",
+   "R41 butt plate width / stock end section",
+   "R43 magazine rear knob / chunky front lug (liner changes)",
+   "detent owner / position: c3 and the side panel put it at the FSB front-top (X ~836-842); R38 keeps it on the brake at X 847.2-853.4 (L2) - not moved this round"
+  ]
+ },
+ "integration_breakages_fixed": [
+  "L4 grip.bottom_Z -132.963 / overall_height_without_mag 182.363 (r2b lofted base: the least-squares bottom line ran 0.26 under the key at its ends): grip.bottom_line() lifts the line until the lowest ring chord end is on the key -> -132.715 (err 0.015)",
+  "L4 butt_height 110.52 vs 109.8 (r2b heel top raised 0.75 to the stock's traced top line): spec R46 sets 110.5, inside the measurement's own +-0.7",
+  "front sight ear inset 1.4 left the block non-manifold (boundary 11 / multi 5): built at 1.0 (manifold)"
+ ],
+ "focused_attempts": {
+  "selector": "pivot = domed bolt head (1.84 high, straight skirt) in a 1.2 thick washer with a crisp 0.12 shoulder (r2b: 1.31 crown on a 0.7 washer read as 'a stamped disc'); c1 zoom confirms. Not changed: skirt step under the lever (c1 ~2 mm at the bottom vs 1.1 built), tip squarer; dust-cover / port tells in this crop belong to receiver_right (R40)",
+  "trigger_guard": "mag catch pin heads set low (r 1.7, 0.14 proud, no washers; judge: 'recessed rivet'). Not changed: catch housing height / paddle foot (side trace + B3 mag_release min 0.109 mm), loop corner radii (round-1 and r2b judges contradict each other on them)",
+  "front_sight": "ear outer faces 1.0 inside the base flanks (ledge 0.6 -> 1.0: 'post with a shoulder'); boss a raised plug (rim 0.62 / face 0.45 proud). Not changed: ear width / height and the whole FSB-brake proportion (R36: c3 is not to scale, L2 front_sight_block 0.9562 vs 0.95), arrow index mark (a marking), detent position (R38)",
+  "muzzle_brake": "chamber r 7.1 -> 6.4 + 0.6 inner round: a thick flat annular face (judge: 'thin uniform wall'). Not changed: brake length / diameter vs c3 (R36, L4 31.2 / 20.2), rear collar hex bolt",
+  "rear_sight": "the 'jagged torn crease' was real geometry: the short upright slot's lit end wall in the rolled band; now a rounded scallop r 2.1 cut after the bevels (shard gone in the c2 crop, L3 gap bbox Z0 36.1 err 1.6, per-part L2 0.9622). Not changed: leaf height vs the deck walls, dust-cover crown roundness (L4 crown 32.7 / width 43.5 fix it to an ellipse), retainer link shape",
+  "receiver_right": "the right pin at (388, -8) is a hollow ring (c1: a small ring round a dark hole). Not changed: port opening / cover lip (R40, L3 port corner Z 17 +- 2.43), the c1 sling loop at the cover's rear (absent from the side silhouette: side_diff shows no bump), c1's taller cover (crown Z 32.7 is L4)",
+  "grip": "checker panel border softened (recess wall 0.15 x 1 -> 0.4 x 2 round, field band 0.7 -> 0.35): no crisp raised lip. Not changed: front shoulder / toe shape (side trace L2 0.9595), cell pitch (FFT-matched in r2)",
+  "magazine": "ribs x0.8 narrower (1.3-1.4 half width), crest ramp 4.5 -> 3.0, bottom ends 14.0 above the floor plate (spec 16 +- 2 lower limit). Not changed: length / curvature / taper (R36, L2 0.9688), top plate height, front bead and knobs (the r1 judge asked for a front bead, r2b says it is not there)",
+  "butt_plate": "face crown 0.6 -> 0.25 (judge: 'domed / pillowed'). Not changed: width 36.9 (R41: c7 draws 0.65x; the dominant tell, together with the lozenge read that follows from our 3:1 aspect), dark rim band (finish tone, BP-4 look proposal)"
+ },
+ "convergence": "NOT verified: no blind judge was run in this stage. By eye the targeted tells are fixed, but each part keeps tells that the authority table forbids fixing (R36 / R40 / R41) or that are render (materials, wear, photo softness). Expect a judge on early_blind2 pair 02 (front sight + brake) to still pick ours on proportion; pair 01 on the cover height / port and materials.",
+ "blind_pairs": {
+  "early": "review/early_blind2 (key review/early_key2.json: ours = A in pair 01, B in pair 02)",
+  "per_part": "review/detail_blind/<part>_r4 (A = reference, B = ours; keys review/detail/<part>/key_r4.json)",
+  "judged": false
+ },
+ "per_part_side_L2": {
+  "receiver": {
+   "iou": 0.9663,
+   "p95": 2.0,
+   "max": 6.0,
+   "pass": true
+  },
+  "dust_cover": {
+   "iou": 0.9509,
+   "p95": 2.0,
+   "max": 3.0,
+   "pass": true
+  },
+  "rear_sight": {
+   "iou": 0.9622,
+   "p95": 1.414,
+   "max": 3.0,
+   "pass": true
+  },
+  "gas_tube_rear_cap": {
+   "iou": 0.9469,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "handguard_upper": {
+   "iou": 0.9877,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "handguard_lower": {
+   "iou": 0.9815,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "handguard_front_band": {
+   "iou": 0.8873,
+   "p95": 1.0,
+   "max": 1.414,
+   "pass": true
+  },
+  "gas_tube": {
+   "iou": 0.9697,
+   "p95": 1.0,
+   "max": 8.0,
+   "pass": true
+  },
+  "gas_block": {
+   "iou": 0.9833,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "barrel": {
+   "iou": 0.964,
+   "p95": 2.0,
+   "max": 162.0,
+   "pass": true
+  },
+  "cleaning_rod": {
+   "iou": 0.791,
+   "p95": 1.0,
+   "max": 2.0,
+   "pass": true
+  },
+  "front_sight_block": {
+   "iou": 0.9562,
+   "p95": 1.0,
+   "max": 2.828,
+   "pass": true
+  },
+  "muzzle_brake": {
+   "iou": 0.892,
+   "p95": 1.0,
+   "max": 2.0,
+   "pass": true
+  },
+  "trigger": {
+   "iou": 0.9462,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "trigger_guard": {
+   "iou": 0.7831,
+   "p95": 1.0,
+   "max": 1.414,
+   "pass": true
+  },
+  "mag_catch": {
+   "iou": 0.9214,
+   "p95": 1.0,
+   "max": 1.414,
+   "pass": true
+  },
+  "pistol_grip": {
+   "iou": 0.9595,
+   "p95": 1.0,
+   "max": 3.0,
+   "pass": true
+  },
+  "stock": {
+   "iou": 0.9921,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "butt_plate": {
+   "iou": 0.9583,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "sling_swivel_rear": {
+   "iou": 0.7818,
+   "p95": 1.0,
+   "max": 1.0,
+   "pass": true
+  },
+  "magazine": {
+   "iou": 0.9688,
+   "p95": 1.414,
+   "max": 2.828,
+   "pass": true
+  }
+ },
+ "r4_crop_numbers": {
+  "selector": {
+   "c1": {
+    "window_px": [
+     36,
+     42,
+     232,
+     160
+    ],
+    "silhouette_iou_window": 0.9937,
+    "edges": {
+     "precision": 0.6904,
+     "recall": 0.5376,
+     "f": 0.6045,
+     "chamfer_p50_px": 2.0,
+     "chamfer_p95_px": 20.0,
+     "ref_edge_px": 1410,
+     "our_edge_px": 1053
+    },
+    "files": {
+     "ref": "ref_c1.png",
+     "ours": "r4_ours_c1.png",
+     "pair": "r4_pair_c1.png",
+     "edges": "r4_edges_c1.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     168,
+     45,
+     232,
+     94
+    ],
+    "silhouette_iou_window": 1.0,
+    "edges": {
+     "precision": 0.3946,
+     "recall": 0.6742,
+     "f": 0.4978,
+     "chamfer_p50_px": 2.5,
+     "chamfer_p95_px": 20.47,
+     "ref_edge_px": 89,
+     "our_edge_px": 147
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "trigger_guard": {
+   "c6": {
+    "window_px": [
+     0,
+     6,
+     216,
+     186
+    ],
+    "silhouette_iou_window": 0.9495,
+    "edges": {
+     "precision": 0.3734,
+     "recall": 0.3133,
+     "f": 0.3407,
+     "chamfer_p50_px": 5.0,
+     "chamfer_p95_px": 16.42,
+     "ref_edge_px": 1446,
+     "our_edge_px": 1082
+    },
+    "files": {
+     "ref": "ref_c6.png",
+     "ours": "r4_ours_c6.png",
+     "pair": "r4_pair_c6.png",
+     "edges": "r4_edges_c6.png"
+    }
+   },
+   "c1": {
+    "window_px": [
+     0,
+     92,
+     271,
+     258
+    ],
+    "silhouette_iou_window": 0.9575,
+    "edges": {
+     "precision": 0.2732,
+     "recall": 0.2578,
+     "f": 0.2653,
+     "chamfer_p50_px": 5.83,
+     "chamfer_p95_px": 19.0,
+     "ref_edge_px": 993,
+     "our_edge_px": 798
+    },
+    "files": {
+     "ref": "ref_c1.png",
+     "ours": "r4_ours_c1.png",
+     "pair": "r4_pair_c1.png",
+     "edges": "r4_edges_c1.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     151,
+     64,
+     285,
+     147
+    ],
+    "silhouette_iou_window": 0.9425,
+    "edges": {
+     "precision": 0.0786,
+     "recall": 0.0408,
+     "f": 0.0537,
+     "chamfer_p50_px": 10.0,
+     "chamfer_p95_px": 32.08,
+     "ref_edge_px": 319,
+     "our_edge_px": 140
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "front_sight": {
+   "c3": {
+    "window_px": [
+     49,
+     12,
+     233,
+     251
+    ],
+    "silhouette_iou_window": 0.8618,
+    "edges": {
+     "precision": 0.3917,
+     "recall": 0.2436,
+     "f": 0.3004,
+     "chamfer_p50_px": 4.47,
+     "chamfer_p95_px": 27.0,
+     "ref_edge_px": 1018,
+     "our_edge_px": 623
+    },
+    "files": {
+     "ref": "ref_c3.png",
+     "ours": "r4_ours_c3.png",
+     "pair": "r4_pair_c3.png",
+     "edges": "r4_edges_c3.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     607,
+     33,
+     695,
+     147
+    ],
+    "silhouette_iou_window": 0.7969,
+    "edges": {
+     "precision": 0.4771,
+     "recall": 0.474,
+     "f": 0.4756,
+     "chamfer_p50_px": 2.24,
+     "chamfer_p95_px": 14.4,
+     "ref_edge_px": 308,
+     "our_edge_px": 306
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "muzzle_brake": {
+   "c3": {
+    "window_px": [
+     157,
+     137,
+     267,
+     233
+    ],
+    "silhouette_iou_window": 0.8158,
+    "edges": {
+     "precision": 0.3862,
+     "recall": 0.2961,
+     "f": 0.3352,
+     "chamfer_p50_px": 3.16,
+     "chamfer_p95_px": 11.96,
+     "ref_edge_px": 358,
+     "our_edge_px": 246
+    },
+    "files": {
+     "ref": "ref_c3.png",
+     "ours": "r4_ours_c3.png",
+     "pair": "r4_pair_c3.png",
+     "edges": "r4_edges_c3.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     662,
+     93,
+     722,
+     142
+    ],
+    "silhouette_iou_window": 0.7484,
+    "edges": {
+     "precision": 0.662,
+     "recall": 0.6488,
+     "f": 0.6553,
+     "chamfer_p50_px": 1.0,
+     "chamfer_p95_px": 5.39,
+     "ref_edge_px": 168,
+     "our_edge_px": 142
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "rear_sight": {
+   "c2": {
+    "window_px": [
+     129,
+     16,
+     277,
+     176
+    ],
+    "silhouette_iou_window": 0.9449,
+    "edges": {
+     "precision": 0.4733,
+     "recall": 0.4259,
+     "f": 0.4483,
+     "chamfer_p50_px": 2.83,
+     "chamfer_p95_px": 17.09,
+     "ref_edge_px": 1592,
+     "our_edge_px": 1310
+    },
+    "files": {
+     "ref": "ref_c2.png",
+     "ours": "r4_ours_c2.png",
+     "pair": "r4_pair_c2.png",
+     "edges": "r4_edges_c2.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     281,
+     10,
+     391,
+     83
+    ],
+    "silhouette_iou_window": 0.9425,
+    "edges": {
+     "precision": 0.4499,
+     "recall": 0.5532,
+     "f": 0.4962,
+     "chamfer_p50_px": 2.24,
+     "chamfer_p95_px": 9.65,
+     "ref_edge_px": 423,
+     "our_edge_px": 489
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "receiver_right": {
+   "c1": {
+    "window_px": [
+     0,
+     0,
+     290,
+     301
+    ],
+    "silhouette_iou_window": 0.9102,
+    "edges": {
+     "precision": 0.4439,
+     "recall": 0.3146,
+     "f": 0.3682,
+     "chamfer_p50_px": 3.61,
+     "chamfer_p95_px": 17.46,
+     "ref_edge_px": 3001,
+     "our_edge_px": 2246
+    },
+    "files": {
+     "ref": "ref_c1.png",
+     "ours": "r4_ours_c1.png",
+     "pair": "r4_pair_c1.png",
+     "edges": "r4_edges_c1.png"
+    }
+   },
+   "c2": {
+    "window_px": [
+     0,
+     15,
+     277,
+     363
+    ],
+    "silhouette_iou_window": 0.9416,
+    "edges": {
+     "precision": 0.3982,
+     "recall": 0.2429,
+     "f": 0.3017,
+     "chamfer_p50_px": 4.47,
+     "chamfer_p95_px": 36.48,
+     "ref_edge_px": 3504,
+     "our_edge_px": 1871
+    },
+    "files": {
+     "ref": "ref_c2.png",
+     "ours": "r4_ours_c2.png",
+     "pair": "r4_pair_c2.png",
+     "edges": "r4_edges_c2.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     124,
+     0,
+     382,
+     166
+    ],
+    "silhouette_iou_window": 0.9284,
+    "edges": {
+     "precision": 0.3255,
+     "recall": 0.3408,
+     "f": 0.333,
+     "chamfer_p50_px": 4.12,
+     "chamfer_p95_px": 38.04,
+     "ref_edge_px": 1121,
+     "our_edge_px": 1069
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "grip": {
+   "c6": {
+    "window_px": [
+     49,
+     50,
+     227,
+     321
+    ],
+    "silhouette_iou_window": 0.9165,
+    "edges": {
+     "precision": 0.2665,
+     "recall": 0.2604,
+     "f": 0.2634,
+     "chamfer_p50_px": 6.0,
+     "chamfer_p95_px": 15.78,
+     "ref_edge_px": 1532,
+     "our_edge_px": 1332
+    },
+    "files": {
+     "ref": "ref_c6.png",
+     "ours": "r4_ours_c6.png",
+     "pair": "r4_pair_c6.png",
+     "edges": "r4_edges_c6.png"
+    }
+   },
+   "c1": {
+    "window_px": [
+     0,
+     133,
+     145,
+     363
+    ],
+    "silhouette_iou_window": 0.9584,
+    "edges": {
+     "precision": 0.1226,
+     "recall": 0.125,
+     "f": 0.1238,
+     "chamfer_p50_px": 8.6,
+     "chamfer_p95_px": 147.77,
+     "ref_edge_px": 352,
+     "our_edge_px": 359
+    },
+    "files": {
+     "ref": "ref_c1.png",
+     "ours": "r4_ours_c1.png",
+     "pair": "r4_pair_c1.png",
+     "edges": "r4_edges_c1.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     150,
+     76,
+     234,
+     199
+    ],
+    "silhouette_iou_window": 0.896,
+    "edges": {
+     "precision": 0.1395,
+     "recall": 0.0751,
+     "f": 0.0977,
+     "chamfer_p50_px": 7.0,
+     "chamfer_p95_px": 19.73,
+     "ref_edge_px": 173,
+     "our_edge_px": 86
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "magazine": {
+   "c4": {
+    "window_px": [
+     0,
+     0,
+     163,
+     363
+    ],
+    "silhouette_iou_window": 0.7664,
+    "edges": {
+     "precision": 0.4208,
+     "recall": 0.3131,
+     "f": 0.359,
+     "chamfer_p50_px": 4.0,
+     "chamfer_p95_px": 20.4,
+     "ref_edge_px": 2836,
+     "our_edge_px": 2272
+    },
+    "files": {
+     "ref": "ref_c4.png",
+     "ours": "r4_ours_c4.png",
+     "pair": "r4_pair_c4.png",
+     "edges": "r4_edges_c4.png"
+    }
+   },
+   "c5": {
+    "window_px": [
+     0,
+     0,
+     115,
+     363
+    ],
+    "silhouette_iou_window": 0.8159,
+    "edges": {
+     "precision": 0.3267,
+     "recall": 0.0942,
+     "f": 0.1462,
+     "chamfer_p50_px": 18.37,
+     "chamfer_p95_px": 54.0,
+     "ref_edge_px": 1168,
+     "our_edge_px": 300
+    },
+    "files": {
+     "ref": "ref_c5.png",
+     "ours": "r4_ours_c5.png",
+     "pair": "r4_pair_c5.png",
+     "edges": "r4_edges_c5.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     216,
+     51,
+     387,
+     279
+    ],
+    "silhouette_iou_window": 0.9263,
+    "edges": {
+     "precision": 0.3567,
+     "recall": 0.1566,
+     "f": 0.2177,
+     "chamfer_p50_px": 7.81,
+     "chamfer_p95_px": 50.21,
+     "ref_edge_px": 1162,
+     "our_edge_px": 499
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  },
+  "butt_plate": {
+   "c7": {
+    "window_px": [
+     0,
+     0,
+     141,
+     363
+    ],
+    "silhouette_iou_window": 0.8576,
+    "edges": {
+     "precision": 0.2781,
+     "recall": 0.1923,
+     "f": 0.2274,
+     "chamfer_p50_px": 8.54,
+     "chamfer_p95_px": 48.9,
+     "ref_edge_px": 1581,
+     "our_edge_px": 953
+    },
+    "files": {
+     "ref": "ref_c7.png",
+     "ours": "r4_ours_c7.png",
+     "pair": "r4_pair_c7.png",
+     "edges": "r4_edges_c7.png"
+    }
+   },
+   "q34": {
+    "window_px": [
+     18,
+     30,
+     92,
+     152
+    ],
+    "silhouette_iou_window": 0.9133,
+    "edges": {
+     "precision": 0.0,
+     "recall": 0.0,
+     "f": 0.0,
+     "chamfer_p50_px": 75.0,
+     "chamfer_p95_px": 80.02,
+     "ref_edge_px": 22,
+     "our_edge_px": 50
+    },
+    "files": {
+     "ref": "ref_q34.png",
+     "ours": "r4_ours_q34.png",
+     "pair": "r4_pair_q34.png",
+     "edges": "r4_edges_q34.png"
+    }
+   }
+  }
+ },
+ "budget": {
+  "rifle_LOD0": 49580,
+  "magazine": 6996
+ }
+}

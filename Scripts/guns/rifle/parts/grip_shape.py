@@ -33,7 +33,8 @@ FRONT_B_Z = -82.0               # the traced strap (fitted over Z -67 .. -82) is
 BLOCK_X = 300.0                 # block front face (the trace runs 299.2 at the flange, 300.4 at Z -50, 299.1 at Z -58:
                                 # a swell under a concave top); hidden behind the guard leg in the side view
 FRONT_R = (8.0, 16.0)           # fillets: convex under the block, concave into the strap (the trace: two sharp corners)
-HEEL_R = 4.0                    # heel fillet radius (side-view heel ~R 4 at 2.24 px/mm; trace chamfer-round ~10)
+HEEL_R = 8.0                    # heel fillet radius (2b: c6 draws the heel rounder than round 2's R 4, which stood 4 panel px
+                                # proud of the c6 heel; the trace is a ~10 chamfer-round; round 2: R 4)
 TOE_NOSE = (271.2, -127.4)      # toe nose: foremost point, vertical tangent (trace 270.2 at Z -127.6, pointed)
 TOE_TOP_Z = -116.0              # toe curve joins the traced front strap here ...
 TOE_BOT_X = 261.0               # ... and the traced bottom here

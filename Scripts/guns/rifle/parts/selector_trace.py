@@ -32,7 +32,7 @@ C1_END_R_PX = 16.8                # round rear end (outer outline)
 C1_RING_R_PX = 11.0               # raised washer ring (outer edge; round 2: re-read 14x zoom, 11.0-11.25)
 C1_DOME_R_PX = 7.85               # domed head (round 2: 14x zoom, 15.7 px across; c1 shows no slot)
 C1_EDGE_BAND_PX = 2.3             # double line: edge band width
-C1_NOSE_BOSS_PX = (231.0, 121.0)  # pressed boss on the nose
+C1_NOSE_BOSS_PX = (231.3, 121.9)  # pressed boss on the nose
 C1_NOSE_BOSS_R_PX = 4.5
 C1_NOSE_PIN_R_PX = 1.4
 C1_BEND_PX = ((211.0, 104.0), (209.0, 131.0))     # tab bend line (top, bottom)
@@ -40,11 +40,16 @@ C1_BEND_PX = ((211.0, 104.0), (209.0, 131.0))     # tab bend line (top, bottom)
 # upper edge, rear to front (outer outline)
 C1_UPPER_PX = [(92.0, 94.8), (100.0, 95.6), (110.0, 97.4), (120.0, 99.2), (124.0, 99.4), (127.0, 97.8),
                (130.0, 95.2), (133.0, 93.3), (137.0, 92.4), (141.0, 92.6), (150.0, 94.5), (160.0, 96.8),
-               (170.0, 99.0), (180.0, 101.3), (190.0, 103.5), (200.0, 105.7), (207.0, 107.1), (212.0, 107.3),
-               (218.0, 108.5), (224.0, 110.0), (229.0, 111.5), (233.0, 113.0)]
+               (170.0, 99.0), (180.0, 101.3), (190.0, 103.5), (200.0, 105.7), (207.0, 107.1), (210.6, 107.8),
+               (211.5, 108.9), (218.0, 110.74), (224.0, 112.4)]
+# detail round 2 (second workflow), re-read at 12x (look_q1_tab.png): the tab's top edge starts a step BELOW the
+# lever's outer top line at the bend (c1's notch, 211.5, 108.9) and falls straight to a true semicircle round the pin
+# (centre 231.3, 121.9, r 7.4: top 114.5, right 238.7, bottom 129.3); the old nose was 1.5-2 px taller at the end
+# and pointed at the lower right
 # rounded nose, top to bottom
-C1_NOSE_PX = [(235.5, 115.0), (237.2, 118.0), (237.6, 121.5), (236.8, 125.0), (234.5, 127.9), (231.0, 129.3),
-              (227.0, 129.6)]
+C1_NOSE_C_PX, C1_NOSE_R_PX = (231.3, 121.9), 7.4
+C1_NOSE_PX = [(231.3 + 7.4 * math.cos(a), 121.9 + 7.4 * math.sin(a))
+              for a in np.radians(np.linspace(-90.0, 90.0, 11))] + [(227.0, 129.35)]
 C1_BOTTOM_Y_PX = 128.0            # straight bottom edge (y at the rear end; rises to 130.0 at the nose)
 # crease (lower boundary of the flange), straight; its rear end merges into the upper edge band
 C1_CREASE_PX = [(112.0, 102.6), (211.0, 117.6)]

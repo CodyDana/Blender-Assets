@@ -799,7 +799,7 @@ def dp(pid, src, dims=None, construction=None, box=None, note=None, feature=None
     if dims:
         p["dims"].update(dims)
     if construction:
-        p["construction_form_stage"] = p["construction"]
+        p.setdefault("construction_form_stage", p["construction"])
         p["construction"] = construction
     if box:
         p["box_M"] = box
@@ -979,6 +979,179 @@ dp("receiver", "receiver_right",
    feature={"name": "teardrop_cutout_right", "XZ_top_centre": [372.0, 1.8], "size": [9.5, 9.1],
             "construction": "through cutout 1.3 inside a 0.6 deep pressed rim (c1)"},
    note="receiver_right rounds 1-2 as built; side dimple kept at the spec centre (L3)")
+# ------------------------------------------------------------------------------- detail pass round 2b (2026-10-05)
+# Second detail loop (r2b): every builder re-ran its round 2 on the integrated build; the proposals' round-2b blocks are
+# applied here as built. Deferred items stay in R36 / R40 / R41 / R43 (open_questions). R45 lists what changed.
+DP2 = "review/detail/{}/spec_proposal.json (round 2b)"
+
+
+def dp2(pid, src, **kw):
+    dp(pid, src, **kw)
+    _P[pid]["detail_pass"][-1]["source"] = DP2.format(src)
+    for k in [k for k, v in _P[pid]["dims"].items() if v is None]:      # None = superseded key: drop it
+        del _P[pid]["dims"][k]
+
+
+dp2("selector", "selector",
+    dims={"plate_thickness": "2.0 main plate on a 0.9 skirt (outline step 1.1 wide)", "washer_collar_dia": 10.64,
+          "washer_proud": 1.2, "head_dia": 7.6, "head_height": 1.84, "head": "domed bolt head on a straight skirt, no slot (R47)",
+          "rib": {"proud": 0.20, "front_scale": 0.55, "flanks_deg": [15, 33]},
+          "nose_pin": {"ring_r": 2.2, "ring_proud": 0.24, "pin_r": 0.68}, "edge_bevel": 0.20},
+    construction="One solid 2.0 mm stamped plate: the c1-traced outer outline inset 1.1 mm at full thickness on a 0.9 "
+                 "mm skirt filling the outer outline (c1's outer line, dark band and inner line); a low rounded rib "
+                 "(0.20 proud) along c1's crease whose upward flank is the bright band, the wedge above it a solid face "
+                 "rising to the top edge (no lip). Nose tab a true semicircle round the pin, full thickness, bent out 12 "
+                 "deg, a thin raised ring round a small flat pin. Pivot: raised washer collar r 5.32 x 1.2 with a crisp "
+                 "shoulder and a domed bolt head r 3.80 x 1.84 (no slot; R47). 0.20 mm crisp bevels on plate and skirt. No markings.",
+    note="selector r2b (second loop) as built; supersedes the integration round's valley pocket / centre boss")
+dp2("trigger", "trigger_guard",
+    dims={"blade": "profiled extrusion: 0.8 mm concave finger face with 0.15 edge breaks round the tip, 0.45 rear roll",
+          "tip_width": 2.0, "c1_rows_scale_Z": 0.914},
+    construction="Trigger re-traced from c1's rows scaled into the side opening (x0.914 in Z): broad sloped shoulder, "
+                 "crisp knee, blunt ~2 mm tip; built as a profiled extrusion (concave finger face, edge breaks carried "
+                 "round the tip, rolled rear edge) instead of bevel-modifier rounds.",
+    note="trigger_guard r2b: side L2 trigger IoU 0.895 -> 0.946")
+dp2("trigger_guard", "trigger_guard",
+    dims={"loop_section": "two rounded beads either side of a V groove", "corner_segments": 8,
+          "inner_R": {"rear": 6.0, "front": 8.0}, "outer_R_front": 11.0, "bottom_bar_extra_depth": 0.3,
+          "catch_tab_full_width_to_Z": -33.2},
+    construction="Stamped U loop lofted from a strip section (two rounded beads either side of a V groove, 8-segment "
+                 "corners) on the traced outline (inner R rear 6 / front 8 as c1, outer front R 11); front leg into the "
+                 "flange with a thin front tab full width down to Z -33.2, recessed below; catch housing cheeks to the "
+                 "paddle top (Z -53.87), pin heads r 1.7 set low (0.14 proud, no washer; R47).",
+    note="trigger_guard r2b as built (inner radii were swapped in round 2)")
+dp2("front_sight_ears_post", "front_sight",
+    dims={"ear_thickness": 4.8, "ear_outer_face_Y": 10.0, "ear_inner_gap": 10.4, "drum_dia": 4.0,
+          "ear_rims": "R 2.0 outer faces, R 1.4 inner, R 1.1 window floor / ear-to-floor fillets, down to Z 8.0; top "
+                      "corners R 4.0, rear knee R 8.0 (2 bevel segments)",
+          "window": {"X": [813.4, 827.2], "Z": [12.2, 21.8], "shape": "rounded trapezoid, larger corner radii, rolled "
+                     "rim"},
+          "top_hole": {"XZ": [824.7, 29.9], "boss_dia": 8.4, "hole_dia": 0.0, "rim_proud": 0.62, "rim_width": 0.4,
+                       "face_proud": 0.45, "scribed_groove": "0.45 wide x 0.3 deep, longer sagging curve"},
+          "inner_faces": "blind hole dia 4.8 x 2.0 deep at (829.4, 43.4), round-ended slot 2.4 x 7.0 x 1.4 deep, drum "
+                         "counterbore r 2.4 x 0.9"},
+    construction="Two thick ears (4.8) cast in one with the base, landing 1.0 inside the base flanks (a ledge, R47), every "
+                 "outline and window edge rolled; rounded trapezoid window; raised boss plug (dia 8.4, R47) with a ring "
+                 "rim and a scribed curve on the outer faces; blind hole and slot on the inner faces; windage drum r 2.0 "
+                 "carrying the post.",
+    note="front_sight r2b as built; ear proportion (c3 ~0.75 as wide) still deferred: R36")
+dp2("front_sight_block", "front_sight",
+    dims={"base_section": "superellipse, exponent 3.5 above Z 0.5, 2.4 below",
+          "cross_pin_heads": {"dia": 5.2, "proud": 0.42, "head": "flat, square to the flank"},
+          "rod_lug": "one rounded body X 809.9-830.2 (half width 3.6, bottom Z -15.7, corners R 2.5), notch X "
+                     "830.9-832.5, round rod-end knob X 833.1-837.5"},
+    construction="Cast block: a loft of superellipse sections X 806.1-837.0 (|Y| 11.0, Z -10.3..11.3; square on top "
+                 "where the ears land, round below), rear rim R 2.2, front shoulder R 1.6; ring collar r 9.7 (X "
+                 "836.6-839.6) then a narrow collar r 8.7 to X 848.78; cross pin dia 4.0 at X 830.5 Z -5.0 with flat "
+                 "heads dia 5.2, 0.42 proud; a rounded cleaning-rod lug with a notch and a round rod-end knob.",
+    note="front_sight r2b as built")
+dp2("muzzle_brake", "muzzle_brake", box={"X": [848.82, 880.0], "Z": [-10.1, 11.0], "Y": [-10.1, 10.1]},
+    dims={"shank_r": 8.7, "shank_X": [848.82, 853.0], "step_groove": {"width": 0.75, "depth": 0.32},
+          "body_r": [10.0, 10.1], "body_X": [853.0, 867.0], "face_angle_deg": 37.5, "cut_X_at_Z0": 872.786,
+          "chamber_r": 6.4, "chamber_inner_round": 0.6, "chamber_floor_X": 858.5, "slot_side": "right (-Y) only", "slot_Z": [-7.7, 6.8],
+          "slot_outline": "parts/muzzle_brake.py SLOT_TRACE (closed spline back-projected from c3's edges)",
+          "slot_edge_round": 0.4, "rim_ring": None,
+          "detent_block": {"X": [847.2, 853.4], "top_Z": 11.0, "Y": [-2.3, 2.3], "pin_XZ": [850.2, 9.95]},
+          "flare": None, "knob": None},
+    construction="One turned part: rear shank r 8.7 (X 848.82-853.0, the FSB collar's radius) ending in a groove (0.75 "
+                 "x 0.32) and a step up to a straight body r 10.0 -> 10.1. The front is cut by one plane 37.5 deg from "
+                 "vertical (X 872.786 at Z 0) removing the top front: a flat face band with small rounds round a plain "
+                 "chamber r 6.4 (R47) (floor X 858.5). ONE slot through the right (-Y) wall, a closed spline through c3's own "
+                 "edges (round top Z 6.8, upright rear edge into a long rounded diagonal, flat floor Z -7.7, front edge "
+                 "leaning with the rim, ~1.4 web at the top), outer edge rounded 0.4. A rounded detent block straddles "
+                 "the junction with transverse pin ends. Body measured without the block: length 31.2, dia 20.2 (L4).",
+    note="muzzle_brake r2b as built: the integration round's raised rim ring and flared body are gone (R45)")
+dp2("rear_sight_leaf", "rear_sight",
+    dims={"rail_top_Z": 44.7,
+          "teeth": {"count_per_rail": 11, "pitch": 2.8, "depth": 1.5,
+                    "form": "sawtooth V-grooves across a 2.6 mm strip along each rail's OUTER edge"},
+          "centre_slot": {"width": 5.6, "X": [466.8, 497.8], "through": True},
+          "notch_block": {"width": 20.0, "lobes": 2, "notch_width": 2.0, "notch_bottom_Z": 45.5,
+                          "shoulders": "inner +-7.2 to Z 48.0, outer to 46.7", "bottom_Z": 41.2, "front_X": 452.4}},
+    construction="Ladder leaf: base plate 17 wide with two flat-topped rails (top 44.7) split by a through centre slot "
+                 "5.6 wide; ratchet teeth = 11 sawtooth V-grooves (pitch 2.8, 1.5 deep) along each rail's outer edge; "
+                 "rear notch block as wide as the slider (20) with two lobes either side of the 2.0 U notch and stepped "
+                 "shoulders, wrapping down over the leaf to the slider skirt (0.2 gap). No numerals or tick marks.",
+    note="rear_sight r2b as built")
+dp2("rear_sight_block", "rear_sight",
+    dims={"deck_half_width": 13.0,
+          "shoulder_band": "half elliptical roll / half chamfer behind a 0.9 ledge along the side face's top S-edge",
+          "housing_front_corner_R": 4.0, "rear_corner_R": 3.5,
+          "slot": "short upright slot 1.2 wide down to Z 36.0 (replaces the slanted slot)"},
+    construction="Contoured casting: the side face stops at a swooping S top edge with a 0.9 mm ledge, above it a "
+                 "rolled band to a deck +-13; the front housing's vertical corners rounded R 4 and its top-front corner "
+                 "an arc (the rounded hood); rear vertical corners R 3.5 and a rounded rear lip; transverse rounded bar "
+                 "r 3.3 at X 510.8; two domed screw heads; a short upright slot down to Z 36.0; the slider in a stepped "
+                 "pocket.",
+    note="rear_sight r2b as built")
+dp2("handguard_retainer_lever", "rear_sight",
+    dims={"boss_r": 3.9, "end_r": 3.5, "slot_r": 1.65, "slot_span": [0.27, 0.8], "pin_collar_r": 3.6,
+          "angle_XZ_deg": 45.0},
+    note="rear_sight r2b: link broadened (the 3/4 view draws it ~1.5x wider); position and angle kept (side view)")
+dp2("dust_cover", "receiver_right",
+    dims={"skirt_bottom_Z_ahead_of_step": 9.6,
+          "skirt_cutout": "lifted to Z 12.3 at X 334-337, rising to Z 19.2 at X 372-378.5"},
+    note="receiver_right r2b as built; cutout top 19.2 (21.5 still R40)")
+dp2("receiver", "receiver_right",
+    dims={"rivet_head": "low dome 5.1 dia, 1.0 proud (10 segments right, 8 left)",
+          "pin_right_head": "hollow ring r 0.95-1.75, 0.45 proud (R47; r2b had a dome)", "side_dimple_right_depth": 1.5,
+          "retainer_clip": "hairpin wire loop ~11.6 x 2.6 with its eye at (350, -25)",
+          "rear_vertical_edges_R": 1.5},
+    feature={"name": "ejection_port_rear_band", "X": ["skirt step line", 336.5], "Z": [3.0, 9.2],
+             "construction": "the visible slot starts at the cover's skirt step as a low band (wall top cut to Z 9.2 "
+                             "under the 9.6 skirt edge) above the selector lever's top edge; full-height port from X "
+                             "336.5"},
+    note="receiver_right r2b as built; the teardrop cutout's top centre moves to (372, 2.3) with a 0.9 lip and a dark "
+         "interior (carrier recess to its bottom, right rail gap X 361-383)")
+for f in _P["receiver"]["features"]:
+    if f.get("name") == "teardrop_cutout_right":
+        f.update({"XZ_top_centre": [372.0, 2.3], "lip": 0.9, "interior": "dark: carrier recess to its bottom"})
+dp2("pistol_grip", "grip",
+    dims={"strap_R_front": 9.0, "strap_R_back": 9.0, "strap_R_front_on_block": 7.0, "side_crown": 1.2,
+          "heel_fillet_R": 8.0, "top_rim_round": 1.2,
+          "base": {"flare_per_side": 2.0, "flare_height": 12.0, "roll_under_R": 5.0, "roll_segments": 7,
+                   "cap": "flat", "note": "lofted rings turning to the bottom line below Z -92.8 (no bottom boolean)"},
+          "bottom_round": None},
+    construction="Wood grip on the traced side profile reshaped to c6 (grip_shape.py), section a rounded oblong 31.5 "
+                 "wide with rounder sides (crown 1.2), straps R 9 (R 7 on the top block); the base is lofted: the "
+                 "rings turn parallel to the bottom line, flare 2.0 per side over the last 12 mm and roll under on a "
+                 "5 mm quarter circle to a flat cap; heel fillet R 8; top rim rounded 1.2 under the receiver. Checkered "
+                 "panel per side (features.checker_panel), border real geometry; cells a normal map baked from "
+                 "modelled gable-crested ridges sitting 0.25 below the border; the recess wall rounded 0.4 (2 segments) and a 0.35 band (R47).",
+    note="grip r2b as built: H1 girth 124.7")
+for f in _P["pistol_grip"]["features"]:
+    if f.get("name") == "checker_panel":
+        f.update({"cells": "A 46.0 deg / 1.61 mm gable-crested ridges (profile 0 / 0.72 / 1.0 / 0.72 at 0 / 0.1 / 0.5 "
+                           "/ 0.9 of the pitch), crowns 0.50 above the recess floor (0.25 under the border); B -49.0 "
+                           "deg / 1.72 mm shallow notches to 0.43"})
+dp2("magazine_top_plates", "magazine",
+    box={"Z": [-36.8, -12.4], "Y": [-13.3, 13.3]},
+    dims={"Z_seated": [-36.8, -12.4],
+          "proud": {"centre": 1.3, "corners": 0.8, "form": "domed cap rounding over toward the lip curl, edges "
+                    "rounded 0.75"},
+          "neck": "body necked to 12.0 per side, neck line 0.35 under the plate with a steep 0.6-tall chamfer"},
+    note="magazine r2b as built")
+dp2("magazine_ribs", "magazine",
+    dims={"rib_half_widths": [1.3, 1.4, 1.4, 1.25], "ends": "round (U) pressed ends, crest fading over 3.0 mm", "bottom_ends_above_floor": 14.0,
+          "top_tips": "1.35 under the plate's lower edge (L3 reading -39.19)",
+          "front_bead": {"u": 0.915, "half_width": 1.35, "proud_over_panel": 0.5, "Z_top": -38.6}},
+    note="magazine r2b as built: the front spine fold is now a raised bead")
+dp2("magazine_floor_plate", "magazine",
+    dims={"bottom_rear_swell": "0.55 out over 9 mm from the rear corner, then a 0.45 step to the 1.0 level"},
+    note="magazine r2b as built (L2 0.9688); band spot welds removed (budget)")
+dp2("magazine_lugs", "magazine",
+    dims={"front_knobs": "two rounded pin heads r 1.3 at Z -19.6 / -23.6 standing to Y +-13.25 (inside the reload "
+                         "envelope)",
+          "rear_lug_built": "rounded block from X 368.55, Z -39.6..-36.4, Y +-5.5, under the guard tang, 0.26 in front "
+                            "of the catch at rest"},
+    note="magazine r2b as built; the higher c4 rear knob and the chunky front lug still need the liner changes (R43)")
+dp2("butt_plate", "butt_plate",
+    dims={"end_outline": "c7's end shapes fitted at the plate's own width (distance from the tip and half width in "
+                         "plate widths, END_FIT concave model); section sampled densely, simplified at 0.05 mm",
+          "heel_top_raise": 0.75, "face_crown": 0.25,
+          "screw_head": "flat, 7.0 dia, 0.5 slots at angles re-measured on c7",
+          "counterbore_ring": {"dia": 8.5, "form": "straight counterbore, 3.5 deep (no countersink)"}},
+    note="butt_plate r2b as built; width (BP-5) and the stock end section (BP-1) still R41")
 # magazine Base socket: the round-2 floor plate steps out 1.0 over its front half and its floor line sits 0.86 outward
 MAG_BASE_SOCK = MAG_BASE + 1.4 * FLOOR_NORMAL
 
@@ -1042,7 +1215,7 @@ mag_sockets = [
 # ================================================================================================== spec
 spec = {
     "meta": {
-        "name": "Assault Rifle AR-01", "code": "AR01", "version": "1.1", "date": "2026-10-05",
+        "name": "Assault Rifle AR-01", "code": "AR01", "version": "1.2", "date": "2026-10-05",
         "assets": {"skeletal": "SK_AR01 (+ _LOD1..3, SK_AR01_Skeleton, PHYS_AR01, clips A_AR01_*)",
                    "static_twin": "SM_AR01 (mag merged by default, gun study Q3)", "magazine": "SM_AR01_Mag"},
         "units": "millimetres (Blender builds in metres: / 1000; Unreal cm: / 10)",
@@ -1518,6 +1691,49 @@ spec["resolutions"] += [
                    "the selector's groove, flush butt screws (16 segments), magazine rib ends at the round-end ring count",
      "rule": "B8 ceiling"},
 ]
+
+spec["resolutions"] += [
+    {"id": "R45", "topic": "Detail pass round 2b (second detail loop) integrated (2026-10-05)",
+     "conflict": "every part builder re-ran round 2 on the integrated build (r2b) and filed round-2b proposals; the "
+                 "integration round's muzzle-brake rim ring (R37) and several construction texts no longer describe "
+                 "the parts",
+     "resolution": "the round-2b proposals are applied as built (parts[*].detail_pass, source '... (round 2b)'): "
+                   "selector solid stepped plate + rib + button head in a washer; trigger profiled blade; guard bead "
+                   "section and c1 radii; front sight 4.8 ears, flat pin heads, rounded rod lug; muzzle brake shank + "
+                   "groove + step, straight body r 10.0-10.1 (no rim ring: supersedes R37's construction, its key dims "
+                   "hold), c3-traced slot, detent block; rear sight outer-edge ratchet teeth, two-lobed notch block, "
+                   "rolled block band, broader link; receiver port rear band, domed rivets / pin, deeper right dimple, "
+                   "hairpin clip; grip lofted flared base, rounder sides, gable-crested checker cells; magazine domed "
+                   "top plate, U rib ends, front bead, front knobs, rear lug, swelled floor plate; butt plate c7 ends "
+                   "at the width scale, straight counterbores, heel top flush with the stock. Deferred items keep "
+                   "their entries: R36 (close-up proportions), R40 (port top), R41 (butt plate width), R43 (liner "
+                   "changes for the higher rear knob / chunky front lug)",
+     "rule": "close-up = shape authority; side views = scale / position authority (R35)"},
+    {"id": "R46", "topic": "Butt plate height after the heel raise",
+     "conflict": "the round-2b plate's heel top was raised 0.75 to meet the stock's traced top line (c7 shows no wood "
+                 "above the plate); the plate's Z bounds measure 110.52 against the measured 109.8",
+     "resolution": "butt_height 110.5: inside the measurement's own uncertainty (109.8 +- 0.7); the traced stock top "
+                   "line at the heel (Z 0.43-0.47) and c7 decide where the plate's top sits",
+     "rule": "measurement within its uncertainty; c7 for the shape"},
+]
+spec["resolutions"] += [
+    {"id": "R47", "topic": "Integration round after r2b: focused attempts on the r2b judges' design tells",
+     "conflict": "the r2b blind judges still picked every part confidently; several tells sit inside the authority "
+                 "table (fixable), the rest are close-up proportions (R36 / R41), the port top (R40) or contradict an "
+                 "earlier round's judge",
+     "resolution": "fixed as real geometry: selector domed bolt head (1.84 high) in a 1.2 thick washer with a crisp "
+                   "shoulder; front sight ears land 1.0 inside the base flanks (a visible ledge) and the ear boss is a "
+                   "raised plug (rim 0.62 / face 0.45 proud); muzzle brake chamber r 7.1 -> 6.4 with a 0.6 inner round "
+                   "(thick flat annular face); rear sight block: the short upright slot (a lit shard in c2: 'torn "
+                   "crease') became a rounded scallop r 2.1 cut after the bevels (L3 gap bbox unchanged); right receiver "
+                   "pin at (388, -8) a hollow ring (c1: a small ring round a dark hole); mag catch pin heads low and "
+                   "flush-set (no washer); grip checker border softened (0.4 x 2 round, field band 0.35); magazine ribs "
+                   "x0.8 narrower, crest ramp 3.0, bottom ends 14.0 above the floor plate (spec 16 +- 2); butt plate "
+                   "face crown 0.6 -> 0.25; grip base lifted onto the key bottom Z (L4)",
+     "rule": "R35 authority table; unchanged where a fix needs R36 / R40 / R41"},
+]
+spec["key_dimensions"]["butt_height"] = 110.5
+spec["key_dimensions"]["butt_height_note"] = "R46: 109.8 +- 0.7 measured; 110.5 with the heel top flush with the stock"
 
 spec["fab_original_changes"] = {
     "status": "NOT applied; the user decides. The game build matches the sheet.",

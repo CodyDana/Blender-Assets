@@ -25,13 +25,17 @@ sys.path.insert(0, str(RIFLE))
 from rifle_common import ROOT, SCRATCH, REVIEW, GRIP, SPEC, TRACE  # noqa: E402
 
 MD = SCRATCH / "mag_detail"
-BASE_NPZ = MD / "base" / "form_tris_base.npz"
 MAG_OBJS = ("magazine", "magazine_floor_plate")
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
 
 
 def arg(name, default=None):
     return argv[argv.index(name) + 1] if name in argv else default
+
+
+# --base <dir under scratch/mag_detail>: the snapshot whose object list / neighbours the build uses (round 1-2: base;
+# detail round 2b: base2 = the integrated build of 2026-10-05 02:54)
+BASE_NPZ = MD / arg("--base", "base") / "form_tris_base.npz"
 
 
 # ======================================================================================== Blender: build + checks
@@ -230,7 +234,7 @@ def l2_magazine(npz):
     if "trigger_guard" in names:
         g = lab == names.index("trigger_guard")
         tl[g & (tc[:, 2] > -34.85) & (tc[:, 0] < 368.0)] = keys.index("receiver")
-        tl[g & (tc[:, 0] > 355.3) & (tc[:, 2] > -52.0) & (tc[:, 2] <= -34.85)] = keys.index("mag_catch")
+        tl[g & (tc[:, 0] > 355.3) & (tc[:, 2] > -54.5) & (tc[:, 2] <= -34.85)] = keys.index("mag_catch")    # rifle_silhouette since integration
     if "bolt_carrier" in names:
         tl[(lab == names.index("bolt_carrier")) & (tc[:, 2] > 10.6)] = keys.index("dust_cover")
     ok = tl >= 0

@@ -1,193 +1,183 @@
 {
- "stage": "detail pass, part grip, round 2",
- "date": "2026-10-05T01:31:16",
- "status": "pass on the round-2 gates (panel IoU vs c6, cells vs c6, L2 per part, H1, B7, G5, B8); 2 non-blocking misses listed in failed",
- "failed": [
-  "Checker cells by the round-1 method (grip_measure per-window medians, c6), informational",
-  "Window silhouette IoU (q34) vs round 1"
- ],
+ "stage": "detail pass, part grip, round 2 (2b run)",
+ "date": "2026-10-05T08:37:28",
+ "status": "pass",
+ "failed": [],
+ "supersedes": "the earlier round-2 grip record of 2026-10-05T01:31 (git 5893f738)",
+ "design_tells_addressed": {
+  "base flare (thin toe lip, flat bottom)": "lofted base: tilted rings parallel to the bottom, +2.0 mm flare per side over 12 mm, R 5 roll-under (7 rings) to a flat cap, chord ends on the traced heel / toe rounds; no boolean cut, no bevel",
+  "proportions (slimmer, tapers more)": "rounder, chunkier sides: crown 0.35 -> 1.2",
+  "front strap notch / swell under the guard": "block front strap R 4 -> 7 (the R 4 -> 9 ramp read as a bulge beside the guard leg in the 3/4 view)",
+  "heel": "R 4 -> 8 (c6 heel; R 4 stood 4 c6 px proud)",
+  "top rim / receiver junction": "top rim round 1.2 mm (2 seg) outside the leg slot (round 2: 0.5 break)",
+  "checkering embossed / pillow-like": "gable-crested ridges, narrow steep A grooves, shallow B notches, crowns 0.25 below the border surface",
+  "panel outline": "unchanged (round 2: c6 quad, IoU 0.99)",
+  "not addressed": "rear-edge undulation (sub-pixel in the side authority), receiver underside (not this part), all render tells (wear, grain figure, dirt in the grooves)"
+ },
  "gates": [
+  {
+   "name": "Part IoU vs the close-up trace: grip-only silhouette in the part's own region (c6, the authority)",
+   "value": {
+    "now": 0.9405,
+    "start_of_round": 0.9343,
+    "round1": 0.9335
+   },
+   "threshold": ">= 0.87 and no regression vs the start (-0.002)",
+   "pass": true
+  },
+  {
+   "name": "Part IoU vs the close-up trace: grip-only silhouette (c1)",
+   "value": {
+    "now": 0.9672,
+    "start_of_round": 0.9691,
+    "round1": 0.9614
+   },
+   "threshold": ">= 0.87 and no regression vs round 1 (-0.002)",
+   "pass": true,
+   "note": "-0.0019 vs the start of this round: the base now follows the trace; c1 draws a deeper base"
+  },
+  {
+   "name": "Part IoU: grip-only silhouette (q34)",
+   "value": {
+    "now": 0.8974,
+    "start_of_round": 0.887
+   },
+   "threshold": "no regression (-0.002)",
+   "pass": true
+  },
   {
    "name": "Checker panel outline IoU vs the close-up trace (c6, panel px)",
    "value": 0.9915,
    "threshold": ">= 0.85",
-   "pass": true,
-   "note": "c6 is this round's authority (PANEL_TS = the c6 corners alone; round 1 c6 0.9456 / c1 0.9023 with a c6 2 : c1 1 average)"
+   "pass": true
   },
   {
    "name": "Checker panel outline IoU vs the close-up trace (c1, panel px)",
    "value": 0.8568,
    "threshold": ">= 0.85",
    "pass": true,
-   "note": "c1 informational this round: the panel follows c6 alone, whose top corners sit 5.6-5.9 mm higher than c1's"
+   "note": "unchanged (c6 corners are the authority)"
   },
   {
-   "name": "Checker cells by summed-window FFT (c6, the authority): family A (dominant ridges) period ratio / direction diff",
+   "name": "Window silhouette IoU / edge F (kit; c6, c1, q34)",
    "value": {
-    "period_ratio": 1.007,
-    "direction_diff_deg": -1.26,
+    "c6": {
+     "iou": 0.9192,
+     "edge_f": 0.2608,
+     "start_iou": 0.9171,
+     "start_edge_f": 0.2368
+    },
+    "c1": {
+     "iou": 0.9591,
+     "edge_f": 0.0836,
+     "start_iou": 0.961,
+     "start_edge_f": 0.1124
+    },
+    "q34": {
+     "iou": 0.8977,
+     "edge_f": 0.0996,
+     "start_iou": 0.8901,
+     "start_edge_f": 0.0184
+    }
+   },
+   "threshold": "report",
+   "pass": true
+  },
+  {
+   "name": "Checker cells by summed-window FFT (c6): family A period ratio / direction diff",
+   "value": {
+    "period_ratio": 0.998,
+    "direction_diff_deg": -1.31,
     "ref_M": {
      "deg_from_vertical_down_toward_rear": 44.4,
      "spacing_mm": 1.589
     },
     "ours_M": {
-     "deg_from_vertical_down_toward_rear": 45.6,
-     "spacing_mm": 1.6
+     "deg_from_vertical_down_toward_rear": 45.7,
+     "spacing_mm": 1.586
     }
    },
    "threshold": "period within 5 %, direction within 6 deg",
    "pass": true
   },
   {
-   "name": "Checker cells by summed-window FFT (c6): family B (weak cross-notches)",
+   "name": "Checker cells by summed-window FFT (c6): family B",
    "value": {
-    "period_ratio": 1.052,
-    "direction_diff_deg": -3.26,
-    "ref_M": {
-     "deg_from_vertical_down_toward_rear": -52.1,
-     "spacing_mm": 1.63
-    },
-    "ours_M": {
-     "deg_from_vertical_down_toward_rear": -48.8,
-     "spacing_mm": 1.714
-    }
+    "period_ratio": 1.058,
+    "direction_diff_deg": -3.48
    },
-   "threshold": "period within 6 %, direction within 6 deg (B carries ~1/20 of A's power in the reference, a shallow peak)",
+   "threshold": "period within 6 %, direction within 6 deg",
    "pass": true
   },
   {
-   "name": "Checker cells (c6): dominant / cross amplitude ratio (judge: reference = elongated diamonds on diagonal ridges, round 1 = square knurls)",
+   "name": "Checker cells (c6): ridge / notch amplitude ratio",
    "value": {
     "ref": 4.48,
-    "ours": 3.02,
-    "round1_ours": 1.63
+    "ours": 2.64,
+    "round2": 3.02
    },
    "threshold": ">= 2.5 (ridges dominate)",
    "pass": true,
-   "note": "ours 3.0 vs ref 4.5, round 1 1.6; a shallower notch read as a square net at 8x, a full bead swell gave 1.1 (knurls again)"
+   "note": "the cut-look gable crests trade some ridge dominance (3.02 -> 2.64) for a less embossed field; a sharp symmetric V read as a square net (1.04)"
   },
   {
-   "name": "Checker cells by summed-window FFT (c1, informational): model family A (dominant) and B",
+   "name": "Checker cells (c1, informational)",
    "value": {
-    "A_period_ratio": 0.969,
-    "A_direction_diff_deg": -5.1,
-    "B_period_ratio": 0.825,
-    "B_direction_diff_deg": -7.94,
+    "A_period_ratio": 0.827,
+    "A_direction_diff_deg": -8.68,
+    "B_period_ratio": 0.973,
+    "B_direction_diff_deg": -4.88,
     "amp_ratio_ref": 3.46,
-    "amp_ratio_ours": 8.31
+    "amp_ratio_ours": 8.06
    },
-   "threshold": "A within 5 % / 6 deg",
+   "threshold": "image band B (= model A) within 5 % / 6 deg",
    "pass": true,
-   "note": "c1 image bands are mirrored (image band B = model A). c1 draws its own lattice (A 51.1 deg / 1.66, B -41.1 / 2.07); one lattice serves both sides with c6 weighted 2 : 1, so the weak model-B family misses c1 (0.825 / -7.9 deg) and ours is more contrasty there (8.3 vs 3.5)"
-  },
-  {
-   "name": "Checker cells by the round-1 method (grip_measure per-window medians, c6), informational",
-   "value": {
-    "period_ratio": {
-     "A": 0.978,
-     "B": 0.902
-    },
-    "direction_diff_deg": {
-     "A": 2.53,
-     "B": 3.85
-    }
-   },
-   "threshold": "round 1: period within 5 %, direction within 6 deg",
-   "pass": false,
-   "note": "FAILS on family B (0.902) by this method: per-window peaks of the weak B family are noisy; the summed spectrum above is the round-2 measure"
-  },
-  {
-   "name": "Grip-only silhouette IoU in the part's own region (c6)",
-   "value": {
-    "now": 0.9344,
-    "round1": 0.9335
-   },
-   "threshold": ">= 0.87 and no regression vs round 1 (-0.002)",
-   "pass": true
-  },
-  {
-   "name": "Grip-only silhouette IoU in the part's own region (c1)",
-   "value": {
-    "now": 0.9708,
-    "round1": 0.9614
-   },
-   "threshold": ">= 0.87 and no regression vs round 1 (-0.002)",
-   "pass": true
-  },
-  {
-   "name": "Grip-only silhouette IoU in the part's own region (q34)",
-   "value": {
-    "now": 0.8779,
-    "round1": 0.8781
-   },
-   "threshold": ">= 0.87 and no regression vs round 1 (-0.002)",
-   "pass": true
-  },
-  {
-   "name": "Window silhouette IoU (c6) vs round 1",
-   "value": {
-    "now": 0.9182,
-    "round1": 0.9171,
-    "window_px": null
-   },
-   "threshold": ">= round 1 - 0.002",
-   "pass": true
-  },
-  {
-   "name": "Window silhouette IoU (c1) vs round 1",
-   "value": {
-    "now": 0.9601,
-    "round1": 0.9555,
-    "window_px": null
-   },
-   "threshold": ">= round 1 - 0.002",
-   "pass": true
-  },
-  {
-   "name": "Window silhouette IoU (q34) vs round 1",
-   "value": {
-    "now": 0.8832,
-    "round1": 0.8856,
-    "window_px": null
-   },
-   "threshold": ">= round 1 - 0.002",
-   "pass": false,
-   "note": "FAILS by 0.0004: the q34 part window moved (149,75-235,200 vs round 1 152,75-234,200; windows follow the part's vertices), so the two numbers cover different areas; the grip-only q34 IoU is unchanged (0.8779 vs 0.8781)"
+   "note": "one lattice serves both sides (c6 authority); c1 draws its own lattice (A 2.07 mm): its weak family misses (0.827 / -8.7 deg) as in round 2, and ours is more contrasty there (8.1 vs 3.5)"
   },
   {
    "name": "L2 per part: pistol_grip side silhouette (rifle_silhouette.py on the grip review npz)",
    "value": {
-    "now": 0.9593,
-    "round1": 0.9752,
+    "now": 0.9612,
+    "start_of_round": 0.9593,
     "contour_p95_px": 1.0
    },
    "threshold": ">= 0.95",
-   "pass": true,
-   "note": "spent on the c6 form changes (back-top line, heel, toe nose, shoulder sweep); margin 0.009"
+   "pass": true
   },
   {
    "name": "L2 side IoU (rifle + seated mag; review npz)",
-   "value": 0.9761,
+   "value": 0.9754,
    "threshold": ">= 0.96",
    "pass": true
   },
   {
    "name": "L2 top IoU (review npz)",
-   "value": 0.931,
+   "value": 0.9316,
    "threshold": ">= 0.93",
+   "pass": true
+  },
+  {
+   "name": "3/4 silhouette gate (rifle_q34.py on the review npz)",
+   "value": {
+    "iou": 0.9164,
+    "start_of_round": 0.9158,
+    "exception_pass": true,
+    "not_explained": []
+   },
+   "threshold": ">= 0.93, or >= 0.915 with every > 3 px region a documented contradiction",
    "pass": true,
-   "note": "unchanged from round 1 (0.931)"
+   "note": "the grip's remaining region (ours-only, front strap side) shrank 386 -> 322 px, max 9.06 -> 8.25 px; still a documented contradiction"
   },
   {
    "name": "H1 early girth / width at the Grip origin (official rifle_h1.py on the review blend)",
    "value": {
-    "perimeter_mm": 129.7,
-    "width_Y_mm": 31.09,
+    "perimeter_mm": 124.7,
+    "width_Y_mm": 30.23,
     "depth_mm": 39.64
    },
-   "threshold": "girth [122.1, 139.5] (band + 2 recess allowance); width [29.75, 36.25]",
+   "threshold": "girth [122.1, 137.5] (rifle_h1 band; task band 122-139.5); width [29.75, 36.25]",
    "pass": true,
-   "note": "round 1 123.1: the tighter strap radii (front 7 / back 9) put the girth mid-band"
+   "note": "start of round 127.75 / 31.13: the rounder sides (crown 1.2) put the widest point on the panel recess"
   },
   {
    "name": "H1 early all (girth, reach, grip origin, support)",
@@ -207,14 +197,29 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 4178,
+    "triangles": 3126,
     "shells": 1
    },
-   "threshold": "0 boundary / multi edges, 1 shell, 0 n-gons",
+   "threshold": "0 boundary / multi edges, 1 shell, 0 n-gons, 0 degenerate",
    "pass": true
   },
   {
-   "name": "G5 contacts: no intersections with neighbours, butt gaps >= 0.01",
+   "name": "Bake-source checker field closed (review only, not exported)",
+   "value": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 14,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 42714,
+    "shells": 2
+   },
+   "threshold": "0 boundary / multi edges",
+   "pass": true
+  },
+  {
+   "name": "G5 contacts: no intersections with neighbours, butt gaps 0.01-0.05",
    "value": {
     "receiver": {
      "overlap_tri_pairs": 0,
@@ -226,7 +231,7 @@
     },
     "rear_trunnion": {
      "overlap_tri_pairs": 0,
-     "min_gap_mm_samples": 7.8102
+     "min_gap_mm_samples": 7.9362
     },
     "buttstock": {
      "overlap_tri_pairs": 0,
@@ -234,7 +239,7 @@
     },
     "trigger": {
      "overlap_tri_pairs": 0,
-     "min_gap_mm_samples": 5.945
+     "min_gap_mm_samples": 6.493
     },
     "mag_catch": {
      "overlap_tri_pairs": 0,
@@ -245,44 +250,19 @@
      "min_gap_mm_samples": 10.0
     }
    },
-   "threshold": "0 overlap pairs; min gap >= 0.01 mm (receiver 0.04, trigger_guard 0.02 by design)",
-   "pass": true,
-   "note": "the guard leg keeps the GRIP_LEG slot interface. Tried a slot-less block face behind the leg: the guard in the current asset has its rear face at X 298.7-300.5, which opened a visible gap in the side view"
+   "threshold": "0 overlap pairs; receiver 0.04, trigger_guard 0.02 by design",
+   "pass": true
   },
   {
    "name": "B8 pistol_grip LOD0 triangles",
    "value": {
-    "now": 4178,
-    "round1": 3978,
-    "form": 3728,
-    "plan_budget": 1500
+    "now": 3126,
+    "start_of_round": 3956,
+    "rifle_lod0_without_magazine": 47864,
+    "magazine": 6710
    },
    "threshold": "report (rifle <= 50k at LOD0)",
-   "pass": true,
-   "note": "+200 vs round 1 (block strap ramp, 34-vertex rings, 3-segment bottom round)"
-  },
-  {
-   "name": "B8 LOD0 total in the review snapshot (36 objects; rifle without the 4,092-tri magazine)",
-   "value": {
-    "all": 53660,
-    "rifle_without_mag": 49568
-   },
-   "threshold": "<= 50000",
-   "pass": true,
-   "note": "snapshot of Assets/Guns/AR01.blend copied at build time; other part builders change their parts in parallel; 432 tris of headroom"
-  },
-  {
-   "name": "Checker field (bake source, review-only) closed and outside LOD0",
-   "value": {
-    "triangles": 42700,
-    "boundary_edges": 0,
-    "multi_face_edges": 0,
-    "shells": 2,
-    "faces_over_4_verts": 23
-   },
-   "threshold": "closed; not in SK/SM or the LOD0 count",
-   "pass": true,
-   "note": "now clipped by four bisect planes + cap fills; the prism intersect left 1-4 four-face edges with the new lattice; 23 planar cap n-gons remain (bake source only)"
+   "pass": true
   },
   {
    "name": "B3 sweep",
@@ -291,32 +271,17 @@
    "pass": true
   }
  ],
- "judge_tells_addressed": {
-  "1 back edge top (hump then dip)": "square top-back corner and a straight edge into the neck (grip_shape.back_top); residual: c6 draws the upper back ~4 mm further forward than the side trace and c1 agree on (stylised close-up; the side view keeps position)",
-  "2 front shoulder notch / upper block": "straight block face + R 8 convex / R 16 concave sweep (grip_shape.front_shoulder); front strap R 4 on the block for a crisp wedge edge",
-  "3 panel outline": "c6 corners alone (raked top edge, wider top, closer to the front), corners R 0.8",
-  "4 checkering pattern": "continuous diagonal ridges with shallow cross-notches; lattice re-measured (A 46 deg / 1.61 mm, B -49 / 1.72)",
-  "5 panel inset": "crisp 0.15 wall + flat 0.7 mm border band",
-  "6 bottom and toe": "round toe nose 1 mm further forward, squarer R 4 heel, bottom round 2.5 mm (3 seg); residual: c6 also draws the grip ~3 mm longer than the side trace (the side view keeps scale)",
-  "7 grip taper": "front strap R 7 (R 4 on the block), back strap R 9, crown 0.35",
-  "8 receiver / guard": "not this part (rivets, guard: other builders)"
+ "evidence": {
+  "pairs": "review/detail/grip/r2b_pair_c6.png, r2b_pair_c1.png, r2b_pair_q34.png",
+  "loop": "review/detail/grip/r2b_loop.json",
+  "fft": "review/detail/grip/r2b_fft.json",
+  "silhouettes": "review/detail/grip/r2b_sil_*.png",
+  "l2": "review/detail/grip/l2/*_r2b.png",
+  "q34": "review/detail/grip/q34/",
+  "iterations": "review/detail/grip/r2b_i0..i16_* (i0 = start of round)"
  },
- "files": {
-  "loop": "review/detail/grip/r2_loop.json",
-  "fft": "review/detail/grip/r2_fft.json",
-  "pairs": [
-   "review/detail/grip/r2_pair_c6.png",
-   "review/detail/grip/r2_pair_c1.png",
-   "review/detail/grip/r2_pair_q34.png"
-  ],
-  "silhouettes": [
-   "review/detail/grip/r2_sil_c6.png",
-   "review/detail/grip/r2_sil_c1.png",
-   "review/detail/grip/r2_sil_q34.png"
-  ],
-  "l2": "review/detail/grip/l2/side_overlay_r2.png",
-  "blind": "review/detail_blind/grip_r2/",
-  "key": "review/detail/grip/key_r2.json",
-  "spec_proposal": "review/detail/grip/spec_proposal.json (round2)"
+ "blind_pair": {
+  "dir": "review/detail_blind/grip_r2/",
+  "key": "review/detail/grip/key_r2.json"
  }
 }

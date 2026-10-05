@@ -56,10 +56,30 @@ class PartDef:
         self.post_recipe = []                             # bevel passes after post_cutters
 
 
+SMALL_FEATURE_MM = {2: 14.0}          # LOD2+: unions / cutters whose box diagonal is under this are left out
+
+
+def _lod_filter(meshes):
+    """At gunlib.lod level >= 2 drop small boolean features (pins, pin holes, tiny slots and bumps: under ~1 px at the
+    LOD2 switch distance); the texture painted from LOD0 still shows them."""
+    from . import lod as _lod
+    lim = SMALL_FEATURE_MM.get(min(_lod.LEVEL, 2))
+    if not lim:
+        return list(meshes)
+    out = []
+    for m in meshes:
+        V = m.verts() if isinstance(m, Mesh) else None
+        if V is not None and len(V) and float(np.linalg.norm(V.max(0) - V.min(0))) < lim:
+            continue
+        out.append(m)
+    return out
+
+
 def build_part(p: PartDef, coll, offset) -> "bpy.types.Object":
     import bpy                      # lazy: PartDef itself is plain Python (numpy sweeps import the part modules)
     from . import bl
     t0 = time.time()
+    p.unions, p.cutters, p.post_cutters = _lod_filter(p.unions), _lod_filter(p.cutters), _lod_filter(p.post_cutters)
     base = Mesh()
     for s in p.solids:
         base.extend(s)

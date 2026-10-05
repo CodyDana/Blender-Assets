@@ -1,0 +1,99 @@
+{
+ "stage": "2 form - detail pass, user fix checklist (2026-10-05)",
+ "date": "2026-10-05",
+ "status": "pass",
+ "quality_bar": "user 2026-10-05: exact match on the side / top / 3-4 views (silhouette + proportion gates, re-run below, all pass); small parts to the real stamped-receiver 7.62x39 pattern with the close-ups as guidance; realism judges decide; blind tests reported, not blocking",
+ "stage2_gates": {
+  "file": "gates/form.json",
+  "status": "pass",
+  "summary": {
+   "L2 side IoU": 0.9763, "L2 top IoU (masked)": 0.9304, "L2 true-left vs RIGHT panel": 0.9179,
+   "L2 per part": "21 / 21 (front_sight_block 0.9518 >= 0.95: closest to its limit, was 0.9562; pistol_grip 0.9598; muzzle_brake thin-part contour rule passes, IoU 0.9017)",
+   "L2 3/4": "IoU 0.9171 < 0.93 and contour P95 5.66 > 3 FAIL as raw gates; passes ONLY through the documented exception (IoU >= 0.915, 18 residual regions > 3 px: 16 classified 3/4-panel contradictions + 2 magazine physical minimum), the same rule and classifier as the form stage (0.9167 then)",
+   "L3": "15 / 15 (was 14 / 14: the ear-boss feature is now actually measured, see measurement_changes)",
+   "L4": "26 / 26",
+   "B3": "bolt / trigger / selector / mag_release / sight_rear sweeps 0 intersections, clearances in row (bolt 0.25, selector 0.175 to rivets)",
+   "G5": "0 static intersections; butt-joint gaps min 0.0149 mm over 34 pairs",
+   "B6a / B7 / B10": "pass / 36 of 36 closed / deny list clean",
+   "B8": "rifle LOD0 49810 <= 50000 (target 45k: above it, 190 under the ceiling); magazine 6984 <= 7000",
+   "H1": "grip width 31.59 in [30, 36], girth 125.2 in [122.1, 137.5]; trigger reach 70.2; Grip socket 46.0; SupportHand -0.01"
+  }
+ },
+ "checklist": {
+  "1 grip": {
+   "done": "real-pattern DIAMOND checkering: two equal crossed V-cut families at 1.5 mm pitch (pyramids with a small worn flat top, tops 0.05 under the border surface = cut into the wood; corner quads split through the odd corner so the facets are planar); panel border FOLLOWS the grip outline (back edge 13.5 inside the back strap, front edge 8.5 -> 6.0 inside the front strap, raked top, bottom parallel to the sloped base) with R 3.5 corners; the field fades to the groove floor over 0.35 at its curved edge; section fuller and rounder: width 30 -> 31.6, side crown 1.2 -> 2.0 peaking forward of mid-depth (GRIP_BELLY 0.55); top rim round 1.2 x2 -> 2.6 x3 (rounder shoulder under the receiver)",
+   "files": ["Scripts/guns/rifle/parts/grip.py", "Scripts/guns/rifle/parts/grip_checker.py"],
+   "note": "the diamonds are the normal-map BAKE SOURCE (user default: crisp normal map from modelled pyramids, real-geometry panel border); the LOD0 grip carries the recessed panel; review renders include the field. LOD0 grip 3706 -> 2774 tris (the old panel cut was costlier)."
+  },
+  "2 front sight": {
+   "done": "the tower TAPERS: outer ear faces are one plane per side, |Y| 10.0 at Z 11 -> 8.0 at the top (ears 2.8 thick at the top, 4.8 at the base); ear rolls 2.0 -> 1.4 / inner 0.98 so the worn rounded tops keep a flat (ear top Z 49.4 unchanged, L4); top corners R 4 -> 5; a raised round windage-drum boss (flat face 1.0 proud of the tapered face, 0.3 rolled edge, square to the face); trapezoid window (wider at the bottom, kept); flat cross-pin heads (kept); STEPPED cleaning-rod lug (full-width rear tier, a 1 mm step in to a narrower 0.6 shallower front tier, notch, rod-end knob, rounded nose); the brake detent as a small boss on the front collar (housing r 1.9 standing 1.0 proud, rolled top, pin head r 0.75)",
+   "files": ["Scripts/guns/rifle/parts/front_sight.py"],
+   "fixes_on_the_way": "a clamped taper made the outline caps non-planar (non-manifold window corners): the taper is one unclamped plane; the planar-face normal fix now also takes the tapered planes (a shading fold crossed the ear)"
+  },
+  "3 muzzle brake": {
+   "done": "real-pattern slant brake: straight body r 9.7 behind a HEAVY ROUNDED RIM BAND r 10.1 (3.0 long, smoothstep step 0.9) with heavier face rounds (outer 1.0 top -> 1.6 chin); a BIG OVAL side port (13.2 x 6.0, long axis parallel to the slant face) 1.2 behind the band; flat-floored straight chamber r 6.7 (no cone), floor at X 857.4 with the bullet hole, inner wall visible; detent block removed (it is the boss on the front sight base); cut plane XC 872.786 -> 872.943 keeps the key length 31.2 (dia 20.2 = the band)",
+   "files": ["Scripts/guns/rifle/parts/muzzle_brake.py", "Scripts/guns/rifle/parts/muzzle_brake_geo.py"],
+   "deviation": "spec R38 kept the detent on the brake; the user checklist moves it to the front sight base (applied)"
+  },
+  "4 dark steel": {
+   "done": "every steel part uses the one RL_Steel; its roughness range 0.34-0.58 -> 0.42-0.64 (no polished / chrome read on the brake, trigger, pins); butt screws moved from the worn steel to RL_Steel (only the butt plate keeps the spec's worn finish)",
+   "files": ["Scripts/guns/gunlib/look.py", "Scripts/guns/rifle/rifle_detail.py", "Scripts/guns/rifle/rifle_realism.py"]
+  },
+  "5 receiver right": {
+   "done": "charging handle KNOB: collar r 2.6 out of the stem, rounded shoulder to r 4.3, flat outer face rolled 0.9 (inside the old tab's footprint and HANDLE_Z, B3 bolt sweep re-run); bolt carrier LAYERED: lit top bar, a face stepped in 1.1 (Z 9.5-14.2), the deep recess below; dust cover section slightly rounded (skirt bows 0.3 in at its foot, crease kept); FLAT-TOPPED rivets; the wire hairpin replaced by a stamped DETENT PLATE (12.4 x 4.4, 0.75 proud, rolled edges) above the trigger guard; the rear SLING LOOP on the rear trunnion's right side (1.5 mm wire D, bow tilted 25 deg out, inside the side silhouette)",
+   "files": ["Scripts/guns/rifle/parts/receiver_right.py", "Scripts/guns/rifle/parts/receiver_right_cover.py"],
+   "not_done": "a shallower crease (0.3-1.0 tried) makes the cover's weighted bevel catch 250-650 more edges: over the triangle ceiling, kept at 1.3; the recoil-spring-guide button through the cover's rear hole is unchanged (it already stands 1.5 proud through the cover's rear end)"
+  },
+  "6 rear sight": {
+   "done": "FINE ratchet teeth along both rails' outer edges (pitch 2.8 -> 1.45, depth 0.75, steep rear flank), sculpted base side wall with a clearer step (ledge 0.9 -> 1.4) and a rounder roll (0.35 -> 0.6), slider block kept; no numerals or marks",
+   "added": "the ADS shot showed the traced slider top (Z 48.5) BLOCKING the sight line in front of the notch (45.5): a 2.4 wide sight groove now runs through the slider roof along the sight line (side silhouette and the L3 slider reading at Y 6.6 unchanged); the post now shows in the notch",
+   "files": ["Scripts/guns/rifle/parts/rear_sight.py"],
+   "budget_note": "pitch 1.25 was tried first (+1100 tris); 1.45 fits the ceiling"
+  },
+  "7 magazine": {
+   "done": "narrow SHALLOW stamped ribs (half width 1.0-1.1, 0.75 proud, ends tapered over 5.5 mm from 15 % height), the thin front-edge rib (half width 0.75, 0.3 on the front panel), a MULTI-STEP front locking lug (three tiers stepping back down its front, all inside the reload-path envelope LUG_FRONT, and stepping in width 4.6 / 5.6 / 4.8)",
+   "files": ["Scripts/guns/rifle/parts/magazine.py"],
+   "note": "rib bottom ends stay at the spec's 16 +- 2 lower limit (14 above the floor plate); L3 rib tips -38.94 (err 0.44)"
+  },
+  "8 butt plate": {
+   "done": "ONE THICK rounded bevel band (1.6 x3 -> 3.0 x3), no inner panel; PLAIN 90 deg COUNTERSINKS (4.2 shank bore) with flush flat countersunk heads (top 0.08 under the face) and one real slot each",
+   "files": ["Scripts/guns/rifle/parts/butt_plate.py"],
+   "fixes_on_the_way": "G5: the bore floor / countersink foot fillets (plain 52 deg break) and the screw's concave shank-cone fillet met inside the hole (302 intersecting triangle pairs): holes excluded from the plate breaks, screw bevel limit 40 -> 50 deg, screw revolve 24 segments like the hole cutter"
+  }
+ },
+ "measurement_changes": [
+  "L4 magazine.thickness = Y bounds - 2 x RIB_H (was - 2.0, which assumed 1.0 ribs); the body is 26.0",
+  "L3 right rivets: apex = centroid of the points within 0.05 of the most proud one (flat-topped heads and the detent plate; was the first most-proud point found); max error 0.958",
+  "L3 front-sight ear boss: measured as proud of the TAPERED face by 0.5; before this fix the -10.75 threshold sat above the r2b boss and the feature was SILENTLY SKIPPED (L3 read 14 / 14); now 15 / 15, error 0.031"
+ ],
+ "spec_proposals": [
+  "R48 (proposal): pistol_grip width_Y 30 -> 31.6 (grip.GRIP_W = spec + 1.6; user checklist 'fuller, rounder')",
+  "R49 (proposal): brake detent = small boss on the front sight base X 845.2 (supersedes R38's detent on the brake)",
+  "R50 (proposal): rear sight slider carries a 2.4 sight groove along the sight line",
+  "R51 (proposal): realism / ADS sight picture = post tip level with the notch top (the spec's sight_line through the notch BOTTOM hides the tip on the notch floor)"
+ ],
+ "triangles": {"rifle_lod0": 49810, "magazine": 6984,
+  "trims_to_fit": "front sight base section 40 -> 34 points, right rivets 10 -> 8 segments, carrier groove dropped, butt rim 3 segments, rear-sight teeth pitch 1.45"},
+ "renders": {
+  "early_crops": ["WorkFiles/guns/rifle/review/early/ours_receiver.png", "WorkFiles/guns/rifle/review/early/ours_frontsight.png",
+                  "WorkFiles/guns/rifle/review/early_compare/after_detail_fix.png"],
+  "early_blind_pairs": "WorkFiles/guns/rifle/review/early_blind2 (key review/early_key2.json: ours = A in pair 01, B in pair 02)",
+  "per_part_crops": "WorkFiles/guns/rifle/review/detail/<part>/fix_pair_<panel>.png (+ fix_crops.json)",
+  "realism_form": ["WorkFiles/guns/rifle/review/realism_form/fp_35cm.png", "ads_55deg.png", "tp_3m.png", "hero_34.png", "contact.png", "shots.json"],
+  "look": "ROUGH LOOK (review only, not the final textures)"
+ },
+ "closeup_window_iou_r4_to_fix (informational; close-ups are not to scale)": {
+  "front_sight c3": [0.8618, 0.857], "muzzle_brake c3": [0.8158, 0.7947], "magazine c5": [0.8159, 0.8206],
+  "grip c6": [0.9165, 0.9166], "receiver_right c1": [0.9102, 0.9105], "rear_sight c2": [0.9449, 0.9448], "butt_plate c7": [0.8576, 0.8576]
+ },
+ "blind_and_realism_judges": {
+  "run": false,
+  "why": "this stage has no separate judge agent; the builder knows which image is which and cannot judge blind. The pairs and the realism set are ready for the orchestrator's judges (not blocking under the 2026-10-05 bar).",
+  "builder_by_eye_open_tells": [
+   "render: no grime, wear patina or wood figure (ROUGH LOOK, not final textures)",
+   "front sight: c3 / q34 draw the ears ~0.7-0.8 as wide front-to-back (R36, side trace kept); from the c3 camera the ears still read as two plates with a gap (the real pattern has the gap)",
+   "c1 draws the cover taller and the port lower (R40 / L4, not changed)",
+   "butt plate width vs c7 (R41, not changed)"
+  ]
+ }
+}

@@ -165,7 +165,7 @@ def kit() -> DetailKit:
         "sheet": str(SHEET), "panels": PANELS, "parts": parts_cfg(), "npz": str(SCRATCH / "form_tris.npz"),
         "blend": str(render_blend()), "offset_M": [float(v) for v in GRIP], "wood_slots": ["M_AR01_Furniture"],
         # spec finish butt_plate_lacquer_worn ('more bare than anywhere else'; sheet sample 78 vs the receiver's 60)
-        "worn_steel_objects": ["butt_plate", "butt_screws"],
+        "worn_steel_objects": ["butt_plate"],     # detail fix (user checklist 4): the screws are dark blued steel
         "review_dir": str(DETAIL_REVIEW), "scratch_dir": str(DETAIL_SCRATCH), "blender": gunlib.BLENDER,
         "ss": 3, "samples": 96, "env": 0.55, "light": 1.35})
 

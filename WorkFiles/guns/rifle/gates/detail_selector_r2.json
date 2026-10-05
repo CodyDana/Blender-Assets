@@ -1,27 +1,27 @@
 {
- "stage": "detail pass: selector round 2",
- "date": "2026-10-05T01:26:08",
+ "stage": "detail pass: selector round 2 (second workflow run)",
+ "date": "2026-10-05T08:27:53",
  "status": "pass",
- "note": "status covers the part gates; the triangle line fails only against the rifle-wide budget that the form build already exceeded",
- "method_change": "round 1's pressed edge band + flat lower flange read as a thin rim round a recessed panel with a groove; round 2 is one solid plate with a dark edge groove and a tilted valley wedge whose crease wall faces up. A raised-rib variant (the judge's word) was built and rendered: its lower wall faces down under the upper-left key and renders dark, the opposite of c1, so it was rejected.",
+ "note": "part gates pass; the blind judge has not seen this round yet (pair review/detail_blind/selector_r2, ours = B)",
+ "method_change": "Starting point was the integration build's selector (r3: deep valley pocket with a lip on all sides, flat chamfered head with a centre boss). Every round-1 judge tell on the lever was the same fault seen three ways: the wedge was a POCKET and the double outline was a rim standing UP. Now: (1) one solid 2.0 mm plate whose outline step goes DOWN: main plate = traced outline inset 1.1 mm, on a 0.9 mm skirt filling the outer outline (c1's outer line / dark band / inner line), the tab full thickness to the outer line (c1's notch); (2) the face shaped as real geometry: a low rounded RIB along c1's crease (0.20 mm proud, broad 33 deg up-facing upper flank = c1's bright band, tapering to the front, running out into the top edge behind the hump) and the wedge above it a solid face rising to 0 at the plate's top edge (no lip anywhere); (3) large low-crowned button head on a raised washer (no slot, no centre boss); (4) tab re-traced at 12x: a true semicircle round the pin, top edge starting a step below the lever's outer line, a thin raised ring round a small flat pin; (5) bevel fix: the plate and skirt prisms are bevelled (0.20 mm) while still clean, before the relief and unions. Blender's bevel overlap clamp is global; on the finished part it had shrunk every bevel to 0.01-0.04 mm (r3 included, measured on the chamfer strips). Measured now: chamfer strip median 0.27 mm (= 0.19 mm bevel).",
  "gates": [
   {
    "name": "Selector outline IoU vs c1 trace, lever frame",
-   "value": 0.9926,
+   "value": 0.9932,
    "threshold": ">= 0.95",
    "pass": true
   },
   {
    "name": "Selector outline IoU vs c1 trace, panel px at the solved selector c1 camera (c1 pose)",
-   "value": 0.9704,
+   "value": 0.9603,
    "threshold": ">= 0.95",
    "pass": true
   },
   {
    "name": "Selector outline IoU vs side-view trace (info; the c1 and side traces disagree by the same amount)",
    "value": {
-    "ours_vs_side": 0.8088,
-    "c1_trace_vs_side_trace": 0.8115
+    "ours_vs_side": 0.8081,
+    "c1_trace_vs_side_trace": 0.8119
    },
    "threshold": "info (L2 gates the selector by the L3 pivot only)",
    "pass": true
@@ -36,12 +36,9 @@
    "pass": true
   },
   {
-   "name": "c1 edge agreement F (2 px)",
-   "value": {
-    "r1_final": 0.3339,
-    "r2_final": 0.3013
-   },
-   "threshold": "info",
+   "name": "c1 edge agreement F (2 px), kit window",
+   "value": 0.5446,
+   "threshold": "info (r3 integration build at this camera: 0.4108)",
    "pass": true
   },
   {
@@ -53,7 +50,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 3636,
+    "triangles": 2500,
     "shells": 1
    },
    "threshold": "0 boundary / multi / wire edges, 1 shell",
@@ -62,36 +59,38 @@
   {
    "name": "Selector triangles (LOD0)",
    "value": {
-    "r1": 2856,
-    "r2": 3636,
-    "delta_vs_r1": 780,
-    "form_stage": 1322
+    "r2_this_run": 2500,
+    "r3_integration": 1836,
+    "delta": 664,
+    "rifle_total_estimate": 49358
    },
-   "threshold": "rifle LOD0 total <= 50k (the form build was already 53210 before the detail pass)",
-   "pass": false,
-   "note": "+780 over r1; trims available if needed: dome 24 -> 16 segs, washer 28 -> 20, groove path max step 2.5 -> 4 mm"
+   "threshold": "rifle LOD0 total <= 50k (48694 after integration)",
+   "pass": true
+  },
+  {
+   "name": "Plate bevel actually applied",
+   "value": {
+    "chamfer_strip_median_mm": 0.27,
+    "r3_integration": 0.038
+   },
+   "threshold": "> 0.1 mm (crisp bevel, not clamped away)",
+   "pass": true
   },
   {
    "name": "B3 selector sweep 0..32 deg",
    "value": {
-    "steps": 432,
+    "steps": 435,
     "intersecting_steps": 0,
     "min_clearance_mm": 0.1749,
     "min_with": "rivets",
     "rest_clearance_mm": 0.199,
     "end_clearance_mm": 0.1749
    },
-   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "threshold": "0 hits, clearance 0.10-0.30 mm",
    "pass": true
   },
   {
-   "name": "Static intersections with the selector at rest",
-   "value": [],
-   "threshold": "none",
-   "pass": true
-  },
-  {
-   "name": "Contact gaps",
+   "name": "Static gaps",
    "value": [
     {
      "a": "receiver",
@@ -104,45 +103,20 @@
      "min_gap_mm": 0.5
     }
    ],
-   "threshold": "hinge >= 0.1",
+   "threshold": "receiver 0.1-0.3 (hinge row), no static intersections",
    "pass": true
   }
  ],
- "judge_r1_tells": {
-  "fixed_in_part": [
-   "thin outline / recessed panel / middle groove -> one solid plate, dark edge groove with lit lips, tilted valley wedge with a lit crease wall",
-   "flat slotted pivot -> stepped washer collar + high plain dome, no slot",
-   "thin hump kink -> the hump keeps the traced outline (IoU gate) but now carries the groove and starts the wedge, so it reads as part of the rib",
-   "narrow rounded tail with a dot -> plain paddle tab (no groove), the groove and wedge end squarely at the bend (the step), thin ring round the pin"
-  ],
-  "not_this_part": [
-   "extra rivet and the missing hook-shaped spring clip below the lever (receiver_right)",
-   "flat ledge pressed into the receiver under the lever's lower edge (receiver_right)",
-   "dust cover / ejection port geometry and the overlap shadow gap at the top (receiver_right / dust cover owner)"
-  ],
-  "render_only": [
-   "polished dome highlight, wear, photographic sharpness (ROUGH LOOK is one steel material per object)"
-  ]
- },
- "iterations": {
-  "s2a": "raised plateau rib: the line along its lower edge renders dark (faces down); rejected",
-  "s2b/s3": "planar valley: the lit crease wall reads; blunt rear notch; a collection boolean dropped the groove (fixed: cutters one at a time)",
-  "s4": "valley swept along the crease with fade/taper: shading streaks; rejected",
-  "s5": "two-plane valley floor in one cutter, kept below the face: clean; the line fades in at the rear and thins forward",
-  "s6/s7": "micro edges made Blender's global bevel clamp shrink every bevel: edges < 0.05 mm collapsed first; adaptive groove path; 1-segment bevel (3682 tris, same look as 2)",
-  "final_r2": "lips widened (groove 0.60-1.40 mm) and bevel 0.28 mm for stronger rim lines; full B3 sweep"
- },
  "files": {
-  "module": "Scripts/guns/rifle/parts/selector.py",
-  "trace": "Scripts/guns/rifle/parts/selector_trace.py",
-  "loop": "Scripts/guns/rifle/parts/selector_dev.py",
-  "look_stack": "Scripts/guns/rifle/parts/selector_look.py",
-  "pair_c1": "WorkFiles/guns/rifle/review/detail/selector/final_r2_pair_c1.png",
-  "pair_q34": "WorkFiles/guns/rifle/review/detail/selector/final_r2_pair_q34.png",
-  "iou_overlay": "WorkFiles/guns/rifle/review/detail/selector/final_r2_iou_c1.png",
-  "result": "WorkFiles/guns/rifle/review/detail/selector/final_r2_result.json",
-  "spec_proposal": "WorkFiles/guns/rifle/review/detail/selector/spec_proposal.json",
-  "blind": "WorkFiles/guns/rifle/review/detail_blind/selector_r2/",
+  "pair_c1": "WorkFiles/guns/rifle/review/detail/selector/r2v2_pair_c1.png",
+  "pair_q34": "WorkFiles/guns/rifle/review/detail/selector/r2v2_pair_q34.png",
+  "iou_c1": "WorkFiles/guns/rifle/review/detail/selector/r2v2_iou_c1.png",
+  "result": "WorkFiles/guns/rifle/review/detail/selector/r2v2_result.json",
+  "blind": "WorkFiles/guns/rifle/review/detail_blind/selector_r2/{A,B}.png",
   "key": "WorkFiles/guns/rifle/review/detail/selector/key_r2.json"
- }
+ },
+ "open": [
+  "Review look: the reference's pivot head is bright polished steel; RL_Steel is one dark material per object, so our head renders dark. Needs a per-face worn/polished finish in gunlib.look (not this part's file) or the final textures.",
+  "3/4 view: the reference seems to draw the pivot ~8 panel px further right than ours; position is the spec's L3 pivot (side view), unchanged here."
+ ]
 }

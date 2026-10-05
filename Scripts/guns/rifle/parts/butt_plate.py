@@ -45,6 +45,20 @@ Detail round 2 (2026-10-05), from the round-1 blind judge's tells (round 1 = A, 
     0.004 of the sharp corner; now >= 0.016 everywhere); coplanar faces are merged before triangulating (2100 -> 1992).
   NOT fixable here: c7 draws the plate ~0.65x the TOP width with wood beside it (the TOP panel shows a flush steel
   cap, 36.5 at X 5.7): proposal BP-5. The stock's faceted end section is the stock's (BP-1).
+
+Detail round 2b (2026-10-05, re-run of round 2 on top of the integration round; butt_plate_ends.py, butt_plate_gaps.py):
+  * ends at the WIDTH scale: with c7 at aspect 0.22 and ours 0.34, the unit-box fit left each end's arch too flat for
+    our width and a pointed tip. c7's half-width vs distance from the tip, both in plate widths, is the target for the
+    end regions (END_HEEL / END_TOE), fitted by the same concave model (END_FIT): end IoU in that frame 0.932 / 0.936
+    -> 0.967 / 0.974 (heel / toe); unit-box IoU 0.981 -> 0.952 (the price: the unit box assumes c7's aspect).
+  * the section is sampled densely and Douglas-Peucker'd (SEC_TOL 0.05): the caps are smooth arcs, not the cosine
+    rows' chamfer facets.
+  * heel top up 0.75 (HEEL_RAISE), flush with the stock's top line: no strip of stock end grain above the plate.
+  * screws: a straight counterbore to the spec ring 8.5 round the 7.0 head (c7's dark gap ring; the 45 deg countersink
+    rendered as a bright cone), 3.5 deep, flat heads (the 0.08 dome still shaded as a star), 0.5 slots at c7's angles
+    (re-measured; round 2 had the toe screw mirrored).
+  * rim stays one 1.6 rolled band (c7's dark band measures 4.2 % of the plate width = 1.55 at 36.9; 2.4 was tried and
+    read no darker: its tone is the finish's, BP-4).
 """
 from __future__ import annotations
 
@@ -54,24 +68,30 @@ import numpy as np
 
 from rifle_common import SPEC
 from gunlib import geo2d as G
+from gunlib import lod as LOD
 from gunlib import mesh as MS
 from gunlib.parts import PartDef
 from rifle_parts import GAP
 from rifle_parts2 import xprism
 
 HALF_W = 18.45                      # spec width 36.9 (TOP), the plate's widest row
-SEC_TOP, SEC_BOT = -0.14, -109.91   # the profile rows span the side outline (heel top, toe); the tips stand TIP_OUT
+HEEL_RAISE = 0.75                   # round 2b: the heel top rises 0.75 (to Z 0.51-0.61, the stock's top line there is
+                                    # 0.43-0.47): no strip of the stock's end grain above the plate (c7 shows none; the
+                                    # round-1 judge's "odd light rectangle sticking up at the top")
+SEC_TOP, SEC_BOT = -0.14 + HEEL_RAISE, -109.91   # the profile rows span the side outline (heel top, toe); tips stand TIP_OUT
 TIP_OUT = 0.4                       # beyond it, so the outline trims a short blunt flat and no faces nearly coincide
 # c7 half-width profile (v = 0 heel tip .. 1 toe tip), round 2 (butt_plate_dev.py profile: round-1 fit corrected by
 # the c7 / rendered row-width ratio, then fitted):
 #   f(v) = (1 - s^a)^b (1 - k s^2), s = (VC - v) / VC above the widest row, (v - VC) / (1 - VC) below it
 C7_FIT = {"vc": 0.4042, "a_top": 12.0, "b_top": 0.6106, "k_top": 0.4001,
           "a_bot": 10.4141, "b_bot": 0.3641, "k_bot": 0.2337}
-CROWN = 0.6                         # rear face convex across the width: 0.6 forward at |y| = HALF_W + 2 (see crown_dx)
+CROWN = 0.25                        # rear face convex across the width: 0.25 forward at |y| = HALF_W + 2 (see crown_dx)
+                                    # (integration r2b: 0.6 -> 0.25; the r2b judge read the face as domed / pillowed
+                                    # where c7's face is flat with straight edges)
 TILT = 5.23                         # rear face tilt, toe forward (spec dims)
-RIM_W = 1.6                         # the face's edge: one rounded band into the skirt (integration round: 3 segments, was a
+RIM_W = 3.0                         # DETAIL FIX (user checklist 8): ONE THICK rounded bevel band (1.6 -> 3.0, 4 seg). Was: the face's edge: one rounded band into the skirt (integration round: 3 segments, was a
                                     # 1.0 45 deg band + a raised lip; judge: 'one thick dark rounded bevel band', no inner border)
-RIM_SEG = 3
+RIM_SEG = 3                         # (round 2b measured c7's dark band at 4.2 % of the plate width: 1.55 at 36.9)
 EDGE_R = 0.3                        # its two edges broken 0.3
 POCKET_INSET, POCKET_D = 2.2, 0.0   # integration round: NO raised lip (round 2 had 0.4; the judge read it as an extra
 #                                     stepped inner border the reference does not have). Round 2: a lip 0.4 proud of the face whose outer
@@ -81,19 +101,25 @@ Y_EXT = HALF_W + 2.0                # the side-outline body spans |y| <= Y_EXT (
 SCREW_Z = (-10.0, -87.5)
 FLAT_HALF = 5.4                     # half height of the flat face strip round each screw (bore 4.25 + lip 0.4 + margin)
 HEAD_R = 3.5                        # spec head 7.0
-HOLE_R = 3.55                       # 0.05 radial gap round the head (integration round: was 0.15, read as a recessed ring)
-CSK_R = 4.25                        # 45 deg countersink to the spec ring 8.5: HOLE_R at depth 0.6, CSK_R at the face
+HOLE_R = 2.1                        # DETAIL FIX (user checklist 8): PLAIN COUNTERSINKS: a 4.2 shank hole under a 90 deg (45 deg
+                                    # half-angle) countersink to the spec ring 8.5, the flat slotted head flush in it.
+_HOLE_R_R2B = 4.25                  # round 2b: a straight counterbore to the spec ring 8.5, 0.75 radial gap round the
+                                    # 7.0 head: the dark gap ring c7 draws (head / ring 0.85 on c7). Integration round had a
+                                    # 0.05 gap + 45 deg countersink, which rendered as a bright cone round the head
+CSK_R = 4.25                        # countersink outer radius at the face (== HOLE_R: none)
 BORE_R = CSK_R                      # (the rim predicate keeps clear of the countersinks)
-RING_DEPTH = 0.2                    # head edge below the face
-BORE_DEPTH = 2.2                    # hole depth (hidden under the head)
-DOME = 0.08                         # head dome height (integration round: flat, flush heads; judge: ours read 'domed bosses')
-SLOT_W, SLOT_D = 0.75, 0.9          # integration round: wider, deeper cut slots (read as cut, not embossed)
-SLOT_ANGLES = ((-30.0, 30.0), (-37.0, 23.0))   # deg from the plate's long axis (heel up), per screw, as c7 draws them
+RING_DEPTH = 0.08                   # head top below the face (detail fix: flush; r2b 0.2)
+BORE_DEPTH = 3.5                    # hole depth (round 2b: 2.2 -> 3.5, the gap ring reads darker)
+DOME = 0.0                          # head dome height (round 2b: flat; integration round 0.08 still shaded as a star)
+SLOT_W, SLOT_D = 0.7, 0.9           # detail fix: one real slot per head (r2b: two 0.5 slots, an X)
+_SLOT_W_R2B = 0.5           # round 2b: 0.75 -> 0.5 (c7's slots are thin dark lines)
+SLOT_ANGLES = ((-31.0, 42.0), (-32.0, 46.0))   # deg from the plate's long axis (heel up), per screw, as c7 draws them
+                                               # (round 2b: re-measured on c7 at 4x; round 2 had them mirrored at the toe)
 
 
-def c7_profile(v):
+def c7_profile(v, c=None):
     v = np.asarray(v, float)
-    c = C7_FIT
+    c = C7_FIT if c is None else c
     top = v < c["vc"]
     s = np.clip(np.where(top, (c["vc"] - v) / c["vc"], (v - c["vc"]) / (1.0 - c["vc"])), 0.0, 1.0)
     a = np.where(top, c["a_top"], c["a_bot"])
@@ -102,21 +128,61 @@ def c7_profile(v):
     return np.clip(1.0 - s ** a, 0.0, 1.0) ** b * (1.0 - k * s * s)
 
 
+# Round 2b: the ENDS matched at the WIDTH scale (butt_plate_ends.py). c7 draws the plate at aspect 0.22, the spec at
+# ~0.34 (BP-5), so the unit-box fit of rounds 1-2 left each end's arch 1/1.5 as tall relative to the width as c7 draws
+# it, with a pointed tip (heel read "flat-topped, chamfered corners", toe "a blunt faceted point"). The targets are
+# c7's own half-width w(d) (d = distance from the tip, both in plate widths; smoothed c7 trace rows): END_HEEL /
+# END_TOE for d <= 0.9, the unit-box profile from d >= 1.15. They are fitted by the same smooth concave model as C7_FIT
+# (END_FIT, rms 0.020 heel / 0.008 toe of the width): a first try blended the tables into C7_FIT directly and put two
+# inflections in the side (a wavy plate edge in the 3/4 view). Widest row 0.40, TOP width 36.9 unchanged.
+END_D = (0.0, 0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1)
+END_HEEL = (0.03, 0.08, 0.11, 0.15, 0.183, 0.222, 0.252, 0.29, 0.312, 0.328, 0.345, 0.375, 0.403, 0.425, 0.439, 0.448,
+            0.455, 0.461, 0.467)
+END_TOE = (0.06, 0.113, 0.145, 0.178, 0.205, 0.24, 0.265, 0.3, 0.323, 0.343, 0.362, 0.388, 0.402, 0.414, 0.428,
+           0.438, 0.443, 0.448, 0.455)
+END_FIT = dict(C7_FIT, a_top=28.7891, b_top=0.7498, k_top=0.5581, a_bot=15.4729, b_bot=0.4234, k_bot=0.3816)
+
+
+def plate_profile(v):
+    """Half-width (fraction of HALF_W) at v (0 heel tip .. 1 toe tip): c7_profile's model with END_FIT."""
+    return c7_profile(v, END_FIT)
+
+
 def butt_plate_section():
-    """End-view (YZ) outline of the plate: the c7 lozenge on the spec box. Denser rows near the tips."""
-    vc = C7_FIT["vc"]
-    u = np.linspace(0.0, 1.0, SEC_ROWS)
-    # the tips need dense rows (the profile turns fast there): cosine spacing on each side of the widest row
-    top = vc * (1.0 - np.cos(u * math.pi / 2.0))      # 0 .. vc, dense at the heel tip
-    bot = vc + (1.0 - vc) * np.sin(u * math.pi / 2.0)  # vc .. 1, dense at the toe tip
-    v = np.unique(np.r_[top, bot, vc])
-    v = v[(v > 0.0) & (v < 1.0)]
-    f = c7_profile(v)
+    """End-view (YZ) outline of the plate: c7's shape on the spec box (plate_profile). Denser rows near the tips."""
+    # round 2b: dense rows, then Douglas-Peucker (SEC_TOL) on one side: vertices go where the outline turns (the
+    # ends' caps), so the caps read as smooth arcs, not chamfered corners (round 1-2: 14 cosine rows per side)
+    v = np.linspace(0.0, 1.0, 1201)[1:-1]
+    f = plate_profile(v)
     z = SEC_TOP - v * (SEC_TOP - SEC_BOT)
-    right = np.c_[-HALF_W * f, z]                     # -Y = gun right
-    left = np.c_[HALF_W * f, z][::-1]
-    P = np.vstack([[0.0, SEC_TOP + TIP_OUT], right, [0.0, SEC_BOT - TIP_OUT], left])
-    return G.ccw(G.dedupe(P))
+    chain = np.vstack([[0.0, SEC_TOP + TIP_OUT], np.c_[-HALF_W * f, z], [0.0, SEC_BOT - TIP_OUT]])   # -Y = gun right
+    chain = _dp_open(chain, SEC_TOL)
+    left = chain[1:-1][::-1] * np.array([-1.0, 1.0])
+    return G.ccw(G.dedupe(np.vstack([chain, left])))
+
+
+SEC_TOL = 0.05                       # mm, section chordal tolerance
+
+
+def _dp_open(P, tol):
+    """Douglas-Peucker on an open polyline (both ends kept)."""
+    keep = np.zeros(len(P), bool)
+    keep[[0, -1]] = True
+    stack = [(0, len(P) - 1)]
+    while stack:
+        a, b = stack.pop()
+        if b - a < 2:
+            continue
+        A, B = P[a], P[b]
+        ab = B - A
+        nn = float(np.hypot(*ab))
+        seg = P[a + 1:b]
+        d = np.abs(ab[0] * (seg[:, 1] - A[1]) - ab[1] * (seg[:, 0] - A[0])) / max(nn, 1e-12)
+        k = int(np.argmax(d))
+        if d[k] > tol:
+            keep[a + 1 + k] = True
+            stack += [(a, a + 1 + k), (a + 1 + k, b)]
+    return P[keep]
 
 
 def _smooth_chain(Pc, sig_mm, step=0.4, pin_mm=4.0):
@@ -124,7 +190,7 @@ def _smooth_chain(Pc, sig_mm, step=0.4, pin_mm=4.0):
     with a linear blend over pin_mm (they are the outline's corners: heel top, toe bottom, the tail's corners)."""
     Pc = np.asarray(Pc, float)
     d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(Pc, axis=0), axis=1))]
-    t = np.linspace(0, d[-1], max(int(d[-1] / step) + 1, 3))
+    t = np.linspace(0, d[-1], max(int(d[-1] / LOD.step(step)) + 1, 3))
     R = np.c_[np.interp(t, d, Pc[:, 0]), np.interp(t, d, Pc[:, 1])]
     sg = sig_mm / step
     r = int(3 * sg) + 1
@@ -143,7 +209,7 @@ def _smooth_chain(Pc, sig_mm, step=0.4, pin_mm=4.0):
 
 REAR_SIGMA, FRONT_SIGMA = 2.0, 5.0     # mm; screened against the side trace (2D IoU 0.986 -> 0.981, round 0 0.986)
 OUTLINE_TOL = 0.08                     # mm, Douglas-Peucker on the cleaned side outline (vertex budget: plate + stock end)
-SEC_ROWS = 14                          # section rows per side of the widest row (cosine-spaced)
+SEC_ROWS = 14                          # (unused since round 2b: the section is sampled densely + Douglas-Peucker, SEC_TOL)
 REAR_SHIFT_X = -0.21                   # integration round: the smoothed trace's heel sits at X 0.16 and the rounded rim
                                        # band pulls the rearmost point to 0.21; the whole plate (and the stock end cut,
                                        # which follows this outline) moves back so the heel is X 0.0 (L4 overall length)
@@ -151,7 +217,14 @@ REAR_SHIFT_X = -0.21                   # integration round: the smoothed trace's
 
 def butt_plate_outline():
     """Side (XZ) outline: the traced profile with the pixel staircase smoothed out (rear face sigma 2 mm, band front
-    edge sigma 5 mm, corners pinned); the short toe lip the side trace and the 3/4 view both show is kept. CCW, M."""
+    edge sigma 5 mm, corners pinned); the short toe lip the side trace and the 3/4 view both show is kept. CCW, M.
+    LOD1 uses the LOD0 outline (the stock's end cut follows this outline; the coarser LOD1 chain left a 0.007 mm
+    butt gap at the toe lip, under the 0.01 row)."""
+    with LOD.hold(1):
+        return _butt_plate_outline()
+
+
+def _butt_plate_outline():
     raw = np.asarray(SPEC.profile("butt_plate"), float)
     i_toe = int(np.argmin(raw[:, 1]))                 # toe bottom (14.25, -109.91)
     i_tip = int(np.argmax(raw[:, 0]))                 # toe lip front (28.87, -107.21)
@@ -175,6 +248,9 @@ def butt_plate_outline():
     radii[int(np.argmin(np.linalg.norm(P - LIP_CORNER, axis=1)))] = LIP_CORNER_R
     P = G.fillet(P, 0.0, seg=3, radii=radii)
     P[:, 0] += REAR_SHIFT_X
+    # round 2b: the heel top up HEEL_RAISE (flush with the stock's top line), fading out 1-4 mm below it
+    t = np.clip((P[:, 1] + 4.0) / 3.0, 0.0, 1.0)
+    P[:, 1] += HEEL_RAISE * t * t * (3.0 - 2.0 * t)
     return G.ccw(P)
 
 
@@ -249,7 +325,7 @@ def crowned_body(P, shift=0.0, smooth=False):
     zr = P[rear, 1]
     w = np.clip((zr.max() - P[:, 1]) / SHIFT_FADE, 0, 1) * np.clip((P[:, 1] - zr.min()) / SHIFT_FADE, 0, 1)
     rings = []
-    for y in np.linspace(-Y_EXT, Y_EXT, 17 if smooth else 3):
+    for y in np.linspace(-Y_EXT, Y_EXT, (17 if LOD.LEVEL < 2 else LOD.count(16, 2) + 1) if smooth else 3):   # LOD1 keeps the crown (stock butt gap)
         dx = float(crown_dx(y, smooth)) + shift * w
         x = P[:, 0] + np.where(rear, dx, 0.0)
         rings.append(np.c_[x, np.full(len(P), y), P[:, 1]])
@@ -260,15 +336,20 @@ def butt_plate() -> PartDef:
     P = butt_plate_outline()
     body = crowned_body(P, shift=-POCKET_D)               # the lip's level; the pocket brings the face back to P
     p = PartDef("butt_plate", [body], cls="S-bend",
-                recipe=[(RIM_W, RIM_SEG, "W", _is_rim), (EDGE_R, 1, "W", _rear_break), (EDGE_R, 1, 52.0)])
+                recipe=[(RIM_W, RIM_SEG, "W", _is_rim), (EDGE_R, 1, "W", _rear_break), (EDGE_R, 1, "W", _plain_break)])
     p.section_intersect_pre = [xprism(butt_plate_section(), -5.0, 35.0)]
     cut, screws = [], []
     for z in SCREW_Z:
         nrm = _face_normal(P, z)
         c = np.array([_rear_face_x(P, z), 0.0, z])       # on the face (the pocket floor)
         # hole + 45 deg countersink (continued outward past the face)
-        prof = [(-BORE_DEPTH, 0.0), (-BORE_DEPTH, HOLE_R), (-(CSK_R - HOLE_R), HOLE_R), (2.5, CSK_R + 2.5), (2.5, 0.0)]
-        cut.append(MS.revolve(prof, c, nrm, 24))
+        prof = [(-BORE_DEPTH, 0.0), (-BORE_DEPTH, HOLE_R)]
+        if CSK_R > HOLE_R:
+            prof += [(-(CSK_R - HOLE_R), HOLE_R), (2.5, CSK_R + 2.5), (2.5, 0.0)]
+        else:                                         # round 2b: a straight counterbore (c7's dark gap ring)
+            prof += [(2.5, HOLE_R), (2.5, 0.0)]
+        if LOD.LEVEL < 2:                             # LOD2: no screws (dropped), no counterbores; painted only
+            cut.append(MS.revolve(prof, c, nrm, 24))
         screws.append((c, nrm))
     p.cutters = cut                                   # before the bevels
     p.post_cutters = [pocket_cutter(P)] if POCKET_D > 0 else []   # the face pocket after the bevels (crisp step)
@@ -290,9 +371,22 @@ def _rear_zone(mid, depth=2.5):
     return mid[0] < _rear_face_x(P, z) + depth
 
 
+def _in_hole(mid):
+    """Edge inside a screw hole (shank bore / countersink foot): never bevelled (a fillet there meets the screw)."""
+    return any(math.hypot(mid[1], mid[2] - zs) < CSK_R - 0.6 for zs in SCREW_Z)
+
+
+def _plain_break(mid, d, n1, n2, dih):
+    """The plain 0.3 break on every edge of 52 deg or more, except inside the screw holes (detail fix: the countersunk
+    screws' shanks sit 0.02 off the bore, so the bore floor's concave fillet met them)."""
+    return 1.0 if dih >= 52.0 and not _in_hole(mid) else 0.0
+
+
 def _rear_break(mid, d, n1, n2, dih):
     """0.3 break on the 40-52 deg edges of the rear zone: the rim band's two edges and the countersinks' (the bright
     lines c7 shows at the face edge and round each screw). The plain 52 deg pass takes the rest."""
+    if _in_hole(mid):
+        return 0.0          # detail fix: not the countersink's concave foot inside the hole (its fillet met the screw head)
     return 1.0 if 40.0 <= dih < 52.0 and _rear_zone(mid) else 0.0
 
 
@@ -435,17 +529,16 @@ def butt_screws() -> PartDef:
         floor_t = -BORE_DEPTH + GAP                   # along nrm from the face point
         edge_t = -RING_DEPTH
         apex_t = edge_t + DOME
-        # profile (t along nrm, r): flat bottom, cylinder side, spherical dome
-        Rs = (HEAD_R ** 2 + DOME ** 2) / (2 * DOME)
-        prof = [(floor_t, 0.0), (floor_t, HEAD_R), (edge_t, HEAD_R)]
-        for k in range(1, 3):
-            r = HEAD_R * (1.0 - k / 3.0)
-            prof.append((apex_t - (Rs - math.sqrt(Rs ** 2 - r ** 2)), r))
-        prof.append((apex_t, 0.0))
-        sol.append(MS.revolve(prof, c, nrm, 16))      # integration round: 16 (budget)
-        for ang in angs:
-            cut.append(_slot_cutter(c, nrm, ang, -apex_t))
-    return PartDef("butt_screws", sol, cutters=cut, cls="M-chamfer", recipe=[(0.06, 1, 40.0)],
+        # DETAIL FIX: flat countersunk head: shank in the hole, a 45 deg cone GAP (normal) inside the countersink, the
+        # flat top RING_DEPTH under the face (flush)
+        D = CSK_R - HOLE_R
+        g2 = GAP * math.sqrt(2.0)
+        t_c = -D + g2 - GAP
+        prof = [(floor_t, 0.0), (floor_t, HOLE_R - GAP), (t_c, HOLE_R - GAP),
+                (edge_t, CSK_R + edge_t - g2), (edge_t, 0.0)]
+        sol.append(MS.revolve(prof, c, nrm, 24))      # 24 = the hole cutter's: facets parallel, the 0.02 gap holds
+        cut.append(_slot_cutter(c, nrm, angs[0], -apex_t))
+    return PartDef("butt_screws", sol, cutters=cut, cls="M-chamfer", recipe=[(0.06, 1, 50.0)],   # 50: not the 45 deg concave shank-cone corner
                    spec_id="butt_plate", joint={"type": "butt", "parent": "butt_plate", "gap_mm": [0.01, 0.05]})
 
 

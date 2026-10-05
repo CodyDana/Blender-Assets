@@ -1,0 +1,466 @@
+{
+ "stage": "3 UV + bake + paint",
+ "status": "fail",
+ "gates": [
+  {
+   "name": "qa_check (twin SM_AR01_LOD0..3, pipeline)",
+   "value": [
+    {
+     "name": "uv_no_overlap",
+     "object": "SM_AR01_LOD2",
+     "passed": false,
+     "detail": "2 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh"
+    },
+    {
+     "name": "uv_no_overlap",
+     "object": "SM_AR01_LOD2",
+     "passed": false,
+     "detail": "2 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh"
+    }
+   ],
+   "threshold": "pass (budget 57000 = 50000 rifle + 7000 merged mag; UV1 required; texel = measured aggregate)",
+   "pass": false
+  },
+  {
+   "name": "density Metal class A (px/cm P5 / median / P95)",
+   "value": "93.1 / 115.6 / 115.9 (300.9 cm2)",
+   "threshold": "median >= 80.0 (band 80.0-100.0), P5 >= 0.75 x 80.0, P5..P95 within +-25 % of the median",
+   "pass": true
+  },
+  {
+   "name": "density Metal class B (px/cm P5 / median / P95)",
+   "value": "81.6 / 92.7 / 92.7 (984.0 cm2)",
+   "threshold": "median >= 60.0 (band 60.0-80.0), P5 >= 0.75 x 60.0, P5..P95 within +-25 % of the median",
+   "pass": true
+  },
+  {
+   "name": "density Metal class E (px/cm P5 / median / P95)",
+   "value": "13.0 / 13.9 / 13.9 (1147.5 cm2)",
+   "threshold": "median >= 8.0 (band 8.0-15.0), P5 >= 0.75 x 8.0, P5..P95 within +-25 % of the median",
+   "pass": true
+  },
+  {
+   "name": "density Furniture class C (px/cm P5 / median / P95)",
+   "value": "41.3 / 49.7 / 49.7 (716.1 cm2)",
+   "threshold": "median >= 30.0 (band 30.0-40.0), P5 >= 0.75 x 30.0, P5..P95 within +-25 % of the median",
+   "pass": true
+  },
+  {
+   "name": "density Furniture class E (px/cm P5 / median / P95)",
+   "value": "15.0 / 17.0 / 17.0 (288.2 cm2)",
+   "threshold": "median >= 8.0 (band 8.0-15.0), P5 >= 0.75 x 8.0, P5..P95 within +-25 % of the median",
+   "pass": true
+  },
+  {
+   "name": "density Furniture class B (px/cm P5 / median / P95)",
+   "value": "75.0 / 96.5 / 99.4 (125.1 cm2)",
+   "threshold": "median >= 60.0 (band 60.0-80.0), P5 >= 0.75 x 60.0, P5..P95 within +-25 % of the median",
+   "pass": true
+  },
+  {
+   "name": "density Mag class C (px/cm P5 / median / P95)",
+   "value": "80.6 / 90.5 / 98.3 (327.9 cm2)",
+   "threshold": "median >= 30.0 (band 30.0-40.0), P5 >= 0.75 x 30.0, P5..P95 within +-25 % of the median",
+   "pass": true,
+   "note": "over the band top x2.26: the set size is fixed by its other classes / the fill gate, extra texels cost nothing"
+  },
+  {
+   "name": "density Mag class E (px/cm P5 / median / P95)",
+   "value": "29.8 / 31.2 / 32.8 (54.9 cm2)",
+   "threshold": "median >= 8.0 (band 8.0-15.0), P5 >= 0.75 x 8.0, P5..P95 within +-25 % of the median",
+   "pass": true,
+   "note": "over the band top x2.08: the set size is fixed by its other classes / the fill gate, extra texels cost nothing"
+  },
+  {
+   "name": "Metal set size (user decision 4: 2048 unless it cannot hold A 80-100 / B 60-80 at >= 70 % fill)",
+   "value": "4096: texels needed at the class floors 5,541,416 vs 2048 capacity at 70 % 2,936,013",
+   "threshold": "smallest of 2048 / 4096 that holds the floors at 70 %",
+   "pass": true
+  },
+  {
+   "name": "fill Metal (4096)",
+   "value": 0.7263,
+   "threshold": ">= 0.70",
+   "pass": true,
+   "note": "at 4096 a 0.70 fill puts the classes over their band tops (x {'A': 1.16, 'B': 1.16}): sharper than the user's A 80-100 / B 60-80 for the same memory (the set size is what costs)"
+  },
+  {
+   "name": "fill Furniture (2048)",
+   "value": 0.68,
+   "threshold": ">= 0.65",
+   "pass": true
+  },
+  {
+   "name": "fill Mag (2048)",
+   "value": 0.6549,
+   "threshold": ">= 0.65",
+   "pass": true
+  },
+  {
+   "name": "UV0 overlaps LOD0 (per set = per twin tile; qa epsilon)",
+   "value": {
+    "Metal": 0,
+    "Furniture": 0,
+    "Mag": 0
+   },
+   "threshold": "0 per set",
+   "pass": true
+  },
+  {
+   "name": "UV0 mirrored islands (flipped UV triangles, LOD0)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "UV0 skeletal layout: every set in 0..1 (all LODs' parts)",
+   "value": {
+    "min": [
+     -0.0,
+     -0.0
+    ],
+    "max": [
+     0.99997,
+     0.99836
+    ]
+   },
+   "threshold": "inside [0, 1]",
+   "pass": true
+  },
+  {
+   "name": "maps: power of two, square (full mips in Unreal)",
+   "value": [
+    "T_AR01_Metal_BC.png 4096x4096 RGB",
+    "T_AR01_Metal_ORM.png 4096x4096 RGB",
+    "T_AR01_Metal_N.png 4096x4096 RGB",
+    "T_AR01_Metal_Masks.png 2048x2048 RGBA",
+    "T_AR01_Furniture_BC.png 2048x2048 RGB",
+    "T_AR01_Furniture_ORM.png 2048x2048 RGB",
+    "T_AR01_Furniture_N.png 2048x2048 RGB",
+    "T_AR01_Furniture_Masks.png 1024x1024 RGBA",
+    "T_AR01_Mag_BC.png 2048x2048 RGB",
+    "T_AR01_Mag_ORM.png 2048x2048 RGB",
+    "T_AR01_Mag_N.png 2048x2048 RGB",
+    "T_AR01_Mag_Masks.png 1024x1024 RGBA"
+   ],
+   "threshold": "all POT",
+   "pass": true,
+   "note": "BC sRGB; ORM linear (R AO, G roughness, B metallic); N DirectX (green flipped on write); Masks half size (R edge, G handling, B cavity, A refinishable)"
+  },
+  {
+   "name": "BC within the spec finishes; metallic exactly 0/1 (G7, B9)",
+   "value": {
+    "Mag/lacquer_mag": {
+     "texels": 2754226,
+     "metal_fraction": 0.0266,
+     "dielectric_p1_p50_p99": [
+      44.0,
+      48.666666666666664,
+      51.0
+     ],
+     "metal_p1_p50_p99": [
+      189.33333333333334,
+      192.33333333333334,
+      195.33333333333334
+     ],
+     "rough_p5_p50_p95": [
+      0.485,
+      0.535,
+      0.673
+     ],
+     "spec_srgb": [
+      49,
+      49,
+      49
+     ]
+    },
+    "Furniture/walnut": {
+     "texels": 2852582,
+     "metal_fraction": 0.0,
+     "dielectric_p1_p50_p99": [
+      52.333333333333336,
+      69.0,
+      93.33333333333333
+     ],
+     "metal_p1_p50_p99": null,
+     "rough_p5_p50_p95": [
+      0.543,
+      0.571,
+      0.644
+     ],
+     "spec_srgb": [
+      107,
+      60,
+      39
+     ]
+    },
+    "Metal/bare": {
+     "texels": 34726,
+     "metal_fraction": 0.0909,
+     "dielectric_p1_p50_p99": [
+      36.666666666666664,
+      39.0,
+      41.0
+     ],
+     "metal_p1_p50_p99": [
+      188.33333333333334,
+      191.33333333333334,
+      196.33333333333334
+     ],
+     "rough_p5_p50_p95": [
+      0.398,
+      0.46,
+      0.482
+     ],
+     "spec_srgb": [
+      195,
+      195,
+      193
+     ]
+    },
+    "Metal/bluing": {
+     "texels": 1856687,
+     "metal_fraction": 0.4723,
+     "dielectric_p1_p50_p99": [
+      37.0,
+      39.0,
+      41.0
+     ],
+     "metal_p1_p50_p99": [
+      116.0,
+      120.0,
+      194.33333333333334
+     ],
+     "rough_p5_p50_p95": [
+      0.335,
+      0.512,
+      0.602
+     ],
+     "spec_srgb": [
+      120,
+      120,
+      120
+     ]
+    },
+    "Metal/lacquer": {
+     "texels": 9771282,
+     "metal_fraction": 0.0109,
+     "dielectric_p1_p50_p99": [
+      45.333333333333336,
+      52.333333333333336,
+      55.0
+     ],
+     "metal_p1_p50_p99": [
+      189.33333333333334,
+      192.33333333333334,
+      195.33333333333334
+     ],
+     "rough_p5_p50_p95": [
+      0.456,
+      0.493,
+      0.631
+     ],
+     "spec_srgb": [
+      53,
+      53,
+      53
+     ]
+    },
+    "Metal/lacquer_worn": {
+     "texels": 532014,
+     "metal_fraction": 0.0501,
+     "dielectric_p1_p50_p99": [
+      52.0,
+      63.0,
+      65.0
+     ],
+     "metal_p1_p50_p99": [
+      189.33333333333334,
+      192.33333333333334,
+      195.33333333333334
+     ],
+     "rough_p5_p50_p95": [
+      0.441,
+      0.5,
+      0.533
+     ],
+     "spec_srgb": [
+      63,
+      63,
+      63
+     ]
+    }
+   },
+   "threshold": "dielectric median within 12 levels of the finish sRGB, dielectric P1 >= 30 and P99 <= 243 sRGB, metal P1 >= 110 sRGB (bluing) / >= 186 (bare steel: chips, sliding faces), metallic values {0, 1}",
+   "pass": true
+  },
+  {
+   "name": "AO bake in Cycles",
+   "value": "256 spp, distance 0.025 m, device OPTIX",
+   "threshold": "Cycles AO of the assembled LOD0 at rest",
+   "pass": true
+  },
+  {
+   "name": "L5 colour vs the sheet (crop-matched; light scale fitted on the receiver, light specular factor on the stock R/B)",
+   "value": {
+    "receiver": {
+     "delta": {
+      "luma": 0.0001,
+      "sat": -0.0123,
+      "rb": -0.0125
+     },
+     "pass": true
+    },
+    "dust_cover": {
+     "delta": {
+      "luma": -0.0409,
+      "sat": -0.0182,
+      "rb": -0.0187
+     },
+     "pass": true
+    },
+    "magazine": {
+     "delta": {
+      "luma": 0.0165,
+      "sat": -0.0331,
+      "rb": -0.0346
+     },
+     "pass": true
+    },
+    "butt_plate": {
+     "delta": {
+      "luma": 0.0515,
+      "sat": -0.0149,
+      "rb": 0.0235
+     },
+     "pass": false
+    },
+    "stock": {
+     "delta": {
+      "luma": 0.0084,
+      "sat": -0.1553,
+      "rb": -0.7337,
+      "hue_deg": -3.25
+     },
+     "pass": false
+    },
+    "pistol_grip": {
+     "delta": {
+      "luma": -0.0507,
+      "sat": -0.0479,
+      "rb": -0.1819,
+      "hue_deg": -4.69
+     },
+     "pass": false
+    },
+    "handguard_lower": {
+     "delta": {
+      "luma": -0.0164,
+      "sat": -0.1608,
+      "rb": -0.7014,
+      "hue_deg": -4.5
+     },
+     "pass": false
+    },
+    "handguard_upper": {
+     "delta": {
+      "luma": -0.0859,
+      "sat": -0.0983,
+      "rb": -0.3641,
+      "hue_deg": -4.06
+     },
+     "pass": false
+    },
+    "gas_block": {
+     "delta": {
+      "luma": 0.042,
+      "sat": -0.0291,
+      "rb": -0.0329
+     },
+     "pass": true
+    },
+    "barrel": {
+     "delta": {
+      "luma": 0.005,
+      "sat": -0.024,
+      "rb": -0.0275
+     },
+     "pass": true
+    }
+   },
+   "threshold": "luma +-0.05, saturation +-0.05, R/B +-0.1, hue +-4 deg (chromatic regions) on every region but the two calibration regions",
+   "pass": false,
+   "note": "k 0.7665927473574469, s 0.0; failed: ['butt_plate', 'pistol_grip', 'handguard_lower', 'handguard_upper']"
+  },
+  {
+   "name": "renders only from the baked maps",
+   "value": "review/tex/*.png via rifle_texrender.py (game materials on T_AR01_*; no procedural shading)",
+   "threshold": "true",
+   "pass": true
+  }
+ ],
+ "failed": [
+  "qa_check (twin SM_AR01_LOD0..3, pipeline)",
+  "L5 colour vs the sheet (crop-matched; light scale fitted on the receiver, light specular factor on the stock R/B)"
+ ],
+ "sets": {
+  "Metal": {
+   "size": 4096,
+   "fill": 0.7263,
+   "islands": 1751
+  },
+  "Furniture": {
+   "size": 2048,
+   "fill": 0.68,
+   "islands": 196
+  },
+  "Mag": {
+   "size": 2048,
+   "fill": 0.6549,
+   "islands": 428
+  }
+ },
+ "lod_uv": {
+  "overlap_pairs_after": {
+   "LOD1/Metal": 0,
+   "LOD1/Furniture": 0,
+   "LOD1/Mag": 0,
+   "LOD2/Metal": 0,
+   "LOD2/Furniture": 0,
+   "LOD2/Mag": 0,
+   "LOD3/Metal": 0,
+   "LOD3/Furniture": 0,
+   "LOD3/Mag": 0
+  },
+  "collapsed_faces": {
+   "LOD1/Metal": 306,
+   "LOD1/Furniture": 36,
+   "LOD1/Mag": 100,
+   "LOD2/Metal": 319,
+   "LOD2/Furniture": 64,
+   "LOD2/Mag": 206,
+   "LOD3/Metal": 76,
+   "LOD3/Furniture": 24,
+   "LOD3/Mag": 6
+  },
+  "corners": {
+   "projected": 96572,
+   "pulled_in": 30031,
+   "faces_off_island_snapped": 3081,
+   "off_island_by_lod": {
+    "LOD1": [
+     1441,
+     30598
+    ],
+    "LOD2": [
+     1305,
+     13500
+    ],
+    "LOD3": [
+     335,
+     1184
+    ]
+   }
+  }
+ }
+}

@@ -33,13 +33,16 @@ def scaled_prism(P2, half_w_fun):
     return out
 
 
-def parts(mag_thickness=None):
+def parts(mag_thickness=None, tol=0.35):
+    """tol: Douglas-Peucker tolerance on the traced outlines (mm). The blockout stage uses 0.35; the game stage's LOD3
+    (the silhouette level, GUN_BUILDING_STUDY 5.7) runs this generator at a coarser tolerance with gunlib.lod level 3
+    (6-sided rounds)."""
     S = SPEC
     if mag_thickness is None:
         mag_thickness = float(S.key["magazine"]["thickness"])
     out = {}
 
-    def prof(pid, tol=0.35):
+    def prof(pid, tol=tol):
         return G.ccw(G.dp_simplify(S.profile(pid), tol))
 
     def yr(pid):
@@ -60,7 +63,7 @@ def parts(mag_thickness=None):
     P = prof("front_sight_block")
     out["front_sight_block"] = MS.prism(G.clip_y(P, None, 11.0), -11.0, 11.0).extend(
         MS.prism(G.clip_y(P, 11.0, None), -10.7, 10.7))
-    out["buttstock"] = scaled_prism(G.ccw(G.dp_simplify(S.profile("buttstock"), 0.35)), _wfun_stock())
+    out["buttstock"] = scaled_prism(G.ccw(G.dp_simplify(S.profile("buttstock"), tol)), _wfun_stock())
     d = S.dims("barrel")
     out["barrel"] = MS.cylinder((d["chamber_face_X"], 0, 0), (d["crown_X"], 0, 0), d["dia"] / 2, 32)
     g = S.dims("gas_tube")
@@ -73,7 +76,7 @@ def parts(mag_thickness=None):
     out["bolt_carrier"] = MS.box(ch["X"][0], ch["X"][1], ch["tip_Y"], -20.75, ch["Z"][0], ch["Z"][1])
     j = json.loads((TRACE / "LEFT_outline.json").read_text())
     ring = max(j["magazine"], key=lambda r: r["area_px"])
-    M = G.ccw(G.dp_simplify(np.array(ring["mm"], float), 0.35))
+    M = G.ccw(G.dp_simplify(np.array(ring["mm"], float), tol))
     M = G.clip_y(M, None, -12.0)          # the hidden top up to the lips is not in the trace; the visible part is
     top = M[:, 1].max()
     out["magazine"] = MS.prism(M, -mag_thickness / 2, mag_thickness / 2)

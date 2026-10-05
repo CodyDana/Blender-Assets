@@ -111,12 +111,19 @@ if best:
 riv = SPEC.feature("receiver", "rivets_right")["XZ"]
 errs, meas = [], []
 for (x0, z0) in riv:
-    best = None
+    # detail fix: the heads are flat-topped (and one spot is the stamped detent plate): the apex is the CENTROID of the
+    # points within 0.05 mm of the most proud one in the window (was: the first most-proud point found)
+    hits = []
     for x in np.arange(x0 - 3, x0 + 3.01, 0.2):
         for z in np.arange(z0 - 3, z0 + 3.01, 0.2):
             y = side_y(x, z)
-            if y is not None and y < -21.0 and (best is None or y < best[2]):
-                best = (x, z, y)
+            if y is not None and y < -21.0:
+                hits.append((x, z, y))
+    best = None
+    if hits:
+        H = np.array(hits)
+        top = H[H[:, 2] < H[:, 2].min() + 0.05]
+        best = (float(top[:, 0].mean()), float(top[:, 1].mean()), float(H[:, 2].min()))
     if best:
         meas.append([round(best[0], 1), round(best[1], 1)])
         errs.append(math.hypot(best[0] - x0, best[1] - z0))
@@ -211,12 +218,14 @@ b = see_through_bbox(812.0, 831.0, 9.0, 23.5, 0.1, (822.0, 15.0))
 l3("front sight ear window (bbox)", b, [813.7, 827.2, 11.8, 21.6],
    None if b is None else max(abs(b[0] - 813.7), abs(b[1] - 827.2), abs(b[2] - 11.8), abs(b[3] - 21.6)))
 
-# ---- ear boss centre (raised ring on the right ear)
+# ---- ear boss centre (raised drum boss on the right ear; detail fix: measured against the tapered ear face; before
+# the fix the -10.75 threshold sat above the r2b boss and the feature was silently skipped)
+from parts import front_sight as _FS  # noqa: E402
 best = []
 for x in np.arange(820.0, 829.5, 0.1):
     for z in np.arange(25.5, 34.5, 0.1):
         y = side_y(x, z)
-        if y is not None and y < -10.75:
+        if y is not None and y < -(_FS.ear_out_y(z) + 0.5):        # detail fix: proud of the TAPERED ear face
             best.append((x, z))
 if best:
     c = np.mean(best, axis=0)
@@ -322,8 +331,9 @@ l4("handguard_lower_length", h1[0] - h0[0], K["handguard_lower_length"], "lower 
 u0, u1 = bb(["upper_handguard"])
 l4("handguard_upper_length", u1[0] - u0[0], K["handguard_upper_length"], "upper handguard bounds X (incl. tenon)")
 m0, m1 = bb(["magazine", "magazine_floor_plate"])
-l4("magazine.thickness", bb(["magazine"])[1][1] - bb(["magazine"])[0][1] - 2.0, K["magazine"]["thickness"],
-   "body bounds Y minus the two 1.0 mm ribs")
+from parts import magazine as _MAGP                    # detail fix: the ribs are RIB_H proud (0.75 since the detail fix)
+l4("magazine.thickness", bb(["magazine"])[1][1] - bb(["magazine"])[0][1] - 2.0 * _MAGP.RIB_H, K["magazine"]["thickness"],
+   "body bounds Y minus the two ribs (2 x RIB_H %.2f)" % _MAGP.RIB_H)
 l4("magazine.bottom_Z", m0[2], K["magazine"]["bottom_Z"], "magazine + floor plate bounds")
 # the brake BODY (the sheet's length / diameter): without the small detent knob on top at the junction (|Y| < 2.7,
 # Z > 8.5, X < 853.5), which the side views do not show (detail round 2 added it from c3); diameter = 2 x the largest

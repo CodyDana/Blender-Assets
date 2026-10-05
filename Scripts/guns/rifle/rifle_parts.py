@@ -94,14 +94,15 @@ def part_defs() -> Dict[str, object]:
 EXTRA: Dict[str, object] = {}
 
 
-def build_all(only=None):
-    """Build every part (or only the registry keys listed) into collection AR01_Parts; export the triangles
-    (scratch/form_tris.npz, or form_partial_tris.npz with only) and the manifold report, in ORDER."""
+def build_all(only=None, tag=None, coll_name="AR01_Parts"):
+    """Build every part (or only the registry keys listed) into collection coll_name; export the triangles
+    (scratch/form_tris.npz, or form_partial_tris.npz with only, or <tag>_tris.npz) and the manifold report, in ORDER.
+    The LOD builds (build_rifle --stage lod) pass a tag so the form stage's files are never overwritten."""
     from gunlib import bl
     from gunlib.parts import BuildCtx
     from rifle_common import SCRATCH
     import parts as PM
-    coll = bl.collection("AR01_Parts")
+    coll = bl.collection(coll_name)
     ctx = BuildCtx(coll, GRIP, SPEC, only)
     defs = part_defs()
     built: Dict[str, list] = {}
@@ -126,7 +127,7 @@ def build_all(only=None):
             objs.append(ob)
             print("[AR01] part %-24s tris %6d  boundary %d  multi %d  shells %d" % (
                 ob.name, rep["triangles"], rep["boundary_edges"], rep["multi_face_edges"], rep["shells"]))
-    tag = "form" if not only else "form_partial"
+    tag = tag or ("form" if not only else "form_partial")
     bl.export_npz(objs, SCRATCH / f"{tag}_tris.npz", GRIP, [o.name for o in objs])
     (SCRATCH / f"{tag}_build_report.json").write_text(json.dumps(report, indent=1))
     print("[AR01] total tris", sum(r["triangles"] for r in report.values()))

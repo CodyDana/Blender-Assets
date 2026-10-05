@@ -99,6 +99,11 @@ def bevel(ob, width_mm, segments=2, angle_deg=30.0, profile=0.5, harden=True, cl
     widths, the bevel is undone and retried: the angle limit 5 deg lower (form fix round 2 found the trigger: an angle
     limit sitting inside a cluster of near-equal dihedrals selects half of a corner's edges), then a sharp outer miter,
     the width x0.97, no clamping; every retry is printed. Edges within 1 deg of the limit are reported as a warning."""
+    from . import lod as _lod
+    plan = _lod.bevel(width_mm, segments)
+    if plan is None:
+        return ob
+    width_mm, segments = plan
     keep = ob.data.copy()
     lo, hi = _bbox_m(ob.data)
     tol = 2.0 * width_mm * 0.001 + 1e-5
@@ -375,6 +380,9 @@ def set_bevel_weights(ob, pred, offset_mm=(0, 0, 0)) -> int:
 
 
 def bevel_weighted(ob, width_mm, segments, pred, offset_mm=(0, 0, 0), profile=0.5, harden=True):
+    from . import lod as _lod
+    if _lod.bevel(width_mm, segments) is None:
+        return 0
     n = set_bevel_weights(ob, pred, offset_mm)
     if n:
         bevel(ob, width_mm, segments, limit="WEIGHT", profile=profile, harden=harden)

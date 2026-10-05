@@ -147,7 +147,8 @@ def rough_steel(name="RL_Steel", base=STEEL_BASE, edge=STEEL_EDGE, edge_mm=0.5):
     # roughness: two noise scales
     nr1 = _noise(nt, obj, 45.0, 4.0, 0.6)
     nr2 = _noise(nt, obj, 300.0, 2.0, 0.5)
-    r1 = _maprange(nt, _fac(nr1), 0.3, 0.7, 0.34, 0.58)
+    r1 = _maprange(nt, _fac(nr1), 0.3, 0.7, 0.42, 0.64)     # detail fix: 0.34-0.58 -> 0.42-0.64 (no polished / chrome
+                                                             # read on small curved parts: brake, trigger, pins)
     r2 = _maprange(nt, _fac(nr2), 0.3, 0.7, -0.06, 0.06)
     radd = nt.nodes.new("ShaderNodeMath")
     radd.operation = "ADD"

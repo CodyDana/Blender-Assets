@@ -1,0 +1,557 @@
+{
+ "stage": "4 Game (rifle)",
+ "status": "fail",
+ "gates": [
+  {
+   "name": "qa_check (twin LOD0..3)",
+   "value": {
+    "SM_AR01_LOD0": 56866,
+    "SM_AR01_LOD1": 30598,
+    "SM_AR01_LOD2": 13500,
+    "SM_AR01_LOD3": 1184
+   },
+   "threshold": "pass",
+   "pass": false,
+   "note": "[{\"name\": \"uv_no_overlap\", \"object\": \"SM_AR01_LOD2\", \"passed\": false, \"detail\": \"2 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh\"}, {\"name\": \"uv_no_overlap\", \"object\": \"SM_AR01_LOD2\", \"passed\": false, \"detail\": \"2 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh\"}]"
+  },
+  {
+   "name": "LODs strictly descending (twin)",
+   "value": [
+    56866,
+    30598,
+    13500,
+    1184
+   ],
+   "threshold": "LOD0 > LOD1 > LOD2 > LOD3",
+   "pass": true
+  },
+  {
+   "name": "B8 rifle LOD0 tris (without the mag)",
+   "value": 49882,
+   "threshold": "<= 50000 (target 30-45k)",
+   "pass": true
+  },
+  {
+   "name": "B8 merged magazine LOD0 tris",
+   "value": 6984,
+   "threshold": "<= 7000",
+   "pass": true
+  },
+  {
+   "name": "LOD1 rifle tris (share of LOD0)",
+   "value": "23614 (47.3%)",
+   "threshold": "~45 % (gun study 5.7)",
+   "pass": true
+  },
+  {
+   "name": "LOD2 rifle tris (share of LOD0)",
+   "value": "8968 (18.0%)",
+   "threshold": "~15 % (gun study 5.7)",
+   "pass": true
+  },
+  {
+   "name": "LOD3 rifle tris",
+   "value": 1076,
+   "threshold": "1500-2500 (ceiling 2500)",
+   "pass": true,
+   "note": "under the 1.5k floor of the target range: the blockout silhouette level is cheaper; the LOD-pop gate passes at its switch"
+  },
+  {
+   "name": "B3 at LOD1 (moving parts, sweep)",
+   "value": {
+    "bolt": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1662
+    },
+    "trigger": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.25
+    },
+    "selector": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1385
+    },
+    "mag_release": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1094
+    },
+    "sight_rear": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1504
+    }
+   },
+   "threshold": "0 intersections; clearance inside each joint's row",
+   "pass": true
+  },
+  {
+   "name": "G5 at LOD1 (static intersecting pairs)",
+   "value": 1,
+   "threshold": "0",
+   "pass": false
+  },
+  {
+   "name": "G5 at LOD1 butt-joint gaps",
+   "value": 0.0196,
+   "threshold": ">= 0.01 mm",
+   "pass": true
+  },
+  {
+   "name": "C1 hull containment",
+   "value": "0 of 85,620,447 jittered 0.5 mm LOD0 samples, 0 of 51,262 LOD0-3 vertices outside",
+   "threshold": "0 and 0; 7 hulls, <= 32 vertices",
+   "pass": true,
+   "note": "hull vertices [27, 27, 27, 27, 27, 27, 27]"
+  },
+  {
+   "name": "S1 sockets (exported sidecar vs build)",
+   "value": "17 sockets, worst 0.0002 mm / 0.0 deg",
+   "threshold": "17 = spec names; <= 0.001 mm and <= 0.001 deg",
+   "pass": true
+  },
+  {
+   "name": "S2 sight picture (spec Sight line: notch bottom -> post tip)",
+   "value": "lateral 0.0 px, vertical 0.0 px",
+   "threshold": "|lateral| <= 0.5 px and |vertical| <= 0.5 px (55 deg, 0.25 m eye relief, 2560 x 1440)",
+   "pass": true
+  },
+  {
+   "name": "LOD-pop LOD0 -> LOD1",
+   "value": "size 0.3 (2.703 m): mean 0.04 px, max 1.118 px (worst of 4 headings)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true
+  },
+  {
+   "name": "LOD-pop LOD1 -> LOD2",
+   "value": "size 0.12 (6.756 m): mean 0.176 px, max 1.581 px (worst of 4 headings)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true
+  },
+  {
+   "name": "LOD-pop LOD2 -> LOD3",
+   "value": "size 0.04 (20.269 m): mean 0.198 px, max 1.0 px (worst of 4 headings)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true
+  },
+  {
+   "name": "names (tokenised gun deny list)",
+   "value": "clean",
+   "threshold": "no hit",
+   "pass": true
+  }
+ ],
+ "failed": [
+  "qa_check (twin LOD0..3)",
+  "G5 at LOD1 (static intersecting pairs)"
+ ],
+ "lod_screen_sizes": [
+  1.0,
+  0.3,
+  0.12,
+  0.04
+ ],
+ "bounds_radius_m": {
+  "twin_with_mag_box_half_diagonal": 0.456,
+  "rifle_without_mag": 0.4502
+ },
+ "triangles": {
+  "twin": [
+   56866,
+   30598,
+   13500,
+   1184
+  ],
+  "rifle": [
+   49882,
+   23614,
+   8968,
+   1076
+  ],
+  "mag": [
+   6984,
+   6984,
+   4532,
+   108
+  ]
+ },
+ "hulls": [
+  {
+   "name": "UCX_SM_AR01_00",
+   "covers": "receiver, dust cover, rear sight, selector, carrier + handle",
+   "vertices": 27,
+   "points": 11675427
+  },
+  {
+   "name": "UCX_SM_AR01_01",
+   "covers": "fore-end: handguards, front band, retainer, cap; barrel, gas tube, rod to the gas block",
+   "vertices": 27,
+   "points": 10250731
+  },
+  {
+   "name": "UCX_SM_AR01_02",
+   "covers": "gas block section: gas block, exposed barrel, gas tube front, rod",
+   "vertices": 27,
+   "points": 3917226
+  },
+  {
+   "name": "UCX_SM_AR01_03",
+   "covers": "front sight block + post + brake",
+   "vertices": 27,
+   "points": 1520853
+  },
+  {
+   "name": "UCX_SM_AR01_04",
+   "covers": "pistol grip + trigger guard + trigger + catch",
+   "vertices": 27,
+   "points": 482441
+  },
+  {
+   "name": "UCX_SM_AR01_05",
+   "covers": "stock + butt plate + swivel + hardware",
+   "vertices": 27,
+   "points": 616536
+  },
+  {
+   "name": "UCX_SM_AR01_06",
+   "covers": "merged magazine (twin only)",
+   "vertices": 27,
+   "points": 1486211
+  }
+ ],
+ "mass": {
+  "modelled_g": 4558.9,
+  "com_B_mm": [
+   158.28,
+   0.27,
+   75.17
+  ],
+  "spec_mass_kg_unloaded_without_mag": 3.1,
+  "parts_g": {
+   "receiver": 564.7,
+   "dust_cover": 126.5,
+   "recoil_spring_button": 3.4,
+   "rivets": 2.9,
+   "receiver_rails": 7.2,
+   "bolt_carrier": 766.8,
+   "mag_catch": 18.7,
+   "rear_trunnion": 189.6,
+   "rear_sight_block": 640.3,
+   "rear_sight_leaf": 35.3,
+   "rear_sight_slider": 10.1,
+   "handguard_retainer": 3.1,
+   "gas_tube_rear_cap": 37.3,
+   "upper_handguard": 28.3,
+   "lower_handguard": 92.6,
+   "handguard_front_band": 71.3,
+   "gas_tube": 98.3,
+   "gas_piston": 53.3,
+   "gas_block": 140.2,
+   "barrel": 563.7,
+   "cleaning_rod": 17.2,
+   "front_sight_block": 109.2,
+   "front_sight_post": 1.5,
+   "muzzle_brake": 31.9,
+   "trigger": 12.7,
+   "trigger_guard": 159.7,
+   "pistol_grip": 76.8,
+   "buttstock": 363.5,
+   "butt_plate": 310.5,
+   "butt_screws": 1.2,
+   "sling_swivel_base": 0.8,
+   "sling_swivel_loop": 0.8,
+   "stock_hardware": 1.8,
+   "selector": 17.8
+  },
+  "note": "hollow internals are not modelled: the physics mass is set to 3.1 kg (README); the CoM is the modelled parts' (steel 7.85, wood 0.65 g/cm^3)"
+ },
+ "sockets": [
+  {
+   "socket": "CenterOfMass",
+   "location_cm": [
+    15.8276,
+    -0.0269,
+    7.5168
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0002,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": null,
+   "computed": true
+  },
+  {
+   "socket": "ChargingHandle",
+   "location_cm": [
+    18.782,
+    3.0,
+    9.504
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Grip",
+   "location_cm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Holster",
+   "location_cm": [
+    15.8276,
+    -0.0269,
+    7.5168
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0002,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": null,
+   "computed": true
+  },
+  {
+   "socket": "Mag",
+   "location_cm": [
+    16.582,
+    0.0,
+    6.254
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "MagInsertStart",
+   "location_cm": [
+    16.829,
+    0.0,
+    5.493
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 18.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "MagRelease",
+   "location_cm": [
+    9.882,
+    0.0,
+    1.254
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "MagRockStart",
+   "location_cm": [
+    16.582,
+    0.0,
+    6.254
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 18.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Muzzle",
+   "location_cm": [
+    60.741,
+    0.0,
+    7.854
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "MuzzleSeat",
+   "location_cm": [
+    58.562,
+    0.0,
+    7.854
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Selector",
+   "location_cm": [
+    8.782,
+    2.375,
+    8.254
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "ShellEject",
+   "location_cm": [
+    13.182,
+    2.075,
+    8.854
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 20.0,
+    "yaw": 80.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Shoulder",
+   "location_cm": [
+    -25.888,
+    0.0,
+    2.354
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 5.229,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Sight",
+   "location_cm": [
+    18.672,
+    0.0,
+    12.404
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": -0.0763,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "SlingRear",
+   "location_cm": [
+    -19.053,
+    0.0,
+    -1.661
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "SupportHand",
+   "location_cm": [
+    29.932,
+    0.0,
+    5.394
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Trigger",
+   "location_cm": [
+    5.812,
+    0.0,
+    3.254
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  }
+ ]
+}

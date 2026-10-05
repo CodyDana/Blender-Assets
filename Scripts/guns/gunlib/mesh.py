@@ -14,6 +14,8 @@ from typing import List, Optional, Sequence
 
 import numpy as np
 
+from . import lod as _lod
+
 
 class Mesh:
     def __init__(self):
@@ -146,13 +148,14 @@ def _frame(axis):
 def revolve(profile, origin, axis, nseg=32, phase_deg=0.0, ref=None) -> Mesh:
     """Revolve a profile [(t, r), ...] (t along the axis from origin, r radius) around the axis. Points with r == 0
     become poles. The profile runs from one end to the other; the solid is closed by poles or n-gon caps."""
+    nseg = _lod.ring(nseg)
     o = np.asarray(origin, float)
     u, v, w = _frame(axis)
     if ref is not None:
         u = np.asarray(ref, float) - (np.asarray(ref, float) @ w) * w
         u /= np.linalg.norm(u)
         v = np.cross(w, u)
-    th = np.radians(phase_deg) + np.linspace(0, 2 * math.pi, nseg, endpoint=False)
+    th = np.radians(phase_deg + (_lod.PHASE_JITTER_DEG if _lod.LEVEL else 0.0)) + np.linspace(0, 2 * math.pi, nseg, endpoint=False)
     ring_dirs = np.outer(np.cos(th), u) + np.outer(np.sin(th), v)
     m = Mesh()
     rows = []
@@ -192,6 +195,7 @@ def box(x0, x1, y0, y1, z0, z1) -> Mesh:
 
 def ellipsoid(c, rx, ry, rz, nu=32, nv=16) -> Mesh:
     c = np.asarray(c, float)
+    nv = _lod.count(nv, 4)
     prof = []
     for j in range(nv + 1):
         ph = math.pi * j / nv
@@ -207,6 +211,7 @@ def ellipsoid(c, rx, ry, rz, nu=32, nv=16) -> Mesh:
 def dome(c, normal, r, h, nseg=24, nrings=4) -> Mesh:
     """Domed rivet head: spherical cap of base radius r and height h on a base disc, base centre c, axis normal."""
     R = (r * r + h * h) / (2 * h)
+    nrings = _lod.count(nrings, 1)
     prof = [(0.0, r)]
     for j in range(1, nrings + 1):
         z = h * j / nrings
@@ -236,6 +241,7 @@ def tube(p0, p1, r_in, r_out, nseg=32) -> Mesh:
     """Closed annular tube (ring) between p0 and p1."""
     p0 = np.asarray(p0, float)
     p1 = np.asarray(p1, float)
+    nseg = _lod.ring(nseg)
     u, v, w = _frame(p1 - p0)
     th = np.linspace(0, 2 * math.pi, nseg, endpoint=False)
     D = np.outer(np.cos(th), u) + np.outer(np.sin(th), v)
@@ -258,6 +264,7 @@ def capsule(p0, p1, r, nseg=24, nend=6) -> Mesh:
     p0 = np.asarray(p0, float)
     p1 = np.asarray(p1, float)
     L = float(np.linalg.norm(p1 - p0))
+    nend = _lod.count(nend, 2)
     prof = []
     for j in range(nend + 1):
         a = math.pi / 2 * j / nend

@@ -12,6 +12,7 @@ import numpy as np
 from rifle_common import SPEC
 from gunlib import geo2d as G
 from gunlib import mesh as MS
+from gunlib import lod as LOD
 from gunlib.parts import PartDef
 import rifle_parts as RP
 from rifle_parts import GAP, prof
@@ -40,7 +41,7 @@ def xcyl(y, z, r, x0, x1, n=32):
 # ======================================================================================== fore-end
 def upper_hg_section(zt, half_w=15.5, zb=13.12, n=24):     # (24: integration-round budget; every user takes the default)
     zc = zt - half_w
-    a = np.linspace(0, math.pi, n)
+    a = np.linspace(0, math.pi, LOD.ring(n))          # LOD: fewer arc points (every user, so the rings match)
     arc = np.c_[half_w * np.cos(a), zc + half_w * np.sin(a)]
     return np.vstack([[half_w, zb], arc, [-half_w, zb]])
 
@@ -329,7 +330,10 @@ def buttstock() -> PartDef:
     # 0.1 mm of the straight run between stations, at most 12 mm apart) instead of fixed linspaces; 36 rings where
     # round 1 had 41, with the density where the lines bend (comb nose, swivel flat, butt)
     forced = np.array([SW_FLAT_X[0] - 3.0, SW_FLAT_X[0], SW_FLAT_X[1], SW_FLAT_X[1] + 3.0])      # swivel flat
-    ch = stock_stations(xs_all, zt_all, zb_all, w_all, 0.1, 12.0)
+    ch = stock_stations(xs_all, zt_all, zb_all, w_all, LOD.tol(0.1), LOD.step(12.0))   # LOD: coarser chords
+    if LOD.LEVEL:      # the butt end keeps LOD0's stations: the plate's heel meets the stock's top line there (gap row)
+        ch0 = stock_stations(xs_all, zt_all, zb_all, w_all, 0.1, 12.0)
+        ch = np.unique(np.r_[ch, ch0[ch0 < 16.0]])
     ch = ch[(np.abs(ch[:, None] - forced[None, :]).min(1) > 1.0) & ~((ch > SW_FLAT_X[0]) & (ch < SW_FLAT_X[1]))]
     xs = np.unique(np.round(np.r_[ch, forced], 3))
     rings = []
@@ -338,8 +342,9 @@ def buttstock() -> PartDef:
         zb = float(np.interp(x, xs_all, zb_all))
         w = float(np.interp(x, xs_all, w_all))
         s = stock_section(x, zt, zb, w_override=w)
-        s = resample_ring(s, STOCK_NR, turn_weight=8.0)
-        rings.append(np.c_[np.full(STOCK_NR, x), s[:, 0], s[:, 1]])
+        nr = LOD.ring(STOCK_NR)
+        s = resample_ring(s, nr, turn_weight=8.0)
+        rings.append(np.c_[np.full(nr, x), s[:, 0], s[:, 1]])
     body = MS.loft(rings)
     trn = [(225.2, 7.0), (225.2, -17.5), (228.7, -22.0), (229.0, -28.5), (230.1, -34.0), (231.4, -36.77),
            (231.4, -45.0), (240.9, -45.0), (240.9, 12.0), (225.2, 12.0)]
@@ -360,6 +365,10 @@ def buttstock() -> PartDef:
     post += swivel_seat_cutters()
     p = PartDef("buttstock", [body], cutters=cut, post_cutters=post, cls="W-round", slot="M_AR01_Furniture",
                 recipe=[(1.6, 2, 40.0)])
+    if LOD.LEVEL >= 1:
+        # LOD1+: no edge round on the stock (1.6 mm is 0.8 px at the 2.7 m switch); its one-segment version came
+        # within 0.0075 mm of the butt plate's heel (row 0.01-0.05)
+        p.recipe = []
     return p
 
 

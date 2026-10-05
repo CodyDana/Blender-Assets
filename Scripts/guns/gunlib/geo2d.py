@@ -10,6 +10,8 @@ from typing import List, Sequence
 
 import numpy as np
 
+from . import lod as _lod
+
 
 def arr(P) -> np.ndarray:
     P = np.asarray(P, float)
@@ -98,6 +100,7 @@ def fillet(P, radius, seg=4, min_turn_deg=12.0, radii=None) -> np.ndarray:
     ``radii``: optional per-vertex radius list (0 = keep sharp)."""
     P = arr(P)
     n = len(P)
+    seg = _lod.count(seg, 1)
     out = []
     for i in range(n):
         r = radius if radii is None else radii[i]
@@ -172,6 +175,7 @@ def point_in_poly(pt, P) -> bool:
 
 
 def arc(cx, cy, r, a0_deg, a1_deg, n) -> np.ndarray:
+    n = _lod.arc_points(n)
     t = np.radians(np.linspace(a0_deg, a1_deg, n))
     return np.c_[cx + r * np.cos(t), cy + r * np.sin(t)]
 
@@ -187,6 +191,7 @@ def rounded_rect(a0, a1, b0, b1, r, seg=4) -> np.ndarray:
 
 
 def superellipse(a, b, n_exp=4.0, npts=48, ca=0.0, cb=0.0) -> np.ndarray:
+    npts = _lod.ring(npts)
     t = np.linspace(0, 2 * math.pi, npts, endpoint=False)
     c, s = np.cos(t), np.sin(t)
     x = a * np.sign(c) * np.abs(c) ** (2.0 / n_exp)

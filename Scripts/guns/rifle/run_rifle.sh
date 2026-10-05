@@ -28,6 +28,8 @@ py -3 -B "$HERE/rifle_gates.py" --stage blockout
 echo "== stage 2: form"
 run_blender form --python "$HERE/build_rifle.py" -- --stage form
 grep -E "total tris" "$LOG/form.log"
+# the gated form-stage blend, kept for the later stages (run_game.sh restores it before the UV stage)
+cp "$ROOT/Assets/Guns/AR01.blend" "$W/scratch/AR01_form_stage.blend"
 py -3 -B "$HERE/rifle_silhouette.py" --npz "$W/scratch/form_tris.npz" --stage form --json "$W/scratch/sil.json" > /dev/null
 py -3 -B "$HERE/rifle_q34.py" --npz "$W/scratch/form_tris.npz" --stage form $SOLVE > /dev/null
 py -3 -B "$HERE/rifle_closeups.py" --npz "$W/scratch/form_tris.npz" > /dev/null

@@ -1,38 +1,36 @@
-"""Detail part FRONT SIGHT: the cast sight block (a boxy base round the barrel with squared, rounded shoulders, the two
-thick rolled ears cast in one piece with it, the flush boss with its raised ring rim and scribed arc, the rounded
-window, the blind holes on the ears' inner faces, the stepped and notched cleaning-rod lug, the domed cross pin, the
-front ring collar), the sight post with its windage drum, and the cleaning rod (its T-head sits inside the lug).
+"""Detail part FRONT SIGHT: the cast sight block (a sleeve round the barrel, squarish on top where the ears land and
+round below, the two thick rolled ears cast in one piece with it, the flush boss with its raised ring rim and scribed
+arc, the rounded window, the blind holes on the ears' inner faces, the notched cleaning-rod lug with its round rod-end
+knob, the flat-headed cross pin, the front ring collar), the sight post with its windage drum, and the cleaning rod
+(its T-head sits inside the lug).
 
 Owns the objects: cleaning_rod, front_sight_block, front_sight_post.
 Authority close-ups: c3 FRONT SIGHT AND MUZZLE (SIDE) and the 3/4 view; the side trace stays the authority for
 position / scale (per-part L2 gate). Interfaces: barrel radius BORE_R, rod axis ROD_Z / ROD_R (gas block, front band),
-the brake's rear face X 848.82 (muzzle_brake: its detent latch sits on the brake's rear ring and hangs 0.03 mm above
-our front collar r 10.1 at X 847.6-848.82, so nothing of ours rises above r 10.1 there).
+the brake's rear face X 848.82 (muzzle_brake: its detent knob sits on the brake's rear ring above our front collar
+r 8.7; c3 / q34 draw it on the front collar right in front of the ear - interface note in
+WorkFiles/guns/rifle/review/detail/front_sight/spec_proposal.json).
 
-Detail pass round 2 (2026-10-05), every change from the round-1 blind judge's design tells checked on c3 / q34:
-- base: a loft of rounded-box sections (|Y| 11.0, Z -10.3..11.3, top shoulders R 3.2, flanks bulging 1.2, round
-  lower half R 7.0), not a turned cylinder; rear rim R 2.2, front shoulder R 1.6 (judge: "boxier, integrated top,
-  squarer front shoulders"; c3 / q34 still shade it like a round casting). The ears' outer faces run down into the
-  top shoulders, so the round-1 platform plate with its hard step is gone. The base ends at X 837.0 (side trace: top
-  10.8 to X 837, 9.8 at 838-839) and a ring collar r 9.7 (X 836.6-839.6, rounded front edge) carries on to the
-  collar r 8.7 (to 842.8) as c3 draws it.
-- ears: 3.8 thick (was 3.4; outer width 21.4 kept), every outline / window edge rolled with a 1.5 mm round (3
-  segments) on the outer faces and 1.2 on the inner faces, top corners R 3.0 front / R 3.5 rear (judge: "thick and
-  rounded, radiused tops, rolled tubular look; the top edge curves down into the ear with a rounded cap"). The ear
-  outline (rake, vertical upper rear edge, top) stays on the side trace (L2).
-- window: same position, corners R 1.6 / 2.2 / 2.6 / 2.0 and the 1.5 rolled rim: a rounded opening in a chunky frame.
-- boss: a mostly flush disc (proud 0.18) with a raised ring rim (0.32 proud, 0.4 wide) and a scribed groove (0.36
-  wide, 0.22 deep, cut after the bevels) leaving its lower rear edge towards the rake, as c3 draws it (round 1: a
-  solid raised disc read as a dome rivet). Planar +-Y faces get face-normal corner normals (flat_face_normals).
-- inner faces of the ears (seen on the far ear through the gap in c3 / q34): a large blind hole dia 4.0 near the
-  top front and a round-ended vertical slot below it (2.4 x 7.0), plus the drum counterbore (r 3.3); no through
-  holes (the side panels show none on the outer faces). The windage drum is r 2.8.
-- open: c3 / q34 draw the ears ~0.7-0.8 as wide front-to-back for their height; EAR_SX (env FS_EAR_SX) builds that
-  variant for review, the default 1.0 keeps the side trace (L2 0.961; the 0.78 variant scores L2 0.865).
-- cavity floor between the ears at Z 11.9 with 0.9 fillets into the ears' inner faces ("filleted inner corners").
-- cross pin moved to c3's position (X 830.5, Z -5.0), domed heads on the box's flat sides.
-- cleaning-rod lug: c3's stepped, notched lug (unchanged from round 1).
-Not built here: the detent latch (muzzle_brake owns it).
+Detail pass, round 2 of the second detail loop (2026-10-05, "r2b"), from the round-1 judge's design tells on c3 / q34:
+- ears 4.8 thick (EAR_IN 5.6; judge: "flat plate-like slabs" vs "thicker, rounded-top forged forms"); the outer faces
+  sit at |Y| 10.4, 0.6 inside the base's 11.0, so the base shows a ledge where the ears land (c3: the ear foot on the
+  sleeve's top line; judge: "thin flat ledge plate" vs "chunkier stepped casting"). Every ear outline / window edge
+  is rolled: R 2.0 outer faces, R 1.4 inner faces, R 1.1 at the window floor and the cavity-floor fillets, down to
+  Z 8.0 (RIM_Z0); top corners R 4.0, the knee where the vertical rear edge meets the rake R 8.0.
+- base: superellipse sections (exponent 3.5 on top, 2.4 below; |Y| 11.0, Z -10.3..11.3) lofted with the rear rim
+  R 2.2 / front shoulder R 1.6 (was a rounded box with flat flanks that read as one flat plate with the ears).
+- window: same position (side trace), corners R 2.2 / 2.6 / 3.0 / 2.4 with the 2.0 rolled rim.
+- boss r 4.2 (was 3.7) with its raised ring rim; the scribed groove (0.45 wide, 0.3 deep) is a longer sagging curve
+  from the boss's lower rear edge towards the rake.
+- far-ear inner face: blind hole dia 4.8 near the top front, the round-ended slot, the drum counterbore r 2.4; the
+  windage drum is r 2.0 (judge: "a small dark block in the gap").
+- cross pin: flat heads r 2.6, edge R 0.35, square to the curved flank and 0.42 proud of it (judge: "a larger
+  flat-headed pin"; round 1 had domed heads).
+- cleaning-rod lug: one rounded body (no width step), rounded rear end, a narrow notch, then a round rod-end knob with
+  a rounded nose (judge: "a shorter, more rounded clip with a visible rod-end shape").
+- open (R36, deferred): c3 / q34 draw the ears ~0.7-0.8 as wide front-to-back for their height; EAR_SX (env
+  FS_EAR_SX) builds that variant for review, the default 1.0 keeps the side trace (L2).
+Not built here: the detent knob (muzzle_brake owns it).
 """
 from __future__ import annotations
 
@@ -41,6 +39,7 @@ import os
 import numpy as np
 
 from gunlib import geo2d as G
+from gunlib import lod as LOD
 from gunlib import mesh as MS
 from gunlib.parts import PartDef
 from rifle_parts import GAP
@@ -55,15 +54,37 @@ def sx(x):
     return 833.0 + (x - 833.0) * EAR_SX
 
 
-EAR_IN, EAR_OUT = 6.9, 10.7       # ears 3.8 thick (outer width 21.4 = TOP panel)
-EAR_RIM = 1.5                     # rolled round on every ear outline / window edge (weighted bevel, weight 1 = 1.5 mm)
-W_IN, W_LOW = 0.8, 0.6            # rim weights: inner faces (1.2 mm), window floor / cavity floor edges (0.9 mm)
+def ear_out_y(z):
+    """|Y| of the ears' (tapered) outer faces at height z: ONE plane per side (not clamped, so the prism's outline caps
+    stay planar; below Z 11 the hood is inside the base anyway)."""
+    u = (z - EAR_TAPER_Z0) / (EAR_TOP_Z - EAR_TAPER_Z0)
+    return EAR_OUT + u * (EAR_OUT_TOP - EAR_OUT)
+
+
+def ear_face_normal(side):
+    """Outward unit normal of the tapered outer face on side +-1 (y, z components)."""
+    k = (EAR_OUT - EAR_OUT_TOP) / (EAR_TOP_Z - EAR_TAPER_Z0)
+    n = np.array([0.0, float(side), k])
+    return n / np.linalg.norm(n)
+
+
+EAR_IN, EAR_OUT = 5.2, 10.0       # integration r2b: ledge 0.6 -> 1.0 (judge: c3 draws the ear as a post with a shoulder where it meets the block; 1.4 left the block non-manifold); ears 4.8 thick
+                                  # the base shows a ledge where they land, c3; the TOP silhouette there is the base)
+# DETAIL FIX (2026-10-05, user checklist 2): the tower TAPERS (real cast pattern: the ears' outer faces lean in toward
+# the top, the ears ~2.8 thick at the top / 4.8 at the base; r2b's constant-width ears read as two flat slabs); the
+# outer faces are planes through |Y| EAR_OUT at Z EAR_TAPER_Z0 and EAR_OUT_TOP at the top Z 49.4 (planar caps)
+EAR_OUT_TOP = 8.0
+EAR_TAPER_Z0, EAR_TOP_Z = 11.0, 49.4
+EAR_RIM = 1.4                     # rolled round on every ear outline / window edge (weighted bevel, weight 1 = 1.4 mm;
+                                  # detail fix 2.0 -> 1.4: the thinner top must keep a flat after both rims: worn round tops)
+W_IN, W_LOW = 0.7, 0.55           # rim weights: inner faces (0.98 mm), window floor / cavity floor edges (0.77 mm)
 FLOOR_Z = 11.9                    # cavity floor between the ears
+RIM_Z0 = 8.0                      # the ears' rolled rims run down to here (the outer faces meet the base at Z ~7.1)
 WIN_Z0 = 12.2                     # window floor
 BOX_W, BOX_ZT, BOX_ZB = 11.0, 11.3, -10.3
-BOX_RT, BOX_RB = 5.0, 9.0        # top shoulders (the ears land on them) / round lower half (integration round: rounder,
-                                  # c3 draws the base as a round sleeve band; was 3.2 / 7.0)
-BOX_BULGE = 1.2                   # the flanks are slightly convex (c3 / q34: the base shades like a round casting)
+BOX_NT, BOX_NB = 3.5, 2.4         # r2b: base section = superellipse halves (squarish top that takes the ears, round
+                                  # sleeve-like lower half; c3 / q34 shade it as a round cast sleeve)
+BOX_NPTS = 34                     # detail fix: 40 -> 34 (triangle budget)
 BOX_X = (806.1, 837.0)
 BOX_RIM = (2.2, 1.6)              # rear rim, front shoulder
 RING = (836.6, 839.6, 9.7)        # ring collar in front of the box
@@ -72,16 +93,20 @@ FRONT_COLLAR_R = 8.7              # the collar under the brake's detent knob (in
                                   # brake, so the brake read long with a seam; c3: sleeve band -> narrow ring -> brake)
 HEAD_X = (811.0, 815.5)           # rod T-head inside the lug
 HEAD_W = 2.5
-BOSS = (sx(824.7), 29.9, 3.7)         # X, Z, radius
-BOSS_RIM_H, BOSS_FACE_H, BOSS_RIM_W = 0.32, 0.18, 0.4
+BOSS = (sx(824.7), 29.9, 4.2)         # X, Z, radius (r2b: c3 boss larger, 3.7 -> 4.2)
+BOSS_RIM_H, BOSS_FACE_H, BOSS_RIM_W = 0.62, 0.45, 0.4   # integration r2b: 0.32 / 0.18 -> 0.62 / 0.45 (judge: c3 draws the circle as a raised plug with a rim)
+BOSS_H, BOSS_EDGE = 1.0, 0.3      # DETAIL FIX: a raised round windage-drum boss (flat face 1.0 proud of the tapered face,
+                                  # 0.3 rolled edge) in place of r2b's flush disc with a ring rim
 # scribed curve leaving the boss's lower rear edge towards the rake (c3: tangent-ish to the boss, sagging slightly)
-SCRIBE = [(sx(824.7) - 3.1, 27.3), (sx(824.7) - 4.3, 27.05), (sx(824.7) - 5.7, 26.95), (sx(824.7) - 7.3 * min(1.0, EAR_SX + 0.1), 26.95)]
-SCRIBE_W, SCRIBE_D = 0.36, 0.22
-DRUM = (sx(825.3), 31.0, 2.8)         # windage drum X, Z, radius (post part); sits 0.9 deep in each ear's counterbore
-CBORE_R = 3.3
-TOP_HOLE = (sx(829.4), 43.4, 2.0, 2.0)                           # X, Z, radius, depth (blind, inner faces)
+SCRIBE = [(sx(824.7) - 3.6, 27.2), (sx(824.7) - 5.2, 26.55), (sx(824.7) - 6.9, 26.35), (sx(824.7) - 8.6 * min(1.0, EAR_SX + 0.1), 26.75)]
+SCRIBE_W, SCRIBE_D = 0.45, 0.3
+DRUM = (sx(825.3), 31.0, 2.0)         # windage drum X, Z, radius (post part); sits 0.9 deep in each ear's counterbore
+CBORE_R = 2.4                         # r2b: drum 2.8 -> 2.0 (judge: a dark block in the gap; c3 shows an open slot)
+TOP_HOLE = (sx(829.4), 43.4, 2.4, 2.0)                           # X, Z, radius, depth (blind, inner faces)
 SLOT = G.rounded_rect(sx(829.3), sx(831.7), 27.5, 34.5, 0.49 * (sx(831.7) - sx(829.3)), 3)     # round-ended slot on the inner faces, 1.4 deep
 PIN = (830.5, -5.0, 2.0)          # cross pin X, Z, radius
+DET_X, DET_R, DET_H = 845.2, 1.9, 2.7   # detail fix: detent housing on the front collar (top Z 9.7, pin to 10.2)
+PIN_HEAD = (2.6, 0.42)            # r2b: flat pin head radius / proud of the flank (c3: a larger flat-headed pin)
 
 
 # ======================================================================================== outlines
@@ -91,27 +116,33 @@ def ear_outline() -> np.ndarray:
     xr = 806.3 + (816.5 - 806.3) * (11.0 - 9.6) / (37.0 - 9.6)          # rake at Z 11.0
     P = np.array([(sx(807.6), 2.0), (833.0, 2.0), (833.0, 49.4), (sx(816.5), 49.4), (sx(816.5), 37.0), (sx(xr), 11.0),
                   (sx(807.6), 9.0)], float)
-    return G.fillet(G.ccw(P), 1.0, 5, radii=[0.0, 0.0, 3.0, 3.5, 3.0, 0.0, 0.0])
+    return G.fillet(G.ccw(P), 1.0, 6, radii=[0.0, 0.0, 5.0, 5.0, 8.0, 0.0, 0.0])   # detail fix: worn rounder tops (R 4 -> 5)
 
 
 def window_outline() -> np.ndarray:
     P = np.array([(sx(813.4), WIN_Z0), (sx(827.2), WIN_Z0), (sx(827.2), 21.8), (sx(816.4), 21.8)], float)
-    return G.fillet(G.ccw(P), 1.0, 4, radii=[1.6, 2.2, 2.6, 2.0])
+    return G.fillet(G.ccw(P), 1.0, 5, radii=[2.2, 2.6, 3.0, 2.4])
 
 
 def box_section(inset=0.0) -> np.ndarray:
-    """YZ section of the base (CCW in YZ), shrunk by `inset` (constant vertex count): top shoulders R BOX_RT, a round
-    lower half R BOX_RB, flanks bulging BOX_BULGE between them (the corner arcs sit at |Y| BOX_W - BOX_BULGE)."""
-    b = BOX_BULGE
-    w, zt, zb = BOX_W - b - inset, BOX_ZT - inset, BOX_ZB + inset
-    rt, rb = max(BOX_RT - inset, 0.05), max(BOX_RB - inset, 0.05)
-    za, zc = zb + rb, zt - rt                       # flank from za up to zc
-    flank = [(w + b * (1 - ((z - (za + zc) / 2) / ((zc - za) / 2)) ** 2), z) for z in np.linspace(za, zc, 7)[1:-1]]
-    pts = [G.arc(w - rb, za, rb, -90.0, 0.0, 9)[:-1], np.array([(w, za)] + flank + [(w, zc)]),
-           G.arc(w - rt, zc, rt, 0.0, 90.0, 5)[1:], G.arc(-w + rt, zc, rt, 90.0, 180.0, 5)[:-1],
-           np.array([(-w, zc)] + [(-y, z) for y, z in flank[::-1]] + [(-w, za)]),
-           G.arc(-w + rb, za, rb, 180.0, 270.0, 9)[1:]]
-    return G.dedupe(np.vstack(pts))
+    """YZ section of the base (CCW in YZ), shrunk by `inset` (constant vertex count): two superellipse halves about
+    Z (BOX_ZT + BOX_ZB) / 2, half width BOX_W, exponent BOX_NT above (squarish shoulders that take the ears) and
+    BOX_NB below (a round sleeve). Points are spaced by arc length plus turning, so the shoulders get the vertices."""
+    zc = 0.5 * (BOX_ZT + BOX_ZB)
+    a, b = BOX_W - inset, 0.5 * (BOX_ZT - BOX_ZB) - inset
+    t = np.linspace(0.0, 2.0 * np.pi, 4000, endpoint=False)
+    c, sn = np.cos(t), np.sin(t)
+    n = np.where(sn >= 0.0, BOX_NT, BOX_NB)
+    P = np.c_[a * np.sign(c) * np.abs(c) ** (2.0 / n), zc + b * np.sign(sn) * np.abs(sn) ** (2.0 / n)]
+    d = np.diff(np.vstack([P, P[:1]]), axis=0)
+    seg = np.linalg.norm(d, axis=1)
+    ang = np.arctan2(d[:, 1], d[:, 0])
+    turn = np.abs((np.diff(np.r_[ang, ang[0]]) + np.pi) % (2.0 * np.pi) - np.pi)
+    w = seg + 6.0 * turn
+    m = np.r_[0.0, np.cumsum(w)[:-1]]
+    u = np.linspace(0.0, w.sum(), BOX_NPTS if LOD.LEVEL == 1 else LOD.ring(BOX_NPTS), endpoint=False)     # LOD2: fewer section points (LOD1 keeps them: a 17-point box met the 16-sided collars in coincident faces)
+    idx = np.searchsorted(m, u).clip(0, len(P) - 1)
+    return G.ccw(P[idx])
 
 
 # ======================================================================================== solids
@@ -142,8 +173,15 @@ def front_collars() -> MS.Mesh:
 
 def hood() -> MS.Mesh:
     """Ears + floor as ONE cast solid: the ear outline at full width; the space between the ears (cavity, cut later)
-    leaves the two ears standing on the floor."""
-    return MS.prism(ear_outline(), -EAR_OUT, EAR_OUT)
+    leaves the two ears standing on the floor. DETAIL FIX: the outer faces taper in toward the top (ear_out_y: planar,
+    so the caps stay flat n-gons)."""
+    m = MS.prism(ear_outline(), -EAR_OUT, EAR_OUT)
+    V = m.verts()
+    V[:, 1] = np.sign(V[:, 1]) * np.array([ear_out_y(z) for z in V[:, 2]])
+    out = MS.Mesh()
+    out.add_verts(V)
+    out.F = list(m.F)
+    return out
 
 
 def cavity() -> MS.Mesh:
@@ -159,10 +197,10 @@ def inner_face_cuts() -> list:
     vertical slot (c3 / q34 show them on the far ear between the ears)."""
     out = []
     for s in (-1, 1):
-        out.append(ycyl(DRUM[0], DRUM[1], CBORE_R, *_ybetween(s, 6.0, EAR_IN + 0.9), 20))
+        out.append(ycyl(DRUM[0], DRUM[1], CBORE_R, *_ybetween(s, EAR_IN - 1.0, EAR_IN + 0.9), 20))
         x, z, r, d = TOP_HOLE
-        out.append(ycyl(x, z, r, *_ybetween(s, 6.0, EAR_IN + d), 20))
-        out.append(MS.prism(SLOT, *_ybetween(s, 6.0, EAR_IN + 1.4)))
+        out.append(ycyl(x, z, r, *_ybetween(s, EAR_IN - 1.0, EAR_IN + d), 20))
+        out.append(MS.prism(SLOT, *_ybetween(s, EAR_IN - 1.0, EAR_IN + 1.4)))
     return out
 
 
@@ -192,7 +230,8 @@ def scribe_outline() -> np.ndarray:
 def arc_cuts() -> list:
     """The scribed curve on each ear's outer face (a SCRIBE_D deep groove, real geometry)."""
     P = scribe_outline()
-    return [MS.prism(P, *_ybetween(s, EAR_OUT - SCRIBE_D, EAR_OUT + 1.0)) for s in (-1, 1)]
+    yf = ear_out_y(26.7)                                 # detail fix: the tapered face at the scribe's height
+    return [MS.prism(P, *_ybetween(s, yf - SCRIBE_D, yf + 1.0)) for s in (-1, 1)]
 
 
 def _near_details(x, z):
@@ -215,7 +254,7 @@ def edge_weight(mid, d, n1, n2, dih):
         return 0.0
     if x > 836.4 and r < 10.2:                           # ring collar / collar seams
         return 0.0
-    if abs(x - PIN[0]) < PIN[2] + 0.8 and abs(z - PIN[1]) < PIN[2] + 0.8 and abs(y) > 9.0:     # domed cross pin
+    if abs(x - PIN[0]) < PIN_HEAD[0] + 0.5 and abs(z - PIN[1]) < PIN_HEAD[0] + 0.5 and abs(y) > 8.0:   # pin head (own round)
         return 0.0
     if (y * y + (z - ROD_Z) ** 2) < (ROD_R + 0.6) ** 2 or (HEAD_X[0] - 0.2 < x < HEAD_X[1] + 0.2 and abs(y) < HEAD_W + 0.2
                                                            and abs(z - ROD_Z) < 2.8):
@@ -224,8 +263,6 @@ def edge_weight(mid, d, n1, n2, dih):
         return 0.0
     if EAR_IN - 0.25 <= abs(y) <= EAR_OUT + 0.25 and z > FLOOR_Z - 0.3:
         return 0.0                                       # the ears' rims (the rim pass rounded them)
-    if abs(y) > EAR_OUT - 0.4 and z > 9.0 and 806.0 < x < 833.5:
-        return 0.0                                       # crease where the ear faces run into the box's top corner
     return 1.0
 
 
@@ -233,9 +270,9 @@ def rim_weight(mid, d, n1, n2, dih):
     """Weighted rolled round on the ears: every outline / window edge on the ear faces (|Y| EAR_IN / EAR_OUT) above
     the box top (1.5 outer, 1.2 inner, 0.9 at the window floor and the cavity floor's fillets); not the details."""
     x, y, z = mid
-    if dih < 45.0 or abs(y) < EAR_IN - 0.15 or abs(y) > EAR_OUT + 0.15:
+    if dih < 45.0 or abs(y) < EAR_IN - 0.15 or abs(y) > ear_out_y(z) + 0.15:
         return 0.0
-    if z < BOX_ZT + 0.3:                                 # base creases (ear faces into the box)
+    if z < RIM_Z0:                                       # base creases (ear faces into the base's shoulders)
         return 0.0
     if _near_details(x, z):
         return 0.0
@@ -247,35 +284,63 @@ def rim_weight(mid, d, n1, n2, dih):
 
 
 def boss(side) -> MS.Mesh:
-    """Flush disc with a raised ring rim: rim proud BOSS_RIM_H (outer chamfer 0.12), face proud BOSS_FACE_H."""
+    """DETAIL FIX (user checklist 2): a raised round windage-drum boss on the tapered outer face, square to it: a flat
+    face BOSS_H proud with a BOSS_EDGE rolled edge (r2b: a flush disc with a raised ring rim)."""
     x, z, r = BOSS
-    y0 = side * (EAR_OUT - 0.3)
-    e = 0.3
-    prof = [(0.0, 0.0), (0.0, r), (e + BOSS_RIM_H - 0.08, r), (e + BOSS_RIM_H, r - 0.08),
-            (e + BOSS_RIM_H, r - BOSS_RIM_W), (e + BOSS_FACE_H, r - BOSS_RIM_W - 0.12)]     # flat n-gon face (no pole)
-    return MS.revolve(prof, (x, y0, z), (0.0, side, 0.0), 24)
+    n = ear_face_normal(side)
+    e = 0.6                                              # rooted 0.6 inside the face
+    o = np.array([x, side * ear_out_y(z), z]) - n * e
+    h = e + BOSS_H
+    c = BOSS_EDGE
+    prof = [(0.0, 0.0), (0.0, r), (h - c, r), (h - c * 0.29, r - c * 0.29), (h, r - c), (h, 0.0)]
+    return MS.revolve(prof, tuple(o), tuple(n), 24)
+
+
+def _flank_y(z) -> float:
+    """|Y| of the base's (uninset) side at height z."""
+    zc = 0.5 * (BOX_ZT + BOX_ZB)
+    b = 0.5 * (BOX_ZT - BOX_ZB)
+    n = BOX_NT if z >= zc else BOX_NB
+    return BOX_W * max(0.0, 1.0 - abs((z - zc) / b) ** n) ** (1.0 / n)
+
+
+def _flank_normal(z):
+    """Unit outward normal (ny, nz) of the base's +Y flank at height z."""
+    h = 0.01
+    dy = (_flank_y(z + h) - _flank_y(z - h)) / (2 * h)
+    n = np.array([1.0, -dy])
+    return n / np.linalg.norm(n)
 
 
 def cross_pin() -> list:
-    """Cross pin through the base below the barrel axis, domed heads proud of the box's flat sides (c3)."""
+    """Cross pin through the base below the barrel axis; flat heads (rounded edge R 0.35) square to the curved flank,
+    standing PIN_HEAD[1] proud of it (c3: a larger flat-headed pin)."""
     x, z, r = PIN
-    yb = BOX_W
-    out = [ycyl(x, z, r, -yb, yb, 16)]
+    rh, hp = PIN_HEAD
+    yf = _flank_y(z)
+    ny, nz = _flank_normal(z)
+    out = [ycyl(x, z, r, -yf + 0.5, yf - 0.5, 16)]
+    L = 1.6 + hp
+    prof = [(0.0, 0.0), (0.0, rh), (L - 0.35, rh), (L - 0.1, rh - 0.1), (L, rh - 0.35), (L, 0.0)]
     for s in (-1, 1):
-        out.append(MS.dome((x, s * yb, z), (0.0, s, 0.0), r, 0.5, 16, 2))
+        o = (x, s * (yf - 1.6 * ny), z - 1.6 * nz)          # starts 1.6 inside the flank, along the normal
+        out.append(MS.revolve(prof, o, (0.0, s * ny, nz), 20))
     return out
 
 
 def rod_lug() -> MS.Mesh:
-    """c3's stepped, notched cleaning-rod lug as one loft of rounded YZ sections (X, half width, bottom Z, corner r);
-    the top runs inside the base."""
+    """c3's cleaning-rod lug as one loft of rounded YZ sections (X, half width, bottom Z, corner r); the top runs
+    inside the base. r2b (judge: 'a shorter, more rounded clip with a visible rod-end shape'): one rounded body with
+    a rounded rear end, a narrow notch, then a round rod-end knob with a rounded nose (no width step)."""
     top = -8.0
-    st = [(809.8, 3.6, -9.8, 0.9), (810.4, 3.6, -14.2, 1.4), (812.6, 3.6, -15.8, 1.6),
-          (824.0, 3.6, -15.8, 1.6),
-          (824.0, 2.9, -15.5, 1.4), (829.6, 2.9, -15.5, 1.4),            # step down (c3: the face at the joint)
-          (829.6, 3.6, -15.8, 1.6), (831.0, 3.6, -15.8, 1.6),            # shoulder (c3: the lit forward face)
-          (832.4, 2.0, -13.9, 1.0), (835.0, 2.0, -13.9, 1.0),            # neck = the notch
-          (835.0, 2.7, -14.3, 1.3), (837.0, 2.7, -14.3, 1.3), (837.8, 2.2, -13.0, 1.0)]   # end knob
+    # DETAIL FIX (user checklist 2): a STEPPED lug: the full-width rear body, a step in to a narrower, 0.6 mm shallower
+    # front tier (the rod seat), the notch, the rod-end knob, the rounded nose (r2b: one rounded body)
+    st = [(809.9, 3.0, -10.6, 1.2), (810.4, 3.4, -13.6, 1.8), (811.4, 3.8, -15.1, 2.3), (812.6, 3.8, -15.7, 2.5),
+          (820.6, 3.8, -15.7, 2.5), (821.6, 3.6, -15.5, 2.3), (822.6, 3.0, -15.1, 1.9),     # the step (1.0 mm runs: the 0.6 chamfer must fit)
+          (829.0, 3.0, -15.1, 1.9), (830.0, 2.9, -14.9, 1.8),
+          (830.7, 2.1, -14.0, 1.2), (832.5, 2.1, -14.0, 1.2),            # the notch
+          (833.1, 3.0, -15.1, 2.3), (835.0, 3.0, -15.1, 2.3),            # round rod-end knob
+          (836.2, 2.7, -14.7, 2.1), (837.0, 2.0, -13.8, 1.6), (837.5, 1.1, -12.4, 0.9)]   # rounded nose
     rings = []
     for x, w, zb, r in st:
         S = G.rounded_rect(-w, w, zb, top, r, 2)
@@ -292,14 +357,21 @@ def cleaning_rod() -> PartDef:
     return PartDef("cleaning_rod", [r], unions=[head], cls="M-round", recipe=[(0.4, 2, 30.0)])
 
 
-# rolled rims first (3 segments), then the process chamfer on the remaining sharp visible edges
-RECIPE = [(EAR_RIM, 2, "W", rim_weight), (0.6, 1, "W", edge_weight)]     # integration round: rims 2 segments (budget; were 3)
+# rolled rims first (2 segments), then the process chamfer on the remaining sharp visible edges
+RECIPE = [(EAR_RIM, 2, "W", rim_weight), (0.6, 1, "W", edge_weight)]     # rims 2 segments (budget; 3 looked the same at c3)
 
 
 def front_sight_block() -> PartDef:
     front_collar2 = MS.cylinder((842.6, 0, 0), (848.78, 0, 0), FRONT_COLLAR_R, 32, phase_deg=5.625)   # off the collar's vertex planes
-    plunger = MS.cylinder((841.2, 0, 7.0), (841.2, 0, 9.1), 1.1, 12)
-    unions = [base_box(), front_collars(), rod_lug(), front_collar2, boss(1), boss(-1), plunger] + cross_pin()
+    # DETAIL FIX (user checklist 3): the brake's detent as a small boss at the front sight's base (the real pattern's
+    # spring detent sits in the sight base and bears on the brake): a round housing r 1.9 standing 1.0 proud of the
+    # front collar with a rolled top, the pin head r 0.75 in it (replaces the brake's detent block / this plunger)
+    plunger = MS.revolve([(0.0, 0.0), (0.0, DET_R), (DET_H - 0.3, DET_R), (DET_H - 0.09, DET_R - 0.09), (DET_H, DET_R - 0.3),
+                          (DET_H, 0.75), (DET_H + 0.38, 0.75), (DET_H + 0.5, 0.63), (DET_H + 0.5, 0.0)],
+                         (DET_X, 0.0, 7.0), (0.0, 0.0, 1.0), 16)
+    unions = [base_box(), front_collars(), rod_lug(), front_collar2]
+    if LOD.LEVEL < 2:                     # LOD2: the bosses, detent and cross pin are painted only (sub-pixel at 6.7 m)
+        unions += [boss(1), boss(-1), plunger] + cross_pin()
     p = PartDef("front_sight_block", [hood()], unions=unions, cls="M-chamfer-front", recipe=RECIPE,
                 spec_id="front_sight_block")
     win = window_outline()
@@ -308,8 +380,9 @@ def front_sight_block() -> PartDef:
                  MS.box(HEAD_X[0] - 0.5, HEAD_X[1] + GAP,     # 0.5 behind the head: room for its rod fillet
                          -HEAD_W - GAP, HEAD_W + GAP, ROD_Z - 2.6 - GAP, ROD_Z + 2.6 + GAP),
                  xcyl(0.0, ROD_Z, ROD_R + GAP, 800.0, HEAD_X[0] + 0.1, 16)]
-    p.cutters += inner_face_cuts()
-    p.post_cutters = [] if os.environ.get("FS_NOSCRIBE") else arc_cuts()     # after the bevels: a crisp scribed line
+    if LOD.LEVEL < 2:
+        p.cutters += inner_face_cuts()
+    p.post_cutters = [] if (os.environ.get("FS_NOSCRIBE") or LOD.LEVEL >= 2) else arc_cuts()     # after the bevels: a crisp scribed line
     return p
 
 
@@ -320,8 +393,11 @@ def flat_face_normals(ob, tol=0.99995) -> int:
     me = ob.data
     cn = np.array([c.vector[:] for c in me.corner_normals], float)
     n = 0
+    # detail fix: the tapered outer faces (and the boss faces square to them) are planar too
+    taper = [ear_face_normal(sd) for sd in (-1, 1)]
     for poly in me.polygons:
-        if abs(poly.normal[1]) > tol:
+        pn = np.array(poly.normal[:])
+        if abs(poly.normal[1]) > tol or any(float(pn @ t) > tol for t in taper):
             for li in poly.loop_indices:
                 cn[li] = poly.normal[:]
             n += 1

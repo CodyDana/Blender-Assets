@@ -6,27 +6,26 @@ left), c1 (right) and the 3/4 view. Interfaces: the receiver's bottom ledge (led
 (X 301.5-329, Y +-3.25), TRIG_PIVOT (B3 trigger sweep), CATCH_PIVOT (mag_catch in receiver_right), the grip's front
 leg cut GRIP_LEG (grip: X 298.4-303.3 above Z -60).
 
-Detail pass round 2 (2026-10-05). Method: the c1 / c6 close-ups rectified onto the part's own XZ plane at the solved
-part cameras (trigger_guard_r2.py rectify), read in mm and drawn over our outlines; the side trace keeps scale,
-position and the per-part L2 outline. Round-1 blind tells fixed here:
-- loop SECTION (judge: "thick flat strap with an even silver rim inside" vs the reference's "thin rod-like bow"):
-  the rectified close-ups show three thin dark lines with light lines between them all round the loop, i.e. a stamped
-  strip with rolled outer edges and a pressed centre groove, not a flat strap with a lit inner edge. The loop is now
-  a loft of that section along the U (rings between the outer and inner chains, nearest-point pairs): outer roll
-  0.8 mm (faces down / out, reads dark), centre V-groove 0.8 x 0.3 mm with a flat bottom (one lit and one dark slope
-  = the light / dark line pair), inner edge only 0.25 mm (the round-1 0.6 mm roll on the inner edge lit the chrome
-  rim). The outline (outer R 10 / 9.5, inner R 8 / 5.5, legs 4.0 / 4.4, bottom 3.25) is unchanged: c1 and c6
-  rectified agree with it within ~0.5 mm, and it holds the side L2;
-- front leg (judge: "meets the receiver with a visible step or shelf"): the lip gusset under the flange is gone, the
-  leg's inner edge runs straight up into the flange as in c1;
-- catch housing (judge: "boxy bracket with a gap"): the cheeks now reach down to the catch paddle's top (Z -54) with a
-  0.12-0.13 mm swept clearance (their bottom follows the paddle top's envelope over the 0-10 deg release), so the
-  tongue recess that read as a gap is closed and the housing reads as one block down to the paddle's chamfer (c1,
-  side trace: housing to Z -57 / -58); the pin is a flat round head on a washer (c1: ring + centre head), no diamond;
-- trigger (judge: "thinner blade, needle-like curl, forward hook/spur at the top"): the blade re-traced from c1 and
-  c6 (c6 sits 4.6 mm rearward in its own frame; after that shift the two agree within 0.3 mm on the rear edge): a
-  single concave flare at the top (no shelf + knee), a broader blade (6.3 mm at mid, 4.9 mm lower), a blunt rounded
-  tip 2.4 mm tall (the side trace's tip end is 2.7 mm), rolled rear edge and tip 0.4 mm, a rounded finger face (1.2 mm x 2 each side).
+Detail pass round 2 (2026-10-05, first run, in git at 5893f738): loop lofted from a stamped section, front-leg gusset
+removed, cheeks down to the paddle, trigger re-traced from c1 / c6.
+
+Detail pass round 2b (2026-10-05, re-run on the integrated build; method: c1 / c6 rectified onto the part's XZ plane at
+the solved part cameras by trigger_guard_r2.py, read at 1 mm rows, ROUGH LOOK renders at the part cameras). Round-1
+blind tells and what changed:
+- trigger "broader at the top, thick tip; ours thinner and hook-like": c1 draws the receiver bottom ~2.3 mm higher
+  than the side trace, so its trigger rows are mapped into our opening (x 0.914 in Z); the sloped shoulder now reaches
+  X 306-308 just below the flange with a crisp knee, the tip is a blunt ~2 mm round end. Side L2 trigger IoU 0.895 ->
+  0.946 (the side trace agrees);
+- trigger chrome streak (render tell in every round): the bevel-modifier "rounds" on the blade were clamped to ~0.06 mm
+  by the cap triangulation, leaving a flat 6 mm finger face the c1 camera (4.5 deg toward the muzzle) sees at grazing
+  incidence. The blade is now a profiled extrusion (blade_mesh): a shallow concave finger face (0.8 mm) with 0.15 mm
+  edge breaks that runs round the tip, and a 0.45 mm rear roll; c1 / c6 show the same dark line / light band / dark
+  outline along the front edge;
+- loop "thicker flat strap with a bevelled lip, boxier rear corner": the side face is two rounded beads either side of
+  a V groove (c1: three dark lines with two light ones), the corners have 8 segments (6 showed facets), inner radii
+  rear 6 / front 8 (c1 rows; round 2 had them swapped), front outer R 11, bottom bar 0.3 mm deeper (c1);
+- "a separate block at the top" of the catch: the front tab is full width only down to Z -33.2 (c1: a thin plate over
+  the housing), recessed like the rear flange below.
 """
 from __future__ import annotations
 
@@ -35,6 +34,7 @@ import math
 import numpy as np
 
 from gunlib import geo2d as G
+from gunlib import lod as LOD
 from gunlib import mesh as MS
 from gunlib.parts import PartDef
 from rifle_parts import GAP, WO, ledge_z
@@ -46,6 +46,7 @@ def catmull(P, n_per=6):
     P = np.asarray(P, float)
     Q = np.vstack([2 * P[0] - P[1], P, 2 * P[-1] - P[-2]])
     out = []
+    n_per = LOD.count(n_per, 2)                     # LOD: fewer spline points per span
     for i in range(1, len(Q) - 2):
         p0, p1, p2, p3 = Q[i - 1], Q[i], Q[i + 1], Q[i + 2]
         for k in range(n_per):
@@ -59,59 +60,123 @@ def catmull(P, n_per=6):
 
 # ======================================================================================== trigger group
 TRIG_PIVOT = (318.0, -20.0)
+TRIG_FACE_C = 0.8             # finger face: shallow concave across the 6.0 mm blade, crisp-broken edges (blade_mesh)
 
 # one chain top-rear -> tip -> top-front (frame M, X/Z), from the rectified c1 / c6 close-ups (c6 + 4.6 mm) inside the
 # side trace's envelope (spec side_profile_M "trigger")
 TRIG_CHAIN = [
-    # rear edge: one concave flare from the slot into the blade (c1: X 310.1 / 311.8 / 313.3 at Z -36 / -37 / -38)
-    # (c1 / c6 put the flare ~1.5 mm higher than the side trace; this sits between them, inside the side L2)
-    (306.0, -34.7), (306.9, -35.5), (308.6, -36.6), (310.6, -37.7), (312.4, -38.8), (313.5, -40.2), (314.0, -41.9),
-    (314.5, -44.2), (315.4, -46.9), (316.8, -49.6), (318.7, -52.2), (321.1, -54.5), (323.8, -56.4), (326.4, -57.6),
-    # integration round (2026-10-05; round-2 judges on c1 and c6: "a slender tapering curve ending in a fine point",
-    # "a pronounced forward hook at the top", ours "thicker, even in width, blunter"): a finer tip (1.3 mm), the lower
-    # front edge 0.9 mm in toward the rear edge (the blade tapers), the top-front curving further forward
-    (327.6, -57.9), (328.5, -57.6), (328.95, -57.15), (328.5, -56.55), (327.5, -55.25),
-    (326.6, -54.0), (325.3, -52.7), (324.1, -51.1), (323.0, -49.3), (322.2, -47.3), (321.6, -45.1), (321.3, -42.7),
-    (321.4, -40.3), (321.9, -37.9), (322.9, -36.1), (324.2, -35.1), (325.2, -34.7)]
+    # detail round 2b (2026-10-05): the rectified c1 read at 1 mm rows (review/detail/trigger_guard/r2b_trace.json) and
+    # compressed into our opening: c1 draws the receiver bottom ~2.3 mm higher than the side trace (its opening is
+    # taller in proportion), so its trigger rows Z -33.3 .. -57.6 map onto ours -35.6 .. -57.8 (x 0.914 in Z, X kept).
+    # That keeps c1's broad top (the sloped shoulder reaching X 306-308 just below the flange, then a crisp knee) inside
+    # our shorter opening; the side trace agrees (its trigger is broader at the top than round 2's).
+    # rear edge
+    (305.8, -34.7), (306.4, -35.33), (307.0, -36.24), (308.2, -37.15), (309.9, -38.07), (311.6, -38.98), (313.0, -39.75),
+    (313.6, -40.6), (313.9, -41.72), (314.2, -43.55), (314.6, -45.38), (315.2, -47.21), (316.1, -49.04),
+    (317.25, -50.86), (318.75, -52.69), (320.75, -54.52), (321.9, -55.43), (323.25, -56.35), (324.9, -57.2),
+    (326.3, -57.7),
+    # blunt rounded tip, ~2 mm across (c1: X 325.2-328.6 at its Z -57; the round-1 judge: "a fairly thick tip")
+    (327.5, -58.0), (328.45, -57.85), (329.0, -57.3), (329.0, -56.6), (328.45, -56.0),
+    # front (finger) edge
+    (327.25, -55.43), (326.1, -54.52), (325.1, -53.5), (324.4, -52.69), (323.25, -50.86), (322.3, -49.04),
+    (321.75, -47.21), (321.4, -45.38), (321.1, -43.55), (321.1, -41.72), (321.4, -39.9), (321.75, -38.98),
+    (322.0, -38.07), (322.4, -37.15), (323.0, -36.24), (323.7, -35.33), (324.3, -34.7)]
 
 
 def trigger_outline():
-    return G.ccw(G.dedupe(G.dp_simplify(catmull(TRIG_CHAIN, 2), 0.03)))     # (0.03 mm DP: budget, shape kept)
+    return G.ccw(G.dedupe(G.dp_simplify(catmull(TRIG_CHAIN, 2), LOD.tol(0.05))))     # (0.05 mm DP: budget, shape kept; LOD: coarser)
 
 
 _TRIG_DENSE = catmull(TRIG_CHAIN, 4)
-_TRIG_APEX = int(np.argmin(np.hypot(_TRIG_DENSE[:, 0] - 329.0, _TRIG_DENSE[:, 1] + 57.0)))
+_TRIG_APEX = int(np.argmin(np.hypot(_TRIG_DENSE[:, 0] - 329.1, _TRIG_DENSE[:, 1] + 57.0)))
 
 
-def _blade_edge(mid, d, n1, n2, dih):
-    """+1 rear edge / tip, -1 front edge, 0 not a blade outline edge (between a flat side, normal +-Y, and the outline
-    wall, below the receiver Z < -35.3)."""
-    if dih < 60.0 or mid[2] > -35.3 or abs(d[1]) > 0.5:
-        return 0
-    if not (abs(n1[1]) > 0.9 or abs(n2[1]) > 0.9):
-        return 0
-    j = int(np.argmin(np.hypot(_TRIG_DENSE[:, 0] - mid[0], _TRIG_DENSE[:, 1] - mid[2])))
-    return 1 if j <= _TRIG_APEX else -1
+TRIG_T = 3.0                  # blade half thickness (Y)
+TRIG_REAR_R = 0.45            # rear edge / tip roll
+TRIG_BREAK = 0.15             # finger face edge break
 
 
-def _pred_trigger_rear(mid, d, n1, n2, dih):
-    """Rolled rear edge and round tip (0.4 mm)."""
-    return 1.0 if _blade_edge(mid, d, n1, n2, dih) == 1 else 0.0
+def _blade_params(Q):
+    """Per-vertex (finger-face weight f, concave depth c, rear roll R) of the blade outline Q (CCW, XZ): the front
+    chain gets the concave finger face, the rear chain and the tip the roll; both ramp down to a small floor at the blade
+    top (hidden in the flange slot, under the stem) and are limited by the local blade width near the tip."""
+    dense = _TRIG_DENSE
+    j = np.array([int(np.argmin(np.hypot(dense[:, 0] - x, dense[:, 1] - z))) for x, z in Q])
+    front = j > _TRIG_APEX - 6                     # the concave face runs round the tip's end too (any convex or
+                                                   # flat end facing up-forward lit a bright knob in c1)
+    ramp = np.clip((-34.75 - Q[:, 1]) / 1.0, 0.25, 1.0)
+    rear_pts, front_pts = dense[: _TRIG_APEX + 1], dense[_TRIG_APEX + 1:]
+    out = []
+    for i, (x, z) in enumerate(Q):
+        other = rear_pts if front[i] else front_pts
+        w = float(np.min(np.hypot(other[:, 0] - x, other[:, 1] - z)))
+        if front[i]:
+            out.append((1.0, max(min(TRIG_FACE_C * ramp[i], 0.2 * w), 0.3 * ramp[i]), 0.0))
+        else:
+            out.append((0.0, 0.0, max(min(TRIG_REAR_R * ramp[i], 0.3 * w), 0.08)))
+    return out
 
 
-def _pred_trigger_front(mid, d, n1, n2, dih):
-    """Front (finger) face rounded 1.2 mm x 2 each side (c1: a dark edge with one thin light line along it; a crisp or
-    0.4 mm rolled edge lit a chrome streak on the wall sliver the c1 camera sees from 5 deg above)."""
-    return 1.0 if _blade_edge(mid, d, n1, n2, dih) == -1 else 0.0
+def _profile(f, c, R):
+    """Rings from the side face to the middle of the blade edge: [(inset, y)] (4 rings; the middle ring y = 0)."""
+    T = TRIG_T
+    if f > 0.5:                                    # concave finger face with a small break at the side-face edge
+        b = TRIG_BREAK
+        y1, y2 = T - b, 0.5 * T
+        return [(b, T), (c * (1 - (y1 / T) ** 2), y1), (c * (1 - (y2 / T) ** 2), y2), (c, 0.0)]
+    ph = [math.radians(a) for a in (90.0, 60.0, 30.0)]
+    return [(R * (1 - math.cos(a)), T - R + R * math.sin(a)) for a in ph] + [(0.0, 0.0)]
+
+
+def blade_mesh():
+    """The blade as a profiled extrusion of its outline (real geometry, no bevel modifier): rings from the -Y side face
+    through the middle of the edge to the +Y side face, each outline vertex moved in along its bisector by its own
+    profile. Finger face: shallow concave (c1 / c6 show a dark line, a light band and a dark outline along the front
+    edge, i.e. the face's far half seen beside a crisp near edge); rear edge and tip: a small roll. Round 2's bevel-
+    modifier rounds were clamped to ~0.06 mm by the cap triangulation, which left a flat 6 mm finger face that the c1
+    camera (4.5 deg toward the muzzle) sees at grazing incidence: the white streak of the round-2 renders; a convex
+    round only moved the streak to its silhouette."""
+    Q = np.asarray(trigger_outline(), float)
+    n = len(Q)
+    prm = _blade_params(Q)
+    e_in = []
+    for i in range(n):
+        d = Q[(i + 1) % n] - Q[i]
+        d = d / np.linalg.norm(d)
+        e_in.append(np.array([-d[1], d[0]]))
+    e_in = np.array(e_in)
+    dirs = []
+    for i in range(n):
+        v = e_in[i - 1] + e_in[i]
+        v = v / np.linalg.norm(v)
+        dirs.append(v / max(float(v @ e_in[i]), 0.5))
+    profs = [_profile(*prm[i]) for i in range(n)]
+    K = len(profs[0])
+    rings = []
+    for k in list(range(K)) + list(range(K - 2, -1, -1)):
+        sgn = -1.0 if len(rings) < K - 1 else 1.0
+        ring = []
+        for i in range(n):
+            inset, y = profs[i][k]
+            x, z = Q[i] + dirs[i] * inset
+            ring.append((x, sgn * y, z))
+        rings.append(np.array(ring))
+    return MS.loft(rings)
+
+
+def _pred_trigger_other(mid, d, n1, n2, dih):
+    """0.3 mm break on the sharp edges above the blade top (stem, pivot boss; inside the slot); the blade's edges are
+    modelled rounds (blade_mesh)."""
+    return 1.0 if dih >= 55.0 and mid[2] > -34.6 else 0.0
 
 
 def trigger() -> PartDef:
-    blade = MS.prism(trigger_outline(), -3.0, 3.0)
+    blade = blade_mesh()
     stem = [(313.6, -35.2), (321.2, -35.2), (320.6, -21.0), (315.4, -21.0)]
     uni = [MS.prism(stem, -3.0, 3.0), ycyl(TRIG_PIVOT[0], TRIG_PIVOT[1], 3.0, -3.0, 3.0, 24)]
     cut = [ycyl(TRIG_PIVOT[0], TRIG_PIVOT[1], 1.2, -4, 4, 16)]
     return PartDef("trigger", [blade], unions=uni, cutters=cut, bone="trigger", cls="C-fillet",
-                   recipe=[(0.4, 2, "W", _pred_trigger_rear), (1.2, 2, "W", _pred_trigger_front), (0.3, 1, 55.0)],
+                   recipe=[(0.3, 1, "W", _pred_trigger_other)],
                    joint={"type": "hinge", "parent": "receiver", "pivot_M": [TRIG_PIVOT[0], 0, TRIG_PIVOT[1]],
                           "axis_M": [0, 1, 0], "range_deg": [0.0, 12.0], "clearance_mm": [0.1, 0.3]})
 
@@ -119,16 +184,19 @@ def trigger() -> PartDef:
 # ======================================================================================== guard loop
 LOOP_W = 5.0                  # loop half width (Y)
 Z_TOP = -34.4                 # loop top, 0.4 inside the flange (the joint is hidden in the flange)
-R_OUT = (10.0, 9.5)           # outer corner radii rear / front (c6 / c1 rectified, side trace)
-R_IN = (8.0, 5.5)             # inner corner radii rear / front
+R_OUT = (10.0, 11.0)          # outer corner radii rear / front (round 2b: c1 rectified rows, the front corner runs
+R_IN = (6.0, 8.0)             # from Z -57.5 to X 341; inner corners rear R ~6 / front R ~8: round 2's 8 / 5.5 had
+                              # them swapped, so our front corner read boxy)
+TAB_Z = -33.2                 # front tab: lower edge of its full-width plate
+BOT_DROP = 0.3                # bottom bar's outer edge below the side-trace line (c1: bar 0.6-1.4 mm deeper than ours)
 SLOPE = 2.2 / 35.2            # bottom bar rises toward the front (side trace: Z -68.4 at X 312.1, -66.2 at 347.3)
-ROLL_OUT, ROLL_IN = 0.8, 0.25  # section: rolled outer edge / small inner edge radius (mm)
-GROOVE = (0.4, 0.15, 0.3)     # centre groove: half width at the face, half width of the flat bottom, depth
-GROOVE_AT = 0.5               # groove centre as a fraction of the strip width from the inner edge
 CHANNEL = (1.0, 0.8)          # inner face: lip height (Y, from the side face) and channel depth (the stamped strip's
                               # open channel faces the trigger; c1 / 3/4 show the loop's inner face dark, and the c1
                               # camera's 5 deg down tilt otherwise shows a flat lit top face as a silver rim)
-FSEG = 6                      # arc segments of the outline fillets (15 deg steps)
+FSEG = 8                      # arc segments of the outline fillets (11.25 deg steps; 15 deg showed facets on the outer
+                              # corners in the c1 crop)
+BEAD_H = 0.45                 # side face = two rounded beads either side of a V groove (c1 / c6: three dark lines with
+                              # two light lines between them along the whole loop; the inner edge reads dark)
 
 
 def _zb(x):
@@ -142,7 +210,7 @@ def loop_polygon():
     i_rear0, i_rear1 = 303.0, 303.2        # rear leg inner edge (leg 3.7-4.0 mm; trace 303.0-303.3)
     o_front, i_front = 355.15, 350.75      # front leg (4.4 mm; trace 350.6-355.2)
     t_bot = 3.25                           # bottom bar (trace 3.0-3.4)
-    P = [(o_rear0, Z_TOP), (o_rear1, _zb(o_rear1)), (o_front, _zb(o_front)), (o_front, Z_TOP),
+    P = [(o_rear0, Z_TOP), (o_rear1, _zb(o_rear1) - BOT_DROP), (o_front, _zb(o_front) - BOT_DROP), (o_front, Z_TOP),
          (i_front, Z_TOP), (i_front, _zb(i_front) + t_bot), (i_rear1, _zb(i_rear1) + t_bot), (i_rear0, Z_TOP)]
     radii = [0.0, R_OUT[0], R_OUT[1], 0.0, 0.0, R_IN[1], R_IN[0], 0.0]
     Q = G.dedupe(G.fillet(np.array(P, float), 0.0, seg=FSEG, radii=radii))
@@ -169,18 +237,17 @@ def loop_stations():
 
 
 def section(w):
-    """Half section (y >= 0) across the strip from the outer edge (u = w) to the inner edge (u = 0): rolled outer edge,
-    centre groove with a flat bottom, small inner roll. Returns [(u, y)]."""
-    T, ro, ri = LOOP_W, ROLL_OUT, ROLL_IN
-    gh, gb, gd = GROOVE
-    um = GROOVE_AT * w
-    pts = [(w, T - ro)]
-    for a in (30.0, 60.0):
-        r = math.radians(a)
-        pts.append((w - ro + ro * math.cos(r), T - ro + ro * math.sin(r)))
-    pts += [(w - ro, T), (um + gh, T), (um + gb, T - gd), (um - gb, T - gd), (um - gh, T), (ri, T)]
-    r = math.radians(135.0)
-    pts += [(ri + ri * math.cos(r), T - ri + ri * math.sin(r)), (0.0, T - ri)]
+    """Half section (y >= 0) across the strip from the outer edge (u = w) to the inner edge (u = 0): two rounded beads
+    (elliptical crowns BEAD_H high) meeting in a V groove at mid width, so the side face shows two highlights between
+    three dark lines (c1 / c6); the inner edge drops into the open channel that faces the trigger. Returns [(u, y)]."""
+    T, hb = LOOP_W, BEAD_H
+    pts = [(w, T - 1.0)]
+    half = 0.5 * w
+    for u0 in (w, half):                                   # outer bead, then inner bead (u decreasing)
+        for sv in (0.0, 0.3, 0.7):
+            e = math.sqrt(max(0.0, 1.0 - (2.0 * sv - 1.0) ** 2))
+            pts.append((u0 - sv * half, T - hb + hb * e))
+    pts.append((0.0, T - hb))
     lip, cd = CHANNEL
     pts += [(0.0, T - lip), (cd, T - lip)]
     return pts
@@ -241,6 +308,9 @@ def trigger_guard() -> PartDef:
     top_f = [(x, ledge_z(x) - GAP) for x in xs_f]
     fl_in = WO - 1.25
     flange_r = MS.prism([(252.0, -34.8), (346.3, -34.8)] + top_r[::-1], -fl_in, fl_in)
+    # front tab: full width only down to TAB_Z (c1: a thin plate, ~3.5 mm, with the housing below it; round 2's full-
+    # height 5.3 mm tab read as "a separate block at the top" of the catch), recessed like the rear flange below that
+    # (cut, so the tab stays one prism over the same footprint)
     flange_f = MS.prism([(345.7, -34.8), (367.9, -34.8)] + top_f[::-1], -WO, WO)
     # the leg's top strap under the tab: straight, 0.7 mm below the tab (side trace lip X 345.7-350.6, Z -35.6), no
     # gusset (round 1's sloped gusset read as a shelf)
@@ -250,10 +320,13 @@ def trigger_guard() -> PartDef:
     cheek_o = cheek_outline()
     cx, cz = CATCH_PIVOT
     uni = [flange_r, flange_f, lip, MS.prism(cheek_o, 3.75, 4.98), MS.prism(cheek_o, -4.98, -3.75),
-           ycyl(cx, cz, 2.1, 4.96, 5.2, 16), ycyl(cx, cz, 2.1, -5.2, -4.96, 16),          # washers
-           ycyl(cx, cz, 1.3, 5.15, 5.5, 12), ycyl(cx, cz, 1.3, -5.5, -5.15, 12),          # pin heads
-           ycyl(cx, cz, 1.5, -5.4, 5.4, 12)]
+           # integration r2b: low pin heads set in the plate (judges r2b, c1: "a recessed rivet near its middle";
+           # ours stood out as a domed head on a washer): head r 1.7, 0.14 proud, no washer
+           ycyl(cx, cz, 1.7, 4.96, 5.12, 16), ycyl(cx, cz, 1.7, -5.12, -4.96, 16),
+           ycyl(cx, cz, 1.5, -5.0, 5.0, 12)]
     cut = [MS.box(301.5, 329.0, -3.25, 3.25, -35.2, -27.0),                 # trigger slot through the flange
+           MS.box(345.0, 368.5, fl_in, WO + 1.0, -35.5, TAB_Z),             # tab recess below its plate, each side
+           MS.box(345.0, 368.5, -WO - 1.0, -fl_in, -35.5, TAB_Z),
            MS.box(352.0, 355.6, -3.75, 3.75, -34.9, -51.6)]                 # catch tongue relief in the front leg
     return PartDef("trigger_guard", [loop], unions=uni, cutters=cut, cls="S-bend", smooth_deg=35.0,
                    recipe=[(0.3, 1, "W", _pred_guard)])

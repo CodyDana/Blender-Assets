@@ -9,24 +9,27 @@ Detail pass (2026-10-05): rebuilt from the c1 close-up trace (parts/selector_tra
 the similarity fitted to the side view (c1 draws the lever 13.25 deg front-down and 1.10x larger). Real geometry,
 every visible form modelled.
 
-Round 2 (after the round-1 blind judge read the pressed edge band as "a thin raised outline round a recessed panel
-with a groove down the middle", a slotted flat pivot and a narrow tail):
-  * ONE solid 2.0 mm lever plate on the traced outline (round rear end, straight bottom, stepped hump, long falling
-    top edge, rounded paddle nose); no all-round pressed band;
-  * a narrow edge groove (0.45-1.30 mm in, 0.7 deep, drafted walls) swept round the rear end, the top edge (over the
-    hump) and the bottom edge, ending squarely at the tab: c1's outer edge line / dark gap / bright inner line, so the
-    plate reads as a thick part with a lit rim on a dark ledge;
-  * c1's long wedge between the top edge and the diagonal line as a valley with a two-plane floor (rear plane
-    deepening 0.5 -> 1.0 mm over 4.5 mm where the line leaves the inner edge line, main plane thinning 40 % to the
-    tab, both tilted so the top edge stays out): the wedge reads dark and the 40 deg crease wall faces up into the
-    key light, c1's bright diagonal line, broad at the hump and narrowing to the front;
-  * the tab bent outward 12 deg about the traced bend line as a real sheet bend (bisect + swing about the inner-face
-    line), a thin raised ring round a small domed pin on it (c1's nose ring);
-  * on the pivot: a raised stepped washer collar (r 11 px in c1) and a high (2.0 mm) dome with a short skirt, NO
-    slot (c1 shows a plain polished dome; the side view's 'slot' is not in the close-up, which is the authority);
-    hub + shaft into the receiver's hole as before.
-Booleans with the groove sweep can leave micro edges; Blender's bevel overlap clamp then shrinks every bevel on the
-part, so edges < 0.05 mm are collapsed before the bevel (reported in the build line).
+History of what the blind judges read (so it is not tried again):
+  r1  pressed raised edge band round a lower panel  -> "thin raised outline rim round a recessed hollow slot"
+  r2  edge groove + valley wedge                    -> "raised rim round a recessed channel, hollow, an outline"
+  r3  deep valley pocket with a lip on every side   -> still a dark slot cut into the lever (orchestrator check)
+The common fault: the wedge between c1's top edge and its bright diagonal line was a POCKET (a lip on all sides),
+and the all-round double line was a rim standing UP. c1 at 8x (trace_overlay.png) and the judges' reading of the
+reference ("one solid stamped plate with a raised diagonal stiffening rib", "the plate sits inside a shallow stamped
+outline") say the opposite on both, so detail round 2 (second workflow) builds:
+  * ONE solid plate whose outline step goes DOWN: the main plate (full 2.0 mm) is the outline inset 1.1 mm, standing
+    on a 0.9 mm skirt that fills the traced outer outline (c1's outer line / dark band / inner line all round,
+    except on the tab, which is full thickness to the outer line: c1's notch where the tab starts);
+  * the plate face shaped as real geometry (the face is cut along lines parallel to c1's crease and displaced, every
+    step under the bevel angle so it shades smooth): a low rounded RIB along the crease (0.20 mm proud, its upper
+    flank sweeping down into the wedge = the up-facing bright band, broad at the hump, narrowing to the front), and
+    the wedge above it a solid face rising from the flank foot to the face at the plate's top edge (it reads darker; no
+    lip), fading in behind the hump and ramping back up just before the tab;
+  * the tab bent outward 12 deg about the traced bend line as a real sheet bend, a small flat-topped pin on it;
+  * on the pivot: a raised washer collar and a large low-crowned button head (no slot, no centre boss: c1 shows a
+    plain polished head filling the washer).
+The plate and skirt prisms are bevelled while clean, before the relief and unions (Blender's bevel overlap clamp is
+global: on the finished part it had shrunk every bevel to ~0.01-0.04 mm).
 """
 from __future__ import annotations
 
@@ -36,6 +39,7 @@ import numpy as np
 
 from rifle_common import SPEC  # noqa: F401  (interface: modules import the spec from rifle_common)
 from gunlib import geo2d as G
+from gunlib import lod as LOD
 from gunlib import mesh as MS
 from rifle_parts import WO
 from rifle_parts2 import ycyl
@@ -47,37 +51,46 @@ SEL_PIVOT = (282.8, -7.8)
 
 Y_WALL = -WO                    # receiver wall outer face (right side)
 Y_IN = Y_WALL - 1.25            # plate inner face (0.2 mm over the rivet heads at -21.8)
-T_PLATE = 2.0                   # solid stamped lever plate (round 1 read as a thin rim: now one thick plate)
+T_PLATE = 2.0                   # solid stamped lever plate
 Y_F = Y_IN - T_PLATE            # lever face
 EMBED = 0.05                    # layers overlap so no boolean faces are coplanar
-# edge groove: c1 draws the lever with an outer edge line, a dark gap, then a bright inner line (rear end, top edge
-# and bottom edge up to the tab). Modelled as a narrow groove whose two lips catch the light and whose floor stays
-# dark: outer lip at 0..GROOVE[0], groove GROOVE[0]..GROOVE[1] at the face, GROOVE_DEPTH deep, walls drafted.
-GROOVE = (0.60, 1.40)
-GROOVE_DEPTH = 0.70
-# c1's long wedge between the top edge and the diagonal bright line: a valley whose floor tilts (top edge out,
-# crease in: the wedge reads dark) with an up-facing crease wall (the bright line). Round 2 tried the judge's word,
-# a RAISED rib: its lower wall faces down under the upper-left key, so the line came out dark; physics and c1 agree
-# on the valley.
-VALLEY_D = 1.00                 # valley: depth at the crease, floor rising to ~0.1 at the top edge
-VALLEY_T0 = 0.0                 # valley: stations start this far along the crease from its traced rear end (mm)
-VALLEY_D0 = 0.50                # valley: depth at the crease's rear end (the floor stays below the face)
-VALLEY_FADE = 4.5               # valley: depth fades in over this length (to where the hump starts)
-VALLEY_TAPER = 0.40             # valley: depth falls by this fraction from the hump to the tab
-VALLEY_WALL_DEG = 40.0          # valley: crease wall angle off the face (faces up: c1's bright line)
+# outline step (c1's double line): the main plate is the outline inset STEP_W, on a skirt T_SKIRT thick that fills the
+# outer outline; the tab (forward of the bend line) is full thickness to the outer outline
+STEP_W = 1.10                   # c1 2.3 px (selector_trace.C1_EDGE_BAND_PX) at the rest-frame scale
+T_SKIRT = 0.90
+SKIRT_GAP = 0.35
+# face relief (s = mm above c1's crease line, toward the top edge; t = mm along the crease from its rear end;
+# u = mm behind the tab bend line): (s, h) knots, h outward from the face, the crest part fixed, the upper flank
+# dropping to -D(t) at s = S_FLOOR, then the wedge floor rising linearly to 0 at the plate's top edge (no lip)
+RIB_LOWER = [(-0.80, 0.0), (-0.50, 0.08), (-0.25, 0.16), (-0.05, 0.20), (0.03, 0.20)]
+# the upper flank is the broad up-facing slope (~33 deg at the hump, ~20 deg at the front) that catches the upper-left
+# key: c1's bright band (12x zoom: ~3.3 px = 1.6 mm wide at the hump, fading toward the tab). The crest turns
+# +11 -> -32 deg within ~0.5 mm (each knot < 24 deg, so the bevel leaves it), a worn high point like c1's
+RIB_UPPER_F = [(0.12, 0.03), (0.28, 0.10), (0.50, 0.24), (0.80, 0.44), (1.10, 0.64), (1.40, 0.82), (1.65, 0.95),
+               (1.85, 1.0)]
+S_FLOOR = 1.85
+D_HUMP = 0.80                   # floor depth at the crease from the hump back
+D_FRONT = 0.45                  # ... at the front end
+CREST_FRONT = 0.55              # rib crest height factor at the front end (c1: the bright band tapers out)
+T_FADE = (0.0, 1.2, 2.4, 3.6)   # rear fade-in knots along t (weights 0, .3, .75, 1)
+W_FADE = (0.0, 0.30, 0.75, 1.0)
+U_RAMP = (0.30, 0.65, 1.05, 1.50)   # front ramp knots behind the bend line (weights 0, .35, .75, 1)
+W_RAMP = (0.0, 0.35, 0.75, 1.0)
 TAB_BEND_DEG = 12.0
-USE_GROOVE = False              # integration round: no edge groove (it read as a hollow outline)
-PRE_BEVEL_MERGE_MM = 0.05       # edges shorter than this are collapsed before the bevel (boolean slivers)
-RECIPE = [(0.28, 1, 24.0)]      # lips, rib and plate edges (>= 45 deg); the 12 deg bend crease stays sharp
+RECIPE = [(0.20, 1, 24.0)]      # the plate and the skirt prisms, each bevelled ALONE while still clean, before the face
+                                # relief and the unions: Blender's bevel overlap clamp is global, and on the finished
+                                # part (relief cuts, boolean seams, the pin's 0.2 mm profile steps) it had shrunk every
+                                # bevel to ~0.01-0.04 mm (measured on the chamfer strips, r3 included); the washer, head
+                                # and pin carry their chamfers in their revolve profiles; the relief (every knot
+                                # < 24 deg, zero on the rim) and the 12 deg bend stay unbevelled
+MIN_EDGE_MM = 0.30              # outline points closer than this are merged (the bevel's overlap clamp is global)
+T_STEP = 4.0                    # relief cuts across the crease every T_STEP mm (the wedge's top edge is not straight)
+ROOM_MM = (1.0, 2.8)            # relief weight 0 -> 1 as the wedge (crease to top edge) widens over this range (mm)
+FLANK_GAP = 0.6                 # where the wedge is narrow, the flank ends this far below the top edge
 
 
 def _px(P):
     return ST.c1_to_rest(P, SEL_PIVOT)
-
-
-def _xz(P2, y):
-    P2 = np.asarray(P2, float)
-    return np.c_[P2[:, 0], np.full(len(P2), float(y)), P2[:, 1]]
 
 
 def _clip_half(P, a, n):
@@ -118,124 +131,190 @@ def _ycap(cx, cz, profile, y0, nseg):
     return MS.revolve(profile, (cx, y0, cz), (0, -1, 0), nseg)
 
 
-def _groove_path(O, g, bend, gap=0.35):
-    """Open path along offset(O, -g) from the tab's bottom round the rear end to the tab's top (stops `gap` mm behind
-    the bend line), resampled ~0.6 mm."""
-    ba, _, nb = bend
-    R = G.resample(G.offset(O, -g), 0.4)
-    keep = (R - ba) @ nb < -gap
-    i0 = int(np.argmin(keep))                       # first point at the tab: rotate so the kept run is contiguous
-    while not keep[i0 % len(R)]:
-        i0 += 1
-    R = np.roll(R, -(i0 % len(R)), axis=0)
-    keep = np.roll(keep, -(i0 % len(R)))
-    run = R[: int(np.argmin(keep))] if not keep.all() else R
-    return _adaptive(G.resample(run, 0.2, closed=False), 6.0, 2.5)
+def _on_line(P, a, n, tol=1e-6):
+    return np.abs((P - a) @ n) < tol
 
 
-def _adaptive(P, max_turn_deg, max_len):
-    """Thin a dense open polyline: keep a point once the heading has turned max_turn_deg or max_len mm have passed
-    since the last kept point (small turns per ring, so the swept groove section never pinches at a corner)."""
-    P = np.asarray(P, float)
-    keep = [0]
-    h0 = None
-    acc = 0.0
-    for i in range(1, len(P) - 1):
-        v = P[i + 1] - P[i]
-        h = math.atan2(v[1], v[0])
-        if h0 is None:
-            h0 = h
-        turn = abs((h - h0 + math.pi) % (2 * math.pi) - math.pi)
-        acc = np.linalg.norm(P[i] - P[keep[-1]])
-        if turn >= math.radians(max_turn_deg) or acc >= max_len:
-            keep.append(i)
-            h0 = h
-    keep.append(len(P) - 1)
-    return P[keep]
+def _splice(A, B, a, n):
+    """Join polygon A (clipped to (p - a).n <= 0) and B (clipped to >= 0), both CCW and each with one edge on the line
+    (a, n): A's ring minus its line edge, then B's ring minus its line edge (the joint steps along the line)."""
+    def ring_from_line(P):
+        on = _on_line(P, a, n, 1e-5)
+        m = len(P)
+        for i in range(m):
+            if on[i] and on[(i + 1) % m]:
+                return np.roll(P, -(i + 1), axis=0)     # starts at the edge's end point, ends at its start point
+        raise RuntimeError("no edge on the line")
+    RA = ring_from_line(A)
+    RB = ring_from_line(B)
+    return G.dedupe(np.vstack([RA, RB]), 1e-4)
 
 
-def _groove_cutter(O, bend):
-    g0, g1 = GROOVE
-    path = _groove_path(O, 0.5 * (g0 + g1), bend)
-    w0 = g1 - g0
-    w1 = max(w0 - 0.25, 0.2)
-    sec = [(-w0 / 2, 0.4), (-w0 / 2, 0.0), (-w1 / 2, -GROOVE_DEPTH), (w1 / 2, -GROOVE_DEPTH), (w0 / 2, 0.0),
-           (w0 / 2, 0.4)]
-    P3 = _xz(path, Y_F)
-    ups = [(0.0, -1.0, 0.0)] * len(P3)              # section 't' = outward (-Y)
-    return MS.sweep_profile(P3, sec, ups=ups)
+def _outlines():
+    """(O outer outline, M main plate outline = inset STEP_W behind the bend line + the full tab) in rest XZ."""
+    O = _px(ST.c1_outline_px(n_arc=36))
+    O = G.ccw(G.dp_simplify(G.dedupe(O, 0.05), LOD.tol(0.03)))          # LOD: coarser outline
+    _, (ba, bb, nb) = _lines()
+    Oin = G.ccw(G.dedupe(G.offset(O, -STEP_W), 0.05))
+    A = G.ccw(_clip_half(Oin, ba, -nb))
+    B = G.ccw(_clip_half(O, ba, nb))
+    M = G.ccw(G.dedupe(_splice(A, B, ba, nb), MIN_EDGE_MM))
+    return O, M
 
 
-def _rib_polygon(O, inset):
-    (ca, cb, nc), (ba, bb, nb) = _lines()
-    W = G.offset(O, -inset)
-    W = _clip_half(W, ca, nc)                       # above the crease
-    W = _clip_half(W, ca, (cb - ca) / np.linalg.norm(cb - ca))      # from the crease's rear end on
-    W = _clip_half(W, ba - 0.35 * nb, -nb)          # behind the tab
-    return G.ccw(G.dedupe(W, 0.05))
+def _interp(x, X, Y):
+    return float(np.interp(x, X, Y))
 
 
-def _rib_valley(O):
-    """c1's long wedge as ONE valley cutter whose floor is two planes meeting on a seam at the hump start: the rear
-    plane deepens from VALLEY_D0 (where the crease leaves the inner edge line; c1's bright line starts from it) to
-    VALLEY_D, the main plane thins toward the tab (c1's line narrows to the front); both rise k mm per mm toward
-    the top boundary (just inside the edge groove) and stay below the face, so no shallow intersection lines and no
-    boolean micro edges (the bevel's overlap clamp is global). Walls at VALLEY_WALL_DEG: the crease wall faces up
-    and catches the key light."""
-    (ca, cb, nc), (ba, bb, nb) = _lines()
+def _depth_at(t, t_hump, t_end):
+    if t <= t_hump:
+        return D_HUMP
+    return D_HUMP + (D_FRONT - D_HUMP) * min(1.0, (t - t_hump) / max(t_end - t_hump, 1e-6))
+
+
+def _s_top_fn(F, crease):
+    """s_top(t): how far above the crease (mm) the face boundary F (the bevelled plate's flat top) lies at station t
+    along the crease (the largest crossing of the line ca + t d + s nc with F); -inf where there is none."""
+    ca, cb, nc = crease
     d = (cb - ca) / np.linalg.norm(cb - ca)
-    W = _rib_polygon(O, GROOVE[1])
-    W = _clip_half(W, ca + VALLEY_T0 * d, d)
-    W = G.ccw(G.dedupe(W, 0.05))
-    th = VALLEY_T0 + VALLEY_FADE
-    # insert the seam (t = th) into the ring
-    t = (W - ca) @ d
-    ring, seam = [], []
-    for i in range(len(W)):
-        p, q = W[i - 1], W[i]
-        tp, tq = t[i - 1], t[i]
-        if (tp - th) * (tq - th) < 0:
-            seam.append(len(ring))
-            ring.append(p + (q - p) * (th - tp) / (tq - tp))
-        ring.append(q)
-    R = np.array(ring)
-    n = len(R)
-    assert len(seam) == 2, seam
-    tR = (R - ca) @ d
-    sR = (R - ca) @ nc
-    t_end = float(tR.max())
-    base = np.where(tR <= th + 1e-9,
-                    VALLEY_D0 + (VALLEY_D - VALLEY_D0) * (tR - VALLEY_T0) / (th - VALLEY_T0),
-                    VALLEY_D + (VALLEY_D * (1.0 - VALLEY_TAPER) - VALLEY_D) * (tR - th) / max(t_end - th, 1e-6))
-    up = sR > 0.2
-    k = float(np.min((base[up] - 0.08) / sR[up]))           # the floor reaches 0.08 below the face at the tightest
-    dep = base - k * sR                                     # top-boundary vertex and stays below it everywhere
-    nrm = G.offset(R, 1.0, miter_limit=2.0) - R
-    out = R + nrm * ((dep + 1.0) / math.tan(math.radians(VALLEY_WALL_DEG)))[:, None]
-    m = MS.Mesh()
-    i_out = m.add_verts(np.c_[out[:, 0], np.full(n, Y_F - 1.0), out[:, 1]])
-    i_fl = m.add_verts(np.c_[R[:, 0], Y_F + dep, R[:, 1]])
-    m.face(i_out[::-1])
-    a, b = seam
-    loop1 = [i_fl[j % n] for j in range(a, b + 1)]
-    loop2 = [i_fl[j % n] for j in range(b, a + n + 1)]
-    m.face(loop1)
-    m.face(loop2)
-    for kk in range(n):
-        k2 = (kk + 1) % n
-        m.face((i_out[kk], i_out[k2], i_fl[k2], i_fl[kk]))
-    print("[selector] valley: seam t %.1f, depth %.2f..%.2f, %d ring verts" % (th, dep.min(), dep.max(), n))
-    return [m]
+    S = (F - ca) @ nc
+    T = (F - ca) @ d
+
+    def f(t):
+        best = -np.inf
+        for k in range(len(F)):
+            t0, t1 = T[k - 1], T[k]
+            if (t0 - t) * (t1 - t) <= 0 and t0 != t1:
+                best = max(best, S[k - 1] + (S[k] - S[k - 1]) * (t - t0) / (t1 - t0))
+        return float(best)
+    return f
 
 
-def _collapse_short(ob, lim_mm, rounds=4):
-    """Collapse edges shorter than lim_mm (boolean slivers) to their midpoints; returns the count."""
+def _relief_h(p, crease, bend, t_hump, t_end, s_top):
+    """Outward displacement (mm) of the plate face at rest-frame XZ point p. Zero on the face boundary: the wedge
+    floor rises from -D at S_FLOOR to 0 at the plate's top edge (s_top), so the edge keeps its full thickness and its
+    bevel and no lip forms; the whole relief fades where the wedge is too narrow for it (behind the hump)."""
+    ca, cb, nc = crease
+    ba, _, nb = bend
+    d = (cb - ca) / np.linalg.norm(cb - ca)
+    s = float((p - ca) @ nc)
+    t = float((p - ca) @ d)
+    u = float((ba - p) @ nb)
+    if s <= RIB_LOWER[0][0] or t <= T_FADE[0] or u <= U_RAMP[0]:
+        return 0.0
+    st = s_top(t)
+    if s >= st - 1e-6:
+        return 0.0
+    room = _interp(st, ROOM_MM, (0.0, 1.0))                       # the wedge's width above the crease
+    w = _interp(t, T_FADE, W_FADE) * _interp(u, U_RAMP, W_RAMP) * room
+    if w <= 0.0:
+        return 0.0
+    # behind the hump the wedge is narrower than the flank: the flank is squeezed to end FLANK_GAP below the edge
+    # (c1's band runs out into the top edge line there)
+    sf = min(S_FLOOR, max(st - FLANK_GAP, 0.5))
+    k = sf / S_FLOOR
+    D = _depth_at(t, t_hump, t_end)
+    c = 1.0 + (CREST_FRONT - 1.0) * (D_HUMP - D) / (D_HUMP - D_FRONT)
+    crest = RIB_LOWER[-1][1] * c
+    if s <= RIB_LOWER[-1][0]:
+        h = c * _interp(s, [k_[0] for k_ in RIB_LOWER], [k_[1] for k_ in RIB_LOWER])
+    elif s <= sf:
+        f = _interp(s / k, [RIB_LOWER[-1][0]] + [k_[0] for k_ in RIB_UPPER_F], [0.0] + [k_[1] for k_ in RIB_UPPER_F])
+        h = crest - (crest + D) * f
+    else:
+        h = -D * (st - s) / max(st - sf, 1e-6)
+    return w * h
+
+
+
+def _uniq(it):
+    """Ordered de-duplication (a Python set of BMesh elements iterates by memory address, which made the relief's
+    bisects, and so the selector's triangles, differ from one build to the next)."""
+    return list(dict.fromkeys(it))
+
+def _relief(ob, offset):
+    """Shape the bevelled main plate's flat face (verts at Y_F; the rim bevel is not touched): bisect it along the
+    relief's knot lines (parallel to the crease, across it every T_STEP mm, parallel to the bend line), displace
+    outward by _relief_h, dissolve what stayed flat, triangulate. Real geometry; every knot turn is < 24 deg so the
+    rib shades round."""
+    import bmesh
+    from mathutils import Vector
+    off = np.asarray(offset, float)
+    crease, bend = _lines()
+    ca, cb, nc = crease
+    ba, bb, nb = bend
+    d = (cb - ca) / np.linalg.norm(cb - ca)
+    t_end = float((ba - ca) @ nb / (d @ nb))        # crease meets the bend line
+    _, Mo = _outlines()
+    F = G.ccw(G.offset(Mo, -RECIPE[0][0]))          # the flat face's boundary after the rim bevel
+    s_top = _s_top_fn(F, crease)
+    sm = (Mo - ca) @ nc
+    tm = (Mo - ca) @ d
+    sel = (tm > 0) & (tm < t_end)
+    t_hump = float(tm[sel][np.argmax(sm[sel])]) if sel.any() else 0.0
+
+    def ymm(v):
+        return v.co.y * 1000.0 + off[1]
+
+    def top_faces(bm):
+        return [f for f in bm.faces if all(abs(ymm(v) - Y_F) < 1e-3 for v in f.verts)]
+
+    planes = []
+    s_knots = sorted({k[0] for k in RIB_LOWER} | {k[0] for k in RIB_UPPER_F} | {S_FLOOR})
+    for s in s_knots:
+        planes.append((ca + s * nc, nc))
+    t_knots = sorted(set(list(T_FADE) + [t_hump] + list(np.arange(T_FADE[-1] + LOD.step(T_STEP), t_end, LOD.step(T_STEP)))))
+    for t in t_knots:
+        planes.append((ca + t * d, d))
+    for u in U_RAMP:
+        planes.append((ba - u * nb, nb))
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    for (p2, n2) in planes:
+        top = top_faces(bm)
+        geom = _uniq(v for f in top for v in f.verts) + _uniq(e for f in top for e in f.edges) + top   # ordered: reproducible bisects
+        co = Vector(((np.array([p2[0], Y_F, p2[1]]) - off) * 0.001).tolist())
+        bmesh.ops.bisect_plane(bm, geom=geom, dist=1e-7, plane_co=co, plane_no=Vector((n2[0], 0.0, n2[1])))
+    top = top_faces(bm)
+    moved = set()
+    hmin, hmax = 0.0, 0.0
+    tv = _uniq(v for f in top for v in f.verts)
+    bmesh.ops.triangulate(bm, faces=top, quad_method="BEAUTY", ngon_method="BEAUTY")
+    for v in tv:
+        p = np.array([v.co.x * 1000.0 + off[0], v.co.z * 1000.0 + off[2]])
+        h = _relief_h(p, crease, bend, t_hump, t_end, s_top)
+        if abs(h) > 1e-6:
+            v.co.y = (Y_F - h - off[1]) * 0.001
+            moved.add(v)
+            hmin, hmax = min(hmin, h), max(hmax, h)
+    # what stayed flat goes back to big faces (the cut lines cross the whole face)
+    bm.normal_update()
+    flat_l = [f for f in bm.faces if all(abs(ymm(v) - Y_F) < 1e-6 for v in f.verts) and abs(f.normal.y) > 0.999]
+    flat = set(flat_l)
+    fe = [e for e in _uniq(e for f in flat_l for e in f.edges) if len(e.link_faces) == 2 and all(g in flat for g in e.link_faces)]
+    if fe:
+        bmesh.ops.dissolve_edges(bm, edges=fe, use_verts=True, use_face_split=False)
+    ng = [f for f in bm.faces if len(f.verts) > 4]
+    if ng:
+        bmesh.ops.triangulate(bm, faces=ng, quad_method="BEAUTY", ngon_method="BEAUTY")
+    bm.to_mesh(ob.data)
+    bm.free()
+    ob.data.update()
+    print("[selector] relief: t_hump %.2f t_end %.2f, %d t-cuts, %d verts moved, h %.2f..%.2f"
+          % (t_hump, t_end, len(t_knots), len(moved), hmin, hmax))
+    return len(moved)
+
+
+def _collapse_short(ob, lim_mm, rounds=4, sharp_deg=None):
+    """Collapse edges shorter than lim_mm (boolean slivers) to their midpoints; with sharp_deg only those whose
+    dihedral is >= sharp_deg (the ones that set the bevel's global overlap clamp). Returns the count."""
     import bmesh
     n = 0
     for _ in range(rounds):
         bm = bmesh.new()
         bm.from_mesh(ob.data)
-        es = [e for e in bm.edges if e.calc_length() * 1000.0 < lim_mm]
+        es = [e for e in bm.edges if e.calc_length() * 1000.0 < lim_mm and
+              (sharp_deg is None or (len(e.link_faces) == 2 and math.degrees(e.calc_face_angle()) >= sharp_deg))]
         if not es:
             bm.free()
             break
@@ -310,37 +389,45 @@ def _bend(ob, offset, a, b, deg):
     return n_moved
 
 
+def _head_profile(r):
+    """Domed bolt head (t outward, radius): a straight skirt (its side reads as the dark ring c1 draws between head and
+    washer), a rounded shoulder and a full dome. Integration round 2b: the r2b judge read our low 1.31 crown in thin
+    rings as "a stamped disc"; c1 at 5x draws a domed bolt head standing in a thick washer with a distinct shoulder."""
+    return [(0.0, 0.0), (0.0, r), (0.60, r), (0.82, r - 0.10), (1.12, r - 0.45), (1.42, r - 1.05), (1.66, r - 1.85),
+            (1.80, r - 2.75), (1.84, 0.0)]
+
+
+H_WASHER = 1.2                  # washer collar height (r2b 0.7: read as a thin ring), crisp 0.12 shoulder chamfer
+
+
 def _parts():
-    """The lever's solids (frame M, rest pose, tab not yet bent) and the cutters."""
-    O = _px(ST.c1_outline_px(n_arc=20))
-    O = G.ccw(G.dp_simplify(G.dedupe(O, 0.05), 0.03))
-    _, bend = _lines()
-    base = MS.prism(O, Y_F, Y_IN)
-    # integration round (2026-10-05), from the round-2 blind judge: the edge groove read as "a thin raised rim round a
-    # recessed channel, hollow, like an outline" -> no groove: one solid plate with crisp bevelled edges and c1's
-    # crease (the valley); "a smooth hemispherical dome inside concentric rings" -> a flat-faced head with a chamfer
-    # and a small centre boss in a distinct raised washer ring; "the tip pin is a ringed dome" -> a small flat pin
-    unions, cutters = [], []
-    if USE_GROOVE:
-        cutters.append(_groove_cutter(O, bend))
-    cutters += _rib_valley(O)
+    """The lever's solids (frame M, rest pose, tab not yet bent): main plate (relief applied later), unions."""
+    O, Mo = _outlines()
+    _, (ba, bb, nb) = _lines()
+    main = MS.prism(Mo, Y_F, Y_IN)                                  # full thickness (tab included)
+    # skirt: the outer outline, ending SKIRT_GAP behind the bend line (an end face ON the bend plane went non-manifold
+    # in the bend's bisect; the small slot it leaves under the tab's notch is c1's notch)
+    Os = G.ccw(G.dedupe(_clip_half(O, ba - SKIRT_GAP * nb, -nb), MIN_EDGE_MM))
+    skirt = MS.prism(Os, Y_IN - T_SKIRT, Y_IN)
+    px_, pz_ = SEL_PIVOT
+    hub = [ycyl(px_, pz_, 5.0, Y_WALL - 0.2, Y_IN - EMBED, 16),          # hub and shaft into the receiver's hole
+           ycyl(px_, pz_, 3.0, Y_WALL - 0.25, -18.0, 16)]                # (joined to the skirt first)
+    unions = []
     bx, bz = _px(ST.C1_NOSE_BOSS_PX)[0]
-    rp = ST.c1_len(ST.C1_NOSE_PIN_R_PX)
-    unions.append(_ycap(bx, bz, [(0.0, 0.0), (0.0, rp), (0.22, rp), (0.32, rp - 0.1), (0.32, 0.0)], Y_F + EMBED, 12))
-    # pivot: raised washer ring, flat-faced chamfered head with a small centre boss; hub and shaft into the receiver
+    rp, rb = ST.c1_len(ST.C1_NOSE_PIN_R_PX), ST.c1_len(ST.C1_NOSE_BOSS_R_PX)
+    # c1's nose: a thin raised ring round the pin (washer face) and the pin's small flat head proud of it
+    unions.append(_ycap(bx, bz, [(0.0, 0.0), (0.0, rb), (0.10, rb), (0.24, rb - 0.14), (0.24, rp + 0.25),
+                                 (0.30, rp), (0.48, rp), (0.56, rp - 0.1), (0.56, 0.0)], Y_F + EMBED, 16))
+    # pivot: raised washer collar, large low-crowned button head; hub and shaft into the receiver
     px_, pz_ = SEL_PIVOT
     r_ring, r_dome = ST.c1_len(ST.C1_RING_R_PX), ST.c1_len(ST.C1_DOME_R_PX)
-    h_ring = 0.8
-    unions.append(_ycap(px_, pz_, [(0.0, 0.0), (0.0, r_ring), (h_ring - 0.25, r_ring), (h_ring, r_ring - 0.3),
+    h_ring = H_WASHER
+    unions.append(_ycap(px_, pz_, [(0.0, 0.0), (0.0, r_ring), (h_ring - 0.12, r_ring), (h_ring, r_ring - 0.12),
                                    (h_ring, 0.0)], Y_F + EMBED, 24))
     y_ring_top = Y_F + EMBED - h_ring
-    h_head, ch, r_boss = 1.3, 0.45, 0.36 * r_dome
-    prof = [(0.0, 0.0), (0.0, r_dome), (h_head - ch, r_dome), (h_head, r_dome - ch), (h_head, r_boss + 0.08),
-            (h_head + 0.22, r_boss), (h_head + 0.22, 0.0)]
-    unions.append(_ycap(px_, pz_, prof, y_ring_top + EMBED, 20))
-    unions.append(ycyl(px_, pz_, 5.0, Y_WALL - 0.2, Y_IN - EMBED, 16))
-    unions.append(ycyl(px_, pz_, 3.0, Y_WALL - 0.25, -18.0, 16))
-    return {"base": base, "unions": unions, "cutters": cutters, "outline": O}
+    unions.append(_ycap(px_, pz_, _head_profile(r_dome), y_ring_top + EMBED, 24))
+
+    return {"main": main, "skirt": skirt, "hub": hub, "unions": unions, "outline": O, "main_outline": Mo}
 
 
 JOINT = {"type": "hinge", "parent": "receiver", "pivot_M": [SEL_PIVOT[0], 0, SEL_PIVOT[1]], "axis_M": [0, 1, 0],
@@ -348,33 +435,48 @@ JOINT = {"type": "hinge", "parent": "receiver", "pivot_M": [SEL_PIVOT[0], 0, SEL
 
 
 def selector(coll, offset):
-    """Custom builder (gunlib.parts.BuildCtx provider(coll, offset)): build_part's steps with the sheet bend
-    between the booleans and the bevel."""
+    """Custom builder (gunlib.parts.BuildCtx provider(coll, offset)): bevelled main plate, its face relief, the
+    bevelled skirt (+ hub and shaft), washer, head and pin, then the sheet bend."""
     import json
     import time
+    import bpy
     from gunlib import bl
     t0 = time.time()
     P = _parts()
-    ob = P["base"].to_object("selector", coll, offset, smooth_deg=30.0)
-    bl.boolean_many(ob, P["unions"], "UNION", offset=offset)
-    for c in P["cutters"]:                                  # one at a time: the groove sweep and the rib cutter
-        bl.boolean_many(ob, [c], "DIFFERENCE", offset=offset)   # overlap, one collection boolean dropped faces
+    ob = P["main"].to_object("selector", coll, offset, smooth_deg=30.0)
+    short = _short_edges(ob, 2.0 * RECIPE[0][0])
+    n_pre = len(ob.data.polygons)
+    for st in RECIPE:                                       # the clean prism alone: the full bevel (the clamp is global)
+        bl.bevel(ob, st[0], st[1], st[2], harden=False)
+    if LOD.LEVEL < 2:                                       # LOD2: the pressed relief is painted only
+        _relief(ob, offset)                                 # then the flat face inside the rim bevel
     bl.clean(ob)
+    sk = P["skirt"].to_object("_selector_skirt", coll, offset, smooth_deg=30.0)
+    for st in RECIPE:
+        bl.bevel(sk, st[0], st[1], st[2], harden=False)
+    bl.boolean_many(sk, P["hub"], "UNION", offset=offset)
+    bl.clean(sk)
+    bl.boolean(ob, sk, "UNION", offset=offset)
+    bpy.data.objects.remove(sk, do_unlink=True)
+    bl.clean(ob)
+    bl.triangulate_ngons(ob)                                # relief slivers out before the EXACT unions: one collection
+    bl.fix_slivers(ob)                                      # union of all five left 2 non-manifold edges at the notch
+    _collapse_short(ob, 0.02)
+    bl.clean(ob)
+    for u in P["unions"]:                                   # one at a time (washer, head, pin)
+        bl.boolean(ob, u, "UNION", offset=offset)
+        bl.clean(ob)
     bt, bb = _px(ST.C1_BEND_PX[0])[0], _px(ST.C1_BEND_PX[1])[0]
     moved = _bend(ob, offset, bb, bt, TAB_BEND_DEG)
-    n_coll = _collapse_short(ob, PRE_BEVEL_MERGE_MM)       # the bevel's overlap clamp is global: one boolean micro
-    bl.clean(ob)                                            # edge would shrink every bevel on the part
-    short = _short_edges(ob, 0.15)
-    n_pre = len(ob.data.polygons)
-    for st in RECIPE:
-        bl.bevel(ob, st[0], st[1], st[2])
+    n_coll = _collapse_short(ob, 0.01)                      # boolean / bisect micro edges only
     bl.clean(ob)
     bl.finish(ob)
+    bl.fix_slivers(ob)
     bl.weighted_normals(ob)
     ob["gun_part"] = json.dumps({"bone": "selector", "class": "S-cut", "slot": "M_AR01_Metal", "joint": JOINT,
                                  "spec_id": "selector", "recipe": [list(s) for s in RECIPE]})
     rep = bl.manifold_report(ob)
-    rep["short_edges_pre_bevel"] = short
+    rep["short_edges_main_prism"] = short
     rep["collapsed_edges"] = n_coll
     rep["faces_pre_bevel"] = n_pre
     print("[selector] tab verts bent %d, %.1fs, %s" % (moved, time.time() - t0, json.dumps(rep)))

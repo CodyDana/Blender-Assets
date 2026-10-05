@@ -329,3 +329,51 @@ def side_rib_flat(fr: ArcFrame, u, a_top, a_bot, side, face_half, hw, h, step=20
         sec_n = np.r_[hh, [-sink_floor, -sink_floor]]
         rings.append(P + np.outer(sec_t, A) + np.outer(sec_n, N))
     return MS.loft(rings)
+
+
+# -------------------------------------------------------------------- detail round 2b: soft pressed ribs
+def _smooth(x):
+    x = min(1.0, max(0.0, x))
+    return x * x * (3.0 - 2.0 * x)
+
+
+def side_rib_soft(fr: ArcFrame, u, a_top, a_bot, side, face_half, hw, h, step=24.0, ramp=4.0, g_min=0.3,
+                  sink_floor=0.6, top=0.26) -> Mesh:
+    """Pressed rib with SOFT ends (c4: the crest highlight wraps round a U end and the crest fades into the face):
+    the flat-topped pressed profile, a round (U) end in plan (the profile revolved about a point hw from the tip, as a
+    pressed rib's end) and, on top of that, the crest height ramping from g_min x h at the tip to full height over
+    `ramp` mm (smoothstep), so the end slopes down into the sheet instead of standing as a capped rod.
+    Round 2b replaces the integration round's stretched (spear-like) ends."""
+    prof = flat_rib_profile(hw, h, top=top)
+    rk = [prof[1, 0], prof[3, 0], prof[4, 0], prof[5, 0]]      # lean section: top edge, shoulder, flank, edge
+    T = np.array([-v for v in reversed(rk)] + rk)
+    R = fr.R(u)
+    L = abs(math.radians(a_bot - a_top)) * R
+    ramp = min(ramp, 0.45 * L)
+    ends = [0.05 * hw, 0.6 * hw, hw + 0.3 * (ramp - hw), ramp]          # 4 rings per end (budget)
+    mid_n = max(1, int(math.ceil((L - 2 * ramp) / step)))
+    mid = list(np.linspace(ramp, L - ramp, mid_n + 1))
+    ss = np.array(sorted(set(round(v, 6) for v in ends + mid + [L - e for e in ends])))
+    rings = []
+    for s in ss:
+        a = a_top + math.degrees(s / R) * (1 if a_bot > a_top else -1)
+        p = fr.pt(R, a)
+        P = np.array([p[0], side * face_half, p[1]])
+        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+        A = np.array([ca, 0.0, sa])
+        N = np.array([0.0, float(side), 0.0])
+        e = min(s, L - s)
+        g = g_min + (1.0 - g_min) * _smooth(e / ramp)
+        if e >= hw - 1e-9:
+            t = T
+            hh = np.array([_p_at(prof, abs(v)) for v in T])
+        else:
+            x = hw - e
+            W = math.sqrt(max(hw * hw - x * x, 0.0))
+            t = T * (W / hw)
+            hh = np.array([_p_at(prof, math.hypot(x, v)) for v in t])
+        hh = np.where(hh > 0, hh * g, hh)
+        sec_t = np.r_[t, [t[-1], t[0]]]
+        sec_n = np.r_[hh, [-sink_floor, -sink_floor]]
+        rings.append(P + np.outer(sec_t, A) + np.outer(sec_n, N))
+    return MS.loft(rings)

@@ -1,68 +1,71 @@
 {
- "stage": "detail pass: magazine round 2",
- "date": "2026-10-05T01:37:12",
+ "stage": "detail pass: magazine round 2 (detail round 2b, rerun on the integrated build)",
+ "date": "2026-10-05T08:22:25",
  "status": "fail",
  "failed": [
   "Part outline IoU vs c4 close-up trace (part window, round-1 solved camera)",
-  "Part outline IoU vs c5 close-up trace (part window, round-1 solved camera)"
+  "Part outline IoU vs c5 close-up trace (part window, round-1 solved camera)",
+  "L2 per part, side view: mag_catch IoU (neighbour, unchanged by this part)"
  ],
  "gates": [
   {
    "name": "Part outline IoU vs c4 close-up trace (part window, round-1 solved camera)",
-   "value": 0.8343,
+   "value": 0.8374,
    "threshold": ">= 0.96 own-scale (RIFLE_BUILD_PLAN L2: magazine vs c4)",
    "pass": false,
-   "note": "own-frame similarity fit 0.8455; with a free vertical stretch 0.8962 at x1.2082: c4 draws the magazine ~21 % longer for its width and more curved at the top than the side views, whose outline is the L2 authority (round 1: raw 0.8336, own-frame 0.8376)"
+   "note": "own-frame 0.8499; with a free vertical stretch 0.8978 at x1.2025: c4 draws the magazine ~20 % longer for its width and more curved than the side views (the L2 outline authority). Start of round (integrated build) 0.8343"
   },
   {
    "name": "Part outline IoU vs c5 close-up trace (part window, round-1 solved camera)",
-   "value": 0.7985,
-   "threshold": ">= 0.94 own-scale (RIFLE_BUILD_PLAN L2: magazine vs c5)",
+   "value": 0.7974,
+   "threshold": ">= 0.94 own-scale (L2: magazine vs c5)",
    "pass": false,
-   "note": "own-frame 0.8224; with a free vertical stretch 0.9281 (x1.378, unstable); round 1: raw 0.7978"
+   "note": "own-frame 0.8243; with stretch 0.9261 (x1.4918); start 0.7987"
   },
   {
    "name": "Part outline IoU vs the 3/4 view (fixed solved camera, part window)",
-   "value": 0.9268,
-   "threshold": "informational (round 1 0.9282)",
+   "value": 0.9269,
+   "threshold": "informational; must not drop materially (rifle 3/4 form gate sits at 0.9158 vs floor 0.915)",
    "pass": true,
-   "note": "own-frame 0.929"
+   "note": "start of round 0.9273 (-0.0004)"
   },
   {
    "name": "Internal-edge agreement F (2 px) vs the close-ups: c4 / c5 / 3-4",
    "value": [
-    0.2667,
-    0.6689,
-    0.2347
+    0.2258,
+    0.2429,
+    0.2083
    ],
-   "threshold": "informational; round 1 [0.2603, 0.6736, 0.2001]",
-   "pass": true
+   "threshold": "informational",
+   "pass": true,
+   "note": "start of round [0.2286, 0.6697, 0.213]"
   },
   {
    "name": "L2 per part, side view: magazine IoU",
-   "value": 0.9678,
+   "value": 0.9688,
    "threshold": ">= 0.95 (mask >= 400 px)",
    "pass": true,
-   "note": "round 1 0.9567; contour P95 1.414 px (r1 2.236), max 2.828 (r1 3.606)"
+   "note": "start 0.9678; contour P95 1.414 px, max 2.828"
   },
   {
-   "name": "L2 per part, side view: mag_catch IoU (unchanged neighbour)",
-   "value": 0.9651,
+   "name": "L2 per part, side view: mag_catch IoU (neighbour, unchanged by this part)",
+   "value": 0.9214,
    "threshold": ">= 0.95",
-   "pass": true
+   "pass": false,
+   "note": "0.9214 identical before and after this round (catch / trigger guard geometry of the integrated build, labelled with rifle_silhouette's -54.5 cheek bound). Not a magazine change: flag for the trigger_guard / catch owner"
   },
   {
-   "name": "L2 side silhouette IoU (identity, guard; the form gate uses the fitted value >= 0.96)",
-   "value": 0.978,
-   "threshold": "no material drop vs 0.9765 (r1)",
+   "name": "L2 side silhouette IoU (identity, guard)",
+   "value": 0.9754,
+   "threshold": "no material drop vs start 0.9753",
    "pass": true
   },
   {
    "name": "Part triangles SM_AR01_Mag (magazine + floor plate, LOD0)",
-   "value": 6800,
+   "value": 6998,
    "threshold": "<= 7000 ceiling (target 4500)",
    "pass": true,
-   "note": "body 5760 + floor plate 1040; round 1 6730; still above the 4.5k target (8 lofted ribs ~2.3k, the layered floor plate ~1.0k); the separate SM_AR01_Mag is not part of the rifle body count"
+   "note": "body 5968 + floor plate 1030; integrated start 6710 (+288); the rifle body without the magazine is unchanged (48694)"
   },
   {
    "name": "B7 closed manifold (magazine, floor plate)",
@@ -82,7 +85,7 @@
      "shells": 1
     }
    },
-   "threshold": "0 boundary / non-manifold / wire / n-gons, 1 shell each",
+   "threshold": "0 / 0 / 0 / 0, 1 shell each",
    "pass": true
   },
   {
@@ -100,56 +103,69 @@
   {
    "name": "Seat lateral clearance magazine / well liner",
    "value": 0.2,
-   "threshold": "[0.2, 0.6] (spec magazine_body clearance lateral)",
+   "threshold": "[0.2, 0.6]",
    "pass": true,
-   "note": "plates / front block outer faces Y 13.3 over the necked 12.4 body (0.9 proud), liner 13.5"
+   "note": "plate / block outer faces Y 13.3, knob crowns 13.25"
+  },
+  {
+   "name": "Clearance rear lug / mag_catch at rest",
+   "value": 0.2626,
+   "threshold": "informational (>= 0.2)",
+   "pass": true,
+   "note": "was 0.84 before the rear lug; the fit stage owns the catch engagement"
   },
   {
    "name": "L3 magazine rib top tips Z (rifle_measure reading)",
-   "value": -38.768,
+   "value": -39.191,
    "threshold": "-38.5 +-1.5",
    "pass": true,
-   "note": "geometric rear-rib tip Z -37.8; the reading takes the first vertex past 0.5 proud on the revolved end"
+   "note": "geometric tips -36.84 / -37.24 / -37.63 / -37.99 (1.35 under the plate's lower edge); the reading takes the first vertex past 0.5 proud on the soft end"
   },
   {
-   "name": "L4 magazine.thickness (body Y bounds - 2 x 1.0 rib)",
+   "name": "L4_thickness",
    "value": 26.0,
    "threshold": "26.0 +-0.05",
    "pass": true
   },
   {
-   "name": "L4 magazine.bottom_Z",
+   "name": "L4_bottom_Z",
    "value": -183.224,
    "threshold": "-183.2 +-0.05",
    "pass": true
   },
   {
-   "name": "L4 overall_height_with_mag",
+   "name": "L4_overall_height_with_mag",
    "value": 232.624,
    "threshold": "232.6 +-0.05",
+   "pass": true
+  },
+  {
+   "name": "L4_overall_height_without_mag",
+   "value": 182.099,
+   "threshold": "182.1 +-0.05",
    "pass": true
   },
   {
    "name": "B3 mag_release sweep 0..10 deg with the new magazine fixed",
    "value": {
     "intersecting_steps": 0,
-    "min_clearance_mm": 0.1791,
+    "min_clearance_mm": 0.1094,
     "min_with": "trigger_guard",
     "steps": 37
    },
    "threshold": "0 intersections; clearance in row [0.1, 0.3]",
    "pass": true,
-   "note": "identical to round 1 (0.1791, trigger_guard)"
+   "note": "the minimum is with the trigger guard (identical at the start of the round: not a magazine change)"
   },
   {
-   "name": "Reload-path probe (spec MagInsertStart -> MagRockStart -> Mag: 8 mm insert along the 18 deg tilted axis, then the rock about the hook (429, 0, -16))",
+   "name": "Reload-path probe (MagInsertStart -> MagRockStart -> Mag)",
    "value": {
     "intersecting_steps": 0,
     "steps": 90
    },
    "threshold": "0 (the fit stage owns M4)",
    "pass": true,
-   "note": "the fuller front lug follows this path's clearance envelope against the plain well front wall (~0.3 margin)"
+   "note": "includes the new front knobs and rear lug; no catch motion modelled"
   },
   {
    "name": "Magazine motion sweep",
@@ -160,180 +176,54 @@
  ],
  "judge_r1_tells": {
   "fixed": [
-   "ribs: flat-topped pressed ribs with rounded shoulders and revolved (U) ends instead of round rods",
-   "front spine: broad front panel + front fold the full length",
-   "top plate: raised 0.9 over a necked top, chamfered, top just under the lips",
-   "floor plate: 5.0 thick, two-tier (folded rim over a narrower lower part), front turn-up, stepped bottom, R 3.5 rear corner, recessed bottom with a detent button; body flange above it",
-   "inset seam outlines: replaced by real raised forms"
+   "rib start: tips now 1.35 under the plate's lower edge (stepped with the slanted edge); no seam band between (neck line 0.35 + steep chamfer)",
+   "rib form: narrow pressed ribs with U ends whose crest fades into the sheet over 4.5 mm (the integration round's spear tips are gone)",
+   "top cap: 1.3 proud (body necked to 12.0), domed (0.8 at the corners), top rounding over toward the lip curl, 0.75 / 2 rounded edges",
+   "front edge: raised bead at u 0.915 on the front panel (lit line pair behind the front edge)",
+   "front lug: two rounded pin-head knobs at the front edge (Z -19.6 / -23.6), overhanging the front face 0.9",
+   "rear lug: a small rounded catch lug on the rear spine under the guard tang (spec rear_lug_X)"
   ],
   "partly": [
-   "front lug: fuller (Y +-5.6, convex front, nose tab, window) but still wedge-like from the side: the plain well front wall and the spec reload path limit it (spec_proposal: front-lug recess)",
-   "rib spacing / widths: spec positions kept (0.17 / 0.34 / 0.51 / 0.66, uneven), widths now uneven"
+   "floorplate: rear bottom swells 0.55 (L2 0.9678 -> 0.9688) on top of the existing step / turn-up / rim; c4's large forward lip and visible underside lie outside the side-view silhouette (our front corner already overshoots the trace) and come from c4's lower viewpoint",
+   "rear knob: c4 draws it ~12 mm under the top, inside the well where the liner wall leaves 0.45 mm; ours sits lower (Z -36.4..-39.6) and reads small"
   ],
   "not_fixed": [
-   "rear locking lug: no room behind the body (receiver rear liner wall, trigger guard tang): spec_proposal",
-   "curvature / taper: the outline is the side-view L2 authority; c4 is stylised (x1.21 stretch)",
-   "render tells (wear, photo softness, lighting): the shared ROUGH LOOK, not this part"
+   "overall / bottom silhouette and curvature: the side views are the L2 authority (c4 needs x1.20 vertical stretch)",
+   "rib spacing: c4's own u reads 0.18 / 0.30 / 0.45 / 0.615 (narrowing toward the REAR, i.e. image right), the side view 0.17 / 0.34 / 0.51 / 0.66: kept at the spec (side views own positions)",
+   "render tells (photo softness, wear, lighting): the shared ROUGH LOOK"
   ]
  },
+ "honest_notes": [
+  "The plate's bright worn rim in c4 is mostly a material cue; ours now has rounded 0.75 edges and a dome, but under the ROUGH LOOK it still reads darker and cleaner than the reference.",
+  "c4 / c5 part IoU stay far below their thresholds for the documented stylisation reason; the silhouette is held to the side views on purpose.",
+  "Triangles sit at the 7000 ceiling (6998): more detail on this part needs savings elsewhere (e.g. the c5 front-face spine lines or the floor-plate recess).",
+  "No blind judge was run by this stage."
+ ],
  "files": {
   "module": "Scripts/guns/rifle/parts/magazine.py",
   "helpers": [
-   "Scripts/guns/rifle/parts/magazine_geo.py",
-   "Scripts/guns/rifle/parts/magazine_dev.py"
+   "Scripts/guns/rifle/parts/magazine_geo.py (side_rib_soft)",
+   "Scripts/guns/rifle/parts/magazine_dev.py (--base snapshot option; L2 labeller cheek bound -54.5 as rifle_silhouette)"
   ],
   "pairs": [
-   "WorkFiles/guns/rifle/review/detail/magazine/r2_final_pair_c4.png",
-   "WorkFiles/guns/rifle/review/detail/magazine/r2_final_pair_c5.png",
-   "WorkFiles/guns/rifle/review/detail/magazine/r2_final_pair_q34.png"
+   "WorkFiles/guns/rifle/review/detail/magazine/r2b_i8_pair_c4.png",
+   "WorkFiles/guns/rifle/review/detail/magazine/r2b_i8_pair_c5.png",
+   "WorkFiles/guns/rifle/review/detail/magazine/r2b_i8_pair_q34.png"
   ],
-  "l2_diff": "WorkFiles/guns/rifle/review/detail/magazine/l2_side_diff_r2.png",
-  "c4_unwrap": "WorkFiles/guns/rifle/review/detail/magazine/c4_unwrap_r2.png",
-  "notes": "WorkFiles/guns/rifle/review/detail/magazine/notes_r2.json",
-  "spec_proposal": "WorkFiles/guns/rifle/review/detail/magazine/spec_proposal.json",
-  "cameras": "WorkFiles/guns/rifle/review/detail/magazine/cameras_r1/ (unchanged)",
-  "blind_pair": "WorkFiles/guns/rifle/review/detail_blind/magazine_r2/ (key: review/detail/magazine/key_r2.json; ours = B)"
+  "start_pairs": [
+   "WorkFiles/guns/rifle/review/detail/magazine/r2b_i0_pair_c4.png",
+   "WorkFiles/guns/rifle/review/detail/magazine/r2b_i0_pair_c5.png",
+   "WorkFiles/guns/rifle/review/detail/magazine/r2b_i0_pair_q34.png"
+  ],
+  "spec_proposal": "WorkFiles/guns/rifle/review/detail/magazine/spec_proposal.json (round_2b block)",
+  "blind_pair": "WorkFiles/guns/rifle/review/detail_blind/magazine_r2/ (A = reference, B = ours; key review/detail/magazine/key_r2.json)",
+  "base_snapshot": "WorkFiles/guns/rifle/scratch/mag_detail/base2 (Assets/Guns/AR01.blend + scratch/form_tris.npz of 02:54)"
  },
- "metrics": {
-  "tag": "r2_final",
-  "panels": {
-   "c4": {
-    "window_iou_raw": 0.8343,
-    "own_frame_iou": 0.8455,
-    "own_frame_fit": {
-     "scale": 0.9774,
-     "rot_deg": 2.36,
-     "shift_px": [
-      1.74,
-      -1.31
-     ]
-    },
-    "own_frame_iou_with_stretch": 0.8962,
-    "own_frame_fit_with_stretch": {
-     "scale": 0.8786,
-     "rot_deg": -0.35,
-     "shift_px": [
-      4.69,
-      1.8
-     ],
-     "vertical_stretch": 1.2082
-    },
-    "edge_f_2px": 0.2667,
-    "edge_precision": 0.4016,
-    "edge_recall": 0.1996,
-    "pair": "review/detail/magazine/r2_final_pair_c4.png"
-   },
-   "c5": {
-    "window_iou_raw": 0.7985,
-    "own_frame_iou": 0.8224,
-    "own_frame_fit": {
-     "scale": 0.9231,
-     "rot_deg": 0.0,
-     "shift_px": [
-      -0.0,
-      10.37
-     ]
-    },
-    "own_frame_iou_with_stretch": 0.9281,
-    "own_frame_fit_with_stretch": {
-     "scale": 0.8163,
-     "rot_deg": -0.01,
-     "shift_px": [
-      -0.57,
-      18.53
-     ],
-     "vertical_stretch": 1.378
-    },
-    "edge_f_2px": 0.6689,
-    "edge_precision": 0.6725,
-    "edge_recall": 0.6652,
-    "pair": "review/detail/magazine/r2_final_pair_c5.png"
-   },
-   "q34": {
-    "window_iou_raw": 0.9268,
-    "own_frame_iou": 0.929,
-    "own_frame_fit": {
-     "scale": 1.0098,
-     "rot_deg": -0.51,
-     "shift_px": [
-      0.03,
-      -0.01
-     ]
-    },
-    "own_frame_iou_with_stretch": 0.9326,
-    "own_frame_fit_with_stretch": {
-     "scale": 1.0,
-     "rot_deg": 0.0,
-     "shift_px": [
-      0.0,
-      0.47
-     ],
-     "vertical_stretch": 1.0322
-    },
-    "edge_f_2px": 0.2347,
-    "edge_precision": 0.4273,
-    "edge_recall": 0.1618,
-    "pair": "review/detail/magazine/r2_final_pair_q34.png"
-   }
-  },
-  "L2_side": {
-   "magazine": {
-    "iou": 0.9678,
-    "contour_p95_px": 1.414,
-    "contour_max_px": 2.828
-   },
-   "mag_catch": {
-    "iou": 0.9651,
-    "contour_p95_px": 1.0,
-    "contour_max_px": 1.414
-   },
-   "side_iou_identity": 0.978
-  }
- },
- "build": {
-  "tag": "r2_final",
-  "floor": {
-   "f0": [
-    456.8793535532689,
-    -184.42448522990165
-   ],
-   "f1": [
-    493.79135858225294,
-    -139.40941901177615
-   ],
-   "shift_mm": -0.8579149537422746
-  },
-  "triangles_mag": 6800,
-  "contact_gaps": [
-   {
-    "a": "magazine",
-    "b": "magazine_floor_plate",
-    "min_gap_mm": 0.02
-   },
-   {
-    "a": "magazine",
-    "b": "receiver",
-    "min_gap_mm": 0.2
-   },
-   {
-    "a": "magazine",
-    "b": "mag_catch",
-    "min_gap_mm": 0.8399
-   },
-   {
-    "a": "magazine",
-    "b": "trigger_guard",
-    "min_gap_mm": 0.5564
-   },
-   {
-    "a": "magazine_floor_plate",
-    "b": "receiver",
-    "min_gap_mm": 1.0
-   }
-  ]
- },
- "reproduce": [
-  "\"C:/Program Files/Blender Foundation/Blender 5.2/blender.exe\" -b WorkFiles/guns/rifle/scratch/mag_detail/base/AR01_base.blend --factory-startup --python Scripts/guns/rifle/parts/magazine_dev.py -- --build --tag r2_final",
-  "py -3 -B Scripts/guns/rifle/parts/magazine_dev.py --render --tag r2_final"
- ]
+ "iterations": {
+  "r2b_i0": "integrated build as is (6718 tris)",
+  "r2b_i1": "plate cap + neck 12.0, soft ribs under the plate, front bead, knobs (8656 tris)",
+  "r2b_i2": "lean rib section, neck 0.35 + steep chamfer, rear lug, floor bulge (20 non-manifold edges from coarser front-face spines: reverted)",
+  "r2b_i3": "domed plate (crown intersect)",
+  "r2b_i4..i8": "triangle trims to 6998 (crown grid 6x6, 4-ring rib ends, rib step 28, bead step 32, 8-gon knobs, welds removed)"
+ }
 }
