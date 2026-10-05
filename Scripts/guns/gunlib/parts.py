@@ -101,3 +101,33 @@ def build_part(p: PartDef, coll, offset) -> "bpy.types.Object":
 
 def part_record(ob) -> Dict[str, Any]:
     return json.loads(ob["gun_part"]) if "gun_part" in ob else {}
+
+
+class BuildCtx:
+    """What a part module's build(spec, ctx) builds into: the collection, the frame offset (frame M -> B, mm) and an
+    optional set of registry keys to build (None = all). make() turns a provider into Blender objects:
+
+      provider() -> PartDef or tuple of PartDefs   built with build_part (the tuple's parts share the key)
+      provider(coll, offset) -> object             a custom builder (explicit boolean steps)
+    """
+
+    def __init__(self, coll, offset, spec=None, only=None):
+        self.coll = coll
+        self.offset = offset
+        self.spec = spec
+        self.only = set(only) if only else None
+        self.built: Dict[str, list] = {}
+
+    def wants(self, key: str) -> bool:
+        return self.only is None or key in self.only
+
+    def make(self, key: str, provider) -> list:
+        if not self.wants(key):
+            return []
+        r = provider() if provider.__code__.co_argcount == 0 else None
+        if r is None:
+            objs = [provider(self.coll, self.offset)]
+        else:
+            objs = [build_part(q, self.coll, self.offset) for q in (r if isinstance(r, tuple) else (r,))]
+        self.built[key] = objs
+        return objs

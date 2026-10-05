@@ -1,0 +1,248 @@
+{
+ "stage": "detail_front_sight_r2",
+ "part": "front_sight",
+ "date": "2026-10-05T01:30:48",
+ "status": "pass",
+ "status_note": "shape / L2 / manifold / contact gates pass; the triangle line is reported as not met (rifle-level budget)",
+ "objects": [
+  "cleaning_rod",
+  "front_sight_block",
+  "front_sight_post"
+ ],
+ "build": "private: base.blend (form build 2026-10-04 23:33) + parts/front_sight.py rebuilt + muzzle_brake rebuilt from its builder's current module (read only) -> scratch/detail/front_sight/fs.blend + fs_tris.npz (Scripts/guns/rifle/parts/front_sight_dev.py)",
+ "gates": [
+  {
+   "name": "part outline IoU vs close-up trace, own frame (part zone, similarity fit) c3 / q34",
+   "value": [
+    0.8832,
+    0.8661
+   ],
+   "fit_s_dx_dy": [
+    [
+     1.04,
+     11,
+     -1
+    ],
+    [
+     1.095,
+     -9,
+     -1
+    ]
+   ],
+   "threshold": "informational (new in round 2; camera residual removed by a similarity fit)",
+   "pass": true
+  },
+  {
+   "name": "part outline IoU vs close-up trace, own frame (ears zone, own-scale fit, round-1 method) c3",
+   "value": 0.9184,
+   "round1": 0.9106,
+   "fit_sx_sy_dx_dy": [
+    0.8,
+    1.08,
+    5,
+    -8
+   ],
+   "threshold": "improve on round 1",
+   "pass": true
+  },
+  {
+   "name": "part outline IoU vs close-up trace, own frame (ears zone, own-scale fit, round-1 method) q34",
+   "value": 0.8672,
+   "round1": 0.8508,
+   "fit_sx_sy_dx_dy": [
+    0.81,
+    1.04,
+    -3,
+    -2
+   ],
+   "threshold": "improve on round 1",
+   "pass": true
+  },
+  {
+   "name": "part outline IoU at the solved camera, identity (part zone / ears zone) c3",
+   "value": [
+    0.8557,
+    0.7518
+   ],
+   "round1": [
+    0.8517,
+    0.7459
+   ],
+   "threshold": "informational",
+   "pass": true
+  },
+  {
+   "name": "part outline IoU at the solved camera, identity (part zone / ears zone) q34",
+   "value": [
+    0.7968,
+    0.6963
+   ],
+   "round1": [
+    0.7979,
+    0.6951
+   ],
+   "threshold": "informational",
+   "pass": true
+  },
+  {
+   "name": "crop internal-edge agreement F c3 / q34",
+   "value": [
+    0.3792,
+    0.5465
+   ],
+   "round1": [
+    0.3082,
+    0.5614
+   ],
+   "threshold": "informational (the brake in frame changed too)",
+   "pass": true
+  },
+  {
+   "name": "L2 per part front_sight_block (side, IoU)",
+   "value": 0.9608,
+   "round1": 0.9608,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 per part cleaning_rod (side, outer contour P95 / max px)",
+   "value": [
+    1.0,
+    2.0
+   ],
+   "threshold": "<= 1.0 / <= 2",
+   "pass": true
+  },
+  {
+   "name": "L2 all side parts pass (private npz incl. the muzzle builder's current brake)",
+   "value": "all",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (fit) / top IoU (fit, valid)",
+   "value": [
+    0.9769,
+    0.9311
+   ],
+   "round1": [
+    0.9772,
+    0.9308
+   ],
+   "threshold": ">= 0.96 / >= 0.93",
+   "pass": true
+  },
+  {
+   "name": "closed manifold (boundary / multi-face / wire edges, shells)",
+   "value": {
+    "cleaning_rod": [
+     0,
+     0,
+     0,
+     1
+    ],
+    "front_sight_block": [
+     0,
+     0,
+     0,
+     1
+    ],
+    "front_sight_post": [
+     0,
+     0,
+     0,
+     1
+    ]
+   },
+   "threshold": "0 / 0 / 0, 1 shell",
+   "pass": true
+  },
+  {
+   "name": "part triangles LOD0 (block + post + rod)",
+   "value": {
+    "cleaning_rod": 300,
+    "front_sight_block": 4510,
+    "front_sight_post": 296,
+    "total": 5106
+   },
+   "round1": 4306,
+   "threshold": "report (rifle LOD0 ceiling 50000; the private npz is 54124 with every other part at baseline / the brake builder's current module)",
+   "pass": false,
+   "note": "+800 over round 1 (3-segment 1.5 mm rolled rims on the thicker ears, the box loft, boss / scribe / hole details). The rifle was already over 50k before this round (53200 in the round-1 private npz); the budget needs a rifle-level decision (LOD0 trims elsewhere, or rim segments 3 -> 2 here for about -600)."
+  },
+  {
+   "name": "G5 static intersections involving this part",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "G5 butt gaps of this part's contacts (mm)",
+   "value": {
+    "barrel/front_sight_block": 0.0199,
+    "front_sight_block/muzzle_brake": 0.04,
+    "cleaning_rod/front_sight_block": 0.0196,
+    "front_sight_block/front_sight_post": 0.02,
+    "cleaning_rod/gas_block": 0.0196,
+    "cleaning_rod/handguard_front_band": 0.0196
+   },
+   "threshold": "0.01-0.05",
+   "pass": true
+  },
+  {
+   "name": "L4 front_sight_ear_top_Z / post tip Z",
+   "value": [
+    49.4,
+    45.0
+   ],
+   "threshold": "49.4 / 45.0",
+   "pass": true
+  },
+  {
+   "name": "B3 sweep",
+   "value": "n/a (no moving part in this module)",
+   "threshold": "n/a",
+   "pass": true
+  }
+ ],
+ "variant_closeup_proportions": {
+  "what": "FS_EAR_SX=0.78 (ears scaled front-to-back about the front edge X 833 to the close-ups' proportion); NOT the default",
+  "c3_part_zone_iou_identity": 0.8993,
+  "c3_part_zone_iou_fit": 0.9033,
+  "q34_part_zone_iou_fit": 0.9101,
+  "L2_front_sight_block_iou": 0.8648,
+  "L2_pass": false,
+  "render": "WorkFiles/guns/rifle/review/detail/front_sight/r2v78_pair_c3.png"
+ },
+ "round1_tells_addressed": {
+  "rolled thick ears, radiused tops, top curving into the ear": "ears 3.8 thick, 1.5 / 1.2 mm 3-segment rolled rims, top corners R 3.0 front / 3.5 rear",
+  "rear (far) ear holes": "large blind hole dia 4.0 near the top front + round-ended slot below, on the inner faces (the side panels show no through holes)",
+  "boss = flush disc with raised ring rim + scribed arc": "disc proud 0.18 with a 0.4 wide rim proud 0.32 and a real scribed groove (0.36 wide, 0.22 deep) leaving its lower rear edge",
+  "detent at the front base": "the muzzle builder's latch is now in our crops; it sits further forward (on the brake ring) than c3 draws it (on the collar right in front of the ear) - interface note",
+  "web / cast transition / filleted inner corners": "0.9 fillets ear-to-floor, rolled window frame; the base shoulder takes the ears with no separate plate",
+  "rounded window in a chunky frame": "corners R 1.6-2.6 + the 1.5 rolled rim on the 3.8 ear",
+  "base boxier, integrated top, squarer front shoulders": "base = loft of rounded-box sections (top shoulders R 3.2, flanks bulging 1.2, round lower half R 7), rear rim R 2.2, front shoulder R 1.6; round-1 platform plate gone",
+  "tower proportions": "NOT changed: side trace kept (L2); open conflict re-raised with the variant's numbers"
+ },
+ "notes": [
+  "Every review render is the gunlib ROUGH LOOK at the setup's solved c3 / q34 cameras (kept fixed).",
+  "Corner normals of the planar +-Y faces are set to the face normal after the bevels (flat_face_normals): the booleans left sliver triangles that smeared the groove / hole rim normals into a dark wedge beside the boss.",
+  "muzzle_brake L2 depends on that builder's live module; at the final run it passed."
+ ],
+ "files": {
+  "module": "Scripts/guns/rifle/parts/front_sight.py",
+  "harness": "Scripts/guns/rifle/parts/front_sight_dev.py",
+  "pairs": [
+   "WorkFiles/guns/rifle/review/detail/front_sight/r2_pair_c3.png",
+   "WorkFiles/guns/rifle/review/detail/front_sight/r2_pair_q34.png"
+  ],
+  "partzone": [
+   "WorkFiles/guns/rifle/review/detail/front_sight/r2_partzone_c3.png",
+   "WorkFiles/guns/rifle/review/detail/front_sight/r2_partzone_q34.png"
+  ],
+  "metrics": "WorkFiles/guns/rifle/review/detail/front_sight/r2_metrics.json",
+  "blind": "WorkFiles/guns/rifle/review/detail_blind/front_sight_r2/",
+  "key": "WorkFiles/guns/rifle/review/detail/front_sight/key_r2.json",
+  "spec_proposal": "WorkFiles/guns/rifle/review/detail/front_sight/spec_proposal.json"
+ }
+}

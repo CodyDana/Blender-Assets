@@ -1,0 +1,155 @@
+{
+ "stage": "detail pass round 2: butt_plate",
+ "date": "2026-10-05T01:29:58",
+ "status": "pass",
+ "note": "All numeric gates pass. Round-1 judge design tells 2, 3, 5, 8 fixed in geometry, 6 and 7 partly; tell 1 (plate narrower than the stock in c7) contradicts the TOP panel and the spec (BP-5), tell 4 is the stock's, the render tells are the shared ROUGH LOOK. Round-2 blind result pending (pair prepared); the width and finish tells are expected to remain.",
+ "gates": [
+  {
+   "name": "Plate outline IoU vs c7 plate trace, part frame (unit box)",
+   "value": 0.981,
+   "threshold": ">= 0.95 (round 1: 0.9594)",
+   "pass": true,
+   "note": "hi-res (4x) unit-box IoU 0.9805, dense row widths within 0.036 of c7 (round 1: ~0.05 too wide on most rows); raw IoU at the solved camera 0.6669 (c7 not to scale: aspect 0.22 vs ours 0.344)"
+  },
+  {
+   "name": "Plate width profile max |diff| vs c7 (fraction of width, 21 rows)",
+   "value": 0.035,
+   "threshold": "report (round 1: 0.065)",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, side view: butt_plate",
+   "value": 0.9672,
+   "threshold": ">= 0.95 (round 1: 0.9671)",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, side view: stock (its end cut follows the plate outline)",
+   "value": 0.9919,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (whole rifle, with this part's rebuild)",
+   "value": 0.9768,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (whole rifle, with this part's rebuild)",
+   "value": 0.9308,
+   "threshold": ">= 0.93 (form: 0.931)",
+   "pass": true,
+   "note": "MARGINAL (+0.0008), as in round 1 (0.9305)"
+  },
+  {
+   "name": "Closed manifold (butt_plate, butt_screws, buttstock)",
+   "value": {
+    "butt_plate": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "zero_area_faces": 0,
+     "shells": 1
+    },
+    "butt_screws": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "zero_area_faces": 0,
+     "shells": 2
+    },
+    "buttstock": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "zero_area_faces": 0,
+     "shells": 1
+    }
+   },
+   "threshold": "0 non-manifold / boundary / wire / zero-area",
+   "pass": true
+  },
+  {
+   "name": "Part triangles (butt_plate + butt_screws)",
+   "value": 3034,
+   "threshold": "<= round 0 (3150); round 1 3002",
+   "pass": true,
+   "note": "plate 1992, screws 1042; buttstock 4064 (round 1 4044: +20 from the lip-corner fillet in its cut); rifle total with this rebuild 53186 (round 1 53134; the 50k LOD0 budget is a whole-rifle issue)"
+  },
+  {
+   "name": "Butt gaps",
+   "value": {
+    "plate|stock": {
+     "overlapping_face_pairs": 0,
+     "min_vertex_distance_mm": 0.0161
+    },
+    "screws|plate": {
+     "overlapping_face_pairs": 0,
+     "min_vertex_distance_mm": 0.02
+    }
+   },
+   "threshold": "0.01-0.05 modelled, no interpenetration",
+   "pass": true,
+   "note": "Blender BVH on the built blend: 0 overlapping face pairs; min vertex distance plate-stock 0.016 (round 1 had 0.0056 at the toe lip's sharp concave corner, now filleted 0.8); screws 0.02 off the hole floors, 0.15 radial clearance"
+  },
+  {
+   "name": "B3 sweep",
+   "value": "n/a (static parts, bone body)",
+   "threshold": "moving parts only",
+   "pass": true
+  }
+ ],
+ "judge_tells_round1": {
+  "1 plate-to-stock width": "NOT FIXED: c7 vs TOP/spec conflict (BP-5); the narrower plate tips now show more wood beside the heel and toe",
+  "2 outline (oval, tapering)": "fixed: section re-fitted through the render; long sides bowed (rows within 0.036 of c7)",
+  "3 dark raised border": "fixed in geometry: 0.4 raised lip 2.2 wide round the face, 45 deg outer band with 0.3 bright edges",
+  "4 stock silhouette facets": "the stock's part (BP-1)",
+  "5 screw heads": "fixed: flush low-domed heads in 45 deg countersinks, engraved 0.55 slots with a 0.06 edge break (no ridge)",
+  "6 screw placement": "positions already match c7 within the plate (t 0.074 / 0.827 ref vs 0.076 / 0.83 ours); the 'narrow toe' read follows from 2 and 1",
+  "7 heel flat strip / facets": "partly: smooth normals over the face; the heel roll seen from c7's low solved camera still reads as a short flat top",
+  "8 flat slab face": "fixed: 0.6 crown across the width (tent geometry + smooth parabola normals)"
+ },
+ "iterations": {
+  "r2_i1": "profile re-fit (unit box 0.9594 -> 0.9796), 0.6 crown loft, R2.0/4 rim, 6.0 countersunk screws: rim invisible, star shading round the screws, screws tiny",
+  "r2_i2": "smooth normals from the crowned loft (stars gone), rim as a 1.8 chamfer, spec-size screws: rim still not distinct",
+  "r2_i3": "face pocket 0.4 (raised lip): the border reads, but the face itself recessed -> side L2 0.9466 FAIL, plate 4136 tris",
+  "r2_i4": "lip proud of the face instead (face stays on the side profile), tent crown + parabola normals: side L2 0.968, 2266 tris",
+  "r2_i5": "screws 20 seg / 2 dome rings, 14 section rows: 3142 tris; BVH found 30 plate-stock overlaps (the 40 deg pass beveled the toe lip's concave corner; lip shift at the heel top)",
+  "r2_i6": "weighted rear-zone breaks + lip shift faded at the chain ends: 0 overlaps, min gap 0.0039 at the toe lip corner (pre-existing in round 1: 0.0056)",
+  "r2_i7": "0.8 fillet at the toe lip corner: min gap 0.016; but 2762 tris (pocket-step 0.08 break: ~700 slivers)",
+  "r2_i8": "coplanar merge before triangulation: 2610",
+  "r2_i9": "pocket step left crisp: plate 1992 + screws 1042 = 3034, all gates pass (FINAL)"
+ },
+ "blind_pair": {
+  "dir": "WorkFiles/guns/rifle/review/detail_blind/butt_plate_r2/",
+  "key": "WorkFiles/guns/rifle/review/detail/butt_plate/key_r2.json",
+  "ours_is": "B"
+ },
+ "c7_crop": {
+  "silhouette_iou_window": 0.8553,
+  "edges_f": 0.2754,
+  "round1": {
+   "silhouette_iou_window": 0.8548,
+   "edges_f": 0.2873
+  }
+ },
+ "q34_crop": {
+  "silhouette_iou_window": 0.9185,
+  "round1": 0.9189
+ },
+ "files": {
+  "pairs": [
+   "WorkFiles/guns/rifle/review/detail/butt_plate/r2_i9_pair_c7.png",
+   "WorkFiles/guns/rifle/review/detail/butt_plate/r2_i9_pair_q34.png"
+  ],
+  "outline": "WorkFiles/guns/rifle/review/detail/butt_plate/r2_i9_plate_outline_c7.png",
+  "profile": "WorkFiles/guns/rifle/review/detail/butt_plate/r2_i9_profile.json",
+  "spec_proposal": "WorkFiles/guns/rifle/review/detail/butt_plate/spec_proposal.json",
+  "code": [
+   "Scripts/guns/rifle/parts/butt_plate.py",
+   "Scripts/guns/rifle/parts/butt_plate_dev.py",
+   "Scripts/guns/rifle/parts/butt_plate_devbuild.py"
+  ]
+ }
+}

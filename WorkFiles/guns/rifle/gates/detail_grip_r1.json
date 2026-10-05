@@ -1,0 +1,315 @@
+{
+ "stage": "detail pass, part grip, round 1",
+ "date": "2026-10-05T00:41:27",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "Checker panel outline IoU vs the close-up trace (c6, panel px)",
+   "value": 0.9456,
+   "threshold": ">= 0.85",
+   "pass": true,
+   "note": "traced reference quad = 4 corner picks on a 5x gridded zoom; ours = the built panel outline projected at the solved part camera"
+  },
+  {
+   "name": "Checker panel outline IoU vs the close-up trace (c1, panel px)",
+   "value": 0.9023,
+   "threshold": ">= 0.85",
+   "pass": true,
+   "note": "traced reference quad = 4 corner picks on a 5x gridded zoom; ours = the built panel outline projected at the solved part camera"
+  },
+  {
+   "name": "Checker cells vs reference by FFT at the same windows (c6): period ratio / groove direction diff",
+   "value": {
+    "period_ratio": {
+     "A": 1.015,
+     "B": 0.99
+    },
+    "direction_diff_deg": {
+     "A": -1.3,
+     "B": -4.65
+    },
+    "amp_A_over_B": {
+     "ref": 3.85,
+     "ours": 1.55
+    }
+   },
+   "threshold": "period within 5 %, direction within 6 deg",
+   "pass": true,
+   "note": "family A (the drawn dominant streaks) must dominate in ours too (A/B > 1)"
+  },
+  {
+   "name": "Checker cells vs reference by FFT at the same windows (c1): period ratio / groove direction diff",
+   "value": {
+    "period_ratio": {
+     "A": 0.986,
+     "B": 1.002
+    },
+    "direction_diff_deg": {
+     "A": -1.38,
+     "B": -5.35
+    },
+    "amp_A_over_B": {
+     "ref": 2.79,
+     "ours": 5.28
+    }
+   },
+   "threshold": "period within 5 %, direction within 6 deg",
+   "pass": true,
+   "note": "family A (the drawn dominant streaks) must dominate in ours too (A/B > 1)"
+  },
+  {
+   "name": "Grip-only silhouette IoU in the part's own region (c6: below the flange, behind the guard leg)",
+   "value": 0.9335,
+   "threshold": ">= 0.87 and no regression vs before",
+   "pass": true
+  },
+  {
+   "name": "Grip-only silhouette IoU in the part's own region (c1: below the flange, behind the guard leg)",
+   "value": 0.9614,
+   "threshold": ">= 0.87 and no regression vs before",
+   "pass": true
+  },
+  {
+   "name": "Grip-only silhouette IoU in the part's own region (q34: below the flange, behind the guard leg)",
+   "value": 0.8781,
+   "threshold": ">= 0.87 and no regression vs before",
+   "pass": true
+  },
+  {
+   "name": "Window silhouette IoU (c6) vs before",
+   "value": {
+    "before": 0.9165,
+    "now": 0.9171
+   },
+   "threshold": ">= before - 0.002",
+   "pass": true
+  },
+  {
+   "name": "Window edge agreement F (c6) vs before",
+   "value": {
+    "before": 0.159,
+    "now": 0.1999
+   },
+   "threshold": "informational (texture-level)",
+   "pass": true
+  },
+  {
+   "name": "Window silhouette IoU (c1) vs before",
+   "value": {
+    "before": 0.9546,
+    "now": 0.9555
+   },
+   "threshold": ">= before - 0.002",
+   "pass": true
+  },
+  {
+   "name": "Window edge agreement F (c1) vs before",
+   "value": {
+    "before": 0.1175,
+    "now": 0.105
+   },
+   "threshold": "informational (texture-level)",
+   "pass": true
+  },
+  {
+   "name": "Window silhouette IoU (q34) vs before",
+   "value": {
+    "before": 0.8856,
+    "now": 0.8856
+   },
+   "threshold": ">= before - 0.002",
+   "pass": true
+  },
+  {
+   "name": "Window edge agreement F (q34) vs before",
+   "value": {
+    "before": 0.1852,
+    "now": 0.1918
+   },
+   "threshold": "informational (texture-level)",
+   "pass": true
+  },
+  {
+   "name": "L2 per part: pistol_grip side silhouette (rifle_silhouette.py on the grip review npz)",
+   "value": 0.9752,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (authority, rifle + seated mag; review npz)",
+   "value": 0.9771,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (review npz)",
+   "value": 0.931,
+   "threshold": ">= 0.93",
+   "pass": true
+  },
+  {
+   "name": "Side (XZ) silhouette of pistol_grip vs the input blend's grip",
+   "value": 0.99314,
+   "threshold": "informational: the leg slot now only 10.1 mm wide, so the grip covers X 298.4-300.4 at Z -35..-60 beside the leg",
+   "pass": true
+  },
+  {
+   "name": "H1 early girth / width at the Grip origin (official rifle_h1.py on the review blend)",
+   "value": {
+    "perimeter_mm": 123.1,
+    "width_Y_mm": 30.41,
+    "depth_mm": 39.62
+   },
+   "threshold": "girth [122.1, 139.5] (band + 2 recess allowance); width [29.75, 36.25]",
+   "pass": true
+  },
+  {
+   "name": "H1 early all (girth, reach, grip origin, support)",
+   "value": {
+    "reach_mm": 70.7,
+    "pass_early": true
+   },
+   "threshold": "all pass",
+   "pass": true
+  },
+  {
+   "name": "B7 pistol_grip closed manifold",
+   "value": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 3978,
+    "shells": 1
+   },
+   "threshold": "0 boundary / multi edges, 1 shell, 0 n-gons",
+   "pass": true
+  },
+  {
+   "name": "G5 contacts: no intersections with neighbours, butt gaps >= 0.01",
+   "value": {
+    "receiver": {
+     "overlap_tri_pairs": 0,
+     "min_gap_mm_samples": 0.04
+    },
+    "trigger_guard": {
+     "overlap_tri_pairs": 0,
+     "min_gap_mm_samples": 0.02
+    },
+    "rear_trunnion": {
+     "overlap_tri_pairs": 0,
+     "min_gap_mm_samples": 5.9894
+    },
+    "buttstock": {
+     "overlap_tri_pairs": 0,
+     "min_gap_mm_samples": 10.0
+    },
+    "trigger": {
+     "overlap_tri_pairs": 0,
+     "min_gap_mm_samples": 6.7771
+    },
+    "mag_catch": {
+     "overlap_tri_pairs": 0,
+     "min_gap_mm_samples": 10.0
+    },
+    "selector": {
+     "overlap_tri_pairs": 0,
+     "min_gap_mm_samples": 10.0
+    }
+   },
+   "threshold": "0 overlap pairs; min gap >= 0.01 mm (receiver 0.04, trigger_guard 0.02 by design)",
+   "pass": true
+  },
+  {
+   "name": "B8 pistol_grip LOD0 triangles",
+   "value": {
+    "now": 3978,
+    "form": 3728,
+    "plan_budget": 1500
+   },
+   "threshold": "report (rifle <= 50k at LOD0)",
+   "pass": true,
+   "note": "over the plan's 1,500 grip line since the form stage (loft 2,036 + recess/bevels); +250 this round (larger panel border, leg slot walls)"
+  },
+  {
+   "name": "B8 LOD0 total in the review snapshot (all 36 objects; rifle without the 4,092-tri magazine)",
+   "value": {
+    "all": 53460,
+    "rifle_without_mag": 49368
+   },
+   "threshold": "<= 50000",
+   "pass": true,
+   "note": "snapshot of Assets/Guns/AR01.blend at build time; other part builders change their parts in parallel"
+  },
+  {
+   "name": "Checker field (bake source, review-only) closed and outside LOD0",
+   "value": {
+    "triangles": 54576,
+    "boundary_edges": 0,
+    "shells": 2
+   },
+   "threshold": "closed; not in SK/SM or the LOD0 count",
+   "pass": true
+  },
+  {
+   "name": "B3 sweep",
+   "value": "n/a",
+   "threshold": "the grip does not move",
+   "pass": true
+  }
+ ],
+ "measured": {
+  "panel_ts": [
+   [
+    18.9,
+    11.35
+   ],
+   [
+    30.8,
+    -6.9
+   ],
+   [
+    88.15,
+    -3.85
+   ],
+   [
+    87.6,
+    15.2
+   ]
+  ],
+  "grooves_c6": {
+   "A": {
+    "deg_from_vertical_down_toward_rear": 48.2,
+    "spacing_mm": 1.635
+   },
+   "B": {
+    "deg_from_vertical_down_toward_rear": -45.0,
+    "spacing_mm": 1.9
+   }
+  },
+  "grooves_c1": {
+   "A": {
+    "deg_from_vertical_down_toward_rear": 51.5,
+    "spacing_mm": 1.7
+   },
+   "B": {
+    "deg_from_vertical_down_toward_rear": -36.6,
+    "spacing_mm": 1.88
+   }
+  }
+ },
+ "files": {
+  "loop": "review/detail/grip/r1_loop.json",
+  "pairs": [
+   "review/detail/grip/r1_pair_c6.png",
+   "review/detail/grip/r1_pair_c1.png",
+   "review/detail/grip/r1_pair_q34.png"
+  ],
+  "measure": "review/detail/grip/measure_r1.json",
+  "blind": "review/detail_blind/grip_r1/",
+  "key": "review/detail/grip/key_r1.json"
+ }
+}

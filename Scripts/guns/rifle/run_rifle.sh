@@ -37,6 +37,7 @@ run_blender b6a "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_b6a.py"
 run_blender measure "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_measure.py"
 run_blender h1 "$ROOT/References/Characters/MH_PlayerDefault/MH_PlayerDefault_FitBody.blend" --python "$HERE/rifle_h1.py"
 run_blender render_grey "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_render.py" -- --set grey --ss 3 --samples 96 --light 0.45 --out "$ROOT/Renders/Guns/AR01"
-run_blender render_crops "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_render.py" -- --set crops --ss 3 --light 0.55 --out "$W/review/early"
+# early-look crops (c1 receiver, c3 front sight) in the ROUGH LOOK + the blind pairs (detail-pass integration)
+py -3 -B "$HERE/rifle_early_look.py" --pairs early_blind2 --key early_key2.json > "$LOG/early_look.log" 2>&1 || { echo "FAILED early_look"; tail -20 "$LOG/early_look.log"; exit 1; }
 py -3 -B "$HERE/rifle_gates.py" --stage form
 echo ALL_DONE

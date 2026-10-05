@@ -1,0 +1,157 @@
+{
+ "stage": "2 form - detail pass integration",
+ "date": "2026-10-05T03:02:44",
+ "status": "pass",
+ "stage2_gates": "gates/form.json (status pass, 26 gates; the 3/4 pair passes through the documented exception at IoU 0.9158, floor 0.915)",
+ "spec": {
+  "version": "1.1",
+  "applied": "make_spec.py detail-pass block: parts[*].detail_pass + resolutions R35-R44",
+  "deferred": [
+   "front sight ear proportion (c3 vs side, R36)",
+   "butt plate width c7 vs TOP and stock end section (R41)",
+   "ejection port top Z 21.5 (R40)",
+   "magazine rear lug / front-lug recess (R43, fit stage)",
+   "magazine c5 ears: wider well opening (needs receiver change)"
+  ],
+  "design_sheet": "RIFLE_DESIGN_SHEET.png regenerated"
+ },
+ "integration_fixes": [
+  "barrel showing through the port (carrier recess floor Y -4 -> -8.5): L2 barrel max 175 px -> pass",
+  "catch housing label bound -52 -> -54.5 (trigger_guard proposal): L2 trigger_guard / mag_catch pass",
+  "rear sight stepped slider pocket: L3 gap-under-the-leaf bbox X0 460 -> pass",
+  "muzzle brake body r <= 10.1, chin X 880.0, L4 measures the body without the knob; butt plate heel moved to X 0.0: L4 26/26",
+  "sliver faces removed in every part (gunlib.bl.fix_slivers): B6a pass",
+  "concave bevel fillets reaching neighbours (rear sight block over the lower guard, upper guard tenon / front end): G5 0",
+  "budget: rifle 53846 -> 48694, magazine 7958 -> 6710 (R44)",
+  "3/4 IoU 0.9137 -> 0.9158: grip front strap back to R 9 (spec R33), magazine spine fold 0.9 -> 0.5 proud; rifle_q34 width rule refined (a width only fits if it lowers the residual summed over every region of the same parts)"
+ ],
+ "focused_attempts_unresolved_parts": {
+  "selector": "edge groove removed (solid plate), flat chamfered head + centre boss in a raised washer, flat nose pin; c1 renders pose the lever at c1's 13.25 deg",
+  "trigger_guard": "trigger slimmer lower blade, 1.3 mm tip, more forward hook",
+  "muzzle_brake": "flat face band + raised rim ring r 10.1, plain bore r 7.1 with a nearer floor, longer slot nearer the rim, slot lip 0.35",
+  "front_sight": "front collar r 10.1 -> 8.7 (sleeve -> narrow ring -> brake step), rounder base R 5 / 9; ear proportion NOT changed (R36)",
+  "butt_plate": "raised inner lip removed, one 1.6 rounded rim band, flat flush screw heads (0.05 gap), lighter worn-steel review finish (spec butt_plate_lacquer_worn); width NOT changed (R41)",
+  "magazine": "ribs x0.75 narrower with tapered ends, lower bottom ends (14.5 above the floor plate); proportions NOT changed (R36)",
+  "receiver_right": "flat-topped rivets; most of its round-2 judge tells were other parts (old selector / grip / trigger in its private snapshot)",
+  "grip": "review renders now show the checker bake source (review blend); panel / cell changes not attempted",
+  "rear_sight": "no design change this round (block S-profile / leaf tells need the c2 camera work; not converged)"
+ },
+ "blind_pairs": {
+  "early": "review/early_blind2 (key review/early_key2.json: ours = A in pair 01, B in pair 02)",
+  "per_part": "review/detail_blind/<part>_r3 (A = reference, B = ours; keys review/detail/<part>/key_r3.json)",
+  "judged": false
+ },
+ "r3_crop_numbers": {
+  "receiver_right": {
+   "c1": {
+    "silhouette_iou_window": 0.9077,
+    "edge_f": 0.3692
+   },
+   "c2": {
+    "silhouette_iou_window": 0.9415,
+    "edge_f": 0.3007
+   },
+   "q34": {
+    "silhouette_iou_window": 0.9282,
+    "edge_f": 0.3111
+   }
+  },
+  "rear_sight": {
+   "c2": {
+    "silhouette_iou_window": 0.944,
+    "edge_f": 0.4107
+   },
+   "q34": {
+    "silhouette_iou_window": 0.9429,
+    "edge_f": 0.5101
+   }
+  },
+  "front_sight": {
+   "c3": {
+    "silhouette_iou_window": 0.8557,
+    "edge_f": 0.3582
+   },
+   "q34": {
+    "silhouette_iou_window": 0.7921,
+    "edge_f": 0.5642
+   }
+  },
+  "muzzle_brake": {
+   "c3": {
+    "silhouette_iou_window": 0.8059,
+    "edge_f": 0.3616
+   },
+   "q34": {
+    "silhouette_iou_window": 0.7454,
+    "edge_f": 0.6904
+   }
+  },
+  "trigger_guard": {
+   "c6": {
+    "silhouette_iou_window": 0.9469,
+    "edge_f": 0.3001
+   },
+   "c1": {
+    "silhouette_iou_window": 0.9554,
+    "edge_f": 0.0973
+   },
+   "q34": {
+    "silhouette_iou_window": 0.9412,
+    "edge_f": 0.0044
+   }
+  },
+  "grip": {
+   "c6": {
+    "silhouette_iou_window": 0.9171,
+    "edge_f": 0.2365
+   },
+   "c1": {
+    "silhouette_iou_window": 0.961,
+    "edge_f": 0.1124
+   },
+   "q34": {
+    "silhouette_iou_window": 0.8901,
+    "edge_f": 0.0184
+   }
+  },
+  "selector": {
+   "c1": {
+    "silhouette_iou_window": 0.9935,
+    "edge_f": 0.6238
+   },
+   "q34": {
+    "silhouette_iou_window": 0.9997,
+    "edge_f": 0.5571
+   }
+  },
+  "magazine": {
+   "c4": {
+    "silhouette_iou_window": 0.7646,
+    "edge_f": 0.3728
+   },
+   "c5": {
+    "silhouette_iou_window": 0.8163,
+    "edge_f": 0.3516
+   },
+   "q34": {
+    "silhouette_iou_window": 0.9273,
+    "edge_f": 0.2109
+   }
+  },
+  "butt_plate": {
+   "c7": {
+    "silhouette_iou_window": 0.8554,
+    "edge_f": 0.2876
+   },
+   "q34": {
+    "silhouette_iou_window": 0.9189,
+    "edge_f": 0.0
+   }
+  }
+ },
+ "honest_notes": [
+  "No blind judge was run in this stage; convergence of the focused attempts is unknown until the orchestrator judges early_blind2 and the r3 pairs.",
+  "Remaining tells that the gates forbid fixing: close-up proportions (ears, brake length, magazine curve, butt plate width) and the dust cover's deep rear skirt step (side trace) vs c1's straight skirt line.",
+  "The magazine_r3 pair uses the standard kit c4 camera, whose framing differs visibly from the reference; the builder's own r2 framing is fairer for that part."
+ ]
+}

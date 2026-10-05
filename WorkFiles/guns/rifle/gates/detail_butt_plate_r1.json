@@ -1,0 +1,127 @@
+{
+ "stage": "detail pass round 1: butt_plate",
+ "date": "2026-10-05T00:43:16",
+ "status": "pass",
+ "gates": [
+  {
+   "name": "Plate outline IoU vs c7 plate trace, part frame (unit box)",
+   "value": 0.9594,
+   "threshold": ">= 0.95 (round 0: 0.9002)",
+   "pass": true,
+   "note": "c7 is not to scale; raw IoU at the solved camera 0.6445 (round 0 0.6005) because c7 draws the plate at aspect 0.22 vs the spec's 0.345 (TOP width)"
+  },
+  {
+   "name": "Plate width profile max |diff| vs c7 (fraction of width, 21 rows)",
+   "value": 0.065,
+   "threshold": "report",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, side view: butt_plate",
+   "value": 0.9671,
+   "threshold": ">= 0.95 (form: 0.974)",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, side view: stock (its end cut follows the plate outline)",
+   "value": 0.9919,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (whole rifle, with this part's rebuild)",
+   "value": 0.9767,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (whole rifle, with this part's rebuild)",
+   "value": 0.9305,
+   "threshold": ">= 0.93 (form: 0.931)",
+   "pass": true,
+   "note": "MARGINAL: -0.0005 from the plate's rounder rear corners in TOP"
+  },
+  {
+   "name": "Closed manifold (butt_plate, butt_screws, buttstock)",
+   "value": {
+    "butt_plate": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "zero_area_faces": 0,
+     "shells": 1
+    },
+    "butt_screws": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "zero_area_faces": 0,
+     "shells": 2
+    },
+    "buttstock": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "zero_area_faces": 0,
+     "shells": 1
+    }
+   },
+   "threshold": "0 non-manifold / boundary / wire / zero-area",
+   "pass": true
+  },
+  {
+   "name": "Part triangles (butt_plate + butt_screws)",
+   "value": 3002,
+   "threshold": "<= round 0 (2318 + 832 = 3150)",
+   "pass": true,
+   "note": "plate 1756, screws 1246; buttstock 4044 (round 0 3972); rifle total with this rebuild 53134 (form 53210; the 50k LOD0 budget is a whole-rifle issue)"
+  },
+  {
+   "name": "Butt gaps",
+   "value": "stock cut by the plate outline grown 0.02; screw bottoms 0.02 off the bore floors, 0.75 radial clearance; min vertex distance plate-stock 0.046",
+   "threshold": "0.01-0.05 modelled",
+   "pass": true
+  },
+  {
+   "name": "B3 sweep",
+   "value": "n/a (static parts, bone body)",
+   "threshold": "moving parts only",
+   "pass": true
+  }
+ ],
+ "iterations": {
+  "r1_i1": "c7 lozenge section + cleaned side outline + domed X-slot screws: unit-box IoU 0.9554; shading streaks round the counterbores (curved face facets)",
+  "r1_i2": "section tips at the outline extremes (blunt flat 26% -> ~10%), flat face strips round the screws (no streaks), counterbores cut before the bevels (post-cut boolean went non-manifold), chamfer limit 52 deg: 0.9595",
+  "r1_i3": "vertex budget (outline DP 0.08, 15 section rows/side): 0.9594, plate+screws 3002 tris"
+ },
+ "blind_pair": {
+  "dir": "WorkFiles/guns/rifle/review/detail_blind/butt_plate_r1/",
+  "key": "WorkFiles/guns/rifle/review/detail/butt_plate/key_r1.json"
+ },
+ "c7_crop": {
+  "silhouette_iou_window": 0.8548,
+  "edges_f": 0.2873,
+  "round0": {
+   "silhouette_iou_window": 0.8313,
+   "edges_f": 0.2774
+  }
+ },
+ "q34_crop": {
+  "silhouette_iou_window": 0.9189,
+  "round0": 0.9205
+ },
+ "files": {
+  "pairs": [
+   "WorkFiles/guns/rifle/review/detail/butt_plate/r1_i3_pair_c7.png",
+   "WorkFiles/guns/rifle/review/detail/butt_plate/r1_i3_pair_q34.png"
+  ],
+  "outline": "WorkFiles/guns/rifle/review/detail/butt_plate/r1_i3_plate_outline_c7.png",
+  "trace": "WorkFiles/guns/rifle/review/detail/butt_plate/trace_plate_c7.png",
+  "spec_proposal": "WorkFiles/guns/rifle/review/detail/butt_plate/spec_proposal.json",
+  "code": [
+   "Scripts/guns/rifle/parts/butt_plate.py",
+   "Scripts/guns/rifle/parts/butt_plate_dev.py",
+   "Scripts/guns/rifle/parts/butt_plate_devbuild.py"
+  ]
+ }
+}

@@ -5,7 +5,7 @@
 The side outline of the grip and the stock is fixed by the trace (LEFT-labelled panel); their SECTIONS are not seen
 there. This replaces the part in the built model by plain-numpy variants (same generators as the build) and scores
 the 3/4 silhouette in a zone round the part (outer silhouettes, holes filled, solved camera scratch/q34/camera.json):
-  grip   width W 26..32 x strap radius R 6..14 (rifle_parts2.grip_mesh_numpy) + the section girth at the Grip depth
+  grip   width W 26..32 x strap radius R 6..14 (parts/grip.py grip_mesh_numpy) + the section girth at the Grip depth
   stock  section edge radius R 5..15 (rifle_parts2.STOCK_R, wrist kept at STOCK_R_WRIST)
 -> WorkFiles/guns/rifle/scratch/q34_sweeps.json
 """
@@ -24,6 +24,7 @@ sys.path.insert(0, str(HERE))
 from rifle_common import SCRATCH  # noqa: E402
 import rifle_q34 as Q  # noqa: E402
 import rifle_parts2 as R2  # noqa: E402
+import parts.grip as PG  # noqa: E402
 from gunlib import compare as C, camsolve as CS  # noqa: E402
 
 
@@ -61,9 +62,9 @@ def main():
     g = {"built": score(z, rest, built), "W_R": {}}
     for W in (26, 28, 30, 31, 32):
         for Rr in (6, 8, 10, 12, 14):
-            Vg, Tg = tris(R2.grip_mesh_numpy(W, Rr, R2.GRIP_CROWN))
+            Vg, Tg = tris(PG.grip_mesh_numpy(W, Rr, PG.GRIP_CROWN))
             m = C.raster_tris(cam.project(Vg), Tg, ref.shape) > 0.5
-            sec = R2.grip_section(39.6, W, Rr, R2.GRIP_CROWN, 400)
+            sec = PG.grip_section(39.6, W, Rr, PG.GRIP_CROWN, 400)
             Qs = np.vstack([sec, sec[:1]])
             girth = float(np.linalg.norm(np.diff(Qs, axis=0), axis=1).sum())
             iou, p95 = score(z, rest, m)

@@ -1,0 +1,129 @@
+{
+ "stage": "detail pass: selector round 1",
+ "date": "2026-10-05T00:53:31",
+ "status": "pass",
+ "note": "status covers the part gates; the triangle line fails against the rifle-wide budget that the form build already exceeded",
+ "gates": [
+  {
+   "name": "Selector outline IoU vs c1 trace, lever frame (c1 trace mapped by the fitted pose+scale similarity, our rest-pose XZ silhouette)",
+   "value": 0.9931,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "Selector outline IoU vs c1 trace, panel px at the solved selector c1 camera (lever posed at the c1 angle)",
+   "value": 0.9605,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "Selector outline IoU vs the side-view trace (face_outline_M), info: c1 and side traces disagree by the same amount",
+   "value": {
+    "ours_vs_side": 0.8093,
+    "c1_trace_vs_side_trace": 0.8124
+   },
+   "threshold": "info (spec L2 gates the selector by the L3 pivot position only)",
+   "pass": true
+  },
+  {
+   "name": "L3 selector pivot position",
+   "value": [
+    282.8,
+    -7.8
+   ],
+   "threshold": "[282.8, -7.8] (unchanged)",
+   "pass": true
+  },
+  {
+   "name": "c1 edge agreement (gunlib render_part_crop, 2 px)",
+   "value": {
+    "before": 0.2116,
+    "final": 0.3339
+   },
+   "threshold": "info (improve)",
+   "pass": true
+  },
+  {
+   "name": "Manifold (closed, one shell)",
+   "value": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2856,
+    "shells": 1
+   },
+   "threshold": "0 boundary / multi / wire edges, 1 shell",
+   "pass": true
+  },
+  {
+   "name": "Selector triangles (LOD0)",
+   "value": {
+    "before": 1322,
+    "final": 2856,
+    "delta": 1534
+   },
+   "threshold": "rifle LOD0 total <= 50k (the form build was already 53210 before the detail pass)",
+   "pass": false,
+   "note": "+1534 tris on a rifle already over budget; candidates to trim if needed: dome 24x6 -> 16x4, washer 28 -> 20 segs, outline arc 16 -> 12"
+  },
+  {
+   "name": "B3 selector sweep 0..32 deg",
+   "value": {
+    "steps": 432,
+    "step": 0.07441833239054345,
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1749,
+    "min_with": "rivets",
+    "rest_clearance_mm": 0.199,
+    "end_clearance_mm": 0.1749
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "Static intersections with the selector at rest",
+   "value": [],
+   "threshold": "none",
+   "pass": true
+  },
+  {
+   "name": "Contact gaps",
+   "value": [
+    {
+     "a": "receiver",
+     "b": "selector",
+     "min_gap_mm": 0.199
+    },
+    {
+     "a": "rivets",
+     "b": "selector",
+     "min_gap_mm": 0.5
+    }
+   ],
+   "threshold": "hinge >= 0.1",
+   "pass": true
+  }
+ ],
+ "iterations": {
+  "r1": "c1-traced outline, vertical 0.4/0.5 mm steps: crease and band edge-on to the camera, invisible; edge F 0.219",
+  "r2": "sloped ramps (band 35 deg, crease 27 deg), sheet bend by bisect: double lines read, crease faint; F 0.328",
+  "r3": "thinner plate, crease ramp 18 deg: crease vanished; F 0.193",
+  "r4/final": "crease step 0.7 mm at 40 deg: crease reads as a line; F 0.334 (kept)",
+  "r5": "quarter-round roll at the crease: softer than c1's line; F 0.206 (reverted)"
+ },
+ "files": {
+  "module": "Scripts/guns/rifle/parts/selector.py",
+  "trace": "Scripts/guns/rifle/parts/selector_trace.py",
+  "loop": "Scripts/guns/rifle/parts/selector_dev.py",
+  "pair_c1": "WorkFiles/guns/rifle/review/detail/selector/final_pair_c1.png",
+  "pair_q34": "WorkFiles/guns/rifle/review/detail/selector/final_pair_q34.png",
+  "iou_overlay": "WorkFiles/guns/rifle/review/detail/selector/final_iou_c1.png",
+  "result": "WorkFiles/guns/rifle/review/detail/selector/final_result.json",
+  "spec_proposal": "WorkFiles/guns/rifle/review/detail/selector/spec_proposal.json",
+  "blind": "WorkFiles/guns/rifle/review/detail_blind/selector_r1/",
+  "key": "WorkFiles/guns/rifle/review/detail/selector/key_r1.json"
+ }
+}

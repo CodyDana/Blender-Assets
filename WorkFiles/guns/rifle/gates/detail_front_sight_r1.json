@@ -1,0 +1,193 @@
+{
+ "stage": "detail_front_sight_r1",
+ "part": "front_sight",
+ "date": "2026-10-05T00:57:55",
+ "status": "pass",
+ "objects": [
+  "cleaning_rod",
+  "front_sight_block",
+  "front_sight_post"
+ ],
+ "build": "private: base.blend (form build 2026-10-04 23:33) with parts/front_sight.py rebuilt -> scratch/detail/front_sight/fs.blend + fs_tris.npz (Scripts/guns/rifle/parts/front_sight_dev.py)",
+ "gates": [
+  {
+   "name": "part outline IoU vs close-up trace, own frame (ears zone, own-scale fit) c3",
+   "value": 0.9106,
+   "round0": 0.8985,
+   "threshold": "improve on round 0",
+   "pass": true
+  },
+  {
+   "name": "part outline IoU vs close-up trace, own frame (ears zone, own-scale fit) q34",
+   "value": 0.8508,
+   "round0": 0.8347,
+   "threshold": "improve on round 0",
+   "pass": true
+  },
+  {
+   "name": "part outline IoU at the solved camera, identity (ears zone) c3",
+   "value": 0.7459,
+   "round0": 0.7543,
+   "threshold": "informational (camera / proportion conflict, see notes)",
+   "pass": true
+  },
+  {
+   "name": "part outline IoU at the solved camera, identity (ears zone) q34",
+   "value": 0.6951,
+   "round0": 0.6804,
+   "threshold": "informational",
+   "pass": true
+  },
+  {
+   "name": "crop window silhouette IoU c3 / q34",
+   "value": [
+    0.8613,
+    0.7981
+   ],
+   "round0": [
+    0.8657,
+    0.7938
+   ],
+   "threshold": "informational",
+   "pass": true
+  },
+  {
+   "name": "crop internal-edge agreement F c3 / q34",
+   "value": [
+    0.3082,
+    0.5614
+   ],
+   "round0": [
+    0.2711,
+    0.5093
+   ],
+   "threshold": "improve on round 0",
+   "pass": true
+  },
+  {
+   "name": "L2 per part front_sight_block (side, IoU)",
+   "value": 0.9608,
+   "round0": 0.9563,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 per part cleaning_rod (side, outer contour P95 / max px)",
+   "value": [
+    1.0,
+    2.0
+   ],
+   "threshold": "<= 1.0 / <= 2",
+   "pass": true
+  },
+  {
+   "name": "L2 all 21 side parts pass (private npz)",
+   "value": "21 / 21",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (fit) / top IoU (fit, valid)",
+   "value": [
+    0.9772,
+    0.9308
+   ],
+   "round0": [
+    0.9769,
+    0.931
+   ],
+   "threshold": ">= 0.96 / >= 0.93",
+   "pass": true,
+   "note": "top identity IoU rose 0.92785 -> 0.92802 (8 px changed); the fitted number moves by optimiser noise"
+  },
+  {
+   "name": "closed manifold (boundary / multi-face / wire edges, shells)",
+   "value": {
+    "cleaning_rod": [
+     0,
+     0,
+     0,
+     1
+    ],
+    "front_sight_block": [
+     0,
+     0,
+     0,
+     1
+    ],
+    "front_sight_post": [
+     0,
+     0,
+     0,
+     1
+    ]
+   },
+   "threshold": "0 / 0 / 0, 1 shell",
+   "pass": true
+  },
+  {
+   "name": "part triangles LOD0 (block + post + rod)",
+   "value": {
+    "front_sight_block": 3696,
+    "front_sight_post": 310,
+    "cleaning_rod": 300,
+    "total": 4306
+   },
+   "round0": 4316,
+   "threshold": "<= round 0 (rifle LOD0 was 49118 of the 50000 ceiling before the detail pass)",
+   "pass": true
+  },
+  {
+   "name": "G5 static intersections involving this part",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "G5 butt gaps of this part's contacts (mm)",
+   "value": {
+    "barrel/front_sight_block": 0.0199,
+    "front_sight_block/muzzle_brake": 0.04,
+    "cleaning_rod/front_sight_block": 0.0196,
+    "front_sight_block/front_sight_post": 0.02,
+    "cleaning_rod/gas_block": 0.0196,
+    "cleaning_rod/handguard_front_band": 0.0196
+   },
+   "threshold": "0.01-0.05",
+   "pass": true
+  },
+  {
+   "name": "L4 front_sight_ear_top_Z / post tip Z (bbox)",
+   "value": [
+    49.4,
+    45.0
+   ],
+   "threshold": "49.4 / 45.0",
+   "pass": true
+  },
+  {
+   "name": "B3 sweep",
+   "value": "n/a (no moving part in this module)",
+   "threshold": "n/a",
+   "pass": true
+  }
+ ],
+ "notes": [
+  "Own-frame IoU: our projected block + post vs the sheet mask in the zone above the barrel (the ears), after an own-scale fit (sx 0.80-1.16, sy 0.90-1.16, shift +-12 px), like the magazine c4 / c5 gate. The fit sits on the sx bound 0.80 in both views (see spec_proposal open_conflict): the close-ups draw the ears ~20 % narrower front-to-back than the side trace; the side trace is kept (L2).",
+  "Identity IoU at the solved camera barely moves: the c3 camera (landmark RMS 18 px) places the drawn rear edge ~4 mm forward of the side-trace / q34 rear edge; matching c3 there would fail the side gate.",
+  "Detent latch on the collar not built here (muzzle_brake builds one further forward); interface question in spec_proposal.json.",
+  "Muzzle brake / barrel in the crops are the baseline form build's."
+ ],
+ "files": {
+  "module": "Scripts/guns/rifle/parts/front_sight.py",
+  "harness": "Scripts/guns/rifle/parts/front_sight_dev.py",
+  "pairs": [
+   "WorkFiles/guns/rifle/review/detail/front_sight/r1_pair_c3.png",
+   "WorkFiles/guns/rifle/review/detail/front_sight/r1_pair_q34.png"
+  ],
+  "metrics": "WorkFiles/guns/rifle/review/detail/front_sight/r1_metrics.json",
+  "blind": "WorkFiles/guns/rifle/review/detail_blind/front_sight_r1/",
+  "key": "WorkFiles/guns/rifle/review/detail/front_sight/key_r1.json",
+  "spec_proposal": "WorkFiles/guns/rifle/review/detail/front_sight/spec_proposal.json"
+ }
+}

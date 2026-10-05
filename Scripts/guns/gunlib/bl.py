@@ -194,6 +194,36 @@ def clean(ob, dist_m=1e-7):
     ob.data.update()
 
 
+def fix_slivers(ob, area_m2=1e-11, rounds=3) -> int:
+    """Remove near-zero-area sliver faces (a vertex almost on the opposite edge; qa_check's degenerate rule is
+    <= 1e-12 m^2) that booleans + bevels can leave without any short edge: triangulate each sliver with its neighbours
+    and flip edges (beautify fill) so no sliver remains; any left are collapsed at 0.01 mm. Returns the count fixed."""
+    fixed = 0
+    for _ in range(rounds):
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bad = [f for f in bm.faces if f.calc_area() <= area_m2]
+        if not bad:
+            bm.free()
+            break
+        region = set(bad)
+        for f in bad:
+            for e in f.edges:
+                region.update(e.link_faces)
+        res = bmesh.ops.triangulate(bm, faces=list(region))
+        tri = set(res["faces"])
+        inner = [e for e in {e for f in tri for e in f.edges} if len(e.link_faces) == 2 and all(g in tri for g in e.link_faces)]
+        bmesh.ops.beautify_fill(bm, faces=list(tri), edges=inner)
+        left = [f for f in bm.faces if f.calc_area() <= area_m2]
+        if left:
+            bmesh.ops.dissolve_degenerate(bm, edges=list({e for f in left for e in f.edges}), dist=1e-5)
+        fixed += len(bad)
+        bm.to_mesh(ob.data)
+        bm.free()
+        ob.data.update()
+    return fixed
+
+
 def manifold_report(ob) -> Dict[str, int]:
     bm = bmesh.new()
     bm.from_mesh(ob.data)

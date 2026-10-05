@@ -1,0 +1,354 @@
+{
+ "stage": "detail receiver_right round 1",
+ "date": "2026-10-05T01:07:38",
+ "status": "pass",
+ "failed": [],
+ "method": "built and rendered privately on a snapshot of the form build (scratch/detail/receiver_right/base.blend; Scripts/guns/rifle/parts/receiver_right_run.py) so the parallel part builders' files were not touched; 8 internal iterations r1i0 (baseline repro) .. r1i7 (final)",
+ "changes": [
+  "ejection port: carrier flank fills the port from X 346 (stepped rear section: travel, spring-guide button and cover rear end clear), round chrome bolt removed",
+  "dust cover skirt cutout re-shaped: edge lifted to Z 12.3 behind, 47 deg rise at X 372-378.5, top Z 19.2 (spec 17 + L3 tolerance; views read ~22)",
+  "charging handle lowered to Z 8-17 (stem Z 8.6-11.85) so the stem passes under the lifted skirt edge",
+  "retainer clip (swept wire) at (350,-25) in place of that right rivet, as c1 draws it",
+  "teardrop recess under the port's rear half (c1 'hole')",
+  "dimples: flat-floored superellipse oval with a crisp rim roll; 0.85 deep, no (ineffective) inner bump: the form build's dimple floor had zero wall thickness",
+  "rivet heads: half-ellipsoid buttons 5.1 dia, height unchanged (selector sweep)"
+ ],
+ "remaining_tells": [
+  "the selector lever / pivot (selector part) dominates the c1 crop",
+  "c1 compresses the port's front half, so our true-scale crop shows only the port's rear third (no handle, no full slot); a judge comparing c1 will see a different layout there",
+  "the void X 338-346 behind the carrier stays dark (travel limit to the rear wall)",
+  "materials: no wear / scratches / bright rivet crowns (ROUGH LOOK only)",
+  "opening top held at Z 19.2 vs the views' ~22 and handle Z 8-17 vs the side view's 4-15 until the spec proposal is decided"
+ ],
+ "gates": [
+  {
+   "name": "part outline IoU vs close-up trace, c1 (receiver group's own window [0, 8, 290, 153])",
+   "value": 0.9464,
+   "threshold": ">= before (0.9464); close-ups are stylised / not to scale",
+   "pass": true
+  },
+  {
+   "name": "internal edge agreement F, c1 (same window, 2 px)",
+   "value": 0.194,
+   "threshold": "informational; before 0.1754",
+   "pass": true,
+   "precision": 0.2653,
+   "recall": 0.1529
+  },
+  {
+   "name": "part outline IoU vs close-up trace, c2 (receiver group's own window [0, 97, 258, 363])",
+   "value": 0.9567,
+   "threshold": ">= before (0.9567); close-ups are stylised / not to scale",
+   "pass": true
+  },
+  {
+   "name": "internal edge agreement F, c2 (same window, 2 px)",
+   "value": 0.2684,
+   "threshold": "informational; before 0.2715",
+   "pass": true,
+   "precision": 0.3635,
+   "recall": 0.2128
+  },
+  {
+   "name": "part outline IoU vs close-up trace, q34 (receiver group's own window [154, 29, 353, 113])",
+   "value": 0.9457,
+   "threshold": ">= before (0.9457); close-ups are stylised / not to scale",
+   "pass": true
+  },
+  {
+   "name": "internal edge agreement F, q34 (same window, 2 px)",
+   "value": 0.2091,
+   "threshold": "informational; before 0.2169",
+   "pass": true,
+   "precision": 0.2779,
+   "recall": 0.1676
+  },
+  {
+   "name": "crop window silhouette IoU c1 / c2 / q34 (identical framing)",
+   "value": {
+    "c1": 0.908,
+    "c2": 0.9496,
+    "q34": 0.9275
+   },
+   "threshold": "unchanged vs before (0.908 / 0.9496 / 0.9275)",
+   "pass": true
+  },
+  {
+   "name": "part triangles (receiver, dust_cover, recoil_spring_button, rivets, receiver_rails, bolt_carrier, mag_catch)",
+   "value": 8520,
+   "threshold": "watch: before 8350",
+   "pass": true,
+   "per_object": {
+    "receiver": 3610,
+    "dust_cover": 1918,
+    "recoil_spring_button": 248,
+    "rivets": 1256,
+    "receiver_rails": 88,
+    "bolt_carrier": 904,
+    "mag_catch": 496
+   }
+  },
+  {
+   "name": "rifle LOD0 triangles without the magazine (this part's build on the form snapshot)",
+   "value": 49288,
+   "threshold": "<= 50000 (other parts change in parallel)",
+   "pass": true
+  },
+  {
+   "name": "closed manifold (boundary / multi-face edges, every object of the part)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "L2 side per part: receiver",
+   "value": 0.9706,
+   "threshold": "IoU >= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 side per part: dust_cover",
+   "value": 0.9596,
+   "threshold": "IoU >= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 side per part: mag_catch (thin)",
+   "value": {
+    "p95": 1.0,
+    "max": 1.414
+   },
+   "threshold": "P95 <= 1.0 px, max <= 2",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (whole rifle) / contour",
+   "value": {
+    "iou": 0.9769,
+    "contour": {
+     "p50": 0.0,
+     "p95": 1.0,
+     "max": 6.0,
+     "n": 5121
+    }
+   },
+   "threshold": ">= 0.96; base 0.9769, max 6 px",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (valid)",
+   "value": 0.9317,
+   "threshold": ">= 0.93",
+   "pass": true
+  },
+  {
+   "name": "L3 ejection port corners (X, Z)",
+   "value": {
+    "measured": {
+     "X": [
+      337.98,
+      451.98
+     ],
+     "Z": [
+      2.98,
+      19.23
+     ]
+    },
+    "err_mm": 2.23
+   },
+   "threshold": "<= 2.43 mm",
+   "pass": true
+  },
+  {
+   "name": "L3 side dimple centre",
+   "value": {
+    "measured": [
+     396.88,
+     -17.12
+    ],
+    "err_mm": 0.177
+   },
+   "threshold": "<= 2.43 mm",
+   "pass": true
+  },
+  {
+   "name": "L3 right rivets (9)",
+   "value": {
+    "measured": [
+     [
+      260.0,
+      -4.0
+     ],
+     [
+      250.0,
+      -25.0
+     ],
+     [
+      313.0,
+      -25.0
+     ],
+     [
+      348.8,
+      -25.8
+     ],
+     [
+      379.0,
+      -21.0
+     ],
+     [
+      413.0,
+      -19.0
+     ],
+     [
+      457.0,
+      -1.5
+     ],
+     [
+      472.0,
+      -1.5
+     ],
+     [
+      475.0,
+      -18.0
+     ]
+    ],
+    "err_mm": 1.442
+   },
+   "threshold": "<= 2.43 mm",
+   "pass": true
+  },
+  {
+   "name": "L3 all 15 features / L4 all",
+   "value": {
+    "L3": "15 / 15",
+    "L4_fail": []
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "B3 bolt sweep 0.0..103.25 (1378 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "receiver_rails"
+   },
+   "threshold": "0 intersections; clearance in row [0.15, 0.4]",
+   "pass": true
+  },
+  {
+   "name": "B3 trigger sweep 0.0..12.0 (84 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "trigger_guard"
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 selector sweep 0.0..32.0 (447 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1749,
+    "min_with": "rivets"
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 mag_release sweep 0.0..10.0 (37 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1791,
+    "min_with": "trigger_guard"
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 sight_rear sweep 0.0..6.0 (60 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1821,
+    "min_with": "rear_sight_block"
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "G5 static intersections at rest",
+   "value": [],
+   "threshold": "none",
+   "pass": true
+  },
+  {
+   "name": "butt gaps of this part's objects (0.01-0.05)",
+   "value": [
+    {
+     "a": "dust_cover",
+     "b": "receiver",
+     "min_gap_mm": 0.018
+    },
+    {
+     "a": "lower_handguard",
+     "b": "receiver",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "pistol_grip",
+     "b": "receiver",
+     "min_gap_mm": 0.04
+    },
+    {
+     "a": "rear_trunnion",
+     "b": "receiver",
+     "min_gap_mm": 0.04
+    },
+    {
+     "a": "receiver",
+     "b": "receiver_rails",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "receiver",
+     "b": "rivets",
+     "min_gap_mm": 0.0149
+    },
+    {
+     "a": "receiver",
+     "b": "trigger_guard",
+     "min_gap_mm": 0.0198
+    },
+    {
+     "a": "rear_sight_block",
+     "b": "receiver",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "dust_cover",
+     "b": "rear_sight_block",
+     "min_gap_mm": 0.04
+    }
+   ],
+   "threshold": "every butt pair in 0.01-0.05",
+   "pass": true
+  }
+ ],
+ "files": {
+  "pairs": [
+   "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\r1i7_pair_c1.png",
+   "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\r1i7_pair_c2.png",
+   "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\r1i7_pair_q34.png"
+  ],
+  "before": [
+   "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\before_pair_c1.png",
+   "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\before_pair_c2.png",
+   "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\before_pair_q34.png"
+  ],
+  "blind": "WorkFiles/guns/rifle/review/detail_blind/receiver_right_r1/ (A = ours)",
+  "key": "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\key_r1.json",
+  "spec_proposal": "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\spec_proposal.json",
+  "features": "WorkFiles\\guns\\rifle\\review\\detail\\receiver_right\\features_c1.json"
+ }
+}

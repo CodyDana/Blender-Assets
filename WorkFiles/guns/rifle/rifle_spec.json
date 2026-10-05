@@ -2,8 +2,8 @@
  "meta": {
   "name": "Assault Rifle AR-01",
   "code": "AR01",
-  "version": "1.0",
-  "date": "2026-10-04",
+  "version": "1.1",
+  "date": "2026-10-05",
   "assets": {
    "skeletal": "SK_AR01 (+ _LOD1..3, SK_AR01_Skeleton, PHYS_AR01, clips A_AR01_*)",
    "static_twin": "SM_AR01 (mag merged by default, gun study Q3)",
@@ -252,7 +252,9 @@
     "lower_handguard_cup_X": [
      483.0,
      485.3
-    ]
+    ],
+    "rivet_head": "flat-topped button 5.1 dia, 1.0 proud (the selector sweep limits the height)",
+    "rivet_350_-25": "a wire retainer clip whose eye sits at (350, -25) (c1), not a rivet; L3 reads 'rivet or clip eye'"
    },
    "construction": "U-channel of 1.0 mm sheet: flat vertical walls, flat bottom, open top closed by the dust cover. Solid outer form with real 1.0 mm wall reveals at every opening (ejection port, magazine well, rear tang joint). Bottom corners R 1.5 with a thin ledge line where the bottom plate meets the walls. The front trunnion region (X 452-485) ends in a thin steel cup (X 483-485.3) that receives the lower handguard.",
    "features": [
@@ -412,6 +414,18 @@
       11.0
      ],
      "head": "flush pin 3.5 dia (under the cover skirt)"
+    },
+    {
+     "name": "teardrop_cutout_right",
+     "XZ_top_centre": [
+      372.0,
+      1.8
+     ],
+     "size": [
+      9.5,
+      9.1
+     ],
+     "construction": "through cutout 1.3 inside a 0.6 deep pressed rim (c1)"
     }
    ],
    "wear": "edge abrasion on the bottom edge and front/rear corners; bright rivet crowns; fine scratches on the flats; scratch fan into the mag well; thumb arc under the selector (right)",
@@ -746,7 +760,13 @@
     "craft 2.1",
     "zoom readings in this merge"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "detail_pass": [
+    {
+     "source": "review/detail/receiver_right/spec_proposal.json",
+     "note": "receiver_right rounds 1-2 as built; side dimple kept at the spec centre (L3)"
+    }
+   ]
   },
   {
    "id": "rear_trunnion",
@@ -865,9 +885,27 @@
       270.0,
       33.4
      ]
-    ]
+    ],
+    "skirt_vertical_to_Z": 21.2,
+    "crease_Z": 22.2,
+    "crease_depth": 1.3,
+    "crown": "elliptical, half width 21.5, rise 10.7, to Z 32.7",
+    "studs": {
+     "X": [
+      271.0,
+      311.0,
+      373.0,
+      422.0
+     ],
+     "dia": 4.8,
+     "proud": [
+      1.0,
+      1.2
+     ]
+    },
+    "skirt_cutout_top_Z_built": 19.2
    },
-   "construction": "Smooth stamped cover: semicircular crown (radius = half width) on straight vertical skirts that sit outside the receiver walls. NO transverse ribs (none in any panel). Lengthwise shoulder line where crown meets skirt. Rear: rounded top-rear corner (profile in dims.rear_profile_XZ) with a rectangular hole for the recoil spring guide button. Front: tucks under a groove in the rear sight block's rear face. Right skirt cut out over the ejection port. Crisp 1 mm skirt edge with a shadow gap to the receiver.",
+   "construction": "Stamped cover: vertical skirts to Z 21.2, a deep lengthwise crease at Z 22.2, an elliptical crown to Z 32.7; four domed studs on the crown centre line; rear end as traced; the right skirt cut out over the port (top Z 19.2, held by the L3 port-corner gate; 21.5 proposed: open question).",
    "features": [
     {
      "name": "skirt_cutout_right",
@@ -1109,7 +1147,14 @@
     "measure (crown corrected)",
     "craft 2.2"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Smooth stamped cover: semicircular crown (radius = half width) on straight vertical skirts that sit outside the receiver walls. NO transverse ribs (none in any panel). Lengthwise shoulder line where crown meets skirt. Rear: rounded top-rear corner (profile in dims.rear_profile_XZ) with a rectangular hole for the recoil spring guide button. Front: tucks under a groove in the rear sight block's rear face. Right skirt cut out over the ejection port. Crisp 1 mm skirt edge with a shadow gap to the receiver.",
+   "detail_pass": [
+    {
+     "source": "review/detail/receiver_right/spec_proposal.json",
+     "note": "receiver_right round 2 as built"
+    }
+   ]
   },
   {
    "id": "recoil_spring_button",
@@ -1204,11 +1249,23 @@
       458.0
      ],
      "Z": [
-      11.0,
-      22.0
+      8.0,
+      17.0
      ],
      "tip_Y": -35.2,
-     "proud_of_wall": 14.5
+     "stem_Z": [
+      8.6,
+      11.85
+     ]
+    },
+    "flank_flat_to_Z": 20.0,
+    "flank_recess": {
+     "below_Z": 9.5,
+     "floor_Y": -8.5,
+     "X": [
+      345.0,
+      443.0
+     ]
     }
    },
    "construction": "Flat steel carrier block visible in the forward 2/3 of the port with a lengthwise highlight; the charging handle is a short rectangular tab (flat top, rounded outer corners) at the port's front end, drawn as a tab, NOT the classic round knob. Bolt face visible through the port at rest (dark).",
@@ -1222,7 +1279,13 @@
     "zoom gz_port",
     "TOP lateral feature image-down X 470-482"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "detail_pass": [
+    {
+     "source": "review/detail/receiver_right/spec_proposal.json",
+     "note": "receiver_right round 2 as built; integration round: recess floor at Y -8.5 (was -4.0: it opened into the chamber pocket and showed the barrel through the port)"
+    }
+   ]
   },
   {
    "id": "selector",
@@ -1253,29 +1316,36 @@
    "texel_class": "B",
    "box_M": {
     "X": [
-     276.2,
-     357.0
+     274.66,
+     354.71
     ],
     "Z": [
-     -16.4,
-     6.8
+     -16.01,
+     7.4
     ],
     "Y": [
-     -25.25,
-     -20.75
+     -26.89,
+     -18.0
     ]
    },
    "dims": {
-    "boss_dia": 13.4,
-    "boss_proud": 3.0,
-    "plate_thickness": 3.0,
-    "plate_standoff": 1.5,
+    "boss_dia": 10.64,
+    "boss_proud": 2.32,
+    "plate_thickness": 2.0,
+    "plate_standoff": 1.25,
     "length": 80.8,
-    "depth_at_pivot": 14.0,
-    "depth_at_front": 8.0,
-    "tab_bend_out_deg": 25.0
+    "depth_at_pivot": 16.3,
+    "depth_at_front": 10.6,
+    "tab_bend_out_deg": 12.0,
+    "washer_collar_dia": 10.64,
+    "head_dia": 7.59,
+    "head_height": 1.52,
+    "washer_proud": 0.8,
+    "round_end_dia": 16.26,
+    "c1_pose_deg_front_down": 13.25,
+    "c1_scale_vs_side": 1.1
    },
-   "construction": "Domed round pivot boss with a central pin face; flat stamped lever plate tapering to the front with a pressed stiffening ridge along its length; the front end steps up and bends outward into a finger tab just under the port's lower edge. Posed up (safe). No selector markings (letters omitted; two plain detent dimples at most).",
+   "construction": "Solid 2.0 mm stamped lever plate on the c1-traced outline (round rear end, straight bottom, stepped hump, long falling top edge, rounded paddle nose), crisp bevelled edges, no edge groove; c1's long wedge between the top edge and the diagonal line is a tilted valley whose 40 deg crease wall faces up (the bright diagonal line). Nose tab bent out 12 deg with a small flat pin. Pivot: a raised washer ring (0.8 proud) and a flat-faced chamfered head with a small centre boss (no slot: c1 shows none). Posed up (safe) at rest; c1 draws it 13.25 deg front-down (review renders at the c1 camera pose it there). No selector markings.",
    "features": [
     {
      "name": "face_outline_M",
@@ -1465,7 +1535,14 @@
     "craft 2.4"
    ],
    "left_side_copy": "NOT built by default: the RIGHT-labelled panel (true left) also draws this lever; the user decides (open question 1)",
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Domed round pivot boss with a central pin face; flat stamped lever plate tapering to the front with a pressed stiffening ridge along its length; the front end steps up and bends outward into a finger tab just under the port's lower edge. Posed up (safe). No selector markings (letters omitted; two plain detent dimples at most).",
+   "detail_pass": [
+    {
+     "source": "review/detail/selector/spec_proposal.json",
+     "note": "selector rounds 1-2 as built; integration round: edge groove removed, dome -> flat chamfered head with a centre boss in a raised washer, ringed nose dome -> flat pin (round-2 blind judge tells)"
+    }
+   ]
   },
   {
    "id": "rear_sight_block",
@@ -1503,7 +1580,7 @@
     "leaf_bed_width": 20.0,
     "note": "trace key parts.rear_sight = block + leaf; the leaf overhangs the dust cover front to X 448.6 (c2)"
    },
-   "construction": "Steel block on the front trunnion, vertical front face (receives the gas tube rear cap); the rear upper part steps down to the dust cover crown with a groove that seats the cover's front edge; two low curved cam rails along the top sides carry the leaf. Traced see-through gap under the leaf (X 466-488, Z 35-41).",
+   "construction": "Contoured casting: the full-width vertical side face stops at a swooping top edge (Z 34.0-34.8 over the rear, an S-rise from X ~481 into the full-height front housing at X 511.5); above it a straight 5.6 mm chamfer band rolls in to a narrow deck / cam walls (Y +-10.8) beside the leaf; the housing carries a transverse rounded bar (r 3.3 at X 510.8, Y +-15.5); two small domed screw heads on the side face; the traced see-through slit under the leaf (X 465.8-487.5, Z 38.7-40.9) with its slanted slot; the slider sits in a stepped pocket (body width, then the catches from their bottom) so no see-through slit joins the traced one (integration round).",
    "features": [
     {
      "name": "gap_under_leaf",
@@ -1812,7 +1889,14 @@
     "measure",
     "craft 2.5"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Steel block on the front trunnion, vertical front face (receives the gas tube rear cap); the rear upper part steps down to the dust cover crown with a groove that seats the cover's front edge; two low curved cam rails along the top sides carry the leaf. Traced see-through gap under the leaf (X 466-488, Z 35-41).",
+   "detail_pass": [
+    {
+     "source": "review/detail/rear_sight/spec_proposal.json",
+     "note": "rear_sight round 2 as built; integration round: stepped slider pocket (L3 gap-under-the-leaf bbox)"
+    }
+   ]
   },
   {
    "id": "handguard_retainer_lever",
@@ -1849,7 +1933,7 @@
     "arm_angle_deg": 45.0,
     "boss_dia": 6.0
    },
-   "construction": "Right side: flat steel arm at 45 deg on the block side, pivot boss at the top front, rounded lower-rear end with a hole. Left side: the round boss only (as the RIGHT-labelled panel shows).",
+   "construction": "Right side: slim stamped slotted link 1.6 thick (boss r 3.3, end r 2.9, open slot r 1.3 at 27-80 % of the length) from a prominent pivot pin (collar r 3.5 x 1.1 + domed head, 2.35 proud of the link) at the block's top front to a small domed screw head at the lower end. Left side: the round boss only.",
    "features": [],
    "wear": "edge wear",
    "trace": null,
@@ -1859,7 +1943,14 @@
     "craft 2.5",
     "zoom gz_port"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Right side: flat steel arm at 45 deg on the block side, pivot boss at the top front, rounded lower-rear end with a hole. Left side: the round boss only (as the RIGHT-labelled panel shows).",
+   "detail_pass": [
+    {
+     "source": "review/detail/rear_sight/spec_proposal.json",
+     "note": "rear_sight round 2 as built"
+    }
+   ]
   },
   {
    "id": "rear_sight_leaf",
@@ -1902,7 +1993,7 @@
    },
    "dims": {
     "leaf_length": 55.8,
-    "leaf_width": 12.0,
+    "leaf_width": 17.0,
     "notch_plate_top_Z": 48.0,
     "notch_bottom_Z": 45.5,
     "notch_X": 449.9,
@@ -1913,9 +2004,31 @@
      465.5
     ],
     "slider_top_Z": 48.5,
-    "rear_overhang_over_dust_cover": 6.2
+    "rear_overhang_over_dust_cover": 6.2,
+    "slider_body_width": 20.0,
+    "catch_reach_width": 26.8,
+    "slider_skirt_X": [
+     452.6,
+     457.5
+    ],
+    "slider_skirt_top_Z": 45.3,
+    "skirt_and_catch_bottom_Z": 40.8,
+    "slider_floor_from_X": 458.8,
+    "teeth": {
+     "count_per_rail": 11,
+     "pitch": 2.8,
+     "top_Z": 45.1
+    },
+    "centre_slot": {
+     "width": 5.6,
+     "X": [
+      466.8,
+      497.8
+     ]
+    },
+    "notch_blade_width": 13.2
    },
-   "construction": "Flat leaf hinged at the block front lying rearward, raised centre strip, NO graduations or numerals (no-markings rule; default: no ticks). Its rear end overhangs the dust cover's front end (c2, traced) and carries a tall transverse notch plate with a square-bottomed U-notch (lit top, side ears in c2). Slider box (the dark raised block at X 457.5-465.5 in the side view) riding on the leaf just ahead of the notch plate, with two spring catches on its sides.",
+   "construction": "Ladder leaf: base plate 17 wide (Z 40.6-42.3) with two flat-topped rails (16 wide outer, top 44.4) split by a deep centre slot 5.6 wide (X 466.8-497.8); fine sawtooth serrations (11, pitch 2.8, to Z 45.1) along each rail's slot-side edge; notch blade 13.2 wide on the rails' rear end, top 48.0, U notch 2.0 wide to Z 45.5; slider with a raised rounded roof over X 457.5-465.5, a lower rear skirt back to the notch blade and side clamps reaching 26.8 across. No numerals or tick marks (teeth are form, not markings).",
    "features": [],
    "wear": "slider catches and notch edges bright",
    "trace": {
@@ -1929,7 +2042,14 @@
     "measure",
     "craft 2.5"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Flat leaf hinged at the block front lying rearward, raised centre strip, NO graduations or numerals (no-markings rule; default: no ticks). Its rear end overhangs the dust cover's front end (c2, traced) and carries a tall transverse notch plate with a square-bottomed U-notch (lit top, side ears in c2). Slider box (the dark raised block at X 457.5-465.5 in the side view) riding on the leaf just ahead of the notch plate, with two spring catches on its sides.",
+   "detail_pass": [
+    {
+     "source": "review/detail/rear_sight/spec_proposal.json",
+     "note": "rear_sight rounds 1-2 as built"
+    }
+   ]
   },
   {
    "id": "gas_tube_rear_cap",
@@ -3008,8 +3128,8 @@
    "texel_class": "D",
    "box_M": {
     "X": [
-     647.0,
-     812.0
+     641.0,
+     815.5
     ],
     "Z": [
      -14.1,
@@ -3023,7 +3143,8 @@
    "dims": {
     "dia": 4.0,
     "axis_Z": -12.1,
-    "head": "flat T-head seated in the FSB lug"
+    "head": "flat T-head seated in the FSB lug",
+    "head_box": "X 811.0-815.5, Y +-2.5, Z axis +-2.6 (inside the lug, hidden)"
    },
    "construction": "Steel rod from under the front band to the front sight block lug, through the gas block lug.",
    "features": [],
@@ -3040,7 +3161,13 @@
     "measure",
     "craft 2.12"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "detail_pass": [
+    {
+     "source": "review/detail/front_sight/spec_proposal.json",
+     "note": "as built"
+    }
+   ]
   },
   {
    "id": "front_sight_block",
@@ -3082,7 +3209,7 @@
     "front_collar_dia": 17.4,
     "lug_bottom_Z": -15.8
    },
-   "construction": "Barrel collar with a cross pin (round head ~4) on the side, a small detent plunger at its top front retaining the brake, and a lug underneath for the cleaning rod head; front collar X 840-848.8.",
+   "construction": "Cast block: a loft of rounded-box sections X 806.1-837.0 (|Y| 11.0, Z -10.3..11.3, top shoulders R 5.0, flanks bulging 1.2, round lower half R 9.0: reads as a round sleeve band, c3), rear rim R 2.2, front shoulder R 1.6; ears cast in one; a ring collar r 9.7 (X 836.6-839.6) then a NARROW collar r 8.7 to the brake's rear face X 848.78, so the brake steps up from it (c3: sleeve band -> narrow ring -> brake); cross pin dia 4.0 at X 830.5 Z -5.0 with domed heads; c3's stepped, notched cleaning-rod lug; detent plunger at X 841.2.",
    "features": [],
    "wear": "collar rims bright",
    "trace": {
@@ -3339,7 +3466,14 @@
     "measure",
     "craft 2.13"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Barrel collar with a cross pin (round head ~4) on the side, a small detent plunger at its top front retaining the brake, and a lug underneath for the cleaning rod head; front collar X 840-848.8.",
+   "detail_pass": [
+    {
+     "source": "review/detail/front_sight/spec_proposal.json",
+     "note": "front_sight round 2 as built; integration round: rounder base (R 5.0 / 9.0, was 3.2 / 7.0) and the front collar r 10.1 -> 8.7 (the brake read long with a seam: judge tells on c3)"
+    }
+   ]
   },
   {
    "id": "front_sight_ears_post",
@@ -3378,34 +3512,39 @@
      832.2
     ],
     "hood_centre_X": 825.3,
-    "ear_thickness": 2.5,
+    "ear_thickness": 3.8,
     "outer_width": 21.4,
     "post_tip_Z": 45.0,
     "post_dia": 2.0,
-    "drum_dia": 8.0,
+    "drum_dia": 5.6,
     "window": {
      "X": [
-      813.7,
+      813.4,
       827.2
      ],
      "Z": [
-      11.8,
-      21.6
+      12.2,
+      21.8
      ],
-     "shape": "triangular, see-through (traced hole)"
+     "shape": "rounded trapezoid, rear side raked with the ear, corner radii 1.6 / 2.2 / 2.6 / 2.0, rolled 1.5 rim"
     },
     "top_hole": {
      "XZ": [
       824.7,
       29.9
      ],
-     "boss_ring_dia": 6.0,
-     "hole_dia": 3.5,
-     "boss_proud": 0.4,
-     "note": "raised ring with a dark centre (pixel dump: ring ~5 px, centre ~3 px at sheet (702, 71.5)); c3's mark on it is left off (no markings)"
-    }
+     "boss_dia": 7.4,
+     "hole_dia": 0.0,
+     "rim_proud": 0.32,
+     "rim_width": 0.4,
+     "face_proud": 0.18,
+     "scribed_groove": "0.36 wide x 0.22 deep, from the boss's lower rear edge toward the rake",
+     "note": "c3: a flush disc outlined by a thin ring (no through hole)"
+    },
+    "ear_rims": "every ear outline / window edge rolled R 1.5 (outer faces) / 1.2 (inner) / 0.9 (window floor); top corners R 3.0 front, 3.5 rear",
+    "inner_faces": "blind hole dia 4.0 x 2.0 deep at (829.4, 43.4), round-ended slot 2.4 x 7.0 x 1.4 deep (X 829.3-831.7, Z 27.5-34.5), drum counterbore r 3.3 x 0.9 (both ears' inner faces only)"
    },
-   "construction": "Two thin steel plates on the collar's edges: vertical front edge, rear edge raked about 20 deg, flat top with rounded corners, a triangular lightening window in the lower half (the traced see-through hole) and a small raised round boss with a hole in the upper half (dims.top_hole). Between them a round windage drum carrying a thin post 4.4 below the ear tops.",
+   "construction": "Two thick ears (3.8) cast in one with the base, every outline and window edge rolled; rounded trapezoid window; a flush boss disc with a thin raised ring rim and a scribed groove on the outer faces; blind hole and slot on the inner faces; windage drum r 2.8 between them carrying the post.",
    "features": [],
    "wear": "ear edges strongly worn bright",
    "trace": {
@@ -3420,7 +3559,14 @@
     "measure",
     "craft 2.13"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Two thin steel plates on the collar's edges: vertical front edge, rear edge raked about 20 deg, flat top with rounded corners, a triangular lightening window in the lower half (the traced see-through hole) and a small raised round boss with a hole in the upper half (dims.top_hole). Between them a round windage drum carrying a thin post 4.4 below the ear tops.",
+   "detail_pass": [
+    {
+     "source": "review/detail/front_sight/spec_proposal.json",
+     "note": "front_sight rounds 1-2 as built (integration: rims 2 segments, budget)"
+    }
+   ]
   },
   {
    "id": "muzzle_brake",
@@ -3437,12 +3583,12 @@
    "texel_class": "D",
    "box_M": {
     "X": [
-     848.8,
+     848.82,
      880.0
     ],
     "Z": [
-     -10.9,
-     9.8
+     -10.1,
+     11.15
     ],
     "Y": [
      -10.1,
@@ -3453,12 +3599,47 @@
     "length": 31.2,
     "dia": 20.2,
     "height_side": 20.1,
-    "cut_angle_from_vertical_deg": 40.8,
+    "cut_angle_from_vertical_deg": 37.5,
     "bottom_lip_front_X": 880.0,
     "top_front_X": 862.1,
-    "bore_dia": 7.62
+    "bore_dia": 7.62,
+    "body_r": [
+     9.6,
+     9.85
+    ],
+    "flare": "R(x) = 9.6 + 0.25 ((x - 848.82) / 31.18) ^ 1.5",
+    "rim_ring": {
+     "r": 10.1,
+     "length_behind_face": 3.4,
+     "ramp": 0.35,
+     "note": "the widest point (key dia 20.2)"
+    },
+    "face": "flat band, outer round 0.6 (top) .. 2.0 (chin) along the face, inner round 0.5",
+    "cut_X_at_Z0": 873.1,
+    "chamber_r": 7.1,
+    "chamber_floor_X": 858.5,
+    "slot_side": "right (-Y) only",
+    "slot_Z": [
+     -5.9,
+     7.2
+    ],
+    "slot_rear_X": "862.0 - 0.20 Z",
+    "slot_front_X": "870.0 - 0.55 Z",
+    "slot_edge_round": 0.35,
+    "knob": {
+     "X": [
+      847.4,
+      852.4
+     ],
+     "top_Z": 11.15,
+     "Y": [
+      -2.6,
+      2.6
+     ],
+     "note": "detent knob at the junction, rooted in the brake, its rear part 0.03 above the FSB's narrow collar (r 8.7)"
+    }
    },
-   "construction": "Cylinder screwed onto the barrel (thin seam ring at the FSB face). The front is cut by one slanted plane removing the TOP front, lower lip longer; the cut exposes the bore as an elongated oval with a rounded worn rim; a soft scallop on one side of the cut face (low confidence).",
+   "construction": "One turned body screwed onto the barrel, rear face X 848.82 (r 9.6, chamfer 0.35), flaring to r 9.85, then a raised rim ring r 10.1 over the last 3.4 mm behind the face (c3: a thick rim band standing proud). The front is cut by one slanted plane (37.5 deg from vertical, X 873.1 at Z 0) removing the TOP front: a FLAT face band (wall 3.0) with small rounds, a long chin round; plain chamber bore r 7.1 with its floor at X 858.5 (c3: a flat-floored oval mouth with a visible inner wall). ONE long rounded oblong slot through the RIGHT wall ending close to the rim band (web 1.6 / 3.2 / 4.5 at Z 7 / 0 / -6). A small domed detent knob at the junction. Body measured without the knob: length 31.2, dia 20.2 (L4).",
    "features": [],
    "wear": "rim and slant edge bright; soot inside the cut",
    "trace": {
@@ -3563,7 +3744,14 @@
     "measure",
     "craft 2.14"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Cylinder screwed onto the barrel (thin seam ring at the FSB face). The front is cut by one slanted plane removing the TOP front, lower lip longer; the cut exposes the bore as an elongated oval with a rounded worn rim; a soft scallop on one side of the cut face (low confidence).",
+   "detail_pass": [
+    {
+     "source": "review/detail/muzzle_brake/spec_proposal.json",
+     "note": "muzzle_brake round 2 as built, then the integration round: bullnose -> flat face band + raised rim ring, cone -> plain bore with a nearer floor, wider slot nearer the rim, max radius 10.1 and the chin's front X 880.0 (L4 key dims), knob lowered onto the narrowed collar"
+    }
+   ]
   },
   {
    "id": "trigger",
@@ -3611,9 +3799,11 @@
      321.3,
      -46.0
     ],
-    "tip_Z": -57.8
+    "tip_Z": -57.8,
+    "blade_width_mid": 5.2,
+    "tip_height": 1.3
    },
-   "construction": "Curved blade, forward-concave hook, about 23 mm visible below the receiver.",
+   "construction": "Curved blade re-traced from c1 / c6 inside the side trace: one concave flare from the slot, a slender blade tapering to a fine 1.3 mm tip, the top-front curving forward (hook); rolled rear edge 0.4, rounded finger face.",
    "features": [],
    "wear": "finger face polished bright",
    "trace": {
@@ -3714,7 +3904,14 @@
     "measure",
     "craft 2.6"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Curved blade, forward-concave hook, about 23 mm visible below the receiver.",
+   "detail_pass": [
+    {
+     "source": "review/detail/trigger_guard/spec_proposal.json",
+     "note": "trigger_guard round 2, then the integration round: slimmer lower blade, finer tip, more forward hook (round-2 judges on c1 and c6)"
+    }
+   ]
   },
   {
    "id": "trigger_guard",
@@ -3775,7 +3972,7 @@
      "note": "flat strap under the receiver from behind the grip junction to the catch housing (real pattern: the guard's long top plate, riveted); guard rivets at Z -25 belong to the receiver list"
     }
    },
-   "construction": "Steel strap: rear leg (X 299.5-303.2) down from the receiver, a rounded rear corner into a flat bottom run that rises slightly toward the front (Z -68.0 at X 310 to -64.7 at X 345), a near-square front corner rising into the catch housing. It does NOT reach back under the grip: the dark sliver at X 284-298 is the grip's front strap (check C2). Above the opening, its long flat top flange runs under the receiver (dims.top_flange).",
+   "construction": "Stamped U loop lofted from a strip section (rolled outer edge 0.8, centre groove, open inner channel) on the traced outline (outer R 10 / 9.5, inner R 8 / 5.5); front leg straight up into the flange with a thin strap under a front tab from X 345.7; the mag catch housing cheeks reach the catch paddle's top (Z -53.87), the pin a flat round head on a washer.",
    "features": [
     {
      "name": "opening",
@@ -3962,7 +4159,14 @@
     "measure",
     "craft 2.6"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Steel strap: rear leg (X 299.5-303.2) down from the receiver, a rounded rear corner into a flat bottom run that rises slightly toward the front (Z -68.0 at X 310 to -64.7 at X 345), a near-square front corner rising into the catch housing. It does NOT reach back under the grip: the dark sliver at X 284-298 is the grip's front strap (check C2). Above the opening, its long flat top flange runs under the receiver (dims.top_flange).",
+   "detail_pass": [
+    {
+     "source": "review/detail/trigger_guard/spec_proposal.json",
+     "note": "trigger_guard round 2 as built; the side-view label convention (cheeks -> mag_catch label above Z -54.5) updated in rifle_silhouette.py"
+    }
+   ]
   },
   {
    "id": "mag_catch",
@@ -4152,9 +4356,14 @@
     ],
     "length_along_axis": 104.2,
     "strap_R_front": 9.0,
-    "strap_R_back": 13.5
+    "strap_R_back": 9.0,
+    "strap_R_front_on_block": "4.0 above Z -50, smoothstep to 9.0 by Z -68",
+    "side_crown": 0.35,
+    "bottom_round": 2.5,
+    "flange_break": 0.5,
+    "guard_leg_slot_half_width_Y": 5.05
    },
-   "construction": "Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, rounded rear heel. Section a rounded oblong (31.5 wide: unseen; real AK grips 30-36, R31 / R33 in resolutions), flatter sides where the checkering sits, straps R 8-10 (front strap R 9; back strap R 13.5, the palm swell: R33). Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
+   "construction": "Wood grip on the traced side profile reshaped to c6 (parts/grip_shape.py: square top-back corner, straight block face under the guard with a soft shoulder R 8 / 16, squarer heel R 4, round toe nose), inside the side-view per-part gate. Section a rounded oblong 31.5 wide with flatter sides, front strap R 9 (R 4 on the top block), back strap R 9; bottom flat with a 2.5 round. Checkered panel per side: the quadrilateral measured on c6 (features.checker_panel), border = real geometry (0.75 recess, 0.15 bevel, 0.7 flat band); the cells are a normal map baked from modelled ridges (two groove families: A 46 deg / 1.61 mm continuous ridges, B -49 deg / 1.72 mm shallow notches).",
    "features": [
     {
      "name": "checker_panel",
@@ -4165,8 +4374,31 @@
      ],
      "inset_front": 4.0,
      "width_fraction": 0.4,
-     "corner_R": 3.0,
-     "note": "c1 (true right) and c6 (true left, mirrored) agree"
+     "corner_R": 0.8,
+     "note": "c1 (true right) and c6 (true left, mirrored) agree",
+     "corners_ts_mm": {
+      "front_top": [
+       16.12,
+       10.97
+      ],
+      "rear_top": [
+       27.86,
+       -7.06
+      ],
+      "rear_bottom": [
+       87.99,
+       -4.12
+      ],
+      "front_bottom": [
+       87.59,
+       15.19
+      ]
+     },
+     "frame": "t down the 22.35 deg axis from the junction (280.67, -36.0), s toward the front strap",
+     "recess": 0.75,
+     "border_bevel": 0.15,
+     "border_band": 0.7,
+     "cells": "A 46.0 deg from vertical (down toward the rear) / 1.61 mm, B -49.0 deg / 1.72 mm"
     }
    ],
    "wear": "firing-hand wear on the straps and toe (finish worn, oil-darkened); scratches on the upper sides; grime in cells",
@@ -4480,7 +4712,14 @@
     "measure",
     "craft 2.7"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, rounded rear heel. Section a rounded oblong (31.5 wide: unseen; real AK grips 30-36, R31 / R33 in resolutions), flatter sides where the checkering sits, straps R 8-10 (front strap R 9; back strap R 13.5, the palm swell: R33). Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
+   "detail_pass": [
+    {
+     "source": "review/detail/grip/spec_proposal.json",
+     "note": "grip rounds 1-2 as built (H1 girth 129.7, width 31.09 pass); back strap R 13.5 -> 9 (supersedes R33's back strap); integration round: front strap back to R 9 (round 2 had 7; the solved 3/4 view contradicted it and the 3/4 IoU fell below the exception floor)"
+    }
+   ]
   },
   {
    "id": "buttstock",
@@ -5460,15 +5699,19 @@
     "screw_slot": "cross (X) slot, both screws, as c7 draws them (10x zoom: crossed slots in a dark ring)",
     "counterbore_ring": {
      "dia": 8.5,
-     "depth": 0.6,
-     "note": "the visible dark ring round each head"
+     "countersink_deg": 45,
+     "head_gap": 0.05
     },
     "screw_fraction_c7": [
      0.066,
      0.82
-    ]
+    ],
+    "end_outline": "c7 lozenge (two-sided power curve with a bow term, widest row at 40 % of the height), mapped on the TOP width 36.9",
+    "rim": "one rounded band 1.6 (3 segments) into the skirt",
+    "face_crown": 0.6,
+    "screw_head": "flat, flush (0.12 below the face), cut X slots 0.75 wide x 0.9 deep"
    },
-   "construction": "Steel plate over the whole butt end, stadium outline following the stock section, face slightly convex, wraparound skirt (the 12 mm band in the side view), rim rounded about 1 mm. Two countersunk screws on the centre line (c7 fractions 0.066 / 0.82), each a cross-slotted head in a visible counterbore ring (c7). No trap door.",
+   "construction": "Steel plate over the butt end, c7's lozenge outline at the TOP width, face slightly convex (0.6 crown), wraparound skirt (the 12 mm side band); the face rolls into the skirt with one rounded band (no raised inner lip); two flush flat screw heads with cut X slots in 45 deg countersinks.",
    "features": [],
    "wear": "face densely covered in bright scratches; rim edges bright; toe/heel corners bare",
    "trace": {
@@ -5681,7 +5924,14 @@
     "measure",
     "craft 2.9"
    ],
-   "asset": "SK_AR01 + SM_AR01"
+   "asset": "SK_AR01 + SM_AR01",
+   "construction_form_stage": "Steel plate over the whole butt end, stadium outline following the stock section, face slightly convex, wraparound skirt (the 12 mm band in the side view), rim rounded about 1 mm. Two countersunk screws on the centre line (c7 fractions 0.066 / 0.82), each a cross-slotted head in a visible counterbore ring (c7). No trap door.",
+   "detail_pass": [
+    {
+     "source": "review/detail/butt_plate/spec_proposal.json",
+     "note": "butt_plate rounds 1-2 as built; integration round: the round-2 raised lip removed (judge: an extra inner border), rim band 1.6 rounded, heads flat with a 0.05 gap (judge: 'domed bosses in a recessed ring'). BP-1 (stock end section) and BP-5 (plate width: c7 vs TOP) deferred: R41"
+    }
+   ]
   },
   {
    "id": "sling_swivel_rear",
@@ -5891,16 +6141,24 @@
      0.51,
      0.66
     ],
-    "front_rib_fraction": 0.79,
-    "rib_width": 2.5,
+    "front_rib_fraction": 0.76,
+    "rib_width": 3.25,
     "rib_proud": 1.0,
     "top_tips_Z_seated": -38.5,
     "top_tips_tol": 1.5,
     "top_tips_below_lips": 26.5,
     "bottom_ends": "on the floor-plate band's upper line, 16 +-2 above the floor plate (perpendicular to it), read on the LEFT side view",
-    "ends": "rounded tips"
+    "ends": "pressed ends tapering over 3x the half width",
+    "rib_half_widths": [
+     1.55,
+     1.7,
+     1.7,
+     1.5
+    ],
+    "bottom_ends_above_floor": 14.5,
+    "front_panel": "front panel 0.45 proud from u 0.745 forward (its crisp rear edge is the side view's 0.76 line) plus a front spine fold 0.5 proud at u 0.905 (round 2: 0.9; 3/4 view), full length; a raised rear strip"
    },
-   "construction": "Four raised pressed ribs per side parallel to the curve plus a narrower rib along the front edge, real geometry (G-rule), round crowns.",
+   "construction": "Four flat-topped pressed ribs per side at u 0.17 / 0.34 / 0.51 / 0.66 (rounded shoulders, ~45 deg flanks, 1.0 proud), narrow, with tapered pressed ends; a front panel and a front spine fold instead of a narrow front rib; real geometry.",
    "features": [],
    "wear": "crests worn to bare steel (the strongest cue)",
    "trace": null,
@@ -5910,6 +6168,13 @@
     "measure ribs_side_view",
     "craft",
     "merge reading of c4"
+   ],
+   "construction_form_stage": "Four raised pressed ribs per side parallel to the curve plus a narrower rib along the front edge, real geometry (G-rule), round crowns.",
+   "detail_pass": [
+    {
+     "source": "review/detail/magazine/spec_proposal.json",
+     "note": "magazine round 2 as built; integration round: ribs narrower (x0.75), ends tapered, bottom ends 14.5 above the floor plate (inside the spec's 16 +- 2)"
+    }
    ]
   },
   {
@@ -5927,33 +6192,34 @@
    "texel_class": "C",
    "box_M": {
     "Z": [
-     -38.0,
-     -12.0
+     -36.0,
+     -13.5
     ],
     "X_at_Z-25": [
      372.2,
      414.5
     ],
     "Y": [
-     -13.8,
-     13.8
+     -13.3,
+     13.3
     ]
    },
    "dims": {
     "Z_seated": [
-     -38.0,
-     -12.0
+     -36.0,
+     -13.5
     ],
     "width_fraction_from_rear_edge": [
-     0.08,
-     0.8
+     0.05,
+     0.735
     ],
     "X_at_Z-25": [
      372.2,
      414.5
     ],
-    "proud": 0.8,
-    "note": "from the lips down to the rib tips; toward the rear of the width as c4 shows; mostly hidden in the well when seated (only Z -30.9..-38 shows)"
+    "proud": 0.9,
+    "note": "from the lips down to the rib tips; toward the rear of the width as c4 shows; mostly hidden in the well when seated (only Z -30.9..-38 shows)",
+    "neck": "the body narrows to 12.4 per side above a line just under the plate, so the plate and front block stand 0.9 proud yet end at Y 13.3 inside the 13.5 well liner"
    },
    "construction": "Flat smooth plate on each side above the ribs (c4).",
    "features": [],
@@ -5963,6 +6229,12 @@
    "confidence": "medium",
    "sources": [
     "craft"
+   ],
+   "detail_pass": [
+    {
+     "source": "review/detail/magazine/spec_proposal.json",
+     "note": "magazine round 2 as built"
+    }
    ]
   },
   {
@@ -6059,7 +6331,14 @@
     "outward_normal_M": [
      0.7728,
      -0.6346
-    ]
+    ],
+    "thickness": 5.0,
+    "rear_bottom_corner_R": 3.5,
+    "floor_line_offset_outward": 0.86,
+    "front_turn_up": 3.0,
+    "bottom_step": "1.0 out over the front 55 %",
+    "rim": "folded rim 1.9 / +0.5 over a narrower lower part",
+    "bottom_panel": "recessed panel with a detent button"
    },
    "construction": "Separate flat plate in rails at the bottom, lip proud all round, rounded front edge; a transverse reinforcing band just above it (c4).",
    "features": [],
@@ -6074,6 +6353,12 @@
    "sources": [
     "measure",
     "craft"
+   ],
+   "detail_pass": [
+    {
+     "source": "review/detail/magazine/spec_proposal.json",
+     "note": "magazine round 2 as built (lowest point kept at -183.224); Base socket moved 1.4 mm outward along the normal"
+    }
    ]
   }
  ],
@@ -6691,19 +6976,19 @@
    {
     "socket": "Base",
     "M_mm_seated": [
-     474.64,
+     475.72,
      0.0,
-     -161.37
+     -162.26
     ],
     "mag_mm": [
-     45.64,
+     46.72,
      0.0,
-     -145.37
+     -146.26
     ],
     "unreal_cm": [
-     4.564,
+     4.672,
      0.0,
-     -14.537
+     -14.626
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6711,7 +6996,7 @@
      "yaw": 0.0
     },
     "use": "floor plate centre, +X = outward normal; impact FX / ground contact",
-    "source": "floor plate corners from the trace"
+    "source": "floor plate corners from the trace, 1.4 mm out along the normal (detail-pass floor plate, R42)"
    },
    {
     "socket": "CenterOfMass",
@@ -7407,6 +7692,76 @@
    "conflict": "round 1 flagged three 3/4 residuals as 'a width the TOP allows would fit', testing our half width +-2.45 mm (2 TOP px)",
    "resolution": "kept. Re-tested against the TOP trace itself: the widths that remove the 3/4 residuals push the TOP width error past the 2 px tolerance (gas block +8 % -> TOP P95 2.43 px, region still 5.1 px; stock -6 % -> 2.16 px, region still 5.0 px; front sight base: no width from -5 % to +25 % brings it below 3.6 px) and lower the TOP L2 IoU (gas block +7 %: -0.0022; stock -3 %: -0.0018) that passes at 0.931 against 0.93. Inside the TOP-allowed range the three regions are 3/4-panel contradictions; the exception test now uses that range (rifle_q34.py, TOP width error P95 <= 2 px at the part's own width stations) instead of a fixed +-2.45 mm",
    "rule": "TOP is the width authority"
+  },
+  {
+   "id": "R35",
+   "topic": "Detail pass: part shapes from their own close-ups (2026-10-05)",
+   "conflict": "the form stage derived small parts from the side outlines; a blind judge picked our crops on design",
+   "resolution": "each detailed part (selector, trigger guard + trigger, front sight, muzzle brake, rear sight, receiver right side, grip, magazine, butt plate) is built from its close-up for its 3D shape; the side views and the spec keep scale / position (every stage-2 gate re-run on the integrated build). The builders' spec proposals are applied as built (parts[*].detail_pass lists them)",
+   "rule": "close-up = shape authority; side views = scale / position authority"
+  },
+  {
+   "id": "R36",
+   "topic": "Close-up proportions that contradict the side views (front sight ears, brake length, magazine curve, butt plate width)",
+   "conflict": "c3 draws the ears ~0.7-0.8 as wide front-to-back and the brake ~35 % shorter for its height; c4 / c5 draw the magazine 21-38 % longer for its width and more curved; c7 draws the plate 0.65x the TOP width",
+   "resolution": "the side / TOP views stay the authority (L2 per part, L4 key dims). The close-up-proportion variants were built and measured (front sight FS_EAR_SX 0.78: L2 0.865 < 0.95) and are NOT shipped; the user decides (open_questions)",
+   "rule": "the gates' authority table; a blind judge on the close-up crops can still see these proportions"
+  },
+  {
+   "id": "R37",
+   "topic": "Muzzle brake body vs key dims after the detail rounds",
+   "conflict": "round 2 flared the body to r 10.5 and moved the chin to X 879.63 (L4 overall_length 879.6, brake length 32.4 and dia 21.6 including the knob vs 880.0 / 31.2 / 20.2)",
+   "resolution": "the widest point is a raised rim ring r 10.1 (c3: a proud rim band), body r 9.6-9.85, cut plane X 873.1 at Z 0 so the chin's front is X 880.0; L4 measures the BODY (the detent knob, which the side views do not show, is excluded: rifle_measure.py)",
+   "rule": "measurement wins on dimensions"
+  },
+  {
+   "id": "R38",
+   "topic": "Detent latch owner and the front collar",
+   "conflict": "front sight and muzzle brake builders both claimed the c3 latch; the FSB front collar r 10.1 equalled the brake and read as part of a long brake with a seam",
+   "resolution": "the muzzle brake owns the knob; the FSB front collar is r 8.7 (c3: sleeve band -> narrow ring -> brake) and the knob sits 0.03 above it",
+   "rule": "c3; one owner per feature"
+  },
+  {
+   "id": "R39",
+   "topic": "Side-view label convention for the catch housing",
+   "conflict": "rifle_silhouette gave guard faces above Z -52 (the round-1 cheek bottom) to the mag_catch label",
+   "resolution": "-54.5: the cheeks reach the paddle top (Z -53.87) since round 2 (trigger_guard proposal); forward of X 355.3 the guard has no loop faces, so only cheek faces move",
+   "rule": "trace label convention"
+  },
+  {
+   "id": "R40",
+   "topic": "Ejection port opening top and the charging handle height",
+   "conflict": "receiver_right proposes the skirt cutout top at Z ~21.5 (c2, q34, the side panel at 16x) and the handle at Z ~4-15; the LEFT trace's L3 port corner says Z 17 (tol 2.43)",
+   "resolution": "built at Z 19.2 (inside the L3 tolerance) and the handle at Z 8-17 (the selector lever under its path limits it); 21.5 stays a proposal (open_questions)",
+   "rule": "L3 trace position"
+  },
+  {
+   "id": "R41",
+   "topic": "Butt plate width and the stock end section (BP-1, BP-5)",
+   "conflict": "c7 draws the plate ~0.65x the stock width with wood beside it; TOP shows a flush steel cap 36.5-36.9",
+   "resolution": "TOP kept (width 36.9, L4 butt_width); the stock end section following the plate lozenge (BP-1) is deferred to the stock's next pass",
+   "rule": "TOP is the width authority"
+  },
+  {
+   "id": "R42",
+   "topic": "Magazine floor plate and Base socket",
+   "conflict": "the LEFT trace's floor face runs ~2.7 mm outside the spec line (56 vs 50.6 deg)",
+   "resolution": "spec corners kept; the plate is 5.0 thick with a R 3.5 rear corner, a 1.0 step over the front 55 % and its floor line 0.86 outward (L2 0.9678); the Base socket moves 1.4 mm out along the normal",
+   "rule": "spec corners (sockets) + side-view L2"
+  },
+  {
+   "id": "R43",
+   "topic": "Magazine rear lug and front-lug recess",
+   "conflict": "c4 draws a rear lug and a chunky front lug; the well liner (0.5 mm behind the body) and the guard's front tang (0.2 mm) leave no room, the reload path limits the front lug",
+   "resolution": "deferred to the fit stage (M4): a rear-liner slot + raised catch nose and a front-liner recess first, then the lugs",
+   "rule": "reload path (M-gates) first"
+  },
+  {
+   "id": "R44",
+   "topic": "LOD0 triangle ceiling after the detail pass",
+   "conflict": "integrated detail parts took the rifle to 53.8k (ceiling 50k) and the magazine to 7.96k (7k)",
+   "resolution": "unseen or redundant density removed: the barrel's chamber cuts (inside the carrier pocket), lower handguard stations on its straight run, upper handguard stations on its profile knots and a 24-point arc, front sight rims 2 segments, rivets 8 segments, an 8-gon swivel wire, trigger outline DP 0.03, the selector's groove, flush butt screws (16 segments), magazine rib ends at the round-end ring count",
+   "rule": "B8 ceiling"
   }
  ],
  "fab_original_changes": {
@@ -7433,7 +7788,10 @@
   "Grip checkering on the first-person LOD0: normal map only (default) or real pyramids (~3.6k tris per side)?",
   "Fab version: which of the 13 original changes to apply (none applied now)?",
   "SM_AR01 and the magazine: your request named SM_AR01 as the rifle with a separate magazine mesh. The gun study's default (Q3) also merges a copy of the magazine into the SM_AR01 static twin (for world pickups and drops) while SM_AR01_Mag stays separate for the reload. Keep the merged copy (default) or ship SM_AR01 without a magazine?",
-  "Gun-study defaults carried here (change the build if answered differently): rig pilot SK + SM twin + mag (Q2), black lacquer finish, Exports/Guns/AR01 (Q20); Metal texture 2048 (R29) or the 4096 fallback."
+  "Gun-study defaults carried here (change the build if answered differently): rig pilot SK + SM twin + mag (Q2), black lacquer finish, Exports/Guns/AR01 (Q20); Metal texture 2048 (R29) or the 4096 fallback.",
+  "Detail pass (R36): the generated close-ups draw some parts at proportions the side views contradict (front sight ears ~0.75 as wide, brake ~35 % shorter, magazine longer and more curved, butt plate 0.65x wide). Keep the side views as the authority (default; a judge on close-up crops can still pick these), or let each close-up govern its own part and re-gate L2 / L4 for it?",
+  "Ejection port opening top Z 21.5 (receiver_right proposal, R40) instead of the built 19.2: needs the L3 port-corner entry changed (the LEFT trace reads 17).",
+  "Butt plate: stock end section following the plate (BP-1) in the stock's next pass?"
  ],
  "counts": {
   "parts": 33,

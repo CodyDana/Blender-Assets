@@ -189,6 +189,9 @@ def stage_form():
         gates.append(g("H1 early", "blocked", "fit body available", False, "MH_PlayerDefault fit body not found"))
     early = {"crops": {"ours": [rel(REVIEW / "early" / "ours_receiver.png"), rel(REVIEW / "early" / "ours_frontsight.png")],
                        "reference": [rel(REVIEW / "early" / "ref_receiver.png"), rel(REVIEW / "early" / "ref_frontsight.png")]},
+             "look": "ROUGH LOOK (gunlib.look; review blend with the grip's checker bake source; selector posed at "
+                     "c1's 13.25 deg in the c1 crop)",
+             "blind_pairs": rel(REVIEW / "early_blind2"), "blind_key": rel(REVIEW / "early_key2.json"),
              "cameras": cl,
              "note": "the close-ups are stylised and not to scale (spec sheet_panels): weak-perspective cameras with the "
                      "view angles set by eye and scale/shift fitted to landmarks; the blind judge runs in the next stage"}

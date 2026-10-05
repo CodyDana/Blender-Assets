@@ -299,8 +299,11 @@ for x0_, x1_ in slots["X"]:
 # front sight ear boss + hole (check C10)
 th_ = P["front_sight_ears_post"]["dims"]["top_hole"]
 hx, hz = th_["XZ"]
-for dia, fc in ((th_["boss_ring_dia"], STEEL), (th_["hole_dia"], (60, 60, 64))):
-    d.ellipse([A.c(hx - dia / 2, hz + dia / 2), A.c(hx + dia / 2, hz - dia / 2)], fill=fc, outline=INK, width=1)
+# detail pass: a flush disc with a thin raised ring rim (boss_dia, no hole); form stage: boss ring + hole
+for dia, fc in ((th_.get("boss_dia", th_.get("boss_ring_dia", 6.0)), STEEL), (th_.get("hole_dia", 0.0), (60, 60, 64)),
+                (th_.get("boss_dia", 0.0) - 2 * th_.get("rim_width", 0.0), STEEL)):
+    if dia > 0:
+        d.ellipse([A.c(hx - dia / 2, hz + dia / 2), A.c(hx + dia / 2, hz - dia / 2)], fill=fc, outline=INK, width=1)
 # receiver / trigger-guard top flange ledge seam behind the well (check C9)
 led = P["receiver"]["dims"]["ledge_seam_XZ"]
 d.line([A.c(*led[0]), A.c(*led[1]), A.c(*led[2])], fill=INK, width=2)

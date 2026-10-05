@@ -1,0 +1,788 @@
+{
+ "stage": "detail pass setup",
+ "date": "2026-10-05T00:10:20",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "Refactor: form_tris.npz identical to the pre-refactor build (V, T, labels, names)",
+   "value": "byte-identical (26655 verts, 53210 tris, 36 objects)",
+   "threshold": "identical",
+   "pass": true
+  },
+  {
+   "name": "Refactor: total triangles",
+   "value": 53210,
+   "threshold": "53210 (gates/form.json build)",
+   "pass": true
+  },
+  {
+   "name": "Refactor: run_rifle.sh end to end, gates/form.json regenerated",
+   "value": "26 / 26 gates identical values, status pass (only B3 timing fields differ)",
+   "threshold": "identical to committed gates/form.json",
+   "pass": true
+  },
+  {
+   "name": "Part modules with build(spec, ctx)",
+   "value": "9 / 9",
+   "threshold": "9 (selector, trigger_guard, front_sight, muzzle_brake, rear_sight, receiver_right, grip, magazine, butt_plate)",
+   "pass": true
+  },
+  {
+   "name": "Panel cameras solved (c1-c7 + fixed 3/4)",
+   "value": {
+    "c1": 0.885,
+    "c2": 0.9513,
+    "c3": 0.8321,
+    "c4": 0.7201,
+    "c5": 0.7943,
+    "c6": 0.9305,
+    "c7": 0.8265,
+    "q34": 0.9042
+   },
+   "threshold": "solved; silhouette IoU in frame reported (close-ups are stylised, not to scale)",
+   "pass": true
+  },
+  {
+   "name": "Per-part crop pairs written (ref + ours at identical framing, ROUGH LOOK)",
+   "value": 22,
+   "threshold": "every part x every authority panel (22)",
+   "pass": true
+  }
+ ],
+ "panels": {
+  "c1": {
+   "model": "ortho",
+   "iou_in_frame": 0.885,
+   "landmark_rms_px_ls": 4.49,
+   "landmark_rms_px": 10.15,
+   "rotation_from_prior_deg": 3.96,
+   "px_per_mm": 1.8924,
+   "f_px": null,
+   "eye_distance_mm": null
+  },
+  "c2": {
+   "model": "persp",
+   "iou_in_frame": 0.9513,
+   "landmark_rms_px_ls": 11.53,
+   "landmark_rms_px": 21.9,
+   "rotation_from_prior_deg": 26.58,
+   "px_per_mm": null,
+   "f_px": 1066.3,
+   "eye_distance_mm": 500.8
+  },
+  "c3": {
+   "model": "ortho",
+   "iou_in_frame": 0.8321,
+   "landmark_rms_px_ls": 11.92,
+   "landmark_rms_px": 17.41,
+   "rotation_from_prior_deg": 5.03,
+   "px_per_mm": 2.7686,
+   "f_px": null,
+   "eye_distance_mm": null
+  },
+  "c4": {
+   "model": "ortho",
+   "iou_in_frame": 0.7201,
+   "landmark_rms_px_ls": 4.35,
+   "landmark_rms_px": 8.9,
+   "rotation_from_prior_deg": 36.25,
+   "px_per_mm": 1.739,
+   "f_px": null,
+   "eye_distance_mm": null
+  },
+  "c5": {
+   "model": "ortho",
+   "iou_in_frame": 0.7943,
+   "landmark_rms_px_ls": 3.1,
+   "landmark_rms_px": 4.63,
+   "rotation_from_prior_deg": 0.38,
+   "px_per_mm": 1.678,
+   "f_px": null,
+   "eye_distance_mm": null
+  },
+  "c6": {
+   "model": "ortho",
+   "iou_in_frame": 0.9305,
+   "landmark_rms_px_ls": 5.1,
+   "landmark_rms_px": 14.2,
+   "rotation_from_prior_deg": 14.89,
+   "px_per_mm": 2.0469,
+   "f_px": null,
+   "eye_distance_mm": null
+  },
+  "c7": {
+   "model": "persp",
+   "iou_in_frame": 0.8265,
+   "landmark_rms_px_ls": 1.7,
+   "landmark_rms_px": 7.86,
+   "rotation_from_prior_deg": 3.21,
+   "px_per_mm": null,
+   "f_px": 1030.6,
+   "eye_distance_mm": 346.4
+  },
+  "q34": {
+   "model": "fixed: scratch/q34/camera.json (rifle_q34.py solve)",
+   "iou_in_frame": 0.9042
+  }
+ },
+ "parts": {
+  "receiver_right": {
+   "module": "Scripts/guns/rifle/parts/receiver_right.py",
+   "objects": [
+    "receiver",
+    "dust_cover",
+    "recoil_spring_button",
+    "rivets",
+    "receiver_rails",
+    "bolt_carrier",
+    "mag_catch"
+   ],
+   "closeups": [
+    "c1",
+    "c2",
+    "q34"
+   ],
+   "cameras": {
+    "c1": {
+     "iou_in_roi": 0.9062,
+     "roi_px": [
+      0,
+      0,
+      290,
+      356
+     ],
+     "rotation_from_prior_deg": 7.27
+    },
+    "c2": {
+     "iou_in_roi": 0.9503,
+     "roi_px": [
+      0,
+      0,
+      277,
+      363
+     ],
+     "rotation_from_prior_deg": 6.45
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c1": {
+     "silhouette_iou_window": 0.908,
+     "edge_f_2px": 0.2087,
+     "edge_chamfer_p95_px": 17.46,
+     "window_px": [
+      0,
+      0,
+      290,
+      301
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/receiver_right/before_pair_c1.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/receiver_right/ref_c1.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/receiver_right/before_ours_c1.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/receiver_right/trace_c1.png"
+    },
+    "c2": {
+     "silhouette_iou_window": 0.9496,
+     "edge_f_2px": 0.3284,
+     "edge_chamfer_p95_px": 28.17,
+     "window_px": [
+      0,
+      17,
+      277,
+      363
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/receiver_right/before_pair_c2.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/receiver_right/ref_c2.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/receiver_right/before_ours_c2.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/receiver_right/trace_c2.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.9275,
+     "edge_f_2px": 0.2693,
+     "edge_chamfer_p95_px": 42.95,
+     "window_px": [
+      124,
+      0,
+      382,
+      166
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/receiver_right/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/receiver_right/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/receiver_right/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/receiver_right/trace_q34.png"
+    }
+   }
+  },
+  "rear_sight": {
+   "module": "Scripts/guns/rifle/parts/rear_sight.py",
+   "objects": [
+    "rear_sight_block",
+    "rear_sight_leaf",
+    "rear_sight_slider",
+    "handguard_retainer"
+   ],
+   "closeups": [
+    "c2",
+    "q34"
+   ],
+   "cameras": {
+    "c2": {
+     "iou_in_roi": 0.9631,
+     "roi_px": [
+      76,
+      16,
+      277,
+      196
+     ],
+     "rotation_from_prior_deg": 7.12
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c2": {
+     "silhouette_iou_window": 0.9596,
+     "edge_f_2px": 0.4139,
+     "edge_chamfer_p95_px": 21.59,
+     "window_px": [
+      125,
+      16,
+      277,
+      176
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/rear_sight/before_pair_c2.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/rear_sight/ref_c2.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/rear_sight/before_ours_c2.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/rear_sight/trace_c2.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.9484,
+     "edge_f_2px": 0.4563,
+     "edge_chamfer_p95_px": 13.15,
+     "window_px": [
+      278,
+      10,
+      394,
+      84
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/rear_sight/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/rear_sight/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/rear_sight/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/rear_sight/trace_q34.png"
+    }
+   }
+  },
+  "front_sight": {
+   "module": "Scripts/guns/rifle/parts/front_sight.py",
+   "objects": [
+    "cleaning_rod",
+    "front_sight_block",
+    "front_sight_post"
+   ],
+   "closeups": [
+    "c3",
+    "q34"
+   ],
+   "cameras": {
+    "c3": {
+     "iou_in_roi": 0.8396,
+     "roi_px": [
+      17,
+      0,
+      261,
+      280
+     ],
+     "rotation_from_prior_deg": 6.02
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c3": {
+     "silhouette_iou_window": 0.8657,
+     "edge_f_2px": 0.2711,
+     "edge_chamfer_p95_px": 25.0,
+     "window_px": [
+      47,
+      11,
+      234,
+      252
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/front_sight/before_pair_c3.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/front_sight/ref_c3.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/front_sight/before_ours_c3.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/front_sight/trace_c3.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.7938,
+     "edge_f_2px": 0.5093,
+     "edge_chamfer_p95_px": 11.05,
+     "window_px": [
+      606,
+      33,
+      696,
+      148
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/front_sight/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/front_sight/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/front_sight/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/front_sight/trace_q34.png"
+    }
+   }
+  },
+  "muzzle_brake": {
+   "module": "Scripts/guns/rifle/parts/muzzle_brake.py",
+   "objects": [
+    "muzzle_brake"
+   ],
+   "closeups": [
+    "c3",
+    "q34"
+   ],
+   "cameras": {
+    "c3": {
+     "iou_in_roi": 0.837,
+     "roi_px": [
+      154,
+      125,
+      267,
+      244
+     ],
+     "rotation_from_prior_deg": 8.39
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c3": {
+     "silhouette_iou_window": 0.8264,
+     "edge_f_2px": 0.3947,
+     "edge_chamfer_p95_px": 11.36,
+     "window_px": [
+      155,
+      139,
+      267,
+      234
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/muzzle_brake/before_pair_c3.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/muzzle_brake/ref_c3.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/muzzle_brake/before_ours_c3.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/muzzle_brake/trace_c3.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.7749,
+     "edge_f_2px": 0.6388,
+     "edge_chamfer_p95_px": 5.04,
+     "window_px": [
+      661,
+      93,
+      725,
+      142
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/muzzle_brake/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/muzzle_brake/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/muzzle_brake/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/muzzle_brake/trace_q34.png"
+    }
+   }
+  },
+  "trigger_guard": {
+   "module": "Scripts/guns/rifle/parts/trigger_guard.py",
+   "objects": [
+    "trigger",
+    "trigger_guard"
+   ],
+   "closeups": [
+    "c6",
+    "c1",
+    "q34"
+   ],
+   "cameras": {
+    "c6": {
+     "iou_in_roi": 0.9483,
+     "roi_px": [
+      0,
+      0,
+      227,
+      223
+     ],
+     "rotation_from_prior_deg": 6.41
+    },
+    "c1": {
+     "iou_in_roi": 0.9603,
+     "roi_px": [
+      0,
+      50,
+      290,
+      285
+     ],
+     "rotation_from_prior_deg": 2.65
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c6": {
+     "silhouette_iou_window": 0.9499,
+     "edge_f_2px": 0.1891,
+     "edge_chamfer_p95_px": 29.0,
+     "window_px": [
+      0,
+      5,
+      216,
+      186
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/trigger_guard/before_pair_c6.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/trigger_guard/ref_c6.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/trigger_guard/before_ours_c6.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/trigger_guard/trace_c6.png"
+    },
+    "c1": {
+     "silhouette_iou_window": 0.955,
+     "edge_f_2px": 0.1912,
+     "edge_chamfer_p95_px": 34.2,
+     "window_px": [
+      0,
+      91,
+      271,
+      258
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/trigger_guard/before_pair_c1.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/trigger_guard/ref_c1.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/trigger_guard/before_ours_c1.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/trigger_guard/trace_c1.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.9416,
+     "edge_f_2px": 0.0934,
+     "edge_chamfer_p95_px": 37.88,
+     "window_px": [
+      150,
+      64,
+      285,
+      147
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/trigger_guard/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/trigger_guard/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/trigger_guard/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/trigger_guard/trace_q34.png"
+    }
+   }
+  },
+  "grip": {
+   "module": "Scripts/guns/rifle/parts/grip.py",
+   "objects": [
+    "pistol_grip"
+   ],
+   "closeups": [
+    "c6",
+    "c1",
+    "q34"
+   ],
+   "cameras": {
+    "c6": {
+     "iou_in_roi": 0.9216,
+     "roi_px": [
+      18,
+      16,
+      227,
+      352
+     ],
+     "rotation_from_prior_deg": 6.69
+    },
+    "c1": {
+     "iou_in_roi": 0.9593,
+     "roi_px": [
+      0,
+      94,
+      174,
+      363
+     ],
+     "rotation_from_prior_deg": 3.02
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c6": {
+     "silhouette_iou_window": 0.9165,
+     "edge_f_2px": 0.159,
+     "edge_chamfer_p95_px": 23.0,
+     "window_px": [
+      51,
+      50,
+      227,
+      322
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/grip/before_pair_c6.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/grip/ref_c6.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/grip/before_ours_c6.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/grip/trace_c6.png"
+    },
+    "c1": {
+     "silhouette_iou_window": 0.9546,
+     "edge_f_2px": 0.1175,
+     "edge_chamfer_p95_px": 120.12,
+     "window_px": [
+      0,
+      132,
+      143,
+      363
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/grip/before_pair_c1.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/grip/ref_c1.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/grip/before_ours_c1.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/grip/trace_c1.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.8856,
+     "edge_f_2px": 0.1852,
+     "edge_chamfer_p95_px": 20.23,
+     "window_px": [
+      152,
+      75,
+      234,
+      200
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/grip/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/grip/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/grip/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/grip/trace_q34.png"
+    }
+   }
+  },
+  "selector": {
+   "module": "Scripts/guns/rifle/parts/selector.py",
+   "objects": [
+    "selector"
+   ],
+   "closeups": [
+    "c1",
+    "q34"
+   ],
+   "cameras": {
+    "c1": {
+     "iou_in_roi": 0.9907,
+     "roi_px": [
+      17,
+      28,
+      258,
+      173
+     ],
+     "rotation_from_prior_deg": 2.42
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c1": {
+     "silhouette_iou_window": 0.994,
+     "edge_f_2px": 0.2116,
+     "edge_chamfer_p95_px": 29.09,
+     "window_px": [
+      39,
+      43,
+      235,
+      161
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/selector/before_pair_c1.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/selector/ref_c1.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/selector/before_ours_c1.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/selector/trace_c1.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 1.0,
+     "edge_f_2px": 0.0194,
+     "edge_chamfer_p95_px": 21.91,
+     "window_px": [
+      167,
+      46,
+      233,
+      95
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/selector/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/selector/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/selector/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/selector/trace_q34.png"
+    }
+   }
+  },
+  "magazine": {
+   "module": "Scripts/guns/rifle/parts/magazine.py",
+   "objects": [
+    "magazine",
+    "magazine_floor_plate"
+   ],
+   "closeups": [
+    "c4",
+    "c5",
+    "q34"
+   ],
+   "cameras": {
+    "c4": {
+     "iou_in_roi": 0.7727,
+     "roi_px": [
+      0,
+      0,
+      163,
+      363
+     ],
+     "rotation_from_prior_deg": 15.88
+    },
+    "c5": {
+     "iou_in_roi": 0.7963,
+     "roi_px": [
+      0,
+      0,
+      115,
+      363
+     ],
+     "rotation_from_prior_deg": 0.36
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c4": {
+     "silhouette_iou_window": 0.7747,
+     "edge_f_2px": 0.393,
+     "edge_chamfer_p95_px": 42.06,
+     "window_px": [
+      0,
+      1,
+      163,
+      363
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/magazine/before_pair_c4.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/magazine/ref_c4.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/magazine/before_ours_c4.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/magazine/trace_c4.png"
+    },
+    "c5": {
+     "silhouette_iou_window": 0.8172,
+     "edge_f_2px": 0.2486,
+     "edge_chamfer_p95_px": 34.0,
+     "window_px": [
+      0,
+      0,
+      115,
+      363
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/magazine/before_pair_c5.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/magazine/ref_c5.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/magazine/before_ours_c5.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/magazine/trace_c5.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.9267,
+     "edge_f_2px": 0.1989,
+     "edge_chamfer_p95_px": 44.38,
+     "window_px": [
+      217,
+      56,
+      385,
+      279
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/magazine/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/magazine/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/magazine/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/magazine/trace_q34.png"
+    }
+   }
+  },
+  "butt_plate": {
+   "module": "Scripts/guns/rifle/parts/butt_plate.py",
+   "objects": [
+    "butt_plate",
+    "butt_screws"
+   ],
+   "closeups": [
+    "c7",
+    "q34"
+   ],
+   "cameras": {
+    "c7": {
+     "iou_in_roi": 0.8324,
+     "roi_px": [
+      0,
+      0,
+      141,
+      363
+     ],
+     "rotation_from_prior_deg": 3.04
+    },
+    "q34": {
+     "iou_in_roi": 0.9042,
+     "roi_px": null,
+     "rotation_from_prior_deg": null
+    }
+   },
+   "before": {
+    "c7": {
+     "silhouette_iou_window": 0.8313,
+     "edge_f_2px": 0.2774,
+     "edge_chamfer_p95_px": 24.33,
+     "window_px": [
+      0,
+      0,
+      141,
+      363
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/butt_plate/before_pair_c7.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/butt_plate/ref_c7.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/butt_plate/before_ours_c7.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/butt_plate/trace_c7.png"
+    },
+    "q34": {
+     "silhouette_iou_window": 0.9205,
+     "edge_f_2px": 0.0,
+     "edge_chamfer_p95_px": 84.66,
+     "window_px": [
+      18,
+      30,
+      93,
+      153
+     ],
+     "pair": "WorkFiles/guns/rifle/review/detail/butt_plate/before_pair_q34.png",
+     "ref": "WorkFiles/guns/rifle/review/detail/butt_plate/ref_q34.png",
+     "ours": "WorkFiles/guns/rifle/review/detail/butt_plate/before_ours_q34.png",
+     "trace": "WorkFiles/guns/rifle/review/detail/butt_plate/trace_q34.png"
+    }
+   }
+  }
+ },
+ "notes": [
+  "Before-images: review/detail/<part>/before_pair_<panel>.png (ref left, ours right), before_edges_<panel>.png (reference edges blue, ours red, silhouettes cyan / orange), trace_<panel>.png/.json, solve_<panel>.png (camera check, ROI box yellow).",
+  "c2 is labelled TOP LEFT but its handed features (selector, charging handle, handguard retainer lever) show the gun's RIGHT side from behind-above; solved as such (perspective camera).",
+  "c3 draws the front sight ears narrower and the brake closer to the block than the side view: the per-part cameras absorb framing, not shape.",
+  "c7 draws wood beside the plate wider than the stock is; the c7 camera only frames the butt-plate objects.",
+  "Edge F scores are low by nature (reference scratches / grain / checkering add edges); use them relatively, per part, before vs after.",
+  "Grip checkering decision: modelled pyramids as the bake source + real-geometry recessed panel border at LOD0 (see summary)."
+ ]
+}

@@ -1,0 +1,163 @@
+{
+ "stage": "detail muzzle_brake round 2",
+ "date": "2026-10-05T01:36:47",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "Part outline IoU vs c3 trace (part ROI = window right of the brake's rear face; ref = traced c3 mask)",
+   "value": {
+    "silhouette_iou_part_roi": 0.9318,
+    "iou_after_similarity_fit": 0.9371,
+    "silhouette_iou_window": 0.9156,
+    "edge_f_2px": 0.4479,
+    "same_geometry_at_round1_camera_raster": 0.845
+   },
+   "baseline_r1": {
+    "silhouette_iou_part_roi": 0.8269,
+    "iou_after_similarity_fit": 0.8626,
+    "silhouette_iou_window": 0.8377,
+    "edge_f_2px": 0.4514
+   },
+   "threshold": "report (close-ups are stylised and not to scale); must not regress",
+   "pass": true,
+   "note": "c3 camera re-solved on the brake only (round 1's was fitted on brake + FSB and drew our brake 13-21 % too thin: the 'stretched tube' tell). At round 1's camera the r2 geometry still improves (0.845 vs 0.827). Edge F 0.448 vs 0.451 (flat): the reference's worn-edge highlights and pitting make edges our clean render does not have."
+  },
+  {
+   "name": "Part outline IoU vs q34 trace (part ROI, fixed camera)",
+   "value": {
+    "silhouette_iou_part_roi": 0.7441,
+    "iou_after_similarity_fit": 0.898,
+    "silhouette_iou_window": 0.7671,
+    "edge_f_2px": 0.6987
+   },
+   "baseline_r1": {
+    "silhouette_iou_part_roi": 0.7622,
+    "iou_after_similarity_fit": 0.895,
+    "silhouette_iou_window": 0.779,
+    "edge_f_2px": 0.7078
+   },
+   "threshold": "report",
+   "pass": true,
+   "note": "raw IoU -0.018 (q34 draws the brake ~5 mm longer than the side trace, and the rounder chin no longer pokes toward it); after the similarity fit 0.898 vs 0.895; edge F -0.009. Flagged, not hidden: q34 is the one view where the outline lost a little."
+  },
+  {
+   "name": "L2 per part muzzle_brake (thin part: outer contour P95 <= 1 px, max <= 2 px)",
+   "value": {
+    "contour_p95_px": 1.0,
+    "contour_max_px": 1.414,
+    "iou_filled": 0.9318
+   },
+   "baseline_r1": {
+    "contour_p95_px": 1.0,
+    "contour_max_px": 1.414,
+    "iou_filled": 0.8997
+   },
+   "threshold": "P95 <= 1.0, max <= 2.0",
+   "pass": true,
+   "note": "iteration 1 failed (max 5.1 px: the knob overhung the FSB collar 3 mm, which the side views do not show); the knob was cut back to X >= 847.4 and lowered"
+  },
+  {
+   "name": "L2 per part, all 21 parts (private build: base + this module)",
+   "value": "21 / 21",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (fit)",
+   "value": 0.9767,
+   "baseline_r1": 0.9764,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (excluded zones masked, fit)",
+   "value": 0.9304,
+   "baseline_r1": 0.9308,
+   "threshold": ">= 0.93",
+   "pass": true,
+   "note": "identity IoU 0.9285 (r1 0.9276)"
+  },
+  {
+   "name": "L2 true-left vs RIGHT-labelled panel",
+   "value": 0.9171,
+   "baseline_r1": 0.9166,
+   "threshold": ">= 0.88",
+   "pass": true
+  },
+  {
+   "name": "Part triangles (LOD0)",
+   "value": 1854,
+   "baseline_r1": 1862,
+   "baseline_form": 1870,
+   "threshold": "no growth (rifle LOD0 <= 50k)",
+   "pass": true,
+   "note": "rifle total with this part 53194 (incl. mag; r1 53202): the rifle is over the 50k LOD0 budget from other parts, this part does not grow it"
+  },
+  {
+   "name": "Closed manifold",
+   "value": {
+    "boundary_edges": 0,
+    "multi_face_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "shells": 1
+   },
+   "threshold": "0 boundary / multi-face / wire / ngons / zero-area, 1 shell",
+   "pass": true
+  },
+  {
+   "name": "G5 at rest: intersections with barrel / FSB / post / cleaning rod",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "Butt gaps (clearance row 0.01-0.05)",
+   "value": {
+    "barrel": 0.04,
+    "front_sight_block": 0.03
+   },
+   "threshold": "[0.01, 0.05] mm",
+   "pass": true,
+   "note": "against the base.blend (form-stage) copies of barrel and front_sight_block; the knob rides 0.03 above the FSB collar r 10.1 at X 847.4-848.78, so the front_sight builder must keep nothing above r 10.1 at X 847.4-848.82 (round 1: 847.6)"
+  },
+  {
+   "name": "B3 sweep",
+   "value": "n/a",
+   "threshold": "moving parts only",
+   "pass": true,
+   "note": "the brake is fixed (bone muzzle_device, joint fixed to barrel)"
+  }
+ ],
+ "method": "c3 + q34 as the shape authority, side views (L2) for X/Z: c3 part camera re-solved on the brake only; slot widths / web measured against the reference's OWN rim in c3 (back-projection through that camera) and placed against our rim; face plane from the LEFT trace through the face top and the chin; iterations r2_i1..i6 + final r2 in review/detail/muzzle_brake/ (pair / edges / result per tag)",
+ "method_changes": [
+  "no threaded rear ring, no raised bead: one convexly flared body r 10.0 -> 10.5",
+  "bullnose rim (outer + inner Bezier rounds meet on the face, no flat band) on a conical chamber r 6.7 -> 7.5 (wall 3.4 top -> 3.0 chin)",
+  "chin = one long round (tangent 5.5 along the body), no flat, front X 879.9 @ Z -9.0",
+  "face 37.5 deg, X 873.2 at Z 0 (r1: 40.8 deg, 873.5)",
+  "slot narrow (4.7 / 6.6 / 8.2 wide), Z -5.9..7.2, rear lean 11 deg, front 25 deg, web 2.2 / 4.3 / 6.1 (r1: 11.8 wide at Z 0, web 1.8 parallel to the cut)",
+  "detent knob: small dome at the junction X 847.4-852.4, crown Z 11.15 (r1: notched rectangular clip 847.6-853.6 on a separate ring)",
+  "loft samples trimmed (K_OUT 2, K_CH 1) to stay under the r1 / form triangle count"
+ ],
+ "files": [
+  "Scripts/guns/rifle/parts/muzzle_brake.py",
+  "Scripts/guns/rifle/parts/muzzle_brake_geo.py",
+  "Scripts/guns/rifle/parts/muzzle_brake_dev.py",
+  "WorkFiles/guns/rifle/review/detail/muzzle_brake/r2_pair_c3.png",
+  "WorkFiles/guns/rifle/review/detail/muzzle_brake/r2_pair_q34.png",
+  "WorkFiles/guns/rifle/review/detail/muzzle_brake/r2_result.json",
+  "WorkFiles/guns/rifle/review/detail/muzzle_brake/solve_c3_r2.png",
+  "WorkFiles/guns/rifle/review/detail_blind/muzzle_brake_r2/A.png",
+  "WorkFiles/guns/rifle/review/detail_blind/muzzle_brake_r2/B.png",
+  "WorkFiles/guns/rifle/review/detail/muzzle_brake/key_r2.json",
+  "WorkFiles/guns/rifle/review/detail/muzzle_brake/spec_proposal.json"
+ ],
+ "known_differences": [
+  "proportion (cannot be fixed within L2): c3 draws the brake ~35 % shorter relative to its height than the side views (straight top ~11 mm vs the side views' ~16-18 mm); q34 draws it ~5 mm LONGER. The side views (L2 authority) keep X 848.82-880 / dia ~20-21, so in the c3 crop our body still runs out of the window's left edge: the round-1 'long tube' tell is reduced (flare, taller mouth, brake-only framing) but not gone",
+  "front sight junction: the reference shows sleeve -> one narrow collar -> brake body (step UP); ours shows the FSB's r 10.1 collar then the brake (r 10.0 at the rear face). Proposal to the front_sight owner in spec_proposal.json (front collar r ~9.4)",
+  "render tells remain by design of the ROUGH LOOK: no wear / pitting / bright worn edges on the rim crown, darker chamber interior",
+  "the knob sits ~4 mm further forward than c3 draws it (c3: over the FSB collar); the side views show nothing above the collar there, so the L2 contour (max <= 2 px) caps its overhang at ~1.4 mm"
+ ]
+}

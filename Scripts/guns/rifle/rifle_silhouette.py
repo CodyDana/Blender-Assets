@@ -107,7 +107,9 @@ def run(npz, stage, tag=""):
     if "trigger_guard" in names:
         g = lab == names.index("trigger_guard")
         tl[g & (tc[:, 2] > -34.85) & (tc[:, 0] < 368.0)] = keys.index("receiver")
-        tl[g & (tc[:, 0] > 355.3) & (tc[:, 2] > -52.0) & (tc[:, 2] <= -34.85)] = keys.index("mag_catch")
+        # (-54.5: the catch housing cheeks reach the paddle's top at Z -53.87 since detail round 2; -52.0 was the old cheek
+        # bottom, not a property of the trace: review/detail/trigger_guard/spec_proposal.json, accepted at integration)
+        tl[g & (tc[:, 0] > 355.3) & (tc[:, 2] > -54.5) & (tc[:, 2] <= -34.85)] = keys.index("mag_catch")
     if "bolt_carrier" in names:
         tl[(lab == names.index("bolt_carrier")) & (tc[:, 2] > 10.6)] = keys.index("dust_cover")
     ok = tl >= 0

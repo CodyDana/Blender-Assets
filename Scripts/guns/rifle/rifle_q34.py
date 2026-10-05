@@ -370,6 +370,25 @@ def exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm):
         dr.text((10, Hh + 8), "verdict: " + verdict + "; local shift (%d, %d) px -> window IoU %.3f -> %.3f"
                 % (dx, dy, i0, i1), fill=(0, 110, 0) if (rec["is_contradiction"] or mag_min) else (160, 0, 0))
         canvas.save(edir / ("region_%02d.png" % n_r))
+    # integration round (2026-10-05): a width only FITS when it removes most of the residual summed over every region
+    # of the same parts (same objects, same tests); a width that shrinks one region by growing another of the same
+    # parts is an offset between the views (the side view places them; per-part L2 passes), i.e. a contradiction
+    for r in recs:
+        if not (r["verdict"].startswith("UNSEEN DIMENSION") or r["verdict"].startswith("OURS: a width")):
+            continue
+        grp = [q for q in recs if set(q["objects"]) == set(r["objects"])
+               and set(q["width_test_core_px"]) == set(r["width_test_core_px"])]
+        if len(grp) < 2:
+            continue
+        tot0 = sum(q["core_px_beyond_3"] for q in grp)
+        tot = {k: sum(q["width_test_core_px"][k] for q in grp) for k in r["width_test_core_px"]}
+        r["group_width_test"] = {"regions": [q["id"] for q in grp], "core_px_at_built": tot0, "core_px_by_test": tot}
+        if min(tot.values()) >= 0.5 * tot0:
+            r["verdict"] = ("3/4 CONTRADICTS the authority views: the width that shrinks this region grows region(s) %s "
+                            "of the same parts (summed core %d px at the built width, %s by width) - an offset between "
+                            "the views, which the side view (per-part L2 pass) decides"
+                            % ([q["id"] for q in grp if q is not r], tot0, tot))
+            r["is_contradiction"] = True
     # index image: the 3/4 diff with numbered region boxes
     H, W = ours.shape
     A = np.zeros((H, W, 3), np.uint8)

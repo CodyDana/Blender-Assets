@@ -1,0 +1,228 @@
+{
+ "stage": "detail rear_sight round 2",
+ "date": "2026-10-05T01:26:21",
+ "status": "shape gates pass; triangle budget fails (rifle-wide: the form build was already over 50k); blind look pending",
+ "failed": [
+  "Part triangles (LOD0)"
+ ],
+ "gates": [
+  {
+   "name": "c2 part camera (round 2 re-solve)",
+   "value": {
+    "landmark_rms_px": 8.72,
+    "landmark_err_px": {
+     "retainer pin head centre": 13.27,
+     "retainer lower end screw": 10.36,
+     "near rail teeth rear end": 7.23,
+     "near rail teeth front end": 4.47,
+     "front housing far top corner": 4.94
+    },
+    "iou_in_roi": 0.9337,
+    "rotation_from_prior_deg": 1.69
+   },
+   "baseline_r1_camera": {
+    "landmark_rms_px": 39.85,
+    "max_err_px": 78.31,
+    "iou_in_roi": 0.9631
+   },
+   "threshold": "report",
+   "pass": true,
+   "note": "prior from the measured image directions of the rear sight's X/Y/Z axes in c2 (forward ~(0.66, 0.62, -0.42)), held within 3 deg; rear-sight landmarks only. The r1 camera viewed the block's side face square on (leaf landmarks 11-24 px off, block corner 78 px)."
+  },
+  {
+   "name": "Part outline IoU vs c2 trace (round-2 camera + window 116,25-277,170)",
+   "value": {
+    "silhouette_iou_window": 0.9449,
+    "iou_part_zone": 0.9474,
+    "edge_f": 0.4158
+   },
+   "baseline_r1_same_camera": {
+    "silhouette_iou_window": 0.9418,
+    "iou_part_zone": 0.9402,
+    "edge_f": 0.4373
+   },
+   "threshold": "report (close-ups stylised, not to scale); must not regress materially",
+   "pass": true,
+   "note": "part-zone IoU +0.007, window IoU +0.003; edge F -0.02 (canny on the ROUGH LOOK picks texture; the new teeth / chamfer band edges do not all line up with the drawing's stylised, taller leaf)"
+  },
+  {
+   "name": "Part outline IoU vs q34 trace (fixed 3/4 camera)",
+   "value": {
+    "silhouette_iou_window": 0.9429,
+    "iou_part_zone": 0.925,
+    "edge_f": 0.4478
+   },
+   "baseline_r1": {
+    "silhouette_iou_window": 0.9451,
+    "iou_part_zone": 0.9266,
+    "edge_f": 0.4564
+   },
+   "threshold": "report",
+   "pass": true,
+   "note": "-0.002 IoU: the slider's raised roof stands slightly prouder in the 3/4 view"
+  },
+  {
+   "name": "L2 per part rear_sight (side, IoU >= 0.95)",
+   "value": 0.9576,
+   "baseline_r1": 0.9552,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, all parts (private build)",
+   "value": "all pass",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (fit)",
+   "value": 0.9772,
+   "baseline_r1": 0.9771,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (excluded zones masked, fit)",
+   "value": 0.9308,
+   "baseline_r1": 0.9294,
+   "threshold": ">= 0.93",
+   "pass": true,
+   "note": "at the fit optimiser's noise level (see round 1)"
+  },
+  {
+   "name": "Part triangles (LOD0)",
+   "value": 4040,
+   "per_object": {
+    "rear_sight_block": 1276,
+    "rear_sight_leaf": 1558,
+    "rear_sight_slider": 488,
+    "handguard_retainer": 718
+   },
+   "baseline_r1": 3428,
+   "baseline_form": 2492,
+   "threshold": "plan floor 1800 (RIFLE_BUILD_PLAN 3.2); rifle <= 50000",
+   "pass": false,
+   "note": "rifle total with this module = 54758 (private build: form baseline + this module; the form build was already 53210, over the 50k ceiling, before the detail pass). This part +612 over r1 (+1548 over form): serrations, slider skirt + catches, chamfer band, bar, screws, pin. Trimmed already: teeth 13->11, leaf bevel angle 40 deg, screw segments."
+  },
+  {
+   "name": "B3 sight_rear sweep 0..6 deg",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1504,
+    "rest_clearance_mm": 0.1624,
+    "end_clearance_mm": 0.1547,
+    "steps": 60
+   },
+   "threshold": "0 intersections; clearance in [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "G5 static intersections involving this part",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "G5 / clearance-row gaps of this part",
+   "value": [
+    {
+     "a": "rear_sight_block",
+     "b": "receiver",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "dust_cover",
+     "b": "rear_sight_block",
+     "min_gap_mm": 0.04
+    },
+    {
+     "a": "gas_tube_rear_cap",
+     "b": "rear_sight_block",
+     "min_gap_mm": 0.04
+    },
+    {
+     "a": "rear_sight_block",
+     "b": "rear_sight_leaf",
+     "min_gap_mm": 0.1624
+    },
+    {
+     "a": "rear_sight_leaf",
+     "b": "rear_sight_slider",
+     "min_gap_mm": 0.15
+    },
+    {
+     "a": "handguard_retainer",
+     "b": "rear_sight_block",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "rear_sight_block",
+     "b": "upper_handguard",
+     "min_gap_mm": 0.5
+    },
+    {
+     "a": "gas_tube",
+     "b": "rear_sight_block",
+     "min_gap_mm": 0.0199
+    },
+    {
+     "a": "bolt_carrier",
+     "b": "rear_sight_block",
+     "min_gap_mm": 0.25
+    },
+    {
+     "a": "lower_handguard",
+     "b": "rear_sight_block",
+     "min_gap_mm": 0.0175
+    }
+   ],
+   "threshold": "butt 0.01-0.05; hinge 0.1-0.3; sliding 0.15-0.4",
+   "pass": true
+  },
+  {
+   "name": "B7 closed manifold (this part's 4 objects)",
+   "value": {
+    "rear_sight_block": [
+     0,
+     0,
+     0
+    ],
+    "rear_sight_leaf": [
+     0,
+     0,
+     0
+    ],
+    "rear_sight_slider": [
+     0,
+     0,
+     0
+    ],
+    "handguard_retainer": [
+     0,
+     0,
+     0
+    ]
+   },
+   "threshold": "0 boundary / multi-face / wire edges",
+   "pass": true
+  }
+ ],
+ "method": "private build (baseline form blend copied at round-1 start, unchanged since) with only Scripts/guns/rifle/parts/rear_sight.py rebuilt via rear_sight_dev.py; c2 part camera re-solved (rear_sight_dev.py camera) and the c2 window fixed for all round-2 iterations (review/detail/rear_sight/r2_window.json); r1 geometry re-rendered at the same camera from a faithful reconstruction (scratch/detail/rear_sight/rear_sight_r1.py, 3428 tris = r1) for the baseline; ROUGH LOOK via gunlib DetailKit.render_part_crop",
+ "iterations": [
+  "camera: r1cam (landmarks incl. receiver points) -> axis-measured prior + rear-sight landmarks, bound 10 -> bound 3 (final)",
+  "r2a contoured block (rounded shoulders, S side edge), ladder leaf with sawtooth across rails, notch blade, slider catches, slim link + pin + screws",
+  "r2b narrower deck, rounded transverse hinge bar, serrated outer fences, bigger catches",
+  "r2c full-width sawtooth, slider skirt back to the notch blade",
+  "r2d serrations on the slot-side edges, straight chamfer band (crisp S-lines)",
+  "r2e S-dip in the side edge; r2f dropping the traced slanted slot failed L2 (0.948) -> restored",
+  "r2g slider floor / catches above Z 40.7 and rear deck at 38.7 for the traced notch under the leaf (L2 0.958), front face 522.4",
+  "r2h-r2i teeth pitch 2.8, slot 5.6, final camera; tri trims -> r2"
+ ],
+ "honest_read": "Closer than r1 on every round-1 design tell for this module: the leaf now reads as a ladder (two serrated rails flanking a long deep slot), the rear end is one chunky notched assembly with big side clamps, the block has a swooping S edge with a chamfer band under the leaf rising into a rounded transverse bar at the front, a prominent pin head, a slim slotted link and extra screws. A blind judge will probably still pick ours: c2 draws the sight ~1.3x taller / longer relative to the block than the side view allows (the spec's stations win), so the block still looks big and the leaf lower; the traced slanted see-through slot reads as a small crack in the shoulder band; the dust cover (smooth, no steps), the charging handle and the gas tube cap in the same crop belong to other modules; and the render is clean CG next to a worn painted drawing.",
+ "outside_this_module": [
+  "recoil spring guide button + dust cover rear step: receiver_right owns them (not in c2)",
+  "dust cover stepped edges / ridge (receiver_right)",
+  "c2 'lower front lug' = bolt carrier charging handle (receiver_right)",
+  "curved shell right of the pin head = gas_tube_rear_cap"
+ ]
+}

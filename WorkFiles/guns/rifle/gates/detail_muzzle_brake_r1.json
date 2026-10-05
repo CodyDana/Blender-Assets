@@ -1,0 +1,149 @@
+{
+ "stage": "detail muzzle_brake round 1",
+ "date": "2026-10-05T01:03:10",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "Part outline IoU vs c3 trace (part ROI = window right of the brake's rear face; ref = traced c3 mask)",
+   "value": {
+    "silhouette_iou_part_roi": 0.8269,
+    "iou_after_similarity_fit": 0.8626,
+    "silhouette_iou_window": 0.8377,
+    "edge_f_2px": 0.4514
+   },
+   "baseline_before": {
+    "silhouette_iou_part_roi": 0.8107,
+    "silhouette_iou_window": 0.8264,
+    "edge_f_2px": 0.3947
+   },
+   "threshold": "report (close-ups are stylised and not to scale; no numeric gate set); must not regress",
+   "pass": true,
+   "note": "the outline is pinned by the side-trace L2 gate (X 848.8-880, dia 20.2); c3 draws the brake's rear section longer and the face shorter (a <= 12 % similarity fit only reaches 0.863), so the outline IoU cannot rise much without breaking L2. Edge F +0.057 (slot, rim and ring now line up)."
+  },
+  {
+   "name": "Part outline IoU vs q34 trace (part ROI)",
+   "value": {
+    "silhouette_iou_part_roi": 0.7622,
+    "iou_after_similarity_fit": 0.895,
+    "silhouette_iou_window": 0.779,
+    "edge_f_2px": 0.7078
+   },
+   "baseline_before": {
+    "silhouette_iou_part_roi": 0.7551,
+    "silhouette_iou_window": 0.7749,
+    "edge_f_2px": 0.6388
+   },
+   "threshold": "report",
+   "pass": true,
+   "note": "q34 draws the brake ~8 mm longer than the side trace: scale / shift explain it (0.895 after the similarity fit). Edge F +0.069."
+  },
+  {
+   "name": "L2 per part muzzle_brake (thin part: outer contour P95 <= 1 px, max <= 2 px)",
+   "value": {
+    "contour_p95_px": 1.0,
+    "contour_max_px": 1.414,
+    "iou_filled": 0.8997
+   },
+   "baseline": {
+    "contour_p95_px": 1.0,
+    "contour_max_px": 1.0,
+    "iou_filled": 0.9193
+   },
+   "threshold": "P95 <= 1.0, max <= 2.0",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, all 21 parts (private build: base + this module)",
+   "value": "21 / 21",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU (fit)",
+   "value": 0.9764,
+   "baseline": 0.9769,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (excluded zones masked, fit)",
+   "value": 0.9308,
+   "baseline": 0.931,
+   "threshold": ">= 0.93",
+   "pass": true,
+   "note": "identity IoU 0.9276 vs baseline 0.9278 (the rim bead adds ~2 top-view px)"
+  },
+  {
+   "name": "L2 true-left vs RIGHT-labelled panel",
+   "value": 0.9166,
+   "baseline": 0.9167,
+   "threshold": ">= 0.88",
+   "pass": true
+  },
+  {
+   "name": "Part triangles (LOD0)",
+   "value": 1862,
+   "baseline": 1870,
+   "threshold": "no growth (rifle LOD0 <= 50k; the form build is 49118 without the mag)",
+   "pass": true,
+   "note": "rifle total with this part 53202 (incl. mag 4092)"
+  },
+  {
+   "name": "Closed manifold",
+   "value": {
+    "boundary_edges": 0,
+    "multi_face_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "shells": 1
+   },
+   "threshold": "0 boundary / multi-face / wire / ngons / zero-area, 1 shell",
+   "pass": true
+  },
+  {
+   "name": "G5 at rest: intersections with barrel / FSB / post / cleaning rod",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "Butt gaps (clearance row 0.01-0.05)",
+   "value": {
+    "barrel": 0.04,
+    "front_sight_block": 0.03
+   },
+   "threshold": "[0.01, 0.05] mm",
+   "pass": true,
+   "note": "against the base.blend copies of barrel and front_sight_block; the front_sight builder keeps nothing above r 10.1 at X 847.6-848.82"
+  },
+  {
+   "name": "B3 sweep",
+   "value": "n/a",
+   "threshold": "moving parts only",
+   "pass": true,
+   "note": "the brake is fixed (bone muzzle_device, joint fixed to barrel)"
+  }
+ ],
+ "method": "c3 + q34 as the 3D-shape authority (the slot back-projected from c3 onto the cylinder through the solved camera; the side panels on a mm grid for X/Z); body = one lofted solid whose sections carry the heavy rim (muzzle_brake_geo.section); slot cut by a cutter whose outer-edge round is real geometry; no bevel modifier",
+ "method_changes": [
+  "iteration 1: symmetric through-slots opened the background through the face and the slot in c3 / q34 -> right side only (spec_proposal.json)",
+  "iteration 2: boolean slant cut + weighted bevel left the rim SHARP (XZ sections): Blender's clamp-overlap limit is global and a 0.036 mm boolean edge collapsed every bevel -> rim built into lofted sections",
+  "iteration 4: the unclamped weighted bevel on the slot threw vertices out (bl.bevel guard) -> slot round built into the cutter"
+ ],
+ "files": {
+  "module": "Scripts/guns/rifle/parts/muzzle_brake.py",
+  "geometry": "Scripts/guns/rifle/parts/muzzle_brake_geo.py",
+  "loop": "Scripts/guns/rifle/parts/muzzle_brake_dev.py",
+  "pairs": "WorkFiles/guns/rifle/review/detail/muzzle_brake/r1_pair_c3.png, r1_pair_q34.png",
+  "blind": "WorkFiles/guns/rifle/review/detail_blind/muzzle_brake_r1/ (key: review/detail/muzzle_brake/key_r1.json)",
+  "spec_proposal": "WorkFiles/guns/rifle/review/detail/muzzle_brake/spec_proposal.json",
+  "result": "WorkFiles/guns/rifle/review/detail/muzzle_brake/r1_result.json"
+ },
+ "known_differences": [
+  "the detent latch reads as a thin clean plate; c3 draws a chunkier knob placed further back over the FSB (q34: at the junction)",
+  "the face and lip run ~4 mm further forward than c3 draws (pinned by the side trace, 880.0 overall)",
+  "materials: the ROUGH LOOK has no wear on the rim edges (texture stage, not design)"
+ ]
+}

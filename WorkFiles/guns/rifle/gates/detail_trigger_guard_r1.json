@@ -1,0 +1,158 @@
+{
+ "stage": "detail trigger_guard round 1",
+ "date": "2026-10-05T00:48:04",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "Part IoU vs close-up trace, c6 (guard + trigger steel below the flange line, X 297-356; aligned = best scale/shift in the part's own frame)",
+   "value": {
+    "raw": 0.5176,
+    "aligned": 0.576,
+    "before_raw": 0.4909,
+    "before_aligned": 0.5735
+   },
+   "threshold": "report (no numeric bar set); must not fall below before",
+   "pass": true
+  },
+  {
+   "name": "Part IoU vs close-up trace, c1",
+   "value": {
+    "raw": 0.6572,
+    "aligned": 0.6572,
+    "before_raw": 0.6535,
+    "before_aligned": 0.6541
+   },
+   "threshold": "report (no numeric bar set); must not fall below before",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, side (trigger_guard; thin-part rule)",
+   "value": {
+    "p95_px": 1.0,
+    "max_px": 1.414,
+    "iou": 0.7876
+   },
+   "threshold": "P95 <= 1.0 px, max <= 2 px",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, side (trigger; thin-part rule)",
+   "value": {
+    "p95_px": 1.0,
+    "max_px": 1.0,
+    "iou": 0.947
+   },
+   "threshold": "P95 <= 1.0 px, max <= 2 px",
+   "pass": true
+  },
+  {
+   "name": "L2 side IoU whole rifle (fit) / top IoU (valid), private build",
+   "value": {
+    "side": 0.9762,
+    "top": 0.931
+   },
+   "threshold": ">= 0.96 / >= 0.93",
+   "pass": true
+  },
+  {
+   "name": "L2 receiver / mag_catch / pistol_grip labels unchanged pass",
+   "value": {
+    "receiver": true,
+    "mag_catch": true,
+    "pistol_grip": true
+   },
+   "threshold": "all pass",
+   "pass": true
+  },
+  {
+   "name": "Part triangles (trigger + trigger_guard)",
+   "value": {
+    "trigger": 1200,
+    "trigger_guard": 1366,
+    "total": 2566,
+    "before": {
+     "trigger": 904,
+     "trigger_guard": 2870,
+     "total": 3774
+    }
+   },
+   "threshold": "no growth (rifle <= 50k LOD0)",
+   "pass": true
+  },
+  {
+   "name": "Rifle LOD0 triangles without the magazine (form snapshot + this part only)",
+   "value": 47910,
+   "threshold": "<= 50000 (form stage 49118)",
+   "pass": true
+  },
+  {
+   "name": "Closed manifold (both objects)",
+   "value": {
+    "trigger": {
+     "boundary": 0,
+     "multi": 0,
+     "shells": 1
+    },
+    "trigger_guard": {
+     "boundary": 0,
+     "multi": 0,
+     "shells": 1
+    }
+   },
+   "threshold": "0 / 0, 1 shell",
+   "pass": true
+  },
+  {
+   "name": "B3 trigger sweep 0..12 deg (step min(1 deg, c_min/r_max))",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "trigger_guard",
+    "steps": 84
+   },
+   "threshold": "0 intersections; clearance in [0.10, 0.30]",
+   "pass": true
+  },
+  {
+   "name": "B3 mag_release sweep 0..10 deg",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1791,
+    "min_with": "trigger_guard",
+    "steps": 37
+   },
+   "threshold": "0 intersections; clearance in [0.10, 0.30]",
+   "pass": true
+  },
+  {
+   "name": "G5 static intersections involving trigger / trigger_guard",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "G5 butt gaps of this part's contacts",
+   "value": {
+    "pistol_grip-trigger_guard": 0.02,
+    "receiver-trigger_guard": 0.0177,
+    "receiver-trigger": 0.25,
+    "trigger-trigger_guard": 0.25,
+    "mag_catch-trigger_guard": 0.1791,
+    "magazine-trigger_guard": 0.4685,
+    "rivets-trigger_guard": 0.5
+   },
+   "threshold": ">= 0.01 mm",
+   "pass": true
+  }
+ ],
+ "method": "private snapshot of the form build (scratch/detail/trigger_guard/base.blend), this part rebuilt into it, ROUGH LOOK renders at the cameras rifle_detail.py solved (gunlib DetailKit), part masks from the close-ups (steel, not wood, inside the part zone), side L2 via rifle_silhouette.run on the private npz; harness Scripts/guns/rifle/parts/trigger_guard_dev.py",
+ "iterations": {
+  "r1_i1": "smooth arcs R 7.5/7 + 0.9 mm roll: looked like thin wire, side L2 failed (max 5 px)",
+  "r1_i2": "trace legs/thickness, R 10/9.5, lip gusset, 0.6 roll; L2 back to max 1.41",
+  "r1_i3": "fatter rear inner corner (c6), trigger mid rear edge",
+  "r1_i4": "stamped strip step (double contour of c1/c6)",
+  "r1_final": "pin boss + diamond head, trigger roll 0.45, cheek bottom -51.9 (L2 label convention), second bevel pass at 55 deg"
+ },
+ "blind_pair": "WorkFiles/guns/rifle/review/detail_blind/trigger_guard_r1 (key: review/detail/trigger_guard/key_r1.json)"
+}

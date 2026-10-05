@@ -325,9 +325,16 @@ m0, m1 = bb(["magazine", "magazine_floor_plate"])
 l4("magazine.thickness", bb(["magazine"])[1][1] - bb(["magazine"])[0][1] - 2.0, K["magazine"]["thickness"],
    "body bounds Y minus the two 1.0 mm ribs")
 l4("magazine.bottom_Z", m0[2], K["magazine"]["bottom_Z"], "magazine + floor plate bounds")
-mb0, mb1 = bb(["muzzle_brake"])
-l4("muzzle_brake.length", mb1[0] - mb0[0], K["muzzle_brake"]["length"], "brake bounds X")
-l4("muzzle_brake.dia", mb1[2] - mb0[2], K["muzzle_brake"]["dia"], "brake bounds Z")
+# the brake BODY (the sheet's length / diameter): without the small detent knob on top at the junction (|Y| < 2.7,
+# Z > 8.5, X < 853.5), which the side views do not show (detail round 2 added it from c3); diameter = 2 x the largest
+# radius about the bore axis
+Vb = GEO["muzzle_brake"][0]
+knob = (np.abs(Vb[:, 1]) < 2.7) & (Vb[:, 2] > 8.5) & (Vb[:, 0] < 853.5)
+Vb = Vb[~knob]
+l4("muzzle_brake.length", Vb[:, 0].max() - Vb[:, 0].min(), K["muzzle_brake"]["length"],
+   "brake body bounds X (detent knob excluded)")
+l4("muzzle_brake.dia", 2.0 * float(np.hypot(Vb[:, 1], Vb[:, 2]).max()), K["muzzle_brake"]["dia"],
+   "brake body: 2 x max radius about the bore (detent knob excluded)")
 res["L3_pass"] = all(f["pass"] for f in res["L3"])
 res["L4_pass"] = all(d["pass"] for d in res["L4"])
 (SCRATCH / "measure_result.json").write_text(json.dumps(res, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)))

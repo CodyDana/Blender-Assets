@@ -1,19 +1,20 @@
-"""Stage 2 form, continued: sights, fore-end, barrel group, front sight, brake, trigger group, furniture, butt,
-selector and the magazine block-in (frame M, mm). See rifle_parts.py for the rules."""
+"""Stage 2 form, continued: the parts that are NOT in the detail pass (frame M, mm) - fore-end (gas tube cap, upper
+and lower handguards, front band), gas tube / piston / block, barrel, buttstock, rear sling swivel and the stock
+hardware - plus the shared helpers (xprism / ycyl / xcyl) and interface constants (BORE_R, TUBE_Z / TUBE_R,
+ROD_Z / ROD_R, CATCH_PIVOT) the detail-part modules import. The detailed parts live in Scripts/guns/rifle/parts/
+(detail pass 2026-10-04). See rifle_parts.py for the rules."""
 from __future__ import annotations
 
-import json
 import math
 
 import numpy as np
 
-from rifle_common import SPEC, TRACE
+from rifle_common import SPEC
 from gunlib import geo2d as G
 from gunlib import mesh as MS
-from gunlib.mesh import Mesh
 from gunlib.parts import PartDef
 import rifle_parts as RP
-from rifle_parts import GAP, WO, COVER_O, ledge_z, prof
+from rifle_parts import GAP, prof
 
 BORE_R = 7.5                     # barrel radius (dia 15.0)
 TUBE_Z, TUBE_R = 24.2, 9.7       # gas tube axis and radius
@@ -36,76 +37,8 @@ def xcyl(y, z, r, x0, x1, n=32):
     return MS.cylinder((x0, y, z), (x1, y, z), r, n)
 
 
-# ======================================================================================== rear sight
-LEAF_PIVOT = (504.0, 41.0)
-KNUCKLE_R = 5.6
-
-
-def rear_sight_block() -> PartDef:
-    """Full-width block (43.5) on the front trunnion: low rear part under the leaf with the traced see-through
-    sliver, tall front part (to Z 44.6) carrying the retainer lever on its side; a channel (Y +-6.2) holds the leaf,
-    whose knuckle sits in a cylindrical seat round the hinge."""
-    # the see-through gap under the leaf follows the trace's hole ring (LEFT_outline parts.rear_sight, the negative
-    # ring) point for point: a 2 mm slit Z 38.7-40.9 from X 465.8 to the hinge block at X 487.5, with the narrow
-    # (~1.3 mm) slanted slot the trace shows dropping from it to (472.5, 34.8). Form fix round 1: the round-0 wedge
-    # down to Z 34.9 left 15 traced-solid px open
-    body = [(454.92, 10.60), (485.28, 10.60), (485.28, 13.12), (523.98, 13.12), (523.98, 34.3), (523.0, 34.3),
-            (523.0, 41.6), (518.7, 43.6), (516.3, 44.6), (497.5, 44.6), (487.5, 44.2), (487.5, 40.4),
-            (481.0, 39.7), (477.3, 37.4), (476.1, 37.7), (474.9, 36.1), (472.5, 34.8), (471.9, 35.5),
-            (474.3, 38.0), (473.7, 38.7), (466.4, 38.7), (465.8, 39.2),
-            (465.8, 40.3), (452.4, 40.3), (452.4, 37.6), (454.92, 34.4)]
-    sol = [MS.prism(body, -COVER_O, COVER_O)]
-    cut = [MS.box(486.0, 509.5, -6.2, 6.2, 40.4, 50.0),                                   # leaf channel
-           ycyl(LEAF_PIVOT[0], LEAF_PIVOT[1], KNUCKLE_R + 0.2, -6.2, 6.2, 40),             # hinge seat
-           MS.box(456.5, 467.0, -7.2, 7.2, 39.0, 50.0)]                                    # slider clearance
-    cut.append(xcyl(0.0, TUBE_Z, TUBE_R + GAP, 519.0, 530.0, 32))                         # gas-tube rear recess
-    return PartDef("rear_sight_block", sol, cutters=cut, cls="M-chamfer")
-
-
-def rear_sight_leaf() -> PartDef:
-    px, pz = LEAF_PIVOT
-    zb, zt = 40.6, 44.4                         # leaf bottom / top at rest
-    leaf = MS.box(450.9, px, -6.0, 6.0, zb, zt)
-    strip = MS.box(452.0, px - 6.0, -2.4, 2.4, zt - 0.1, zt + 0.6)            # raised centre strip
-    knuckle = ycyl(px, pz, KNUCKLE_R, -6.0, 6.0, 40)
-    # notch plate: tall transverse plate at the rear end with a square-bottomed U notch (2.0 x 2.5, bottom 45.5)
-    plate = MS.box(448.7, 451.0, -6.0, 6.0, zb - 0.2, 48.0)
-    notch = MS.box(447.0, 452.5, -1.0, 1.0, 45.5, 50.0)
-    # slider riding on the leaf (wraps it; 0.02 gap)
-    slider_o = G.rounded_rect(457.5, 465.5, zb - 1.0, 48.5, 0.8, 2)
-    slider = MS.prism(slider_o, -7.0, 7.0)
-    slider_cut = MS.box(457.0, 466.0, -6.15, 6.15, zb - 0.15, zt + 0.75)     # adjustable: sliding row
-    return PartDef("rear_sight_leaf", [leaf], unions=[strip, knuckle, plate], cutters=[notch], bone="sight_rear",
-                   cls="M-chamfer", recipe=[(0.3, 1, 30.0)],
-                   joint={"type": "hinge", "parent": "rear_sight_block", "pivot_M": [px, 0.0, pz],
-                          "axis_M": [0, 1, 0], "range_deg": [0.0, 6.0], "clearance_mm": [0.1, 0.3]}) , \
-        PartDef("rear_sight_slider", [slider], cutters=[slider_cut], bone="sight_rear", cls="M-chamfer",
-                recipe=[(0.25, 1, 30.0)], spec_id="rear_sight_leaf",
-                joint={"type": "sliding", "parent": "rear_sight_leaf", "clearance_mm": [0.15, 0.4],
-                       "note": "range adjuster; no bone (static in the clips)"})
-
-
-def retainer() -> PartDef:
-    yb = -COVER_O - GAP
-    boss_c, end_c = (516.5, 41.0), (500.0, 24.0)   # read off a 10x zoom of the LEFT panel
-    d = np.subtract(end_c, boss_c)
-    L = float(np.hypot(*d))
-    a = math.degrees(math.atan2(d[1], d[0]))
-    # arm outline: stadium from boss to end, 6 mm wide at the boss tapering to 5.2
-    t = np.linspace(-90, 90, 13)
-    end_arc = G.arc(L, 0, 3.0, -90, 90, 13)
-    boss_arc = G.arc(0, 0, 3.4, 90, 270, 13)
-    arm = G.rot(np.vstack([end_arc, boss_arc]), a, (0, 0)) + boss_c
-    sol = [MS.prism(arm, yb - 2.0, yb)]
-    uni = [ycyl(boss_c[0], boss_c[1], 3.4, yb - 2.9, yb, 32)]
-    cut = [ycyl(end_c[0], end_c[1], 1.0, yb - 4, yb + 1, 16)]
-    left = ycyl(boss_c[0], boss_c[1], 3.4, COVER_O + GAP, COVER_O + GAP + 1.8, 32)
-    return PartDef("handguard_retainer", sol + [left], unions=uni, cutters=cut, cls="S-cut",
-                   recipe=[(0.3, 1, 30.0)], spec_id="handguard_retainer_lever")
-
-
 # ======================================================================================== fore-end
-def upper_hg_section(zt, half_w=15.5, zb=13.12, n=28):
+def upper_hg_section(zt, half_w=15.5, zb=13.12, n=24):     # (24: integration-round budget; every user takes the default)
     zc = zt - half_w
     a = np.linspace(0, math.pi, n)
     arc = np.c_[half_w * np.cos(a), zc + half_w * np.sin(a)]
@@ -130,7 +63,7 @@ def gas_tube_rear_cap() -> PartDef:
 
 
 def upper_handguard() -> PartDef:
-    xs = np.r_[np.linspace(535.02, 637.8, 13), 639.5, 640.88]
+    xs = np.r_[535.02, 540.0, 553.0, 566.0, 580.0, 594.0, 607.0, 620.0, 629.0, 637.8, 639.5, 640.88]   # the top polyline's knots (budget; was 13 even stations)
     rings = [upper_hg_section(upper_top(x), 15.5, 13.12) for x in xs]
     rings3 = [np.c_[np.full(len(r), x), r[:, 0], r[:, 1]] for x, r in zip(xs, rings)]
     body = MS.loft(rings3)
@@ -142,7 +75,19 @@ def upper_handguard() -> PartDef:
         for s in (-1, 1):
             cut.append(MS.prism(o, min(s * 12.5, s * 20), max(s * 12.5, s * 20)))
     return PartDef("upper_handguard", [body], unions=[tenon], cutters=cut, cls="W-round", slot="M_AR01_Furniture",
-                   recipe=[(1.0, 2, 35.0)], joint={"type": "butt", "parent": "gas_tube", "gap_mm": [0.01, 0.05]})
+                   recipe=[(1.0, 2, "W", _upper_hg_bevel)], joint={"type": "butt", "parent": "gas_tube", "gap_mm": [0.01, 0.05]})
+
+
+def _upper_hg_bevel(mid, d, n1, n2, dih):
+    """The W-round 1.0 pass on every >= 35 deg edge except the concave tenon junction at the rear face: its fillet
+    grew 0.02 behind the face into the rear cap (G5, integration round)."""
+    if dih < 35.0:
+        return 0.0
+    if mid[0] > 639.2:                               # the front end inside the band's pocket (hidden): its concave
+        return 0.0                                   # step fillet reached into the band (G5)
+    if mid[0] < 535.6 and abs(mid[1]) < 14.9 and (mid[2] <= 25.5 or math.hypot(mid[1], mid[2] - 25.5) < 14.9):
+        return 0.0                                   # inside the tenon's outline (straight sides + arc)
+    return 1.0
 
 
 def lower_bottom(x):
@@ -174,7 +119,7 @@ def lower_hg_section(x, top=13.1, n_c=6):
 
 
 def lower_handguard() -> PartDef:
-    xs = np.r_[np.linspace(485.32, 512.0, 6), np.linspace(516.0, 636.7, 7), 639.5, 640.88]
+    xs = np.r_[np.linspace(485.32, 512.0, 6), np.linspace(516.0, 636.7, 4), 639.5, 640.88]   # (4: the bottom is straight there; budget)
     rings = []
     for x in xs:
         s = lower_hg_section(x)
@@ -245,394 +190,15 @@ def gas_block() -> PartDef:
 def barrel() -> PartDef:
     b = xcyl(0.0, 0.0, BORE_R, 433.8, 848.78, 48)
     cut = [xcyl(0.0, 0.0, 3.81, 820.0, 849.5, 32),                 # bore, >= 2 calibres deep
-           MS.revolve([(0.0, 3.81 + 0.6), (0.6, 3.81), (0.61, 0.0)], (848.78 + 0.001, 0, 0), (-1, 0, 0), 32),
-           xcyl(0.0, 0.0, 5.6, 433.0, 446.0, 32), xcyl(0.0, 0.0, 3.81, 440.0, 460.0, 32)]       # chamber
+           MS.revolve([(0.0, 3.81 + 0.6), (0.6, 3.81), (0.61, 0.0)], (848.78 + 0.001, 0, 0), (-1, 0, 0), 32)]
+    # (integration round, budget: the chamber cuts at the rear end are gone; that end sits inside the carrier's
+    # pocket, never seen)
     return PartDef("barrel", [b], cutters=cut, cls="M-chamfer", recipe=[(0.4, 1, 30.0)])
-
-
-def cleaning_rod() -> PartDef:
-    r = xcyl(0.0, ROD_Z, ROD_R, 641.0, 806.8, 16)
-    head = MS.box(806.8 - 0.4, 811.98, -2.6, 2.6, ROD_Z - 2.8, ROD_Z + 2.4)
-    return PartDef("cleaning_rod", [r], unions=[head], cls="M-round", recipe=[(0.4, 2, 30.0)])
-
-
-# ======================================================================================== front sight + brake
-EAR_IN, EAR_OUT = 8.2, 10.7
-
-
-def front_sight_block() -> PartDef:
-    base = [(806.1, -7.9), (809.7, -9.1), (810.3, -14.0), (813.0, -15.8), (830.0, -15.8), (832.4, -14.5),
-            (836.0, -14.3), (837.8, -12.7), (837.8, -9.6), (839.9, -8.7), (839.9, 8.7), (837.2, 11.1),
-            (806.1, 11.1)]
-    collar_r = 11.0
-    side = MS.prism(base, -collar_r, collar_r)
-    sec = G.ccw(np.vstack([G.arc(0, 0, collar_r, -60, 240, 31), [[-5.0, -18.0], [5.0, -18.0]]]))
-    front_collar = xcyl(0.0, 0.0, 8.7, 839.85, 842.8, 32)
-    front_collar2 = xcyl(0.0, 0.0, 10.1, 842.6, 848.78, 32)
-    # ears run down into the round collar (c3: they rise straight from it). Round 0 stopped them at Z 9.0 and kept
-    # a full-width 0.2 mm slab at Z 10.9-11.1, which showed as thin fins beside the collar in the early crop
-    # (form fix round 1: ears from Z 2.0, slab removed)
-    ear_o = [(807.6, 2.0), (807.6, 9.0), (818.2, 45.5), (819.0, 49.4), (832.2, 49.4), (833.0, 47.0), (833.0, 2.0)]
-    ear_o = G.fillet(G.ccw(np.array(ear_o, float)), 1.6, 3)
-    ears = [MS.prism(ear_o, EAR_IN, EAR_OUT), MS.prism(ear_o, -EAR_OUT, -EAR_IN)]
-    # boss rings (raised 0.4) round the hole on each ear's outer face
-    boss = [ycyl(824.7, 29.9, 3.0, EAR_OUT - 0.1, EAR_OUT + 0.4, 20), ycyl(824.7, 29.9, 3.0, -EAR_OUT - 0.4, -EAR_OUT + 0.1, 20)]
-    plunger = MS.cylinder((840.7, 0, 7.0), (840.7, 0, 9.55), 1.1, 16)
-    # cross pin: round heads proud 0.8 on the collar sides (c3); the TOP's 37 mm wide item at X ~800 does not
-    # agree with c3 or the side view and is not modelled
-    pin = ycyl(826.0, -5.0, 2.2, -11.8, 11.8, 20)
-    p = PartDef("front_sight_block", [side], unions=[front_collar, front_collar2] + ears + boss + [plunger, pin],
-                cls="M-chamfer-front", recipe=[(0.6, 1, 30.0)], spec_id="front_sight_block")
-    # form fix round 2: the box that kept everything at X 839-840 left the square base prism's corners (+-11 x 8.7)
-    # outside the round collar as a 0.9 mm sliver at the brake junction; the section now clips the whole base
-    p.section_intersect_pre = [xprism(sec, 800.0, 840.0), MS.box(839.95, 850.0, -40, 40, -40, 60),
-                               MS.box(800.0, 850.0, -40, 40, 11.2, 60)]
-    win = G.ccw(np.array([(813.7, 11.8), (827.2, 11.8), (827.2, 21.6), (818.6, 21.6)], float))
-    win = G.fillet(win, 1.2, 3)
-    p.cutters = [xcyl(0.0, 0.0, BORE_R + GAP, 800.0, 850.0, 48),
-                 MS.prism(win, -12.0, 12.0),
-                 ycyl(824.7, 29.9, 1.75, -12.0, 12.0, 16),
-                 MS.box(806.38, 812.0, -2.6 - GAP, 2.6 + GAP, ROD_Z - 2.8 - GAP, ROD_Z + 2.4 + GAP),    # rod head seat
-                 xcyl(0.0, ROD_Z, ROD_R + GAP, 800.0, 812.5, 16)]
-    return p
-
-
-def front_sight_post() -> PartDef:
-    drum = ycyl(825.3, 31.0, 4.0, -EAR_IN + GAP, EAR_IN - GAP, 32)
-    post = MS.cylinder((825.3, 0, 34.0), (825.3, 0, 45.0), 1.0, 16)
-    return PartDef("front_sight_post", [drum], unions=[post], cls="M-round", recipe=[(0.3, 2, 30.0)],
-                   spec_id="front_sight_ears_post")
-
-
-def muzzle_brake() -> PartDef:
-    r = 10.1
-    x0, x1 = 848.82, 880.0
-    body = xcyl(0.0, 0.0, r, x0, 880.0, 40)
-    # slant cut: plane through (862.1, +r) toward the bottom lip, 40.8 deg from vertical
-    a = math.radians(40.8)
-    dvec = np.array([math.sin(a), -math.cos(a)])
-    p0 = np.array([873.0, 0.0]) - dvec * (12.0 / math.cos(a))     # traced slant: X 873.0 at Z 0 (LS fit)
-    far = p0 + dvec * 40
-    cutp = [p0 - dvec * 5, far, far + np.array([30, 0]), (p0 - dvec * 5) + np.array([30, 30])]
-    cut = [MS.prism(np.array(cutp), -15.0, 15.0),
-           xcyl(0.0, 0.0, 7.0, 852.0, 890.0, 48),               # expansion chamber (thin worn rim at the cut)
-           xcyl(0.0, 0.0, 4.1, 846.0, 853.0, 32),                # bullet hole through the rear wall
-           MS.prism(G.rounded_rect(860.5, 869.5, -3.2, 3.2, 3.1, 4), -14.0, -5.0)]   # side scallop, right side (c3)
-    return PartDef("muzzle_brake", [body], cutters=cut, bone="muzzle_device", cls="M-chamfer-front",
-                   recipe=[(0.7, 2, 30.0)], joint={"type": "fixed", "parent": "barrel"})
-
-
-# ======================================================================================== trigger group
-TRIG_PIVOT = (318.0, -20.0)
-CATCH_PIVOT = (362.0, -50.0)
-
-
-def trigger() -> PartDef:
-    P = prof("trigger", 0.4)
-    blade = MS.prism(P, -3.0, 3.0)
-    stem = [(313.6, -35.2), (321.2, -35.2), (320.6, -21.0), (315.4, -21.0)]
-    uni = [MS.prism(stem, -3.0, 3.0), ycyl(TRIG_PIVOT[0], TRIG_PIVOT[1], 3.0, -3.0, 3.0, 24)]
-    cut = [ycyl(TRIG_PIVOT[0], TRIG_PIVOT[1], 1.2, -4, 4, 16)]
-    return PartDef("trigger", [blade], unions=uni, cutters=cut, bone="trigger", cls="C-fillet",
-                   recipe=[(0.6, 2, 30.0)],
-                   joint={"type": "hinge", "parent": "receiver", "pivot_M": [TRIG_PIVOT[0], 0, TRIG_PIVOT[1]],
-                          "axis_M": [0, 1, 0], "range_deg": [0.0, 12.0], "clearance_mm": [0.1, 0.3]})
-
-
-def trigger_guard() -> PartDef:
-    P = prof("trigger_guard", 0.55)
-    # the loop's top points (Z -34.96..-34.6) straddled the flange bottom plane Z -34.8, leaving a 0.16 mm sliver
-    # that the 0.6 mm bevel collapsed (non-manifold after finish() once the build frame moved): lift them into the
-    # flange (the joint is hidden inside the flange)
-    P = P.copy()
-    P[P[:, 1] > -35.0, 1] = -34.7
-    loop = MS.prism(P, -5.0, 5.0)
-    xs = np.array([252.0, 255.0, 300.0, 360.0, 367.9])
-    top = [(x, ledge_z(x) - GAP) for x in xs]
-    flange = MS.prism([(252.0, -34.8), (367.9, -34.8)] + top[::-1], -WO, WO)
-    # catch housing cheeks either side of the catch tongue + the catch pin with heads
-    cheek_o = [(354.8, -34.82), (367.6, -34.82), (367.6, -46.5), (365.6, -51.5), (354.8, -51.5)]
-    # cheeks 0.02 inside the loop faces (Y 5.0): coplanar faces left sub-micron bevel vertices that finish() merged
-    uni = [flange, MS.prism(cheek_o, 3.75, 4.98), MS.prism(cheek_o, -4.98, -3.75),
-           ycyl(CATCH_PIVOT[0], CATCH_PIVOT[1], 1.5, -5.6, 5.6, 20),
-           ycyl(CATCH_PIVOT[0], CATCH_PIVOT[1], 2.2, 4.99, 5.6, 24), ycyl(CATCH_PIVOT[0], CATCH_PIVOT[1], 2.2, -5.6, -4.99, 24)]
-    cut = [MS.box(301.5, 329.0, -3.25, 3.25, -40.0, -27.0),                 # trigger slot through the flange
-           MS.box(352.0, 355.6, -3.75, 3.75, -34.9, -51.6)]                 # catch tongue relief in the front leg
-    return PartDef("trigger_guard", [loop], unions=uni, cutters=cut, cls="S-bend",
-                   recipe=[(0.6, 2, 40.0)])
-
-
-def mag_catch() -> PartDef:
-    P = prof("mag_catch", 0.4)
-    P = G.clip_x(G.clip_y(P, None, -34.9), 355.45, 368.3)
-    cx, cz = CATCH_PIVOT
-    tongue = MS.prism(G.clip_y(P, -54.0, None), -3.5, 3.5)
-    paddle = MS.prism(G.clip_y(P, None, -54.0), -5.0, 5.0)
-    # top cut to an arc about the pivot (r 15.0): rotation-invariant clearance under the flange
-    r = 15.0
-    arch = np.vstack([[[cx + r, cz], [cx + 40, cz], [cx + 40, cz + 40], [cx - 40, cz + 40], [cx - r, cz]],
-                      G.arc(cx, cz, r, 180, 0, 49)[1:-1]])
-    cut = [MS.prism(G.ccw(arch), -6.0, 6.0), ycyl(cx, cz, 1.5 + 0.2, -6, 6, 20)]
-    return PartDef("mag_catch", [tongue], unions=[paddle], cutters=cut, bone="mag_release", cls="S-cut",
-                   recipe=[(0.3, 1, 30.0)],
-                   joint={"type": "hinge", "parent": "receiver", "pivot_M": [cx, 0, cz], "axis_M": [0, -1, 0],
-                          "range_deg": [0.0, 10.0], "direction": "+ = top rearward (release)",
-                          "clearance_mm": [0.1, 0.3]})
+# ======================================================================================== trigger group interface
+CATCH_PIVOT = (362.0, -50.0)    # mag catch pin: the catch (parts/receiver_right) and its cheeks (parts/trigger_guard)
 
 
 # ======================================================================================== furniture
-def grip_outline():
-    P = G.clean_smooth(SPEC.profile("pistol_grip"), 1.4, 1.8, 35.0)
-    top = P[:, 1] > -37.6
-    P[top & (P[:, 0] > 244.0) & (P[:, 0] < 301.5), 1] = -34.82
-    zb = SPEC.key["grip"]["bottom_Z"]
-    P[:, 1] = -34.82 + (P[:, 1] + 34.82) * ((zb + 34.82) / (P[:, 1].min() + 34.82))
-    P = G.dedupe(P, 0.05)
-    return P
-
-
-# ---- pistol grip (form fix round 1): a LOFT of rounded sections, not a slab with edge bevels.
-# The slab (flat +-15 sides, 7.5 mm weighted bevel) clamped to almost nothing on the dense traced outline: girth
-# 141 mm and a slab look in the 3/4 view. The spec's section is "a rounded oblong (30 wide), flatter sides where the
-# checkering sits, straps R 8-10"; the side outline stays the trace. Construction:
-#   rings   horizontal sections at Z levels (the top is the horizontal flange joint); each ring is the
-#           perpendicular section (rounded rectangle D x W, strap radius R, sides crowned C1-smoothly by `crown`)
-#           stretched along X onto the outline's back..front interval at that Z (D = interval * cos(rake));
-#   bottom  the rings run on past the heel / toe and the traced bottom chain is cut with a boolean (flat end),
-#           then the bottom edges get a 1.0 mm round (2 seg) and the flange edge a 0.5 mm break;
-#   panels  checkered panel border = real geometry: a 0.6 mm recess that follows the rounded side (panel prism
-#           minus the loft shrunk 0.6 in Y), border bevel 0.3; the diamonds go in the normal map.
-GRIP_RAKE = 22.35          # axis rake from vertical (spec)
-GRIP_W = float(SPEC.dims("pistol_grip")["width_Y"])   # section width Y (spec; real AK grips 30-36 mm, rifle_h1)
-GRIP_R = float(SPEC.dims("pistol_grip").get("strap_R_front", 10.0))   # front strap R 9 (spec 8-10; R33)
-GRIP_R_BACK = float(SPEC.dims("pistol_grip").get("strap_R_back", GRIP_R))   # back strap (palm swell) R 13.5 (R33)
-GRIP_CROWN = 0.5           # side crown at mid-depth (flatter sides where the checkering sits)
-GRIP_NR = 30               # vertices per ring
-GRIP_Z_TOP = -34.82
-GRIP_Z_BACK_CUT = -117.21  # heel: lowest Z with an exact back point (the outline's most rearward heel point)
-GRIP_Z_FRONT_CUT = -127.78  # toe: the toe flare's foremost point (vertical tangent; round 1 cut 0.8 mm lower, -128.6)
-GRIP_Z_END = -137.0
-CARRY_OUT = 0.02           # rings below the heel / toe cut levels: this far outside the outline (round 1: 0.6)
-
-
-def _hits_x(P, z):
-    Q = np.vstack([P, P[:1]])
-    xs = []
-    for a, b in zip(Q[:-1], Q[1:]):
-        if (a[1] - z) * (b[1] - z) <= 0 and a[1] != b[1]:
-            t = (z - a[1]) / (b[1] - a[1])
-            xs.append(a[0] + t * (b[0] - a[0]))
-    return (min(xs), max(xs)) if len(xs) >= 2 else None
-
-
-def _rrect2(a0, a1, b0, b1, ra, rb, seg=24):
-    """Rounded rectangle with corner radius ra at the a0 end (back strap) and rb at the a1 end (front strap)."""
-    pts = []
-    for (cx, cy, r, s0) in ((a1 - rb, b0 + rb, rb, -90), (a1 - rb, b1 - rb, rb, 0), (a0 + ra, b1 - ra, ra, 90),
-                            (a0 + ra, b0 + ra, ra, 180)):
-        pts.append(G.arc(cx, cy, r, s0, s0 + 90, seg + 1))
-    return G.dedupe(np.vstack(pts))
-
-
-def grip_section(D, W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, n=GRIP_NR, Rb=None):
-    """Perpendicular section, s = 0 at the back strap .. D at the front strap, y across. Starts at the back strap
-    middle (s 0, y 0) and runs CCW in (s, y); n points by arc length (consistent rings for the loft). R = front strap
-    radius, Rb = back strap radius (default GRIP_R_BACK)."""
-    Rb = GRIP_R_BACK if Rb is None else Rb
-    R = min(R, 0.5 * W - 1e-3, 0.5 * D - 1e-3)
-    Rb = min(Rb, 0.5 * W - 1e-3, 0.5 * D - 1e-3)
-    h = 0.5 * W - crown
-    rr = G.ccw(_rrect2(0.0, D, -h, h, Rb, R, 24))
-    rr = G.resample(rr, 0.15)
-    # crown the flat side runs (C1: zero value and slope where the strap arcs begin)
-    s0, s1 = Rb, D - R
-    u = (rr[:, 0] - 0.5 * (s0 + s1)) / max(0.5 * (s1 - s0), 1e-6)
-    flat = (np.abs(u) < 1.0) & (np.abs(rr[:, 1]) > h - 1e-6)
-    rr[flat, 1] += np.sign(rr[flat, 1]) * crown * (1 - u[flat] ** 2) ** 2
-    k = int(np.argmin(rr[:, 0] + 10 * np.abs(rr[:, 1])))          # back strap middle
-    rr = np.roll(rr, -k, axis=0)
-    Q = np.vstack([rr, rr[:1]])
-    dd = np.r_[0, np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))]
-    t = np.linspace(0, dd[-1], n, endpoint=False)
-    return np.c_[np.interp(t, dd, Q[:, 0]), np.interp(t, dd, Q[:, 1])]
-
-
-def grip_levels(P, tol=0.12, max_gap=6.0):
-    """Z levels for the rings: a level wherever the outline's back or front leaves the straight line between the
-    last kept level and the next by > tol mm (chordal error), at most max_gap apart. Form fix round 2: round 1 kept a
-    level wherever the back/front MOVED 1.2 mm, which the 22 deg rake alone triggers every ~3 mm on straight runs
-    (40 rings; the receiver's restored 0.3 mm arc bevel needs the triangles)."""
-    zs = np.arange(GRIP_Z_TOP - 0.25, GRIP_Z_BACK_CUT + 0.2, -0.25)
-    hits = {}
-
-    def H(z):
-        if z not in hits:
-            hits[z] = _hits_x(P, min(z, GRIP_Z_TOP - 1e-3))
-        return hits[z]
-
-    keep = [GRIP_Z_TOP]
-    i0 = -1                                   # index in zs of the last kept level (-1 = the top)
-    i = 0
-    while i < len(zs):
-        z0 = keep[-1]
-        ok_i = None
-        for j in range(i, len(zs)):
-            z1 = zs[j]
-            if z0 - z1 > max_gap:
-                break
-            h0, h1 = H(z0), H(z1)
-            if h0 is None or h1 is None:
-                continue
-            bad = False
-            for k in range(i, j):
-                zk = zs[k]
-                hk = H(zk)
-                if hk is None:
-                    continue
-                t = (z0 - zk) / (z0 - z1)
-                if (abs(hk[0] - (h0[0] + t * (h1[0] - h0[0]))) > tol
-                        or abs(hk[1] - (h0[1] + t * (h1[1] - h0[1]))) > tol):
-                    bad = True
-                    break
-            if bad:
-                break
-            ok_i = j
-        if ok_i is None:
-            ok_i = i
-        keep.append(float(zs[ok_i]))
-        i = ok_i + 1
-    keep = [z for z in keep if z > GRIP_Z_BACK_CUT + 0.5]
-    keep.append(GRIP_Z_BACK_CUT)
-    keep += [-119.5, -122.0, -124.5, -126.5, GRIP_Z_FRONT_CUT, -129.0, -131.0, -134.0, GRIP_Z_END]
-    return np.array(keep)
-
-
-def grip_intervals(P):
-    """(z, x_back, x_front) per ring: exact outline hits down to the heel / toe cut levels, then carried straight
-    down just outside the outline so the bottom boolean, not the loft, makes the traced bottom. The cut levels are
-    the outline's rearmost heel / foremost toe points (vertical tangents), so the carried rings continue the straps
-    tangentially; form fix round 2 carries them 0.02 mm outside (round 1: 0.6 mm, which bent the strap out between
-    the cut level and the next ring and left a 0.6 mm lip at the toe where the cut met it)."""
-    out = []
-    xb_heel = _hits_x(P, GRIP_Z_BACK_CUT)[0]
-    xf_toe = _hits_x(P, GRIP_Z_FRONT_CUT)[1]
-    for z in grip_levels(P):
-        h = _hits_x(P, min(z, GRIP_Z_TOP - 1e-3))
-        xb = h[0] if (h is not None and z >= GRIP_Z_BACK_CUT) else xb_heel - CARRY_OUT
-        xf = h[1] if (h is not None and z >= GRIP_Z_FRONT_CUT) else xf_toe + CARRY_OUT
-        out.append((float(z), float(xb), float(xf)))
-    return out
-
-
-def grip_rings(W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, n=GRIP_NR, dy=0.0, dr=0.0, Rb=None):
-    """Rings in frame M. dy / dr shrink the half width / strap radius (the panel-recess inner loft)."""
-    P = grip_outline()
-    c = math.cos(math.radians(GRIP_RAKE))
-    rings = []
-    for z, xb, xf in grip_intervals(P):
-        D = (xf - xb) * c
-        sec = grip_section(D, W - 2 * dy, R - dr, crown, n, (GRIP_R_BACK if Rb is None else Rb) - dr)
-        x = xb + sec[:, 0] / D * (xf - xb)
-        rings.append(np.c_[x, sec[:, 1], np.full(n, z)])
-    return rings
-
-
-def grip_bottom_cutter():
-    """XZ polygon below the traced bottom chain, from the heel cut level round the toe to the front cut level."""
-    P = G.ccw(grip_outline())
-    b = np.array([_hits_x(P, GRIP_Z_BACK_CUT)[0], GRIP_Z_BACK_CUT])
-    f = np.array([_hits_x(P, GRIP_Z_FRONT_CUT)[1], GRIP_Z_FRONT_CUT])
-    # CCW (Z up) runs back strap -> heel -> bottom -> toe -> front strap: walk from the vertex after b to before f
-    k0 = int(np.argmin(np.hypot(*(P - b).T)))
-    k1 = int(np.argmin(np.hypot(*(P - f).T)))
-    idx = [(k0 + i) % len(P) for i in range(((k1 - k0) % len(P)) + 1)]
-    chain = P[idx]
-    chain = chain[(chain[:, 1] < GRIP_Z_BACK_CUT - 1e-6) & (chain[:, 1] < GRIP_Z_FRONT_CUT - 1e-6)
-                  | ((chain[:, 0] < 255.0) & (chain[:, 1] < GRIP_Z_BACK_CUT - 1e-6))]
-    chain = chain[(np.hypot(*(chain - b).T) > 0.05) & (np.hypot(*(chain - f).T) > 0.05)]
-    poly = np.vstack([[b + (-15.0, 0.0)], [b], chain, [f], [f + (15.0, 0.0)],
-                      [(f[0] + 15.0, -160.0)], [(b[0] - 15.0, -160.0)]])
-    return G.dedupe(poly, 1e-4)
-
-
-def grip_panel_outline():
-    """Checkered panel (per side), axis-aligned rounded rectangle down the grip from the junction (c1 / c6)."""
-    ang = math.radians(GRIP_RAKE)
-    d = np.array([-math.sin(ang), -math.cos(ang)])        # down the grip axis
-    pdir = np.array([math.cos(ang), -math.sin(ang)])      # toward the front strap
-    j = np.array([280.67, -36.0])
-    rr = G.rounded_rect(26.0, 91.7, -1.5, 14.4, 3.0, 4)
-    return np.array([j + t * d + s * pdir for t, s in rr])
-
-
-GRIP_LEG = [(298.6, -34.0), (303.3, -34.0), (303.3, -60.0), (298.4, -60.0)]   # guard rear leg (cut back 0.02)
-
-
-def grip_mesh_numpy(W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, Rb=None):
-    """Plain-numpy approximation for silhouette sweeps: the loft with vertices outside the traced bottom moved onto
-    it (the Blender build cuts it with a boolean instead)."""
-    m = MS.loft(grip_rings(W, R, crown, Rb=Rb))
-    V = m.verts()
-    cut = grip_bottom_cutter()
-    inside = np.array([G.point_in_poly((v[0], v[2]), cut) for v in V])
-    P = grip_outline()
-    chain = P[P[:, 1] < -110.0]
-    for i in np.nonzero(inside)[0]:
-        d = np.hypot(chain[:, 0] - V[i, 0], chain[:, 1] - V[i, 2])
-        k = int(np.argmin(d))
-        V[i, 0], V[i, 2] = chain[k]
-    out = MS.Mesh()
-    out.add_verts(V)
-    out.F = list(m.F)
-    return out
-
-
-def pred_grip_ends(mid, d, n1, n2, dih):
-    if dih < 25:
-        return 0.0
-    if mid[2] < GRIP_Z_BACK_CUT + 1.0 or (mid[2] < GRIP_Z_FRONT_CUT + 1.0 and mid[0] > 262.0):
-        return 1.0                                   # bottom end: 1.0 mm round
-    if mid[2] > GRIP_Z_TOP - 0.3:
-        return 0.5                                   # flange joint: 0.5 mm break
-    return 0.0
-
-
-def build_pistol_grip(coll, offset):
-    import bpy
-    from gunlib import bl
-    ob = MS.loft(grip_rings()).to_object("pistol_grip", coll, offset, smooth_deg=35.0)
-    bl.boolean_many(ob, [MS.prism(grip_bottom_cutter(), -40.0, 40.0),
-                         MS.prism(G.offset(G.ccw(np.array(GRIP_LEG)), GAP), -40, 40)], "DIFFERENCE", offset=offset)
-    bl.clean(ob)
-    bl.bevel_weighted(ob, 1.0, 2, pred_grip_ends, offset)
-    # panel recess: panel prisms minus the loft shrunk 0.6 in Y (the recess follows the rounded side)
-    panel = grip_panel_outline()
-    cut = MS.prism(panel, -25.0, -8.0).to_object("_gpanel", coll, offset)
-    bl.boolean(cut, MS.prism(panel, 8.0, 25.0), "UNION", offset=offset)
-    inner = MS.loft(grip_rings(dy=0.6, dr=0.6)).to_object("_ginner", coll, offset)
-    bl.boolean(cut, inner, "DIFFERENCE")
-    bpy.data.objects.remove(inner, do_unlink=True)
-    bl.boolean(ob, cut, "DIFFERENCE")
-    bpy.data.objects.remove(cut, do_unlink=True)
-    bl.clean(ob)
-    bl.bevel(ob, 0.3, 1, 50.0)
-    bl.finish(ob)
-    bl.weighted_normals(ob)
-    # form fix round 2: the boolean/bevel triangulation left shading blotches beside the checker panel under weighted
-    # normals; faces on the loft (or on the recess floor) take the smooth loft normals instead
-    src = [MS.loft(grip_rings()).to_object("_gsrc_outer", coll, offset),
-           MS.loft(grip_rings(dy=0.6, dr=0.6)).to_object("_gsrc_floor", coll, offset)]
-    n_on = bl.surface_normals_from(ob, src, tol_mm=0.05, max_angle_deg=20.0)
-    for o in src:
-        bpy.data.objects.remove(o, do_unlink=True)
-    print("[AR01] pistol_grip: %d faces take the loft's smooth normals" % n_on)
-    ob["gun_part"] = json.dumps({"bone": "body", "class": "W-round", "slot": "M_AR01_Furniture",
-                                 "spec_id": "pistol_grip", "joint": {"type": "butt", "parent": "receiver",
-                                                                     "gap_mm": [0.01, 0.05]},
-                                 "recipe": [[1.0, 2, "weighted ends"], [0.3, 1, 50.0]],
-                                 "section": {"construction": "loft of rounded sections", "width_Y": GRIP_W,
-                                             "strap_R": GRIP_R, "side_crown": GRIP_CROWN}})
-    return ob
 
 
 def stock_zt_zb():
@@ -777,6 +343,7 @@ def buttstock() -> PartDef:
     body = MS.loft(rings)
     trn = [(225.2, 7.0), (225.2, -17.5), (228.7, -22.0), (229.0, -28.5), (230.1, -34.0), (231.4, -36.77),
            (231.4, -45.0), (240.9, -45.0), (240.9, 12.0), (225.2, 12.0)]
+    from parts.butt_plate import butt_plate_outline, _rear_face_x      # the plate's outline cuts the stock's end
     bpo = butt_plate_outline()
     # behind the plate's rear face: no stock (with the R 13 section the toe ring at X 9 otherwise leaves a 0.3 mm
     # sliver shell under the plate's raked toe)
@@ -806,70 +373,6 @@ def _vertical_hits(P, x):
     if len(zs) < 2:
         return None
     return min(zs), max(zs)
-
-
-def butt_plate_outline():
-    P = G.clean_hard(SPEC.profile("butt_plate"), 0.65)
-    return P
-
-
-def butt_plate() -> PartDef:
-    P = butt_plate_outline()
-    body = MS.prism(P, -18.45, 18.45)
-    # plate section: the stock's end section + 0.3 (rounded corners STOCK_R + 0.3)
-    sec = G.rounded_rect(-18.45, 18.45, -110.5, 0.5, STOCK_R + 0.3, 8)
-    p = PartDef("butt_plate", [body], cls="S-bend", recipe=[(1.0, 3, 30.0)])
-    p.section_intersect_pre = [xprism(sec, -5.0, 35.0)]
-    # counterbores for the two cross-slotted screws on the rear face (centre line)
-    cut = []
-    screws = []
-    for z in (-10.0, -87.5):
-        xf = _rear_face_x(P, z)
-        nrm = np.array([-math.cos(math.radians(5.23)), 0.0, -math.sin(math.radians(5.23))])
-        c = np.array([xf, 0.0, z])
-        cut.append(MS.cylinder(c - nrm * 0.6, c - nrm * (-3.0), 4.25, 32))
-        screws.append((c - nrm * 0.6, nrm))
-    p.cutters = cut
-    p.screws = screws
-    return p
-
-
-def _rear_face_x(P, z):
-    Q = np.vstack([P, P[:1]])
-    xs = []
-    for a, b in zip(Q[:-1], Q[1:]):
-        if (a[1] - z) * (b[1] - z) <= 0 and a[1] != b[1]:
-            t = (z - a[1]) / (b[1] - a[1])
-            xs.append(a[0] + t * (b[0] - a[0]))
-    return min(xs)
-
-
-def butt_screws() -> PartDef:
-    bp = butt_plate()
-    sol, cut = [], []
-    rng = np.random.default_rng(11)
-    for c, nrm in bp.screws:
-        c = np.asarray(c, float) + nrm * 0.6               # back to the rear face point
-        floor = c - nrm * 0.6
-        sol.append(MS.cylinder(floor + nrm * GAP, c - nrm * 0.1, 3.5, 32))
-        e1 = np.array([0.0, 1.0, 0.0])
-        e2 = np.cross(nrm, e1)
-        ang = math.radians(rng.uniform(0, 90))
-        for k in (0.0, math.pi / 2):
-            u = math.cos(ang + k) * e1 + math.sin(ang + k) * e2
-            w = np.cross(nrm, u)
-            b0 = c - nrm * 0.45
-            P = np.array([b0 + u * 4 + w * 0.45, b0 - u * 4 + w * 0.45, b0 - u * 4 - w * 0.45, b0 + u * 4 - w * 0.45])
-            m = MS.Mesh()
-            ids = m.add_verts(np.vstack([P, P + nrm * 1.5]))
-            m.face(ids[[3, 2, 1, 0]])
-            m.face(ids[[4, 5, 6, 7]])
-            for i in range(4):
-                j = (i + 1) % 4
-                m.face((ids[i], ids[j], ids[4 + j], ids[4 + i]))
-            cut.append(m)
-    return PartDef("butt_screws", sol, cutters=cut, cls="M-chamfer", recipe=[(0.25, 1, 30.0)],
-                   spec_id="butt_plate", joint={"type": "butt", "parent": "butt_plate", "gap_mm": [0.01, 0.05]})
 
 
 # ---- rear sling swivel (form fix round 1): fitted to the trace (LEFT_outline parts.sling_swivel_rear).
@@ -915,7 +418,7 @@ def sling_loop_path(step=0.7):
 
 def sling_loop() -> PartDef:
     path = sling_loop_path()
-    circ = G.arc(0, 0, SW_WIRE_R, 0, 360, 13)[:-1]
+    circ = G.arc(0, 0, SW_WIRE_R, 0, 360, 9)[:-1]      # 8-gon wire (integration-round budget; was 12)
     m = MS.sweep_profile(path, circ, ups=[[0, 1, 0]] * len(path), closed_path=True)
     return PartDef("sling_swivel_loop", [m], cls="none", recipe=[], wn=False, smooth_deg=60.0,
                    spec_id="sling_swivel_rear", joint={"type": "hinge", "parent": "sling_swivel_base",
@@ -936,134 +439,3 @@ def stock_hardware() -> PartDef:
     for (x, z) in ((217.0, -9.0), (217.0, -19.0)):
         sol.append(MS.dome((x, stock_halfw(210) + 0.2 + GAP, z), (0, 1, 0), 1.8, 0.6, 16, 3))
     return PartDef("stock_hardware", sol, cls="none", recipe=[], wn=False, smooth_deg=50.0, spec_id="buttstock")
-
-
-# ======================================================================================== selector
-SEL_PIVOT = (282.8, -7.8)
-
-
-def selector() -> PartDef:
-    face = np.array(SPEC.feature("selector", "face_outline_M")["XZ"], float)
-    face = G.clean_hard(face, 0.4)
-    y_wall = -WO
-    yi, yo = y_wall - 1.25, y_wall - 3.75
-    main = G.clip_x(face, None, 342.0)
-    tab = G.clip_x(face, 342.0, None)
-    plate = MS.prism(main, yo, yi)
-    tabm = MS.prism(tab, yo, yi)
-    # bend the tab outward 15 deg about a vertical axis at X 342
-    V = tabm.verts()
-    k = math.radians(10.0)
-    dx = V[:, 0] - 342.0
-    V2 = V.copy()
-    V2[:, 0] = 342.0 + dx * math.cos(k)
-    V2[:, 1] = V[:, 1] - dx * math.sin(k)
-    tb = MS.Mesh()
-    tb.add_verts(V2)
-    tb.F = tabm.F
-    px, pz = SEL_PIVOT
-    boss = MS.revolve([(0.0, 0.0), (0.0, 6.7), (3.6, 6.7), (4.4, 5.9), (5.0, 4.2), (5.2, 2.6), (5.25, 0.0)],
-                      (px, y_wall - 0.2, pz), (0, -1, 0), 32)
-    shaft = ycyl(px, pz, 3.0, y_wall - 0.25, -18.0, 32)
-    ridge = MS.capsule((292.0, yo + 0.1, -6.5), (338.0, yo + 0.1, -1.2), 0.75, 12, 3)
-    return PartDef("selector", [plate], unions=[tb, boss, shaft, ridge], bone="selector", cls="S-cut",
-                   recipe=[(0.3, 1, 30.0)],
-                   joint={"type": "hinge", "parent": "receiver", "pivot_M": [px, 0, pz], "axis_M": [0, 1, 0],
-                          "positions_deg": {"safe": 0.0, "auto": 16.0, "semi": 32.0}, "clearance_mm": [0.1, 0.3]})
-
-
-# ======================================================================================== magazine block-in
-MAG_C = np.array([604.8, 3.3])
-# floor line (form fix round 1): the spec's floor-plate corners (456.2, -183.9) / (493.1, -138.9) give the line's
-# direction; its offset is set so the plate's lowest point lands on the LOWEST POINT OF THE TRACED SILHOUETTE
-# (LEFT_outline silhouette, read at run time: -183.224), the same outline every other overall L4 number is read from
-# (ear top 49.36, grip bottom -132.72). Round 0 used the spec's magazine bottom_Z -183.4, which was read from the
-# separately traced magazine ring (-183.376, the same edge 0.13 px lower); with the ear top at 49.4 that made the
-# overall height 232.78 against the spec's 232.6 (= 49.4 + 183.2 from the silhouette). The spec value is amended
-# to -183.2 with resolution R30 in tools/make_spec.py.
-_FN = np.array([0.7728, -0.6346])
-_FT = np.array([0.6341, 0.7733])
-FLOOR_BEVEL_LIFT = 0.247     # the plate's 0.6 mm S-bend bevel raises its lowest corner by this (measured, round 0)
-
-
-def _traced_lowest_z():
-    j = json.loads((TRACE / "LEFT_outline.json").read_text())
-    return min(min(p[1] for p in r["mm"]) for r in j["silhouette"])
-
-
-def _floor_line():
-    c0, c1 = np.array([456.2, -183.9]), np.array([493.1, -138.9])
-    corner_z = c0[1] - 0.3 * _FT[1]                       # plate outer rear corner (0.3 past the floor end)
-    shift = (_traced_lowest_z() - (corner_z + FLOOR_BEVEL_LIFT)) / -_FN[1]
-    return c0 - shift * _FN, c1 - shift * _FN, shift
-
-
-FLOOR = _floor_line()[:2]
-R_F, R_R = 180.8, 239.0
-MAG_T = float(SPEC.key["magazine"]["thickness"])        # 26.0 (R32: the physical minimum closest to the sheet)
-MAG_HT = MAG_T / 2
-
-
-def mag_outline():
-    a_top, a_bot = -175.0, -128.3
-    fr = G.arc(MAG_C[0], MAG_C[1], R_F, a_top, a_bot, 26)
-    rr = G.arc(MAG_C[0], MAG_C[1], R_R, a_bot, a_top, 30)
-    P = np.vstack([fr, rr])
-    P = G.clip_y(G.ccw(P), None, -12.0)
-    return P
-
-
-def _arc_floor_angle(Rr):
-    """Angle (deg) where the arc of radius Rr about the magazine centre meets the floor line."""
-    f0, f1 = FLOOR
-    best = None
-    for a in np.linspace(-140.0, -115.0, 2501):
-        q = MAG_C + Rr * np.array([math.cos(math.radians(a)), math.sin(math.radians(a))])
-        t = np.cross(f1 - f0, q - f0)
-        if best is None or abs(t) < best[1]:
-            best = (a, abs(t))
-    return best[0]
-
-
-def magazine() -> PartDef:
-    P = mag_outline()
-    body = MS.prism(P, -MAG_HT, MAG_HT)
-    # well part: inside the liner (X 368.8-432, 0.5 clear) above the receiver bottom
-    cut = [MS.box(300.0, 369.3, -20, 20, -31.2, 0.0), MS.box(431.5, 470.0, -20, 20, -31.2, 0.0)]
-    # floor plate seat: the body stops 2.0 above the floor line (plate is its own part)
-    fl0, fl1 = FLOOR
-    nrm = np.array([0.7728, -0.6346])
-    off = -2.0
-    a = fl0 + nrm * off
-    b = fl1 + nrm * off
-    tdir = (b - a) / np.linalg.norm(b - a)
-    poly = [a - tdir * 20, b + tdir * 20, b + tdir * 20 + nrm * 30, a - tdir * 20 + nrm * 30]
-    cut.append(MS.prism(np.array(poly), -20, 20))
-    ribs = []
-    for frac in (0.17, 0.34, 0.51, 0.66):
-        Rr = R_R - frac * (R_R - R_F)
-        a_top = -180.0 + math.degrees(math.asin((MAG_C[1] + 38.5) / Rr))
-        a_floor = _arc_floor_angle(Rr)
-        a_end = a_floor - math.degrees(16.0 / Rr)
-        arcp = G.arc(MAG_C[0], MAG_C[1], Rr, a_top, a_end, 18)
-        for s in (-1, 1):
-            path = np.c_[arcp[:, 0], np.full(len(arcp), s * MAG_HT), arcp[:, 1]]
-            sec = G.arc(0, 0, 1.25, 0, 180, 5)
-            sec = np.vstack([sec, [[-1.25, -0.3], [1.25, -0.3]]])
-            ribs.append(MS.sweep_profile(path, np.c_[sec[:, 0], sec[:, 1] * 0.8] if s > 0 else
-                                         np.c_[sec[:, 0], sec[:, 1] * 0.8], ups=[[0, s, 0]] * len(path)))
-    return PartDef("magazine", [body], unions=ribs, cutters=cut, bone="magazine", cls="S-bend",
-                   slot="M_AR01_Mag", recipe=[(1.2, 2, 50.0)], spec_id="magazine_body",
-                   joint={"type": "seated_mag", "parent": "receiver", "note": "block-in (stage 6 builds it)"})
-
-
-def magazine_floor() -> PartDef:
-    fl0, fl1 = FLOOR
-    nrm = np.array([0.7728, -0.6346])
-    tdir = (fl1 - fl0) / np.linalg.norm(fl1 - fl0)
-    a = fl0 - tdir * 0.0 + nrm * (-2.0 + GAP)
-    b = fl1 + nrm * (-2.0 + GAP)
-    poly = [a - tdir * 0.3, b + tdir * 1.2, b + tdir * 1.2 + nrm * (2.0 - GAP), a - tdir * 0.3 + nrm * (2.0 - GAP)]
-    m = MS.prism(np.array(poly), -(MAG_HT + 1.5), MAG_HT + 1.5)
-    return PartDef("magazine_floor_plate", [m], bone="magazine", cls="S-bend", slot="M_AR01_Mag",
-                   recipe=[(0.6, 2, 30.0)], spec_id="magazine_floor_plate")
