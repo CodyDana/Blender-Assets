@@ -64,7 +64,7 @@ and possibly Fab, as GUN_BUILDING_STUDY 1.1 sets it:
 | User colours | `M_Fabric_Master` `Colour` on the lacquer (Metal slot, bare wear and small bare parts keep their baked colour) and on the wood stain (gun study 5.9-5.10) | `Colour` on the lacquer |
 | Collision (static twin) | **7 hulls** `UCX_SM_AR01_LOD0_00..06`: receiver, fore-end, gas block section, front sight + brake, pistol grip + guard, stock, merged magazine (06 only while the twin carries the mag) | 2 hulls `UCX_SM_AR01_Mag_LOD0_00..01`: upper and lower halves of the curve |
 | Sockets (sidecar / on bones) | **17** (spec): `Grip` (pivot), `SupportHand` [`OffHand`] (*provisional*, H1), `Trigger`, `Muzzle`, `MuzzleSeat`, `Sight` [`ADS`/`SightRear`; `SightFront` dropped, carried by `Sight`'s +X], `Mag` [`MagWell`], `MagRockStart`, `MagInsertStart`, `ShellEject` [`EjectPort`] (on `body`), `ChargingHandle`, `Selector`, `MagRelease`, `Shoulder`, `SlingRear`, `CenterOfMass`, `Holster`. `SlingFront` omitted (no front loop on the sheet) | 5: `Mag` [`Attach`] (pivot = front-lug hook), `HandReload`, `Feed`, `Base`, `CenterOfMass` |
-| Frame | Origin = `Grip` at spec M (265.46, 0, -72.99): the bore lies at z = **+72.99**. **+X = muzzle** (the bore is exactly parallel to X), +Z up, **-Y = the rifle's right side**. In Unreal: +X forward, +Y right, +Z up | Seated, the mag frame equals the rifle's `Mag` frame (zero relative transform) |
+| Frame | Origin = `Grip` at spec M (263.18, 0, -78.54): the bore lies at z = **+78.54**. **+X = muzzle** (the bore is exactly parallel to X), +Z up, **-Y = the rifle's right side**. In Unreal: +X forward, +Y right, +Z up | Seated, the mag frame equals the rifle's `Mag` frame (zero relative transform) |
 | Reload path | `MagInsertStart` → (straight lift, hooks the front lug) → `MagRockStart` → (pure rotation about the lug, about the socket's Y axis) → `Mag`. In game: lerp, then slerp. No sign reasoning needed in code | |
 | Fit | 0 intersections on the co-visible gun/mag LOD pairs when seated (gun study 11.9); seat and lug clearances; rock path clean at every step except a declared allowance for the spring-loaded catch; exported bytes only; mag reads the rifle's sha256 | |
 | Nanite | **off** on both | |
@@ -88,9 +88,9 @@ and possibly Fab, as GUN_BUILDING_STUDY 1.1 sets it:
 ### 2.1 Rifle frame (Blender metres, modelled in mm; Unreal cm after export)
 
 - **Origin = `Grip`.** This is the centre of the right hand on the pistol grip: on the grip's centre line in the
-  mid-plane y = 0, 40 mm (*provisional*: gate H1 on `MH_PlayerDefault` fixes it) down the grip axis from where the
+  mid-plane y = 0, 46 mm (set by H1 early on `MH_PlayerDefault`, R31) down the grip axis from where the
   grip meets the receiver. The spec computes it from the trace: the grip-axis midline (22.35 deg from vertical, fitted
-  over Z -64..-116) meets the receiver at M (280.67, -36.0), so `Grip` = M (265.46, 0, -72.99). This follows the house rule (pivot at the grip
+  over Z -64..-116) meets the receiver at M (280.67, -36.0), so `Grip` = M (263.18, 0, -78.54). This follows the house rule (pivot at the grip
   point), and it is how UE weapons are usually attached: the weapon's origin snaps to a weapon socket on `hand_r`.
 - **+X = toward the muzzle.** The bore axis is **exactly parallel to X**, at y = 0 and z = `bore_z`, so the `Muzzle`
   socket needs zero rotation.
@@ -112,24 +112,26 @@ and possibly Fab, as GUN_BUILDING_STUDY 1.1 sets it:
 
 ### 2.2 Layout (from `rifle_spec.json`; rifle frame B = spec M - Grip, mm)
 
+> **Form fix rounds 1-2 (2026-10-04): `rifle_spec.json` is authoritative.** The Grip origin moved to 46 mm down the grip axis (R31): Grip = M (263.18, 0, -78.54), so every rifle-frame (B) number below moved by (+2.28, 0, +5.55) mm against the study's first edition; the tables here are regenerated from the spec. Magazine thickness 26.0 (R32, supersedes R5's 28.0); grip section 31.5 wide, front strap R 9, back strap R 13.5 (R33).
+
 | Feature (rifle frame, mm) | Spec value |
 |---|---|
-| Overall | 880.0 (butt heel x -265.46 → brake bottom lip x +614.54) |
-| Bore axis | z = **+72.99** above `Grip` |
-| Barrel | 415.0: chamber face x +168.34 (M 433.8) → crown x +583.34 (M 848.8, under the brake collar); 363.5 exposed from the receiver face (x +219.84); Ø 15.0 |
-| Trigger face | (+55.84, 0, +26.99) |
-| Magazine well | catch X 355.2-369.8 (x +89.74..+104.34); magazine top X 369.7-428.4; front lug hook at **(+163.54, 0, +56.99)** = `Mag` (*provisional* ± 5 mm, the fit stage sets it); well opening X 368.8-432.0 (≈ 63) |
-| Rear sight notch (aim point) | (+184.44, 0, +118.49): notch bottom, 2.5 below the leaf top +48.0, at the leaf's rear end, which overhangs the dust cover (spec R22) |
-| Front sight post tip | (+559.84, 0, +117.99); sight radius **375.4**; sight line -0.08° to the bore (a 100 m zero; the post is hidden on the sheet) |
-| Lower handguard | x +218.54..+375.44; off-hand palm `SupportHand` (+297.04, 0, +48.39) on the underside (*provisional*, H1) |
-| Butt plate centre | (-261.16, 0, +17.99); rear face tilted 5.2° toe forward |
-| Height | 232.6 with the mag (mag base z -110.41), 182.1 without (grip bottom z -59.71; front sight top z +122.39) |
+| Overall | 880.0 (butt heel x -263.18 → brake bottom lip x +616.82) |
+| Bore axis | z = **+78.54** above `Grip` |
+| Barrel | 415.0: chamber face x +170.62 (M 433.8) → crown x +585.62 (M 848.8, under the brake collar); 363.5 exposed from the receiver face (x +222.12); Ø 15.0 |
+| Trigger face | (+58.12, 0, +32.54) |
+| Magazine well | catch X 355.2-369.8 (x +92.02..+106.62); magazine top X 369.7-428.4; front lug hook at **(+165.82, 0, +62.54)** = `Mag` (*provisional* ± 5 mm, the fit stage sets it); well opening X 368.8-432.0 (≈ 63) |
+| Rear sight notch (aim point) | (+186.72, 0, +124.04): notch bottom, 2.5 below the leaf top +48.0, at the leaf's rear end, which overhangs the dust cover (spec R22) |
+| Front sight post tip | (+562.12, 0, +123.54); sight radius **375.4**; sight line -0.08° to the bore (a 100 m zero; the post is hidden on the sheet) |
+| Lower handguard | x +220.82..+377.72; off-hand palm `SupportHand` (+299.32, 0, +53.94) on the underside (*provisional*, H1) |
+| Butt plate centre | (-258.88, 0, +23.54); rear face tilted 5.2° toe forward |
+| Height | 232.6 with the mag (mag base z -104.86), 182.1 without (grip bottom z -54.16; front sight top z +127.94) |
 | Bounding sphere radius | r_rifle = 0.450 m without the mag, 0.456 m with it (box half-diagonal from the spec; re-derived from Unreal's bounds); r_mag = 0.108 m |
 | Mass (for physics) | rifle ≈ 3.1 kg unloaded without the mag; mag 0.33 kg empty, ≈ 0.82 kg with 30 rounds. Real-pattern figures, not the sheet. The builder computes the CoM from part volumes × densities (steel 7.85, wood ≈ 0.65) and scales so the totals equal these masses, because hollow internals are not modelled |
 
 ### 2.3 Magazine frame and the reload path
 
-- **Mag origin = the front-lug hook point** (spec M (429.0, 0, -16.0) = rifle frame (+163.54, 0, +56.99), *provisional*
+- **Mag origin = the front-lug hook point** (spec M (429.0, 0, -16.0) = rifle frame (+165.82, 0, +62.54), *provisional*
   ± 5 mm). When seated, that point equals the rifle's `Mag` socket [was `MagWell`], with identical axes. So the seated
   mag is attached at `Mag` with **zero relative transform** (SnapToTarget).
 - **How the AK-pattern mag goes in:** the front lug hooks first, then the mag rocks rearward until the rear lug
@@ -140,7 +142,7 @@ and possibly Fab, as GUN_BUILDING_STUDY 1.1 sets it:
     +X). In Blender it is `rotation_euler.y = -θ`. The sidecar writes the real value through `ue_socket_transform`,
     and the pipeline test confirms the sign.
   - `MagInsertStart` is `MagRockStart` moved d = 8 mm along the tilted mag's local -Z, before the lug enters its
-    recess: rifle frame (+166.01, 0, +49.38).
+    recess: rifle frame (+168.29, 0, +54.93).
 - **Insert** = lerp the location `MagInsertStart` → `MagRockStart` (rotation constant), then slerp the rotation
   `MagRockStart` → `Mag` (location constant: the pivot is the hook). Removal runs the same path in reverse. Because
   the pivot is the mag's origin, the rock is a **pure rotation**, the same trick as the katana's `DrawPivot`.
@@ -307,35 +309,35 @@ The finishes, slots and texture sets are the gun study's (5.8-5.10) as the spec 
 
 | Socket | Bone | Blender mm (rifle frame) | Unreal cm | Rotation (Unreal) | Use |
 |---|---|---|---|---|---|
-| `Grip` | body | (0, 0, 0) | (0, 0, 0) | 0 | origin; attach to the character's weapon_r (40 mm down the grip axis: provisional, H1) |
-| `SupportHand` [OffHand] | body | (+297.04, 0, +48.39) | (29.704, 0, 4.839) | 0 | hand_l two-bone IK target; **provisional**: on the handguard underside until H1 sets the measured hand_l frame (off-axis, rotated); the sidecar records the hand offset |
-| `Trigger` | trigger | (+55.84, 0, +26.99) | (5.584, 0, 2.699) | 0 | index finger target |
-| `Muzzle` | muzzle_device | (+605.13, 0, +72.99) | (60.513, 0, 7.299) | 0 | flash, smoke, tracer; +X out of the bore |
-| `MuzzleSeat` | body | (+583.34, 0, +72.99) | (58.334, 0, 7.299) | 0 | device / suppressor seat |
-| `Sight` [ADS (+SightRear; SightFront dropped)] | sight_rear | (+184.44, 0, +118.49) | (18.444, 0, 11.849) | pitch -0.076° | ADS: on the notch bottom, +X toward the front post tip; eye relief is game data (0.25 m standard) |
-| `Mag` [MagWell] | magazine | (+163.54, 0, +56.99) | (16.354, 0, 5.699) | 0 | SM_AR01_Mag attaches here with zero relative transform (*provisional* ± 5 mm) |
-| `MagRockStart` | body | (+163.54, 0, +56.99) | (16.354, 0, 5.699) | pitch +18° | start of the rock (lug hooked); pure rotation about the lug to Mag (angle *provisional*) |
-| `MagInsertStart` | body | (+166.01, 0, +49.38) | (16.601, 0, 4.938) | pitch +18° | before the lug enters its recess (8 mm along the tilted -Z) |
-| `ShellEject` [EjectPort] | **body** | (+129.54, -20.75, +82.99) | (12.954, 2.075, 8.299) | pitch +20°, yaw +80° | casing spawn; +X = throw direction (right, slightly forward and up); on body so it never rides the bolt back into the receiver |
-| `ChargingHandle` | bolt | (+185.54, -30.00, +89.49) | (18.554, 3.000, 8.949) | 0 | hand target for the charge; travel along -X |
-| `Selector` | selector | (+85.54, -23.75, +76.99) | (8.554, 2.375, 7.699) | 0 | thumb target on the lever tab |
-| `MagRelease` | mag_release | (+96.54, 0, +6.99) | (9.654, 0, 0.699) | 0 | finger target on the catch tab |
-| `Shoulder` | body | (-261.16, 0, +17.99) | (-26.116, 0, 1.799) | pitch +5.229° | butt plate centre, +X = plate normal reversed (TP aim offsets) |
-| `SlingRear` | body | (-192.81, 0, -22.16) | (-19.281, 0, -2.216) | 0 | sling / back carry |
-| `CenterOfMass` | body | (+154.54, 0, +62.99) | (15.454, 0, 6.299) | 0 | physics CoM offset (README); COMPUTED by the build |
-| `Holster` | body | (+154.54, 0, +62.99) | (15.454, 0, 6.299) | 0 | stowed hang point; = CenterOfMass until the game sets it |
+| `Grip` | body | (0, 0, 0) | (0, 0, 0) | 0 | origin; attach to the character's weapon_r (46 mm down the grip axis, R31; the posed H1 at the rig stage records hand_offset) |
+| `SupportHand` [OffHand] | body | (+299.32, 0, +53.94) | (29.932, 0, 5.394) | 0 | hand_l two-bone IK target; **provisional**: on the handguard underside until H1 sets the measured hand_l frame (off-axis, rotated); the sidecar records the hand offset |
+| `Trigger` | trigger | (+58.12, 0, +32.54) | (5.812, 0, 3.254) | 0 | index finger target |
+| `Muzzle` | muzzle_device | (+607.41, 0, +78.54) | (60.741, 0, 7.854) | 0 | flash, smoke, tracer; +X out of the bore |
+| `MuzzleSeat` | body | (+585.62, 0, +78.54) | (58.562, 0, 7.854) | 0 | device / suppressor seat |
+| `Sight` [ADS (+SightRear; SightFront dropped)] | sight_rear | (+186.72, 0, +124.04) | (18.672, 0, 12.404) | pitch -0.076° | ADS: on the notch bottom, +X toward the front post tip; eye relief is game data (0.25 m standard) |
+| `Mag` [MagWell] | magazine | (+165.82, 0, +62.54) | (16.582, 0, 6.254) | 0 | SM_AR01_Mag attaches here with zero relative transform (*provisional* ± 5 mm) |
+| `MagRockStart` | body | (+165.82, 0, +62.54) | (16.582, 0, 6.254) | pitch +18° | start of the rock (lug hooked); pure rotation about the lug to Mag (angle *provisional*) |
+| `MagInsertStart` | body | (+168.29, 0, +54.93) | (16.829, 0, 5.493) | pitch +18° | before the lug enters its recess (8 mm along the tilted -Z) |
+| `ShellEject` [EjectPort] | **body** | (+131.82, -20.75, +88.54) | (13.182, 2.075, 8.854) | pitch +20°, yaw +80° | casing spawn; +X = throw direction (right, slightly forward and up); on body so it never rides the bolt back into the receiver |
+| `ChargingHandle` | bolt | (+187.82, -30.00, +95.04) | (18.782, 3.000, 9.504) | 0 | hand target for the charge; travel along -X |
+| `Selector` | selector | (+87.82, -23.75, +82.54) | (8.782, 2.375, 8.254) | 0 | thumb target on the lever tab |
+| `MagRelease` | mag_release | (+98.82, 0, +12.54) | (9.882, 0, 1.254) | 0 | finger target on the catch tab |
+| `Shoulder` | body | (-258.88, 0, +23.54) | (-25.888, 0, 2.354) | pitch +5.229° | butt plate centre, +X = plate normal reversed (TP aim offsets) |
+| `SlingRear` | body | (-190.53, 0, -16.61) | (-19.053, 0, -1.661) | 0 | sling / back carry |
+| `CenterOfMass` | body | (+156.82, 0, +68.54) | (15.682, 0, 6.854) | 0 | physics CoM offset (README); COMPUTED by the build |
+| `Holster` | body | (+156.82, 0, +68.54) | (15.682, 0, 6.854) | 0 | stowed hang point; = CenterOfMass until the game sets it |
 | `SlingFront` | | omitted | | | the sheet shows no front loop |
 
 The old `ADS` eye point (300 mm behind the notch) is now game data: the standard eye relief is 0.25 m behind `Sight`
 along -X (gun study 5.3, B4). The old `SightFront` is the post tip at spec M (825.3, 0, 45.0) = rifle frame
-(+559.84, 0, +117.99); `Sight`'s +X points at it.
+(+562.12, 0, +123.54); `Sight`'s +X points at it.
 
 ### 6.2 Magazine `SM_AR01_Mag` (5)
 
 | Socket | Magazine mm | Unreal cm | Rotation | Use |
 |---|---|---|---|---|
 | `Mag` [Attach] | (0, 0, 0) | (0, 0, 0) | 0 | origin = front-lug hook = the rifle's Mag socket when seated |
-| `HandReload` | (-4.99, +14.00, -87.35) | (-0.499, -1.400, -8.735) | 0 | left palm on the body (left face); hand_l relative = inverse |
+| `HandReload` | (-4.99, +13.00, -87.35) | (-0.499, -1.300, -8.735) | 0 | left palm on the body (left face); hand_l relative = inverse |
 | `Feed` | (-29.65, 0, +4.00) | (-2.965, 0, 0.400) | 0 | top centre of the lips |
 | `Base` | (+45.64, 0, -145.37) | (4.564, 0, -14.537) | pitch -39.393° | floor plate centre, +X = outward normal; impact FX / ground contact |
 | `CenterOfMass` | (-4.99, 0, -87.35) | (-0.499, 0, -8.735) | 0 | physics CoM (empty); COMPUTED by the build |

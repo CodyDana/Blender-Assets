@@ -96,20 +96,26 @@ def bevel(ob, width_mm, segments=2, angle_deg=30.0, profile=0.5, harden=True, cl
     """Bevel modifier, applied. Guard: Blender's bevel occasionally throws a vertex to ~1e32 at a degenerate corner
     (seen on the receiver once the build frame moved by 6 mm: the same geometry, other float coordinates; the arc
     outer miter with overlap clamping was the trigger). If any vertex lands outside the pre-bevel box grown by 2
-    widths, the bevel is undone and retried: sharp outer miter, then the width x0.97, then no clamping; the retry is
-    printed."""
+    widths, the bevel is undone and retried: the angle limit 5 deg lower (form fix round 2 found the trigger: an angle
+    limit sitting inside a cluster of near-equal dihedrals selects half of a corner's edges), then a sharp outer miter,
+    the width x0.97, no clamping; every retry is printed. Edges within 1 deg of the limit are reported as a warning."""
     keep = ob.data.copy()
     lo, hi = _bbox_m(ob.data)
     tol = 2.0 * width_mm * 0.001 + 1e-5
-    tries = [(1.0, miter, clamp), (1.0, "SHARP", clamp), (0.97, "SHARP", clamp), (1.0, miter, False)]
-    for k, (f, mt, cl) in enumerate(tries):
+    if limit == "ANGLE":
+        near = _edges_near_angle(ob.data, angle_deg, 1.0)
+        if near:
+            print("[gunlib.bl] warning: %d edge(s) of %s within 1 deg of the %.1f deg bevel limit" % (near, ob.name, angle_deg))
+    tries = [(1.0, miter, clamp, 0.0), (1.0, miter, clamp, -5.0), (1.0, "SHARP", clamp, 0.0), (0.97, "SHARP", clamp, 0.0),
+             (1.0, miter, False, 0.0)]
+    for k, (f, mt, cl, da) in enumerate(tries):
         if k:
             bad = ob.data
             ob.data = keep.copy()
             bpy.data.meshes.remove(bad)
-            print("[gunlib.bl] bevel %.3f mm on %s threw vertices out; retry x%.2f miter %s clamp %s"
-                  % (width_mm, ob.name, f, mt, cl))
-        _bevel_once(ob, width_mm * f, segments, angle_deg, profile, harden, cl, limit, mt)
+            print("[gunlib.bl] bevel %.3f mm on %s threw vertices out; retry x%.2f miter %s clamp %s angle %.1f"
+                  % (width_mm, ob.name, f, mt, cl, angle_deg + da))
+        _bevel_once(ob, width_mm * f, segments, angle_deg + da, profile, harden, cl, limit, mt)
         a, b = _bbox_m(ob.data)
         if np.all(a >= lo - tol) and np.all(b <= hi + tol):
             break
@@ -117,6 +123,17 @@ def bevel(ob, width_mm, segments=2, angle_deg=30.0, profile=0.5, harden=True, cl
         raise RuntimeError("bevel %.3f mm on %s keeps throwing vertices out" % (width_mm, ob.name))
     bpy.data.meshes.remove(keep)
     return ob
+
+
+def _edges_near_angle(me, angle_deg, tol_deg) -> int:
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    n = 0
+    for e in bm.edges:
+        if len(e.link_faces) == 2 and abs(math.degrees(e.calc_face_angle()) - angle_deg) <= tol_deg:
+            n += 1
+    bm.free()
+    return n
 
 
 def _bevel_once(ob, width_mm, segments, angle_deg, profile, harden, clamp, limit, miter):
@@ -332,3 +349,70 @@ def bevel_weighted(ob, width_mm, segments, pred, offset_mm=(0, 0, 0), profile=0.
     if n:
         bevel(ob, width_mm, segments, limit="WEIGHT", profile=profile, harden=harden)
     return n
+
+
+def surface_normals_from(ob, sources, tol_mm=0.05, max_angle_deg=20.0, smooth_deg=35.0) -> int:
+    """Custom split normals from smooth SOURCE surfaces (form fix round 2, the grip's shading blotches).
+
+    Booleans and bevels re-triangulate a lofted surface into long thin triangles; weighted normals then average them
+    unevenly and the curved surface shows blotches. Every face of `ob` that lies on a source surface (centroid within
+    tol_mm, normal within max_angle_deg of the source's interpolated normal) takes, per corner, the source's smooth
+    normal interpolated (barycentric, over the source's loop triangles with sharp edges at smooth_deg) at the corner's
+    vertex. Every other corner (bevels, cut faces, the panel walls) keeps its current normal. `ob` and the sources share
+    one local frame. Returns the number of faces that took source normals."""
+    me = ob.data
+    me.calc_loop_triangles()
+    cur = np.array([tuple(c.vector) for c in me.corner_normals], float)
+    trees = []
+    for src in sources:
+        sm = src.data
+        sm.polygons.foreach_set("use_smooth", [True] * len(sm.polygons))
+        sm.set_sharp_from_angle(angle=math.radians(smooth_deg))
+        sm.update()
+        sm.calc_loop_triangles()
+        SV = np.array([tuple(v.co) for v in sm.vertices], float)
+        SN = np.array([tuple(c.vector) for c in sm.corner_normals], float)
+        tri_v = np.array([tuple(t.vertices) for t in sm.loop_triangles], int)
+        tri_l = np.array([tuple(t.loops) for t in sm.loop_triangles], int)
+        tree = BVHTree.FromPolygons([tuple(v) for v in SV], [tuple(t) for t in tri_v], all_triangles=True)
+        trees.append((tree, SV, SN, tri_v, tri_l))
+
+    def interp(p):
+        best = None
+        for tree, SV, SN, tri_v, tri_l in trees:
+            loc, nrm, idx, dist = tree.find_nearest(Vector(p))
+            if loc is not None and (best is None or dist < best[0]):
+                a, b, c = SV[tri_v[idx]]
+                v0, v1, v2 = b - a, c - a, np.array(loc) - a
+                d00, d01, d11 = v0 @ v0, v0 @ v1, v1 @ v1
+                d20, d21 = v2 @ v0, v2 @ v1
+                den = d00 * d11 - d01 * d01
+                if abs(den) < 1e-30:
+                    w = np.array([1 / 3, 1 / 3, 1 / 3])
+                else:
+                    wv = (d11 * d20 - d01 * d21) / den
+                    ww = (d00 * d21 - d01 * d20) / den
+                    w = np.clip(np.array([1 - wv - ww, wv, ww]), 0, 1)
+                n = (SN[tri_l[idx]] * w[:, None]).sum(0)
+                n /= max(np.linalg.norm(n), 1e-12)
+                best = (dist, n)
+        return best
+
+    V = np.array([tuple(v.co) for v in me.vertices], float)
+    tol = tol_mm * 0.001
+    cosmax = math.cos(math.radians(max_angle_deg))
+    out = cur.copy()
+    n_on = 0
+    for poly in me.polygons:
+        c = np.array(poly.center)
+        r = interp(c)
+        if r is None or r[0] > tol or float(np.array(poly.normal) @ r[1]) < cosmax:
+            continue
+        n_on += 1
+        for li in poly.loop_indices:
+            q = interp(V[me.loops[li].vertex_index])
+            if q is not None:
+                out[li] = q[1]
+    me.normals_split_custom_set([tuple(n) for n in out])
+    me.update()
+    return n_on

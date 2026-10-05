@@ -93,10 +93,12 @@ def receiver() -> PartDef:
     unions = []
     # magazine well liner (sheet walls round the opening, up to Z -11)
     # well liner: side/front walls down into the bottom sheet; the rear wall stops inside the sheet above the ledge
-    unions.append(MS.box(368.8, 433.0, -15.5, 15.5, -30.3, -11.0))
-    unions.append(MS.box(367.8, 368.85, -15.5, 15.5, -29.0, -11.0))
+    # opening = magazine thickness + 1.0 (spec magazine_well), liner walls 1.0 (R32: magazine 26.0)
+    mh = float(SPEC.key["magazine"]["thickness"]) / 2 + 0.5
+    unions.append(MS.box(368.8, 433.0, -(mh + 1.0), mh + 1.0, -30.3, -11.0))
+    unions.append(MS.box(367.8, 368.85, -(mh + 1.0), mh + 1.0, -29.0, -11.0))
     post = []
-    post.append(MS.box(368.8, 432.0, -14.5, 14.5, -45.0, -5.0))                       # well opening + bore
+    post.append(MS.box(368.8, 432.0, -mh, mh, -45.0, -5.0))                           # well opening + bore
     # ejection port (right wall only), R1 corners
     port = G.rounded_rect(338.0, 452.0, 3.0, 17.0, 1.0, 3)
     post.append(MS.prism(port, -24.0, -WO + WT + 0.85))          # through the whole 1.0 wall
@@ -117,7 +119,11 @@ def receiver() -> PartDef:
     # flush pin, right: inset ring 0.3 deep
     post.append(MS.tube((388.0, -WO - 1.0, -8.0), (388.0, -WO + 0.3, -8.0), 1.45, 1.75, 32))
     # trigger-guard flange relief is a separate part; the rear-section bottom meets the grip
-    rec = [(1.6, 3, "W", pred_bend_bottom), (0.3, 1, 40.0)]
+    # 0.3 pass angle limit 35 (form fix round 2): at 40 the limit sat inside a cluster of 39.4-40.0 deg edges (the
+    # bottom kink at X 479.8), half of a corner's edges were bevelled, and Blender 5.2's arc outer miter with overlap
+    # clamping threw 36 corner vertices to ~1e21 (the guard fell back to a sharp miter). 35 keeps the 1.6 pass's 30 deg
+    # ring steps out and takes the whole kink.
+    rec = [(1.6, 3, "W", pred_bend_bottom), (0.3, 1, 35.0)]
     return PartDef("receiver", solids, cutters=cut + post, unions=unions, cls="S-bend", recipe=rec,
                    joint={"type": "fixed", "parent": None})
 

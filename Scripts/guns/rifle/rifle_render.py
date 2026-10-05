@@ -110,6 +110,8 @@ def closeups(cam, prefix):
         "under": ((380, -250, -330), (360, 0, -40), 50),
         "top_rec": ((370, -60, 450), (370, 0, 10), 50),
         "left_rec": ((380, 520, 20), (380, 0, 0), 55),
+        "grip_r34": ((420, -260, -60), (268, 0, -85), 55),
+        "grip_toe": ((380, -200, -230), (270, 0, -120), 60),
     }
     for k, (loc, tgt, lens) in shots.items():
         look_cam(cam, loc, tgt, lens)
@@ -170,6 +172,11 @@ def main():
         for k, nm in (("c1", "receiver"), ("c3", "frontsight")):
             camd = json.loads((SCRATCH / "q34" / f"camera_{k}.json").read_text())
             ortho_from_json(cam, camd, SS)
+            RD.still(sc, OUT / f"ours_{nm}.png")
+        # grip (form fix round 2): the checker-panel shading and the toe, close perspective views
+        for nm, (loc, tgt, lens) in (("grip_r34", ((420, -260, -60), (268, 0, -85), 55)),
+                                     ("grip_toe", ((380, -200, -230), (270, 0, -120), 60))):
+            look_cam(cam, loc, tgt, lens, (1200 * SS // 3, 1200 * SS // 3))
             RD.still(sc, OUT / f"ours_{nm}.png")
     print("[AR01] RENDER_DONE", SET)
 

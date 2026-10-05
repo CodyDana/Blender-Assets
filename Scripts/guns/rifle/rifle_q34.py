@@ -6,7 +6,17 @@
           magazine region (so the magazine check that follows is independent of the solve); saved to
           scratch/q34/camera.json and reused by later stages and the Blender 3/4 render.
 Magazine thickness: with the solved camera, the magazine's visible silhouette is compared (IoU in the magazine zone)
-for thickness t in 18..34 mm (Y scaled about the mid-plane); the best t is reported against the spec's 28.0.
+for thickness t in 18..34 mm (Y scaled about the mid-plane); the best t is reported against the spec's value (26.0
+since form fix round 2, R32: the physical minimum of a staggered double stack).
+
+Exception analysis (form fix round 2 definitions): a residual region > 3 px is a 3/4-panel CONTRADICTION when the
+involved parts pass the side view (per-part L2) and no width the authorities allow removes it. "Allowed" is read from
+the authority itself: for parts on the TOP silhouette, every Y scale whose TOP half-width error at the part's own width
+stations stays at P95 <= 2 TOP px (round 1 tested our half width +-2.45 mm instead, which could leave the TOP tolerance);
+for hidden parts their documented band: magazine thickness [spec minimum, 32] (R32), grip sections the H1 gate allows
+(width 30-36 and girth in its band), other
+hidden parts +-15 %. A magazine-only region that no allowed thickness removes but a thinner (sub-minimum) magazine
+reduces is the documented MAGAZINE PHYSICAL-MINIMUM residual.
 """
 from __future__ import annotations
 
@@ -21,7 +31,7 @@ from scipy import ndimage as ndi
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from rifle_common import ROOT, SHEET, SCRATCH, REVIEW, WORK  # noqa: E402
+from rifle_common import ROOT, SHEET, SCRATCH, REVIEW, WORK, SPEC  # noqa: E402
 from gunlib import compare as C  # noqa: E402
 from gunlib import camsolve as CS  # noqa: E402
 
@@ -45,6 +55,42 @@ LANDMARKS = [
     ("trigger guard bottom", (213.0, 129.0), (312.0, -5.0, -68.0)),
 ]
 MAG_ZONE = [(238, 96), (372, 96), (372, 275), (238, 275)]          # px polygon holding the magazine
+MAG_T = float(SPEC.key["magazine"]["thickness"])                  # spec (R32: the physical minimum, 26.0)
+MAG_T_MAX = 32.0                                                   # thickest real-pattern magazines (R5 / R32)
+GRIP_W_BAND = (30.0, 36.0)                                         # documented real grips (H1: IMI 30, FAB Gradus 36)
+GRIP_W = float(SPEC.dims("pistol_grip")["width_Y"])
+MAG_PREF_T: list = []                                              # the panel's preferred thickness (set by main)
+
+
+def grip_h1_section(Vg, Tg):
+    """Girth / width / depth of the grip section perpendicular to its axis at the Grip origin (the H1 gate's own
+    section, rifle_h1.py), from triangles in frame M (numpy plane slice)."""
+    ang = np.radians(SPEC.dims("pistol_grip")["axis_rake_deg_from_vertical"])
+    n = np.array([-np.sin(ang), 0.0, -np.cos(ang)])
+    o = np.array(SPEC.d["frames"]["B"]["Grip_in_M"], float)
+    d = (Vg - o) @ n
+    segs = []
+    for t in Tg:
+        dd = d[t]
+        if (dd > 0).all() or (dd < 0).all():
+            continue
+        pts = []
+        for a, b in ((0, 1), (1, 2), (2, 0)):
+            if (dd[a] > 0) != (dd[b] > 0):
+                u = dd[a] / (dd[a] - dd[b])
+                pts.append(Vg[t[a]] + u * (Vg[t[b]] - Vg[t[a]]))
+        if len(pts) == 2:
+            segs.append(pts)
+    if not segs:
+        return None
+    S = np.array(segs)
+    girth = float(np.linalg.norm(S[:, 1] - S[:, 0], axis=1).sum())
+    P = S.reshape(-1, 3)
+    pdir = np.array([np.cos(ang), 0.0, -np.sin(ang)])
+    depth = float(np.ptp(P @ pdir))
+    width = float(np.ptp(P[:, 1]))
+    band = (2 * (depth + 30.0) - (8 - 2 * np.pi) * 10.0, 2 * (depth + 36.0) - (8 - 2 * np.pi) * 8.0 + 2.0)
+    return {"girth_mm": girth, "width_mm": width, "depth_mm": depth, "girth_band_mm": band}
 
 
 def panel():
@@ -157,6 +203,7 @@ def exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm):
         # TOP is the authority for WIDTHS only (its X positions are drawn up to 45 mm off, spec sheet_panels): compare
         # the half widths at the traced width-profile stations where these parts form our outer edge
         errs = []
+        pairs = []                                   # (our Y at the station, traced Y) for the allowed-scale range
         for X, yl, yr in wprof:
             col = np.abs(mmT[:, 0] - X) <= 0.65
             if not col.any():
@@ -168,6 +215,7 @@ def exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm):
                 near_zone = any(z0 - 6.0 <= X <= z1 + 6.0 for z0, z1, zs in top_zones if zs == sgn)
                 if ll[k] in ids and not near_zone:
                     errs.append(abs(ys[k] - yt))
+                    pairs.append((ys[k], yt))
         if len(errs) >= 2 and selT.sum() >= 3:
             e = np.array(errs) * frT.s
             top = {"stations": len(errs), "width_err_p95_px": round(float(np.percentile(e, 95)), 2),
@@ -186,7 +234,7 @@ def exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm):
         win_m[win[1]:win[3], win[0]:win[2]] = True
 
         def core_with_y_scale(f):
-            sel_o = np.isin(lab, ids)
+            sel_o = selm if all(o.startswith("magazine") for o in objs) else np.isin(lab, ids)
             idx = np.unique(T[sel_o].ravel())
             Vw = V.copy()
             Vw[idx, 1] = V[idx, 1] * f
@@ -196,33 +244,102 @@ def exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm):
             return int(sum(r["core_px"] for r in regs))
 
         hw = float(np.abs(V[np.unique(T[np.isin(lab, ids)].ravel()), 1]).max())
+        mag_only = all(o.startswith("magazine") for o in objs)
         if top_ok is not None:
-            dmm = max(2.0, top.get("width_err_p95_px", 0.0)) / frT.s
-            tests = {"half_width_minus_%.2fmm" % dmm: (hw - dmm) / hw, "half_width_plus_%.2fmm" % dmm: (hw + dmm) / hw}
+            # the Y scales the TOP allows: TOP half-width error P95 <= 2 px at these parts' own stations
+            ysa = np.array([q[0] for q in pairs])
+            yta = np.array([q[1] for q in pairs])
+            fs = np.round(np.arange(0.70, 1.3001, 0.005), 3)
+            e95 = np.array([np.percentile(np.abs(f * ysa - yta), 95) * frT.s for f in fs])
+            ok = e95 <= 2.0
+            if ok.any():
+                j1 = int(np.argmin(np.abs(fs - 1.0)))
+                if not ok[j1]:                       # we are outside already: take the nearest allowed window
+                    nz = np.nonzero(ok)[0]
+                    j1 = int(nz[np.argmin(np.abs(nz - j1))])
+                lo_i = hi_i = j1
+                while lo_i > 0 and ok[lo_i - 1]:
+                    lo_i -= 1
+                while hi_i < len(fs) - 1 and ok[hi_i + 1]:
+                    hi_i += 1
+                flo, fhi = float(fs[lo_i]), float(fs[hi_i])
+            else:
+                flo = fhi = float(fs[int(np.argmin(e95))])
+            allowed = {"source": "TOP width error P95 <= 2 px", "scale_range": [flo, fhi],
+                       "half_width_mm_range": [round(hw * flo, 2), round(hw * fhi, 2)]}
+            cand = sorted({flo, fhi, round(0.5 * (1.0 + flo), 4), round(0.5 * (1.0 + fhi), 4)} - {1.0})
+            tests = {"top_allowed_x%.3f" % f: f for f in cand}
+        elif mag_only:
+            allowed = {"source": "magazine thickness band [%.1f (physical minimum, R32), %.1f]" % (MAG_T, MAG_T_MAX),
+                       "thickness_mm_range": [MAG_T, MAG_T_MAX]}
+            tests = {"thickness_%gmm" % t: t / MAG_T for t in (MAG_T + 2.0, MAG_T + 4.0, MAG_T_MAX)}
+        elif "pistol_grip" in objs and all(o in ("pistol_grip", "trigger_guard") for o in objs):
+            # the sections the H1 gate allows: width 30-36 (+-0.25) AND girth inside the H1 band for the depth
+            kg = names.index("pistol_grip")
+            ig = np.unique(T[lab == kg].ravel())
+            remap = -np.ones(len(V), int)
+            remap[ig] = np.arange(len(ig))
+            Tg = remap[T[lab == kg]]
+            fs = np.round(np.arange(0.85, 1.2001, 0.005), 3)
+            okf = []
+            for f in fs:
+                Vg = V[ig].copy()
+                Vg[:, 1] *= f
+                h = grip_h1_section(Vg, Tg)
+                okf.append(h is not None and GRIP_W_BAND[0] - 0.25 <= h["width_mm"] <= GRIP_W_BAND[1] + 0.25
+                           and h["girth_band_mm"][0] <= h["girth_mm"] <= h["girth_band_mm"][1])
+            okf = np.array(okf)
+            if okf.any():
+                nz = np.nonzero(okf)[0]
+                j1 = int(nz[np.argmin(np.abs(fs[nz] - 1.0))])
+                lo_i = hi_i = j1
+                while lo_i > 0 and okf[lo_i - 1]:
+                    lo_i -= 1
+                while hi_i < len(fs) - 1 and okf[hi_i + 1]:
+                    hi_i += 1
+                flo, fhi = float(fs[lo_i]), float(fs[hi_i])
+            else:
+                flo = fhi = 1.0
+            allowed = {"source": "grip sections the H1 gate allows (width %s +-0.25 mm and girth in its band)"
+                                 % (GRIP_W_BAND,), "scale_range": [flo, fhi],
+                       "width_mm_range": [round(GRIP_W * flo, 2), round(GRIP_W * fhi, 2)]}
+            cand = sorted({flo, fhi, round(0.5 * (1.0 + flo), 4), round(0.5 * (1.0 + fhi), 4)} - {1.0})
+            tests = {"h1_allowed_x%.3f" % f: f for f in cand}
         else:
+            allowed = {"source": "hidden part, +-15 %", "scale_range": [0.85, 1.15]}
             tests = {"width_x0.85": 0.85, "width_x1.15": 1.15}
-            if any(o.startswith("magazine") for o in objs):
-                tests["magazine_23mm"] = 23.0 / 28.0
         width_test = {k: core_with_y_scale(f) for k, f in tests.items()}
         width_fits = min(width_test.values()) < 0.5 * rg["core_px"]
-        mag_dep = {"thickness_mm": 23.0, "region_core_px_at_23": width_test["magazine_23mm"],
-                   "region_core_px_at_28": rg["core_px"]} if "magazine_23mm" in width_test else None
+        mag_dep = None
+        if any(o.startswith("magazine") for o in objs):
+            t_pref = float(MAG_PREF_T[0]) if MAG_PREF_T else 24.0
+            c_pref = core_with_y_scale(t_pref / MAG_T)
+            mag_dep = {"spec_thickness_mm": MAG_T, "region_core_px_at_spec": rg["core_px"],
+                       "panel_preferred_thickness_mm": round(t_pref, 2), "region_core_px_at_preferred": c_pref}
+        mag_min = bool(mag_only and side_ok and not width_fits and mag_dep is not None
+                       and mag_dep["region_core_px_at_preferred"] <= 0.8 * rg["core_px"])
         if not side_ok:
             verdict = "OURS: the involved parts also miss the side view"
         elif width_fits and top_ok is not None:
             verdict = "OURS: a width the TOP allows would fit the 3/4 here"
         elif width_fits:
-            verdict = "UNSEEN DIMENSION: a different width/thickness (no TOP witness) fits the 3/4 here"
+            verdict = "UNSEEN DIMENSION: a width/thickness inside the documented band fits the 3/4 here"
+        elif mag_min:
+            verdict = ("MAGAZINE PHYSICAL MINIMUM (R32): no thickness from %.0f to %.0f mm removes it; the panel's "
+                       "thinner %.1f mm magazine shrinks it (core %d -> %d px)"
+                       % (MAG_T, MAG_T_MAX, mag_dep["panel_preferred_thickness_mm"], rg["core_px"],
+                          mag_dep["region_core_px_at_preferred"]))
         else:
-            verdict = ("3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the TOP "
-                       "allows (or, hidden, +-15 %) removes the region")
+            verdict = ("3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the "
+                       "authorities allow (%s) removes the region" % allowed["source"])
         rec = {"id": n_r, "kind": rg["kind"], "bbox_px": rg["bbox"], "px": rg["px"], "core_px_beyond_3": rg["core_px"],
                "max_dist_px": rg["max_dist_px"], "objects": objs, "trace_keys": keys, "side_per_part_pass": side,
                "top": top, "local_shift": {"dx": dx, "dy": dy, "window_iou_before": round(i0, 4),
                                            "window_iou_after": round(i1, 4), "window_p95_before": p0,
                                            "window_p95_after": p1},
-               "width_test_core_px": width_test, "magazine_thickness_dependence": mag_dep, "verdict": verdict,
-               "is_contradiction": verdict.startswith("3/4 CONTRADICTS")}
+               "allowed_widths": allowed, "width_test_core_px": width_test,
+               "magazine_thickness_dependence": mag_dep, "verdict": verdict,
+               "is_contradiction": verdict.startswith("3/4 CONTRADICTS"), "is_magazine_minimum": mag_min}
         recs.append(rec)
         # evidence image: 3/4 crop | side crop of the involved parts | TOP crop (if visible)
         tiles = [("3/4 panel (region %d, %s, %.1f px)" % (n_r, rg["kind"], rg["max_dist_px"]),
@@ -251,7 +368,7 @@ def exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm):
             dr.text((x, 8), cap, fill=(0, 0, 0))
             x += im.width + 10
         dr.text((10, Hh + 8), "verdict: " + verdict + "; local shift (%d, %d) px -> window IoU %.3f -> %.3f"
-                % (dx, dy, i0, i1), fill=(160, 0, 0) if not rec["is_contradiction"] else (0, 110, 0))
+                % (dx, dy, i0, i1), fill=(0, 110, 0) if (rec["is_contradiction"] or mag_min) else (160, 0, 0))
         canvas.save(edir / ("region_%02d.png" % n_r))
     # index image: the 3/4 diff with numbered region boxes
     H, W = ours.shape
@@ -263,7 +380,8 @@ def exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm):
     dr = _D.Draw(im)
     for r in recs:
         b = r["bbox_px"]
-        col = (0, 200, 0) if r["is_contradiction"] else (255, 160, 0)
+        col = ((0, 200, 0) if r["is_contradiction"] else (120, 200, 255) if r["is_magazine_minimum"]
+               else (255, 160, 0))
         dr.rectangle([b[0] * 3 - 6, b[1] * 3 - 6, b[2] * 3 + 6, b[3] * 3 + 6], outline=col, width=2)
         dr.text((b[0] * 3 - 6, max(b[1] * 3 - 20, 0)), str(r["id"]), fill=col)
     im.save(edir / "index.png")
@@ -327,7 +445,7 @@ def main():
     for t in (18, 20, 22, 24, 26, 28, 30, 32, 34):
         Vm[:, 1] = V[:, 1]
         idx = np.unique(T[selm].ravel())
-        Vm[idx, 1] = V[idx, 1] * (t / 28.0)
+        Vm[idx, 1] = V[idx, 1] * (t / MAG_T)
         om = C.raster_tris(cam.project(Vm), T[selm], ref.shape) > 0.5
         both = om | rest
         sweep[t] = round(C.iou(both, ref, magzone), 4)
@@ -343,22 +461,27 @@ def main():
     else:
         t_star = float(best_t)
     out["magazine_thickness_check"] = {"iou_in_mag_zone_by_thickness_mm": sweep, "best_mm": best_t,
-                                       "parabola_peak_mm": round(t_star, 2), "spec_mm": 28.0,
-                                       "verdict": "28.0 kept" if abs(t_star - 28.0) <= 3.0 else
-                                       "28.0 questioned (peak %.1f)" % t_star}
+                                       "parabola_peak_mm": round(t_star, 2), "spec_mm": MAG_T,
+                                       "verdict": ("%.1f kept" % MAG_T) if abs(t_star - MAG_T) <= 3.0 else
+                                       ("%.1f kept as the physical minimum (R32); the panel peaks at %.1f"
+                                        % (MAG_T, t_star) if t_star < MAG_T else "%.1f questioned (peak %.1f)"
+                                        % (MAG_T, t_star))}
+    MAG_PREF_T[:] = [t_star]
     if a.stage != "blockout":
         recs = exception_analysis(cam, V, T, lab, names, ours, ref, P, tag, magzone, selm)
         big = [r for r in recs if r["max_dist_px"] > 3.0]
         out["residual_regions_over_3px"] = recs
         out["exception"] = {
             "rule": "pass if IoU >= 0.93; else pass only if IoU >= 0.915 AND every residual region > 3 px is a region "
-                    "where the 3/4 panel contradicts the LEFT/RIGHT/TOP authority views",
+                    "where the 3/4 panel contradicts the LEFT/RIGHT/TOP authority views, or the documented magazine "
+                    "physical-minimum residual (R32)",
             "regions_over_3px": len(big), "contradictions": sum(r["is_contradiction"] for r in big),
-            "not_contradictions": [{"id": r["id"], "objects": r["objects"], "verdict": r["verdict"]}
-                                   for r in big if not r["is_contradiction"]],
+            "magazine_minimum": sum(r["is_magazine_minimum"] for r in big),
+            "not_explained": [{"id": r["id"], "objects": r["objects"], "verdict": r["verdict"]}
+                              for r in big if not (r["is_contradiction"] or r["is_magazine_minimum"])],
             "evidence_dir": "WorkFiles/guns/rifle/review/%s/q34_exception" % tag}
-        out["exception"]["pass"] = bool(out["iou"] >= 0.93 or (out["iou"] >= 0.915 and
-                                                                 all(r["is_contradiction"] for r in big)))
+        out["exception"]["pass"] = bool(out["iou"] >= 0.93 or (out["iou"] >= 0.915 and all(
+            r["is_contradiction"] or r["is_magazine_minimum"] for r in big)))
     print(json.dumps({k: v for k, v in out.items() if k != "residual_regions_over_3px"}, indent=1))
     (REVIEW / tag / "q34_result.json").write_text(json.dumps(out, indent=1, default=str))
 

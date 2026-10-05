@@ -132,7 +132,7 @@
    "R_front": 180.8,
    "R_rear": 239.0,
    "width": 58.2,
-   "thickness": 28.0,
+   "thickness": 26.0,
    "arc_length": 153.0,
    "bottom_Z": -183.2,
    "bottom_Z_note": "from the traced SILHOUETTE (lowest point -183.224), like the overall height; the separately traced magazine ring reads the same edge at -183.376 (0.13 px lower), which round 0 used (R30)"
@@ -276,7 +276,7 @@
       368.8,
       432.0
      ],
-     "width_Y": 29.0,
+     "width_Y": 27.0,
      "depth_above_bottom": 16.8,
      "note": "fitted to the exported mag (lateral 0.2-0.6 mm, lug recess 0.1-0.4); front lug recess at the front wall, catch notch at the rear; interior reload-visible (class E)"
     },
@@ -4132,8 +4132,8 @@
      -36.0
     ],
     "Y": [
-     -15.5,
-     15.5
+     -15.75,
+     15.75
     ]
    },
    "dims": {
@@ -4145,14 +4145,16 @@
      "rear": 19.1
     },
     "width_perp_to_axis": 39.7,
-    "width_Y": 31.0,
+    "width_Y": 31.5,
     "junction_M": [
      280.67,
      -36.0
     ],
-    "length_along_axis": 104.2
+    "length_along_axis": 104.2,
+    "strap_R_front": 9.0,
+    "strap_R_back": 13.5
    },
-   "construction": "Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, rounded rear heel. Section a rounded oblong (31 wide: unseen; real AK grips 30-36, R31 in resolutions), flatter sides where the checkering sits, straps R 8-10. Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
+   "construction": "Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, rounded rear heel. Section a rounded oblong (31.5 wide: unseen; real AK grips 30-36, R31 / R33 in resolutions), flatter sides where the checkering sits, straps R 8-10 (front strap R 9; back strap R 13.5, the palm swell: R33). Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
    "features": [
     {
      "name": "checker_panel",
@@ -5820,8 +5822,8 @@
      -12.0
     ],
     "Y": [
-     -14.0,
-     14.0
+     -13.0,
+     13.0
     ]
    },
    "dims": {
@@ -5832,7 +5834,7 @@
     "R_front_concave": 180.8,
     "R_rear_convex": 239.0,
     "width_front_to_rear": 58.2,
-    "thickness_Y": 28.0,
+    "thickness_Y": 26.0,
     "visible_top_Z": -30.9,
     "lips_top_Z": -12.0,
     "angles_deg_about_centre": {
@@ -5933,8 +5935,8 @@
      414.5
     ],
     "Y": [
-     -14.8,
-     14.8
+     -13.8,
+     13.8
     ]
    },
    "dims": {
@@ -6640,17 +6642,17 @@
     "socket": "HandReload",
     "M_mm_seated": [
      424.01,
-     14.0,
+     13.0,
      -103.35
     ],
     "mag_mm": [
      -4.99,
-     14.0,
+     13.0,
      -87.35
     ],
     "unreal_cm": [
      -0.499,
-     -1.4,
+     -1.3,
      -8.735
     ],
     "unreal_rotation_deg": {
@@ -6961,13 +6963,13 @@
   "mag_screen_sizes_derived": [
    1.0,
    0.0719,
-   0.0288,
+   0.0287,
    0.0096
   ],
   "bounds_radius_m": {
    "rifle_no_mag": 0.4502,
    "rifle_with_mag": 0.456,
-   "mag": 0.108,
+   "mag": 0.1078,
    "note": "box half-diagonal from the spec; re-derived from Unreal's bounds"
   },
   "rule": "size_mag = size_rifle x r_mag / r_rifle; LOD-pop gate fixes the rifle sizes (mean <= 1 px, max <= 3 px at 1440p)",
@@ -7200,7 +7202,7 @@
    "id": "R5",
    "topic": "Magazine thickness",
    "conflict": "front close-up c5 reads 17.9 (18-20); real ~28-30; craft ~29",
-   "resolution": "28.0: NOT measurable on the sheet (c5 reads about 18-20); the real-pattern double-stack norm is 28-30, and 28 is chosen. The earlier derivation (17.9 x 1.557 from the c7/TOP butt-plate ratio) is withdrawn: c7 draws wood on both sides of the plate where TOP shows the plate flush with the stock, so that ratio is a drawing inconsistency, not a uniform close-up scale (check C5). Confirm on the camera-solved 3/4 view (spine width against the 41.5 receiver) in the blockout stage before freezing",
+   "resolution": "SUPERSEDED by R32 (26.0). Round-0 text: NOT measurable on the sheet (c5 reads about 18-20); the real-pattern double-stack norm is 28-30, and 28 was chosen. The earlier derivation (17.9 x 1.557 from the c7/TOP butt-plate ratio) is withdrawn: c7 draws wood on both sides of the plate where TOP shows the plate flush with the stock, so that ratio is a drawing inconsistency, not a uniform close-up scale (check C5). Confirm on the camera-solved 3/4 view (spine width against the 41.5 receiver) in the blockout stage before freezing",
    "rule": "real-pattern norm where the sheet cannot be measured; the user may override"
   },
   {
@@ -7384,6 +7386,27 @@
    "conflict": "provisional 40 mm (study 5.1)",
    "resolution": "46 mm: the fit body's palm centre projected on the knuckle line from the web (45.9 mm); B-frame coordinates (sockets, bore height) are regenerated from it. Grip section width 30 -> 31 (documented real AK grips 30-36 mm; at 30 the rounded-oblong girth sat on the real-world band's lower edge)",
    "rule": "H1 (gun study 7)"
+  },
+  {
+   "id": "R32",
+   "topic": "Magazine thickness (form fix round 2; supersedes R5)",
+   "conflict": "spec 28.0 (real-pattern norm) vs the camera-solved 3/4 panel's preference ~24 (parabola peak 23.6 on the magazine-zone IoU sweep 18-34 mm) and close-up c5's 18-20",
+   "resolution": "26.0: a staggered double stack of 11.35 mm case heads needs d x (1 + sin 60 deg) = 21.2 mm inside, plus two ~1.0 mm walls and the pressed ribs' depth, so about 25-26 mm is the physical minimum; 26 is the closest physically real value to the sheet. The magazine well opening and liner follow (opening = thickness + 1.0, liner walls 1.0); the remaining 3/4 magazine residual (the panel's ~24) is the documented physical-minimum residual of the L2 3/4 gate",
+   "rule": "physical minimum wins over a drawing that is thinner than a real magazine can be"
+  },
+  {
+   "id": "R33",
+   "topic": "Grip back strap radius (form fix round 2)",
+   "conflict": "straps R 8-10 (craft) at width 31 / R 10 leave a 3.2-3.6 px residual on the grip's back strap in the camera-solved 3/4 view; width 30 / R 10 also removes it but drops the section girth below the H1 band (122.0 for this depth); back strap R 11 at width 31 leaves 3.16 px (it flickers with the camera re-solve)",
+   "resolution": "width 31.5 (inside the documented 30-36), front strap R 9 (inside the spec's 8-10), back strap R 13.5 (the palm swell; real grips are rounder at the back than at the front): the back-strap residual drops to 2.8 px (sweep at the solved camera; R 12 / R 12.5 / R 13 leave 3.0-3.16 px, R 11 3.16 px) and the H1 girth stays inside its band (about 122.5 against the 122.06 lower edge for this depth; round 1: 123.5 at 31 / R 10). The grip's front-strap 3/4 residual grows slightly (core 114 -> 136 px) and stays a 3/4-panel contradiction",
+   "rule": "3/4 panel for the unseen section, inside the H1 band"
+  },
+  {
+   "id": "R34",
+   "topic": "Gas block, buttstock and front sight widths vs the 3/4 panel (form fix round 2)",
+   "conflict": "round 1 flagged three 3/4 residuals as 'a width the TOP allows would fit', testing our half width +-2.45 mm (2 TOP px)",
+   "resolution": "kept. Re-tested against the TOP trace itself: the widths that remove the 3/4 residuals push the TOP width error past the 2 px tolerance (gas block +8 % -> TOP P95 2.43 px, region still 5.1 px; stock -6 % -> 2.16 px, region still 5.0 px; front sight base: no width from -5 % to +25 % brings it below 3.6 px) and lower the TOP L2 IoU (gas block +7 %: -0.0022; stock -3 %: -0.0018) that passes at 0.931 against 0.93. Inside the TOP-allowed range the three regions are 3/4-panel contradictions; the exception test now uses that range (rifle_q34.py, TOP width error P95 <= 2 px at the part's own width stations) instead of a fixed +-2.45 mm",
+   "rule": "TOP is the width authority"
   }
  ],
  "fab_original_changes": {

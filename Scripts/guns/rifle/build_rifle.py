@@ -40,7 +40,7 @@ def stage_blockout():
     import rifle_blockout as RB
     bl.reset_scene()
     col = bl.collection("AR01_Blockout")
-    t = float(arg("--mag-thickness", "28"))
+    t = float(arg("--mag-thickness", str(SPEC.key["magazine"]["thickness"])))
     objs = []
     for pid, m in RB.parts(t).items():
         ob = m.to_object("BO_" + pid, col, GRIP)

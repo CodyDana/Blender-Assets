@@ -33,8 +33,10 @@ def scaled_prism(P2, half_w_fun):
     return out
 
 
-def parts(mag_thickness=28.0):
+def parts(mag_thickness=None):
     S = SPEC
+    if mag_thickness is None:
+        mag_thickness = float(S.key["magazine"]["thickness"])
     out = {}
 
     def prof(pid, tol=0.35):

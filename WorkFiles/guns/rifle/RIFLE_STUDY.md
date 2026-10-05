@@ -32,9 +32,9 @@ looking, by measuring and by a blind test.
 | Sights | Rear sight block X 454.9-524.1; the leaf overhangs the cover to X 448.7. Leaf top +48.0, notch bottom **(449.9, +45.5)**, slider X 457.5-465.5. Front ears top +49.4, post tip **(825.3, +45.0)**. Radius **375.4**, line -0.08° to the bore |
 | Furniture (wood) | Stock X 10.0-231.4, butt 109.8 x 36.9. Pistol grip down to Z -132.7, axis **22.35°** from vertical. Lower handguard X 484.0-640.9 (156.9 x 42.4). Upper handguard X 534.0-640.9 (106.9). Two side slots per side at X **543-571 and 595-623** in the guard joint |
 | Front end | Gas block X 681-737, gas tube Ø 19.4 at Z +24.2, front sight block X **806.1**-848.8, slant brake X 848.8-880.0 (Ø 20.2, cut **40.8°**, bottom lip forward) |
-| Magazine | Separate mesh. Concentric arcs **R 239.0 / 180.8** about M (604.8, 3.3). Width 58.2, thickness **28.0** (real-pattern norm), centre-arc length 153.0, sweep 41.8°. Rock-in reload about the front-lug hook |
+| Magazine | Separate mesh. Concentric arcs **R 239.0 / 180.8** about M (604.8, 3.3). Width 58.2, thickness **26.0** (R32: the physical minimum of a staggered double stack; was 28.0), centre-arc length 153.0, sweep 41.8°. Rock-in reload about the front-lug hook |
 | Assets | `SK_AR01` (rig pilot), `SM_AR01` (static twin), `SM_AR01_Mag` (GUN_BUILDING_STUDY 1.1) |
-| Frame | Build frame B = M - Grip; the Grip origin is at M (265.46, 0, -72.99), so the bore sits at B z = +72.99. +X muzzle, +Z up, -Y right. Unreal cm = (Bx, -By, Bz) / 10 |
+| Frame | Build frame B = M - Grip; the Grip origin is at M (263.18, 0, -78.54) (R31), so the bore sits at B z = +78.54. +X muzzle, +Z up, -Y right. Unreal cm = (Bx, -By, Bz) / 10 |
 | Finish | Black lacquer over steel (metallic 0) wearing to bare steel; bluing on small parts; walnut-tone shellac wood |
 
 ## 1. Decisions (merge log; full text in `rifle_spec.json` "resolutions" R1-R29)
@@ -60,7 +60,7 @@ repo-root line standard overrides the tech plan where it decides.
    - The adversarial check (section 11) found more of the same and the trace itself is now cleaned (R19): slivers are
      dropped or relabelled in `tools/trace_reference.py`, so the trace keys no longer carry them.
 3. **Scale is 880.0 overall and 415.0 for the barrel (section 4).**
-4. **The magazine is 28.0 thick (R5).** Not measurable on the sheet: the front close-up c5 reads about 18-20, and the
+4. **The magazine is 26.0 thick (R32, superseding R5's 28.0).** Not measurable on the sheet: the front close-up c5 reads about 18-20, and the
    close-ups are not drawn to one scale (c7 draws wood beside the butt plate where TOP shows the plate flush, so its
    ratio to TOP does not carry over to c5). The real-pattern double-stack width is 28-30; 28 is chosen. The blockout
    stage confirms it on the camera-solved 3/4 view (spine width against the 41.5 receiver) before it is frozen.
@@ -178,7 +178,7 @@ Traced parts also carry `side_profile_M`, the trace simplified to 0.3 mm.
 | 25 | buttstock | body | X 10.0-231.4, heel +1.1, toe -106.6, comb nose (157.5, +10.1) | Solid wood, comb step, widths 38.3 to 31.9 (TOP), left wrist inlet |
 | 26 | butt_plate | body | 109.8 x 36.9, tilt 5.2° toe forward | Stadium plate with a skirt, 2 cross-slotted screws in counterbore rings at Z -10 / -87.5 |
 | 27 | sling_swivel_rear | body | X 67.6-77.7, Z -99.6..-90.7 | Loop on a base plate |
-| 28 | magazine_body | (mag) | R 239.0 / 180.8 about (604.8, 3.3), 58.2 x 28.0 | Two welded halves, spine channels |
+| 28 | magazine_body | (mag) | R 239.0 / 180.8 about (604.8, 3.3), 58.2 x 26.0 (R32) | Two welded halves, spine channels |
 | 29 | magazine_ribs | (mag) | 4 ribs at 0.17 / 0.34 / 0.51 / 0.66 of the width + a front rib at 0.79; tips at seated Z -38.5, bottom ends 16 above the floor plate | Pressed, 2.5 wide, 1.0 proud, bright crests |
 | 30 | magazine_top_plates | (mag) | seated Z -38..-12, width fraction 0.08-0.80 from the rear (X 372.2-414.5 at Z -25) | Smooth plates above the ribs |
 | 31 | magazine_lugs | (mag) | hook (429.0, -16.0) | Front hook (pivot), rear catch lug |
@@ -188,7 +188,7 @@ Traced parts also carry `side_profile_M`, the trace simplified to 0.3 mm.
 ## 6. Frames, bones and sockets
 
 **Frames.** M (spec) and B (build) share axes:
-- B = M - (265.46, 0, -72.99).
+- B = M - (263.18, 0, -78.54) (R31; first edition (265.46, 0, -72.99)).
 - The Grip origin is 40 mm down the grip-axis midline (22.35°, fitted over Z -64..-116) from the receiver junction at
   (280.67, -36.0). The 40 mm is provisional; gate H1 fixes it.
 - Unreal cm = (Bx, -By, Bz) / 10.
@@ -201,31 +201,33 @@ is provisional to ± 5 mm; the fit stage sets it.
 - Gun study 5.2 says "a selector turns about X". A lever on a transverse pin turns about Y, so this is flagged to the
   gun-study owner.
 
+> **Form fix rounds 1-2 (2026-10-04): `rifle_spec.json` is authoritative.** The Grip origin moved to 46 mm down the grip axis (R31): Grip = M (263.18, 0, -78.54), so every rifle-frame (B) number below moved by (+2.28, 0, +5.55) mm against the study's first edition; the tables here are regenerated from the spec. Magazine thickness 26.0 (R32, supersedes R5's 28.0); grip section 31.5 wide, front strap R 9, back strap R 13.5 (R33).
+
 **Rifle sockets (17)**, B frame, mm:
 
 | Socket | Bone | B (x, y, z) | Unreal rotation | Note |
 |---|---|---|---|---|
 | Grip | body | (0, 0, 0) | 0 | origin |
-| SupportHand | body | (297.04, 0, 48.39) | 0 | **provisional**: on the handguard underside (Z -24.6) until H1 sets the measured hand_l frame; plan `OffHand` |
-| Trigger | trigger | (55.84, 0, 26.99) | 0 | trigger face |
-| Muzzle | muzzle_device | (605.13, 0, 72.99) | 0 | bore x cut plane |
-| MuzzleSeat | body | (583.34, 0, 72.99) | 0 | brake rear face |
-| Sight | sight_rear | (184.44, 0, 118.49) | pitch -0.076 | notch bottom; +X to the post tip; plan `ADS` |
-| Mag | magazine | (163.54, 0, 56.99) | 0 | hook; plan `MagWell` |
-| MagRockStart | body | (163.54, 0, 56.99) | pitch +18 | base swings forward |
-| MagInsertStart | body | (166.01, 0, 49.38) | pitch +18 | 8 along the tilted -Z |
-| ShellEject | **body** | (129.54, -20.75, 82.99) | yaw 80, pitch 20 | port centre; on body so it never travels into the receiver with the bolt; plan `EjectPort` |
-| ChargingHandle | bolt | (185.54, -30.0, 89.49) | 0 | |
-| Selector | selector | (85.54, -23.75, 76.99) | 0 | lever tab |
-| MagRelease | mag_release | (96.54, 0, 6.99) | 0 | catch tab |
-| Shoulder | body | (-261.16, 0, 17.99) | pitch 5.229 | butt plate centre |
-| SlingRear | body | (-192.81, 0, -22.16) | 0 | |
-| CenterOfMass, Holster | body | (154.54, 0, 62.99) | 0 | **computed by the build** (nominal here) |
+| SupportHand | body | (299.32, 0, 53.94) | 0 | **provisional**: on the handguard underside (Z -24.6) until H1 sets the measured hand_l frame; plan `OffHand` |
+| Trigger | trigger | (58.12, 0, 32.54) | 0 | trigger face |
+| Muzzle | muzzle_device | (607.41, 0, 78.54) | 0 | bore x cut plane |
+| MuzzleSeat | body | (585.62, 0, 78.54) | 0 | brake rear face |
+| Sight | sight_rear | (186.72, 0, 124.04) | pitch -0.076 | notch bottom; +X to the post tip; plan `ADS` |
+| Mag | magazine | (165.82, 0, 62.54) | 0 | hook; plan `MagWell` |
+| MagRockStart | body | (165.82, 0, 62.54) | pitch +18 | base swings forward |
+| MagInsertStart | body | (168.29, 0, 54.93) | pitch +18 | 8 along the tilted -Z |
+| ShellEject | **body** | (131.82, -20.75, 88.54) | yaw 80, pitch 20 | port centre; on body so it never travels into the receiver with the bolt; plan `EjectPort` |
+| ChargingHandle | bolt | (187.82, -30, 95.04) | 0 | |
+| Selector | selector | (87.82, -23.75, 82.54) | 0 | lever tab |
+| MagRelease | mag_release | (98.82, 0, 12.54) | 0 | catch tab |
+| Shoulder | body | (-258.88, 0, 23.54) | pitch 5.229 | butt plate centre |
+| SlingRear | body | (-190.53, 0, -16.61) | 0 | |
+| CenterOfMass, Holster | body | (156.82, 0, 68.54) | 0 | **computed by the build** (nominal here) |
 
 **Magazine sockets (5)**, magazine frame, mm:
 - `Mag` (0, 0, 0)
-- `HandReload` (-4.99, 14.0, -87.35)
-- `Feed` (-29.65, 0, 4.0)
+- `HandReload` (-4.99, 13, -87.35)
+- `Feed` (-29.65, 0, 4)
 - `Base` (45.64, 0, -145.37), pitch -39.39
 - `CenterOfMass` (computed)
 
@@ -297,7 +299,7 @@ these; none changes frames, sockets or slots:
 
 Closed in this merge, with their stated defaults (the user can still override):
 - butt-plate screws: cross slots, as c7 draws them (closed by the check, R24; a single slot stays a Fab option);
-- magazine thickness (28.0, the real-pattern norm; not measurable on the sheet);
+- magazine thickness (26.0 since R32, the physical minimum; not measurable on the sheet);
 - barrel diameter (15.0);
 - overall length (880.0);
 - static vs skeletal (the gun study's rig pilot);
@@ -312,7 +314,7 @@ Closed in this merge, with their stated defaults (the user can still override):
   vents. Gate L3 (feature positions ≤ 2 sheet px, listed in `gates_look.L3_features`) catches drift on the right side.
 - **Thin parts** (8 trace masks under 400 px, `gates_look.L2_parts`) are gated on contour distance, not IoU, because a
   3 px part cannot score IoU 0.95 against a trace with 0.25-0.5 px edge error.
-- **The magazine thickness (28.0) is a norm,** not a sheet reading; the blockout checks it on the 3/4 view. The left side is gated loosely
+- **The magazine thickness (26.0 since R32; first 28.0) is a physical minimum,** not a sheet reading; the blockout checks it on the 3/4 view. The left side is gated loosely
   (≥ 0.88 IoU) because its panel disagrees with LEFT by 12-16 mm.
 - **The spec top view is boxes per part** (IoU 0.871 against the TOP trace, whose fake side bumps and drop shadow
   are outside the spec). The build gets its sections from the craft notes, not from the boxes.

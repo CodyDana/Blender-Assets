@@ -255,7 +255,7 @@ l3("trigger-guard opening (see-through bbox)", b, hole,
 
 # ---- magazine rib top tips (Z of the highest rib point on the right side)
 V, T = GEO["magazine"]
-rib = V[(V[:, 1] < -14.5)]
+rib = V[(V[:, 1] < -(float(SPEC.key["magazine"]["thickness"]) / 2 + 0.5))]      # right-side ribs (body face at -T/2)
 l3("magazine rib top tips (Z)", round(float(rib[:, 2].max()), 2) if len(rib) else None, -38.5,
    None if not len(rib) else abs(rib[:, 2].max() + 38.5), "spec tolerance +-1.5")
 

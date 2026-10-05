@@ -185,8 +185,11 @@ if FLOOR_NORMAL[1] > 0:
 # where TOP shows the plate skirt flush with the stock, so the c7/TOP ratio (0.64) is a drawing inconsistency and
 # does not carry over to c5 (check C5). 28.0 is the real-pattern double-stack norm (28-30); confirm it on the
 # camera-solved 3/4 view (spine width against the 41.5 receiver) in the blockout stage before freezing.
+# Form fix round 2 (R32): 26.0, the physical minimum closest to the sheet (the 3/4 panel prefers ~24, c5 reads 18-20).
 MAG_T_C5 = MAG["thickness_from_front_closeup"]["mm"]
-MAG_T = 28.0
+CASE_HEAD_D = 11.35                                   # cartridge case head diameter of the pattern (mm)
+MAG_T_INSIDE_MIN = CASE_HEAD_D * (1 + math.sin(math.radians(60)))   # staggered double stack: 21.18 inside
+MAG_T = 26.0
 
 # ---- magazine pivot (front-lug hook) and reload path
 REC_BOT = D["receiver"]["bottom_Z"]["mm"]                                # -28.8
@@ -229,7 +232,7 @@ assert abs(UPPER_HG_X[0] - 534.0) < 1.0, UPPER_HG_X
 # (IMI Defense AK47/AK74 grip 30 mm, FAB Defense Gradus AK grip 36 mm); 30.0 put the rounded-oblong girth on the
 # band's lower edge (W 30 / straps R 10 = 122 mm). The camera-solved 3/4 view cannot separate 28-32 (zone IoU
 # 0.903-0.908).
-GRIP_WIDTH_Y = 31.0
+GRIP_WIDTH_Y = 31.5                     # R31 (30 -> 31), R33 (31 -> 31.5)
 CH_TIP_Y = -35.2                                                        # TOP image-down knob extreme (gun right)
 
 # ---- frames: M (measurement) -> B (Blender build, origin Grip) -> Unreal cm
@@ -656,10 +659,11 @@ part(id="pistol_grip", display="Pistol grip (wood) with checkered panels", bone=
            "axis_line_M": f"X = {k_axis:.4f} * Z + {c_axis:.2f} (midline, Z -64..-116)",
            "edge_rakes_deg": {"front": pg["front_edge_rake_from_vertical_deg"], "rear": pg["rear_edge_rake_from_vertical_deg"]},
            "width_perp_to_axis": round(GRIP_WIDTH_PERP, 1), "width_Y": GRIP_WIDTH_Y,
-           "junction_M": r1(JUNCTION, 2), "length_along_axis": pg["length_along_axis"]["mm"]},
+           "junction_M": r1(JUNCTION, 2), "length_along_axis": pg["length_along_axis"]["mm"],
+           "strap_R_front": 9.0, "strap_R_back": 13.5},
      construction="Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, "
-     "rounded rear heel. Section a rounded oblong (31 wide: unseen; real AK grips 30-36, R31 in resolutions), flatter sides where the "
-     "checkering sits, straps R 8-10. Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), "
+     "rounded rear heel. Section a rounded oblong (31.5 wide: unseen; real AK grips 30-36, R31 / R33 in resolutions), flatter sides where the "
+     "checkering sits, straps R 8-10 (front strap R 9; back strap R 13.5, the palm swell: R33). Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), "
      "diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a "
      "real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
      features=[{"name": "checker_panel", "both_sides": True, "from_top_fraction": [0.25, 0.88], "inset_front": 4.0,
@@ -1123,8 +1127,8 @@ spec["resolutions"] = [
     {"id": "R4", "topic": "Magazine radii", "conflict": "craft R 210 / 150 about (580, -10); measure concentric R 239.0 / 180.8 about (604.8, 3.3)",
      "resolution": "measure (rms 0.56 mm fit on sub-pixel edges)", "rule": "measurement wins on dimensions"},
     {"id": "R5", "topic": "Magazine thickness", "conflict": f"front close-up c5 reads {MAG_T_C5} (18-20); real ~28-30; craft ~29",
-     "resolution": f"{MAG_T}: NOT measurable on the sheet (c5 reads about 18-20); the real-pattern double-stack norm is "
-                   "28-30, and 28 is chosen. The earlier derivation (17.9 x 1.557 from the c7/TOP butt-plate ratio) is "
+     "resolution": f"SUPERSEDED by R32 ({MAG_T}). Round-0 text: NOT measurable on the sheet (c5 reads about 18-20); the real-pattern double-stack norm is "
+                   "28-30, and 28 was chosen. The earlier derivation (17.9 x 1.557 from the c7/TOP butt-plate ratio) is "
                    "withdrawn: c7 draws wood on both sides of the plate where TOP shows the plate flush with the stock, so "
                    "that ratio is a drawing inconsistency, not a uniform close-up scale (check C5). Confirm on the "
                    "camera-solved 3/4 view (spine width against the 41.5 receiver) in the blockout stage before freezing",
@@ -1223,6 +1227,37 @@ spec["resolutions"] += [
      "resolution": "both read the same traced edge 0.15 mm (0.13 px) apart; the silhouette is the outline authority for every overall number, so magazine.bottom_Z = -183.2 and the build sets its floor line from the silhouette's lowest point (rifle_parts2._floor_line)", "rule": "one outline for all overall dimensions"},
     {"id": "R31", "topic": "Grip origin depth (H1 early, form fix round 1)", "conflict": "provisional 40 mm (study 5.1)",
      "resolution": f"{GRIP_DEPTH:g} mm: the fit body's palm centre projected on the knuckle line from the web (45.9 mm); B-frame coordinates (sockets, bore height) are regenerated from it. Grip section width 30 -> 31 (documented real AK grips 30-36 mm; at 30 the rounded-oblong girth sat on the real-world band's lower edge)", "rule": "H1 (gun study 7)"},
+    {"id": "R32", "topic": "Magazine thickness (form fix round 2; supersedes R5)",
+     "conflict": "spec 28.0 (real-pattern norm) vs the camera-solved 3/4 panel's preference ~24 (parabola peak 23.6 on "
+                 "the magazine-zone IoU sweep 18-34 mm) and close-up c5's 18-20",
+     "resolution": f"{MAG_T}: a staggered double stack of {CASE_HEAD_D} mm case heads needs d x (1 + sin 60 deg) = "
+                   f"{MAG_T_INSIDE_MIN:.1f} mm inside, plus two ~1.0 mm walls and the pressed ribs' depth, so about 25-26 mm "
+                   "is the physical minimum; 26 is the closest physically real value to the sheet. The magazine well "
+                   "opening and liner follow (opening = thickness + 1.0, liner walls 1.0); the remaining 3/4 magazine "
+                   "residual (the panel's ~24) is the documented physical-minimum residual of the L2 3/4 gate",
+     "rule": "physical minimum wins over a drawing that is thinner than a real magazine can be"},
+    {"id": "R33", "topic": "Grip back strap radius (form fix round 2)",
+     "conflict": "straps R 8-10 (craft) at width 31 / R 10 leave a 3.2-3.6 px residual on the grip's back strap in the "
+                 "camera-solved 3/4 view; width 30 / R 10 also removes it but drops the section girth below the H1 band "
+                 "(122.0 for this depth); back strap R 11 at width 31 leaves 3.16 px (it flickers with the camera re-solve)",
+     "resolution": "width 31.5 (inside the documented 30-36), front strap R 9 (inside the spec's 8-10), back strap "
+                   "R 13.5 (the palm swell; real grips are rounder at the back than at the front): the back-strap residual "
+                   "drops to 2.8 px (sweep at the solved camera; R 12 / R 12.5 / R 13 leave 3.0-3.16 px, R 11 3.16 px) and "
+                   "the H1 girth stays inside its band (about 122.5 against the 122.06 lower edge for this depth; round 1: "
+                   "123.5 at 31 / R 10). The grip's front-strap 3/4 residual grows slightly (core 114 -> 136 px) and stays "
+                   "a 3/4-panel contradiction",
+     "rule": "3/4 panel for the unseen section, inside the H1 band"},
+    {"id": "R34", "topic": "Gas block, buttstock and front sight widths vs the 3/4 panel (form fix round 2)",
+     "conflict": "round 1 flagged three 3/4 residuals as 'a width the TOP allows would fit', testing our half width "
+                 "+-2.45 mm (2 TOP px)",
+     "resolution": "kept. Re-tested against the TOP trace itself: the widths that remove the 3/4 residuals push the TOP "
+                   "width error past the 2 px tolerance (gas block +8 % -> TOP P95 2.43 px, region still 5.1 px; stock "
+                   "-6 % -> 2.16 px, region still 5.0 px; front sight base: no width from -5 % to +25 % brings it below "
+                   "3.6 px) and lower the TOP L2 IoU (gas block +7 %: -0.0022; stock -3 %: -0.0018) that passes at "
+                   "0.931 against 0.93. Inside the TOP-allowed range the three regions are 3/4-panel contradictions; "
+                   "the exception test now uses that range (rifle_q34.py, TOP width error P95 <= 2 px at the part's own "
+                   "width stations) instead of a fixed +-2.45 mm",
+     "rule": "TOP is the width authority"},
 ]
 
 spec["fab_original_changes"] = {

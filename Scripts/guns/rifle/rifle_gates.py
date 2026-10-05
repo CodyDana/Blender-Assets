@@ -78,18 +78,19 @@ def stage_blockout():
     info = {"magazine_thickness_check_on_solved_3q_view": mt,
             "camera": q.get("camera"), "camera_landmark_rms_px": q.get("landmark_rms_px"),
             "q34_iou_blockout": q.get("iou"),
-            "verdict": ("28.0 kept: the 3/4 panel prefers %.1f mm, but the effect (IoU %.4f at the best vs %.4f at 28) "
-                        "is smaller than the panel's own inconsistency (camera landmark residual %.1f px RMS, "
-                        "silhouette IoU ceiling ~0.90 for a rigid model); flagged for the stage-6 magazine build"
-                        % (mt["parabola_peak_mm"], max(mt["iou_in_mag_zone_by_thickness_mm"].values()),
-                           mt["iou_in_mag_zone_by_thickness_mm"].get("28", mt["iou_in_mag_zone_by_thickness_mm"].get(28, 0)),
+            "verdict": ("%.1f (spec, R32: the physical minimum of a staggered double stack): the 3/4 panel prefers "
+                        "%.1f mm (IoU %.4f at the best vs %.4f at the spec value); the panel is thinner than a real "
+                        "magazine can be (camera landmark residual %.1f px RMS)"
+                        % (mt["spec_mm"], mt["parabola_peak_mm"], max(mt["iou_in_mag_zone_by_thickness_mm"].values()),
+                           mt["iou_in_mag_zone_by_thickness_mm"].get(str(int(mt["spec_mm"])),
+                                                                   mt["iou_in_mag_zone_by_thickness_mm"].get(int(mt["spec_mm"]), 0)),
                            q.get("landmark_rms_px", 0)))}
     res = {"stage": "1 blockout", "date": datetime.now().isoformat(timespec="seconds"),
            "status": "pass" if all(x["pass"] for x in gates) else ("fail" if min(s["iou_fit"], t["iou_fit_valid"]) < 0.90 else "partial"),
            "gates": gates, "details": {"silhouette": sil, "magazine_thickness": info},
            "method": "primary volumes = the traced side profiles (spec side_profile_M, Douglas-Peucker 0.35 mm) extruded "
                      "across their TOP widths; stock tapered by the TOP width profile; round parts as cylinders; "
-                     "magazine = the traced magazine ring at 28 mm. IoU on 4x supersampled rasters in the trace's own "
+                     "magazine = the traced magazine ring at the spec thickness (26 mm, R32). IoU on 4x supersampled rasters in the trace's own "
                      "px<->mm frame (no camera error).",
            "files": {"blend": rel(SCRATCH / "AR01_blockout.blend"), "overlays": [rel(p) for p in sorted((REVIEW / "blockout").glob("*.png"))]}}
     (GATES / "blockout.json").write_text(json.dumps(res, indent=1))
@@ -117,16 +118,18 @@ def stage_form():
                    "failing: " + ", ".join("%s (IoU %.3f, P95 %s, max %s)" % (k, parts[k]["iou"], parts[k]["contour_p95_px"],
                                                                        parts[k]["contour_max_px"]) for k in bad)))
     ex = q.get("exception", {})
-    nc = ex.get("not_contradictions", [])
+    nc = ex.get("not_explained", ex.get("not_contradictions", []))
     gates.append(g("L2 3/4 view IoU (camera solved, outer silhouettes)", q["iou"], ">= 0.93", q["iou"] >= 0.93,
                    "raw (our holes open against the hole-filled reference mask, the round-0 measure) %.4f; camera "
                    "landmark residual %.1f px RMS" % (q.get("iou_raw_unfilled", float("nan")), q.get("landmark_rms_px", float("nan")))))
     gates.append(g("L2 3/4 view contour P95 (sheet px)", q["contour_px"]["p95"], "<= 3", q["contour_px"]["p95"] <= 3))
-    gates.append(g("L2 3/4 documented exception (IoU >= 0.915 and every residual region > 3 px a 3/4-panel contradiction)",
-                   {"iou": q["iou"], "regions_over_3px": ex.get("regions_over_3px"), "contradictions": ex.get("contradictions")},
-                   "IoU >= 0.915 and all regions contradict LEFT/RIGHT/TOP", bool(ex.get("pass")),
-                   ("not shown to be contradictions: " + "; ".join("region %d %s: %s" % (r["id"], "/".join(r["objects"]), r["verdict"])
-                                                                 for r in nc) if nc else "all regions are contradictions")
+    gates.append(g("L2 3/4 documented exception (IoU >= 0.915 and every residual region > 3 px a 3/4-panel contradiction "
+                   "or the magazine physical-minimum residual)",
+                   {"iou": q["iou"], "regions_over_3px": ex.get("regions_over_3px"), "contradictions": ex.get("contradictions"),
+                    "magazine_minimum": ex.get("magazine_minimum")},
+                   "IoU >= 0.915 and all regions contradict LEFT/RIGHT/TOP or are the R32 magazine residual", bool(ex.get("pass")),
+                   ("not explained: " + "; ".join("region %d %s: %s" % (r["id"], "/".join(r["objects"]), r["verdict"])
+                                                  for r in nc) if nc else "all regions explained")
                    + "; evidence images " + ex.get("evidence_dir", "")))
     gates.append(g("L3 side contour P95 (sheet px)", s["contour_px"]["p95"], "<= 2", s["contour_px"]["p95"] <= 2))
     l3bad = [f["feature"] for f in me["L3"] if not f["pass"]]
