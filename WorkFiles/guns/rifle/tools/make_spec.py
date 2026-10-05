@@ -210,6 +210,11 @@ NOTCH_Z = D["rear_sight"]["leaf_top_Z"]["mm"] - 2.5                     # U-notc
 POST_X = D["front_sight_block"]["hood_centre_X"]["mm"]
 POST_Z = NOTCH_Z - 0.5                                                  # 100 m zero: line ~1.4 mrad down toward the muzzle
 SIGHT_PITCH = math.degrees(math.atan2(POST_Z - NOTCH_Z, POST_X - NOTCH_X))
+# R48 (form realism round): the eye line runs over the notch TOP (the shoulders, leaf top) to the post tip -- the
+# real-pattern sight picture, post tip level with the notch top and centred in it. The line through the notch
+# BOTTOM puts the tip on the notch floor, so the post is hidden behind the leaf (the 'broken sight line').
+NOTCH_TOP_Z = D["rear_sight"]["leaf_top_Z"]["mm"]
+EYE_PITCH = math.degrees(math.atan2(POST_Z - NOTCH_TOP_Z, POST_X - NOTCH_X))
 
 # ---- brake cut
 BR = D["muzzle_brake"]
@@ -1172,10 +1177,13 @@ rifle_sockets = [
          src="bore axis x brake cut plane"),
     sock("MuzzleSeat", "body", [D["barrel"]["muzzle_end_X"]["mm"], 0.0, 0.0], use="device / suppressor seat",
          src="brake rear face = barrel shoulder"),
-    sock("Sight", "sight_rear", [round(NOTCH_X, 2), 0.0, NOTCH_Z],
-         rot={"roll": 0.0, "pitch": round(SIGHT_PITCH, 4), "yaw": 0.0},
-         use="ADS: on the notch bottom, +X toward the front post tip; eye relief is game data (0.25 m standard)",
-         src=f"notch Z = leaf top - 2.5; post tip at X {POST_X}, Z {POST_Z}", plan_name="ADS (+SightRear; SightFront dropped)"),
+    sock("Sight", "sight_rear", [round(NOTCH_X, 2), 0.0, NOTCH_TOP_Z],
+         rot={"roll": 0.0, "pitch": round(EYE_PITCH, 4), "yaw": 0.0},
+         use="ADS: at the notch TOP centre (level with the shoulders), +X through the front post tip: the eye on this "
+             "line sees the post tip level with the notch top and centred in it (gate B4); eye relief is game data "
+             "(0.25 m standard)",
+         src=f"R48: notch top Z = leaf top {NOTCH_TOP_Z}; post tip at X {POST_X}, Z {POST_Z}",
+         plan_name="ADS (+SightRear; SightFront dropped)"),
     sock("Mag", "magazine", [float(HOOK[0]), 0.0, float(HOOK[1])], use="SM_AR01_Mag attaches here with zero relative transform",
          src="front-lug hook point (provisional +-5 mm; the fit stage sets it)", plan_name="MagWell"),
     sock("MagRockStart", "body", [float(HOOK[0]), 0.0, float(HOOK[1])], rot={"roll": 0.0, "pitch": ROCK, "yaw": 0.0},
@@ -1285,7 +1293,10 @@ spec = {
         "rear_sight_leaf_top_Z": rs["leaf_top_Z"]["mm"], "front_sight_ear_top_Z": fsb["hood_top_Z"]["mm"],
         "sight_line": {"notch_M": [round(NOTCH_X, 2), 0.0, NOTCH_Z], "post_tip_M": [POST_X, 0.0, POST_Z],
                        "radius": round(POST_X - NOTCH_X, 1), "pitch_deg": round(SIGHT_PITCH, 4),
-                       "height_above_bore_at_notch": NOTCH_Z},
+                       "height_above_bore_at_notch": NOTCH_Z,
+                       "eye_line": {"from_M": [round(NOTCH_X, 2), 0.0, NOTCH_TOP_Z], "to_M": [POST_X, 0.0, POST_Z],
+                                    "pitch_deg": round(EYE_PITCH, 4),
+                                    "note": "R48: the Sight socket's line (notch top centre -> post tip)"}},
         "grip": {"origin_M": r1([GX, 0.0, GZ], 2), "axis_rake_deg": round(GRIP_RAKE, 2), "bottom_Z": pg["Z"][0]},
         "stock_length": st["length_butt_to_receiver"]["mm"], "butt_height": bpl["height"]["mm"], "butt_width": TV["butt_plate_width"]["mm"],
         "handguard_lower_length": lh["length"]["mm"], "handguard_upper_length": round(UPPER_HG_X[1] - UPPER_HG_X[0], 1),
@@ -1331,8 +1342,9 @@ spec = {
         "rifle": rifle_sockets, "mag": mag_sockets,
         "omitted": {"SlingFront": "not shown on the sheet (gas block left side shows no loop)",
                     "Rail_*": "no rail on the game rifle (Fab delta only)", "Stock": "fixed stock"},
-        "gates": {"B4": "Muzzle on the bore <= 0.5 mm / 0.05 deg; sight picture at 55 deg ADS FOV, eye 0.25 m behind Sight, "
-                        "2560x1440: post centred in the notch within 0.5 px", "B5": "sidecar = build within 0.001 mm / 0.001 deg"},
+        "gates": {"B4": "Muzzle on the bore <= 0.5 mm / 0.05 deg; sight picture at 55 deg ADS FOV, eye 0.25 m behind Sight on "
+                        "its line, 2560x1440, occlusion-aware: the post tip level with the notch top and centred in "
+                        "the notch within 0.2 mm (both axes, at the notch), the post visible in the notch (R48)", "B5": "sidecar = build within 0.001 mm / 0.001 deg"},
     },
     "materials": {
         "finishes": {
@@ -1735,13 +1747,185 @@ spec["resolutions"] += [
 spec["key_dimensions"]["butt_height"] = 110.5
 spec["key_dimensions"]["butt_height_note"] = "R46: 109.8 +- 0.7 measured; 110.5 with the heel top flush with the stock"
 
+# ------------------------------------------------------------------------------- form realism round (2026-10-05, R48)
+# Two realism judges on the rough-look form: fake in the first-person, ADS and hero views, real at 3 m. Every reason
+# they gave was fixed as real geometry in the part modules / generators (Scripts/guns/rifle/parts/*, rifle_parts2.py);
+# the values below are as built.
+DP3 = "form realism round (R48): {}"
+
+
+def dp3(pid, src, **kw):
+    dp(pid, src, **kw)
+    _P[pid]["detail_pass"][-1]["source"] = DP3.format(src)
+    for k in [k for k, v in _P[pid]["dims"].items() if v is None]:
+        del _P[pid]["dims"][k]
+
+
+dp3("dust_cover", "parts/receiver_right_cover.py",
+    dims={"skirt_vertical_to_Z": 22.26, "crease_Z": None, "crease_depth": None, "studs": None,
+          "crown": "gentle top arc R 48 (rise ~2.9 over +-16.5) on R 8 shoulders, tangent-continuous, to Z 32.7",
+          "sheet_thickness": 0.98,
+          "rear_end": "formed hood: the section above the lip line Z 11.6 scaled by the traced centreline rear "
+                      "profile; lip end ~1 mm tall at X ~240 (Z 11.6-12.6, over the receiver top 11.0)",
+          "edge_break": "0.3 on cut edges only (skirt bottoms, lip, front end, port cutout, button hole)"},
+    construction="Pressed 0.98 mm sheet: outer loft (vertical skirts to Z 22.26, R 8 shoulders, gentle R 48 top arc "
+                 "through the crown Z 32.7) minus the same construction one sheet thickness in; the rear end a formed "
+                 "hood whose centreline follows the traced rear profile (steep lip, ramp, roll into the crown) with the "
+                 "shoulders and skirt tops on proportionally lower copies of it; open below the lip line Z 11.6 and "
+                 "behind X 241 under it; the spring-guide button through a hole in the lip's slope; the right skirt "
+                 "cut out over the port (top Z 19.2). No studs, no ribs (sheet and real pattern). Crisp 0.3 breaks on "
+                 "the cut edges, smooth lofted faces.",
+    note="realism: invented crown studs removed; half-cylinder / flat rear face / shading seam replaced by a pressed "
+         "sheet with a gentle crown and a formed rear lip")
+dp3("selector", "parts/selector.py",
+    dims={"plate_thickness": 2.0, "washer_proud": 0.5, "head_height": 0.9, "rib": None, "edge_bevel": 0.3,
+          "top_edge_Z": 8.0, "crease_step": 0.35,
+          "head": "low button head (axle end) on a low washer",
+          "slot_closed": "upper edge Z 8.0 over the slot band (wall cut Z 3-9.2): 1.6 mm left under the skirt edge 9.6"},
+    construction="One flat stamped blade 2.0 mm on c1's outline mapped to the side view, its upper edge raised from the "
+                 "step forward to Z 8.0 (closes most of the charging-handle slot on safe; clears the handle stem 8.6 / "
+                 "knob 8.2 over the full bolt travel), crisp 0.3 breaks; c1's crease a 0.35 pressed step; the nose tab "
+                 "bent out 12 deg about c1's bend line with a small flat pin; a low washer 0.5 and button head 0.9 on "
+                 "the pivot. No markings.",
+    note="realism: short stubby paddle sitting high -> a long thin stamped blade closing most of the slot")
+dp3("trigger_guard", "parts/trigger_guard.py",
+    dims={"loop_section": "stamped channel: flat web 10 wide outside, R 1.0 bends, flat 1.0 flanges (the side band), "
+                          "0.25 flange-end breaks, channel open toward the trigger, web 1.6",
+          "strap_thickness": 1.0},
+    note="realism: wire-thin rounded beads -> a stamped strip channel with flat faces and crisp edges")
+dp3("buttstock", "rifle_parts2.py",
+    dims={"section": "swelling oval: w(x) f(v); f = the butt plate's end-view profile at the butt (X <= 24), a "
+                     "two-sided superellipse forward of X 70 (exponent 3.3 -> 2.9 at X 150 -> 2.45 at the wrist, widest "
+                     "row 0.42 -> 0.5 from the top), blended between",
+          "edges": "no round-over along the stock (the oval is smooth); 1.6 x 2 only on the inlet / tang seats"},
+    construction="Wood stock lofted from swelling oval sections on the traced top / bottom lines and the TOP-traced "
+                 "width: the butt end follows the butt plate's own lozenge (slimmer, rounder butt), convex sides that "
+                 "taper and swell toward a rounded comb crest and toe line, rounder toward the wrist.",
+    note="realism: flat-sided slab, boxy butt, faceted comb, uniform round-over -> swelling oval sections")
+dp3("magazine_ribs", "parts/magazine.py",
+    dims={"rib_half_widths": [2.0, 2.15, 2.15, 1.95], "rib_proud": 0.95,
+          "profile": "pressed-out swell: crest to 0.15 hw, 0.72 h at 0.55 hw, 0.24 h at 0.82 hw, 0.1 fillet dip"},
+    note="realism: ribs read as incised lines -> broad rounded pressed-out ribs")
+dp3("pistol_grip", "parts/grip.py + parts/grip_checker.py",
+    dims={"checker_pitch": 1.8, "checker_border": "recess 0.75 with a crisp 0.25 x 1 cut wall",
+          "checker_cut_depth": 0.70},
+    note="realism: checkering read as a decal -> 1.8 mm diamonds cut 0.70 into a 0.75 recess with a crisp border")
+dp3("rear_sight_leaf", "parts/rear_sight.py",
+    dims={"slider_top_Z": 47.6, "slider_top_Z_traced": 48.5},
+    note="B4: the slider's roof (traced 48.5, inside the trace's noise) formed the visible notch top 0.58 mm above the "
+         "real one from the ADS eye; built 0.4 under the notch top (real pattern: the slider sits below the notch)")
+dp3("receiver", "parts/receiver_right.py",
+    dims={"rear_vertical_edges": "0.6 roll (was 1.5)"},
+    note="realism: crisp stamped / machined edges (0.3-0.6) on steel")
+spec["resolutions"] += [
+    {"id": "R48", "topic": "Form realism round (2026-10-05): the realism judges' reasons fixed as real geometry",
+     "conflict": "both realism judges read the rough-look form as fake in the first-person (35 cm), ADS and hero views "
+                 "(real at 3 m): invented domed studs on the dust cover; the cover a thick half cylinder with a flat "
+                 "sharp rear face and a shading seam; no front post in the ADS notch; the stock a flat-sided slab with "
+                 "a boxy butt, faceted comb and a uniform round-over; the selector a short stubby paddle; the trigger "
+                 "guard wire-thin; the magazine ribs incised lines; the grip checkering a decal; uniform soft bevels",
+     "resolution": "SIGHT: the Sight socket moved from the notch bottom to the notch TOP centre (Z 48.0), pitch -0.4579 "
+                   "toward the post tip: an eye on the old line saw the tip exactly on the notch floor (post hidden "
+                   "behind the leaf); the rear sight slider's roof (traced 48.5) lowered to 47.6 (it formed a false, "
+                   "higher notch top). New gate B4 (rifle_b4.py, occlusion-aware raster at 2560x1440 x8): post tip "
+                   "level with the notch top and centred within 0.2 mm, visible in the notch. COVER: pressed 0.98 "
+                   "sheet, gentle crown, formed rear hood / lip, no studs, cut-edge-only breaks. STOCK: swelling oval "
+                   "sections (butt = the plate's lozenge). SELECTOR: flat 2.0 blade, top raised to Z 8.0 (closes most "
+                   "of the slot), low pivot hardware. GUARD: stamped channel strip. MAG RIBS: broad pressed-out swells. "
+                   "CHECKERING: pitch 1.8, crisp cut border. EDGES: 0.3-0.6 on steel (receiver rear roll 1.5 -> 0.6, "
+                   "cover / selector 0.3), soft only on wood. Silhouette / proportion gates re-run (gates/form.json).",
+     "rule": "real pattern + main views (user decision 2026-10-05); the side / top / 3-4 gates keep passing"},
+]
+
+# ------------------------------------------------------------------------------- realism round 2 (2026-10-05, R49)
+# The two realism judges on the round-1 rebuild (hero 3/4 and first-person 35 cm): reasons checked one by one against
+# the real stamped-receiver pattern and the sheet's main views; the real flaws are fixed as geometry, the rest rejected
+# with the reason (R49). Values as built.
+DP4 = "realism round 2 (R49): {}"
+
+
+def dp4(pid, src, **kw):
+    dp(pid, src, **kw)
+    _P[pid]["detail_pass"][-1]["source"] = DP4.format(src)
+    for k in [k for k, v in _P[pid]["dims"].items() if v is None]:
+        del _P[pid]["dims"][k]
+
+
+dp4("dust_cover", "parts/receiver_right_cover.py",
+    dims={"skirt_vertical_to_Z": 26.03, "crown_radius": None,
+          "crown": "flatter top arc R 90 (rise ~1.8 over +-17.7) on R 5 shoulders, tangent-continuous, to Z 32.7",
+          "cross_ribs": {"X": [296.0, 322.0, 348.0, 374.0, 400.0, 426.0], "top_width": 5.0, "floor_width": 3.2,
+                         "depth": 0.8, "pressed": "IN (the main views' top line stays smooth at the crown 32.7)",
+                         "extent": "across the top arc, fading over the shoulder to 0 at the vertical wall "
+                                   "(smoothstep in the shoulder angle); flanks ~42 deg (crisp)"},
+          "lengthwise_rib": "the shoulder line (top of the vertical skirt, Z 26.03)"},
+    construction="Pressed 0.98 mm sheet: outer loft (vertical skirts to Z 26.03, R 5 shoulders, flat R 90 top arc "
+                 "through the crown Z 32.7) with six transverse stiffening ribs pressed 0.8 into the top (X 296-426, "
+                 "pitch 26, stopping at the vertical wall) minus the same construction one sheet thickness in (cavity "
+                 "smooth: 0.18 under a rib floor, never seen); the rear end a formed hood whose centreline follows the traced rear profile; open below the "
+                 "lip line Z 11.6 and behind X 241 under it; the spring-guide button through a hole in the lip's slope; "
+                 "the right skirt cut out over the port (top Z 19.2). Crisp 0.3 breaks on the cut edges.",
+    note="realism 2: soft inflated lid (R 8 shoulders, 2.9 crown) -> tight U stamping (R 5, R 90 top); smooth hump -> "
+         "the stamped pattern's cross ribs (the receiver's oval dimple is that pattern's; its thin cover has "
+         "lengthwise and transverse ribs; the sheet's 3/4 draws transverse lines near X ~316 / ~377)")
+dp4("rear_trunnion", "rifle_parts.py + rifle_parts2.rear_tang",
+    dims={"upper_tang": {"object": "rear_tang", "X": [208.0, 225.22], "half_width": 9.5, "rear_end": "round (R 9.5)",
+                         "proud_of_wood": 0.25, "inlet_depth": 1.35, "thickness": 1.6, "edge_break": 0.3,
+                         "screw_X": 219.0, "gap_to_trunnion_face": 0.02}},
+    construction="Short steel block at the receiver rear (stepped: the wrist's width back of X ~233.5, the receiver's "
+                 "ahead, as the TOP panel measures 34-35.6 then 43-45), vertical rear face into which the stock seats; "
+                 "its UPPER TANG a conformal 1.6 mm strap over the wrist's top (X 208-225.2, round rear end) inletted "
+                 "flush (0.25 proud), the slotted tang screw through its round end.",
+    note="realism 2: no tang (a bare screw head on the wood) -> the stamped pattern's upper tang with the screw on it "
+         "(the sheet's TOP panel draws the strap-shaped patch round the screw)")
+dp4("buttstock", "rifle_parts2.py",
+    dims={"tang_seat": "conformal inlet under the rear tang (outline + 0.02, depth 1.37)",
+          "tang_screw": "slotted head r 3.0 on the tang (slot 0.9 wide; object stock_hardware)"},
+    note="realism 2: the tang seat and the slotted tang screw on the tang. Rounder sections (exponents 2.8 / 2.55 / "
+         "2.35) were tried for 'a flat-sided slab' and dropped: the 3/4 gate's stock-top residual then read 'a width the "
+         "TOP allows would fit' (unexplained); round 1's swelling oval stays, the plan taper 38.3 -> 31.9 is the TOP trace")
+dp4("handguard_front_band", "rifle_parts2.front_band",
+    dims={"pieces": "two: gas-tube collar (upper, from Z 13.45) and lower ferrule (to Z 12.75); 0.7 seam at the "
+                    "handguards' joint line", "proud_of_wood": 0.6},
+    construction="Two sheet-steel pieces at the handguards' front (X 639.6-647.1): a collar round the upper guard's "
+                 "front on the gas tube, and a U ferrule round the lower guard's front with the barrel and "
+                 "cleaning-rod holes; outer outlines = the guards' sections + 0.6, split at the joint line.",
+    note="realism 2: one band framing both guards -> collar + ferrule (real pattern; the sheet's LEFT and 3/4 draw "
+         "the two pieces with a seam)")
+dp4("lower_handguard", "rifle_parts2.lower_hg_section",
+    dims={"section_fillets": "R 1.5 on the two top corners only (was every vertex: the belly arc's 15 deg vertices "
+                             "each took a 0.2 mm 3-segment fillet; 52 -> 22 points, same shape)"},
+    note="budget only (no visible change)")
+spec["resolutions"] += [
+    {"id": "R49", "topic": "Realism round 2 (2026-10-05): hero 3/4 and first-person reasons checked against the real "
+                           "pattern and the main views",
+     "conflict": "the judges still called the hero 3/4 and the first-person 35 cm views fake: cover a soft inflated lid "
+                 "without cross ribs; no upper tang (screw on the wood); one band framing both handguards; stock a "
+                 "flat slab; comb bump; straight grip with a decal-like panel; stubby selector; blocky receiver rear",
+     "resolution": "FIXED (geometry): cover section R 8 / crown 2.9 -> R 5 shoulders + R 90 top (rise 1.8), six crisp "
+                   "transverse ribs pressed 0.8 in (X 296-426; pressed out they stood above the traced top line, broke "
+                   "L4 and the 3/4 exception); rear trunnion upper tang (conformal strap X 208-225.2, slotted screw on "
+                   "it, stock inletted); front band split into the gas-tube collar and the lower ferrule. REJECTED (with "
+                   "reason): flat-sided stock (plan taper 38.3 -> 31.9 is the TOP trace; rounder sections were tried "
+                   "and broke the 3/4 exception); comb bump (the LEFT, "
+                   "RIGHT and 3/4 panels all draw the comb nose at X 157.5 dropping to the wrist low at 181.5; traced, "
+                   "side IoU authority); grip shape (traced side outline, per-part IoU; the real pattern's grip is a "
+                   "straight, near-uniform stick with a flared base, as built); checker panel size (c6's panel, as "
+                   "built; its light 'decal' read is the review look's plain wood shader -- the texture stage paints "
+                   "the cut cells #4E2E1E); selector (80.8 mm, the traced main-view outline and c1, 2.0 mm blade "
+                   "closing the slot to Z 8.0); stepped receiver rear (the TOP panel measures the wrist-wide block "
+                   "34-35.6 back of X 233 and 43-45 ahead: the real stepped trunnion); cover surface lumps and wood "
+                   "colour (rough-look placeholder material).",
+     "rule": "real pattern + main views (user decision 2026-10-05); the side / top / 3-4 gates keep passing"},
+]
+
 spec["fab_original_changes"] = {
     "status": "NOT applied; the user decides. The game build matches the sheet.",
     "items": [
         "Muzzle: an original device (round two-port brake, or a cylinder with 3 short side slots) instead of the slant cut",
         "Dust cover: two lengthwise stiffening ribs and a stepped rear end (or a 1913-profile rail on top, gun study Q7)",
         "Receiver: own rivet layout (fewer rivets) and a rectangular recess or long pressed rib instead of the oval dimple",
-        "Stock: straight comb without the nose step and wrist dip, optional steel tang strap or inset cheek panel",
+        "Stock: straight comb without the nose step and wrist dip, or an inset cheek panel",
         "Butt plate: rubber pad with 3 horizontal ribs, no screws",
         "Handguards: one long palm swell with three shallow flutes instead of the two side slots; flat-sided band with one screw",
         "Grip: horizontal-groove or hex-stipple panel instead of diamond checkering, subtle finger swell",

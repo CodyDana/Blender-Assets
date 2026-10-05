@@ -36,7 +36,7 @@ PART_MAP = {"receiver": ["receiver", "rear_trunnion", "rivets", "receiver_rails"
             "gas_tube": ["gas_tube", "gas_piston"], "gas_block": ["gas_block"], "barrel": ["barrel"],
             "cleaning_rod": ["cleaning_rod"], "front_sight_block": ["front_sight_block", "front_sight_post"],
             "muzzle_brake": ["muzzle_brake"], "trigger": ["trigger"], "trigger_guard": ["trigger_guard"],
-            "mag_catch": ["mag_catch"], "pistol_grip": ["pistol_grip"], "stock": ["buttstock", "stock_hardware"],
+            "mag_catch": ["mag_catch"], "pistol_grip": ["pistol_grip"], "stock": ["buttstock", "stock_hardware", "rear_tang"],
             "butt_plate": ["butt_plate", "butt_screws"],
             "sling_swivel_rear": ["sling_swivel_base", "sling_swivel_loop"],
             "magazine": ["magazine", "magazine_floor_plate"]}

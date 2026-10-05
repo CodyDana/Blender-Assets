@@ -58,8 +58,9 @@ FAM_A_DEG = 46.0
 FAM_B_DEG = -49.0
 # DETAIL FIX (2026-10-05, user checklist 1): real-pattern DIAMOND checkering, two equal crossed V-cut families at one
 # pitch (round 2b's ridges + shallow notches read as hatching, not checkering); pitch 1.7 (real pattern 1.5-2 mm)
-PITCH_A = 1.50           # perpendicular groove spacing, family A (detail fix: 1.5, the fine end of the real pattern)
-PITCH_B = 1.50           # family B
+PITCH_A = 1.80           # FORM REALISM ROUND: 1.5 -> 1.8 (c6 FFT 1.6-1.9; real 1.5-2): at 1.5 the field averaged to a
+                         # flat tone in the realism views ('reads like a decal'); 1.8 resolves as cut diamonds
+PITCH_B = 1.80           # family B
 PITCH = 0.5 * (PITCH_A + PITCH_B)
 APEX_H = 0.70            # detail fix: diamond tops 0.05 under the border surface = the cut field (the grooves are cut INTO
                          # the wood, the tops are what is left of the surface; 2b: 0.50, round 2: 0.70)

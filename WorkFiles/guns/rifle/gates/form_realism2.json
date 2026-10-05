@@ -1,0 +1,344 @@
+{
+ "stage": "2r2 realism round 2: shape fixes before texturing (hero 3/4 + first-person reasons)",
+ "date": "2026-10-05T17:08:28",
+ "status": "pass",
+ "failed": [],
+ "rebuild": "from scratch: Scripts/guns/rifle/run_rifle.sh (stages 1-2 + every stage-2 gate incl. B4) -> Assets/Guns/AR01.blend; full gate file gates/form.json; spec v1.2 + R49 (tools/make_spec.py)",
+ "gates": [
+  {
+   "name": "L2 side IoU (authority, rifle + seated mag)",
+   "value": 0.9759,
+   "threshold": ">= 0.96",
+   "pass": true,
+   "round1_value": 0.9769
+  },
+  {
+   "name": "L2 top IoU (excluded zones masked)",
+   "value": 0.932,
+   "threshold": ">= 0.93",
+   "pass": true,
+   "round1_value": 0.9319
+  },
+  {
+   "name": "L2 true-left vs RIGHT-labelled panel",
+   "value": 0.9186,
+   "threshold": ">= 0.88",
+   "pass": true,
+   "round1_value": 0.9201
+  },
+  {
+   "name": "L2 per part (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2 px)",
+   "value": "21 / 21 parts pass",
+   "threshold": "all",
+   "pass": true,
+   "note": "failing: ",
+   "round1_value": "21 / 21 parts pass"
+  },
+  {
+   "name": "L2 3/4 view IoU (camera solved, outer silhouettes)",
+   "value": 0.9192,
+   "threshold": ">= 0.93",
+   "pass": false,
+   "note": "raw (our holes open against the hole-filled reference mask, the round-0 measure) 0.9065; camera landmark residual 5.9 px RMS",
+   "round1_value": 0.9178
+  },
+  {
+   "name": "L2 3/4 view contour P95 (sheet px)",
+   "value": 5.385,
+   "threshold": "<= 3",
+   "pass": false,
+   "round1_value": 5.385
+  },
+  {
+   "name": "L2 3/4 documented exception (IoU >= 0.915 and every residual region > 3 px a 3/4-panel contradiction or the magazine physical-minimum residual)",
+   "value": {
+    "iou": 0.9192,
+    "regions_over_3px": 18,
+    "contradictions": 16,
+    "magazine_minimum": 2
+   },
+   "threshold": "IoU >= 0.915 and all regions contradict LEFT/RIGHT/TOP or are the R32 magazine residual",
+   "pass": true,
+   "note": "all regions explained; evidence images WorkFiles/guns/rifle/review/form/q34_exception"
+  },
+  {
+   "name": "L3 side contour P95 (sheet px)",
+   "value": 1.0,
+   "threshold": "<= 2",
+   "pass": true,
+   "round1_value": 1.0
+  },
+  {
+   "name": "L3 feature positions (<= 2 sheet px = 2.43 mm)",
+   "value": "15 / 15",
+   "threshold": "all",
+   "pass": true,
+   "round1_value": "15 / 15"
+  },
+  {
+   "name": "L4 key dimensions (<= 0.05 mm)",
+   "value": "26 / 26",
+   "threshold": "all",
+   "pass": true,
+   "round1_value": "26 / 26"
+  },
+  {
+   "name": "B3 bolt sweep 0.0..103.25 (step 0.0750, 1378 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "receiver_rails",
+    "rest_mm": 0.25,
+    "end_mm": 0.25
+   },
+   "threshold": "0 intersections; clearance in row [0.15, 0.4]",
+   "pass": true
+  },
+  {
+   "name": "B3 trigger sweep 0.0..12.0 (step 0.1457, 84 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "trigger_guard",
+    "rest_mm": 0.25,
+    "end_mm": 0.25
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 selector sweep 0.0..32.0 (step 0.0738, 435 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1749,
+    "min_with": "rivets",
+    "rest_mm": 0.199,
+    "end_mm": 0.1749
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 mag_release sweep 0.0..10.0 (step 0.2809, 37 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1094,
+    "min_with": "trigger_guard",
+    "rest_mm": 0.13,
+    "end_mm": 0.1182
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 sight_rear sweep 0.0..6.0 (step 0.1015, 61 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1504,
+    "min_with": "rear_sight_block",
+    "rest_mm": 0.1624,
+    "end_mm": 0.1547
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "G5 static intersections between parts at rest (LOD0)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true,
+   "round1_value": 0
+  },
+  {
+   "name": "G5 butt-joint gaps (no vertex of one part within 1 micron of another; modelled 0.01-0.05)",
+   "value": "min 0.0149 mm over 37 contact pairs",
+   "threshold": ">= 0.01 (0.009 sampling)",
+   "pass": true,
+   "round1_value": "min 0.0149 mm over 34 contact pairs"
+  },
+  {
+   "name": "B4 sight picture (ADS 55 deg, eye 0.25 m behind Sight on its line, occlusion-aware raster)",
+   "value": {
+    "lateral_mm": 0.0,
+    "vertical_mm": 0.0127,
+    "post_visible_in_notch_mm": 2.059,
+    "occluders": {}
+   },
+   "threshold": "|lateral|, |vertical| <= 0.2 mm at the notch; post visible >= 1.0 mm; no occluder",
+   "pass": true,
+   "note": "post tip vs the notch top (shoulders) and the notch centre, measured in the 2560x1440 raster at 8x; image WorkFiles/guns/rifle/review/realism_form3/b4_sight_picture.png"
+  },
+  {
+   "name": "B6a joined twin: qa_check topology + degenerate checks",
+   "value": true,
+   "threshold": "all pass",
+   "pass": true,
+   "note": "no_ngons: 0 n-gon(s) of 35755 faces; no_non_manifold_edges: 0 edge(s) with more than 2 faces, 0 wire edge(s), of 63704; open_boundary_edges: 0 boundary edge(s) of 63704 (informational: open meshes are allowed); no_loose_vertices: 0 loose vertex/vertices of 27999; no_zero_length_edges: 0 edge(s) at or below 1e-06 of 63704; shortest 2.11931e-06; no_degenerate_faces: 0 face(s) at or below 1e-12 area of 35755; smallest 1.01766e-11; no_coincident_vertices: 0 vertex pair(s) within 1e-06 of 27999; UV: n/a until stage 3 (no UVs yet); B6a re-runs with uv_no_overlap once UVs exist",
+   "round1_value": true
+  },
+  {
+   "name": "B10 tokenised gun deny list on every object name",
+   "value": true,
+   "threshold": "clean",
+   "pass": true,
+   "round1_value": true
+  },
+  {
+   "name": "B7 closed manifold parts",
+   "value": "37 / 37 closed",
+   "threshold": "all",
+   "pass": true,
+   "round1_value": "36 / 36 closed"
+  },
+  {
+   "name": "B8 LOD0 triangles, rifle (target 30-45k, ceiling 50k)",
+   "value": 48934,
+   "threshold": "<= 50000 (target <= 45000)",
+   "pass": true,
+   "note": "above the 45k target",
+   "round1_value": 49884
+  },
+  {
+   "name": "B8 magazine block-in triangles (target 4.5k, ceiling 7k)",
+   "value": 6964,
+   "threshold": "<= 7000",
+   "pass": true,
+   "round1_value": 6964
+  },
+  {
+   "name": "H1 early: grip section vs real AK grips (width, girth)",
+   "value": {
+    "girth_mm": 125.2,
+    "width_Y_mm": 31.59,
+    "depth_mm": 39.64
+   },
+   "threshold": "width [30.0, 36.0] mm (documented: IMI 30, FAB Gradus 36); girth in [122.1, 137.5] mm (+2 recess allowance)",
+   "pass": true,
+   "note": "section perpendicular to the axis at the Grip origin; the round-0 proxy (Kong & Lowe cylinder optimum 107.4 mm for this hand) is kept as information only"
+  },
+  {
+   "name": "H1 early: trigger reach (web hollow -> trigger face)",
+   "value": 70.2,
+   "threshold": "[57.2, 72.0] mm (documented: AR-15 2.25 in, Glock 17 72 mm)",
+   "pass": true,
+   "note": "trigger stays where the sheet puts it; round-0 definition (along X at the trigger height) 70.5 mm; hand web->DIP 85.3, web->pad 86.6 mm",
+   "round1_value": 70.2
+  },
+  {
+   "name": "H1 early: Grip origin depth set from the hand",
+   "value": 46.0,
+   "threshold": "within 1 mm of the hand's palm centre on the knuckle line (45.9 mm)",
+   "pass": true,
+   "note": "was 40 mm provisional; the 55.2 mm round-0 estimate is the Euclidean web->palm-centre distance, which includes the palm's 30.7 mm offset behind the axis; the posed H1 at the rig stage records hand_offset",
+   "round1_value": 46.0
+  },
+  {
+   "name": "H1 early: SupportHand on the handguard underside, reachable",
+   "value": -0.01,
+   "threshold": "|offset| <= 1.5 mm",
+   "pass": true,
+   "round1_value": -0.01
+  }
+ ],
+ "verdicts": [
+  {
+   "image": "hero_34",
+   "reason": "comb bump / saddle behind the wrist",
+   "verdict": "REJECTED",
+   "why": "the sheet's LEFT, RIGHT and 3/4 panels all draw the comb nose (X 157.5, Z 10.1) dropping to the wrist low (X 181.5, Z -1.3) and rising to the receiver; traced (spec buttstock.profile_top_M), stock side IoU is the authority. A straight comb is listed as a Fab-only change (fab_original_changes)."
+  },
+  {
+   "image": "hero_34",
+   "reason": "flat-sided slab, near-parallel faces",
+   "verdict": "REJECTED (tried, reverted)",
+   "why": "the plan taper 38.3 -> 31.9 mm (butt -> wrist) is the TOP trace and is the real narrowing at the wrist; round 1 already made the sections a swelling oval. Rounder sections (superellipse 2.8 / 2.55 / 2.35) were built and gated: the 3/4 gate's stock-top residual then read 'a width the TOP allows would fit' (unexplained, exception failed), so round 1's sections stay"
+  },
+  {
+   "image": "hero_34 + fp_35cm",
+   "reason": "no upper rear-trunnion tang; screw head on the wood",
+   "verdict": "FIXED",
+   "fix": "object rear_tang: conformal 1.6 mm steel strap over the wrist top X 208-225.22 (round rear end R 9.5, 0.25 proud, inletted 1.35, 0.3 edge break, 0.02 behind the trunnion face); the tang screw (slotted head r 3.0) sits on it at X 219; the stock inletted under it (tang_seat_cutter_obj). The sheet's TOP panel draws the strap-shaped patch round the screw.",
+   "tris": 472
+  },
+  {
+   "image": "hero_34 + fp_35cm",
+   "reason": "dust cover smooth, no transverse stiffening ribs",
+   "verdict": "FIXED",
+   "fix": "six cross ribs pressed 0.8 INTO the top (top width 5.0, flat floor 3.2, ~42 deg flanks: crisp), X 296-426 pitch 26, across the top arc and fading over the shoulder to 0 at the vertical wall; the receiver's oval dimple is the stamped pattern whose thin cover carries lengthwise and transverse ribs; the sheet's 3/4 draws transverse lines near X ~316 / ~377. Pressed in, not out: ribs pressed out (built first) stood 0.8 above the traced top line, failed L4 (crown 33.5 vs 32.7) and moved the 3/4 camera solve so the rear-sight residual turned unexplained",
+   "tris": 3280
+  },
+  {
+   "image": "fp_35cm",
+   "reason": "cover a soft inflated lid (broad crown, rolled bulging sides)",
+   "verdict": "FIXED",
+   "fix": "section R 8 shoulders + R 48 top (rise 2.9) -> R 5 shoulders + R 90 top (rise 1.8); vertical skirt now to Z 26.03 (the lengthwise shoulder line); crown Z 32.7 and width 43.5 unchanged (key dims); the new cavity contains the old one (carrier clearances only grow)"
+  },
+  {
+   "image": "fp_35cm",
+   "reason": "lumpy surface",
+   "verdict": "REJECTED (placeholder material)",
+   "why": "the rough-look steel's noise / speckle; the geometry is smooth lofted sheet. Texture stage."
+  },
+  {
+   "image": "hero_34",
+   "reason": "pistol grip a straight uniform block, no rearward bow / palm swell",
+   "verdict": "REJECTED",
+   "why": "the side outline is the sheet's traced grip (per-part L2 IoU); the real pattern's grip is a straight, near-uniform stick with a flared base (as built, H1 girth 125 mm in the real-grip range)"
+  },
+  {
+   "image": "hero_34",
+   "reason": "checkering a small rectangular patch like a decal",
+   "verdict": "REJECTED (geometry as c6; material)",
+   "why": "the panel's outline and extent are c6's (long tapered panel from ~1/4 down to near the base), cut 0.70 deep at 1.8 mm pitch in a 0.75 recess with a crisp wall; its light flat read in the review is the plain wood shader without cavity -- the texture stage paints the cut cells #4E2E1E (spec)"
+  },
+  {
+   "image": "hero_34",
+   "reason": "lower retainer one band framing both handguards",
+   "verdict": "FIXED",
+   "fix": "handguard_front_band is now two pieces: the gas-tube collar round the upper guard (from Z 13.45) and the U ferrule round the lower guard with the barrel / rod holes (to Z 12.75), seam at the joint line; same X span and outer outline (side trace contour gate)",
+   "tris": 1206
+  },
+  {
+   "image": "hero_34",
+   "reason": "selector short and wedge-thick",
+   "verdict": "REJECTED",
+   "why": "80.8 mm long on the traced main-view outline and c1 (L3 positions), one 2.0 mm stamped blade whose top edge (Z 8.0) closes the charging slot's rear on safe; the 'wedge' is c1's pressed step (0.35)"
+  },
+  {
+   "image": "fp_35cm",
+   "reason": "receiver rear a stepped box, overhang lip, taller / wider than the wrist",
+   "verdict": "REJECTED (sheet + real pattern); eased by the tang",
+   "why": "the TOP panel measures the wrist-wide block 34-35.6 mm back of X ~233 and 43-45 mm ahead (built 33.2 / 41.5); the side trace has the trunnion ledge at Z 7.8 and the 10.38 step under the cover's lip; the real trunnion is stepped. The new tang now carries the steel line from the trunnion over the wrist."
+  }
+ ],
+ "budget": {
+  "rifle_lod0_tris": 48934,
+  "magazine_tris": 6964,
+  "savings": "lower handguard section fillets only on its 2 top corners (52 -> 22 ring points, same shape: lower_handguard 2820 -> 1750); front band 2226 -> 1206 (two pieces, 32-gon holes); cover top arc 3 segments (R 90 spans 11.4 deg a side); cover ribs on the outer surface only (inner cavity smooth)",
+  "round1_rifle_lod0_tris": 49884,
+  "per_part_changed": {
+   "rear_trunnion": 176,
+   "rear_tang": 472,
+   "dust_cover": 3280,
+   "lower_handguard": 1750,
+   "handguard_front_band": 1206,
+   "buttstock": 4286,
+   "stock_hardware": 758
+  }
+ },
+ "blind_tests": "early-look blind pairs regenerated by run_rifle.sh (review/early_blind2, key review/early_key2.json); reported, not blocking -- judges run by the orchestrator",
+ "renders": {
+  "look": "ROUGH LOOK (gunlib.look), review blend with the grip checker bake source",
+  "files": [
+   "WorkFiles/guns/rifle/review/realism_form3/fp_35cm.png",
+   "WorkFiles/guns/rifle/review/realism_form3/ads_55deg.png",
+   "WorkFiles/guns/rifle/review/realism_form3/tp_3m.png",
+   "WorkFiles/guns/rifle/review/realism_form3/hero_34.png",
+   "WorkFiles/guns/rifle/review/realism_form3/contact.png",
+   "WorkFiles/guns/rifle/review/realism_form3/shots.json",
+   "WorkFiles/guns/rifle/review/realism_form3/b4_sight_picture.png"
+  ]
+ },
+ "stale": "Exports/Guns/AR01/Textures and gates/uv_bake_paint.json / game.json predate this geometry: regenerate in the texture stage",
+ "b3_note": "B3 bolt sweep clean against the new cover section (min clearance 0.25, to the rails); the ribs dent only the outer surface, and the new cavity section contains round 1's, so carrier clearances under the cover only grew"
+}

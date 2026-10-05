@@ -37,6 +37,8 @@ py -3 -B "$HERE/rifle_q34_sweep.py" --npz "$W/scratch/form_tris.npz" > /dev/null
 [ $SKIPB3 = 1 ] || run_blender b3 "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_b3.py"
 run_blender b6a "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_b6a.py"
 run_blender measure "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_measure.py"
+# B4 sight picture (form realism round): occlusion-aware raster of the ADS view from the Sight socket
+py -3 -B "$HERE/rifle_b4.py" > "$LOG/b4.log" 2>&1 || { echo "FAILED b4"; tail -20 "$LOG/b4.log"; exit 1; }
 run_blender h1 "$ROOT/References/Characters/MH_PlayerDefault/MH_PlayerDefault_FitBody.blend" --python "$HERE/rifle_h1.py"
 run_blender render_grey "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_render.py" -- --set grey --ss 3 --samples 96 --light 0.45 --out "$ROOT/Renders/Guns/AR01"
 # early-look crops (c1 receiver, c3 front sight) in the ROUGH LOOK + the blind pairs (detail-pass integration)

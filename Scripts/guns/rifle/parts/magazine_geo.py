@@ -337,14 +337,22 @@ def _smooth(x):
     return x * x * (3.0 - 2.0 * x)
 
 
+def pressed_rib_profile(hw, h):
+    """Form realism round: a PRESSED-OUT rib, a broad rounded swell (narrow crest to 0.15 hw, a full shoulder 0.72 h at
+    0.55 hw, a soft flank 0.24 h at 0.82 hw, a 0.1 fillet dip into the face at hw), so the side reads a lit crest and a
+    shaded flank, not an incised line. Same knot layout as flat_rib_profile (side_rib_soft samples knots 1, 3, 4, 5)."""
+    return np.array([[0.0, h], [0.15 * hw, h], [0.33 * hw, 0.9 * h], [0.55 * hw, 0.72 * h], [0.82 * hw, 0.24 * h],
+                     [hw, -0.1]], float)
+
+
 def side_rib_soft(fr: ArcFrame, u, a_top, a_bot, side, face_half, hw, h, step=24.0, ramp=4.0, g_min=0.3,
-                  sink_floor=0.6, top=0.26) -> Mesh:
+                  sink_floor=0.6, top=0.26, prof=None) -> Mesh:
     """Pressed rib with SOFT ends (c4: the crest highlight wraps round a U end and the crest fades into the face):
     the flat-topped pressed profile, a round (U) end in plan (the profile revolved about a point hw from the tip, as a
     pressed rib's end) and, on top of that, the crest height ramping from g_min x h at the tip to full height over
     `ramp` mm (smoothstep), so the end slopes down into the sheet instead of standing as a capped rod.
     Round 2b replaces the integration round's stretched (spear-like) ends."""
-    prof = flat_rib_profile(hw, h, top=top)
+    prof = flat_rib_profile(hw, h, top=top) if prof is None else np.asarray(prof, float)
     rk = [prof[1, 0], prof[3, 0], prof[4, 0], prof[5, 0]]      # lean section: top edge, shoulder, flank, edge
     T = np.array([-v for v in reversed(rk)] + rk)
     R = fr.R(u)

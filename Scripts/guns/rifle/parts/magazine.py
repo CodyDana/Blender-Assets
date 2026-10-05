@@ -96,12 +96,14 @@ PLATE_LOW_Z = (-35.2, -36.8)     # round 2b: plate lower edge at PLATE_U[0] / PL
 BLOCK_U = (0.75, 0.95)
 BLOCK_DROP = 1.0                 # front block lower edge under the plate's line
 RIB_U = (0.17, 0.34, 0.51, 0.66)
-RIB_HW = (1.05, 1.1, 1.1, 1.0)    # DETAIL FIX (user checklist 7): NARROW SHALLOW stamped ribs with tapered ends (r2b 1.3-1.4 / 1.0 /
+RIB_HW = (2.0, 2.15, 2.15, 1.95)   # FORM REALISM ROUND: realism judges read the narrow 2.1 mm beads as INCISED LINES; the
+                                   # real pressed rib is a broad rounded swell (spec rib_width 3.25-4.3, proud 1.0)
+_RIB_HW_DETAIL_FIX = (1.05, 1.1, 1.1, 1.0)    # DETAIL FIX (user checklist 7): NARROW SHALLOW stamped ribs with tapered ends (r2b 1.3-1.4 / 1.0 /
                                    # ramp 3.0); was    # integration r2b: x0.8 (judge r2b: c4's ribs are narrow sharp beads, ours wider and softer); round 2b: narrow pressed ribs (spec rib_width 3.25), soft U ends (RIB_RAMP)
 RIB_RAMP = 5.5                   # DETAIL FIX: long tapered ends (the crest fades in over 5.5 mm from RIB_GMIN of its height)
 RIB_GMIN = 0.15
 _RIB_RAMP_R2B = 3.0                   # integration r2b: 4.5 -> 3.0 (judge: ours stop short in rounded tips); crest fades into the sheet over this length at both ends (magazine_geo.side_rib_soft)
-RIB_H = 0.75                     # DETAIL FIX: shallow (r2b 1.0); L4 magazine.thickness subtracts 2 x RIB_H
+RIB_H = 0.95                     # form realism round: pressed out 0.95 (detail fix 0.75, r2b 1.0); L4 magazine.thickness subtracts 2 x RIB_H
 RIB_GAP = 1.35                   # round 2b: top tips this far under the plate's lower edge (c4: the ribs run up to it)
 RIB_END_D = -14.0                # integration r2b: -14.5 -> -14.0 (the spec's 16 +- 2 lower limit; c4's ribs run nearly to the floor plate); integration round: lower (spec R: bottom ends 16 +- 2 above the floor plate)
 PANEL_U, PANEL_PROUD = 0.745, 0.45
@@ -342,7 +344,7 @@ def _ribs():
         a_bot = FR.a_at_d(R, RIB_END_D)
         for s in (-1, 1):
             out.append(MG.side_rib_soft(FR, u, a_top, a_bot, s, MAG_HT, hw, RIB_H, step=34.0, ramp=RIB_RAMP,
-                                        g_min=RIB_GMIN))
+                                        g_min=RIB_GMIN, prof=MG.pressed_rib_profile(hw, RIB_H)))
     return out
 
 
@@ -364,7 +366,7 @@ def _knobs():
         cx = xf - 0.4
         prof = [(0.0, KNOB_R), (1.85, KNOB_R), (2.15, KNOB_R - 0.45), (2.25, 0.0)]
         for s in (-1, 1):
-            out.append(MS.revolve(prof, (cx, s * (NECK_HT - 1.0), z), (0.0, float(s), 0.0), 8))
+            out.append(MS.revolve(prof, (cx, s * (NECK_HT - 1.0), z), (0.0, float(s), 0.0), 6))   # form realism round: 8 -> 6 seg (inside the well when seated; budget for the wider ribs)
     return out
 
 

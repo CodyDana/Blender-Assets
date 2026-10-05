@@ -58,8 +58,9 @@ def rear_trunnion() -> PartDef:
     # TOP: the block is the stock-wrist width (33) back to X ~233, then flares to the receiver width
     rear = MS.prism(G.clip_x(np.array(o, float), None, 234.0), -16.6, 16.6)
     front = MS.prism(G.clip_x(np.array(o, float), 233.0, None), -WO, WO)
-    return PartDef("rear_trunnion", [rear], unions=[front], cls="M-chamfer", recipe=[(0.45, 1, 40.0)],
-                   joint={"type": "butt", "parent": "receiver", "gap_mm": [0.01, 0.05]})
+    import rifle_parts2 as R2       # realism round 2: the trunnion's upper tang over the wrist (object rear_tang)
+    return (PartDef("rear_trunnion", [rear], unions=[front], cls="M-chamfer", recipe=[(0.45, 1, 40.0)],
+                    joint={"type": "butt", "parent": "receiver", "gap_mm": [0.01, 0.05]}), R2.rear_tang())
 
 
 # ======================================================================================== harness
@@ -81,7 +82,7 @@ def part_defs() -> Dict[str, object]:
               "gas_tube_rear_cap": R2.gas_tube_rear_cap, "upper_handguard": R2.upper_handguard,
               "lower_handguard": R2.lower_handguard, "handguard_front_band": R2.front_band, "gas_tube": R2.gas_tube,
               "gas_piston": R2.gas_piston, "gas_block": R2.gas_block, "barrel": R2.barrel,
-              "buttstock": R2.buttstock, "sling_swivel_base": R2.sling_swivel, "sling_swivel_loop": R2.sling_loop,
+              "buttstock": R2.build_buttstock, "sling_swivel_base": R2.sling_swivel, "sling_swivel_loop": R2.sling_loop,
               "stock_hardware": R2.stock_hardware}
     d = {}
     for k in ORDER:

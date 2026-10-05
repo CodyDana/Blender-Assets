@@ -72,16 +72,21 @@ def pred_bend_receiver(mid, d, n1, n2, dih):
     return 0.0
 
 
-def pred_cover_bend(mid, d, n1, n2, dih):
-    """Dust cover, one weighted pass (1.2 mm base): the rear end wall's pressed bend into crown and skirts gets
-    1.0; every other sharp edge (cut edges, port, hole) gets 0.21 (0.25 mm land)."""
-    if dih < 40:
+def pred_cover_cut(mid, d, n1, n2, dih):
+    """Dust cover (form realism round): a crisp 0.3 break on the CUT edges only -- skirt bottoms and the lip's bottom
+    (horizontal faces), lip end / front end / button-hole ends (faces square to X), button-hole sides (square to Y
+    near the centre) and the port cutout walls (normals in the XZ plane on the right skirt). The two lofted sheet
+    faces are smooth and never bevelled (the squashed rear rings make steep but smooth turns)."""
+    if dih < 40.0:
         return 0.0
-    if mid[0] > 454.5 and abs(n1[0]) + abs(n2[0]) > 0.9:
-        return 0.0          # detail r2: the front end face butts on the rear sight block (unseen): no bevel ring
-    if mid[0] < 272 and mid[2] > 11.5 and (abs(n1[0]) > 0.35) != (abs(n2[0]) > 0.35):
-        return 1.0
-    return 0.21
+    for n in (n1, n2):
+        if abs(n[2]) > 0.999 or abs(n[0]) > 0.999:
+            return 1.0
+        if abs(n[1]) > 0.999 and abs(mid[1]) < 3.4:
+            return 1.0
+        if abs(n[1]) < 0.02 and mid[1] < -15.0:
+            return 1.0
+    return 0.0
 
 
 def open_chaikin(P, iters=3):
@@ -206,7 +211,7 @@ def step_x(z):
 # detail r2b: 1.5 deep (spec 1.0: proposal) on a 1.0 inner block behind the wall (DIMPLE_BLOCK: X0, X1, top Z)
 DIMPLE_DEPTH = 1.5
 DIMPLE_BLOCK = (385.0, 409.0, -9.0)
-REAR_ROLL = 1.5                    # detail r2b: rolled rear vertical edges of the receiver
+REAR_ROLL = 0.6                    # form realism round: crisp sheet edge (detail r2b 1.5: a soft rolled corner)
 PIN_HEAD = (1.75, 0.6)             # detail r2b: domed head of the right flush pin (r, proud)
 TEAR_TOP = (372.0, 2.3)            # teardrop recess: top-centre (X, Z), frame M (r2b: 1.8 -> 2.3, c1: the notch hangs
                                    # from the port's bottom edge line)
@@ -274,38 +279,14 @@ def dimple_crisp(c, side, ax, az, depth, inner=False, n_exp=2.6, t0=0.62):
     return m
 
 
-def dust_cover() -> PartDef:
-    """Smooth stamped cover: semicircular crown (R 21.75) on short skirts, closed rounded rear end, open front
-    tucked under the rear sight block, right skirt cut out over the port, button hole at the rear top."""
-    zc = 32.7 - COVER_O                      # crown centre height 10.95
-    x0, x1 = 239.4, 454.9 - GAP
-    rear = [(241.5, 13.5), (245.0, 20.1), (250.0, 22.6), (255.0, 25.6), (260.0, 29.3), (265.0, 32.1), (268.5, 32.7)]
-    rear_s = open_chaikin([(x0, 10.6), (x0, 11.6)] + rear + [(280.0, 32.7)], 2)   # r2: 2 iters (the denser section x rear grid)
-    rear_s = rear_s[rear_s[:, 0] <= 268.6]
-    # skirt bottom (trace): deep at the rear (Z 0.75 to X 302.3), a slanted step up to 10.6 at X 313-314
-    # r2b: the raised skirt's bottom is CUT_SKIRT_Z (9.6) along the traced step line (was 10.3 / 10.6)
-    bottom = [(241.0, 9.6), (241.0, 0.75), SKIRT_STEP[0], (step_x(CUT_SKIRT_Z), CUT_SKIRT_Z)]
-    side = bottom + [(x1, CUT_SKIRT_Z), (x1, 32.7), (268.6, 32.7)] + [tuple(q) for q in rear_s[::-1] if q[1] > 10.7]
-    side_s = G.fillet(G.ccw(G.dedupe(np.array(side, float))), 1.0, 3)
-    off = G.offset(side_s, -WT)
-    rp = off[(off[:, 0] < 268.0) & (off[:, 1] > 11.8) & (off[:, 0] > 239.0)]
-    # CCW order runs bottom -> front -> top -> rear: the rear points come top-first; keep that run in order
-    rp = rp[np.argsort(-rp[:, 1])]
-    # open at the bottom and below Z 11.6 at the rear (the skirts pass outside the receiver's rear wall)
-    side_in = np.vstack([[[230.0, -5.0], [x1 + 10, -5.0], [x1 + 10, 32.7 - WT]], [[268.5, 32.7 - WT]], rp,
-                         [[rp[-1, 0], 11.6], [230.0, 11.6]]])
-    # detail r2: shouldered section (vertical skirts, deep lengthwise crease, fuller elliptical crown) instead of the
-    # plain semicircle (receiver_right_cover.py); it contains the old section, so every clearance only grows
-    outer = MS.prism(RC.cover_section_outer(-2.0), x0 - 1, x1, "YZ")
-    # build the outer as section-prism INTERSECT side-prism via a cutter = big box minus side prism
-    big = MS.box(x0 - 5, x1 + 5, -40, 40, 0, 50)
-    p = PartDef("dust_cover", [outer], cls="S-bend")
-    inner_sec = MS.prism(RC.cover_section_inner(-8.0, COVER_I, WT), x0 - 10, x1 + 10, "YZ")
-    p.side_outline = side_s
-    p.side_inner = side_in
-    p.inner_sec = inner_sec
-    p.big = big
-    return p
+def dust_cover_parts(x1=454.9 - GAP):
+    """Form realism round: the pressed-sheet cover (receiver_right_cover): outer loft, cavity loft and the boxes that
+    open it below the lip line and behind X 241 under it (the skirts' rear edge, side trace)."""
+    outer = RC.outer_mesh(x1)
+    inner = RC.inner_mesh(x1, COVER_I)
+    under = MS.box(230.0, x1 + 12.0, -COVER_I, COVER_I, -20.0, RC.Z_BASE)
+    rear = MS.box(230.0, 241.0, -30.0, 30.0, -20.0, RC.Z_BASE)
+    return outer, [inner, under, rear]
 
 
 # skirt cutout over the port. Detail r2: a slanted (~47 deg) step from the lifted rear edge (Z 12.3: the handle stem,
@@ -329,42 +310,30 @@ def cover_cut_outline():
 
 
 def build_dust_cover(coll, offset):
-    """Cover needs intersections, so it is built with explicit boolean steps."""
-    import bpy
+    """Pressed-sheet cover: outer loft minus the cavity (explicit boolean steps), the port cutout and the button hole,
+    then a crisp 0.3 break on the cut edges only (pred_cover_cut)."""
     from gunlib import bl
-    p = dust_cover()
-    ob = p.solids[0].to_object("dust_cover", coll, offset)
-    bl.boolean(ob, MS.prism(p.side_outline, -40.0, 40.0), "INTERSECT", offset=offset)
-    inner = p.inner_sec.to_object("_cov_in", coll, offset)
-    bl.boolean(inner, MS.prism(G.ccw(p.side_inner), -40.0, 40.0), "INTERSECT", offset=offset)
-    bl.boolean(ob, inner, "DIFFERENCE")
-    bpy.data.objects.remove(inner, do_unlink=True)
+    outer, cav = dust_cover_parts()
+    ob = outer.to_object("dust_cover", coll, offset, smooth_deg=40.0)
+    bl.boolean_many(ob, cav, "DIFFERENCE", offset=offset)
+    bl.clean(ob)
     cuts = [MS.prism(cover_cut_outline(), -30.0, -15.0),                                    # port / skirt cutout
             MS.box(243.0 - 0.15, 251.0 + 0.15, -3.0 - 0.15, 3.0 + 0.15, 11.0, 40.0)]      # spring-guide button hole
     bl.boolean_many(ob, cuts, "DIFFERENCE", offset=offset)
     bl.clean(ob)
-    bl.bevel_weighted(ob, 1.2, 2, pred_cover_bend, offset)
+    bl.bevel_weighted(ob, 0.3, 1, pred_cover_cut, offset)
     bl.finish(ob)
     bl.weighted_normals(ob)
     ob["gun_part"] = json.dumps({"bone": "body", "class": "S-bend", "slot": "M_AR01_Metal", "spec_id": "dust_cover",
-                                 "joint": {"type": "butt", "parent": "receiver", "gap_mm": [0.01, 0.05]}})
+                                 "joint": {"type": "butt", "parent": "receiver", "gap_mm": [0.01, 0.05]},
+                                 "recipe": [[0.3, 1, "weighted: cut edges only"]]})
     return ob
 
 
 def recoil_button() -> PartDef:
-    """Recoil spring guide button: squared tab through a hole in the cover's sloped rear end, 1.5 mm proud of the
-    slope (the TOP view's small squared tab); its top follows the slope."""
-    side = dust_cover().side_outline
-
-    def ztop(x):
-        Q = np.vstack([side, side[:1]])
-        zs = []
-        for p0, p1 in zip(Q[:-1], Q[1:]):
-            if (p0[0] - x) * (p1[0] - x) <= 0 and p0[0] != p1[0]:
-                t = (x - p0[0]) / (p1[0] - p0[0])
-                zs.append(p0[1] + t * (p1[1] - p0[1]))
-        return max(zs)
-    o = [(243.0, 12.0), (251.0, 12.0), (251.0, ztop(251.0) + 1.5), (243.0, ztop(243.0) + 1.5)]
+    """Recoil spring guide button: squared tab through the hole in the cover's formed rear lip, 1.5 mm proud of the
+    lip's centreline slope (the TOP view's small squared tab); its top follows the slope."""
+    o = [(243.0, 12.0), (251.0, 12.0), (251.0, RC.centre_top_z(251.0) + 1.5), (243.0, RC.centre_top_z(243.0) + 1.5)]
     o = G.fillet(G.ccw(np.array(o, float)), 1.0, 3)
     return PartDef("recoil_spring_button", [MS.prism(o, -3.0, 3.0)], cls="M-round",
                    recipe=[(0.5, 2, 30.0)], joint={"type": "butt", "parent": "dust_cover", "gap_mm": [0.01, 0.05]})
@@ -491,9 +460,7 @@ def rivets() -> PartDef:
     # integration r2b: c1 draws this pin as a small ring round a dark hole (a hollow pin end), not a dome (judge r2b:
     # "A has a small round hole ... B has a rivet"): a ring 0.45 proud, r 0.95-1.75, the wall showing in its centre
     sol.append(MS.tube((388.0, -WO - GAP, -8.0), (388.0, -WO - GAP - 0.45, -8.0), 0.95, PIN_HEAD[0], 16))
-    # detail r2: round studs on the cover crown (side-panel top bumps at X ~270/311/373/422, c1 draws three)
-    for x in RC.STUDS_X:
-        sol.append(rivet_head((x, 0.0, RC.CROWN_Z + GAP), (0, 0, 1), RC.STUD_R, RC.STUD_H, 8))
+    # (detail round 2's crown studs are gone: form realism round, real covers and the sheet have none)
     return PartDef("rivets", sol, cls="none", recipe=[], wn=False, smooth_deg=60.0,
                    joint={"type": "butt", "parent": "receiver", "gap_mm": [0.01, 0.05]})
 

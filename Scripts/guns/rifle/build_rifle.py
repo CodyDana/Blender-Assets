@@ -78,7 +78,7 @@ def _bad(rep):
 
 def _key_of(name):
     import rifle_parts as RP
-    return name if name in RP.ORDER else {"rear_sight_slider": "rear_sight_leaf"}.get(name, name)
+    return name if name in RP.ORDER else {"rear_sight_slider": "rear_sight_leaf", "rear_tang": "rear_trunnion"}.get(name, name)
 
 
 def _lod1_contacts(objs, RP, L, rounds=3):

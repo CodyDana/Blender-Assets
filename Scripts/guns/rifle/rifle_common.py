@@ -38,4 +38,5 @@ CONTACT_PAIRS = [("pistol_grip", "trigger_guard"), ("pistol_grip", "receiver"), 
                  ("bolt_carrier", "receiver_rails"), ("bolt_carrier", "dust_cover"), ("bolt_carrier", "receiver"),
                  ("trigger", "receiver"), ("trigger", "trigger_guard"), ("mag_catch", "trigger_guard"),
                  ("rear_sight_leaf", "rear_sight_block"), ("rear_sight_slider", "rear_sight_leaf"),
-                 ("sling_swivel_loop", "sling_swivel_base"), ("gas_piston", "gas_tube")]
+                 ("sling_swivel_loop", "sling_swivel_base"), ("gas_piston", "gas_tube"),
+                 ("rear_tang", "buttstock"), ("rear_tang", "rear_trunnion"), ("rear_tang", "stock_hardware")]

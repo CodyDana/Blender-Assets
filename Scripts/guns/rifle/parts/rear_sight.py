@@ -73,7 +73,11 @@ FLOOR_X0 = 458.8                          # the slider's floor under the leaf st
 SIGHT_GROOVE_HW = 1.2                     # detail fix: sight groove through the slider roof (half width)
 SLIDER_HW = 10.0                          # slider body half width (wraps the leaf)
 CATCH_HW = 13.4                           # side clamps / catches reach (c2's big near-side box)
-SLIDER_ZB, SLIDER_ZT = LEAF_ZB - 1.0, 48.5
+# FORM REALISM ROUND (gate B4, R48): the slider's roof stood at the traced 48.5, 0.5 above the notch top (48.0) and
+# right in front of it, so from the ADS eye on the Sight line its top edge (and its groove) formed the visible notch
+# top, 0.58 mm above the real one, and the post tip sat low in a 'second notch'. On the real pattern the slider sits
+# below the notch top; 47.6 is 0.4 under it (0.5 sheet px from the trace: inside its noise; L3 slider tol 2.43)
+SLIDER_ZB, SLIDER_ZT = LEAF_ZB - 1.0, 47.6
 BAR_HW = 15.5                             # transverse rounded bar on the front housing (c2's hinge bar)
 DECK_HW = 13.0                            # deck / cam walls half width above the shoulder (leaf + thin walls)
 TOOTH_PITCH = 1.45                        # DETAIL FIX (user checklist 6): FINE ratchet teeth (real pattern ~1.2 mm; r2b 2.8)
@@ -244,7 +248,7 @@ def rear_sight_leaf():
                     G.arc(SLIDER_X[1] - 1.6, SLIDER_ZT - 1.6, 1.6, 0, 90, 3), G.arc(SLIDER_X[0] + 1.6, SLIDER_ZT - 1.6, 1.6, 90, 180, 3),
                     [(SLIDER_X[0], SKIRT_Z)], G.arc(SKIRT_X0 + 0.6, SKIRT_Z - 0.6, 0.6, 90, 180, 3)[1:]])
     slider = MS.prism(so, -SLIDER_HW, SLIDER_HW)
-    catch_o = G.rounded_rect(SKIRT_X0 + 0.3, SLIDER_X[1] - 0.4, SKIRT_ZB + 0.15, 47.4, 1.6, 2)
+    catch_o = G.rounded_rect(SKIRT_X0 + 0.3, SLIDER_X[1] - 0.4, SKIRT_ZB + 0.15, SLIDER_ZT - 0.6, 1.6, 2)   # (form realism: under the roof)
     catches = [MS.prism(catch_o, SLIDER_HW - 0.3, CATCH_HW), MS.prism(catch_o, -CATCH_HW, -(SLIDER_HW - 0.3))]
     slider_cut = MS.box(SKIRT_X0 - 0.5, SLIDER_X[1] + 0.5, -hw - 0.15, hw + 0.15, zb - 0.15, LEAF_ZT + 0.15)
     # DETAIL FIX (ADS realism shot, 2026-10-05): the slider's top (Z 48.5, traced) stood 3 mm above the notch bottom

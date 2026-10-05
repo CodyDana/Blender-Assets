@@ -1,0 +1,290 @@
+{
+ "stage": "2r form realism fixes (before texturing)",
+ "date": "2026-10-05T15:57:19",
+ "status": "pass",
+ "failed": [],
+ "rebuild": "from scratch: Scripts/guns/rifle/run_rifle.sh (stages 1-2 + every stage-2 gate) -> Assets/Guns/AR01.blend; full gate file gates/form.json",
+ "gates": [
+  {
+   "name": "L2 side IoU (authority, rifle + seated mag)",
+   "value": 0.9769,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 top IoU (excluded zones masked)",
+   "value": 0.9319,
+   "threshold": ">= 0.93",
+   "pass": true
+  },
+  {
+   "name": "L2 true-left vs RIGHT-labelled panel",
+   "value": 0.9201,
+   "threshold": ">= 0.88",
+   "pass": true
+  },
+  {
+   "name": "L2 per part (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2 px)",
+   "value": "21 / 21 parts pass",
+   "threshold": "all",
+   "pass": true,
+   "note": "failing: "
+  },
+  {
+   "name": "L2 3/4 view IoU (camera solved, outer silhouettes)",
+   "value": 0.9178,
+   "threshold": ">= 0.93",
+   "pass": false,
+   "note": "raw (our holes open against the hole-filled reference mask, the round-0 measure) 0.9051; camera landmark residual 5.9 px RMS"
+  },
+  {
+   "name": "L2 3/4 view contour P95 (sheet px)",
+   "value": 5.385,
+   "threshold": "<= 3",
+   "pass": false
+  },
+  {
+   "name": "L2 3/4 documented exception (IoU >= 0.915 and every residual region > 3 px a 3/4-panel contradiction or the magazine physical-minimum residual)",
+   "value": {
+    "iou": 0.9178,
+    "regions_over_3px": 19,
+    "contradictions": 17,
+    "magazine_minimum": 2
+   },
+   "threshold": "IoU >= 0.915 and all regions contradict LEFT/RIGHT/TOP or are the R32 magazine residual",
+   "pass": true,
+   "note": "all regions explained; evidence images WorkFiles/guns/rifle/review/form/q34_exception"
+  },
+  {
+   "name": "L3 side contour P95 (sheet px)",
+   "value": 1.0,
+   "threshold": "<= 2",
+   "pass": true
+  },
+  {
+   "name": "L3 feature positions (<= 2 sheet px = 2.43 mm)",
+   "value": "15 / 15",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "L4 key dimensions (<= 0.05 mm)",
+   "value": "26 / 26",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "B3 bolt sweep 0.0..103.25 (step 0.0750, 1378 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "receiver_rails",
+    "rest_mm": 0.25,
+    "end_mm": 0.25
+   },
+   "threshold": "0 intersections; clearance in row [0.15, 0.4]",
+   "pass": true
+  },
+  {
+   "name": "B3 trigger sweep 0.0..12.0 (step 0.1457, 84 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "trigger_guard",
+    "rest_mm": 0.25,
+    "end_mm": 0.25
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 selector sweep 0.0..32.0 (step 0.0738, 435 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1749,
+    "min_with": "rivets",
+    "rest_mm": 0.199,
+    "end_mm": 0.1749
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 mag_release sweep 0.0..10.0 (step 0.2809, 37 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1094,
+    "min_with": "trigger_guard",
+    "rest_mm": 0.13,
+    "end_mm": 0.1182
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 sight_rear sweep 0.0..6.0 (step 0.1015, 61 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1504,
+    "min_with": "rear_sight_block",
+    "rest_mm": 0.1624,
+    "end_mm": 0.1547
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "G5 static intersections between parts at rest (LOD0)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "G5 butt-joint gaps (no vertex of one part within 1 micron of another; modelled 0.01-0.05)",
+   "value": "min 0.0149 mm over 34 contact pairs",
+   "threshold": ">= 0.01 (0.009 sampling)",
+   "pass": true
+  },
+  {
+   "name": "B4 sight picture (ADS 55 deg, eye 0.25 m behind Sight on its line, occlusion-aware raster)",
+   "value": {
+    "lateral_mm": 0.0,
+    "vertical_mm": 0.0127,
+    "post_visible_in_notch_mm": 2.059,
+    "occluders": {}
+   },
+   "threshold": "|lateral|, |vertical| <= 0.2 mm at the notch; post visible >= 1.0 mm; no occluder",
+   "pass": true,
+   "note": "post tip vs the notch top (shoulders) and the notch centre, measured in the 2560x1440 raster at 8x; image WorkFiles/guns/rifle/review/realism_form2/b4_sight_picture.png"
+  },
+  {
+   "name": "B6a joined twin: qa_check topology + degenerate checks",
+   "value": true,
+   "threshold": "all pass",
+   "pass": true,
+   "note": "no_ngons: 0 n-gon(s) of 36114 faces; no_non_manifold_edges: 0 edge(s) with more than 2 faces, 0 wire edge(s), of 64538; open_boundary_edges: 0 boundary edge(s) of 64538 (informational: open meshes are allowed); no_loose_vertices: 0 loose vertex/vertices of 28472; no_zero_length_edges: 0 edge(s) at or below 1e-06 of 64538; shortest 2.11931e-06; no_degenerate_faces: 0 face(s) at or below 1e-12 area of 36114; smallest 1.01766e-11; no_coincident_vertices: 0 vertex pair(s) within 1e-06 of 28472; UV: n/a until stage 3 (no UVs yet); B6a re-runs with uv_no_overlap once UVs exist"
+  },
+  {
+   "name": "B10 tokenised gun deny list on every object name",
+   "value": true,
+   "threshold": "clean",
+   "pass": true
+  },
+  {
+   "name": "B7 closed manifold parts",
+   "value": "36 / 36 closed",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "B8 LOD0 triangles, rifle (target 30-45k, ceiling 50k)",
+   "value": 49884,
+   "threshold": "<= 50000 (target <= 45000)",
+   "pass": true,
+   "note": "above the 45k target"
+  },
+  {
+   "name": "B8 magazine block-in triangles (target 4.5k, ceiling 7k)",
+   "value": 6964,
+   "threshold": "<= 7000",
+   "pass": true
+  },
+  {
+   "name": "H1 early: grip section vs real AK grips (width, girth)",
+   "value": {
+    "girth_mm": 125.2,
+    "width_Y_mm": 31.59,
+    "depth_mm": 39.64
+   },
+   "threshold": "width [30.0, 36.0] mm (documented: IMI 30, FAB Gradus 36); girth in [122.1, 137.5] mm (+2 recess allowance)",
+   "pass": true,
+   "note": "section perpendicular to the axis at the Grip origin; the round-0 proxy (Kong & Lowe cylinder optimum 107.4 mm for this hand) is kept as information only"
+  },
+  {
+   "name": "H1 early: trigger reach (web hollow -> trigger face)",
+   "value": 70.2,
+   "threshold": "[57.2, 72.0] mm (documented: AR-15 2.25 in, Glock 17 72 mm)",
+   "pass": true,
+   "note": "trigger stays where the sheet puts it; round-0 definition (along X at the trigger height) 70.5 mm; hand web->DIP 85.3, web->pad 86.6 mm"
+  },
+  {
+   "name": "H1 early: Grip origin depth set from the hand",
+   "value": 46.0,
+   "threshold": "within 1 mm of the hand's palm centre on the knuckle line (45.9 mm)",
+   "pass": true,
+   "note": "was 40 mm provisional; the 55.2 mm round-0 estimate is the Euclidean web->palm-centre distance, which includes the palm's 30.7 mm offset behind the axis; the posed H1 at the rig stage records hand_offset"
+  },
+  {
+   "name": "H1 early: SupportHand on the handguard underside, reachable",
+   "value": -0.01,
+   "threshold": "|offset| <= 1.5 mm",
+   "pass": true
+  }
+ ],
+ "fixes": {
+  "1_sight_line": {
+   "cause": "the Sight socket sat on the notch BOTTOM (45.5) with the post tip at 45.0: an eye on that line sees the tip exactly on the notch floor (post hidden behind the leaf); the slider roof (traced 48.5) stood 0.5 above the notch top right in front of it and formed a false higher notch (measured 0.58 mm)",
+   "fix": "Sight socket at the notch TOP centre (449.9, 0, 48.0), pitch -0.4579 to the post tip (spec R48); slider roof 47.6",
+   "B4": {
+    "lateral_offset_mm": 0.0,
+    "vertical_offset_mm": 0.0127,
+    "notch": {
+     "centre_x_px": 1280.0,
+     "top_y_px": 719.875,
+     "floor_y_px": 740.25,
+     "width_px": 19.5,
+     "width_mm": 1.983
+    },
+    "post": {
+     "centre_x_px": 1280.0,
+     "tip_y_px": 720.0,
+     "visible_height_in_notch_mm_at_notch": 2.059,
+     "visible_px_in_notch": 151
+    },
+    "occluders_in_notch_px": {},
+    "pass": true,
+    "image": "WorkFiles/guns/rifle/review/realism_form2/b4_sight_picture.png"
+   }
+  },
+  "2_dust_cover": {
+   "studs": "removed (4)",
+   "construction": "pressed sheet 0.98: outer loft (skirts to Z 22.26, R 8 shoulders, gentle R 48 crown, rise 2.9) minus the cavity loft; formed rear hood (section scaled by the traced rear profile), lip end over the receiver top; 0.3 breaks on cut edges only; smooth lofted faces (no seam)",
+   "tris": 2578
+  },
+  "3_buttstock": {
+   "section": "swelling oval: butt plate lozenge at the butt, superellipse 3.3 -> 2.9 -> 2.45 to the wrist; no uniform round-over; conformal inletted wrist plate",
+   "tris": 4288,
+   "side_L2_iou": 0.9919
+  },
+  "4_selector": {
+   "construction": "one flat 2.0 stamped blade, top edge raised to Z 8.0 (closes the slot band to 1.6 under the skirt edge), crease a 0.35 pressed step, tab bent 12 deg, low washer 0.5 + head 0.9, 0.3 edge breaks",
+   "tris": 1172,
+   "B3_selector": 0,
+   "B3_bolt": 0
+  },
+  "5_trigger_guard": {
+   "section": "stamped channel: flat web 10 wide outside, R 1.0 bends, flat 1.0 flanges (side band 3.25-4.4 as traced), web 1.6, crisp 0.25 breaks",
+   "tris": 1408
+  },
+  "6_ribs_checkering": {
+   "mag_ribs": "half widths 2.0-2.15, pressed out 0.95, rounded swell profile",
+   "checker": "pitch 1.8 diamonds, V cut 0.70 into a 0.75 recess, crisp 0.25 cut border",
+   "mag_tris": 6964
+  },
+  "7_edges": "steel: dust cover / selector 0.3, receiver rear vertical edges 0.6 (was 1.5), guard 0.25 breaks + R1 bends; soft rounds only on wood"
+ },
+ "blind_tests": "early-look blind pairs regenerated (review/early_blind2, key review/early_key2.json); reported, not blocking -- judges run by the orchestrator",
+ "renders": {
+  "look": "ROUGH LOOK (gunlib.look), review blend with the grip checker bake source",
+  "files": [
+   "WorkFiles/guns/rifle/review/realism_form2/fp_35cm.png",
+   "WorkFiles/guns/rifle/review/realism_form2/ads_55deg.png",
+   "WorkFiles/guns/rifle/review/realism_form2/tp_3m.png",
+   "WorkFiles/guns/rifle/review/realism_form2/hero_34.png",
+   "WorkFiles/guns/rifle/review/realism_form2/contact.png",
+   "WorkFiles/guns/rifle/review/realism_form2/b4_sight_picture.png",
+   "WorkFiles/guns/rifle/review/realism_form2/shots.json"
+  ]
+ },
+ "stale": "Exports/Guns/AR01/Textures and gates/uv_bake_paint.json / game.json from the killed texture stage predate this geometry: regenerate in the texture stage"
+}

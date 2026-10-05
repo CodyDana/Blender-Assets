@@ -106,6 +106,7 @@ def stage_form():
     h1 = load(SCRATCH / "h1_result.json")
     rep = load(SCRATCH / "form_build_report.json")
     cl = load(SCRATCH / "closeup_cameras.json")
+    b4 = load(SCRATCH / "b4_result.json")
     s, t, l = sil["views"]["side"], sil["views"]["top"], sil["views"]["left_vs_RIGHT_panel"]
     gates = []
     gates.append(g("L2 side IoU (authority, rifle + seated mag)", s["iou_fit"], ">= 0.96", s["iou_fit"] >= 0.96))
@@ -152,6 +153,16 @@ def stage_form():
     gates.append(g("G5 butt-joint gaps (no vertex of one part within 1 micron of another; modelled 0.01-0.05)",
                    "min %.4f mm over %d contact pairs" % (min(x["min_gap_mm"] for x in gaps), len(gaps)), ">= 0.01 (0.009 sampling)",
                    not zero, ("below: " + ", ".join("%s/%s %.4f" % (x["a"], x["b"], x["min_gap_mm"]) for x in zero)) if zero else ""))
+    if b4 and "lateral_offset_mm" in b4:
+        gates.append(g("B4 sight picture (ADS 55 deg, eye 0.25 m behind Sight on its line, occlusion-aware raster)",
+                       {"lateral_mm": b4["lateral_offset_mm"], "vertical_mm": b4["vertical_offset_mm"],
+                        "post_visible_in_notch_mm": b4["post"]["visible_height_in_notch_mm_at_notch"],
+                        "occluders": b4["occluders_in_notch_px"]},
+                       "|lateral|, |vertical| <= 0.2 mm at the notch; post visible >= 1.0 mm; no occluder", b4["pass"],
+                       "post tip vs the notch top (shoulders) and the notch centre, measured in the 2560x1440 raster "
+                       "at 8x; image " + b4.get("image", "")))
+    else:
+        gates.append(g("B4 sight picture", (b4 or {}).get("error", "not run"), "post centred in the notch", False))
     gates.append(g("B6a joined twin: qa_check topology + degenerate checks", b6["passed"], "all pass", b6["passed"],
                    "; ".join("%s: %s" % (c["name"], c["detail"]) for c in b6["checks"]) + "; UV: " + b6["uv_checks"]))
     gates.append(g("B10 tokenised gun deny list on every object name", b6["deny_list_clean"], "clean", b6["deny_list_clean"]))
@@ -205,7 +216,7 @@ def stage_form():
     res = {"stage": "2 form", "date": datetime.now().isoformat(timespec="seconds"), "status": status,
            "failed": [x["name"] for x in hard], "gates": gates,
            "details": {"silhouette": sil, "q34": q, "q34_section_sweeps": load(SCRATCH / "q34_sweeps.json"),
-                       "B3": b3, "B6a": b6, "measure": me, "H1": h1,
+                       "B3": b3, "B4": b4, "B6a": b6, "measure": me, "H1": h1,
                        "build_report": rep, "early_look": early},
            "files": {"blend": rel(ROOT / "Assets" / "Guns" / "AR01.blend"),
                      "renders": [rel(p) for p in sorted(RENDERS.glob("form_grey_*.png"))],

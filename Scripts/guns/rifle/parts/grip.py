@@ -391,10 +391,12 @@ def grip_panel_outline():
     return GC.panel_outline_xz()
 
 
-BORDER_SEG = 2             # integration r2b: 0.15 x 1 -> 0.4 x 2 (judges r2 / r2b on c1 and c6: our panel had "a crisp raised
+BORDER_SEG = 1             # integration r2b: 0.15 x 1 -> 0.4 x 2 (judges r2 / r2b on c1 and c6: our panel had "a crisp raised
                            # border lip", the reference's field is cut in and fades out without a raised border)
-BORDER_BEVEL = 0.4         # panel recess wall / leg slot edges (round 1: 0.3; the judge read the rim as soft: "cut into
+BORDER_BEVEL = 0.25        # panel recess wall / leg slot edges (round 1: 0.3; the judge read the rim as soft: "cut into
                            # the surface, with a distinct border line" in the reference)
+# FORM REALISM ROUND: the border wall is a crisp CUT edge (0.25 x 1, was 0.4 x 2: a soft rolled lip that read as a
+# decal's edge); the recess (grip_checker.RECESS 0.75) and the 0.70 V-cut field are the cut depths
 GRIP_LEG = [(298.6, -34.0), (303.3, -34.0), (303.3, -60.0), (298.4, -60.0)]   # guard rear leg (cut back 0.02)
 GRIP_LEG_HALF_W = 5.0      # the guard loop's half width (trigger_guard.LOOP_W): detail round 1 cuts the leg slot only
                            # this wide (+ LEG_SIDE_GAP), the full-width cut left a flat notch face and a ledge at Z -60 that

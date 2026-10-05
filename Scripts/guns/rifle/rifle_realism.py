@@ -1,6 +1,6 @@
 """AR-01 realism set in the ROUGH LOOK (plain Python; renders via headless Blender, gunlib/realism_job.py):
 
-    py -3 -B Scripts/guns/rifle/rifle_realism.py [--out WorkFiles/guns/rifle/review/realism_form] [--samples 128]
+    py -3 -B Scripts/guns/rifle/rifle_realism.py [--out WorkFiles/guns/rifle/review/realism_form3] [--samples 128]
 
 Four views a realism judge looks at (RIFLE_BUILD_PLAN 9, L7 realism): the first-person crop (eye 35 cm from the
 receiver, behind / left / above the gun as a right-handed player holds it, 70 deg FOV), the ADS sight picture (eye on
@@ -32,23 +32,28 @@ def _unit(v):
     return v / np.linalg.norm(v)
 
 
+def ads_eye():
+    """The ADS eye of gate B4 (rifle_b4.py): 0.25 m behind the Sight socket ON its line (R48: the socket sits at the
+    notch top centre and points at the post tip, the real-pattern sight picture: tip level with the notch top)."""
+    import math
+    soc = {s["socket"]: s for s in SPEC.sockets["rifle"]}["Sight"]
+    p = math.radians(soc["unreal_rotation_deg"]["pitch"])
+    d = np.array([math.cos(p), 0.0, math.sin(p)])
+    sight = np.array(soc["M_mm"], float)
+    post = np.array(SPEC.key["sight_line"]["post_tip_M"], float)
+    return sight - 250.0 * d, post
+
+
 def shots(out: Path):
-    sl = SPEC.key["sight_line"]
-    notch, post = np.array(sl["notch_M"], float), np.array(sl["post_tip_M"], float)
-    # the sight picture: the post tip level with the notch's top edges (the real-pattern hold; the spec's sight line runs
-    # through the notch BOTTOM and the post tip, which hides the tip exactly on the notch floor): the eye is on the line
-    # through the post tip and the notch top (the notch plate top Z 48.0, L3), 0.25 m behind the notch
-    notch_top = notch + np.array([0.0, 0.0, 48.0 - notch[2]])
-    d = _unit(post - notch_top)
-    notch = notch_top
+    ads_e, ads_t = ads_eye()
     fp_r = np.array([350.0, 0.0, 0.0])                          # receiver centre: the eye is 35 cm from it
     fp_eye = fp_r + 350.0 * _unit([-0.93, 0.22, 0.30])            # behind, left, above (right-handed hold)
     fp_t = np.array([620.0, 0.0, 10.0])                         # looking forward along the gun
     hero_t = np.array([450.0, 0.0, -20.0])
     S = [("fp_35cm", fp_eye, fp_t, 70.0, 1.1,
           "first person: eye 35 cm from the receiver, behind / left / above (right-handed hold), 70 deg FOV"),
-         ("ads_55deg", notch - 250.0 * d, post, 55.0, 1.1,
-          "ADS: eye 0.25 m behind the notch, post tip level with the notch top, 55 deg FOV"),
+         ("ads_55deg", ads_e, ads_t, 55.0, 1.1,
+          "ADS: eye 0.25 m behind the Sight socket on its line (notch top -> post tip), 55 deg FOV"),
          ("tp_3m", hero_t + 3000.0 * _unit([-0.45, -0.85, 0.28]), hero_t, 60.0, 3.2,
           "third person: camera 3 m from the gun, right side, 60 deg FOV"),
          ("hero_34", hero_t + 1500.0 * _unit([0.55, -0.78, 0.30]), hero_t, 38.0, 1.6,
@@ -72,10 +77,10 @@ def contact(out: Path, sh):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(REVIEW / "realism_form"))
+    ap.add_argument("--out", default=str(REVIEW / "realism_form3"))
     ap.add_argument("--samples", type=int, default=128)
     a = ap.parse_args()
-    out = Path(a.out)
+    out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     blend = RDT.make_review_blend()
     sh = shots(out)
