@@ -202,7 +202,8 @@ def see_through_bbox(x0, x1, z0, z1, step=0.1, seed=None):
             round(float(P[:, 1].max()), 2)]
 
 
-b = see_through_bbox(460.0, 495.0, 32.0, 43.0, 0.1, (473.0, 38.5))
+# seed inside the traced slit (Z 38.7-40.9); round 0 seeded (473.0, 38.5), inside its old wedge
+b = see_through_bbox(460.0, 495.0, 32.0, 43.0, 0.1, (470.0, 39.8))
 l3("gap under the leaf (see-through bbox X0 X1 Z0 Z1)", b, [465.8, 487.5, 34.8, 40.9],
    None if b is None else max(abs(b[0] - 465.8), abs(b[1] - 487.5), abs(b[2] - 34.8), abs(b[3] - 40.9)),
    "the trace's hole is a thin sliver (37 px); bbox compared")

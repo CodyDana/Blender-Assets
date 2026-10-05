@@ -16,10 +16,8 @@ import json
 import time
 from typing import Any, Dict, List, Optional, Sequence
 
-import bpy
 import numpy as np
 
-from . import bl
 from .mesh import Mesh
 
 RECIPES = {
@@ -59,6 +57,8 @@ class PartDef:
 
 
 def build_part(p: PartDef, coll, offset) -> "bpy.types.Object":
+    import bpy                      # lazy: PartDef itself is plain Python (numpy sweeps import the part modules)
+    from . import bl
     t0 = time.time()
     base = Mesh()
     for s in p.solids:

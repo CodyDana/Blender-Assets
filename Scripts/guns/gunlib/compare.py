@@ -221,6 +221,8 @@ def overlay(panel_rgb, ours, ref, path, scale=3, extra=None):
         for m, col in extra:
             mm = ndi.binary_dilation(boundary(up(m)), iterations=1)
             A[mm] = col
+    if path is None:
+        return Image.fromarray(A)
     Image.fromarray(A).save(path)
 
 
@@ -234,3 +236,46 @@ def diff_image(ours, ref, path, scale=3, valid=None):
     if valid is not None:
         A[~valid] = (A[~valid] * 0.4 + 60).astype(np.uint8)
     Image.fromarray(A).resize((W * scale, H * scale), Image.NEAREST).save(path)
+
+
+# ------------------------------------------------------------------------------------------------ residual regions
+def residual_regions(ours, ref, min_dist=3.0, min_core_px=2):
+    """Connected residual regions (8-connected) between two silhouettes whose far part lies more than ``min_dist`` px
+    outside the other mask. kind 'ours_only' = our silhouette sticks out, 'ref_only' = the reference does.
+    Returns dicts with the region mask, its size, the core size beyond min_dist, the max distance and the bbox."""
+    d_out_ref = ndi.distance_transform_edt(~ref)
+    d_out_ours = ndi.distance_transform_edt(~ours)
+    out = []
+    for kind, res, dist in (("ours_only", ours & ~ref, d_out_ref), ("ref_only", ref & ~ours, d_out_ours)):
+        lab, n = ndi.label(res, structure=np.ones((3, 3), bool))
+        for k in range(1, n + 1):
+            m = lab == k
+            core = m & (dist > min_dist)
+            if core.sum() < min_core_px:
+                continue
+            ys, xs = np.nonzero(m)
+            out.append({"kind": kind, "mask": m, "px": int(m.sum()), "core_px": int(core.sum()),
+                        "max_dist_px": round(float(dist[m].max()), 2),
+                        "p95_dist_px": round(float(np.percentile(dist[m], 95)), 2),
+                        "bbox": [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())]})
+    out.sort(key=lambda r: -r["core_px"])
+    return out
+
+
+def best_local_shift(ours, ref, window, max_shift=8):
+    """Integer shift of our mask (inside a window x0, y0, x1, y1) that maximises the window IoU. Returns
+    (dx, dy, iou_before, iou_after, p95_before, p95_after)."""
+    x0, y0, x1, y1 = window
+    o = ours[y0:y1, x0:x1]
+    r = ref[y0:y1, x0:x1]
+    i0 = iou(o, r)
+    best = (0, 0, i0)
+    for dy in range(-max_shift, max_shift + 1):
+        for dx in range(-max_shift, max_shift + 1):
+            s = np.roll(np.roll(ours, dy, 0), dx, 1)[y0:y1, x0:x1]
+            v = iou(s, r)
+            if v > best[2] + 1e-9:
+                best = (dx, dy, v)
+    s = np.roll(np.roll(ours, best[1], 0), best[0], 1)[y0:y1, x0:x1]
+    c0, c1 = contour_distance(o, r), contour_distance(s, r)
+    return best[0], best[1], i0, best[2], c0["p95"], c1["p95"]

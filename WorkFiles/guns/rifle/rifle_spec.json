@@ -52,12 +52,12 @@
    "axes": "+X muzzle, +Z up, -Y = gun RIGHT (same axes as M)",
    "origin": "Grip",
    "Grip_in_M": [
-    265.46,
+    263.178,
     0.0,
-    -72.995
+    -78.544
    ],
    "transform": "B = M - Grip_in_M (pure translation)",
-   "bore_axis_in_B": "Y = 0, Z = 72.995 (parallel to X)",
+   "bore_axis_in_B": "Y = 0, Z = 78.544 (parallel to X)",
    "blender_front_view": "from -Y shows the right side, muzzle to screen right = the LEFT-labelled panel"
   },
   "unreal": {
@@ -116,9 +116,9 @@
   },
   "grip": {
    "origin_M": [
-    265.46,
+    263.18,
     0.0,
-    -72.99
+    -78.54
    ],
    "axis_rake_deg": 22.35,
    "bottom_Z": -132.7
@@ -134,7 +134,8 @@
    "width": 58.2,
    "thickness": 28.0,
    "arc_length": 153.0,
-   "bottom_Z": -183.4
+   "bottom_Z": -183.2,
+   "bottom_Z_note": "from the traced SILHOUETTE (lowest point -183.224), like the overall height; the separately traced magazine ring reads the same edge at -183.376 (0.13 px lower), which round 0 used (R30)"
   },
   "muzzle_brake": {
    "length": 31.2,
@@ -4131,8 +4132,8 @@
      -36.0
     ],
     "Y": [
-     -15.0,
-     15.0
+     -15.5,
+     15.5
     ]
    },
    "dims": {
@@ -4144,14 +4145,14 @@
      "rear": 19.1
     },
     "width_perp_to_axis": 39.7,
-    "width_Y": 30.0,
+    "width_Y": 31.0,
     "junction_M": [
      280.67,
      -36.0
     ],
     "length_along_axis": 104.2
    },
-   "construction": "Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, rounded rear heel. Section a rounded oblong (30 wide: unseen, real-pattern value), flatter sides where the checkering sits, straps R 8-10. Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
+   "construction": "Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, rounded rear heel. Section a rounded oblong (31 wide: unseen; real AK grips 30-36, R31 in resolutions), flatter sides where the checkering sits, straps R 8-10. Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
    "features": [
     {
      "name": "checker_panel",
@@ -6083,9 +6084,9 @@
     "parent": null,
     "parts": "all fixed parts",
     "head_M": [
-     265.46,
+     263.18,
      0.0,
-     -72.99
+     -78.54
     ]
    },
    {
@@ -6165,9 +6166,9 @@
     "socket": "Grip",
     "bone": "body",
     "M_mm": [
-     265.46,
+     263.18,
      0.0,
-     -72.99
+     -78.54
     ],
     "blender_mm": [
      0.0,
@@ -6184,8 +6185,8 @@
      "pitch": 0.0,
      "yaw": 0.0
     },
-    "use": "origin; attach to the character's weapon_r (40 mm down the grip axis: provisional, H1)",
-    "source": "computed: grip axis midline + 40 mm from the junction"
+    "use": "origin; attach to the character's weapon_r (46 mm down the grip axis, set from the fit body's hand in form fix round 1; the posed H1 at the rig stage records hand_offset)",
+    "source": "computed: grip axis midline + 46 mm from the junction (H1 early: palm centre projected on the knuckle line)"
    },
    {
     "socket": "SupportHand",
@@ -6196,14 +6197,14 @@
      -24.6
     ],
     "blender_mm": [
-     297.04,
+     299.32,
      0.0,
-     48.39
+     53.94
     ],
     "unreal_cm": [
-     29.704,
+     29.932,
      0.0,
-     4.839
+     5.394
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6223,14 +6224,14 @@
      -46.0
     ],
     "blender_mm": [
-     55.84,
+     58.12,
      0.0,
-     26.99
+     32.54
     ],
     "unreal_cm": [
-     5.584,
+     5.812,
      0.0,
-     2.699
+     3.254
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6249,14 +6250,14 @@
      0.0
     ],
     "blender_mm": [
-     605.13,
+     607.41,
      0.0,
-     72.99
+     78.54
     ],
     "unreal_cm": [
-     60.513,
+     60.741,
      0.0,
-     7.299
+     7.854
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6275,14 +6276,14 @@
      0.0
     ],
     "blender_mm": [
-     583.34,
+     585.62,
      0.0,
-     72.99
+     78.54
     ],
     "unreal_cm": [
-     58.334,
+     58.562,
      0.0,
-     7.299
+     7.854
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6301,14 +6302,14 @@
      45.5
     ],
     "blender_mm": [
-     184.44,
+     186.72,
      0.0,
-     118.49
+     124.04
     ],
     "unreal_cm": [
-     18.444,
+     18.672,
      0.0,
-     11.849
+     12.404
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6328,14 +6329,14 @@
      -16.0
     ],
     "blender_mm": [
-     163.54,
+     165.82,
      0.0,
-     56.99
+     62.54
     ],
     "unreal_cm": [
-     16.354,
+     16.582,
      0.0,
-     5.699
+     6.254
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6355,14 +6356,14 @@
      -16.0
     ],
     "blender_mm": [
-     163.54,
+     165.82,
      0.0,
-     56.99
+     62.54
     ],
     "unreal_cm": [
-     16.354,
+     16.582,
      0.0,
-     5.699
+     6.254
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6381,14 +6382,14 @@
      -23.61
     ],
     "blender_mm": [
-     166.01,
+     168.29,
      0.0,
-     49.38
+     54.93
     ],
     "unreal_cm": [
-     16.601,
+     16.829,
      0.0,
-     4.938
+     5.493
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6407,14 +6408,14 @@
      10.0
     ],
     "blender_mm": [
-     129.54,
+     131.82,
      -20.75,
-     82.99
+     88.54
     ],
     "unreal_cm": [
-     12.954,
+     13.182,
      2.075,
-     8.299
+     8.854
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6434,14 +6435,14 @@
      16.5
     ],
     "blender_mm": [
-     185.54,
+     187.82,
      -30.0,
-     89.49
+     95.04
     ],
     "unreal_cm": [
-     18.554,
+     18.782,
      3.0,
-     8.949
+     9.504
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6460,14 +6461,14 @@
      4.0
     ],
     "blender_mm": [
-     85.54,
+     87.82,
      -23.75,
-     76.99
+     82.54
     ],
     "unreal_cm": [
-     8.554,
+     8.782,
      2.375,
-     7.699
+     8.254
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6486,14 +6487,14 @@
      -66.0
     ],
     "blender_mm": [
-     96.54,
+     98.82,
      0.0,
-     6.99
+     12.54
     ],
     "unreal_cm": [
-     9.654,
+     9.882,
      0.0,
-     0.699
+     1.254
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6512,14 +6513,14 @@
      -55.0
     ],
     "blender_mm": [
-     -261.16,
+     -258.88,
      0.0,
-     17.99
+     23.54
     ],
     "unreal_cm": [
-     -26.116,
+     -25.888,
      0.0,
-     1.799
+     2.354
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6538,14 +6539,14 @@
      -95.15
     ],
     "blender_mm": [
-     -192.81,
+     -190.53,
      0.0,
-     -22.16
+     -16.61
     ],
     "unreal_cm": [
-     -19.281,
+     -19.053,
      0.0,
-     -2.216
+     -1.661
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6564,14 +6565,14 @@
      -10.0
     ],
     "blender_mm": [
-     154.54,
+     156.82,
      0.0,
-     62.99
+     68.54
     ],
     "unreal_cm": [
-     15.454,
+     15.682,
      0.0,
-     6.299
+     6.854
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -6590,14 +6591,14 @@
      -10.0
     ],
     "blender_mm": [
-     154.54,
+     156.82,
      0.0,
-     62.99
+     68.54
     ],
     "unreal_cm": [
-     15.454,
+     15.682,
      0.0,
-     6.299
+     6.854
     ],
     "unreal_rotation_deg": {
      "roll": 0.0,
@@ -7369,6 +7370,20 @@
    "conflict": "'2048 likely' did not fit the classes at 70 % fill",
    "resolution": "Metal 2048 with class B at 60 px/cm (A 90): ~2.4 M texels; 4096 fallback recorded (textures.sets)",
    "rule": "decided here; the user may choose the fallback"
+  },
+  {
+   "id": "R30",
+   "topic": "Magazine bottom vs overall height (form fix round 1)",
+   "conflict": "key overall_height_with_mag 232.6 (front sight top 49.4 to the traced silhouette's lowest point -183.2) but magazine.bottom_Z -183.4 (the magazine ring's lowest point -183.376): 49.4 + 183.4 = 232.8, so no model could meet both within the L4 0.05 mm",
+   "resolution": "both read the same traced edge 0.15 mm (0.13 px) apart; the silhouette is the outline authority for every overall number, so magazine.bottom_Z = -183.2 and the build sets its floor line from the silhouette's lowest point (rifle_parts2._floor_line)",
+   "rule": "one outline for all overall dimensions"
+  },
+  {
+   "id": "R31",
+   "topic": "Grip origin depth (H1 early, form fix round 1)",
+   "conflict": "provisional 40 mm (study 5.1)",
+   "resolution": "46 mm: the fit body's palm centre projected on the knuckle line from the web (45.9 mm); B-frame coordinates (sockets, bore height) are regenerated from it. Grip section width 30 -> 31 (documented real AK grips 30-36 mm; at 30 the rounded-oblong girth sat on the real-world band's lower edge)",
+   "rule": "H1 (gun study 7)"
   }
  ],
  "fab_original_changes": {

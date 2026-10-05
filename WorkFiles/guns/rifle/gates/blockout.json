@@ -1,6 +1,6 @@
 {
  "stage": "1 blockout",
- "date": "2026-10-04T20:45:14",
+ "date": "2026-10-04T22:09:45",
  "status": "pass",
  "gates": [
   {
@@ -78,7 +78,10 @@
        "iou": 0.9952,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": 0.0,
+       "contour_unfilled_max_px": 1.0,
+       "iou_filled": 0.9952,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "handguard_upper": {
@@ -102,7 +105,10 @@
        "iou": 0.9961,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": 0.0,
+       "contour_unfilled_max_px": 1.0,
+       "iou_filled": 0.9961,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "gas_tube": {
@@ -134,7 +140,10 @@
        "iou": 0.7955,
        "contour_p95_px": 1.0,
        "contour_max_px": 1.414,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": 1.0,
+       "contour_unfilled_max_px": 1.414,
+       "iou_filled": 0.7955,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "front_sight_block": {
@@ -150,7 +159,10 @@
        "iou": 0.9914,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": 0.0,
+       "contour_unfilled_max_px": 1.0,
+       "iou_filled": 0.9914,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "trigger": {
@@ -158,7 +170,10 @@
        "iou": 0.9922,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": 0.0,
+       "contour_unfilled_max_px": 1.0,
+       "iou_filled": 0.9922,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "trigger_guard": {
@@ -166,7 +181,10 @@
        "iou": 0.9269,
        "contour_p95_px": 1.0,
        "contour_max_px": 1.0,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": 1.0,
+       "contour_unfilled_max_px": 1.0,
+       "iou_filled": 0.9269,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "mag_catch": {
@@ -174,7 +192,10 @@
        "iou": 0.9825,
        "contour_p95_px": 1.0,
        "contour_max_px": 1.0,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": 1.0,
+       "contour_unfilled_max_px": 1.0,
+       "iou_filled": 0.9825,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "pistol_grip": {
@@ -206,7 +227,10 @@
        "iou": 0.0,
        "contour_p95_px": null,
        "contour_max_px": null,
-       "rule": "contour P95 <= 1.0 px, max <= 2 px",
+       "contour_unfilled_p95_px": null,
+       "contour_unfilled_max_px": null,
+       "iou_filled": 0.0,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": false
       },
       "magazine": {
@@ -273,39 +297,39 @@
   "magazine_thickness": {
    "magazine_thickness_check_on_solved_3q_view": {
     "iou_in_mag_zone_by_thickness_mm": {
-     "18": 0.891,
+     "18": 0.8922,
      "20": 0.8969,
-     "22": 0.8994,
+     "22": 0.9004,
      "24": 0.9001,
-     "26": 0.896,
-     "28": 0.8911,
-     "30": 0.8828,
-     "32": 0.8715,
-     "34": 0.8594
+     "26": 0.897,
+     "28": 0.8912,
+     "30": 0.8816,
+     "32": 0.8706,
+     "34": 0.8581
     },
-    "best_mm": 24,
-    "parabola_peak_mm": 23.29,
+    "best_mm": 22,
+    "parabola_peak_mm": 22.84,
     "spec_mm": 28.0,
-    "verdict": "28.0 questioned (peak 23.3)"
+    "verdict": "28.0 questioned (peak 22.8)"
    },
    "camera": {
     "centre_M_mm": [
-     1358.8,
-     -855.5,
-     199.5
+     1356.6,
+     -853.8,
+     198.9
     ],
-    "f_px": 1315.3,
-    "distance_to_centre_mm": 1276.2,
+    "f_px": 1314.1,
+    "distance_to_centre_mm": 1273.4,
     "forward_M": [
-     -0.6755,
-     0.7069,
-     -0.2098
+     -0.6761,
+     0.7064,
+     -0.2097
     ],
-    "hfov_deg": 32.15
+    "hfov_deg": 32.18
    },
-   "camera_landmark_rms_px": null,
-   "q34_iou_blockout": 0.8998,
-   "verdict": "28.0 kept: the 3/4 panel prefers 23.3 mm, but the effect (IoU 0.9001 at the best vs 0.8911 at 28) is smaller than the panel's own inconsistency (camera landmark residual 0.0 px RMS, silhouette IoU ceiling ~0.90 for a rigid model); flagged for the stage-6 magazine build"
+   "camera_landmark_rms_px": 5.886485957583089,
+   "q34_iou_blockout": 0.9097,
+   "verdict": "28.0 kept: the 3/4 panel prefers 22.8 mm, but the effect (IoU 0.9004 at the best vs 0.8912 at 28) is smaller than the panel's own inconsistency (camera landmark residual 5.9 px RMS, silhouette IoU ceiling ~0.90 for a rigid model); flagged for the stage-6 magazine build"
   }
  },
  "method": "primary volumes = the traced side profiles (spec side_profile_M, Douglas-Peucker 0.35 mm) extruded across their TOP widths; stock tapered by the TOP width profile; round parts as cylinders; magazine = the traced magazine ring at 28 mm. IoU on 4x supersampled rasters in the trace's own px<->mm frame (no camera error).",

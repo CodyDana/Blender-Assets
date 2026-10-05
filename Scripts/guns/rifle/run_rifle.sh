@@ -31,6 +31,7 @@ grep -E "total tris" "$LOG/form.log"
 py -3 -B "$HERE/rifle_silhouette.py" --npz "$W/scratch/form_tris.npz" --stage form --json "$W/scratch/sil.json" > /dev/null
 py -3 -B "$HERE/rifle_q34.py" --npz "$W/scratch/form_tris.npz" --stage form $SOLVE > /dev/null
 py -3 -B "$HERE/rifle_closeups.py" --npz "$W/scratch/form_tris.npz" > /dev/null
+py -3 -B "$HERE/rifle_q34_sweep.py" --npz "$W/scratch/form_tris.npz" > /dev/null
 [ $SKIPB3 = 1 ] || run_blender b3 "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_b3.py"
 run_blender b6a "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_b6a.py"
 run_blender measure "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_measure.py"

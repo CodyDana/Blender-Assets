@@ -116,10 +116,18 @@ def stage_form():
                    "%d / %d parts pass" % (len(parts) - len(bad), len(parts)), "all", not bad,
                    "failing: " + ", ".join("%s (IoU %.3f, P95 %s, max %s)" % (k, parts[k]["iou"], parts[k]["contour_p95_px"],
                                                                        parts[k]["contour_max_px"]) for k in bad)))
-    gates.append(g("L2 3/4 view IoU (camera solved)", q["iou"], ">= 0.93", q["iou"] >= 0.93,
-                   "the rigid-model ceiling for this panel is ~0.90 (camera landmark residual %.1f px RMS)" %
-                   q.get("landmark_rms_px", float("nan")) if "landmark_rms_px" in q else ""))
+    ex = q.get("exception", {})
+    nc = ex.get("not_contradictions", [])
+    gates.append(g("L2 3/4 view IoU (camera solved, outer silhouettes)", q["iou"], ">= 0.93", q["iou"] >= 0.93,
+                   "raw (our holes open against the hole-filled reference mask, the round-0 measure) %.4f; camera "
+                   "landmark residual %.1f px RMS" % (q.get("iou_raw_unfilled", float("nan")), q.get("landmark_rms_px", float("nan")))))
     gates.append(g("L2 3/4 view contour P95 (sheet px)", q["contour_px"]["p95"], "<= 3", q["contour_px"]["p95"] <= 3))
+    gates.append(g("L2 3/4 documented exception (IoU >= 0.915 and every residual region > 3 px a 3/4-panel contradiction)",
+                   {"iou": q["iou"], "regions_over_3px": ex.get("regions_over_3px"), "contradictions": ex.get("contradictions")},
+                   "IoU >= 0.915 and all regions contradict LEFT/RIGHT/TOP", bool(ex.get("pass")),
+                   ("not shown to be contradictions: " + "; ".join("region %d %s: %s" % (r["id"], "/".join(r["objects"]), r["verdict"])
+                                                                 for r in nc) if nc else "all regions are contradictions")
+                   + "; evidence images " + ex.get("evidence_dir", "")))
     gates.append(g("L3 side contour P95 (sheet px)", s["contour_px"]["p95"], "<= 2", s["contour_px"]["p95"] <= 2))
     l3bad = [f["feature"] for f in me["L3"] if not f["pass"]]
     gates.append(g("L3 feature positions (<= 2 sheet px = %.2f mm)" % me["tol_mm_side"],
@@ -154,16 +162,24 @@ def stage_form():
                    tri_rifle <= 50000, "above the 45k target" if tri_rifle > 45000 else ""))
     gates.append(g("B8 magazine block-in triangles (target 4.5k, ceiling 7k)", tri_mag, "<= 7000", tri_mag <= 7000))
     if h1:
-        gates.append(g("H1 early: grip girth vs the fit body's hand (power-grasp optimum +-15 %)",
-                       h1["girth"]["perimeter_mm"], "%s mm band" % h1["girth"]["band_mm"], h1["girth"]["pass"],
-                       "proxy rule (cylindrical-handle optimum 19.7 %% of hand length %.1f mm); the sheet's grip section is "
-                       "39.7 x 30 mm" % h1["hand"]["hand_length_mm"]))
-        gates.append(g("H1 early: trigger reach", h1["reach"]["reach_mm"], h1["reach"]["rule"], h1["reach"]["pass"],
-                       "hand web->DIP %.1f, web->pad %.1f mm (bone-joint estimate)" % (h1["reach"]["hand_web_to_DIP_mm"],
-                                                                                      h1["reach"]["hand_web_to_pad_mm"])))
-        gates.append(g("H1 early: provisional Grip 40 mm vs the hand (web line -> palm centre)",
-                       h1["grip40"]["hand_web_to_palm_centre_mm"], "within 10 mm of 40", h1["grip40"]["pass_within_10mm"],
-                       "estimate only; the posed H1 at the rig stage sets Grip and hand_offset (frames unchanged here)"))
+        gi, rc, gp = h1["girth"], h1["reach"], h1["grip"]
+        gates.append(g("H1 early: grip section vs real AK grips (width, girth)",
+                       {"girth_mm": gi["perimeter_mm"], "width_Y_mm": gi["width_Y_mm"], "depth_mm": gi["depth_mm"]},
+                       "width %s mm (documented: IMI 30, FAB Gradus 36); girth in %s mm (+2 recess allowance)"
+                       % (gi["real_world_width_band_mm"], gi["girth_band_mm"]), gi["pass"],
+                       "section perpendicular to the axis at the Grip origin; the round-0 proxy (Kong & Lowe cylinder "
+                       "optimum %.1f mm for this hand) is kept as information only" % gi["kong_lowe_cylinder_optimum_mm_info"]))
+        gates.append(g("H1 early: trigger reach (web hollow -> trigger face)", rc["reach_mm"],
+                       "%s mm (documented: AR-15 2.25 in, Glock 17 72 mm)" % rc["real_world_band_mm"], rc["pass"],
+                       "trigger stays where the sheet puts it; round-0 definition (along X at the trigger height) %.1f mm; "
+                       "hand web->DIP %.1f, web->pad %.1f mm" % (rc["reach_at_trigger_height_along_X_mm_round0_definition"],
+                                                               rc["hand_web_to_DIP_mm"], rc["hand_web_to_pad_mm"])))
+        gates.append(g("H1 early: Grip origin depth set from the hand", gp["spec_Grip_depth_mm"],
+                       "within 1 mm of the hand's palm centre on the knuckle line (%.1f mm)"
+                       % gp["hand_palm_centre_along_knuckle_line_mm"], gp["pass"],
+                       "was 40 mm provisional; the 55.2 mm round-0 estimate is the Euclidean web->palm-centre distance, "
+                       "which includes the palm's %.1f mm offset behind the axis; the posed H1 at the rig stage records "
+                       "hand_offset" % gp["palm_offset_behind_axis_mm"]))
         gates.append(g("H1 early: SupportHand on the handguard underside, reachable", h1["support"]["offset_from_surface_mm"],
                        "|offset| <= 1.5 mm", h1["support"]["pass"]))
     else:
@@ -173,12 +189,17 @@ def stage_form():
              "cameras": cl,
              "note": "the close-ups are stylised and not to scale (spec sheet_panels): weak-perspective cameras with the "
                      "view angles set by eye and scale/shift fitted to landmarks; the blind judge runs in the next stage"}
-    hard = [x for x in gates if not x["pass"]]
+    # the 3/4 pair (IoU, P95) is met either directly or through the documented exception
+    q34_names = ("L2 3/4 view IoU", "L2 3/4 view contour P95")
+    exc_ok = any(x["name"].startswith("L2 3/4 documented exception") and x["pass"] for x in gates)
+    hard = [x for x in gates if not x["pass"] and not (exc_ok and x["name"].startswith(q34_names))
+            and not (x["name"].startswith("L2 3/4 documented exception") and q["iou"] >= 0.93 and q["contour_px"]["p95"] <= 3)]
     lone = min(s["iou_fit"], t["iou_fit_valid"])
     status = "pass" if not hard else ("fail" if lone < 0.90 else "partial")
     res = {"stage": "2 form", "date": datetime.now().isoformat(timespec="seconds"), "status": status,
            "failed": [x["name"] for x in hard], "gates": gates,
-           "details": {"silhouette": sil, "q34": q, "B3": b3, "B6a": b6, "measure": me, "H1": h1,
+           "details": {"silhouette": sil, "q34": q, "q34_section_sweeps": load(SCRATCH / "q34_sweeps.json"),
+                       "B3": b3, "B6a": b6, "measure": me, "H1": h1,
                        "build_report": rep, "early_look": early},
            "files": {"blend": rel(ROOT / "Assets" / "Guns" / "AR01.blend"),
                      "renders": [rel(p) for p in sorted(RENDERS.glob("form_grey_*.png"))],

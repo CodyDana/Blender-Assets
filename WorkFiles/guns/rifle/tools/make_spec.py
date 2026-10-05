@@ -122,7 +122,12 @@ GRIP_RAKE = math.degrees(math.atan(k_axis))
 GRIP_TOP_Z = D["pistol_grip"]["Z"][1]                                    # receiver / grip junction (-35.9)
 JUNCTION = np.array([k_axis * GRIP_TOP_Z + c_axis, GRIP_TOP_Z])
 AXIS_DOWN = -np.array([k_axis, 1.0]) / math.hypot(k_axis, 1.0)          # unit, pointing down the grip toward the butt
-GRIP_DEPTH = 40.0                                                       # GUN_BUILDING_STUDY 5.1 (provisional, H1 fixes it)
+# Grip depth down the axis from the junction. GUN_BUILDING_STUDY 5.1 set 40 mm provisionally for H1 to fix. Form fix
+# round 1 (2026-10-04) sets it from the locked MH_PlayerDefault fit body's right hand (rifle_h1.py): in a power grasp
+# the index->pinky knuckle line runs along the grip axis with the thumb-index web at the junction, so the on-axis
+# point under the palm centre is the palm centre's projection on that line: 45.9 mm (the 55.2 mm web->palm-centre
+# distance includes the palm's 30.7 mm offset behind the axis). The posed H1 at the rig stage records hand_offset.
+GRIP_DEPTH = 46.0
 G = JUNCTION + GRIP_DEPTH * AXIS_DOWN                                   # Grip origin in the M frame (X, Z)
 GRIP_WIDTH_PERP = float(np.median((R[:, 2] - R[:, 1]) * math.cos(math.atan(k_axis))))
 
@@ -220,7 +225,11 @@ GAS_D = D["gas_tube"]["diameter_exposed"]["mm"]
 GAS_Z = D["gas_tube"]["axis_Z"]["mm"]
 UPPER_HG_X = D["handguard_upper"]["X"]                                  # cleaned trace (the old 487.1 start was a sliver ring)
 assert abs(UPPER_HG_X[0] - 534.0) < 1.0, UPPER_HG_X
-GRIP_WIDTH_Y = 30.0
+# grip section width (unseen on the sheet). Form fix round 1: 31.0, inside the documented real AK grip widths
+# (IMI Defense AK47/AK74 grip 30 mm, FAB Defense Gradus AK grip 36 mm); 30.0 put the rounded-oblong girth on the
+# band's lower edge (W 30 / straps R 10 = 122 mm). The camera-solved 3/4 view cannot separate 28-32 (zone IoU
+# 0.903-0.908).
+GRIP_WIDTH_Y = 31.0
 CH_TIP_Y = -35.2                                                        # TOP image-down knob extreme (gun right)
 
 # ---- frames: M (measurement) -> B (Blender build, origin Grip) -> Unreal cm
@@ -649,7 +658,7 @@ part(id="pistol_grip", display="Pistol grip (wood) with checkered panels", bone=
            "width_perp_to_axis": round(GRIP_WIDTH_PERP, 1), "width_Y": GRIP_WIDTH_Y,
            "junction_M": r1(JUNCTION, 2), "length_along_axis": pg["length_along_axis"]["mm"]},
      construction="Wood grip, the traced profile: wider flare at the receiver, front-bottom toe is the lowest point, "
-     "rounded rear heel. Section a rounded oblong (30 wide: unseen, real-pattern value), flatter sides where the "
+     "rounded rear heel. Section a rounded oblong (31 wide: unseen; real AK grips 30-36, R31 in resolutions), flatter sides where the "
      "checkering sits, straps R 8-10. Checkered panel per side: border = real geometry (0.6 recess, 0.3 bevel), "
      "diamonds in the normal map baked from a modelled pyramid tile (pitch 1.2-1.5, elongated along the axis); a "
      "real-pyramid LOD0 option for first person. Bottom: plain flat end with a small chamfer, no cap or screw.",
@@ -776,8 +785,8 @@ GM = [GX, 0.0, GZ]
 SH_X = round((lh["X"][0] + lh["X"][1]) / 2, 1)
 SH_Z = round(cross_z(rings(None, "handguard_lower"), SH_X)[0], 1)          # underside of the lower handguard
 rifle_sockets = [
-    sock("Grip", "body", GM, use="origin; attach to the character's weapon_r (40 mm down the grip axis: provisional, H1)",
-         src="computed: grip axis midline + 40 mm from the junction"),
+    sock("Grip", "body", GM, use=f"origin; attach to the character's weapon_r ({GRIP_DEPTH:g} mm down the grip axis, set from the fit body's hand in form fix round 1; the posed H1 at the rig stage records hand_offset)",
+         src=f"computed: grip axis midline + {GRIP_DEPTH:g} mm from the junction (H1 early: palm centre projected on the knuckle line)"),
     sock("SupportHand", "body", [SH_X, 0.0, SH_Z], use="hand_l two-bone IK target. PROVISIONAL: H1 replaces it with the "
          "measured hand_l bone frame in the support-hand pose (off-axis, left of and below the handguard, with rotation); "
          "until then it sits ON the handguard underside (no hand-in-wood) and the sidecar records the hand offset",
@@ -906,7 +915,8 @@ spec = {
         "stock_length": st["length_butt_to_receiver"]["mm"], "butt_height": bpl["height"]["mm"], "butt_width": TV["butt_plate_width"]["mm"],
         "handguard_lower_length": lh["length"]["mm"], "handguard_upper_length": round(UPPER_HG_X[1] - UPPER_HG_X[0], 1),
         "magazine": {"R_front": R_IN, "R_rear": R_OUT, "width": MAG["width_front_to_rear_radial"]["mm"], "thickness": MAG_T,
-                     "arc_length": MAG["length_along_centre_arc"]["mm"], "bottom_Z": MAG["Z"][0]},
+                     "arc_length": MAG["length_along_centre_arc"]["mm"], "bottom_Z": D["overall"]["bottom_Z_with_mag"]["mm"],
+                     "bottom_Z_note": "from the traced SILHOUETTE (lowest point -183.224), like the overall height; the separately traced magazine ring reads the same edge at -183.376 (0.13 px lower), which round 0 used (R30)"},
         "muzzle_brake": {"length": BR["length"]["mm"], "dia": TV["muzzle_brake_width"]["mm"],
                          "cut_deg": BR["front_face_angle_from_vertical_deg"]},
     },
@@ -1209,6 +1219,10 @@ spec["resolutions"] += [
     {"id": "R29", "topic": "Metal texture size (check C13)", "conflict": "'2048 likely' did not fit the classes at 70 % fill",
      "resolution": "Metal 2048 with class B at 60 px/cm (A 90): ~2.4 M texels; 4096 fallback recorded (textures.sets)",
      "rule": "decided here; the user may choose the fallback"},
+    {"id": "R30", "topic": "Magazine bottom vs overall height (form fix round 1)", "conflict": "key overall_height_with_mag 232.6 (front sight top 49.4 to the traced silhouette's lowest point -183.2) but magazine.bottom_Z -183.4 (the magazine ring's lowest point -183.376): 49.4 + 183.4 = 232.8, so no model could meet both within the L4 0.05 mm",
+     "resolution": "both read the same traced edge 0.15 mm (0.13 px) apart; the silhouette is the outline authority for every overall number, so magazine.bottom_Z = -183.2 and the build sets its floor line from the silhouette's lowest point (rifle_parts2._floor_line)", "rule": "one outline for all overall dimensions"},
+    {"id": "R31", "topic": "Grip origin depth (H1 early, form fix round 1)", "conflict": "provisional 40 mm (study 5.1)",
+     "resolution": f"{GRIP_DEPTH:g} mm: the fit body's palm centre projected on the knuckle line from the web (45.9 mm); B-frame coordinates (sockets, bore height) are regenerated from it. Grip section width 30 -> 31 (documented real AK grips 30-36 mm; at 30 the rounded-oblong girth sat on the real-world band's lower edge)", "rule": "H1 (gun study 7)"},
 ]
 
 spec["fab_original_changes"] = {

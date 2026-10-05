@@ -84,8 +84,42 @@ def boolean_many(ob, cutters: Sequence, op="DIFFERENCE", solver="EXACT", offset=
     return ob
 
 
+def _bbox_m(me):
+    V = np.empty(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", V)
+    V = V.reshape(-1, 3)
+    return V.min(0), V.max(0)
+
+
 def bevel(ob, width_mm, segments=2, angle_deg=30.0, profile=0.5, harden=True, clamp=True, limit="ANGLE",
           miter="ARC"):
+    """Bevel modifier, applied. Guard: Blender's bevel occasionally throws a vertex to ~1e32 at a degenerate corner
+    (seen on the receiver once the build frame moved by 6 mm: the same geometry, other float coordinates; the arc
+    outer miter with overlap clamping was the trigger). If any vertex lands outside the pre-bevel box grown by 2
+    widths, the bevel is undone and retried: sharp outer miter, then the width x0.97, then no clamping; the retry is
+    printed."""
+    keep = ob.data.copy()
+    lo, hi = _bbox_m(ob.data)
+    tol = 2.0 * width_mm * 0.001 + 1e-5
+    tries = [(1.0, miter, clamp), (1.0, "SHARP", clamp), (0.97, "SHARP", clamp), (1.0, miter, False)]
+    for k, (f, mt, cl) in enumerate(tries):
+        if k:
+            bad = ob.data
+            ob.data = keep.copy()
+            bpy.data.meshes.remove(bad)
+            print("[gunlib.bl] bevel %.3f mm on %s threw vertices out; retry x%.2f miter %s clamp %s"
+                  % (width_mm, ob.name, f, mt, cl))
+        _bevel_once(ob, width_mm * f, segments, angle_deg, profile, harden, cl, limit, mt)
+        a, b = _bbox_m(ob.data)
+        if np.all(a >= lo - tol) and np.all(b <= hi + tol):
+            break
+    else:
+        raise RuntimeError("bevel %.3f mm on %s keeps throwing vertices out" % (width_mm, ob.name))
+    bpy.data.meshes.remove(keep)
+    return ob
+
+
+def _bevel_once(ob, width_mm, segments, angle_deg, profile, harden, clamp, limit, miter):
     mod = ob.modifiers.new("bevel", "BEVEL")
     mod.width = width_mm * 0.001
     mod.segments = segments

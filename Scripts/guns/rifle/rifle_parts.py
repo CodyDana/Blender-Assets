@@ -326,7 +326,7 @@ def part_defs() -> Dict[str, object]:
                      ("barrel", R2.barrel), ("cleaning_rod", R2.cleaning_rod),
                      ("front_sight_block", R2.front_sight_block), ("front_sight_post", R2.front_sight_post),
                      ("muzzle_brake", R2.muzzle_brake), ("trigger", R2.trigger), ("trigger_guard", R2.trigger_guard),
-                     ("mag_catch", R2.mag_catch), ("pistol_grip", R2.pistol_grip), ("buttstock", R2.buttstock),
+                     ("mag_catch", R2.mag_catch), ("pistol_grip", R2.build_pistol_grip), ("buttstock", R2.buttstock),
                      ("butt_plate", R2.butt_plate), ("butt_screws", R2.butt_screws),
                      ("sling_swivel_base", R2.sling_swivel), ("sling_swivel_loop", R2.sling_loop),
                      ("stock_hardware", R2.stock_hardware), ("selector", R2.selector),

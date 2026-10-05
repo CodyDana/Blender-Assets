@@ -19,11 +19,27 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
+from scipy import ndimage as ndi
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from rifle_common import SPEC, TRACE, GATES, SCRATCH, SHEET, REVIEW, RENDERS  # noqa: E402
 from gunlib import compare as C  # noqa: E402
+
+
+# trace part key -> our object names (per-part L2 labels)
+PART_MAP = {"receiver": ["receiver", "rear_trunnion", "rivets", "receiver_rails", "bolt_carrier", "selector"],
+            "dust_cover": ["dust_cover", "recoil_spring_button"],
+            "rear_sight": ["rear_sight_block", "rear_sight_leaf", "rear_sight_slider", "handguard_retainer"],
+            "gas_tube_rear_cap": ["gas_tube_rear_cap"], "handguard_upper": ["upper_handguard"],
+            "handguard_lower": ["lower_handguard"], "handguard_front_band": ["handguard_front_band"],
+            "gas_tube": ["gas_tube", "gas_piston"], "gas_block": ["gas_block"], "barrel": ["barrel"],
+            "cleaning_rod": ["cleaning_rod"], "front_sight_block": ["front_sight_block", "front_sight_post"],
+            "muzzle_brake": ["muzzle_brake"], "trigger": ["trigger"], "trigger_guard": ["trigger_guard"],
+            "mag_catch": ["mag_catch"], "pistol_grip": ["pistol_grip"], "stock": ["buttstock", "stock_hardware"],
+            "butt_plate": ["butt_plate", "butt_screws"],
+            "sling_swivel_rear": ["sling_swivel_base", "sling_swivel_loop"],
+            "magazine": ["magazine", "magazine_floor_plate"]}
 
 
 def panel_rgb(view):
@@ -78,18 +94,6 @@ def run(npz, stage, tag=""):
         res["views"]["side"]["rifle_without_mag_iou"] = round(C.iou(on, refn), 4)
 
     # ---------------- per part, visible labels (painter's order from -Y) vs the trace's part masks
-    PART_MAP = {"receiver": ["receiver", "rear_trunnion", "rivets", "receiver_rails", "bolt_carrier", "selector"],
-                "dust_cover": ["dust_cover", "recoil_spring_button"],
-                "rear_sight": ["rear_sight_block", "rear_sight_leaf", "rear_sight_slider", "handguard_retainer"],
-                "gas_tube_rear_cap": ["gas_tube_rear_cap"], "handguard_upper": ["upper_handguard"],
-                "handguard_lower": ["lower_handguard"], "handguard_front_band": ["handguard_front_band"],
-                "gas_tube": ["gas_tube", "gas_piston"], "gas_block": ["gas_block"], "barrel": ["barrel"],
-                "cleaning_rod": ["cleaning_rod"], "front_sight_block": ["front_sight_block", "front_sight_post"],
-                "muzzle_brake": ["muzzle_brake"], "trigger": ["trigger"], "trigger_guard": ["trigger_guard"],
-                "mag_catch": ["mag_catch"], "pistol_grip": ["pistol_grip"], "stock": ["buttstock", "stock_hardware"],
-                "butt_plate": ["butt_plate", "butt_screws"],
-                "sling_swivel_rear": ["sling_swivel_base", "sling_swivel_loop"],
-                "magazine": ["magazine", "magazine_floor_plate"]}
     keys = list(PART_MAP)
     remap = np.full(len(names), -1)
     for ki, k in enumerate(keys):
@@ -125,8 +129,18 @@ def run(npz, stage, tag=""):
             e["rule"] = "IoU >= 0.95"
             e["pass"] = e["iou"] >= 0.95
         else:
-            e["rule"] = "contour P95 <= 1.0 px, max <= 2 px"
-            e["pass"] = cdp["p95"] is not None and cdp["p95"] <= 1.0 and cdp["max"] <= 2.0
+            # thin parts: the OUTER contour (holes filled in both masks). The trace records a part's holes only where
+            # the background shows through at 1.2 mm/px; a ring's shaded interior (the rear swivel's D-ring) is traced
+            # solid, so comparing our open interior's edge against no edge would test the tracer, not the shape.
+            # The unfilled numbers are kept beside it.
+            opf, refpf = ndi.binary_fill_holes(op), ndi.binary_fill_holes(refp)
+            cdf = C.contour_distance(opf, refpf)
+            e["contour_unfilled_p95_px"], e["contour_unfilled_max_px"] = e["contour_p95_px"], e["contour_max_px"]
+            e["contour_p95_px"] = None if cdf["p95"] is None else round(cdf["p95"], 3)
+            e["contour_max_px"] = None if cdf["max"] is None else round(cdf["max"], 3)
+            e["iou_filled"] = round(C.iou(opf, refpf), 4)
+            e["rule"] = "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px"
+            e["pass"] = cdf["p95"] is not None and cdf["p95"] <= 1.0 and cdf["max"] <= 2.0
         parts_res[k] = e
         if not e["pass"]:
             ys, xs = np.nonzero(op | refp)

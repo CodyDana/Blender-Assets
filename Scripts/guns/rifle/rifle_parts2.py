@@ -2,6 +2,7 @@
 selector and the magazine block-in (frame M, mm). See rifle_parts.py for the rules."""
 from __future__ import annotations
 
+import json
 import math
 
 import numpy as np
@@ -44,10 +45,15 @@ def rear_sight_block() -> PartDef:
     """Full-width block (43.5) on the front trunnion: low rear part under the leaf with the traced see-through
     sliver, tall front part (to Z 44.6) carrying the retainer lever on its side; a channel (Y +-6.2) holds the leaf,
     whose knuckle sits in a cylindrical seat round the hinge."""
+    # the see-through gap under the leaf follows the trace's hole ring (LEFT_outline parts.rear_sight, the negative
+    # ring) point for point: a 2 mm slit Z 38.7-40.9 from X 465.8 to the hinge block at X 487.5, with the narrow
+    # (~1.3 mm) slanted slot the trace shows dropping from it to (472.5, 34.8). Form fix round 1: the round-0 wedge
+    # down to Z 34.9 left 15 traced-solid px open
     body = [(454.92, 10.60), (485.28, 10.60), (485.28, 13.12), (523.98, 13.12), (523.98, 34.3), (523.0, 34.3),
             (523.0, 41.6), (518.7, 43.6), (516.3, 44.6), (497.5, 44.6), (487.5, 44.2), (487.5, 40.4),
-            (480.0, 39.5), (471.5, 36.0), (470.0, 34.9), (465.8, 40.3), (452.4, 40.3), (452.4, 37.6),
-            (454.92, 34.4)]
+            (481.0, 39.7), (477.3, 37.4), (476.1, 37.7), (474.9, 36.1), (472.5, 34.8), (471.9, 35.5),
+            (474.3, 38.0), (473.7, 38.7), (466.4, 38.7), (465.8, 39.2),
+            (465.8, 40.3), (452.4, 40.3), (452.4, 37.6), (454.92, 34.4)]
     sol = [MS.prism(body, -COVER_O, COVER_O)]
     cut = [MS.box(486.0, 509.5, -6.2, 6.2, 40.4, 50.0),                                   # leaf channel
            ycyl(LEAF_PIVOT[0], LEAF_PIVOT[1], KNUCKLE_R + 0.2, -6.2, 6.2, 40),             # hinge seat
@@ -263,7 +269,10 @@ def front_sight_block() -> PartDef:
     sec = G.ccw(np.vstack([G.arc(0, 0, collar_r, -60, 240, 31), [[-5.0, -18.0], [5.0, -18.0]]]))
     front_collar = xcyl(0.0, 0.0, 8.7, 839.85, 842.8, 32)
     front_collar2 = xcyl(0.0, 0.0, 10.1, 842.6, 848.78, 32)
-    ear_o = [(807.6, 9.0), (818.2, 45.5), (819.0, 49.4), (832.2, 49.4), (833.0, 47.0), (833.0, 9.0)]
+    # ears run down into the round collar (c3: they rise straight from it). Round 0 stopped them at Z 9.0 and kept
+    # a full-width 0.2 mm slab at Z 10.9-11.1, which showed as thin fins beside the collar in the early crop
+    # (form fix round 1: ears from Z 2.0, slab removed)
+    ear_o = [(807.6, 2.0), (807.6, 9.0), (818.2, 45.5), (819.0, 49.4), (832.2, 49.4), (833.0, 47.0), (833.0, 2.0)]
     ear_o = G.fillet(G.ccw(np.array(ear_o, float)), 1.6, 3)
     ears = [MS.prism(ear_o, EAR_IN, EAR_OUT), MS.prism(ear_o, -EAR_OUT, -EAR_IN)]
     # boss rings (raised 0.4) round the hole on each ear's outer face
@@ -275,7 +284,7 @@ def front_sight_block() -> PartDef:
     p = PartDef("front_sight_block", [side], unions=[front_collar, front_collar2] + ears + boss + [plunger, pin],
                 cls="M-chamfer-front", recipe=[(0.6, 1, 30.0)], spec_id="front_sight_block")
     p.section_intersect_pre = [xprism(sec, 800.0, 840.0), MS.box(839.0, 850.0, -40, 40, -40, 60),
-                               MS.box(800.0, 850.0, -40, 40, 10.9, 60)]
+                               MS.box(800.0, 850.0, -40, 40, 11.2, 60)]
     win = G.ccw(np.array([(813.7, 11.8), (827.2, 11.8), (827.2, 21.6), (818.6, 21.6)], float))
     win = G.fillet(win, 1.2, 3)
     p.cutters = [xcyl(0.0, 0.0, BORE_R + GAP, 800.0, 850.0, 48),
@@ -330,13 +339,19 @@ def trigger() -> PartDef:
 
 def trigger_guard() -> PartDef:
     P = prof("trigger_guard", 0.55)
+    # the loop's top points (Z -34.96..-34.6) straddled the flange bottom plane Z -34.8, leaving a 0.16 mm sliver
+    # that the 0.6 mm bevel collapsed (non-manifold after finish() once the build frame moved): lift them into the
+    # flange (the joint is hidden inside the flange)
+    P = P.copy()
+    P[P[:, 1] > -35.0, 1] = -34.7
     loop = MS.prism(P, -5.0, 5.0)
     xs = np.array([252.0, 255.0, 300.0, 360.0, 367.9])
     top = [(x, ledge_z(x) - GAP) for x in xs]
     flange = MS.prism([(252.0, -34.8), (367.9, -34.8)] + top[::-1], -WO, WO)
     # catch housing cheeks either side of the catch tongue + the catch pin with heads
     cheek_o = [(354.8, -34.82), (367.6, -34.82), (367.6, -46.5), (365.6, -51.5), (354.8, -51.5)]
-    uni = [flange, MS.prism(cheek_o, 3.75, 5.0), MS.prism(cheek_o, -5.0, -3.75),
+    # cheeks 0.02 inside the loop faces (Y 5.0): coplanar faces left sub-micron bevel vertices that finish() merged
+    uni = [flange, MS.prism(cheek_o, 3.75, 4.98), MS.prism(cheek_o, -4.98, -3.75),
            ycyl(CATCH_PIVOT[0], CATCH_PIVOT[1], 1.5, -5.6, 5.6, 20),
            ycyl(CATCH_PIVOT[0], CATCH_PIVOT[1], 2.2, 4.99, 5.6, 24), ycyl(CATCH_PIVOT[0], CATCH_PIVOT[1], 2.2, -5.6, -4.99, 24)]
     cut = [MS.box(301.5, 329.0, -3.25, 3.25, -40.0, -27.0),                 # trigger slot through the flange
@@ -374,39 +389,189 @@ def grip_outline():
     return P
 
 
-def pred_grip_round(mid, d, n1, n2, dih):
-    if dih < 20:
-        return 0.0
-    side1, side2 = abs(n1[1]) > 0.9, abs(n2[1]) > 0.9
-    if side1 == side2:
-        return 0.0
-    perim = n2 if side1 else n1
-    if mid[2] > -36.0:                     # top face against the flange: small break only
-        return 0.08
-    if perim[2] < -0.75:                   # flat bottom end: small chamfer
-        return 0.15
-    return 1.0
+# ---- pistol grip (form fix round 1): a LOFT of rounded sections, not a slab with edge bevels.
+# The slab (flat +-15 sides, 7.5 mm weighted bevel) clamped to almost nothing on the dense traced outline: girth
+# 141 mm and a slab look in the 3/4 view. The spec's section is "a rounded oblong (30 wide), flatter sides where the
+# checkering sits, straps R 8-10"; the side outline stays the trace. Construction:
+#   rings   horizontal sections at Z levels (the top is the horizontal flange joint); each ring is the
+#           perpendicular section (rounded rectangle D x W, strap radius R, sides crowned C1-smoothly by `crown`)
+#           stretched along X onto the outline's back..front interval at that Z (D = interval * cos(rake));
+#   bottom  the rings run on past the heel / toe and the traced bottom chain is cut with a boolean (flat end),
+#           then the bottom edges get a 1.0 mm round (2 seg) and the flange edge a 0.5 mm break;
+#   panels  checkered panel border = real geometry: a 0.6 mm recess that follows the rounded side (panel prism
+#           minus the loft shrunk 0.6 in Y), border bevel 0.3; the diamonds go in the normal map.
+GRIP_RAKE = 22.35          # axis rake from vertical (spec)
+GRIP_W = float(SPEC.dims("pistol_grip")["width_Y"])   # section width Y (spec; real AK grips 30-36 mm, rifle_h1)
+GRIP_R = 10.0              # strap radius in the perpendicular section (spec "straps R 8-10"; 3/4-view sweep)
+GRIP_CROWN = 0.5           # side crown at mid-depth (flatter sides where the checkering sits)
+GRIP_NR = 30               # vertices per ring
+GRIP_Z_TOP = -34.82
+GRIP_Z_BACK_CUT = -117.21  # heel: lowest Z with an exact back point (the outline's most rearward heel point)
+GRIP_Z_FRONT_CUT = -128.6  # toe: lowest Z with an exact front point (just below the toe flare's front max)
+GRIP_Z_END = -137.0
 
 
-def pistol_grip() -> PartDef:
+def _hits_x(P, z):
+    Q = np.vstack([P, P[:1]])
+    xs = []
+    for a, b in zip(Q[:-1], Q[1:]):
+        if (a[1] - z) * (b[1] - z) <= 0 and a[1] != b[1]:
+            t = (z - a[1]) / (b[1] - a[1])
+            xs.append(a[0] + t * (b[0] - a[0]))
+    return (min(xs), max(xs)) if len(xs) >= 2 else None
+
+
+def grip_section(D, W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, n=GRIP_NR):
+    """Perpendicular section, s = 0 at the back strap .. D at the front strap, y across. Starts at the back strap
+    middle (s 0, y 0) and runs CCW in (s, y); n points by arc length (consistent rings for the loft)."""
+    R = min(R, 0.5 * W - 1e-3, 0.5 * D - 1e-3)
+    h = 0.5 * W - crown
+    rr = G.ccw(G.rounded_rect(0.0, D, -h, h, R, 24))
+    rr = G.resample(rr, 0.15)
+    # crown the flat side runs (C1: zero value and slope where the strap arcs begin)
+    u = (rr[:, 0] - 0.5 * D) / max(0.5 * D - R, 1e-6)
+    flat = (np.abs(u) < 1.0) & (np.abs(rr[:, 1]) > h - 1e-6)
+    rr[flat, 1] += np.sign(rr[flat, 1]) * crown * (1 - u[flat] ** 2) ** 2
+    k = int(np.argmin(rr[:, 0] + 10 * np.abs(rr[:, 1])))          # back strap middle
+    rr = np.roll(rr, -k, axis=0)
+    Q = np.vstack([rr, rr[:1]])
+    dd = np.r_[0, np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))]
+    t = np.linspace(0, dd[-1], n, endpoint=False)
+    return np.c_[np.interp(t, dd, Q[:, 0]), np.interp(t, dd, Q[:, 1])]
+
+
+def grip_levels(P):
+    """Z levels for the rings: dense where the outline's back or front moves > 1.2 mm, at most 5 mm apart."""
+    zs = np.arange(GRIP_Z_TOP - 0.5, GRIP_Z_BACK_CUT + 0.2, -0.25)
+    keep = [GRIP_Z_TOP]
+    last = _hits_x(P, GRIP_Z_TOP - 1e-3)
+    for z in zs:
+        h = _hits_x(P, z)
+        if h is None:
+            continue
+        if max(abs(h[0] - last[0]), abs(h[1] - last[1])) > 1.2 or keep[-1] - z >= 5.0:
+            keep.append(float(z))
+            last = h
+    keep.append(GRIP_Z_BACK_CUT)
+    keep += [-119.5, -122.0, -124.5, -126.5, -127.8, GRIP_Z_FRONT_CUT, -131.0, -134.0, GRIP_Z_END]
+    return np.array(keep)
+
+
+def grip_intervals(P):
+    """(z, x_back, x_front) per ring: exact outline hits down to the heel / toe cut levels, then carried on just
+    outside the outline (0.6 mm) so the bottom boolean, not the loft, makes the traced bottom."""
+    out = []
+    xb_heel = _hits_x(P, GRIP_Z_BACK_CUT)[0]
+    xf_toe = _hits_x(P, GRIP_Z_FRONT_CUT)[1]
+    for z in grip_levels(P):
+        h = _hits_x(P, min(z, GRIP_Z_TOP - 1e-3))
+        xb = h[0] if (h is not None and z >= GRIP_Z_BACK_CUT) else xb_heel - 0.6
+        xf = h[1] if (h is not None and z >= GRIP_Z_FRONT_CUT) else xf_toe + 0.6
+        out.append((float(z), float(xb), float(xf)))
+    return out
+
+
+def grip_rings(W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN, n=GRIP_NR, dy=0.0, dr=0.0):
+    """Rings in frame M. dy / dr shrink the half width / strap radius (the panel-recess inner loft)."""
     P = grip_outline()
-    body = MS.prism(P, -15.0, 15.0)
-    # guard rear leg is in front of the grip: cut the grip back by the leg grown 0.02
-    leg = [(298.6, -34.0), (303.3, -34.0), (303.3, -60.0), (298.4, -60.0)]
-    cut = [MS.prism(G.offset(G.ccw(np.array(leg)), GAP), -40, 40)]
-    # checkered panels: 0.6 mm recess with a crisp border (checker pattern itself in the normal map)
-    ang = math.radians(22.35)
+    c = math.cos(math.radians(GRIP_RAKE))
+    rings = []
+    for z, xb, xf in grip_intervals(P):
+        D = (xf - xb) * c
+        sec = grip_section(D, W - 2 * dy, R - dr, crown, n)
+        x = xb + sec[:, 0] / D * (xf - xb)
+        rings.append(np.c_[x, sec[:, 1], np.full(n, z)])
+    return rings
+
+
+def grip_bottom_cutter():
+    """XZ polygon below the traced bottom chain, from the heel cut level round the toe to the front cut level."""
+    P = G.ccw(grip_outline())
+    b = np.array([_hits_x(P, GRIP_Z_BACK_CUT)[0], GRIP_Z_BACK_CUT])
+    f = np.array([_hits_x(P, GRIP_Z_FRONT_CUT)[1], GRIP_Z_FRONT_CUT])
+    # CCW (Z up) runs back strap -> heel -> bottom -> toe -> front strap: walk from the vertex after b to before f
+    k0 = int(np.argmin(np.hypot(*(P - b).T)))
+    k1 = int(np.argmin(np.hypot(*(P - f).T)))
+    idx = [(k0 + i) % len(P) for i in range(((k1 - k0) % len(P)) + 1)]
+    chain = P[idx]
+    chain = chain[(chain[:, 1] < GRIP_Z_BACK_CUT - 1e-6) & (chain[:, 1] < GRIP_Z_FRONT_CUT - 1e-6)
+                  | ((chain[:, 0] < 255.0) & (chain[:, 1] < GRIP_Z_BACK_CUT - 1e-6))]
+    chain = chain[(np.hypot(*(chain - b).T) > 0.05) & (np.hypot(*(chain - f).T) > 0.05)]
+    poly = np.vstack([[b + (-15.0, 0.0)], [b], chain, [f], [f + (15.0, 0.0)],
+                      [(f[0] + 15.0, -160.0)], [(b[0] - 15.0, -160.0)]])
+    return G.dedupe(poly, 1e-4)
+
+
+def grip_panel_outline():
+    """Checkered panel (per side), axis-aligned rounded rectangle down the grip from the junction (c1 / c6)."""
+    ang = math.radians(GRIP_RAKE)
     d = np.array([-math.sin(ang), -math.cos(ang)])        # down the grip axis
-    pdir = np.array([math.cos(ang), -math.sin(ang)])     # toward the front strap
+    pdir = np.array([math.cos(ang), -math.sin(ang)])      # toward the front strap
     j = np.array([280.67, -36.0])
     rr = G.rounded_rect(26.0, 91.7, -1.5, 14.4, 3.0, 4)
-    panel = np.array([j + t * d + s * pdir for t, s in rr])
-    post = [MS.prism(panel, min(s * 14.4, s * 20), max(s * 14.4, s * 20)) for s in (-1, 1)]
-    rec = [(7.5, 3, "W", pred_grip_round)]
-    p = PartDef("pistol_grip", [body], cutters=cut, post_cutters=post, cls="W-round", slot="M_AR01_Furniture",
-                recipe=rec)
-    p.post_recipe = [(0.3, 1, 40.0)]
-    return p
+    return np.array([j + t * d + s * pdir for t, s in rr])
+
+
+GRIP_LEG = [(298.6, -34.0), (303.3, -34.0), (303.3, -60.0), (298.4, -60.0)]   # guard rear leg (cut back 0.02)
+
+
+def grip_mesh_numpy(W=GRIP_W, R=GRIP_R, crown=GRIP_CROWN):
+    """Plain-numpy approximation for silhouette sweeps: the loft with vertices outside the traced bottom moved onto
+    it (the Blender build cuts it with a boolean instead)."""
+    m = MS.loft(grip_rings(W, R, crown))
+    V = m.verts()
+    cut = grip_bottom_cutter()
+    inside = np.array([G.point_in_poly((v[0], v[2]), cut) for v in V])
+    P = grip_outline()
+    chain = P[P[:, 1] < -110.0]
+    for i in np.nonzero(inside)[0]:
+        d = np.hypot(chain[:, 0] - V[i, 0], chain[:, 1] - V[i, 2])
+        k = int(np.argmin(d))
+        V[i, 0], V[i, 2] = chain[k]
+    out = MS.Mesh()
+    out.add_verts(V)
+    out.F = list(m.F)
+    return out
+
+
+def pred_grip_ends(mid, d, n1, n2, dih):
+    if dih < 25:
+        return 0.0
+    if mid[2] < GRIP_Z_BACK_CUT + 1.0 or (mid[2] < GRIP_Z_FRONT_CUT + 1.0 and mid[0] > 262.0):
+        return 1.0                                   # bottom end: 1.0 mm round
+    if mid[2] > GRIP_Z_TOP - 0.3:
+        return 0.5                                   # flange joint: 0.5 mm break
+    return 0.0
+
+
+def build_pistol_grip(coll, offset):
+    import bpy
+    from gunlib import bl
+    ob = MS.loft(grip_rings()).to_object("pistol_grip", coll, offset, smooth_deg=35.0)
+    bl.boolean_many(ob, [MS.prism(grip_bottom_cutter(), -40.0, 40.0),
+                         MS.prism(G.offset(G.ccw(np.array(GRIP_LEG)), GAP), -40, 40)], "DIFFERENCE", offset=offset)
+    bl.clean(ob)
+    bl.bevel_weighted(ob, 1.0, 2, pred_grip_ends, offset)
+    # panel recess: panel prisms minus the loft shrunk 0.6 in Y (the recess follows the rounded side)
+    panel = grip_panel_outline()
+    cut = MS.prism(panel, -25.0, -8.0).to_object("_gpanel", coll, offset)
+    bl.boolean(cut, MS.prism(panel, 8.0, 25.0), "UNION", offset=offset)
+    inner = MS.loft(grip_rings(dy=0.6, dr=0.6)).to_object("_ginner", coll, offset)
+    bl.boolean(cut, inner, "DIFFERENCE")
+    bpy.data.objects.remove(inner, do_unlink=True)
+    bl.boolean(ob, cut, "DIFFERENCE")
+    bpy.data.objects.remove(cut, do_unlink=True)
+    bl.clean(ob)
+    bl.bevel(ob, 0.3, 1, 50.0)
+    bl.finish(ob)
+    bl.weighted_normals(ob)
+    ob["gun_part"] = json.dumps({"bone": "body", "class": "W-round", "slot": "M_AR01_Furniture",
+                                 "spec_id": "pistol_grip", "joint": {"type": "butt", "parent": "receiver",
+                                                                     "gap_mm": [0.01, 0.05]},
+                                 "recipe": [[1.0, 2, "weighted ends"], [0.3, 1, 50.0]],
+                                 "section": {"construction": "loft of rounded sections", "width_Y": GRIP_W,
+                                             "strap_R": GRIP_R, "side_crown": GRIP_CROWN}})
+    return ob
 
 
 def stock_zt_zb():
@@ -421,10 +586,26 @@ def stock_halfw(x):
     return np.interp(x, xs, ws) / 2.0
 
 
-def stock_section(x, zt, zb, n=64, w_override=None):
+# section edge radius. The spec read "edges R 6-8"; the 3/4 view (form fix round 1, gates/form.json "stock 3/4
+# section sweep") shows a rounder butt: zone IoU 0.9115 at R 7 -> 0.9185 at R 13, saturating at 13-15, and c7 draws
+# the plate ends with radii ~0.35 of the width (~13 mm). The wrist keeps R 7 (round 0, spec range) so the flat left inlet
+# plate stays seated on a flat side.
+STOCK_R = 13.0
+STOCK_NR = 46          # ring vertices (corner-weighted sampling: ~5 segments per R 13 corner)
+STOCK_R_WRIST = 7.0    # the radius blends from STOCK_R (X <= 140) to this at the wrist (X >= 185)
+
+
+def stock_r(x):
+    if STOCK_R_WRIST is None:
+        return STOCK_R
+    t = min(max((x - 140.0) / 45.0, 0.0), 1.0)
+    return STOCK_R + (STOCK_R_WRIST - STOCK_R) * t
+
+
+def stock_section(x, zt, zb, n=160, w_override=None, r_max=None):
     w = (stock_halfw(x) if w_override is None else w_override) - 0.6     # TOP width includes the 0.6 side swell
     h = zt - zb
-    r = min(7.0, 0.3 * h, 0.45 * 2 * w)
+    r = min(stock_r(x) if r_max is None else r_max, 0.3 * h, 0.45 * 2 * w)
     rr = G.rounded_rect(-w, w, zb, zt, r, 6)
     R = G.resample(rr, (2 * (2 * w + h)) / n)[:n]
     zm = 0.5 * (zt + zb)
@@ -434,15 +615,23 @@ def stock_section(x, zt, zb, n=64, w_override=None):
     return R
 
 
-def resample_ring(P, n, start_angle=-90.0):
-    """Resample a closed ring to n points starting at the point nearest the given polar angle (consistent lofts)."""
+def resample_ring(P, n, start_angle=-90.0, turn_weight=0.0):
+    """Resample a closed ring to n points starting at the point nearest the given polar angle (consistent lofts).
+    turn_weight (mm per radian) adds the turning angle to the arc-length measure, so rounded corners get more of
+    the n points than flat runs (the same rule on every ring keeps the loft consistent)."""
     P = G.ccw(P)
     c = P.mean(axis=0)
     ang = np.degrees(np.arctan2(P[:, 1] - c[1], P[:, 0] - c[0]))
     k = int(np.argmin(np.abs(((ang - start_angle) + 180) % 360 - 180)))
     P = np.roll(P, -k, axis=0)
     Q = np.vstack([P, P[:1]])
-    dd = np.r_[0, np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))]
+    seg = np.diff(Q, axis=0)
+    ln = np.linalg.norm(seg, axis=1)
+    if turn_weight > 0:
+        hd = np.arctan2(seg[:, 1], seg[:, 0])
+        turn = np.abs((np.diff(np.r_[hd[-1], hd]) + np.pi) % (2 * np.pi) - np.pi)
+        ln = ln + turn_weight * 0.5 * (turn + np.r_[turn[1:], turn[:1]])
+    dd = np.r_[0, np.cumsum(ln)]
     t = np.linspace(0, dd[-1], n, endpoint=False)
     return np.c_[np.interp(t, dd, Q[:, 0]), np.interp(t, dd, Q[:, 1])]
 
@@ -479,26 +668,41 @@ def stock_lines():
     zt_s[nose] = zt_n[nose]
     zb_s = _gauss_smooth_1d(zb, 4.0)
     zb_s[xs < 30.0] = zb[xs < 30.0]
+    # the swivel seat: the trace's short horizontal flat (X 69.5-77.5, Z -90.85) survives with its short ramps
+    zb_n = _gauss_smooth_1d(zb, 0.8)
+    seat = (xs >= SW_FLAT_X[0] - 3.0) & (xs <= SW_FLAT_X[1] + 3.0)
+    zb_s[seat] = zb_n[seat]
+    zb_s[(xs >= SW_FLAT_X[0]) & (xs <= SW_FLAT_X[1])] = SW_FLAT_Z
     w = _gauss_smooth_1d(stock_halfw(xs), 6.0)
     return xs, zt_s, zb_s, w
 
 
 def buttstock() -> PartDef:
     xs_all, zt_all, zb_all, w_all = stock_lines()
-    xs = np.r_[np.linspace(9.0, 146.0, 16), np.linspace(148.0, 176.0, 12), np.linspace(180.0, 233.0, 9)]
+    xs = np.r_[np.linspace(9.0, 146.0, 16), np.linspace(148.0, 176.0, 12), np.linspace(180.0, 233.0, 9),
+               [SW_FLAT_X[0] - 3.0, SW_FLAT_X[0], SW_FLAT_X[1], SW_FLAT_X[1] + 3.0]]      # swivel flat
+    xs = np.unique(np.round(xs, 3))
+    xs = xs[np.r_[True, np.diff(xs) > 1.0]]
     rings = []
     for x in xs:
         zt = float(np.interp(x, xs_all, zt_all))
         zb = float(np.interp(x, xs_all, zb_all))
         w = float(np.interp(x, xs_all, w_all))
         s = stock_section(x, zt, zb, w_override=w)
-        s = resample_ring(s, 40)
-        rings.append(np.c_[np.full(40, x), s[:, 0], s[:, 1]])
+        s = resample_ring(s, STOCK_NR, turn_weight=8.0)
+        rings.append(np.c_[np.full(STOCK_NR, x), s[:, 0], s[:, 1]])
     body = MS.loft(rings)
     trn = [(225.2, 7.0), (225.2, -17.5), (228.7, -22.0), (229.0, -28.5), (230.1, -34.0), (231.4, -36.77),
            (231.4, -45.0), (240.9, -45.0), (240.9, 12.0), (225.2, 12.0)]
+    bpo = butt_plate_outline()
+    # behind the plate's rear face: no stock (with the R 13 section the toe ring at X 9 otherwise leaves a 0.3 mm
+    # sliver shell under the plate's raked toe)
+    zz = np.linspace(bpo[:, 1].min() + 0.05, bpo[:, 1].max() - 0.05, 80)
+    rear = [(_rear_face_x(bpo, z), z) for z in zz[::-1]]
+    behind = np.array([(-10.0, zz[-1])] + rear + [(-10.0, zz[0])])
     cut = [MS.prism(np.array(trn), -40, 40),
-           MS.prism(G.offset(G.ccw(butt_plate_outline()), GAP), -40, 40)]
+           MS.prism(G.offset(G.ccw(bpo), GAP), -40, 40),
+           MS.prism(G.ccw(behind), -40, 40)]
     cut.append(MS.prism(G.offset(G.ccw(np.array([(222.5, -4.0), (197.5, -14.0), (222.5, -24.0)], float)), GAP),
                         stock_halfw(210) - 0.6 - GAP, 40))                                        # inlet plate seat
     zt219 = float(np.interp(219.0, xs_all, zt_all))
@@ -529,8 +733,8 @@ def butt_plate_outline():
 def butt_plate() -> PartDef:
     P = butt_plate_outline()
     body = MS.prism(P, -18.45, 18.45)
-    # plate section: the stock's end section + 0.3 (rounded corners R 7.3)
-    sec = G.rounded_rect(-18.45, 18.45, -110.5, 0.5, 7.3, 4)
+    # plate section: the stock's end section + 0.3 (rounded corners STOCK_R + 0.3)
+    sec = G.rounded_rect(-18.45, 18.45, -110.5, 0.5, STOCK_R + 0.3, 8)
     p = PartDef("butt_plate", [body], cls="S-bend", recipe=[(1.0, 3, 30.0)])
     p.section_intersect_pre = [xprism(sec, -5.0, 35.0)]
     # counterbores for the two cross-slotted screws on the rear face (centre line)
@@ -585,45 +789,51 @@ def butt_screws() -> PartDef:
                    spec_id="butt_plate", joint={"type": "butt", "parent": "butt_plate", "gap_mm": [0.01, 0.05]})
 
 
-def swivel_frame():
-    """The rear swivel sits on the stock's (smoothed) bottom line at X 72.6, turned to its slope."""
-    xs_all, zt_all, zb_all, w_all = stock_lines()
-    x0 = 72.6
-    z0 = float(np.interp(x0, xs_all, zb_all))
-    z1 = float(np.interp(x0 + 6.0, xs_all, zb_all))
-    zm = float(np.interp(x0 - 6.0, xs_all, zb_all))
-    ang = math.degrees(math.atan2(z1 - zm, 12.0))
-    M = np.eye(4)
-    t = math.radians(-ang)
-    M[:3, :3] = np.array([[math.cos(t), 0, math.sin(t)], [0, 1, 0], [-math.sin(t), 0, math.cos(t)]])
-    M[:3, 3] = [x0, 0.0, z0]
-    return M
+# ---- rear sling swivel (form fix round 1): fitted to the trace (LEFT_outline parts.sling_swivel_rear).
+# The trace shows a D-ring hanging below a short horizontal flat in the stock's bottom line (X 69.5-77.5 at
+# Z -90.85, traced as part of the stock): straight top bar along the flat, round bottom, outer X 67.6-77.7,
+# lowest Z -99.6 at X 72.6. Built in frame M (no tilt): a flush base plate in the flat, a lug under it with a
+# transverse hole, and the D-ring (wire 2.5, spec) whose top bar passes through the hole (0.25 radial clearance).
+SW_X = 72.65            # ring centre X (trace: lowest point 72.6, sides 67.6 / 77.7)
+SW_FLAT_Z = -90.85      # the traced flat in the stock's bottom line
+SW_FLAT_X = (69.5, 77.5)
+SW_WIRE_R = 1.25
+SW_HALF = 3.8           # centreline half width (outer +-5.05)
+SW_BAR_Z = -92.35       # top bar centreline (outer top 0.15 below the base plate)
+SW_BOTTOM_Z = -99.6     # outer bottom (trace)
+SW_HOLE_R = 1.5
 
 
 def swivel_seat_cutters():
-    M = swivel_frame()
-    return [MS.box(-6.1 - GAP, 6.4 + GAP, -5.0 - GAP, 5.0 + GAP, -3.0, 0.6 + GAP).transformed(M)]
+    return [MS.box(69.8 - GAP, 75.8 + GAP, -4.0 - GAP, 4.0 + GAP, SW_FLAT_Z - 1.0, SW_FLAT_Z + 1.9 + GAP)]
 
 
 def sling_swivel() -> PartDef:
-    # local frame: X along the stock bottom, Z = its outward normal (down is -Z); origin on the bottom line
-    M = swivel_frame()
-    base = MS.box(-6.1, 6.4, -5.0, 5.0, -1.4, 0.6)                     # 0.6 inset into its seat, 1.4 proud
-    lug = MS.box(-0.6, 0.6, -2.8, 2.8, -4.4, -1.38)
-    hole = xcyl(0.0, -2.5, 1.75, -3.0, 3.0, 20)
-    p = PartDef("sling_swivel_base", [base.transformed(M)], unions=[lug.transformed(M)],
-                cutters=[hole.transformed(M)], cls="S-cut", recipe=[(0.3, 1, 30.0)], spec_id="sling_swivel_rear")
-    return p
+    base = MS.box(69.8, 75.8, -4.0, 4.0, SW_FLAT_Z - 0.1, SW_FLAT_Z + 1.9)     # 0.1 proud of the flat, 1.9 inset
+    lug = MS.box(SW_X - 0.65, SW_X + 0.65, -2.2, 2.2, -94.5, SW_FLAT_Z - 0.08)
+    hole = xcyl(0.0, SW_BAR_Z, SW_HOLE_R, SW_X - 3.0, SW_X + 3.0, 24)
+    return PartDef("sling_swivel_base", [base], unions=[lug], cutters=[hole], cls="S-cut", recipe=[(0.3, 1, 30.0)],
+                   spec_id="sling_swivel_rear")
+
+
+def sling_loop_path(step=0.7):
+    rt = 1.0
+    xl, xr = SW_X - SW_HALF, SW_X + SW_HALF
+    zc = SW_BOTTOM_Z + SW_WIRE_R + SW_HALF                   # bottom semicircle centre
+    pts = [np.c_[np.linspace(xl + rt, xr - rt, 8), np.full(8, SW_BAR_Z)][:-1]]
+    pts.append(G.arc(xr - rt, SW_BAR_Z - rt, rt, 90, 0, 5)[:-1])
+    pts.append(np.c_[np.full(3, xr), np.linspace(SW_BAR_Z - rt, zc, 3)][:-1])
+    pts.append(G.arc(SW_X, zc, SW_HALF, 0, -180, 25)[:-1])
+    pts.append(np.c_[np.full(3, xl), np.linspace(zc, SW_BAR_Z - rt, 3)][:-1])
+    pts.append(G.arc(xl + rt, SW_BAR_Z - rt, rt, 180, 90, 5)[:-1])
+    P = G.resample(np.vstack(pts), step)
+    return np.c_[P[:, 0], np.zeros(len(P)), P[:, 1]]
 
 
 def sling_loop() -> PartDef:
-    # D-ring in the XZ plane hanging from the lug hole (wire 2.5), hinge clearance 0.2 in the hole
-    R = 2.9
-    c = np.array([0.0, 0.0, -2.5 - R])
-    th = np.linspace(0, 2 * math.pi, 40, endpoint=False)
-    path = c + np.c_[R * np.sin(th), np.zeros_like(th), R * np.cos(th)]
-    circ = G.arc(0, 0, 1.25, 0, 360, 13)[:-1]
-    m = MS.sweep_profile(path, circ, ups=[[0, 1, 0]] * len(path), closed_path=True).transformed(swivel_frame())
+    path = sling_loop_path()
+    circ = G.arc(0, 0, SW_WIRE_R, 0, 360, 13)[:-1]
+    m = MS.sweep_profile(path, circ, ups=[[0, 1, 0]] * len(path), closed_path=True)
     return PartDef("sling_swivel_loop", [m], cls="none", recipe=[], wn=False, smooth_deg=60.0,
                    spec_id="sling_swivel_rear", joint={"type": "hinge", "parent": "sling_swivel_base",
                                                        "clearance_mm": [0.1, 0.3], "note": "static, no bone"})
@@ -681,10 +891,31 @@ def selector() -> PartDef:
 
 # ======================================================================================== magazine block-in
 MAG_C = np.array([604.8, 3.3])
-# floor line: the spec corners moved 0.8 mm inward along the plate normal so the plate's lowest point meets the
-# spec's magazine bottom_Z -183.4 (the corner reading -183.9 and bottom_Z disagree by 0.5 in the spec itself)
+# floor line (form fix round 1): the spec's floor-plate corners (456.2, -183.9) / (493.1, -138.9) give the line's
+# direction; its offset is set so the plate's lowest point lands on the LOWEST POINT OF THE TRACED SILHOUETTE
+# (LEFT_outline silhouette, read at run time: -183.224), the same outline every other overall L4 number is read from
+# (ear top 49.36, grip bottom -132.72). Round 0 used the spec's magazine bottom_Z -183.4, which was read from the
+# separately traced magazine ring (-183.376, the same edge 0.13 px lower); with the ear top at 49.4 that made the
+# overall height 232.78 against the spec's 232.6 (= 49.4 + 183.2 from the silhouette). The spec value is amended
+# to -183.2 with resolution R30 in tools/make_spec.py.
 _FN = np.array([0.7728, -0.6346])
-FLOOR = (np.array([456.2, -183.9]) - 0.8 * _FN, np.array([493.1, -138.9]) - 0.8 * _FN)
+_FT = np.array([0.6341, 0.7733])
+FLOOR_BEVEL_LIFT = 0.247     # the plate's 0.6 mm S-bend bevel raises its lowest corner by this (measured, round 0)
+
+
+def _traced_lowest_z():
+    j = json.loads((TRACE / "LEFT_outline.json").read_text())
+    return min(min(p[1] for p in r["mm"]) for r in j["silhouette"])
+
+
+def _floor_line():
+    c0, c1 = np.array([456.2, -183.9]), np.array([493.1, -138.9])
+    corner_z = c0[1] - 0.3 * _FT[1]                       # plate outer rear corner (0.3 past the floor end)
+    shift = (_traced_lowest_z() - (corner_z + FLOOR_BEVEL_LIFT)) / -_FN[1]
+    return c0 - shift * _FN, c1 - shift * _FN, shift
+
+
+FLOOR = _floor_line()[:2]
 R_F, R_R = 180.8, 239.0
 
 
