@@ -22,6 +22,9 @@ WorkFiles/guns/rifle/gates/detail_receiver_right_r2.json.
 Detail round 2 rerun (r2b, judge r1 tells on c1): one slot from the skirt step (wall cut under a 9.6 skirt edge, full
 port from PORT_X0, cutout rise back at X 372-378.5), dark notch interior (carrier recess to its bottom, rail gap),
 domed rivets and pin head, hairpin wire clip, 1.5 deep right dimple on an inner block, rolled rear edges.
+LAST SHAPE ROUND (2026-10-05, orchestrator rulings 1 / 3 / 5): cover ribs removed and tighter R 3.2 shoulders
+(receiver_right_cover.py); the REAL charging handle (handle_knob: a flat stem and a bent-up knob 24.85 mm proud of the
+wall; real-pattern photos in WorkFiles/guns/rifle/scratch/realref); the mag catch paddle as a pressed-rib stamping.
 """
 from __future__ import annotations
 
@@ -476,7 +479,7 @@ CARRIER_X = (346.0, 450.0)
 # the flank below Z 9.5 is recessed 14.75 mm (CAVITY_*) so the port's lower half reads dark, the upper half a lit bar
 CARRIER_STEPS = [(346.0, 11.4), (355.0, 19.6), (369.0, 40.0)]   # r2: middle step 17 -> 19.6 (fills the raised cutout)
 HANDLE_Z = (8.0, 17.0)             # tab; its bottom stays 1.2 above the selector lever (Z 6.8) at full travel
-KNOB_X, KNOB_Z = 449.6, 12.5       # detail fix: knob axis (Z 8.2-16.8 inside HANDLE_Z; X 445.3-453.9 inside the old tab)
+KNOB_X = 449.6                     # charging handle centre X (stem X 444.25-451.75; last shape round: the knob is lofted)
 STEM_Z = (8.6, 11.85)              # stem in the wall port; passes under the cutout's slanted rear step at full travel
 CARRIER_FLAT_Z, CARRIER_TOP_B = 20.0, 9.7     # detail r2 section (top Z 29.7 as before)
 # integration (2026-10-05): the recess floor stops at Y -8.5 (was -4.0): deeper, it opened into the chamber pocket round
@@ -506,14 +509,13 @@ def bolt_carrier() -> PartDef:
         if i > 0:
             side += [(x, CARRIER_STEPS[i - 1][1])]
     side_prism = MS.prism(G.ccw(np.array(side, float)), -30.0, 30.0)
-    stem = MS.prism(G.rounded_rect(444.25, 451.75, STEM_Z[0], STEM_Z[1], 0.75, 3), -22.3, -18.5)
-    # DETAIL FIX (user checklist 5): the charging handle KNOB with a collar and a flat outer face (r2b: a flat
-    # rounded-rectangle tab; round 0: a plain hemisphere): collar r 2.6 out of the stem, a rounded shoulder up to the
-    # knob r 4.3, the flat face rolled 0.9 at its edge; axis along -Y at (KNOB_X, KNOB_Z)
-    kx, kz = KNOB_X, KNOB_Z
-    prof = [(0.0, 0.0), (0.0, 2.6), (2.3, 2.6), (2.75, 3.0), (3.35, 3.85), (4.1, 4.3), (8.7, 4.3), (9.3, 4.0),
-            (9.65, 3.6), (9.8, 3.15), (9.8, 0.0)]
-    tab = MS.revolve(prof, (kx, -22.0, kz), (0.0, -1.0, 0.0), 20)
+    # LAST SHAPE ROUND (ruling 3): the REAL charging handle -- a flat stem straight out of the carrier through the slot
+    # and a knob on its end bent up, standing HANDLE_OUT mm proud of the receiver wall (real-pattern photos, scratch/
+    # realref: ~25 mm out, knob ~9-10 mm, bent up ~25 deg, its top level with the old tab). Round 2's 10 mm collar knob
+    # read as a stub. It travels with the carrier (bolt bone); the stem stays in its old Z band (B3: over the selector's
+    # top edge Z 8.0 at full travel, under the cover cutout's low edge 12.3)
+    stem = MS.prism(G.rounded_rect(444.25, 451.75, STEM_Z[0], STEM_Z[1], 0.75, 3), -29.5, -18.5)
+    tab = handle_knob()
     cut = [MS.cylinder((433.5, 0, 0), (452.0, 0, 0), 7.5 + 0.3, 32)]     # chamber pocket round the barrel end (unseen)
     # detail r2: deep recess in the right flank below the lit bar (c1 draws a dark shadow band under the carrier face,
     # q34 a dark gap under it): the port reads as a dark slot instead of a flush wall-coloured face
@@ -529,6 +531,45 @@ def bolt_carrier() -> PartDef:
     return p
 
 
+HANDLE_OUT = 24.5                  # knob end proud of the wall (Y -WO - HANDLE_OUT)
+KNOB_PATH = ((-25.5, 10.225), (-36.0, 10.225), (-42.6, 13.4))   # quadratic Bezier in YZ at X = KNOB_X (stem -> knob)
+KNOB_AX = ((0.0, 3.75), (0.45, 3.85), (0.8, 4.55), (1.0, 4.6))    # section half width along X over the path parameter
+KNOB_AZ = ((0.0, 1.62), (0.45, 1.9), (0.8, 3.3), (1.0, 3.45))     # section half thickness across the path
+
+
+def handle_knob():
+    """The charging handle's knob: superellipse sections (exponent 2.6: a pressed flat-sided knob, not a ball) lofted
+    along KNOB_PATH (flat out of the stem, then bent up ~26 deg), closed by a domed end (quarter ellipse, 4 rings) whose
+    tip reaches Y -WO - HANDLE_OUT."""
+    p0, p1, p2 = (np.asarray(q, float) for q in KNOB_PATH)
+    ts = np.linspace(0.0, 1.0, LOD.count(11, 5))
+    nu = LOD.ring(20)
+    ph = np.linspace(0.0, 2.0 * math.pi, nu, endpoint=False)
+    e = 2.0 / 2.6
+    cu, su = np.cos(ph), np.sin(ph)
+    eu, ev = np.sign(cu) * np.abs(cu) ** e, np.sign(su) * np.abs(su) ** e
+    rings = []
+
+    def ring_at(c, tan, ax, az):
+        n = np.array([-tan[1], tan[0]])           # in YZ, rotated +90 deg: up for a -Y tangent
+        if n[1] < 0:
+            n = -n
+        return np.c_[np.full(nu, KNOB_X) + ax * eu, c[0] + az * ev * n[0], c[1] + az * ev * n[1]]
+    for t in ts:
+        c = (1 - t) ** 2 * p0 + 2 * (1 - t) * t * p1 + t * t * p2
+        d = 2 * (1 - t) * (p1 - p0) + 2 * t * (p2 - p1)
+        d = d / np.linalg.norm(d)
+        ax = float(np.interp(t, [a for a, _ in KNOB_AX], [b for _, b in KNOB_AX]))
+        az = float(np.interp(t, [a for a, _ in KNOB_AZ], [b for _, b in KNOB_AZ]))
+        rings.append(ring_at(c, d, ax, az))
+    d = (p2 - p1) / np.linalg.norm(p2 - p1)
+    tip_len = abs((-WO - HANDLE_OUT) - p2[0]) / max(abs(d[0]), 1e-6)       # dome length along the end tangent
+    ax1, az1 = KNOB_AX[-1][1], KNOB_AZ[-1][1]
+    for a in np.radians([25.0, 50.0, 70.0, 84.0]):
+        rings.append(ring_at(p2 + d * tip_len * math.sin(a), d, ax1 * math.cos(a), az1 * math.cos(a)))
+    return MS.loft(rings)
+
+
 def receiver_rails() -> PartDef:
     """Carrier guide rails pressed into the inner walls (below the port, X 262-452): the carrier's lateral guide,
     0.25 mm per side."""
@@ -539,18 +580,29 @@ def receiver_rails() -> PartDef:
                    joint={"type": "butt", "parent": "receiver", "gap_mm": [0.01, 0.05]})
 
 
+PADDLE_HW, PADDLE_RIB_HW = 5.0, 1.6
+
+
 def mag_catch() -> PartDef:
     P = prof("mag_catch", 0.4)
     P = G.clip_x(G.clip_y(P, None, -34.9), 355.45, 368.3)
     cx, cz = CATCH_PIVOT
     tongue = MS.prism(G.clip_y(P, -54.0, None), -3.5, 3.5)
-    paddle = MS.prism(G.clip_y(P, None, -54.0), -5.0, 5.0)
+    # LAST SHAPE ROUND (ruling 5): the real-pattern paddle (scratch/realref akbuilder_mag_catch_*.jpg: a stamped flat
+    # paddle with a pressed rib down its middle): the traced side outline (the flared lower end) is the centre RIB
+    # (+-RIB_HW), and the paddle's two wings are the outline pulled back 2.0 mm from its front edge and 1 mm from its
+    # ends (offset 1.0 in, shifted 1.0 rearward), so the front reads as a pressed plate with a raised rib. A 13 mm
+    # paddle was tried first: the 3/4 panel's paddle is the 10 mm one (q34 residual unexplained), so the width stays
+    Pp = G.clip_y(P, None, -54.0)
+    rib = MS.prism(Pp, -PADDLE_RIB_HW, PADDLE_RIB_HW)
+    W = G.offset(G.ccw(Pp), -1.0) + np.array([-1.0, 0.0])
+    wings = [MS.prism(W, PADDLE_RIB_HW - 0.05, PADDLE_HW), MS.prism(W, -PADDLE_HW, -PADDLE_RIB_HW + 0.05)]
     # top cut to an arc about the pivot (r 15.0): rotation-invariant clearance under the flange
     r = 15.0
     arch = np.vstack([[[cx + r, cz], [cx + 40, cz], [cx + 40, cz + 40], [cx - 40, cz + 40], [cx - r, cz]],
                       G.arc(cx, cz, r, 180, 0, 49)[1:-1]])
     cut = [MS.prism(G.ccw(arch), -6.0, 6.0), ycyl(cx, cz, 1.5 + 0.2, -6, 6, 20)]
-    return PartDef("mag_catch", [tongue], unions=[paddle], cutters=cut, bone="mag_release", cls="S-cut",
+    return PartDef("mag_catch", [tongue], unions=[rib] + wings, cutters=cut, bone="mag_release", cls="S-cut",
                    recipe=[(0.3, 1, 30.0)],
                    joint={"type": "hinge", "parent": "receiver", "pivot_M": [cx, 0, cz], "axis_M": [0, -1, 0],
                           "range_deg": [0.0, 10.0], "direction": "+ = top rearward (release)",

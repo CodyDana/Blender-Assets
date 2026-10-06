@@ -19,12 +19,17 @@ SETS = {
                   "cell_px": {2048: 2},
                   "classes": {"B": 70.0, "C": 35.0, "E": 12.0},
                   "bands": {"B": (60.0, 80.0), "C": (30.0, 40.0), "E": (8.0, 15.0)}},
-    "Mag": {"slot": "M_AR01_Mag", "sizes": (2048,), "fill_min": 0.65, "gap_px": {2048: 4},
-            "cell_px": {2048: 2},
+    # Mag: the smallest of 1024 / 2048 that holds class C at >= 65 % fill (plan 5.3 named 2048, which puts C at
+    # ~93 px/cm, 2.3x the band top: outside the stage-3 gate "per-class density within +-25 %"; 1024 gives ~47)
+    "Mag": {"slot": "M_AR01_Mag", "sizes": (1024, 2048), "fill_min": 0.65, "gap_px": {1024: 2, 2048: 4},
+            "cell_px": {1024: 1, 2048: 2},
             "classes": {"C": 35.0, "E": 12.0},
             "bands": {"C": (30.0, 40.0), "E": (8.0, 15.0)}},
 }
 SLOT_SET = {v["slot"]: k for k, v in SETS.items()}
+# density ceiling (stage-3 gate: per-class density within +-25 % of the class band): the packer's scale is capped so
+# no class median exceeds 1.25 x its band top (a bigger set than the floors need otherwise over-fills its classes)
+DENSITY_CEIL = 1.25
 CLASS_CODE = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4}
 CODE_CLASS = {v: k for k, v in CLASS_CODE.items()}
 
@@ -97,6 +102,10 @@ FIN = {
     "lacquer_worn": {"metal": 0, "srgb": srgb("#383838"), "rough": (0.50, 0.50),
                      "note": "spec #3F3F3F; L5 (the plate's band reads 51 in the sheet's side view) -> #383838, 7 levels "
                              "darker, inside the +-12 finish check"},
+    "lacquer_cover": {"metal": 0, "srgb": srgb("#474747"), "spec_srgb": srgb("#3F3F3F"), "rough": (0.48, 0.62),
+                      "note": "the dust cover: spec lacquer_worn #3F3F3F (the most rubbed pressed sheet on the gun); "
+                              "L5 (the sheet's cover reads 89 against the receiver's 63 under one light) -> #474747, "
+                              "8 levels lighter, inside the +-12 finish check against the spec value"},
     "bluing": {"metal": 1, "srgb": srgb("#787878"), "rough": (0.30, 0.55)},
     "bare": {"metal": 1, "srgb": srgb("#C3C3C1"), "rough": (0.25, 0.40), "sliding": (0.15, 0.25)},
     "walnut": {"metal": 0, "srgb": srgb("#6B3C27"), "grain_dark": srgb("#482C1B"), "figure_light": srgb("#965F46"),
@@ -108,7 +117,7 @@ FIN = {
 # part -> (finish, wear profile). Wear: edge = chip wear to bare steel on convex edges (moderate, the sheet's own);
 # 'slide' = polished bare on sliding faces; 'scratched' = the butt plate's dense scratches
 PART_FINISH = {
-    "receiver": "lacquer", "rear_trunnion": "lacquer", "dust_cover": "lacquer", "receiver_rails": "bluing",
+    "receiver": "lacquer", "rear_trunnion": "lacquer", "rear_tang": "lacquer", "dust_cover": "lacquer_cover", "receiver_rails": "bluing",
     "recoil_spring_button": "bluing", "rivets": "lacquer", "bolt_carrier": "bluing", "rear_sight_block": "lacquer",
     "rear_sight_leaf": "bluing", "rear_sight_slider": "bluing", "handguard_retainer": "bluing",
     "gas_tube_rear_cap": "lacquer", "handguard_front_band": "lacquer", "gas_tube": "lacquer", "gas_piston": "bare",
@@ -142,3 +151,38 @@ HOT_PARTS = ("gas_block", "barrel", "gas_tube", "front_sight_block", "muzzle_bra
 SOOT = [{"center_M": (870.0, 0.0, 0.0), "radius": 16.0, "w": 1.0},
         {"center_M": (700.0, 0.0, 24.0), "radius": 14.0, "w": 0.6},
         {"center_M": (395.0, -20.0, 10.0), "radius": 22.0, "w": 0.35}]
+
+# ---------------------------------------------------------------- metal wear placement (stage 3 on the r4 geometry)
+# Chip wear to bare steel is NOT uniform: it follows where hands, slings, the ground and the magazine change wear a
+# stamped-receiver rifle, and where the sheet draws its bright worn edges (the brake rim, the front sight ears, the
+# receiver's lower edges round the magazine well, the dust cover's shoulders, the charging handle and selector tab,
+# the guard's bottom, the magazine's spine / ribs / floor plate, the butt plate rim). Edge wear propensity =
+# WEAR_BASE + (1 - WEAR_BASE) x the strongest zone falloff (frame M centres, mm).
+WEAR_BASE = 0.30
+METAL_WEAR = [
+    {"what": "brake rim and slant cut", "center_M": (866.0, 0.0, 0.0), "radius": 26.0, "w": 1.0},
+    {"what": "front sight ears / post", "center_M": (826.0, 0.0, 38.0), "radius": 17.0, "w": 0.95},
+    {"what": "front sight block base, rod lug", "center_M": (815.0, 0.0, -14.0), "radius": 22.0, "w": 0.55},
+    {"what": "gas block corners", "center_M": (700.0, 0.0, 22.0), "radius": 24.0, "w": 0.55},
+    {"what": "front band / handguard retainer", "center_M": (640.0, 0.0, 0.0), "radius": 20.0, "w": 0.5},
+    {"what": "receiver lower edges round the magazine well", "center_M": (430.0, 0.0, -30.0), "radius": 48.0, "w": 0.85},
+    {"what": "rear sight block and leaf edges", "center_M": (450.0, 0.0, 40.0), "radius": 26.0, "w": 0.6},
+    {"what": "charging handle", "center_M": (452.0, -32.0, 16.0), "radius": 20.0, "w": 1.0},
+    {"what": "dust cover shoulders and rear lip", "center_M": (330.0, 0.0, 28.0), "radius": 70.0, "w": 0.65},
+    {"what": "receiver flanks under the firing hand / cheek", "center_M": (320.0, 0.0, -10.0), "radius": 55.0, "w": 0.55},
+    {"what": "selector tab (thumb)", "center_M": (362.0, -24.0, -6.0), "radius": 20.0, "w": 1.0},
+    {"what": "trigger guard bottom", "center_M": (335.0, 0.0, -60.0), "radius": 30.0, "w": 0.75},
+    {"what": "magazine floor plate and toe", "center_M": (478.0, 0.0, -160.0), "radius": 48.0, "w": 0.95},
+    {"what": "magazine spine and rib crests", "center_M": (472.0, 0.0, -88.0), "radius": 70.0, "w": 0.55},
+    {"what": "butt plate rim", "center_M": (4.0, 0.0, -40.0), "radius": 85.0, "w": 0.85},
+]
+# scuff direction per part (frame M unit vectors): along the bore for the receiver, cover, barrel and gas parts (rubbed
+# in and out of a rack / sling); the magazine down its curve (pulled from pouches)
+SCUFF_AXIS = {"magazine": (0.45, 0.0, -0.89), "magazine_floor_plate": (1.0, 0.0, 0.0),
+              "butt_plate": (0.0, 0.0, 1.0), "trigger_guard": (1.0, 0.0, 0.0)}
+# how scuffed each lacquered part is (x the shared scuff field; the sheet's dust cover is the most rubbed surface)
+SCUFF_W = {"dust_cover": 1.35, "receiver": 1.0, "magazine": 1.1, "barrel": 0.9, "gas_block": 0.9, "gas_tube": 0.9,
+           "front_sight_block": 1.0, "muzzle_brake": 1.0, "rear_trunnion": 0.8, "rear_tang": 0.8,
+           "handguard_front_band": 0.9, "trigger_guard": 0.9, "rear_sight_block": 0.8}
+# wood handling damage density per part (dents, scratches; the sheet's grip is the most dinged)
+DENT_W = {"pistol_grip": 1.6, "buttstock": 1.0, "lower_handguard": 1.2, "upper_handguard": 0.9}

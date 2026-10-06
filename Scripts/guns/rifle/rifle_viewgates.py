@@ -117,8 +117,8 @@ def lod_pop(sizes, r_m, ss=2):
     return res
 
 
-def sight_picture():
-    V, T, lab, names = load(0)
+def sight_picture(lv=0):
+    V, T, lab, names = load(lv)
     soc = {r["socket"]: r for r in SPEC["sockets"]["rifle"]}["Sight"]
     sight_B = np.array(soc["blender_mm"], float)
     pitch = soc["unreal_rotation_deg"]["pitch"]
@@ -128,6 +128,9 @@ def sight_picture():
     cam = RZ.Camera(eye, forward=fwd, up=(0.0, 0.0, 1.0), hfov_deg=55.0)
     rear = [i for i, n in enumerate(names) if n in ("rear_sight_leaf", "rear_sight_slider")]
     post = [i for i, n in enumerate(names) if n == "front_sight_post"]
+    if not rear or not post:
+        return {"lod": lv, "pass": None, "note": "no rear sight leaf / front post at this LOD (the blockout "
+                                                 "silhouette level): no sight picture to test"}
     ss = 8
     win = (1280 - 60, 720 - 60, 1280 + 60, 720 + 60)
 
@@ -184,7 +187,36 @@ def sight_picture():
     dr.text((4, 4), "S2: lateral %.2f px, vertical %.2f px (post drawn over the rear sight)" % (
         out["lateral_offset_px"], out["vertical_offset_px"]), fill=(200, 0, 0))
     OUTR.mkdir(parents=True, exist_ok=True)
-    im.save(OUTR / "s2_sight_window.png")
+    im.save(OUTR / ("s2_sight_window.png" if lv == 0 else f"s2_sight_window_lod{lv}.png"))
+    out["lod"] = lv
+    return out
+
+
+def sight_picture_b4(lv):
+    """S2 on the twin's LOD triangles with the form stage's occlusion-aware B4 measurement (rifle_b4.py: the eye 0.25 m
+    behind the Sight socket ON its line, 55 deg, 2560 x 1440, z-buffered). Since R48 the Sight socket sits at the
+    notch TOP centre and the real-pattern picture holds the post tip LEVEL WITH THE NOTCH TOP (the older notch-bottom
+    test above measures a 20 px drop by design). Plan 6 threshold: |lateral|, |vertical| <= 0.5 px; plus B4's own
+    conditions (the post visible >= 1 mm in the notch, no occluder)."""
+    import subprocess
+    z = np.load(GAME / f"lod{lv}_tris.npz")
+    names = [str(n) for n in z["names"]]
+    if "front_sight_post" not in names or "rear_sight_leaf" not in names:
+        return {"lod": lv, "pass": None, "note": "no rear sight leaf / front post at this LOD (the blockout silhouette "
+                                                 "level): no sight picture to test"}
+    js = GAME / f"s2_lod{lv}.json"
+    subprocess.run([sys.executable, "-B", str(HERE / "rifle_b4.py"), "--npz", str(GAME / f"lod{lv}_tris.npz"),
+                    "--out", str(js), "--img", str(OUTR / f"s2_sight_picture_lod{lv}.png")],
+                   stdout=subprocess.DEVNULL, check=True)
+    r = json.loads(js.read_text())
+    out = {"lod": lv, "method": "rifle_b4 (occlusion-aware; post tip vs the notch TOP line, R48)",
+           "lateral_offset_px": r.get("lateral_offset_px"), "vertical_offset_px": r.get("vertical_offset_px"),
+           "lateral_offset_mm": r.get("lateral_offset_mm"), "vertical_offset_mm": r.get("vertical_offset_mm"),
+           "post_visible_mm": (r.get("post") or {}).get("visible_height_in_notch_mm_at_notch"),
+           "occluders": r.get("occluders_in_notch_px"), "notch": r.get("notch"), "image": r.get("image")}
+    out["pass"] = bool(r.get("lateral_offset_px") is not None and abs(r["lateral_offset_px"]) <= 0.5
+                       and abs(r["vertical_offset_px"]) <= 0.5 and (out["post_visible_mm"] or 0) >= 1.0
+                       and not r.get("occluders_in_notch_px"))
     return out
 
 
@@ -192,11 +224,16 @@ def main():
     rep = json.loads((GAME / "game_report.json").read_text())
     r = rep["bounds_radius_m"]["twin_with_mag_box_half_diagonal"]
     sizes = [1.0, 0.30, 0.12, 0.04]
-    out = {"lod_pop": lod_pop(sizes, r), "s2": sight_picture()}
+    out = {"lod_pop": lod_pop(sizes, r), "s2": sight_picture_b4(0),
+           "s2_lods": {f"LOD{k}": sight_picture_b4(k) for k in (1, 2, 3)},
+           "s2_notch_bottom_info": sight_picture(0)}
+    for k, v in out["s2_lods"].items():
+        print("[viewgates] S2", k, v.get("lateral_offset_px"), v.get("vertical_offset_px"), v.get("pass"))
     (GAME / "viewgates.json").write_text(json.dumps(out, indent=1))
     (GATES / "game_lod_sizes.json").write_text(json.dumps({"SM_AR01": out["lod_pop"]["final_sizes"],
                                                            "bounds_radius_m": r}, indent=1))
-    print("[viewgates] S2", json.dumps({k: v for k, v in out["s2"].items() if k != "eye_M"}))
+    print("[viewgates] S2 LOD0", out["s2"].get("lateral_offset_px"), out["s2"].get("vertical_offset_px"),
+          out["s2"].get("pass"))
     print("[viewgates] DONE sizes", out["lod_pop"]["final_sizes"])
 
 

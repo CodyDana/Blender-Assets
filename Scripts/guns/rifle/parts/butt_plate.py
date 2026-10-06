@@ -156,7 +156,7 @@ def butt_plate_section():
     f = plate_profile(v)
     z = SEC_TOP - v * (SEC_TOP - SEC_BOT)
     chain = np.vstack([[0.0, SEC_TOP + TIP_OUT], np.c_[-HALF_W * f, z], [0.0, SEC_BOT - TIP_OUT]])   # -Y = gun right
-    chain = _dp_open(chain, SEC_TOL)
+    chain = _dp_open(chain, SEC_TOL if LOD.LEVEL < 2 else LOD.tol(SEC_TOL))   # LOD2: the level's chord tolerance
     left = chain[1:-1][::-1] * np.array([-1.0, 1.0])
     return G.ccw(G.dedupe(np.vstack([chain, left])))
 

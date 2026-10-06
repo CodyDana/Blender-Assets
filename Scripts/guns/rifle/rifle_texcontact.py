@@ -51,9 +51,8 @@ def crop_fg(im, bg=126, pad=20):
 
 
 def main():
-    names = ["hero_34", "tp_3m", "fp_35cm", "ads_spec_line", "ads_notch_top_hold"]
-    labels = ["hero 3/4, 1.5 m", "third person, 3 m", "first person, eye 35 cm", "ADS, spec Sight line (notch bottom)",
-              "ADS, post level with the notch top"]
+    names = ["hero_34", "tp_3m", "fp_35cm", "ads_55deg"]
+    labels = ["hero 3/4, 1.5 m", "third person, 3 m", "first person, eye 35 cm", "ADS, 55 deg, 0.25 m behind Sight"]
     tile([T / f"{n}.png" for n in names], labels, 2, 960, 540, T / "contact_realism.png")
     cu = ["cu_receiver_right", "cu_front_sight", "cu_grip_checker", "cu_stock_r34", "cu_mag_left", "cu_buttplate",
           "cu_receiver_top", "cu_muzzle_34"]

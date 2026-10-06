@@ -16,7 +16,7 @@ Measured (output pixels, then mm AT THE NOTCH: 1 px = 2 tan(27.5 deg) 250 / 2560
             of the visible columns over the top 0.3 mm of the tip; visible height down to the notch floor;
   occluders any other part visible inside the notch opening above the notch floor (the 'broken sight line' tell).
 Gate: |lateral| and |vertical| offsets <= 0.2 mm at the notch, the post visible (>= 1 mm of it in the notch) and no
-occluder. Writes the composite sight picture (window, 4x) to review/realism_form3/b4_sight_picture.png.
+occluder. Writes the composite sight picture (window, 4x) to review/realism_form4/b4_sight_picture.png.
 """
 from __future__ import annotations
 
@@ -88,7 +88,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--npz", default=str(SCRATCH / "form_tris.npz"))
     ap.add_argument("--out", default=str(SCRATCH / "b4_result.json"))
-    ap.add_argument("--img", default=str(REVIEW / "realism_form3" / "b4_sight_picture.png"))
+    ap.add_argument("--img", default=str(REVIEW / "realism_form4" / "b4_sight_picture.png"))
     a = ap.parse_args()
     z = np.load(a.npz)
     V, T, lab, names = z["V"], z["T"], z["lab"], [str(n) for n in z["names"]]

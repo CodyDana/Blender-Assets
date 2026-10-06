@@ -159,9 +159,11 @@ def front_band_pieces():
     sw = lambda P: np.asarray(P, float)[:, ::-1]                      # (Y, Z) <-> (Z, Y): clip_x clips on Z
     ferrule = xprism(sw(G.clip_x(sw(G.ccw(lo)), None, BAND_SPLIT[0])), 639.6, 647.1)
     collar = xprism(sw(G.clip_x(sw(G.ccw(up)), BAND_SPLIT[1], None)), 639.6, 647.1)
+    with LOD.hold(1):      # LOD1: the hole keeps its 32 sides (a 16-gon's edge midpoints cut the 24-gon barrel, G5)
+        bore_hole = xcyl(0.0, 0.0, BORE_R + 0.06, 630.0, 650.0, 32)   # 32-gon round the 48-gon barrel: >= 0.023 gap
     cut_f = [xprism(G.offset(G.ccw(lower_hg_section(640.9)), GAP), 639.0, 640.9 + GAP),
              xprism(G.rounded_rect(-11.0, 11.0, -15.0, 11.0, 6.0, 4), 639.0, 640.9 + GAP),
-             xcyl(0.0, 0.0, BORE_R + 0.06, 630.0, 650.0, 32),       # 32-gon hole round the 48-gon barrel: >= 0.023 gap
+             bore_hole,
              xcyl(0.0, ROD_Z, ROD_R + GAP, 630.0, 650.0, 16)]
     cut_c = [xprism(upper_hg_section(upper_top(640.9) + GAP, 15.5 + GAP, 13.0), 639.0, 640.9 + GAP),
              xcyl(0.0, TUBE_Z, TUBE_R + GAP, 630.0, 650.0, 32)]
@@ -285,7 +287,9 @@ STOCK_BUTT_X = (24.0, 70.0)
 # (realism round 2 tried rounder sides, exponents 2.8 / 2.55 / 2.35, for the judges' "flat-sided slab": the 3/4 gate's
 # stock-top residual then read 'a width the TOP allows would fit' (unexplained), so round 1's oval stays; the plan
 # taper 38.3 -> 31.9 is the TOP trace)
-STOCK_P = ((70.0, 3.3), (150.0, 2.9), (190.0, 2.45), (235.0, 2.45))      # superellipse exponent along X
+STOCK_P = ((70.0, 3.0), (150.0, 2.62), (190.0, 2.45), (235.0, 2.45))     # superellipse exponent along X (last shape
+# round, ruling 8: 3.3 / 2.9 -> 3.0 / 2.62, slimmer-reading sides at the same TOP-traced widest row; the 3/4 exception
+# still holds, round 2's 2.8 / 2.55 / 2.35 broke it)
 STOCK_VC = ((70.0, 0.42), (150.0, 0.46), (190.0, 0.5), (235.0, 0.5))     # widest row (fraction from the top)
 
 
@@ -354,6 +358,11 @@ def _gauss_smooth_1d(y, sigma_pts):
     return np.convolve(yp, k, mode="same")[r:-r]
 
 
+# LAST SHAPE ROUND (ruling 8): the comb nose's concave turn softened within the side trace tolerance (kernel 1.0 ->
+# STOCK_NOSE_SIGMA mm, the same as the rest of the top line; per-part stock IoU 0.9919, contour max 1 px: unchanged)
+STOCK_NOSE_SIGMA = 4.0
+
+
 def stock_lines():
     """Top / bottom lines and half width of the stock, sampled every 1 mm and smoothed along X (the comb nose
     step X 150-170 keeps a short kernel so its crisp concave turn survives)."""
@@ -371,7 +380,7 @@ def stock_lines():
     zt[xs > 224.0] = 7.8
     zb[xs > 224.0] = -38.2
     zt_s = _gauss_smooth_1d(zt, 4.0)
-    zt_n = _gauss_smooth_1d(zt, 1.0)
+    zt_n = _gauss_smooth_1d(zt, STOCK_NOSE_SIGMA)
     nose = (xs > 148) & (xs < 172)
     zt_s[nose] = zt_n[nose]
     zb_s = _gauss_smooth_1d(zb, 4.0)

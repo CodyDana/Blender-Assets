@@ -1,25 +1,24 @@
 {
  "stage": "4 Game (rifle)",
- "status": "fail",
+ "status": "pass",
  "gates": [
   {
    "name": "qa_check (twin LOD0..3)",
    "value": {
-    "SM_AR01_LOD0": 56866,
-    "SM_AR01_LOD1": 30598,
-    "SM_AR01_LOD2": 13500,
+    "SM_AR01_LOD0": 52366,
+    "SM_AR01_LOD1": 28428,
+    "SM_AR01_LOD2": 12626,
     "SM_AR01_LOD3": 1184
    },
    "threshold": "pass",
-   "pass": false,
-   "note": "[{\"name\": \"uv_no_overlap\", \"object\": \"SM_AR01_LOD2\", \"passed\": false, \"detail\": \"2 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh\"}, {\"name\": \"uv_no_overlap\", \"object\": \"SM_AR01_LOD2\", \"passed\": false, \"detail\": \"2 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh\"}]"
+   "pass": true
   },
   {
    "name": "LODs strictly descending (twin)",
    "value": [
-    56866,
-    30598,
-    13500,
+    52366,
+    28428,
+    12626,
     1184
    ],
    "threshold": "LOD0 > LOD1 > LOD2 > LOD3",
@@ -27,25 +26,25 @@
   },
   {
    "name": "B8 rifle LOD0 tris (without the mag)",
-   "value": 49882,
+   "value": 45498,
    "threshold": "<= 50000 (target 30-45k)",
    "pass": true
   },
   {
    "name": "B8 merged magazine LOD0 tris",
-   "value": 6984,
+   "value": 6868,
    "threshold": "<= 7000",
    "pass": true
   },
   {
    "name": "LOD1 rifle tris (share of LOD0)",
-   "value": "23614 (47.3%)",
+   "value": "21560 (47.4%)",
    "threshold": "~45 % (gun study 5.7)",
    "pass": true
   },
   {
    "name": "LOD2 rifle tris (share of LOD0)",
-   "value": "8968 (18.0%)",
+   "value": "8106 (17.8%)",
    "threshold": "~15 % (gun study 5.7)",
    "pass": true
   },
@@ -55,6 +54,12 @@
    "threshold": "1500-2500 (ceiling 2500)",
    "pass": true,
    "note": "under the 1.5k floor of the target range: the blockout silhouette level is cheaper; the LOD-pop gate passes at its switch"
+  },
+  {
+   "name": "G5 at LOD0 on the shipped (triangulated) parts",
+   "value": "0 intersecting pairs; min butt gap 0.0149 mm",
+   "threshold": "0; >= 0.01 mm",
+   "pass": true
   },
   {
    "name": "B3 at LOD1 (moving parts, sweep)",
@@ -73,11 +78,11 @@
     },
     "mag_release": {
      "intersecting_steps": 0,
-     "min_clearance_mm": 0.1094
+     "min_clearance_mm": 0.1791
     },
     "sight_rear": {
      "intersecting_steps": 0,
-     "min_clearance_mm": 0.1504
+     "min_clearance_mm": 0.15
     }
    },
    "threshold": "0 intersections; clearance inside each joint's row",
@@ -85,50 +90,85 @@
   },
   {
    "name": "G5 at LOD1 (static intersecting pairs)",
-   "value": 1,
+   "value": 0,
    "threshold": "0",
-   "pass": false
+   "pass": true
   },
   {
    "name": "G5 at LOD1 butt-joint gaps",
-   "value": 0.0196,
+   "value": 0.0131,
    "threshold": ">= 0.01 mm",
    "pass": true
   },
   {
+   "name": "G5 at LOD2 (study B3/G5 R5: penetration depth projected at the switch-in distance)",
+   "value": "6 intersecting pairs; deepest penetration 0.568 px at 6.762 m (cleaning_rod_LOD2/front_sight_block_LOD2 3.001 mm)",
+   "threshold": "< 1 px at 1440p",
+   "pass": true,
+   "note": "info, visible change of the intersecting parts vs LOD1 (4 headings): worst mean 0.127 px, max 1.118 px: magazine 0.127 / 0.559; front_sight_post 0.083 / 0.25; handguard_front_band 0.045 / 0.354"
+  },
+  {
+   "name": "G5 at LOD3 (study B3/G5 R5: penetration depth projected at the switch-in distance)",
+   "value": "27 intersecting pairs; deepest penetration 0.645 px at 20.287 m (upper_handguard_LOD3/gas_tube_LOD3 10.226 mm)",
+   "threshold": "< 1 px at 1440p",
+   "pass": true,
+   "note": "info, visible change of the intersecting parts vs LOD2 (4 headings): worst mean 2.279 px, max 6.25 px: bolt_carrier 2.279 / 6.25; gas_tube_rear_cap 0.935 / 0.935; buttstock 0.333 / 1.031 (LOD3's blockout receiver has no ejection port, so the carrier strip seen through the port at LOD2 is covered at 20 m)"
+  },
+  {
    "name": "C1 hull containment",
-   "value": "0 of 85,620,447 jittered 0.5 mm LOD0 samples, 0 of 51,262 LOD0-3 vertices outside",
+   "value": "0 of 67,574,703 jittered 0.5 mm LOD0 samples, 0 of 47,468 LOD0-3 vertices outside",
    "threshold": "0 and 0; 7 hulls, <= 32 vertices",
    "pass": true,
-   "note": "hull vertices [27, 27, 27, 27, 27, 27, 27]"
+   "note": "hull vertices [27, 27, 27, 27, 25, 27, 27]"
   },
   {
    "name": "S1 sockets (exported sidecar vs build)",
-   "value": "17 sockets, worst 0.0002 mm / 0.0 deg",
+   "value": "17 sockets, worst 0.0005 mm / 0.0 deg",
    "threshold": "17 = spec names; <= 0.001 mm and <= 0.001 deg",
    "pass": true
   },
   {
-   "name": "S2 sight picture (spec Sight line: notch bottom -> post tip)",
-   "value": "lateral 0.0 px, vertical 0.0 px",
+   "name": "S2 sight picture at LOD0 (B4 method: post tip level with the notch top, R48)",
+   "value": "lateral 0.0 px, vertical 0.125 px",
    "threshold": "|lateral| <= 0.5 px and |vertical| <= 0.5 px (55 deg, 0.25 m eye relief, 2560 x 1440)",
    "pass": true
   },
   {
+   "name": "S2 sight picture at LOD1",
+   "value": "lateral 0.0 px, vertical 0.125 px",
+   "threshold": "|lateral| <= 0.5 px and |vertical| <= 0.5 px",
+   "pass": true,
+   "note": "first person forces LOD0 (ForcedLodModel 1): informative for the coarse LODs"
+  },
+  {
+   "name": "S2 sight picture at LOD2",
+   "value": "lateral 0.0 px, vertical 0.125 px",
+   "threshold": "|lateral| <= 0.5 px and |vertical| <= 0.5 px",
+   "pass": true,
+   "note": "first person forces LOD0 (ForcedLodModel 1): informative for the coarse LODs"
+  },
+  {
+   "name": "S2 sight picture at LOD3",
+   "value": "n/a",
+   "threshold": "|lateral|, |vertical| <= 0.5 px",
+   "pass": true,
+   "note": "no rear sight leaf / front post at this LOD (the blockout silhouette level): no sight picture to test"
+  },
+  {
    "name": "LOD-pop LOD0 -> LOD1",
-   "value": "size 0.3 (2.703 m): mean 0.04 px, max 1.118 px (worst of 4 headings)",
+   "value": "size 0.3 (2.705 m): mean 0.029 px, max 0.707 px (worst of 4 headings)",
    "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
    "pass": true
   },
   {
    "name": "LOD-pop LOD1 -> LOD2",
-   "value": "size 0.12 (6.756 m): mean 0.176 px, max 1.581 px (worst of 4 headings)",
+   "value": "size 0.12 (6.762 m): mean 0.195 px, max 1.803 px (worst of 4 headings)",
    "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
    "pass": true
   },
   {
    "name": "LOD-pop LOD2 -> LOD3",
-   "value": "size 0.04 (20.269 m): mean 0.198 px, max 1.0 px (worst of 4 headings)",
+   "value": "size 0.04 (20.287 m): mean 0.186 px, max 1.414 px (worst of 4 headings)",
    "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
    "pass": true
   },
@@ -139,10 +179,7 @@
    "pass": true
   }
  ],
- "failed": [
-  "qa_check (twin LOD0..3)",
-  "G5 at LOD1 (static intersecting pairs)"
- ],
+ "failed": [],
  "lod_screen_sizes": [
   1.0,
   0.3,
@@ -150,26 +187,26 @@
   0.04
  ],
  "bounds_radius_m": {
-  "twin_with_mag_box_half_diagonal": 0.456,
-  "rifle_without_mag": 0.4502
+  "twin_with_mag_box_half_diagonal": 0.4564,
+  "rifle_without_mag": 0.4506
  },
  "triangles": {
   "twin": [
-   56866,
-   30598,
-   13500,
+   52366,
+   28428,
+   12626,
    1184
   ],
   "rifle": [
-   49882,
-   23614,
-   8968,
+   45498,
+   21560,
+   8106,
    1076
   ],
   "mag": [
-   6984,
-   6984,
-   4532,
+   6868,
+   6868,
+   4520,
    108
   ]
  },
@@ -178,88 +215,89 @@
    "name": "UCX_SM_AR01_00",
    "covers": "receiver, dust cover, rear sight, selector, carrier + handle",
    "vertices": 27,
-   "points": 11675427
+   "points": 5792292
   },
   {
    "name": "UCX_SM_AR01_01",
    "covers": "fore-end: handguards, front band, retainer, cap; barrel, gas tube, rod to the gas block",
    "vertices": 27,
-   "points": 10250731
+   "points": 10025076
   },
   {
    "name": "UCX_SM_AR01_02",
    "covers": "gas block section: gas block, exposed barrel, gas tube front, rod",
    "vertices": 27,
-   "points": 3917226
+   "points": 3907796
   },
   {
    "name": "UCX_SM_AR01_03",
    "covers": "front sight block + post + brake",
    "vertices": 27,
-   "points": 1520853
+   "points": 1503486
   },
   {
    "name": "UCX_SM_AR01_04",
    "covers": "pistol grip + trigger guard + trigger + catch",
-   "vertices": 27,
-   "points": 482441
+   "vertices": 25,
+   "points": 427005
   },
   {
    "name": "UCX_SM_AR01_05",
    "covers": "stock + butt plate + swivel + hardware",
    "vertices": 27,
-   "points": 616536
+   "points": 598210
   },
   {
    "name": "UCX_SM_AR01_06",
    "covers": "merged magazine (twin only)",
    "vertices": 27,
-   "points": 1486211
+   "points": 1472195
   }
  ],
  "mass": {
-  "modelled_g": 4558.9,
+  "modelled_g": 4574.3,
   "com_B_mm": [
-   158.28,
-   0.27,
-   75.17
+   162.51,
+   0.22,
+   75.6
   ],
   "spec_mass_kg_unloaded_without_mag": 3.1,
   "parts_g": {
-   "receiver": 564.7,
-   "dust_cover": 126.5,
+   "receiver": 564.8,
+   "dust_cover": 136.0,
    "recoil_spring_button": 3.4,
-   "rivets": 2.9,
+   "rivets": 2.5,
    "receiver_rails": 7.2,
-   "bolt_carrier": 766.8,
-   "mag_catch": 18.7,
+   "bolt_carrier": 769.5,
+   "mag_catch": 16.2,
    "rear_trunnion": 189.6,
-   "rear_sight_block": 640.3,
-   "rear_sight_leaf": 35.3,
-   "rear_sight_slider": 10.1,
-   "handguard_retainer": 3.1,
+   "rear_tang": 3.6,
+   "rear_sight_block": 650.2,
+   "rear_sight_leaf": 28.8,
+   "rear_sight_slider": 5.3,
+   "handguard_retainer": 2.5,
    "gas_tube_rear_cap": 37.3,
    "upper_handguard": 28.3,
    "lower_handguard": 92.6,
-   "handguard_front_band": 71.3,
+   "handguard_front_band": 69.6,
    "gas_tube": 98.3,
    "gas_piston": 53.3,
    "gas_block": 140.2,
    "barrel": 563.7,
    "cleaning_rod": 17.2,
-   "front_sight_block": 109.2,
-   "front_sight_post": 1.5,
+   "front_sight_block": 138.5,
+   "front_sight_post": 0.5,
    "muzzle_brake": 31.9,
    "trigger": 12.7,
-   "trigger_guard": 159.7,
+   "trigger_guard": 165.7,
    "pistol_grip": 76.8,
-   "buttstock": 363.5,
+   "buttstock": 331.1,
    "butt_plate": 310.5,
    "butt_screws": 1.2,
    "sling_swivel_base": 0.8,
    "sling_swivel_loop": 0.8,
    "stock_hardware": 1.8,
-   "selector": 17.8
+   "selector": 22.1
   },
   "note": "hollow internals are not modelled: the physics mass is set to 3.1 kg (README); the CoM is the modelled parts' (steel 7.85, wood 0.65 g/cm^3)"
  },
@@ -267,16 +305,16 @@
   {
    "socket": "CenterOfMass",
    "location_cm": [
-    15.8276,
-    -0.0269,
-    7.5168
+    16.2512,
+    -0.022,
+    7.5604
    ],
    "rotation_deg": {
     "roll": 0.0,
     "pitch": 0.0,
     "yaw": 0.0
    },
-   "d_build_mm": 0.0002,
+   "d_build_mm": 0.0005,
    "d_rot_deg": 0.0,
    "d_spec_mm": null,
    "computed": true
@@ -318,16 +356,16 @@
   {
    "socket": "Holster",
    "location_cm": [
-    15.8276,
-    -0.0269,
-    7.5168
+    16.2512,
+    -0.022,
+    7.5604
    ],
    "rotation_deg": {
     "roll": 0.0,
     "pitch": 0.0,
     "yaw": 0.0
    },
-   "d_build_mm": 0.0002,
+   "d_build_mm": 0.0005,
    "d_rot_deg": 0.0,
    "d_spec_mm": null,
    "computed": true
@@ -490,11 +528,11 @@
    "location_cm": [
     18.672,
     0.0,
-    12.404
+    12.654
    ],
    "rotation_deg": {
     "roll": 0.0,
-    "pitch": -0.0763,
+    "pitch": -0.4579,
     "yaw": 0.0
    },
    "d_build_mm": 0.0,

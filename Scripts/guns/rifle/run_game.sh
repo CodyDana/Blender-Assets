@@ -54,6 +54,11 @@ if want gates; then
   echo "== stage 4 gates"
   py -3 -B "$HERE/rifle_viewgates.py" > "$LOG/viewgates.log" 2>&1 || { echo "FAILED viewgates"; tail -20 "$LOG/viewgates.log"; exit 1; }
   grep -E "lodpop|S2" "$LOG/viewgates.log"
+  # G5 at LOD2-3 (study R5: intersections only below 1 px at the LOD's switch-in distance; needs the sizes above)
+  run_blender g5_lods "$BL" --python "$HERE/rifle_g5_lods.py"
+  grep -E "G5-lods\] LOD" "$LOG/g5_lods.log"
+  py -3 -B "$HERE/rifle_g5_visible.py" > "$LOG/g5_visible.log" 2>&1 || { echo "FAILED g5_visible"; tail -20 "$LOG/g5_visible.log"; exit 1; }
+  grep -E "G5-visible" "$LOG/g5_visible.log"
   run_blender game_gates "$BL" --python "$HERE/rifle_game_gates.py"
   grep -E "AR01-gates" "$LOG/game_gates.log" | cut -c1-300
   run_blender b3_lod1 "$BL" --python "$HERE/rifle_b3.py" -- --suffix _LOD1 --out "$W/scratch/b3_lod1.json"

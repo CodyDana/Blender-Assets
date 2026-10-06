@@ -122,7 +122,10 @@ def pack(tris: Sequence[np.ndarray], size: int, gap_px: int, cell_px: int = 4, r
     order = np.lexsort((-area, -np.max(ext, axis=1)))      # longest side first, then area
     isl = {"tris": tris, "lo": lo, "ext": ext, "order": order}
     d = int(math.ceil(gap_px / cell_px))
-    s_hi = scale_hi or math.sqrt(size * size / max(area.sum(), 1e-12))
+    s_hi = math.sqrt(size * size / max(area.sum(), 1e-12))
+    if scale_hi:
+        scale_hi = min(scale_hi, s_hi)
+        s_hi = scale_hi
     s_lo = s_hi * 0.3
     best = None
     while best is None:
@@ -130,6 +133,11 @@ def pack(tris: Sequence[np.ndarray], size: int, gap_px: int, cell_px: int = 4, r
         if best is None:
             s_lo *= 0.7
     best_s = s_lo
+    if scale_hi:
+        # a capped scale (texel density ceiling): take the cap itself when it fits
+        r = _try(isl, s_hi, size, cell_px, d, rotate)
+        if r is not None:
+            best, best_s, iters = r, s_hi, 0
     for _ in range(iters):
         s = math.sqrt(s_lo * s_hi)
         r = _try(isl, s, size, cell_px, d, rotate)

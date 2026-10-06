@@ -60,7 +60,7 @@ HULLS = [
     ("pistol grip + trigger guard + trigger + catch", ("pistol_grip", "trigger_guard", "trigger", "mag_catch"), None),
     ("stock + butt plate + swivel + hardware",
      ("buttstock", "butt_plate", "butt_screws", "sling_swivel_base", "sling_swivel_loop", "stock_hardware",
-      "sling_swivel_rear"), None),
+      "sling_swivel_rear", "rear_tang"), None),
     ("merged magazine (twin only)", ("magazine", "magazine_floor_plate"), None),
 ]
 LINE_PARTS = ("barrel", "gas_tube", "gas_piston", "cleaning_rod")

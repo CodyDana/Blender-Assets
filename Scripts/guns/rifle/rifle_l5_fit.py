@@ -53,7 +53,11 @@ def lum(rgb):
 
 
 def main():
-    k, s = 0.75, 1.0
+    # Two light parameters (k on the receiver, s on the stock's R/B), as before. Tried on the r4 maps (2026-10-05):
+    # physical lights (s fixed at 1, --physical) whiten every wood region under the rig's big key (R/B 1.80-1.90 vs
+    # the sheet's 2.04-2.57) and still leave the dust cover 0.08 dark, so the fitted s stays the default.
+    FIT_S = "--physical" not in sys.argv
+    k, s = (0.75, 1.0) if FIT_S else (0.75, 1.0)
     hist = []
     prev = None
     for it in range(6):
@@ -65,7 +69,7 @@ def main():
         hist.append({"k": round(k, 4), "s": round(s, 4), "receiver_lum_ratio": round(ratio, 4), "stock_rb_err":
                      round(rb_err, 4), "failed": d["failed"]})
         print("[l5fit]", hist[-1], flush=True)
-        if abs(ratio - 1) < 0.02 and abs(rb_err) < 0.05:
+        if abs(ratio - 1) < 0.02 and (abs(rb_err) < 0.05 or not FIT_S):
             break
         k_new = k * ratio
         # R/B falls as s rises: secant on (s, rb_err), first step a fixed slope guess
@@ -76,11 +80,13 @@ def main():
             slope = (rb_err - prev[1]) / (s - prev[0])
             s_new = s - rb_err / slope if slope < -1e-3 else s + rb_err / 1.0
         prev = (s, rb_err)
-        k, s = k_new, min(max(s_new, 0.0), 1.0)
+        k, s = k_new, (min(max(s_new, 0.0), 1.0) if FIT_S else 1.0)
     render(k, s, 128, OUT)
     d = evaluate(OUT / "tex_side.png", k, s, W / "scratch" / "game" / "l5.json")
     d["fit"] = {"light_scale": k, "specular_factor": s, "history": hist,
-                "method": "k on the receiver luminance, s on the stock R/B; every other region is the test"}
+                "method": ("k on the receiver luminance, s on the stock R/B" if FIT_S else
+                           "k on the receiver luminance; physical lights (specular factor 1)") +
+                          "; every other region is the test"}
     (W / "scratch" / "game" / "l5.json").write_text(json.dumps(d, indent=1))
     print("[l5fit] DONE k %.4f s %.4f failed %s" % (k, s, d["failed"]))
 

@@ -63,7 +63,8 @@ def stage_form():
 
 # LOD2 drops the fastener groups and the hidden internals (GUN_BUILDING_STUDY 5.7: under ~2 px at its 6.7 m switch:
 # a 5 mm rivet head is ~0.9 px there); LOD3 is the blockout generator (the silhouette level)
-LOD2_DROP = ("rivets", "butt_screws", "stock_hardware", "receiver_rails", "gas_piston", "recoil_spring_button")
+LOD2_DROP = ("rivets", "butt_screws", "stock_hardware", "receiver_rails", "gas_piston", "recoil_spring_button",
+             "sling_swivel_base", "sling_swivel_loop")     # plan 3.2: the rear sling swivel is 0 at LOD2
 LOD3_TOL = 1.2
 # parts built at LOD0 resolution in a level's mesh (before anything else, in this fresh process, so no module cache of
 # the coarse level reaches them): pairs whose fit is defined by both parts' resolutions - the magazine and its floor
@@ -190,7 +191,15 @@ def stage_lod():
         import rifle_blockout as RB
         col = bl.collection(f"AR01_LOD{lv}")
         objs = []
-        for i, (pid, m) in enumerate(RB.parts(None, tol=LOD3_TOL).items()):
+        from gunlib import mesh as MS
+        lod3 = RB.parts(None, tol=LOD3_TOL)
+        # hidden surfaces deleted at the silhouette level (plan 4): the barrel starts 2 mm inside the front band (its
+        # length inside the receiver and the handguards is never seen; buried, it broke G5's LOD3 depth rule: 17-20 mm
+        # = 1.1-1.2 px at the 20 m switch)
+        d = SPEC.dims("barrel")
+        x0 = SPEC.box("handguard_front_band")["X"][1] - 2.0
+        lod3["barrel"] = MS.cylinder((x0, 0, 0), (d["crown_X"], 0, 0), d["dia"] / 2, 32)
+        for i, (pid, m) in enumerate(lod3.items()):
             # the silhouette prisms share traced outline points: each part shrinks 0.02 % about its own centre, so no
             # two parts keep a vertex pair closer than qa_check's 1 micron
             V = m.verts()

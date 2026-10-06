@@ -31,6 +31,16 @@ Detail pass, round 2 of the second detail loop (2026-10-05, "r2b"), from the rou
 - open (R36, deferred): c3 / q34 draw the ears ~0.7-0.8 as wide front-to-back for their height; EAR_SX (env
   FS_EAR_SX) builds that variant for review, the default 1.0 keeps the side trace (L2).
 Not built here: the detent knob (muzzle_brake owns it).
+
+LAST SHAPE ROUND (2026-10-05, orchestrator ruling 7; realism judges: the windage drum spanning the ears at mid height
+read as a horizontal CROSSBAR in the first-person view, with open space under it). On the real pattern (scratch/
+realref photos: the drum's end is the round boss on the ear ABOVE the see-through window) the drum sits in the solid
+cast BRIDGE that joins the ears' lower halves, and the post rises from it with open space between the ears above it.
+So the space between the ears is solid up to BRIDGE_Z (just over the drum; the window still tunnels through it, the
+side silhouette is unchanged), the drum is inside it (only its ends show, as the bosses), and the post with its
+threaded shank stands in a hole in the bridge top up to the unchanged tip (Z 45.0, B4). A first try put the drum low
+at the floor (Z 11.6): its post then crossed the window (L3 window bbox and per-part IoU failed) -- and the photos
+put the drum above the window.
 """
 from __future__ import annotations
 
@@ -78,7 +88,8 @@ EAR_TAPER_Z0, EAR_TOP_Z = 11.0, 49.4
 EAR_RIM = 1.4                     # rolled round on every ear outline / window edge (weighted bevel, weight 1 = 1.4 mm;
                                   # detail fix 2.0 -> 1.4: the thinner top must keep a flat after both rims: worn round tops)
 W_IN, W_LOW = 0.7, 0.55           # rim weights: inner faces (0.98 mm), window floor / cavity floor edges (0.77 mm)
-FLOOR_Z = 11.9                    # cavity floor between the ears
+FLOOR_Z = 11.9                    # (round 2b cavity floor; the rim / edge weight predicates still key to it)
+BRIDGE_Z = 33.4                   # last shape round: the cast bridge between the ears' lower halves (cavity floor)
 RIM_Z0 = 8.0                      # the ears' rolled rims run down to here (the outer faces meet the base at Z ~7.1)
 WIN_Z0 = 12.2                     # window floor
 BOX_W, BOX_ZT, BOX_ZB = 11.0, 11.3, -10.3
@@ -100,7 +111,9 @@ BOSS_H, BOSS_EDGE = 1.0, 0.3      # DETAIL FIX: a raised round windage-drum boss
 # scribed curve leaving the boss's lower rear edge towards the rake (c3: tangent-ish to the boss, sagging slightly)
 SCRIBE = [(sx(824.7) - 3.6, 27.2), (sx(824.7) - 5.2, 26.55), (sx(824.7) - 6.9, 26.35), (sx(824.7) - 8.6 * min(1.0, EAR_SX + 0.1), 26.75)]
 SCRIBE_W, SCRIBE_D = 0.45, 0.3
-DRUM = (sx(825.3), 31.0, 2.0)         # windage drum X, Z, radius (post part); sits 0.9 deep in each ear's counterbore
+DRUM = (sx(825.3), 31.0, 2.0)         # windage drum X, Z, radius (inside the bridge since the last shape round)
+POST_HOLE = (1.6, 3.0)                # last shape round: the post's hole in the bridge top (radius, depth)
+EAR_TOP_R = float(os.environ.get("FS_EAR_TOP_R", "7.0"))   # ear top corners: last shape round 5.0 -> 7.0 (rounded tops; per-part L2 0.9517, 6.0 left a boolean crack)
 CBORE_R = 2.4                         # r2b: drum 2.8 -> 2.0 (judge: a dark block in the gap; c3 shows an open slot)
 TOP_HOLE = (sx(829.4), 43.4, 2.4, 2.0)                           # X, Z, radius, depth (blind, inner faces)
 SLOT = G.rounded_rect(sx(829.3), sx(831.7), 27.5, 34.5, 0.49 * (sx(831.7) - sx(829.3)), 3)     # round-ended slot on the inner faces, 1.4 deep
@@ -116,7 +129,7 @@ def ear_outline() -> np.ndarray:
     xr = 806.3 + (816.5 - 806.3) * (11.0 - 9.6) / (37.0 - 9.6)          # rake at Z 11.0
     P = np.array([(sx(807.6), 2.0), (833.0, 2.0), (833.0, 49.4), (sx(816.5), 49.4), (sx(816.5), 37.0), (sx(xr), 11.0),
                   (sx(807.6), 9.0)], float)
-    return G.fillet(G.ccw(P), 1.0, 6, radii=[0.0, 0.0, 5.0, 5.0, 8.0, 0.0, 0.0])   # detail fix: worn rounder tops (R 4 -> 5)
+    return G.fillet(G.ccw(P), 1.0, 7, radii=[0.0, 0.0, EAR_TOP_R, EAR_TOP_R, 8.0, 0.0, 0.0])   # detail fix R 5; last round EAR_TOP_R
 
 
 def window_outline() -> np.ndarray:
@@ -185,7 +198,7 @@ def hood() -> MS.Mesh:
 
 
 def cavity() -> MS.Mesh:
-    return MS.box(800.0, 840.0, -EAR_IN, EAR_IN, FLOOR_Z, 60.0)
+    return MS.box(800.0, 840.0, -EAR_IN, EAR_IN, BRIDGE_Z, 60.0)
 
 
 def _ybetween(s, a, b):
@@ -196,11 +209,12 @@ def inner_face_cuts() -> list:
     """On each ear's inner face: the drum's counterbore, the large blind hole near the top front and the round-ended
     vertical slot (c3 / q34 show them on the far ear between the ears)."""
     out = []
+    # last shape round: the post's hole in the bridge top (the drum is inside the bridge; the counterbores and the
+    # round-ended slot of round 2b straddled the bridge top and are gone)
+    out.append(MS.cylinder((DRUM[0], 0.0, BRIDGE_Z - POST_HOLE[1]), (DRUM[0], 0.0, BRIDGE_Z + 2.0), POST_HOLE[0], 16))
     for s in (-1, 1):
-        out.append(ycyl(DRUM[0], DRUM[1], CBORE_R, *_ybetween(s, EAR_IN - 1.0, EAR_IN + 0.9), 20))
         x, z, r, d = TOP_HOLE
         out.append(ycyl(x, z, r, *_ybetween(s, EAR_IN - 1.0, EAR_IN + d), 20))
-        out.append(MS.prism(SLOT, *_ybetween(s, EAR_IN - 1.0, EAR_IN + 1.4)))
     return out
 
 
@@ -261,7 +275,7 @@ def edge_weight(mid, d, n1, n2, dih):
         return 0.0                                       # rod bore and the hidden head seat
     if abs(y) > EAR_IN - 1.0 and z > 20.0 and _near_details(x, z):
         return 0.0
-    if EAR_IN - 0.25 <= abs(y) <= EAR_OUT + 0.25 and z > FLOOR_Z - 0.3:
+    if EAR_IN - 0.25 <= abs(y) <= EAR_OUT + 0.25 and z > FLOOR_Z - 0.3:      # (the ears' rims; the bridge top too)
         return 0.0                                       # the ears' rims (the rim pass rounded them)
     return 1.0
 
@@ -414,9 +428,13 @@ def front_sight_block_obj(coll, offset):
 
 
 def front_sight_post() -> PartDef:
-    drum = ycyl(DRUM[0], DRUM[1], DRUM[2], -(EAR_IN + 0.9) + GAP, EAR_IN + 0.9 - GAP, 20)
-    post = MS.cylinder((DRUM[0], 0, DRUM[1] + DRUM[2] - 1.0), (DRUM[0], 0, 45.0), 1.0, 12)
-    return PartDef("front_sight_post", [drum], unions=[post], cls="M-round", recipe=[(0.3, 1, 30.0)],
+    # last shape round: the post stands in its hole in the bridge top (the drum inside the bridge is not modelled:
+    # unseen): a threaded shank r 1.45 (0.15 off the hole wall, 0.2 off its floor), a short taper, the round post r 1.0
+    # to the tip (Z 45.0, B4 / L4 sight line)
+    z0 = BRIDGE_Z - POST_HOLE[1] + 0.2
+    post = MS.revolve([(0.0, 0.0), (0.0, 1.45), (BRIDGE_Z + 2.4 - z0, 1.45), (BRIDGE_Z + 4.0 - z0, 1.0),
+                       (45.0 - z0, 1.0), (45.0 - z0, 0.0)], (DRUM[0], 0.0, z0), (0.0, 0.0, 1.0), 12)
+    return PartDef("front_sight_post", [post], cls="M-round", recipe=[(0.3, 1, 30.0)],
                    spec_id="front_sight_ears_post")
 
 

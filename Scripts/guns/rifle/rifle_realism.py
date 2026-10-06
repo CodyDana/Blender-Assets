@@ -1,6 +1,6 @@
 """AR-01 realism set in the ROUGH LOOK (plain Python; renders via headless Blender, gunlib/realism_job.py):
 
-    py -3 -B Scripts/guns/rifle/rifle_realism.py [--out WorkFiles/guns/rifle/review/realism_form3] [--samples 128]
+    py -3 -B Scripts/guns/rifle/rifle_realism.py [--out WorkFiles/guns/rifle/review/realism_form4] [--samples 128]
 
 Four views a realism judge looks at (RIFLE_BUILD_PLAN 9, L7 realism): the first-person crop (eye 35 cm from the
 receiver, behind / left / above the gun as a right-handed player holds it, 70 deg FOV), the ADS sight picture (eye on
@@ -77,7 +77,7 @@ def contact(out: Path, sh):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=str(REVIEW / "realism_form3"))
+    ap.add_argument("--out", default=str(REVIEW / "realism_form4"))
     ap.add_argument("--samples", type=int, default=128)
     a = ap.parse_args()
     out = Path(a.out).resolve()

@@ -1223,7 +1223,7 @@ mag_sockets = [
 # ================================================================================================== spec
 spec = {
     "meta": {
-        "name": "Assault Rifle AR-01", "code": "AR01", "version": "1.2", "date": "2026-10-05",
+        "name": "Assault Rifle AR-01", "code": "AR01", "version": "1.3", "date": "2026-10-05",
         "assets": {"skeletal": "SK_AR01 (+ _LOD1..3, SK_AR01_Skeleton, PHYS_AR01, clips A_AR01_*)",
                    "static_twin": "SM_AR01 (mag merged by default, gun study Q3)", "magazine": "SM_AR01_Mag"},
         "units": "millimetres (Blender builds in metres: / 1000; Unreal cm: / 10)",
@@ -1917,6 +1917,85 @@ spec["resolutions"] += [
                    "34-35.6 back of X 233 and 43-45 ahead: the real stepped trunnion); cover surface lumps and wood "
                    "colour (rough-look placeholder material).",
      "rule": "real pattern + main views (user decision 2026-10-05); the side / top / 3-4 gates keep passing"},
+]
+
+# ------------------------------------------------------------------------------- last shape round (2026-10-05, R50)
+# The orchestrator's binding rulings on the realism judges' round-3 verdicts (fake in hero 3/4, first person and ADS;
+# real at 3 m). Method change for the small parts: built to the REAL stamped-receiver pattern's proportions read off
+# photos (WorkFiles/guns/rifle/scratch/realref, URLs in gates/form_ruled.json), inside the sheet's main-view silhouette.
+DP5 = "last shape round (R50): {}"
+
+
+def dp5(pid, src, **kw):
+    dp(pid, src, **kw)
+    _P[pid]["detail_pass"][-1]["source"] = DP5.format(src)
+
+
+dp5("dust_cover", "parts/receiver_right_cover.py",
+    dims={"cross_ribs": "REMOVED (R50: they rendered as stepped shingles; the sheet draws a smooth cover)",
+          "shoulder_radius_outer": 3.2, "shoulder_radius_inner": 2.22},
+    note="last round: smooth thin pressed cover, R 3.2 shoulders (tight stamped bend), ribs removed")
+dp5("selector", "parts/selector.py",
+    box={"X": [274.66, 371.59], "Z": [-16.01, 8.0], "Y": [-27.53, -18.0]},
+    dims={"length_pivot_to_tip": 88.8, "stretch": "c1 outline stretched x1.25 forward of X 290 (real photo: pivot -> "
+          "tip 91 mm, step X ~300-310, lower edge rising ~0.18)", "top_edge_Z": 8.0, "step_X": [299.0, 308.5]},
+    note="last round: the real long stamped plate from the pivot to the charging-handle slot, closing the slot band on "
+         "safe (the sheet's shorter lever is an AI artifact, ruling 2)")
+dp5("bolt_carrier", "parts/receiver_right.py (handle_knob)",
+    dims={"charging_handle": {**_P["bolt_carrier"]["dims"]["charging_handle"],      # (X / Z / tip_Y: the blockout box)
+                              "stem": "flat bar X 444.25-451.75, Z 8.6-11.85, out to Y -29.5",
+                              "knob": "superellipse sections lofted along a path bent up ~26 deg, domed end",
+                              "proud_of_wall": 24.85, "knob_Z": [8.58, 16.76], "knob_width_X": 9.2}},
+    note="last round: the real prominent knob on its stem (~2.5 cm out; was a 10 mm collar knob), B3 0 hits")
+dp5("rear_sight_leaf", "parts/rear_sight.py",
+    dims={"leaf": "one flat stamped plate 2.2 thick (Z 42.5-44.7), ratchet notches along both edges, no centre slot",
+          "notch_blade": "thin transverse blade X 448.7-450.9, top 48.0 (rounded corners r 1.4), squared-U notch 2.0 "
+                         "wide to 45.5, bottom corners r 0.45",
+          "slider_sleeve": {"X": [457.5, 465.5], "Z": [40.1, 46.6], "half_width": 9.8,
+                            "latch_buttons": "one small round button a side, r 2.0, out to |Y| 12.1"}},
+    note="last round: thin stamped tangent leaf, real slider and squared-U notch (was a 4.1 mm ladder, a two-lobed "
+         "notch block and a slider with two big side clamps)")
+dp5("rear_sight_block", "parts/rear_sight.py",
+    dims={"leaf_spring": "flat spring in the channel under the leaf X 465.8-497.5, +-4.0, top 0.15 under the leaf",
+          "ramp": "cam walls rise to just past the leaf bottom from X 489 (the leaf lies along it)",
+          "rear_hood": "vertical rear face X 452.35 down to an underside Z 32.9 over the dust cover's front end",
+          "hinge_ridge": "full-width rounded ridge in the block outline (no separate bar ends)"},
+    note="last round: block sculpted as the real part; the full-width slider pocket and the rear undercut (a straight "
+         "black band in the ADS view) are gone; the symmetric round knobs (bar ends) removed")
+dp5("handguard_retainer_lever", "parts/rear_sight.py",
+    dims={"left_axis_end": "low flush pin end with a centre hole (0.45 proud, r 2.9)", "right_pin_head_proud": 1.45},
+    note="last round: asymmetric as on the real block (lever + pin head on the right only)")
+dp5("mag_catch", "parts/receiver_right.py",
+    dims={"paddle": "traced side outline as the centre rib (+-1.6); wings +-5.0 pulled back 2.0 from the front edge "
+                    "(pressed-rib stamped paddle)"},
+    note="last round: real-pattern paddle (a 13 mm paddle broke the 3/4 exception: the panel draws the 10 mm one)")
+dp5("trigger_guard", "parts/trigger_guard.py",
+    dims={"loop_section": "flat strap 10 wide (Y), flat outer / inner faces, 0.35 edge breaks (was a stamped channel)",
+          "catch_rivet_heads": "domed r 1.9, 0.75 proud"},
+    note="last round: reads as a wide flat stamped strap riveted under the receiver (ruling 6)")
+dp5("front_sight_ears_post", "parts/front_sight.py",
+    dims={"bridge_Z": 33.4, "post": "stands in a hole (r 1.6, 3 deep) in the bridge top; shank r 1.45, post r 1.0, tip "
+          "Z 45.0", "drum": "inside the bridge (its ends are the bosses)", "ear_top_corner_r": 7.0},
+    note="last round: no crossbar between the ears -- the ears' lower halves joined by the cast bridge, the post rising "
+         "from it with open space above (real photos: the drum end above the window)")
+dp5("buttstock", "rifle_parts2.py",
+    dims={"comb_nose_kernel_mm": 4.0, "section_exponents_X70_X150": [3.0, 2.62]},
+    note="last round: comb nose softened within the side trace tolerance (per-part 0.9919, contour max 1 px); slimmer-"
+         "reading sides at the TOP-traced widest row (3/4 exception holds)")
+spec["resolutions"] += [
+    {"id": "R50", "topic": "Last shape round (2026-10-05): the orchestrator's rulings on the realism judges' round 3",
+     "conflict": "fake in hero 3/4, first person and ADS (real at 3 m): ribbed cover as stepped shingles, short selector, "
+                 "stub charging handle, chunky ladder leaf / two-lobed notch / boxy slider, symmetric knobs on the "
+                 "rear sight block, black recess across it, hidden mag release, wire-thin guard, front sight crossbar, "
+                 "comb bump",
+     "resolution": "small parts built to the real pattern's proportions (photos in scratch/realref) inside the sheet's "
+                   "main-view silhouette: smooth R 3.2 cover; the real long selector (c1 outline x1.25, tip X 371.6); "
+                   "the real charging handle (24.85 out, bent-up knob); thin 2.2 mm leaf + leaf spring + squared-U "
+                   "notch blade + slider sleeve with latch buttons, block ramp / rear hood / full-width hinge ridge, "
+                   "asymmetric retainer; pressed-rib paddle; flat-strap guard with domed catch rivets; front sight "
+                   "bridge with the post rising from it, R 7 ear tops; comb softened, slimmer stock sections",
+     "rule": "orchestrator rulings 1-8 (binding); every stage-2 gate re-run and passing (gates/form.json, "
+             "gates/form_ruled.json)"},
 ]
 
 spec["fab_original_changes"] = {

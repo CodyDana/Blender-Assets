@@ -244,6 +244,13 @@ def section(w):
     outer faces are the flat side faces the side view shows (the traced 3.25-4.4 mm band), crisp 0.25 breaks on the
     flange ends, the channel open toward the trigger with its floor WEB_T in from the outer face. Returns [(u, y)]."""
     T = LOOP_W
+    if FLAT_STRAP:
+        # LAST SHAPE ROUND (ruling 6): the real guard loop is a WIDE FLAT STAMPED STRAP: flat outer and inner faces
+        # 10 mm across (Y), flat side faces (the traced band), crisp EDGE_BRK breaks on the four edges. The round-2b
+        # channel (open toward the trigger) read as a thin wire loop in the hero 3/4 view; from its 17 deg elevation
+        # the strap's broad inner face now shows
+        e = EDGE_BRK
+        return [(w, T - e), (w - e * 0.29, T - e * 0.29), (w - e, T), (e, T), (e * 0.29, T - e * 0.29), (0.0, T - e)]
     rb, tf, tw = BEND_R, FLANGE_T, WEB_T
     cd = max(w - tw, 0.6)
     pts = [(w, T - rb)]
@@ -251,6 +258,10 @@ def section(w):
         pts.append((w - rb + rb * math.cos(math.radians(a)), T - rb + rb * math.sin(math.radians(a))))
     pts += [(w - rb, T), (0.25, T), (0.0, T - 0.25), (0.0, T - tf), (cd + 0.4, T - tf), (cd, T - tf - 0.4)]
     return pts
+
+
+FLAT_STRAP = True             # last shape round: flat strap section (False: round 2b's stamped channel)
+EDGE_BRK = 0.35
 
 
 BEND_R = 1.0                  # web-to-flange bend (outer radius) of the stamped strip
@@ -327,7 +338,10 @@ def trigger_guard() -> PartDef:
     uni = [flange_r, flange_f, lip, MS.prism(cheek_o, 3.75, 4.98), MS.prism(cheek_o, -4.98, -3.75),
            # integration r2b: low pin heads set in the plate (judges r2b, c1: "a recessed rivet near its middle";
            # ours stood out as a domed head on a washer): head r 1.7, 0.14 proud, no washer
-           ycyl(cx, cz, 1.7, 4.96, 5.12, 16), ycyl(cx, cz, 1.7, -5.12, -4.96, 16),
+           # last shape round (ruling 6, "riveted under the receiver"): the real front tower's catch rivet is a domed
+           # head (scratch/realref AKM_1980: a round rivet head on the guard's front tower), r 1.9, 0.75 proud
+           MS.revolve([(0.0, 0.0), (0.0, 1.9), (0.3, 1.78), (0.55, 1.35), (0.75, 0.0)], (cx, 4.96, cz), (0, 1, 0), 16),
+           MS.revolve([(0.0, 0.0), (0.0, 1.9), (0.3, 1.78), (0.55, 1.35), (0.75, 0.0)], (cx, -4.96, cz), (0, -1, 0), 16),
            ycyl(cx, cz, 1.5, -5.0, 5.0, 12)]
     cut = [MS.box(301.5, 329.0, -3.25, 3.25, -35.2, -27.0),                 # trigger slot through the flange
            MS.box(345.0, 368.5, fl_in, WO + 1.0, -35.5, TAB_Z),             # tab recess below its plate, each side

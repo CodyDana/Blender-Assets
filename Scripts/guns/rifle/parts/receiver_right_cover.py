@@ -34,8 +34,10 @@ from gunlib import mesh as MS
 
 HALF_W = 21.75           # skirt outer half width (rifle_parts.COVER_O; key dim dust_cover_width 43.5)
 CROWN_Z = 32.7           # key dim dust_cover_crown_Z
-SHOULDER_R = 5.0         # shoulder radius (outer); realism round 2: 8.0 -> 5.0 (judges: "a soft inflated lid, rolled
-                         # bulging sides"; a real cover is a tight U stamping with defined edges)
+SHOULDER_R = 3.2         # shoulder radius (outer); realism round 2: 8.0 -> 5.0 (judges: "a soft inflated lid, rolled
+                         # bulging sides"; a real cover is a tight U stamping with defined edges); last shape round
+                         # (ruling 1): 5.0 -> 3.2, the thin pressed sheet's tight bend (outer 3.2 / inner 2.2 on the
+                         # 0.98 sheet, real stamped covers: ~2-3 mm bend radii), not a pillowy round
 TOP_R = 90.0             # top arc radius (outer); realism round 2: 48 -> 90, rise ~1.8 instead of 2.9 ("flatter top")
 WT_C = 0.98              # sheet thickness: HALF_W - COVER_I
 Z_BASE = 11.6            # lip line: the rear hood rolls down to it (trace: the lip at X 239.4, Z 10.6-11.6); above
@@ -58,7 +60,9 @@ STUDS_X = ()             # (detail round 2's crown studs: removed, real covers a
 # fading to 0 over the shoulder (smoothstep in the shoulder angle). The flanks fall at ~42 deg, steeper than the
 # cover's 40 deg smoothing / 35 deg weighted-normal sharp limit, so each rib reads crisp, not as a soft wave (a
 # one-ring rounded rib rendered as a lumpy, wavy top in the first-person view).
-RIBS_X = (296.0, 322.0, 348.0, 374.0, 400.0, 426.0)
+RIBS_X = ()             # LAST SHAPE ROUND (ruling 1, 2026-10-05): the ribs are REMOVED. They rendered as stepped
+                        # shingles in the first-person / ADS views, and the sheet draws a SMOOTH cover (CRAFT_STUDY 2.2,
+                        # RIFLE_STUDY); rib_rings() keeps the mechanism for a Fab variant, unused here
 RIB_W0, RIB_W1, RIB_H = 5.0, 3.2, 0.8
 SKIRT_Z_REAR, SKIRT_STEP = 0.75, ((302.3, 0.8), (313.2, 10.3))   # deep rear skirt bottom; the traced slanted step
 

@@ -318,6 +318,129 @@ def triangulate_keep_normals(ob):
     return len(me.polygons)
 
 
+def nonmanifold_edges_of(me):
+    """Edges without exactly two faces (mesh datablock)."""
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    n = sum(1 for e in bm.edges if len(e.link_faces) != 2)
+    bm.free()
+    return n
+
+
+def nonmanifold_edges(ob):
+    return nonmanifold_edges_of(ob.data)
+
+
+def triangulate_as_looptris(ob):
+    """Triangulate in place with EXACTLY Blender's own loop triangles (the triangles every form-stage gate measured:
+    G5, B3, the silhouettes): a fresh triangle mesh on the same vertices, each triangle a loop triangle, carrying its
+    corners' actual normals (custom split normals kept) and its polygon's material index. bmesh's quad / n-gon splits
+    can pick another diagonal on a non-planar face (AR-01: a 6-pair rod / front sight block intersection appeared that
+    the loop triangles do not have). Returns the triangle count."""
+    me = ob.data
+    if all(p.loop_total == 3 for p in me.polygons):
+        return len(me.polygons)
+    me.calc_loop_triangles()
+    nv = len(me.vertices)
+    co = np.empty(nv * 3)
+    me.vertices.foreach_get("co", co)
+    nt = len(me.loop_triangles)
+    lt = np.empty(nt * 3, np.int64)
+    me.loop_triangles.foreach_get("loops", lt)
+    pidx = np.empty(nt, np.int64)
+    me.loop_triangles.foreach_get("polygon_index", pidx)
+    lv = np.empty(len(me.loops), np.int64)
+    me.loops.foreach_get("vertex_index", lv)
+    cn = np.array([c.vector[:] for c in me.corner_normals])
+    mi = np.empty(len(me.polygons), np.int64)
+    me.polygons.foreach_get("material_index", mi)
+    tris = lv[lt].reshape(-1, 3)
+    corner_n = cn[lt].reshape(-1, 3, 3)
+    # drop loop triangles that repeat a vertex, and exact duplicates (mesh validation would remove them and shift the
+    # corner order the normals are set in)
+    keep = (tris[:, 0] != tris[:, 1]) & (tris[:, 1] != tris[:, 2]) & (tris[:, 0] != tris[:, 2])
+    _, first = np.unique(np.sort(tris, 1), axis=0, return_index=True)
+    uniq = np.zeros(len(tris), bool)
+    uniq[first] = True
+    keep &= uniq
+    tris, corner_n, pidx = tris[keep], corner_n[keep].reshape(-1, 3), pidx[keep]
+    nt = len(tris)
+    mats = list(me.materials)
+    me.clear_geometry()
+    me.vertices.add(nv)
+    me.vertices.foreach_set("co", co)
+    me.loops.add(nt * 3)
+    me.loops.foreach_set("vertex_index", tris.ravel())
+    me.polygons.add(nt)
+    me.polygons.foreach_set("loop_start", np.arange(0, nt * 3, 3))
+    me.polygons.foreach_set("loop_total", np.full(nt, 3))
+    me.polygons.foreach_set("material_index", mi[pidx])
+    me.update(calc_edges=True)
+    if len(me.loops) == nt * 3:
+        me.normals_split_custom_set([tuple(v) for v in corner_n])
+    me.update()
+    del mats
+    return len(me.polygons)
+
+
+def fix_degenerates(ob, short_mm=0.005, area_m2=1e-12):
+    """After triangulation: weld the vertex pairs of edges shorter than short_mm (boolean / bevel run-outs leave 2-3 micron
+    edges whose sliver faces put a third face on a neighbour edge: qa's no_non_manifold_edges) and turn needle
+    triangles (area <= area_m2 with no short edge: three near-collinear corners) by rotating their longest edge. The
+    corner normals ride along in a loop layer and are set again (custom split normals kept). Returns (welded, rotated)."""
+    me = ob.data
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    cn = me.corner_normals
+    lay = bm.loops.layers.float_vector.new("_cn")
+    li = 0
+    bm.faces.ensure_lookup_table()
+    for f in bm.faces:                     # bmesh loops come face by face in mesh order
+        for lp in f.loops:
+            lp[lay] = cn[li].vector
+            li += 1
+    s = short_mm / 1000.0
+    welded = 0
+    for _ in range(4):
+        short = [e for e in bm.edges if e.is_valid and e.calc_length() < s]
+        if not short:
+            break
+        targetmap = {}
+        for e in short:
+            a, b = e.verts
+            if a in targetmap or b in targetmap or any(t in (a, b) for t in targetmap.values()):
+                continue
+            targetmap[b] = a
+        bmesh.ops.weld_verts(bm, targetmap=targetmap)
+        welded += len(targetmap)
+    rotated = 0
+    for _ in range(4):
+        thin = [f for f in bm.faces if f.is_valid and f.calc_area() <= area_m2]
+        if not thin:
+            break
+        for f in thin:
+            if not f.is_valid:
+                continue
+            e = max(f.edges, key=lambda x: x.calc_length())
+            if len(e.link_faces) == 2:
+                bmesh.ops.rotate_edges(bm, edges=[e], use_ccw=False)
+                rotated += 1
+    if not (welded or rotated):
+        bm.free()
+        return 0, 0
+    per_loop = []
+    for f in bm.faces:
+        for lp in f.loops:
+            per_loop.append(tuple(lp[lay]))
+    bm.loops.layers.float_vector.remove(lay)
+    bm.to_mesh(me)
+    bm.free()
+    if len(per_loop) == len(me.loops):
+        me.normals_split_custom_set(per_loop)
+    me.update()
+    return welded, rotated
+
+
 class IslandSnap:
     """Closest-point UV lookup restricted to one LOD0 island (its triangles in 3D, mm, with their packed UVs)."""
 

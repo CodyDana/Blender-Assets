@@ -58,7 +58,8 @@ def top_exclusions():
         [[230, 21.9], [300, 21.9], [300, 45], [230, 45]],          # left bump X 236-295 (not real)
         [[348, 21.9], [468, 21.9], [468, 45], [348, 45]],          # left plate X 353-462 (not real)
         [[462, -22.0], [490, -22.0], [490, -45], [462, -45]],      # handle knob drawn 25 mm forward
-        [[440, -22.0], [462, -22.0], [462, -45], [440, -45]],      # our handle at the side-view X
+        [[440, -22.0], [462, -22.0], [462, -50], [440, -50]],      # our handle at the side-view X (last shape round:
+                                                                   # the real knob stands 24.5 out, to Y -45.3)
     ]
 
 

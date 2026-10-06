@@ -32,6 +32,7 @@ import time
 from pathlib import Path
 
 import numpy as np
+import scipy.ndimage as ndi
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
@@ -54,6 +55,28 @@ def lin(rgb):
 
 def log(*a):
     print("[AR01-paint]", *a, flush=True)
+
+
+def inside_poly(Q, poly):
+    """Even-odd point-in-polygon for many points Q (n, 2) against one closed polygon (m, 2)."""
+    x, y = Q[:, 0], Q[:, 1]
+    ins = np.zeros(len(Q), bool)
+    px, py = poly[:, 0], poly[:, 1]
+    j = len(poly) - 1
+    for i in range(len(poly)):
+        c = ((py[i] > y) != (py[j] > y)) & (x < (px[j] - px[i]) * (y - py[i]) / (py[j] - py[i] + 1e-30) + px[i])
+        ins ^= c
+        j = i
+    return ins
+
+
+def checker_field_mask(P):
+    """Texels whose frame-M point lies inside the modelled checker field's outline (grip_checker.field_outline_xz, side
+    plane XZ, both sides): the selected-to-active mask also caught rays from the panel's border band hitting the bake
+    source's clip walls (dark blotches along the border); the field outline is the authority."""
+    sys.path.insert(0, str(ROOT / "Scripts" / "guns" / "rifle"))
+    from parts import grip_checker as GC
+    return inside_poly(P[:, [0, 2]], np.asarray(GC.field_outline_xz(0.0), float))
 
 
 def load(st):
@@ -108,7 +131,33 @@ def paint(st, meta):
     v_far = PT.chunked(PT.fbm3, P, 25.0, 2, 4)        # some edges see more handling than others
     edge_fine = PT.smoothstep(0.012, 0.07, e1) * convex
     edge_broad = PT.smoothstep(0.035, 0.16, e2) * convex
-    edge = np.maximum(edge_fine, 0.8 * edge_broad) * (0.55 + 0.9 * v_far)
+    # wear placement (rifle_surface.METAL_WEAR): edges wear where hands, sling, ground and reloads put it, and where
+    # the sheet draws its bright edges; elsewhere only the strongest edges chip
+    wearz = np.zeros(n, np.float32)
+    for z in RS.METAL_WEAR:
+        dd = np.linalg.norm(P - np.array(z["center_M"], np.float32), axis=1)
+        wearz = np.maximum(wearz, z["w"] * PT.smoothstep(z["radius"], z["radius"] * 0.3, dd))
+    wear = RS.WEAR_BASE + (1.0 - RS.WEAR_BASE) * wearz
+    # the baked bevel masks light whole bevel strips (sub-mm faces) evenly: real wear is an irregular 0.5-3 mm band
+    # (GUN_BUILDING_STUDY 3.4) that bleeds onto the flats. The edge mask is spread ~0.8 mm (sigma, in texels from the
+    # set's density) inside the islands (normalised blur), then broken by flake noise at two scales
+    e_core = np.maximum(edge_fine, 0.8 * edge_broad)
+    E_full = np.zeros(S * S, np.float32)
+    E_full[idx] = e_core
+    E_full = E_full.reshape(S, S)
+    vmask = valid.astype(np.float32)
+    # texels per mm at the set's packing scale (uv_report: px per chart unit; class B / C charts at k ~0.8-1)
+    px_mm = 0.85 * json.loads((WORK / "scratch" / "uv" / "uv_report.json").read_text())["sets"][st]["pack"][
+        "scale_px_per_unit"]
+    sig = max(1.0, 0.8 * px_mm)
+    num = ndi.gaussian_filter(E_full * vmask, sig)
+    den = ndi.gaussian_filter(vmask, sig)
+    spread = (num / np.maximum(den, 1e-4)).reshape(-1)[idx]
+    del num, den, E_full
+    e_band = np.maximum(e_core, np.clip(spread * 2.4, 0.0, 1.0))
+    flake = PT.chunked(PT.fbm3, P, 1.1, 3, 41)
+    flake_big = PT.chunked(PT.fbm3, P, 5.0, 2, 42)
+    edge = e_band * (0.45 + 1.1 * wear) * (0.75 + 0.5 * v_far) * (0.35 + 0.85 * flake + 0.35 * flake_big) / 0.95
     v_lo = PT.chunked(PT.fbm3, P, 9.0, 3, 1)          # broad value / sheen variation
     v_mid = PT.chunked(PT.fbm3, P, 2.6, 3, 2)
     chip_n = PT.chunked(PT.fbm3, P, 0.9, 3, 3)
@@ -123,7 +172,7 @@ def paint(st, meta):
     grime = lin(RS.FIN["grime"]["srgb"]).astype(np.float32)
 
     # ---------------------------------------------------------------- metal finishes
-    for f in ("lacquer", "lacquer_mag", "lacquer_worn", "bluing", "bare"):
+    for f in ("lacquer", "lacquer_cover", "lacquer_mag", "lacquer_worn", "bluing", "bare"):
         sel = fin == f
         if not sel.any():
             continue
@@ -143,16 +192,51 @@ def paint(st, meta):
         r = r0 + (r1 - r0) * (0.25 + 0.6 * v_lo[k] + 0.4 * (v_mid[k] - 0.5))
         met = np.full(k.sum(), float(F["metal"]), np.float32)
         # wear: chips on convex edges (lacquer: hard flakes to bare steel; bluing: worn to bare on the high edges)
-        if f in ("lacquer", "lacquer_mag"):
+        if f in ("lacquer", "lacquer_cover", "lacquer_mag"):
             eb = edge_broad[k] * (0.55 + 0.9 * v_far[k]) if f == "lacquer_mag" else 0.0   # mag: bright rib crests
             amt = np.maximum(edge[k], eb) * (0.45 + chip_n[k])
             chip = amt > 0.62
+            # rubbed lacquer short of a chip: the coat thinned lighter and glossier along the worn edges
+            rub = PT.smoothstep(0.30, 0.62, amt) * (~chip)
+            col *= (1.0 + 0.9 * rub)[:, None]
+            r = r - 0.06 * rub
+            # scuffs (the sheet's long light rubs on the cover, receiver, barrel and magazine): thin streaks along the
+            # part's scuff axis in patches, plus short random scratches; light (thinned lacquer), the deepest to bare
+            pk_ = part[tp[k]]
+            sw = np.array([RS.SCUFF_W.get(x, 0.7) for x in pk_], np.float32)
+            Pk = P[k]
+            scl = np.zeros(k.sum(), np.float32)
+            for axn in set(RS.SCUFF_AXIS.get(x, (1.0, 0.0, 0.0)) for x in np.unique(pk_)):
+                gsel = np.array([RS.SCUFF_AXIS.get(x, (1.0, 0.0, 0.0)) == axn for x in pk_])
+                scl[gsel] = PT.aniso(Pk[gsel], axn, 16.0, 0.09, 2, 81)
+            patch = PT.smoothstep(0.42, 0.72, PT.chunked(PT.fbm3, Pk, 14.0, 3, 83)) * sw
+            scr1 = PT.aniso(Pk, (0.62, 0.70, 0.35), 5.0, 0.05, 2, 85)
+            scr2 = PT.aniso(Pk, (0.55, -0.60, -0.58), 4.0, 0.05, 2, 86)
+            scuff = np.clip(PT.smoothstep(0.66, 0.78, scl) * patch
+                            + 0.8 * PT.smoothstep(0.72, 0.82, np.maximum(scr1, scr2)) * np.clip(patch + 0.25, 0, 1),
+                            0, 1)
+            col *= (1.0 + 1.6 * scuff)[:, None]
+            r = r - 0.10 * scuff
+            deep = (scuff > 0.85) & (PT.smoothstep(0.80, 0.90, scl) * patch * (0.6 + 0.8 * wear[k]) > 0.55)
+            chip |= deep
+            # worn-finish mottling (lighter, glossier patches where the coat has thinned) and darker oily patches
+            wp = PT.smoothstep(0.58, 0.82, PT.chunked(PT.fbm3, Pk, 22.0, 3, 87)) * np.clip(sw, 0, 1.2)
+            col *= (1.0 + 0.55 * wp)[:, None]
+            r = r - 0.06 * wp
+            oil = PT.smoothstep(0.62, 0.86, PT.chunked(PT.fbm3, Pk, 34.0, 2, 88))
+            col *= (1.0 - 0.22 * oil)[:, None]
+            r = r - 0.05 * oil
+            # pitting in the worn patches: dark specks
+            pit = (PT.chunked(PT.vnoise3, Pk / 0.35, 89) > 0.93) & (PT.chunked(PT.fbm3, Pk, 9.0, 2, 90) > 0.6)
+            col[pit] *= 0.55
+            r = np.where(pit, r + 0.15, r)
             # rare surface nicks on flats (subtle surface wear)
-            nick = (PT.chunked(PT.fbm3, P[k], 0.45, 2, 9) > 0.88) & (v_lo[k] > 0.64)
+            nick = (PT.chunked(PT.fbm3, Pk, 0.45, 2, 9) > 0.88) & (v_lo[k] > 0.64)
             chip |= nick
             # micro scratches and handling sheen in roughness only (no colour change)
-            scr = PT.smoothstep(0.68, 0.80, PT.aniso(P[k], (1.0, 0.0, 0.25), 6.0, 0.18, 2, 12))
+            scr = PT.smoothstep(0.68, 0.80, PT.aniso(Pk, (1.0, 0.0, 0.25), 6.0, 0.18, 2, 12))
             r = r - 0.07 * scr
+            hscuff = -0.006 * scuff - 0.02 * pit
             m_edge[k] = np.clip(edge[k], 0, 1)
             refin[k] = 1.0
         elif f == "lacquer_worn":
@@ -165,6 +249,10 @@ def paint(st, meta):
         elif f == "bluing":
             amt = edge[k] * (0.4 + chip_n[k])
             chip = amt > 0.70
+            # bluing thins to a lighter grey before it reaches bare steel (metal stays metal: >= sRGB 110)
+            thin = PT.smoothstep(0.35, 0.70, amt) * (~chip)
+            col *= (1.0 + 0.45 * thin)[:, None]
+            r = r - 0.08 * thin
             m_edge[k] = np.clip(edge[k], 0, 1)
         else:
             chip = np.zeros(k.sum(), bool)
@@ -182,7 +270,7 @@ def paint(st, meta):
         met = np.where(chip, 1.0, met)
         # chip relief: the lacquer flake edge (0.03 mm) for the normal map
         if f.startswith("lacquer"):
-            h[k] = np.where(chip, -0.03, 0.0)
+            h[k] = np.where(chip, -0.03, hscuff if f in ("lacquer", "lacquer_cover", "lacquer_mag") else 0.0)
         # cavity grime and soot. On a dielectric (lacquer) they darken the colour; on bare / blued metal they are a
         # dirt layer: a texel is either clean metal (its BC stays a metal's, >= sRGB 110 / 186: B9) or covered
         # (dielectric, grime / soot colour) - never a darkened metal
@@ -238,20 +326,42 @@ def paint(st, meta):
             pith = c - perp * 55.0 + np.array([0.0, 23.0, 0.0], np.float32)
             ph, rad = PT.wood_rings(Pw[s], ax, pith, spacing_mm=1.3, warp_mm=4.0, seed=40 + len(name))
             # soft latewood (no contour-map lines), long figure streaks, fine pores along the grain
-            late = PT.smoothstep(0.55, 0.85, ph) * (1 - PT.smoothstep(0.88, 1.0, ph))
+            late = PT.smoothstep(0.35, 0.80, ph) * (1 - PT.smoothstep(0.80, 1.0, ph))
             fig = PT.aniso(Pw[s], ax, 60.0, 6.0, 3, 50 + len(name))
             streak = PT.aniso(Pw[s], ax, 18.0, 0.8, 2, 55 + len(name))
             pores = PT.smoothstep(0.62, 0.82, PT.aniso(Pw[s], ax, 4.0, 0.18, 2, 60 + len(name)))
-            l_ = 1.0 + (k_dark - 1.0) * 0.32 * late
+            l_ = 1.0 + (k_dark - 1.0) * 0.30 * late
             l_ *= 1.0 + (k_light - 1.0) * 0.30 * PT.smoothstep(0.45, 0.75, fig) - 0.10 * PT.smoothstep(0.5, 0.2, fig)
-            l_ *= 1.0 + 0.22 * (streak - 0.5)
+            l_ *= 1.0 + 0.45 * (streak - 0.5)
+            # long dark grain streaks (the sheet's walnut: dark lines running the part's length)
+            dstreak = PT.smoothstep(0.62, 0.78, PT.aniso(Pw[s], ax, 40.0, 0.35, 3, 57 + len(name)))
+            l_ *= 1.0 - 0.38 * dstreak
+            # broad darker patches in the figure (heartwood / old oil), the sheet's uneven stock and guards
+            l_ *= 1.0 - 0.16 * PT.smoothstep(0.50, 0.78, PT.chunked(PT.fbm3, Pw[s], 30.0, 3, 59 + len(name)))
             l_ *= 1.0 - 0.12 * pores
             dirt = PT.smoothstep(0.55, 0.75, PT.chunked(PT.fbm3, Pw[s], 14.0, 3, 65 + len(name)))
             l_ *= 1.0 - 0.14 * dirt
             l_ *= RS.WOOD_VALUE.get(name, 1.0)
+            # handling damage (the sheet's furniture is dinged and scratched all over, the grip most): small dark
+            # dents (crushed fibres, darker, rougher, a shallow dip) and fine scratches through the shellac (lighter)
+            dw = RS.DENT_W.get(name, 1.0)
+            dpatch = PT.smoothstep(0.35, 0.70, PT.chunked(PT.fbm3, Pw[s], 18.0, 2, 91 + len(name)))
+            dents = PT.smoothstep(0.74 - 0.05 * (dw - 1.0), 0.84 - 0.05 * (dw - 1.0),
+                                  PT.chunked(PT.fbm3, Pw[s], 1.5, 2, 93 + len(name))) * np.clip(dpatch * dw, 0, 1)
+            sc_a = PT.aniso(Pw[s], (0.35, 0.85, 0.40), 9.0, 0.07, 2, 95 + len(name))
+            sc_b = PT.aniso(Pw[s], (0.80, -0.30, 0.52), 12.0, 0.07, 2, 97 + len(name))
+            scr = PT.smoothstep(0.76, 0.84, np.maximum(sc_a, sc_b)) * np.clip(dpatch * dw + 0.2, 0, 1)
+            l_ *= 1.0 - 0.32 * dents
+            l_ *= 1.0 + 0.16 * scr
+            # stronger figure for the sheet's dark-grained walnut (r4 look: the grain hardly read at the side view),
+            # as one extra luminance factor normalised to median 1, so the part's median value (gate L5) is kept
+            extra = (1.0 - 0.30 * PT.smoothstep(0.55, 0.75, PT.aniso(Pw[s], ax, 55.0, 0.6, 3, 61 + len(name))))
+            extra *= 1.0 + (k_dark - 1.0) * 0.25 * late
+            extra *= 1.0 - 0.18 * PT.smoothstep(0.45, 0.80, PT.aniso(Pw[s], ax, 120.0, 4.0, 2, 63 + len(name)))
+            l_ *= extra / max(float(np.median(extra)), 1e-3)
             L[s] = l_
-            rr[s] = 0.55 + 0.06 * (fig - 0.5) + 0.07 * pores + 0.03 * late
-            hh[s] = -0.012 * pores + 0.006 * late
+            rr[s] = 0.55 + 0.06 * (fig - 0.5) + 0.07 * pores + 0.03 * late + 0.06 * dents + 0.08 * scr
+            hh[s] = -0.012 * pores + 0.006 * late - 0.05 * dents - 0.01 * scr
         # handling wear: worn lighter and rougher at the hands, oil-darkened around
         hz = np.zeros(wsel.sum(), np.float32)
         ring = np.zeros(wsel.sum(), np.float32)
@@ -271,7 +381,10 @@ def paint(st, meta):
         rr += 0.10 * hz + 0.06 * wedge
         # checkering (grip): darker grooves from the baked normal's tilt
         if "ckm" in d:
-            km = d["ckm"].reshape(-1)[idx][wsel] > 0.5
+            infield = np.zeros(len(idx), bool)
+            gsel = part[tp] == "pistol_grip"
+            infield[gsel] = checker_field_mask(P[gsel])
+            km = (d["ckm"].reshape(-1)[idx][wsel] > 0.5) & infield[wsel]
             ckn = d["ckn"].reshape(-1, 3)[idx][wsel] * 2.0 - 1.0
             groove = PT.smoothstep(0.98, 0.80, ckn[:, 2])
             L = np.where(km, L * (1.0 + (k_chk - 1.0) * (0.45 + 0.55 * groove)), L)
@@ -327,7 +440,9 @@ def paint(st, meta):
     if "ckm" in d:
         ck = d["ckn"] * 2.0 - 1.0
         ck /= np.maximum(np.linalg.norm(ck, axis=-1, keepdims=True), 1e-6)
-        km = (d["ckm"] > 0.5) & valid
+        km_flat = np.zeros(S * S, bool)
+        km_flat[idx] = (d["ckm"].reshape(-1)[idx] > 0.5) & infield
+        km = km_flat.reshape(S, S) & valid
         nrm = np.where(km[..., None], PT.whiteout(ck, nrm), nrm)
     nrm[~valid] = (0.0, 0.0, 1.0)
     del pos_mm, du, dv

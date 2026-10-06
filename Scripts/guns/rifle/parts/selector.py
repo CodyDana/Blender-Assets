@@ -19,6 +19,16 @@ washer and a 1.84 mm domed bolt head (3 mm of hardware standing off the blade). 
   * the nose tab bent outward 12 deg about c1's bend line (a real sheet bend), a small flat pin on it;
   * the pivot: a low washer (0.5) and a low button head (0.9): the axle end, not a bolt standing off the lever.
 Old build: git history (247d02bd, parts/selector.py).
+
+LAST SHAPE ROUND (2026-10-05, orchestrator ruling 2: "the REAL long flat stamped plate from the rear pivot forward to
+the charging-handle slot, covering the slot in the safe position; the sheet's shorter lever is an AI artifact").
+Method: measured on a museum photo of the real stamped-receiver rifle (WorkFiles/guns/rifle/scratch/realref,
+AKM_1980_assault_rifle.jpg, right side square on; scale from the selector pivot -> charging-handle knob, 0.192 mm/px):
+pivot -> front tip 91 mm (ours was 73), the upper edge's step at X ~300-310, the flat top at Z ~8.5, the lower edge
+rising at ~0.18 (ours 0.21), the front end ~9.5 mm tall with the finger tab. The c1 outline (its rounded rear end,
+hub, step, crease, nose tab and bend line) is kept and STRETCHED forward about X STRETCH_X0 (ahead of the hub) by
+STRETCH_K, which lands every one of those real proportions (tip X ~372, step 299-308.5, lower-edge slope 0.17); the
+top stays at TOP_Z 8.0 under the charging handle (B3 bolt sweep) and the plate closes the slot band on safe.
 """
 from __future__ import annotations
 
@@ -44,7 +54,8 @@ T_PLATE = 2.0                   # stamped blade
 Y_F = Y_IN - T_PLATE            # blade face
 EMBED = 0.05                    # layers overlap so no boolean faces are coplanar
 TOP_Z = 8.0                     # raised upper edge (closes the slot band; under the stem 8.6 / knob 8.2)
-STEP_X = (297.0, 304.5)         # the upper edge's step (side trace X 297-306): cosine ramp from the hub line to TOP_Z
+STEP_X = (299.0, 308.5)         # the upper edge's step (last shape round: the stretched c1 step; real photo X ~300-310)
+STRETCH_X0, STRETCH_K = 290.0, 1.25   # last shape round: c1 outline stretched forward of X0 (front tip 355.6 -> 372)
 CREASE_SET = 0.35               # the strip above c1's crease pressed in by this much (a lit step line)
 EDGE = 0.30                     # crisp edge break on the blade
 H_WASHER, H_HEAD = 0.5, 0.9     # low washer collar and button head on the pivot
@@ -52,8 +63,16 @@ TAB_BEND_DEG = 12.0
 MIN_EDGE_MM = 0.35              # outline points closer than this are merged (the bevel's overlap clamp is global)
 
 
+def _stretch(Q):
+    """Last shape round: the real lever's length (see the module notes): X' = X0 + (X - X0) K ahead of X0."""
+    Q = np.array(Q, float)
+    m = Q[..., 0] > STRETCH_X0
+    Q[..., 0] = np.where(m, STRETCH_X0 + (Q[..., 0] - STRETCH_X0) * STRETCH_K, Q[..., 0])
+    return Q
+
+
 def _px(P):
-    return ST.c1_to_rest(P, SEL_PIVOT)
+    return _stretch(ST.c1_to_rest(P, SEL_PIVOT))
 
 
 def _clip_half(P, a, n):
@@ -235,8 +254,11 @@ def selector(coll, offset):
         bl.boolean(ob, _crease_cutter(), "DIFFERENCE", offset=offset)
         bl.clean(ob)
     hub, caps = _hardware()
-    bl.boolean_many(ob, hub, "UNION", offset=offset)
-    bl.clean(ob)
+    if LOD.LEVEL >= 2:          # LOD2: the hub and shaft are hidden in the receiver wall, the nose pin is < 1 px at 6.7 m
+        hub, caps = [], caps[:2]
+    if hub:
+        bl.boolean_many(ob, hub, "UNION", offset=offset)
+        bl.clean(ob)
     for u in caps:
         bl.boolean(ob, u, "UNION", offset=offset)
         bl.clean(ob)

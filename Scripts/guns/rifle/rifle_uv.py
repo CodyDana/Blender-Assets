@@ -39,6 +39,28 @@ from gunlib import rasterpack as RPK  # noqa: E402
 from gunlib import fit as F  # noqa: E402
 
 OUT = SCRATCH / "uv"
+# the static twin's U tile per set (rifle_game.TILE) and the smallest UV1 square (rifle_game.UV1_REGIONS): the overlap
+# checks run on what qa_check will read: float32 UVs shifted to the tile, and the same scaled into the UV1 square
+TILE_OF_SET = {"Metal": 0.0, "Furniture": 1.0, "Mag": -1.0}
+UV1_MIN_SCALE = 0.375
+
+
+def qa_views(TT, st):
+    """The UV triangles as qa_check reads them on the twin: UV0 (float32, tile-shifted) and UV1 (scaled, float32)."""
+    t0 = (TT + np.array([TILE_OF_SET[st], 0.0])).astype(np.float32).astype(np.float64)
+    t1 = (TT * UV1_MIN_SCALE).astype(np.float32).astype(np.float64)
+    return t0, t1
+
+
+def qa_overlaps(TT, st, eps):
+    t0, t1 = qa_views(TT, st)
+    a = UC.overlap_pairs(t0, eps, qa=True)
+    b = UC.overlap_pairs(t1, eps, qa=True)
+    if not len(b):
+        return a
+    if not len(a):
+        return b
+    return np.unique(np.vstack([a, b]), axis=0)
 OUT.mkdir(parents=True, exist_ok=True)
 
 
@@ -137,7 +159,21 @@ def main():
     for cn in ("AR01_Parts", "AR01_LOD1", "AR01_LOD2", "AR01_LOD3"):
         for o in bpy.data.collections[cn].objects:
             if o.type == "MESH":
-                UB.triangulate_keep_normals(o)
+                # the loop triangles every form gate measured (G5 holds); where they overlap or repeat a vertex
+                # (a concave n-gon's fill: dropping one leaves a 3-face edge) the part falls back to the bmesh split
+                keep = o.data.copy()
+                UB.triangulate_as_looptris(o)
+                if UB.nonmanifold_edges(o) > UB.nonmanifold_edges_of(keep):
+                    bad = o.data
+                    o.data = keep
+                    bpy.data.meshes.remove(bad)
+                    UB.triangulate_keep_normals(o)
+                    log("loop-triangle split not manifold, bmesh split used:", o.name)
+                else:
+                    bpy.data.meshes.remove(keep)
+                w, r = UB.fix_degenerates(o)       # qa: no 3-face edges from micron edges, no needle triangles
+                if w or r:
+                    log("degenerates fixed", o.name, "welded", w, "rotated", r)
                 ntri += 1
     log("triangulated", ntri, "objects")
     parts = {o.name: o for o in bpy.data.collections["AR01_Parts"].objects if o.type == "MESH"}
@@ -240,7 +276,11 @@ def main():
                 tris.append(r["luv"][T[lab[tf] == li]] * k)
                 gmeta[iid] = {"part": n, "cls": RS.CODE_CLASS[c], "k": k, "faces": faces}
         tp0 = time.time()
-        res = RPK.pack(tris, size, cfg["gap_px"][size], cfg["cell_px"][size], iters=8)
+        # density ceiling: px/cm of class c = 10 x scale x k_c (charts in mm), so the scale is capped at
+        # min_c(DENSITY_CEIL x band top_c / (10 k_c))
+        cap = min(RS.DENSITY_CEIL * cfg["bands"][c][1] / (10.0 * cfg["classes"][c] / ref) for c in cfg["classes"])
+        res = RPK.pack(tris, size, cfg["gap_px"][size], cfg["cell_px"][size], iters=8, scale_hi=cap)
+        sizes[st]["scale_cap_px_per_unit"] = round(cap, 4)
         log("pack", st, size, "islands", len(ids), "fill %.3f" % res["fill"], "%.1fs" % (time.time() - tp0))
         for iid, A in zip(ids, res["affine"]):
             aff_all[iid] = (A, gmeta[iid]["k"])
@@ -354,7 +394,7 @@ def main():
                     Ts.append(m["uv01"][T])
                     refs += [(on, int(f)) for f in tf]
                 TT = np.vstack(Ts)
-                pr = UC.overlap_pairs(TT, 0.5e-5, qa=True)
+                pr = qa_overlaps(TT, st, 0.5e-5)
                 if not len(pr):
                     break
                 area = 0.5 * np.abs((TT[:, 1, 0] - TT[:, 0, 0]) * (TT[:, 2, 1] - TT[:, 0, 1])
@@ -383,7 +423,7 @@ def main():
                 T, tf = m["pm"].tris()
                 Ts.append(m["uv01"][T])
             if Ts:
-                lod_overlaps[f"LOD{lv}/{st}"] = int(len(UC.overlap_pairs(np.vstack(Ts), 1e-5, qa=True)))
+                lod_overlaps[f"LOD{lv}/{st}"] = int(len(qa_overlaps(np.vstack(Ts), st, 1e-5)))
     # mirrored (flipped) UV triangles on LOD0 and the UV0 range of every LOD's parts (the skeletal layout: 0..1)
     flipped, umin, umax = 0, np.array([9.0, 9.0]), np.array([-9.0, -9.0])
     for n, o in parts.items():
@@ -410,7 +450,7 @@ def main():
             T, tf = pm.tris()
             Ts.append(uv[T])
         if Ts:
-            lod0_overlaps[st] = int(len(UC.overlap_pairs(np.vstack(Ts), 1e-5, qa=True)))   # qa_check's own rules
+            lod0_overlaps[st] = int(len(qa_overlaps(np.vstack(Ts), st, 1e-5)))   # qa_check's own rules (UV0 + UV1)
     # ---------------------------------------------------------------- report
     out_sets = {}
     for st, d in stats.items():

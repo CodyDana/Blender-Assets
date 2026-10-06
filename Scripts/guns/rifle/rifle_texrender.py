@@ -106,16 +106,18 @@ def unit(v):
 
 
 def realism_shots():
-    sl = SPEC.key["sight_line"]
-    notch, post = np.array(sl["notch_M"], float), np.array(sl["post_tip_M"], float)
-    d_spec = unit(post - notch)
-    top = notch + np.array([0.0, 0.0, 48.0 - notch[2]])
-    d_top = unit(post - top)
+    """The realism judge's four views, the same cameras as rifle_realism.py (review/realism_form4): first person 35 cm,
+    ADS from the Sight socket (B4 / R48: 0.25 m behind the socket on its line, notch top -> post tip), third person
+    3 m, hero 3/4."""
+    soc = {s["socket"]: s for s in SPEC.sockets["rifle"]}["Sight"]
+    p = math.radians(soc["unreal_rotation_deg"]["pitch"])
+    d = np.array([math.cos(p), 0.0, math.sin(p)])
+    sight = np.array(soc["M_mm"], float)
+    post = np.array(SPEC.key["sight_line"]["post_tip_M"], float)
     fp_eye = np.array([350.0, 0.0, 0.0]) + 350.0 * unit([-0.93, 0.22, 0.30])
     hero_t = np.array([450.0, 0.0, -20.0])
     return [("fp_35cm", fp_eye, np.array([620.0, 0.0, 10.0]), 70.0, 1.1),
-            ("ads_spec_line", notch - 250.0 * d_spec, post, 55.0, 1.1),
-            ("ads_notch_top_hold", top - 250.0 * d_top, post, 55.0, 1.1),
+            ("ads_55deg", sight - 250.0 * d, post, 55.0, 1.1),
             ("tp_3m", hero_t + 3000.0 * unit([-0.45, -0.85, 0.28]), hero_t, 60.0, 3.2),
             ("hero_34", hero_t + 1500.0 * unit([0.55, -0.78, 0.30]), hero_t, 38.0, 1.6)]
 
