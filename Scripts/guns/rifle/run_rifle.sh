@@ -37,6 +37,9 @@ py -3 -B "$HERE/rifle_q34_sweep.py" --npz "$W/scratch/form_tris.npz" > /dev/null
 [ $SKIPB3 = 1 ] || run_blender b3 "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_b3.py"
 run_blender b6a "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_b6a.py"
 run_blender measure "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_measure.py"
+# magazine fit at the form stage (R51 loop-back): the M-gate geometry on the LOD0 parts -> gates/form_magfit.json
+run_blender magfit "$ROOT/Assets/Guns/AR01.blend" --python "$HERE/rifle_magfit_check.py"
+grep -E "AR01-magfit\] (PASS|FAIL|MAGFIT)" "$LOG/magfit.log" | cut -c1-160
 # B4 sight picture (form realism round): occlusion-aware raster of the ADS view from the Sight socket
 py -3 -B "$HERE/rifle_b4.py" > "$LOG/b4.log" 2>&1 || { echo "FAILED b4"; tail -20 "$LOG/b4.log"; exit 1; }
 run_blender h1 "$ROOT/References/Characters/MH_PlayerDefault/MH_PlayerDefault_FitBody.blend" --python "$HERE/rifle_h1.py"

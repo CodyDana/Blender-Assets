@@ -131,6 +131,18 @@ and possibly Fab, as GUN_BUILDING_STUDY 1.1 sets it:
 
 ### 2.3 Magazine frame and the reload path
 
+> **R51 (magazine-fit loop-back, 2026-10-06) supersedes the numbers below.** The rock pivot (`Mag` socket, the
+> magazine origin) is on the front spine at M (426.7, 0, -28.0) = rifle frame (+163.52, 0, +50.54), 1.85 mm above the
+> bottom sheet's inside face, and θ = 8° (MagInsertStart M (427.81, 0, -35.92)): the visible well seam is the distance
+> the front spine moves at the sheet over the path (5.3 mm with the old hook at Z -16 and 18°, 0.43 mm now), while the
+> lug's hook tab, 11.5 mm above the pivot, still swings 1.6 mm forward over the front trunnion's ledge. The front
+> trunnion block, the lug pocket / tab channel / ledge / roof (front top stop), the well's front and rear edges and the
+> catch nose are cut from the magazine's swept envelope over the path plus the clearance rows
+> (`Scripts/guns/rifle/rifle_magfit.py`); the form stage runs the M-gate geometry (`rifle_magfit_check.py` ->
+> `gates/form_magfit.json`, part of `gates/form.json`). θ is no longer "the rear corner clears the catch by 2 mm": at
+> 8° the rear lug is 1.5 mm in front of the catch's face and ~8 mm under its nose (2.6 mm at MagInsertStart); it
+> rides the spring catch only in the last 1.25° (M4 allowance: <= 3 mm, last <= 6°; measured 0.04 mm).
+
 - **Mag origin = the front-lug hook point** (spec M (429.0, 0, -16.0) = rifle frame (+165.82, 0, +62.54), *provisional*
   ± 5 mm). When seated, that point equals the rifle's `Mag` socket [was `MagWell`], with identical axes. So the seated
   mag is attached at `Mag` with **zero relative transform** (SnapToTarget).

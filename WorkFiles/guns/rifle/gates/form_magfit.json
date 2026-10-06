@@ -1,0 +1,196 @@
+{
+ "stage": "2 form: magazine fit (R51 loop-back)",
+ "blend": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Assets\\Guns\\AR01.blend",
+ "path": {
+  "pivot_M": [
+   426.7,
+   -28.0
+  ],
+  "rock_deg": 8.0,
+  "insert_mm": 7.9974,
+  "approach_mm": 14.0
+ },
+ "design": {
+  "pivot_M": [
+   426.7,
+   -28.0
+  ],
+  "rock_deg": 8.0,
+  "insert_mm": 7.9974,
+  "front_sweep_at_sheet_mm": {
+   "outer": 0.4271,
+   "mid": 0.3521,
+   "inner": 0.277
+  },
+  "front_seam_at_sheet_mm": {
+   "outer": 0.4871,
+   "mid": 0.4121,
+   "inner": 0.337
+  },
+  "pocket_roof_Z": -15.008,
+  "ledge_top_Z": -17.85,
+  "ledge_rear_X": 427.426,
+  "hook_over_ledge_mm": 1.174,
+  "body_roof_Z": -16.75,
+  "well_front_points": 18,
+  "pocket_points": 10,
+  "channel_front_at_sheet_X": 429.253,
+  "spine_at_sheet_X": 427.254
+ },
+ "gates": [
+  {
+   "name": "F1 (M1) seated: intersecting triangle pairs, magazine vs the rifle (LOD0)",
+   "value": {
+    "pairs": 0,
+    "parts": []
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "F2 (M2) top stop; seam at the well's lower edge (M2 sections)",
+   "value": {
+    "top_stop_gap_mm": 0.2958,
+    "top_stop_from_M": [
+     428.0,
+     -3.79,
+     -15.4
+    ],
+    "seam": {
+     "front": {
+      "gap_mm": 0.2843,
+      "at_Z_M": -29.5
+     },
+     "rear": {
+      "gap_mm": 0.4,
+      "at_Z_M": -30.8
+     },
+     "left": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.6
+     },
+     "right": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.6
+     }
+    },
+    "visible_edge_at_outer_face": {
+     "front, outside the lug channel": 0.4552,
+     "front, lug channel": 1.9651,
+     "front_at_Z_M": -30.73,
+     "rear (receiver sheet behind the opening)": 0.5641,
+     "rear_at_Z_M": -29.16,
+     "rear down the guard tab (Z: gap)": {
+      "-29.6": 0.406,
+      "-30.5": 0.4,
+      "-31.5": 0.492,
+      "-32.5": 0.639,
+      "-33.5": 0.785,
+      "-34.5": 0.931
+     }
+    }
+   },
+   "threshold": "top stop 0.1-0.5 mm; seam <= 0.6 mm (clearance table visible seam 0.2-0.8)",
+   "pass": true,
+   "note": "the lug channel (the real pattern's slot for the front lug at the front of the well, TAB_HW wide) is reported separately: the hook tab rises through it from under the receiver"
+  },
+  {
+   "name": "F3 (M3) lateral per side; front lug in its recess; rear lug to the catch",
+   "value": {
+    "lateral_mm": {
+     "left": 0.2,
+     "right": 0.2
+    },
+    "front_lug_to_nearest_rifle_mm (M3 selection)": 0.1873,
+    "hook_tab_to_its_pocket_mm": 0.2087,
+    "rear_lug_to_catch_mm": 0.2
+   },
+   "threshold": "0.2-0.6; 0.1-0.4; 0.0-0.3 mm",
+   "pass": true
+  },
+  {
+   "name": "F4 (M4/M5) reload path: insert 0.5 mm, rock 0.25 deg (+ the approach from under the receiver)",
+   "value": {
+    "steps": {
+     "approach": 56,
+     "insert": 16,
+     "rock": 33
+    },
+    "intersecting_steps": {
+     "approach": 0,
+     "insert": 0,
+     "rock": 3
+    },
+    "catch_contacts": [
+     {
+      "phase": "rock",
+      "rock_deg": 1.25,
+      "insert_mm": 0.0,
+      "pairs": 8,
+      "depth_mm": 0.003
+     },
+     {
+      "phase": "rock",
+      "rock_deg": 1.0,
+      "insert_mm": 0.0,
+      "pairs": 17,
+      "depth_mm": 0.043
+     },
+     {
+      "phase": "rock",
+      "rock_deg": 0.75,
+      "insert_mm": 0.0,
+      "pairs": 8,
+      "depth_mm": 0.002
+     }
+    ],
+    "other_contacts": []
+   },
+   "threshold": "0 intersections on insert + rock except the rear lug on the catch nose (<= 3.0 mm, last <= 6 deg); approach reported (0 expected)",
+   "pass": true
+  },
+  {
+   "name": "F4b (info) the reload clip's vertical drop into MagInsertStart (last 40 mm, 0.5 mm steps)",
+   "value": {
+    "steps": 81,
+    "intersecting_steps": 0,
+    "first": []
+   },
+   "threshold": "reported (0 expected)",
+   "pass": true
+  },
+  {
+   "name": "F5 catch release sweep 0-10 deg with the magazine seated",
+   "value": {
+    "steps": 41,
+    "intersecting_steps": 0
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "F8 (M8, info) straight vertical insert without the rock",
+   "value": {
+    "colliding_steps": 35,
+    "first": [
+     [
+      17.5,
+      17
+     ],
+     [
+      17.0,
+      19
+     ],
+     [
+      16.5,
+      21
+     ]
+    ]
+   },
+   "threshold": "reported (expected to collide)",
+   "pass": true
+  }
+ ],
+ "failed": [],
+ "status": "pass"
+}

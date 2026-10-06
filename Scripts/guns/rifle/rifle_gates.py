@@ -166,6 +166,13 @@ def stage_form():
     gates.append(g("B6a joined twin: qa_check topology + degenerate checks", b6["passed"], "all pass", b6["passed"],
                    "; ".join("%s: %s" % (c["name"], c["detail"]) for c in b6["checks"]) + "; UV: " + b6["uv_checks"]))
     gates.append(g("B10 tokenised gun deny list on every object name", b6["deny_list_clean"], "clean", b6["deny_list_clean"]))
+    # R51 loop-back: the magazine fit's M-gate geometry on the LOD0 parts (rifle_magfit_check.py)
+    mf = load(GATES / "form_magfit.json")
+    if mf:
+        for x in mf["gates"]:
+            gates.append(g("MAGFIT " + x["name"], x["value"], x["threshold"], x["pass"], x.get("note", "")))
+    else:
+        gates.append(g("MAGFIT magazine fit at the form stage", "not run", "gates/form_magfit.json", False))
     closed = [k for k, v in rep.items() if v["boundary_edges"] or v["multi_face_edges"]]
     gates.append(g("B7 closed manifold parts", "%d / %d closed" % (len(rep) - len(closed), len(rep)), "all", not closed,
                    ", ".join(closed)))

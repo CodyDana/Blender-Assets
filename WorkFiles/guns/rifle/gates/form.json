@@ -1,12 +1,12 @@
 {
  "stage": "2 form",
- "date": "2026-10-05T22:12:18",
+ "date": "2026-10-06T01:22:59",
  "status": "pass",
  "failed": [],
  "gates": [
   {
    "name": "L2 side IoU (authority, rifle + seated mag)",
-   "value": 0.9765,
+   "value": 0.9758,
    "threshold": ">= 0.96",
    "pass": true
   },
@@ -18,7 +18,7 @@
   },
   {
    "name": "L2 true-left vs RIGHT-labelled panel",
-   "value": 0.9189,
+   "value": 0.9184,
    "threshold": ">= 0.88",
    "pass": true
   },
@@ -140,7 +140,7 @@
   },
   {
    "name": "G5 butt-joint gaps (no vertex of one part within 1 micron of another; modelled 0.01-0.05)",
-   "value": "min 0.0149 mm over 37 contact pairs",
+   "value": "min 0.0161 mm over 37 contact pairs",
    "threshold": ">= 0.01 (0.009 sampling)",
    "pass": true
   },
@@ -161,12 +161,164 @@
    "value": true,
    "threshold": "all pass",
    "pass": true,
-   "note": "no_ngons: 0 n-gon(s) of 34341 faces; no_non_manifold_edges: 0 edge(s) with more than 2 faces, 0 wire edge(s), of 61180; open_boundary_edges: 0 boundary edge(s) of 61180 (informational: open meshes are allowed); no_loose_vertices: 0 loose vertex/vertices of 26893; no_zero_length_edges: 0 edge(s) at or below 1e-06 of 61180; shortest 2.14591e-06; no_degenerate_faces: 0 face(s) at or below 1e-12 area of 34341; smallest 1.01766e-11; no_coincident_vertices: 0 vertex pair(s) within 1e-06 of 26893; UV: n/a until stage 3 (no UVs yet); B6a re-runs with uv_no_overlap once UVs exist"
+   "note": "no_ngons: 0 n-gon(s) of 34558 faces; no_non_manifold_edges: 0 edge(s) with more than 2 faces, 0 wire edge(s), of 61564; open_boundary_edges: 0 boundary edge(s) of 61564 (informational: open meshes are allowed); no_loose_vertices: 0 loose vertex/vertices of 27060; no_zero_length_edges: 0 edge(s) at or below 1e-06 of 61564; shortest 2.14591e-06; no_degenerate_faces: 0 face(s) at or below 1e-12 area of 34558; smallest 1.01766e-11; no_coincident_vertices: 0 vertex pair(s) within 1e-06 of 27060; UV: n/a until stage 3 (no UVs yet); B6a re-runs with uv_no_overlap once UVs exist"
   },
   {
    "name": "B10 tokenised gun deny list on every object name",
    "value": true,
    "threshold": "clean",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT F1 (M1) seated: intersecting triangle pairs, magazine vs the rifle (LOD0)",
+   "value": {
+    "pairs": 0,
+    "parts": []
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT F2 (M2) top stop; seam at the well's lower edge (M2 sections)",
+   "value": {
+    "top_stop_gap_mm": 0.2958,
+    "top_stop_from_M": [
+     428.0,
+     -3.79,
+     -15.4
+    ],
+    "seam": {
+     "front": {
+      "gap_mm": 0.2843,
+      "at_Z_M": -29.5
+     },
+     "rear": {
+      "gap_mm": 0.4,
+      "at_Z_M": -30.8
+     },
+     "left": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.6
+     },
+     "right": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.6
+     }
+    },
+    "visible_edge_at_outer_face": {
+     "front, outside the lug channel": 0.4552,
+     "front, lug channel": 1.9651,
+     "front_at_Z_M": -30.73,
+     "rear (receiver sheet behind the opening)": 0.5641,
+     "rear_at_Z_M": -29.16,
+     "rear down the guard tab (Z: gap)": {
+      "-29.6": 0.406,
+      "-30.5": 0.4,
+      "-31.5": 0.492,
+      "-32.5": 0.639,
+      "-33.5": 0.785,
+      "-34.5": 0.931
+     }
+    }
+   },
+   "threshold": "top stop 0.1-0.5 mm; seam <= 0.6 mm (clearance table visible seam 0.2-0.8)",
+   "pass": true,
+   "note": "the lug channel (the real pattern's slot for the front lug at the front of the well, TAB_HW wide) is reported separately: the hook tab rises through it from under the receiver"
+  },
+  {
+   "name": "MAGFIT F3 (M3) lateral per side; front lug in its recess; rear lug to the catch",
+   "value": {
+    "lateral_mm": {
+     "left": 0.2,
+     "right": 0.2
+    },
+    "front_lug_to_nearest_rifle_mm (M3 selection)": 0.1873,
+    "hook_tab_to_its_pocket_mm": 0.2087,
+    "rear_lug_to_catch_mm": 0.2
+   },
+   "threshold": "0.2-0.6; 0.1-0.4; 0.0-0.3 mm",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT F4 (M4/M5) reload path: insert 0.5 mm, rock 0.25 deg (+ the approach from under the receiver)",
+   "value": {
+    "steps": {
+     "approach": 56,
+     "insert": 16,
+     "rock": 33
+    },
+    "intersecting_steps": {
+     "approach": 0,
+     "insert": 0,
+     "rock": 3
+    },
+    "catch_contacts": [
+     {
+      "phase": "rock",
+      "rock_deg": 1.25,
+      "insert_mm": 0.0,
+      "pairs": 8,
+      "depth_mm": 0.003
+     },
+     {
+      "phase": "rock",
+      "rock_deg": 1.0,
+      "insert_mm": 0.0,
+      "pairs": 17,
+      "depth_mm": 0.043
+     },
+     {
+      "phase": "rock",
+      "rock_deg": 0.75,
+      "insert_mm": 0.0,
+      "pairs": 8,
+      "depth_mm": 0.002
+     }
+    ],
+    "other_contacts": []
+   },
+   "threshold": "0 intersections on insert + rock except the rear lug on the catch nose (<= 3.0 mm, last <= 6 deg); approach reported (0 expected)",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT F4b (info) the reload clip's vertical drop into MagInsertStart (last 40 mm, 0.5 mm steps)",
+   "value": {
+    "steps": 81,
+    "intersecting_steps": 0,
+    "first": []
+   },
+   "threshold": "reported (0 expected)",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT F5 catch release sweep 0-10 deg with the magazine seated",
+   "value": {
+    "steps": 41,
+    "intersecting_steps": 0
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT F8 (M8, info) straight vertical insert without the rock",
+   "value": {
+    "colliding_steps": 35,
+    "first": [
+     [
+      17.5,
+      17
+     ],
+     [
+      17.0,
+      19
+     ],
+     [
+      16.5,
+      21
+     ]
+    ]
+   },
+   "threshold": "reported (expected to collide)",
    "pass": true
   },
   {
@@ -177,14 +329,14 @@
   },
   {
    "name": "B8 LOD0 triangles, rifle (target 30-45k, ceiling 50k)",
-   "value": 46714,
+   "value": 47278,
    "threshold": "<= 50000 (target <= 45000)",
    "pass": true,
    "note": "above the 45k target"
   },
   {
    "name": "B8 magazine block-in triangles (target 4.5k, ceiling 7k)",
-   "value": 6964,
+   "value": 6734,
    "threshold": "<= 7000",
    "pass": true
   },
@@ -224,26 +376,26 @@
   "silhouette": {
    "stage": "form",
    "npz": "form_tris.npz",
-   "triangles": 53678,
+   "triangles": 54012,
    "views": {
     "side": {
      "iou_identity": 0.9758,
-     "iou_fit": 0.9765,
+     "iou_fit": 0.9758,
      "fit_params_s_rotdeg_tx_ty": [
-      -0.0007464118640595051,
-      0.011702674143941178,
-      0.022441738802590774,
-      0.05570493932426794
+      0.0,
+      0.0,
+      0.0,
+      0.0
      ],
      "contour_px": {
       "p50": 0.0,
       "p95": 1.0,
       "max": 6.0,
-      "n": 5123
+      "n": 5120
      },
-     "ours_px": 45391,
+     "ours_px": 45397,
      "ref_px": 44899,
-     "magazine_iou": 0.8473,
+     "magazine_iou": 0.8469,
      "rifle_without_mag_iou": 0.9708,
      "parts": {
       "receiver": {
@@ -386,12 +538,12 @@
       },
       "mag_catch": {
        "area_px": 222.9,
-       "iou": 0.9609,
+       "iou": 0.9565,
        "contour_p95_px": 1.0,
-       "contour_max_px": 1.414,
+       "contour_max_px": 2.0,
        "contour_unfilled_p95_px": 1.0,
-       "contour_unfilled_max_px": 1.414,
-       "iou_filled": 0.9609,
+       "contour_unfilled_max_px": 2.0,
+       "iou_filled": 0.9565,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
@@ -432,7 +584,7 @@
       },
       "magazine": {
        "area_px": 6135.2,
-       "iou": 0.9688,
+       "iou": 0.9677,
        "contour_p95_px": 1.414,
        "contour_max_px": 2.828,
        "rule": "IoU >= 0.95",
@@ -459,13 +611,13 @@
      }
     },
     "left_vs_RIGHT_panel": {
-     "iou_identity": 0.8626,
-     "iou_fit": 0.9189,
+     "iou_identity": 0.8627,
+     "iou_fit": 0.9184,
      "fit_params_s_rotdeg_tx_ty": [
-      -0.007739054404187293,
-      -0.04640775306291853,
-      8.130805714774318,
-      -0.4014864661930868
+      -0.010046866306215143,
+      -0.04151209744299955,
+      8.298384745786985,
+      -0.607925322042125
      ],
      "note": "orthographic silhouettes from +Y and -Y are identical; this measures the sheet's left panel drawing (self-IoU 0.893)"
     }
@@ -1767,9 +1919,9 @@
       "rest_nearest": "receiver_rails",
       "end_clearance_mm": 0.25,
       "end_nearest": "receiver_rails",
-      "seconds": 81.9,
+      "seconds": 84.3,
       "moving_samples": 254624,
-      "fixed_samples": 694592,
+      "fixed_samples": 733425,
       "row_mm": [
        0.15,
        0.4
@@ -1832,9 +1984,9 @@
       "rest_nearest": "receiver",
       "end_clearance_mm": 0.1749,
       "end_nearest": "rivets",
-      "seconds": 53.9,
+      "seconds": 53.7,
       "moving_samples": 67853,
-      "fixed_samples": 214074,
+      "fixed_samples": 214686,
       "row_mm": [
        0.1,
        0.3
@@ -1854,20 +2006,20 @@
        0.0,
        10.0
       ],
-      "step": 0.2878063693422135,
+      "step": 0.2878063689364179,
       "intersecting_steps": 0,
       "max_intersections": 0,
       "parts_hit": [],
       "min_clearance_mm": 0.1791,
-      "min_at": 2.5902573240799214,
+      "min_at": 2.5902573204277615,
       "min_with": "trigger_guard",
       "rest_clearance_mm": 0.1811,
       "rest_nearest": "trigger_guard",
       "end_clearance_mm": 0.1793,
       "end_nearest": "trigger_guard",
-      "seconds": 4.3,
-      "moving_samples": 46946,
-      "fixed_samples": 95654,
+      "seconds": 4.2,
+      "moving_samples": 45334,
+      "fixed_samples": 91550,
       "row_mm": [
        0.1,
        0.3
@@ -1950,7 +2102,7 @@
     {
      "a": "magazine",
      "b": "receiver",
-     "min_gap_mm": 0.2
+     "min_gap_mm": 0.1882
     },
     {
      "a": "barrel",
@@ -1995,7 +2147,7 @@
     {
      "a": "receiver",
      "b": "rivets",
-     "min_gap_mm": 0.0149
+     "min_gap_mm": 0.018
     },
     {
      "a": "receiver",
@@ -2065,7 +2217,7 @@
     {
      "a": "mag_catch",
      "b": "magazine",
-     "min_gap_mm": 0.25
+     "min_gap_mm": 0.2
     },
     {
      "a": "rivets",
@@ -2158,49 +2310,49 @@
   "B6a": {
    "object": "SM_AR01_B6aCheck",
    "parts": 37,
-   "triangles": 53678,
+   "triangles": 54012,
    "checks": [
     {
      "name": "no_ngons",
      "object": "SM_AR01_B6aCheck",
      "passed": true,
-     "detail": "0 n-gon(s) of 34341 faces"
+     "detail": "0 n-gon(s) of 34558 faces"
     },
     {
      "name": "no_non_manifold_edges",
      "object": "SM_AR01_B6aCheck",
      "passed": true,
-     "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 61180"
+     "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 61564"
     },
     {
      "name": "open_boundary_edges",
      "object": "SM_AR01_B6aCheck",
      "passed": true,
-     "detail": "0 boundary edge(s) of 61180 (informational: open meshes are allowed)"
+     "detail": "0 boundary edge(s) of 61564 (informational: open meshes are allowed)"
     },
     {
      "name": "no_loose_vertices",
      "object": "SM_AR01_B6aCheck",
      "passed": true,
-     "detail": "0 loose vertex/vertices of 26893"
+     "detail": "0 loose vertex/vertices of 27060"
     },
     {
      "name": "no_zero_length_edges",
      "object": "SM_AR01_B6aCheck",
      "passed": true,
-     "detail": "0 edge(s) at or below 1e-06 of 61180; shortest 2.14591e-06"
+     "detail": "0 edge(s) at or below 1e-06 of 61564; shortest 2.14591e-06"
     },
     {
      "name": "no_degenerate_faces",
      "object": "SM_AR01_B6aCheck",
      "passed": true,
-     "detail": "0 face(s) at or below 1e-12 area of 34341; smallest 1.01766e-11"
+     "detail": "0 face(s) at or below 1e-12 area of 34558; smallest 1.01766e-11"
     },
     {
      "name": "no_coincident_vertices",
      "object": "SM_AR01_B6aCheck",
      "passed": true,
-     "detail": "0 vertex pair(s) within 1e-06 of 26893"
+     "detail": "0 vertex pair(s) within 1e-06 of 27060"
     }
    ],
    "passed": true,
@@ -2581,9 +2733,9 @@
     },
     {
      "dimension": "receiver_width_walls",
-     "measured": 41.506,
+     "measured": 41.502,
      "spec": 41.5,
-     "error_mm": 0.006,
+     "error_mm": 0.002,
      "pass": true,
      "how": "receiver bounds Y"
     },
@@ -2605,17 +2757,17 @@
     },
     {
      "dimension": "receiver_bottom_Z",
-     "measured": -28.808,
+     "measured": -28.809,
      "spec": -28.8,
-     "error_mm": 0.008,
+     "error_mm": 0.009,
      "pass": true,
      "how": "mean wall-bottom Z over X 433-484 (the traced line)"
     },
     {
      "dimension": "receiver_height_incl_cover",
-     "measured": 61.508,
+     "measured": 61.509,
      "spec": 61.5,
-     "error_mm": 0.008,
+     "error_mm": 0.009,
      "pass": true,
      "how": "crown - mean bottom ahead of the well"
     },
@@ -2859,7 +3011,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 3738,
+    "triangles": 4310,
     "shells": 1
    },
    "rear_trunnion": {
@@ -3119,7 +3271,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 292,
+    "triangles": 284,
     "shells": 1
    },
    "pistol_grip": {
@@ -3209,7 +3361,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 5940,
+    "triangles": 5710,
     "shells": 1
    },
    "magazine_floor_plate": {

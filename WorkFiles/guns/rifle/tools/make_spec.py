@@ -193,10 +193,16 @@ MAG_T = 26.0
 
 # ---- magazine pivot (front-lug hook) and reload path
 REC_BOT = D["receiver"]["bottom_Z"]["mm"]                                # -28.8
-HOOK_Z = -16.0                                                          # inside the well, under the carrier (fit stage sets it)
+# R51 (mag-fit loop-back, 2026-10-06): the rock pivot sits ON the front spine 1.85 mm above the bottom sheet's inside
+# face (was the lug tip at Z -16, 4 mm ahead of the spine) and the rock is 8 deg (was 18): the spine then moves
+# <= 0.45 mm at the visible sheet line over the whole path (the well seam), while the lug's hook 11.5 mm higher still
+# swings 1.6 mm forward over the front trunnion's ledge (Scripts/guns/rifle/rifle_magfit.py)
+HOOK_Z = -28.0
 x_front_at_hook = MC[0] - math.sqrt(R_IN ** 2 - (HOOK_Z - MC[1]) ** 2)
-HOOK = np.array([round(x_front_at_hook + 4.0, 1), HOOK_Z])              # lug tip 4 mm ahead of the front spine
-ROCK = 18.0
+HOOK = np.array([round(x_front_at_hook, 1), HOOK_Z])                    # on the front spine (rock pivot)
+ROCK = 8.0
+LIPS_Z = -12.0                       # the lips top (was written as HOOK_Z + 4 while the hook sat at Z -16)
+LUG_REF_X = 429.0                    # the front lug's tip X (old hook): the well's nominal front and the Feed socket X
 INSERT_D = 8.0
 rr = math.radians(ROCK)
 INSERT = HOOK + INSERT_D * np.array([math.sin(rr), -math.cos(rr)])
@@ -278,7 +284,7 @@ def bounds_r(x0, x1, y0, y1, z0, z1):
 
 R_RIFLE = bounds_r(0, 880, CH_TIP_Y, W_COVER / 2, D["overall"]["bottom_Z_without_mag"]["mm"], D["overall"]["top_Z"]["mm"])
 R_RIFLE_MAG = bounds_r(0, 880, CH_TIP_Y, W_COVER / 2, D["overall"]["bottom_Z_with_mag"]["mm"], D["overall"]["top_Z"]["mm"])
-R_MAG = bounds_r(MAG["X"][0], MAG["X"][1] + 4, -MAG_T / 2, MAG_T / 2, MAG["Z"][0], HOOK_Z + 4)
+R_MAG = bounds_r(MAG["X"][0], MAG["X"][1] + 4, -MAG_T / 2, MAG_T / 2, MAG["Z"][0], LIPS_Z)
 SS_RIFLE = [1.0, 0.30, 0.12, 0.04]
 SS_MAG = [1.0] + [round(s * R_MAG / R_RIFLE, 4) for s in SS_RIFLE[1:]]
 
@@ -360,8 +366,8 @@ part(id="receiver", display="Receiver (stamped shell, front trunnion)", bone="bo
          {"name": "ejection_port", "side": "right", "X": [338.0, 452.0], "Z": [3.0, 17.0], "conf": "low-medium (+-3 mm; "
           "blurred)", "note": "through the wall and the cover skirt; 1 mm wall reveal; dark interior; the carrier fills the "
           "front 2/3 (X 378-450); must also clear the full bolt travel (B3)"},
-         {"name": "magazine_well", "X": [round(MAG["X"][0] - 0.9, 1), round(HOOK[0] + 3.0, 1)], "width_Y": MAG_T + 1.0,
-          "depth_above_bottom": round(HOOK_Z + 4 - REC_BOT, 1), "note": "fitted to the exported mag (lateral 0.2-0.6 mm, lug "
+         {"name": "magazine_well", "X": [round(MAG["X"][0] - 0.9, 1), round(LUG_REF_X + 3.0, 1)], "width_Y": MAG_T + 1.0,
+          "depth_above_bottom": round(LIPS_Z - REC_BOT, 1), "note": "fitted to the exported mag (lateral 0.2-0.6 mm, lug "
           "recess 0.1-0.4); front lug recess at the front wall, catch notch at the rear; interior reload-visible (class E)"},
          {"name": "side_dimple", "side": "both", "centre_XZ": [397.0, -17.0], "size": [18.0, 11.0], "depth": 1.0,
           "note": "pressed oval, 1 mm soft fillet; right reads (395,-17), left (395,-19.5) after the RIGHT-panel shift"},
@@ -728,10 +734,10 @@ part(id="magazine_body", asset=MAGT, display="Magazine body", bone="magazine (at
      joint={"type": "seated_mag", "parent": "receiver", "clearance_mm": {"lateral": [0.2, 0.6], "top_stop": [0.1, 0.5],
                                                                           "lug": [0.1, 0.4]}},
      slot=SLOT_MAG, finish=F_MAG, texel_class="C",
-     box_M={"X": [MAG["X"][0], MAG["X"][1]], "Z": [MAG["Z"][0], HOOK_Z + 4.0], "Y": [-MAG_T / 2, MAG_T / 2]},
+     box_M={"X": [MAG["X"][0], MAG["X"][1]], "Z": [MAG["Z"][0], LIPS_Z], "Y": [-MAG_T / 2, MAG_T / 2]},
      dims={"arc_centre_M": MC.tolist(), "R_front_concave": R_IN, "R_rear_convex": R_OUT,
            "width_front_to_rear": MAG["width_front_to_rear_radial"]["mm"], "thickness_Y": MAG_T,
-           "visible_top_Z": MAG["top_Z_receiver_cut"]["mm"], "lips_top_Z": HOOK_Z + 4.0,
+           "visible_top_Z": MAG["top_Z_receiver_cut"]["mm"], "lips_top_Z": LIPS_Z,
            "angles_deg_about_centre": {"top_mid": round(A_TOP, 2), "floor_rear": round(A_BOT_OUT, 2), "floor_front": round(A_BOT_IN, 2)},
            "sweep_deg": MAG["arc_sweep_deg"], "length_along_centre_arc": MAG["length_along_centre_arc"]["mm"],
            "floor_rear_corner_M": r1(FLOOR_REAR, 1), "floor_front_corner_M": r1(FLOOR_FRONT, 1)},
@@ -775,7 +781,7 @@ part(id="magazine_lugs", asset=MAGT, display="Front locking lug (pivot) and rear
 
 part(id="magazine_lips_follower", asset=MAGT, display="Feed lips and follower (empty)", bone="magazine (attach only)",
      process="S-bend", joint={"type": "integral", "parent": "magazine_body"}, slot=SLOT_MAG, finish=F_MAG, texel_class="E",
-     box_M=None, dims={"lips_top_Z": HOOK_Z + 4.0},
+     box_M=None, dims={"lips_top_Z": LIPS_Z},
      construction="Lips folded inward at the top, plain dark follower; no cartridge (the sheet shows none).",
      features=[], wear="lip edges bright", trace=None, authority="c5", confidence="medium", sources=["craft"])
 
@@ -1150,6 +1156,18 @@ dp2("magazine_lugs", "magazine",
           "rear_lug_built": "rounded block from X 368.55, Z -39.6..-36.4, Y +-5.5, under the guard tang, 0.26 in front "
                             "of the catch at rest"},
     note="magazine r2b as built; the higher c4 rear knob and the chunky front lug still need the liner changes (R43)")
+dp2("magazine_lugs", "magazine",
+    dims={"front_lug": "R51: body plate X 421.0-426.1 (0.9 / 0.26 in front of the spine), Z -21.3..-17.6, Y +-5.2, a "
+                       "window pocket in its front; HOOK TAB on top X 422.6-428.6, Z -17.6..-15.4, Y +-4.0 (2.6 in "
+                       "front of the body): at the seat it sits 0.2 over the front trunnion's ledge, 0.3 under its "
+                       "roof (the front top stop)",
+          "rock_pivot_M": "R51: (426.7, -28.0) on the front spine (the Mag socket); rock 8 deg",
+          "front_knobs": "R51: the pin heads stand on the side faces only (centre 1.4 behind the spine), Z -19.6 / -23.6",
+          "rear_lug_built": "R51: block X 367.3-373.0 (2.0 behind the rear spine), Z -37.85..-35.2, Y +-3.3 (between the "
+                            "guard's catch cheeks), flat bottom 0.2 over the catch's nose (an arc r 13 about the pin)",
+          "rear_step": "R51: under the receiver's ledge the rear face steps from 369.3 back to 368.3 (Z -29.36..-29.6)",
+          "spine_beads_top_Z": -31.8},
+    note="R51 magazine-fit loop-back (Scripts/guns/rifle/rifle_magfit.py)")
 dp2("butt_plate", "butt_plate",
     dims={"end_outline": "c7's end shapes fitted at the plate's own width (distance from the tip and half width in "
                          "plate widths, END_FIT concave model); section sampled densely, simplified at 0.05 mm",
@@ -1212,7 +1230,7 @@ mag_sockets = [
           src="hook point", plan_name="Attach"),
     msock("HandReload", [round(float(MAG_MID[0]), 2), MAG_T / 2, round(float(MAG_MID[1]), 2)],
           use="left palm on the body (left face); hand_l relative = inverse", src="mid-arc point on the left face"),
-    msock("Feed", [round((MAG["X"][0] + HOOK[0]) / 2, 2), 0.0, HOOK_Z + 4.0], use="top centre of the lips", src="lips top"),
+    msock("Feed", [round((MAG["X"][0] + LUG_REF_X) / 2, 2), 0.0, LIPS_Z], use="top centre of the lips", src="lips top"),
     msock("Base", [round(float(MAG_BASE_SOCK[0]), 2), 0.0, round(float(MAG_BASE_SOCK[1]), 2)],
           rot={"roll": 0.0, "pitch": round(math.degrees(math.atan2(FLOOR_NORMAL[1], FLOOR_NORMAL[0])), 3), "yaw": 0.0},
           use="floor plate centre, +X = outward normal; impact FX / ground contact", src="floor plate corners from the trace, 1.4 mm out along the normal (detail-pass floor plate, R42)"),
@@ -1223,7 +1241,7 @@ mag_sockets = [
 # ================================================================================================== spec
 spec = {
     "meta": {
-        "name": "Assault Rifle AR-01", "code": "AR01", "version": "1.3", "date": "2026-10-05",
+        "name": "Assault Rifle AR-01", "code": "AR01", "version": "1.4", "date": "2026-10-06",
         "assets": {"skeletal": "SK_AR01 (+ _LOD1..3, SK_AR01_Skeleton, PHYS_AR01, clips A_AR01_*)",
                    "static_twin": "SM_AR01 (mag merged by default, gun study Q3)", "magazine": "SM_AR01_Mag"},
         "units": "millimetres (Blender builds in metres: / 1000; Unreal cm: / 10)",
@@ -1996,6 +2014,24 @@ spec["resolutions"] += [
                    "bridge with the post rising from it, R 7 ear tops; comb softened, slimmer stock sections",
      "rule": "orchestrator rulings 1-8 (binding); every stage-2 gate re-run and passing (gates/form.json, "
              "gates/form_ruled.json)"},
+    {"id": "R51", "topic": "Magazine fit loop-back (2026-10-06): stage 6 failed M2 / M3 on an empty receiver shell",
+     "conflict": "no front trunnion block and no lug recess (nothing stopped the magazine until the carrier, 8.4 mm "
+                 "above the lips); with the rock pivot at the lug tip (429, -16), 15 mm above the bottom sheet, the 18 "
+                 "deg rock swept the front spine 5.3 mm forward at the sheet, so the well opening ran 4.9 mm ahead of "
+                 "the seated magazine",
+     "resolution": "the real pattern: a front trunnion block in the receiver front (X >= 431 under the carrier, bore "
+                   "through it, a feed ramp on its rear face) with the lug pocket and its ledge at the lower rear; the "
+                   "magazine's front lug = a body tapering into the spine plus a hook tab that, at the seat, sits on "
+                   "the ledge under the trunnion (front top stop); the rear lug rests over the catch's nose (an arc "
+                   "about the catch pin); the sheet behind the opening is cut back along the rock-start pose's tilted rear face; "
+                   "the magazine's rear steps back under the receiver's ledge to 0.4 from the trigger guard's front tab "
+                   "(was 0.74; a 0.6 lean of the tab itself was tried and dropped: it moved the solved 3/4 camera "
+                   "and broke the 3/4 exception rule). "
+                   "Rock pivot (Mag socket) on the front spine at Z -28.0 (fit stage; beyond the old +-5 mm "
+                   "provisional range: the seam needs the pivot near the sheet) and rock 8 deg (was 18): the front "
+                   "spine moves <= 0.45 mm at the sheet; every cut is the swept envelope of the magazine's silhouettes "
+                   "plus its clearance row (rifle_magfit.py)",
+     "rule": "GUN_BUILDING_STUDY 3.7 (seated mag, visible seam); RIFLE_BUILD_PLAN 2.3 / 8; the main views unchanged"},
 ]
 
 spec["fab_original_changes"] = {

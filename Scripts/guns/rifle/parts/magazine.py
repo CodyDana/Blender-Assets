@@ -48,6 +48,15 @@ lip curl, 0.75 rounded edges); neck line 0.35 under it with a steep chamfer; rib
 (magazine_geo.side_rib_soft) starting 1.35 under the plate's lower edge (lowered to -35.2 / -36.8); the front fold is
 now a raised bead on the front panel; two pin-head knobs at the front lug; a small rear catch lug under the guard
 tang; the floor plate's bottom swells out toward the rear (L2); band welds removed (budget 6998 <= 7000).
+
+Magazine-fit loop-back (2026-10-06, R51; the interface lives in Scripts/guns/rifle/rifle_magfit.py, shared with the
+receiver): the front lug is the real pattern's hooked lug: a body plate standing 0.3-0.9 in front of the spine with a
+HOOK TAB on top (2.6 in front of the body) that, at the seat, sits on the front trunnion's ledge under the trunnion
+(the front top stop); every part in front of the spine stays above the receiver's bottom sheet over the whole reload
+path (rock 8 deg about the pivot on the front spine at Z -28, then 8 mm along the tilted -Z), so the well's front
+edge stays 0.5 from the spine. The pin heads stand on the side faces only (no front overhang), the front spine beads
+start at Z -31.8 (under the sheet's reach on the path), and the rear catch lug is a block 2.0 behind the rear spine
+whose flat bottom rests over the catch's nose (arc about the catch pin).
 """
 from __future__ import annotations
 
@@ -61,6 +70,7 @@ from gunlib import geo2d as G
 from gunlib import mesh as MS
 from rifle_parts import GAP
 from parts import magazine_geo as MG
+import rifle_magfit as MF
 
 
 # ======================================================================================== frame and outline
@@ -246,7 +256,9 @@ def _body_cutters():
     # floor plate seat: the body stops PLATE_TH above the floor face
     cut.append(MS.prism(_floor_poly(-PLATE_TH, 30.0), -20, 20))
     # well part: inside the liner (X 368.8-432, 0.5 clear) above the receiver bottom
-    rear = np.array([[300.0, -33.5], [367.6, -33.5], [WELL_REAR_X, -30.4], [WELL_REAR_X, 0.0], [300.0, 0.0]])
+    # R51: under the receiver's ledge the rear face steps back to the guard's front tab (MF.REAR_STEP; was a chamfer
+    # (369.3, -30.4) -> (367.6, -33.5) that left 0.74 to the tab)
+    rear = np.array([[300.0, -33.5]] + [list(q) for q in MF.REAR_STEP] + [[WELL_REAR_X, 0.0], [300.0, 0.0]])
     cut += [MS.prism(rear, -20, 20), MS.box(WELL_FRONT_X, 470.0, -20, 20, -31.2, 0.0)]
     # front zone step (u > U_STEP) down to FRONT_TOP_Z
     st = G.clip_y(FR.sector(U_STEP, 1.4, -179.5, -165.0, 30), FRONT_TOP_Z, None)
@@ -363,14 +375,15 @@ def _knobs():
     out = []
     for z in KNOB_Z:
         xf = FR.pt(R_F, FR.a_at_z(R_F, z))[0]
-        cx = xf - 0.4
+        cx = xf - MF.KNOB_IN            # R51: on the side face only (was 0.9 over the front: it crossed the sheet)
         prof = [(0.0, KNOB_R), (1.85, KNOB_R), (2.15, KNOB_R - 0.45), (2.25, 0.0)]
         for s in (-1, 1):
             out.append(MS.revolve(prof, (cx, s * (NECK_HT - 1.0), z), (0.0, float(s), 0.0), 6))   # form realism round: 8 -> 6 seg (inside the well when seated; budget for the wider ribs)
     return out
 
 
-REAR_LUG_Z, REAR_LUG_X, REAR_LUG_HW = (-39.6, -36.4), 368.55, 5.5
+REAR_LUG_Z, REAR_LUG_X, REAR_LUG_HW = MF.REAR_LUG_Z, MF.REAR_LUG_X0, MF.REAR_LUG_HW    # R51 (was Z -39.6..-36.4
+#                                                                                       from X 368.55: beside the catch)
 
 
 def _rear_lug():
@@ -378,7 +391,7 @@ def _rear_lug():
     of the rear spine just under the trigger guard's tang (Z <= -34.8) and the receiver, in front of the catch's front
     face (X 367.8: 0.75 at rest; c4's knob at the top rear). Higher up the liner wall leaves no room."""
     z0, z1 = REAR_LUG_Z
-    P = G.rounded_rect(REAR_LUG_X, 373.0, z0, z1, 0.9, 3)
+    P = G.rounded_rect(REAR_LUG_X, MF.REAR_LUG_X1, z0, z1, 0.5, 2)     # R51: flat bottom over the catch nose
     o = MS.prism(P, -REAR_LUG_HW, REAR_LUG_HW)
     return o
 
@@ -421,7 +434,7 @@ def _cap_cutter(side):
 
 def _spine_beads():
     out = []
-    R, z_top, outward = R_F, -31.0, -1
+    R, z_top, outward = R_F, MF.SPINE_BEAD_TOP_Z, -1      # R51: from -31.0 (it reached the sheet on the path)
     a_top = FR.a_at_z(R, z_top)
     a_bot = FR.a_at_d(R, -(PLATE_TH + PLATE_UP + 1.4))            # clear of the floor plate's turned-up front
     for y0 in (-4.9, 4.9):
@@ -439,33 +452,22 @@ def _welds():
     return out
 
 
-LUG_FRONT = [(-17.2, 428.4), (-17.6, 428.8), (-19.0, 428.2), (-22.0, 427.25), (-25.0, 427.0), (-27.0, 426.95)]
-LUG_HW = 5.6
-# DETAIL FIX (user checklist 7): a MULTI-STEP front locking lug (r2b: one rounded block): three tiers stepping back
-# down the front (each inside the reload-path envelope LUG_FRONT) and stepping in width (4.6 / 5.6 / 4.8 half width)
-LUG_STEPS_Z = (-19.8, -23.6)
-LUG_TIER_HW = (4.6, 5.6, 4.8)
+LUG_HW = MF.LUG_HW
 
 
 def _lug_parts():
-    """Front locking lug (c4: a lug at the top front with a small tab; c5: ~10.4-11 mm wide, a U-loop / window from
-    the front). The front follows the clearance envelope of the spec's reload path against the plain well front wall
-    (X 432) with ~0.3 mm margin, so it is fullest at the top (3.6 proud) and runs out toward Z -27. Returns the lug
-    solid, its rounding section (intersect), the nose tab and the window cutter."""
-    z1, z2 = LUG_STEPS_Z
-    side = [(422.6, -17.2), (428.4, -17.2), (428.8, -17.6), (428.2, -19.0), (427.95, z1),       # top tier (envelope)
-            (427.2, z1), (427.0, -22.0), (426.9, z2),                                           # step back, mid tier
-            (426.2, z2), (426.2, -27.0), (422.6, -27.0)]                                        # step back, low tier
-    a = MS.prism(np.array(side), -LUG_HW, LUG_HW)
-    h0, h1, h2 = LUG_TIER_HW
-    w1, w2 = z1 - 0.5, z2 + 0.5                           # width steps 0.5 off the front steps (no coincident corners)
-    half = [(h0, -15.0), (h0, w1), (h1, w1), (h1, w2), (h2, w2), (h2, -27.0)]
+    """R51 front locking lug (rifle_magfit): the lug BODY (a plate standing in front of the spine, MF.LUG_SIDE, Y
+    +-MF.LUG_HW, its section rounded) and the HOOK TAB on top (MF.TAB_*: 2.6 in front of the body; at the seat it sits
+    on the front trunnion's ledge, its top under the trunnion = the front top stop), and the window pocket in the body's
+    front (c5's U-loop). Returns the body, its rounding section (intersect), the tab and the window cutter."""
+    a = MS.prism(np.array(MF.LUG_SIDE, float), -LUG_HW, LUG_HW)
+    half = [(LUG_HW, -15.0), (LUG_HW, -22.0)]
     sec = np.array(half + [(-y, z) for y, z in half[::-1]], float)
     sec = G.fillet(G.ccw(sec), 0.7, 1)
-    tab = MS.prism(G.rounded_rect(425.3, 428.6, -17.6, -15.4, 0.9, 2), -3.4, 3.4)
-    # window pocket in the top tier's front face (Z -18.0 .. -19.5), along X
-    win = np.array([[427.3, -18.0], [431.0, -18.0], [431.0, -19.4], [427.1, -19.4]])
-    return a, MS.prism(sec, 421.0, 433.0, "YZ"), tab, MS.prism(win, -2.6, 2.6)
+    tab = MS.prism(G.rounded_rect(MF.TAB_X0, MF.TAB_TIP, MF.TAB_Z[0], MF.TAB_Z[1], 0.6, 2), -MF.TAB_HW, MF.TAB_HW)
+    (wx0, wx1), (wz0, wz1), whw = MF.LUG_WIN
+    win = np.array([[wx0, wz0], [wx1, wz0], [wx1, wz1], [wx0, wz1]])
+    return a, MS.prism(sec, 418.0, 433.0, "YZ"), tab, MS.prism(win, -whw, whw)
 
 
 def _weighted_normals(ob):

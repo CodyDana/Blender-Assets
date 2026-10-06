@@ -159,6 +159,30 @@ def px_per_mm(k):
     return 1280.0 / (SWITCH_M[k] * 1000.0)
 
 
+def band_pts(segs, axis, lo, hi):
+    """Endpoints of the section segments clipped to lo <= |coord[axis]| <= hi (R51: a band measured on the segments,
+    not only on the mesh vertices; long faces cross the |Y| < 8 band with no vertex in it)."""
+    out = []
+    for a, b in segs:
+        a, b = np.asarray(a), np.asarray(b)
+        for sgn in (1.0, -1.0):
+            ya, yb = sgn * a[axis], sgn * b[axis]
+            t0, t1, d = 0.0, 1.0, yb - ya
+            for bound, above in ((lo, True), (hi, False)):
+                if abs(d) < 1e-12:
+                    if (ya < bound) if above else (ya > bound):
+                        t0, t1 = 1.0, 0.0
+                    continue
+                t = (bound - ya) / d
+                if (d > 0) == above:
+                    t0 = max(t0, t)
+                else:
+                    t1 = min(t1, t)
+            if t0 <= t1:
+                out += [a + (b - a) * t0, a + (b - a) * t1]
+    return np.array(out) if out else np.zeros((0, 3))
+
+
 def section(V, T, axis, c):
     """Segments of triangles cut by the plane coord[axis] = c."""
     s = V[:, axis] - c
@@ -304,15 +328,17 @@ def main():
     # for the sides), over the planes where both exist
     gaps = {"front": [], "rear": [], "left": [], "right": []}
     for zp in np.arange(plate_bottom - 1.5, plate_bottom + 1.0001, 0.1):
-        rp = [p for s_ in section(VR, TR_, 2, zp) for p in s_]
-        mp = [p for s_ in section(QM, TM, 2, zp) for p in s_]
+        rs, ms = section(VR, TR_, 2, zp), section(QM, TM, 2, zp)
+        rp = [p for s_ in rs for p in s_]
+        mp = [p for s_ in ms for p in s_]
         if not rp or not mp:
             continue
         rp, mp = np.array(rp), np.array(mp)
         x0, x1 = mp[:, 0].min(), mp[:, 0].max()
         xc = 0.5 * (x0 + x1)
-        rb = rp[(np.abs(rp[:, 1]) < 8.0) & (rp[:, 0] > x0 - 15) & (rp[:, 0] < x1 + 15)]
-        mb = mp[np.abs(mp[:, 1]) < 8.0]
+        rb = band_pts(rs, 1, 0.0, 8.0)
+        rb = rb[(rb[:, 0] > x0 - 15) & (rb[:, 0] < x1 + 15)] if len(rb) else rb
+        mb = band_pts(ms, 1, 0.0, 8.0)
         if len(mb) and (rb[:, 0] > xc).any():
             gaps["front"].append((float(rb[rb[:, 0] > xc][:, 0].min() - mb[:, 0].max()), float(zp)))
         if len(mb) and (rb[:, 0] < xc).any():
@@ -336,10 +362,10 @@ def main():
                       {"top_stop_gap_mm": round(top_gap, 4), "top_stop_from": None if best[1] is None else
                        np.round(best[1] + GRIP, 2).tolist(), "seam": seams, "receiver_sheet_bottom_Z_M": round(zp + GRIP[2], 3)},
                       "top stop 0.1-0.5 mm; seam <= 0.6 mm (side: front / rear; front view: left / right)", ok2,
-                      "the receiver is a stamped shell with no front-trunnion block or lug recess inside the well: "
-                      "nothing stops the magazine going up until the carrier, 8.4 mm above the lips; the well opening "
-                      "runs ~4 mm in front of the magazine at the sheet line (the room the 18 deg rock about the hook "
-                      "at M (429, -16) needs)" if not ok2 else None))
+                      "fails: see the values (R51 design: front top stop = the hook tab under the trunnion, seam = the "
+                      "spine's sweep at the sheet + 0.06, the lug channel at |Y| <= 4.2 is the real pattern's lug slot)"
+                      if not ok2 else "R51: the front top stop is the hook tab under the front trunnion; the "
+                      "visible-edge numbers per band are in gates/form_magfit.json"))
     # ------------------------------------------------------------ M3 clearances
     Ss = samples(QM, TM, 0.2)
     SsM = Ss + GRIP
@@ -374,8 +400,8 @@ def main():
     ok3 = all(0.2 - 1e-4 <= v <= 0.6 for v in lat.values()) and 0.1 <= d_lug <= 0.4 and 0.0 <= d_rear <= 0.3
     gates.append(gate("M3 clearances: lateral per side; front lug in its recess; rear lug to the catch face", m3,
                       "0.2-0.6 mm; 0.1-0.4 mm; 0.0-0.3 mm", ok3,
-                      None if ok3 else "no recess exists for the front lug (the receiver interior is empty ahead of the "
-                                       "well): its nearest rifle surface is the measured distance"))
+                      None if ok3 else "fails: see the values (R51: the lug's pocket and the tab's channel in the front "
+                                       "trunnion are cut 0.2 from the lug's swept envelope)"))
     # ------------------------------------------------------------ M4 / M5 rock path
     steps = []
     s_vals = np.arange(d_ins, -1e-9, -0.5)
@@ -440,9 +466,8 @@ def main():
     gates.append(gate("M8 (info) straight vertical insert without the rock", {"steps": len(vert),
                       "colliding_steps": len(hit), "first": hit[:3]},
                       "reported (expected to collide: proves the rock is needed)", True,
-                      "does NOT collide: with no front lug recess and no catch engagement in the well, a straight "
-                      "push seats the magazine as well; the rock is kept because the real pattern needs it" if not hit
-                      else None))
+                      "does NOT collide: a straight push seats the magazine as well" if not hit else
+                      "collides: the hook tab meets the trunnion's ledge and the rear lug the catch's nose"))
     # ------------------------------------------------------------ the build's gates (qa_check, C1, S1, LODs)
     m = MAGREP
     lods = [m["lods"][f"SM_AR01_Mag_LOD{k}"]["triangles"] for k in range(4)]

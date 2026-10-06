@@ -25,6 +25,14 @@ domed rivets and pin head, hairpin wire clip, 1.5 deep right dimple on an inner 
 LAST SHAPE ROUND (2026-10-05, orchestrator rulings 1 / 3 / 5): cover ribs removed and tighter R 3.2 shoulders
 (receiver_right_cover.py); the REAL charging handle (handle_knob: a flat stem and a bent-up knob 24.85 mm proud of the
 wall; real-pattern photos in WorkFiles/guns/rifle/scratch/realref); the mag catch paddle as a pressed-rib stamping.
+MAGAZINE-FIT LOOP-BACK (2026-10-06, R51; stage 6 failed M2 / M3 on an empty shell): the FRONT TRUNNION is a block
+inside the receiver front (X >= TRUNNION_X0 below TRUNNION_TOP_Z, under the carrier) with the barrel's chamber mouth
+and a feed ramp on its rear face; the magazine well, the lug pocket, the tab channel and its LEDGE, and the trunnion's
+underside over the magazine's front zone are the swept envelopes of the magazine's silhouettes over the reload path
+plus their clearance rows (Scripts/guns/rifle/rifle_magfit.py: seam 0.06 over the sweep, never under 0.26 to the
+seated magazine, lug 0.2, top stop 0.2); the bottom sheet behind the opening is cut back along the rock-start pose's
+tilted rear face; the catch's top in front of a notch is an arc about the catch pin (its nose under the magazine's
+rear lug).
 """
 from __future__ import annotations
 
@@ -43,6 +51,14 @@ from rifle_parts import GAP, WO, WT, COVER_O, COVER_I, LEDGE, ledge_z, prof, low
 from rifle_parts2 import CATCH_PIVOT, ycyl
 
 from parts import receiver_right_cover as RC  # noqa: E402
+import rifle_magfit as MF  # noqa: E402
+
+TRUNNION_X0 = 418.0             # R51: the front trunnion's rear face (under the carrier); the cuts below carve it
+TRUNNION_TOP_Z = -5.0           # its top inside the receiver: 1.0 under the carrier's bottom (-4.0 before the bevels)
+TRUNNION_FRONT_X = 452.03       # the block's face above its top (the old solid front was 452.0: coplanar with the port's
+#                                 front end, the block's top corner left a 0.006 mm sliver; the rails end 0.05 short)
+RAMP = ((417.0, -13.6), (431.0, -7.6), 7.0)    # feed ramp on the rear face: line (X, Z) -> (X, Z), half width
+CHAMBER_X = 431.0               # the bore through the trunnion starts here (the barrel's rear end is at 433.8)
 
 
 # ======================================================================================== bevel predicates
@@ -114,12 +130,14 @@ def receiver() -> PartDef:
                (472.5, -27.9), (479.8, -28.3), (481.0, -29.4), (x_f, -29.4)]
     outer = bottom + [(x_f, top_fr), (454.9, top_fr), (454.9, top_cov), (x_r, top_cov)]
     solids = [MS.prism(outer, -WO, WO)]
-    # interior: 1.0 mm walls, rear wall, front trunnion solid from X 452; open top (closed by the cover)
+    # interior: 1.0 mm walls, rear wall, the front trunnion block (R51: X >= 418 under Z -5, its upper face at 451); open
+    # top (closed by the cover)
     ib = [(x_r + WT, -34.78 + WT), (250.98, -34.78 + WT), (250.98, ledge_z(250.98) + WT)]
     ib += [(x, z + WT) for x, z in LEDGE if 250.98 < x < 369.8]
-    ib += [(369.8, ledge_z(369.8) + WT), (369.8, -30.85 + WT), (431.0, -30.85 + WT), (431.0, -29.52 + WT),
-           (447.0, -29.3 + WT), (452.0, -29.05 + WT)]
-    inner = ib + [(452.0, 30.0), (x_r + WT, 30.0)]
+    # R51: the interior stops at the front trunnion's rear face below its top (the block the well / pocket cuts carve)
+    ib += [(369.8, ledge_z(369.8) + WT), (369.8, -30.85 + WT), (TRUNNION_X0, -30.85 + WT),
+           (TRUNNION_X0, TRUNNION_TOP_Z), (TRUNNION_FRONT_X, TRUNNION_TOP_Z), (TRUNNION_FRONT_X, 30.0)]
+    inner = ib + [(x_r + WT, 30.0)]
     # detail r2b: a 1.0 mm block stays behind the right dimple (the sheet pressed inward), so the dimple can be pressed
     # DIMPLE_DEPTH deep (c1 'deep round hole', side panel: strong rim, dark floor): the right wall's first 1.0 mm of
     # interior is cut with the inner outline notched up from the bottom at the block (hidden: between the wall and
@@ -131,7 +149,7 @@ def receiver() -> PartDef:
         if q == (369.8, -30.85 + WT):
             ibn += [(bx0, -30.85 + WT), (bx0, bz1), (bx1, bz1), (bx1, -30.85 + WT)]
     assert len(ibn) == len(ib) + 4
-    inner_n = ibn + [(452.0, 30.0), (x_r + WT, 30.0)]
+    inner_n = ibn + [(x_r + WT, 30.0)]
     cut = [MS.prism(inner, -WO + WT + 1.0, WO - WT), MS.prism(inner_n, -WO + WT, -WO + WT + 1.02)]
     unions = []
     # magazine well liner (sheet walls round the opening, up to Z -11)
@@ -142,7 +160,7 @@ def receiver() -> PartDef:
     unions.append(MS.box(367.8, 368.85, -(mh + 1.0), mh + 1.0, -29.0, -11.0))
     post = []
     late = []                       # detail r2b: cut after the bevel passes (PartDef.post_cutters)
-    post.append(MS.box(368.8, 432.0, -mh, mh, -45.0, -5.0))                           # well opening + bore
+    post += well_cutters(mh)                                                           # R51: well, pocket, ramp
     # ejection port (right wall only), R1 corners
     # detail r2b: ONE opening from the cover's skirt step to X 452 (side panel at 16x: a black band Z ~6.5-10.5 runs
     # from the step's slant at X ~312 forward, the selector lever's top edge forming its lower edge; c1: the slot starts
@@ -157,7 +175,7 @@ def receiver() -> PartDef:
     post.append(MS.cylinder((282.8, -24.0, -7.8), (282.8, -18.9, -7.8), 3.2, 32))
     post.append(MS.box(301.5, 329.0, -3.25, 3.25, -40.0, -27.0))
     # barrel bore through the front trunnion (barrel r 7.5 + gap)
-    post.append(MS.cylinder((450.0, 0, 0), (490.0, 0, 0), 7.5 + GAP, 48))
+    post.append(MS.cylinder((CHAMBER_X, 0, 0), (490.0, 0, 0), 7.5 + GAP, 48))     # R51: chamber mouth from 431
     # lower handguard tenon pocket in the front face (X 484.0 - 485.3)
     post.append(lower_handguard_tenon(GAP, 483.98, 490.0))
     post.append(lower_handguard_tenon(1.5, 484.75, 490.0))      # mouth relief: room for the tenon's root fillet
@@ -195,6 +213,29 @@ def receiver() -> PartDef:
     rec = [(1.6, 3, "W", pred_bend_receiver), (0.3, 1, 35.0)]
     return PartDef("receiver", solids, cutters=cut + post, unions=unions, cls="S-bend", recipe=rec, post_cutters=late,
                    joint={"type": "fixed", "parent": None})
+
+
+def well_cutters(mh):
+    """R51 cutters (frame M prisms across Y) from the magazine's swept envelopes (rifle_magfit):
+    - well (|Y| <= mh): the opening's rear edge X 368.8, its front = the body's swept front spine + 0.06 (seam) up to
+      the trunnion's underside over the magazine's front zone (body roof), then back to the trunnion's rear face;
+    - lug band (|Y| <= lug + 0.2): the lug body's pocket; tab band (|Y| <= tab + 0.2): the hook tab's channel up the
+      trunnion's lower rear face, its ledge, the pocket and its roof (the front top stop);
+    - the feed ramp (|Y| <= RAMP[2]) on the trunnion's rear face, from above the pocket roof up to the chamber mouth."""
+    x_back = TRUNNION_X0 - 0.1
+    prof, roof = MF.well_front_profile()
+    rear = MF.well_rear_profile()          # the sheet behind the opening, cut back along the rock's tilted rear face
+    xr = rear[-1][0]                         # the opening's rear edge below the ledge sheet
+    P = [(xr, prof[0][1])] + list(prof) + [(prof[-1][0], roof), (x_back, roof), (x_back, -4.0), (368.8, -4.0)]
+    P += [(368.8, rear[0][1] + 0.5)] + [q for q in rear]
+    out = [MS.prism(G.ccw(np.array(P, float)), -mh, mh)]
+    lug, tab, roof_t = MF.pocket_profile()
+    for pr, hw, top in ((lug, MF.LUG_HW + MF.C_LUG, lug[-1][1]), (tab, MF.TAB_HW + MF.C_LUG, roof_t)):
+        P = [(x_back, pr[0][1])] + list(pr) + ([(pr[-1][0], top)] if top > pr[-1][1] + 1e-6 else []) + [(x_back, top)]
+        out.append(MS.prism(G.ccw(np.array(P, float)), -hw, hw))
+    (ax, az), (bx, bz), rhw = RAMP
+    out.append(MS.prism(G.ccw(np.array([(ax, az), (bx, bz), (bx + 2.0, -4.0), (ax, -4.0)], float)), -rhw, rhw))
+    return out
 
 
 SKIRT_STEP = ((302.3, 0.8), (313.2, 10.3))     # the cover's traced skirt step (rear deep skirt -> raised skirt)
@@ -602,6 +643,14 @@ def mag_catch() -> PartDef:
     arch = np.vstack([[[cx + r, cz], [cx + 40, cz], [cx + 40, cz + 40], [cx - 40, cz + 40], [cx - r, cz]],
                       G.arc(cx, cz, r, 180, 0, 49)[1:-1]])
     cut = [MS.prism(G.ccw(arch), -6.0, 6.0), ycyl(cx, cz, 1.5 + 0.2, -6, 6, 20)]
+    # R51: the NOSE under the magazine's rear lug: in front of the notch (MF.CATCH_NOTCH_X) the top is an arc about the
+    # pin (r MF.CATCH_NOSE_R, rotation-invariant: the release never lifts the magazine); the notch's back wall stands
+    # 0.2 behind the lug's rear face
+    rn = MF.CATCH_NOSE_R
+    a0 = math.degrees(math.acos((MF.CATCH_NOTCH_X - cx) / rn))
+    nose = np.vstack([G.arc(cx, cz, rn, a0, 20.0, 12), [[cx + 20.0, cz + 4.0], [cx + 20.0, cz + 30.0],
+                                                         [MF.CATCH_NOTCH_X, cz + 30.0]]])
+    cut.append(MS.prism(G.ccw(nose), -6.0, 6.0))
     return PartDef("mag_catch", [tongue], unions=[rib] + wings, cutters=cut, bone="mag_release", cls="S-cut",
                    recipe=[(0.3, 1, 30.0)],
                    joint={"type": "hinge", "parent": "receiver", "pivot_M": [cx, 0, cz], "axis_M": [0, -1, 0],
