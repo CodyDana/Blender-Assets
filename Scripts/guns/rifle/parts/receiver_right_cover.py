@@ -34,7 +34,13 @@ from gunlib import mesh as MS
 
 HALF_W = 21.75           # skirt outer half width (rifle_parts.COVER_O; key dim dust_cover_width 43.5)
 CROWN_Z = 32.7           # key dim dust_cover_crown_Z
-SHOULDER_R = 3.2         # shoulder radius (outer); realism round 2: 8.0 -> 5.0 (judges: "a soft inflated lid, rolled
+SHOULDER_R = 2.4         # shoulder radius (outer); LOOK-POLISH ROUND (2026-10-05, orchestrator item 4: "reads as a soft
+                         # pillow in first person"): 3.2 -> 2.4, outer 2.4 / inner 1.42 on the 0.98 sheet = the
+                         # ~1.5 t inside bend of a real pressed cover; the skirts run vertical higher (Z 28.1, 27.5
+                         # before) and the rear hood's rolled sides tighten with it (crown, width and the traced rear
+                         # profile unchanged). 2.2 was tried: its 3/4 camera re-solve left a 2 px stock residual that
+                         # the documented exception does not explain (2.6 a 2 px rear-sight one); 2.4 and 2.8 pass.
+                         # Before: realism round 2: 8.0 -> 5.0 (judges: "a soft inflated lid, rolled
                          # bulging sides"; a real cover is a tight U stamping with defined edges); last shape round
                          # (ruling 1): 5.0 -> 3.2, the thin pressed sheet's tight bend (outer 3.2 / inner 2.2 on the
                          # 0.98 sheet, real stamped covers: ~2-3 mm bend radii), not a pillowy round
@@ -43,7 +49,7 @@ WT_C = 0.98              # sheet thickness: HALF_W - COVER_I
 Z_BASE = 11.6            # lip line: the rear hood rolls down to it (trace: the lip at X 239.4, Z 10.6-11.6); above
                          # the receiver's top edges (Z 11.0) and the rear trunnion (10.38): the hood never dips into them
 PHI0 = 1.0 / (CROWN_Z - Z_BASE)     # the lip's end face: 1.0 mm tall at the centreline
-N_SH, N_TOP = 4, 3       # section segments: shoulder arc, top arc (per side) (round 2: R 5 shoulder 4; the R 90 top arc
+N_SH, N_TOP = 5, 3       # section segments (look-polish: shoulder 4 -> 5, ~16 deg per facet on the tighter bend): shoulder arc, top arc (per side) (round 2: R 5 shoulder 4; the R 90 top arc
                          # spans only 11.4 deg a side: 3 segments, sagitta 0.05)
 REAR_PTS = [(239.4, 11.6), (240.2, 12.7), (241.5, 13.5), (245.0, 20.1), (250.0, 22.6), (255.0, 25.6), (260.0, 29.3),
             (265.0, 32.1), (268.5, 32.7), (282.0, 32.7)]

@@ -41,7 +41,10 @@ OUT = Path(arg("--out", str(REVIEW / "tex"))).resolve()
 OUT.mkdir(parents=True, exist_ok=True)
 SAMPLES = int(arg("--samples", "128"))
 LIGHT = float(arg("--light", "1.0"))
-SPECF = float(arg("--spec", "1.0"))        # L5 rig: the lights' specular factor (fitted with the light scale)
+SPECF = float(arg("--spec", "1.0"))        # legacy L5 rig only (--rig fitted): the lights' specular factor
+RIG = arg("--rig", "physical")             # L5 rig: physical (default, specular factor 1) | fitted (legacy, r4)
+KEY_ELEV = float(arg("--key-elev", "62"))  # physical rig: key elevation above the horizon toward the camera (deg)
+ENV = float(arg("--env", "0.30"))          # physical rig: grey world strength seen by lighting / reflections
 sc = bpy.context.scene
 
 
@@ -87,6 +90,22 @@ def sheet_lights(k=1.0):
     RD.area_light("Rim", (0.2, 1.0, 0.6), c, 1.5, 10 * k)
 
 
+def sheet_lights_physical(k=1.0, elev_deg=62.0):
+    """Physical L5 rig (specular factor 1 on every light; 2026-10-05 look-polish round). The sheet's look: the side
+    flats show their own colour while the top surfaces and rounded steel carry highlights. A side flat faces the camera
+    (-Y), so it mirrors what is behind the camera: no light sits there (the r4 rig's front fill did, which whitened the
+    shellac and forced its specular factor to 0, leaving blued steel black). One large soft key overhead, tipped toward
+    the camera by elev_deg above the horizon (its mirror direction is 2 x (90 - elev) off the camera ray for a side
+    flat, outside the 0.4-0.6 roughness lobe), a rim behind, and the grey world (126) at strength ENV x k as the fill
+    and the environment that metal reflects."""
+    for ob in [o for o in bpy.data.objects if o.type == "LIGHT"]:
+        bpy.data.objects.remove(ob, do_unlink=True)
+    c = np.array((0.2, 0.0, 0.0))
+    e = math.radians(elev_deg)
+    RD.area_light("Key", tuple(c + 1.4 * np.array((0.05, -math.cos(e), math.sin(e)))), tuple(c), 2.4, 60 * k)
+    RD.area_light("Rim", (0.2, 1.0, 0.6), tuple(c), 1.5, 10 * k)
+
+
 def persp(cam, eye_M, target_M, fov_deg, res, up=(0.0, 0.0, 1.0)):
     eye, tgt = B(eye_M), B(target_M)
     cam.location = eye
@@ -128,12 +147,16 @@ def main():
     cam = RD.camera_object("TexCam")
     if SET == "side":
         show_only(lod0_parts())
-        RD.world_flat(sc, RD.srgb_to_lin((126, 126, 126)), 1.0, env=0.25)
-        sheet_lights(LIGHT)
-        # Cycles ignores a light's specular factor: each light becomes a diffuse-only copy at (1 - s) of its energy
-        # plus the full light at s, so the diffuse light stays k and the specular light is k x s
+        if RIG == "physical":
+            RD.world_flat(sc, RD.srgb_to_lin((126, 126, 126)), 1.0, env=ENV * LIGHT)
+            sheet_lights_physical(LIGHT, KEY_ELEV)
+        else:
+            RD.world_flat(sc, RD.srgb_to_lin((126, 126, 126)), 1.0, env=0.25)
+            sheet_lights(LIGHT)
+        # (legacy rig) Cycles ignores a light's specular factor: each light becomes a diffuse-only copy at (1 - s) of
+        # its energy plus the full light at s, so the diffuse light stays k and the specular light is k x s
         for lo in [o for o in bpy.data.objects if o.type == "LIGHT"]:
-            if SPECF < 1.0:
+            if RIG != "physical" and SPECF < 1.0:
                 d = lo.copy()
                 d.data = lo.data.copy()
                 bpy.context.scene.collection.objects.link(d)

@@ -126,31 +126,50 @@ def stage3():
                   f"{bake['device']}", "Cycles AO of the assembled LOD0 at rest", True))
     if l5:
         fit = l5.get("fit", {})
-        G.append(gate("L5 colour vs the sheet (crop-matched; light scale fitted on the receiver, light specular factor "
-                      "on the stock R/B)",
+        G.append(gate("L5 colour vs the sheet (crop-matched; PHYSICAL rig, specular factor 1; light scale fitted on the "
+                      "receiver; wood: per-part tone ratios calibrated on this rig)",
                       {k: {"delta": v["delta"], "pass": v["pass"]} for k, v in l5["regions"].items()},
                       "luma +-0.05, saturation +-0.05, R/B +-0.1, hue +-4 deg (chromatic regions) on every region but "
-                      "the two calibration regions", l5["pass"],
-                      f"k {fit.get('light_scale')}, s {fit.get('specular_factor')}; failed: {l5['failed']}"))
+                      "the calibration region (receiver)", l5["pass"],
+                      f"k {fit.get('light_scale')}, specular factor {fit.get('specular_factor')}, rig {fit.get('rig')}; "
+                      f"failed: {l5['failed']}"))
+    rp = j(W / "gates" / "recolour_precheck.json")
+    if rp:
+        G.append(gate("furniture recolour pre-check (the pack's derive_constants.fabric_part on T_AR01_Furniture_Detail16; "
+                      "black floor, knee, mip drift, 10-colour stress)",
+                      {"derive_gates": {k: v["pass"] for k, v in rp["derive_constants_fabric_part"]["gates"].items()},
+                       "colour_max_vs_floor": [rp["black_floor"]["colour_max"], rp["black_floor"]["floor"]],
+                       "max_default_albedo_vs_knee": [rp["knee"]["max_default_albedo"], rp["knee"]["knee"]],
+                       "stress": rp["stress_10_colours"]["pass"]},
+                      "every derive gate passes; Colour above the floor; default albedo under the knee; stress passes",
+                      rp["pass"], "value ratios survive the recolour (detail), per-part hue is baked-BC only: stage 9 "
+                                  "default instance = Use Original Baked Colours ON (default_path_vs_bc in the record)"))
     G.append(gate("renders only from the baked maps", "review/tex/*.png via rifle_texrender.py (game materials on "
                   "T_AR01_*; no procedural shading)", "true", True))
     status = "pass" if all(g["pass"] for g in G) else "fail"
     notes = {}
+    wt = j(W / "wood_tone.json")
     if l5:
         wood = {k: {"sheet_rb": v["sheet"]["rb"], "ours_rb": v["ours"]["rb"], "luma_delta": v["delta"]["luma"],
                     "hue_delta_deg": v["delta"].get("hue_deg")}
                 for k, v in l5["regions"].items() if k in ("stock", "pistol_grip", "handguard_lower", "handguard_upper")}
         notes["L5_wood"] = {
             "regions": wood,
-            "why": "the sheet's four wood parts carry four R/B values (2.04-2.57); one stain hue x a luminance field "
-                   "(plan 5.2: the pack recolour reproduces the BC by construction) holds one R/B (ours 2.24-2.35 "
-                   "lit), so at most the parts near the mean can pass; luma and hue pass on every wood region",
-            "options": "plan 5.2 fallback = fixed-colour wood (a hue per part, the recolour no longer reproduces the "
-                       "BC by construction): the user decides"}
-    notes["L5_rig"] = ("the light fit drives the specular factor to 0 (diffuse-only light), so blued / bare metal parts "
-                       "(selector, rear sight leaf) render black in review/tex/tex_side.png: a property of the L5 rig, "
-                       "not of the maps; physical lights (--physical) were tried and whiten every wood region "
-                       "(R/B 1.80-1.90) and leave the dust cover 0.08 dark")
+            "ruling": "orchestrator ruling 2026-10-05: ONE recolourable stain (#6B3C27) x a per-part tone ratio baked "
+                      "into the furniture BC (the sheet's four pieces of walnut, R/B 2.04-2.57, as mismatched "
+                      "furniture on real rifles of this pattern)",
+            "tones": (wt or {}).get("parts"),
+            "calibration": "rifle_wood_tone.py: tone *= lin(sheet) / lin(ours) per channel on the physical L5 rig, "
+                           "3-4 rounds; so the wood rows verify the baked tones on this rig, not an independent "
+                           "prediction (the receiver-fitted k and the metal / magazine / butt plate rows are the test)",
+            "recolour": "value ratio -> Detail16 (moves with the buyer's colour); hue offset -> baked BC only "
+                        "(gates/recolour_precheck.json)"}
+    notes["L5_rig"] = ("physical rig since the look-polish round (rifle_texrender.sheet_lights_physical: overhead key "
+                       "tipped 70 deg toward the camera, rim, grey world 0.2; specular factor 1): blued and bare steel "
+                       "show their specular response. The r4 rig's front fill sat behind the camera, so every side flat "
+                       "mirrored it; its fitted specular factor went to 0 and blued parts rendered black (retired). "
+                       "Walnut shellac roughness base 0.55 -> 0.43 (spec range 0.42-0.60): at 0.55 the 4 % specular "
+                       "spreads so wide the dark stain washes out under any real light (R/B ~1.9)")
     return {"stage": "3 UV + bake + paint", "status": status, "gates": G, "notes": notes,
             "failed": [g["name"] for g in G if not g["pass"]],
             "sets": {k: {"size": v["size"], "fill": v["fill"], "islands": v["islands"]} for k, v in uv["sets"].items()},

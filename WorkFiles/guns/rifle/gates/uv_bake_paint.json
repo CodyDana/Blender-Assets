@@ -1,6 +1,6 @@
 {
  "stage": "3 UV + bake + paint",
- "status": "fail",
+ "status": "pass",
  "gates": [
   {
    "name": "qa_check (twin SM_AR01_LOD0..3, pipeline)",
@@ -10,21 +10,21 @@
   },
   {
    "name": "density Metal class A (px/cm P5 / median / P95)",
-   "value": "97.5 / 115.9 / 115.9 (277.4 cm2)",
+   "value": "97.0 / 115.9 / 115.9 (279.4 cm2)",
    "threshold": "median in [60, 125] (band 80-100 +-25 %), P5 >= 60, P5..P95 within +-25 % of the median",
    "pass": true,
    "note": "x1.16 of the band top"
   },
   {
    "name": "density Metal class B (px/cm P5 / median / P95)",
-   "value": "85.0 / 92.8 / 92.8 (1019.7 cm2)",
+   "value": "85.4 / 92.8 / 92.8 (1020.1 cm2)",
    "threshold": "median in [45, 100] (band 60-80 +-25 %), P5 >= 45, P5..P95 within +-25 % of the median",
    "pass": true,
    "note": "x1.16 of the band top"
   },
   {
    "name": "density Metal class E (px/cm P5 / median / P95)",
-   "value": "13.1 / 13.9 / 13.9 (1167.7 cm2)",
+   "value": "13.1 / 13.9 / 13.9 (1167.2 cm2)",
    "threshold": "median in [6, 18.75] (band 8-15 +-25 %), P5 >= 6, P5..P95 within +-25 % of the median",
    "pass": true
   },
@@ -65,13 +65,13 @@
   },
   {
    "name": "Metal set size (user decision: 2048 unless it cannot hold A 80-100 / B 60-80 at >= 70 % fill)",
-   "value": "4096: texels needed at the class floors 5,521,323 vs 2048 capacity at 70 % 2,936,013",
+   "value": "4096: texels needed at the class floors 5,535,352 vs 2048 capacity at 70 % 2,936,013",
    "threshold": "smallest of 2048 / 4096 that holds the floors at 70 %",
    "pass": true
   },
   {
    "name": "fill Metal (4096)",
-   "value": 0.7364,
+   "value": 0.7382,
    "threshold": ">= 0.70",
    "pass": true,
    "note": "at 4096 a 0.70 fill puts the classes over their band tops (x {'A': 1.16, 'B': 1.16}): sharper than the user's A 80-100 / B 60-80 for the same memory (the set size is what costs)"
@@ -114,7 +114,7 @@
     ],
     "max": [
      1.0,
-     0.99298
+     0.99643
     ]
    },
    "threshold": "inside [0, 1]",
@@ -144,8 +144,8 @@
    "name": "BC within the spec finishes; metallic exactly 0/1 (G7, B9)",
    "value": {
     "Mag/lacquer_mag": {
-     "texels": 719281,
-     "metal_fraction": 0.0555,
+     "texels": 719288,
+     "metal_fraction": 0.0769,
      "dielectric_p1_p50_p99": [
       43.0,
       49.0,
@@ -157,8 +157,8 @@
       195.33333333333334
      ],
      "rough_p5_p50_p95": [
-      0.353,
-      0.528,
+      0.344,
+      0.527,
       0.664
      ],
      "spec_srgb": [
@@ -176,15 +176,15 @@
      "texels": 2770598,
      "metal_fraction": 0.0,
      "dielectric_p1_p50_p99": [
-      48.0,
-      67.66666666666667,
-      94.0
+      48.333333333333336,
+      71.0,
+      105.66666666666667
      ],
      "metal_p1_p50_p99": null,
      "rough_p5_p50_p95": [
-      0.545,
-      0.576,
-      0.648
+      0.425,
+      0.456,
+      0.529
      ],
      "spec_srgb": [
       107,
@@ -199,7 +199,7 @@
     },
     "Metal/bare": {
      "texels": 34728,
-     "metal_fraction": 0.0823,
+     "metal_fraction": 0.0809,
      "dielectric_p1_p50_p99": [
       37.0,
       39.0,
@@ -208,10 +208,10 @@
      "metal_p1_p50_p99": [
       188.33333333333334,
       191.33333333333334,
-      195.33333333333334
+      197.33333333333334
      ],
      "rough_p5_p50_p95": [
-      0.402,
+      0.403,
       0.46,
       0.482
      ],
@@ -227,8 +227,8 @@
      ]
     },
     "Metal/bluing": {
-     "texels": 1797843,
-     "metal_fraction": 0.501,
+     "texels": 1797749,
+     "metal_fraction": 0.5012,
      "dielectric_p1_p50_p99": [
       37.0,
       39.0,
@@ -240,8 +240,8 @@
       194.33333333333334
      ],
      "rough_p5_p50_p95": [
-      0.336,
-      0.496,
+      0.333,
+      0.492,
       0.602
      ],
      "spec_srgb": [
@@ -256,22 +256,22 @@
      ]
     },
     "Metal/lacquer": {
-     "texels": 6970396,
-     "metal_fraction": 0.0137,
+     "texels": 6970636,
+     "metal_fraction": 0.0202,
      "dielectric_p1_p50_p99": [
-      44.0,
-      52.333333333333336,
-      76.66666666666667
+      43.0,
+      51.333333333333336,
+      75.66666666666667
      ],
      "metal_p1_p50_p99": [
-      189.33333333333334,
+      190.33333333333334,
       192.33333333333334,
       195.33333333333334
      ],
      "rough_p5_p50_p95": [
-      0.424,
+      0.42,
       0.491,
-      0.628
+      0.629
      ],
      "spec_srgb": [
       53,
@@ -285,22 +285,22 @@
      ]
     },
     "Metal/lacquer_cover": {
-     "texels": 3018271,
-     "metal_fraction": 0.0032,
+     "texels": 3044954,
+     "metal_fraction": 0.0058,
      "dielectric_p1_p50_p99": [
       55.0,
-      70.66666666666667,
-      105.66666666666667
+      71.0,
+      107.0
      ],
      "metal_p1_p50_p99": [
-      189.56,
+      190.33333333333334,
       192.33333333333334,
       195.33333333333334
      ],
      "rough_p5_p50_p95": [
-      0.494,
-      0.558,
-      0.697
+      0.425,
+      0.566,
+      0.701
      ],
      "spec_srgb": [
       63,
@@ -314,8 +314,8 @@
      ]
     },
     "Metal/lacquer_worn": {
-     "texels": 541761,
-     "metal_fraction": 0.0749,
+     "texels": 541638,
+     "metal_fraction": 0.1186,
      "dielectric_p1_p50_p99": [
       48.0,
       56.0,
@@ -327,7 +327,7 @@
       195.33333333333334
      ],
      "rough_p5_p50_p95": [
-      0.345,
+      0.338,
       0.5,
       0.5
      ],
@@ -353,96 +353,119 @@
    "pass": true
   },
   {
-   "name": "L5 colour vs the sheet (crop-matched; light scale fitted on the receiver, light specular factor on the stock R/B)",
+   "name": "L5 colour vs the sheet (crop-matched; PHYSICAL rig, specular factor 1; light scale fitted on the receiver; wood: per-part tone ratios calibrated on this rig)",
    "value": {
     "receiver": {
      "delta": {
-      "luma": -0.0003,
-      "sat": -0.0088,
-      "rb": -0.0089
+      "luma": -0.0001,
+      "sat": -0.0123,
+      "rb": -0.0125
      },
      "pass": true
     },
     "dust_cover": {
      "delta": {
-      "luma": 0.0021,
-      "sat": -0.0162,
-      "rb": -0.0051
+      "luma": -0.018,
+      "sat": -0.0191,
+      "rb": -0.0137
      },
      "pass": true
     },
     "magazine": {
      "delta": {
-      "luma": 0.0118,
-      "sat": -0.0291,
-      "rb": -0.0305
+      "luma": 0.0204,
+      "sat": -0.0332,
+      "rb": -0.0347
      },
      "pass": true
     },
     "butt_plate": {
      "delta": {
-      "luma": 0.0464,
-      "sat": -0.0157,
-      "rb": 0.0227
+      "luma": 0.0329,
+      "sat": 0.0084,
+      "rb": 0.0085
      },
      "pass": true
     },
     "stock": {
      "delta": {
-      "luma": 0.0231,
-      "sat": -0.0477,
-      "rb": -0.2812,
-      "hue_deg": -1.44
+      "luma": -0.0006,
+      "sat": -0.0059,
+      "rb": -0.0388,
+      "hue_deg": -0.49
      },
-     "pass": false
+     "pass": true
     },
     "pistol_grip": {
      "delta": {
-      "luma": -0.0155,
-      "sat": 0.0616,
-      "rb": 0.2934,
-      "hue_deg": -2.45
+      "luma": -0.0007,
+      "sat": 0.0025,
+      "rb": 0.0105,
+      "hue_deg": -0.11
      },
-     "pass": false
+     "pass": true
     },
     "handguard_lower": {
      "delta": {
-      "luma": -0.0063,
-      "sat": -0.0313,
-      "rb": -0.1773,
-      "hue_deg": -2.74
+      "luma": -0.0005,
+      "sat": -0.0021,
+      "rb": -0.0129,
+      "hue_deg": -0.06
      },
-     "pass": false
+     "pass": true
     },
     "handguard_upper": {
      "delta": {
-      "luma": -0.0466,
-      "sat": 0.0262,
-      "rb": 0.1244,
-      "hue_deg": -2.13
+      "luma": -0.0012,
+      "sat": 0.0042,
+      "rb": 0.0191,
+      "hue_deg": 0.12
      },
-     "pass": false
+     "pass": true
     },
     "gas_block": {
      "delta": {
-      "luma": 0.0494,
-      "sat": -0.0059,
-      "rb": -0.0068
+      "luma": 0.0408,
+      "sat": -0.0238,
+      "rb": -0.0271
      },
      "pass": true
     },
     "barrel": {
      "delta": {
-      "luma": 0.0412,
-      "sat": -0.0009,
-      "rb": -0.0011
+      "luma": 0.027,
+      "sat": -0.0199,
+      "rb": -0.0228
      },
      "pass": true
     }
    },
-   "threshold": "luma +-0.05, saturation +-0.05, R/B +-0.1, hue +-4 deg (chromatic regions) on every region but the two calibration regions",
-   "pass": false,
-   "note": "k 1.4432356930271728, s 0.0; failed: ['pistol_grip', 'handguard_lower', 'handguard_upper']"
+   "threshold": "luma +-0.05, saturation +-0.05, R/B +-0.1, hue +-4 deg (chromatic regions) on every region but the calibration region (receiver)",
+   "pass": true,
+   "note": "k 1.3132458016128086, specular factor 1.0, rig {'name': 'physical', 'key_elev_deg': 70.0, 'world_env': 0.2}; failed: []"
+  },
+  {
+   "name": "furniture recolour pre-check (the pack's derive_constants.fabric_part on T_AR01_Furniture_Detail16; black floor, knee, mip drift, 10-colour stress)",
+   "value": {
+    "derive_gates": {
+     "default_equals_v1_contract": true,
+     "default_guards_inactive": true,
+     "default_every_mip_equals_v1": true,
+     "mip_mean_drift_within_2pct": true
+    },
+    "colour_max_vs_floor": [
+     0.19166,
+     0.01
+    ],
+    "max_default_albedo_vs_knee": [
+     0.4864,
+     0.85
+    ],
+    "stress": true
+   },
+   "threshold": "every derive gate passes; Colour above the floor; default albedo under the knee; stress passes",
+   "pass": true,
+   "note": "value ratios survive the recolour (detail), per-part hue is baked-BC only: stage 9 default instance = Use Original Baked Colours ON (default_path_vs_bc in the record)"
   },
   {
    "name": "renders only from the baked maps",
@@ -456,42 +479,99 @@
    "regions": {
     "stock": {
      "sheet_rb": 2.5714,
-     "ours_rb": 2.2902,
-     "luma_delta": 0.0231,
-     "hue_delta_deg": -1.44
+     "ours_rb": 2.5326,
+     "luma_delta": -0.0006,
+     "hue_delta_deg": -0.49
     },
     "pistol_grip": {
      "sheet_rb": 2.0408,
-     "ours_rb": 2.3342,
-     "luma_delta": -0.0155,
-     "hue_delta_deg": -2.45
+     "ours_rb": 2.0513,
+     "luma_delta": -0.0007,
+     "hue_delta_deg": -0.11
     },
     "handguard_lower": {
      "sheet_rb": 2.4681,
-     "ours_rb": 2.2908,
-     "luma_delta": -0.0063,
-     "hue_delta_deg": -2.74
+     "ours_rb": 2.4552,
+     "luma_delta": -0.0005,
+     "hue_delta_deg": -0.06
     },
     "handguard_upper": {
      "sheet_rb": 2.1159,
-     "ours_rb": 2.2403,
-     "luma_delta": -0.0466,
-     "hue_delta_deg": -2.13
+     "ours_rb": 2.135,
+     "luma_delta": -0.0012,
+     "hue_delta_deg": 0.12
     }
    },
-   "why": "the sheet's four wood parts carry four R/B values (2.04-2.57); one stain hue x a luminance field (plan 5.2: the pack recolour reproduces the BC by construction) holds one R/B (ours 2.24-2.35 lit), so at most the parts near the mean can pass; luma and hue pass on every wood region",
-   "options": "plan 5.2 fallback = fixed-colour wood (a hue per part, the recolour no longer reproduces the BC by construction): the user decides"
+   "ruling": "orchestrator ruling 2026-10-05: ONE recolourable stain (#6B3C27) x a per-part tone ratio baked into the furniture BC (the sheet's four pieces of walnut, R/B 2.04-2.57, as mismatched furniture on real rifles of this pattern)",
+   "tones": {
+    "upper_handguard": {
+     "value_ratio": 1.818,
+     "chroma_ratio_unit_lum": [
+      0.9699,
+      1.0344,
+      0.8849
+     ],
+     "base_srgb8": [
+      139,
+      82,
+      51
+     ],
+     "base_rb_srgb": 2.371
+    },
+    "lower_handguard": {
+     "value_ratio": 1.3922,
+     "chroma_ratio_unit_lum": [
+      1.0492,
+      0.9706,
+      0.5993
+     ],
+     "base_srgb8": [
+      128,
+      70,
+      35
+     ],
+     "base_rb_srgb": 2.882
+    },
+    "pistol_grip": {
+     "value_ratio": 1.3084,
+     "chroma_ratio_unit_lum": [
+      0.9623,
+      1.0429,
+      0.8578
+     ],
+     "base_srgb8": [
+      119,
+      70,
+      42
+     ],
+     "base_rb_srgb": 2.394
+    },
+    "buttstock": {
+     "value_ratio": 1.0725,
+     "chroma_ratio_unit_lum": [
+      1.1005,
+      0.9238,
+      0.5377
+     ],
+     "base_srgb8": [
+      116,
+      60,
+      28
+     ],
+     "base_rb_srgb": 3.076
+    }
+   },
+   "calibration": "rifle_wood_tone.py: tone *= lin(sheet) / lin(ours) per channel on the physical L5 rig, 3-4 rounds; so the wood rows verify the baked tones on this rig, not an independent prediction (the receiver-fitted k and the metal / magazine / butt plate rows are the test)",
+   "recolour": "value ratio -> Detail16 (moves with the buyer's colour); hue offset -> baked BC only (gates/recolour_precheck.json)"
   },
-  "L5_rig": "the light fit drives the specular factor to 0 (diffuse-only light), so blued / bare metal parts (selector, rear sight leaf) render black in review/tex/tex_side.png: a property of the L5 rig, not of the maps; physical lights (--physical) were tried and whiten every wood region (R/B 1.80-1.90) and leave the dust cover 0.08 dark"
+  "L5_rig": "physical rig since the look-polish round (rifle_texrender.sheet_lights_physical: overhead key tipped 70 deg toward the camera, rim, grey world 0.2; specular factor 1): blued and bare steel show their specular response. The r4 rig's front fill sat behind the camera, so every side flat mirrored it; its fitted specular factor went to 0 and blued parts rendered black (retired). Walnut shellac roughness base 0.55 -> 0.43 (spec range 0.42-0.60): at 0.55 the 4 % specular spreads so wide the dark stain washes out under any real light (R/B ~1.9)"
  },
- "failed": [
-  "L5 colour vs the sheet (crop-matched; light scale fitted on the receiver, light specular factor on the stock R/B)"
- ],
+ "failed": [],
  "sets": {
   "Metal": {
    "size": 4096,
-   "fill": 0.7364,
-   "islands": 1533
+   "fill": 0.7382,
+   "islands": 1535
   },
   "Furniture": {
    "size": 2048,
@@ -501,7 +581,7 @@
   "Mag": {
    "size": 1024,
    "fill": 0.6857,
-   "islands": 424
+   "islands": 426
   }
  },
  "lod_uv": {
@@ -517,27 +597,27 @@
    "LOD3/Mag": 0
   },
   "collapsed_faces": {
-   "LOD1/Metal": 256,
+   "LOD1/Metal": 255,
    "LOD1/Furniture": 46,
    "LOD1/Mag": 128,
-   "LOD2/Metal": 305,
+   "LOD2/Metal": 313,
    "LOD2/Furniture": 53,
    "LOD2/Mag": 250,
-   "LOD3/Metal": 94,
+   "LOD3/Metal": 91,
    "LOD3/Furniture": 28,
    "LOD3/Mag": 5
   },
   "corners": {
-   "projected": 89593,
-   "pulled_in": 27143,
-   "faces_off_island_snapped": 3326,
+   "projected": 89504,
+   "pulled_in": 27193,
+   "faces_off_island_snapped": 3339,
    "off_island_by_lod": {
     "LOD1": [
-     1583,
+     1590,
      28428
     ],
     "LOD2": [
-     1377,
+     1383,
      12626
     ],
     "LOD3": [

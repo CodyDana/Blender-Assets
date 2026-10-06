@@ -44,6 +44,9 @@ if want paint; then
   echo "== stage 3c: painted maps"
   py -3 -B "$HERE/rifle_paint.py" > "$LOG/paint.log" 2>&1 || { echo "FAILED paint"; tail -20 "$LOG/paint.log"; exit 1; }
   grep PAINT_DONE "$LOG/paint.log"
+  # furniture recolour maps (Detail16 + recolour_maps.json) and the pre-check through the pack's derive step
+  py -3 -B "$HERE/rifle_recolour.py" > "$LOG/recolour.log" 2>&1 || { echo "FAILED recolour"; tail -20 "$LOG/recolour.log"; exit 1; }
+  grep -o "AR01-recolour\] [A-Z]*" "$LOG/recolour.log"
 fi
 if want game; then
   echo "== stage 4: static twin, hulls, sockets"
@@ -66,11 +69,13 @@ if want gates; then
   run_blender b3_lod0_tri "$BL" --python "$HERE/rifle_b3.py" -- --collection AR01_Parts --quick --out "$W/scratch/b3_lod0_tri.json"
 fi
 if want renders; then
-  echo "== renders from the baked maps + L5"
+  echo "== renders from the baked maps + L5 (physical rig)"
   py -3 -B "$HERE/rifle_l5_fit.py" > "$LOG/l5fit.log" 2>&1 || { echo "FAILED l5fit"; tail -20 "$LOG/l5fit.log"; exit 1; }
   grep "l5fit" "$LOG/l5fit.log"
   py -3 -B -c "import json; d=json.load(open('WorkFiles/guns/rifle/scratch/game/l5.json')); [print('[L5]', k, v['delta'], v['pass']) for k, v in d['regions'].items()]"
   for s in realism closeups lods; do run_blender tex_$s "$BL" --python "$HERE/rifle_texrender.py" -- --set $s --samples 128 --out "$W/review/tex"; done
+  # the realism judges' four views from the final maps (look-polish round): review/realism_tex
+  run_blender tex_realism2 "$BL" --python "$HERE/rifle_texrender.py" -- --set realism --samples 256 --out "$W/review/realism_tex"
 fi
 py -3 -B "$HERE/rifle_texcontact.py" || true
 py -3 -B "$HERE/rifle_stage34_gates.py"

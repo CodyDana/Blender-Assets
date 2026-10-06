@@ -62,7 +62,7 @@ def main():
     ap.add_argument("--calibrate", action="store_true")
     ap.add_argument("--light", type=float, default=1.0, help="the light scale the render used (recorded)")
     ap.add_argument("--json", default=str(WORK / "scratch" / "game" / "l5.json"))
-    ap.add_argument("--calib", default="receiver,stock", help="regions the light fit used (not graded)")
+    ap.add_argument("--calib", default="receiver", help="regions the light fit used (not graded)")
     a = ap.parse_args()
     j = json.loads((TRACE / "LEFT_outline.json").read_text())
     x0, y0, x1, y1 = j["panel_box_sheet_px"]
