@@ -74,8 +74,10 @@ if want renders; then
   grep "l5fit" "$LOG/l5fit.log"
   py -3 -B -c "import json; d=json.load(open('WorkFiles/guns/rifle/scratch/game/l5.json')); [print('[L5]', k, v['delta'], v['pass']) for k, v in d['regions'].items()]"
   for s in realism closeups lods; do run_blender tex_$s "$BL" --python "$HERE/rifle_texrender.py" -- --set $s --samples 128 --out "$W/review/tex"; done
-  # the realism judges' four views from the final maps (look-polish round): review/realism_tex
-  run_blender tex_realism2 "$BL" --python "$HERE/rifle_texrender.py" -- --set realism --samples 256 --out "$W/review/realism_tex"
+  # the realism judges' four views from the final maps (realism-tex round 2: form-following wood grain, clean dust
+  # cover, edge-only bare steel, the ADS at the exact B4 camera + ads_check.json): review/realism_tex2
+  run_blender tex_realism2 "$BL" --python "$HERE/rifle_texrender.py" -- --set realism --samples 256 --out "$W/review/realism_tex2"
+  grep -h "ADS_CHECK" "$LOG/tex_realism2.log" | cut -c1-400
 fi
 py -3 -B "$HERE/rifle_texcontact.py" || true
 py -3 -B "$HERE/rifle_stage34_gates.py"

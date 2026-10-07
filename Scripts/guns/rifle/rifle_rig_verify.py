@@ -259,10 +259,14 @@ def main():
         worst = max(worst, float(np.abs(np.array(s["location_cm"]) - np.array([e[0], -e[1], e[2]]) * 0.1).max()) * 10)
         er = sp["unreal_rotation_deg"]
         wdeg = max(wdeg, max(abs(((s["rotation_deg"][k] - er[k]) + 180.0) % 360.0 - 180.0) for k in ("roll", "pitch", "yaw")))
+    # CenterOfMass / Holster ship the exact stage-4 CoM (rig fit set); game_report keeps it rounded to 0.01 mm
+    com_rep_d = float(np.abs(FIT["CenterOfMass"] - com).max()) if "CenterOfMass" in FIT else 0.0
     gates.append(gate("S1 SM_AR01 sidecar sockets", {"count": len(sside["sockets"]), "worst_mm": round(worst, 6),
-                      "worst_deg": round(wdeg, 6), "lod_screen_sizes": sside.get("lod_screen_sizes")},
-                      "17; <= 0.001 mm, <= 0.001 deg; screen sizes = the LOD-pop sizes",
-                      len(sside["sockets"]) == 17 and worst <= 0.001 and wdeg <= 0.001
+                      "worst_deg": round(wdeg, 6), "lod_screen_sizes": sside.get("lod_screen_sizes"),
+                      "com_exact_vs_game_report_mm": round(com_rep_d, 5)},
+                      "17; <= 0.001 mm, <= 0.001 deg; screen sizes = the LOD-pop sizes; CoM within the report's "
+                      "0.01 mm rounding",
+                      len(sside["sockets"]) == 17 and worst <= 0.001 and wdeg <= 0.001 and com_rep_d <= 0.0051
                       and sside.get("lod_screen_sizes") == json.loads((GATES / "game_lod_sizes.json").read_text())["SM_AR01"]))
     # ------------------------------------------------------------ export warnings, deny tokens
     warn = {"SM_AR01": REP["export_static"]["warnings"],

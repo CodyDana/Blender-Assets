@@ -33,6 +33,77 @@ def gate(name, value, threshold, ok, note=None):
     return g
 
 
+def realism_tex_gates(uv):
+    """Realism-tex round (judges 2026-10-06) checks on the final maps: no blown wear (bare-steel chip blobs on the
+    lacquered parts stay small edge flecks; no light dielectric texel on a lacquer), the dust cover's crown a dark even
+    coat (no whitish slabs) with its UV unstretched at class A, and the textured ADS view (review/realism_tex2/
+    ads_check.json: the post visible in the notch at the exact B4 camera, contrast against the opening)."""
+    import numpy as np
+    from scipy import ndimage as ndi
+    Image.MAX_IMAGE_PIXELS = None
+    out = []
+    bake = S / "bake"
+    meta = j(bake / "bake_meta.json")
+    parts = meta["parts"]
+    pid = np.load(bake / "Metal_ids.npy")[..., 0].astype(np.int32)
+    orm = np.asarray(Image.open(TEX / "T_AR01_Metal_ORM.png"))[::-1]
+    bc = np.asarray(Image.open(TEX / "T_AR01_Metal_BC.png").convert("RGB"))[::-1].mean(2)
+    met = orm[..., 2] > 127
+    lacq = np.isin(pid, [i for n, i in parts.items() if RS.PART_FINISH.get(n, "").startswith("lacquer")
+                         and n != "butt_plate"])                  # the butt plate is scratched bare by design
+    mm2 = (10.0 / uv["sets"]["Metal"]["classes"]["B"]["px_per_cm_median"]) ** 2
+    lab, nl = ndi.label(met & lacq)
+    sz = np.bincount(lab.ravel())[1:] if nl else np.zeros(1, int)
+    big = float(sz.max() * mm2)
+    names = {v: k for k, v in parts.items()}
+    worst = names.get(int(np.bincount(pid[lab == int(np.argmax(sz)) + 1]).argmax()), "?") if nl else None
+    light = int(((~met) & lacq & (bc > 140)).sum())
+    out.append(gate("realism-tex: no blown wear masks (lacquered parts)",
+                    f"largest bare-steel chip blob {big:.1f} mm2 ({worst}); {int(met[lacq].sum()):,} chip texels "
+                    f"({met[lacq].mean():.2%}); dielectric texels lighter than sRGB 140: {light}",
+                    "largest chip blob <= 8 mm2 (an edge fleck, not a patch); light dielectric texels <= 1e-5 of the "
+                    "lacquer (isolated texels, no patch: the rubbed coat stays a mid-dark grey)",
+                    big <= 8.0 and light <= 1e-5 * int(lacq.sum()),
+                    "chips need the 0.6 mm bevel mask + a flake gate; worn steel rough 0.50-0.62 (rifle_paint.py)"))
+    nz = np.load(bake / "Metal_nrm.npy", mmap_mode="r")[..., 2].astype(np.float32) * 2 - 1
+    cov = pid == parts["dust_cover"]
+    crown = cov & (nz > 0.55)
+    pos = np.load(bake / "Metal_pos.npy", mmap_mode="r")
+    ys, xs = np.nonzero(crown)
+    ok = (xs > 0) & (xs < pid.shape[1] - 1) & (ys > 0) & (ys < pid.shape[0] - 1)
+    ys, xs = ys[ok], xs[ok]
+    inner = crown[ys, xs - 1] & crown[ys, xs + 1] & crown[ys - 1, xs] & crown[ys + 1, xs]
+    ys, xs = ys[inner], xs[inner]
+    du = np.linalg.norm(np.asarray(pos[ys, xs + 1]) - np.asarray(pos[ys, xs - 1]), axis=1) * 500.0   # mm per px
+    dv = np.linalg.norm(np.asarray(pos[ys + 1, xs]) - np.asarray(pos[ys - 1, xs]), axis=1) * 500.0
+    an = np.maximum(du, dv) / np.maximum(np.minimum(du, dv), 1e-6)
+    pxcm = 10.0 / np.sqrt(np.maximum(du * dv, 1e-9))
+    cb, cr = bc[crown], orm[..., 1][crown] / 255.0
+    out.append(gate("realism-tex: dust cover crown (dark even coat, class A, unstretched)",
+                    f"BC sRGB p1/p50/p99 {np.percentile(cb, 1):.0f} / {np.percentile(cb, 50):.0f} / "
+                    f"{np.percentile(cb, 99):.0f}; roughness p5/p95 {np.percentile(cr, 5):.2f} / "
+                    f"{np.percentile(cr, 95):.2f}; {np.median(pxcm):.1f} px/cm (P5 {np.percentile(pxcm, 5):.1f}); "
+                    f"UV anisotropy p50/p95/p99 {np.percentile(an, 50):.3f} / {np.percentile(an, 95):.3f} / "
+                    f"{np.percentile(an, 99):.3f}",
+                    "BC p99 <= 100 (no whitish slab: the old crown reached 107+ in broad patches), p99 - p1 <= 45; "
+                    "class A 80-125 px/cm; anisotropy p95 <= 1.3",
+                    np.percentile(cb, 99) <= 100 and np.percentile(cb, 99) - np.percentile(cb, 1) <= 45 and
+                    80 <= np.median(pxcm) <= 125 and np.percentile(an, 95) <= 1.3))
+    ads = j(W / "review" / "realism_tex2" / "ads_check.json")
+    if ads:
+        out.append(gate("realism-tex: textured ADS sight picture (exact B4 camera, 2560 x 1440)",
+                        f"post visible {ads.get('post_visible_px')} px ({ads.get('post_visible_width_px_median')} px "
+                        f"wide x {ads.get('post_visible_rows')} rows), tip at {ads.get('post_tip_visible_px')} vs "
+                        f"projected {ads.get('post_tip_projected_px')}; Weber contrast vs the opening beside it "
+                        f"{ads.get('weber_contrast_post_vs_beside')}",
+                        "post found (>= 20 px) with |Weber contrast| >= 0.25, tip within 1.5 px of the B4 projection",
+                        bool(ads.get("post_found")) and abs(ads.get("weber_contrast_post_vs_beside", 0)) >= 0.25 and
+                        abs(ads["post_tip_visible_px"][0] - ads["post_tip_projected_px"][0]) <= 1.5 and
+                        abs(ads["post_tip_visible_px"][1] - ads["post_tip_projected_px"][1]) <= 1.5,
+                        "review/realism_tex2/ads_55deg_notch.png: 6x crop, post outline marked on the right"))
+    return out
+
+
 def stage3():
     uv = j(S / "uv" / "uv_report.json")
     bake = j(S / "bake" / "bake_meta.json")
@@ -144,6 +215,7 @@ def stage3():
                       "every derive gate passes; Colour above the floor; default albedo under the knee; stress passes",
                       rp["pass"], "value ratios survive the recolour (detail), per-part hue is baked-BC only: stage 9 "
                                   "default instance = Use Original Baked Colours ON (default_path_vs_bc in the record)"))
+    G.extend(realism_tex_gates(uv))
     G.append(gate("renders only from the baked maps", "review/tex/*.png via rifle_texrender.py (game materials on "
                   "T_AR01_*; no procedural shading)", "true", True))
     status = "pass" if all(g["pass"] for g in G) else "fail"

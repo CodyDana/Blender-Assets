@@ -270,6 +270,20 @@ def main():
                                                  "spec_blender_mm": SOCK["MagInsertStart"]["blender_mm"],
                                                  "delta_mm": round(float(np.abs(tI - np.array(SOCK["MagInsertStart"]["blender_mm"])).max()), 5),
                                                  "rule": "MagRockStart + R_y(-rock) (0, 0, -8 mm): on the tilted magazine's -Z"}}
+    # CenterOfMass / Holster: the exact stage-4 CoM the static twin's empties carry (game_report rounds it to
+    # 0.01 mm), so SK_AR01 and SM_AR01 ship the same point; the report value must agree to its rounding
+    global COM_B
+    com_exact = np.array(bpy.data.objects["SOCKET_SM_AR01_LOD0_CenterOfMass"].location, float) * 1000.0
+    d_rep = float(np.abs(com_exact - COM_B).max())
+    if d_rep > 0.0051:
+        raise SystemExit(f"stage-4 CoM empty {com_exact} disagrees with game_report {COM_B} by {d_rep:.4f} mm")
+    COM_B = com_exact
+    for n in ("CenterOfMass", "Holster"):
+        FIT_SET[n] = com_exact.copy()
+        rep["fit_set_sockets"][n] = {"blender_mm": [round(float(v), 5) for v in com_exact],
+                                     "game_report_com_B_mm": GAME_REP["mass"]["com_B_mm"],
+                                     "delta_mm": round(d_rep, 5),
+                                     "rule": "the stage-4 CoM empty on SM_AR01_LOD0 (game_report rounds to 0.01 mm)"}
     CL.configure(TRAVEL, ROCK, INSERT)
     rep["motion"] = {"bolt_travel_mm": TRAVEL, "rock_deg": ROCK, "insert_mm": round(INSERT, 4), "drop_mm": CL.DROP_MM}
     coll = bpy.data.collections.new(SK)

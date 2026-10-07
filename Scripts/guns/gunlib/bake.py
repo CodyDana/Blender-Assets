@@ -168,3 +168,27 @@ def bake_pass(objs, mats, image, kind, source=None, samples=1, margin=16, **kw):
     if "FINISHED" not in res:
         raise RuntimeError(f"bake {kind}/{source} failed: {res}")
     return time.time() - t
+
+
+def dump_tris(objs, pids, path, offset_mm):
+    """The bake objects' evaluated triangles for the geometric edge masks (gunlib.edgemask): V (n, 3, 3) float32 in
+    the paint frame (world metres x 1000 + offset_mm, i.e. frame M mm), pid (n,) = each object's part index (the ids
+    bake's R). Plain data, read by the numpy painter."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    Vs, Ps = [], []
+    off = np.asarray(offset_mm, np.float32)
+    for o in objs:
+        ev = o.evaluated_get(dg)
+        me = ev.to_mesh()
+        me.calc_loop_triangles()
+        co = np.empty(len(me.vertices) * 3, np.float32)
+        me.vertices.foreach_get("co", co)
+        co = co.reshape(-1, 3)
+        M = np.array(o.matrix_world, np.float32)
+        co = co @ M[:3, :3].T + M[:3, 3]
+        tri = np.empty(len(me.loop_triangles) * 3, np.int32)
+        me.loop_triangles.foreach_get("vertices", tri)
+        Vs.append(co[tri.reshape(-1, 3)] * 1000.0 + off)
+        Ps.append(np.full(len(tri) // 3, pids[o.name], np.int32))
+        ev.to_mesh_clear()
+    np.savez_compressed(path, V=np.concatenate(Vs).astype(np.float32), pid=np.concatenate(Ps))

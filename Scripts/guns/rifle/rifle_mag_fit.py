@@ -393,7 +393,8 @@ def main():
          (Mc[:, 1] >= CATCH_BOX_M["Y"][0]) & (Mc[:, 1] <= CATCH_BOX_M["Y"][1]) & \
          (Mc[:, 2] >= CATCH_BOX_M["Z"][0]) & (Mc[:, 2] <= CATCH_BOX_M["Z"][1])
     ctree = tree(VR, TR_[cm])
-    rl = (SsM[:, 0] > 368.0) & (SsM[:, 0] < 374.0) & (SsM[:, 2] > -40.5) & (SsM[:, 2] < -35.5) & (np.abs(SsM[:, 1]) < 6)
+    # the rear lug's window = the form gate's (F3, rifle_magfit_check.py): the R51 lug's rear face sits at X ~367.3
+    rl = (SsM[:, 0] > 366.0) & (SsM[:, 0] < 374.0) & (SsM[:, 2] > -40.5) & (SsM[:, 2] < -34.5) & (np.abs(SsM[:, 1]) < 6)
     d_rear, _ = nearest(Ss[rl], ctree)
     m3 = {"lateral_mm": lat, "front_lug_to_nearest_rifle_mm": round(float(d_lug), 4),
           "rear_lug_to_catch_face_mm": round(float(d_rear), 4)}
@@ -421,6 +422,7 @@ def main():
     worst_other = 0
     dep_cache = {}
     catch_hits = []
+    catch_lod23 = []
     for a, b in PAIRS:
         rec = []
         for si, (kind, val, R, t) in enumerate(steps):
@@ -440,8 +442,14 @@ def main():
                 cb = (np.array([CATCH_BOX_M["X"][0], CATCH_BOX_M["Y"][0], CATCH_BOX_M["Z"][0]]) - GRIP,
                       np.array([CATCH_BOX_M["X"][1], CATCH_BOX_M["Y"][1], CATCH_BOX_M["Z"][1]]) - GRIP)
                 cd = depth_inside(samples(Q, T, 0.5), ctrees[a], *cb)
-                catch_hits.append({"pair": [a, b], "step": [kind, round(val, 3)], "triangle_pairs": nc,
-                                   "depth_mm": round(cd, 3)})
+                hit = {"pair": [a, b], "step": [kind, round(val, 3)], "triangle_pairs": nc, "depth_mm": round(cd, 3)}
+                if max(a, b) >= 2:
+                    # LOD2-3 pairs: every contact (the catch's included) is judged in pixels at the switch distance
+                    hit["depth_px"] = round(cd * px_per_mm(max(a, b)), 4)
+                    dep_cache.setdefault((a, b), []).append(cd * px_per_mm(max(a, b)))
+                    catch_lod23.append(hit)
+                else:
+                    catch_hits.append(hit)
         path[f"rifle LOD{a} / mag LOD{b}"] = {"steps": len(rec), "intersecting_steps": sum(1 for r in rec if r[2]),
                                                "with_catch_only": sum(1 for r in rec if r[2] and r[2] == r[3])}
     deep = {f"rifle LOD{a} / mag LOD{b}": round(max(v), 3) for (a, b), v in dep_cache.items()}
@@ -451,6 +459,9 @@ def main():
     gates.append(gate("M4 rock path (insert 0.5 mm, rock 0.25 deg; co-visible pairs)",
                       {"steps": len(steps), "insert_steps": len(s_vals), "rock_steps": n_rot, "rock_deg": round(theta, 4),
                        "pairs": path, "catch_contacts": catch_hits[:20],
+                       "catch_contacts_lod2_3 (px rule)": {"count": len(catch_lod23),
+                                                           "worst": max(catch_lod23, key=lambda h: h["depth_px"])
+                                                           if catch_lod23 else None},
                        "lod2_3_depth_px (every 6th step + seated)": deep},
                       "0 intersections (LOD0-1 pairs; LOD2-3 pairs: depth < 1 px at the switch distance), except the "
                       "rear lug on the catch nose (<= 3.0 mm, last <= 6 deg)", ok4,

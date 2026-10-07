@@ -145,6 +145,19 @@ def visibility(parts, pms):
                 N = N @ M[:3, :3].T
             o = UB.openness(C, N, tree)
             idx = np.nonzero(todo)[0]
+            # realism-fix round (2026-10-07): a face whose CENTROID is covered (a long sliver of the receiver wall
+            # whose centre lay under a rivet head) was classed hidden (E, 1/7 the density) and printed as a lit wedge
+            # from the dimple to the well's corner; such faces are tried again at points near each corner
+            rem = np.nonzero(o <= 0)[0]
+            if len(rem):
+                fi = idx[rem]
+                for j in range(3):
+                    Pj = pm.V[pm.loop_v[pm.ps[fi] + np.minimum(j, pm.pt[fi] - 1)]]
+                    Cj = 0.75 * Pj + 0.25 * pm.fc[fi]
+                    if M is not None:
+                        Cj = (np.c_[Cj, np.ones(len(Cj))] @ M.T)[:, :3]
+                    oj = UB.openness(Cj, N[rem], tree)
+                    o[rem[oj > 0]] = 1.0
             vis[n][idx[o > 0]] = True
             nvis += int((o > 0).sum())
         log("visibility", cname, "newly visible", nvis, "%.1fs" % (time.time() - t0))

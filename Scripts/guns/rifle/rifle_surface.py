@@ -106,7 +106,9 @@ FIN = {
                       "note": "the dust cover: spec lacquer_worn #3F3F3F (the most rubbed pressed sheet on the gun); "
                               "L5 (the sheet's cover reads 89 against the receiver's 63 under one light) -> #474747, "
                               "8 levels lighter, inside the +-12 finish check against the spec value"},
-    "bluing": {"metal": 1, "srgb": srgb("#787878"), "rough": (0.30, 0.55)},
+    # realism-fix round 2026-10-07 (review: the stamped selector / trigger / catch flashed chrome): satin bluing on the
+    # small stamped parts, 0.45-0.55 (spec range 0.30-0.55, its upper half)
+    "bluing": {"metal": 1, "srgb": srgb("#787878"), "rough": (0.45, 0.55)},
     "bare": {"metal": 1, "srgb": srgb("#C3C3C1"), "rough": (0.25, 0.40), "sliding": (0.15, 0.25)},
     "walnut": {"metal": 0, "srgb": srgb("#6B3C27"), "grain_dark": srgb("#482C1B"), "figure_light": srgb("#965F46"),
                "handling": srgb("#87573F"), "checker": srgb("#4E2E1E"), "rough": (0.42, 0.60)},
@@ -160,15 +162,18 @@ SOOT = [{"center_M": (870.0, 0.0, 0.0), "radius": 16.0, "w": 1.0},
 # WEAR_BASE + (1 - WEAR_BASE) x the strongest zone falloff (frame M centres, mm).
 WEAR_BASE = 0.30
 METAL_WEAR = [
-    {"what": "brake rim and slant cut", "center_M": (866.0, 0.0, 0.0), "radius": 26.0, "w": 1.0},
+    {"what": "brake rim and slant cut (the muzzle end; the base collar sees base wear only)",
+     "center_M": (876.0, 0.0, 0.0), "radius": 20.0, "w": 1.0},
     {"what": "front sight ears / post", "center_M": (826.0, 0.0, 38.0), "radius": 17.0, "w": 0.95},
     {"what": "front sight block base, rod lug", "center_M": (815.0, 0.0, -14.0), "radius": 22.0, "w": 0.55},
-    {"what": "gas block corners", "center_M": (700.0, 0.0, 22.0), "radius": 24.0, "w": 0.55},
+    {"what": "gas block corners", "center_M": (700.0, 0.0, 22.0), "radius": 24.0, "w": 0.45},
     {"what": "front band / handguard retainer", "center_M": (640.0, 0.0, 0.0), "radius": 20.0, "w": 0.5},
     {"what": "receiver lower edges round the magazine well", "center_M": (430.0, 0.0, -30.0), "radius": 48.0, "w": 0.85},
     {"what": "rear sight block and leaf edges", "center_M": (450.0, 0.0, 40.0), "radius": 26.0, "w": 0.6},
     {"what": "charging handle", "center_M": (452.0, -32.0, 16.0), "radius": 20.0, "w": 1.0},
-    {"what": "dust cover shoulders and rear lip", "center_M": (330.0, 0.0, 28.0), "radius": 70.0, "w": 0.65},
+    {"what": "dust cover shoulders", "center_M": (330.0, 0.0, 28.0), "radius": 70.0, "w": 0.45},
+    {"what": "dust cover rear lip and the recoil spring button (thumb)", "center_M": (247.0, 0.0, 22.0),
+     "radius": 22.0, "w": 0.95},
     {"what": "receiver flanks under the firing hand / cheek", "center_M": (320.0, 0.0, -10.0), "radius": 55.0, "w": 0.55},
     {"what": "selector tab (thumb)", "center_M": (362.0, -24.0, -6.0), "radius": 20.0, "w": 1.0},
     {"what": "trigger guard bottom", "center_M": (335.0, 0.0, -60.0), "radius": 30.0, "w": 0.75},
@@ -181,7 +186,7 @@ METAL_WEAR = [
 SCUFF_AXIS = {"magazine": (0.45, 0.0, -0.89), "magazine_floor_plate": (1.0, 0.0, 0.0),
               "butt_plate": (0.0, 0.0, 1.0), "trigger_guard": (1.0, 0.0, 0.0)}
 # how scuffed each lacquered part is (x the shared scuff field; the sheet's dust cover is the most rubbed surface)
-SCUFF_W = {"dust_cover": 1.35, "receiver": 1.0, "magazine": 1.1, "barrel": 0.9, "gas_block": 0.9, "gas_tube": 0.9,
+SCUFF_W = {"dust_cover": 0.45, "receiver": 1.0, "magazine": 1.1, "barrel": 0.9, "gas_block": 0.9, "gas_tube": 0.9,
            "front_sight_block": 1.0, "muzzle_brake": 1.0, "rear_trunnion": 0.8, "rear_tang": 0.8,
            "handguard_front_band": 0.9, "trigger_guard": 0.9, "rear_sight_block": 0.8}
 # wood handling damage density per part (dents, scratches; the sheet's grip is the most dinged)

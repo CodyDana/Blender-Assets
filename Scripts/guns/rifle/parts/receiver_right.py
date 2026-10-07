@@ -32,7 +32,8 @@ underside over the magazine's front zone are the swept envelopes of the magazine
 plus their clearance rows (Scripts/guns/rifle/rifle_magfit.py: seam 0.06 over the sweep, never under 0.26 to the
 seated magazine, lug 0.2, top stop 0.2); the bottom sheet behind the opening is cut back along the rock-start pose's
 tilted rear face; the catch's top in front of a notch is an arc about the catch pin (its nose under the magazine's
-rear lug).
+rear lug). LOD2 (6.7 m+): no feed ramp and one lug/tab pocket (both inside the trunnion, never seen; the LOD2 share
+of LOD0 went 18.1 % -> 17.8 %, limit 18 %).
 """
 from __future__ import annotations
 
@@ -230,9 +231,15 @@ def well_cutters(mh):
     P += [(368.8, rear[0][1] + 0.5)] + [q for q in rear]
     out = [MS.prism(G.ccw(np.array(P, float)), -mh, mh)]
     lug, tab, roof_t = MF.pocket_profile()
-    for pr, hw, top in ((lug, MF.LUG_HW + MF.C_LUG, lug[-1][1]), (tab, MF.TAB_HW + MF.C_LUG, roof_t)):
+    bands = [(lug, MF.LUG_HW + MF.C_LUG, lug[-1][1]), (tab, MF.TAB_HW + MF.C_LUG, roof_t)]
+    if LOD.LEVEL >= 2:              # LOD2: one pocket (the tab band's envelope, which holds the lug's, at the wider of
+        #                             the two widths): inside the trunnion, never seen at 6.7 m+; LOD budget
+        bands = [(tab, max(MF.LUG_HW, MF.TAB_HW) + MF.C_LUG, roof_t)]
+    for pr, hw, top in bands:
         P = [(x_back, pr[0][1])] + list(pr) + ([(pr[-1][0], top)] if top > pr[-1][1] + 1e-6 else []) + [(x_back, top)]
         out.append(MS.prism(G.ccw(np.array(P, float)), -hw, hw))
+    if LOD.LEVEL >= 2:              # LOD2 (6.7 m+): the ramp is inside, under the carrier: never seen; LOD budget
+        return out
     (ax, az), (bx, bz), rhw = RAMP
     out.append(MS.prism(G.ccw(np.array([(ax, az), (bx, bz), (bx + 2.0, -4.0), (ax, -4.0)], float)), -rhw, rhw))
     return out

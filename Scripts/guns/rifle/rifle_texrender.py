@@ -135,10 +135,95 @@ def realism_shots():
     post = np.array(SPEC.key["sight_line"]["post_tip_M"], float)
     fp_eye = np.array([350.0, 0.0, 0.0]) + 350.0 * unit([-0.93, 0.22, 0.30])
     hero_t = np.array([450.0, 0.0, -20.0])
+    # ADS: EXACTLY the B4 / S2 camera (rifle_b4.sight_camera): the eye 250 mm behind the Sight socket on its line, the
+    # view ALONG the socket's pitch (not aimed at the post tip), 55 deg, 2560 x 1440 (realism-tex round: at 1600 px the
+    # 2 mm post in the notch was ~4 px and the judges could not find it; the gate's own resolution is kept)
     return [("fp_35cm", fp_eye, np.array([620.0, 0.0, 10.0]), 70.0, 1.1),
-            ("ads_55deg", sight - 250.0 * d, post, 55.0, 1.1),
+            ("ads_55deg", sight - 250.0 * d, sight + 1000.0 * d, 55.0, 1.1),
             ("tp_3m", hero_t + 3000.0 * unit([-0.45, -0.85, 0.28]), hero_t, 60.0, 3.2),
             ("hero_34", hero_t + 1500.0 * unit([0.55, -0.78, 0.30]), hero_t, 38.0, 1.6)]
+
+
+def _pixels(path):
+    im = bpy.data.images.load(str(path), check_existing=False)
+    w, h = im.size
+    a = np.array(im.pixels[:], np.float32).reshape(h, w, 4)[::-1]          # top-down rows
+    bpy.data.images.remove(im)
+    return a
+
+
+def ads_check(cam, png):
+    """The textured ADS picture's post vs its surround: a second render with every other part a holdout gives the
+    post's VISIBLE pixels (occlusion by the rear sight kept); from the beauty render: the post's mean luminance, the
+    luminance of the opening beside it (the notch gap, same rows, 2-6 px off each side, not post) and of the rear
+    sight lobes; Weber contrast. Writes <out>/ads_check.json and a 6x crop of the notch (ads_55deg_notch.png)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    post = bpy.data.objects["front_sight_post"]
+    others = [o for o in lod0_parts() if o.name != post.name and not o.hide_render]
+    for o in others:
+        o.is_holdout = True
+    mpath = OUT / "_ads_post_visible.png"
+    sp = sc.cycles.samples
+    sc.cycles.samples = 16
+    RD.still(sc, mpath, transparent=True)
+    sc.cycles.samples = sp
+    for o in others:
+        o.is_holdout = False
+    sc.render.film_transparent = False
+    beauty = _pixels(png)
+    vis = _pixels(mpath)[..., 3] > 0.5
+    mpath.unlink()
+    H, W = vis.shape
+    # Image.pixels of an 8-bit PNG are the stored (sRGB-encoded) values: decode to linear for the luminance
+    lin_ = np.where(beauty[..., :3] <= 0.04045, beauty[..., :3] / 12.92, ((beauty[..., :3] + 0.055) / 1.055) ** 2.4)
+    lum = lin_ @ np.array([0.2126, 0.7152, 0.0722], np.float32)
+    soc = {s["socket"]: s for s in SPEC.sockets["rifle"]}["Sight"]
+    tip = world_to_camera_view(sc, cam, B(SPEC.key["sight_line"]["post_tip_M"]))
+    notch = world_to_camera_view(sc, cam, B(soc["M_mm"]))
+    tip_px = (tip.x * W, (1 - tip.y) * H)
+    rec = {"camera": "B4 / S2: eye 250 mm behind the Sight socket on its line, forward = the socket pitch, 55 deg, "
+                     "%d x %d" % (W, H),
+           "post_tip_projected_px": [round(tip_px[0], 2), round(tip_px[1], 2)],
+           "notch_socket_projected_px": [round(notch.x * W, 2), round((1 - notch.y) * H, 2)],
+           "post_visible_px": int(vis.sum())}
+    if vis.any():
+        ys, xs = np.nonzero(vis)
+        rows = np.unique(ys)
+        sur = np.zeros_like(vis)
+        for y in rows:
+            xr = xs[ys == y]
+            for x0 in list(range(xr.min() - 6, xr.min() - 1)) + list(range(xr.max() + 2, xr.max() + 7)):
+                if 0 <= x0 < W:
+                    sur[y, x0] = True
+        sur &= ~vis
+        lp, ls = float(lum[vis].mean()), float(np.median(lum[sur])) if sur.any() else float("nan")
+        bg = float(np.median(lum[:40, :40]))
+        rec.update({"post_visible_rows": int(len(rows)), "post_visible_width_px_median": float(np.median(
+                    [np.sum(ys == y) for y in rows])),
+                    "post_tip_visible_px": [round(float(xs[ys == rows[0]].mean()), 2), int(rows[0])],
+                    "lum_post_linear": round(lp, 5), "lum_beside_post_linear": round(ls, 5),
+                    "lum_backdrop_linear": round(bg, 5),
+                    "weber_contrast_post_vs_beside": round((lp - ls) / max(ls, 1e-6), 3),
+                    "weber_contrast_post_vs_backdrop": round((lp - bg) / max(bg, 1e-6), 3)})
+    rec["post_found"] = bool(vis.sum() >= 20)
+    (OUT / "ads_check.json").write_text(json.dumps(rec, indent=1))
+    print("[AR01] ADS_CHECK", json.dumps(rec))
+    # 6x crop of the notch window (nearest), the post's visible outline marked in a side panel
+    cx, cy = int(round(tip_px[0])), int(round(tip_px[1]))
+    x0, y0 = max(cx - 80, 0), max(cy - 45, 0)
+    crop = beauty[y0:y0 + 90, x0:x0 + 160, :3]
+    mk = vis[y0:y0 + 90, x0:x0 + 160]
+    side = crop.copy()
+    side[mk] = (side[mk] * 0.3 + np.array([0.9, 0.05, 0.05], np.float32) * 0.7)
+    both = np.concatenate([crop, side], 1).repeat(6, 0).repeat(6, 1)
+    hh, ww = both.shape[:2]
+    img = bpy.data.images.new("ads_notch", ww, hh, alpha=False, float_buffer=False)   # byte: values stay sRGB
+    rgba = np.concatenate([both, np.ones((hh, ww, 1), np.float32)], 2)[::-1]
+    img.pixels[:] = rgba.ravel()
+    img.filepath_raw = str(OUT / "ads_55deg_notch.png")
+    img.file_format = "PNG"
+    img.save()
+    bpy.data.images.remove(img)
 
 
 def main():
@@ -168,13 +253,18 @@ def main():
         RD.still(sc, OUT / "tex_side.png")
     elif SET == "realism":
         show_only(lod0_parts())
+        post_tip = np.array(SPEC.key["sight_line"]["post_tip_M"], float)
         for name, eye, tgt, fov, ld in realism_shots():
             LK.rough_world(sc, (126, 126, 126), 0.55)
             sc.render.film_transparent = False
-            persp(cam, eye, tgt, fov, (1600, 900))
+            ads = name == "ads_55deg"
+            persp(cam, eye, tgt, fov, (2560, 1440) if ads else (1600, 900))
             bpy.context.view_layer.update()
-            LK.rough_lights(cam, tuple(B(tgt)), ld, 1.35 * LIGHT)
+            # the lights aim at the post tip in the ADS view (as before), at the view target otherwise
+            LK.rough_lights(cam, tuple(B(post_tip if ads else tgt)), ld, 1.35 * LIGHT)
             RD.still(sc, OUT / f"{name}.png")
+            if ads:
+                ads_check(cam, OUT / f"{name}.png")
     elif SET == "closeups":
         show_only(lod0_parts())
         RD.world_flat(sc, RD.srgb_to_lin((123, 123, 123)), 1.0, env=0.35)

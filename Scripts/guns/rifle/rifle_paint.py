@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -41,6 +42,7 @@ sys.path.insert(0, str(HERE))
 
 import rifle_surface as RS  # noqa: E402
 from gunlib import paint as PT  # noqa: E402
+from gunlib import edgemask as EM  # noqa: E402
 
 WORK = ROOT / "WorkFiles" / "guns" / "rifle"
 BAKE = WORK / "scratch" / "bake"
@@ -65,6 +67,23 @@ WOOD_WEAR = {"upper_handguard": [(1.0, 0.6, 22.0, 0.9)], "lower_handguard": [(1.
 _WT = ROOT / "WorkFiles" / "guns" / "rifle" / "wood_tone.json"
 WOOD_TONE = ({k: tuple(v) for k, v in json.loads(_WT.read_text())["tone_linear"].items()} if _WT.exists() else
              {k: (v, v, v) for k, v in RS.WOOD_VALUE.items()})
+
+
+# form-following grain per piece (realism-tex round): the piece's long axis and its "height" direction for
+# gunlib.paint.flow_coords (frame M unit vectors), the pith of the virtual blank (distance from the piece's mid height
+# and the angle of the pith direction from straight down, toward +w; oblique: the side faces cut the rings at a slant,
+# so the lines run with the form and open into long arches), the mean ring spacing (mm) and a noise seed
+_ga = math.radians(RS.GRIP_RAKE_DEG)
+WOOD_FLOW = {
+    "buttstock": {"ax": (1.0, 0.0, 0.0), "up": (0.0, 0.0, 1.0), "pith_mm": 150.0, "pith_deg": 38.0, "spacing": 2.9,
+                  "seed": 410},
+    "pistol_grip": {"ax": (math.sin(_ga), 0.0, math.cos(_ga)), "up": (-math.cos(_ga), 0.0, math.sin(_ga)),
+                    "pith_mm": 95.0, "pith_deg": 52.0, "spacing": 2.4, "seed": 430},
+    "upper_handguard": {"ax": (1.0, 0.0, 0.0), "up": (0.0, 0.0, 1.0), "pith_mm": 120.0, "pith_deg": 30.0,
+                        "spacing": 2.5, "seed": 450, "rigid": True},
+    "lower_handguard": {"ax": (1.0, 0.0, 0.0), "up": (0.0, 0.0, 1.0), "pith_mm": 135.0, "pith_deg": 44.0,
+                        "spacing": 2.7, "seed": 470, "rigid": True},
+}
 
 
 def lin(rgb):
@@ -97,6 +116,23 @@ def checker_field_mask(P):
     return inside_poly(P[:, [0, 2]], np.asarray(GC.field_outline_xz(0.0), float))
 
 
+def geo_edges(st, P, tp):
+    """Geometric edge masks at the texels (gunlib.edgemask: convex dihedral edges of each texel's own part on the true
+    LOD0 triangles; realism-fix round 2026-10-07): E at sigma 0.3 mm (fine) and 1.0 mm (broad), and the distance to
+    the nearest sharp (> 25 deg) convex edge. Cached next to the bakes (recomputed when the triangles or the position
+    bake are newer)."""
+    cache = BAKE / f"{st}_geoedge.npz"
+    src = [BAKE / f"{st}_tris.npz", BAKE / f"{st}_pos.npy", BAKE / f"{st}_ids.npy"]
+    if cache.exists() and all(cache.stat().st_mtime > f.stat().st_mtime for f in src):
+        c = np.load(cache)
+        if len(c["ef"]) == len(P):
+            return c["ef"], c["eb"], c["dist"]
+    t = np.load(BAKE / f"{st}_tris.npz")
+    E, dist = EM.part_fields(t["V"], t["pid"], P, tp, (0.3, 1.0))
+    np.savez(cache, ef=E[0.3], eb=E[1.0], dist=dist)
+    return E[0.3], E[1.0], dist
+
+
 def load(st):
     d = {}
     for k in ("pos", "nrm", "ids", "edge", "ao"):
@@ -120,11 +156,9 @@ def paint(st, meta):
     P = d["pos"].reshape(-1, 3)[idx].astype(np.float32) * 1000.0 + GRIP.astype(np.float32)     # frame M, mm
     N = d["nrm"].reshape(-1, 3)[idx].astype(np.float32) * 2.0 - 1.0
     N /= np.maximum(np.linalg.norm(N, axis=1, keepdims=True), 1e-6)
-    e1 = d["edge"].reshape(-1, 3)[idx, 0].astype(np.float32)
-    e2 = d["edge"].reshape(-1, 3)[idx, 1].astype(np.float32)
-    pt = d["edge"].reshape(-1, 3)[idx, 2].astype(np.float32)
     ao = np.clip(d["ao"].reshape(-1)[idx].astype(np.float32), 0, 1)
     tp = pid.ravel()[idx]
+    ef, eb, dist_e = geo_edges(st, P, tp)
     n = len(idx)
     part = np.array([names.get(int(k), "") for k in range(0, max(names) + 1)], object)
     fin_of_part = np.array([RS.PART_FINISH.get(part[k], "lacquer") if part[k] else "lacquer"
@@ -143,12 +177,15 @@ def paint(st, meta):
     refin = np.zeros(n, np.float32)
 
     # ---------------------------------------------------------------- shared masks
-    # convex edges only: a concave corner is occluded by its own neighbour face (low AO), a convex one is open; the
-    # vertex pointiness reads > 0.5 on most flats here (fine bevels everywhere), so it only nudges
-    convex = PT.smoothstep(0.78, 0.95, ao) * (0.75 + 0.25 * PT.smoothstep(0.50, 0.56, pt))
+    # REALISM-FIX ROUND (2026-10-07, review: white triangular shards on flat panels, a lit wedge on the receiver's
+    # right wall at the magazine well, dashed seam lines): the edge masks are the GEOMETRIC convex-edge fields of
+    # gunlib.edgemask (true dihedral edges of each part; an edge inside a planar face reads 0), no longer the
+    # bevel-node bake (which followed the interpolated normals across long sliver triangles). Edges in an occluded
+    # corner (low AO: a slot's inner lip, under a neighbour) see less handling
+    open_ = 0.6 + 0.4 * PT.smoothstep(0.60, 0.90, ao)
     v_far = PT.chunked(PT.fbm3, P, 25.0, 2, 4)        # some edges see more handling than others
-    edge_fine = PT.smoothstep(0.012, 0.07, e1) * convex
-    edge_broad = PT.smoothstep(0.035, 0.16, e2) * convex
+    edge_fine = PT.smoothstep(0.30, 0.80, ef) * open_
+    edge_broad = PT.smoothstep(0.30, 0.90, eb) * open_
     # wear placement (rifle_surface.METAL_WEAR): edges wear where hands, sling, ground and reloads put it, and where
     # the sheet draws its bright edges; elsewhere only the strongest edges chip
     wearz = np.zeros(n, np.float32)
@@ -175,10 +212,30 @@ def paint(st, meta):
     # look-polish round (orchestrator item 3: wear read faint at hero / third-person distance): in the handling zones
     # the worn band spreads wider (x up to 2.0) and the zone term adds to the propensity, so the wear there forms
     # readable 1-4 mm bands and patches, not sub-mm flecks; elsewhere unchanged
-    e_band = np.maximum(e_core, np.clip(spread * (2.4 + 2.4 * wearz), 0.0, 1.0))
+    # (realism-tex round: x (2.4 + 2.4 wearz) put a uniform light halo round the cover's button hole; narrower now)
+    e_band = np.maximum(e_core, np.clip(spread * (1.9 + 1.3 * wearz), 0.0, 1.0))
     flake = PT.chunked(PT.fbm3, P, 1.1, 3, 41)
     flake_big = PT.chunked(PT.fbm3, P, 5.0, 2, 42)
     edge = e_band * (0.45 + 1.1 * wear + 0.55 * wearz) * (0.75 + 0.5 * v_far) * (0.35 + 0.85 * flake + 0.35 * flake_big) / 0.95
+    # realism-tex round (judges 2026-10-06: a flat white patch on the gas block collar, a hard white ring at the brake's
+    # base): the chips to bare steel came from the SPREAD band (up to ~2 mm off any edge in the wear zones, x 4.8), so a
+    # narrow section between two edges went bare all round. Bare steel now needs the true edge (the 0.6 / 2 mm bevel
+    # masks, e_core) and is broken by a fine flake field (real chips are irregular flecks along an edge, never a solid
+    # band); the spread band only thins / rubs the coat (lighter, glossier dielectric), as worn paint does first
+    edge_chip = e_core * (0.45 + 1.1 * wear + 0.55 * wearz) * (0.75 + 0.5 * v_far) *         (0.35 + 0.85 * flake + 0.35 * flake_big) / 0.95
+    flk = PT.chunked(PT.fbm3, P, 0.7, 3, 44)
+    # bare steel only ON a sharp edge (the 0.6 mm bevel mask): the 2 mm mask lights whole rounded collars (the gas
+    # block's rear collar went bare across its crown); the magazine's rib crests keep the broad mask (lacquer_mag)
+    # (flake gate 0.48: at 0.40 a straight 0.6 mm bevel broke into regular bright dashes, "stitching" at FP distance)
+    # bare steel only within 0.6 mm of a real sharp convex edge (1.2 mm inside a handling / wear zone), and never on
+    # a panel interior (gate: bare clusters > 2 mm from any convex edge outside the wear zones = 0)
+    near = (dist_e < 0.6) | ((wearz > 0.5) & (dist_e < 1.2))
+    # chips CLUSTER where something rubs (review: 'even white streaks along every rib and edge, the look of an
+    # automatic edge-wear generator'): a 9 mm cluster field gates them, loosely inside the wear zones and only at its
+    # rare peaks elsewhere, so most of an edge's length keeps its coat
+    clus = PT.smoothstep(0.42, 0.72, PT.chunked(PT.fbm3, P, 9.0, 3, 45)) * (0.35 + 0.65 * wearz)
+    on_edge = (edge_fine > 0.35) & (flk > 0.48) & near & (clus > 0.30)
+    on_edge_mag = (edge_fine > 0.30) & (flk > 0.46) & near & (clus > 0.34)
     v_lo = PT.chunked(PT.fbm3, P, 9.0, 3, 1)          # broad value / sheen variation
     v_mid = PT.chunked(PT.fbm3, P, 2.6, 3, 2)
     chip_n = PT.chunked(PT.fbm3, P, 0.9, 3, 3)
@@ -216,35 +273,41 @@ def paint(st, meta):
         if f in ("lacquer", "lacquer_cover", "lacquer_mag"):
             eb = edge_broad[k] * (0.55 + 0.9 * v_far[k]) if f == "lacquer_mag" else 0.0   # mag: bright rib crests
             amt = np.maximum(edge[k], eb) * (0.45 + chip_n[k])
-            chip = amt > 0.62 - 0.10 * wearz[k]
-            # rubbed lacquer short of a chip: the coat thinned lighter and glossier along the worn edges
-            rub = PT.smoothstep(0.30, 0.62, amt) * (~chip)
-            col *= (1.0 + (0.9 + 0.6 * wearz[k]) * rub)[:, None]
+            amt_c = edge_chip[k] * (0.45 + chip_n[k])     # (the mag's rib crests rub lighter; chips only at true edges)
+            chip = (amt_c > (0.62 if f == "lacquer_mag" else 0.70) - 0.10 * wearz[k]) &                 (on_edge_mag[k] if f == "lacquer_mag" else on_edge[k])
+            # rubbed lacquer short of a chip: the coat thinned lighter and glossier along the worn edges (a mid-dark
+            # grey, not a light one: x <= 1.8 on the 0.035 lacquer)
+            # (mottled by the flake field: a uniform rubbed band round a hole or along an edge read as a halo)
+            rub = PT.smoothstep(0.36, 0.70, amt) * (~chip) * np.clip(0.15 + 1.0 * flake[k], 0, 1)
+            col *= (1.0 + (0.45 + 0.35 * wearz[k]) * rub)[:, None]
             r = r - 0.06 * rub
             # scuffs (the sheet's long light rubs on the cover, receiver, barrel and magazine): thin streaks along the
             # part's scuff axis in patches, plus short random scratches; light (thinned lacquer), the deepest to bare
             pk_ = part[tp[k]]
             sw = np.array([RS.SCUFF_W.get(x, 0.7) for x in pk_], np.float32)
+            # the dust cover: no long bore-aligned streaks, oil blotches or thinned-coat patches on its crown (the
+            # judges' "brushed aluminium / plaster"); short random-direction scratches only
+            cov = (pk_ == "dust_cover").astype(np.float32)
             Pk = P[k]
-            scl = np.zeros(k.sum(), np.float32)
-            for axn in set(RS.SCUFF_AXIS.get(x, (1.0, 0.0, 0.0)) for x in np.unique(pk_)):
-                gsel = np.array([RS.SCUFF_AXIS.get(x, (1.0, 0.0, 0.0)) == axn for x in pk_])
-                scl[gsel] = PT.aniso(Pk[gsel], axn, 16.0, 0.09, 2, 81)
-            patch = PT.smoothstep(0.42, 0.72, PT.chunked(PT.fbm3, Pk, 14.0, 3, 83)) * sw
-            scr1 = PT.aniso(Pk, (0.62, 0.70, 0.35), 5.0, 0.05, 2, 85)
-            scr2 = PT.aniso(Pk, (0.55, -0.60, -0.58), 4.0, 0.05, 2, 86)
-            scuff = np.clip(PT.smoothstep(0.66, 0.78, scl) * patch
-                            + 0.8 * PT.smoothstep(0.72, 0.82, np.maximum(scr1, scr2)) * np.clip(patch + 0.25, 0, 1),
-                            0, 1)
-            col *= (1.0 + 1.6 * scuff)[:, None]
-            r = r - 0.10 * scuff
+            # REALISM-FIX ROUND (review: uniform horizontal hairlines over the whole receiver side and the front
+            # sight tower read as brushed aluminium): scuffs only in the handling / sling / wear zones, short (6 mm)
+            # and in a direction that changes from patch to patch, at about half the old contrast; the open flats
+            # keep the fine lacquer mottle only. Deep scratches to bare steel only inside a wear zone
+            zone = PT.smoothstep(0.30, 0.65, wearz[k])
+            scl = PT.scratch_patches(Pk, 9.0, 6.0, 0.07, 81)
+            patch = PT.smoothstep(0.45, 0.72, PT.chunked(PT.fbm3, Pk, 14.0, 3, 83)) * sw * zone
+            scr1 = PT.scratch_patches(Pk, 5.0, 3.0, 0.05, 85)
+            scuff = np.clip(PT.smoothstep(0.68, 0.80, scl) * patch * (1.0 - cov)
+                            + 0.7 * PT.smoothstep(0.74, 0.84, scr1) * np.clip(patch + 0.15 * zone, 0, 1), 0, 1)
+            col *= (1.0 + 0.55 * scuff)[:, None]
+            r = r - 0.04 * scuff
             deep = (scuff > 0.85) & (PT.smoothstep(0.80, 0.90, scl) * patch * (0.6 + 0.8 * wear[k]) > 0.55)
-            chip |= deep
+            chip |= deep & (flk[k] > 0.45) & (wearz[k] > 0.5) & (dist_e[k] < 2.0)
             # worn-finish mottling (lighter, glossier patches where the coat has thinned) and darker oily patches
-            wp = PT.smoothstep(0.58, 0.82, PT.chunked(PT.fbm3, Pk, 22.0, 3, 87)) * np.clip(sw, 0, 1.2)
-            col *= (1.0 + 0.55 * wp)[:, None]
+            wp = PT.smoothstep(0.58, 0.82, PT.chunked(PT.fbm3, Pk, 22.0, 3, 87)) * np.clip(sw, 0, 1.2) * (1 - cov)
+            col *= (1.0 + 0.35 * wp)[:, None]
             r = r - 0.06 * wp
-            oil = PT.smoothstep(0.62, 0.86, PT.chunked(PT.fbm3, Pk, 34.0, 2, 88))
+            oil = PT.smoothstep(0.62, 0.86, PT.chunked(PT.fbm3, Pk, 34.0, 2, 88)) * (1.0 - 0.8 * cov)
             col *= (1.0 - 0.22 * oil)[:, None]
             r = r - 0.05 * oil
             # dust cover (look-polish item 4): the top is not one uniform light slab at ADS: broad dust (lighter,
@@ -253,14 +316,14 @@ def paint(st, meta):
             # over the receiver wall is rubbed bright (the cover slides on and off along it)
             is_c = pk_ == "dust_cover"
             if is_c.any():
-                up = np.clip((N[k][:, 2] - 0.35) / 0.4, 0, 1) * is_c
-                dz = PT.chunked(PT.fbm3, Pk * np.array([0.45, 1.0, 1.0], np.float32), 30.0, 3, 101)
-                oz = PT.aniso(Pk, (1.0, 0.0, 0.0), 45.0, 3.0, 3, 102)
-                dust = PT.smoothstep(0.42, 0.75, dz) * up
-                wipe = PT.smoothstep(0.45, 0.75, oz) * up * (1.0 - dust)
-                # (first pass 0.30 / 0.22 and +0.16 / -0.14 read too faint at ADS: the top still one light slab)
-                col *= (1.0 + 0.40 * dust - 0.32 * wipe)[:, None]
-                r = r + 0.20 * dust - 0.22 * wipe
+                # realism-tex round (judges 2026-10-06: the top read as plaster / brushed aluminium - large whitish
+                # dust slabs and glossy wipe streaks stretched along the bore): the cover is a dark pressed sheet in
+                # one coat; only a fine low-contrast mottle (+-4 %) and a satin sheen wander (+-0.04) on it; its wear is
+                # on the edges, the rear lip and round the button (METAL_WEAR, the edge masks), not on the flat crown
+                cm = PT.chunked(PT.fbm3, Pk, 6.0, 3, 101)
+                cs = PT.chunked(PT.fbm3, Pk, 20.0, 2, 102)
+                col *= (1.0 + 0.08 * (cm - 0.5) * is_c)[:, None]
+                r = r + 0.08 * (cs - 0.5) * is_c
                 sb = np.array([RC.skirt_bottom(float(x)) for x in Pk[:, 0]], np.float32)
                 skirt = is_c & (Pk[:, 2] < sb + 1.3) & (np.abs(N[k][:, 1]) > 0.35) & (Pk[:, 2] < RC.Z_BASE + 12.0)
                 sk = skirt.astype(np.float32) * PT.smoothstep(1.3, 0.2, Pk[:, 2] - sb) * (0.55 + 0.6 * flake[k])
@@ -280,12 +343,13 @@ def paint(st, meta):
             pit = (PT.chunked(PT.vnoise3, Pk / 0.35, 89) > 0.93) & (PT.chunked(PT.fbm3, Pk, 9.0, 2, 90) > 0.6)
             col[pit] *= 0.55
             r = np.where(pit, r + 0.15, r)
-            # rare surface nicks on flats (subtle surface wear)
-            nick = (PT.chunked(PT.fbm3, Pk, 0.45, 2, 9) > 0.88) & (v_lo[k] > 0.64)
-            chip |= nick
-            # micro scratches and handling sheen in roughness only (no colour change)
-            scr = PT.smoothstep(0.68, 0.80, PT.aniso(Pk, (1.0, 0.0, 0.25), 6.0, 0.18, 2, 12))
-            r = r - 0.07 * scr
+            # rare surface nicks on flats: a dull rubbed fleck in the coat (no bare steel off the edges: the review's
+            # 'isolated white chip in the middle of the magazine body')
+            nick = (PT.chunked(PT.fbm3, Pk, 0.45, 2, 9) > 0.88) & (v_lo[k] > 0.64) & (cov < 0.5)
+            col[nick] *= 1.25
+            # micro scratches and handling sheen in roughness only (no colour change), in the zones, mixed directions
+            scr = PT.smoothstep(0.68, 0.80, PT.scratch_patches(Pk, 7.0, 4.0, 0.15, 12)) * (1.0 - cov) * zone
+            r = r - 0.05 * scr
             hscuff = -0.006 * scuff - 0.02 * pit
             m_edge[k] = np.clip(edge[k], 0, 1)
             refin[k] = 1.0
@@ -293,16 +357,17 @@ def paint(st, meta):
             # butt plate: densely scratched to bare steel (two scratch directions)
             sc1 = PT.aniso(P[k], (0.0, 0.0, 1.0), 12.0, 0.30, 2, 21)
             sc2 = PT.aniso(P[k], (0.0, 0.7, 0.7), 10.0, 0.30, 2, 22)
-            chip = (np.maximum(sc1, sc2) > 0.79) | (edge[k] * (0.5 + chip_n[k]) > 0.55)
+            chip = (np.maximum(sc1, sc2) > 0.79) | ((edge_chip[k] * (0.5 + chip_n[k]) > 0.55) & on_edge[k])
             m_edge[k] = np.clip(edge[k] + 0.4, 0, 1)
             refin[k] = 1.0
         elif f == "bluing":
             amt = edge[k] * (0.4 + chip_n[k])
-            chip = amt > 0.70 - 0.14 * wearz[k]
+            chip = (edge_chip[k] * (0.4 + chip_n[k]) > 0.70 - 0.14 * wearz[k]) & on_edge[k]
             # bluing thins to a lighter grey before it reaches bare steel (metal stays metal: >= sRGB 110)
             thin = PT.smoothstep(0.35, 0.70, amt) * (~chip)
-            col *= (1.0 + 0.45 * thin)[:, None]
-            r = r - 0.08 * thin
+            # (realism-fix round: the stamped small parts flashed white / chrome; bluing thins only a little before bare)
+            col *= (1.0 + 0.25 * thin)[:, None]
+            r = r - 0.04 * thin
             m_edge[k] = np.clip(edge[k], 0, 1)
         else:
             chip = np.zeros(k.sum(), bool)
@@ -313,11 +378,20 @@ def paint(st, meta):
         st_ = np.zeros(k.sum(), np.float32)
         if cs.any():
             st_[cs] = PT.aniso(P[k][cs], (1.0, 0.0, 0.0), 14.0, 0.25, 2, 31)
-            slide[cs] = np.abs(N[k][cs, 1]) > 0.75                      # the flanks: polished bare
-        chip |= slide
+            # REALISM-FIX ROUND (review: the carrier flank in the port read as cloudy polished chrome, the charging
+            # knob 79 % bare): polish only on the rail-contact strip (the carrier's lower flank inside the receiver,
+            # Z <= 1, |Y| < 20; the knob is outside the wall at |Y| > 20): the bluing worn lighter (BC ~ 150-165,
+            # still blued, not bare) at roughness 0.30-0.40
+            Pc = P[k][cs]
+            slide[cs] = (np.abs(N[k][cs, 1]) > 0.75) & (Pc[:, 2] <= 1.0) & (np.abs(Pc[:, 1]) < 20.0)
+        chip &= ~slide
         col[chip] = bare[None, :] * (0.92 + 0.12 * v_mid[k][chip])[:, None]
-        r = np.where(chip, np.where(slide, 0.16 + 0.10 * st_, 0.30 + 0.08 * v_mid[k]), r)
-        met = np.where(chip, 1.0, met)
+        if slide.any():
+            col[slide] = lin((156, 156, 154))[None, :] * (0.94 + 0.10 * v_mid[k][slide])[:, None]
+        # worn steel: micro-scratched, rough enough (0.50-0.62) to read mid grey under a soft light, not a white mirror flash
+        r = np.where(chip, 0.50 + 0.12 * v_mid[k], r)
+        r = np.where(slide, 0.30 + 0.10 * st_, r)
+        met = np.where(chip | slide, 1.0, met)
         # chip relief: the lacquer flake edge (0.03 mm) for the normal map
         if f.startswith("lacquer"):
             h[k] = np.where(chip, -0.03, hscuff if f in ("lacquer", "lacquer_cover", "lacquer_mag") else 0.0)
@@ -347,6 +421,26 @@ def paint(st, meta):
             met_b = met[bsel]
             met_b[inner] = 0.0
             met[bsel] = met_b
+        # REALISM-FIX ROUND (review G11: the slant brake's inside was the same even grey as its outside): the
+        # chamber, bore and port walls (texels facing into the bore axis or along it, inside r 9.6) carry soot that
+        # deepens toward the chamber's rear, heaviest carbon on the slant lip's inner face; dielectric, rough
+        if (pk == "muzzle_brake").any():
+            msel = pk == "muzzle_brake"
+            Pm, Nm = P[k][msel], N[k][msel]
+            rad = np.maximum(np.hypot(Pm[:, 1], Pm[:, 2]), 1e-3)
+            nr = (Nm[:, 1] * Pm[:, 1] + Nm[:, 2] * Pm[:, 2]) / rad
+            inside = (nr < 0.4) & (rad < 9.6) & (Pm[:, 0] > 849.5)
+            dep = PT.smoothstep(879.0, 858.0, Pm[:, 0])
+            sootm = np.clip(0.55 + 0.40 * dep + 0.15 * (v_mid[k][msel] - 0.5), 0, 1) * inside
+            cm, rm, mm_ = col[msel], r[msel], met[msel]
+            cm = np.where(inside[:, None], cm * (1 - 0.88 * sootm)[:, None] + 0.018 * sootm[:, None], cm)
+            rm = np.where(inside, 0.82 + 0.08 * sootm, rm)
+            mm_ = np.where(inside, 0.0, mm_)
+            # carbon on the slant lip's front (the outer rim within 3 mm of the cut, in front of X 873)
+            lip = (~inside) & (Pm[:, 0] > 873.0) & (edge_broad[k][msel] > 0.2)
+            cm = np.where(lip[:, None], cm * 0.55, cm)
+            mm_ = np.where(lip & (mm_ > 0.5) & (v_mid[k][msel] > 0.45), 0.0, mm_)
+            col[msel], r[msel], met[msel] = cm, rm, mm_
         bc[k] = col
         rough[k] = r
         metal[k] = met
@@ -365,53 +459,83 @@ def paint(st, meta):
         L = np.ones(wsel.sum(), np.float32)
         rr = np.zeros(wsel.sum(), np.float32)
         hh = np.zeros(wsel.sum(), np.float32)
+        satm = np.ones(wsel.sum(), np.float32)        # chroma multiplier (1 = the part's tone; < 1 browner / greyer)
+        gold = np.zeros(wsel.sum(), np.float32)       # -1 redder .. +1 more golden (light figure)
+        endg = np.zeros(wsel.sum(), np.float32)       # end grain (surface across the grain)
         Pw, Nw, pk = P[wsel], N[wsel], part[tp[wsel]]
         for name in np.unique(pk):
             s = pk == name
-            ax = np.array(RS.GRAIN_AXIS.get(name, (1.0, 0.0, 0.0)), np.float32)
-            c = Pw[s].mean(0)
-            # pith of the virtual blank: off the part, below / to one side (flat-sawn: rings show as cathedral arches)
-            perp = np.cross(ax, np.array([0.0, 1.0, 0.0], np.float32))
-            perp /= max(np.linalg.norm(perp), 1e-6)
-            pith = c - perp * 55.0 + np.array([0.0, 23.0, 0.0], np.float32)
-            ph, rad = PT.wood_rings(Pw[s], ax, pith, spacing_mm=1.3, warp_mm=4.0, seed=40 + len(name))
-            # soft latewood (no contour-map lines), long figure streaks, fine pores along the grain
-            late = PT.smoothstep(0.35, 0.80, ph) * (1 - PT.smoothstep(0.80, 1.0, ph))
-            fig = PT.aniso(Pw[s], ax, 60.0, 6.0, 3, 50 + len(name))
-            streak = PT.aniso(Pw[s], ax, 18.0, 0.8, 2, 55 + len(name))
-            pores = PT.smoothstep(0.62, 0.82, PT.aniso(Pw[s], ax, 4.0, 0.18, 2, 60 + len(name)))
-            l_ = 1.0 + (k_dark - 1.0) * 0.30 * late
-            l_ *= 1.0 + (k_light - 1.0) * 0.30 * PT.smoothstep(0.45, 0.75, fig) - 0.10 * PT.smoothstep(0.5, 0.2, fig)
-            l_ *= 1.0 + 0.45 * (streak - 0.5)
-            # long dark grain streaks (the sheet's walnut: dark lines running the part's length)
-            dstreak = PT.smoothstep(0.62, 0.78, PT.aniso(Pw[s], ax, 40.0, 0.35, 3, 57 + len(name)))
-            l_ *= 1.0 - 0.38 * dstreak
-            # broad darker patches in the figure (heartwood / old oil), the sheet's uneven stock and guards
-            l_ *= 1.0 - 0.16 * PT.smoothstep(0.50, 0.78, PT.chunked(PT.fbm3, Pw[s], 30.0, 3, 59 + len(name)))
-            l_ *= 1.0 - 0.12 * pores
+            # realism-tex round (judges 2026-10-06: "straight horizontal wallpaper stripes that ignore the form"): the
+            # grain is laid out in FORM-FOLLOWING coordinates of each piece (gunlib.paint.flow_coords: u along the
+            # piece, s between its lower and upper outline at that u), so the lines run with the stock's drop and
+            # converge through the wrist, lean with the grip, and the butt / grip toe / guard ends cut across them
+            # (end grain: ring arcs, open pores, darker and drier)
+            fl = WOOD_FLOW.get(str(name), WOOD_FLOW["upper_handguard"])
+            u, sv, w, span, Hn, T = PT.flow_coords(Pw[s], fl["ax"], fl["up"], rigid=bool(fl.get("rigid")))
+            v = np.clip(sv, -0.3, 1.3) * np.sqrt(np.maximum(span, 5.0) * Hn)   # straightened height (mm)
+            sd = fl["seed"]
+            th = math.radians(fl["pith_deg"])
+            pith = (0.5 * Hn - fl["pith_mm"] * math.cos(th), fl["pith_mm"] * math.sin(th))
+            ph, ring = PT.ring_phase(v, w, u, pith, fl["spacing"], sd)
+            # walnut is semi-ring-porous: a soft darker latewood band closing each ring, open pores in the earlywood
+            late = PT.smoothstep(0.55, 0.88, ph) * (1.0 - PT.smoothstep(0.92, 1.0, ph))
+            rv = PT._hash(ring, np.full_like(ring, sd), np.zeros_like(ring), 5)          # per-ring strength
+            late *= 0.3 + 1.2 * rv
+            # straightened sample points: noise stretched ALONG the grain lines
+            def gq(along, across, off=0.0):
+                return np.stack([u / along + off, v / across, w / across], 1).astype(np.float32)
+            # dark colour streaks (heartwood / mineral streaks), long and narrow, in patches
+            strk = PT.smoothstep(0.56, 0.80, PT.chunked(PT.fbm3, gq(95.0, 3.2), 1.0, 3, sd + 1))
+            strk *= PT.smoothstep(0.35, 0.65, PT.chunked(PT.fbm3, gq(160.0, 22.0, 3.3), 1.0, 2, sd + 2))
+            # broad figure (lighter golden / darker red-brown zones), elongated along the grain
+            fig = PT.chunked(PT.fbm3, gq(75.0, 16.0, 7.1), 1.0, 3, sd + 3)
+            # fine fibre texture between the rings, and the pores: short dark dashes along the grain
+            fib = PT.chunked(PT.fbm3, gq(9.0, 0.45, 1.7), 1.0, 2, sd + 4)
+            # (the furniture texel is 0.14-0.29 mm: the pores are a fine, dense, low-contrast fleck along the grain)
+            pores = PT.smoothstep(0.58, 0.76, PT.chunked(PT.fbm3, gq(1.2, 0.20, 5.5), 1.0, 2, sd + 6))
+            pores *= 0.55 + 0.45 * (1.0 - late)
+            # end grain: |N . T| high where the surface cuts across the grain lines
+            eg = PT.smoothstep(0.55, 0.88, np.abs(np.sum(Nw[s] * T, axis=1)))
+            # broad heartwood-dark zones (walnut's chocolate patches): the figure's large-scale value contrast
+            heart = PT.smoothstep(0.42, 0.72, PT.chunked(PT.fbm3, gq(150.0, 30.0, 4.4), 1.0, 3, sd + 9))
+            l_ = 1.0 + (k_dark - 1.0) * 0.42 * late
+            l_ *= 1.0 + 0.65 * (fig - 0.5)
+            l_ *= 1.0 - 0.34 * heart
+            l_ *= 1.0 - 0.46 * strk                    # (realism-fix: darker mineral streaks)
+            l_ *= 1.0 + 0.10 * (fib - 0.5)
+            l_ *= 1.0 - 0.26 * pores
+            l_ *= 1.0 - 0.34 * eg                      # end grain: drier and grimier
             dirt = PT.smoothstep(0.55, 0.75, PT.chunked(PT.fbm3, Pw[s], 14.0, 3, 65 + len(name)))
-            l_ *= 1.0 - 0.14 * dirt
+            l_ *= 1.0 - 0.10 * dirt
             # (the part's value AND hue relative to the stain: WOOD_TONE below, applied to the colour)
             # handling damage (the sheet's furniture is dinged and scratched all over, the grip most): small dark
             # dents (crushed fibres, darker, rougher, a shallow dip) and fine scratches through the shellac (lighter)
             dw = RS.DENT_W.get(name, 1.0)
             dpatch = PT.smoothstep(0.35, 0.70, PT.chunked(PT.fbm3, Pw[s], 18.0, 2, 91 + len(name)))
-            dents = PT.smoothstep(0.74 - 0.05 * (dw - 1.0), 0.84 - 0.05 * (dw - 1.0),
-                                  PT.chunked(PT.fbm3, Pw[s], 1.5, 2, 93 + len(name))) * np.clip(dpatch * dw, 0, 1)
+            # REALISM-FIX ROUND (review: evenly spread round pock dents gave a hammered look): sparse dings
+            # stretched ALONG the grain (crushed fibres run with it), in patches
+            dents = PT.smoothstep(0.83 - 0.03 * (dw - 1.0), 0.90 - 0.03 * (dw - 1.0),
+                                  PT.chunked(PT.fbm3, gq(5.0, 0.9, 2.9), 1.0, 2, 93 + len(name))) * \
+                np.clip(dpatch * dw, 0, 1)
             sc_a = PT.aniso(Pw[s], (0.35, 0.85, 0.40), 9.0, 0.07, 2, 95 + len(name))
             sc_b = PT.aniso(Pw[s], (0.80, -0.30, 0.52), 12.0, 0.07, 2, 97 + len(name))
             scr = PT.smoothstep(0.76, 0.84, np.maximum(sc_a, sc_b)) * np.clip(dpatch * dw + 0.2, 0, 1)
-            l_ *= 1.0 - 0.32 * dents
-            l_ *= 1.0 + 0.16 * scr
-            # stronger figure for the sheet's dark-grained walnut (r4 look: the grain hardly read at the side view),
-            # as one extra luminance factor normalised to median 1, so the part's median value (gate L5) is kept
-            extra = (1.0 - 0.30 * PT.smoothstep(0.55, 0.75, PT.aniso(Pw[s], ax, 55.0, 0.6, 3, 61 + len(name))))
-            extra *= 1.0 + (k_dark - 1.0) * 0.25 * late
-            extra *= 1.0 - 0.18 * PT.smoothstep(0.45, 0.80, PT.aniso(Pw[s], ax, 120.0, 4.0, 2, 63 + len(name)))
-            l_ *= extra / max(float(np.median(extra)), 1e-3)
+            l_ *= 1.0 - 0.16 * dents
+            l_ *= 1.0 + 0.12 * scr
             L[s] = l_
-            rr[s] = WOOD_R0 + 0.06 * (fig - 0.5) + 0.07 * pores + 0.03 * late + 0.06 * dents + 0.08 * scr
-            hh[s] = -0.012 * pores + 0.006 * late - 0.05 * dents - 0.01 * scr
+            # chroma: streaks, pores and end grain browner / greyer, latewood richer, a broad saturation wander
+            sn = PT.chunked(PT.fbm3, gq(120.0, 30.0, 9.9), 1.0, 2, sd + 7)
+            satm[s] = (1.0 + 0.40 * (sn - 0.5) - 0.30 * strk - 0.16 * pores - 0.20 * eg + 0.06 * late
+                       - 0.08 * dents - 0.22 * heart)
+            # light figure turns golden (hue toward yellow), dark figure red-brown: desaturating an orange toward its
+            # luminance grey reads salmon / pink, so the light zones shift hue instead of losing chroma
+            gold[s] = np.clip((fig - 0.5) * 3.0 - 0.5 * heart, -1.0, 1.0)
+            endg[s] = eg
+            # finish sheen: an oil / shellac wander along the grain, open pores and end grain drier
+            sh = PT.chunked(PT.fbm3, gq(60.0, 14.0, 2.2), 1.0, 2, sd + 8)
+            rr[s] = (WOOD_R0 + 0.10 * (sh - 0.5) + 0.08 * pores + 0.03 * late + 0.12 * eg + 0.06 * dents
+                     + 0.08 * scr)
+            hh[s] = -0.014 * pores + 0.005 * late - 0.05 * dents - 0.01 * scr - 0.006 * eg * (1.0 - ph)
         # handling wear: worn lighter and rougher at the hands, oil-darkened around
         hz = np.zeros(wsel.sum(), np.float32)
         ring = np.zeros(wsel.sum(), np.float32)
@@ -446,7 +570,10 @@ def paint(st, meta):
         L *= 1.0 + (k_hand - 1.0) * np.clip(hz * 1.1 + 0.6 * wedge, 0, 1)
         L *= 1.0 + 0.55 * np.clip(wband, 0, 1)                      # worn through: lighter raw walnut
         L *= 1.0 - 0.10 * ring
-        rr += 0.10 * hz + 0.06 * wedge + 0.12 * np.clip(wband, 0, 1)
+        # worn high points: lighter, paler (the stain thinned), drier; the hands' own zones polished a little
+        satm -= 0.12 * np.clip(wband, 0, 1) + 0.06 * np.clip(hz, 0, 1)
+        gold += 0.6 * np.clip(wband, 0, 1) + 0.3 * np.clip(hz, 0, 1)            # bare / thinned wood: tan
+        rr += 0.02 * hz + 0.06 * wedge + 0.12 * np.clip(wband, 0, 1)
         # checkering (grip): darker grooves from the baked normal's tilt
         if "ckm" in d:
             infield = np.zeros(len(idx), bool)
@@ -455,7 +582,9 @@ def paint(st, meta):
             km = (d["ckm"].reshape(-1)[idx][wsel] > 0.5) & infield[wsel]
             ckn = d["ckn"].reshape(-1, 3)[idx][wsel] * 2.0 - 1.0
             groove = PT.smoothstep(0.98, 0.80, ckn[:, 2])
-            L = np.where(km, L * (1.0 + (k_chk - 1.0) * (0.45 + 0.55 * groove)), L)
+            # (realism-fix round, review + blind tells: 'a dark rectangular inset panel / decal on flat wood'): the
+            # grooves darken, the diamond tops keep the wood's own tone (worked into the wood, not a dark patch)
+            L = np.where(km, L * (1.0 + (k_chk - 1.0) * (0.08 + 0.72 * groove)), L)
             rr = np.where(km, rr + 0.06 * groove, rr)
         g = np.clip(cav[wsel] * 0.45, 0, 1)
         L *= 1.0 - 0.35 * g
@@ -465,7 +594,21 @@ def paint(st, meta):
         tone = np.ones((wsel.sum(), 3), np.float32)
         for name in np.unique(pk):
             tone[pk == name] = WOOD_TONE.get(str(name), (1.0, 1.0, 1.0))
-        bc[wsel] = stain[None, :] * tone * L[:, None]
+        # each part's luminance field and chroma multiplier normalised to median 1 (the tone ratios carry the part's
+        # median value and hue: wood_tone.json, calibrated on the L5 rig), then the colour: one stain x tone x L, the
+        # golden / red-brown hue wander of the figure (luminance kept), and the chroma wander (luminance kept)
+        for name in np.unique(pk):
+            s = pk == name
+            L[s] /= max(float(np.median(L[s])), 1e-3)
+            satm[s] /= max(float(np.median(satm[s])), 1e-3)
+        col = stain[None, :] * tone * L[:, None]
+        lw = np.array([0.2126, 0.7152, 0.0722], np.float32)
+        l_before = col @ lw
+        col = col * np.stack([1.0 - 0.02 * gold, 1.0 + 0.11 * gold, 1.0 - 0.06 * gold], 1)
+        col *= (l_before / np.maximum(col @ lw, 1e-6))[:, None]
+        lum_w = (col @ lw)[:, None]
+        col = lum_w + (col - lum_w) * np.clip(satm, 0.45, 1.5)[:, None]
+        bc[wsel] = np.maximum(col, 0.0)
         rough[wsel] = np.clip(rr, F["rough"][0] - 0.02, 0.75)
         metal[wsel] = 0.0
         h[wsel] = hh

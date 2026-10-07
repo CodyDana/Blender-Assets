@@ -88,6 +88,13 @@ def main():
             o.data.materials.clear()
             o.data.materials.append(mat)
         times = {}
+        # the triangles for the geometric edge masks (gunlib.edgemask, realism-fix round 2026-10-07): the bevel-node
+        # edge bake follows the interpolated shading normals, so long sliver triangles of the CDT flats came out as
+        # whole lit / bare triangles; the painter now measures convex edges on the true geometry
+        if not PASSES or "tris" in PASSES:
+            BK.dump_tris(objs, {o.name: pidx[o.name] + 1 for o in objs}, OUT / f"{st}_tris.npz",
+                         [float(v) for v in GRIP])
+            log(st, "tris dumped")
         for name, kind, src, spp in (("pos", "EMIT", "pos", 1), ("nrm", "EMIT", "nrm", 1), ("ids", "EMIT", "ids", 1),
                                      ("edge", "EMIT", "edge", EDGE_SAMPLES), ("ao", "AO", None, AO_SAMPLES)):
             if PASSES and name not in PASSES:

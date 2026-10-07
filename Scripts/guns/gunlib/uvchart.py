@@ -565,6 +565,36 @@ def absorb_slivers(pm: PartMesh, fr, keys, cls, min_dot=0.26, thin_mm=1.2, long_
     return keys, moved
 
 
+def signed_uv_area(luv, pm: PartMesh) -> np.ndarray:
+    """Per-face SIGNED UV area of loop UVs (shoelace; > 0 = counter-clockwise = not mirrored)."""
+    nl = len(pm.loop_v)
+    nxt = np.arange(nl) + 1
+    last = pm.ps + pm.pt - 1
+    nxt[last] = pm.ps
+    cr = luv[:, 0] * luv[nxt, 1] - luv[nxt, 0] * luv[:, 1]
+    return np.add.reduceat(cr, pm.ps) * 0.5
+
+
+def _unflip_polar_caps(pm: PartMesh, fr, keys):
+    """Polar cap charts (u = -/+ theta Rcap, v = r) are orientation-preserving at every point, but a face is mapped
+    through its corners only: a long thin face (a rib flank's sliver, ~30 mm long and < 0.5 mm wide) whose straight
+    edge spans enough angle has its chord's sagitta in (theta, r) exceed its width, and its UV triangle folds over
+    (AR-01 R51 magazine: one flank triangle). Such faces take the frame's planar chart along w instead (key 4 + box key
+    in the (u0, v0, w) frame: U x V = the chart direction, so never mirrored); they become their own islands."""
+    if not fr.get("polar_caps"):
+        return keys
+    cap = np.isin(keys, (2, 3))
+    if not cap.any():
+        return keys
+    sa = signed_uv_area(loop_uv(pm, keys, fr), pm)
+    bad = cap & (sa <= 0.0)
+    if bad.any():
+        keys = keys.copy()
+        keys[bad] = 4 + box_keys(pm.fn[bad], np.array([fr["u0"], fr["v0"], fr["w"]]))
+        fr["unflipped_cap_faces"] = int(fr.get("unflipped_cap_faces", 0)) + int(bad.sum())
+    return keys
+
+
 def make_islands(pm: PartMesh, fr, cls) -> dict:
     """Charts + class -> islands for one part. Returns {'keys', 'luv' (loops, mm), 'lab' (face -> local island),
     'n_split', 'overlaps_left'}."""
@@ -579,6 +609,7 @@ def make_islands(pm: PartMesh, fr, cls) -> dict:
             sel = keys == k
             if sel.any() and nm not in fr:
                 fr[nm] = float(np.median(_cyl_theta(pm.fc[sel], fr)[1]))
+        keys = _unflip_polar_caps(pm, fr, keys)
     luv = loop_uv(pm, keys, fr)
     grp = keys * 1000 + cls
     lab = connected(pm, grp, luv)
