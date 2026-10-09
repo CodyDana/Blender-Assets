@@ -1,0 +1,1368 @@
+{
+ "what": "Planned interface contract for Compact SMG SM-01 (code SMG01): SK_SMG01 (rigged, held gun), SM_SMG01 (static twin, stock extended, magazine merged by default) and SM_SMG01_Mag (straight 25-round polymer magazine). Written by the game+tech planning role 2026-10-09 from the AR-01 pilot (RIFLE_BUILD_PLAN.md, RIFLE_REPORT.md section 10, gates/*.json, Scripts/guns/rifle/run_*.sh, gunlib). Companion: SMG_BUILD_PLAN.md.",
+ "status": "PLAN. smg_spec.json (measurer + real-pattern study) overrides every value marked rough; names, bones, sockets, slots, budgets, gates and stage order here are the contract the spec fills.",
+ "reference": {
+  "sheet": "References/Guns/SMG/smg_sheetA.webp",
+  "panels": [
+   "LEFT side (muzzle left)",
+   "RIGHT side (muzzle right)",
+   "TOP (muzzle left; screen-down = +Y = the gun's left)",
+   "3/4 FRONT VIEW (LEFT)"
+  ],
+  "labels_consistent": true,
+  "ruler": "unreliable (reads ~86 cm for 69); scale from the real pattern",
+  "sheet_B": "refused by the generator: unseen details stay plain"
+ },
+ "names": {
+  "product": "Compact SMG SM-01",
+  "code": "SMG01",
+  "lock": "SMG01",
+  "skeletal": "SK_SMG01",
+  "skeleton": "SK_SMG01_Skeleton",
+  "physics_asset": "PHYS_SMG01",
+  "lod_files_sk": [
+   "SK_SMG01.fbx",
+   "SK_SMG01_LOD1.fbx",
+   "SK_SMG01_LOD2.fbx",
+   "SK_SMG01_LOD3.fbx"
+  ],
+  "static_twin": "SM_SMG01",
+  "static_lod_nodes": [
+   "SM_SMG01_LOD0",
+   "SM_SMG01_LOD1",
+   "SM_SMG01_LOD2",
+   "SM_SMG01_LOD3"
+  ],
+  "static_lod_group": "SM_SMG01_LodGroup",
+  "mag": "SM_SMG01_Mag",
+  "mag_lod_nodes": [
+   "SM_SMG01_Mag_LOD0",
+   "SM_SMG01_Mag_LOD1",
+   "SM_SMG01_Mag_LOD2",
+   "SM_SMG01_Mag_LOD3"
+  ],
+  "mag_lod_group": "SM_SMG01_Mag_LodGroup",
+  "deny_list_rule": "tokenised gun deny list (GUN_BUILDING_STUDY 4.9) on every asset/object/material/texture/bone/socket/clip/notify name and the shipped text (no ump, hk, heckler, koch ...); no markings"
+ },
+ "layout": {
+  "sources": [
+   "Assets/Guns/SMG01.blend",
+   "Assets/Guns/SMG01_Mag.blend"
+  ],
+  "exports": "Exports/Guns/SMG01/: SK_SMG01*.fbx, SK_SMG01.skeletal.json, A_SMG01_*.fbx, SM_SMG01.fbx + SM_SMG01.sockets.json, SM_SMG01_Mag.fbx + SM_SMG01_Mag.sockets.json, Physics/, Textures/ (+ Recolour/), README.md, MATERIALS_README.md",
+  "scripts": "Scripts/guns/smg/ (build_smg.py staged with the lock asserted, smg_parts.py, parts/, run_smg.sh -> run_game.sh -> run_rig_mag.sh); shared code in Scripts/guns/gunlib/ (lock GunLib); ROOT = Path(__file__).resolve().parents[3]",
+  "work": "WorkFiles/guns/smg/ (plan, smg_spec.json, gates/, review/, UnrealCheck/); heavy scratch in scratch/ (gitignored)",
+  "realref": "WorkFiles/guns/smg/scratch/realref/ (real-pattern photos; URLs listed in the spec)",
+  "renders": "Renders/Guns/SMG01/, showcase/CompactSMG_SM01/ + one showcase/ASSET_LIST.md row",
+  "locks": {
+   "asset": "SMG01",
+   "library": "GunLib",
+   "shared_exports": "GunShared",
+   "materials": "PackMaterials (np_lock.py, run_build.sh)"
+  },
+  "unreal_check_path": "/Game/GunCheck/SMG01_<run>"
+ },
+ "frame": {
+  "blender": "metres, modelled in mm; +X = muzzle (bore parallel to X at Y = 0), +Z up, -Y = the gun's right (ejection port side)",
+  "unreal": "+X forward, +Y right, +Z up; location cm = (x, -y, z) / 10 from Blender mm",
+  "origin": "Grip: on the grip axis in Y = 0, 46 mm (the AR-01's H1 value; H1 early confirms) down the grip axis from the grip/receiver junction; weapon axes",
+  "grip_axis_deg_rough": [
+   18,
+   22
+  ],
+  "views": "Blender front (from -Y) = sheet RIGHT panel; Blender back = sheet LEFT panel"
+ },
+ "scale_real": {
+  "overall_extended_mm": 690,
+  "overall_folded_mm": 450,
+  "barrel_mm": 200,
+  "mass_kg_without_mag": 2.5,
+  "mag_mass_kg": "empty ~0.15-0.20 rough, loaded = empty + 25 x ~0.021; the real-pattern study sets both",
+  "source": "GUN_BUILDING_STUDY 3.5 (real pattern); sheet proportions through the length/height ratio"
+ },
+ "layout_rough_mm_from_muzzle_tip": {
+  "note": "ROUGH: LEFT panel silhouette scaled to 690 mm (~1.18 mm/px). The measurer's spec replaces every value. Heights relative to the rail top.",
+  "muzzle_device": [
+   0,
+   60
+  ],
+  "muzzle_device_dia": 25,
+  "receiver_front_face": 70,
+  "front_flip_sight": [
+   85,
+   105
+  ],
+  "front_sight_top_above_rail": 33,
+  "lower_rail": [
+   75,
+   160
+  ],
+  "charging_knob_left": [
+   120,
+   140
+  ],
+  "charging_knob_proud_of_left_wall": [
+   20,
+   25
+  ],
+  "magwell_flare": [
+   165,
+   225
+  ],
+  "magazine_foreaft": [
+   170,
+   215
+  ],
+  "mag_base_below_rail_top": 300,
+  "trigger_guard": [
+   235,
+   330
+  ],
+  "trigger_face": [
+   280,
+   290
+  ],
+  "selector_hub": [
+   285,
+   300
+  ],
+  "grip": [
+   330,
+   405
+  ],
+  "grip_rake_deg": 20,
+  "rear_flip_sight": [
+   350,
+   365
+  ],
+  "rear_sight_top_above_rail": 34,
+  "sight_radius": 260,
+  "receiver_rear_and_hinge": [
+   395,
+   415
+  ],
+  "stock_and_buttpad": [
+   415,
+   690
+  ],
+  "buttpad_height": 113,
+  "bore_below_rail_top": 48,
+  "overall_height_with_mag": 338,
+  "overall_height_without_mag": 230,
+  "folded_length_on_sheet": 443,
+  "length_of_pull": 400,
+  "bounds_radius_m": {
+   "gun_extended_no_mag": 0.37,
+   "gun_with_mag": 0.38,
+   "mag": 0.12
+  }
+ },
+ "real_pattern_rulings": [
+  {
+   "id": "R1",
+   "part": "receiver",
+   "ruling": "two moulded polymer shells (upper with the rail seat; lower with integral grip, guard and magwell); P-round 0.6-2 mm, 1-2 deg draft, a parting line on the mould split; ribs and the 2 x 2 side vents as geometry with wall thickness; flush pins as inset rings"
+  },
+  {
+   "id": "R2",
+   "part": "top_rail",
+   "ruling": "separate steel rail from gunlib.rail_1913, true profile; length from the sheet, slot count = round(length / 10.01); butt joint 0.01-0.05 mm"
+  },
+  {
+   "id": "R3",
+   "part": "lower_rail",
+   "ruling": "short 1913 section under the front, same module"
+  },
+  {
+   "id": "R4",
+   "part": "charging_handle",
+   "ruling": "non-reciprocating, left front; knob + arm + internal slide pushing a lug on the bolt; rests forward, pulled -X, returns on its own spring; slot cut for the full travel",
+   "confirm": "the sheet draws the open slot ahead of the knob: if the real pattern rests the handle at the slot's rear end, ask (design conflict)"
+  },
+  {
+   "id": "R5",
+   "part": "bolt",
+   "ruling": "blowback bolt block (face, extractor, firing-pin hole, charging lug) on guide rails; visible through the right port; travel = real figure (rough 60-70 mm, never less than a 32.4 mm round + feed clearance)"
+  },
+  {
+   "id": "R6",
+   "part": "ejection_port",
+   "ruling": "right side only, ~3 mm wall reveal, dark interior; barrel breech and the mag lips visible with the bolt back"
+  },
+  {
+   "id": "R7",
+   "part": "selector",
+   "ruling": "ambidextrous: one transverse shaft with a lever each side, one part, one bone, rotate about Y; safe/semi/auto (+burst only if the real arc shows it); no markings; the sheet's red dots are not built"
+  },
+  {
+   "id": "R8",
+   "part": "mag_release",
+   "ruling": "ambidextrous paddle behind the magwell, pivot about Y; its nose engages a notch on the mag's rear face"
+  },
+  {
+   "id": "R9",
+   "part": "bolt_catch",
+   "ruling": "the real pattern has a left-side hold-open release; build it (bone bolt_catch) only if the sheet's LEFT view shows it; otherwise ReloadEmpty releases the bolt with the charging handle"
+  },
+  {
+   "id": "R10",
+   "part": "stock",
+   "ruling": "side-folding skeleton polymer stock: two-knuckle hinge, vertical steel pin at the receiver rear, spring detent when extended, a hook/lip snapping over a receiver stud when folded; fold side and angle from the real pattern (the sheet's TOP view shows the knuckle toward the gun's right); the folded stock leaves the ejection throw path clear",
+   "confirm": "real-pattern photos"
+  },
+  {
+   "id": "R11",
+   "part": "buttpad",
+   "ruling": "serrated rear face as geometry; the stock frame's two round holes as through-holes"
+  },
+  {
+   "id": "R12",
+   "part": "flip_sights",
+   "ruling": "rail-clamp flip sights from one gunlib.sights_flip design (shared with CB01): clamp base with its recoil lug in a rail slot (integer index), spring-detented leaf on a transverse pin; rear diopter aperture (rough 2.0-2.6 mm, ghost-ring outer), front post in ears/hood; modelled UP with a folded state; no markings"
+  },
+  {
+   "id": "R13",
+   "part": "grip",
+   "ruling": "integral polymer grip; stipple panel border in geometry, stipple in the normal map (roughness 0.75-0.90)"
+  },
+  {
+   "id": "R14",
+   "part": "trigger_and_guard",
+   "ruling": "steel trigger blade (C-fillet); guard integral with the lower unless the sheet shows a seam"
+  },
+  {
+   "id": "R15",
+   "part": "barrel_and_muzzle",
+   "ruling": "phosphated barrel, bore >= 2 calibres deep with a chamfered crown; slotted cage device with real through-slots on muzzle_device; muzzle_class '.45-class pistol calibre' as data only"
+  },
+  {
+   "id": "R16",
+   "part": "magazine",
+   "ruling": "straight double-stack polymer mag; the side ladder grooves and ribs as geometry; floor plate + tab; lips + follower modelled; no cartridge; catch notch on the rear face; no witness holes or numbers"
+  },
+  {
+   "id": "R17",
+   "part": "magwell_internals",
+   "ruling": "flared well, two guide channels for the mag's guide ribs, a top shelf above the seated mag (overtravel), the catch window at the rear"
+  },
+  {
+   "id": "R18",
+   "part": "right_side_upper_slot",
+   "ruling": "the sheet's RIGHT panel mirrors the charging slot: the real pattern decides (plain wall if it has no right-side slot)",
+   "open_question": "Q1"
+  },
+  {
+   "id": "R19",
+   "part": "fasteners",
+   "ruling": "count and position from the sheet; sizes from norms under 4 sheet px; written in mm"
+  },
+  {
+   "id": "R20",
+   "part": "markings",
+   "ruling": "none anywhere"
+  }
+ ],
+ "bones": {
+  "root": "armature OBJECT 'root' at Grip, identity (no bone named root)",
+  "table": [
+   {
+    "bone": "body",
+    "parent": null,
+    "head": "Grip origin",
+    "motion": "fixed; the physics body"
+   },
+   {
+    "bone": "bolt",
+    "parent": "body",
+    "head": "bolt face centre at rest",
+    "motion": "translate -X, 0..travel (R5)",
+    "joint": "sliding"
+   },
+   {
+    "bone": "charging_handle",
+    "parent": "body",
+    "head": "knob axis centre at rest",
+    "motion": "translate -X, 0..travel (R4)",
+    "joint": "sliding"
+   },
+   {
+    "bone": "trigger",
+    "parent": "body",
+    "head": "trigger pin axis",
+    "motion": "rotate about Y, 0..pull",
+    "joint": "hinge"
+   },
+   {
+    "bone": "selector",
+    "parent": "body",
+    "head": "selector shaft axis (transverse)",
+    "motion": "rotate about Y, positions from R7",
+    "joint": "hinge"
+   },
+   {
+    "bone": "mag_release",
+    "parent": "body",
+    "head": "paddle pivot axis",
+    "motion": "rotate about Y, 0..release",
+    "joint": "hinge"
+   },
+   {
+    "bone": "magazine",
+    "parent": "body",
+    "head": "well-entry centre (= Mag socket)",
+    "motion": "attach only, no weighted vertices",
+    "joint": "seated_mag"
+   },
+   {
+    "bone": "stock",
+    "parent": "body",
+    "head": "on the vertical hinge axis",
+    "motion": "rotate about Z, 0 (extended) .. fold angle (R10)",
+    "joint": "hinge"
+   },
+   {
+    "bone": "sight_rear",
+    "parent": "body",
+    "head": "rear flip-sight hinge axis",
+    "motion": "rotate about Y, 0 (up) .. folded",
+    "joint": "hinge"
+   },
+   {
+    "bone": "sight_front",
+    "parent": "body",
+    "head": "front flip-sight hinge axis",
+    "motion": "rotate about Y, 0 (up) .. folded",
+    "joint": "hinge"
+   },
+   {
+    "bone": "muzzle_device",
+    "parent": "body",
+    "head": "barrel shoulder (MuzzleSeat)",
+    "motion": "none (hidden when suppressed)"
+   }
+  ],
+  "conditional": [
+   {
+    "bone": "bolt_catch",
+    "parent": "body",
+    "when": "ruling R9 (the sheet shows the catch)",
+    "motion": "rotate about Y"
+   }
+  ],
+  "count": 11,
+  "rest_rotation": "identity (root's) for every bone",
+  "same_bones_every_lod": true,
+  "compatible_skeleton": {
+   "with": "SK_AR01_Skeleton",
+   "shared_bones": [
+    "body",
+    "bolt",
+    "trigger",
+    "selector",
+    "mag_release",
+    "magazine",
+    "sight_rear",
+    "muzzle_device"
+   ],
+   "smg_only_bones": [
+    "charging_handle",
+    "stock",
+    "sight_front"
+   ],
+   "contract": "shared bones keep name, parent (body), identity rest rotation and motion axis (bolt -X; selector, trigger, mag_release, sight_rear about Y); the SMG skeleton is a strict superset; ABP_Gun_LongGun is authored on SK_AR01_Skeleton; proven by U2b"
+  }
+ },
+ "joints_clearance_mm": {
+  "sliding": [
+   0.15,
+   0.4
+  ],
+  "hinge": [
+   0.1,
+   0.3
+  ],
+  "butt": [
+   0.01,
+   0.05
+  ],
+  "visible_seam": [
+   0.2,
+   0.8
+  ],
+  "seated_mag": {
+   "lateral": [
+    0.2,
+    0.6
+   ],
+   "foreaft": [
+    0.2,
+    0.6
+   ],
+   "guide_rib_in_channel": [
+    0.1,
+    0.4
+   ]
+  },
+  "declared_allowances": [
+   {
+    "where": "stock lip over the folded-lock stud",
+    "max_mm": 0.5,
+    "only": "last <= 3 deg of the fold (polymer flex)"
+   },
+   {
+    "where": "flip-sight detents",
+    "max_mm": 0.3,
+    "only": "last <= 2 deg"
+   },
+   {
+    "where": "mag catch nose on the mag's rear face/ramp during insertion",
+    "max_mm": "engagement depth + 0.3",
+    "only": "catch zone; M4b requires 0 with the paddle at its release angle"
+   },
+   {
+    "where": "charging-handle pusher on the bolt lug during the push",
+    "contact_mm": [
+     0.0,
+     0.05
+    ],
+    "rule": "no penetration"
+   }
+  ]
+ },
+ "sockets": {
+  "standard": "GUN_BUILDING_STUDY 5.3; PascalCase; on bones in SK_SMG01.skeletal.json; Empties + .sockets.json on SM_SMG01; values computed by the build from smg_spec.json",
+  "gun": [
+   {
+    "name": "Grip",
+    "bone": "body",
+    "place": "origin, weapon axes"
+   },
+   {
+    "name": "SupportHand",
+    "bone": "body",
+    "place": "off-hand palm on the magwell front (H1 may move it to the lower rail), +X along the bore"
+   },
+   {
+    "name": "Trigger",
+    "bone": "trigger",
+    "place": "trigger face"
+   },
+   {
+    "name": "Muzzle",
+    "bone": "muzzle_device",
+    "place": "bore exit, +X out (<= 0.5 mm, <= 0.05 deg off the bore)"
+   },
+   {
+    "name": "MuzzleSeat",
+    "bone": "body",
+    "place": "barrel shoulder, +X forward"
+   },
+   {
+    "name": "Sight",
+    "bone": "sight_rear",
+    "place": "aperture centre, +X toward the front post tip"
+   },
+   {
+    "name": "Mag",
+    "bone": "magazine",
+    "place": "well-entry centre; +Z out of the well along the insertion axis; zero relative transform for SM_SMG01_Mag"
+   },
+   {
+    "name": "MagInsertStart",
+    "bone": "body",
+    "place": "Mag moved along its -Z by the insert depth + 10 mm (straight mag: no MagRockStart)"
+   },
+   {
+    "name": "ShellEject",
+    "bone": "body",
+    "place": "port centre, +X = throw direction (right, forward/up per the real pattern)"
+   },
+   {
+    "name": "ChargingHandle",
+    "bone": "charging_handle",
+    "place": "knob centre"
+   },
+   {
+    "name": "Selector",
+    "bone": "selector",
+    "place": "left lever tab"
+   },
+   {
+    "name": "MagRelease",
+    "bone": "mag_release",
+    "place": "paddle tab"
+   },
+   {
+    "name": "Rail_Top",
+    "bone": "body",
+    "place": "top rail slot 0 (rearmost) centre on the rail-top plane, +X along the slots, +Z up"
+   },
+   {
+    "name": "Rail_Bottom",
+    "bone": "body",
+    "place": "lower rail slot 0 centre, +X along the slots, +Z out of the rail (down; roll 180 deg)"
+   },
+   {
+    "name": "Stock",
+    "bone": "body",
+    "place": "hinge face on the receiver"
+   },
+   {
+    "name": "Shoulder",
+    "bone": "stock",
+    "place": "buttpad centre, +X = pad normal reversed; follows the fold"
+   },
+   {
+    "name": "Holster",
+    "bone": "body",
+    "place": "= CenterOfMass until the game sets it"
+   },
+   {
+    "name": "CenterOfMass",
+    "bone": "body",
+    "place": "computed, stock extended; the folded CoM is reported"
+   },
+   {
+    "name": "SightFront",
+    "bone": "sight_front",
+    "place": "post tip (folded-state check, review camera)"
+   },
+   {
+    "name": "SlingFront",
+    "bone": "body",
+    "conditional": "only if the sheet shows a loop/QD point"
+   },
+   {
+    "name": "SlingRear",
+    "bone": "stock",
+    "conditional": "only if the sheet shows a loop/QD point"
+   }
+  ],
+  "gun_count": "19 + up to 2 conditional sling sockets",
+  "mag": [
+   {
+    "name": "Mag",
+    "place": "origin = the well-entry centre when seated; +X forward, +Z up the insertion axis"
+   },
+   {
+    "name": "HandReload",
+    "place": "left palm on the body"
+   },
+   {
+    "name": "Feed",
+    "place": "top centre of the lips"
+   },
+   {
+    "name": "Base",
+    "place": "floor plate centre, +X = outward normal"
+   },
+   {
+    "name": "CenterOfMass",
+    "place": "computed"
+   }
+  ],
+  "reload_path": "MagInsertStart -> (lerp along the mag's -Z, rotation constant) -> Mag; removal in reverse with mag_release at its release angle"
+ },
+ "rails": {
+  "module": "Scripts/guns/gunlib/parts/rail_1913.py (W1a, lock GunLib): rail_1913(n_slots, pad_front, pad_rear, height, lod) -> closed solid + slot-centre record",
+  "profile_mm": {
+   "width_across_dovetail": 21.2,
+   "flank_deg": 45,
+   "slot_width": 5.24,
+   "slot_width_range": [
+    5.23,
+    5.26
+   ],
+   "slot_pitch": 10.01,
+   "slot_depth": 3.0,
+   "height": "~9.5 (per gun, from the sheet)",
+   "bevel": [
+    0.3,
+    0.5
+   ],
+   "min_bevel": 0.1
+  },
+  "lod": {
+   "LOD1": "every slot, half the bevel segments",
+   "LOD2": "slots as single-face cuts",
+   "LOD3": "box"
+  },
+  "tests": "pitch and width within 0.01 mm; unreal_drops = 0 at every LOD; closed manifold",
+  "snap_rule": "an attachment's Mount at Rail_X + k x 10.01 mm along +X, integer k; the flip sights are placed this way",
+  "sidecar": "rail_slots per rail: count + the slots the flip sights occupy",
+  "optic_clearance_B4c": "folded flip sights under rail top + 12 mm (default until the attachments kit spec sets its optic window)"
+ },
+ "sights": {
+  "decision": "bones sight_front + sight_rear (hinge about Y), modelled UP as drawn, with a folded state for optics; module gunlib.sights_flip shared with CB01",
+  "B4": "ADS 55 deg, 2560 x 1440, eye 0.25 m behind Sight along -X: post tip at the aperture centre within 0.5 px laterally and vertically; hood ring concentric within 1 px (reported); no occluder; post visible >= 1 mm",
+  "B4b": "the same at the real cheek-weld eye point (rough 80-100 mm behind the aperture), reported",
+  "S2": "B4 at LOD0-3 on the SK and the twin"
+ },
+ "budgets_triangles": {
+  "gun": {
+   "lod0_target": [
+    25000,
+    40000
+   ],
+   "lod0_ceiling": 50000,
+   "lod1": "~45 %",
+   "lod2": "~15 %",
+   "lod3": [
+    1200,
+    2000
+   ],
+   "floor_allocation_lod0": 25450,
+   "floor_allocation_lod1": 10860,
+   "floor_allocation_lod2": 3150,
+   "per_part_lod0": {
+    "upper_receiver": 3500,
+    "lower_receiver": 3600,
+    "top_rail": 2800,
+    "lower_rail": 800,
+    "rear_flip_sight": 1800,
+    "front_flip_sight": 1500,
+    "barrel_bore_collar": 1000,
+    "muzzle_device": 1200,
+    "bolt_and_guides": 1100,
+    "charging_handle": 800,
+    "selector_ambi": 700,
+    "trigger": 350,
+    "mag_release": 400,
+    "hinge_block_knuckles_pin_detent_stud": 1800,
+    "stock_frame": 2400,
+    "buttpad": 900,
+    "pins_screws": 800
+   }
+  },
+  "mag": {
+   "lod0_target": [
+    2500,
+    4000
+   ],
+   "lod0_ceiling": 5000,
+   "lod1": 1180,
+   "lod2": 380,
+   "lod3": [
+    150,
+    250
+   ]
+  },
+  "twin_qa_budget": 55000
+ },
+ "lods": {
+  "count": 4,
+  "screen_sizes_start": [
+   1.0,
+   0.25,
+   0.1,
+   0.033
+  ],
+  "switch_distances_m": [
+   0.8,
+   2.7,
+   6.7,
+   20.0
+  ],
+  "rule": "the LOD-pop gate (mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg, 4 headings) on both stock states fixes the distances; SK sizes converted with the FINAL engine bounds radius incl. the bounds extension; the twin uses its own radius; mag sizes = gun sizes x r_mag / r_gun (the SK's engine radius)",
+  "bounds_extension": "posed envelope of LOD0-3 over every frame of every clip (incl. StockFold/StockUnfold, SightFlip) and the folded static state, minus the bind AABB; gates B11 and U5",
+  "first_person": "ForcedLodModel = 1 on every FP component",
+  "nanite": false
+ },
+ "materials": {
+  "finishes": {
+   "polymer_black": {
+    "metallic": 0,
+    "base_srgb": [
+     40,
+     55
+    ],
+    "roughness": [
+     0.5,
+     0.7
+    ],
+    "stipple_roughness": [
+     0.75,
+     0.9
+    ],
+    "wears_to": "polished polymer (roughness -0.10..-0.20), never metal"
+   },
+   "buttpad": {
+    "metallic": 0,
+    "base_srgb": [
+     35,
+     45
+    ],
+    "roughness": [
+     0.7,
+     0.9
+    ]
+   },
+   "phosphate_steel": {
+    "metallic": 0,
+    "base_srgb": [
+     50,
+     70
+    ],
+    "roughness": [
+     0.65,
+     0.85
+    ],
+    "oiled": [
+     0.55,
+     0.7
+    ],
+    "wears_to": "bare_steel"
+   },
+   "bare_steel": {
+    "metallic": 1,
+    "base_srgb": [
+     190,
+     196
+    ],
+    "roughness": [
+     0.25,
+     0.4
+    ],
+    "sliding_polished": [
+     0.15,
+     0.25
+    ]
+   },
+   "polymer_mag": {
+    "metallic": 0,
+    "base_srgb": [
+     40,
+     50
+    ],
+    "roughness": [
+     0.55,
+     0.75
+    ]
+   },
+   "soot": {
+    "metallic": 0,
+    "base_linear": 0.025,
+    "roughness": [
+     0.8,
+     0.95
+    ],
+    "where": "muzzle slots, port, bolt face"
+   }
+  },
+  "slots": {
+   "SK_SMG01 / SM_SMG01": [
+    {
+     "index": 0,
+     "slot": "M_SMG01_Metal",
+     "master": "M_Steel_Master (Steel Tint; the AR-01's shipped precedent)",
+     "parts": "rails, sights, barrel, muzzle device, bolt, charging handle, selector, trigger, paddle, pins, hinge pin"
+    },
+    {
+     "index": 1,
+     "slot": "M_SMG01_Furniture",
+     "master": "M_Fabric_Master, Metal From ORM OFF",
+     "parts": "receiver shells, grip frame, magwell, stock, buttpad",
+     "user_colour": "Colour = the polymer colour"
+    }
+   ],
+   "SM_SMG01_Mag": [
+    {
+     "index": 0,
+     "slot": "M_SMG01_Mag",
+     "master": "M_Fabric_Master, Metal From ORM OFF",
+     "user_colour": "Colour (same recolour group)"
+    }
+   ]
+  },
+  "recolour": {
+   "group": "SMG01",
+   "members": [
+    "M_SMG01_Furniture",
+    "M_SMG01_Mag"
+   ],
+   "default": "the shipped black (P1: default capture = shipped BC)",
+   "light_colours_safe": "yes: no polymer slot has MFO on",
+   "bc_compression": "BC1 first; BC7 on the polymer BC if P1 misses (AR-01: 12 -> 4 levels)"
+  },
+  "sidecar_materials_block": "generated from this slot table (AR-01 open item 5)",
+  "draw_calls_held": 6
+ },
+ "textures": {
+  "texel_classes_px_per_cm": {
+   "A": [
+    80,
+    100
+   ],
+   "B": [
+    60,
+    80
+   ],
+   "C": [
+    30,
+    40
+   ],
+   "D": [
+    25,
+    30
+   ],
+   "E": [
+    8,
+    15
+   ]
+  },
+  "class_assignment": {
+   "A": "rear diopter, front post + hood/ears, the whole top rail",
+   "B": "bolt, charging handle, selector; polymer rear receiver behind the magwell, grip top, stock comb + hinge",
+   "C": "lower rail, trigger, paddle; polymer front receiver, magwell, guard, stock frame; the magazine",
+   "D": "barrel, muzzle device",
+   "E": "port, well and hinge interiors, contact faces"
+  },
+  "sets": {
+   "Metal": {
+    "maps": "T_SMG01_Metal_{BC,ORM,N} + T_SMG01_Metal_Masks",
+    "rough_need_texels": "~1.95 M at estimate, ~4.5 M with the AR-01's 2.3x estimate error",
+    "expected": "4096 unless the packer proves 2048 at >= 70 % fill"
+   },
+   "Furniture": {
+    "maps": "T_SMG01_Furniture_{BC,ORM,N} + _Masks + Recolour/T_SMG01_Furniture_Detail16",
+    "rough_need_texels": "~3.1 M",
+    "expected": "4096 likely; 2048 only if B at 60 fits at >= 65 % fill"
+   },
+   "Mag": {
+    "maps": "T_SMG01_Mag_{BC,ORM,N} + _Masks + Recolour/T_SMG01_Mag_Detail16",
+    "rough_need_texels": "~0.35 M",
+    "expected": "1024"
+   }
+  },
+  "rule": "each set = the smallest power of two that holds its class floors at fill >= 70 % (Metal) / 65 % (others); the packer decides",
+  "uv0": "SK: each slot in 0..1; SM twin: Metal u 0..1, Furniture u 1..2, merged mag u -1..0; no mirrored or stacked islands",
+  "uv1": "authored, gated in Blender at 64 and 128 px with 2 px padding (UD4); imported with Generate Lightmap UVs off on the statics (Q6 default)",
+  "maps": "BC sRGB; ORM linear (AO/rough/metal); N DirectX; Masks R edge, G handling, B cavity, A refinishable; power of two, full mips; TEXTUREGROUP_Weapon / WeaponNormalMap",
+  "bake_rules": [
+   "margin 0, per-island fill afterwards",
+   "the magazine's AO baked alone",
+   "the gun's AO at rest, stock extended, mag out",
+   "same-side edge masks (gunlib.edgemask)",
+   "analytic wear: bevel parameter + spec handling zones + AO cavity",
+   "renders only from the baked maps"
+  ]
+ },
+ "collision": {
+  "twin": [
+   "UCX_SM_SMG01_LOD0_00 receiver body + top rail",
+   "UCX_SM_SMG01_LOD0_01 rear flip sight",
+   "UCX_SM_SMG01_LOD0_02 front flip sight",
+   "UCX_SM_SMG01_LOD0_03 fore-end below the bore + lower rail",
+   "UCX_SM_SMG01_LOD0_04 barrel + muzzle device",
+   "UCX_SM_SMG01_LOD0_05 grip + trigger guard",
+   "UCX_SM_SMG01_LOD0_06 merged magazine (twin only)",
+   "UCX_SM_SMG01_LOD0_07 stock frame + buttpad (extended)"
+  ],
+  "mag": [
+   "UCX_SM_SMG01_Mag_LOD0_00"
+  ],
+  "method": "dense surface samples <= 1 mm (LOD0), dilated 0.2 mm, neighbours overlap 3 mm, <= 32 vertices",
+  "gates": {
+   "C1": "0 jittered 0.5 mm samples and 0 LOD vertices outside the union",
+   "C2": "Unreal: 0 of 300k LOD0 samples outside",
+   "C3": "8 and 1 hulls"
+  },
+  "physics_asset": {
+   "name": "PHYS_SMG01",
+   "bodies": "one body on 'body' (receiver, grip, barrel, extended-stock shapes)",
+   "mass_kg": 2.5,
+   "com": "part volumes x densities (polymer ~1.4, steel 7.85) scaled to the total",
+   "folded_drop": "reported in U7 (Q8)",
+   "in_hand": "NoCollision / QueryOnly"
+  }
+ },
+ "magazine_fit": {
+  "construction": "built in W3 from the shipped SM_SMG01 bytes (sha256 guard); fit geometry proven at form (form_magfit); in-well part fitted: lateral 0.3, fore-aft 0.3, guide ribs 0.2 mm; seat = catch nose on the notch bearing face; overtravel to the top shelf",
+  "gates": [
+   {
+    "id": "M1",
+    "what": "seated, co-visible LOD pairs (k,k), (k,k+-1)",
+    "threshold": "0 intersections LOD0-1; LOD2-3 depth < 1 px at the switch distance"
+   },
+   {
+    "id": "M2",
+    "what": "catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
+    "threshold": "0.0-0.3 mm; 0.5-3.0 mm rough (the real pattern sets it); seam <= 0.6 mm"
+   },
+   {
+    "id": "M3",
+    "what": "lateral per side; fore-aft; guide ribs; catch engagement depth",
+    "threshold": "0.2-0.6; 0.2-0.6; 0.1-0.4; >= 1.5 mm rough"
+   },
+   {
+    "id": "M4",
+    "what": "insert path MagInsertStart -> Mag, 0.5 mm steps, catch at rest",
+    "threshold": "0 intersections except the catch-nose allowance (<= engagement + 0.3 mm, catch zone only), reported per step"
+   },
+   {
+    "id": "M4b",
+    "what": "the same path, mag_release at its release angle",
+    "threshold": "0 intersections"
+   },
+   {
+    "id": "M5",
+    "what": "removal path, mag_release at its release angle",
+    "threshold": "0 intersections"
+   },
+   {
+    "id": "M5b",
+    "what": "removal with the catch at rest (info)",
+    "threshold": "reported; expected to collide"
+   },
+   {
+    "id": "M6",
+    "what": "Mag / MagInsertStart / mag Mag from the exported sidecars vs the fit",
+    "threshold": "<= 0.001 mm, <= 0.001 deg"
+   },
+   {
+    "id": "M7",
+    "what": "gun bytes = the shipped sha256",
+    "threshold": "equal"
+   },
+   {
+    "id": "M8",
+    "what": "the Reload clip's drop and re-entry below MagInsertStart (info)",
+    "threshold": "reported (0 expected)"
+   },
+   {
+    "id": "M9",
+    "what": "Unreal: mag at Mag; composed sockets; seated fit on read-back geometry",
+    "threshold": "<= 0.001 cm; 0 intersections"
+   },
+   {
+    "id": "M10",
+    "what": "the twin's merged mag = SM_SMG01_Mag at every LOD",
+    "threshold": "equal triangles; vertices within 0.001 mm"
+   },
+   {
+    "id": "F5",
+    "what": "catch sweep 0..release with the mag seated (form)",
+    "threshold": "0 except the nose leaving the notch"
+   }
+  ]
+ },
+ "clips": {
+  "rule": "start and end at rest unless stated; selector rest = safe; every clip that moves the bolt holds the selector at Auto from first to last frame; review tools pose from absolute matrices; bone compression DefaultRecorderBoneCompression",
+  "list": [
+   {
+    "file": "A_SMG01_Fire.fbx",
+    "fps": 60,
+    "frames": [
+     0,
+     6
+    ],
+    "motion": "trigger pull; bolt 0 -> travel -> 0; the charging handle does not move",
+    "notifies": [
+     "Fire",
+     "ShellEject (bolt rear stop)",
+     "TriggerReset"
+    ],
+    "selector": "Auto"
+   },
+   {
+    "file": "A_SMG01_Charge.fbx",
+    "fps": 30,
+    "frames": [
+     0,
+     22
+    ],
+    "motion": "handle back pushing the bolt, release, both forward",
+    "notifies": [
+     "ChargeRear",
+     "BoltRelease"
+    ],
+    "selector": "Auto"
+   },
+   {
+    "file": "A_SMG01_Reload.fbx",
+    "fps": 30,
+    "frames": [
+     0,
+     55
+    ],
+    "motion": "paddle press; magazine straight down along -Z, drop, new mag up the path, catch snaps",
+    "notifies": [
+     "MagRelease",
+     "MagOut",
+     "MagDrop",
+     "MagIn"
+    ]
+   },
+   {
+    "file": "A_SMG01_ReloadEmpty.fbx",
+    "fps": 30,
+    "frames": [
+     0,
+     80
+    ],
+    "starts_at_rest": false,
+    "motion": "bolt held open at frame 0; reload; charging-handle tug (or bolt_catch under R9) releases the bolt",
+    "notifies": [
+     "MagRelease",
+     "MagOut",
+     "MagDrop",
+     "MagIn",
+     "BoltRelease"
+    ],
+    "selector": "Auto"
+   },
+   {
+    "file": "A_SMG01_Selector.fbx",
+    "fps": 30,
+    "frames": [
+     0,
+     30
+    ],
+    "motion": "safe -> semi -> auto -> safe"
+   },
+   {
+    "file": "A_SMG01_StockFold.fbx",
+    "fps": 30,
+    "frames": [
+     0,
+     24
+    ],
+    "motion": "stock 0 -> fold angle about Z; the lip snaps over the stud",
+    "notifies": [
+     "StockUnlock",
+     "StockLocked"
+    ]
+   },
+   {
+    "file": "A_SMG01_StockUnfold.fbx",
+    "fps": 30,
+    "frames": [
+     0,
+     24
+    ],
+    "motion": "the reverse",
+    "notifies": [
+     "StockUnlock",
+     "StockLocked"
+    ]
+   }
+  ],
+  "optional": [
+   {
+    "file": "A_SMG01_SightFlip.fbx",
+    "fps": 30,
+    "frames": [
+     0,
+     20
+    ],
+    "motion": "both sights up -> folded -> up",
+    "open_question": "Q5 (default: ship)"
+   }
+  ],
+  "frames_note": "starting values; the rig stage records the final keys; notifies travel in the skeletal sidecar and the harness adds them (U9)"
+ },
+ "gates": {
+  "look": {
+   "L1": "blockout IoU sides >= 0.95, top >= 0.92; < 0.90 = stop and change the method",
+   "L2": "form IoU: authority sides >= 0.96 (LEFT and RIGHT are both authority views: the labels are consistent), top >= 0.93; 3/4 FRONT (LEFT) camera-solved IoU >= 0.93 and P95 <= 3 px (exception only for proven 3/4-panel contradictions); per part IoU >= 0.95 (masks >= 400 px), thin parts P95 <= 1 px, max <= 2 px",
+   "L3": "side contour P95 <= 2 sheet px; features <= 2 sheet px (vents, port, knob, selector hub, paddle, sights, hinge knuckle, stock openings + holes, buttpad serration ends, rail ends); angles <= 1 deg",
+   "L4": "measured vs spec <= 0.05 mm",
+   "L5": "crop-matched hue, R/B, median luma within the stone S16 tolerances under the physical light",
+   "L6": "G1-G20 with evidence, 0 major",
+   "L7": "blind design judge >= 12 pairs REPORTED (not blocking); 2 realism judges, 4 views + a folded-stock hero: <= 1 single-judge fake call",
+   "L8_early": "form stage, per part group (receiver + rails, sights, grip + lower, stock + hinge, front end, magazine): 2 realism judges in the ROUGH LOOK with real photos beside; stop on a decisive fail"
+  },
+  "blender": {
+   "B1": "skeleton: root identity, 11 (12) names, parents body, rest identity, magazine unweighted survives the FBX",
+   "B2": "qa_skeletal(max_influences=1)",
+   "B3": "sweeps at LOD0-1: bolt, charging_handle (+ pusher-lug contact 0.0-0.05 mm, no penetration), trigger, selector (full arc, both levers), mag_release, stock 0..fold (step min(1 deg, 0.10 / r_max), or 0.25 deg steps each proving a min distance >= r_max x 0.25 deg / 2 outside the latch zone), sights 0..folded: 0 intersections, inside the 3.7 rows, only the declared allowances; LOD2-3 < 1 px at the switch distance",
+   "B3b": "folded stock clear of selector, knob, port, grip; the ShellEject throw cone (15 deg half-angle, 150 mm) clear of it",
+   "B4": "sockets on bones; Muzzle on the bore <= 0.5 mm / 0.05 deg; sight picture (sights block)",
+   "B4b": "cheek-weld sight picture, reported",
+   "B4c": "folded sights under rail top + 12 mm",
+   "B5": "sidecar = build within 0.001 mm / 0.001 deg",
+   "B6": "twin qa_check on the exported bytes: UCX keyed to the node, slot k on tile k, uv_no_overlap 0, no_coincident_vertices 0, UV1, LODs descending, budget 55000",
+   "B6a": "joined-twin qa_check topology + degenerate checks from form on",
+   "B7": "closed manifold; flat deviation < 1 deg; facet <= 7.5 deg at LOD0; bevels = spec +-0.05 mm and >= the visibility minimum",
+   "B8": "budgets; LOD-pop mean <= 1 px, max <= 3 px at each switch, both stock states",
+   "B9": "power of two, full mips; classes within +-15 % of target (P5..median); fill >= 70 / 65 %; metallic 0/1; dielectric BC sRGB 30-243 (below 50 only the declared black finishes); bare metal BC >= 186",
+   "B10": "tokenised gun deny list + qa_check deny list on names and shipped text; no text in maps",
+   "B11": "every LOD0-3 vertex at every clip frame and both stock states inside the bind AABB + bounds extension",
+   "G5": "0 static intersections LOD0-1; butt gaps >= 0.01 mm; LOD2-3 < 1 px",
+   "S1": "exported sidecar sockets = build within 0.001 mm / 0.001 deg; counts = spec",
+   "S2": "B4 sight picture at LOD0-3 (SK and twin)",
+   "H1_early": "grip width/girth vs real polymer SMG grips; trigger reach; Grip depth within 1 mm of the fit body's palm; SupportHand on the magwell <= 1.5 mm; length of pull reported; cheek-weld eye height vs the sight line",
+   "H1_full": "study 7.2 H1 on MH_PlayerDefault: palm penetration <= 1 mm, trigger reach +-3 mm, IK residual < 0.5 mm, 0 intersections at rest and at clip extremes incl. stock folded and mag out; records hand_offset",
+   "UD1": "gunlib.tspace.unreal_drops(ob) = 0 on every part (after bl.finish) at LOD0-3, on the joined twin and on each SK LOD mesh; min triangle area >= 0.01 mm2",
+   "UD2": "0 edges < 0.05 mm; 0 triangles with height < 0.02 mm over their longest edge; 0 bevel strips < 0.1 mm wide",
+   "UD3": "tspace.collapsed(me, 'UV0', unreal=True) = 0, float32_zero_corners = 0, edge_on_corners = 0 on every export mesh LOD0-3 (SK, twin, mag)",
+   "UD4": "authored UV1 inside 0..1, 0 overlap at 64 and 128 px with 2 px padding, every LOD"
+  },
+  "unreal": {
+   "U1": "skeleton dump: names, parents, ref poses; +X muzzle, +Z up, +Y right; root scale 1",
+   "U2": "Transform Modify Bone: bolt -X straight back; selector about Y",
+   "U2b": "ABP_Gun_LongGun (authored on SK_AR01_Skeleton) drives the SK_SMG01 and SK_AR01 bolts via Compatible Skeletons within 0.01 cm; missing bones raise no error",
+   "U3": "sockets on bones at scale 1 within 0.001 cm / 0.001 deg; no extras",
+   "U4": "FP + WSR full component set (gun + mag): FP no ground shadow, LOD0; TP casts; owner sees no TP component",
+   "U5": "LOD count; triangles equal Blender/FBX/Unreal (expected PASS through UD1); screen sizes; bounds contain every clip vertex incl. both stock states; records whether the extension enters the LOD radius",
+   "U6": "mag composition at Mag within 0.001 cm, at rest and at sampled reload frames",
+   "U7": "PHYS_SMG01 simulates and rests (extended; folded drop reported); SM_SMG01 drop rests on its hulls",
+   "U8": "lightmap index 1; per Q6 (authored UV1: inside 0..1, overlap 0); texture flags, LOD groups, full mips",
+   "U9": "clips: lengths, end poses = rest, compression <= 0.1 mm, every sidecar notify on its frame +-0.5",
+   "U10": "0 warnings/errors from the assets (expected PASS through UD1-UD3); same sha256 everywhere",
+   "U11": "engine hand fit if a player MetaHuman exists in the verification project, else reported",
+   "U12": "top-mip residency of BC and N at hip and ADS",
+   "C2": "0 of 300k LOD0 samples outside the stored hulls",
+   "M9": "see magazine_fit"
+  },
+  "pack": {
+   "P1": "default capture = shipped BC, p99.9 <= 2 levels (BC7 fallback on the polymer)",
+   "P2": "recolour path + 10-colour stress incl. FFFFFF FF0000 0000FF F2E8D5 000000 + tan/OD/FDE",
+   "P3": "mip drift <= 2 %",
+   "P4": "dump comparison: additions only"
+  },
+  "spec": {
+   "S0": "smg_spec.json validator: 0 missing/null fields per part (process, bevel class, texel class, set, authority view, pivot/motion/limits, bone, parent, joint row, fastener sources), 0 unresolved rough values a stage needs, real dims within +-5 %, camera block present"
+  }
+ },
+ "workflows": {
+  "rule": "each stage is a fresh workflow started from a named commit; holds lock SMG01 (+ GunLib while editing gunlib); one Blender process per step; never leaves a process running; writes WorkFiles/guns/smg/gates/<stage>.json (status, failed); ends with a commit; stops and shows the user on a decisive fail",
+  "order": [
+   {
+    "id": "W0",
+    "name": "plan + spec",
+    "starts_from": "9c1df845",
+    "does": "measurement + traces, real-pattern study with photos, this plan; smg_spec.json; S0",
+    "gates": [
+     "S0"
+    ],
+    "ends": "commit 'SMG01 study, spec and plan'"
+   },
+   {
+    "id": "W1",
+    "name": "form",
+    "starts_from": "W0 commit",
+    "does": "W1a gunlib extraction (rail_1913, mag_box, hinge, sights_flip, hardware, gun_standard.json + standard.py, promoted gun-agnostic drivers; LIB_VERSION 0.2.0) with the AR-01 regression (gate values reproduced, export sha256 unchanged); W1b Scripts/guns/smg run_smg.sh: blockout (L1, B4) -> form (R1-R20, internals, both stock states, sights up and folded)",
+    "gates": [
+     "L1",
+     "L2",
+     "L3",
+     "L4",
+     "B3",
+     "B3b",
+     "B4",
+     "B4b",
+     "B4c",
+     "B6a",
+     "B7",
+     "B8",
+     "G5",
+     "B10",
+     "UD1",
+     "UD2",
+     "H1_early",
+     "M1-M5b + F5 (form_magfit)",
+     "L8_early"
+    ],
+    "files": [
+     "gates/gunlib_regression.json",
+     "gates/form.json",
+     "gates/form_magfit.json"
+    ],
+    "ends": "commit; scratch/SMG01_form_stage.blend kept"
+   },
+   {
+    "id": "W2",
+    "name": "surface",
+    "starts_from": "W1 commit",
+    "does": "UV by class + slot tiles, bakes (margin 0, mag AO alone), paint (same-side edge masks, analytic wear, polymer polish), Masks, Detail16 + recolour pre-check, renders from the baked maps",
+    "gates": [
+     "qa_check",
+     "B9",
+     "fill",
+     "densities",
+     "UV0 overlaps 0",
+     "mirrored 0",
+     "L5",
+     "wear audits",
+     "UD1",
+     "UD3",
+     "UD4"
+    ],
+    "files": [
+     "gates/uv_bake_paint.json"
+    ],
+    "ends": "commit"
+   },
+   {
+    "id": "W3",
+    "name": "rig + mag",
+    "starts_from": "W2 commit",
+    "does": "LOD1-3 (same generators), twin (hulls, sockets, tiles), LOD-pop on both stock states -> sizes on engine radii, S1/S2 at LOD0-3, G5 LOD2-3; rig, clips, bounds extension, export_skeletal_set + twin; fresh-process verify; SM_SMG01_Mag from the shipped twin bytes; M1-M10; H1 full; look check from the exported bytes",
+    "gates": [
+     "B1",
+     "B2",
+     "B3 (LOD1)",
+     "B4",
+     "B5",
+     "B6",
+     "B8",
+     "B10",
+     "B11",
+     "C1",
+     "S1",
+     "S2",
+     "M1-M10",
+     "H1_full"
+    ],
+    "files": [
+     "gates/game.json",
+     "gates/rig_export.json",
+     "gates/mag.json"
+    ],
+    "ends": "commit with Exports/Guns/SMG01/"
+   },
+   {
+    "id": "W4",
+    "name": "review + fix",
+    "starts_from": "W3 commit",
+    "does": "review sets from the exported bytes under the physical light; L6, L7 (blind reported), 2 realism judges, tech review; FIX_LOG.md; fixes in the generators; full chain from nothing",
+    "gates": [
+     "L6",
+     "L7",
+     "every stage file passes"
+    ],
+    "files": [
+     "gates/review_fixes.json",
+     "review/FIX_LOG.md"
+    ],
+    "ends": "commit"
+   },
+   {
+    "id": "W5",
+    "name": "Unreal",
+    "starts_from": "W4 commit",
+    "does": "harness copied from WorkFiles/guns/rifle/UnrealCheck into WorkFiles/guns/smg/UnrealCheck; passes A, A2, B, C, D, E, F; /Game/GunCheck/SMG01_<run>; machine guard; sha256 at start and end",
+    "gates": [
+     "U1-U12",
+     "U2b",
+     "C2",
+     "M9"
+    ],
+    "files": [
+     "UnrealCheck/verification_summary.json"
+    ],
+    "ends": "commit"
+   },
+   {
+    "id": "W6",
+    "name": "finish",
+    "starts_from": "W5 commit",
+    "does": "pack materials under PackMaterials via run_build.sh from a short-path mirror root (items SMG01, SMG01_Static, SMG01_Mag, the recolour group, maps/derive_constants_smg01.py); READMEs; showcase/CompactSMG_SM01 via studio.py + the ASSET_LIST row (re-read first); release lock SMG01",
+    "gates": [
+     "P1-P4",
+     "docs present",
+     "only SMG01 exports changed"
+    ],
+    "files": [
+     "gates/pack_materials.json",
+     "gates/docs_showcase.json"
+    ],
+    "ends": "commit; ask before merge/push"
+   }
+  ],
+  "run_chain": "Scripts/guns/smg/run_smg.sh (stages 1-2) -> run_game.sh (3-4) -> run_rig_mag.sh (5-6), each resumable with --from; logs in WorkFiles/guns/smg/scratch/logs/"
+ },
+ "gunlib_additions_W1a": {
+  "lock": "GunLib",
+  "lib_version": "0.1.0 -> 0.2.0",
+  "new_modules": [
+   "parts/rail_1913.py",
+   "parts/mag_box.py (straight box mag: section, ribs/grooves, floor plate, lips, follower, catch notch, guide ribs)",
+   "parts/hinge.py (knuckles, pin, detent boss, pivot record, sweep helper)",
+   "parts/sights_flip.py (clamp base on a rail slot, leaf, aperture/post, detent; up + folded)",
+   "parts/hardware.py (pins, screws, rivets from the AR-01 parts)",
+   "standard.py + WorkFiles/guns/gunlib/gun_standard.json (camera block, bone table, socket table, rail profile, clearance table, texel classes)"
+  ],
+  "promoted_drivers": [
+   "b3 sweep driver",
+   "b4 sight picture",
+   "b6a",
+   "measure",
+   "magfit check (straight + rock-in)",
+   "viewgates (LOD-pop, S2)",
+   "g5_lods",
+   "rig_verify",
+   "mag_fit"
+  ],
+  "regression": "AR-01 stage-2/4/5 gate values reproduced with the promoted code; Exports/Guns/AR01 sha256 unchanged (gates/gunlib_regression.json)",
+  "wire_in": "tspace.unreal_drops and the micro-edge/needle checks called by every part generator at every LOD (UD1-UD2); tspace.unreal_safe stays diagnostic-only"
+ },
+ "sidecar_gun_block": {
+  "class": "long_gun",
+  "compatible_with": "SK_AR01_Skeleton",
+  "grip_axis_deg": "from the spec",
+  "rail_slots": {
+   "Rail_Top": "count + slots occupied by the sights",
+   "Rail_Bottom": "count"
+  },
+  "muzzle_class": ".45-class pistol calibre (data only)",
+  "mag_family": "SMG01 straight 25",
+  "stock_states": {
+   "extended_deg": 0,
+   "folded_deg": "from the spec (R10)"
+  },
+  "texel_classes_px_per_cm": "as textures",
+  "hand_offset": "H1 full"
+ },
+ "open_questions": [
+  {
+   "id": "Q1",
+   "q": "The sheet's RIGHT panel mirrors the charging slot (R18): real pattern (plain wall) or copy the slot?",
+   "default": "real pattern, if the real-pattern study confirms no right-side slot"
+  },
+  {
+   "id": "Q2",
+   "q": "Stock fold side if the real pattern and the sheet's TOP view disagree (R10)",
+   "default": "real pattern"
+  },
+  {
+   "id": "Q3",
+   "q": "Keep the merged magazine in SM_SMG01",
+   "default": "yes"
+  },
+  {
+   "id": "Q4",
+   "q": "Also ship a folded static SM_SMG01_Folded",
+   "default": "no"
+  },
+  {
+   "id": "Q5",
+   "q": "Ship A_SMG01_SightFlip as an 8th clip",
+   "default": "yes"
+  },
+  {
+   "id": "Q6",
+   "q": "Lightmap UV: authored UV1 with Generate Lightmap UVs off, a higher lightmap resolution, or dynamic-lit only",
+   "default": "authored UV1, Generate off, gated by UD4 + U8"
+  },
+  {
+   "id": "Q7",
+   "q": "bolt_catch bone",
+   "default": "only if the sheet shows the catch (R9)"
+  },
+  {
+   "id": "Q8",
+   "q": "Folded-stock physics: one body (extended shapes) or a second kinematic stock body (probed in U7)",
+   "default": "one body"
+  },
+  {
+   "id": "Q9",
+   "q": "Fab design deltas (receiver ribs, vent shapes, stock openings, buttpad pattern, muzzle device)",
+   "default": "listed in the spec, not applied"
+  }
+ ],
+ "sources_checked": {
+  "real_pattern_figures": "https://en.wikipedia.org/wiki/Heckler_%26_Koch_UMP (690/450 mm, 200 mm barrel, 2.5 kg for the .45 version, 25-round straight mag, bolt locks open after the last round with a left-side release, aperture rear sight + ringed front post, four rail positions). The fold side is not stated there: the real-pattern study decides R10."
+ }
+}

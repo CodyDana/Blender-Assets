@@ -1,0 +1,1334 @@
+{
+ "asset": "Compact SMG SM-01",
+ "code": "SMG01",
+ "meshes": [
+  "SK_SMG01",
+  "SM_SMG01",
+  "SM_SMG01_Mag"
+ ],
+ "reference": "References/Guns/SMG/smg_sheetA.webp",
+ "study": "WorkFiles/guns/smg/CRAFT_STUDY.md",
+ "date": "2026-10-09",
+ "pattern_note": "modern boxy polymer .45 blowback SMG with a side-folding stock (UMP family); study-internal only, never in shipped names or text",
+ "scale": {
+  "overall_mm": 690,
+  "folded_mm": 450,
+  "barrel_mm": 200,
+  "left_view_silhouette_px": [
+   23,
+   608
+  ],
+  "top_view_silhouette_px": [
+   23,
+   605
+  ],
+  "mm_per_sheet_px": 1.1795,
+  "bore_axis_sheet_y_left_view": 201,
+  "axes": "X = mm forward of the butt face along the bore; Z = mm above (+) / below (-) the bore axis; Y = 0 on the bore plane, +Y = the gun's left (line frame: -Y = right). The spec converts to the Grip-origin frame.",
+  "ruler_note": "the sheet ruler reads 86.6 cm (+26 %); ignored",
+  "accuracy": "craft-level readings, about +/-3.5 mm (3 px); the measurer's trace replaces them",
+  "checks": {
+   "height_sight_to_mag_mm": {
+    "sheet": 338,
+    "real_with_mag": 326,
+    "note": "+3.7 %; rail-clamp sights stand taller than the real fixed sights"
+   },
+   "body_width_top_mm": {
+    "sheet": "62.5-65",
+    "real_overall_width": 63.5
+   },
+   "folded_length_mm": {
+    "sheet": 435,
+    "real": 450
+   },
+   "barrel_breech_X": {
+    "value": 485,
+    "note": "a 200 mm barrel from the muzzle puts the breech inside the port span X 453-515, as on the real blowback"
+   },
+   "sight_radius_mm": {
+    "sheet": 268,
+    "real_fixed_sights": 325,
+    "note": "design change, sheet wins"
+   }
+  }
+ },
+ "panels": {
+  "LEFT": "top-left, true left (knob side), muzzle to screen left",
+  "RIGHT": "top-right, true right (port side), muzzle to screen right",
+  "TOP": "bottom-left, screen-down = the gun's left (knob protrudes there)",
+  "Q34": "bottom-right, 3/4 front view of the left side"
+ },
+ "real_figures_manual": {
+  "source": "UMP45/UMP40 operator's manual 10/1999 rev 08/2000 (specs table p.47)",
+  "overall_extended_mm": 690,
+  "overall_folded_mm": 450,
+  "overall_width_mm": 63.5,
+  "height_with_mag_mm": 326,
+  "barrel_mm": 200,
+  "sight_radius_mm": 325,
+  "mass_without_mag_kg": 2.26,
+  "mag_empty_kg": 0.17,
+  "bore": "6x polygonal, right-hand twist",
+  "action": "simple blowback, closed bolt"
+ },
+ "stations": [
+  {
+   "feature": "muzzle_device",
+   "X": [
+    651,
+    690
+   ],
+   "Z": [
+    -11.8,
+    11.8
+   ],
+   "note": "OD ~24, 6-slot cage, open front"
+  },
+  {
+   "feature": "jam_nut_thread_collar",
+   "X": [
+    632,
+    651
+   ],
+   "OD": 17.7
+  },
+  {
+   "feature": "barrel_collar_ring",
+   "X": [
+    620,
+    632
+   ],
+   "OD": 26
+  },
+  {
+   "feature": "receiver_front_face",
+   "X": 620,
+   "Z": [
+    -42,
+    33
+   ],
+   "note": "sling eyelet at upper-left corner (3/4)"
+  },
+  {
+   "feature": "front_flip_sight",
+   "X": [
+    590,
+    605
+   ],
+   "Z_top": 79.0
+  },
+  {
+   "feature": "forward_long_vent_left",
+   "X": [
+    561,
+    602
+   ],
+   "Z": [
+    21.8,
+    29.5
+   ]
+  },
+  {
+   "feature": "forward_long_vent_right",
+   "X": [
+    531,
+    598
+   ],
+   "Z": [
+    21.8,
+    29.5
+   ]
+  },
+  {
+   "feature": "charging_knob_centre_left",
+   "X": 551,
+   "Z": 19.5,
+   "note": "ball ~18 mm, protrudes ~19 mm; lever bar to X ~505"
+  },
+  {
+   "feature": "lower_vents_each_side",
+   "X": [
+    [
+     579,
+     606
+    ],
+    [
+     541,
+     570
+    ]
+   ],
+   "Z": [
+    -10.6,
+    -3.2
+   ]
+  },
+  {
+   "feature": "lower_rail",
+   "X": [
+    540,
+    611
+   ],
+   "Z_bottom": -42.5,
+   "slots_sheet": 6
+  },
+  {
+   "feature": "diagonal_forearm_to_magwell_step",
+   "from": [
+    530,
+    -3
+   ],
+   "to": [
+    512,
+    -42
+   ]
+  },
+  {
+   "feature": "magwell_outer",
+   "X": [
+    452,
+    512
+   ],
+   "Z_bottom": -79,
+   "lip_band_Z": [
+    -79,
+    -68
+   ]
+  },
+  {
+   "feature": "magazine_visible",
+   "top_X": [
+    452,
+    512
+   ],
+   "bottom_X": [
+    479,
+    521
+   ],
+   "Z": [
+    -256,
+    -79
+   ],
+   "fore_aft_mm": 42,
+   "rake_deg_bottom_forward": 8
+  },
+  {
+   "feature": "ejection_port_right",
+   "X": [
+    453,
+    515
+   ],
+   "Z": [
+    -1.8,
+    21.8
+   ]
+  },
+  {
+   "feature": "stock_catch_tab_right",
+   "X": [
+    517,
+    527
+   ],
+   "Z": [
+    -1.8,
+    21.8
+   ],
+   "proud_mm": 3
+  },
+  {
+   "feature": "trigger_guard",
+   "X": [
+    363,
+    448
+   ],
+   "Z_bottom": -100.3
+  },
+  {
+   "feature": "selector_hub_both_sides",
+   "X": 364,
+   "Z": -30.7,
+   "hub_dia": 20,
+   "blade_tip_left": [
+    355,
+    -49.5
+   ],
+   "blade_angle_deg": "65 below the rearward horizontal (left 65, right 64)"
+  },
+  {
+   "feature": "pistol_grip",
+   "bottom_X": [
+    287,
+    347
+   ],
+   "Z_bottom": -167.5,
+   "rake_deg": 22,
+   "front_edge_deg": 17,
+   "rear_edge_deg": 26
+  },
+  {
+   "feature": "top_rail",
+   "X": [
+    308,
+    607
+   ],
+   "Z_base": 35.4,
+   "Z_top": 47.2,
+   "height_sheet_mm": 11.8,
+   "band_width_top_mm": "~35"
+  },
+  {
+   "feature": "rear_flip_sight",
+   "X": [
+    322,
+    336
+   ],
+   "Z_top": 82.6
+  },
+  {
+   "feature": "end_block_backplate",
+   "X": [
+    278,
+    302
+   ],
+   "Z": [
+    -58,
+    33
+   ],
+   "note": "lower locking pin head on the left face (X ~282, Z ~-18)"
+  },
+  {
+   "feature": "hinge_latch_block",
+   "X": [
+    255,
+    278
+   ]
+  },
+  {
+   "feature": "stock_top_strut",
+   "X": [
+    42,
+    255
+   ],
+   "Z": [
+    4.7,
+    16.5
+   ],
+   "width_top_mm": 29.5
+  },
+  {
+   "feature": "stock_slanted_web",
+   "X": [
+    121,
+    138
+   ]
+  },
+  {
+   "feature": "rear_upright_and_pad",
+   "X": [
+    0,
+    42
+   ],
+   "pad_X": [
+    0,
+    28
+   ],
+   "Z": [
+    -87.3,
+    20.1
+   ],
+   "pad_height": 107,
+   "pad_width_top_mm": "55-59"
+  }
+ ],
+ "parts": [
+  {
+   "name": "upper_receiver",
+   "bone": "body",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "Fibre-reinforced polymer box shell, flat vertical sides, flat top at Z +33 under the rail; forearm front face at X 620 (1-2 deg draft, R 2 edge); full-length 0.5-0.8 mm moulded shoulder step at Z ~+12..+15 on both sides; wall 3.0-3.5 mm with real wall reveals at every opening; inside: two steel L-section bolt guide rails (3x4 mm) over the bolt travel +10 mm, the charging-slide guide above the barrel, barrel seat boss with a transverse roll-pin bore, support-bolt bosses at the magwell front, right-rear hinge knuckles (2).",
+   "key_features": [
+    "width = TOP trace (~62-64 mm)",
+    "parting witness along the side-wall edge rounds (texture only, 0.05-0.1 mm)",
+    "ejector circles 4-6 mm only on hidden faces",
+    "no sink drawn = none built",
+    "fastener count/position from the trace only"
+   ],
+   "wear": "whitening on the vertical corners, front-face rim and forearm lower edge; support-hand polish on the forearm belly and left side; fine fore-aft scratches",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.11 (fibre-reinforced plastic upper, metal guideways, support bolts, cocking lever above the barrel, port with integral catch, left sling eyebolts, hinge at the rear); HKUMP45 photo",
+   "confidence": "high (form), medium (inner layout)"
+  },
+  {
+   "name": "forearm_vents",
+   "bone": "body",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "Two oblong through-vents per side (~27 x 8.7 mm, Z -3..-11) plus one long upper through-vent per side (left X 561-602, right X 531-598, Z +21.8..+29.5), stadium ends, 1 deg drafted walls, 0.4 mm outer break; the barrel shows through.",
+   "key_features": [
+    "lower vents X 579-606 and 541-570",
+    "the real pattern's side-rail hard-point bosses are NOT drawn and NOT built"
+   ],
+   "wear": "whitening on vent lips; grime at the vent ends",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "HKUMP45 photo + manual img30 (the two lower vents match the real pattern)",
+   "confidence": "high",
+   "ruling": "RP4"
+  },
+  {
+   "name": "charging_handle",
+   "bone": "charging_handle",
+   "process_class": "M-round (knob), M-chamfer (lever)",
+   "material": "phosphate_steel",
+   "construction": "Non-reciprocating cocking lever: the sheet's ball knob (~18 mm) on a dia 8 neck at X ~551, Z +19.5, protruding ~19 mm; the drawn bar behind it (to X ~505, pin head at its rear) is the lever arm lying flush in a 0.8 mm recess; a 6.5 mm tall channel through the left wall runs REARWARD from the neck for 75 mm + neck (to X ~468) and ends in an upward lock indent (~8 mm rise, ~7 mm wide, round bottom); inside, a steel slide (12x10 mm) in a moulded guide over the barrel with a hook that pushes the bolt's charging lug.",
+   "key_features": [
+    "travel 75 mm (photo-measured, +/-5)",
+    "lock rotation about X 0..+18 deg at full travel",
+    "returns forward on its own spring",
+    "sliding clearance 0.15-0.40 mm"
+   ],
+   "wear": "polished knob crown, bright rim; polished channel lips along the travel",
+   "panels": [
+    "LEFT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.4/11/20 (pull back, rotate up into the indent; 'slap' to release), parts 12-15; HKUMP45 photo (lever at the FRONT of an ~85 mm slot)",
+   "confidence": "medium (sheet reverses slot and knob)",
+   "ruling": "RP3"
+  },
+  {
+   "name": "lower_receiver",
+   "bone": "body",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "One moulding: trigger housing, integral magwell, integral trigger guard, integral pistol grip, integrated backplate (the tall end block X 278-302 up to the receiver top); front lugs hook onto the upper's support bolts, rear held by the removable locking pin (head dia 7 on the left face of the end block). Design seam 0.3-0.5 mm (0.6 deep) along the drawn upper/lower line and at the end block's front edge.",
+   "key_features": [
+    "magwell X 452-512 down to Z -79 with the flared lip band",
+    "guard bottom Z -100",
+    "grip bottom Z -167.5, rake 22 deg",
+    "selector seat bosses both sides"
+   ],
+   "wear": "grip straps and web polished; magwell flare polished + insertion scratch fan; guard bottom whitened",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.14-15 fig 10 (lower receiver with trigger mechanism, backplate, magwell, release, bolt catch; parts list 33-58)",
+   "confidence": "high"
+  },
+  {
+   "name": "magwell",
+   "bone": "body",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "Box around the magazine; mouth flared 1.5-2.0 mm per side over the lowest 8-10 mm with an R 1.5 rolled lip; inner walls 1 deg draft opening downward, 0.3 mm per side to the magazine; catch window in the rear wall for the paddle nose; hard top shelf (feed-ramp ledge) 1-2 mm above the seated magazine; NO guide ribs.",
+   "key_features": [
+    "diagonal sloped front panel from (530,-3) to (512,-42) then a horizontal shelf",
+    "dark interior, class E texels (visible with the mag out)"
+   ],
+   "wear": "insertion scratch fan into the mouth; lip whitening",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual fig 10; real pattern",
+   "confidence": "medium (internals unseen)",
+   "ruling": "RP21"
+  },
+  {
+   "name": "trigger_guard",
+   "bone": "body",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "Integral heavy polymer loop (no seam): bottom bar ~6-7 mm deep at Z -100, legs ~6 mm, edges R 1.5-2, large rectangular inside with R 6-8 corners.",
+   "key_features": [
+    "X 363-448"
+   ],
+   "wear": "bottom whitening, inside front polished by the finger",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual fig 10 #12 (integral with the grip housing)",
+   "confidence": "high",
+   "ruling": "RP12"
+  },
+  {
+   "name": "pistol_grip",
+   "bone": "body",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "Integral grip, rounded-oblong section ~31-33 mm wide (unseen; norm), front strap R 9-10, back strap R 12-14, beaver-tail web at the top rear, ~55-62 mm fore-aft, flared base lip ~3 mm; lower ~9 mm = separate grip cover with a 0.3 x 0.5 mm seam and a flat plain bottom (R 1 rim). Stipple panel both sides: rounded-rectangle inset from ~20 % below the top to ~12 % above the bottom, ~5 mm in from both straps; border = 0.5-0.6 mm geometric step with a 0.3 mm break; stipple in the normal map (pebbles 0.5-0.8 mm pitch, 0.1-0.15 mm tall).",
+   "key_features": [
+    "rake 22 deg",
+    "the small mark near the bottom in the 3/4 = the cover seam"
+   ],
+   "wear": "front/back strap and web polished; stipple crowns polished; base lip whitened",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual parts 33 + 58 (pistol grip cover)",
+   "confidence": "high (outline), medium (section)",
+   "unseen_treatment": "grip bottom = flat cover face, no hole",
+   "ruling": "RP13"
+  },
+  {
+   "name": "selector",
+   "bone": "selector",
+   "process_class": "M-chamfer (steel plate)",
+   "material": "phosphate_steel",
+   "construction": "Ambidextrous teardrop levers on one transverse shaft: hub dia ~20 (sheet) on a seat boss 1.0 mm proud; blade tapering from ~12 mm at the hub tangent to ~6 mm at an R 3 tip, tip 21-24 mm from the axis; 2.5-3 mm plate, R 0.8 edge round, tip +0.5 mm thumb ledge; index line = 0.5 x 0.3 mm groove across the hub along the blade, unpainted; right lever same outline ~10 % smaller.",
+   "key_features": [
+    "rest = sheet pose = SEMI: blade ~65 deg below the rearward horizontal",
+    "SAFE: blade forward-down (~45 deg below forward)",
+    "AUTO: ~45 deg further rearward than SEMI (near horizontal)",
+    "clips that move the bolt hold AUTO",
+    "no red dot, no pictograms"
+   ],
+   "wear": "bright blade tip and hub rim; thumb-arc polish on the housing (right-handed: left side)",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.14-15 fig 11a-c (img62/65/68), parts 48-49",
+   "confidence": "medium (angles to confirm on the figures)",
+   "ruling": "RP7"
+  },
+  {
+   "name": "trigger",
+   "bone": "trigger",
+   "process_class": "C-fillet",
+   "material": "phosphate_steel",
+   "construction": "Steel blade ~6 mm wide, curved forward-concave, smooth face crowned R 8 across, ~30 mm below the housing; pivots on a transverse axle (flush pin heads both sides).",
+   "key_features": [
+    "pull ~12-15 deg about Y"
+   ],
+   "wear": "bright face",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual part 34 + axles",
+   "confidence": "high"
+  },
+  {
+   "name": "mag_release",
+   "bone": "mag_release",
+   "process_class": "M-chamfer",
+   "material": "phosphate_steel",
+   "construction": "One centred steel paddle (Y = 0) behind the magwell, ahead of the guard's front leg: ~10 mm wide, 3 mm thick, ~18 mm below the housing, forward-curved finger pad (R 4); pivot ~8 mm above the housing face inside the catch window; nose engages the magazine notch >= 1.5 mm; pushed FORWARD to release (rotate about Y ~10-12 deg).",
+   "key_features": [],
+   "wear": "bright pad face",
+   "panels": [
+    "LEFT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.19 ('push magazine catch forward'), fig 10 #2, parts 50-52; HKUMP45 photo",
+   "confidence": "medium",
+   "ruling": "RP8"
+  },
+  {
+   "name": "bolt",
+   "bone": "bolt",
+   "process_class": "M-chamfer",
+   "material": "phosphate_steel (bare/polished on the flanks)",
+   "construction": "Rectangular blowback block (~26 mm wide, fills the port height), longer upper section overhanging rearward with the spring-guide bore at the top front; bolt face with a 12 mm case-head boss and a 1.5 mm firing-pin hole; extractor claw (5x25 mm) inset in the right face at the bolt face, hook 1 mm over the face; THUMB RECESS on the right face: oval scallop ~16x9 mm, 1.5 mm deep, centred in the port at rest; guide grooves along both lower edges on the receiver rails (0.2 mm per side); charging lug on the top front.",
+   "key_features": [
+    "rest: face at the barrel breech ~X 485",
+    "travel 75 mm (back to ~X 410)",
+    "0.4 mm M-chamfers, milling passes in roughness only"
+   ],
+   "wear": "sliding polish on the flanks; soot at the face",
+   "panels": [
+    "RIGHT"
+   ],
+   "real_pattern_evidence": "manual p.12-13 (bolt group, 'right side of the bolt has a thumb recess'), img47-49, img118",
+   "confidence": "medium",
+   "ruling": "RP5"
+  },
+  {
+   "name": "ejection_port_and_stock_catch",
+   "bone": "body",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "Right side only, X 453-515, Z -2..+22, through the wall, corners R 2, 45 deg deflector chamfer on the rear edge; the vertical tab at the port front (X 517-527, proud ~3 mm) is the integral stock catch with a hooked rear face (undercut 1.0-1.5 mm).",
+   "key_features": [
+    "dark interior: bolt, breech, feed lips (class E)"
+   ],
+   "wear": "polished catch lip; light soot at the port rear edge",
+   "panels": [
+    "RIGHT"
+   ],
+   "real_pattern_evidence": "manual p.11-12 ('the ejection port includes an integral catch'; 'buttstock engages on the catch located on the forward part of the ejection port'); img42",
+   "confidence": "high",
+   "ruling": "RP6"
+  },
+  {
+   "name": "barrel",
+   "bone": "body",
+   "process_class": "M-chamfer",
+   "material": "phosphate_steel",
+   "construction": "Steel barrel 200 mm, breech ~X 485, pinned in the upper (transverse roll pin, unseen); visible OD 17.7 at the thread collar, steel collar ring OD ~26 (X 620-632) in a counterbore of the receiver face; bore dia 11.4, dark, >= 2 calibres deep; polygonal bore texture only.",
+   "key_features": [],
+   "wear": "edge brightening on the collar ring",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.11 (barrel inserted and pinned), part 16-17 (roll pin 6x32)",
+   "confidence": "high"
+  },
+  {
+   "name": "muzzle_device",
+   "bone": "muzzle_device",
+   "process_class": "M-chamfer",
+   "material": "phosphate_steel",
+   "construction": "Slotted cage OD ~24, 39 mm long (X 651-690), open front; six through-slots at 60 deg, one centred on each side (3 visible in side views, 2 in TOP), ~4 mm wide x ~26 mm, round ends; bars 6-7 mm; front rim ring ~5 mm (0.6 mm outer chamfer, 1 mm bore chamfer); rear ring, 2 mm groove, then the jam nut / thread collar (X 632-651) with two 3 mm wrench flats on the underside only; bore ID ~13.5.",
+   "key_features": [],
+   "wear": "soot gradient from each slot and the crown; bright front rim",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "HKUMP45 photo (slotted hider at the muzzle)",
+   "confidence": "high",
+   "ruling": "RP16"
+  },
+  {
+   "name": "top_rail",
+   "bone": "body",
+   "process_class": "M-chamfer",
+   "material": "phosphate_steel",
+   "construction": "gunlib.rail_1913: 21.2 mm dovetail, 45 deg flanks, 5.24 mm square-bottomed slots at 10.01 mm pitch, 3.0 mm deep, 0.3-0.5 mm chamfers, on a ~30-34 mm wide x ~4 mm base flange (TOP band width); total height ~11.8 (sheet); X ~308-607 (~29 slots); two socket-head cap screws (head dia 8.5) counterbored in two slot floors, heads 0.3 mm below the floor; butt joint 0.01-0.05 mm.",
+   "key_features": [
+    "slot count = round(length/10.01); the sheet's teeth are irregular"
+   ],
+   "wear": "bright slot edges and flank crests; grime in slot roots",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.17 (rails screwed onto moulded-in hard points; 2 screws per rail, parts 64-67)",
+   "confidence": "high",
+   "ruling": "RP14"
+  },
+  {
+   "name": "lower_rail",
+   "bone": "body",
+   "process_class": "M-chamfer",
+   "material": "phosphate_steel",
+   "construction": "Short 1913 rail under the forearm front, facing down, X ~540-611, 6 slots (sheet), same profile and base flange rule, 2 counterbored screws.",
+   "key_features": [],
+   "wear": "as the top rail",
+   "panels": [
+    "LEFT",
+    "RIGHT"
+   ],
+   "real_pattern_evidence": "manual p.17",
+   "confidence": "high",
+   "ruling": "RP14"
+  },
+  {
+   "name": "front_flip_sight",
+   "bone": "sight_front",
+   "process_class": "M-round (ears), M-chamfer (base)",
+   "material": "phosphate_steel or black anodized aluminium",
+   "construction": "Rail-clamp base with a recoil lug in one slot (integer index) and a transverse cross-bolt (head on the LEFT, captive jaw/nut on the right); leaf on a transverse pin with a spring detent (no button); two ears 2.5-3 mm thick (tops R 1) and a 1.85 mm square post between them, tip flat with a 0.2 mm break, level with the aperture centre; adjuster ring geometry only if >= 4 px at ADS. Folds REARWARD; folded <= rail top + 12 mm.",
+   "key_features": [
+    "X ~590-605, top Z +79",
+    "class A texels"
+   ],
+   "wear": "bright ear tops",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "generic rail-clamp backup sights (no equivalent on the real gun, whose front post + hood sit on the receiver)",
+   "confidence": "medium",
+   "ruling": "RP15"
+  },
+  {
+   "name": "rear_flip_sight",
+   "bone": "sight_rear",
+   "process_class": "M-round / M-chamfer",
+   "material": "phosphate_steel or black anodized aluminium",
+   "construction": "Rail-clamp base as the front; rectangular leaf with two protective side ears framing a round aperture disc (10 mm boss, aperture dia 2.0 mm, 45 deg eye-side countersink); a plain round windage drum on the base's right side (knurl in the normal map, no ticks). Folds FORWARD; folded <= rail top + 12 mm.",
+   "key_features": [
+    "X ~322-336, top Z +82.6",
+    "Sight socket at the aperture centre",
+    "class A texels"
+   ],
+   "wear": "bright ear edges",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "generic rail-clamp diopter; the real gun's rear sight is a flip diopter with peep and U-notch on the receiver (manual p.11)",
+   "confidence": "medium",
+   "ruling": "RP15"
+  },
+  {
+   "name": "stock_hinge_and_latch",
+   "bone": "stock (stock-side parts) / body (knuckles)",
+   "process_class": "M-chamfer (axle), P-round (housings)",
+   "material": "polymer_black + steel axle/bushings",
+   "construction": "Corner hinge at the RIGHT rear: vertical steel axle dia 6 through two receiver-side knuckles (top, bottom; steel bushings) and one stock-side centre knuckle. LEFT: the drawn vertical rounded boss = the stock's latch housing (spring latch bolt moving along Y into a notch in the receiver's left rear) with a vertical oval release button (~7 x 16 mm, 1 mm proud, 2 mm stroke) in its outer face; the drawn grooves = button outline and knuckle splits. Stock-side hinge block joggled (short Z-link) so the folded frame's inner face sits 2-4 mm off the highest right-side feature.",
+   "key_features": [
+    "fold: rotate about +Z ~180 deg to the RIGHT",
+    "swept minimum >= 0.10 mm",
+    "folded retention: the port catch hook, engagement >= 1.0 mm",
+    "bounds extension over both states x every LOD"
+   ],
+   "wear": "button face polished; knuckle edges whitened; grime in the knuckle splits",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.12 (folds right; press the catch; engages the port catch; axle, lock and spring parts 22, 25, 26); img29, img42, img43; Ump-side illustration",
+   "confidence": "medium",
+   "ruling": "RP1, RP2"
+  },
+  {
+   "name": "stock_frame",
+   "bone": "stock",
+   "process_class": "P-round",
+   "material": "polymer_black",
+   "construction": "One-piece moulded skeleton frame symmetric about its mid-plane (1 deg draft each way, parting witness around the middle); top strut Z +4.7..+16.5 (~29.5 wide), lower strut rising ~19 deg from the hinge block to the toe (~12 mm deep), slanted web X ~121-138 splitting a small front triangle from a large rear opening, rear upright X 28-42; raised 0.8-1.0 mm border step 1.5 mm in from each opening edge, R 1.5 inner rounds; solid struts with flat faces; two dia ~6 through-holes on the rear upright (lower = SlingRear); dia 4 locking-pin storage hole in the front strut.",
+   "key_features": [
+    "no cheek piece (the real one has a rubber cheek piece; not drawn)",
+    "folded it lies along the right side; see C-Q3 on the port"
+   ],
+   "wear": "cheek-weld polish on the top strut (left), whitening on outer corners and the toe",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.12 (open frame, rubber pad, locking-pin hole); img24, img30; Ump-side illustration (toe hole)",
+   "confidence": "high (outline)"
+  },
+  {
+   "name": "butt_pad",
+   "bone": "stock",
+   "process_class": "P-round (rubber)",
+   "material": "rubber",
+   "construction": "Rubber pad X 0-28, height 107, width ~55-59 (TOP), wrapping the upright with a 2 mm lip; horizontal ribs on the rear face as geometry (count from the trace, ~12-14, pitch ~7-8, depth ~1.2, R 0.6 crests); edges R 3-4; 0.3 mm seam to the frame.",
+   "key_features": [],
+   "wear": "dust in the rib roots; toe/heel scuffs",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.12 (rubber pad), img42",
+   "confidence": "high"
+  },
+  {
+   "name": "magazine",
+   "bone": "magazine (SM_SMG01_Mag)",
+   "process_class": "P-round",
+   "material": "polymer_mag",
+   "construction": "Straight solid polymer double-stack housing tapering to a single-feed top over ~30 mm; section 42 fore-aft x ~27 thick (confirm in blockout), corners R 3 front / R 2.5 rear; inside 0.25 deg core draft only; two parallel recessed channels per side (each ~4.5 wide, 1.0 deep, 3.5 apart) from ~25 mm below the top to ~15 mm above the floor plate, crossed by flush ties (4 levels on LEFT); front spine rib ~6 wide, 0.8 proud, parting line on its crest; rear spine plain with the catch notch (window ~8x4, 2.5 deep, square bearing face, ~30 mm below the top); feed lips folded inward (wall 2.0), front top stepped higher; dark follower visible, no cartridge.",
+   "key_features": [
+    "raked ~8 deg (bottom forward); straight insertion along its own axis",
+    "0.3 mm per side in the well; overtravel 1-2 mm",
+    "mass empty 0.17 kg (manual)"
+   ],
+   "wear": "insertion streaks on the upper 40 mm; polished spine crest and lips; whitened floor-plate corners; dust in the ladder floors",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.16 + p.27 (housing, floor plate, follower, spring, locking plate; floor plate slides off to the rear, held by the locking plate tab); img73, img74, img86, img87",
+   "confidence": "medium",
+   "ruling": "RP10"
+  },
+  {
+   "name": "magazine_floor_plate",
+   "bone": "magazine (SM_SMG01_Mag)",
+   "process_class": "P-round",
+   "material": "polymer_mag",
+   "construction": "Separate cap 5 mm thick, lip 1.5-2.0 mm proud all round, front edge R 4; slides onto rails moulded into the housing's bottom flange from the rear; bottom face carries a dia 8 hole with the locking plate's dark tab flush inside and fine slide-rail seams.",
+   "key_features": [],
+   "wear": "corner whitening (drops), Base impact zone",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.27, img73 part 2",
+   "confidence": "medium",
+   "unseen_treatment": "bottom face: locking-tab hole + seams (real pattern; not on the sheet)"
+  },
+  {
+   "name": "sling_points",
+   "bone": "body / stock",
+   "process_class": "P-round with steel sleeve",
+   "material": "polymer_black + phosphate_steel",
+   "construction": "Front: eyelet hole dia 6-7 through a solid boss at the receiver's front-left corner below the rail base, steel sleeve 0.6 mm proud (SlingFront). Rear: the stock's lower rear through-hole (SlingRear).",
+   "key_features": [],
+   "wear": "sleeve rim bright",
+   "panels": [
+    "Q34",
+    "LEFT"
+   ],
+   "real_pattern_evidence": "manual p.11 (left-side eyebolts), p.41 (attached to receiver, handstop or buttstock)",
+   "confidence": "medium",
+   "ruling": "RP17"
+  },
+  {
+   "name": "pins_and_fasteners",
+   "bone": "body",
+   "process_class": "M-chamfer",
+   "material": "phosphate_steel",
+   "construction": "Flush steel inset rings: front support bolt head (magwell front top), rear locking pin head (dia 7, end block left), trigger/hammer/selector axles; dia 4-7, 0.3 mm chamfer, 0.1-0.2 mm proud or sunk as each sheet head reads; count and position from the trace only.",
+   "key_features": [],
+   "wear": "rims brightened, grime around",
+   "panels": [
+    "LEFT",
+    "RIGHT",
+    "Q34"
+   ],
+   "real_pattern_evidence": "manual p.14 (front lugs on support bolts, rear removable locking pin), parts 23, 36",
+   "confidence": "medium",
+   "ruling": "RP18"
+  }
+ ],
+ "materials": {
+  "polymer_black": {
+   "metallic": 0,
+   "base_srgb": [
+    46,
+    47,
+    50
+   ],
+   "base_linear": [
+    0.028,
+    0.031
+   ],
+   "roughness": [
+    0.58,
+    0.66
+   ],
+   "roughness_hand_zones": 0.52,
+   "micro_texture": "moulded matte (EDM-spark class, Ra ~2-3 um) as Detail16 normal noise, feature 0.05-0.15 mm, tile ~20 mm",
+   "wear": {
+    "polish": "roughness -0.10..-0.18, base -2 levels (handling)",
+    "whitening": "base +15..+35 levels, roughness +0.05, 0.3-1.0 mm bands (impact/abrasion)"
+   }
+  },
+  "grip_stipple": {
+   "metallic": 0,
+   "base": "as polymer_black",
+   "roughness": [
+    0.78,
+    0.88
+   ],
+   "texture": "pebbles 0.5-0.8 mm pitch, 0.1-0.15 mm tall (normal + AO)"
+  },
+  "polymer_mag": {
+   "metallic": 0,
+   "base_srgb": [
+    41,
+    42,
+    45
+   ],
+   "base_linear": [
+    0.022,
+    0.025
+   ],
+   "roughness": [
+    0.55,
+    0.65
+   ],
+   "micro_texture": "0.04-0.1 mm matte"
+  },
+  "rubber": {
+   "metallic": 0,
+   "base_srgb": [
+    42,
+    42,
+    44
+   ],
+   "roughness": [
+    0.82,
+    0.92
+   ]
+  },
+  "phosphate_steel": {
+   "metallic": 0,
+   "base_srgb": [
+    [
+     48,
+     49,
+     50
+    ],
+    [
+     52,
+     53,
+     54
+    ]
+   ],
+   "base_linear": [
+    0.03,
+    0.035
+   ],
+   "roughness_dry": [
+    0.66,
+    0.8
+   ],
+   "roughness_oiled": [
+    0.55,
+    0.65
+   ],
+   "micro_texture": "crystalline grain 0.02-0.05 mm, roughness noise +/-0.05",
+   "wears_to": "bare_steel"
+  },
+  "bare_steel": {
+   "metallic": 1,
+   "base_linear": [
+    0.53,
+    0.56
+   ],
+   "roughness": [
+    0.25,
+    0.4
+   ],
+   "roughness_sliding": [
+    0.15,
+    0.25
+   ]
+  },
+  "anodized_aluminium_optional": {
+   "metallic": 0,
+   "base_srgb": [
+    45,
+    55
+   ],
+   "roughness": [
+    0.45,
+    0.6
+   ],
+   "wears_to": "metallic 1, 0.91, rough 0.30-0.45"
+  },
+  "soot": {
+   "metallic": 0,
+   "base_linear": [
+    0.02,
+    0.03
+   ],
+   "roughness": [
+    0.85,
+    0.95
+   ]
+  },
+  "sheet_samples_srgb_median": {
+   "background": [
+    152,
+    160
+   ],
+   "receiver_left": [
+    63,
+    64,
+    66
+   ],
+   "receiver_right": [
+    76,
+    78,
+    81
+   ],
+   "grip_stipple": [
+    64,
+    65,
+    66
+   ],
+   "magazine": [
+    55,
+    57,
+    59
+   ],
+   "stock": [
+    61,
+    62,
+    64
+   ],
+   "butt_pad": [
+    55,
+    55,
+    58
+   ],
+   "muzzle_device": [
+    40,
+    40,
+    40
+   ],
+   "rail_side": [
+    49,
+    50,
+    51
+   ],
+   "note": "lit values; polymer/backdrop 0.40, steel 0.26-0.32, mag 0.36; neutral with B-R +2..+3; calibrate under matched light (study 3.3)"
+  }
+ },
+ "wear_logic": [
+  "polymer never shows metal: polish (G) where hands slide, whitening (R) where struck or abraded",
+  "polish: grip straps and web, forearm belly + left side, magwell flare, top strut cheek zone, selector arc",
+  "whitening: receiver corners, front-face rim, forearm lower edge, vent/port lips, magwell lip, stock outer corners, pad toe/heel, floor plate",
+  "insertion: scratch fan into the magwell mouth; streaks on the mag's upper 40 mm",
+  "steel bright edges: rail slot edges and flank crests, sight ears, device rim and slots, knob crown, selector tip, trigger face; sliding polish on bolt flanks and channel lips",
+  "cavity grime (B): rail slot roots, vent ends, ladder channels, pin surrounds, pad rib roots, hinge splits, stipple roots",
+  "soot: device slots and crown; light at the port rear edge",
+  "right-handed: more support-hand polish on the left; port soot and selector thumb arc on the right; left/right differ"
+ ],
+ "rulings": [
+  {
+   "id": "RP1",
+   "part": "stock fold side",
+   "ruling": "folds to the RIGHT; vertical axle at the right rear corner",
+   "evidence": "manual p.12; img29; Ump-side",
+   "plan": "confirms R10/Q2"
+  },
+  {
+   "id": "RP2",
+   "part": "hinge, latch, folded retention",
+   "ruling": "right = knuckle stack + steel axle; left drawn boss = latch housing with an oval push button; folded retention = the integral port-front catch hook; stock-side block joggled so the folded frame lies 2-4 mm off the side",
+   "evidence": "manual p.12; img42, img43",
+   "plan": "adjusts R10 (stud -> port catch)"
+  },
+  {
+   "id": "RP3",
+   "part": "charging handle",
+   "ruling": "knob at rest where drawn; 6.5 mm channel cut REARWARD 75 mm + neck with an upward lock indent at its rear; drawn bar = lever arm, flush, moving with the knob; lock rotation about X 0..+18 deg",
+   "evidence": "manual p.4, 11, 20; HKUMP45 photo",
+   "plan": "resolves R4; user check C-Q1"
+  },
+  {
+   "id": "RP4",
+   "part": "forward long slot",
+   "ruling": "both drawn slots are moulded through-vents, as drawn per side",
+   "evidence": "sheet LEFT/RIGHT/3/4; the real right side has no slot, the real left slot is the lever channel behind the lever",
+   "plan": "overrides R18 default; user check C-Q1"
+  },
+  {
+   "id": "RP5",
+   "part": "bolt",
+   "ruling": "rectangular block, extractor right, thumb recess on the right face visible in the port; travel 75 mm; rest face at ~X 485",
+   "evidence": "manual p.12-13, img47-49",
+   "plan": "refines R5"
+  },
+  {
+   "id": "RP6",
+   "part": "ejection port",
+   "ruling": "right only; the drawn front tab = integral stock catch with a hooked rear face",
+   "evidence": "manual p.11-12",
+   "plan": "confirms R6"
+  },
+  {
+   "id": "RP7",
+   "part": "selector",
+   "ruling": "teardrop steel levers both sides on one shaft (hub 20, tip 21-24 from the axis), right ~10 % smaller; unpainted index groove; no red dot or pictograms; sheet pose = SEMI, SAFE forward-down, AUTO further rearward",
+   "evidence": "manual fig 11a-c, parts 48-49",
+   "plan": "confirms R7; user check C-Q2"
+  },
+  {
+   "id": "RP8",
+   "part": "mag release",
+   "ruling": "one centred steel paddle ahead of the guard, pushed forward, rotate about Y ~10-12 deg, nose >= 1.5 mm in the notch",
+   "evidence": "manual p.19, fig 10 #2, parts 50-52",
+   "plan": "confirms R8"
+  },
+  {
+   "id": "RP9",
+   "part": "bolt catch",
+   "ruling": "not built (no bone); ReloadEmpty releases the held-open bolt with the charging lever",
+   "evidence": "manual p.14; sheet shows no distinct lever",
+   "plan": "confirms R9/Q7"
+  },
+  {
+   "id": "RP10",
+   "part": "magazine",
+   "ruling": "solid; recessed ladder channels; front spine rib with the parting line; floor plate on rear-entry rails with a locking-tab hole; single-feed lips; follower, no cartridge; thickness ~27 to confirm",
+   "evidence": "manual p.16, p.27, img73/74/86/87",
+   "plan": "refines R16"
+  },
+  {
+   "id": "RP11",
+   "part": "trigger",
+   "ruling": "steel C-fillet blade, crowned smooth face",
+   "evidence": "manual part 34",
+   "plan": "confirms R14"
+  },
+  {
+   "id": "RP12",
+   "part": "trigger guard",
+   "ruling": "integral polymer loop at the sheet's thickness, no seam",
+   "evidence": "manual fig 10 #12",
+   "plan": "confirms R14"
+  },
+  {
+   "id": "RP13",
+   "part": "grip",
+   "ruling": "integral; stipple border geometry + stipple normal; bottom ~9 mm = separate cover with a seam",
+   "evidence": "manual parts 33, 58",
+   "plan": "refines R13"
+  },
+  {
+   "id": "RP14",
+   "part": "rails",
+   "ruling": "21.2 dovetail on a ~30-34 mm base flange (TOP width); pitch 10.01; 2 counterbored screws per rail in slot floors",
+   "evidence": "manual p.17, parts 64-67",
+   "plan": "refines R2/R3"
+  },
+  {
+   "id": "RP15",
+   "part": "flip sights",
+   "ruling": "rail-clamp base + recoil lug + cross-bolt head on the left; spring detent, no button; rear folds forward, front folds rearward; aperture 2.0 in a 10 mm disc; post 1.85; folded <= rail + 12",
+   "evidence": "generic rail BUIS pattern (none on the real gun)",
+   "plan": "confirms R12"
+  },
+  {
+   "id": "RP16",
+   "part": "muzzle device",
+   "ruling": "6 slots at 60 deg, one centred per side; open front; jam nut with underside flats",
+   "evidence": "sheet LEFT/TOP slot counts; HKUMP45 photo",
+   "plan": "refines R15"
+  },
+  {
+   "id": "RP17",
+   "part": "sling points",
+   "ruling": "SlingFront = front-left eyelet hole; SlingRear = the stock's lower rear hole",
+   "evidence": "manual p.11, p.41; Ump-side",
+   "plan": "adds socket places"
+  },
+  {
+   "id": "RP18",
+   "part": "lower attachment pins",
+   "ruling": "steel flush heads where drawn (front support bolt, rear locking pin); stock front hole = locking-pin storage (dia 4)",
+   "evidence": "manual p.12, p.14, p.24",
+   "plan": "new"
+  },
+  {
+   "id": "RP19",
+   "part": "upper/lower seam",
+   "ruling": "0.3-0.5 mm design seam, 0.6 deep, along the drawn line",
+   "evidence": "manual p.10 (separate upper and lower)",
+   "plan": "confirms R1"
+  },
+  {
+   "id": "RP20",
+   "part": "end block",
+   "ruling": "the lower's integrated backplate; seam at its front edge",
+   "evidence": "manual fig 10 #8-10",
+   "plan": "new"
+  },
+  {
+   "id": "RP21",
+   "part": "magwell internals",
+   "ruling": "flare 1.5-2 mm per side, 1 deg draft, catch window, top shelf, NO guide ribs",
+   "evidence": "the mag's ladder is recessed; manual fig 10",
+   "plan": "adjusts R17"
+  },
+  {
+   "id": "RP22",
+   "part": "real-only features not drawn",
+   "ruling": "cheek piece, side-rail hard-point bosses, cocking-housing screws are not built",
+   "evidence": "main views decide visible surfaces",
+   "plan": "-"
+  }
+ ],
+ "unseen_plain": [
+  "receiver underside between the lower rail and the magwell: flat, diagonal panel continued",
+  "lower underside between magwell and guard: flat with the paddle window and pivot boss",
+  "receiver front face right half: plain; no right eyelet",
+  "end-block rear face and hinge faces: plain polymer, steel-bushed knuckles, class E (seen during the fold)",
+  "inside vents and port: dark drafted walls; barrel and bolt behind",
+  "inside the magwell: dark, catch window, top shelf, class E",
+  "grip bottom: flat cover face with an R 1 rim, no hole",
+  "stock inner faces: same as the outer (symmetric moulding)",
+  "butt pad sides/top: smooth rubber",
+  "rail and sight-base undersides: flat on the receiver (0.01-0.05 mm joint)",
+  "magazine rear/bottom/inside: plain with the catch notch; floor-plate locking-tab hole and slide seams; follower top only",
+  "bolt top/left: plain with the charging lug and guide grooves, class E",
+  "charging slide and guide: plain steel block in a plain moulded guide, class E",
+  "muzzle device underside: jam-nut wrench flats only here",
+  "recoil spring assembly: internal, not modelled"
+ ],
+ "inconsistencies": [
+  {
+   "id": "I1",
+   "what": "forward long slot ahead of the knob (left X 561-602) vs longer right slot (X 531-598); real lever sits ahead of its channel",
+   "handling": "RP3 + RP4; C-Q1"
+  },
+  {
+   "id": "I2",
+   "what": "hinge knuckle drawn on both sides",
+   "handling": "RP2"
+  },
+  {
+   "id": "I3",
+   "what": "front sight reads as one post (side) vs two ears (3/4)",
+   "handling": "consistent once the ears align; both built"
+  },
+  {
+   "id": "I4",
+   "what": "red dot and engraved marks near the selector (LEFT, 3/4), marks only on RIGHT",
+   "handling": "not built (RP7)"
+  },
+  {
+   "id": "I5",
+   "what": "top rail band ~35 mm wide in TOP vs the 21.2 standard",
+   "handling": "RP14 base flange"
+  },
+  {
+   "id": "I6",
+   "what": "ruler 86.6 cm vs 69 cm",
+   "handling": "ignored"
+  },
+  {
+   "id": "I7",
+   "what": "sight radius 268 vs real 325",
+   "handling": "design change; sheet wins"
+  },
+  {
+   "id": "I8",
+   "what": "folded stock top strut crosses the port (Z +5..+17), upright covers its front 20 mm; real fires folded",
+   "handling": "C-Q3"
+  },
+  {
+   "id": "I9",
+   "what": "magazine ladder tie spacing differs slightly LEFT vs 3/4",
+   "handling": "LEFT trace is the authority"
+  },
+  {
+   "id": "I10",
+   "what": "butt pad 55-59 mm wide vs the 29.5 mm frame",
+   "handling": "plausible; built as drawn"
+  },
+  {
+   "id": "I11",
+   "what": "selector hub ~20 mm vs the real ~16-18",
+   "handling": "sheet wins"
+  },
+  {
+   "id": "I12",
+   "what": "mass: manual 2.26 kg vs line standard 2.5 kg",
+   "handling": "C-Q4"
+  }
+ ],
+ "fab_original_changes": [
+  "three stepped, tapered forearm vents instead of two oblong vents",
+  "raised chevron reinforcement rib on the magwell flank",
+  "stock: one long rounded-trapezoid opening with the web reversed, plus a thumb-rest notch on the top strut",
+  "butt pad: chevron tread and an exposed centre hex-head screw",
+  "grip panel: hex-cell stipple with a moulded thumb ledge",
+  "muzzle: 4-port compensator (two top, two side, closed bottom)",
+  "magazine: one offset vertical rib + three short horizontal grip ribs; floor plate with a finger-pull ledge",
+  "charging knob: mushroom knob with three flats",
+  "selector: squared paddle tip with a scalloped thumb face",
+  "rear sight: triangular protective frame around the aperture"
+ ],
+ "added_gates": [
+  "stock folded: catch engagement >= 1.0 mm; 0 intersections; swept minimum >= 0.10 mm",
+  "folded length 450 +/- 15 mm",
+  "selector sweep clearance >= 0.10 mm",
+  "charging lever sweep (translate + lock rotation) clear of the channel by 0.15-0.40 mm",
+  "bolt thumb recess visible in the port in the rest pose (render check)",
+  "every part generator: gunlib.tspace.unreal_drops() == 0 at every LOD; no bevel < 0.1 mm"
+ ],
+ "open_questions": [
+  {
+   "id": "C-Q1",
+   "q": "Charging handle: keep the knob where drawn with a real 75 mm channel behind it and the drawn slots as vents, or move the knob ~35 mm forward to the slot's front (costs TOP/3/4 silhouette)?",
+   "default": "knob as drawn; channel behind; slots as vents"
+  },
+  {
+   "id": "C-Q2",
+   "q": "Selector index groove: paint white (the sheet shows a light line) or leave unpainted?",
+   "default": "unpainted"
+  },
+  {
+   "id": "C-Q3",
+   "q": "Folded stock crosses the port on the sheet's proportions: accept as drawn (folded = carry/no-fire) or raise the top strut (changes the side silhouette)?",
+   "default": "accept as drawn"
+  },
+  {
+   "id": "C-Q4",
+   "q": "Physics mass: line standard 2.5 kg or the manual's 2.26 kg without magazine?",
+   "default": "2.5 kg"
+  }
+ ],
+ "realref": {
+  "folder": "WorkFiles/guns/smg/scratch/realref/craft/",
+  "sources": [
+   {
+    "files": "manual_text_extract.txt, manual_fig_img*.jpg (29)",
+    "url": "https://archive.org/download/MManuals/HkUmp40.pdf",
+    "mirror": "https://ia601500.us.archive.org/28/items/MManuals/HkUmp40.pdf",
+    "what": "operator's manual UMP45/UMP40, 10/1999 rev 08/2000"
+   },
+   {
+    "files": "commons_HKUMP45_left.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/d6/HKUMP45.JPG",
+    "what": "left side photo"
+   },
+   {
+    "files": "commons_Ump-side_illustration.png",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/80/Ump-side.png",
+    "what": "side illustration, extended and folded (CC BY-SA)"
+   },
+   {
+    "files": "commons_HK_HV_080810_046.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/52/H%26K_HV_080810_046.jpg",
+    "what": "display table, context only"
+   },
+   {
+    "files": "(text only)",
+    "url": "https://en.wikipedia.org/wiki/Heckler_%26_Koch_UMP",
+    "what": "materials, mags, sights, rails"
+   },
+   {
+    "files": "(text only)",
+    "url": "https://hk-usa.com/hk-models/ump45/",
+    "what": "dimension table (search snippet)"
+   }
+  ],
+  "gaps": [
+   "no close-up of the right-side hinge knuckles",
+   "no top-down close-up of the feed lips",
+   "no raking-light polymer close-up",
+   "no real-pattern flip sights (generic pattern used)"
+  ]
+ },
+ "crops": "WorkFiles/guns/smg/scratch/craft/ (p_*, z_*, mask_*)"
+}
