@@ -1,0 +1,1161 @@
+{
+ "stage": "8 Unreal (UE 5.8, RIFLE_BUILD_PLAN 10.2 + GUN_BUILDING_STUDY 7.4)",
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "content_path": "/Game/GunCheck/AR01_1009b",
+ "project": "WorkFiles/shuriken/UnrealShuriken/ShurikenValidation.uproject (the katana's verification project)",
+ "passes": {
+  "A import": "arA_import.py (-nullrhi)",
+  "A2 check level": "arA2_level.py (-nullrhi)",
+  "B read-back": "arB_verify.py (-nullrhi)",
+  "C render": "arC_render.py (D3D12, -RenderOffscreen)",
+  "E game world": "arE_game.py (-game, D3D12, -RenderOffscreen)",
+  "D analysis": "arD_analyse.py (Blender)"
+ },
+ "status": "fail",
+ "engine_verified": false,
+ "failed": [
+  "U5 triangles per LOD equal in Blender, the FBX and Unreal (render data, mesh description, Unreal's FBX export)",
+  "U8 the GENERATED UV1 (Unreal's export): inside 0..1, overlap 0 (strict-interior pixel test at 1024; 64 / 256 / 2048 reported)",
+  "U10 0 warning / error lines from the assets in every pass log"
+ ],
+ "issues": [
+  "U4: 'owner sees no TP component' is not measured (needs the weapon Blueprint on a possessed pawn: game-side integration, plan 11).",
+  "U11 not run: no MH_PlayerDefault in the verification project and no posed H1 baseline to reproduce."
+ ],
+ "findings": [
+  {
+   "gate": "U5 triangles equal / U10",
+   "cause": "Unreal 5.8's static FBX import (Remove Degenerates, the default) drops every triangle with |cross|^2 < 1e-8 cm^4 (area < 0.005 mm^2; FbxStaticMeshImport.cpp GetTriangleAreaThreshold). gunlib.tspace.unreal_drops() predicts exactly Unreal's counts: SM_AR01 4,584 / 580 / 122 / 0 and SM_AR01_Mag 772 / 33 / 0 / 0 of LOD0-3 (the skeletal import keeps them: SK_AR01 has 3,812 / 547 / 122 / 0 such triangles). They are micro bevel and boolean run-out strips (4-25 microns wide) made by the part generators, plus decimation slivers at LOD1-2.",
+   "effect": "triangle counts differ Blender / FBX vs Unreal; hairline cracks where the strips were (sub-pixel)"
+  },
+  {
+   "gate": "U10",
+   "cause": "'nearly zero tangents / bi-normals' (SM_AR01, SM_AR01_Mag) and 'degenerate tangent bases' (SM_AR01): StaticMeshBuild.cpp HasBadNTB on the render data. Unreal's exported render data (ASCII FBX) located them: 20 / 44 / 24 / 1 zero tangents on SM_AR01 LOD0-3 and 6 / 4 / 1 / 0 on SM_AR01_Mag; tangent = normal on 12 / 63 / 26 SM_AR01 LOD1-3 vertices. Causes: needle corners of the micro strips (float32 angle weight 0), faces seen edge-on by their shading normal, and LOD faces whose UV collapsed onto a line / point (island snapping).",
+   "effect": "normal-map shading wrong at those few vertices (sub-pixel strips; LOD1-3 snapped faces)"
+  },
+  {
+   "gate": "fix attempts (stage 8, generator side)",
+   "result": "gunlib.tspace.unreal_safe (collapse micro edges, split needles, re-UV degenerate faces, tilt edge-on corner normals) made the test meshes import with 0 warnings, 0 dropped triangles and 0 zero tangents (TVB variants, ar_tan_ue.log), but as an export step it opened 3-face edges (qa_skeletal edge_manifold), moved vertices up to ~1 mm, pushed UVs out of their tile (uv0_inside_0_1) and multiplied the generated-lightmap overlaps (LOD0 85 -> 2,718 px at 1024); applied to the parts it broke G5 (butt gap 0.0074 mm, 3 LOD1 pairs) and the LOD-share targets (LOD0 shrank 8 %). A link-checked live-bmesh variant does not converge. Everything was reverted; the shipped bytes are the stage-7 geometry.",
+   "recommendation": "change the method: remove the micro strips where the part generators make them (minimum bevel segment and boolean sliver >= 0.05 mm, triangles >= 0.01 mm^2, checked by unreal_drops() == 0 as a form-stage gate), and give LOD faces non-degenerate UVs at the LOD UV stage; then re-run stages 2-8."
+  },
+  {
+   "gate": "U8 generated UV1 overlap",
+   "cause": "Unreal's FLayoutUV output overlaps on this many-chart mesh: at the lightmap's own 64 px SM_AR01 LOD1-3 overlap 1 / 3 / 4 texels (LOD0 0), at 1024 px 85 / 77 / 53 / 53 (mag LOD0-1 22 / 190); the shipped UV0 and UV1 have 0 overlapping triangles (SAT test, lodfix.overlap_pairs). Higher minimum lightmap resolutions (256-1024) and full-precision UVs reduce but do not remove it (lmtest/).",
+   "recommendation": "decide the lightmap route for static-lit buyers (plan R12): the authored UV1 with Generate Lightmap UVs off measured fewer overlaps (LOD0 11 px at 1024) but not zero either"
+  },
+  {
+   "gate": "U5 bounds",
+   "cause": "LOD2 is 2.78 mm wider on the left than LOD0's bind box (fix log N4); the sidecar extension was computed on LOD0 only. Fixed in rifle_rig.posed_envelope (LOD0-3) and re-exported in this stage (see U5 bounds row)."
+  }
+ ],
+ "sha256": {
+  "A_AR01_Charge.fbx": "485ec8dbfd5d6275bdbe192c0f7e9217b45c0119b331abc0eff6eace434acc48",
+  "A_AR01_Fire.fbx": "2477354313aea3a153392e577e71c14e25ea41a280b8dd7559e39e3e7c048576",
+  "A_AR01_Reload.fbx": "0faa3260ed8d872e473ddb7babdaaa4c4fa3cada4a4f185dacc662dbd4fb56de",
+  "A_AR01_ReloadEmpty.fbx": "fe4febf15621c24cdce4defffb3c3eb2b7f8c9b26079b7d96c48a6f1f4db992d",
+  "A_AR01_Selector.fbx": "d94a4e89dc3b9d2eff7125d35b765b545c45be2a95ddf4c5dfc07efaddac44c5",
+  "MATERIALS_README.md": "0d402cd0770cd86cd0abce1b5d7b357e4070661afc113963968fe82bd7ac28a4",
+  "Physics/SK_AR01_PhysicsProxy.fbx": "c77dc05f4aae84e996818488b7bdabe7cc25b159fb65d4ea55ff6f73025d5e59",
+  "README.md": "764e0f992249162772c8e24fed077224ee6bb9123269fc0c60018d4554259e1c",
+  "SK_AR01.fbx": "8ff09166711a947039ddad82c5279ebc2fceb9e29988c11fa4b8bbf54c181f72",
+  "SK_AR01.skeletal.json": "f166e50097d7cd7fc52ce0ae8ab6cf6c8a2d2d1f1effbe2b37ecaca321999688",
+  "SK_AR01_LOD1.fbx": "2d3925cd9f1f72a3e015dff6ca6c11d65881b243c12ca03362963700fafa98b3",
+  "SK_AR01_LOD2.fbx": "91909db0ab053fb8e77058c033c43db8b6a06ae729d473bf79f4bb719737109b",
+  "SK_AR01_LOD3.fbx": "cc3354b082ea19f7c0f3360c3ee51082cc5f73cbd3c2610249c26003a508a0bf",
+  "SM_AR01.fbx": "bc6f1982abeca534990637fc841f84d1e177ef6faf0ea893b5415b819c97edbc",
+  "SM_AR01.sockets.json": "914475334adf44ea6fcf505c2eb23a83e6298b866287c328fe1ef5001f3bfb11",
+  "SM_AR01_Mag.fbx": "e6462ccfde4e5c4e10fedd516e1b928ac40c31ddab10a0dbb7b97708c3cae296",
+  "SM_AR01_Mag.sockets.json": "329c17070981faf753fb37fe83d0aa9cd415a4dbb618752c184521d13893d9ce",
+  "Textures/Recolour/recolour_maps.json": "a7f507632e676fc78bd6c742f24c3f610a7e0c55b8847673e827334b027a28d9",
+  "Textures/Recolour/T_AR01_Furniture_Detail16.png": "f8ad69050d2139a11f221b02a0ac299cc0f1f3d3d5ef8ce9edb26c56771ad20b",
+  "Textures/T_AR01_Furniture_BC.png": "74363d6e97d8e98b4245191380d43e35ee2ab1f581ee3355d4b6669e252e1f60",
+  "Textures/T_AR01_Furniture_Masks.png": "15c590cf8d7abd365fa41ca1bd7a505627b524a3d5b6d018804a2cdb1e813014",
+  "Textures/T_AR01_Furniture_N.png": "d987b04f47e7b67f78afb653429c5d6f1c635cb73e85a6f9ccd5536c545bdfc8",
+  "Textures/T_AR01_Furniture_ORM.png": "2a5bfd306e06dcbde0492ef2f9c7fc1cb70de293fb721eec65fae98d203e1898",
+  "Textures/T_AR01_Mag_BC.png": "24b59857fcdf475ec6e1048a94dd5220043d8659b8bf504a35a3572785006e97",
+  "Textures/T_AR01_Mag_Masks.png": "764ade8256ac400741683102453835231f3480b2b3b6216b3f68bff335be0d26",
+  "Textures/T_AR01_Mag_N.png": "208dbc8b2b188c7b1f925ab3fc4297bd6e1cb9feaf38dca6374857d24d6694e2",
+  "Textures/T_AR01_Mag_ORM.png": "364983db93d986ef2453994b57152946f72848df9fb7bde92a24f832e2903cee",
+  "Textures/T_AR01_Metal_BC.png": "b9e703eeae0c691ede3d22616434c57fb08130c591b37255e0f6814d4b96ec2c",
+  "Textures/T_AR01_Metal_Masks.png": "5071092719e92247a1b1597010735d9f22c8353e4f43133dbbf33110023a2fac",
+  "Textures/T_AR01_Metal_N.png": "fb2bfdcb28da37fa47ba85c283348d2e46974588cf14a76580ecde08cd0a7181",
+  "Textures/T_AR01_Metal_ORM.png": "86c312530dd01aeb93e682f3be10c412bdc0affcc81fb3640b7dbc8c8e6f47eb"
+ },
+ "gates": [
+  {
+   "name": "bytes: every pass used the shipped bytes (sha256 of every asset file before and after passes A, A2, B, C)",
+   "value": {
+    "files": 29,
+    "unchanged_per_pass": {
+     "A": true,
+     "A2": true,
+     "B": true,
+     "C": true
+    },
+    "now_equal_start": true
+   },
+   "threshold": "all equal",
+   "pass": true
+  },
+  {
+   "name": "bytes = the stage-5 / 6 gated bytes (rig_report files, mag.json M7)",
+   "value": {
+    "stage5_files": 13,
+    "mismatch": [],
+    "SM_AR01_Mag.fbx": true
+   },
+   "threshold": "equal",
+   "pass": true
+  },
+  {
+   "name": "pass A import (fresh process; legacy FBX importer, the README / sidecar settings)",
+   "value": {
+    "status": "ok",
+    "lods_SK": 4,
+    "clips": 5,
+    "sockets_SK": 17,
+    "physics": "/Game/GunCheck/AR01_1009b/PHYS_AR01.PHYS_AR01",
+    "textures": 13
+   },
+   "threshold": "ok",
+   "pass": true
+  },
+  {
+   "name": "U1 skeleton: names, parents, reference heads (<= 0.001 cm), root scale 1, axes (muzzle +X, up +Z, right +Y)",
+   "value": {
+    "mesh_bones": 9,
+    "names_match": true,
+    "parents_match": true,
+    "max_head_err_cm": 4.089379523009029e-06,
+    "root_scale_1": true,
+    "max_bone_rest_rotation_deg": 0.0,
+    "axes": {
+     "muzzle_plusX_cm": 60.741,
+     "muzzle_on_bore_y_cm": 0.0,
+     "sight_above_bore_cm": 4.8,
+     "charging_handle_right_plusY_cm": 3.0,
+     "bolt_rest_x_axis_component": [
+      1.0,
+      0.0,
+      -0.0
+     ]
+    }
+   },
+   "threshold": "all true; head err <= 0.001 cm",
+   "pass": true
+  },
+  {
+   "name": "U2 procedural (engine pose maths, bone-space offsets): bolt -X moves straight back; selector turns about its pin",
+   "value": {
+    "bolt_component_motion_cm": [
+     -10.325,
+     0.0,
+     0.0
+    ],
+    "selector": {
+     "selector_16deg_about_Y": {
+      "angle_deg": 16.0,
+      "axis": [
+       0.0,
+       -1.0,
+       0.0
+      ],
+      "head_moved_cm": 0.0
+     },
+     "selector_32deg_about_Y": {
+      "angle_deg": 32.0,
+      "axis": [
+       0.0,
+       -1.0,
+       0.0
+      ],
+      "head_moved_cm": 0.0
+     }
+    }
+   },
+   "threshold": "bolt (-10.325, 0, 0) +- 0.001 cm; selector about Y (the sidecar's transverse pin; the study's generic 'about X' does not apply to this pattern), angle +- 0.001 deg",
+   "pass": true
+  },
+  {
+   "name": "U3 sockets on SK_AR01: from the sidecar, on the right bones, scale 1, outered to the asset, fresh process",
+   "value": {
+    "count": 17,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 1.8663187814938065e-06,
+    "extra": []
+   },
+   "threshold": "17; <= 0.001 cm / 0.001 deg; no extras",
+   "pass": true
+  },
+  {
+   "name": "sockets on SM_AR01 (sidecar, fresh process)",
+   "value": {
+    "count": 17,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 0.0,
+    "extra": [],
+    "missing": []
+   },
+   "threshold": "17; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras",
+   "pass": true
+  },
+  {
+   "name": "sockets on SM_AR01_Mag (sidecar, fresh process)",
+   "value": {
+    "count": 5,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 0.0,
+    "extra": [],
+    "missing": []
+   },
+   "threshold": "5; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras",
+   "pass": true
+  },
+  {
+   "name": "U5 LOD count 4 (SK_AR01, SM_AR01, SM_AR01_Mag)",
+   "value": {
+    "SK": 4,
+    "SM": 4,
+    "Mag": 4
+   },
+   "threshold": "4 each",
+   "pass": true
+  },
+  {
+   "name": "U5 triangles per LOD equal in Blender, the FBX and Unreal (render data, mesh description, Unreal's FBX export)",
+   "value": {
+    "SK_AR01": [
+     {
+      "lod": 0,
+      "blender": 48386,
+      "fbx": 48386,
+      "unreal_export": 48386,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 22462,
+      "fbx": 22462,
+      "unreal_export": 22462,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 8450,
+      "fbx": 8450,
+      "unreal_export": 8450,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 1076,
+      "fbx": 1076,
+      "unreal_export": 1076,
+      "equal": true
+     }
+    ],
+    "SM_AR01": [
+     {
+      "lod": 0,
+      "blender": 55052,
+      "fbx": 55052,
+      "unreal_render": 50468,
+      "unreal_mesh_description": 50468,
+      "unreal_export": 50468,
+      "predicted_import_drops": 4584,
+      "equal": false
+     },
+     {
+      "lod": 1,
+      "blender": 24460,
+      "fbx": 24460,
+      "unreal_render": 23880,
+      "unreal_mesh_description": 23880,
+      "unreal_export": 23880,
+      "predicted_import_drops": 580,
+      "equal": false
+     },
+     {
+      "lod": 2,
+      "blender": 9098,
+      "fbx": 9098,
+      "unreal_render": 8976,
+      "unreal_mesh_description": 8976,
+      "unreal_export": 8976,
+      "predicted_import_drops": 122,
+      "equal": false
+     },
+     {
+      "lod": 3,
+      "blender": 1324,
+      "fbx": 1324,
+      "unreal_render": 1324,
+      "unreal_mesh_description": 1324,
+      "unreal_export": 1324,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ],
+    "SM_AR01_Mag": [
+     {
+      "lod": 0,
+      "blender": 6666,
+      "fbx": 6666,
+      "unreal_render": 5894,
+      "unreal_mesh_description": 5894,
+      "unreal_export": 5894,
+      "predicted_import_drops": 772,
+      "equal": false
+     },
+     {
+      "lod": 1,
+      "blender": 1998,
+      "fbx": 1998,
+      "unreal_render": 1965,
+      "unreal_mesh_description": 1965,
+      "unreal_export": 1965,
+      "predicted_import_drops": 33,
+      "equal": false
+     },
+     {
+      "lod": 2,
+      "blender": 648,
+      "fbx": 648,
+      "unreal_render": 648,
+      "unreal_mesh_description": 648,
+      "unreal_export": 648,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 248,
+      "fbx": 248,
+      "unreal_render": 248,
+      "unreal_mesh_description": 248,
+      "unreal_export": 248,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ]
+   },
+   "threshold": "equal per LOD",
+   "pass": false
+  },
+  {
+   "name": "screen sizes from the sidecars (SK LOD settings, SM, Mag)",
+   "value": {
+    "SK": [
+     1.0,
+     0.30000001192092896,
+     0.11999999731779099,
+     0.03999999910593033
+    ],
+    "SK_sidecar": [
+     1.0,
+     0.3,
+     0.12,
+     0.04
+    ],
+    "SM": [
+     1.0,
+     0.3,
+     0.12,
+     0.04
+    ],
+    "SM_sidecar": [
+     1.0,
+     0.3,
+     0.12,
+     0.04
+    ],
+    "Mag": [
+     1.0,
+     0.0717,
+     0.0287,
+     0.0096
+    ],
+    "Mag_sidecar": [
+     1.0,
+     0.0717,
+     0.0287,
+     0.0096
+    ]
+   },
+   "threshold": "equal (1e-6)",
+   "pass": true
+  },
+  {
+   "name": "mag screen sizes re-derived from the engine bounds (plan 2.4: size_rifle x r_mag / r_rifle)",
+   "value": {
+    "r_mag_cm": 10.77187068021191,
+    "r_rifle_cm": 45.07582496280667,
+    "derived": [
+     1.0,
+     0.0717,
+     0.0287,
+     0.0096
+    ],
+    "sidecar": [
+     1.0,
+     0.0717,
+     0.0287,
+     0.0096
+    ],
+    "max_diff": 0.0
+   },
+   "threshold": "<= 0.001 from the sidecar",
+   "pass": true
+  },
+  {
+   "name": "U5 bounds: the stored bounds (+ the sidecar extension) hold every LOD0-3 vertex at every runtime frame of every clip",
+   "value": {
+    "extension_applied": {
+     "pos": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "neg": [
+      0.0,
+      0.378,
+      0.0
+     ],
+     "sidecar": [
+      [
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       0.0,
+       0.378,
+       0.0
+      ]
+     ]
+    },
+    "vertices_outside": 0,
+    "per_clip": {
+     "A_AR01_Fire": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_AR01_Charge": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_AR01_Reload": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_AR01_ReloadEmpty": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_AR01_Selector": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     }
+    },
+    "by_bone": null
+   },
+   "threshold": "0 outside",
+   "pass": true
+  },
+  {
+   "name": "U6 magazine at Mag (engine attach, SnapToTarget, gun at an arbitrary world transform): composed transform zero",
+   "value": {
+    "attached_vs_socket_cm": 1.1546319456101628e-14,
+    "rot": 0.0,
+    "relative_to_socket": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ],
+    "socket_vs_sidecar_cm": 1.1546319456101628e-14,
+    "reload_frames_attached_vs_socket": {
+     "A_AR01_Reload": 8.40501113152925e-10,
+     "A_AR01_ReloadEmpty": 8.40501113152925e-10
+    }
+   },
+   "threshold": "<= 0.001 cm, identity",
+   "pass": true
+  },
+  {
+   "name": "M9 seated fit on the read-back geometry (co-visible LOD0 / LOD1 pairs; LOD2 / LOD3 reported as mag.json M1 does)",
+   "value": {
+    "rifle LOD0 / mag LOD0": 0,
+    "rifle LOD1 / mag LOD1": 0,
+    "rifle LOD2 / mag LOD2": 32,
+    "rifle LOD3 / mag LOD3": 47
+   },
+   "threshold": "0 at LOD0 and LOD1",
+   "pass": true
+  },
+  {
+   "name": "M9 reload path from the engine sockets (insert 0.5 mm, rock 0.25 deg about the front-lug hook) on the read-back geometry",
+   "value": {
+    "insert_mm": 7.999957998014665,
+    "rock_deg": 7.99999163662328,
+    "hook_point_cm": [
+     16.352,
+     0.0,
+     5.054
+    ],
+    "axis": [
+     0.0,
+     1.0,
+     -0.0
+    ],
+    "rock_end_vs_Mag_cm": 3.5527136788005136e-15,
+    "pairs": {
+     "rifle LOD0 / mag LOD0": {
+      "steps": 50,
+      "intersecting_steps": 0
+     },
+     "rifle LOD1 / mag LOD1": {
+      "steps": 50,
+      "intersecting_steps": 0
+     }
+    }
+   },
+   "threshold": "0 intersecting steps at LOD0 / LOD1; ends on Mag",
+   "pass": true
+  },
+  {
+   "name": "U6 reload clips in engine: the magazine on the posed rifle at every runtime frame (LOD0)",
+   "value": {
+    "A_AR01_Reload": {
+     "frames": 61,
+     "frames_with_intersections": []
+    },
+    "A_AR01_ReloadEmpty": {
+     "frames": 85,
+     "frames_with_intersections": []
+    }
+   },
+   "threshold": "0 frames",
+   "pass": true
+  },
+  {
+   "name": "PHYS_AR01: one body on 'body', the sidecar's 7 boxes + 1 capsule, 3.1 kg, fresh process",
+   "value": {
+    "bodies": [
+     "body"
+    ],
+    "shapes": [
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "capsule"
+    ],
+    "mass_kg": 3.0999999046325684,
+    "override": true
+   },
+   "threshold": "1 body; 7 box + 1 capsule; 3.1 kg",
+   "pass": true
+  },
+  {
+   "name": "U7 physics in a ticking game world: SM_AR01 (level, rolled 70 deg), SM_AR01_Mag and SK_AR01 (PHYS_AR01) dropped 1 m rest on their collision, no tunnelling (read-back LOD0 placed at every sampled transform)",
+   "value": {
+    "AR_PHYS_SM_AR01": {
+     "samples": 2884,
+     "sim_seconds": 8.0,
+     "start_lowest_vertex_cm": 88.0412,
+     "min_lowest_vertex_cm": 0.0021,
+     "final_lowest_vertex_cm": 0.2034,
+     "max_speed_last_1s_cm_s": 0.0,
+     "rests": true,
+     "no_tunnelling": true
+    },
+    "AR_PHYS_SM_AR01_rolled": {
+     "samples": 2884,
+     "sim_seconds": 8.0,
+     "start_lowest_vertex_cm": 93.5864,
+     "min_lowest_vertex_cm": 0.0901,
+     "final_lowest_vertex_cm": 0.1734,
+     "max_speed_last_1s_cm_s": 0.0,
+     "rests": true,
+     "no_tunnelling": true
+    },
+    "AR_PHYS_SM_AR01_Mag": {
+     "samples": 2884,
+     "sim_seconds": 8.0,
+     "start_lowest_vertex_cm": 82.9872,
+     "min_lowest_vertex_cm": -0.24,
+     "final_lowest_vertex_cm": 0.0409,
+     "max_speed_last_1s_cm_s": 0.0,
+     "rests": true,
+     "no_tunnelling": true
+    },
+    "AR_PHYS_SK_AR01": {
+     "samples": 2884,
+     "sim_seconds": 8.0,
+     "start_lowest_vertex_cm": 93.0921,
+     "min_lowest_vertex_cm": -0.1388,
+     "final_lowest_vertex_cm": 0.0,
+     "max_speed_last_1s_cm_s": 0.0,
+     "rests": true,
+     "no_tunnelling": true
+    }
+   },
+   "threshold": "speed < 1 cm/s over the last 1 s; lowest vertex never < -2 cm, final >= -0.5 cm (ground top 0)",
+   "pass": true
+  },
+  {
+   "name": "U8 lightmap: index 1, UV1 generated (0 -> 1) on every LOD",
+   "value": {
+    "SM_AR01": {
+     "index": 1,
+     "generated": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "uv_channels": [
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    "SM_AR01_Mag": {
+     "index": 1,
+     "generated": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "uv_channels": [
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   },
+   "threshold": "index 1; generated on 4 / 4 LODs",
+   "pass": true
+  },
+  {
+   "name": "U8 the GENERATED UV1 (Unreal's export): inside 0..1, overlap 0 (strict-interior pixel test at 1024; 64 / 256 / 2048 reported)",
+   "value": {
+    "SM_AR01_LOD0": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_256": 0,
+     "overlap_px_1024": 85,
+     "overlap_px_2048": 111
+    },
+    "SM_AR01_LOD1": {
+     "inside_0_1": true,
+     "overlap_px_64": 1,
+     "overlap_px_256": 1,
+     "overlap_px_1024": 77,
+     "overlap_px_2048": 326
+    },
+    "SM_AR01_LOD2": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_256": 3,
+     "overlap_px_1024": 53,
+     "overlap_px_2048": 292
+    },
+    "SM_AR01_LOD3": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_256": 4,
+     "overlap_px_1024": 53,
+     "overlap_px_2048": 83
+    },
+    "SM_AR01_Mag_LOD0": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_256": 0,
+     "overlap_px_1024": 22,
+     "overlap_px_2048": 54
+    },
+    "SM_AR01_Mag_LOD1": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_256": 0,
+     "overlap_px_1024": 190,
+     "overlap_px_2048": 720
+    },
+    "SM_AR01_Mag_LOD2": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_256": 0,
+     "overlap_px_1024": 0,
+     "overlap_px_2048": 0
+    },
+    "SM_AR01_Mag_LOD3": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_256": 0,
+     "overlap_px_1024": 0,
+     "overlap_px_2048": 0
+    }
+   },
+   "threshold": "inside; 0 px at 1024",
+   "pass": false
+  },
+  {
+   "name": "texture flags persisted (fresh process): BC sRGB TC_Default, ORM / Masks linear TC_Masks, N TC_Normalmap flip-green off (group WeaponNormalMap), Detail16 linear Grayscale; groups Weapon",
+   "value": {
+    "textures": 13,
+    "wrong": {}
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "full mip chains (ListTextures, real RHI): 13 at 4096, 12 at 2048, 11 at 1024, 10 at 512; Detail16 builds PF_G16",
+   "value": {
+    "T_AR01_Metal_N": {
+     "size": 4096,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 13
+    },
+    "T_AR01_Metal_BC": {
+     "size": 4096,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 13
+    },
+    "T_AR01_Metal_ORM": {
+     "size": 4096,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 13
+    },
+    "T_AR01_Furniture_N": {
+     "size": 2048,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 12
+    },
+    "T_AR01_Metal_Masks": {
+     "size": 2048,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_AR01_Furniture_BC": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_AR01_Furniture_Detail16": {
+     "size": 1024,
+     "format": "PF_G16",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_AR01_Furniture_ORM": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_AR01_Furniture_Masks": {
+     "size": 1024,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_AR01_Mag_N": {
+     "size": 1024,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 11
+    },
+    "T_AR01_Mag_BC": {
+     "size": 1024,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_AR01_Mag_ORM": {
+     "size": 1024,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_AR01_Mag_Masks": {
+     "size": 512,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 10
+    }
+   },
+   "threshold": "all full; Detail16 PF_G16",
+   "pass": true
+  },
+  {
+   "name": "U9 clips: frames = the sidecar's; engine-evaluated runtime (compressed) vs raw <= 0.1 mm on every rigid part; raw = the authored clip; end pose = start pose (= bind except the selector held at Auto, README); every sidecar notify on its frame (+-0.5), no extras",
+   "value": {
+    "A_AR01_Fire": {
+     "frames": 9,
+     "engine_num_frames": 8,
+     "play_length_s": 0.13333334028720856,
+     "authored_frames": 8,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {
+      "selector": 24.8811
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true
+    },
+    "A_AR01_Charge": {
+     "frames": 23,
+     "engine_num_frames": 22,
+     "play_length_s": 0.7333333492279053,
+     "authored_frames": 22,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 5e-05,
+     "max_runtime_vs_animpose_compressed_mm": 5e-05,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {
+      "selector": 24.8811
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true
+    },
+    "A_AR01_Reload": {
+     "frames": 61,
+     "engine_num_frames": 60,
+     "play_length_s": 2.0,
+     "authored_frames": 60,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {
+      "selector": 24.8811
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true
+    },
+    "A_AR01_ReloadEmpty": {
+     "frames": 85,
+     "engine_num_frames": 84,
+     "play_length_s": 2.799999952316284,
+     "authored_frames": 84,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 9e-05,
+     "max_runtime_vs_animpose_compressed_mm": 9e-05,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {
+      "selector": 24.8811
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true
+    },
+    "A_AR01_Selector": {
+     "frames": 31,
+     "engine_num_frames": 30,
+     "play_length_s": 1.0,
+     "authored_frames": 30,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 1e-05,
+     "max_runtime_vs_animpose_compressed_mm": 1e-05,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true
+    }
+   },
+   "threshold": "as stated",
+   "pass": true
+  },
+  {
+   "name": "U10 0 warning / error lines from the assets in every pass log",
+   "value": {
+    "arA_import.log": {
+     "count": 5,
+     "lines": [
+      "[2026.10.09-14.50.53:513][  0]FBXImport: Warning: SM_AR01 has degenerate tangent bases which will result in incorrect shading.  MikkTSpace relies on tangent bases and may result in mesh corruption, consider disabling thi",
+      "[2026.10.09-14.50.53:513][  0]FBXImport: Warning: SM_AR01 has some nearly zero bi-normals which can create some issues. (Tolerance of 1E-4)",
+      "[2026.10.09-14.50.53:513][  0]FBXImport: Warning: SM_AR01 has some nearly zero tangents which can create some issues. (Tolerance of 1E-4)",
+      "[2026.10.09-14.50.54:219][  0]FBXImport: Warning: SM_AR01_Mag has some nearly zero bi-normals which can create some issues. (Tolerance of 1E-4)",
+      "[2026.10.09-14.50.54:219][  0]FBXImport: Warning: SM_AR01_Mag has some nearly zero tangents which can create some issues. (Tolerance of 1E-4)"
+     ]
+    },
+    "arA2_level.log": {
+     "count": 0,
+     "lines": []
+    },
+    "arB_verify.log": {
+     "count": 0,
+     "lines": []
+    },
+    "arC_render.log": {
+     "count": 0,
+     "lines": []
+    },
+    "arE_game.log": {
+     "count": 0,
+     "lines": []
+    }
+   },
+   "threshold": "0",
+   "pass": false
+  },
+  {
+   "name": "U12 texture residency in a ticking game world (streaming on): the gun's BC and N resident at the top mip at the hip (35 cm, 90 deg) and at ADS (Sight eye, 55 deg)",
+   "value": {
+    "hip": {
+     "T_AR01_Furniture_BC": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_AR01_Furniture_N": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_AR01_Furniture_ORM": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_AR01_Mag_BC": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_AR01_Mag_N": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_AR01_Mag_ORM": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_AR01_Metal_BC": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_AR01_Metal_N": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_AR01_Metal_ORM": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     }
+    },
+    "ads": {
+     "T_AR01_Furniture_BC": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_AR01_Furniture_N": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_AR01_Furniture_ORM": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_AR01_Mag_BC": {
+      "current": 1024,
+      "wanted": 1024,
+      "max": 1024
+     },
+     "T_AR01_Mag_N": {
+      "current": 1024,
+      "wanted": 1024,
+      "max": 1024
+     },
+     "T_AR01_Mag_ORM": {
+      "current": 1024,
+      "wanted": 1024,
+      "max": 1024
+     },
+     "T_AR01_Metal_BC": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_AR01_Metal_N": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_AR01_Metal_ORM": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     }
+    }
+   },
+   "threshold": "current = max for Metal / Furniture BC and N at both views",
+   "pass": true,
+   "note": "the magazine's own maps are reported (a separate mesh: at the hip it streams one mip lower)"
+  },
+  {
+   "name": "C2 every LOD0 surface sample (300k + every vertex) of the read-back geometry inside the stored hulls",
+   "value": {
+    "SM_AR01": {
+     "samples": 327582,
+     "outside_gt_0.001cm": 0,
+     "max_outside_mm": 0.0
+    },
+    "SM_AR01_Mag": {
+     "samples": 303337,
+     "outside_gt_0.001cm": 0,
+     "max_outside_mm": 0.0
+    }
+   },
+   "threshold": "0 outside",
+   "pass": true
+  },
+  {
+   "name": "hulls stored: SM_AR01 7, SM_AR01_Mag 2, <= 32 vertices each (Unreal's own export split into shells)",
+   "value": {
+    "SM_AR01": {
+     "count": 7,
+     "vertices": [
+      31,
+      27,
+      27,
+      27,
+      26,
+      27,
+      27
+     ]
+    },
+    "SM_AR01_Mag": {
+     "count": 2,
+     "vertices": [
+      27,
+      27
+     ]
+    },
+    "pass_B_convex_elems": {
+     "SM_AR01": 7,
+     "SM_AR01_Mag": 2
+    }
+   },
+   "threshold": "7 + 2; <= 32",
+   "pass": true
+  },
+  {
+   "name": "material slots (2 + 3 + 1, sidecar names); Nanite off",
+   "value": {
+    "slots": {
+     "SK_AR01": [
+      "M_AR01_Metal",
+      "M_AR01_Furniture"
+     ],
+     "SM_AR01": [
+      "M_AR01_Metal",
+      "M_AR01_Furniture",
+      "M_AR01_Mag"
+     ],
+     "SM_AR01_Mag": [
+      "M_AR01_Mag"
+     ]
+    },
+    "nanite": {
+     "SM_AR01": false,
+     "SM_AR01_Mag": false
+    }
+   },
+   "threshold": "SK [Metal, Furniture], SM [Metal, Furniture, Mag], Mag [Mag]; nanite false",
+   "pass": true
+  },
+  {
+   "name": "U4 First Person rendering with VSM (FP_Weapon + FP_Mag vs TP_Weapon + TP_Mag): FP casts no ground shadow, TP does; FP at ForcedLodModel 1 renders LOD0 where the auto-LOD TP component falls to LOD3",
+   "value": {
+    "ground_shadow_px": {
+     "u4_tp": 58175,
+     "u4_none": 58162,
+     "u4_fp": 1
+    },
+    "lod_pixels_differing": {
+     "tp_auto_vs_ref0": 319,
+     "tp_auto_vs_ref3": 164,
+     "fp_forced_vs_ref0": 145,
+     "fp_forced_vs_ref3": 311
+    },
+    "components": {
+     "tp_noshadow_mask": {
+      "fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "forced_lod_model": 0,
+      "cast_shadow": false,
+      "file": "u4_tp_noshadow",
+      "predicted_lod_after_capture": 0
+     },
+     "tp": {
+      "fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "forced_lod_model": 0,
+      "cast_shadow": true,
+      "file": "u4_tp",
+      "predicted_lod_after_capture": 0
+     },
+     "none": {
+      "fp_type": "<FirstPersonPrimitiveType.NONE: 0>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.NONE: 0>",
+      "forced_lod_model": 0,
+      "cast_shadow": true,
+      "file": "u4_none",
+      "predicted_lod_after_capture": 0
+     },
+     "fp": {
+      "fp_type": "<FirstPersonPrimitiveType.FIRST_PERSON: 1>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.FIRST_PERSON: 1>",
+      "forced_lod_model": 1,
+      "cast_shadow": true,
+      "file": "u4_fp",
+      "predicted_lod_after_capture": 0
+     }
+    }
+   },
+   "threshold": "TP shadow > 1000 px, FP < 1 % of it; FP closer to the LOD0 reference, TP to LOD3",
+   "pass": true,
+   "note": "'the owner sees no TP component' needs a possessed player pawn carrying the components (a weapon Blueprint: plan section 11, game-side, needs the user's go); Python cannot add components or spawn actors in a game world, so it is not measured here"
+  },
+  {
+   "name": "U11 hand fit in engine",
+   "value": null,
+   "threshold": "if the player body is available",
+   "pass": true,
+   "note": "not run: MH_PlayerDefault is not in the verification project and the posed H1 (hand_r frame) it would reproduce has not been run (sidecar gun.hand_offset 'identity (provisional)')",
+   "kind": "not_applicable"
+  }
+ ]
+}

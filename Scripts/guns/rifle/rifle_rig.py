@@ -374,8 +374,15 @@ def main():
                 if x < a - 1e-9 or x > b + 1e-9:
                     rep.setdefault("b3_out_of_range", []).append({"clip": cname, "frame": f, k: x})
     rep["b3_coverage"] = {k: [round(a, 4), round(b, 4)] for k, (a, b) in cover.items()}
-    # ------------------------------------------------------------ bounds over every clip frame (LOD0)
+    # ------------------------------------------------------------ bounds over every clip frame (LOD0-3)
+    # stage-8 fix round (U5 in Unreal): Unreal stores LOD0's bind box as the asset bounds, and LOD2 is 2.8 mm wider on
+    # the left (fix log N4): the extension covers every LOD at every clip frame, not LOD0 only
     rlo, rhi, lo, hi, worst = posed_envelope(arm, meshes[0], clips)
+    for m_ in meshes[1:]:
+        _l, _h, lo2, hi2, w2 = posed_envelope(arm, m_, clips)
+        lo, hi = np.minimum(lo, lo2), np.maximum(hi, hi2)
+        for k_, v_ in w2.items():
+            worst[k_] = max(worst.get(k_, 0.0), v_)
     ext_pos = np.where(hi > rhi + 1e-6, hi - rhi + 1.0, 0.0)
     ext_neg = np.where(lo < rlo - 1e-6, rlo - lo + 1.0, 0.0)
     bounds_ext = {"positive_cm": [round(float(ext_pos[0]) * 0.1, 3), round(float(ext_neg[1]) * 0.1, 3),
@@ -385,7 +392,7 @@ def main():
                   "rest_aabb_mm": [np.round(rlo, 3).tolist(), np.round(rhi, 3).tolist()],
                   "posed_aabb_mm": [np.round(lo, 3).tolist(), np.round(hi, 3).tolist()],
                   "worst_excursion_mm_per_clip": {k: round(v, 3) for k, v in worst.items()},
-                  "why": "LOD0 posed at every frame of every clip vs the bind AABB, per axis (+1 mm where it grows; "
+                  "why": "LOD0-3 posed at every frame of every clip vs LOD0's bind AABB (Unreal's stored bounds), per axis (+1 mm where it grows; "
                          "Unreal axes: y flipped): the mesh's own Positive/Negative Bounds Extension. The attached "
                          "magazine is its own component with its own bounds"}
     rep["bounds_extension"] = bounds_ext

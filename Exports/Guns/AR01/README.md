@@ -5,8 +5,10 @@ skeletal mesh whose bolt, trigger, selector, magazine catch, rear sight and maga
 for pickups and world props, and the magazine is a separate mesh that you swap during reloads. The gun carries no
 names, markings or logos.
 
-This folder holds the shipped files. The Unreal import, its checks and the material instances come in a later stage,
-so this file describes the FBX files and the settings they need.
+This folder holds the shipped files. The Unreal Engine 5.8 import was checked with the settings below (see "Unreal
+import notes"). The rifle is also part of the pack's shared materials: its instances `MI_AR01_Metal`,
+`MI_AR01_Furniture` and `MI_AR01_Mag` were built and verified with the pack (see "Materials" and
+`MATERIALS_README.md`).
 
 ## What is in this folder
 
@@ -23,7 +25,7 @@ so this file describes the FBX files and the settings they need.
 | `SM_AR01.fbx` (+ `SM_AR01.sockets.json`) | Static twin with the magazine merged in, LOD0-3 (55,052 / 24,460 / 9,098 / 1,324 triangles) and 7 convex hulls `UCX_SM_AR01_LOD0_00..06` |
 | `SM_AR01_Mag.fbx` (+ `SM_AR01_Mag.sockets.json`) | The removable magazine, LOD0-3 (6,666 / 1,998 / 648 / 248 triangles) and 2 hulls. At every LOD it is the same mesh as the twin's merged magazine |
 | `Physics/SK_AR01_PhysicsProxy.fbx` | A proxy that rebuilds `PHYS_AR01` exactly (see Physics below) |
-| `Textures/` | `T_AR01_Metal_*` (4096), `T_AR01_Furniture_*` (2048), `T_AR01_Mag_*` (1024): BC, ORM, N and Masks for each set; `Textures/Recolour/` holds the walnut Detail16 map and the recolour data |
+| `Textures/` | `T_AR01_Metal_*` (4096), `T_AR01_Furniture_*` (2048), `T_AR01_Mag_*` (1024): BC, ORM, N and Masks for each set; `Textures/Recolour/` holds the walnut Detail16 map, `recolour_maps.json` and `recolour_constants.json` (the pack's matched recolour settings) |
 
 ## Import into Unreal Engine 5.8
 
@@ -46,7 +48,9 @@ so this file describes the FBX files and the settings they need.
 | `A_AR01_ReloadEmpty` | as Reload, then `ChargeRear` 74, `BoltRelease` 80 |
 | `A_AR01_Selector` | `SelectorAuto` 4, `SelectorSemi` 12, `SelectorAuto` 22, `SelectorSafe` 28 |
 
-5. The bounds do not need an extension: every vertex stays inside the bind-pose box on every frame of every clip.
+5. Set the mesh's **Negative Bounds Extension** to **(0, 0.378, 0) cm** (the sidecar's `import.bounds_extension_cm`;
+   Positive stays 0). Unreal stores LOD0's bind-pose box as the bounds, and LOD2 reaches 2.8 mm past it on the left;
+   with the extension every vertex of every LOD stays inside the bounds on every frame of every clip.
 
 ### Selector state in the clips
 
@@ -79,13 +83,36 @@ screen sizes from the sidecars too.
 along that path, so a magazine attached to that bone follows it. For a hand-held magazine (on `hand_l`), copy the
 weapon clip's `MagOut` and `MagIn` frames to the character montage.
 
+## Materials
+
+| Slot | Instance | Master | Colour control |
+|---|---|---|---|
+| `M_AR01_Metal` (0 on `SK_AR01` and `SM_AR01`) | `MI_AR01_Metal` | `M_Steel_Master` | Steel Tint (white = as shipped) |
+| `M_AR01_Furniture` (1) | `MI_AR01_Furniture` | `M_Fabric_Master` | Colour, with *Use Original Baked Colours* turned off |
+| `M_AR01_Mag` (2 on `SM_AR01`, 0 on `SM_AR01_Mag`) | `MI_AR01_Mag` | `M_Steel_Master` | Steel Tint |
+
+Assign the instances by slot name. The shipped wood shows its baked colour map exactly. To recolour it, turn off *Use
+Original Baked Colours* on `MI_AR01_Furniture` (or a copy) and pick **Colour**; the grain and wear follow. Details,
+map settings and the measured results are in `MATERIALS_README.md`.
+
+## Collision
+
+- `SM_AR01` collides through 7 convex hulls `UCX_SM_AR01_LOD0_00..06`, and `SM_AR01_Mag` through 2,
+  `UCX_SM_AR01_Mag_LOD0_00..01`. Import with *One Convex Hull per UCX* on and *Auto Generate Collision* off. Every
+  LOD0 surface point lies inside the hulls (measured in Unreal).
+- `SK_AR01` collides through `PHYS_AR01` (below).
+- **In hand:** while the rifle and its magazine are attached to the character, set their components to *No Collision*
+  (or a query-only weapon profile) and *Simulate Physics* off, so they never push the character's capsule. Turn
+  collision and physics on only for a dropped or world pickup (`SM_AR01`, or `SK_AR01` with `PHYS_AR01`).
+- **Centre of mass:** 163.0 / 0.1 / 74.9 mm from the `body` origin (the `CenterOfMass` socket, computed by the
+  build); `PHYS_AR01` uses a mass override of 3.1 kg.
+
 ## Physics
 
 `PHYS_AR01` has one body on `body` (3.1 kg) made of the shapes in the sidecar's `physics_bodies`. To
 rebuild it, import `Physics/SK_AR01_PhysicsProxy.fbx` onto `SK_AR01_Skeleton` with *Create Physics Asset* on (it makes
 exactly one body on `body`), replace that body's shapes with the sidecar's, then rename the asset to `PHYS_AR01`,
-assign it to `SK_AR01` and delete the proxy mesh. The static twin collides through its 7 `UCX` hulls and the magazine
-through its 2.
+assign it to `SK_AR01` and delete the proxy mesh. The physics proxy is not a render mesh: it exists only to rebuild the body.
 
 ## Textures
 
@@ -97,8 +124,9 @@ through its 2.
 
 BC is sRGB. ORM is linear (R ambient occlusion, G roughness, B metallic). N is a DirectX-convention normal map, stored
 as 16-bit PNG. Masks are linear (R edge wear, G handling, B cavity, A refinishable). All maps are square powers of two.
-Use texture group `Weapon` for BC and ORM and `WeaponNormalMap` for N, and keep full mips. Materials and colours:
-see `MATERIALS_README.md`.
+Keep full mips. Compression: BC Default (BC1), except `T_AR01_Furniture_BC`, which uses **BC7** because the shipped
+wood shows that map directly; ORM Masks; N Normalmap; Detail16 Grayscale (G16). In a game, use texture group `Weapon`
+for BC and ORM and `WeaponNormalMap` for N. Materials and colours: see `MATERIALS_README.md`.
 
 ## Good to know
 
@@ -111,4 +139,21 @@ see `MATERIALS_README.md`.
   every bone except a selector held at Auto, that pose is the bind pose. Blender's importer reads the defaults as the
   rest pose, so a held selector re-imports at Safe. Unreal plays the baked curves and is not affected. In Blender,
   read a clip's absolute bone matrices (its own armature's `pose.bones[...].matrix`).
-- Not tested yet: the Unreal import itself and the in-game first-person setup (the next stage), mobile, Nanite.
+- Not tested yet: a full in-game first-person weapon Blueprint (the owner-only visibility of the two components), mobile,
+  Nanite (the meshes import and were checked with Nanite off), and the hand fit on the game's player character.
+
+## Unreal import notes (UE 5.8, measured)
+
+- Everything above imports as described: 4 LODs, the 17 + 17 + 5 sockets on the right bones at scale 1, the five clips
+  (rigid parts within 0.0001 mm of the authored motion, notifies on their frames), PHYS_AR01 (it drops and rests), the
+  hulls (every LOD0 surface point inside them), full mip chains, and the textures stay at their top mip at the hip and
+  at ADS. First-person components cast no world shadow and stay on LOD0.
+- With *Remove Degenerates* on (the import default) Unreal drops the static meshes' sub-0.005 mm^2 triangles: 4,584 /
+  580 / 122 of `SM_AR01` LOD0-2 and 772 / 33 of `SM_AR01_Mag` LOD0-1 (micro bevel strips; invisible). The skeletal
+  import keeps them. Importing the statics logs "nearly zero tangents / bi-normals" and, for `SM_AR01`, "degenerate tangent
+  bases" for a few dozen vertices on those strips and on coarse-LOD faces. Both are known open items of this version.
+- The pack's material build (`run_build.sh ar01_1009b`, the pack's validation project) imported the same bytes with
+  the same settings: every pack gate passed, the 17 + 17 + 5 sockets and 4 LODs came through, and every LOD section
+  resolves to the pack's instances.
+- *Generate Lightmap UVs* makes a lightmap UV with a few overlapping texels on `SM_AR01` LOD1-3 at the default 64 px
+  lightmap resolution. Projects with dynamic lighting only are not affected.

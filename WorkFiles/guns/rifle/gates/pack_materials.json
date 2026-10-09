@@ -1,0 +1,398 @@
+{
+ "stage": "9 pack materials (AR01 + AR01_Mag in the NinjaPack masters)",
+ "date": "2026-10-09",
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "validation_project": "WorkFiles/shuriken/UnrealShuriken (/Game/NinjaPack)",
+ "lock": "PackMaterials held by ar01-gun-chat for the whole stage; released at the end",
+ "how": "run_build.sh ran from a mirror root (temp folder: copies of main's Scripts/unreal/materials + Scripts/pipeline with this branch's spec and new script, junctions to main's Exports of the other pack items and to this worktree's Exports/Guns) so the other items were imported from exactly the bytes of the last pack build (katana_1003) and nothing in the main checkout's tracked files changed",
+ "exports_sha256": {
+  "Exports/Guns/AR01/SK_AR01.fbx": "8ff09166711a947039ddad82c5279ebc2fceb9e29988c11fa4b8bbf54c181f72",
+  "Exports/Guns/AR01/SM_AR01.fbx": "bc6f1982abeca534990637fc841f84d1e177ef6faf0ea893b5415b819c97edbc",
+  "Exports/Guns/AR01/SM_AR01_Mag.fbx": "e6462ccfde4e5c4e10fedd516e1b928ac40c31ddab10a0dbb7b97708c3cae296",
+  "Exports/Guns/AR01/SK_AR01.skeletal.json": "f166e50097d7cd7fc52ce0ae8ab6cf6c8a2d2d1f1effbe2b37ecaca321999688",
+  "Exports/Guns/AR01/Textures/T_AR01_Furniture_BC.png": "74363d6e97d8e98b4245191380d43e35ee2ab1f581ee3355d4b6669e252e1f60",
+  "Exports/Guns/AR01/Textures/Recolour/T_AR01_Furniture_Detail16.png": "f8ad69050d2139a11f221b02a0ac299cc0f1f3d3d5ef8ce9edb26c56771ad20b",
+  "Exports/Guns/AR01/Textures/Recolour/recolour_maps.json": "a7f507632e676fc78bd6c742f24c3f610a7e0c55b8847673e827334b027a28d9",
+  "Exports/Guns/AR01/Textures/Recolour/recolour_constants.json": "f15ddbea389e60deba01d2c60e016d9cc402c9e908051c6c65886e26032c6fee"
+ },
+ "shipped_colour": {
+  "Colour_linear": [
+   0.21113852436370908,
+   0.05778182047230309,
+   0.014949206105658036,
+   1.0
+  ],
+  "Lightest Colour": 0.6
+ },
+ "gates": [
+  {
+   "name": "S1 constants (maps/derive_constants_ar01.py = derive_constants.fabric_part): default equals the v1 contract at mip 0 and every mip, guards inactive, mip drift of the fit within 2 %",
+   "value": {
+    "default_equals_v1_contract": true,
+    "default_guards_inactive": true,
+    "default_every_mip_equals_v1": true,
+    "mip_mean_drift_within_2pct": true
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "S2 spec additions only: the spec without the AR01 keys equals material_spec_before_ar01.json (add_ar01_to_spec.py projection check); np_spec resolves, every export PNG imported or listed",
+   "value": "projection OK; maps_check OK; accounting OK",
+   "threshold": "equal",
+   "pass": true
+  },
+  {
+   "name": "S3 pack build run_build.sh ar01_1009b (preflight, maps_check, import_meshes, import_textures, clean, build, assign, verify): every step passed=True, 0 compile failures",
+   "value": {
+    "steps_passed": 6,
+    "compile_failures_lines": 6
+   },
+   "threshold": "6 Unreal steps passed, 6 x 0 compile failures (+ preflight, maps_check ok)",
+   "pass": true
+  },
+  {
+   "name": "S4 pack verify gates (fresh process): functions, masters, instances, meshes, textures, dependencies, accounting",
+   "value": {
+    "functions": true,
+    "masters": true,
+    "instances": true,
+    "meshes": true,
+    "textures": true,
+    "dependencies": true,
+    "accounting": true
+   },
+   "threshold": "all true",
+   "pass": true
+  },
+  {
+   "name": "S5 AR01 instances read back (parent + every effective value), permutations compile",
+   "value": {
+    "MI_AR01_Furniture": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Colour"
+     ]
+    },
+    "MI_AR01_Furniture_Base": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Albedo Ceiling",
+      "Base Colour Map",
+      "Cloth Sheen",
+      "Colour",
+      "Dark Detail Follow",
+      "Detail Bias",
+      "Detail Highlight Ratio",
+      "Detail Map",
+      "Detail Map Size",
+      "Detail Mean",
+      "Detail Mip Compensation 1-4",
+      "Detail Mip Compensation 5-8",
+      "Detail Mip Compensation Power",
+      "Detail Moments High",
+      "Detail Moments Low",
+      "Detail Scale",
+      "Lightest Colour",
+      "Metal From ORM",
+      "Normal Map",
+      "ORM Map",
+      "Specular From ORM Alpha",
+      "Specular Strength",
+      "Use Lettering",
+      "Use Original Baked Colours"
+     ]
+    },
+    "MI_AR01_Mag": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": []
+    },
+    "MI_AR01_Mag_Base": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": [
+      "Base Colour Map",
+      "Normal Map",
+      "ORM Map"
+     ]
+    },
+    "MI_AR01_Metal": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": []
+    },
+    "MI_AR01_Metal_Base": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": [
+      "Base Colour Map",
+      "Normal Map",
+      "ORM Map"
+     ]
+    }
+   },
+   "threshold": "6 pass",
+   "pass": true
+  },
+  {
+   "name": "S6 every other pack entry unchanged: dump katana_1003 (the last pack build) vs ar01_1009b",
+   "value": {
+    "functions": {
+     "before": 5,
+     "after": 5,
+     "added": 0,
+     "removed": 0,
+     "changed": 0
+    },
+    "masters": {
+     "before": 3,
+     "after": 3,
+     "added": 0,
+     "removed": 0,
+     "changed": 0
+    },
+    "instances": {
+     "before": 69,
+     "after": 75,
+     "added": 6,
+     "removed": 0,
+     "changed": 0
+    },
+    "meshes": {
+     "before": 23,
+     "after": 26,
+     "added": 3,
+     "removed": 0,
+     "changed": 0
+    },
+    "textures": {
+     "before": 114,
+     "after": 124,
+     "added": 10,
+     "removed": 0,
+     "changed": 0
+    },
+    "node_layout_identical": true
+   },
+   "threshold": "only AR01 entries added; nothing removed or changed; layout identical",
+   "pass": true
+  },
+  {
+   "name": "P1 default capture = shipped BC: the shipped MI_AR01_Furniture (baked colours ON) vs T_AR01_Furniture_BC.png at the measured sample positions",
+   "value": {
+    "BC7 (shipped)": {
+     "max": 13,
+     "mean": 0.4941,
+     "p99_9": 4.0,
+     "p99": 2.0,
+     "texels_gt1": 187077,
+     "texels_gt2": 29462,
+     "texels": 4194304,
+     "dE00": {
+      "mean": 0.2328,
+      "p99": 0.9154
+     }
+    },
+    "BC1 (measured first)": {
+     "max": 43,
+     "mean": 1.90869,
+     "p99_9": 12.0,
+     "p99": 7.0,
+     "texels_gt1": 2266800,
+     "texels_gt2": 997337,
+     "texels": 4194304,
+     "dE00": {
+      "mean": 0.7116,
+      "p99": 2.258
+     }
+    }
+   },
+   "threshold": "p99.9 <= 2 levels",
+   "pass": false,
+   "note": "FAIL as worded. The shipped default samples the BC itself (no material math: the graph's baked branch is BaseColourMap.rgb), so this is the block-compression floor of the map, the error the pack reports (not gates) for every steel BC. BC1 gave p99.9 12 levels (dE00 mean 0.71, p99 2.26); BC7 cut it to 4 (dE00 mean 0.23, p99 0.92), so the furniture BC ships BC7 (new kind BC_BC7). Only an uncompressed map (+18.6 MiB) would reach <= 2. The recolour path (P2) meets the pack's default gate."
+  },
+  {
+   "name": "P2 the recolour path (switch OFF) at the default Colour vs the pack's float twin",
+   "value": {
+    "max": 1,
+    "mean": 0.10485,
+    "p99_9": 1.0,
+    "p99": 1.0,
+    "texels_gt1": 0,
+    "texels_gt2": 0,
+    "texels": 4194304
+   },
+   "threshold": "p99.9 <= 1, mean <= 0.3 (pack default gate)",
+   "pass": true,
+   "note": "its distance from the BC: p99.9 34.0 levels on covered texels (the four pieces' hue offsets; recolour_precheck.json predicted 33)"
+  },
+  {
+   "name": "P3 10-colour stress on the wood (mip 0) vs the twin + the pack's v3 gate",
+   "value": {
+    "FFFFFF": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99959,
+     "std_ratio": 0.6218,
+     "clip": 0.0
+    },
+    "FF0000": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99959,
+     "std_ratio": 0.6218,
+     "clip": 0.0
+    },
+    "0000FF": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99959,
+     "std_ratio": 0.6218,
+     "clip": 0.0
+    },
+    "F2E8D5": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99977,
+     "std_ratio": 0.6217,
+     "clip": 0.0
+    },
+    "000000": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99536,
+     "std_ratio": 1.0019,
+     "clip": 0.0
+    },
+    "808080": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.9996,
+     "std_ratio": 1.0,
+     "clip": 0.0
+    },
+    "1A1A1A": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99525,
+     "std_ratio": 1.0018,
+     "clip": 0.0
+    },
+    "3050A0": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99979,
+     "std_ratio": 1.0012,
+     "clip": 0.0
+    },
+    "2E5E2E": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99953,
+     "std_ratio": 1.0013,
+     "clip": 0.0
+    },
+    "6B3C27": {
+     "p99_9": 1.0,
+     "max": 1,
+     "v3": true,
+     "spearman": 0.99964,
+     "std_ratio": 1.0007,
+     "clip": 0.0
+    }
+   },
+   "threshold": "10 colours; p99.9 <= 2; v3 (clip <= 0.1 %, banding, std ratio >= 0.25, Spearman >= 0.98)",
+   "pass": true,
+   "worst_level": 1
+  },
+  {
+   "name": "P4 mip drift: mip-4 capture mean vs the box-filtered mip-0 capture (11 colours incl. the default)",
+   "value": {
+    "worst_abs_ratio_minus_1": 0.00076
+   },
+   "threshold": "<= 0.02",
+   "pass": true
+  },
+  {
+   "name": "R1 steel sets vs their BC PNGs (BC1; reported, the pack does not gate steel)",
+   "value": {
+    "Metal 4096": {
+     "max": 33,
+     "mean": 1.18045,
+     "p99_9": 7.0,
+     "p99": 4.0,
+     "texels_gt1": 3599213,
+     "texels_gt2": 612798,
+     "texels": 16777216
+    },
+    "Mag 1024": {
+     "max": 29,
+     "mean": 1.01798,
+     "p99_9": 6.0,
+     "p99": 3.0,
+     "texels_gt1": 198286,
+     "texels_gt2": 25457,
+     "texels": 1048576
+    }
+   },
+   "threshold": "report",
+   "pass": true
+  },
+  {
+   "name": "R2 texture memory in Unreal (with mips); Detail16 builds G16 (2 bytes/texel)",
+   "value": {
+    "T_AR01_Furniture_BC": 5636096,
+    "T_AR01_Furniture_Detail16": 2818048,
+    "T_AR01_Furniture_N": 5636096,
+    "T_AR01_Furniture_ORM": 2818048,
+    "T_AR01_Mag_BC": 720896,
+    "T_AR01_Mag_N": 1441792,
+    "T_AR01_Mag_ORM": 720896,
+    "T_AR01_Metal_BC": 11206656,
+    "T_AR01_Metal_N": 22413312,
+    "T_AR01_Metal_ORM": 11206656
+   },
+   "threshold": "report; Detail16 ~2.67 B/texel with mips",
+   "pass": true
+  },
+  {
+   "name": "R3 lit Unreal frames of SM_AR01 and SM_AR01_Mag with the pack instances (render ar01_1009b, beauty; looked at: wood, lacquer and magazine read correctly on all three UV tiles of the twin)",
+   "value": {
+    "SM_AR01": [
+     "threequarter",
+     "top",
+     "low"
+    ],
+    "SM_AR01_Mag": [
+     "threequarter",
+     "top",
+     "low"
+    ]
+   },
+   "threshold": "rendered, no error",
+   "pass": true
+  }
+ ],
+ "failed": [
+  "P1 default capture = shipped BC: the shipped MI_AR01_Furniture (baked colours ON) vs T_AR01_Furniture_BC.png at the measured sample positions"
+ ],
+ "status": "fail (see failed + notes)"
+}

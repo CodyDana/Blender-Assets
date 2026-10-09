@@ -1,5 +1,15 @@
 """Tangent-safe meshes (Blender side; import inside Blender).
 
+STATUS (AR-01 stage 8, 2026-10-09): DIAGNOSTICS + EXPERIMENTAL FIXES, NOT WIRED INTO ANY BUILD.
+- Reliable and used by the stage-8 harness: unreal_drops() reproduces exactly the triangles Unreal 5.8's static FBX
+  import drops (measured: equal to Unreal's own counts at every LOD of SM_AR01 / SM_AR01_Mag); collapsed() /
+  float32_zero_corners() / edge_on_corners() flag the corners whose MikkTSpace frame collapses (conservative).
+- The fixes (unreal_safe = unreal_min_area + make_tangent_safe) made the stage-8 test meshes import with 0 warnings,
+  0 dropped triangles and 0 zero tangents in Unreal, but on the export meshes they also opened 3-face edges, moved
+  vertices up to ~1 mm, put UVs outside their tile and multiplied Unreal's generated-lightmap overlaps; the link-checked
+  live-bmesh variant oscillates without converging. Kept for the method change the stage-8 summary recommends (fix the
+  micro strips where the part generators make them), not for use as an export step.
+
 Unreal 5.8's static-mesh FBX import computes MikkTSpace tangents from the exported triangles, corner normals and UV0
 and logs "has some nearly zero tangents / bi-normals" and "has degenerate tangent bases" for any vertex instance whose
 tangent frame collapses (measured at the AR-01 stage-8 import: SM_AR01 and SM_AR01_Mag; the skeletal import computes the
@@ -17,7 +27,9 @@ Why a corner collapses (measured on the stage-7 bytes, gunlib.tspace diagnostics
 - C: a face seen edge-on by its own corner normal (a narrow bevel / side face carrying its neighbour's shading normal):
   the face projects onto a line in the tangent plane, its corner angle is 0 again. Fix: tilt that corner's normal
   towards the face normal by a few degrees (the corner is alone in its group, so no other corner's shading moves).
-All three moves are below a texel / a pixel at the closest view (A: collapses edges <= 50 microns or needles under
+Tried (stage 8) as an export conditioning step on the joined export meshes (rifle_rig: SK_AR01 LOD0-3 and the twin;
+rifle_mag: SM_AR01_Mag LOD0-3), after every stage gate measured the part objects; unreal_safe reports the largest
+vertex move against the gated mesh. All three moves are below a texel / a pixel at the closest view (A: collapses edges <= 50 microns or needles under
 20 microns high, B: <= 0.5 texel, C: <= 15 deg on the corner of a face seen edge-on).
 """
 from __future__ import annotations
@@ -26,6 +38,21 @@ import math
 from typing import Dict, Optional
 
 import numpy as np
+
+
+def texels(me, UV, texel_uv):
+    """One texel in UV units per corner: None (4096), a scalar, a callable uv(N,2) -> (N,), or {"by_slot": {i: t}}
+    (per material slot)."""
+    if isinstance(texel_uv, dict) and "by_slot" in texel_uv:
+        mi = np.empty(len(me.polygons), np.int64)
+        me.polygons.foreach_get("material_index", mi)
+        lt = np.empty(len(me.polygons), np.int64)
+        me.polygons.foreach_get("loop_total", lt)
+        per_face = np.array([texel_uv["by_slot"].get(int(m), 1.0 / 4096) for m in mi], float)
+        return np.repeat(per_face, lt)
+    if callable(texel_uv):
+        return np.asarray(texel_uv(UV), float)
+    return np.full(len(UV), 1.0 / 4096 if texel_uv is None else float(texel_uv))
 
 
 def frames(me, uvmap: str):
@@ -232,8 +259,7 @@ def _arrays(me, uvmap):
     return UV.reshape(-1, 2).astype(float), LV, V.reshape(-1, 3).astype(float), CN
 
 
-def _collapse_edges(ob, pairs):
-    """Weld each (a, b) vertex pair at its midpoint (bmesh), corner normals carried in a loop layer and set again."""
+def _bm_begin(ob):
     import bmesh
     me = ob.data
     bm = bmesh.new()
@@ -247,22 +273,12 @@ def _collapse_edges(ob, pairs):
             lp[lay] = cn[li].vector
             li += 1
     bm.verts.ensure_lookup_table()
-    targetmap = {}
-    used = set()
-    for a, b in pairs:
-        if a in used or b in used or a == b:
-            continue
-        va, vb = bm.verts[a], bm.verts[b]
-        mid = (va.co + vb.co) * 0.5
-        va.co = mid
-        vb.co = mid
-        # keep the vertex with the lower index (the twin and the shipped magazine are built from the same parts in
-        # the same order, so both keep the same one)
-        keep, drop = (va, vb) if a < b else (vb, va)
-        targetmap[drop] = keep
-        used.update((a, b))
-    if targetmap:
-        bmesh.ops.weld_verts(bm, targetmap=targetmap)
+    bm.edges.ensure_lookup_table()
+    return bm, lay
+
+
+def _bm_end(ob, bm, lay):
+    me = ob.data
     per_loop = [tuple(lp[lay]) for f in bm.faces for lp in f.loops]
     bm.loops.layers.float_vector.remove(lay)
     bm.to_mesh(me)
@@ -270,6 +286,102 @@ def _collapse_edges(ob, pairs):
     if len(per_loop) == len(me.loops):
         me.normals_split_custom_set(per_loop)
     me.update()
+
+
+def _ring(v):
+    return {e.other_vert(v) for e in v.link_edges}
+
+
+def _link_ok(bm, va, vb):
+    """Edge-collapse link condition: the two vertices share no neighbour beyond the apexes of the faces on their edge,
+    so welding them cannot make an edge with three faces or a duplicate face."""
+    common = (_ring(va) & _ring(vb)) - {va, vb}
+    ed = bm.edges.get((va, vb))
+    return len(common) <= (len(ed.link_faces) if ed is not None else 0)
+
+
+def _snap_uvs(bm, verts, uv_snap):
+    """A welded vertex's corners keep their own UVs: corners whose UVs lie within uv_snap of each other (the two ends of
+    the collapsed micro edge, a fraction of a texel) take one shared UV again, so no UV seam opens and the UV / lightmap
+    charts stay whole."""
+    for uvl in bm.loops.layers.uv.values():
+        for v in verts:
+            if not v.is_valid:
+                continue
+            loops = list(v.link_loops)
+            done = set()
+            for i, l in enumerate(loops):
+                if i in done:
+                    continue
+                u0 = l[uvl].uv.copy()
+                group = [i] + [k for k in range(i + 1, len(loops)) if k not in done and (loops[k][uvl].uv - u0).length <= uv_snap]
+                if len(group) > 1:
+                    for k in group:
+                        loops[k][uvl].uv = u0
+                done.update(group)
+
+
+def _collapse_edges(ob, pairs, uv_snap: float = 2.0 / 4096):
+    """Weld each (a, b) vertex pair at its midpoint (bmesh), corner normals carried in a loop layer and set again; a pair
+    is skipped when it fails the link condition or touches a vertex (or its 1-ring) already edited in this call."""
+    import bmesh
+    bm, lay = _bm_begin(ob)
+    targetmap = {}
+    used = set()
+    for a, b in pairs:
+        if a == b:
+            continue
+        va, vb = bm.verts[a], bm.verts[b]
+        if va in used or vb in used or not _link_ok(bm, va, vb):
+            continue
+        mid = (va.co + vb.co) * 0.5
+        va.co = mid
+        vb.co = mid
+        # keep the vertex with the lower index (the twin and the shipped magazine are built from the same parts in
+        # the same order, so both keep the same one)
+        keep, drop = (va, vb) if a < b else (vb, va)
+        targetmap[drop] = keep
+        used.update({va, vb} | _ring(va) | _ring(vb))
+    keeps = list(set(targetmap.values()))
+    if targetmap:
+        bmesh.ops.weld_verts(bm, targetmap=targetmap)
+    _snap_uvs(bm, keeps, uv_snap)
+    _bm_end(ob, bm, lay)
+    return len(targetmap)
+
+
+def _split_needles(ob, needles, uv_snap: float = 2.0 / 4096):
+    """Remove needle triangles without moving anything more than the needle's height: split the long edge at the apex's
+    projection and weld the apex onto the new vertex (the needle disappears, the neighbour across the edge becomes
+    two triangles). needles: (apex, u, v) vertex indices."""
+    import bmesh
+    bm, lay = _bm_begin(ob)
+    targetmap = {}
+    used = set()
+    refs = [(bm.verts[w], bm.verts[u], bm.verts[v]) for w, u, v in needles]     # before any split adds vertices
+    for vw, vu, vv in refs:
+        if not (vw.is_valid and vu.is_valid and vv.is_valid):
+            continue
+        if used & ({vw, vu, vv} | _ring(vw) | _ring(vu) | _ring(vv)):
+            continue
+        ed = bm.edges.get((vu, vv))
+        if ed is None or len(ed.link_faces) > 2:
+            continue
+        others = {x for f in ed.link_faces for x in f.verts} - {vu, vv, vw}
+        if others & _ring(vw):
+            continue
+        d = vv.co - vu.co
+        t = max(0.02, min(0.98, (vw.co - vu.co).dot(d) / max(d.length_squared, 1e-30)))
+        ne, nv = bmesh.utils.edge_split(ed, vu, t)
+        targetmap[vw] = nv
+        used.update({vw, vu, vv, nv} | _ring(vw) | _ring(vu) | _ring(vv))
+    if targetmap:
+        bmesh.ops.weld_verts(bm, targetmap=targetmap)
+        ngons = [f for f in bm.faces if len(f.verts) > 3]
+        if ngons:
+            bmesh.ops.triangulate(bm, faces=ngons)
+    _snap_uvs(bm, list(set(targetmap.values())), uv_snap)
+    _bm_end(ob, bm, lay)
     return len(targetmap)
 
 
@@ -290,18 +402,16 @@ def make_tangent_safe(ob, texel_uv=None, uvmap: Optional[str] = None, short_mm: 
     for rnd in range(max_rounds):
         if len(bad) == 0:
             UV0, _, _, _ = _arrays(me, uvmap)
-            tex0 = (np.asarray(texel_uv(UV0), float) if callable(texel_uv)
-                    else np.full(len(UV0), 1.0 / 4096 if texel_uv is None else float(texel_uv)))
+            tex0 = texels(me, UV0, texel_uv)
             if not tiny_uv_faces(me, UV0, tex0):
                 break
         rep["rounds"] = rnd + 1
         UV, LV, V, CN = _arrays(me, uvmap)
-        tex = (np.asarray(texel_uv(UV), float) if callable(texel_uv)
-               else np.full(len(UV), 1.0 / 4096 if texel_uv is None else float(texel_uv)))
+        tex = texels(me, UV, texel_uv)
         lp_face = np.empty(len(me.loops), np.int64)
         for p in me.polygons:
             lp_face[p.loop_start:p.loop_start + p.loop_total] = p.index
-        pairs, degen, tilts = [], set(), {}
+        pairs, needles, degen, tilts = [], [], set(), {}
         # every face whose UV area is below 1e-3 texel^2 (a point or a line: Unreal's MikkTSpace gives its lone corners
         # no usable frame even where Blender's port borrows one from a neighbour)
         for fi in tiny_uv_faces(me, UV, tex):
@@ -311,8 +421,11 @@ def make_tangent_safe(ob, texel_uv=None, uvmap: Optional[str] = None, short_mm: 
             n = len(vid)
             e = sorted((float(np.linalg.norm(P[(k + 1) % n] - P[k])), vid[k], vid[(k + 1) % n]) for k in range(n))
             area2 = float(np.linalg.norm(sum(np.cross(P[k] - P[0], P[k + 1] - P[0]) for k in range(1, n - 1))))
-            if area2 / max(e[-1][0], 1e-12) < 0.02 or e[0][0] < short_mm:     # a 3D needle / micro face: collapse it
+            if e[0][0] < short_mm:                                            # a micro face: collapse its edge
                 pairs.append((e[0][1], e[0][2]))
+            elif n == 3 and area2 / max(e[-1][0], 1e-12) < 0.05:              # a 3D needle: split it away
+                u_, v_ = e[-1][1], e[-1][2]
+                needles.append((next(x for x in vid if x not in (u_, v_)), u_, v_))
             else:
                 degen.add(fi)
         Tf, Bf = frames(me, uvmap)
@@ -333,8 +446,12 @@ def make_tangent_safe(ob, texel_uv=None, uvmap: Optional[str] = None, short_mm: 
             angle_type = needle or eon[li] or tlen[li] < 1e-4
             area2 = float(np.linalg.norm(sum(np.cross(P[k] - P[0], P[k + 1] - P[0]) for k in range(1, n - 1))))
             height = area2 / max(e[-1][0], 1e-12)          # the face's height over its longest edge, mm
-            if needle and (e[0][0] < short_mm or height < 0.05):            # A: micro strip / collinear needle
+            if needle and e[0][0] < short_mm:                               # A: micro strip
                 pairs.append((e[0][1], e[0][2]))
+                continue
+            if needle and n == 3 and height < 0.05:                         # A: collinear needle (split, no collapse)
+                u_, v_ = e[-1][1], e[-1][2]
+                needles.append((next(x for x in vid if x not in (u_, v_)), u_, v_))
                 continue
             if angle_type:                                                   # C: face edge-on to its corner normal
                 tilts[int(li)] = np.array(p.normal[:], float)
@@ -349,10 +466,13 @@ def make_tangent_safe(ob, texel_uv=None, uvmap: Optional[str] = None, short_mm: 
             # smallest UV area of the corner's faces is the degenerate one
             degen.add(p.index)
         # ---- A
-        if pairs:
-            rep["A_edges_collapsed"] += _collapse_edges(ob, pairs)
+        if pairs or needles:
+            got = _collapse_edges(ob, pairs) if pairs else 0
+            if not got and needles:
+                got = _split_needles(ob, needles)
+            rep["A_edges_collapsed"] += got
             bad = collapsed(me, uvmap, theta_min_deg=theta_min_deg)
-            if tilts or degen:
+            if got:
                 continue                       # indices changed: B / C run on the next round's classification
         # ---- B / D: give each degenerate UV face its own tiny copy of its 3D shape (0.5 texel across) at its old UV
         # centroid
@@ -436,8 +556,7 @@ def make_tangent_safe(ob, texel_uv=None, uvmap: Optional[str] = None, short_mm: 
         bad = collapsed(me, uvmap, theta_min_deg=theta_min_deg)
     rep["collapsed_after"] = int(len(bad))
     UV1, _, _, _ = _arrays(me, uvmap)
-    tex1 = (np.asarray(texel_uv(UV1), float) if callable(texel_uv)
-            else np.full(len(UV1), 1.0 / 4096 if texel_uv is None else float(texel_uv)))
+    tex1 = texels(me, UV1, texel_uv)
     rep["tiny_uv_faces_after"] = len(tiny_uv_faces(me, UV1, tex1))
     if len(bad):
         Tf, Bf = frames(me, uvmap)
@@ -482,75 +601,124 @@ def unreal_drops(ob) -> np.ndarray:
     return np.array(out, np.int64)
 
 
-def unreal_min_area(ob, margin: float = 2.0, max_rounds: int = 40, flip_rounds: int = 12) -> Dict:
-    """Remove every face Unreal would drop (and those within `margin` x its threshold): collapse the face's shortest
-    edge to its midpoint (corner normals and every other corner's UV kept), or, for a needle whose shortest edge is
-    long (> 0.1 mm), flip its longest edge (after `flip_rounds` rounds such a needle is collapsed too: its height is
-    under 0.1 mm, so the surface moves less than that). Faces this small are
-    below 0.01 mm^2: invisible at any view, and Unreal would delete them anyway, leaving hairline cracks."""
+def unreal_min_area(ob, margin: float = 2.0, short_mm: float = 0.05, needle_mm: float = 0.05,
+                    max_ops: int = 200000, max_passes: int = 60, verbose: bool = False, dissolve_mm: float = 0.25) -> Dict:
+    """Remove every face Unreal would drop (and those within `margin` x its threshold: area < 0.01 mm^2), one face at a
+    time in one live bmesh, without moving any vertex more than half a micro edge (<= short_mm / 2) or a needle's height
+    (<= needle_mm):
+    - a face with an edge under short_mm: that edge collapses to its midpoint (link condition checked, so no edge ever
+      gets a third face);
+    - a needle (height under needle_mm): its long edge is split at the apex's projection and the apex merged onto the
+      new vertex (the needle disappears, the neighbour across the edge becomes two triangles);
+    - otherwise the face's longest edge is flipped.
+    Corner normals ride along in a loop layer; corners of a merged vertex whose UVs were within a fraction of a texel
+    take one UV (no seam opens). Faces this small are invisible at any view and Unreal would delete them anyway,
+    leaving hairline cracks. Returns counts; unreal_drops_after must be 0."""
     import bmesh
     me = ob.data
     s = float(ob.matrix_world.to_scale()[0]) * 1000.0            # mesh units -> mm
-    thr = 0.005 * margin                                          # mm^2
+    thr = 0.005 * margin / (s * s)                                # mesh units^2
+    short = short_mm / s
+    ndl = needle_mm / s
+    dis = dissolve_mm / s
     rep = {"faces_before": len(me.polygons), "unreal_drops_before": int(len(unreal_drops(ob))),
-           "collapsed": 0, "flipped": 0, "rounds": 0}
-    for rnd in range(max_rounds):
-        V = np.empty(len(me.vertices) * 3)
-        me.vertices.foreach_get("co", V)
-        V = V.reshape(-1, 3) * s
-        small, pairs, flips = [], [], []
-        used = set()
-        for p in me.polygons:
-            vs = list(p.vertices)
-            P = V[vs]
-            area = 0.5 * float(np.linalg.norm(sum(np.cross(P[k] - P[0], P[k + 1] - P[0]) for k in range(1, len(vs) - 1))))
-            if area >= thr:
+           "collapsed": 0, "needles_split": 0, "flipped": 0, "dissolved": 0, "stuck": 0}
+    bm, lay = _bm_begin(ob)
+    uvls = list(bm.loops.layers.uv.values())
+    stuck = set()
+    flipped = set()                    # each vertex pair flips once (no ping-pong)
+    ops = 0
+
+    def area(f):
+        return f.calc_area()
+
+    def merge(keep, drop, co):
+        """Merge `drop` into `keep` at `co`; snap the merged corners' UVs."""
+        keep.co = co
+        drop.co = co
+        bmesh.ops.pointmerge(bm, verts=[keep, drop], merge_co=co)
+        v = keep if keep.is_valid else (drop if drop.is_valid else None)
+        if v is not None:
+            _snap_uvs(bm, [v], 2.0 / 4096)
+
+    changed = True
+    passes = 0
+    while changed and ops < max_ops and passes < max_passes:
+        changed = False
+        passes += 1
+        bm.faces.index_update()
+        small = [f for f in bm.faces if f.is_valid and area(f) < thr]
+        if verbose:
+            print("[tspace] pass", passes, "small", len(small), "ops", ops, flush=True)
+        for f in small:
+            if not f.is_valid or area(f) >= thr:
                 continue
-            small.append(p.index)
+            vs = list(f.verts)
             n = len(vs)
-            e = sorted((float(np.linalg.norm(P[(k + 1) % n] - P[k])), vs[k], vs[(k + 1) % n]) for k in range(n))
-            if e[0][0] <= 0.1 or n != 3 or rnd >= flip_rounds:     # late rounds: collapse what flips did not fix
-                a, b = e[0][1], e[0][2]
-                if a in used or b in used:
+            es = sorted(f.edges, key=lambda e: e.calc_length())
+            e0 = es[0]
+            if e0.calc_length() <= short or n != 3:
+                va, vb = e0.verts
+                if _link_ok(bm, va, vb):
+                    merge(va, vb, (va.co + vb.co) * 0.5)
+                    rep["collapsed"] += 1
+                    ops += 1
+                    changed = True
                     continue
-                used.update((a, b))
-                pairs.append((a, b))
-            else:
-                flips.append((e[-1][1], e[-1][2]))
-        rep["rounds"] = rnd + 1
-        if not small:
+            el = es[-1]
+            vu, vv = el.verts
+            vw = next(v for v in vs if v not in (vu, vv))
+            h = 2.0 * area(f) / max(el.calc_length(), 1e-30)
+            if h <= ndl and len(el.link_faces) <= 2:
+                others = {x for g in el.link_faces for x in g.verts} - {vu, vv, vw}
+                if not (others & _ring(vw)):
+                    d = vv.co - vu.co
+                    t = max(0.02, min(0.98, (vw.co - vu.co).dot(d) / max(d.length_squared, 1e-30)))
+                    ne, nv = bmesh.utils.edge_split(el, vu, t)
+                    for g in list(nv.link_faces):
+                        if g.is_valid and len(g.verts) > 3:
+                            bmesh.ops.triangulate(bm, faces=[g])
+                    if _link_ok(bm, nv, vw):
+                        merge(nv, vw, nv.co.copy())
+                        rep["needles_split"] += 1
+                        ops += 1
+                        changed = True
+                        continue
+            key = frozenset((vu.index, vv.index))
+            if len(el.link_faces) == 2 and key not in flipped:
+                flipped.add(key)
+                r = bmesh.ops.rotate_edges(bm, edges=[el], use_ccw=False)
+                if r.get("edges"):
+                    rep["flipped"] += 1
+                    ops += 1
+                    changed = True
+                    continue
+            # last resort: dissolve one of the face's vertices whose whole fan is micro (every edge <= dissolve_mm):
+            # its faces merge into one polygon (re-triangulated), nothing moves, the surface changes by at most the
+            # fan's size
+            done_ = False
+            for v in sorted(vs, key=lambda x: max(e.calc_length() for e in x.link_edges)):
+                if v.is_valid and not v.is_boundary and max(e.calc_length() for e in v.link_edges) <= dis and len(v.link_faces) >= 3:
+                    ring = _ring(v)
+                    bmesh.ops.dissolve_verts(bm, verts=[v], use_face_split=False, use_boundary_tear=False)
+                    ng = list({g for u in ring if u.is_valid for g in u.link_faces if g.is_valid and len(g.verts) > 3})
+                    if ng:
+                        bmesh.ops.triangulate(bm, faces=ng)
+                    rep["dissolved"] += 1
+                    ops += 1
+                    changed = done_ = True
+                    break
+            if done_:
+                continue
+            stuck.add(f)
+        if not changed:
             break
-        if pairs:
-            rep["collapsed"] += _collapse_edges(ob, pairs)
-            continue                           # indices changed: flips (if any) wait for the next round
-        if flips:
-            bm = bmesh.new()
-            bm.from_mesh(me)
-            cn = me.corner_normals
-            lay = bm.loops.layers.float_vector.new("_cn")
-            li = 0
-            for f in bm.faces:
-                for lp in f.loops:
-                    lp[lay] = cn[li].vector
-                    li += 1
-            bm.verts.ensure_lookup_table()
-            edges = []
-            for a, b in flips:
-                ed = bm.edges.get((bm.verts[a], bm.verts[b]))
-                if ed is not None and len(ed.link_faces) == 2 and ed not in edges:
-                    edges.append(ed)
-            if edges:
-                r = bmesh.ops.rotate_edges(bm, edges=edges, use_ccw=False)
-                rep["flipped"] += len(r.get("edges", []))
-            per_loop = [tuple(lp[lay]) for f in bm.faces for lp in f.loops]
-            bm.loops.layers.float_vector.remove(lay)
-            bm.to_mesh(me)
-            bm.free()
-            if len(per_loop) == len(me.loops):
-                me.normals_split_custom_set(per_loop)
-            me.update()
-        if not pairs and not flips:
-            break
+    rep["stuck"] = sum(1 for f in stuck if f.is_valid and area(f) < thr)
+    rep["passes"] = passes
+    ngons = [f for f in bm.faces if len(f.verts) > 3]
+    if ngons:
+        bmesh.ops.triangulate(bm, faces=ngons)
+    _bm_end(ob, bm, lay)
     rep["faces_after"] = len(me.polygons)
     rep["unreal_drops_after"] = int(len(unreal_drops(ob)))
     return rep
@@ -559,14 +727,30 @@ def unreal_min_area(ob, margin: float = 2.0, max_rounds: int = 40, flip_rounds: 
 def unreal_safe(ob, texel_uv=None) -> Dict:
     """Both Unreal import rules on one mesh: no face Unreal drops (unreal_min_area), then no collapsed MikkTSpace
     frame (make_tangent_safe), then the drop check again (the tangent pass may collapse micro strips). Gate:
-    unreal_drops_after == 0 and collapsed_after == 0."""
+    unreal_drops_after == 0 (exact: Unreal's own rule). collapsed_after counts what the conservative Blender-side
+    detectors still flag (they over-report: the stage-8 test meshes with 4 such flags imported with 0 warnings and 0
+    zero tangents in Unreal's render data); Unreal's import (stage 8) is the authority there."""
+    from mathutils.bvhtree import BVHTree
+    me = ob.data
+    sc = float(ob.matrix_world.to_scale()[0]) * 1000.0
+    V0 = np.empty(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", V0)
+    V0 = V0.reshape(-1, 3)
+    F0 = [tuple(p.vertices) for p in me.polygons]
+    tree0 = BVHTree.FromPolygons([tuple(v) for v in V0], F0, all_triangles=False, epsilon=0.0)
+    CN0 = np.array([c.vector[:] for c in me.corner_normals], float)
     r1 = unreal_min_area(ob)
     r2 = make_tangent_safe(ob, texel_uv=texel_uv)
     r2.pop("left", None)
     r3 = unreal_min_area(ob)
     r4 = make_tangent_safe(ob, texel_uv=texel_uv) if r3["collapsed"] or r3["flipped"] else {"collapsed_after": r2["collapsed_after"]}
     r4.pop("left", None)
+    V1 = np.empty(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", V1)
+    V1 = V1.reshape(-1, 3)
+    moved = max((tree0.find_nearest(tuple(p))[3] for p in V1), default=0.0) * sc     # distance to the gated surface
     return {"min_area": r1, "tangents": r2, "min_area_2": r3, "tangents_2": r4,
+            "max_surface_deviation_mm": round(float(moved), 5), "corners_before": int(len(CN0)),
             "unreal_drops_after": r3["unreal_drops_after"], "collapsed_after": r4["collapsed_after"],
             "faces_before": r1["faces_before"], "faces_after": len(ob.data.polygons),
-            "pass": r3["unreal_drops_after"] == 0 and r4["collapsed_after"] == 0}
+            "pass": r3["unreal_drops_after"] == 0}

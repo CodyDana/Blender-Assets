@@ -181,11 +181,11 @@ def main():
                       "rigid skin + identical pivots / axes: every clip pose is a pose B3 already tested; the magazine "
                       "bone carries no geometry here (its path is gate M4, stage 6)"))
     be = REP["bounds_extension"]
-    gates.append(gate("bounds hold every vertex at every clip frame (LOD0)", {"positive_cm": be["positive_cm"],
+    gates.append(gate("bounds hold every vertex at every clip frame (LOD0-3)", {"positive_cm": be["positive_cm"],
                       "negative_cm": be["negative_cm"], "worst_excursion_mm": be["worst_excursion_mm_per_clip"]},
                       "posed envelope inside bind AABB + extension", True,
-                      "the carrier runs back inside the receiver and the other moving parts stay inside the rest AABB: "
-                      "extension 0 (U5 re-checks in engine)"))
+                      "LOD0-3 posed vs LOD0's bind box (Unreal's stored bounds); the extension covers what leaves it "
+                      "(stage 8: LOD2 is 2.8 mm wider on the left); U5 re-checks in engine"))
     # ------------------------------------------------------------ sockets (SK sidecar) B4 / B5
     side = json.loads((EXP / "SK_AR01.skeletal.json").read_text())
     spec = {r["socket"]: r for r in SPEC.sockets["rifle"]}

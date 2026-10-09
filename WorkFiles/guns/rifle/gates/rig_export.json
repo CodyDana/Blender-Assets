@@ -4,18 +4,18 @@
   "rig_report": "scratch/rig/rig_report.json"
  },
  "sha256": {
-  "Exports/Guns/AR01/SK_AR01.fbx": "3ab76e1c48d6de010fbcd588d6cb818ebc80d85c66ed3e23890e704e3924aa77",
-  "Exports/Guns/AR01/SK_AR01_LOD1.fbx": "33f22410b8de98d62e5c6d9de5a83d1c750438cf5d61ca86eec4cb4b80ea27bd",
-  "Exports/Guns/AR01/SK_AR01_LOD2.fbx": "f70deb40dbe92a17b530f3929afa5ef935e91a1046e53cc2b16e4c092ad8e7b6",
-  "Exports/Guns/AR01/SK_AR01_LOD3.fbx": "90499aca4ecdf7d2bb695b562fa294d081ff8f63d67d9d9daf96cdb15a7b04eb",
-  "Exports/Guns/AR01/A_AR01_Fire.fbx": "8828abdf4698654ecf3051c07065caee9657562033bdeebf733c80a327e09d35",
-  "Exports/Guns/AR01/A_AR01_Charge.fbx": "f19a98d17b3f3b725c882fa4e1a73bef30734be40b6efec082e58e7f5124113d",
-  "Exports/Guns/AR01/A_AR01_Reload.fbx": "ed6da6db99414cc8aa46bc3aaaab69205c9b5edc6786119f30a43e911cdb098f",
-  "Exports/Guns/AR01/A_AR01_ReloadEmpty.fbx": "0a1f86db9952f8f7c1869b6515b63524acca35a5a9b152b929e2e53710dac624",
-  "Exports/Guns/AR01/A_AR01_Selector.fbx": "a296cdbb995be8f18e5ebad5a1f5da7fb00f0331448c90ddbf9f4721a385985a",
-  "Exports/Guns/AR01/Physics/SK_AR01_PhysicsProxy.fbx": "54e94e24b5f39185351bbe9d63968f30219e33805d466fb87e88009e70b1d5c9",
-  "Exports/Guns/AR01/SK_AR01.skeletal.json": "8b42a65857741d2beff591b5ba9bee812e059476ef1377205a916251bddb1c95",
-  "Exports/Guns/AR01/SM_AR01.fbx": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c",
+  "Exports/Guns/AR01/SK_AR01.fbx": "8ff09166711a947039ddad82c5279ebc2fceb9e29988c11fa4b8bbf54c181f72",
+  "Exports/Guns/AR01/SK_AR01_LOD1.fbx": "2d3925cd9f1f72a3e015dff6ca6c11d65881b243c12ca03362963700fafa98b3",
+  "Exports/Guns/AR01/SK_AR01_LOD2.fbx": "91909db0ab053fb8e77058c033c43db8b6a06ae729d473bf79f4bb719737109b",
+  "Exports/Guns/AR01/SK_AR01_LOD3.fbx": "cc3354b082ea19f7c0f3360c3ee51082cc5f73cbd3c2610249c26003a508a0bf",
+  "Exports/Guns/AR01/A_AR01_Fire.fbx": "2477354313aea3a153392e577e71c14e25ea41a280b8dd7559e39e3e7c048576",
+  "Exports/Guns/AR01/A_AR01_Charge.fbx": "485ec8dbfd5d6275bdbe192c0f7e9217b45c0119b331abc0eff6eace434acc48",
+  "Exports/Guns/AR01/A_AR01_Reload.fbx": "0faa3260ed8d872e473ddb7babdaaa4c4fa3cada4a4f185dacc662dbd4fb56de",
+  "Exports/Guns/AR01/A_AR01_ReloadEmpty.fbx": "fe4febf15621c24cdce4defffb3c3eb2b7f8c9b26079b7d96c48a6f1f4db992d",
+  "Exports/Guns/AR01/A_AR01_Selector.fbx": "d94a4e89dc3b9d2eff7125d35b765b545c45be2a95ddf4c5dfc07efaddac44c5",
+  "Exports/Guns/AR01/Physics/SK_AR01_PhysicsProxy.fbx": "c77dc05f4aae84e996818488b7bdabe7cc25b159fb65d4ea55ff6f73025d5e59",
+  "Exports/Guns/AR01/SK_AR01.skeletal.json": "f166e50097d7cd7fc52ce0ae8ab6cf6c8a2d2d1f1effbe2b37ecaca321999688",
+  "Exports/Guns/AR01/SM_AR01.fbx": "bc6f1982abeca534990637fc841f84d1e177ef6faf0ea893b5415b819c97edbc",
   "Exports/Guns/AR01/SM_AR01.sockets.json": "914475334adf44ea6fcf505c2eb23a83e6298b866287c328fe1ef5001f3bfb11"
  },
  "B1_files": {
@@ -553,7 +553,7 @@
    "note": "rigid skin + identical pivots / axes: every clip pose is a pose B3 already tested; the magazine bone carries no geometry here (its path is gate M4, stage 6)"
   },
   {
-   "name": "bounds hold every vertex at every clip frame (LOD0)",
+   "name": "bounds hold every vertex at every clip frame (LOD0-3)",
    "value": {
     "positive_cm": [
      0.0,
@@ -562,7 +562,7 @@
     ],
     "negative_cm": [
      0.0,
-     0.0,
+     0.378,
      0.0
     ],
     "worst_excursion_mm": {
@@ -575,7 +575,7 @@
    },
    "threshold": "posed envelope inside bind AABB + extension",
    "pass": true,
-   "note": "the carrier runs back inside the receiver and the other moving parts stay inside the rest AABB: extension 0 (U5 re-checks in engine)"
+   "note": "LOD0-3 posed vs LOD0's bind box (Unreal's stored bounds); the extension covers what leaves it (stage 8: LOD2 is 2.8 mm wider on the left); U5 re-checks in engine"
   },
   {
    "name": "B4 sockets on the right bones; Muzzle on the bore; sight picture",
@@ -674,7 +674,7 @@
   {
    "name": "B10 names (tokenised gun deny list)",
    "value": {
-    "checked": 856,
+    "checked": 859,
     "hits": {}
    },
    "threshold": "no hit in file names, bone / socket / clip / notify names and the sidecar text",
@@ -801,51 +801,51 @@
  ],
  "files": {
   "Exports/Guns/AR01/SK_AR01.fbx": {
-   "sha256": "3ab76e1c48d6de010fbcd588d6cb818ebc80d85c66ed3e23890e704e3924aa77",
+   "sha256": "8ff09166711a947039ddad82c5279ebc2fceb9e29988c11fa4b8bbf54c181f72",
    "bytes": 1626476
   },
   "Exports/Guns/AR01/SK_AR01_LOD1.fbx": {
-   "sha256": "33f22410b8de98d62e5c6d9de5a83d1c750438cf5d61ca86eec4cb4b80ea27bd",
+   "sha256": "2d3925cd9f1f72a3e015dff6ca6c11d65881b243c12ca03362963700fafa98b3",
    "bytes": 867484
   },
   "Exports/Guns/AR01/SK_AR01_LOD2.fbx": {
-   "sha256": "f70deb40dbe92a17b530f3929afa5ef935e91a1046e53cc2b16e4c092ad8e7b6",
+   "sha256": "91909db0ab053fb8e77058c033c43db8b6a06ae729d473bf79f4bb719737109b",
    "bytes": 385388
   },
   "Exports/Guns/AR01/SK_AR01_LOD3.fbx": {
-   "sha256": "90499aca4ecdf7d2bb695b562fa294d081ff8f63d67d9d9daf96cdb15a7b04eb",
+   "sha256": "cc3354b082ea19f7c0f3360c3ee51082cc5f73cbd3c2610249c26003a508a0bf",
    "bytes": 86556
   },
   "Exports/Guns/AR01/A_AR01_Fire.fbx": {
-   "sha256": "8828abdf4698654ecf3051c07065caee9657562033bdeebf733c80a327e09d35",
+   "sha256": "2477354313aea3a153392e577e71c14e25ea41a280b8dd7559e39e3e7c048576",
    "bytes": 69948
   },
   "Exports/Guns/AR01/A_AR01_Charge.fbx": {
-   "sha256": "f19a98d17b3f3b725c882fa4e1a73bef30734be40b6efec082e58e7f5124113d",
+   "sha256": "485ec8dbfd5d6275bdbe192c0f7e9217b45c0119b331abc0eff6eace434acc48",
    "bytes": 80572
   },
   "Exports/Guns/AR01/A_AR01_Reload.fbx": {
-   "sha256": "ed6da6db99414cc8aa46bc3aaaab69205c9b5edc6786119f30a43e911cdb098f",
+   "sha256": "0faa3260ed8d872e473ddb7babdaaa4c4fa3cada4a4f185dacc662dbd4fb56de",
    "bytes": 92684
   },
   "Exports/Guns/AR01/A_AR01_ReloadEmpty.fbx": {
-   "sha256": "0a1f86db9952f8f7c1869b6515b63524acca35a5a9b152b929e2e53710dac624",
+   "sha256": "fe4febf15621c24cdce4defffb3c3eb2b7f8c9b26079b7d96c48a6f1f4db992d",
    "bytes": 103676
   },
   "Exports/Guns/AR01/A_AR01_Selector.fbx": {
-   "sha256": "a296cdbb995be8f18e5ebad5a1f5da7fb00f0331448c90ddbf9f4721a385985a",
+   "sha256": "d94a4e89dc3b9d2eff7125d35b765b545c45be2a95ddf4c5dfc07efaddac44c5",
    "bytes": 87212
   },
   "Exports/Guns/AR01/Physics/SK_AR01_PhysicsProxy.fbx": {
-   "sha256": "54e94e24b5f39185351bbe9d63968f30219e33805d466fb87e88009e70b1d5c9",
+   "sha256": "c77dc05f4aae84e996818488b7bdabe7cc25b159fb65d4ea55ff6f73025d5e59",
    "bytes": 31164
   },
   "Exports/Guns/AR01/SK_AR01.skeletal.json": {
-   "sha256": "8b42a65857741d2beff591b5ba9bee812e059476ef1377205a916251bddb1c95",
-   "bytes": 42583
+   "sha256": "f166e50097d7cd7fc52ce0ae8ab6cf6c8a2d2d1f1effbe2b37ecaca321999688",
+   "bytes": 42614
   },
   "Exports/Guns/AR01/SM_AR01.fbx": {
-   "sha256": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c",
+   "sha256": "bc6f1982abeca534990637fc841f84d1e177ef6faf0ea893b5415b819c97edbc",
    "bytes": 4171580
   },
   "Exports/Guns/AR01/SM_AR01.sockets.json": {
