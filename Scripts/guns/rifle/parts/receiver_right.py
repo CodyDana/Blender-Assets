@@ -60,6 +60,15 @@ TRUNNION_FRONT_X = 452.03       # the block's face above its top (the old solid 
 #                                 front end, the block's top corner left a 0.006 mm sliver; the rails end 0.05 short)
 RAMP = ((417.0, -13.6), (431.0, -7.6), 7.0)    # feed ramp on the rear face: line (X, Z) -> (X, Z), half width
 CHAMBER_X = 431.0               # the bore through the trunnion starts here (the barrel's rear end is at 433.8)
+# STAGE-7 FIX ROUND (craft review item 3, 2026-10-08: 'the receiver is an empty shell at full bolt travel; no bolt
+# head, no chamber'): the real pattern's rotating BOLT now rides in the carrier (bolt_carrier, BOLT_*), its head in a
+# bore through the trunnion's rear (BOLT_BORE_R) up to the barrel's breech; over the barrel's rear end the trunnion
+# stands up to TRUNNION_UP_Z (the barrel end sits in the trunnion, as on the real receiver, instead of in a pocket of
+# the carrier), so the port's front shows the trunnion block, and at full travel the bolt face + extractor show at the
+# port's rear with the trunnion, the chamber mouth and the magazine top ahead of them
+TRUNNION_UP_X = 434.0           # the raised block's rear face (the barrel's breech at 433.8 sits just inside it)
+TRUNNION_UP_Z = 8.0             # its top: 1.0 under the carrier's front section (Z 9.0), 0.6 under the handle stem
+BOLT_BORE_R = 8.0               # bolt head bore through the trunnion's rear (bolt r 7.6: 0.4 radial clearance)
 
 
 # ======================================================================================== bevel predicates
@@ -137,7 +146,8 @@ def receiver() -> PartDef:
     ib += [(x, z + WT) for x, z in LEDGE if 250.98 < x < 369.8]
     # R51: the interior stops at the front trunnion's rear face below its top (the block the well / pocket cuts carve)
     ib += [(369.8, ledge_z(369.8) + WT), (369.8, -30.85 + WT), (TRUNNION_X0, -30.85 + WT),
-           (TRUNNION_X0, TRUNNION_TOP_Z), (TRUNNION_FRONT_X, TRUNNION_TOP_Z), (TRUNNION_FRONT_X, 30.0)]
+           (TRUNNION_X0, TRUNNION_TOP_Z), (TRUNNION_UP_X, TRUNNION_TOP_Z), (TRUNNION_UP_X, TRUNNION_UP_Z),
+           (TRUNNION_FRONT_X, TRUNNION_UP_Z), (TRUNNION_FRONT_X, 30.0)]
     inner = ib + [(x_r + WT, 30.0)]
     # detail r2b: a 1.0 mm block stays behind the right dimple (the sheet pressed inward), so the dimple can be pressed
     # DIMPLE_DEPTH deep (c1 'deep round hole', side panel: strong rim, dark floor): the right wall's first 1.0 mm of
@@ -177,6 +187,8 @@ def receiver() -> PartDef:
     post.append(MS.box(301.5, 329.0, -3.25, 3.25, -40.0, -27.0))
     # barrel bore through the front trunnion (barrel r 7.5 + gap)
     post.append(MS.cylinder((CHAMBER_X, 0, 0), (490.0, 0, 0), 7.5 + GAP, 48))     # R51: chamber mouth from 431
+    # stage-7: the bolt head's bore through the trunnion's rear (the bolt rides into it to the breech)
+    post.append(MS.cylinder((TRUNNION_X0 - 1.0, 0, 0), (BOLT_X[1] + 0.4, 0, 0), BOLT_BORE_R, 48))
     # lower handguard tenon pocket in the front face (X 484.0 - 485.3)
     post.append(lower_handguard_tenon(GAP, 483.98, 490.0))
     post.append(lower_handguard_tenon(1.5, 484.75, 490.0))      # mouth relief: room for the tenon's root fillet
@@ -391,6 +403,7 @@ def recoil_button() -> PartDef:
 
 
 RIVET_R, RIVET_H = 2.55, 1.0        # c1 draws the heads ~5 mm (spec 4.5 +- the sheet's 1.2 mm px); height kept for the selector sweep
+RIVET_SEG = 24                      # stage-7 (G3): 15 deg per segment, the crown's smooth-shaded normals carry the dome
 CLIP_AT = (350.0, -25.0)           # c1 draws a wire retainer clip where the side view's dot (350, -25) is
 
 
@@ -401,6 +414,10 @@ def rivet_head(c, normal, r, h, nseg=8, domed=False) -> Mesh:
     rolled foot and a continuous low dome, so the crown catches the key light."""
     if domed:
         prof = [(0.0, 0.0), (0.0, r), (0.42 * h, 0.93 * r), (0.84 * h, 0.58 * r), (h, 0.0)]   # 3 rings (budget)
+    elif nseg > 8:
+        # stage-7 (G3 at 24 segments inside the 50k LOD0 ceiling): the flat crown on a straight rolled flank, one ring
+        # fewer (4n triangles, was 6n); the 60 deg auto-smooth carries the flank-to-crown roll in the shading
+        prof = [(0.0, 0.0), (0.0, r), (h, 0.62 * r), (h, 0.0)]
     else:
         prof = [(0.0, 0.0), (0.0, r), (0.6 * h, 0.93 * r), (h, 0.62 * r), (h, 0.0)]
     return MS.revolve(prof, c, normal, nseg)
@@ -499,10 +516,12 @@ def rivets() -> PartDef:
         if (x, z) == CLIP_AT:
             continue
         # DETAIL FIX (user checklist 5): FLAT-TOPPED rivet heads (real pattern; r2b: domed)
-        sol.append(rivet_head((x, -WO - GAP, z), (0, -1, 0), RIVET_R, h, 8, domed=False))   # 8 seg (budget)
+        # stage-7 fix round (craft review item 8, G3 'facet angle <= 7.5 deg on rounds at LOD0'): 8 -> RIVET_SEG
+        # segments (the 8-sided crowns read as octagons at 3x and at 35 cm first person); LOD1 12, LOD2 6 (gunlib.lod)
+        sol.append(rivet_head((x, -WO - GAP, z), (0, -1, 0), RIVET_R, h, RIVET_SEG, domed=False))
     for (x, z) in l:
         h = RIVET_H + rng.uniform(-0.1, 0.1)
-        sol.append(rivet_head((x, WO + GAP, z), (0, 1, 0), RIVET_R, h, 8, domed=False))  # r2: 8 seg on the left (budget)
+        sol.append(rivet_head((x, WO + GAP, z), (0, 1, 0), RIVET_R, h, RIVET_SEG, domed=False))
     # DETAIL FIX (user checklist 5): the stamped DETENT PLATE above the trigger guard (r2b: a floating wire hairpin)
     sol.append(detent_plate(CLIP_AT))
     # DETAIL FIX (user checklist 5): the rear sling loop on the rear trunnion (c1 draws it at the receiver's rear top)
@@ -539,17 +558,48 @@ CAVITY_Z_LOW = -4.5
 RAIL_GAP_X = (361.0, 383.0)
 
 
+BOLT_R = 7.6                       # stage-7: the rotating bolt (real pattern: ~15 mm body), on the bore axis
+BOLT_X = (395.0, 433.4)            # at rest: from inside the carrier's rear section to 0.4 short of the barrel's breech
+CORE_X = 397.5                     # the carrier's full section ends here; ahead of it only its upper body (Z >= CORE_Z)
+CORE_Z = 9.0                       # (1.0 over the trunnion's raised top; the bolt hangs below it in the open)
+EXTRACTOR_DEG = 40.0               # the extractor's centre angle above the right horizontal (it shows through the port,
+#                                    whose bottom edge is Z 3: real bolts carry it high on the right of the head)
+
+
+def bolt_parts():
+    """Stage-7 fix round: the bolt (cylinder r BOLT_R, crisp face with the case-head recess and the firing-pin hole)
+    and the extractor (a flat claw plate 0.3 proud on the bolt's upper right, its claw hooked over the face's rim)."""
+    bolt = MS.cylinder((BOLT_X[0], 0, 0), (BOLT_X[1], 0, 0), BOLT_R, 24)       # (seen through the port only: 24)
+    a0 = math.radians(EXTRACTOR_DEG)
+    da = math.radians(16.0)
+
+    def plate(r0, r1, half):
+        aa = np.linspace(a0 - half, a0 + half, 5)
+        outer = np.c_[-r1 * np.cos(aa), r1 * np.sin(aa)]
+        inner = np.c_[-r0 * np.cos(aa[::-1]), r0 * np.sin(aa[::-1])]
+        return np.vstack([outer, inner])
+    ext = MS.prism(plate(BOLT_R - 0.6, BOLT_R + 0.3, da), 409.0, BOLT_X[1] + 0.15, "YZ")
+    claw = MS.prism(plate(BOLT_R - 1.3, BOLT_R + 0.3, math.radians(11.0)), BOLT_X[1] - 0.9, BOLT_X[1] + 0.15, "YZ")
+    cut = [MS.cylinder((BOLT_X[1] - 0.9, 0, 0), (BOLT_X[1] + 1.0, 0, 0), 5.7, 20),       # case-head recess 0.9 deep
+           MS.cylinder((BOLT_X[1] - 4.0, 0, 0), (BOLT_X[1] + 1.0, 0, 0), 1.0, 8)]        # firing-pin hole
+    return [bolt, ext, claw], cut
+
+
 def bolt_carrier() -> PartDef:
     """Carrier block (flat flank in the port, D-shaped top under the cover crown) with a stepped rear that fills the
     port's visible length; charging handle tab (stem through the port's front end, flat-topped tab with rounded
-    outer corners outside)."""
+    outer corners outside). Stage-7: ahead of CORE_X only the carrier's upper body (Z >= CORE_Z) runs forward; the
+    rotating bolt with its extractor rides under it (bolt_parts)."""
     # detail r2: flat flanks up to Z CARRIER_FLAT_Z (the flank shows as a flat lit bar through the whole skirt cutout,
     # c1 / c2 / q34), then an elliptical top 2 mm under the new cover crown (receiver_right_cover)
     yc = 18.75
     a = np.linspace(0.0, math.pi, 41)[1:-1]
     top = np.c_[yc * np.cos(a), CARRIER_FLAT_Z + CARRIER_TOP_B * np.sin(a)]
     sec = np.vstack([[[yc, -4.0], [yc, CARRIER_FLAT_Z]], top, [[-yc, CARRIER_FLAT_Z], [-yc, -4.0]]])
-    carrier = MS.prism(sec, CARRIER_X[0], CARRIER_X[1], "YZ")
+    carrier = MS.prism(sec, CARRIER_X[0], CORE_X, "YZ")
+    sec_up = np.vstack([[[yc, CORE_Z], [yc, CARRIER_FLAT_Z]], top, [[-yc, CARRIER_FLAT_Z], [-yc, CORE_Z]]])
+    upper = MS.prism(sec_up, CORE_X - 0.5, CARRIER_X[1], "YZ")
+    bolt, bolt_cut = bolt_parts()
     side = [(CARRIER_X[0], -10.0), (CARRIER_X[1] + 5.0, -10.0), (CARRIER_X[1] + 5.0, 40.0)]
     for i in range(len(CARRIER_STEPS) - 1, -1, -1):
         x, z = CARRIER_STEPS[i]
@@ -564,7 +614,8 @@ def bolt_carrier() -> PartDef:
     # top edge Z 8.0 at full travel, under the cover cutout's low edge 12.3)
     stem = MS.prism(G.rounded_rect(444.25, 451.75, STEM_Z[0], STEM_Z[1], 0.75, 3), -29.5, -18.5)
     tab = handle_knob()
-    cut = [MS.cylinder((433.5, 0, 0), (452.0, 0, 0), 7.5 + 0.3, 32)]     # chamber pocket round the barrel end (unseen)
+    # (stage-7: the chamber pocket round the barrel end is gone: the barrel's rear end sits in the trunnion now)
+    cut = list(bolt_cut)
     # detail r2: deep recess in the right flank below the lit bar (c1 draws a dark shadow band under the carrier face,
     # q34 a dark gap under it): the port reads as a dark slot instead of a flush wall-coloured face
     cut.append(MS.prism(G.rounded_rect(CAVITY_X[0], CAVITY_X[1], CAVITY_Z_LOW, CAVITY_Z[1], 0.6, 2), -30.0, -CAVITY_Y))
@@ -572,7 +623,7 @@ def bolt_carrier() -> PartDef:
     # a second face stepped in 1.1 mm (Z 9.5-14.2), then the deep recess; a 0.8 mm lengthwise groove in the bar
     cut.append(MS.prism(G.rounded_rect(CAVITY_X[0], CAVITY_X[1], CAVITY_Z[1] - 0.5, 14.2, 0.4, 1), -30.0, -(18.75 - 1.1)))
     p = PartDef("bolt_carrier", [carrier], bone="bolt", cls="M-chamfer", cutters=cut,
-                unions=[stem, tab], joint={"type": "sliding", "parent": "receiver", "axis_M": [-1, 0, 0],
+                unions=[upper] + bolt + [stem, tab], joint={"type": "sliding", "parent": "receiver", "axis_M": [-1, 0, 0],
                                            "travel_mm": round(CARRIER_TRAVEL, 3), "clearance_mm": [0.15, 0.4]},
                 recipe=[(0.4, 1, 30.0)])
     p.section_intersect_pre = [side_prism]
@@ -621,9 +672,11 @@ def handle_knob():
 def receiver_rails() -> PartDef:
     """Carrier guide rails pressed into the inner walls (below the port, X 262-452): the carrier's lateral guide,
     0.25 mm per side."""
-    sol = [MS.box(262.0, 451.98, 19.0, WO - WT - GAP, -4.6, -1.0),
+    # (stage-7: the rails end GAP short of the trunnion's raised block, TRUNNION_UP_X)
+    xe = TRUNNION_UP_X - GAP
+    sol = [MS.box(262.0, xe, 19.0, WO - WT - GAP, -4.6, -1.0),
            MS.box(262.0, RAIL_GAP_X[0], -(WO - WT - GAP), -19.0, -4.6, -1.0),
-           MS.box(RAIL_GAP_X[1], 451.98, -(WO - WT - GAP), -19.0, -4.6, -1.0)]       # r2b: gap behind the notch
+           MS.box(RAIL_GAP_X[1], xe, -(WO - WT - GAP), -19.0, -4.6, -1.0)]       # r2b: gap behind the notch
     return PartDef("receiver_rails", sol, cls="M-chamfer", recipe=[(0.2, 1, 30.0)],
                    joint={"type": "butt", "parent": "receiver", "gap_mm": [0.01, 0.05]})
 
@@ -642,9 +695,11 @@ def mag_catch() -> PartDef:
     # ends (offset 1.0 in, shifted 1.0 rearward), so the front reads as a pressed plate with a raised rib. A 13 mm
     # paddle was tried first: the 3/4 panel's paddle is the 10 mm one (q34 residual unexplained), so the width stays
     Pp = G.clip_y(P, None, -54.0)
-    rib = MS.prism(Pp, -PADDLE_RIB_HW, PADDLE_RIB_HW)
-    W = G.offset(G.ccw(Pp), -1.0) + np.array([-1.0, 0.0])
-    wings = [MS.prism(W, PADDLE_RIB_HW - 0.05, PADDLE_HW), MS.prism(W, -PADDLE_HW, -PADDLE_RIB_HW + 0.05)]
+    # STAGE-7 FIX ROUND (craft review item 5: 'a melted chrome lump, a T / Y-section wedge with bent normals'): the
+    # rib + pulled-back wings made a T section whose many near-coplanar faces smoothed into one blob. The paddle is
+    # now ONE flat stamped plate (the traced side outline, PADDLE_HW each side) with crisp 0.3 edges and flat-shaded
+    # faces (wn off, sharp at 30 deg), on the tongue as before; finish: satin bluing (rifle_surface)
+    paddle = MS.prism(Pp, -PADDLE_HW, PADDLE_HW)
     # top cut to an arc about the pivot (r 15.0): rotation-invariant clearance under the flange
     r = 15.0
     arch = np.vstack([[[cx + r, cz], [cx + 40, cz], [cx + 40, cz + 40], [cx - 40, cz + 40], [cx - r, cz]],
@@ -658,8 +713,8 @@ def mag_catch() -> PartDef:
     nose = np.vstack([G.arc(cx, cz, rn, a0, 20.0, 12), [[cx + 20.0, cz + 4.0], [cx + 20.0, cz + 30.0],
                                                          [MF.CATCH_NOTCH_X, cz + 30.0]]])
     cut.append(MS.prism(G.ccw(nose), -6.0, 6.0))
-    return PartDef("mag_catch", [tongue], unions=[rib] + wings, cutters=cut, bone="mag_release", cls="S-cut",
-                   recipe=[(0.3, 1, 30.0)],
+    return PartDef("mag_catch", [tongue], unions=[paddle], cutters=cut, bone="mag_release", cls="S-cut",
+                   recipe=[(0.3, 1, 30.0)], wn=False, smooth_deg=30.0,
                    joint={"type": "hinge", "parent": "receiver", "pivot_M": [cx, 0, cz], "axis_M": [0, -1, 0],
                           "range_deg": [0.0, 10.0], "direction": "+ = top rearward (release)",
                           "clearance_mm": [0.1, 0.3]})

@@ -16,6 +16,11 @@ dashed lines along seams). Here the edges are measured on the TRUE geometry inst
      sigma 0.3: 0.02 - not an edge); a coplanar sliver reads 0
   3. dist_convex(p): the distance to the nearest convex edge sharper than `sharp_deg` (the gates' 'panel interior'
      test and the chip rule 'bare only within 0.6 mm of a real edge')
+  4. (stage-7 fix round, 2026-10-08) SAME-SIDE edges only: every edge carries the mean normal of its faces, and an
+     edge counts at a texel only where that normal agrees with the texel's own normal (smoothstep(-0.1, 0.4, n_e . n_q)).
+     Distances are 3D, so through a thin wall (the upper handguard over its liner channel, the 1 mm receiver sheet
+     over the rails) the far side's edges lay 1-3 mm from the outer face and printed their outline on it (the review's
+     'trapezoid of the gas tube / liner bleeding through the wood'); a far-side edge's faces point away (n_e . n_q < 0)
 """
 from __future__ import annotations
 
@@ -36,7 +41,7 @@ def weld(V, tol=1e-3):
     return P, F[keep], keep
 
 
-def edges(V, tol=1e-3, area_eps=1e-8):
+def edges(V, tol=1e-3, area_eps=1e-8, with_normals=False):
     """Interior edges of a triangle soup with their signed dihedral angle (rad; + convex, - concave) and the boundary
     edges (one face: an exposed sheet edge, treated as a 90 deg convex edge). Returns A (m, 3), B (m, 3), theta (m,)."""
     P, F, _keep = weld(V, tol)
@@ -58,7 +63,7 @@ def edges(V, tol=1e-3, area_eps=1e-8):
     key, lo, hi, op, fi = key[order], lo[order], hi[order], op[order], fi[order]
     start = np.r_[0, np.nonzero(np.diff(key))[0] + 1]
     cnt = np.diff(np.r_[start, len(key)])
-    A, Bv, T = [], [], []
+    A, Bv, T, NE = [], [], [], []
     # pairs (first two faces of each edge; a > 2 fan is rare and its first pair is representative)
     two = start[cnt >= 2]
     f1, f2 = fi[two], fi[two + 1]
@@ -70,15 +75,21 @@ def edges(V, tol=1e-3, area_eps=1e-8):
     A.append(pa)
     Bv.append(P[hi[two]])
     T.append(np.where(convex, th, -th))
+    ne = n[f1] + n[f2]
+    ne /= np.maximum(np.linalg.norm(ne, axis=1, keepdims=True), 1e-9)
+    NE.append(ne)
     one = start[cnt == 1]
     A.append(P[lo[one]])
     Bv.append(P[hi[one]])
     T.append(np.full(len(one), math.pi / 2))
+    NE.append(n[fi[one]])
+    if with_normals:
+        return np.concatenate(A), np.concatenate(Bv), np.concatenate(T), np.concatenate(NE)
     return np.concatenate(A), np.concatenate(Bv), np.concatenate(T)
 
 
-def pieces(A, B, T, maxlen):
-    """Split segments into pieces no longer than maxlen (mm)."""
+def pieces(A, B, T, maxlen, NE=None):
+    """Split segments into pieces no longer than maxlen (mm) (NE: per-segment normals carried along)."""
     L = np.linalg.norm(B - A, axis=1)
     k = np.maximum(1, np.ceil(L / maxlen).astype(int))
     idx = np.repeat(np.arange(len(A)), k)
@@ -86,6 +97,8 @@ def pieces(A, B, T, maxlen):
     kk = k[idx]
     t0, t1 = j / kk, (j + 1) / kk
     D = B[idx] - A[idx]
+    if NE is not None:
+        return A[idx] + D * t0[:, None], A[idx] + D * t1[:, None], T[idx], NE[idx]
     return A[idx] + D * t0[:, None], A[idx] + D * t1[:, None], T[idx]
 
 
@@ -93,15 +106,16 @@ class EdgeField:
     """Convex-edge field of ONE part (its own triangles)."""
 
     def __init__(self, V, min_deg=2.0, maxlen=0.5):
-        A, B, T = edges(V)
+        A, B, T, NE = edges(V, with_normals=True)
         cv = T > math.radians(min_deg)
         self.maxlen = maxlen
-        self.A, self.B, self.T = pieces(A[cv], B[cv], T[cv], maxlen)
+        self.A, self.B, self.T, self.NE = pieces(A[cv], B[cv], T[cv], maxlen, NE[cv])
         self.mid = 0.5 * (self.A + self.B)
         self.tree = cKDTree(self.mid) if len(self.mid) else None
 
-    def value(self, Q, sigma, k=48, chunk=150000):
-        """E(Q) / (pi / 2) at points Q (n, 3) mm for Gaussian scale sigma (mm)."""
+    def value(self, Q, sigma, k=48, chunk=150000, QN=None):
+        """E(Q) / (pi / 2) at points Q (n, 3) mm for Gaussian scale sigma (mm); QN (n, 3): the texel normals (same-side
+        weighting, docstring item 4)."""
         out = np.zeros(len(Q), np.float32)
         if self.tree is None or not len(Q):
             return out
@@ -123,20 +137,24 @@ class EdgeField:
             t = np.sum(w * u, axis=2)
             dp2 = np.maximum(np.sum(w * w, axis=2) - t * t, 0.0)
             g = np.exp(-dp2 / (2.0 * sigma * sigma)) * 0.5 * (erf((L - t) / s2) - erf(-t / s2))
+            if QN is not None:
+                g = g * same_side(np.sum(self.NE[ii] * QN[s:s + chunk, None, :].astype(np.float64), axis=2))
             out[s:s + chunk] = (np.where(valid, g * self.T[ii], 0.0).sum(1) / (math.pi / 2)).astype(np.float32)
         return out
 
-    def dist_sharp(self, Q, sharp_deg=25.0, chunk=400000):
-        """Distance (mm) from Q to the nearest convex edge piece sharper than sharp_deg (inf if none)."""
+    def dist_sharp(self, Q, sharp_deg=25.0, chunk=400000, QN=None):
+        """Distance (mm) from Q to the nearest convex edge piece sharper than sharp_deg (inf if none); with QN only
+        same-side edges count (n_e . n_q > 0.15; the 8 nearest pieces are tested)."""
         sel = self.T > math.radians(sharp_deg)
         out = np.full(len(Q), np.inf, np.float32)
         if not sel.any() or not len(Q):
             return out
-        A, B = self.A[sel], self.B[sel]
+        A, B, NE = self.A[sel], self.B[sel], self.NE[sel]
         tr = cKDTree(0.5 * (A + B))
+        kq = min(8 if QN is not None else 4, len(A))
         for s in range(0, len(Q), chunk):
             q = Q[s:s + chunk].astype(np.float64)
-            _d, ii = tr.query(q, k=min(4, len(A)))
+            _d, ii = tr.query(q, k=kq)
             if ii.ndim == 1:
                 ii = ii[:, None]
             a, b = A[ii], B[ii]
@@ -144,13 +162,23 @@ class EdgeField:
             L2 = np.maximum(np.sum(u * u, axis=2), 1e-12)
             t = np.clip(np.sum((q[:, None, :] - a) * u, axis=2) / L2, 0.0, 1.0)
             pr = a + u * t[..., None]
-            out[s:s + chunk] = np.sqrt(np.sum((q[:, None, :] - pr) ** 2, axis=2)).min(1)
+            dd = np.sqrt(np.sum((q[:, None, :] - pr) ** 2, axis=2))
+            if QN is not None:
+                ok = np.sum(NE[ii] * QN[s:s + chunk, None, :].astype(np.float64), axis=2) > 0.15
+                dd = np.where(ok, dd, np.inf)
+            out[s:s + chunk] = dd.min(1)
         return out
 
 
-def part_fields(V, pid, Q, qpid, sigmas, sharp_deg=25.0, log=None):
+def same_side(d):
+    """Weight of an edge whose mean normal has dot d with the texel normal (docstring item 4)."""
+    x = np.clip((d + 0.1) / 0.5, 0.0, 1.0)
+    return x * x * (3.0 - 2.0 * x)
+
+
+def part_fields(V, pid, Q, qpid, sigmas, sharp_deg=25.0, log=None, QN=None):
     """Per-part edge values at the texel points Q (n, 3) of part ids qpid (n,): returns {sigma: E (n,)} and the
-    distance to the nearest sharp convex edge of the texel's own part."""
+    distance to the nearest sharp convex edge of the texel's own part. QN (n, 3): the texel normals (same-side only)."""
     out = {s: np.zeros(len(Q), np.float32) for s in sigmas}
     dist = np.full(len(Q), np.inf, np.float32)
     for p in np.unique(qpid):
@@ -159,9 +187,10 @@ def part_fields(V, pid, Q, qpid, sigmas, sharp_deg=25.0, log=None):
         if not len(tv):
             continue
         ef = EdgeField(tv)
+        qn = None if QN is None else QN[sel]
         for s in sigmas:
-            out[s][sel] = ef.value(Q[sel], s)
-        dist[sel] = ef.dist_sharp(Q[sel], sharp_deg)
+            out[s][sel] = ef.value(Q[sel], s, QN=qn)
+        dist[sel] = ef.dist_sharp(Q[sel], sharp_deg, QN=qn)
         if log:
             log("edgemask part", int(p), "texels", len(sel), "edge pieces", len(ef.mid))
     return out, dist

@@ -111,6 +111,73 @@ def lod_objects(lv):
     return [o for o in bpy.data.collections[cn].objects if o.type == "MESH"]
 
 
+WOOD_SMOOTH = ("buttstock", "pistol_grip", "upper_handguard", "lower_handguard")
+
+
+def transfer_wood_normals():
+    """STAGE-7 FIX ROUND (craft review G18: 'on LOD2 the stock shades as visible faceted planes', a shading pop at the
+    switch): the smooth wooden parts of LOD1-3 take LOD0's shading normals (DataTransfer, custom normals, polygon-
+    interpolated along each loop's own normal), so a coarse LOD keeps LOD0's light and shade; the silhouette is its own.
+    The relief-free furniture has no hard edges except the butt / grip ends, which keep their side (projection along
+    the LOD loop normal hits the LOD0 face of the same side)."""
+    rep = {}
+    for lv in (1, 2, 3):
+        for o in list(bpy.data.collections[f"AR01_LOD{lv}"].objects):
+            if o.type != "MESH":
+                continue
+            base, _ = base_of(o.name)
+            src = bpy.data.objects.get(base)
+            if base not in WOOD_SMOOTH or src is None:
+                continue
+            md = o.modifiers.new("lod_normals", "DATA_TRANSFER")
+            md.object = src
+            md.use_object_transform = True
+            md.use_loop_data = True
+            md.data_types_loops = {"CUSTOM_NORMAL"}
+            md.loop_mapping = "POLYINTERP_LNORPROJ"
+            bl.apply_modifiers(o)
+            rep[o.name] = "custom normals from %s" % base
+    log("wood LOD normals", len(rep))
+    return rep
+
+
+def replace_mag_lods(mats):
+    import rifle_maglod as ML
+    rep = {}
+    src = ML.lod_mag_objects(0)
+    for lv in (1, 2, 3):
+        cn = f"AR01_LOD{lv}"
+        coll = bpy.data.collections[cn]
+        old = [o for o in coll.objects if o.type == "MESH" and slot_of(o) == SLOT_INDEX["M_AR01_Mag"]]
+        old_names = sorted(o.name for o in old)
+        for o in old:
+            bpy.data.objects.remove(o, do_unlink=True)
+        parts_ = ML.decimated_parts(lv, src, suffix=f"_tmp{lv}")
+        from gunlib import lodfix
+        # ONE magazine object per LOD (the parts joined, as SM_AR01_Mag_LOD<n> is), so the decimate's few overlapping
+        # UV triangles -- inside a part and between the body and the floor plate -- are separated the way rifle_mag
+        # separates them on its joined LODs (UV only: the geometry stays the shipped magazine's)
+        j = GM.join_copies(parts_, f"magazine_LOD{lv}", coll, lambda o: 0, [mats[SLOT_INDEX["M_AR01_Mag"]]], None)
+        j["gun_part"] = parts_[0]["gun_part"]
+        for lay in list(j.data.uv_layers):
+            if lay.name != "UV0":
+                j.data.uv_layers.remove(lay)
+        for o in parts_:
+            bpy.data.objects.remove(o, do_unlink=True)
+        uvfix = {j.name: lodfix.fix_uv_overlaps(j)}
+        new = [j]
+        for o in new:
+            for c in list(o.users_collection):
+                c.objects.unlink(o)
+            coll.objects.link(o)
+            o.data.materials.clear()
+            o.data.materials.append(mats[SLOT_INDEX["M_AR01_Mag"]])
+        rep[f"LOD{lv}"] = {"replaced": old_names, "with": sorted(o.name for o in new), "uv0_overlap_fix": uvfix,
+                           "tris": int(sum(len(p.vertices) - 2 for o in new for p in o.data.polygons))}
+        log("mag LOD%d" % lv, rep[f"LOD{lv}"])
+    return rep
+
+
 def main():
     sys.path.insert(0, str(ROOT / "Scripts"))
     from pipeline import lock as L
@@ -127,10 +194,16 @@ def main():
         for o in lod_objects(lv):
             o.data.materials.clear()
             o.data.materials.append(mats[slot_of(o)])
+    # STAGE-7 FIX ROUND (tech review: the twin's merged magazine below LOD0 was the part generator's coarse levels,
+    # not the shipped SM_AR01_Mag LODs): the magazine parts of LOD1-3 are replaced by the shipped magazine's own LOD
+    # recipe (rifle_maglod: LOD0 parts collapse-decimated), under the generator objects' names, so the twin, the
+    # LOD gates (G5 / b3_lod1 / S2) and the shipped SM_AR01_Mag all use the same magazine at every LOD
+    report_maglod = replace_mag_lods(mats)
+    report_wood_n = transfer_wood_normals()
     coll = bpy.data.collections.new(NAME)
     bpy.context.scene.collection.children.link(coll)
     lods = []
-    report = {"lods": {}, "hulls": [], "sockets": {}}
+    report = {"lods": {}, "hulls": [], "sockets": {}, "mag_lods": report_maglod, "wood_lod_normals": report_wood_n}
     for lv in (0, 1, 2, 3):
         objs = lod_objects(lv)
         ob = GM.join_copies(objs, NAME if lv == 0 else f"{NAME}_LOD{lv}", coll, slot_of, mats, TILE)

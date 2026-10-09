@@ -5,10 +5,10 @@
   {
    "name": "qa_check (twin LOD0..3)",
    "value": {
-    "SM_AR01_LOD0": 52870,
-    "SM_AR01_LOD1": 28442,
-    "SM_AR01_LOD2": 12638,
-    "SM_AR01_LOD3": 1184
+    "SM_AR01_LOD0": 55052,
+    "SM_AR01_LOD1": 24460,
+    "SM_AR01_LOD2": 9098,
+    "SM_AR01_LOD3": 1324
    },
    "threshold": "pass",
    "pass": true
@@ -16,17 +16,17 @@
   {
    "name": "LODs strictly descending (twin)",
    "value": [
-    52870,
-    28442,
-    12638,
-    1184
+    55052,
+    24460,
+    9098,
+    1324
    ],
    "threshold": "LOD0 > LOD1 > LOD2 > LOD3",
    "pass": true
   },
   {
    "name": "B8 rifle LOD0 tris (without the mag)",
-   "value": 46204,
+   "value": 48386,
    "threshold": "<= 50000 (target 30-45k)",
    "pass": true
   },
@@ -38,13 +38,13 @@
   },
   {
    "name": "LOD1 rifle tris (share of LOD0)",
-   "value": "21776 (47.1%)",
+   "value": "22462 (46.4%)",
    "threshold": "~45 % (gun study 5.7)",
    "pass": true
   },
   {
    "name": "LOD2 rifle tris (share of LOD0)",
-   "value": "8208 (17.8%)",
+   "value": "8450 (17.5%)",
    "threshold": "~15 % (gun study 5.7)",
    "pass": true
   },
@@ -66,7 +66,7 @@
    "value": {
     "bolt": {
      "intersecting_steps": 0,
-     "min_clearance_mm": 0.1662
+     "min_clearance_mm": 0.25
     },
     "trigger": {
      "intersecting_steps": 0,
@@ -78,7 +78,7 @@
     },
     "mag_release": {
      "intersecting_steps": 0,
-     "min_clearance_mm": 0.1791
+     "min_clearance_mm": 0.1094
     },
     "sight_rear": {
      "intersecting_steps": 0,
@@ -102,28 +102,28 @@
   },
   {
    "name": "G5 at LOD2 (study B3/G5 R5: penetration depth projected at the switch-in distance)",
-   "value": "7 intersecting pairs; deepest penetration 0.568 px at 6.762 m (cleaning_rod_LOD2/front_sight_block_LOD2 3.001 mm)",
+   "value": "5 intersecting pairs; deepest penetration 0.568 px at 6.762 m (cleaning_rod_LOD2/front_sight_block_LOD2 3.001 mm)",
    "threshold": "< 1 px at 1440p",
    "pass": true,
-   "note": "info, visible change of the intersecting parts vs LOD1 (4 headings): worst mean 0.191 px, max 2.61 px: receiver 0.191 / 2.61; magazine 0.129 / 0.559; front_sight_post 0.083 / 0.25"
+   "note": "info, visible change of the intersecting parts vs LOD1 (4 headings): worst mean 0.201 px, max 2.75 px: receiver 0.201 / 2.75; front_sight_post 0.083 / 0.25; handguard_front_band 0.045 / 0.354"
   },
   {
    "name": "G5 at LOD3 (study B3/G5 R5: penetration depth projected at the switch-in distance)",
-   "value": "27 intersecting pairs; deepest penetration 0.645 px at 20.287 m (upper_handguard_LOD3/gas_tube_LOD3 10.226 mm)",
+   "value": "28 intersecting pairs; deepest penetration 0.975 px at 20.287 m (receiver_LOD3/magazine_LOD3 15.458 mm)",
    "threshold": "< 1 px at 1440p",
    "pass": true,
-   "note": "info, visible change of the intersecting parts vs LOD2 (4 headings): worst mean 2.279 px, max 6.25 px: bolt_carrier 2.279 / 6.25; gas_tube_rear_cap 0.935 / 0.935; buttstock 0.333 / 1.031 (LOD3's blockout receiver has no ejection port, so the carrier strip seen through the port at LOD2 is covered at 20 m)"
+   "note": "info, visible change of the intersecting parts vs LOD2 (4 headings): worst mean 2.237 px, max 6.25 px: bolt_carrier 2.237 / 6.25; gas_tube_rear_cap 0.935 / 0.935; mag_catch 0.568 / 1.25 (LOD3's blockout receiver has no ejection port, so the carrier strip seen through the port at LOD2 is covered at 20 m)"
   },
   {
    "name": "C1 hull containment",
-   "value": "0 of 68,097,775 jittered 0.5 mm LOD0 samples, 0 of 47,733 LOD0-3 vertices outside",
+   "value": "0 of 67,788,083 jittered 0.5 mm LOD0 samples, 0 of 45,143 LOD0-3 vertices outside",
    "threshold": "0 and 0; 7 hulls, <= 32 vertices",
    "pass": true,
-   "note": "hull vertices [27, 27, 27, 27, 25, 27, 27]"
+   "note": "hull vertices [31, 27, 27, 27, 26, 27, 27]"
   },
   {
    "name": "S1 sockets (exported sidecar vs build)",
-   "value": "17 sockets, worst 0.0004 mm / 0.0 deg",
+   "value": "17 sockets, worst 0.0003 mm / 0.0 deg",
    "threshold": "17 = spec names; <= 0.001 mm and <= 0.001 deg",
    "pass": true
   },
@@ -156,13 +156,13 @@
   },
   {
    "name": "LOD-pop LOD0 -> LOD1",
-   "value": "size 0.3 (2.705 m): mean 0.029 px, max 0.707 px (worst of 4 headings)",
+   "value": "size 0.3 (2.705 m): mean 0.031 px, max 0.707 px (worst of 4 headings)",
    "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
    "pass": true
   },
   {
    "name": "LOD-pop LOD1 -> LOD2",
-   "value": "size 0.12 (6.762 m): mean 0.195 px, max 1.803 px (worst of 4 headings)",
+   "value": "size 0.12 (6.762 m): mean 0.18 px, max 1.803 px (worst of 4 headings)",
    "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
    "pass": true
   },
@@ -192,36 +192,36 @@
  },
  "triangles": {
   "twin": [
-   52870,
-   28442,
-   12638,
-   1184
+   55052,
+   24460,
+   9098,
+   1324
   ],
   "rifle": [
-   46204,
-   21776,
-   8208,
+   48386,
+   22462,
+   8450,
    1076
   ],
   "mag": [
    6666,
-   6666,
-   4430,
-   108
+   1998,
+   648,
+   248
   ]
  },
  "hulls": [
   {
    "name": "UCX_SM_AR01_00",
    "covers": "receiver, dust cover, rear sight, selector, carrier + handle",
-   "vertices": 27,
-   "points": 5944292
+   "vertices": 31,
+   "points": 5866469
   },
   {
    "name": "UCX_SM_AR01_01",
    "covers": "fore-end: handguards, front band, retainer, cap; barrel, gas tube, rod to the gas block",
    "vertices": 27,
-   "points": 10025076
+   "points": 10023964
   },
   {
    "name": "UCX_SM_AR01_02",
@@ -233,13 +233,13 @@
    "name": "UCX_SM_AR01_03",
    "covers": "front sight block + post + brake",
    "vertices": 27,
-   "points": 1503486
+   "points": 1503619
   },
   {
    "name": "UCX_SM_AR01_04",
    "covers": "pistol grip + trigger guard + trigger + catch",
-   "vertices": 25,
-   "points": 426129
+   "vertices": 26,
+   "points": 423572
   },
   {
    "name": "UCX_SM_AR01_05",
@@ -251,31 +251,31 @@
    "name": "UCX_SM_AR01_06",
    "covers": "merged magazine (twin only)",
    "vertices": 27,
-   "points": 1466167
+   "points": 1155471
   }
  ],
  "mass": {
-  "modelled_g": 4791.1,
+  "modelled_g": 4758.8,
   "com_B_mm": [
-   162.99,
-   0.21,
-   74.98
+   163.04,
+   0.08,
+   74.87
   ],
   "spec_mass_kg_unloaded_without_mag": 3.1,
   "parts_g": {
-   "receiver": 780.9,
+   "receiver": 830.5,
    "dust_cover": 136.8,
    "recoil_spring_button": 3.4,
-   "rivets": 2.5,
-   "receiver_rails": 7.2,
-   "bolt_carrier": 769.5,
-   "mag_catch": 16.1,
+   "rivets": 2.3,
+   "receiver_rails": 6.4,
+   "bolt_carrier": 686.8,
+   "mag_catch": 18.5,
    "rear_trunnion": 189.6,
    "rear_tang": 3.6,
    "rear_sight_block": 650.2,
    "rear_sight_leaf": 28.8,
    "rear_sight_slider": 5.3,
-   "handguard_retainer": 2.5,
+   "handguard_retainer": 2.8,
    "gas_tube_rear_cap": 37.3,
    "upper_handguard": 28.3,
    "lower_handguard": 92.6,
@@ -285,7 +285,7 @@
    "gas_block": 140.2,
    "barrel": 563.7,
    "cleaning_rod": 17.2,
-   "front_sight_block": 138.5,
+   "front_sight_block": 137.4,
    "front_sight_post": 0.5,
    "muzzle_brake": 31.9,
    "trigger": 12.7,
@@ -305,16 +305,16 @@
   {
    "socket": "CenterOfMass",
    "location_cm": [
-    16.2989,
-    -0.021,
-    7.4985
+    16.3037,
+    -0.0075,
+    7.4873
    ],
    "rotation_deg": {
     "roll": 0.0,
     "pitch": 0.0,
     "yaw": 0.0
    },
-   "d_build_mm": 0.0004,
+   "d_build_mm": 0.0003,
    "d_rot_deg": 0.0,
    "d_spec_mm": null,
    "computed": true
@@ -356,16 +356,16 @@
   {
    "socket": "Holster",
    "location_cm": [
-    16.2989,
-    -0.021,
-    7.4985
+    16.3037,
+    -0.0075,
+    7.4873
    ],
    "rotation_deg": {
     "roll": 0.0,
     "pitch": 0.0,
     "yaw": 0.0
    },
-   "d_build_mm": 0.0004,
+   "d_build_mm": 0.0003,
    "d_rot_deg": 0.0,
    "d_spec_mm": null,
    "computed": true

@@ -45,7 +45,8 @@ def B(p):
 
 
 GROUPS = {
-    "bolt": {"parts": ["bolt_carrier"], "kind": "slide", "axis": [-1, 0, 0],
+    # (stage-7: the gas piston rides with the carrier, bone 'bolt')
+    "bolt": {"parts": [n for n in ("bolt_carrier", "gas_piston") if n in G], "kind": "slide", "axis": [-1, 0, 0],
              "range": [0.0, rec["bolt_carrier"]["joint"]["travel_mm"]], "row": "sliding"},
     "trigger": {"parts": ["trigger"], "kind": "rot", "pivot": B([318.0, 0, -20.0]), "axis": [0, 1, 0],
                 "range": [0.0, 12.0], "row": "hinge"},

@@ -7,7 +7,7 @@
 - B2 rigid skin: from the build report (qa_skeletal max_influences=1 + gunlib.rig rigid checks) and re-read: every
   imported vertex in exactly one group;
 - clips: every A_AR01_*.fbx re-imported, every bone at every frame vs rifle_clips (<= 0.01 mm, <= 0.01 deg), first and
-  last frame = rest, frame ranges; B3 coverage (every clip value inside the swept range);
+  last frame = rest, frame ranges (stage-7: the selector may be held at one detent through a clip); B3 coverage (every clip value inside the swept range);
 - B4 / B5 sockets: SK sidecar sockets on the spec bones, location / rotation vs the spec (computed CoM / Holster vs the
   stage-4 value) <= 0.001 mm / 0.001 deg; Muzzle on the bore axis; Sight = the socket S2 / B4 measured;
 - SM_AR01.fbx re-imported: LOD triangles = Blender's, 7 UCX hulls; its sidecar's 17 sockets vs the build (S1);
@@ -163,7 +163,7 @@ def main():
                 E = E @ bas.get(pb.name, np.eye(4))
                 werr_t = max(werr_t, float(np.abs(t - E[:3, 3]).max()))
                 werr_r = max(werr_r, angle_deg(R, E[:3, :3]))
-        rest = CL.basis_from(frames[0][1]) == {} and CL.basis_from(frames[-1][1]) == {}
+        rest = CL.loop_rest(frames)              # stage-7: the selector held at AUTO is allowed (rifle_clips)
         ok = fr is not None and fr[1] - fr[0] == frames[-1][0] - frames[0][0] and werr_t <= 0.01 and werr_r <= 0.01 and rest
         ok_clips &= ok
         cres[cname] = {"fps": fps, "frames_expected": [frames[0][0], frames[-1][0]], "frames_fbx": fr,

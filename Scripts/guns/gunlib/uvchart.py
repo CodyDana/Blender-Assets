@@ -626,6 +626,39 @@ def make_islands(pm: PartMesh, fr, cls) -> dict:
             "absorbed_faces": absorbed}
 
 
+def split_long(pm: PartMesh, lab, luv, limit_of):
+    """Split islands whose longest chart extent exceeds limit_of(faces) (mm) at the median face centre along that
+    axis, repeatedly (stage-7, AR-01: one over-long island capped the whole set's packing scale -- the packer can only
+    place an island whose longest side fits the atlas -- so the Metal set fell to fill 0.65). Returns (lab, n_cuts)."""
+    lab = np.asarray(lab).copy()
+    cuts = 0
+    for _ in range(64):
+        changed = False
+        nxt = int(lab.max()) + 1
+        for l in np.unique(lab):
+            F = np.nonzero(lab == l)[0]
+            if len(F) < 2:
+                continue
+            L = np.isin(pm.loop_f, F)
+            u = luv[L]
+            ext = u.max(0) - u.min(0)
+            ax = int(np.argmax(ext))
+            if ext[ax] <= limit_of(F):
+                continue
+            cf = np.add.reduceat(luv[:, ax], pm.ps)[F] / pm.pt[F]
+            m = float(np.median(cf))
+            hi = F[cf > m]
+            if len(hi) == 0 or len(hi) == len(F):
+                continue
+            lab[hi] = nxt
+            nxt += 1
+            cuts += 1
+            changed = True
+        if not changed:
+            break
+    return lab, cuts
+
+
 def uv_area(luv, pm: PartMesh) -> np.ndarray:
     """Per-face UV area of loop UVs (shoelace over each polygon)."""
     nl = len(pm.loop_v)

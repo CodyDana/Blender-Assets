@@ -5,11 +5,11 @@
   {
    "name": "M7 rifle bytes = the shipped stage-5 sha256",
    "value": {
-    "rifle": "4c160d36163189c2af3cb42e7188c77d527b6210d0429d721403ad19a5a2f1ff",
-    "recorded": "4c160d36163189c2af3cb42e7188c77d527b6210d0429d721403ad19a5a2f1ff",
-    "mag": "4b0b4d190fe42ccb9c888931b99e6d4cde3752cd192fcda9adec971ff2ad226e",
-    "mag_recorded": "4b0b4d190fe42ccb9c888931b99e6d4cde3752cd192fcda9adec971ff2ad226e",
-    "mag_built_from_rifle_sha": "4c160d36163189c2af3cb42e7188c77d527b6210d0429d721403ad19a5a2f1ff"
+    "rifle": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c",
+    "recorded": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c",
+    "mag": "7a4f60c7adb21371056efe26352fff8c79d5df1436865641eedd610123867fc3",
+    "mag_recorded": "7a4f60c7adb21371056efe26352fff8c79d5df1436865641eedd610123867fc3",
+    "mag_built_from_rifle_sha": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c"
    },
    "threshold": "equal (and the magazine was built from these rifle bytes)",
    "pass": true
@@ -149,8 +149,8 @@
     "pairs": {
      "rifle LOD0 / mag LOD0": {
       "steps": 49,
-      "intersecting_steps": 3,
-      "with_catch_only": 3
+      "intersecting_steps": 0,
+      "with_catch_only": 0
      },
      "rifle LOD1 / mag LOD1": {
       "steps": 49,
@@ -174,8 +174,8 @@
      },
      "rifle LOD1 / mag LOD0": {
       "steps": 49,
-      "intersecting_steps": 3,
-      "with_catch_only": 3
+      "intersecting_steps": 2,
+      "with_catch_only": 2
      },
      "rifle LOD1 / mag LOD2": {
       "steps": 49,
@@ -201,42 +201,6 @@
     "catch_contacts": [
      {
       "pair": [
-       0,
-       0
-      ],
-      "step": [
-       "rock",
-       -1.25
-      ],
-      "triangle_pairs": 8,
-      "depth_mm": 0.004
-     },
-     {
-      "pair": [
-       0,
-       0
-      ],
-      "step": [
-       "rock",
-       -1.0
-      ],
-      "triangle_pairs": 17,
-      "depth_mm": 0.041
-     },
-     {
-      "pair": [
-       0,
-       0
-      ],
-      "step": [
-       "rock",
-       -0.75
-      ],
-      "triangle_pairs": 8,
-      "depth_mm": 0.0
-     },
-     {
-      "pair": [
        1,
        0
       ],
@@ -258,18 +222,6 @@
       ],
       "triangle_pairs": 17,
       "depth_mm": 0.041
-     },
-     {
-      "pair": [
-       1,
-       0
-      ],
-      "step": [
-       "rock",
-       -0.75
-      ],
-      "triangle_pairs": 8,
-      "depth_mm": 0.0
      }
     ],
     "catch_contacts_lod2_3 (px rule)": {
@@ -305,8 +257,8 @@
     "pairs": {
      "rifle LOD0 / mag LOD0": {
       "steps": 49,
-      "intersecting_steps": 3,
-      "with_catch_only": 3
+      "intersecting_steps": 0,
+      "with_catch_only": 0
      },
      "rifle LOD1 / mag LOD1": {
       "steps": 49,
@@ -330,8 +282,8 @@
      },
      "rifle LOD1 / mag LOD0": {
       "steps": 49,
-      "intersecting_steps": 3,
-      "with_catch_only": 3
+      "intersecting_steps": 2,
+      "with_catch_only": 2
      },
      "rifle LOD1 / mag LOD2": {
       "steps": 49,
@@ -371,7 +323,7 @@
      ],
      [
       17.0,
-      19
+      21
      ],
      [
       16.5,
@@ -477,21 +429,53 @@
    },
    "threshold": "no hit",
    "pass": true
+  },
+  {
+   "name": "Twin magazine = SM_AR01_Mag at every LOD (stage-7 fix round)",
+   "value": {
+    "LOD0": {
+     "twin_tris": 6666,
+     "mag_tris": 6666,
+     "max_dev_mm": 0.0,
+     "pass": true
+    },
+    "LOD1": {
+     "twin_tris": 1998,
+     "mag_tris": 1998,
+     "max_dev_mm": 0.0,
+     "pass": true
+    },
+    "LOD2": {
+     "twin_tris": 648,
+     "mag_tris": 648,
+     "max_dev_mm": 0.0,
+     "pass": true
+    },
+    "LOD3": {
+     "twin_tris": 248,
+     "mag_tris": 248,
+     "max_dev_mm": 0.0,
+     "pass": true
+    }
+   },
+   "threshold": "per LOD: equal triangles; vertex sets within 0.001 mm both ways",
+   "pass": true,
+   "note": "the static twin's merged magazine at LOD n is the shipped SM_AR01_Mag_LOD n (rifle_maglod: one recipe for both)"
   }
  ],
  "failed": [],
  "status": "pass",
  "files": {
   "Exports/Guns/AR01/SM_AR01_Mag.fbx": {
-   "sha256": "4b0b4d190fe42ccb9c888931b99e6d4cde3752cd192fcda9adec971ff2ad226e",
-   "bytes": 470156
+   "sha256": "7a4f60c7adb21371056efe26352fff8c79d5df1436865641eedd610123867fc3",
+   "bytes": 470284
   },
   "Exports/Guns/AR01/SM_AR01_Mag.sockets.json": {
    "sha256": "329c17070981faf753fb37fe83d0aa9cd415a4dbb618752c184521d13893d9ce",
    "bytes": 3064
   },
   "Exports/Guns/AR01/SM_AR01.fbx (input)": {
-   "sha256": "4c160d36163189c2af3cb42e7188c77d527b6210d0429d721403ad19a5a2f1ff"
+   "sha256": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c"
   }
  },
  "build_report": "scratch/mag/mag_report.json"

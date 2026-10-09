@@ -110,7 +110,7 @@ def _try(islands, scale, size, cell, d, rotate=True):
 
 
 def pack(tris: Sequence[np.ndarray], size: int, gap_px: int, cell_px: int = 4, rotate=True, iters=9,
-         scale_hi=None) -> Dict:
+         scale_hi=None, refine=0) -> Dict:
     """tris: per island (n, 3, 2) coordinates (any unit). Returns {'scale' (texels per unit), 'affine' [2x3 per island,
     unit -> atlas UV 0..1], 'fill' (triangle area / atlas), 'placements'}."""
     tris = [np.asarray(t, float) for t in tris]
@@ -138,6 +138,7 @@ def pack(tris: Sequence[np.ndarray], size: int, gap_px: int, cell_px: int = 4, r
         r = _try(isl, s_hi, size, cell_px, d, rotate)
         if r is not None:
             best, best_s, iters = r, s_hi, 0
+    s_top = s_hi
     for _ in range(iters):
         s = math.sqrt(s_lo * s_hi)
         r = _try(isl, s, size, cell_px, d, rotate)
@@ -145,6 +146,25 @@ def pack(tris: Sequence[np.ndarray], size: int, gap_px: int, cell_px: int = 4, r
             s_hi = s
         else:
             s_lo, best, best_s = s, r, s
+    if refine and best_s < s_top * 0.999:
+        # greedy packing is not monotonic in the scale (a slightly larger scale often packs where the bisection's probe
+        # failed), and the island order matters: walk down from the top scale in 1.5 % steps with two orders (longest
+        # side first; largest area first) and keep the first that fits above the bisection's result
+        orders = [order, np.lexsort((-np.max(ext, axis=1), -area))]
+        s = s_top
+        for _ in range(int(refine)):
+            if s <= best_s * 1.001:
+                break
+            hit = None
+            for od in orders:
+                r = _try(dict(isl, order=od), s, size, cell_px, d, rotate)
+                if r is not None:
+                    hit = r
+                    break
+            if hit is not None:
+                best, best_s = hit, s
+                break
+            s *= 0.985
     aff = []
     for i in range(len(tris)):
         rot, x, y = best[i]

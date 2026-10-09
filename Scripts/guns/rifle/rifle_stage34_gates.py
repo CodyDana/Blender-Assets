@@ -216,6 +216,33 @@ def stage3():
                       rp["pass"], "value ratios survive the recolour (detail), per-part hue is baked-BC only: stage 9 "
                                   "default instance = Use Original Baked Colours ON (default_path_vs_bc in the record)"))
     G.extend(realism_tex_gates(uv))
+    # stage-7 fix round: the wear audit (rifle_paint.wear_audit) on every set, the magazine and the wood included
+    for st in ("Metal", "Mag", "Furniture"):
+        wa = (paint or {}).get(st, {}).get("wear_audit")
+        if wa is None:
+            G.append(gate(f"stage-7 wear audit {st}", "missing (paint without wear_audit)", "present", False))
+            continue
+        if "interior_bare_clusters" in wa:
+            G.append(gate(f"stage-7 wear: no bare steel on {st} panel interiors",
+                          {k: wa[k] for k in ("interior_bare_clusters", "interior_bare_texels")},
+                          "0 clusters of bare texels > 2 mm from any sharp convex edge outside the wear zones",
+                          wa["interior_bare_clusters"] == 0,
+                          "geometric same-side edge field (gunlib.edgemask); craft review item 1, tech major"))
+            G.append(gate(f"stage-7 wear: largest bare-steel blob on {st} lacquer",
+                          f"{wa['largest_bare_blob_mm2']} mm2 ({wa['largest_bare_blob_part']}); {wa['bare_blobs']} "
+                          f"blobs, {wa['lacquer_bare_fraction']:.3%} of the lacquer",
+                          "<= 8 mm2 (an edge fleck, not a patch)", wa["largest_bare_blob_mm2"] <= 8.0))
+        if "wood_largest_light_blob_mm2" in wa:
+            G.append(gate("stage-7 wear: wood has no stray grey chips (and no metallic texel)",
+                          {k: wa.get(k) for k in ("wood_grey_blobs", "wood_largest_grey_blob_mm2", "wood_metallic_texels",
+                                                  "wood_light_blobs", "wood_largest_light_blob_mm2")},
+                          "largest blob that lost the stain's chroma (< 0.5 x its part's median saturation) <= 8 mm2; "
+                          "0 metallic texels (light blobs: info, the worn-through handling zones)",
+                          wa.get("wood_largest_grey_blob_mm2", 1e9) <= 8.0 and wa["wood_metallic_texels"] == 0))
+        if "charging_knob_bare_fraction" in wa:
+            G.append(gate("stage-7 finish: charging knob bare steel", wa["charging_knob_bare_fraction"],
+                          "<= 0.25 (tip and edges only; was 0.79 in look_polish)",
+                          wa["charging_knob_bare_fraction"] <= 0.25))
     G.append(gate("renders only from the baked maps", "review/tex/*.png via rifle_texrender.py (game materials on "
                   "T_AR01_*; no procedural shading)", "true", True))
     status = "pass" if all(g["pass"] for g in G) else "fail"

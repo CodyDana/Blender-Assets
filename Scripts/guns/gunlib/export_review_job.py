@@ -22,7 +22,8 @@ job.json:
                       {"mag_socket": {"location_B_mm": [...], "matrix_rows": 3x3}},
               "look": "tex" | "wire",
               "lights": {"rig": "rough", "bg_rgb", "env", "k", "dist_m", "target_M"} |
-                        {"rig": "l5", "bg_rgb", "env", "k", "key_elev_deg", "side": "right" | "left" | "top"}}]}
+                        {"rig": "l5", "bg_rgb", "env", "k", "key_elev_deg", "side": "right" | "left" | "top",
+                         "target_M": optional rig centre (default the gun's middle), "fill": optional weak fill W}}]}
 """
 from __future__ import annotations
 
@@ -90,6 +91,7 @@ for o in import_fbx(EXP / JOB["mag_fbx"]):
 print("[export_review] mag LODs", sorted(MAG))
 
 ACTS = {}
+CLIPARM = {}
 for c in JOB.get("clips", []):
     objs = import_fbx(EXP / f"{c}.fbx")
     a2 = next(o for o in objs if o.type == "ARMATURE")
@@ -97,8 +99,16 @@ for c in JOB.get("clips", []):
     act.name = c
     act.use_fake_user = True
     ACTS[c] = act
+    # stage-7: the clip's own armature is kept (hidden). Blender's importer takes an animation FBX's node defaults
+    # (the exporter writes the clip's first-frame pose there) as the bones' rest, so the action alone, put on the
+    # mesh's skeleton, loses any pose the clip holds from its first frame (the selector held at AUTO read as SAFE).
+    # The clip armature's ABSOLUTE bone matrices are what Unreal plays; set_clip copies them
     for o in objs:
-        bpy.data.objects.remove(o, do_unlink=True)
+        if o is a2:
+            o.hide_render = True                  # (not hide_viewport: a viewport-hidden armature is not evaluated)
+            CLIPARM[c] = o
+        else:
+            bpy.data.objects.remove(o, do_unlink=True)
 print("[export_review] clips", {k: tuple(v.frame_range) for k, v in ACTS.items()})
 
 # game materials from the shipped textures, one per material base name
@@ -191,6 +201,19 @@ def rest(arm):
 
 
 def set_clip(arm, name, frame):
+    if name in CLIPARM:
+        ca = CLIPARM[name]
+        off = int(round(ACTS[name].frame_range[0]))
+        sc.frame_set(int(frame) + off)
+        bpy.context.view_layer.update()
+        rest(arm)
+        for pb in arm.pose.bones:                 # parents first (Blender's bone order)
+            cpb = ca.pose.bones.get(pb.name)
+            if cpb is None:
+                continue
+            pb.matrix = arm.matrix_world.inverted() @ ca.matrix_world @ cpb.matrix
+            bpy.context.view_layer.update()
+        return
     act = ACTS[name]
     arm.animation_data.action = act
     try:
@@ -297,10 +320,17 @@ def lights(cam, L):
     up = np.array(Mw.col[1][:3])
     back = np.array(Mw.col[2][:3])
     rgt, up, back = (v / np.linalg.norm(v) for v in (rgt, up, back))
-    c = np.array((0.2, 0.0, 0.0))
+    # (stage-7 fix round, review item 7: the close-up set and the realism views use this rig too, centred on the
+    # shot's own target instead of the gun's middle; the key / rim distances stay the L5 rig's own, so the light the
+    # colour was calibrated under reaches every view unchanged)
+    c = np.array(B(L["target_M"])) if "target_M" in L else np.array((0.2, 0.0, 0.0))
     e = math.radians(float(L.get("key_elev_deg", 70.0)))
     RD.area_light("Key", tuple(c + 1.4 * (0.05 * rgt + math.cos(e) * back + math.sin(e) * up)), tuple(c), 2.4, 60 * k)
     RD.area_light("Rim", tuple(c - back + 0.6 * up), tuple(c), 1.5, 10 * k)
+    if float(L.get("fill", 0.0)) > 0.0:
+        # optional weak fill from the camera side, low (opens a port's interior without lifting the flats much)
+        RD.area_light("Fill", tuple(c + 1.2 * (0.35 * rgt + 0.9 * back - 0.25 * up)), tuple(c), 1.5,
+                      float(L["fill"]) * k)
 
 
 # ------------------------------------------------------------------------------------------------ shots

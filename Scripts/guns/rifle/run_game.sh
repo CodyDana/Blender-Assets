@@ -64,7 +64,8 @@ if want gates; then
   grep -E "G5-visible" "$LOG/g5_visible.log"
   run_blender game_gates "$BL" --python "$HERE/rifle_game_gates.py"
   grep -E "AR01-gates" "$LOG/game_gates.log" | cut -c1-300
-  run_blender b3_lod1 "$BL" --python "$HERE/rifle_b3.py" -- --suffix _LOD1 --out "$W/scratch/b3_lod1.json"
+  # (stage-7: --collection: after stage 5 the blend also holds SK_AR01_LOD1, which the suffix alone would sweep as a part)
+  run_blender b3_lod1 "$BL" --python "$HERE/rifle_b3.py" -- --collection AR01_LOD1 --suffix _LOD1 --out "$W/scratch/b3_lod1.json"
   # G5 on the shipped LOD0 triangles (the UV stage triangulates: the form gates measured Blender's own loop triangles)
   run_blender b3_lod0_tri "$BL" --python "$HERE/rifle_b3.py" -- --collection AR01_Parts --quick --out "$W/scratch/b3_lod0_tri.json"
 fi

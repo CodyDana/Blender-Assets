@@ -117,13 +117,17 @@ def frame_for(name, pm):
     return UC.box_frame()
 
 
+LONG_FRAC = 0.80                 # stage-7: longest island side <= 80 % of the atlas at the set's capped scale
+
+
 def visibility(parts, pms):
     """Per part: bool per face (some ray escapes in some configuration)."""
     names = list(parts)
     rec = {n: part_rec(parts[n]) for n in names}
     bolt_mm = rec.get("bolt_carrier", {}).get("joint", {}).get("travel_mm", 103.25)
     piv_sel = np.array([282.8, 0.0, -7.8]) - np.array(RS.GRIP_M)
-    configs = {"rest": {}, "bolt_back": {"bolt_carrier": F.trans_matrix([-1, 0, 0], bolt_mm)},
+    configs = {"rest": {}, "bolt_back": {"bolt_carrier": F.trans_matrix([-1, 0, 0], bolt_mm),
+                                         "gas_piston": F.trans_matrix([-1, 0, 0], bolt_mm)},
                "mag_out": {"magazine": None, "magazine_floor_plate": None},
                "selector_down": {"selector": F.rot_matrix(piv_sel, [0, 1, 0], 32.0)}}
     vis = {n: np.zeros(pms[n].nf, bool) for n in names}
@@ -145,19 +149,11 @@ def visibility(parts, pms):
                 N = N @ M[:3, :3].T
             o = UB.openness(C, N, tree)
             idx = np.nonzero(todo)[0]
-            # realism-fix round (2026-10-07): a face whose CENTROID is covered (a long sliver of the receiver wall
-            # whose centre lay under a rivet head) was classed hidden (E, 1/7 the density) and printed as a lit wedge
-            # from the dimple to the well's corner; such faces are tried again at points near each corner
-            rem = np.nonzero(o <= 0)[0]
-            if len(rem):
-                fi = idx[rem]
-                for j in range(3):
-                    Pj = pm.V[pm.loop_v[pm.ps[fi] + np.minimum(j, pm.pt[fi] - 1)]]
-                    Cj = 0.75 * Pj + 0.25 * pm.fc[fi]
-                    if M is not None:
-                        Cj = (np.c_[Cj, np.ones(len(Cj))] @ M.T)[:, :3]
-                    oj = UB.openness(Cj, N[rem], tree)
-                    o[rem[oj > 0]] = 1.0
+            # (the paused realism-fix round's corner retry -- a face whose CENTROID is covered tried again near its
+            # corners -- is withdrawn in the stage-7 fix round: it re-classed ~600 mostly interior faces next to the
+            # openings and fragmented their islands (1601 -> 1846), dropping the Metal pack to fill 0.65 under the 0.70
+            # gate and Mag to 0.636. The wedge it chased on the receiver wall came from the 16 px bake margin
+            # (rifle_bake MARGIN), not from the face's class)
             vis[n][idx[o > 0]] = True
             nvis += int((o > 0).sum())
         log("visibility", cname, "newly visible", nvis, "%.1fs" % (time.time() - t0))
@@ -204,6 +200,18 @@ def main():
                         for z, nz, v in zip(zM, pm.fn[:, 2], vis[n])])
         fr = frame_for(n, pm)
         r = UC.make_islands(pm, fr, cls)
+        # stage-7: no island longer than LONG_FRAC of the atlas at the set's capped scale (UC.split_long)
+        cfg = RS.SETS[st]
+        ref = max(cfg["classes"].values())
+        cap = min(RS.DENSITY_CEIL * cfg["bands"][c][1] / (10.0 * cfg["classes"][c] / ref) for c in cfg["classes"])
+        lim_units = LONG_FRAC * max(cfg["sizes"]) / cap
+
+        def limit_of(F, cls=cls, cfg=cfg, ref=ref, lim_units=lim_units):
+            c = int(np.bincount(cls[F]).argmax())          # the island's class (as the packer weighs it)
+            return lim_units / (cfg["classes"][RS.CODE_CLASS[c]] / ref)
+        r["lab"], n_long = UC.split_long(pm, r["lab"], r["luv"], limit_of)
+        if n_long:
+            log("long islands split", n, n_long)
         r["cls"] = cls
         r["frame"] = fr
         r["base"] = gid
@@ -292,7 +300,15 @@ def main():
         # density ceiling: px/cm of class c = 10 x scale x k_c (charts in mm), so the scale is capped at
         # min_c(DENSITY_CEIL x band top_c / (10 k_c))
         cap = min(RS.DENSITY_CEIL * cfg["bands"][c][1] / (10.0 * cfg["classes"][c] / ref) for c in cfg["classes"])
-        res = RPK.pack(tris, size, cfg["gap_px"][size], cfg["cell_px"][size], iters=8, scale_hi=cap)
+        # (stage-7: refine=24 -- the bolt / trunnion / visibility round left the bisection at fill 0.65 on Metal)
+        import os
+        if os.environ.get("AR01_UV_DUMP"):           # debug: the packer's input for offline tests
+            np.save(SCRATCH / "uv" / f"pack_in_{st}.npy", np.array(tris + [None], dtype=object)[:-1], allow_pickle=True)
+            (SCRATCH / "uv" / f"pack_in_{st}.json").write_text(json.dumps(
+                {"size": size, "gap": cfg["gap_px"][size], "cell": cfg["cell_px"][size], "cap": cap,
+                 "ids": [int(i) for i in ids], "meta": {str(k): {"part": v["part"], "cls": v["cls"]}
+                                                         for k, v in gmeta.items()}}))
+        res = RPK.pack(tris, size, cfg["gap_px"][size], cfg["cell_px"][size], iters=8, scale_hi=cap, refine=24)
         sizes[st]["scale_cap_px_per_unit"] = round(cap, 4)
         log("pack", st, size, "islands", len(ids), "fill %.3f" % res["fill"], "%.1fs" % (time.time() - tp0))
         for iid, A in zip(ids, res["affine"]):

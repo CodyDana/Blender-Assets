@@ -77,7 +77,9 @@ def clip_fire():
     bolt = {0: 0.0, 1: 0.0, 2: 0.68 * TRAVEL, 3: TRAVEL, 4: 0.7 * TRAVEL, 5: 0.3 * TRAVEL, 6: 0.0, 7: 0.0, 8: 0.0}
     trig = {0: 0.0, 1: 12.0, 2: 12.0, 3: 12.0, 4: 12.0, 5: 12.0, 6: 12.0, 7: 6.0, 8: 0.0}
     frames = [(f, {"bolt": bolt[f], "trigger": trig[f]}) for f in range(9)]
-    notes = [("Fire", 1), ("ShellEject", 2), ("TriggerReset", 8)]
+    # stage-7 fix round (tech review): the case leaves the port once the carrier has pulled it back past the port,
+    # i.e. at the rear stop (frame 3, full travel), not at frame 2 (the carrier only starting back)
+    notes = [("Fire", 1), ("ShellEject", 3), ("TriggerReset", 8)]
     return frames, notes, FPS_FIRE
 
 
@@ -151,12 +153,38 @@ def clip_reload(empty=False):
     return frames, notes, FPS
 
 
+# stage-7 fix round (craft review item 4): the clips that move the carrier (Fire, Charge, ReloadEmpty) ran with the
+# selector at SAFE (lever up), which on the real pattern blocks the trigger and the carrier's rearward travel. Every clip
+# except A_AR01_Selector now HOLDS the selector at the AUTO detent for its whole length (first frame = last frame, so
+# looping and blending are unaffected); the game keeps the player's real fire mode with a per-bone layered blend of the
+# 'selector' bone from the A_AR01_Selector poses (README, AnimBP notes). The static SM_AR01 and the bind pose stay on
+# SAFE as the sheet draws them.
+SELECTOR_HELD_DEG = 16.0
+
+
+def hold_selector(frames, deg=SELECTOR_HELD_DEG):
+    return [(f, dict(v, selector=deg)) for f, v in frames]
+
+
+def loop_rest(frames):
+    """True when the clip starts and ends in the same pose and that pose is the rest pose apart from a selector held
+    at one detent through the whole clip (the clip's own selector track, or the held AUTO)."""
+    a, b = frames[0][1], frames[-1][1]
+    sel = {round(float(v.get("selector", 0.0)), 6) for _f, v in frames}
+    no_sel = (lambda v: {k: x for k, x in v.items() if k != "selector"})
+    held = len(sel) == 1 or (abs(a.get("selector", 0.0)) < 1e-9 and abs(b.get("selector", 0.0)) < 1e-9)
+    return basis_from(no_sel(a)) == {} and basis_from(no_sel(b)) == {} and held and \
+        abs(a.get("selector", 0.0) - b.get("selector", 0.0)) < 1e-9
+
+
 def configure(travel, rock, insert):
     global TRAVEL, ROCK, INSERT
     TRAVEL, ROCK, INSERT = float(travel), float(rock), float(insert)
 
 
 def all_clips():
-    return {"A_AR01_Fire": clip_fire(), "A_AR01_Charge": clip_charge() + (FPS,),
-            "A_AR01_Reload": clip_reload(False), "A_AR01_ReloadEmpty": clip_reload(True),
+    def held(c):
+        return (hold_selector(c[0]),) + tuple(c[1:])
+    return {"A_AR01_Fire": held(clip_fire()), "A_AR01_Charge": held(clip_charge() + (FPS,)),
+            "A_AR01_Reload": held(clip_reload(False)), "A_AR01_ReloadEmpty": held(clip_reload(True)),
             "A_AR01_Selector": clip_selector()}

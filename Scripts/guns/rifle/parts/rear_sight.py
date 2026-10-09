@@ -308,7 +308,9 @@ def retainer() -> PartDef:
     # ~1.5x wider than ours with a big open slot; the LEFT panel zoom reads ~7.5 mm across the bars
     sol = [MS.prism(_stadium(boss_c, end_c, 3.9, 3.5), yb - t, yb)]
     s0, s1 = np.add(boss_c, u * 0.27 * L), np.add(boss_c, u * 0.80 * L)
-    cut = [MS.prism(_stadium(s0, s1, 1.65, 1.65, 7), yb - t - 1.0, yb + 0.5)]       # open slot (3/4 view, LEFT)
+    # stage-7 fix round (craft review note: the real lever is solid with a pressed / recessed face; the sheet's centre
+    # reads as a recess, not a see-through slot): the slot is a 0.7 mm deep recess with a floor in the 1.6 mm link
+    cut = [MS.prism(_stadium(s0, s1, 1.65, 1.65, 7), yb - t - 1.0, yb - t + 0.7)]   # recess (3/4 view, LEFT)
     # prominent pivot pin: collar + domed head (c2's big round pin head at the block's top front corner)
     y0 = yb - t + 0.05
     # last shape round: a lower head (1.45 proud of the link, was 2.35: with the left boss it read as a pair of round

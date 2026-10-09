@@ -209,11 +209,13 @@ def gas_tube() -> PartDef:
 
 
 def gas_piston() -> PartDef:
-    """Piston head inside the gas tube, seen through the vents (static here; 0.4 mm radial clearance)."""
+    """Piston head inside the gas tube, seen through the vents (0.4 mm radial clearance). Stage-7 fix round: it rides
+    with the carrier (bone 'bolt', as the real piston is fixed to the carrier), so the vents show it move in Fire /
+    Charge; at full travel it is still inside the tube (X 551.75-585.75 of the tube's 519-691)."""
     return PartDef("gas_piston", [xcyl(0.0, TUBE_Z, 8.0, 655.0, 689.0, 32)], cls="M-chamfer",
-                   recipe=[(0.3, 1, 30.0)], spec_id="gas_tube",
-                   joint={"type": "sliding", "parent": "gas_tube", "clearance_mm": [0.15, 0.4],
-                          "note": "rides with the carrier in reality; static at this stage"})
+                   recipe=[(0.3, 1, 30.0)], spec_id="gas_tube", bone="bolt",
+                   joint={"type": "sliding", "parent": "gas_tube", "axis_M": [-1, 0, 0], "clearance_mm": [0.15, 0.4],
+                          "note": "fixed to the carrier (bone bolt): moves with it"})
 
 
 def gas_block() -> PartDef:

@@ -503,6 +503,11 @@ def main():
     gates.append(gate("mag LOD screen sizes derived from the rifle's", m["lod_screen_sizes"],
                       "size_mag = size_rifle x r_mag / r_rifle", True))
     gates.append(gate("B10 mag names", m["B10_names"], "no hit", m["B10_names"]["pass"]))
+    tw = m.get("twin_mag_equal", {"pass": False, "lods": "missing (rifle_mag.twin_mag_check did not run)"})
+    gates.append(gate("Twin magazine = SM_AR01_Mag at every LOD (stage-7 fix round)", tw["lods"],
+                      "per LOD: equal triangles; vertex sets within 0.001 mm both ways", tw["pass"],
+                      "the static twin's merged magazine at LOD n is the shipped SM_AR01_Mag_LOD n (rifle_maglod: one "
+                      "recipe for both)"))
     out["gates"] = gates
     out["failed"] = [g["name"] for g in gates if not g["pass"]]
     out["status"] = "pass" if not out["failed"] else "fail"

@@ -133,8 +133,15 @@ def ear_outline() -> np.ndarray:
 
 
 def window_outline() -> np.ndarray:
-    P = np.array([(sx(813.4), WIN_Z0), (sx(827.2), WIN_Z0), (sx(827.2), 21.8), (sx(816.4), 21.8)], float)
-    return G.fillet(G.ccw(P), 1.0, 5, radii=[2.2, 2.6, 3.0, 2.4])
+    # stage-7 fix round (craft review: 'a near-rectangle; the sheet's window is a trapezoid whose rear edge runs
+    # parallel to the tower's raked rear, narrow top, wide bottom'): the rear edge now runs exactly with the rake
+    # (ear_outline: 10.2 mm over 27.4 mm, i.e. 3.57 mm over the window's 9.6 mm), the bottom 0.6 mm wider at the rear,
+    # and the corner rounds tighter (2.2-3.0 -> 1.2-1.8) so the slant reads instead of a rounded box
+    rake = (816.5 - 806.3) / (37.0 - 9.6)
+    xb = 812.8
+    P = np.array([(sx(xb), WIN_Z0), (sx(827.2), WIN_Z0), (sx(827.2), 21.8), (sx(xb + rake * (21.8 - WIN_Z0)), 21.8)],
+                 float)
+    return G.fillet(G.ccw(P), 1.0, 5, radii=[1.2, 1.6, 1.8, 1.4])
 
 
 def box_section(inset=0.0) -> np.ndarray:

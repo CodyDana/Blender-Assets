@@ -124,6 +124,7 @@ def lod_objects(lv):
 
 
 # clips: rifle_clips.py
+REST_FRAME = -100          # stage-7: the scene frame while the clips are written (before every clip)
 import rifle_clips as CL  # noqa: E402
 from rifle_clips import basis_from  # noqa: E402
 
@@ -353,7 +354,7 @@ def main():
         act = RG.key_action(arm, cname, [(f, basis_from(v)) for f, v in frames])
         actions.append(act)
         f0, f1 = frames[0][0], frames[-1][0]
-        end_rest = basis_from(frames[-1][1]) == {} and basis_from(frames[0][1]) == {}
+        end_rest = CL.loop_rest(frames)          # rest at both ends (a held selector detent allowed)
         rep["clips"][cname] = {"fps": fps, "frames": [f0, f1], "seconds": round((f1 - f0) / fps, 4),
                                "starts_and_ends_at_rest": end_rest,
                                "values": {str(f): {k: round(float(x), 4) for k, x in v.items() if x} for f, v in frames}}
@@ -414,8 +415,16 @@ def main():
                             "lod_screen_sizes": sres["lod_screen_sizes"]}
     log("SM_AR01 exported", sres["warnings"])
     # ------------------------------------------------------------ the skeletal set
+    # stage-7 fix round (tech review: every A_*.fbx carried the clip's FRAME-1 pose as its bones' node defaults, the
+    # scene sat on frame 1): the scene is parked before every clip, so Blender's exporter takes the clip's START pose
+    # (frame 0) instead -- the bind pose for every bone except a selector held at AUTO (measured: Lcl Rotation Y 16 on
+    # 'selector', every other bone at rest). Unreal reads the baked curves (absolute) and is unaffected; Blender's
+    # importer treats node defaults as rest, so Blender-side readers (gunlib/export_review_job, README) take the
+    # clip armature's absolute bone matrices
+    bpy.context.scene.frame_current = REST_FRAME
     written = SKP.export_skeletal_set(str(EXPORTS), arm, meshes, SK, actions=actions, frame_rate=FPS,
                                       fps_by_action={k: v[2] for k, v in clips.items()})
+    bpy.context.scene.frame_current = 0
     # physics proxy (fan method): one 250 mm cube weighted to 'body'
     proxy = proxy_mesh(arm, mats[0], coll)
     pw = SKP.export_skeletal_set(str(EXPORTS / "Physics"), arm, [proxy], "SK_AR01_PhysicsProxy", frame_rate=FPS)

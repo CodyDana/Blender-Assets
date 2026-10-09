@@ -72,40 +72,48 @@ def mag_socket_frame(side):
     return R, t, s
 
 
-def lod_mag_objects(lv):
-    cn = "AR01_Parts" if lv == 0 else f"AR01_LOD{lv}"
-    return [o for o in bpy.data.collections[cn].objects if o.type == "MESH" and o.data.materials
-            and o.data.materials[0].name == "M_AR01_Mag"]
+# the magazine LOD recipe is shared with the static twin's merged magazine (stage-7 fix round): rifle_maglod
+from rifle_maglod import lod_mag_objects, decimated_parts, UVFIX, LOD_TARGETS  # noqa: E402,F401
 
 
-UVFIX = {}
-LOD_TARGETS = {1: 2000, 2: 650, 3: 250}     # plan 3.3: ~1,750 / ~580 / 200-300 (LOD1 a little richer: the pressed ribs)
-
-
-def decimated_parts(lv):
-    """LOD1-3 of the magazine: each LOD0 part (closed solid) collapse-decimated to the LOD's share of the target, UV0
-    interpolated (the LOD0 maps stay valid), weighted normals with sharp edges at 35 deg. The part generator at the
-    coarse levels either held LOD0 resolution (its fit with the floor plate, build_rifle HOLD_AT) or left 4,520
-    triangles at LOD2 with UV0 overlaps, so the magazine LODs are reduced from LOD0 instead."""
-    from gunlib import bl
-    src = lod_mag_objects(0)
-    total = sum(len(o.data.polygons) for o in src)
-    out = []
-    for o in src:
-        c = o.copy()
-        c.data = o.data.copy()
-        c.name = f"{o.name}_dec{lv}"
-        bpy.context.scene.collection.objects.link(c)
-        md = c.modifiers.new("dec", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = LOD_TARGETS[lv] / float(total)
-        md.use_collapse_triangulate = True
-        bl.apply_modifiers(c)
-        bl.finish(c)
-        bl.weighted_normals(c, keep_sharp=True, sharp_deg=35.0)
-        from gunlib import lodfix
-        UVFIX.setdefault(lv, {})[o.name] = lodfix.relax_uv_foldovers(c)
-        out.append(c)
+def twin_mag_check(lods, Mx):
+    """The twin SM_AR01_LOD<n>'s magazine faces (material slot M_AR01_Mag) against SM_AR01_Mag_LOD<n>, both in the
+    magazine frame: triangle counts equal and every twin vertex within 0.001 mm of a shipped vertex (and back)."""
+    def nearest(A, B):                     # max over A of the distance to the nearest point of B (numpy, chunked)
+        if not len(A) or not len(B):
+            return 1e9
+        worst = 0.0
+        for i in range(0, len(A), 512):
+            d = np.sqrt(((A[i:i + 512, None, :] - B[None, :, :]) ** 2).sum(-1)).min(1)
+            worst = max(worst, float(d.max()))
+        return worst
+    out = {"lods": {}, "rule": "twin magazine tris == SM_AR01_Mag_LOD<n> tris; vertex sets within 0.001 mm both ways"}
+    ok = True
+    for lv, mob in enumerate(lods):
+        tw = bpy.data.objects.get(f"SM_AR01_LOD{lv}") or (bpy.data.objects.get("SM_AR01") if lv == 0 else None)
+        if tw is None:
+            out["lods"][f"LOD{lv}"] = {"twin": None}
+            ok = False
+            continue
+        slot = next(i for i, m in enumerate(tw.data.materials) if m and m.name == "M_AR01_Mag")
+        mw = Matrix(Mx) @ tw.matrix_world
+        Vt, tt = [], 0
+        for poly in tw.data.polygons:
+            if poly.material_index == slot:
+                tt += len(poly.vertices) - 2
+                Vt += [tuple(mw @ tw.data.vertices[i].co) for i in poly.vertices]
+        Vt = np.unique(np.round(np.array(Vt) * 1000.0, 5), axis=0)
+        Vm = np.array([tuple(mob.matrix_world @ v.co) for v in mob.data.vertices]) * 1000.0
+        mt = sum(len(p.vertices) - 2 for p in mob.data.polygons)
+        Vm = np.unique(np.round(Vm, 5), axis=0)
+        d1 = nearest(Vt, Vm)
+        d2 = nearest(Vm, Vt)
+        dev = float(max(d1, d2))
+        good = tt == mt and dev <= 0.001
+        ok &= good
+        out["lods"][f"LOD{lv}"] = {"twin_tris": int(tt), "mag_tris": int(mt), "max_dev_mm": round(dev, 6),
+                                   "pass": bool(good)}
+    out["pass"] = bool(ok)
     return out
 
 
@@ -163,6 +171,10 @@ def main():
                 bpy.data.objects.remove(o, do_unlink=True)
         lods.append(ob)
         log(ob.name, tris)
+    # stage-7 fix round: the static twin's merged magazine at LOD n must be this SM_AR01_Mag_LOD n (rifle_maglod)
+    rep["twin_mag_equal"] = twin_mag_check(lods, Mx)
+    log("twin mag = shipped mag per LOD", rep["twin_mag_equal"]["pass"],
+        [(k, v.get("twin_tris"), v.get("mag_tris"), v.get("max_dev_mm")) for k, v in rep["twin_mag_equal"]["lods"].items()])
     lod0 = lods[0]
     V0, T0 = GM.mesh_vt(lod0)                                       # mag frame, mm
     # ---------------------------------------------------------------- hulls: upper / lower half of the curve

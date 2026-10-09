@@ -116,20 +116,24 @@ def checker_field_mask(P):
     return inside_poly(P[:, [0, 2]], np.asarray(GC.field_outline_xz(0.0), float))
 
 
-def geo_edges(st, P, tp):
+GEOEDGE_VERSION = 2       # 2: same-side edges only (gunlib.edgemask item 4, stage-7 fix round 2026-10-08)
+
+
+def geo_edges(st, P, tp, N):
     """Geometric edge masks at the texels (gunlib.edgemask: convex dihedral edges of each texel's own part on the true
     LOD0 triangles; realism-fix round 2026-10-07): E at sigma 0.3 mm (fine) and 1.0 mm (broad), and the distance to
-    the nearest sharp (> 25 deg) convex edge. Cached next to the bakes (recomputed when the triangles or the position
-    bake are newer)."""
+    the nearest sharp (> 25 deg) convex edge. Only edges on the texel's own side count (the texel normal N vs the
+    edge's face normals: no outline of a thin wall's far side). Cached next to the bakes (recomputed when the
+    triangles or the position bake are newer, or the version changes)."""
     cache = BAKE / f"{st}_geoedge.npz"
-    src = [BAKE / f"{st}_tris.npz", BAKE / f"{st}_pos.npy", BAKE / f"{st}_ids.npy"]
+    src = [BAKE / f"{st}_tris.npz", BAKE / f"{st}_pos.npy", BAKE / f"{st}_ids.npy", BAKE / f"{st}_nrm.npy"]
     if cache.exists() and all(cache.stat().st_mtime > f.stat().st_mtime for f in src):
         c = np.load(cache)
-        if len(c["ef"]) == len(P):
+        if len(c["ef"]) == len(P) and int(c["ver"]) == GEOEDGE_VERSION if "ver" in c.files else False:
             return c["ef"], c["eb"], c["dist"]
     t = np.load(BAKE / f"{st}_tris.npz")
-    E, dist = EM.part_fields(t["V"], t["pid"], P, tp, (0.3, 1.0))
-    np.savez(cache, ef=E[0.3], eb=E[1.0], dist=dist)
+    E, dist = EM.part_fields(t["V"], t["pid"], P, tp, (0.3, 1.0), QN=N)
+    np.savez(cache, ef=E[0.3], eb=E[1.0], dist=dist, ver=np.int32(GEOEDGE_VERSION))
     return E[0.3], E[1.0], dist
 
 
@@ -158,7 +162,7 @@ def paint(st, meta):
     N /= np.maximum(np.linalg.norm(N, axis=1, keepdims=True), 1e-6)
     ao = np.clip(d["ao"].reshape(-1)[idx].astype(np.float32), 0, 1)
     tp = pid.ravel()[idx]
-    ef, eb, dist_e = geo_edges(st, P, tp)
+    ef, eb, dist_e = geo_edges(st, P, tp, N)
     n = len(idx)
     part = np.array([names.get(int(k), "") for k in range(0, max(names) + 1)], object)
     fin_of_part = np.array([RS.PART_FINISH.get(part[k], "lacquer") if part[k] else "lacquer"
@@ -192,6 +196,14 @@ def paint(st, meta):
     for z in RS.METAL_WEAR:
         dd = np.linalg.norm(P - np.array(z["center_M"], np.float32), axis=1)
         wearz = np.maximum(wearz, z["w"] * PT.smoothstep(z["radius"], z["radius"] * 0.3, dd))
+    # stage-7: the magazine's own wear zones (rifle_surface.MAG_WEAR) replace the rifle's on its lacquer
+    magl = fin == "lacquer_mag"
+    if magl.any():
+        wz = np.zeros(int(magl.sum()), np.float32)
+        for z in RS.MAG_WEAR:
+            dd = np.linalg.norm(P[magl] - np.array(z["center_M"], np.float32), axis=1)
+            wz = np.maximum(wz, z["w"] * PT.smoothstep(z["radius"], z["radius"] * 0.3, dd))
+        wearz[magl] = wz
     wear = RS.WEAR_BASE + (1.0 - RS.WEAR_BASE) * wearz
     # the baked bevel masks light whole bevel strips (sub-mm faces) evenly: real wear is an irregular 0.5-3 mm band
     # (GUN_BUILDING_STUDY 3.4) that bleeds onto the flats. The edge mask is spread ~0.8 mm (sigma, in texels from the
@@ -248,6 +260,7 @@ def paint(st, meta):
 
     bare = lin(RS.FIN["bare"]["srgb"]).astype(np.float32)
     grime = lin(RS.FIN["grime"]["srgb"]).astype(np.float32)
+    bare_all = np.zeros(n, bool)          # every texel painted bare steel (the wear audit below)
 
     # ---------------------------------------------------------------- metal finishes
     for f in ("lacquer", "lacquer_cover", "lacquer_mag", "lacquer_worn", "bluing", "bare"):
@@ -271,10 +284,15 @@ def paint(st, meta):
         met = np.full(k.sum(), float(F["metal"]), np.float32)
         # wear: chips on convex edges (lacquer: hard flakes to bare steel; bluing: worn to bare on the high edges)
         if f in ("lacquer", "lacquer_cover", "lacquer_mag"):
-            eb = edge_broad[k] * (0.55 + 0.9 * v_far[k]) if f == "lacquer_mag" else 0.0   # mag: bright rib crests
+            # mag: rib crests rub a little lighter (the sheet's bright ribs), more inside its wear zones (stage-7: was
+            # a full-strength band on every crest and spine)
+            eb = edge_broad[k] * (0.30 + 0.45 * v_far[k]) * (0.35 + 0.65 * wearz[k]) if f == "lacquer_mag" else 0.0
             amt = np.maximum(edge[k], eb) * (0.45 + chip_n[k])
             amt_c = edge_chip[k] * (0.45 + chip_n[k])     # (the mag's rib crests rub lighter; chips only at true edges)
-            chip = (amt_c > (0.62 if f == "lacquer_mag" else 0.70) - 0.10 * wearz[k]) &                 (on_edge_mag[k] if f == "lacquer_mag" else on_edge[k])
+            chip = (amt_c > (0.62 if f == "lacquer_mag" else 0.70) - 0.10 * wearz[k]) & \
+                (on_edge_mag[k] if f == "lacquer_mag" else on_edge[k])
+            if f == "lacquer_mag":
+                chip &= wearz[k] > 0.5                      # stage-7: magazine chips only in its wear zones
             # rubbed lacquer short of a chip: the coat thinned lighter and glossier along the worn edges (a mid-dark
             # grey, not a light one: x <= 1.8 on the 0.035 lacquer)
             # (mottled by the flake field: a uniform rubbed band round a hole or along an edge read as a halo)
@@ -385,6 +403,7 @@ def paint(st, meta):
             Pc = P[k][cs]
             slide[cs] = (np.abs(N[k][cs, 1]) > 0.75) & (Pc[:, 2] <= 1.0) & (np.abs(Pc[:, 1]) < 20.0)
         chip &= ~slide
+        bare_all[k] = chip
         col[chip] = bare[None, :] * (0.92 + 0.12 * v_mid[k][chip])[:, None]
         if slide.any():
             col[slide] = lin((156, 156, 154))[None, :] * (0.94 + 0.10 * v_mid[k][slide])[:, None]
@@ -439,7 +458,11 @@ def paint(st, meta):
             # carbon on the slant lip's front (the outer rim within 3 mm of the cut, in front of X 873)
             lip = (~inside) & (Pm[:, 0] > 873.0) & (edge_broad[k][msel] > 0.2)
             cm = np.where(lip[:, None], cm * 0.55, cm)
-            mm_ = np.where(lip & (mm_ > 0.5) & (v_mid[k][msel] > 0.45), 0.0, mm_)
+            # carbon over a bare chip on the lip: a dark dielectric deposit (stage-7: the chip's bare-steel colour x 0.55
+            # left 122 light dielectric texels, sRGB 147, on the lip -- the 'no blown wear masks' gate)
+            carb = lip & (mm_ > 0.5) & (v_mid[k][msel] > 0.45)
+            cm = np.where(carb[:, None], np.float32(0.022) * (0.8 + 0.4 * v_mid[k][msel])[:, None], cm)
+            mm_ = np.where(carb, 0.0, mm_)
             col[msel], r[msel], met[msel] = cm, rm, mm_
         bc[k] = col
         rough[k] = r
@@ -656,7 +679,7 @@ def paint(st, meta):
     log(st, "paint %.1fs" % (time.time() - t0))
     # normal map: painted height in each texel's UV frame + the checkering bake
     pos_mm = d["pos"].astype(np.float32) * 1000.0
-    du, dv = PT.mm_per_px(pos_mm, valid)
+    du, dv = PT.mm_per_px(pos_mm, valid, isl)      # island-aware (the bakes carry no margin since stage 7)
     nrm = PT.height_to_normal(Hm, np.where(valid, isl, -1), du, dv)
     if "ckm" in d:
         ck = d["ckn"] * 2.0 - 1.0
@@ -666,6 +689,8 @@ def paint(st, meta):
         km = km_flat.reshape(S, S) & valid
         nrm = np.where(km[..., None], PT.whiteout(ck, nrm), nrm)
     nrm[~valid] = (0.0, 0.0, 1.0)
+    audit = wear_audit(st, S, idx, valid, du, dv, fin, part, tp, bare_all, dist_e, wearz, P, bc, metal)
+    log(st, "wear audit", json.dumps(audit)[:600])
     del pos_mm, du, dv
     # ---------------------------------------------------------------- write
     TEX.mkdir(parents=True, exist_ok=True)
@@ -690,8 +715,79 @@ def paint(st, meta):
             if (metal[s] > 0.5).any() else None,
             "rough_p5_p50_p95": [round(float(np.percentile(rough[s], q)), 3) for q in (5, 50, 95)]}
     rep["metallic_values"] = sorted(set(np.unique(M).tolist()))
+    rep["wear_audit"] = audit
     log(st, "DONE %.1fs" % (time.time() - t0))
     return rep
+
+
+def wear_audit(st, S, idx, valid, du, dv, fin, part, tp, bare_all, dist_e, wearz, P, bc, metal):
+    """Stage-7 fix round (craft + tech reviews: bare-steel triangles on panel interiors, dashed seam lines, 75 mm2 bare
+    areas on the magazine; the old chip gate measured the rifle's lacquer only). Measured in TEXTURE space on the final
+    masks, per set:
+      - bare texels on lacquered panel interiors: > 2 mm from any sharp convex edge (gunlib.edgemask, same side) and
+        outside the wear zones (wearz < 0.5): texels and 8-connected clusters (gate: 0 clusters);
+      - the largest connected bare-steel blob on lacquer (mm2 from the position bake's texel size; gate <= 8 mm2,
+        the magazine included), the butt plate excluded (scratched bare by design);
+      - wood: the largest light blob (luminance > 1.6 x its part's median: a worn-through patch or a stray chip);
+      - the charging knob's bare fraction (bolt_carrier texels outside the right wall, Y < -23 mm; review: <= 25 %)."""
+    out = {}
+    area = (du * dv).astype(np.float32)                      # mm2 per texel (S x S, rows as the bakes)
+    lacq = np.array([str(f).startswith("lacquer") for f in fin]) & (part[tp] != "butt_plate")
+
+    def img(m):
+        a = np.zeros(S * S, bool)
+        a[idx] = m
+        return a.reshape(S, S)
+
+    def blobs(m2):
+        lab, nl = ndi.label(m2, structure=np.ones((3, 3), int))
+        if not nl:
+            return 0, 0.0, None
+        ar = ndi.sum(area, lab, index=np.arange(1, nl + 1))
+        k = int(np.argmax(ar))
+        return int(nl), float(ar[k]), lab == k + 1
+    if lacq.any():
+        interior = bare_all & lacq & (dist_e > 2.0) & (wearz < 0.5)
+        ni, _ai, _ = blobs(img(interior))
+        nb, big, bm = blobs(img(bare_all & lacq))
+        wp = None
+        if bm is not None:
+            pidimg = np.zeros(S * S, np.int32)
+            pidimg[idx] = tp
+            wp = str(part[int(np.bincount(pidimg.reshape(S, S)[bm]).argmax())])
+        out["lacquer_bare_texels"] = int((bare_all & lacq).sum())
+        out["lacquer_bare_fraction"] = round(float((bare_all & lacq).sum() / max(lacq.sum(), 1)), 5)
+        out["interior_bare_texels"] = int(interior.sum())
+        out["interior_bare_clusters"] = ni
+        out["largest_bare_blob_mm2"] = round(big, 2)
+        out["largest_bare_blob_part"] = wp
+        out["bare_blobs"] = nb
+    wood = np.array([str(f) == "walnut" for f in fin])
+    if wood.any():
+        lum = bc @ np.array([0.2126, 0.7152, 0.0722], np.float32)
+        light = np.zeros(len(lum), bool)
+        for nm in np.unique(part[tp][wood]):
+            sel = wood & (part[tp] == nm)
+            light[sel] = lum[sel] > 1.6 * float(np.median(lum[sel]))
+        nl, big, _ = blobs(img(light))
+        out["wood_light_blobs"] = nl
+        out["wood_largest_light_blob_mm2"] = round(big, 2)      # (info: worn-through handling zones are large)
+        # grey chips: texels that lost the stain's chroma (< 0.5 x the part's median saturation) -- a stray metal-like
+        # fleck or a mask artefact on wood (tech review: 'grey triangular chips on the handguard')
+        mx, mn = bc.max(1), bc.min(1)
+        sat = (mx - mn) / np.maximum(mx, 1e-6)
+        grey = np.zeros(len(lum), bool)
+        for nm in np.unique(part[tp][wood]):
+            sel = wood & (part[tp] == nm)
+            grey[sel] = sat[sel] < 0.5 * float(np.median(sat[sel]))
+        ng, bg, _ = blobs(img(grey))
+        out["wood_grey_blobs"] = ng
+        out["wood_largest_grey_blob_mm2"] = round(bg, 2)
+        out["wood_metallic_texels"] = int((metal[wood] > 0.5).sum())
+    knob = (part[tp] == "bolt_carrier") & (P[:, 1] < -23.0)
+    if knob.any():
+        out["charging_knob_bare_fraction"] = round(float(bare_all[knob].mean()), 4)
+    return out
 
 
 def main():

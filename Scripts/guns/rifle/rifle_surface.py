@@ -170,10 +170,13 @@ METAL_WEAR = [
     {"what": "front band / handguard retainer", "center_M": (640.0, 0.0, 0.0), "radius": 20.0, "w": 0.5},
     {"what": "receiver lower edges round the magazine well", "center_M": (430.0, 0.0, -30.0), "radius": 48.0, "w": 0.85},
     {"what": "rear sight block and leaf edges", "center_M": (450.0, 0.0, 40.0), "radius": 26.0, "w": 0.6},
-    {"what": "charging handle", "center_M": (452.0, -32.0, 16.0), "radius": 20.0, "w": 1.0},
+    # stage-7 fix round (craft review: the knob read as a chrome ball, 79 % bare): bare only at its tip / edges
+    {"what": "charging handle", "center_M": (452.0, -40.0, 14.0), "radius": 12.0, "w": 0.6},
     {"what": "dust cover shoulders", "center_M": (330.0, 0.0, 28.0), "radius": 70.0, "w": 0.45},
+    # (stage-7 fix round: at r 22 / w 0.95 the rub spread into a uniform light-grey halo round the button hole in
+    # first person; the thumb wears the button and the hole's rim, not a disc of the cover)
     {"what": "dust cover rear lip and the recoil spring button (thumb)", "center_M": (247.0, 0.0, 22.0),
-     "radius": 22.0, "w": 0.95},
+     "radius": 12.0, "w": 0.6},
     {"what": "receiver flanks under the firing hand / cheek", "center_M": (320.0, 0.0, -10.0), "radius": 55.0, "w": 0.55},
     {"what": "selector tab (thumb)", "center_M": (362.0, -24.0, -6.0), "radius": 20.0, "w": 1.0},
     {"what": "trigger guard bottom", "center_M": (335.0, 0.0, -60.0), "radius": 30.0, "w": 0.75},
@@ -183,6 +186,21 @@ METAL_WEAR = [
 ]
 # scuff direction per part (frame M unit vectors): along the bore for the receiver, cover, barrel and gas parts (rubbed
 # in and out of a rack / sling); the magazine down its curve (pulled from pouches)
+# STAGE-7 FIX ROUND (realism judges: 'even white streaks along every rib and edge: the classic look of an automatic
+# edge-wear generator; real wear clusters at the feed lips, the front lug, the floor plate edges and the spine contact
+# points'; craft / tech: white chips and dashed lines along the magazine's spine): the magazine's own wear zones (frame
+# M, seated). They REPLACE the rifle's METAL_WEAR on the magazine's lacquer; outside them no chip and only a faint rub
+MAG_WEAR = [
+    {"what": "feed lips and the top block (cartridges, loading)", "center_M": (395.0, 0.0, -14.0), "radius": 22.0,
+     "w": 1.0},
+    {"what": "front locking lug (rocked onto the trunnion every reload)", "center_M": (424.0, 0.0, -20.0),
+     "radius": 9.0, "w": 0.9},
+    {"what": "rear lug on the catch", "center_M": (370.0, 0.0, -37.0), "radius": 9.0, "w": 0.9},
+    {"what": "spines at the well's lower edge", "center_M": (428.0, 0.0, -33.0), "radius": 10.0, "w": 0.6},
+    {"what": "rear spine at the well's lower edge", "center_M": (369.0, 0.0, -33.0), "radius": 8.0, "w": 0.6},
+    {"what": "floor plate and its edges (dropped, slapped, rested on)", "center_M": (475.0, 0.0, -162.0),
+     "radius": 26.0, "w": 0.95},
+]
 SCUFF_AXIS = {"magazine": (0.45, 0.0, -0.89), "magazine_floor_plate": (1.0, 0.0, 0.0),
               "butt_plate": (0.0, 0.0, 1.0), "trigger_guard": (1.0, 0.0, 0.0)}
 # how scuffed each lacquered part is (x the shared scuff field; the sheet's dust cover is the most rubbed surface)

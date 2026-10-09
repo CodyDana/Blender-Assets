@@ -319,18 +319,27 @@ def rough_l(target, dist=1.1, bg=(126, 126, 126), env=0.55, k=1.35):
     return {"rig": "rough", "bg_rgb": list(bg), "env": env, "k": k, "dist_m": dist, "target_M": [float(v) for v in target]}
 
 
+def l5_l(target, dist=None, fill=0.0, bg=(126, 126, 126)):
+    """Stage-7 fix round (craft review item 7: the set and the realism views were lit by the near 'rough' rig, env
+    0.55 x 1.35 with lights at 1.1 m, under which the black lacquer read grey and the walnut orange; receiver / background
+    0.88 against the sheet's 0.53): the L5 PHYSICAL rig the colour was calibrated on (scratch/game/l5.json fit: key
+    overhead tipped toward the camera, rim behind, grey world 0.2 x k), centred on the shot's target. `dist` is
+    ignored (kept for the call sites); `fill` adds a weak low fill from the camera side (the open-port views)."""
+    return dict(l5_params(), rig="l5", bg_rgb=list(bg), target_M=[float(v) for v in target], fill=float(fill))
+
+
 def realism_shots(samples):
     s, d, post = sight()
     fp_eye = np.array([350.0, 0.0, 0.0]) + 350.0 * unit([-0.93, 0.22, 0.30])
     hero_t = np.array([450.0, 0.0, -20.0])
-    S = [("fp_35cm", persp_look(fp_eye, (620.0, 0.0, 10.0), 70.0, (1600, 900)), rough_l((620.0, 0.0, 10.0), 1.1),
+    S = [("fp_35cm", persp_look(fp_eye, (620.0, 0.0, 10.0), 70.0, (1600, 900)), l5_l((620.0, 0.0, 10.0)),
           "first person: eye 35 cm from the receiver, behind / left / above (right-handed hold), 70 deg FOV"),
-         ("ads_55deg", persp_look(s - 250.0 * d, s + 1000.0 * d, 55.0, (2560, 1440)), rough_l(post, 1.1),
+         ("ads_55deg", persp_look(s - 250.0 * d, s + 1000.0 * d, 55.0, (2560, 1440)), l5_l(post),
           "ADS: eye 0.25 m behind the Sight socket on its line (forward = the socket pitch), 55 deg FOV"),
          ("tp_3m", persp_look(hero_t + 3000.0 * unit([-0.45, -0.85, 0.28]), hero_t, 60.0, (1600, 900)),
-          rough_l(hero_t, 3.2), "third person: camera 3 m from the gun, right side, 60 deg FOV"),
+          l5_l(hero_t), "third person: camera 3 m from the gun, right side, 60 deg FOV"),
          ("hero_34", persp_look(hero_t + 1500.0 * unit([0.55, -0.78, 0.30]), hero_t, 38.0, (1600, 900)),
-          rough_l(hero_t, 1.6), "hero 3/4 front right, 1.5 m, 38 deg FOV")]
+          l5_l(hero_t), "hero 3/4 front right, 1.5 m, 38 deg FOV")]
     return [{"name": n, "out": str(REAL / f"{n}.png"), "camera": c, "lights": L, "samples": samples, "note": note}
             for n, c, L, note in S]
 
@@ -351,9 +360,9 @@ def set_shots(samples):
     full_c = (440.0, 0.0, -40.0)
     S = []
 
-    def add(name, cam, note, target, dist=1.1, **kw):
+    def add(name, cam, note, target, dist=1.1, fill=0.0, **kw):
         S.append(dict({"name": name, "out": str(SETD / f"{name}.png"), "camera": cam, "samples": samples,
-                       "lights": rough_l(target, dist), "note": note}, **kw))
+                       "lights": l5_l(target, dist, fill), "note": note}, **kw))
 
     add("receiver_right_3x", ortho_look(rec_c, R, 320, 210, px3), "receiver, true right, ortho 3x", rec_c)
     add("receiver_left_3x", ortho_look(rec_c, Lf, 320, 210, px3), "receiver, true left, ortho 3x", rec_c)
@@ -380,9 +389,10 @@ def set_shots(samples):
         pose=rock_pose)
     add("bolt_rear_right_3x", ortho_look(rec_c, R, 320, 210, px3),
         "bolt carrier + charging handle at full rearward travel (A_AR01_Charge frame %d ChargeRear), ortho 3x"
-        % charge_rear, rec_c, pose=bolt_pose)
+        % charge_rear, rec_c, pose=bolt_pose, fill=15.0)
     add("bolt_rear_34_above", persp_look((470.0, -260.0, 210.0), (400.0, 0.0, 15.0), 34.0, (1600, 1100)),
-        "bolt at full rearward travel, open ejection port from right above", (400.0, 0.0, 15.0), pose=bolt_pose)
+        "bolt at full rearward travel, open ejection port from right above", (400.0, 0.0, 15.0), pose=bolt_pose,
+        fill=15.0)
     for lv in range(4):
         add(f"lod/lod{lv}_side", ortho_look(full_c, R, 920, 330, 1600 / 920.0),
             f"SK_AR01 LOD{lv} + SM_AR01_Mag LOD{lv}, true right, ortho", full_c, lod=lv, mag_lod=lv)
@@ -465,11 +475,16 @@ def main():
     ap.add_argument("--only", default="blind,realism,set")
     ap.add_argument("--samples", type=int, default=128)
     ap.add_argument("--no-render", action="store_true")
+    ap.add_argument("--tag", default="", help="trial renders: review/realism_<tag>, review/set_<tag>; no gate file")
     a = ap.parse_args()
     only = set(a.only.split(","))
     gp = GATES / "review_export.json"
+    if a.tag:
+        global REAL, SETD
+        REAL, SETD = REVIEW / f"realism_{a.tag}", REVIEW / f"set_{a.tag}"
+        gp = SCRATCH / "export_review" / f"review_export_{a.tag}.json"
     res = json.loads(gp.read_text()) if gp.exists() else {}
-    res.update({"stage": "7 review renders from the exported bytes", "date": "2026-10-07",
+    res.update({"stage": "7 review renders from the exported bytes", "date": __import__("datetime").date.today().isoformat(),
                 "inputs_sha256": {rel(p): sha(p) for p in sorted(EXP.glob("*.fbx")) + sorted(TEXD.glob("*.png"))}})
     if "blind" in only:
         shots, meta = blind_shots(a.samples)

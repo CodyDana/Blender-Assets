@@ -186,13 +186,35 @@ def ring_phase(v, w, u, pith_vw, spacing_mm, seed, warp_mm=(4.0, 0.7), warp_len=
 
 
 # ---------------------------------------------------------------- normals
-def mm_per_px(pos_mm, valid):
-    """Texel size (mm per px) along U (columns) and V (rows) from the baked position map (central differences inside
-    one island; edges one-sided)."""
-    du = np.zeros(pos_mm.shape[:2], np.float32)
-    dv = np.zeros(pos_mm.shape[:2], np.float32)
-    du[:, 1:-1] = np.linalg.norm(pos_mm[:, 2:] - pos_mm[:, :-2], axis=2) * 0.5
-    dv[1:-1, :] = np.linalg.norm(pos_mm[2:] - pos_mm[:-2], axis=2) * 0.5
+def mm_per_px(pos_mm, valid, isl=None):
+    """Texel size (mm per px) along U (columns) and V (rows) from the baked position map: central differences inside
+    one island, one-sided at island borders (isl: island id per texel, -1 = gutter). Without isl: plain central
+    differences (needs a bake margin; stage-7: the bakes have none, see rifle_bake MARGIN)."""
+    H, W = pos_mm.shape[:2]
+    if isl is None:
+        du = np.zeros((H, W), np.float32)
+        dv = np.zeros((H, W), np.float32)
+        du[:, 1:-1] = np.linalg.norm(pos_mm[:, 2:] - pos_mm[:, :-2], axis=2) * 0.5
+        dv[1:-1, :] = np.linalg.norm(pos_mm[2:] - pos_mm[:-2], axis=2) * 0.5
+        return du, dv
+    isl = np.where(valid, isl, -1)
+
+    def one_axis(P, I):
+        # P (H, W, 3), I (H, W): differences along axis 1
+        d = np.zeros(I.shape, np.float32)
+        nxt = np.zeros(I.shape, bool)
+        prv = np.zeros(I.shape, bool)
+        nxt[:, :-1] = (I[:, :-1] == I[:, 1:]) & (I[:, :-1] >= 0)
+        prv[:, 1:] = (I[:, 1:] == I[:, :-1]) & (I[:, 1:] >= 0)
+        fwd = np.zeros(I.shape, np.float32)
+        bwd = np.zeros(I.shape, np.float32)
+        fwd[:, :-1] = np.linalg.norm(P[:, 1:] - P[:, :-1], axis=2)
+        bwd[:, 1:] = fwd[:, :-1]
+        both = nxt & prv
+        d = np.where(both, 0.5 * (fwd + bwd), np.where(nxt, fwd, np.where(prv, bwd, 0.0)))
+        return d.astype(np.float32)
+    du = one_axis(pos_mm, isl)
+    dv = one_axis(pos_mm.transpose(1, 0, 2), isl.T).T
     return du, dv
 
 

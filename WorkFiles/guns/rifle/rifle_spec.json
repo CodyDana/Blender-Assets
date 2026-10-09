@@ -7576,7 +7576,13 @@
    "decided_by": "check C13 (2026-10-04); the user may pick the 4096 fallback instead"
   },
   "uv0": "SK: every slot in 0..1; SM twin: Metal u 0..1, Furniture u 1..2, merged mag u -1..0; no mirrored or stacked islands",
-  "maps": "BC sRGB; ORM linear (AO / rough / metal); N DirectX; full mips; TEXTUREGROUP_Weapon / WeaponNormalMap"
+  "maps": "BC sRGB; ORM linear (AO / rough / metal); N DirectX; full mips; TEXTUREGROUP_Weapon / WeaponNormalMap",
+  "sets_shipped_2026_10_08": {
+   "Metal": "T_AR01_Metal_{BC,ORM,N} 4096",
+   "Furniture": "T_AR01_Furniture_{BC,ORM,N} 2048 + Detail16 1024",
+   "Mag": "T_AR01_Mag_{BC,ORM,N} 1024",
+   "note": "R52: supersedes the planned sizes in 'sets' (kept as the planning record)"
+  }
  },
  "budgets_triangles": {
   "rifle": {
@@ -8179,6 +8185,18 @@
    "conflict": "no front trunnion block and no lug recess (nothing stopped the magazine until the carrier, 8.4 mm above the lips); with the rock pivot at the lug tip (429, -16), 15 mm above the bottom sheet, the 18 deg rock swept the front spine 5.3 mm forward at the sheet, so the well opening ran 4.9 mm ahead of the seated magazine",
    "resolution": "the real pattern: a front trunnion block in the receiver front (X >= 431 under the carrier, bore through it, a feed ramp on its rear face) with the lug pocket and its ledge at the lower rear; the magazine's front lug = a body tapering into the spine plus a hook tab that, at the seat, sits on the ledge under the trunnion (front top stop); the rear lug rests over the catch's nose (an arc about the catch pin); the sheet behind the opening is cut back along the rock-start pose's tilted rear face; the magazine's rear steps back under the receiver's ledge to 0.4 from the trigger guard's front tab (was 0.74; a 0.6 lean of the tab itself was tried and dropped: it moved the solved 3/4 camera and broke the 3/4 exception rule). Rock pivot (Mag socket) on the front spine at Z -28.0 (fit stage; beyond the old +-5 mm provisional range: the seam needs the pivot near the sheet) and rock 8 deg (was 18): the front spine moves <= 0.45 mm at the sheet; every cut is the swept envelope of the magazine's silhouettes plus its clearance row (rifle_magfit.py)",
    "rule": "GUN_BUILDING_STUDY 3.7 (seated mag, visible seam); RIFLE_BUILD_PLAN 2.3 / 8; the main views unchanged"
+  },
+  {
+   "id": "R52",
+   "topic": "Stage-7 fix round (2026-10-08): craft review L6 (8 major / 6 minor) and tech review (1 major / 8 minor) on the exported bytes",
+   "conflict": "receiver empty at full bolt travel (no bolt, no chamber); the clips moved the carrier with the selector on SAFE; the magazine catch read as a blob; the static twin's magazine LODs were not the shipped SM_AR01_Mag LODs; spec text drift (texture sizes, LOD3 floor, R32 thickness at the ribs)",
+   "resolution": "the rotating bolt (r 7.6, face recess, firing-pin hole, extractor claw high on the right) rides in the carrier, whose full section now ends at X 397.5 (ahead of it only the upper body, Z >= 9); its head runs in a bore (r 8.0) through the trunnion's rear to the breech, and over the barrel's rear end the trunnion stands up to Z 8.0 (X 434-452; the rails end at 433.98); the gas piston rides with the carrier (bone bolt). Clips: every clip but A_AR01_Selector holds the selector at AUTO (16 deg) start to end (the game layers the real fire mode per bone from A_AR01_Selector); ShellEject at the rear stop (frame 3). Mag catch = one flat stamped paddle (+-5.0, crisp 0.3, flat shaded). Rivet heads 24 segments (G3). Front sight window rear edge parallel to the rake. Retainer lever: floored 0.7 mm recess (was a through slot). Twin magazine LOD n = SM_AR01_Mag LOD n (rifle_maglod, gated in mag.json)",
+   "rulings": {
+    "magazine_thickness_R32": "26.0 mm is the body between the ribs (top, -20 mm: 26.0-26.6 measured); the pressed ribs stand OUT ~0.8 mm a side as on real steel magazines (27.5-27.9 mm over the ribs) and the floor plate is 29.0 mm; the ribbed part never enters the well opening (M2 / M3 unaffected)",
+    "lod3_triangles": "the blockout LOD3 at ~1,100 triangles (under the plan's 1,500-2,500 band) is accepted: its LOD-pop passes (max <= 1.8 px) and the band is a guide, not a floor; game.json reports the value against the band",
+    "textures_shipped": "Metal 4096 (the user's 2026-10-04 rule: 2048 cannot hold class A 80-100 / B 60-80 at >= 70 % fill), Furniture 2048, Mag 1024 (the smallest that holds class C at >= 65 % fill: 2048 put C at ~93 px/cm, outside +-25 % of its band), Detail16 1024",
+    "grip_checkering": "OPEN for the user: LOD0 carries the checkering as a crisp normal map baked from the modelled pyramid field (as every LOD); real cut geometry on LOD0 would cost ~3-6k triangles against the 50k ceiling (LOD0 ~48k). Default kept until the user rules"
+   }
   }
  ],
  "fab_original_changes": {

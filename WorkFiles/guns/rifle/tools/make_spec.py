@@ -2034,6 +2034,43 @@ spec["resolutions"] += [
      "rule": "GUN_BUILDING_STUDY 3.7 (seated mag, visible seam); RIFLE_BUILD_PLAN 2.3 / 8; the main views unchanged"},
 ]
 
+# ------------------------------------------------------------------------------- stage-7 fix round (2026-10-08, R52)
+spec["resolutions"] += [
+    {"id": "R52", "topic": "Stage-7 fix round (2026-10-08): craft review L6 (8 major / 6 minor) and tech review "
+                           "(1 major / 8 minor) on the exported bytes",
+     "conflict": "receiver empty at full bolt travel (no bolt, no chamber); the clips moved the carrier with the "
+                 "selector on SAFE; the magazine catch read as a blob; the static twin's magazine LODs were not the "
+                 "shipped SM_AR01_Mag LODs; spec text drift (texture sizes, LOD3 floor, R32 thickness at the ribs)",
+     "resolution": "the rotating bolt (r 7.6, face recess, firing-pin hole, extractor claw high on the right) rides "
+                   "in the carrier, whose full section now ends at X 397.5 (ahead of it only the upper body, Z >= 9); "
+                   "its head runs in a bore (r 8.0) through the trunnion's rear to the breech, and over the barrel's "
+                   "rear end the trunnion stands up to Z 8.0 (X 434-452; the rails end at 433.98); the gas piston "
+                   "rides with the carrier (bone bolt). Clips: every clip but A_AR01_Selector holds the selector at "
+                   "AUTO (16 deg) start to end (the game layers the real fire mode per bone from A_AR01_Selector); "
+                   "ShellEject at the rear stop (frame 3). Mag catch = one flat stamped paddle (+-5.0, crisp 0.3, "
+                   "flat shaded). Rivet heads 24 segments (G3). Front sight window rear edge parallel to the rake. "
+                   "Retainer lever: floored 0.7 mm recess (was a through slot). Twin magazine LOD n = SM_AR01_Mag "
+                   "LOD n (rifle_maglod, gated in mag.json)",
+     "rulings": {
+         "magazine_thickness_R32": "26.0 mm is the body between the ribs (top, -20 mm: 26.0-26.6 measured); the pressed "
+                                   "ribs stand OUT ~0.8 mm a side as on real steel magazines (27.5-27.9 mm over the "
+                                   "ribs) and the floor plate is 29.0 mm; the ribbed part never enters the well "
+                                   "opening (M2 / M3 unaffected)",
+         "lod3_triangles": "the blockout LOD3 at ~1,100 triangles (under the plan's 1,500-2,500 band) is accepted: its "
+                           "LOD-pop passes (max <= 1.8 px) and the band is a guide, not a floor; game.json reports "
+                           "the value against the band",
+         "textures_shipped": "Metal 4096 (the user's 2026-10-04 rule: 2048 cannot hold class A 80-100 / B 60-80 at "
+                             ">= 70 % fill), Furniture 2048, Mag 1024 (the smallest that holds class C at >= 65 % "
+                             "fill: 2048 put C at ~93 px/cm, outside +-25 % of its band), Detail16 1024",
+         "grip_checkering": "OPEN for the user: LOD0 carries the checkering as a crisp normal map baked from the "
+                            "modelled pyramid field (as every LOD); real cut geometry on LOD0 would cost ~3-6k "
+                            "triangles against the 50k ceiling (LOD0 ~48k). Default kept until the user rules"}},
+]
+spec["textures"]["sets_shipped_2026_10_08"] = {"Metal": "T_AR01_Metal_{BC,ORM,N} 4096", "Furniture":
+                                               "T_AR01_Furniture_{BC,ORM,N} 2048 + Detail16 1024",
+                                               "Mag": "T_AR01_Mag_{BC,ORM,N} 1024", "note": "R52: supersedes the "
+                                               "planned sizes in 'sets' (kept as the planning record)"}
+
 spec["fab_original_changes"] = {
     "status": "NOT applied; the user decides. The game build matches the sheet.",
     "items": [

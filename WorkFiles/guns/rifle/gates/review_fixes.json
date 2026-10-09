@@ -1,0 +1,1087 @@
+{
+ "stage": "7 apply fixes (resumed 2026-10-08)",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "stage file form.json",
+   "value": {
+    "status": "pass",
+    "gates": 34,
+    "failed": []
+   },
+   "threshold": "status pass, failed []",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "stage file uv_bake_paint.json",
+   "value": {
+    "status": "pass",
+    "gates": 31,
+    "failed": []
+   },
+   "threshold": "status pass, failed []",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "stage file game.json",
+   "value": {
+    "status": "pass",
+    "gates": 23,
+    "failed": []
+   },
+   "threshold": "status pass, failed []",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "stage file rig_export.json",
+   "value": {
+    "status": "pass",
+    "gates": 14,
+    "failed": []
+   },
+   "threshold": "status pass, failed []",
+   "pass": true,
+   "source": "gates/rig_export.json"
+  },
+  {
+   "name": "stage file mag.json",
+   "value": {
+    "status": "pass",
+    "gates": 15,
+    "failed": []
+   },
+   "threshold": "status pass, failed []",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "L2 side IoU (authority, rifle + seated mag)",
+   "value": 0.9759,
+   "threshold": ">= 0.96",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "L2 top IoU (excluded zones masked)",
+   "value": 0.9321,
+   "threshold": ">= 0.93",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "L2 3/4 documented exception (IoU >= 0.915 and every residual region > 3 px a 3/4-panel contradiction or the magazine physical-minimum residual)",
+   "value": {
+    "iou": 0.9185,
+    "regions_over_3px": 18,
+    "contradictions": 16,
+    "magazine_minimum": 2
+   },
+   "threshold": "IoU >= 0.915 and all regions contradict LEFT/RIGHT/TOP or are the R32 magazine residual",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "L2 per part (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2 px)",
+   "value": "21 / 21 parts pass",
+   "threshold": "all",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "B3 bolt sweep 0.0..103.25 (step 0.0750, 1378 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.25,
+    "min_with": "receiver_rails",
+    "rest_mm": 0.25,
+    "end_mm": 0.25
+   },
+   "threshold": "0 intersections; clearance in row [0.15, 0.4]",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "B3 mag_release sweep 0.0..10.0 (step 0.2816, 37 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1021,
+    "min_with": "trigger_guard",
+    "rest_mm": 0.1191,
+    "end_mm": 0.109
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "B3 selector sweep 0.0..32.0 (step 0.0615, 522 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1749,
+    "min_with": "rivets",
+    "rest_mm": 0.199,
+    "end_mm": 0.1749
+   },
+   "threshold": "0 intersections; clearance in row [0.1, 0.3]",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "B4 sight picture (ADS 55 deg, eye 0.25 m behind Sight on its line, occlusion-aware raster)",
+   "value": {
+    "lateral_mm": 0.0,
+    "vertical_mm": 0.0127,
+    "post_visible_in_notch_mm": 2.059,
+    "occluders": {}
+   },
+   "threshold": "|lateral|, |vertical| <= 0.2 mm at the notch; post visible >= 1.0 mm; no occluder",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "G5 static intersections between parts at rest (LOD0)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "B8 LOD0 triangles, rifle (target 30-45k, ceiling 50k)",
+   "value": 49474,
+   "threshold": "<= 50000 (target <= 45000)",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "MAGFIT F2 (M2) top stop; seam at the well's lower edge (M2 sections)",
+   "value": {
+    "top_stop_gap_mm": 0.2958,
+    "top_stop_from_M": [
+     428.0,
+     -3.79,
+     -15.4
+    ],
+    "seam": {
+     "front": {
+      "gap_mm": 0.2843,
+      "at_Z_M": -29.5
+     },
+     "rear": {
+      "gap_mm": 0.4,
+      "at_Z_M": -30.8
+     },
+     "left": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.6
+     },
+     "right": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.6
+     }
+    },
+    "visible_edge_at_outer_face": {
+     "front, outside the lug channel": 0.4552,
+     "front, lug channel": 1.9651,
+     "front_at_Z_M": -30.73,
+     "rear (receiver sheet behind the opening)": 0.5641,
+     "rear_at_Z_M": -29.16,
+     "rear down the guard tab (Z: gap)": {
+      "-29.6": 0.406,
+      "-30.5": 0.4,
+      "-31.5": 0.492,
+      "-32.5": 0.639,
+      "-33.5": 0.785,
+      "-34.5": 0.931
+     }
+    }
+   },
+   "threshold": "top stop 0.1-0.5 mm; seam <= 0.6 mm (clearance table visible seam 0.2-0.8)",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "MAGFIT F3 (M3) lateral per side; front lug in its recess; rear lug to the catch",
+   "value": {
+    "lateral_mm": {
+     "left": 0.2,
+     "right": 0.2
+    },
+    "front_lug_to_nearest_rifle_mm (M3 selection)": 0.1873,
+    "hook_tab_to_its_pocket_mm": 0.2087,
+    "rear_lug_to_catch_mm": 0.2
+   },
+   "threshold": "0.2-0.6; 0.1-0.4; 0.0-0.3 mm",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "MAGFIT F4 (M4/M5) reload path: insert 0.5 mm, rock 0.25 deg (+ the approach from under the receiver)",
+   "value": {
+    "steps": {
+     "approach": 56,
+     "insert": 16,
+     "rock": 33
+    },
+    "intersecting_steps": {
+     "approach": 0,
+     "insert": 0,
+     "rock": 0
+    },
+    "catch_contacts": [],
+    "other_contacts": []
+   },
+   "threshold": "0 intersections on insert + rock except the rear lug on the catch nose (<= 3.0 mm, last <= 6 deg); approach reported (0 expected)",
+   "pass": true,
+   "source": "gates/form.json"
+  },
+  {
+   "name": "fill Metal (4096)",
+   "value": 0.7266,
+   "threshold": ">= 0.70",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "fill Mag (1024)",
+   "value": 0.6641,
+   "threshold": ">= 0.65",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "fill Furniture (2048)",
+   "value": 0.6605,
+   "threshold": ">= 0.65",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "density Metal class A (px/cm P5 / median / P95)",
+   "value": "96.6 / 114.8 / 114.9 (291.2 cm2)",
+   "threshold": "median in [60, 125] (band 80-100 +-25 %), P5 >= 60, P5..P95 within +-25 % of the median",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "density Metal class B (px/cm P5 / median / P95)",
+   "value": "82.2 / 91.9 / 91.9 (1007.4 cm2)",
+   "threshold": "median in [45, 100] (band 60-80 +-25 %), P5 >= 45, P5..P95 within +-25 % of the median",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "UV0 mirrored islands (flipped UV triangles, LOD0)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "L5 colour vs the sheet (crop-matched; PHYSICAL rig, specular factor 1; light scale fitted on the receiver; wood: per-part tone ratios calibrated on this rig)",
+   "value": {
+    "receiver": {
+     "delta": {
+      "luma": 0.0004,
+      "sat": -0.0123,
+      "rb": -0.0125
+     },
+     "pass": true
+    },
+    "dust_cover": {
+     "delta": {
+      "luma": -0.0245,
+      "sat": -0.0198,
+      "rb": -0.0144
+     },
+     "pass": true
+    },
+    "magazine": {
+     "delta": {
+      "luma": 0.0207,
+      "sat": -0.0332,
+      "rb": -0.0347
+     },
+     "pass": true
+    },
+    "butt_plate": {
+     "delta": {
+      "luma": 0.0402,
+      "sat": 0.0054,
+      "rb": 0.0018
+     },
+     "pass": true
+    },
+    "stock": {
+     "delta": {
+      "luma": 0.0005,
+      "sat": -0.0121,
+      "rb": -0.0778,
+      "hue_deg": -0.6
+     },
+     "pass": true
+    },
+    "pistol_grip": {
+     "delta": {
+      "luma": 0.0031,
+      "sat": -0.0078,
+      "rb": -0.0319,
+      "hue_deg": 0.09
+     },
+     "pass": true
+    },
+    "handguard_lower": {
+     "delta": {
+      "luma": 0.0057,
+      "sat": -0.0061,
+      "rb": -0.0365,
+      "hue_deg": 0.91
+     },
+     "pass": true
+    },
+    "handguard_upper": {
+     "delta": {
+      "luma": -0.0083,
+      "sat": -0.0087,
+      "rb": -0.0384,
+      "hue_deg": -0.68
+     },
+     "pass": true
+    },
+    "gas_block": {
+     "delta": {
+      "luma": 0.041,
+      "sat": -0.0238,
+      "rb": -0.0271
+     },
+     "pass": true
+    },
+    "barrel": {
+     "delta": {
+      "luma": 0.0169,
+      "sat": -0.0349,
+      "rb": -0.0395
+     },
+     "pass": true
+    }
+   },
+   "threshold": "luma +-0.05, saturation +-0.05, R/B +-0.1, hue +-4 deg (chromatic regions) on every region but the calibration region (receiver)",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "realism-tex: no blown wear masks (lacquered parts)",
+   "value": "largest bare-steel chip blob 3.2 mm2 (receiver); 23,864 chip texels (0.24%); dielectric texels lighter than sRGB 140: 37",
+   "threshold": "largest chip blob <= 8 mm2 (an edge fleck, not a patch); light dielectric texels <= 1e-5 of the lacquer (isolated texels, no patch: the rubbed coat stays a mid-dark grey)",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "realism-tex: textured ADS sight picture (exact B4 camera, 2560 x 1440)",
+   "value": "post visible 158 px (8.0 px wide x 20 rows), tip at [1279.5, 720] vs projected [1280.0, 720.0]; Weber contrast vs the opening beside it -0.342",
+   "threshold": "post found (>= 20 px) with |Weber contrast| >= 0.25, tip within 1.5 px of the B4 projection",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "stage-7 wear: no bare steel on Metal panel interiors",
+   "value": {
+    "interior_bare_clusters": 0,
+    "interior_bare_texels": 0
+   },
+   "threshold": "0 clusters of bare texels > 2 mm from any sharp convex edge outside the wear zones",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "stage-7 wear: largest bare-steel blob on Metal lacquer",
+   "value": "3.19 mm2 (receiver); 1993 blobs, 0.333% of the lacquer",
+   "threshold": "<= 8 mm2 (an edge fleck, not a patch)",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "stage-7 wear: no bare steel on Mag panel interiors",
+   "value": {
+    "interior_bare_clusters": 0,
+    "interior_bare_texels": 0
+   },
+   "threshold": "0 clusters of bare texels > 2 mm from any sharp convex edge outside the wear zones",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "stage-7 wear: largest bare-steel blob on Mag lacquer",
+   "value": "3.25 mm2 (magazine); 169 blobs, 0.152% of the lacquer",
+   "threshold": "<= 8 mm2 (an edge fleck, not a patch)",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "stage-7 wear: wood has no stray grey chips (and no metallic texel)",
+   "value": {
+    "wood_grey_blobs": 0,
+    "wood_largest_grey_blob_mm2": 0.0,
+    "wood_metallic_texels": 0,
+    "wood_light_blobs": 1930,
+    "wood_largest_light_blob_mm2": 506.66
+   },
+   "threshold": "largest blob that lost the stain's chroma (< 0.5 x its part's median saturation) <= 8 mm2; 0 metallic texels (light blobs: info, the worn-through handling zones)",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "stage-7 finish: charging knob bare steel",
+   "value": 0.0001,
+   "threshold": "<= 0.25 (tip and edges only; was 0.79 in look_polish)",
+   "pass": true,
+   "source": "gates/uv_bake_paint.json"
+  },
+  {
+   "name": "LOD1 rifle tris (share of LOD0)",
+   "value": "22462 (46.4%)",
+   "threshold": "~45 % (gun study 5.7)",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "LOD2 rifle tris (share of LOD0)",
+   "value": "8450 (17.5%)",
+   "threshold": "~15 % (gun study 5.7)",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "LOD-pop LOD0 -> LOD1",
+   "value": "size 0.3 (2.705 m): mean 0.031 px, max 0.707 px (worst of 4 headings)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "LOD-pop LOD1 -> LOD2",
+   "value": "size 0.12 (6.762 m): mean 0.18 px, max 1.803 px (worst of 4 headings)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "LOD-pop LOD2 -> LOD3",
+   "value": "size 0.04 (20.287 m): mean 0.186 px, max 1.414 px (worst of 4 headings)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "B3 at LOD1 (moving parts, sweep)",
+   "value": {
+    "bolt": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.25
+    },
+    "trigger": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.25
+    },
+    "selector": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1385
+    },
+    "mag_release": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1094
+    },
+    "sight_rear": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.15
+    }
+   },
+   "threshold": "0 intersections; clearance inside each joint's row",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "G5 at LOD1 (static intersecting pairs)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "G5 at LOD1 butt-joint gaps",
+   "value": 0.0131,
+   "threshold": ">= 0.01 mm",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "qa_check (twin LOD0..3)",
+   "value": {
+    "SM_AR01_LOD0": 55052,
+    "SM_AR01_LOD1": 24460,
+    "SM_AR01_LOD2": 9098,
+    "SM_AR01_LOD3": 1324
+   },
+   "threshold": "pass",
+   "pass": true,
+   "source": "gates/game.json"
+  },
+  {
+   "name": "clips read back (every bone, every frame)",
+   "value": {
+    "A_AR01_Fire": {
+     "fps": 60,
+     "frames_expected": [
+      0,
+      8
+     ],
+     "frames_fbx": [
+      1,
+      9
+     ],
+     "max_bone_error_mm": 5e-05,
+     "max_bone_error_deg": 1e-05,
+     "first_last_rest": true
+    },
+    "A_AR01_Charge": {
+     "fps": 30,
+     "frames_expected": [
+      0,
+      22
+     ],
+     "frames_fbx": [
+      1,
+      23
+     ],
+     "max_bone_error_mm": 5e-05,
+     "max_bone_error_deg": 1e-05,
+     "first_last_rest": true
+    },
+    "A_AR01_Reload": {
+     "fps": 30,
+     "frames_expected": [
+      0,
+      60
+     ],
+     "frames_fbx": [
+      1,
+      61
+     ],
+     "max_bone_error_mm": 5e-05,
+     "max_bone_error_deg": 1e-05,
+     "first_last_rest": true
+    },
+    "A_AR01_ReloadEmpty": {
+     "fps": 30,
+     "frames_expected": [
+      0,
+      84
+     ],
+     "frames_fbx": [
+      1,
+      85
+     ],
+     "max_bone_error_mm": 5e-05,
+     "max_bone_error_deg": 1e-05,
+     "first_last_rest": true
+    },
+    "A_AR01_Selector": {
+     "fps": 30,
+     "frames_expected": [
+      0,
+      30
+     ],
+     "frames_fbx": [
+      1,
+      31
+     ],
+     "max_bone_error_mm": 5e-05,
+     "max_bone_error_deg": 1e-05,
+     "first_last_rest": true
+    }
+   },
+   "threshold": "frame count as authored (the importer offsets the take to frame 1); <= 0.01 mm and <= 0.01 deg vs rifle_clips; first and last frame = rest",
+   "pass": true,
+   "source": "gates/rig_export.json"
+  },
+  {
+   "name": "bounds hold every vertex at every clip frame (LOD0)",
+   "value": {
+    "positive_cm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "negative_cm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "worst_excursion_mm": {
+     "A_AR01_Fire": 0.0,
+     "A_AR01_Charge": 0.0,
+     "A_AR01_Reload": 0.0,
+     "A_AR01_ReloadEmpty": 0.0,
+     "A_AR01_Selector": 0.0
+    }
+   },
+   "threshold": "posed envelope inside bind AABB + extension",
+   "pass": true,
+   "source": "gates/rig_export.json"
+  },
+  {
+   "name": "B4 sockets on the right bones; Muzzle on the bore; sight picture",
+   "value": {
+    "sockets": 17,
+    "names_match_spec": true,
+    "bones_match_spec": true,
+    "muzzle_off_axis_mm": 0.004,
+    "muzzle_deg": 0.0,
+    "sight_socket_mm": [
+     186.72,
+     0.0,
+     126.54
+    ],
+    "sight_picture_LOD0": "lateral 0.0 px, vertical 0.125 px"
+   },
+   "threshold": "17 sockets on their spec bones; Muzzle <= 0.5 mm and <= 0.05 deg off the bore; sight picture <= 0.5 px (55 deg ADS, 0.25 m eye relief, 2560 x 1440)",
+   "pass": true,
+   "source": "gates/rig_export.json"
+  },
+  {
+   "name": "B1 skeleton (re-imported SK files)",
+   "value": {
+    "SK_AR01.fbx": {
+     "bones": 8,
+     "head_err_mm": 0.0001,
+     "magazine_present": true,
+     "magazine_weighted": 0
+    },
+    "SK_AR01_LOD1.fbx": {
+     "bones": 8,
+     "head_err_mm": 0.0001,
+     "magazine_present": true,
+     "magazine_weighted": 0
+    },
+    "SK_AR01_LOD2.fbx": {
+     "bones": 8,
+     "head_err_mm": 0.0001,
+     "magazine_present": true,
+     "magazine_weighted": 0
+    },
+    "SK_AR01_LOD3.fbx": {
+     "bones": 8,
+     "head_err_mm": 0.0001,
+     "magazine_present": true,
+     "magazine_weighted": 0
+    }
+   },
+   "threshold": "object root at identity; the spec's 8 bones (5.2 names) with their parents; rest heads <= 0.001 mm; rest rotation = root's; unweighted 'magazine' survives every FBX; every vertex 1 influence",
+   "pass": true,
+   "source": "gates/rig_export.json"
+  },
+  {
+   "name": "M7 rifle bytes = the shipped stage-5 sha256",
+   "value": {
+    "rifle": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c",
+    "recorded": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c",
+    "mag": "7a4f60c7adb21371056efe26352fff8c79d5df1436865641eedd610123867fc3",
+    "mag_recorded": "7a4f60c7adb21371056efe26352fff8c79d5df1436865641eedd610123867fc3",
+    "mag_built_from_rifle_sha": "479715d9854bae06c1c04698818ee2cb711234af094955278908cecaedddad9c"
+   },
+   "threshold": "equal (and the magazine was built from these rifle bytes)",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "M6 reload-path sockets from the exported sidecars vs the fit",
+   "value": {
+    "rock_deg": -7.999996,
+    "insert_mm": 7.999803,
+    "rockstart_at_hook_mm": 0.0,
+    "insertstart_on_tilted_axis_mm": 0.000357,
+    "insert_rot_eq_rock_deg": 0.0,
+    "vs_spec_mm_or_deg": 0.00038,
+    "skeletal_vs_static_mm": 0.0004,
+    "mag_own_Mag_origin_mm_or_deg": 0.0
+   },
+   "threshold": "<= 0.001 mm, <= 0.001 deg",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "M1 seated: intersecting triangles, co-visible LOD pairs",
+   "value": {
+    "rifle LOD0 / mag LOD0": {
+     "intersecting_triangle_pairs": 0
+    },
+    "rifle LOD1 / mag LOD1": {
+     "intersecting_triangle_pairs": 0
+    },
+    "rifle LOD2 / mag LOD2": {
+     "intersecting_triangle_pairs": 32,
+     "depth_mm_outside_well": 0.157,
+     "depth_px": 0.03,
+     "at_m": 6.762,
+     "raw_depth_mm_incl_hidden_well_part": 0.171,
+     "raw_px": 0.032
+    },
+    "rifle LOD3 / mag LOD3": {
+     "intersecting_triangle_pairs": 47,
+     "depth_mm_outside_well": 5.396,
+     "depth_px": 0.34,
+     "at_m": 20.287,
+     "raw_depth_mm_incl_hidden_well_part": 15.482,
+     "raw_px": 0.977
+    },
+    "rifle LOD0 / mag LOD1": {
+     "intersecting_triangle_pairs": 0
+    },
+    "rifle LOD1 / mag LOD0": {
+     "intersecting_triangle_pairs": 0
+    },
+    "rifle LOD1 / mag LOD2": {
+     "intersecting_triangle_pairs": 46,
+     "depth_mm_outside_well": 0.157,
+     "depth_px": 0.03,
+     "at_m": 6.762,
+     "raw_depth_mm_incl_hidden_well_part": 0.327,
+     "raw_px": 0.062
+    },
+    "rifle LOD2 / mag LOD1": {
+     "intersecting_triangle_pairs": 0
+    },
+    "rifle LOD2 / mag LOD3": {
+     "intersecting_triangle_pairs": 35,
+     "depth_mm_outside_well": 0.157,
+     "depth_px": 0.01,
+     "at_m": 20.287,
+     "raw_depth_mm_incl_hidden_well_part": 0.275,
+     "raw_px": 0.017
+    },
+    "rifle LOD3 / mag LOD2": {
+     "intersecting_triangle_pairs": 77,
+     "depth_mm_outside_well": 5.538,
+     "depth_px": 0.349,
+     "at_m": 20.287,
+     "raw_depth_mm_incl_hidden_well_part": 16.134,
+     "raw_px": 1.018
+    }
+   },
+   "threshold": "0 (LOD0-1 pairs 0; LOD2-3 pairs: depth under 1 px at the switch distance, counted outside the LOD0 well where the magazine is never visible)",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "M2 seat: top-stop gap; visible seam at the well's lower edge",
+   "value": {
+    "top_stop_gap_mm": 0.2958,
+    "top_stop_from": [
+     428.0,
+     -3.79,
+     -15.4
+    ],
+    "seam": {
+     "front": {
+      "gap_mm": 0.2843,
+      "at_Z_M": -29.5
+     },
+     "rear": {
+      "gap_mm": 0.4,
+      "at_Z_M": -30.8
+     },
+     "left": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.6
+     },
+     "right": {
+      "gap_mm": 0.2,
+      "at_Z_M": -30.0
+     }
+    },
+    "receiver_sheet_bottom_Z_M": -30.3
+   },
+   "threshold": "top stop 0.1-0.5 mm; seam <= 0.6 mm (side: front / rear; front view: left / right)",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "M3 clearances: lateral per side; front lug in its recess; rear lug to the catch face",
+   "value": {
+    "lateral_mm": {
+     "left": 0.2,
+     "right": 0.2
+    },
+    "front_lug_to_nearest_rifle_mm": 0.1873,
+    "rear_lug_to_catch_face_mm": 0.2
+   },
+   "threshold": "0.2-0.6 mm; 0.1-0.4 mm; 0.0-0.3 mm",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "M4 rock path (insert 0.5 mm, rock 0.25 deg; co-visible pairs)",
+   "value": {
+    "steps": 49,
+    "insert_steps": 17,
+    "rock_steps": 32,
+    "rock_deg": -8.0,
+    "pairs": {
+     "rifle LOD0 / mag LOD0": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD1 / mag LOD1": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD2 / mag LOD2": {
+      "steps": 49,
+      "intersecting_steps": 18,
+      "with_catch_only": 0
+     },
+     "rifle LOD3 / mag LOD3": {
+      "steps": 49,
+      "intersecting_steps": 49,
+      "with_catch_only": 0
+     },
+     "rifle LOD0 / mag LOD1": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD1 / mag LOD0": {
+      "steps": 49,
+      "intersecting_steps": 2,
+      "with_catch_only": 2
+     },
+     "rifle LOD1 / mag LOD2": {
+      "steps": 49,
+      "intersecting_steps": 27,
+      "with_catch_only": 0
+     },
+     "rifle LOD2 / mag LOD1": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD2 / mag LOD3": {
+      "steps": 49,
+      "intersecting_steps": 11,
+      "with_catch_only": 0
+     },
+     "rifle LOD3 / mag LOD2": {
+      "steps": 49,
+      "intersecting_steps": 49,
+      "with_catch_only": 0
+     }
+    },
+    "catch_contacts": [
+     {
+      "pair": [
+       1,
+       0
+      ],
+      "step": [
+       "rock",
+       -1.25
+      ],
+      "triangle_pairs": 8,
+      "depth_mm": 0.004
+     },
+     {
+      "pair": [
+       1,
+       0
+      ],
+      "step": [
+       "rock",
+       -1.0
+      ],
+      "triangle_pairs": 17,
+      "depth_mm": 0.041
+     }
+    ],
+    "catch_contacts_lod2_3 (px rule)": {
+     "count": 90,
+     "worst": {
+      "pair": [
+       3,
+       2
+      ],
+      "step": [
+       "rock",
+       -1.5
+      ],
+      "triangle_pairs": 16,
+      "depth_mm": 1.625,
+      "depth_px": 0.1026
+     }
+    },
+    "lod2_3_depth_px (every 6th step + seated)": {
+     "rifle LOD2 / mag LOD2": 0.03,
+     "rifle LOD3 / mag LOD3": 0.576,
+     "rifle LOD1 / mag LOD2": 0.03,
+     "rifle LOD2 / mag LOD3": 0.01,
+     "rifle LOD3 / mag LOD2": 0.709
+    }
+   },
+   "threshold": "0 intersections (LOD0-1 pairs; LOD2-3 pairs: depth < 1 px at the switch distance), except the rear lug on the catch nose (<= 3.0 mm, last <= 6 deg)",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "M5 removal path (the M4 poses in reverse order)",
+   "value": {
+    "pairs": {
+     "rifle LOD0 / mag LOD0": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD1 / mag LOD1": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD2 / mag LOD2": {
+      "steps": 49,
+      "intersecting_steps": 18,
+      "with_catch_only": 0
+     },
+     "rifle LOD3 / mag LOD3": {
+      "steps": 49,
+      "intersecting_steps": 49,
+      "with_catch_only": 0
+     },
+     "rifle LOD0 / mag LOD1": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD1 / mag LOD0": {
+      "steps": 49,
+      "intersecting_steps": 2,
+      "with_catch_only": 2
+     },
+     "rifle LOD1 / mag LOD2": {
+      "steps": 49,
+      "intersecting_steps": 27,
+      "with_catch_only": 0
+     },
+     "rifle LOD2 / mag LOD1": {
+      "steps": 49,
+      "intersecting_steps": 0,
+      "with_catch_only": 0
+     },
+     "rifle LOD2 / mag LOD3": {
+      "steps": 49,
+      "intersecting_steps": 11,
+      "with_catch_only": 0
+     },
+     "rifle LOD3 / mag LOD2": {
+      "steps": 49,
+      "intersecting_steps": 49,
+      "with_catch_only": 0
+     }
+    }
+   },
+   "threshold": "same as M4",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "Twin magazine = SM_AR01_Mag at every LOD (stage-7 fix round)",
+   "value": {
+    "LOD0": {
+     "twin_tris": 6666,
+     "mag_tris": 6666,
+     "max_dev_mm": 0.0,
+     "pass": true
+    },
+    "LOD1": {
+     "twin_tris": 1998,
+     "mag_tris": 1998,
+     "max_dev_mm": 0.0,
+     "pass": true
+    },
+    "LOD2": {
+     "twin_tris": 648,
+     "mag_tris": 648,
+     "max_dev_mm": 0.0,
+     "pass": true
+    },
+    "LOD3": {
+     "twin_tris": 248,
+     "mag_tris": 248,
+     "max_dev_mm": 0.0,
+     "pass": true
+    }
+   },
+   "threshold": "per LOD: equal triangles; vertex sets within 0.001 mm both ways",
+   "pass": true,
+   "source": "gates/mag.json"
+  },
+  {
+   "name": "ShellEject notify at the carrier's rear stop (A_AR01_Fire)",
+   "value": 3,
+   "threshold": "frame 3 (bolt = full travel)",
+   "pass": true,
+   "source": "SK_AR01.skeletal.json"
+  },
+  {
+   "name": "selector held at AUTO through the moving-bolt clips",
+   "value": {
+    "A_AR01_Fire": [
+     16.0
+    ],
+    "A_AR01_Charge": [
+     16.0
+    ],
+    "A_AR01_Reload": [
+     16.0
+    ],
+    "A_AR01_ReloadEmpty": [
+     16.0
+    ]
+   },
+   "threshold": "[16.0] in every clip",
+   "pass": true,
+   "source": "scratch/rig/rig_report.json"
+  },
+  {
+   "name": "review renders (blind / realism / set) from the current exported bytes",
+   "value": {
+    "files": 23,
+    "all_equal": true,
+    "blind_pairs": 12,
+    "realism_images": 4,
+    "set_images": 19
+   },
+   "threshold": "every input sha256 = the shipped file",
+   "pass": true,
+   "source": "gates/review_export.json"
+  },
+  {
+   "name": "Exports/Guns/AR01/README.md",
+   "value": true,
+   "threshold": "present",
+   "pass": true,
+   "source": "Exports/Guns/AR01"
+  },
+  {
+   "name": "Exports/Guns/AR01/MATERIALS_README.md",
+   "value": true,
+   "threshold": "present",
+   "pass": true,
+   "source": "Exports/Guns/AR01"
+  }
+ ],
+ "fix_log": "WorkFiles/guns/rifle/review/FIX_LOG.md",
+ "not_judged_here": "the blind judge and the two realism judges run in the next review stage (target: at most 1 single-judge fake call over the 4 realism views; blind reported, not blocking)"
+}

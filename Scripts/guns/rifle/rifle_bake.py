@@ -30,6 +30,13 @@ AO_SAMPLES = int(argv[argv.index("--ao-samples") + 1]) if "--ao-samples" in argv
 EDGE_SAMPLES = int(argv[argv.index("--edge-samples") + 1]) if "--edge-samples" in argv else 64
 ONLY = argv[argv.index("--only") + 1].split(",") if "--only" in argv else None
 PASSES = argv[argv.index("--passes") + 1].split(",") if "--passes" in argv else None
+# STAGE-7 FIX ROUND: every pass bakes WITHOUT a margin (was 16 px EXTEND on pos / nrm / edge / ao). Blender writes each
+# object's bake with its own margin, so an object's 16 px extension overwrote the border texels of a neighbouring part's
+# island (packed 4-8 px apart): those texels carried another part's position / normal / AO (the upper handguard's
+# sliver strip at X 594-595 held the stock's seat face, X 248 -> a dark painted line; seam lines and wedges on the
+# metal). The painter reads valid texels only (ids, margin 0) and fills the gutters itself; its texel-size estimate is
+# island-aware (gunlib.paint.mm_per_px)
+MARGIN = int(argv[argv.index("--margin") + 1]) if "--margin" in argv else 0
 OUT = SCRATCH / "bake"
 OUT.mkdir(parents=True, exist_ok=True)
 UVD = SCRATCH / "uv"
@@ -101,8 +108,19 @@ def main():
                 continue
             # ids: no margin (the EXTEND margin averages neighbours, which would invent part / class / island codes in
             # the gutters); the painter fills the gutters itself from the exact interior
+            # STAGE-7 FIX ROUND (craft review: dark triangles on the magazine's top block): the magazine is a separate,
+            # removable mesh (SM_AR01_Mag), so its AO / edge passes see the magazine ALONE; seated, its top sat inside
+            # the receiver and baked the receiver's shadow into every face above the well (AO 0.04-0.25 on visible
+            # class-C faces, printed as dark triangles once the magazine is out: in the hand, on reloads, on the floor)
+            hidden = []
+            if st == "Mag" and name in ("ao", "edge"):
+                hidden = [o for o in parts if o not in objs and not o.hide_render]
+                for o in hidden:
+                    o.hide_render = True
             times[name] = round(BK.bake_pass(objs, [mat], img, kind, src, samples=spp,
-                                             margin=0 if name == "ids" else 16), 1)
+                                             margin=0 if name == "ids" else MARGIN), 1)
+            for o in hidden:
+                o.hide_render = False
             px = BK.read_image(img)
             if name == "pos":
                 np.save(OUT / f"{st}_pos.npy", px[..., :3] - 1.0)
