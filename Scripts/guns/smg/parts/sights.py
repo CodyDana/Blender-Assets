@@ -7,7 +7,7 @@ round end with a spring-detent plunger) and a leaf pinned at its front-lower cor
 an arm, a protective box frame (the side view's leaf head) with a window round the sight line, the diopter disc (2.0
 hole, 45 deg eye-side countersink) held in the window by a stem, the windage drum on the LEFT face of the frame at the
 aperture height (the ring the LEFT panel and the 3/4 view draw) and a round end cap on the right.
-Front (bone sight_front): the clamp base (cross-bolt head left, the round clamp knob on the RIGHT that the TOP draws)
+Front (bone sight_front): the clamp base (cross-bolt head left, its captive hex nut right: R40 drops the TOP knob)
 and a leaf pinned at the spec pivot that folds rearward: an arm, a web with two protective ears (rounded tops) and the
 square 1.85 post between them, its flat tip on the sight line. The web sits high enough that the folded head clears
 the base (the fold was checked by hand: folded X <= 531.9 behind the base's rear end 532.3).
@@ -134,6 +134,15 @@ def rear_sight():
     return [base_c, leaf_c, pin_c]
 
 
+def _stepped_cheeks(xa, xb, xc, z0, zs, z1, inner, thick, r=1.2):
+    """The front base's cheeks with a lower rear step: X xa..xb at top zs, xb..xc at top z1 (rounded top corners);
+    square bottom 0.5 inside the base (rail frame)."""
+    top = np.vstack([arc(xc - r, z1 - r, r, 0.0, 90.0, 4), arc(xb + r, z1 - r, r, 90.0, 180.0, 4)[:-1],
+                     [[xb, zs]], arc(xa + r, zs - r, r, 90.0, 180.0, 4)])
+    P = np.vstack([[(xa, z0 - 0.5), (xc, z0 - 0.5)], top])
+    return [prism(P, inner, inner + thick, "XZ"), prism(P, -inner - thick, -inner, "XZ")]
+
+
 def front_sight():
     x0, z0, H, M4, rec = rail_frame()
     rx = lambda X: X - x0          # noqa: E731
@@ -147,19 +156,24 @@ def front_sight():
     fl = 2.0
     slot = int(SFR["lug_slot"])
     base, lugs, brec = SF.clamp_base(rec, slot, rx(bx[0]), rx(bx[1]), width=W_BASE, floor_above_rail=fl)
-    cheeks = SF.cheeks(rx(px) - 4.0, rx(px) + 6.5, H + fl, rz(pz) + 4.5, CH_IN, CH_T, r=1.2)
     kx = SFR["clamp_knob_right"]["X"]
     kxc = 0.5 * (kx[0] + kx[1])
-    kr = 0.5 * (kx[1] - kx[0])
-    yext = float(SFR["clamp_knob_right"]["Y_extreme"])
     kz = 7.3                         # the head clears the rail's base flange (top 4.0) by 0.2
     cb_head = HW.place(HW.button_head(3.0, shank_len=1.0, nseg=32), (rx(kxc), W_BASE / 2.0, kz), (0, 1, 0))
-    stem = cylinder((rx(kxc), -W_BASE / 2.0 + 0.5, kz), (rx(kxc), yext + 9.0, kz), 2.6, 32)
-    knob = revolve([(0.0, 0.0), (0.0, kr - 0.8), (0.8, kr), (8.2, kr), (9.0, kr - 0.8), (9.0, 0.0)],
-                   (rx(kxc), yext + 9.0, kz), (0, -1, 0), 48)
+    # (W1 realism round 1, R40) the cross-bolt's right end is the captive hex nut the rear sight carries, flush on the
+    # base's right face. The TOP panel's 15 mm 'clamp knob' (built as a stalk + cap) is drawn by neither the RIGHT side
+    # view (authority: a small screw head on the base's face) nor the 3/4 view, every close-up judge read it as a
+    # second charging handle / a stray plunger, and the real pattern (rail-clamp flip sights) carries no such stalk
+    # flats up / down: corner-down its bottom met the jaw's underside level (an Unreal-dropped sliver)
+    nut = prism(HW._hex(5.5, 30.0), -W_BASE / 2.0 - 2.2, -W_BASE / 2.0 + 0.5, "XZ").translated((rx(kxc), 0.0, kz))
+    # the side panels draw the base block taller over the knob's X span (535.3..547.1) than the floor: the cheeks run
+    # on rearward to 535.3 as a lower step (top at the knob's top, Z 13.2 in the rail frame); folded, the arm lies
+    # between them (inner |y| 4.0 vs the arm's 3.85), so the fold is unchanged
+    cheeks = _stepped_cheeks(rx(kx[0]), rx(px) - 4.0, rx(px) + 6.5, H + fl, kz + 0.5 * (kx[1] - kx[0]),
+                             rz(pz) + 4.5, CH_IN, CH_T, r=1.2)
     plunger = _plunger(rx(px), rz(pz), 305.0)
     pieces = [(base, SF.base_recipe(rec), [_pocket(rx(px), rz(pz), H, 3.4, 4.2)])] + [(m, []) for m in lugs] + \
-             [(m, BR) for m in cheeks] + [(cb_head, []), (stem, []), (knob, []), (plunger, [])]
+             [(m, BR) for m in cheeks] + [(cb_head, []), (nut, BR), (plunger, [])]
     pin_bore = SF.pin_bore((rx(px), rz(pz)), PIN_R + 0.02, CH_IN + CH_T + 1.0)
     base_c = Comp("sight_front_base", [(_T(p[0], M4), p[1]) + ((tuple(_T(c, M4) for c in p[2]),) if len(p) > 2 else ())
                                        for p in pieces], [_T(pin_bore, M4)], bone="body", cls="M-chamfer", slot=METAL,

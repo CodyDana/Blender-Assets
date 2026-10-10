@@ -17,6 +17,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from smg_common import ROOT, GATES, SCRATCH, REVIEW, RENDERS, D as SPECD  # noqa: E402
+EARLY = REVIEW / "early_realism"            # the realism review set the form gates cite (--early)
 
 
 def load(p):
@@ -86,7 +87,7 @@ def stage_form():
     b4 = load(SCRATCH / "b4_result.json")
     b4b = load(SCRATCH / "b4b_result.json")
     mf = load(GATES / "form_magfit.json")
-    er = load(REVIEW / "early_realism" / "shots.json")
+    er = load(EARLY / "shots.json")
     gates = []
     # ---- L2
     L, R, T = sil["views"]["LEFT"], sil["views"]["RIGHT"], sil["views"]["TOP"]
@@ -120,12 +121,23 @@ def stage_form():
                                         "met" if ex.get("floor_pass") else "NOT met", ex.get("regions_over_3px"),
                                         ex.get("contradictions"), ex.get("r26_magazine"), len(ex.get("not_explained") or []),
                                         (q.get("solve") or {}).get("candidates_iou")))
-        gates.append(g("L2 3/4 FRONT (LEFT) IoU, camera solved", q.get("iou"), ">= 0.93 (or the R38 exception)",
-                       (q.get("iou") or 0) >= 0.93 or bool(ex.get("pass")), exn))
+        # R39 (orchestrator ruling 2026-10-10): no rigid camera fits the AI 3/4 panel; the side + top views are the
+        # exact-match authority, the 3/4 rows are measured and REPORTED (not blocking)
+        ok_iou = (q.get("iou") or 0) >= 0.93 or bool(ex.get("pass"))
+        r = g("L2 3/4 FRONT (LEFT) IoU, camera solved (reported, R39)", q.get("iou"),
+              ">= 0.93 (or the R38 exception); reported only (R39)", True,
+              "bar %s; %s" % ("met" if ok_iou else "not met", exn))
+        r["reported"] = True
+        r["bar_met"] = ok_iou
+        gates.append(r)
         cp = (q.get("contour_px") or {}).get("p95")
-        gates.append(g("L2 3/4 contour P95 (sheet px)", cp, "<= 3 (or the R38 exception)",
-                       (cp is not None and cp <= 3) or bool(ex.get("pass")),
-                       "panel consistency: %s" % json.dumps(q.get("panel_consistency", {}).get("reading"))[:400]))
+        ok_cp = (cp is not None and cp <= 3) or bool(ex.get("pass"))
+        r = g("L2 3/4 contour P95 (sheet px) (reported, R39)", cp, "<= 3 (or the R38 exception); reported only (R39)",
+              True, "bar %s; panel consistency: %s" % ("met" if ok_cp else "not met",
+                                                      json.dumps(q.get("panel_consistency", {}).get("reading"))[:400]))
+        r["reported"] = True
+        r["bar_met"] = ok_cp
+        gates.append(r)
     else:
         gates.append(g("L2 3/4 FRONT (LEFT)", "not run", ">= 0.93", False))
     # ---- L3 / L4
@@ -266,8 +278,8 @@ def stage_form():
     else:
         gates.append(g("MAGFIT form magazine fit", "not run", "gates/form_magfit.json", False))
     # ---- L8 early realism: the renders; the verdict belongs to the realism judges (run by the orchestrator)
-    early = {"renders": [s["out"] for s in (er or {}).get("shots", [])], "contact": rel(REVIEW / "early_realism" / "contact.png")
-             if (REVIEW / "early_realism" / "contact.png").exists() else None,
+    early = {"renders": [s["out"] for s in (er or {}).get("shots", [])], "contact": rel(EARLY / "contact.png")
+             if (EARLY / "contact.png").exists() else None,
              "verdict": "pending: 2 realism judges per part group (plan 14.1 L8), not run by this stage"}
     declared = [
         "stock latch: stroke 2.5 (spec 2.0) and full-diameter engagement 1.75 (2.5 with the 45 deg inner shoulder): with "
@@ -291,8 +303,12 @@ def stage_form():
         "daylight)",
         "stock head: narrower than the end block (Y -25..22) with the latch housing boss proud on the left to Y 28.6 "
         "(3/4 and TOP read); at the neck's end its top / bottom held 0.5 inside the neck's (no coplanar union faces)",
-        "lower rail: its rear end tucks 4.1 mm into the magwell's front pocket (the well's side walls hide it; the sheet "
-        "draws the rail end over the face); L2 per part leaves the stretch behind the face line out (R33)",
+        "lower rail: its rear end butts the lower's flat front face across the rail band (X 484.2, 0.3 gap; R42: the "
+        "former 4.1 mm pocket left a hooked flap); L2 per part leaves the stretch behind the face line out (R33)",
+        "front sight: the TOP panel's right-side knob is not built (R40: RIGHT + 3/4 draw none, real pattern); the "
+        "cross-bolt ends in a captive hex nut, the cheeks carry a lower rear step over the knob's X span",
+        "outlines: every traced ring faired (R41: corners pinned, runs smoothed, straight stretches on their "
+        "least-squares lines); the trigger one fair curve through the trace and the guard one opening (R42)",
         "front sight base: starts at X 532.3 (spec base_X) while the sheet draws its rear face at ~529.6: the folded "
         "leaf's head lands behind 532.3 (B4c); the 2.7 x 5 mm strip shows in the side IoU",
         "front sight leaf: below the head (Z < 61) the arm is 3.5 wide in X (the folded arm clears the base top by "
@@ -325,5 +341,7 @@ def stage_form():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", default="form")
+    ap.add_argument("--early", default="early_realism", help="the review set (under review/) the gates cite")
     a = ap.parse_args()
+    globals()["EARLY"] = REVIEW / a.early
     {"blockout": stage_blockout, "form": stage_form}[a.stage]()

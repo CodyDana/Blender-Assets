@@ -98,16 +98,133 @@ def clean_ring_true(P, tol=0.5, sigma_mm=1.0, straight_mm=6.0, snap_mm=0.8, sag_
     return G.ccw(G.dp_simplify(Q, sag_mm))
 
 
+def _turn_deg(a, b, c):
+    u, v = b - a, c - b
+    return math.degrees(abs(math.atan2(u[0] * v[1] - u[1] * v[0], float(u @ v))))
+
+
+def _smooth_open(R, sig_pts):
+    """Gaussian smoothing of an open run with both ends held (odd reflection about the ends: a straight run stays
+    straight, the end tangents are kept)."""
+    n = len(R)
+    if n < 4 or sig_pts <= 0:
+        return R.copy()
+    r = int(3 * sig_pts) + 1
+    a, b = R[0], R[-1]
+    pre = 2 * a - R[1:r + 1][::-1]
+    post = 2 * b - R[-r - 1:-1][::-1]
+    if len(pre) < r:
+        pre = np.vstack([np.repeat(pre[:1], r - len(pre), 0), pre])
+    if len(post) < r:
+        post = np.vstack([post, np.repeat(post[-1:], r - len(post), 0)])
+    E = np.vstack([pre, R, post])
+    k = np.exp(-0.5 * (np.arange(-r, r + 1) / sig_pts) ** 2)
+    k /= k.sum()
+    out = np.zeros_like(R)
+    for j, w in zip(range(-r, r + 1), k):
+        out += w * E[r + j: r + j + n]
+    out[0], out[-1] = a, b
+    return out
+
+
+# (W1 realism round 1) The close-up judges read the traced outlines' residue as torn / chipped edges: the pins of
+# clean_ring_true blend back to the raw pixel stairs (short zig-zags), clean_ring's DP 0.3 keeps sub-pixel steps on the
+# small parts (the trigger's stepped tip, the guard's notched rim) and every long gentle run keeps a slow wobble (the
+# stock arm's lumpy top). fair_ring:
+#   1. the true corners: vertices of the Douglas-Peucker 0.75 polyline (the 1.065 mm pixel stair's half-diagonal is
+#      0.53: the stairs go, a drawn edge stays) turning >= 40 deg with an adjacent segment >= 1.5 mm (longer than a
+#      pixel step);
+#   2. each run of the RAW ring between two corners resampled at 0.4 mm and Gaussian-smoothed (sigma 1.5 mm) with its
+#      ends held (odd reflection: corners stay crisp, the curve passes through the stairs' middle, unbiased);
+#   3. every straight stretch (a DP segment >= 5 mm) snapped onto the total-least-squares line of its raw points (the
+#      slow wobble of a gently sloped edge, whose stair period is longer than any smoothing, goes);
+#   4. simplified at 0.04 mm sagitta, no edge under 0.2 mm. No point is ever pulled back to the raw stairs.
+FAIR_DP, FAIR_CORNER_DEG, FAIR_MIN_SEG, FAIR_SIGMA, FAIR_STRAIGHT = 0.75, 40.0, 1.5, 1.5, 5.0
+
+
+def _tls_line(Q):
+    c = Q.mean(0)
+    u = np.linalg.svd(Q - c)[2][0]
+    return c, u / np.linalg.norm(u)
+
+
+def fair_ring(P, dp=FAIR_DP, corner_deg=FAIR_CORNER_DEG, min_seg=FAIR_MIN_SEG, sigma=FAIR_SIGMA, step=0.4,
+              sag=0.04, straight=FAIR_STRAIGHT, snap=0.8, min_edge=0.2):
+    P = G.dedupe(G.ccw(np.asarray(P, float)), 1e-6)
+    r_eq = math.sqrt(abs(G.area(P)) / math.pi)          # small rings: tolerances scale down (a 3 mm part keeps its shape)
+    dp, sigma, min_seg = min(dp, 0.15 * r_eq), min(sigma, 0.2 * r_eq), min(min_seg, 0.3 * r_eq)
+    D = G.dp_simplify(P, dp)
+    n = len(D)
+    if n < 4:
+        return G.ccw(D)
+    di = [int(np.argmin(np.einsum("ij,ij->i", P - d, P - d))) for d in D]     # D's vertices as indices into P
+    order = np.argsort(di)
+    D, di = D[order], [di[k] for k in order]
+    L = np.linalg.norm(np.roll(D, -1, 0) - D, axis=1)          # segment i: D[i] -> D[i + 1]
+    corners = [i for i in range(n) if _turn_deg(D[i - 1], D[i], D[(i + 1) % n]) >= corner_deg
+               and (L[i - 1] >= min_seg or L[i] >= min_seg)]
+    N = len(P)
+
+    def raw_run(i0, i1):                                         # P[i0] .. P[i1] along the ring (wrapping)
+        if i1 <= i0:
+            i1 += N
+        return np.array([P[k % N] for k in range(i0, i1 + 1)])
+
+    if not corners:
+        S = G.smooth(G.resample(P, step), sigma / step)
+    else:
+        out = []
+        for k, ci in enumerate(corners):
+            cj = corners[(k + 1) % len(corners)]
+            run = raw_run(di[ci], di[cj])
+            R = G.resample(run, step, closed=False)
+            R[0], R[-1] = run[0], run[-1]
+            out.append(_smooth_open(R, sigma / step)[:-1])
+        S = np.vstack(out)
+    # straight stretches onto their least-squares lines
+    for i in range(n):
+        if L[i] < straight:
+            continue
+        a, b = D[i], D[(i + 1) % n]
+        c, u = _tls_line(raw_run(di[i], di[(i + 1) % n]))
+        ab = b - a
+        t = ((S - a) @ ab) / float(ab @ ab)
+        nrm = np.array([-u[1], u[0]])
+        dist = (S - c) @ nrm
+        m = (t > 0.08) & (t < 0.92) & (np.abs(dist) < snap)
+        S[m] = S[m] - np.outer(dist[m], nrm)
+    Q = G.dedupe(G.dp_simplify(G.dedupe(S, 0.05), sag), min_edge)      # no outline edge under 0.2 mm: the
+    return G.ccw(G.dp_simplify(Q, sag))                                 # prisms' side faces stay UD-safe
+
+
+def straight_span(P, a, b):
+    """Replace the ring's run between the vertices nearest a and b (the shorter way round) by the straight segment."""
+    P = np.asarray(P, float)
+    ia = int(np.argmin(np.linalg.norm(P - np.asarray(a, float), axis=1)))
+    ib = int(np.argmin(np.linalg.norm(P - np.asarray(b, float), axis=1)))
+    i0, i1 = min(ia, ib), max(ia, ib)
+    if i1 - i0 <= len(P) - (i1 - i0):
+        return np.vstack([P[:i0 + 1], P[i1:]])
+    return P[i0:i1 + 1].copy()
+
+
+# (W1 realism round 1) the lower rail's rear end: the trace's 2-3 mm stair notch between the fore-end bottom (485.1,
+# -32.0) and the rail's bottom (490.0, -37.3) built a hooked flap of the lower's wall round the rail end (judges: torn /
+# jagged geometry above the magwell). The sheet draws one rounded step there: a straight chamfer between the two.
+MASTER_SPANS = [((485.08, -32.04), (490.04, -37.28))]
+
+
 def master_outer(tol=0.3):
     rr = [r for r in trace("LEFT")["gun_without_magazine"] if r["kind"] == "outer"]
     r = max(rr, key=lambda r: abs(r["area_px"]))
-    return G.ccw(clean_ring_true(np.array(r["mm"], float)))
+    P = fair_ring(np.array(r["mm"], float))
+    for a, b in MASTER_SPANS:
+        P = straight_span(P, a, b)
+    return G.ccw(P)
 
 
 def master_holes(tol=0.25):
-    # the see-through holes keep the DP + Chaikin clean-up (their bias is small: IoU +0.001 with the new one, while the
-    # guard opening's smoothed polyline left slivers on the guard bar's faces at the lip break)
-    return [clean_ring(np.array(r["mm"], float), tol) for r in trace("LEFT")["gun_without_magazine"]
+    return [fair_ring(np.array(r["mm"], float)) for r in trace("LEFT")["gun_without_magazine"]
             if r["kind"] == "hole"]
 
 
@@ -115,11 +232,11 @@ def part_ring(part, tol=0.3, view="LEFT", raw=False):
     rr = trace(view)["parts"][part]
     r = max((r for r in rr if r["kind"] == "outer"), key=lambda r: abs(r["area_px"]))
     P = np.array(r["mm"], float)
-    return G.ccw(G.dp_simplify(P, tol) if raw else clean_ring(P, tol))
+    return G.ccw(G.dp_simplify(P, tol) if raw else fair_ring(P))
 
 
 def part_holes(part, tol=0.25):
-    return [clean_ring(np.array(r["mm"], float), tol) for r in trace("LEFT")["parts"][part] if r["kind"] == "hole"]
+    return [fair_ring(np.array(r["mm"], float)) for r in trace("LEFT")["parts"][part] if r["kind"] == "hole"]
 
 
 # ------------------------------------------------------------------------------------------------ the seam

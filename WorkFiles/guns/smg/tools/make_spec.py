@@ -974,7 +974,7 @@ part(id="sight_front", display="Front flip sight (rail clamp, post between ears)
      process="M-chamfer (base) + M-round (ears)", joint={"type": "hinge", "parent": "body", "clearance_mm": [0.10, 0.30]},
      slot=SLOT_METAL, finish=F_STEEL, texel_class="A",
      box_M={"X": D["sights"]["sight_front"]["X"], "Z": [RAIL_TOP_Z - 6.0, D["sights"]["sight_front"]["top_Z"]["mm"]],
-            "Y": [TV["lateral_features_gun_right_(-Y,image-up)"][0]["Y_extreme"], 14.0]},
+            "Y": [-16.2, 14.0]},                     # R40: the TOP panel's knob (to Y -46.3) is not built
      dims={"base_X": FRONT_BASE, "head_X": D["sights"]["sight_front"]["head_X_span_1to6mm_below_top"],
            "ear_top_Z": D["sights"]["sight_front"]["top_Z"]["mm"], "post_tip_XZ": POST_TIP, "post_width": 1.85,
            "ear_thickness": [2.5, 3.0], "pivot_XZ": FRONT_PIVOT, "fold": "rearward (about Y)",
@@ -983,12 +983,14 @@ part(id="sight_front", display="Front flip sight (rail clamp, post between ears)
                           "%.1f)" % (FRONT_FOLDED_Z[0], RAIL_TOP_Z - 3.0), "lug_slot": FRONT_LUG,
            "clamp_knob_right": {"X": TV["lateral_features_gun_right_(-Y,image-up)"][0]["X"],
                                 "Y_extreme": TV["lateral_features_gun_right_(-Y,image-up)"][0]["Y_extreme"],
-                                "note": "TOP shows the clamp's nut end on the right as a round knob, %.1f mm proud" % sc(16.0, 1)}},
-     construction="Rail-clamp base (lug in a hidden slot, cross-bolt head left, round clamp knob right as TOP shows); "
+                                "note": "TOP shows the clamp's nut end on the right as a round knob, %.1f mm proud; "
+                                        "R40: not built (RIGHT and 3/4 draw none; real pattern); its X span sets the "
+                                        "cross-bolt / captive nut X and the cheeks' lower rear step" % sc(16.0, 1)}},
+     construction="Rail-clamp base (lug in a hidden slot, cross-bolt head left, captive hex nut right, R40); "
      "leaf with two ears and a square post between them, tip flat with a 0.2 mm break, the tip on the sight line "
      f"(Z {POST_TIP[1]}, {round(D['sights']['sight_front']['top_Z']['mm'] - POST_TIP[1], 1)} mm under the ear tops); "
      "spring detent, no button.", ruling="RP15", wear="bright ear tops",
-     trace=tref("sight_front"), side_profile_M=profile("sight_front", 0.2), authority="LEFT (+TOP knob, 3/4 ears)",
+     trace=tref("sight_front"), side_profile_M=profile("sight_front", 0.2), authority="LEFT + RIGHT (3/4 ears; the TOP knob not built, R40)",
      confidence="medium-high", sources=["measure", "craft front_flip_sight", "merge"])
 
 part(id="selector", display="Selector (ambidextrous: one shaft, two teardrop levers)", bone="selector",
@@ -1435,6 +1437,48 @@ RES = [
      "the authorities allow removes the region; R26 magazine-thickness regions) left out the rest meets the bar. Below "
      "the floor no region is excused and the panel goes to the user (Q11: regenerate the 3/4 panel or rule on it)",
      "rule": "measurement method (orchestrator: solve the camera properly; the exception only with evidence)"},
+    {"id": "R39", "topic": "L2 3/4 FRONT (LEFT): reported only for the SMG (orchestrator ruling 2026-10-10)",
+     "conflict": "no rigid camera fits the AI 3/4 panel: best camera-solved IoU 0.90 (R38 floor 0.915 not met); the "
+     "grip / magazine landmarks sit 16-19 px off any camera that fits the body, while the LEFT and RIGHT panels agree "
+     "with each other at 0.95 (the panel is internally inconsistent, not the build)",
+     "resolution": "the side (LEFT / RIGHT) and TOP views are the exact-match authority; the 3/4 panel is a look "
+     "reference. The two 3/4 rows (camera-solved IoU, contour P95) are still measured and recorded every stage, marked "
+     "'reported' and not blocking (gates/form.json status pass)",
+     "rule": "orchestrator ruling (W1 start state, 2026-10-10)"},
+    {"id": "R40", "topic": "Front sight: the TOP panel's right-side 'clamp knob' (W1 realism round 1)",
+     "conflict": "the TOP panel draws a 12 x 15 mm protrusion on the right at the front sight base (built in W1 as a "
+     "stalk + cap knob to Y -46.3); every close-up realism judge read it as a second charging handle / a stray "
+     "plunger; the RIGHT side view (authority) draws only a small screw head on the base's face where an end-on 11.8 "
+     "mm knob would show, the 3/4 view draws nothing beyond the base, and real rail-clamp flip sights carry no stalk",
+     "resolution": "not built: the cross-bolt ends in the captive hex nut the rear sight carries (flats up, flush on the "
+     "base's right face); the side panels' taller base block over the knob's X span (535.3-547.1) is the cheeks' lower "
+     "rear step (top Z 13.2 in the rail frame); TOP L2 stays >= 0.93 without it",
+     "rule": "authority views (RIGHT + 3/4 agree against the TOP panel) + real pattern + realism judges"},
+    {"id": "R41", "topic": "Traced outlines as geometry: fairing (W1 realism round 1)",
+     "conflict": "the close-up judges read the trace's pixel residue as torn / chipped geometry: clean_ring_true's "
+     "corner pins blended back to the raw stairs (zig-zags on the magwell lip, the receiver's lower front, the stock "
+     "arm's lumpy top), clean_ring's DP 0.3 kept sub-pixel steps on small parts (the trigger's stepped tip, the guard's "
+     "notched rim)",
+     "resolution": "smg_geom.fair_ring for every traced ring (master outline, holes, part rings): true corners pinned "
+     "(DP 0.75 polyline turns >= 40 deg next to a segment >= 1.5 mm), each raw run between corners Gaussian-smoothed "
+     "(sigma 1.5 mm, ends held), straight stretches (DP segment >= 5 mm) snapped onto their least-squares line, no "
+     "edge under 0.2 mm; the lower rail's rear-end stair notch replaced by its straight step (MASTER_SPANS). Measured: "
+     "LEFT 0.9814 -> 0.983, L3 P95 2.0 (unchanged), 23 / 23 parts",
+     "rule": "sheet authority (unchanged silhouette within the gates) + realism judges"},
+    {"id": "R42", "topic": "W1 realism round 1: part construction fixes",
+     "conflict": "judged fake at 35 cm: the trigger's stepped tip, the guard's broken rim (two traced holes and the "
+     "drawn blade's relief cut separately), the lower's hooked flap round the lower rail's rear end, an unchamfered "
+     "magwell flare band under a round (a cornice), the stock head unrounded with a square step from the arm",
+     "resolution": "trigger: one centripetal Catmull-Rom curve through control points read at the trace stairs' middles "
+     "(finger face 370.9 / -66.5, forward-curled tip 378.2 / -80.7, root flaring to 360.2-374.0 at the opening's top), "
+     "no housing band; guard: ONE opening (the traced hole minus the blade's run, its top held at the drawn -51.3 across "
+     "the blade's root, 45 deg corners kept) cut before the rounds (rim R 1.05), the loop = the opening grown 8 mm to "
+     "the front leg (X 402.2) + the drawn foot spliced in; the lower rail butts the lower's flat face (X 484.2, 0.3 "
+     "gap) instead of tucking into a pocket; the flare band's 45 deg top chamfer runs (its predicate missed the "
+     "built top by 1.2 mm); the stock's head, hinge leaf and latch boss rounded with the frame (R 1.0) and the neck "
+     "flaring into the head in plan; the upper's seam edges and the shoulder set-in round the front chamfer kept off "
+     "the rounds (UD)",
+     "rule": "real pattern + realism judges, inside the sheet's side / top gates"},
 ]
 
 # ================================================================================================ gates
@@ -1445,7 +1489,7 @@ GATES = {
     "look": {
         "L1": "blockout IoU: LEFT >= 0.95, RIGHT >= 0.95, TOP (X >= %.0f) >= 0.92; < 0.90 = stop and change the method" % sc(245),
         "L2": "form IoU: LEFT >= 0.96, RIGHT >= 0.96 (labels consistent: both sides are authority views), TOP (X >= %.0f) " % sc(245) +
-              ">= 0.93, 3/4 FRONT (LEFT) camera-solved IoU >= 0.93 and contour P95 <= 3 px (exception rule R38); per "
+              ">= 0.93, 3/4 FRONT (LEFT) camera-solved IoU >= 0.93 and contour P95 <= 3 px (reported only, R39); per "
               "part (LEFT trace keys) IoU >= 0.95 where area >= 400 px and mean width (2 area / perimeter) >= 7 px, "
               "else contour P95 <= 1 px / max <= 2 px; the fold-resized sight leaves IoU >= their fold ceiling - 0.05; "
               "measurement conventions R33 (per part) and R34 (side IoU and L3 contour)",

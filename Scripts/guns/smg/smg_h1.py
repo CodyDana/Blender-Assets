@@ -122,14 +122,22 @@ out["girth"] = {"section_at": "Grip origin, perpendicular to the grip axis (21.8
                 "pass": perim <= 1.10 * band_max}
 
 # ---- reach: the back strap at the web (deepest point of the hollow under the beaver tail) -> the trigger face
-Vg, Tg = tris(G["lower_receiver"])
 trig_face = np.array(socket("Trigger")["M_mm"], float)
-near_mid = np.abs(Vg[:, 1]) < 1.5
+# (W1 realism round 1) the back strap's profile from the mid-plane SECTION of the moulding (bisect at Y 0), not from
+# vertices that happen to lie within 1.5 mm of it: the UD repair's flat dissolve can leave none there
+bm = bmesh.new()
+bm.from_mesh(G["lower_receiver"].data)
+res = bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], dist=1e-7, plane_co=Vector((0, 0, 0)),
+                             plane_no=Vector((0, 1, 0)), clear_inner=False, clear_outer=False)
+Vs = np.array([v.co for v in res["geom_cut"] if isinstance(v, bmesh.types.BMVert)]) * 1000.0 + np.asarray(GRIP, float)
+bm.free()
+Vg, Tg = tris(G["lower_receiver"])
+near_mid = np.abs(Vs[:, 1]) < 1.5
 best = None
 for zz in np.arange(-48.0, -75.01, -0.5):
-    sel = near_mid & (np.abs(Vg[:, 2] - zz) < 0.6) & (Vg[:, 0] < 300.0) & (Vg[:, 0] > 260.0)
+    sel = near_mid & (np.abs(Vs[:, 2] - zz) < 0.6) & (Vs[:, 0] < 300.0) & (Vs[:, 0] > 260.0)
     if sel.any():
-        xb = float(Vg[sel, 0].min())
+        xb = float(Vs[sel, 0].min())
         if best is None or xb > best[0]:
             best = (xb, zz)
 web_pt = np.array([best[0], 0.0, best[1]])

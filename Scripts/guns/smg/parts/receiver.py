@@ -226,18 +226,36 @@ def upper_receiver():
     plan = prism(plan_pts, -100.0, 100.0, "XY")
     # the moulded shoulder: the band above Z_LEDGE set in by LEDGE on both sides, up to the front corner chamfers
     s = SG.FORE_END_STEP_X
-    right_chain = [(X_EBF - 2.0, SG.Y_R), (s - (SG.F_R - SG.Y_R), SG.Y_R), (s, SG.F_R),
-                   (SG.FRONT_FACE_X - SG.FRONT_CHAMFER, SG.F_R)]
-    left_chain = [(X_EBF - 2.0, SG.Y_L), (s - (SG.Y_L - SG.F_L), SG.Y_L), (s, SG.F_L),
-                  (SG.FRONT_FACE_X - SG.FRONT_CHAMFER, SG.F_L)]
+    # (r1) the set-in runs on round the chamfered front corner to the front face: ending at the chamfer's start it
+    # left a 0.01 mm2 corner triangle where the ledge step, the chamfer and the round met (UD1)
+    xf_, c_ = SG.FRONT_FACE_X, SG.FRONT_CHAMFER
+    right_chain = [(X_EBF - 2.0, SG.Y_R), (s - (SG.F_R - SG.Y_R), SG.Y_R), (s, SG.F_R), (xf_ - c_, SG.F_R),
+                   (xf_, SG.F_R + c_), (xf_ + 3.0, SG.F_R + c_)]
+    left_chain = [(X_EBF - 2.0, SG.Y_L), (s - (SG.Y_L - SG.F_L), SG.Y_L), (s, SG.F_L), (xf_ - c_, SG.F_L),
+                  (xf_, SG.F_L - c_), (xf_ + 3.0, SG.F_L - c_)]
     strips = [side_strip(right_chain, LEDGE, Z_LEDGE, Z_TOP + 5.0), side_strip(left_chain, LEDGE, Z_LEDGE, Z_TOP + 5.0)]
     seam_z = float(SEAM[0, 1]) + H
+
+    up_seam = SG.offset_polyline(SEAM, +H)
+
+    def near_up_seam(x, z, tol=1.3):
+        q = np.array([x, z])
+        for a, b in zip(up_seam[:-1], up_seam[1:]):
+            ab = b - a
+            t = np.clip((q - a) @ ab / max(ab @ ab, 1e-12), 0.0, 1.0)
+            if np.linalg.norm(a + t * ab - q) < tol:
+                return True
+        return False
 
     def outer_round(mid, d, n1, n2, dih, convex):
         if not convex or dih < 35.0:
             return 0.0
         if mid[2] < seam_z + 1.2 and mid[0] < SG.FORE_END_STEP_X + 3.0:
             return 0.0                                           # the seam edges (their own break)
+        if near_up_seam(mid[0], mid[2]):
+            return 0.0                                           # (r1) the whole seam incl. the V's upper corners: a
+            #                                                      round ending part-way up the V left 0.003 mm2 corner
+            #                                                      patches the UD repair could not collapse
         if abs(mid[2] - Z_LEDGE) < 0.8:
             return 0.0                                           # the shoulder's step edge
         if abs(mid[2] - Z_FB) < 0.8 and X_LR0 - 1.0 < mid[0] < X_LRF + 1.0:

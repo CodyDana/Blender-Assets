@@ -558,7 +558,7 @@ top.append((rect(WD["X"][0], WD["X"][1], 14.0, yl + WD["proud_of_body"]), STEEL)
 sfb = P["sight_front"]["dims"]
 top.append((rect(sfb["base_X"][0], sfb["base_X"][1], -14.0, 14.0), STEEL))
 ck = sfb["clamp_knob_right"]
-top.append((rect(ck["X"][0], ck["X"][1], ck["Y_extreme"], -14.0), STEEL))
+top.append((rect(ck["X"][0] + 2.9, ck["X"][1] - 2.9, -16.2, -14.0), STEEL))     # R40: the captive hex nut (no knob)
 top.append((rect(ch["arm_rear_block"]["X"][0], ch["arm_rod"]["X"][1], yl, yl + ch["arm_rear_block"]["proud_of_wall"]), STEEL))
 top.append((rect(ch["knob_centre_XZ"][0] - 3, ch["knob_centre_XZ"][0] + 3, yl, ch["knob_centre_Y"]), STEEL))
 top.append((circle(ch["knob_centre_XZ"][0], ch["knob_centre_Y"], ch["knob_dia"] / 2, 32), STEEL))
@@ -730,7 +730,7 @@ lines = [
     (f"magazine (from spec numbers): IoU {iou_mag:.3f} vs the traced magazine", F_M),
     (f"top, X >= {XT:.0f}: IoU {iou_top:.3f} (panel C boxes vs the TOP trace)", F_M),
     ("", F_S),
-    ("Key decisions (SMG_STUDY.md; smg_spec.json resolutions R1-R38)", F_H),
+    ("Key decisions (SMG_STUDY.md; smg_spec.json resolutions R1-R42)", F_H),
     (f"- SCALE {OVERALL:.0f} mm (R26, orchestrator ruling; the W0 merge was 690): the sheet's rail pitch is 10.01 at this "
      f"scale; labels true (LEFT = left); the ruler reads {MEAS['scale']['sheet_ruler']['implied_overall_length_cm_LEFT']} cm", F_S),
     (f"- bore at Z_M {bz}: device OD {od} (side and top agree; the 20.8 read was a slot sliver)", F_S),
@@ -739,7 +739,7 @@ lines = [
     (f"- top rail: {rd['teeth_built']} teeth / {len(rd['cut_slot_centres_X'])} cut slots at 10.01, flats as drawn", F_S),
     (f"- fold: axle ({ax}, {ay}), +180° to the right, folded {FOLD['folded_length']} (Q6, R19-R20)", F_S),
     ("- right long slot = a vent (not a mirror); boss at the port = stock catch", F_S),
-    ("- drum on the rear sight's LEFT; front clamp knob on the right", F_S),
+    ("- drum on the rear sight's LEFT; front: cross-bolt + hex nut, the TOP knob not built (R40)", F_S),
     ("- selector detents = the design call (R27); folded retention = the moulded lug (R28)", F_S),
     ("", F_S),
     ("Check fixes C1-C16 (SMG_STUDY.md section 12)", F_H),
