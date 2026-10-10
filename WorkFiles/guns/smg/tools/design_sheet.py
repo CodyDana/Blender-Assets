@@ -730,7 +730,7 @@ lines = [
     (f"magazine (from spec numbers): IoU {iou_mag:.3f} vs the traced magazine", F_M),
     (f"top, X >= {XT:.0f}: IoU {iou_top:.3f} (panel C boxes vs the TOP trace)", F_M),
     ("", F_S),
-    ("Key decisions (SMG_STUDY.md; smg_spec.json resolutions R1-R29)", F_H),
+    ("Key decisions (SMG_STUDY.md; smg_spec.json resolutions R1-R38)", F_H),
     (f"- SCALE {OVERALL:.0f} mm (R26, orchestrator ruling; the W0 merge was 690): the sheet's rail pitch is 10.01 at this "
      f"scale; labels true (LEFT = left); the ruler reads {MEAS['scale']['sheet_ruler']['implied_overall_length_cm_LEFT']} cm", F_S),
     (f"- bore at Z_M {bz}: device OD {od} (side and top agree; the 20.8 read was a slot sliver)", F_S),

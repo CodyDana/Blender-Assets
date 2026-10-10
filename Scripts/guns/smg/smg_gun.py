@@ -63,6 +63,11 @@ CFG.magfit = {
     "insert_mm": float(np.linalg.norm(np.array(SPEC.socket("MagInsertStart")["M_mm"]) - np.array(_mf["Mag_in_M"]))),
     "well_band": [0.0, float(_mag["top_along_axis"]) - 4.0], "lip_z": 0.0,
     "well_parts": ("lower_receiver",), "catch_zone_mm": 6.0,
+    # the real pattern's catch is spring-loaded: the magazine's top rear edge meets the nose's 41 deg underside ramp and
+    # cams it back, the nose rides the rear face and snaps into the notch (W1b fix round; gunlib 0.2.2). A ramp: the
+    # nose moves <= 0.5 x tan 60 = 0.87 mm per 0.5 mm insertion step (a square shoulder needs the whole engagement)
+    "catch_spring": {"nose_M": [float(_mr["nose_tip_XZ_seated"][0]) + 0.15, 0.0,
+                                float(_mr["nose_tip_XZ_seated"][1]) - 0.2], "cam_mm_per_step": 0.866},
     "half_thickness": float(_mag["thickness"]) / 2.0, "half_length": float(_mag["foreaft"]) / 2.0,
     "header": lambda S: {"stage": "form: magazine fit (straight insert, SMG_BUILD_PLAN 12.2 at form time)",
                          "spec": "smg_spec.json frames.mag, sockets Mag / MagInsertStart, mag_release dims"}}

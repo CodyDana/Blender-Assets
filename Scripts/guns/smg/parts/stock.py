@@ -15,7 +15,7 @@ Real pattern (one-piece glass-filled polymer moulding, P-round; rubber pad):
 - the folded-retention lug on the rear upright's right face (X 32.3-38.3, tip Y -29.96) with its barb and 35 deg rear
   ramp: folded, the barb sits 1.3 under the port catch's hooked lip;
 - the butt pad: the traced side outline with a flat rear face cut by horizontal grooves (ribs 1.2 deep, pitch 3.2,
-  R 0.6 crests), the 2 mm wrap lip round the upright, R 3 edge rounds.
+  R 0.6 crests), the plain 0.3 seam to the upright, R 3 edge rounds.
 """
 from __future__ import annotations
 
@@ -81,7 +81,8 @@ def windows_and_borders():
     r_in = float(SF["opening_inner_R"])
     b = float(SF["opening_border_inset"])
     out = []
-    for h in SG.master_holes(0.25):
+    for h in [SG.clean_ring(np.array(r["mm"], float), 0.25) for r in SG.trace("LEFT")["gun_without_magazine"]
+              if r["kind"] == "hole"]:                   # (simplified to 0.6 below; the legacy clean-up keeps EXACT clean)
         if not (h[:, 0].min() > X_F0 + 2.0 and h[:, 0].max() < X_NECK1 - 2.0):
             continue
         P = G.ccw(G.dp_simplify(G.ccw(h), 0.6))
@@ -92,7 +93,18 @@ def windows_and_borders():
 def head_outline():
     r = SG.part_ring("stock_hinge_knuckle", 0.3)
     P = G.clip_x(r, X_HEAD0, X_HEAD1)
-    return G.ccw(G.clip_y(P, -19.2, 22.2))          # 0.5 past the neck's top and bottom: no near-coplanar faces
+    # the traced head entire (W1b fix round, L2 per part): its top rises to Z 31 toward the end block and its bottom
+    # sits 2-3 mm under the neck's; the earlier clip to the neck's height (-19.2 .. 22.2) cut both off. Where the head
+    # overlaps the neck's end (X < 222.6) the two traced outlines share the same pixel boundary: the head's top and
+    # bottom are held 0.5 inside the neck's there (no near-coplanar faces at the union)
+    fo = frame_outline()
+    Q = []
+    for x, z in P:
+        if x < X_NECK1 + 0.6:
+            zb, zt = _z_span_at(fo, min(x, X_NECK1 - 0.05))
+            z = min(max(z, zb + 0.5), zt - 0.5)
+        Q.append((x, z))
+    return G.ccw(G.dedupe(np.array(Q)))
 
 
 def _z_span_at(P, x):
@@ -214,12 +226,9 @@ def butt_pad():
         g = np.array([[-1.0, zc - 1.05], [depth - 0.25, zc - 0.55], [depth, zc - 0.3], [depth, zc + 0.3],
                       [depth - 0.25, zc + 0.55], [-1.0, zc + 1.05]])
         grooves.append(prism(g, -hw + 3.4, hw - 3.4, "XZ"))       # closed ends inside the R 3 side rounds
-    # the wrap lip round the upright (2 mm), 0.3 off it
-    spans = [_z_span_at(frame_outline(), x) for x in np.arange(X_F0 + 0.05, X_PAD + 2.4, 0.25)]
-    zb, zt = min(z[0] for z in spans), max(z[1] for z in spans)
-    lip = box(X_PAD - 0.6, X_PAD + 2.0, -(HW_ + 0.3 + 2.0), HW_ + 0.3 + 2.0, zb - 2.3, zt + 2.3)
-    lip_in = box(X_PAD - 0.3, X_PAD + 3.0, -(HW_ + 0.3), HW_ + 0.3, zb - 0.3, zt + 0.3)
-    return Comp("butt_pad", [(body, [(3.0, 3, 30.0)]), (lip, [(0.6, 2, 30.0)], [lip_in])], cutters=grooves,
+    # (W1b fix round, L2 per part: the 2 mm wrap lip round the upright is gone; the sheet draws the pad ending at the
+    # seam, X 28.1, with the upright's own faces behind it)
+    return Comp("butt_pad", [(body, [(3.0, 3, 30.0)])], cutters=grooves,
                 bone="stock", cls="P-round", slot=FURN, spec_id="butt_pad",
                 joint={"type": "seam", "parent": "stock_frame", "gap_mm": [0.2, 0.4]})
 

@@ -132,7 +132,15 @@ def build_ops(o: Ops, coll, offset):
                 cp.name = f"_dbg_{o.name}_{len(steps):02d}"
                 coll.objects.link(cp)
     bl.finish(ob)
+    if DEBUG_OPS:
+        r_ = bl.manifold_report(ob)
+        print("  [ops] %s after finish: tris %d bnd %d multi %d" % (o.name, r_["triangles"], r_["boundary_edges"],
+                                                                r_["multi_face_edges"]), flush=True)
     fix = _repair(ob)
+    if DEBUG_OPS:
+        r_ = bl.manifold_report(ob)
+        print("  [ops] %s after repair: tris %d bnd %d multi %d %s" % (o.name, r_["triangles"], r_["boundary_edges"],
+                                                                   r_["multi_face_edges"], fix), flush=True)
     if o.wn:
         bl.weighted_normals(ob, weight=WN_WEIGHT, clear_custom=True)
     else:
@@ -198,6 +206,133 @@ def _repair(ob):
         return {"needed": False}
     out = UD.repair(ob, rounds=30)          # relaxed_final moved vertices up to 0.6 mm: B3 rows broke (not used)
     out["needed"] = True
+    out["area_flip"] = _area_flip(ob)
+    return out
+
+
+AREA_MARGIN_MM2 = 0.0125                     # UD1 asks >= 0.01 mm2: a 25 % margin over it
+
+
+def _area_flip(ob, lim=AREA_MARGIN_MM2, rounds=8):
+    """Sub-margin triangles (< lim mm2) left by the repair, removed WITHOUT moving a vertex (W1b fix round, UD1):
+    (a) a sliver lying flat in its surface (3 consecutive points of a cut arc, an ear) gets the edge it shares with a
+        coplanar neighbour flipped when both new triangles are larger than the old smaller one, keep their
+        orientation and clear the needle height (the surface is unchanged: the same plane, other diagonals);
+    (b) a folded sliver (its normal against its neighbours': a repair collapse folded it over) loses its shortest edge,
+        collapsed under the link condition only when no surviving face turns by more than 30 deg, the move <= 0.35 mm.
+    Each round is kept only when the manifold report stays as clean. Returns the counts."""
+    import bmesh
+    import bpy
+    from gunlib import bl
+    from gunlib import ud as UD
+    k2 = 1e-6                                 # mm2 -> m2
+    out = {"flipped": 0, "collapsed": 0, "left": None}
+    base = bl.manifold_report(ob)
+
+    def tri_area(a, b, c):
+        return 0.5 * (b - a).cross(c - a).length
+
+    for _ in range(rounds):
+        snap = ob.data.copy()
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bm.normal_update()
+        small = [f for f in bm.faces if len(f.verts) == 3 and f.calc_area() < lim * k2]
+        if not small:
+            bm.free()
+            bpy.data.meshes.remove(snap)
+            break
+        nf = nc = 0
+        folded = []
+        for f in small:
+            if not f.is_valid:
+                continue
+            a0 = f.calc_area()
+            nbr = [g for e in f.edges for g in e.link_faces if g is not f]
+            if nbr and sum(1 for g in nbr if f.normal.dot(g.normal) < -0.5) >= 2:
+                folded.append(f)
+                continue
+            best = None
+            for e in sorted(f.edges, key=lambda e: -e.calc_length()):
+                if len(e.link_faces) != 2:
+                    continue
+                g = e.link_faces[0] if e.link_faces[1] is f else e.link_faces[1]
+                if len(g.verts) != 3 or f.normal.dot(g.normal) < 0.99995:
+                    continue
+                v = [x for x in f.verts if x not in e.verts][0]
+                w = [x for x in g.verts if x not in e.verts][0]
+                p, q = e.verts
+                n = f.normal
+                t1 = (v.co, p.co, w.co)
+                t2 = (v.co, w.co, q.co)
+                ok = True
+                areas = []
+                for t in (t1, t2):
+                    cr = (t[1] - t[0]).cross(t[2] - t[0])
+                    ar = 0.5 * cr.length
+                    if ar <= 0:
+                        ok = False
+                        break
+                    # orientation: both new triangles on the same side as the old pair (a convex quad)
+                    if abs(cr.normalized().dot(n)) < 0.9999:
+                        ok = False
+                        break
+                    L = max((t[1] - t[0]).length, (t[2] - t[1]).length, (t[0] - t[2]).length)
+                    if 2.0 * ar / L < UD.MIN_HEIGHT_MM * 1e-3 or (w.co - v.co).length < UD.MIN_EDGE_MM * 1e-3:
+                        ok = False
+                        break
+                    areas.append(ar)
+                if not ok:
+                    continue
+                # the quad must be convex: v and w on opposite sides of the line p-q, p and q on opposite sides of v-w
+                s1 = (q.co - p.co).cross(v.co - p.co).dot(n) * (q.co - p.co).cross(w.co - p.co).dot(n)
+                s2 = (w.co - v.co).cross(p.co - v.co).dot(n) * (w.co - v.co).cross(q.co - v.co).dot(n)
+                if s1 >= 0 or s2 >= 0:
+                    continue
+                gain = min(areas)
+                if gain > max(a0, lim * k2) or (gain > a0 * 1.5 and gain > min(a0, g.calc_area())):
+                    if best is None or gain > best[0]:
+                        best = (gain, e)
+            if best is not None:
+                r = bmesh.ops.rotate_edges(bm, edges=[best[1]], use_ccw=False)
+                if r.get("edges"):
+                    nf += 1
+        # folded slivers: collapse their shortest edge (link condition, surviving faces turn < 30 deg)
+        es = [min(f.edges, key=lambda e: e.calc_length()) for f in folded if f.is_valid]
+        if es:
+            nc = UD._safe_collapse(bm, es, min_dot=0.866, max_len_mm=0.35)
+        if not (nf or nc):
+            # (c) a corner sliver no flip can widen (where a bevel round meets a cut, its neighbours not coplanar):
+            # one of its edges (shortest first, <= 0.5 mm: the move <= 0.25) collapsed, surviving faces turn < 41 deg.
+            # Only for what still fails UD1 itself (< 0.0101 mm2): a collapse moves a vertex, and on a curved contact
+            # face (a press-fit bore, 0.02 to its pin) any move breaks the contact (measured: the rear sight's pin bore)
+            rest = [f for f in bm.faces if f.is_valid and len(f.verts) == 3 and f.calc_area() < 0.0101 * k2]
+            es = [e for f in rest for e in f.edges]
+            if es:
+                nc = UD._safe_collapse(bm, es, min_dot=0.75, max_len_mm=0.5)
+        if not (nf or nc):
+            bm.free()
+            bpy.data.meshes.remove(snap)
+            break
+        bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+        bm.to_mesh(ob.data)
+        bm.free()
+        ob.data.update()
+        r = bl.manifold_report(ob)
+        if r["boundary_edges"] > base["boundary_edges"] or r["multi_face_edges"] > base["multi_face_edges"] or \
+                r["wire_edges"] > base["wire_edges"]:
+            bad = ob.data
+            ob.data = snap
+            bpy.data.meshes.remove(bad)
+            break
+        bpy.data.meshes.remove(snap)
+        out["flipped"] += nf
+        out["collapsed"] += nc
+    V, T = bl.tris_np(ob)
+    A, B, Cc = V[T[:, 0]], V[T[:, 1]], V[T[:, 2]]
+    ar = 0.5 * np.linalg.norm(np.cross(B - A, Cc - A), axis=1)
+    out["left"] = int((ar < lim).sum())
+    out["min_area_mm2"] = round(float(ar.min()), 6) if len(ar) else None
     return out
 
 

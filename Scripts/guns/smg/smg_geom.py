@@ -71,13 +71,42 @@ def clean_ring(P, tol=0.3):
     return G.dedupe(chaikin_keep_corners(Q))
 
 
+def clean_ring_true(P, tol=0.5, sigma_mm=1.0, straight_mm=6.0, snap_mm=0.8, sag_mm=0.05):
+    """(W1b fix round) The master outline's clean-up without the corner-cutting bias: a Gaussian-smoothed contour
+    (sigma 1.0 mm: the 1 px stairs go, crisp corners > 40 deg pinned: geo2d.clean_smooth) whose points along every
+    straight run (a Douglas-Peucker 0.5 segment >= 6 mm) are snapped onto that run, then simplified at 0.05 mm sagitta.
+    Measured on the LEFT master silhouette: IoU 0.9932 against the trace (the DP 0.9 + Chaikin clean_ring: 0.9857, its
+    corner cutting pushed every concave run outward, e.g. 86 px of the stock neck). (Tried and dropped in the same
+    round: smoothing without pins, with or without snapping: the booleans of the stock frame / lower receiver broke and
+    the lower strut fell under 0.95. The pins' blend back to the raw stairs leaves short zig-zags here and there: noted
+    for the close-up realism pass.)"""
+    P = G.ccw(np.asarray(P, float))
+    D = G.ccw(G.dp_simplify(P, tol))
+    S = G.ccw(G.clean_smooth(P, 0.6, sigma_mm))
+    S2 = S.copy()
+    for i in range(len(D)):
+        a, b = D[i], D[(i + 1) % len(D)]
+        ab = b - a
+        L2 = float(ab @ ab)
+        if L2 < straight_mm ** 2:
+            continue
+        t = ((S - a) @ ab) / L2
+        proj = a + np.outer(t, ab)
+        m = (t > 0.0) & (t < 1.0) & (np.linalg.norm(S - proj, axis=1) < snap_mm)
+        S2[m] = proj[m]
+    Q = G.dedupe(G.dp_simplify(S2, sag_mm), 0.2)        # no edge under 0.2 mm
+    return G.ccw(G.dp_simplify(Q, sag_mm))
+
+
 def master_outer(tol=0.3):
     rr = [r for r in trace("LEFT")["gun_without_magazine"] if r["kind"] == "outer"]
     r = max(rr, key=lambda r: abs(r["area_px"]))
-    return G.ccw(clean_ring(np.array(r["mm"], float), tol))
+    return G.ccw(clean_ring_true(np.array(r["mm"], float)))
 
 
 def master_holes(tol=0.25):
+    # the see-through holes keep the DP + Chaikin clean-up (their bias is small: IoU +0.001 with the new one, while the
+    # guard opening's smoothed polyline left slivers on the guard bar's faces at the lip break)
     return [clean_ring(np.array(r["mm"], float), tol) for r in trace("LEFT")["gun_without_magazine"]
             if r["kind"] == "hole"]
 
@@ -96,7 +125,9 @@ def part_holes(part, tol=0.25):
 # ------------------------------------------------------------------------------------------------ the seam
 # the trace CONFIG's seam points (LEFT panel px): end-block seam, horizontal seam, the lower's front tab, the V tongue,
 # the magwell front face (trace_reference.CONFIG LEFT regions)
-SEAM_PX = [(352.5, 211.0), (219.0, 211.0), (217.0, 206.5), (191.0, 206.5), (172.0, 231.0), (147.0, 205.5),
+# (W1b fix round: the horizontal run's row 211.0 -> 210.5: the drawn seam line is one pixel; the trace's part labels give
+# it to the lower, so the upper / lower boundary lies on the line's upper edge, Z -16.3, not its centre -16.8)
+SEAM_PX = [(352.5, 210.5), (219.0, 210.5), (217.0, 206.5), (191.0, 206.5), (172.0, 231.0), (147.0, 205.5),
            (141.0, 228.0)]
 END_BLOCK_FRONT_X = float(L([(352.5, 150.0)])[0, 0])           # the end block's front edge seam (X ~265.2)
 END_BLOCK_REAR_X = float(L([(369.5, 150.0)])[0, 0])            # the hinge gap (X ~247.2)

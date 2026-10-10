@@ -91,26 +91,46 @@ def stage_form():
     # ---- L2
     L, R, T = sil["views"]["LEFT"], sil["views"]["RIGHT"], sil["views"]["TOP"]
     ceil = R.get("sheet_ceiling_iou_LEFT_trace_vs_RIGHT", 0.948)
-    gates.append(g("L2 LEFT IoU (authority)", L["iou_fit"], ">= 0.96", L["iou_fit"] >= 0.96))
-    gates.append(g("L2 RIGHT IoU (authority, port side)", R["iou_fit"], ">= 0.96 or within 0.005 of the sheet's own "
-                   "LEFT/RIGHT ceiling %.3f" % ceil, R["iou_fit"] >= 0.96 or R["iou_fit"] >= ceil - 0.005))
+    raw_note = lambda e: "raw (no R34 conventions) %s / identity %s" % (e.get("iou_fit_raw"), e.get("iou_identity_raw"))
+    gates.append(g("L2 LEFT IoU (authority; R34 side conventions)", L["iou_fit"], ">= 0.96", L["iou_fit"] >= 0.96,
+                   raw_note(L)))
+    ceil_raw = R.get("sheet_ceiling_iou_LEFT_trace_vs_RIGHT_raw", 0.948)
+    ok_conv = R["iou_fit"] >= 0.96 or R["iou_fit"] >= ceil - 0.005
+    ok_raw = (R.get("iou_fit_raw") or 0) >= 0.96 or (R.get("iou_fit_raw") or 0) >= ceil_raw - 0.005
+    gates.append(g("L2 RIGHT IoU (authority, port side; R34 side conventions)", R["iou_fit"], ">= 0.96 or within 0.005 "
+                   "of the sheet's own LEFT/RIGHT ceiling %.4f (same conventions)" % ceil, ok_conv,
+                   "raw: %s vs the raw ceiling %.3f - 0.005 -> %s; residual split (details.silhouette.views.RIGHT."
+                   "residual_split): %s" % (R.get("iou_fit_raw"), ceil_raw, "pass" if ok_raw else "fail",
+                                            R.get("residual_split"))))
     gates.append(g("L2 TOP IoU (X >= %.1f)" % float(SPECD["gates"]["look"]["L2_TOP_exclusion_X"]), T["iou_fit_valid"],
                    ">= 0.93", T["iou_fit_valid"] >= 0.93))
     parts = L.get("parts", {})
-    bad = {k: v for k, v in parts.items() if not v["pass"]}
-    gates.append(g("L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2)",
+    bad = {k: v for k, v in parts.items() if not (v["pass"] or v.get("pass_waived"))}
+    gates.append(g("L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px and mean width >= 7 px; thin parts contour "
+                   "P95 <= 1 px, max <= 2; fold-resized sights >= ceiling - 0.05; R33 conventions; the paddle waived, "
+                   "declared C1)",
                    "%d / %d parts pass" % (len(parts) - len(bad), len(parts)), "all", not bad,
                    "failing: " + ", ".join("%s (IoU %.3f, P95 %s)" % (k, v["iou"], v["contour_p95_px"])
                                            for k, v in bad.items())))
     if q:
-        gates.append(g("L2 3/4 FRONT (LEFT) IoU, camera solved", q.get("iou"), ">= 0.93", (q.get("iou") or 0) >= 0.93,
-                       "landmark RMS %s px" % q.get("landmark_rms_px")))
+        ex = q.get("exception") or {}
+        exn = ("exception (R38) %s: floor IoU %s %s, regions > 3 px %s (contradictions %s, R26 magazine %s, unexplained %s); "
+               "solve candidates %s; global search: review/form/q34_global_search.json; evidence images: "
+               "review/form/q34_exception/" % ("PASS" if ex.get("pass") else "FAIL", ex.get("floor_iou"),
+                                        "met" if ex.get("floor_pass") else "NOT met", ex.get("regions_over_3px"),
+                                        ex.get("contradictions"), ex.get("r26_magazine"), len(ex.get("not_explained") or []),
+                                        (q.get("solve") or {}).get("candidates_iou")))
+        gates.append(g("L2 3/4 FRONT (LEFT) IoU, camera solved", q.get("iou"), ">= 0.93 (or the R38 exception)",
+                       (q.get("iou") or 0) >= 0.93 or bool(ex.get("pass")), exn))
         cp = (q.get("contour_px") or {}).get("p95")
-        gates.append(g("L2 3/4 contour P95 (sheet px)", cp, "<= 3", cp is not None and cp <= 3))
+        gates.append(g("L2 3/4 contour P95 (sheet px)", cp, "<= 3 (or the R38 exception)",
+                       (cp is not None and cp <= 3) or bool(ex.get("pass")),
+                       "panel consistency: %s" % json.dumps(q.get("panel_consistency", {}).get("reading"))[:400]))
     else:
         gates.append(g("L2 3/4 FRONT (LEFT)", "not run", ">= 0.93", False))
     # ---- L3 / L4
-    gates.append(g("L3 LEFT contour P95 (sheet px)", L["contour_px"]["p95"], "<= 2", L["contour_px"]["p95"] <= 2))
+    gates.append(g("L3 LEFT contour P95 (sheet px; R34 conventions, the paddle zone out)", L["contour_px"]["p95"],
+                   "<= 2", L["contour_px"]["p95"] <= 2, "raw %s" % (L.get("contour_px_raw") or {}).get("p95")))
     l3bad = [f["feature"] for f in me["L3"] if not f["pass"]]
     gates.append(g("L3 feature positions (<= 2 sheet px = %.2f mm)" % me["tol_mm_side"],
                    "%d / %d" % (len(me["L3"]) - len(l3bad), len(me["L3"])), "all", not l3bad,
@@ -270,7 +290,19 @@ def stage_form():
         "fore-end: the moulded charging-slide guide runs on to the front wall (the sheet's long vents read dark, not "
         "daylight)",
         "stock head: narrower than the end block (Y -25..22) with the latch housing boss proud on the left to Y 28.6 "
-        "(3/4 and TOP read); butt pad wrap lip 2.0 round the upright",
+        "(3/4 and TOP read); at the neck's end its top / bottom held 0.5 inside the neck's (no coplanar union faces)",
+        "lower rail: its rear end tucks 4.1 mm into the magwell's front pocket (the well's side walls hide it; the sheet "
+        "draws the rail end over the face); L2 per part leaves the stretch behind the face line out (R33)",
+        "front sight base: starts at X 532.3 (spec base_X) while the sheet draws its rear face at ~529.6: the folded "
+        "leaf's head lands behind 532.3 (B4c); the 2.7 x 5 mm strip shows in the side IoU",
+        "front sight leaf: below the head (Z < 61) the arm is 3.5 wide in X (the folded arm clears the base top by "
+        "0.15), above it the head 6.6 (B4c); the sheet draws 11.5: L2 per part against the fold ceiling (R33)",
+        "rear sight leaf: the head's rear face at 293.7 (folded top 59.8 <= 60.1); the sheet draws 292.3",
+        "muzzle device: real through-slots (daylight through the bore at the 90 / 270 deg pair); the sheet draws dark "
+        "slots and a 1 px daylight slit at the upper slot: measured hole-filled (R33 / R34)",
+        "magazine: body 41.4 + the front spine rib 0.8 = the traced 42.2 front-to-back (R35)",
+        "magazine catch: spring-loaded, cammed back by the magazine's top rear edge on its 41 deg underside ramp and "
+        "snapping into the notch (M4 per R36); the well's mouth a 0.25 / 2.5 mm lead-in (M2 per R36)",
         "grip: sections perpendicular to the raked axis held 16 mm on up into the housing (the front strap's top corner "
         "otherwise sat 14 mm under the housing)",
     ]

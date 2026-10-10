@@ -30,11 +30,17 @@ AR-01 regression: WorkFiles/guns/smg/gates/gunlib_regression.json (tests/ar01_re
   proof, fit.sweep(proof=)), --only; descending ranges; the clearance rows exclude declared allowance windows;
 - look.rough_polymer / PHOS_* and rough_steel(metallic=, rough_add=); realism_job polymer_slots / steel_style /
   poses / hide.
+
+0.2.2 (2026-10-09, SMG W1b form fix round, lock GunLib; opt-in, the AR-01's rock path unchanged):
+- drivers.magfit_check: cfg.magfit["catch_spring"] = {"nose_M", "cam_mm_per_step"} evaluates M4 with the real
+  pattern's spring-loaded catch (the smallest clearing rotation per step inside the release travel, the nose move per
+  step bounded = a ramp not a shoulder, the snap at the seat); without the key M4 is the static-catch allowance as
+  before.
 """
 from __future__ import annotations
 
 from pathlib import Path
 
-LIB_VERSION = "0.2.1"
+LIB_VERSION = "0.2.2"
 ROOT = Path(__file__).resolve().parents[3]          # Scripts/guns/gunlib -> repo root
 BLENDER = "C:/Program Files/Blender Foundation/Blender 5.2/blender.exe"

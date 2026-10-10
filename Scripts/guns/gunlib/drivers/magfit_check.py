@@ -202,14 +202,66 @@ def straight_gates(S, C):
             allow.append({"insert_mm": round(float(s), 3), "pairs": n0, "depth_mm": round(dep, 3),
                           "in_zone": bool(s <= zone + 1e-9)})
     lim = (eng or 0.0) + 0.3
-    ok4 = not other and all(a["in_zone"] and a["depth_mm"] <= lim for a in allow)
     ride = [a["insert_mm"] for a in allow]
-    gates.append(GU.gate("M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)",
-                         {"steps": len(s_vals), "gun_contacts_at": other[:12], "catch_ride_mm": [min(ride), max(ride)]
-                          if ride else None, "catch_contacts": len(allow),
-                          "worst_catch_depth_mm": max((a["depth_mm"] for a in allow), default=0.0)},
-                         "0 intersections except the catch nose riding the mag (depth <= engagement + 0.3 mm, last "
-                         "%.2f mm only)" % zone, ok4))
+    spring = C.get("catch_spring")
+    if spring:
+        # gunlib 0.2.2 (SMG W1b fix round): the real pattern's spring-loaded catch. At every step the catch takes the
+        # SMALLEST rotation toward its release angle that clears the magazine (the magazine cams it back); the gate
+        # proves (a) 0 intersections with the rest of the gun at every step, (b) a clearing angle inside the catch's
+        # travel at every step, (c) the cam is a ramp, not a shoulder: the nose is pushed back <= cam_mm_per_step per
+        # 0.5 mm of insertion (a square face meeting the nose would need the whole engagement in one step; the spring's
+        # return into the notch, the snap, is free), (d) the snap: the catch back at rest (0 deg), magazine seated.
+        r_nose = float(np.linalg.norm(np.asarray(spring["nose_M"], float) - piv))
+        cam_lim = float(spring.get("cam_mm_per_step", 0.6))
+
+        def clear_angle(Vm, mt):
+            if not len(ctree0.overlap(mt)):
+                return 0.0
+            if len(ctreer.overlap(mt)):
+                return None
+            lo_a, hi_a = 0.0, rel                      # rel is signed (release direction)
+            for _ in range(14):
+                mid = 0.5 * (lo_a + hi_a)
+                if len(GU.tree(catch_at(mid), S.cT).overlap(mt)):
+                    lo_a = mid
+                else:
+                    hi_a = mid
+            return hi_a
+        angs = []
+        for s in s_vals:
+            Q = mag_at(s)
+            angs.append(clear_angle(Q, GU.tree(Q, MT)))
+        none_at = [round(float(s), 3) for s, a in zip(s_vals, angs) if a is None]
+        A = np.array([abs(a) if a is not None else np.nan for a in angs])
+        disp = np.radians(A) * r_nose
+        steps_d = np.diff(disp)                      # + = the nose cammed further back; - = the spring returning it
+        cam_max = float(np.nanmax(np.maximum(steps_d, 0.0))) if len(steps_d) and np.isfinite(steps_d).any() else 0.0
+        snap_drop = float(-np.nanmin(np.minimum(steps_d, 0.0))) if len(steps_d) and np.isfinite(steps_d).any() else 0.0
+        moved = [round(float(s), 3) for s, a in zip(s_vals, A) if a > 1e-6]
+        snap = bool(A[-1] == 0.0)
+        ok4 = not other and not none_at and cam_max <= cam_lim + 1e-9 and snap
+        gates.append(GU.gate("M4 insert path MagInsertStart -> Mag (0.5 mm steps, spring-loaded catch cammed by the "
+                             "magazine)",
+                             {"steps": len(s_vals), "gun_contacts_at": other[:12],
+                              "catch_displaced_over_mm": [min(moved), max(moved)] if moved else None,
+                              "max_catch_angle_deg": round(float(np.nanmax(A)), 3) if np.isfinite(A).any() else None,
+                              "release_angle_deg": rel, "max_nose_travel_mm": round(float(np.nanmax(disp)), 3),
+                              "cam_max_nose_move_per_step_mm": round(cam_max, 3),
+                              "snap_max_return_per_step_mm": round(snap_drop, 3), "no_clearing_angle_at": none_at[:12],
+                              "snapped_at_seat": snap,
+                              "static_catch_record": {"catch_ride_mm": [min(ride), max(ride)] if ride else None,
+                                                      "worst_catch_depth_mm": max((a["depth_mm"] for a in allow),
+                                                                                  default=0.0)}},
+                             "0 gun intersections; a clearing catch angle inside 0..%.1f deg at every step; nose move "
+                             "<= %.2f mm per 0.5 mm step (a ramp); the catch back at 0 deg seated" % (rel, cam_lim), ok4))
+    else:
+        ok4 = not other and all(a["in_zone"] and a["depth_mm"] <= lim for a in allow)
+        gates.append(GU.gate("M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)",
+                             {"steps": len(s_vals), "gun_contacts_at": other[:12], "catch_ride_mm": [min(ride), max(ride)]
+                              if ride else None, "catch_contacts": len(allow),
+                              "worst_catch_depth_mm": max((a["depth_mm"] for a in allow), default=0.0)},
+                             "0 intersections except the catch nose riding the mag (depth <= engagement + 0.3 mm, last "
+                             "%.2f mm only)" % zone, ok4))
     n4b = sum(1 for _, ng, nr in rec["released"] if ng or nr)
     gates.append(GU.gate("M4b insert path with the catch released (%.1f deg)" % rel,
                          {"steps": len(s_vals), "intersecting_steps": n4b}, "0", n4b == 0))

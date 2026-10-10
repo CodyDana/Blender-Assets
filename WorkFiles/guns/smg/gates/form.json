@@ -1,61 +1,59 @@
 {
  "stage": "W1b form",
- "date": "2026-10-09T21:06:46",
+ "date": "2026-10-10T01:51:30",
  "status": "fail",
  "failed": [
-  "L2 RIGHT IoU (authority, port side)",
-  "L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2)",
   "L2 3/4 FRONT (LEFT) IoU, camera solved",
-  "L2 3/4 contour P95 (sheet px)",
-  "L3 LEFT contour P95 (sheet px)",
-  "UD1 Unreal degenerate rule on every LOD0 part (drops; min triangle area)",
-  "MAGFIT M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
-  "MAGFIT M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)"
+  "L2 3/4 contour P95 (sheet px)"
  ],
  "gates": [
   {
-   "name": "L2 LEFT IoU (authority)",
-   "value": 0.9634,
+   "name": "L2 LEFT IoU (authority; R34 side conventions)",
+   "value": 0.9814,
    "threshold": ">= 0.96",
-   "pass": true
+   "pass": true,
+   "note": "raw (no R34 conventions) 0.9716 / identity 0.9716"
   },
   {
-   "name": "L2 RIGHT IoU (authority, port side)",
-   "value": 0.9379,
-   "threshold": ">= 0.96 or within 0.005 of the sheet's own LEFT/RIGHT ceiling 0.948",
-   "pass": false
+   "name": "L2 RIGHT IoU (authority, port side; R34 side conventions)",
+   "value": 0.9574,
+   "threshold": ">= 0.96 or within 0.005 of the sheet's own LEFT/RIGHT ceiling 0.9565 (same conventions)",
+   "pass": true,
+   "note": "raw: 0.946 vs the raw ceiling 0.948 - 0.005 -> pass; residual split (details.silhouette.views.RIGHT.residual_split): {'mismatch_px': 2384, 'LEFT_trace_agrees_with_RIGHT_ours_differs_px': 595, 'LEFT_trace_vs_RIGHT_panel_contradiction_px': 1789}"
   },
   {
    "name": "L2 TOP IoU (X >= 221.9)",
-   "value": 0.9373,
+   "value": 0.9379,
    "threshold": ">= 0.93",
    "pass": true
   },
   {
-   "name": "L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2)",
-   "value": "4 / 23 parts pass",
+   "name": "L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px and mean width >= 7 px; thin parts contour P95 <= 1 px, max <= 2; fold-resized sights >= ceiling - 0.05; R33 conventions; the paddle waived, declared C1)",
+   "value": "23 / 23 parts pass",
    "threshold": "all",
-   "pass": false,
-   "note": "failing: barrel (IoU 0.569, P95 62.0), butt_pad (IoU 0.902, P95 2.0), handguard_area (IoU 0.874, P95 24.0), hinge_block (IoU 0.917, P95 4.0), lower_rail (IoU 0.722, P95 2.828), mag_release (IoU 0.256, P95 4.092), muzzle_device (IoU 0.877, P95 8.0), receiver_lower (IoU 0.904, P95 2.532), sight_front (IoU 0.620, P95 3.98), sight_rear (IoU 0.776, P95 5.0), stock_hinge_knuckle (IoU 0.861, P95 3.0), stock_lower_strut (IoU 0.869, P95 2.236), stock_neck (IoU 0.909, P95 3.561), stock_rear_upright (IoU 0.747, P95 4.006), stock_top_strut (IoU 0.905, P95 3.0), stock_web (IoU 0.836, P95 2.0), top_rail (IoU 0.758, P95 2.0), trigger (IoU 0.767, P95 9.105), trigger_guard (IoU 0.780, P95 2.0)"
+   "pass": true,
+   "note": "failing: "
   },
   {
    "name": "L2 3/4 FRONT (LEFT) IoU, camera solved",
-   "value": 0.891,
-   "threshold": ">= 0.93",
+   "value": 0.9014,
+   "threshold": ">= 0.93 (or the R38 exception)",
    "pass": false,
-   "note": "landmark RMS 8.006860570412881 px"
+   "note": "exception (R38) FAIL: floor IoU 0.915 NOT met, regions > 3 px 22 (contradictions 18, R26 magazine 0, unexplained 4); solve candidates {'a_iou_no_mag': 0.89, 'b_chamfer': 0.8958, 'c_iou_all': 0.9014, 'd_iou_body': 0.9}; global search: review/form/q34_global_search.json; evidence images: review/form/q34_exception/"
   },
   {
    "name": "L2 3/4 contour P95 (sheet px)",
-   "value": 12.166,
-   "threshold": "<= 3",
-   "pass": false
+   "value": 13.019,
+   "threshold": "<= 3 (or the R38 exception)",
+   "pass": false,
+   "note": "panel consistency: \"a consistent panel fits its body landmarks to the 2 px read accuracy and each half to the gate bar; here the body landmarks alone leave 6.8 px RMS, the grip / magazine landmarks miss the body camera by [15.8, 18.5, 18.6] px and neither half reaches IoU 0.93 on its own\""
   },
   {
-   "name": "L3 LEFT contour P95 (sheet px)",
-   "value": 3.0,
+   "name": "L3 LEFT contour P95 (sheet px; R34 conventions, the paddle zone out)",
+   "value": 2.0,
    "threshold": "<= 2",
-   "pass": false
+   "pass": true,
+   "note": "raw 2.236"
   },
   {
    "name": "L3 feature positions (<= 2 sheet px = 2.13 mm)",
@@ -136,7 +134,7 @@
     "min_clearance_mm": 0.1361,
     "min_with": "lower_receiver",
     "rest_mm": 0.1361,
-    "end_mm": 0.1382
+    "end_mm": 0.142
    },
    "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
    "pass": true
@@ -163,7 +161,7 @@
     "end_mm": 0.1497,
     "allowances": {
      "allowed_steps": 32,
-     "worst_depth_mm": 0.7488,
+     "worst_depth_mm": 0.7448,
      "not_allowed": []
     },
     "coarse_proof": {
@@ -317,8 +315,8 @@
       0.1736000031232834
      ],
      "vertices_inside": {
-      "stock_frame": 10,
-      "butt_pad": 9
+      "stock_frame": 12,
+      "butt_pad": 8
      },
      "clear": false,
      "note": "reported (Q5): the folded stock lies along the right side"
@@ -381,7 +379,7 @@
    "value": true,
    "threshold": "all pass",
    "pass": true,
-   "note": "no_ngons: 0 n-gon(s) of 40208 faces; no_non_manifold_edges: 0 edge(s) with more than 2 faces, 0 wire edge(s), of 63311; open_boundary_edges: 0 boundary edge(s) of 63311 (informational: open meshes are allowed); no_loose_vertices: 0 loose vertex/vertices of 23101; no_zero_length_edges: 0 edge(s) at or below 1e-06 of 63311; shortest 5.10442e-05; no_degenerate_faces: 0 face(s) at or below 1e-12 area of 40208; smallest 5.97993e-09; no_coincident_vertices: 0 vertex pair(s) within 1e-06 of 23101"
+   "note": "no_ngons: 0 n-gon(s) of 40549 faces; no_non_manifold_edges: 0 edge(s) with more than 2 faces, 0 wire edge(s), of 64007; open_boundary_edges: 0 boundary edge(s) of 64007 (informational: open meshes are allowed); no_loose_vertices: 0 loose vertex/vertices of 23456; no_zero_length_edges: 0 edge(s) at or below 1e-06 of 64007; shortest 5.00008e-05; no_degenerate_faces: 0 face(s) at or below 1e-12 area of 40549; smallest 1.01718e-08; no_coincident_vertices: 0 vertex pair(s) within 1e-06 of 23456"
   },
   {
    "name": "B10 tokenised gun deny list on every object name",
@@ -397,14 +395,14 @@
   },
   {
    "name": "B8 LOD0 triangles, gun (target 25-40k, ceiling 50k)",
-   "value": 42914,
+   "value": 43684,
    "threshold": "<= 50000 (target <= 40000)",
    "pass": true,
    "note": "above the 40k target"
   },
   {
    "name": "B8 magazine LOD0 triangles (floor 3,000, qa budget 5,000)",
-   "value": 3292,
+   "value": 3232,
    "threshold": "<= 5000",
    "pass": true
   },
@@ -412,11 +410,10 @@
    "name": "UD1 Unreal degenerate rule on every LOD0 part (drops; min triangle area)",
    "value": {
     "unreal_drops": 0,
-    "min_area_mm2": 0.005979
+    "min_area_mm2": 0.010178
    },
    "threshold": "0; >= 0.01 mm2",
-   "pass": false,
-   "note": "under the 2x margin: {'upper_receiver': 0.007826, 'lower_receiver': 0.005979, 'stock_frame': 0.006699} (Unreal's own drop rule, 0.005, passes)"
+   "pass": true
   },
   {
    "name": "UD2 micro edges / needles / strips",
@@ -427,21 +424,21 @@
    },
    "threshold": "0 / 0 / 0",
    "pass": true,
-   "note": "information (UD3-type, W2): gunlib zero-tangent-risk needle-corner groups {'upper_receiver': 3, 'lower_receiver': 1, 'top_rail': 1, 'sight_rear_base': 1, 'stock_frame': 2, 'butt_pad': 4}"
+   "note": "information (UD3-type, W2): gunlib zero-tangent-risk needle-corner groups {'upper_receiver': 1, 'lower_receiver': 2, 'butt_pad': 4}"
   },
   {
    "name": "H1 early: grip girth vs real polymer SMG grips + 10 %",
    "value": {
-    "perimeter_mm": 148.0,
+    "perimeter_mm": 147.9,
     "width_Y_mm": 30.9,
-    "depth_mm": 51.24
+    "depth_mm": 51.19
    },
-   "threshold": "<= 167.3 mm (real band [143.8, 152.1] + 10 %)",
+   "threshold": "<= 167.2 mm (real band [143.7, 152.0] + 10 %)",
    "pass": true
   },
   {
    "name": "H1 early: trigger reach (web hollow -> trigger face)",
-   "value": 78.1,
+   "value": 77.5,
    "threshold": "<= 80 mm (real [57.2, 72.0])",
    "pass": true,
    "note": "the sheet's reach at 625 reads 82.0; a FAIL puts Q1 to the user (does not stop the build)"
@@ -469,8 +466,8 @@
      0.0,
      -54.35
     ],
-    "front_face_hit_X": 460.23,
-    "offset_from_surface_mm": -0.03,
+    "front_face_hit_X": 460.2,
+    "offset_from_surface_mm": 0.0,
     "hand_separation_mm": 162.0,
     "arm_length_mm": 563.2,
     "pass": true
@@ -512,16 +509,16 @@
    "name": "MAGFIT M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
    "value": {
     "bearing_gap_mm": 0.26,
-    "overtravel_mm": 1.5589,
+    "overtravel_mm": 1.5679,
     "seam_mm": {
-     "front": 1.6967,
-     "rear": 1.8621,
-     "left": 1.8578,
-     "right": 1.8578
+     "front": 0.5194,
+     "rear": 0.347,
+     "left": 0.354,
+     "right": 0.354
     }
    },
    "threshold": "0.0-0.3; 1.0-2.0; <= 0.6 mm",
-   "pass": false
+   "pass": true
   },
   {
    "name": "MAGFIT M3 lateral per side; fore-aft; catch engagement depth",
@@ -532,25 +529,37 @@
      "front": 0.2715,
      "rear": 0.2758
     },
-    "engagement_mm": 1.55
+    "engagement_mm": 1.6
    },
    "threshold": "0.2-0.6; 0.2-0.6; >= 1.5 mm",
    "pass": true
   },
   {
-   "name": "MAGFIT M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)",
+   "name": "MAGFIT M4 insert path MagInsertStart -> Mag (0.5 mm steps, spring-loaded catch cammed by the magazine)",
    "value": {
     "steps": 138,
     "gun_contacts_at": [],
-    "catch_ride_mm": [
-     0.576,
-     26.076
+    "catch_displaced_over_mm": [
+     0.699,
+     26.199
     ],
-    "catch_contacts": 52,
-    "worst_catch_depth_mm": 1.242
+    "max_catch_angle_deg": 5.62,
+    "release_angle_deg": -11.0,
+    "max_nose_travel_mm": 1.802,
+    "cam_max_nose_move_per_step_mm": 0.556,
+    "snap_max_return_per_step_mm": 1.508,
+    "no_clearing_angle_at": [],
+    "snapped_at_seat": true,
+    "static_catch_record": {
+     "catch_ride_mm": [
+      0.699,
+      26.199
+     ],
+     "worst_catch_depth_mm": 1.239
+    }
    },
-   "threshold": "0 intersections except the catch nose riding the mag (depth <= engagement + 0.3 mm, last 6.00 mm only)",
-   "pass": false
+   "threshold": "0 gun intersections; a clearing catch angle inside 0..-11.0 deg at every step; nose move <= 0.87 mm per 0.5 mm step (a ramp); the catch back at 0 deg seated",
+   "pass": true
   },
   {
    "name": "MAGFIT M4b insert path with the catch released (-11.0 deg)",
@@ -602,55 +611,72 @@
   "muzzle device: six slots symmetric about the bore (the side panels draw the side slot ~2.5 mm high)",
   "muzzle wrench flats: 0.5 deep at +-35 deg off the bottom (spec 'two 3 mm flats' read as their chord scale)",
   "fore-end: the moulded charging-slide guide runs on to the front wall (the sheet's long vents read dark, not daylight)",
-  "stock head: narrower than the end block (Y -25..22) with the latch housing boss proud on the left to Y 28.6 (3/4 and TOP read); butt pad wrap lip 2.0 round the upright",
+  "stock head: narrower than the end block (Y -25..22) with the latch housing boss proud on the left to Y 28.6 (3/4 and TOP read); at the neck's end its top / bottom held 0.5 inside the neck's (no coplanar union faces)",
+  "lower rail: its rear end tucks 4.1 mm into the magwell's front pocket (the well's side walls hide it; the sheet draws the rail end over the face); L2 per part leaves the stretch behind the face line out (R33)",
+  "front sight base: starts at X 532.3 (spec base_X) while the sheet draws its rear face at ~529.6: the folded leaf's head lands behind 532.3 (B4c); the 2.7 x 5 mm strip shows in the side IoU",
+  "front sight leaf: below the head (Z < 61) the arm is 3.5 wide in X (the folded arm clears the base top by 0.15), above it the head 6.6 (B4c); the sheet draws 11.5: L2 per part against the fold ceiling (R33)",
+  "rear sight leaf: the head's rear face at 293.7 (folded top 59.8 <= 60.1); the sheet draws 292.3",
+  "muzzle device: real through-slots (daylight through the bore at the 90 / 270 deg pair); the sheet draws dark slots and a 1 px daylight slit at the upper slot: measured hole-filled (R33 / R34)",
+  "magazine: body 41.4 + the front spine rib 0.8 = the traced 42.2 front-to-back (R35)",
+  "magazine catch: spring-loaded, cammed back by the magazine's top rear edge on its 41 deg underside ramp and snapping into the notch (M4 per R36); the well's mouth a 0.25 / 2.5 mm lead-in (M2 per R36)",
   "grip: sections perpendicular to the raked axis held 16 mm on up into the housing (the front strap's top corner otherwise sat 14 mm under the housing)"
  ],
  "details": {
   "silhouette": {
    "stage": "form",
    "npz": "form_tris.npz",
-   "triangles": 46206,
+   "triangles": 46916,
    "views": {
     "LEFT": {
-     "iou_identity": 0.9634,
-     "iou_fit": 0.9634,
+     "iou_identity_raw": 0.9716,
+     "iou_fit_raw": 0.9716,
      "fit_params_s_rotdeg_tx_ty": [
       0.0,
       0.0,
       0.0,
       0.0
      ],
+     "iou_identity": 0.9814,
+     "iou_fit": 0.9814,
+     "conventions": "rail notch bands closed (R9), muzzle interior filled (real through-slots drawn dark), our see-through stock holes filled (declared); L3 contour also without the paddle zone",
+     "contour_px_raw": {
+      "p50": 0.0,
+      "p95": 2.236,
+      "max": 23.259,
+      "n": 5223
+     },
      "contour_px": {
       "p50": 0.0,
-      "p95": 3.0,
-      "max": 21.19,
-      "n": 5242
+      "p95": 2.0,
+      "max": 23.259,
+      "n": 4858
      },
-     "ours_px": 48525,
+     "ours_px": 48396,
      "ref_px": 48173,
-     "magazine_iou": 0.7099,
-     "gun_without_mag_iou": 0.962,
+     "magazine_iou": 0.7206,
+     "gun_without_mag_iou": 0.9696,
      "parts": {
       "barrel": {
        "area_px": 394.8,
-       "iou": 0.5691,
-       "contour_p95_px": 62.0,
-       "contour_max_px": 67.0,
-       "iou_filled": 0.5691,
+       "iou": 0.9825,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "mean_width_px": 10.26,
+       "iou_filled": 0.9825,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
-       "pass": false
+       "pass": true
       },
       "butt_pad": {
        "area_px": 2321.4,
-       "iou": 0.9017,
-       "contour_p95_px": 2.0,
-       "contour_max_px": 3.606,
+       "iou": 0.9798,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 2.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "grip": {
        "area_px": 4414.0,
-       "iou": 0.974,
+       "iou": 0.9846,
        "contour_p95_px": 1.0,
        "contour_max_px": 2.0,
        "rule": "IoU >= 0.95",
@@ -658,33 +684,37 @@
       },
       "handguard_area": {
        "area_px": 4395.4,
-       "iou": 0.8735,
-       "contour_p95_px": 24.0,
-       "contour_max_px": 27.0,
+       "iou": 0.9986,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "hinge_block": {
        "area_px": 1105.0,
-       "iou": 0.9167,
-       "contour_p95_px": 4.0,
-       "contour_max_px": 6.0,
+       "iou": 0.991,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "lower_rail": {
        "area_px": 493.0,
-       "iou": 0.7216,
-       "contour_p95_px": 2.828,
-       "contour_max_px": 4.0,
-       "rule": "IoU >= 0.95",
-       "pass": false
+       "iou": 0.9909,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "convention": "the slotted layer Z [-99.0, -31.3] excluded (R9: the notch / relief depth is the line standard's)",
+       "mean_width_px": 6.59,
+       "iou_filled": 0.9909,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": true
       },
       "mag_release": {
        "area_px": 166.9,
        "iou": 0.2558,
        "contour_p95_px": 4.092,
        "contour_max_px": 5.0,
+       "mean_width_px": 6.49,
        "iou_filled": 0.2558,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": false,
@@ -693,15 +723,15 @@
       },
       "mag_well": {
        "area_px": 2876.8,
-       "iou": 0.9503,
-       "contour_p95_px": 2.828,
+       "iou": 0.9801,
+       "contour_p95_px": 1.311,
        "contour_max_px": 7.81,
        "rule": "IoU >= 0.95",
        "pass": true
       },
       "magazine": {
        "area_px": 5873.6,
-       "iou": 0.9754,
+       "iou": 0.9841,
        "contour_p95_px": 1.0,
        "contour_max_px": 2.828,
        "rule": "IoU >= 0.95",
@@ -709,158 +739,193 @@
       },
       "muzzle_device": {
        "area_px": 802.9,
-       "iou": 0.8768,
-       "contour_p95_px": 8.0,
-       "contour_max_px": 8.062,
+       "iou": 0.9755,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 2.236,
+       "convention": "slots closed and filled (real through-slots; the sheet draws them dark and one 1 px slit)",
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "receiver_lower": {
        "area_px": 3682.7,
-       "iou": 0.9045,
-       "contour_p95_px": 2.532,
+       "iou": 0.9749,
+       "contour_p95_px": 2.201,
        "contour_max_px": 8.0,
+       "convention": "the trace's trigger-labelled band at the housing's lower edge excluded (see trigger)",
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "receiver_upper": {
        "area_px": 10241.3,
-       "iou": 0.9646,
-       "contour_p95_px": 8.0,
-       "contour_max_px": 23.0,
+       "iou": 0.99,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 8.0,
        "rule": "IoU >= 0.95",
        "pass": true
       },
       "sight_front": {
        "area_px": 423.6,
-       "iou": 0.6203,
-       "contour_p95_px": 3.98,
+       "iou": 0.6982,
+       "contour_p95_px": 3.606,
        "contour_max_px": 5.0,
-       "rule": "IoU >= 0.95",
-       "pass": false
+       "rule": "IoU >= spec ceiling 0.7460 - 0.05 = 0.6960 (the leaf resized by the fold spec: fold feasibility (B4c band [44.8, 51.7], base top 47.4 + 0.15))",
+       "fold_ceiling": {
+        "rule": "fold feasibility (B4c band [44.8, 51.7], base top 47.4 + 0.15)",
+        "leaf_px_removed": 110
+       },
+       "spec_ceiling_iou": 0.746,
+       "pass": true
       },
       "sight_rear": {
        "area_px": 596.6,
-       "iou": 0.7758,
-       "contour_p95_px": 5.0,
-       "contour_max_px": 8.0,
-       "rule": "IoU >= 0.95",
-       "pass": false
+       "iou": 0.9389,
+       "contour_p95_px": 1.414,
+       "contour_max_px": 2.0,
+       "rule": "IoU >= spec ceiling 0.9685 - 0.05 = 0.9185 (the leaf resized by the fold spec: fold feasibility (B4c band [45.55, 60.1], base top 47.4 + 0.15))",
+       "fold_ceiling": {
+        "rule": "fold feasibility (B4c band [45.55, 60.1], base top 47.4 + 0.15)",
+        "leaf_px_removed": 19
+       },
+       "spec_ceiling_iou": 0.9685,
+       "pass": true
       },
       "stock_hinge_knuckle": {
        "area_px": 1062.5,
-       "iou": 0.8612,
-       "contour_p95_px": 3.0,
-       "contour_max_px": 5.0,
+       "iou": 0.9724,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "stock_lower_strut": {
        "area_px": 1874.4,
-       "iou": 0.8685,
-       "contour_p95_px": 2.236,
-       "contour_max_px": 5.385,
+       "iou": 0.9502,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 4.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "stock_neck": {
        "area_px": 1483.5,
-       "iou": 0.9087,
-       "contour_p95_px": 3.561,
-       "contour_max_px": 9.849,
+       "iou": 0.9886,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "stock_rear_upright": {
        "area_px": 694.1,
-       "iou": 0.7474,
-       "contour_p95_px": 4.006,
-       "contour_max_px": 11.0,
+       "iou": 0.9859,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "stock_top_strut": {
        "area_px": 1940.2,
-       "iou": 0.9047,
-       "contour_p95_px": 3.0,
-       "contour_max_px": 7.071,
+       "iou": 0.9741,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 7.0,
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "stock_web": {
        "area_px": 344.1,
-       "iou": 0.8358,
-       "contour_p95_px": 2.0,
-       "contour_max_px": 3.162,
-       "iou_filled": 0.8358,
+       "iou": 0.9858,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "mean_width_px": 9.01,
+       "iou_filled": 0.9858,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
-       "pass": false
+       "pass": true
       },
       "top_rail": {
        "area_px": 1672.3,
-       "iou": 0.7577,
-       "contour_p95_px": 2.0,
-       "contour_max_px": 8.062,
-       "rule": "IoU >= 0.95",
-       "pass": false
+       "iou": 0.9916,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.414,
+       "convention": "the slotted layer Z [39.5, 99.0] excluded (R9: the notch / relief depth is the line standard's)",
+       "mean_width_px": 5.22,
+       "iou_filled": 0.9916,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": true
       },
       "trigger": {
        "area_px": 286.9,
-       "iou": 0.7674,
-       "contour_p95_px": 9.105,
-       "contour_max_px": 13.153,
-       "iou_filled": 0.7674,
+       "iou": 0.9252,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "convention": "below the housing's bottom line Z -49.1 - 2.5 px (the trace's band at the opening's top is the housing's edge)",
+       "mean_width_px": 5.79,
+       "iou_filled": 0.9252,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
-       "pass": false
+       "pass": true
       },
       "trigger_guard": {
        "area_px": 870.3,
-       "iou": 0.7802,
-       "contour_p95_px": 2.0,
-       "contour_max_px": 8.246,
-       "rule": "IoU >= 0.95",
-       "pass": false
+       "iou": 0.9402,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 2.0,
+       "mean_width_px": 5.08,
+       "iou_filled": 0.9402,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": true
       }
      }
     },
     "RIGHT": {
-     "iou_identity": 0.9357,
-     "iou_fit": 0.9379,
+     "iou_identity_raw": 0.9415,
+     "iou_fit_raw": 0.946,
      "fit_params_s_rotdeg_tx_ty": [
-      0.0008009485856816116,
-      0.11894534656781867,
-      0.20007475514229411,
-      -0.5017492993447117
+      -0.0005697997786397793,
+      0.09367259336182993,
+      0.21642577025275472,
+      -0.7221756803877022
      ],
+     "iou_identity": 0.9523,
+     "iou_fit": 0.9574,
+     "conventions": "rail notch bands closed (R9), muzzle interior filled (real through-slots drawn dark), our see-through stock holes filled (declared); L3 contour also without the paddle zone",
+     "contour_px_raw": {
+      "p50": 1.0,
+      "p95": 3.0,
+      "max": 11.314,
+      "n": 5148
+     },
      "contour_px": {
       "p50": 1.0,
       "p95": 3.0,
       "max": 11.314,
-      "n": 5172
+      "n": 4809
      },
-     "ours_px": 48663,
+     "ours_px": 48601,
      "ref_px": 48082,
-     "magazine_iou": 0.686,
-     "gun_without_mag_iou": 0.9341,
-     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT": 0.948,
-     "ours_minus_ceiling": -0.0123
+     "magazine_iou": 0.6983,
+     "gun_without_mag_iou": 0.9386,
+     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT_raw": 0.948,
+     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT": 0.9565,
+     "ours_minus_ceiling": -0.0042,
+     "residual_split": {
+      "mismatch_px": 2384,
+      "LEFT_trace_agrees_with_RIGHT_ours_differs_px": 595,
+      "LEFT_trace_vs_RIGHT_panel_contradiction_px": 1789
+     }
     },
     "TOP": {
-     "iou_identity_valid": 0.9366,
-     "iou_fit_valid": 0.9373,
-     "iou_identity_all_pixels": 0.8921,
+     "iou_identity_valid": 0.9369,
+     "iou_fit_valid": 0.9379,
+     "iou_identity_all_pixels": 0.8931,
      "fit_params_s_rotdeg_tx_ty": [
-      -0.00584019228740853,
-      0.14640473928311395,
-      -0.04559880513847267,
-      0.3816664253735147
+      -0.006134699904093944,
+      0.1358804777472479,
+      -0.029998453723995767,
+      0.3493685595923205
      ],
      "valid_rule": "X >= 221.9 (spec gates.look.L2_TOP_exclusion_X)",
      "contour_px": {
       "p50": 1.0,
-      "p95": 5.831,
+      "p95": 5.839,
       "max": 10.0,
-      "n": 1822
+      "n": 1820
      }
     }
    }
@@ -873,65 +938,1338 @@
     1247,
     1207
    ],
-   "landmark_rms_px": 8.006860570412881,
+   "landmark_rms_px": 8.095146276844854,
    "landmark_err_px": {
-    "muzzle device front face centre": 7.83,
-    "rear sight frame top centre": 4.81,
-    "front sight ear tops centre": 8.41,
-    "butt pad top rear corner (near, left)": 3.32,
-    "butt pad bottom rear corner (near)": 8.08,
-    "grip bottom toe (near)": 5.78,
-    "mag floor plate front corner (near)": 10.01,
-    "mag floor plate rear corner (near)": 10.65,
-    "lower rail front bottom (near)": 6.51,
-    "charging knob centre": 10.96
+    "muzzle device front face centre": 7.8,
+    "rear sight frame top centre": 4.84,
+    "front sight ear tops centre": 8.39,
+    "butt pad top rear corner (near, left)": 3.35,
+    "butt pad bottom rear corner (near)": 8.07,
+    "grip bottom toe (near)": 5.8,
+    "mag floor plate front corner (near)": 10.46,
+    "mag floor plate rear corner (near)": 10.91,
+    "lower rail front bottom (near)": 6.42,
+    "charging knob centre": 11.0
    },
-   "refine_soft_iou_no_mag": 0.8791853510858815,
+   "solve": {
+    "candidates_iou": {
+     "a_iou_no_mag": 0.89,
+     "b_chamfer": 0.8958,
+     "c_iou_all": 0.9014,
+     "d_iou_body": 0.9
+    },
+    "chosen": "c_iou_all"
+   },
+   "panel_consistency": {
+    "body_landmark_rms_px": 6.83,
+    "landmark_err_px_under_the_body_camera": {
+     "muzzle device front face centre": 6.7,
+     "rear sight frame top centre": 2.6,
+     "front sight ear tops centre": 9.6,
+     "butt pad top rear corner (near, left)": 3.3,
+     "butt pad bottom rear corner (near)": 3.6,
+     "grip bottom toe (near)": 15.8,
+     "mag floor plate front corner (near)": 18.5,
+     "mag floor plate rear corner (near)": 18.6,
+     "lower rail front bottom (near)": 6.9,
+     "charging knob centre": 10.6
+    },
+    "halves_fitted_alone": {
+     "front_x_lt_300": {
+      "iou_on_its_half": 0.9317,
+      "contour_p95_on_its_half": 10.15
+     },
+     "rear_x_ge_300": {
+      "iou_on_its_half": 0.8842,
+      "contour_p95_on_its_half": 13.6
+     }
+    },
+    "reading": "a consistent panel fits its body landmarks to the 2 px read accuracy and each half to the gate bar; here the body landmarks alone leave 6.8 px RMS, the grip / magazine landmarks miss the body camera by [15.8, 18.5, 18.6] px and neither half reaches IoU 0.93 on its own"
+   },
    "camera": {
     "centre_M_mm": [
-     1957.6,
-     1336.8,
-     271.0
+     1969.1,
+     1340.1,
+     272.0
     ],
-    "f_px": 2791.0,
+    "f_px": 2821.6,
     "forward_M": [
-     -0.7576,
-     -0.6298,
-     -0.1716
+     -0.7597,
+     -0.6275,
+     -0.1704
     ],
-    "hfov_deg": 12.64
+    "hfov_deg": 12.5
    },
-   "iou_raw_unfilled": 0.8785,
-   "iou": 0.891,
+   "iou_raw_unfilled": 0.8888,
+   "iou": 0.9014,
    "contour_px": {
-    "p50": 3.0,
-    "p95": 12.166,
-    "max": 24.352,
-    "n": 4440
+    "p50": 2.0,
+    "p95": 13.019,
+    "max": 28.284,
+    "n": 4431
    },
-   "iou_without_mag_zone": 0.8936,
+   "iou_without_mag_zone": 0.8932,
    "magazine_thickness_check": {
     "iou_in_mag_zone_by_thickness_mm": {
-     "21": 0.8691,
-     "23": 0.8723,
-     "25": 0.874,
-     "27": 0.8771,
-     "29": 0.8806,
-     "31": 0.8822,
-     "33": 0.8696
+     "21": 0.9122,
+     "23": 0.9379,
+     "25": 0.9513,
+     "27": 0.9476,
+     "29": 0.9225,
+     "31": 0.8969,
+     "33": 0.8731
     },
-    "best_mm": 31,
-    "parabola_peak_mm": 30.23,
+    "best_mm": 25,
+    "parabola_peak_mm": 25.57,
     "spec_mm": 27.0,
     "band_mm": [
      27.0,
      31.0
     ],
-    "verdict": "27.0 kept (the panel peaks at 30.2; real minimum 27)"
+    "verdict": "27.0 kept (the panel peaks at 25.6; real minimum 27)"
    },
    "gate": {
     "rule": "L2 3/4: IoU >= 0.93 and contour P95 <= 3 px (outer silhouettes, camera solved)",
     "pass": false
+   },
+   "residual_regions": [
+    {
+     "id": 1,
+     "kind": "ours_only",
+     "bbox_px": [
+      309,
+      297,
+      359,
+      374
+     ],
+     "px": 1271,
+     "core_px_beyond_3": 967,
+     "max_dist_px": 17.12,
+     "objects": [
+      "lower_receiver",
+      "grip_cover"
+     ],
+     "trace_keys": [
+      "grip",
+      "hinge_block",
+      "mag_well",
+      "receiver_lower",
+      "stock_hinge_knuckle",
+      "trigger_guard"
+     ],
+     "side_per_part_pass": {
+      "grip": true,
+      "hinge_block": true,
+      "mag_well": true,
+      "receiver_lower": true,
+      "stock_hinge_knuckle": true,
+      "trigger_guard": true
+     },
+     "top": {
+      "stations": 11,
+      "width_err_p95_px": 6.45
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.94,
+       0.94
+      ],
+      "half_width_mm_range": [
+       34.2,
+       34.2
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.940": 907,
+      "top_allowed_x0.970": 940
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 8,
+      "dy": -4,
+      "window_iou": [
+       0.7415,
+       0.8552
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 2,
+     "kind": "ref_only",
+     "bbox_px": [
+      361,
+      243,
+      403,
+      368
+     ],
+     "px": 1342,
+     "core_px_beyond_3": 936,
+     "max_dist_px": 15.3,
+     "objects": [
+      "lower_receiver",
+      "grip_cover"
+     ],
+     "trace_keys": [
+      "grip",
+      "hinge_block",
+      "mag_well",
+      "receiver_lower",
+      "stock_hinge_knuckle",
+      "trigger_guard"
+     ],
+     "side_per_part_pass": {
+      "grip": true,
+      "hinge_block": true,
+      "mag_well": true,
+      "receiver_lower": true,
+      "stock_hinge_knuckle": true,
+      "trigger_guard": true
+     },
+     "top": {
+      "stations": 11,
+      "width_err_p95_px": 6.45
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.94,
+       0.94
+      ],
+      "half_width_mm_range": [
+       34.2,
+       34.2
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.940": 1035,
+      "top_allowed_x0.970": 979
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 8,
+      "dy": -5,
+      "window_iou": [
+       0.708,
+       0.8951
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 3,
+     "kind": "ours_only",
+     "bbox_px": [
+      83,
+      119,
+      115,
+      184
+     ],
+     "px": 823,
+     "core_px_beyond_3": 619,
+     "max_dist_px": 28.28,
+     "objects": [
+      "upper_receiver",
+      "sight_front_base"
+     ],
+     "trace_keys": [
+      "handguard_area",
+      "receiver_upper",
+      "sight_front"
+     ],
+     "side_per_part_pass": {
+      "handguard_area": true,
+      "receiver_upper": true,
+      "sight_front": true
+     },
+     "top": {
+      "stations": 101,
+      "width_err_p95_px": 4.79
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       1.03,
+       1.03
+      ],
+      "half_width_mm_range": [
+       47.69,
+       47.69
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x1.015": 648,
+      "top_allowed_x1.030": 670
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 8,
+      "dy": 0,
+      "window_iou": [
+       0.7128,
+       0.8012
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 4,
+     "kind": "ours_only",
+     "bbox_px": [
+      372,
+      196,
+      436,
+      242
+     ],
+     "px": 670,
+     "core_px_beyond_3": 428,
+     "max_dist_px": 14.56,
+     "objects": [
+      "lower_receiver"
+     ],
+     "trace_keys": [
+      "grip",
+      "hinge_block",
+      "mag_well",
+      "receiver_lower",
+      "stock_hinge_knuckle",
+      "trigger_guard"
+     ],
+     "side_per_part_pass": {
+      "grip": true,
+      "hinge_block": true,
+      "mag_well": true,
+      "receiver_lower": true,
+      "stock_hinge_knuckle": true,
+      "trigger_guard": true
+     },
+     "top": {
+      "stations": 11,
+      "width_err_p95_px": 6.45
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.94,
+       0.94
+      ],
+      "half_width_mm_range": [
+       34.2,
+       34.2
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.940": 343,
+      "top_allowed_x0.970": 384
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -8,
+      "dy": -3,
+      "window_iou": [
+       0.775,
+       0.8321
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 5,
+     "kind": "ref_only",
+     "bbox_px": [
+      27,
+      186,
+      87,
+      223
+     ],
+     "px": 551,
+     "core_px_beyond_3": 373,
+     "max_dist_px": 12.65,
+     "objects": [
+      "muzzle_device"
+     ],
+     "trace_keys": [
+      "muzzle_device"
+     ],
+     "side_per_part_pass": {
+      "muzzle_device": true
+     },
+     "top": {
+      "stations": 17,
+      "width_err_p95_px": 1.29
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.93,
+       1.17
+      ],
+      "half_width_mm_range": [
+       10.74,
+       13.51
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.930": 440,
+      "top_allowed_x0.965": 430,
+      "top_allowed_x1.085": 388,
+      "top_allowed_x1.170": 362
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -8,
+      "dy": 1,
+      "window_iou": [
+       0.7354,
+       0.7778
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 6,
+     "kind": "ref_only",
+     "bbox_px": [
+      540,
+      244,
+      596,
+      262
+     ],
+     "px": 526,
+     "core_px_beyond_3": 358,
+     "max_dist_px": 12.37,
+     "objects": [
+      "butt_pad"
+     ],
+     "trace_keys": [
+      "butt_pad"
+     ],
+     "side_per_part_pass": {
+      "butt_pad": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 433,
+      "width_x1.15": 334
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 0,
+      "dy": 8,
+      "window_iou": [
+       0.6506,
+       0.8174
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 7,
+     "kind": "ours_only",
+     "bbox_px": [
+      432,
+      123,
+      563,
+      150
+     ],
+     "px": 590,
+     "core_px_beyond_3": 196,
+     "max_dist_px": 12.17,
+     "objects": [
+      "stock_frame",
+      "butt_pad"
+     ],
+     "trace_keys": [
+      "butt_pad",
+      "stock_hinge_knuckle",
+      "stock_lower_strut",
+      "stock_neck",
+      "stock_rear_upright",
+      "stock_top_strut",
+      "stock_web"
+     ],
+     "side_per_part_pass": {
+      "butt_pad": true,
+      "stock_hinge_knuckle": true,
+      "stock_lower_strut": true,
+      "stock_neck": true,
+      "stock_rear_upright": true,
+      "stock_top_strut": true,
+      "stock_web": true
+     },
+     "top": {
+      "stations": 7,
+      "width_err_p95_px": 5.25
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       1.08,
+       1.08
+      ],
+      "half_width_mm_range": [
+       39.29,
+       39.29
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x1.040": 332,
+      "top_allowed_x1.080": 358
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -1,
+      "dy": 4,
+      "window_iou": [
+       0.8281,
+       0.9062
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 8,
+     "kind": "ref_only",
+     "bbox_px": [
+      172,
+      493,
+      232,
+      506
+     ],
+     "px": 314,
+     "core_px_beyond_3": 152,
+     "max_dist_px": 9.06,
+     "objects": [
+      "magazine_floor_plate"
+     ],
+     "trace_keys": [
+      "magazine"
+     ],
+     "side_per_part_pass": {
+      "magazine": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "magazine thickness band [27.0, 31.0] (R26)",
+      "thickness_mm_range": [
+       27.0,
+       31.0
+      ]
+     },
+     "width_test_core_px": {
+      "thickness_29mm": 152,
+      "thickness_31mm": 135
+     },
+     "magazine_thickness_dependence": {
+      "spec_thickness_mm": 27.0,
+      "panel_preferred_mm": 25.57,
+      "core_px_at_spec": 152,
+      "core_px_at_preferred": 165
+     },
+     "local_shift": {
+      "dx": -1,
+      "dy": 6,
+      "window_iou": [
+       0.7557,
+       0.872
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (magazine thickness band [27.0, 31.0] (R26)) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 9,
+     "kind": "ref_only",
+     "bbox_px": [
+      138,
+      85,
+      163,
+      131
+     ],
+     "px": 375,
+     "core_px_beyond_3": 135,
+     "max_dist_px": 7.81,
+     "objects": [
+      "sight_front_leaf",
+      "sight_front_base"
+     ],
+     "trace_keys": [
+      "sight_front"
+     ],
+     "side_per_part_pass": {
+      "sight_front": true
+     },
+     "top": {
+      "stations": 2,
+      "width_err_p95_px": 0.59
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.97,
+       1.05
+      ],
+      "half_width_mm_range": [
+       44.91,
+       48.62
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.970": 154,
+      "top_allowed_x0.985": 149,
+      "top_allowed_x1.025": 140,
+      "top_allowed_x1.050": 131
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 3,
+      "dy": -5,
+      "window_iou": [
+       0.7398,
+       0.8023
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 10,
+     "kind": "ref_only",
+     "bbox_px": [
+      336,
+      70,
+      365,
+      112
+     ],
+     "px": 318,
+     "core_px_beyond_3": 126,
+     "max_dist_px": 7.0,
+     "objects": [
+      "sight_rear_leaf",
+      "sight_rear_base"
+     ],
+     "trace_keys": [
+      "sight_rear"
+     ],
+     "side_per_part_pass": {
+      "sight_rear": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 182,
+      "width_x1.15": 85
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -5,
+      "dy": -4,
+      "window_iou": [
+       0.7973,
+       0.9009
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 11,
+     "kind": "ours_only",
+     "bbox_px": [
+      416,
+      122,
+      430,
+      139
+     ],
+     "px": 175,
+     "core_px_beyond_3": 107,
+     "max_dist_px": 12.65,
+     "objects": [
+      "lower_receiver"
+     ],
+     "trace_keys": [
+      "grip",
+      "hinge_block",
+      "mag_well",
+      "receiver_lower",
+      "stock_hinge_knuckle",
+      "trigger_guard"
+     ],
+     "side_per_part_pass": {
+      "grip": true,
+      "hinge_block": true,
+      "mag_well": true,
+      "receiver_lower": true,
+      "stock_hinge_knuckle": true,
+      "trigger_guard": true
+     },
+     "top": {
+      "stations": 11,
+      "width_err_p95_px": 6.45
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.94,
+       0.94
+      ],
+      "half_width_mm_range": [
+       34.2,
+       34.2
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.940": 80,
+      "top_allowed_x0.970": 94
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -8,
+      "dy": -3,
+      "window_iou": [
+       0.7256,
+       0.8361
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 12,
+     "kind": "ours_only",
+     "bbox_px": [
+      177,
+      247,
+      195,
+      278
+     ],
+     "px": 226,
+     "core_px_beyond_3": 97,
+     "max_dist_px": 7.81,
+     "objects": [
+      "lower_receiver"
+     ],
+     "trace_keys": [
+      "grip",
+      "hinge_block",
+      "mag_well",
+      "receiver_lower",
+      "stock_hinge_knuckle",
+      "trigger_guard"
+     ],
+     "side_per_part_pass": {
+      "grip": true,
+      "hinge_block": true,
+      "mag_well": true,
+      "receiver_lower": true,
+      "stock_hinge_knuckle": true,
+      "trigger_guard": true
+     },
+     "top": {
+      "stations": 11,
+      "width_err_p95_px": 6.45
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.94,
+       0.94
+      ],
+      "half_width_mm_range": [
+       34.2,
+       34.2
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.940": 64,
+      "top_allowed_x0.970": 83
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 6,
+      "dy": 1,
+      "window_iou": [
+       0.8074,
+       0.8735
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 13,
+     "kind": "ours_only",
+     "bbox_px": [
+      87,
+      216,
+      100,
+      232
+     ],
+     "px": 109,
+     "core_px_beyond_3": 45,
+     "max_dist_px": 7.21,
+     "objects": [
+      "upper_receiver"
+     ],
+     "trace_keys": [
+      "handguard_area",
+      "receiver_upper"
+     ],
+     "side_per_part_pass": {
+      "handguard_area": true,
+      "receiver_upper": true
+     },
+     "top": {
+      "stations": 99,
+      "width_err_p95_px": 4.83
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       1.03,
+       1.03
+      ],
+      "half_width_mm_range": [
+       35.63,
+       35.63
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x1.015": 50,
+      "top_allowed_x1.030": 50
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 7,
+      "dy": 1,
+      "window_iou": [
+       0.8291,
+       0.9033
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 14,
+     "kind": "ours_only",
+     "bbox_px": [
+      598,
+      130,
+      604,
+      189
+     ],
+     "px": 167,
+     "core_px_beyond_3": 17,
+     "max_dist_px": 4.12,
+     "objects": [
+      "butt_pad"
+     ],
+     "trace_keys": [
+      "butt_pad"
+     ],
+     "side_per_part_pass": {
+      "butt_pad": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 0,
+      "width_x1.15": 285
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -2,
+      "dy": -4,
+      "window_iou": [
+       0.819,
+       0.9106
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the width that shrinks this region grows region(s) [6, 15] of the same parts (summed core 385 px built, {'width_x0.85': 443, 'width_x1.15': 628} by width): an offset between the views, which the side view (per-part L2 pass) decides",
+     "is_contradiction": true,
+     "is_r26_magazine": false,
+     "group_width_test": {
+      "regions": [
+       6,
+       14,
+       15
+      ],
+      "core_px_at_built": 385,
+      "core_px_by_test": {
+       "width_x0.85": 443,
+       "width_x1.15": 628
+      }
+     }
+    },
+    {
+     "id": 15,
+     "kind": "ref_only",
+     "bbox_px": [
+      565,
+      124,
+      598,
+      129
+     ],
+     "px": 100,
+     "core_px_beyond_3": 10,
+     "max_dist_px": 4.0,
+     "objects": [
+      "butt_pad"
+     ],
+     "trace_keys": [
+      "butt_pad"
+     ],
+     "side_per_part_pass": {
+      "butt_pad": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 10,
+      "width_x1.15": 9
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -4,
+      "dy": -3,
+      "window_iou": [
+       0.8171,
+       0.9081
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 16,
+     "kind": "ours_only",
+     "bbox_px": [
+      163,
+      128,
+      172,
+      135
+     ],
+     "px": 43,
+     "core_px_beyond_3": 8,
+     "max_dist_px": 4.12,
+     "objects": [
+      "top_rail"
+     ],
+     "trace_keys": [
+      "top_rail"
+     ],
+     "side_per_part_pass": {
+      "top_rail": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 2,
+      "width_x1.15": 9
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 7,
+      "dy": -1,
+      "window_iou": [
+       0.7958,
+       0.8772
+      ]
+     },
+     "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here",
+     "is_contradiction": false,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 17,
+     "kind": "ref_only",
+     "bbox_px": [
+      108,
+      235,
+      133,
+      253
+     ],
+     "px": 95,
+     "core_px_beyond_3": 5,
+     "max_dist_px": 4.12,
+     "objects": [
+      "lower_rail"
+     ],
+     "trace_keys": [
+      "lower_rail"
+     ],
+     "side_per_part_pass": {
+      "lower_rail": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 20,
+      "width_x1.15": 0
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -3,
+      "dy": 1,
+      "window_iou": [
+       0.8977,
+       0.9477
+      ]
+     },
+     "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here",
+     "is_contradiction": false,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 18,
+     "kind": "ours_only",
+     "bbox_px": [
+      368,
+      94,
+      373,
+      104
+     ],
+     "px": 36,
+     "core_px_beyond_3": 3,
+     "max_dist_px": 4.0,
+     "objects": [
+      "sight_rear_leaf",
+      "sight_rear_base"
+     ],
+     "trace_keys": [
+      "sight_rear"
+     ],
+     "side_per_part_pass": {
+      "sight_rear": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 5,
+      "width_x1.15": 6
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -3,
+      "dy": -3,
+      "window_iou": [
+       0.8853,
+       0.9004
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 19,
+     "kind": "ref_only",
+     "bbox_px": [
+      117,
+      123,
+      123,
+      127
+     ],
+     "px": 27,
+     "core_px_beyond_3": 3,
+     "max_dist_px": 4.0,
+     "objects": [
+      "sight_front_base"
+     ],
+     "trace_keys": [
+      "sight_front"
+     ],
+     "side_per_part_pass": {
+      "sight_front": true
+     },
+     "top": {
+      "stations": 2,
+      "width_err_p95_px": 0.59
+     },
+     "allowed_widths": {
+      "source": "TOP width error P95 <= 2 px",
+      "scale_range": [
+       0.97,
+       1.05
+      ],
+      "half_width_mm_range": [
+       44.91,
+       48.62
+      ]
+     },
+     "width_test_core_px": {
+      "top_allowed_x0.970": 3,
+      "top_allowed_x0.985": 3,
+      "top_allowed_x1.025": 2,
+      "top_allowed_x1.050": 0
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -3,
+      "dy": 2,
+      "window_iou": [
+       0.7225,
+       0.7691
+      ]
+     },
+     "verdict": "OURS: a width the authorities allow (TOP width error P95 <= 2 px) fits the 3/4 here",
+     "is_contradiction": false,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 20,
+     "kind": "ours_only",
+     "bbox_px": [
+      239,
+      293,
+      269,
+      455
+     ],
+     "px": 338,
+     "core_px_beyond_3": 2,
+     "max_dist_px": 3.61,
+     "objects": [
+      "magazine"
+     ],
+     "trace_keys": [
+      "magazine"
+     ],
+     "side_per_part_pass": {
+      "magazine": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "magazine thickness band [27.0, 31.0] (R26)",
+      "thickness_mm_range": [
+       27.0,
+       31.0
+      ]
+     },
+     "width_test_core_px": {
+      "thickness_29mm": 35,
+      "thickness_31mm": 166
+     },
+     "magazine_thickness_dependence": {
+      "spec_thickness_mm": 27.0,
+      "panel_preferred_mm": 25.57,
+      "core_px_at_spec": 2,
+      "core_px_at_preferred": 2
+     },
+     "local_shift": {
+      "dx": -2,
+      "dy": 1,
+      "window_iou": [
+       0.9242,
+       0.9693
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (magazine thickness band [27.0, 31.0] (R26)) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 21,
+     "kind": "ref_only",
+     "bbox_px": [
+      129,
+      86,
+      135,
+      92
+     ],
+     "px": 23,
+     "core_px_beyond_3": 2,
+     "max_dist_px": 3.61,
+     "objects": [
+      "sight_front_leaf"
+     ],
+     "trace_keys": [
+      "sight_front"
+     ],
+     "side_per_part_pass": {
+      "sight_front": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 7,
+      "width_x1.15": 0
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": 1,
+      "dy": -5,
+      "window_iou": [
+       0.7297,
+       0.8689
+      ]
+     },
+     "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here",
+     "is_contradiction": false,
+     "is_r26_magazine": false
+    },
+    {
+     "id": 22,
+     "kind": "ref_only",
+     "bbox_px": [
+      374,
+      105,
+      382,
+      108
+     ],
+     "px": 27,
+     "core_px_beyond_3": 2,
+     "max_dist_px": 4.0,
+     "objects": [
+      "sight_rear_base"
+     ],
+     "trace_keys": [
+      "sight_rear"
+     ],
+     "side_per_part_pass": {
+      "sight_rear": true
+     },
+     "top": null,
+     "allowed_widths": {
+      "source": "hidden part, +-15 %",
+      "scale_range": [
+       0.85,
+       1.15
+      ]
+     },
+     "width_test_core_px": {
+      "width_x0.85": 5,
+      "width_x1.15": 11
+     },
+     "magazine_thickness_dependence": null,
+     "local_shift": {
+      "dx": -4,
+      "dy": -3,
+      "window_iou": [
+       0.8284,
+       0.9127
+      ]
+     },
+     "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+     "is_contradiction": true,
+     "is_r26_magazine": false
+    }
+   ],
+   "exception": {
+    "rule": "R38: pass if IoU >= 0.93 and contour P95 <= 3 px; else pass only if the camera-solved IoU >= 0.915 (the AR-01's floor: the camera must explain the panel before regions can be called contradictions) AND, with the regions the study proves 3/4-panel contradictions (and the R26 magazine-thickness regions) left out of both masks, the rest meets the same bar and no region > 3 px is unexplained",
+    "floor_iou": 0.915,
+    "floor_pass": false,
+    "outright_pass": false,
+    "regions": 22,
+    "regions_over_3px": 22,
+    "contradictions": 18,
+    "r26_magazine": 0,
+    "excluded_px": 10619,
+    "iou_without_contradictions": 0.9876,
+    "contour_p95_without_contradictions": 2.828,
+    "not_explained": [
+     {
+      "id": 16,
+      "objects": [
+       "top_rail"
+      ],
+      "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here"
+     },
+     {
+      "id": 17,
+      "objects": [
+       "lower_rail"
+      ],
+      "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here"
+     },
+     {
+      "id": 19,
+      "objects": [
+       "sight_front_base"
+      ],
+      "verdict": "OURS: a width the authorities allow (TOP width error P95 <= 2 px) fits the 3/4 here"
+     },
+     {
+      "id": 21,
+      "objects": [
+       "sight_front_leaf"
+      ],
+      "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here"
+     }
+    ],
+    "pass": false,
+    "evidence_dir": "WorkFiles/guns/smg/review/form/q34_exception"
    }
   },
   "B3": {
@@ -954,9 +2292,9 @@
       "rest_nearest": "barrel",
       "end_clearance_mm": 0.1529,
       "end_nearest": "bolt_rails",
-      "seconds": 24.2,
+      "seconds": 23.0,
       "moving_samples": 162750,
-      "fixed_samples": 129623,
+      "fixed_samples": 129420,
       "row_mm": [
        0.15,
        0.4
@@ -986,9 +2324,9 @@
       "rest_nearest": "barrel",
       "end_clearance_mm": 0.1529,
       "end_nearest": "bolt_rails",
-      "seconds": 54.6,
+      "seconds": 49.6,
       "moving_samples": 275032,
-      "fixed_samples": 456151,
+      "fixed_samples": 453869,
       "row_mm": [
        0.15,
        0.4
@@ -1018,9 +2356,9 @@
       "rest_nearest": "charging_slide",
       "end_clearance_mm": 0.1487,
       "end_nearest": "charging_slide",
-      "seconds": 10.3,
+      "seconds": 9.9,
       "moving_samples": 78780,
-      "fixed_samples": 41749,
+      "fixed_samples": 41717,
       "row_mm": [
        0.1,
        0.3
@@ -1051,9 +2389,9 @@
       "rest_nearest": "trigger_axle",
       "end_clearance_mm": 0.1433,
       "end_nearest": "trigger_axle",
-      "seconds": 17.0,
+      "seconds": 13.9,
       "moving_samples": 74891,
-      "fixed_samples": 78350,
+      "fixed_samples": 72596,
       "row_mm": [
        0.1,
        0.3
@@ -1084,9 +2422,9 @@
       "rest_nearest": "lower_receiver",
       "end_clearance_mm": 0.1493,
       "end_nearest": "lower_receiver",
-      "seconds": 166.2,
-      "moving_samples": 144946,
-      "fixed_samples": 286509,
+      "seconds": 148.1,
+      "moving_samples": 144961,
+      "fixed_samples": 279303,
       "row_mm": [
        0.1,
        0.3
@@ -1115,11 +2453,11 @@
       "min_with": "lower_receiver",
       "rest_clearance_mm": 0.1361,
       "rest_nearest": "lower_receiver",
-      "end_clearance_mm": 0.1382,
-      "end_nearest": "lower_receiver",
-      "seconds": 4.4,
+      "end_clearance_mm": 0.142,
+      "end_nearest": "mag_release_pin",
+      "seconds": 4.3,
       "moving_samples": 38061,
-      "fixed_samples": 70103,
+      "fixed_samples": 73580,
       "row_mm": [
        0.1,
        0.3
@@ -1150,9 +2488,9 @@
       "rest_nearest": "stock_frame",
       "end_clearance_mm": 0.1592,
       "end_nearest": "stock_frame",
-      "seconds": 0.4,
-      "moving_samples": 27667,
-      "fixed_samples": 43716,
+      "seconds": 0.3,
+      "moving_samples": 27751,
+      "fixed_samples": 41409,
       "row_mm": [
        0.15,
        0.4
@@ -1173,27 +2511,27 @@
       ],
       "step": 0.02,
       "intersecting_steps": 32,
-      "max_intersections": 16,
+      "max_intersections": 14,
       "parts_hit": [
        "upper_receiver"
       ],
       "min_clearance_mm": 0.1432,
-      "min_at": 179.56,
+      "min_at": 179.75,
       "min_with": "upper_receiver",
       "rest_clearance_mm": 0.1497,
       "rest_nearest": "hinge_axle",
       "end_clearance_mm": 0.1497,
       "end_nearest": "hinge_axle",
-      "seconds": 2918.2,
-      "moving_samples": 748672,
-      "fixed_samples": 1640798,
+      "seconds": 3997.5,
+      "moving_samples": 684099,
+      "fixed_samples": 1672671,
       "row_mm": [
        0.1,
        0.3
       ],
       "allowances": {
        "allowed_steps": 32,
-       "worst_depth_mm": 0.7488,
+       "worst_depth_mm": 0.7448,
        "not_allowed": []
       },
       "pass_intersections": true,
@@ -1213,67 +2551,67 @@
      "worst_steps": [
       {
        "value": 179.7,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
        "clearance_mm": 0.0004,
        "nearest_part": "upper_receiver",
-       "allowance_depth_mm": 0.4855
+       "allowance_depth_mm": 0.4826
       },
       {
        "value": 179.72,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
-       "clearance_mm": 0.0014,
+       "clearance_mm": 0.0018,
        "nearest_part": "upper_receiver",
        "allowance_depth_mm": 0.437
       },
       {
        "value": 179.74,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
-       "clearance_mm": 0.0024,
+       "clearance_mm": 0.0003,
        "nearest_part": "upper_receiver",
-       "allowance_depth_mm": 0.4027
+       "allowance_depth_mm": 0.403
       },
       {
        "value": 179.75,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
        "clearance_mm": 0.0,
        "nearest_part": "upper_receiver",
-       "allowance_depth_mm": 0.4028
+       "allowance_depth_mm": 0.4032
       },
       {
        "value": 179.76,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
-       "clearance_mm": 0.0036,
+       "clearance_mm": 0.0011,
        "nearest_part": "upper_receiver",
-       "allowance_depth_mm": 0.403
+       "allowance_depth_mm": 0.4033
       },
       {
        "value": 179.78,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
-       "clearance_mm": 0.0044,
+       "clearance_mm": 0.0026,
        "nearest_part": "upper_receiver",
-       "allowance_depth_mm": 0.4036
+       "allowance_depth_mm": 0.4037
       },
       {
        "value": 179.8,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
@@ -1283,7 +2621,7 @@
       },
       {
        "value": 179.82,
-       "intersections": 16,
+       "intersections": 14,
        "hit_parts": [
         "upper_receiver"
        ],
@@ -1311,9 +2649,9 @@
       "rest_nearest": "sight_rear_pin",
       "end_clearance_mm": 0.1493,
       "end_nearest": "sight_rear_pin",
-      "seconds": 34.3,
+      "seconds": 37.7,
       "moving_samples": 101961,
-      "fixed_samples": 86758,
+      "fixed_samples": 91138,
       "row_mm": [
        0.1,
        0.3
@@ -1349,9 +2687,9 @@
       "rest_nearest": "sight_front_pin",
       "end_clearance_mm": 0.1438,
       "end_nearest": "sight_front_pin",
-      "seconds": 21.6,
-      "moving_samples": 49354,
-      "fixed_samples": 80507,
+      "seconds": 23.0,
+      "moving_samples": 46337,
+      "fixed_samples": 80517,
       "row_mm": [
        0.1,
        0.3
@@ -1386,7 +2724,7 @@
     {
      "a": "butt_pad",
      "b": "stock_frame",
-     "min_gap_mm": 0.1524
+     "min_gap_mm": 0.3877
     },
     {
      "a": "grip_cover",
@@ -1411,7 +2749,7 @@
     {
      "a": "lower_receiver",
      "b": "mag_release_pin",
-     "min_gap_mm": 0.0129
+     "min_gap_mm": 0.0148
     },
     {
      "a": "magazine",
@@ -1451,7 +2789,7 @@
     {
      "a": "sight_rear_base",
      "b": "sight_rear_pin",
-     "min_gap_mm": 0.0145
+     "min_gap_mm": 0.0142
     },
     {
      "a": "stock_frame",
@@ -1466,12 +2804,12 @@
     {
      "a": "top_rail",
      "b": "upper_receiver",
-     "min_gap_mm": 0.0519
+     "min_gap_mm": 0.0336
     },
     {
      "a": "lower_receiver",
      "b": "trigger_axle",
-     "min_gap_mm": 0.0227
+     "min_gap_mm": 0.0398
     }
    ],
    "suffix": ""
@@ -1579,49 +2917,49 @@
   "B6a": {
    "object": "SM_SMG01_B6aCheck",
    "parts": 32,
-   "triangles": 46206,
+   "triangles": 46916,
    "checks": [
     {
      "name": "no_ngons",
      "object": "SM_SMG01_B6aCheck",
      "passed": true,
-     "detail": "0 n-gon(s) of 40208 faces"
+     "detail": "0 n-gon(s) of 40549 faces"
     },
     {
      "name": "no_non_manifold_edges",
      "object": "SM_SMG01_B6aCheck",
      "passed": true,
-     "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 63311"
+     "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 64007"
     },
     {
      "name": "open_boundary_edges",
      "object": "SM_SMG01_B6aCheck",
      "passed": true,
-     "detail": "0 boundary edge(s) of 63311 (informational: open meshes are allowed)"
+     "detail": "0 boundary edge(s) of 64007 (informational: open meshes are allowed)"
     },
     {
      "name": "no_loose_vertices",
      "object": "SM_SMG01_B6aCheck",
      "passed": true,
-     "detail": "0 loose vertex/vertices of 23101"
+     "detail": "0 loose vertex/vertices of 23456"
     },
     {
      "name": "no_zero_length_edges",
      "object": "SM_SMG01_B6aCheck",
      "passed": true,
-     "detail": "0 edge(s) at or below 1e-06 of 63311; shortest 5.10442e-05"
+     "detail": "0 edge(s) at or below 1e-06 of 64007; shortest 5.00008e-05"
     },
     {
      "name": "no_degenerate_faces",
      "object": "SM_SMG01_B6aCheck",
      "passed": true,
-     "detail": "0 face(s) at or below 1e-12 area of 40208; smallest 5.97993e-09"
+     "detail": "0 face(s) at or below 1e-12 area of 40549; smallest 1.01718e-08"
     },
     {
      "name": "no_coincident_vertices",
      "object": "SM_SMG01_B6aCheck",
      "passed": true,
-     "detail": "0 vertex pair(s) within 1e-06 of 23101"
+     "detail": "0 vertex pair(s) within 1e-06 of 23456"
     }
    ],
    "passed": true,
@@ -1665,8 +3003,8 @@
        539.65
       ],
       "Z": [
-       22.58,
-       30.73
+       22.53,
+       30.78
       ]
      },
      "spec": {
@@ -1679,7 +3017,7 @@
        30.7
       ]
      },
-     "error_mm": 0.05,
+     "error_mm": 0.08,
      "pass": true,
      "note": "opening = rays deeper than the face - 1 mm"
     },
@@ -1743,7 +3081,7 @@
        461.55
       ],
       "Z": [
-       2.08,
+       2.03,
        23.93
       ]
      },
@@ -2224,28 +3562,28 @@
     {
      "feature": "stock hole at [36.3, 8.6]",
      "measured": [
-      36.35,
+      36.3,
       8.6
      ],
      "spec": [
       36.3,
       8.6
      ],
-     "error_mm": 0.05,
+     "error_mm": 0.0,
      "pass": true,
      "note": ""
     },
     {
      "feature": "stock hole at [36.3, -59.3]",
      "measured": [
-      36.35,
+      36.3,
       -59.3
      ],
      "spec": [
       36.3,
       -59.3
      ],
-     "error_mm": 0.05,
+     "error_mm": 0.0,
      "pass": true,
      "note": ""
     },
@@ -2321,9 +3659,9 @@
     },
     {
      "dimension": "butt pad height",
-     "measured": 104.56,
+     "measured": 102.09,
      "spec": 102.6,
-     "error_mm": 1.96,
+     "error_mm": 0.51,
      "pass": true,
      "how": "butt_pad bbox"
     },
@@ -2377,9 +3715,9 @@
     },
     {
      "dimension": "upper receiver right face Y",
-     "measured": -34.6,
+     "measured": -34.591,
      "spec": -34.6,
-     "error_mm": 0.0,
+     "error_mm": 0.009,
      "pass": true,
      "how": "bbox min Y (the port catch stands 3.0 proud)"
     },
@@ -2409,8 +3747,8 @@
     },
     {
      "dimension": "magazine fore-aft (body)",
-     "measured": 42.2,
-     "spec": 42.2,
+     "measured": 41.4,
+     "spec": 41.4,
      "error_mm": 0.0,
      "pass": true,
      "how": "mag frame X extent minus the 0.8 spine rib"
@@ -2433,9 +3771,9 @@
     },
     {
      "dimension": "stock frame rear X",
-     "measured": 28.4,
+     "measured": 28.41,
      "spec": 28.4,
-     "error_mm": 0.0,
+     "error_mm": 0.01,
      "pass": true,
      "how": "bbox (the pad seam 0.3 behind the pad's front face 28.1)"
     }
@@ -2459,20 +3797,20 @@
    },
    "girth": {
     "section_at": "Grip origin, perpendicular to the grip axis (21.87 deg)",
-    "perimeter_mm": 148.0,
+    "perimeter_mm": 147.9,
     "width_Y_mm": 30.9,
-    "depth_mm": 51.24,
+    "depth_mm": 51.19,
     "real_band_mm": [
-     143.8,
-     152.1
+     143.7,
+     152.0
     ],
-    "limit_mm": 167.3,
+    "limit_mm": 167.2,
     "rule": "rounded oblong of the measured depth with the real width 30-33 and the spec strap radii; PASS = perimeter <= the band's top + 10 % (plan 14.2 H1 early)",
     "pass": true
    },
    "reach": {
     "web_point_M": [
-     294.44,
+     295.01,
      0.0,
      -54.5
     ],
@@ -2481,7 +3819,7 @@
      0.0,
      -70.56
     ],
-    "reach_mm": 78.1,
+    "reach_mm": 77.5,
     "spec_reach_mm": 82.0,
     "real_band_mm": [
      57.2,
@@ -2509,8 +3847,8 @@
      0.0,
      -54.35
     ],
-    "front_face_hit_X": 460.23,
-    "offset_from_surface_mm": -0.03,
+    "front_face_hit_X": 460.2,
+    "offset_from_surface_mm": 0.0,
     "hand_separation_mm": 162.0,
     "arm_length_mm": 563.2,
     "pass": true
@@ -2614,8 +3952,8 @@
       0.1736000031232834
      ],
      "vertices_inside": {
-      "stock_frame": 10,
-      "butt_pad": 9
+      "stock_frame": 12,
+      "butt_pad": 8
      },
      "clear": false,
      "note": "reported (Q5): the folded stock lies along the right side"
@@ -2637,7 +3975,7 @@
      -31.9
     ],
     "lip_Y": [
-     -34.6,
+     -34.59,
      -33.1
     ],
     "folded_intersections": {},
@@ -2700,18 +4038,18 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2604,
+    "triangles": 2496,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.007826,
+     "min_area_mm2": 0.013186,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
-     "needle_groups": 3,
+     "needle_groups": 1,
      "edge_on_groups": 0,
-     "pass_ud1": false,
+     "pass_ud1": true,
      "pass_ud2": false
     }
    },
@@ -2722,18 +4060,18 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 8178,
+    "triangles": 7906,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.005979,
+     "min_area_mm2": 0.011234,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
-     "needle_groups": 1,
+     "needle_groups": 2,
      "edge_on_groups": 0,
-     "pass_ud1": false,
+     "pass_ud1": true,
      "pass_ud2": false
     }
    },
@@ -2749,7 +4087,7 @@
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.567061,
+     "min_area_mm2": 0.567354,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
@@ -2788,19 +4126,19 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2046,
+    "triangles": 2036,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.018699,
+     "min_area_mm2": 0.018719,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
-     "needle_groups": 1,
+     "needle_groups": 0,
      "edge_on_groups": 0,
      "pass_ud1": true,
-     "pass_ud2": false
+     "pass_ud2": true
     }
    },
    "rail_screws": {
@@ -2854,19 +4192,19 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1220,
+    "triangles": 1334,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.011478,
+     "min_area_mm2": 0.012219,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
-     "needle_groups": 1,
+     "needle_groups": 0,
      "edge_on_groups": 0,
      "pass_ud1": true,
-     "pass_ud2": false
+     "pass_ud2": true
     }
    },
    "sight_rear_leaf": {
@@ -2925,7 +4263,7 @@
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.011476,
+     "min_area_mm2": 0.014043,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
@@ -2942,7 +4280,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 412,
+    "triangles": 460,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
@@ -2986,7 +4324,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2176,
+    "triangles": 2944,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
@@ -3250,19 +4588,19 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2514,
+    "triangles": 3044,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.006699,
+     "min_area_mm2": 0.010505,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
-     "needle_groups": 2,
+     "needle_groups": 0,
      "edge_on_groups": 0,
-     "pass_ud1": false,
-     "pass_ud2": false
+     "pass_ud1": true,
+     "pass_ud2": true
     }
    },
    "stock_latch_button": {
@@ -3316,12 +4654,12 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1486,
+    "triangles": 1186,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.011054,
+     "min_area_mm2": 0.01079,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
@@ -3338,12 +4676,12 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2580,
+    "triangles": 2520,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.029129,
+     "min_area_mm2": 0.029128,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
@@ -3387,7 +4725,7 @@
     "ud": {
      "unreal_drops": 0,
      "unreal_drops_polygons": 0,
-     "min_area_mm2": 0.05127,
+     "min_area_mm2": 0.051273,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,

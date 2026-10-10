@@ -49,8 +49,12 @@ def barrel():
     xc0 = X_FF - CB_DEPTH + GAP                      # the collar's rear face sits on the counterbore floor
     xc1 = float(BA["collar_ring"]["X"][1])           # 572.8
     c = 0.4
+    # (W1b fix round, L2 per part) the face flange both side panels and the 3/4 draw against the receiver face: a ring
+    # dia 26.4 over the first 3.6 mm in front of the face (the collar ring seated in the counterbore behind it)
+    xf0, xf1, R_FL = X_FF + GAP, X_FF + 3.6, 13.2
     loop = [(xb, R_BORE + 0.6), (xb, R_HID - c), (xb + c, R_HID),
-            (xc0, R_HID), (xc0, R_COL - c), (xc0 + c, R_COL), (xc1 - c, R_COL), (xc1, R_COL - c),
+            (xc0, R_HID), (xc0, R_COL - c), (xc0 + c, R_COL), (xf0, R_COL), (xf0, R_FL - c), (xf0 + c, R_FL),
+            (xf1 - c, R_FL), (xf1, R_FL - c), (xf1, R_COL), (xc1 - c, R_COL), (xc1, R_COL - c),
             (xc1, R_NECK), (X_SEAT - GAP - 0.3, R_NECK), (X_SEAT - GAP, R_NECK - 0.3),
             (X_SEAT - GAP, R_TEN), (X_CROWN - 0.3, R_TEN), (X_CROWN, R_TEN - 0.3),
             (X_CROWN, R_BORE + 0.8), (X_CROWN - 0.8, R_BORE),          # the recessed crown's 45 deg bore chamfer

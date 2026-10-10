@@ -1,21 +1,21 @@
 {
  "stage": "W1b blockout",
- "date": "2026-10-09T16:34:07",
+ "date": "2026-10-10T00:15:55",
  "status": "pass",
  "failed": [],
  "gates": [
   {
    "name": "L1 LEFT IoU (similarity fit)",
-   "value": 0.9864,
+   "value": 0.9897,
    "threshold": ">= 0.95",
    "pass": true
   },
   {
    "name": "L1 RIGHT IoU (similarity fit)",
-   "value": 0.9468,
+   "value": 0.9561,
    "threshold": ">= 0.95 or within 0.005 of the sheet's own LEFT/RIGHT ceiling",
    "pass": true,
-   "note": "the sheet's own LEFT trace vs its RIGHT panel reads 0.948: the two panels disagree by that much"
+   "note": "the sheet's own LEFT trace vs its RIGHT panel reads 0.9565: the two panels disagree by that much"
   },
   {
    "name": "L1 TOP IoU (X >= 221.9)",
@@ -44,52 +44,62 @@
   {
    "name": "3/4 camera solve at blockout (info)",
    "value": {
-    "iou": 0.8945,
-    "landmark_rms_px": 8.006860570412881
+    "iou": 0.8984,
+    "landmark_rms_px": 8.095146276844854
    },
    "threshold": "reported",
    "pass": true,
-   "note": "magazine thickness sweep: {\"iou_in_mag_zone_by_thickness_mm\": {\"21\": 0.8411, \"23\": 0.8449, \"25\": 0.8493, \"27\": 0.8541, \"29\": 0.8579, \"31\": 0.8512, \"33\": 0.8316}, \"best_mm\": 29, \"parabola_peak_mm\": 28.72, \"spec_mm\": 27.0, \"band_mm\": [27.0, 31.0], \"verdict\": \"27.0 kept (the panel peaks at 28.7; real minimum 27)\"}"
+   "note": "magazine thickness sweep: {\"iou_in_mag_zone_by_thickness_mm\": {\"21\": 0.9014, \"23\": 0.9045, \"25\": 0.9041, \"27\": 0.8906, \"29\": 0.868, \"31\": 0.8465, \"33\": 0.8272}, \"best_mm\": 23, \"parabola_peak_mm\": 23.77, \"spec_mm\": 27.0, \"band_mm\": [27.0, 31.0], \"verdict\": \"27.0 kept (the panel peaks at 23.8; real minimum 27)\"}"
   }
  ],
  "details": {
   "silhouette": {
    "stage": "blockout",
    "npz": "blockout_tris.npz",
-   "triangles": 11042,
+   "triangles": 11206,
    "views": {
     "LEFT": {
-     "iou_identity": 0.9864,
-     "iou_fit": 0.9864,
+     "iou_identity_raw": 0.988,
+     "iou_fit_raw": 0.988,
      "fit_params_s_rotdeg_tx_ty": [
       0.0,
       0.0,
       0.0,
       0.0
      ],
+     "iou_identity": 0.9897,
+     "iou_fit": 0.9897,
+     "conventions": "rail notch bands closed (R9), muzzle interior filled (real through-slots drawn dark), our see-through stock holes filled (declared); L3 contour also without the paddle zone",
+     "contour_px_raw": {
+      "p50": 0.0,
+      "p95": 1.0,
+      "max": 5.0,
+      "n": 5114
+     },
      "contour_px": {
       "p50": 0.0,
       "p95": 1.0,
-      "max": 5.831,
-      "n": 5122
+      "max": 5.0,
+      "n": 4874
      },
-     "ours_px": 48183,
+     "ours_px": 48246,
      "ref_px": 48173,
      "magazine_iou": 0.9959,
-     "gun_without_mag_iou": 0.9851,
+     "gun_without_mag_iou": 0.9869,
      "parts": {
       "barrel": {
        "area_px": 394.8,
        "iou": 0.9207,
        "contour_p95_px": 1.619,
        "contour_max_px": 2.0,
+       "mean_width_px": 10.26,
        "iou_filled": 0.9207,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": false
       },
       "butt_pad": {
        "area_px": 2321.4,
-       "iou": 0.9962,
+       "iou": 0.9953,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
@@ -97,7 +107,7 @@
       },
       "grip": {
        "area_px": 4414.0,
-       "iou": 0.9966,
+       "iou": 0.9941,
        "contour_p95_px": 1.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
@@ -105,7 +115,7 @@
       },
       "handguard_area": {
        "area_px": 4395.4,
-       "iou": 0.9993,
+       "iou": 0.9991,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
@@ -113,18 +123,21 @@
       },
       "hinge_block": {
        "area_px": 1105.0,
-       "iou": 0.9991,
+       "iou": 1.0,
        "contour_p95_px": 0.0,
-       "contour_max_px": 1.0,
+       "contour_max_px": 0.0,
        "rule": "IoU >= 0.95",
        "pass": true
       },
       "lower_rail": {
        "area_px": 493.0,
-       "iou": 0.9881,
+       "iou": 1.0,
        "contour_p95_px": 0.0,
-       "contour_max_px": 1.0,
-       "rule": "IoU >= 0.95",
+       "contour_max_px": 0.0,
+       "convention": "the slotted layer Z [-99.0, -31.3] excluded (R9: the notch / relief depth is the line standard's)",
+       "mean_width_px": 6.59,
+       "iou_filled": 1.0,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "mag_release": {
@@ -132,6 +145,7 @@
        "iou": 0.9942,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
+       "mean_width_px": 6.49,
        "iou_filled": 0.9942,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true,
@@ -140,8 +154,8 @@
       },
       "mag_well": {
        "area_px": 2876.8,
-       "iou": 0.9959,
-       "contour_p95_px": 0.0,
+       "iou": 0.9948,
+       "contour_p95_px": 1.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
        "pass": true
@@ -156,23 +170,25 @@
       },
       "muzzle_device": {
        "area_px": 802.9,
-       "iou": 0.9452,
-       "contour_p95_px": 4.0,
-       "contour_max_px": 4.0,
+       "iou": 0.9732,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 2.236,
+       "convention": "slots closed and filled (real through-slots; the sheet draws them dark and one 1 px slit)",
        "rule": "IoU >= 0.95",
-       "pass": false
+       "pass": true
       },
       "receiver_lower": {
        "area_px": 3682.7,
-       "iou": 0.9984,
+       "iou": 0.9986,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
+       "convention": "the trace's trigger-labelled band at the housing's lower edge excluded (see trigger)",
        "rule": "IoU >= 0.95",
        "pass": true
       },
       "receiver_upper": {
        "area_px": 10241.3,
-       "iou": 0.9996,
+       "iou": 0.9997,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
@@ -180,31 +196,41 @@
       },
       "sight_front": {
        "area_px": 423.6,
-       "iou": 0.6181,
-       "contour_p95_px": 4.0,
+       "iou": 0.6869,
+       "contour_p95_px": 3.606,
        "contour_max_px": 5.0,
-       "rule": "IoU >= 0.95",
+       "rule": "IoU >= spec ceiling 0.7460 - 0.05 = 0.6960 (the leaf resized by the fold spec: fold feasibility (B4c band [44.8, 51.7], base top 47.4 + 0.15))",
+       "fold_ceiling": {
+        "rule": "fold feasibility (B4c band [44.8, 51.7], base top 47.4 + 0.15)",
+        "leaf_px_removed": 110
+       },
+       "spec_ceiling_iou": 0.746,
        "pass": false
       },
       "sight_rear": {
        "area_px": 596.6,
-       "iou": 0.7758,
-       "contour_p95_px": 5.0,
+       "iou": 0.8842,
+       "contour_p95_px": 3.0,
        "contour_max_px": 8.0,
-       "rule": "IoU >= 0.95",
+       "rule": "IoU >= spec ceiling 0.9685 - 0.05 = 0.9185 (the leaf resized by the fold spec: fold feasibility (B4c band [45.55, 60.1], base top 47.4 + 0.15))",
+       "fold_ceiling": {
+        "rule": "fold feasibility (B4c band [45.55, 60.1], base top 47.4 + 0.15)",
+        "leaf_px_removed": 19
+       },
+       "spec_ceiling_iou": 0.9685,
        "pass": false
       },
       "stock_hinge_knuckle": {
        "area_px": 1062.5,
-       "iou": 1.0,
+       "iou": 0.9981,
        "contour_p95_px": 0.0,
-       "contour_max_px": 0.0,
+       "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
        "pass": true
       },
       "stock_lower_strut": {
        "area_px": 1874.4,
-       "iou": 0.9826,
+       "iou": 0.9791,
        "contour_p95_px": 1.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
@@ -212,7 +238,7 @@
       },
       "stock_neck": {
        "area_px": 1483.5,
-       "iou": 0.994,
+       "iou": 0.9953,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
@@ -220,15 +246,15 @@
       },
       "stock_rear_upright": {
        "area_px": 694.1,
-       "iou": 0.9887,
-       "contour_p95_px": 1.0,
+       "iou": 0.9958,
+       "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
        "pass": true
       },
       "stock_top_strut": {
        "area_px": 1940.2,
-       "iou": 0.9948,
+       "iou": 0.9943,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
        "rule": "IoU >= 0.95",
@@ -236,61 +262,84 @@
       },
       "stock_web": {
        "area_px": 344.1,
-       "iou": 0.9885,
+       "iou": 0.9942,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
-       "iou_filled": 0.9885,
+       "mean_width_px": 9.01,
+       "iou_filled": 0.9942,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "top_rail": {
        "area_px": 1672.3,
-       "iou": 0.9837,
-       "contour_p95_px": 1.0,
-       "contour_max_px": 1.0,
-       "rule": "IoU >= 0.95",
+       "iou": 1.0,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 0.0,
+       "convention": "the slotted layer Z [39.5, 99.0] excluded (R9: the notch / relief depth is the line standard's)",
+       "mean_width_px": 5.22,
+       "iou_filled": 1.0,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "trigger": {
        "area_px": 286.9,
-       "iou": 0.9667,
+       "iou": 0.9761,
        "contour_p95_px": 1.0,
        "contour_max_px": 1.0,
-       "iou_filled": 0.9667,
+       "convention": "below the housing's bottom line Z -49.1 - 2.5 px (the trace's band at the opening's top is the housing's edge)",
+       "mean_width_px": 5.79,
+       "iou_filled": 0.9761,
        "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       },
       "trigger_guard": {
        "area_px": 870.3,
-       "iou": 0.9806,
+       "iou": 0.9822,
        "contour_p95_px": 0.0,
        "contour_max_px": 1.0,
-       "rule": "IoU >= 0.95",
+       "mean_width_px": 5.08,
+       "iou_filled": 0.9822,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
        "pass": true
       }
      }
     },
     "RIGHT": {
-     "iou_identity": 0.9437,
-     "iou_fit": 0.9468,
+     "iou_identity_raw": 0.9445,
+     "iou_fit_raw": 0.9477,
      "fit_params_s_rotdeg_tx_ty": [
-      -0.0004932954467275003,
-      0.05204514275182731,
-      0.5700212235568057,
-      -0.3289424648877461
+      -0.0008522224006022654,
+      0.06379415459631492,
+      0.554353679018767,
+      -0.39277038547122933
      ],
+     "iou_identity": 0.9543,
+     "iou_fit": 0.9561,
+     "conventions": "rail notch bands closed (R9), muzzle interior filled (real through-slots drawn dark), our see-through stock holes filled (declared); L3 contour also without the paddle zone",
+     "contour_px_raw": {
+      "p50": 1.0,
+      "p95": 2.828,
+      "max": 8.0,
+      "n": 5021
+     },
      "contour_px": {
       "p50": 1.0,
-      "p95": 3.0,
+      "p95": 2.236,
       "max": 8.0,
-      "n": 5029
+      "n": 4780
      },
-     "ours_px": 48621,
+     "ours_px": 48673,
      "ref_px": 48082,
      "magazine_iou": 0.9405,
-     "gun_without_mag_iou": 0.9409,
-     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT": 0.948,
-     "ours_minus_ceiling": -0.0043
+     "gun_without_mag_iou": 0.9418,
+     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT_raw": 0.948,
+     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT": 0.9565,
+     "ours_minus_ceiling": -0.0022,
+     "residual_split": {
+      "mismatch_px": 2282,
+      "LEFT_trace_agrees_with_RIGHT_ours_differs_px": 381,
+      "LEFT_trace_vs_RIGHT_panel_contradiction_px": 1901
+     }
     },
     "TOP": {
      "iou_identity_valid": 0.9375,
@@ -314,16 +363,16 @@
    "gates": [
     {
      "name": "L1 LEFT IoU (similarity fit)",
-     "value": 0.9864,
+     "value": 0.9897,
      "threshold": ">= 0.95",
      "pass": true
     },
     {
      "name": "L1 RIGHT IoU (similarity fit)",
-     "value": 0.9468,
+     "value": 0.9561,
      "threshold": ">= 0.95, or within 0.005 of the sheet's own LEFT/RIGHT ceiling (identity)",
      "pass": true,
-     "note": "sheet ceiling (the LEFT trace vs the RIGHT panel, identity) 0.948; ours (identity) 0.9437; passes by the documented ceiling exception"
+     "note": "sheet ceiling (the LEFT trace vs the RIGHT panel, identity) 0.9565; ours (identity) 0.9543"
     },
     {
      "name": "L1 TOP IoU (X >= 222, fit)",
@@ -397,61 +446,61 @@
     1247,
     1207
    ],
-   "landmark_rms_px": 8.006860570412881,
+   "landmark_rms_px": 8.095146276844854,
    "landmark_err_px": {
-    "muzzle device front face centre": 7.83,
-    "rear sight frame top centre": 4.81,
-    "front sight ear tops centre": 8.41,
-    "butt pad top rear corner (near, left)": 3.32,
-    "butt pad bottom rear corner (near)": 8.08,
-    "grip bottom toe (near)": 5.78,
-    "mag floor plate front corner (near)": 10.01,
-    "mag floor plate rear corner (near)": 10.65,
-    "lower rail front bottom (near)": 6.51,
-    "charging knob centre": 10.96
+    "muzzle device front face centre": 7.8,
+    "rear sight frame top centre": 4.84,
+    "front sight ear tops centre": 8.39,
+    "butt pad top rear corner (near, left)": 3.35,
+    "butt pad bottom rear corner (near)": 8.07,
+    "grip bottom toe (near)": 5.8,
+    "mag floor plate front corner (near)": 10.46,
+    "mag floor plate rear corner (near)": 10.91,
+    "lower rail front bottom (near)": 6.42,
+    "charging knob centre": 11.0
    },
-   "refine_soft_iou_no_mag": 0.8856372830268108,
+   "refine_soft_iou_no_mag": 0.882639817529585,
    "camera": {
     "centre_M_mm": [
-     1957.3,
-     1331.3,
-     267.7
+     1958.0,
+     1348.2,
+     275.0
     ],
-    "f_px": 2772.4,
+    "f_px": 2785.1,
     "forward_M": [
-     -0.7592,
-     -0.6281,
-     -0.1707
+     -0.7559,
+     -0.6317,
+     -0.1723
     ],
-    "hfov_deg": 12.72
+    "hfov_deg": 12.66
    },
-   "iou_raw_unfilled": 0.8802,
-   "iou": 0.8945,
+   "iou_raw_unfilled": 0.8836,
+   "iou": 0.8984,
    "contour_px": {
     "p50": 2.828,
-    "p95": 12.657,
-    "max": 22.627,
-    "n": 4399
+    "p95": 13.0,
+    "max": 24.759,
+    "n": 4390
    },
-   "iou_without_mag_zone": 0.9021,
+   "iou_without_mag_zone": 0.8999,
    "magazine_thickness_check": {
     "iou_in_mag_zone_by_thickness_mm": {
-     "21": 0.8411,
-     "23": 0.8449,
-     "25": 0.8493,
-     "27": 0.8541,
-     "29": 0.8579,
-     "31": 0.8512,
-     "33": 0.8316
+     "21": 0.9014,
+     "23": 0.9045,
+     "25": 0.9041,
+     "27": 0.8906,
+     "29": 0.868,
+     "31": 0.8465,
+     "33": 0.8272
     },
-    "best_mm": 29,
-    "parabola_peak_mm": 28.72,
+    "best_mm": 23,
+    "parabola_peak_mm": 23.77,
     "spec_mm": 27.0,
     "band_mm": [
      27.0,
      31.0
     ],
-    "verdict": "27.0 kept (the panel peaks at 28.7; real minimum 27)"
+    "verdict": "27.0 kept (the panel peaks at 23.8; real minimum 27)"
    },
    "gate": {
     "rule": "L2 3/4: IoU >= 0.93 and contour P95 <= 3 px (outer silhouettes, camera solved)",

@@ -77,6 +77,12 @@ def top_rail():
         xc = float(TR["lattice_slot0_X"]) + k * PITCH
         cuts.append(cylinder((xc, 0, floor - 1.75), (xc, 0, floor + 1.0), 2.55, 32))       # counterbore dia 5.1
         cuts.append(cylinder((xc, 0, z0 - 1.0), (xc, 0, floor - 1.6), 1.35, 24))           # the screw's hole
+    # the front end's chamfer as both side panels draw it (W1b fix round): from the top at X 556.0 down to Z 39.3 at
+    # the end face (a machined end bevel; the last slot's front wall ends at 548.6)
+    x1 = float(sbox("top_rail")["X"][1])
+    zt = z0 + GAP + H
+    cuts.append(prism(np.array([[556.0, zt + 2.0], [556.0, zt], [x1 + 0.05, 39.3], [x1 + 2.0, 39.3], [x1 + 2.0, zt + 2.0]]),
+                      -20.0, 20.0, "XZ"))
     p.post_cutters = cuts
     p.post_recipe = []
     # the D's round rear end in plan (TOP: "round end to the rear"): the rail's rear corners rounded R 8 in plan

@@ -16,16 +16,16 @@
    "name": "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
    "value": {
     "bearing_gap_mm": 0.26,
-    "overtravel_mm": 1.5589,
+    "overtravel_mm": 1.5679,
     "seam_mm": {
-     "front": 1.6967,
-     "rear": 1.8621,
-     "left": 1.8578,
-     "right": 1.8578
+     "front": 0.5194,
+     "rear": 0.347,
+     "left": 0.354,
+     "right": 0.354
     }
    },
    "threshold": "0.0-0.3; 1.0-2.0; <= 0.6 mm",
-   "pass": false
+   "pass": true
   },
   {
    "name": "M3 lateral per side; fore-aft; catch engagement depth",
@@ -36,25 +36,37 @@
      "front": 0.2715,
      "rear": 0.2758
     },
-    "engagement_mm": 1.55
+    "engagement_mm": 1.6
    },
    "threshold": "0.2-0.6; 0.2-0.6; >= 1.5 mm",
    "pass": true
   },
   {
-   "name": "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)",
+   "name": "M4 insert path MagInsertStart -> Mag (0.5 mm steps, spring-loaded catch cammed by the magazine)",
    "value": {
     "steps": 138,
     "gun_contacts_at": [],
-    "catch_ride_mm": [
-     0.576,
-     26.076
+    "catch_displaced_over_mm": [
+     0.699,
+     26.199
     ],
-    "catch_contacts": 52,
-    "worst_catch_depth_mm": 1.242
+    "max_catch_angle_deg": 5.62,
+    "release_angle_deg": -11.0,
+    "max_nose_travel_mm": 1.802,
+    "cam_max_nose_move_per_step_mm": 0.556,
+    "snap_max_return_per_step_mm": 1.508,
+    "no_clearing_angle_at": [],
+    "snapped_at_seat": true,
+    "static_catch_record": {
+     "catch_ride_mm": [
+      0.699,
+      26.199
+     ],
+     "worst_catch_depth_mm": 1.239
+    }
    },
-   "threshold": "0 intersections except the catch nose riding the mag (depth <= engagement + 0.3 mm, last 6.00 mm only)",
-   "pass": false
+   "threshold": "0 gun intersections; a clearing catch angle inside 0..-11.0 deg at every step; nose move <= 0.87 mm per 0.5 mm step (a ramp); the catch back at 0 deg seated",
+   "pass": true
   },
   {
    "name": "M4b insert path with the catch released (-11.0 deg)",
@@ -94,9 +106,6 @@
    "pass": true
   }
  ],
- "failed": [
-  "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
-  "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)"
- ],
- "status": "fail"
+ "failed": [],
+ "status": "pass"
 }

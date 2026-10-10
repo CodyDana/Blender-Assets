@@ -181,6 +181,24 @@ def trigger_profile():
     return blade, tongue
 
 
+def _hull2d(P):
+    """Convex hull (Andrew's monotone chain), counter-clockwise."""
+    pts = sorted(set(map(tuple, np.round(np.asarray(P, float), 9))))
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lo, hi = [], []
+    for p in pts:
+        while len(lo) >= 2 and cross(lo[-2], lo[-1], p) <= 0:
+            lo.pop()
+        lo.append(p)
+    for p in reversed(pts):
+        while len(hi) >= 2 and cross(hi[-2], hi[-1], p) <= 0:
+            hi.pop()
+        hi.append(p)
+    return np.array(lo[:-1] + hi[:-1], float)
+
+
 def _rotY(P, c, deg):
     t = math.radians(deg)
     a = P - c
@@ -267,6 +285,16 @@ def lower_receiver():
           and hr[:, 1].max() < -40.0] or SG.part_holes("trigger_guard", 0.4)
     for hr in gh:
         cuts.append(prism(G.ccw(hr), -20.0, 20.0, "XZ"))
+    # the opening's traced hole wraps round the DRAWN trigger blade: the blade's own region (traced ring + 0.6) is cut
+    # too, from below up to 0.3 over the opening's top there (a 0.3 relief in the housing band's underside round the
+    # blade; level with the top it left a coplanar seam, under it a 0.2 lip; W1b fix round: the drawn blade minus the
+    # built blade's 0.3 sweep left ragged polymer slivers beside the trigger)
+    tr_ = G.offset(G.ccw(SG.part_ring("trigger", 0.2)), 0.6)
+    near_t = np.vstack([h[(h[:, 0] > tr_[:, 0].min() - 3.0) & (h[:, 0] < tr_[:, 0].max() + 3.0)] for h in gh])
+    zt_ = float(near_t[:, 1].max()) + 0.3 if len(near_t) else Z_BODY_BOT - 1.2
+    tcut = G.clip_y(tr_, -200.0, zt_)
+    if len(tcut) >= 3:
+        cuts.append(prism(G.ccw(tcut), -20.0, 20.0, "XZ"))
     # magwell cavity: the magazine + 0.3 per side, up into the upper's cavity; the mouth flare (1.6 per side at the lip
     # to 0 at 9.5 above it, along the mag axis)
     fa = MAGD["foreaft"] / 2.0 + 0.3
@@ -274,13 +302,21 @@ def lower_receiver():
     # concentric with the magazine's corners (R 3.0 / 2.5 + 0.3), 6 segments per corner, no resample (a 36-point
     # resample cut the corners as chords 0.33 inside the magazine's round corners)
     sec_in = MB.section(2 * fa, 2 * th, 3.3, 2.8, 6)
-    sec_mouth = MB.section(2 * fa + 3.2, 2 * th + 3.2, 4.9, 4.4, 6)
-    z_lip_lo = -25.0
+    # the insertion lead-in (real pattern: the moulded well's mouth is a shallow taper, the guide is the outer flare
+    # band and the magazine's own tapered top; W1b fix round, M2): +0.25 per side at the lip, back to the 0.3 fit 2.5
+    # above it, following the slanted lip line in the mag frame, so the seam seen at the well's lower edge is 0.55
+    # (M2 <= 0.6). The former 1.6 mouth flare left a 1.9 mm visible gap all round.
+    lead, lead_h = 0.25, 2.5
+    sec_lead = MB.section(2 * fa + 2 * lead, 2 * th + 2 * lead, 3.3 + lead, 2.8 + lead, 6)
     zt = MAGD["top_along_axis"] + 12.0
     M4 = mag_M4()
-    # the mouth flare (1.6 per side) at the lip line, tapering to the 0.3 fit 9.0 above it (spec flare_height 7.2-9.1)
-    rings = [np.c_[sec_mouth, np.full(len(sec_mouth), z_lip_lo)], np.c_[sec_mouth, np.full(len(sec_mouth), 1.5)],
-             np.c_[sec_in, np.full(len(sec_in), 9.0)], np.c_[sec_in, np.full(len(sec_in), zt)]]
+    lf_l = [(np.array([p[0], 0.0, p[1]]) - MAG_O) for p in (MW["lip_lower_edge_front_XZ"], MW["lip_lower_edge_rear_XZ"])]
+    (xf_, zf_), (xr_, zr_) = [(float(d @ MAG_X), float(d @ MAG_Z)) for d in lf_l]
+    z_lip = lambda x: zr_ + (zf_ - zr_) * (np.asarray(x) - xr_) / (xf_ - xr_)      # noqa: E731
+
+    def ring(sec, dz):
+        return np.c_[sec, z_lip(sec[:, 0]) + dz]
+    rings = [ring(sec_lead, -25.0), ring(sec_lead, 0.0), ring(sec_in, lead_h), np.c_[sec_in, np.full(len(sec_in), zt)]]
     cuts.append(loft(rings).transformed(M4))
     # the catch window in the rear wall (the paddle's nose passes through it to the notch)
     cw = MW["catch_window"]
@@ -289,7 +325,9 @@ def lower_receiver():
     # the paddle's slot: open between the guard's front leg and the rear wall below the housing; through the housing
     # bottom for the paddle's upper body (0.3 per side) and its nose (3.2 half width + 0.3) up to the window
     xl = float(TG["front_leg"]["X"][1])
-    cuts.append(prism(np.array([[xl, -100.0], [wall_line_x(-100.0) - 0.0, -100.0], [wall_line_x(Z_BODY_BOT + 0.0),
+    # (its front face 0.1 into the wall's outer face: coplanar with the well's rear face it left a 0.002 mm strip and a
+    # degenerate triangle where the traced outline crosses the wall line, W1b fix round UD1-UD2)
+    cuts.append(prism(np.array([[xl, -100.0], [wall_line_x(-100.0) + 0.1, -100.0], [wall_line_x(Z_BODY_BOT) + 0.1,
                                 Z_BODY_BOT + 0.0], [xl, Z_BODY_BOT + 0.0]]), -(pw + 0.3), pw + 0.3, "XZ"))
     # the nose's slot: open 3.6 behind the guard leg's line too (released, the nose swings 3.5 rearward)
     nose_slot = np.array([[xl - 3.6, Z_BODY_BOT - 1.0], [wall_line_x(Z_BODY_BOT) + 0.3, Z_BODY_BOT - 1.0],
@@ -300,9 +338,16 @@ def lower_receiver():
     # the trigger slot: the blade + tongue swept 0..+13 deg about the axle, grown 0.3, 6.6 wide
     blade, tongue = trigger_profile()
     tp = TRG["pivot_XZ"]
-    trig_cutters = [prism(_rotY(G.offset(G.ccw(P), 0.3), np.array(tp), a), -TRG["width"] / 2.0 - 0.3,
+    trig_cutters = [prism(_rotY(G.offset(G.ccw(blade), 0.3), np.array(tp), a), -TRG["width"] / 2.0 - 0.3,
                           TRG["width"] / 2.0 + 0.3, "XZ")
-                    for a in np.linspace(0.0, float(TRG["pull_rot_Y_deg"]) + 1.0, 3) for P in (blade, tongue)]
+                    for a in np.linspace(0.0, float(TRG["pull_rot_Y_deg"]) + 1.0, 3)]
+    # the tongue's arc is concentric with the axle: three rotated copies laid coincident arcs on each other and the
+    # booleans left 0.006 mm2 fan slivers on the slot walls (UD1). One cutter instead: the hull of the tongue swept
+    # 0..+14 deg, its arc simplified to 0.02 mm sagitta (chords ~0.85 mm)
+    tw = np.vstack([_rotY(G.offset(G.ccw(tongue), 0.3), np.array(tp), a)
+                    for a in np.linspace(0.0, float(TRG["pull_rot_Y_deg"]) + 1.0, 29)])
+    tongue_sw = G.ccw(G.dp_simplify(G.ccw(_hull2d(tw)), 0.02))
+    trig_cutters.append(prism(tongue_sw, -TRG["width"] / 2.0 - 0.3, TRG["width"] / 2.0 + 0.3, "XZ"))
     cuts += trig_cutters
     # bores: selector shaft (dia 5.0 + 0.3), trigger axle (press 0.02), paddle pin in the ears (press 0.02)
     sp = SE["pivot_XZ"]

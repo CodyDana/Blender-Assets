@@ -6,64 +6,1337 @@
   1247,
   1207
  ],
- "landmark_rms_px": 8.006860570412881,
+ "landmark_rms_px": 8.095146276844854,
  "landmark_err_px": {
-  "muzzle device front face centre": 7.83,
-  "rear sight frame top centre": 4.81,
-  "front sight ear tops centre": 8.41,
-  "butt pad top rear corner (near, left)": 3.32,
-  "butt pad bottom rear corner (near)": 8.08,
-  "grip bottom toe (near)": 5.78,
-  "mag floor plate front corner (near)": 10.01,
-  "mag floor plate rear corner (near)": 10.65,
-  "lower rail front bottom (near)": 6.51,
-  "charging knob centre": 10.96
+  "muzzle device front face centre": 7.8,
+  "rear sight frame top centre": 4.84,
+  "front sight ear tops centre": 8.39,
+  "butt pad top rear corner (near, left)": 3.35,
+  "butt pad bottom rear corner (near)": 8.07,
+  "grip bottom toe (near)": 5.8,
+  "mag floor plate front corner (near)": 10.46,
+  "mag floor plate rear corner (near)": 10.91,
+  "lower rail front bottom (near)": 6.42,
+  "charging knob centre": 11.0
  },
- "refine_soft_iou_no_mag": 0.8791853510858815,
+ "solve": {
+  "candidates_iou": {
+   "a_iou_no_mag": 0.89,
+   "b_chamfer": 0.8958,
+   "c_iou_all": 0.9014,
+   "d_iou_body": 0.9
+  },
+  "chosen": "c_iou_all"
+ },
+ "panel_consistency": {
+  "body_landmark_rms_px": 6.83,
+  "landmark_err_px_under_the_body_camera": {
+   "muzzle device front face centre": 6.7,
+   "rear sight frame top centre": 2.6,
+   "front sight ear tops centre": 9.6,
+   "butt pad top rear corner (near, left)": 3.3,
+   "butt pad bottom rear corner (near)": 3.6,
+   "grip bottom toe (near)": 15.8,
+   "mag floor plate front corner (near)": 18.5,
+   "mag floor plate rear corner (near)": 18.6,
+   "lower rail front bottom (near)": 6.9,
+   "charging knob centre": 10.6
+  },
+  "halves_fitted_alone": {
+   "front_x_lt_300": {
+    "iou_on_its_half": 0.9317,
+    "contour_p95_on_its_half": 10.15
+   },
+   "rear_x_ge_300": {
+    "iou_on_its_half": 0.8842,
+    "contour_p95_on_its_half": 13.6
+   }
+  },
+  "reading": "a consistent panel fits its body landmarks to the 2 px read accuracy and each half to the gate bar; here the body landmarks alone leave 6.8 px RMS, the grip / magazine landmarks miss the body camera by [15.8, 18.5, 18.6] px and neither half reaches IoU 0.93 on its own"
+ },
  "camera": {
   "centre_M_mm": [
-   1957.6,
-   1336.8,
-   271.0
+   1969.1,
+   1340.1,
+   272.0
   ],
-  "f_px": 2791.0,
+  "f_px": 2821.6,
   "forward_M": [
-   -0.7576,
-   -0.6298,
-   -0.1716
+   -0.7597,
+   -0.6275,
+   -0.1704
   ],
-  "hfov_deg": 12.64
+  "hfov_deg": 12.5
  },
- "iou_raw_unfilled": 0.8785,
- "iou": 0.891,
+ "iou_raw_unfilled": 0.8888,
+ "iou": 0.9014,
  "contour_px": {
-  "p50": 3.0,
-  "p95": 12.166,
-  "max": 24.352,
-  "n": 4440
+  "p50": 2.0,
+  "p95": 13.019,
+  "max": 28.284,
+  "n": 4431
  },
- "iou_without_mag_zone": 0.8936,
+ "iou_without_mag_zone": 0.8932,
  "magazine_thickness_check": {
   "iou_in_mag_zone_by_thickness_mm": {
-   "21": 0.8691,
-   "23": 0.8723,
-   "25": 0.874,
-   "27": 0.8771,
-   "29": 0.8806,
-   "31": 0.8822,
-   "33": 0.8696
+   "21": 0.9122,
+   "23": 0.9379,
+   "25": 0.9513,
+   "27": 0.9476,
+   "29": 0.9225,
+   "31": 0.8969,
+   "33": 0.8731
   },
-  "best_mm": 31,
-  "parabola_peak_mm": 30.23,
+  "best_mm": 25,
+  "parabola_peak_mm": 25.57,
   "spec_mm": 27.0,
   "band_mm": [
    27.0,
    31.0
   ],
-  "verdict": "27.0 kept (the panel peaks at 30.2; real minimum 27)"
+  "verdict": "27.0 kept (the panel peaks at 25.6; real minimum 27)"
  },
  "gate": {
   "rule": "L2 3/4: IoU >= 0.93 and contour P95 <= 3 px (outer silhouettes, camera solved)",
   "pass": false
+ },
+ "residual_regions": [
+  {
+   "id": 1,
+   "kind": "ours_only",
+   "bbox_px": [
+    309,
+    297,
+    359,
+    374
+   ],
+   "px": 1271,
+   "core_px_beyond_3": 967,
+   "max_dist_px": 17.12,
+   "objects": [
+    "lower_receiver",
+    "grip_cover"
+   ],
+   "trace_keys": [
+    "grip",
+    "hinge_block",
+    "mag_well",
+    "receiver_lower",
+    "stock_hinge_knuckle",
+    "trigger_guard"
+   ],
+   "side_per_part_pass": {
+    "grip": true,
+    "hinge_block": true,
+    "mag_well": true,
+    "receiver_lower": true,
+    "stock_hinge_knuckle": true,
+    "trigger_guard": true
+   },
+   "top": {
+    "stations": 11,
+    "width_err_p95_px": 6.45
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.94,
+     0.94
+    ],
+    "half_width_mm_range": [
+     34.2,
+     34.2
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.940": 907,
+    "top_allowed_x0.970": 940
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 8,
+    "dy": -4,
+    "window_iou": [
+     0.7415,
+     0.8552
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 2,
+   "kind": "ref_only",
+   "bbox_px": [
+    361,
+    243,
+    403,
+    368
+   ],
+   "px": 1342,
+   "core_px_beyond_3": 936,
+   "max_dist_px": 15.3,
+   "objects": [
+    "lower_receiver",
+    "grip_cover"
+   ],
+   "trace_keys": [
+    "grip",
+    "hinge_block",
+    "mag_well",
+    "receiver_lower",
+    "stock_hinge_knuckle",
+    "trigger_guard"
+   ],
+   "side_per_part_pass": {
+    "grip": true,
+    "hinge_block": true,
+    "mag_well": true,
+    "receiver_lower": true,
+    "stock_hinge_knuckle": true,
+    "trigger_guard": true
+   },
+   "top": {
+    "stations": 11,
+    "width_err_p95_px": 6.45
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.94,
+     0.94
+    ],
+    "half_width_mm_range": [
+     34.2,
+     34.2
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.940": 1035,
+    "top_allowed_x0.970": 979
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 8,
+    "dy": -5,
+    "window_iou": [
+     0.708,
+     0.8951
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 3,
+   "kind": "ours_only",
+   "bbox_px": [
+    83,
+    119,
+    115,
+    184
+   ],
+   "px": 823,
+   "core_px_beyond_3": 619,
+   "max_dist_px": 28.28,
+   "objects": [
+    "upper_receiver",
+    "sight_front_base"
+   ],
+   "trace_keys": [
+    "handguard_area",
+    "receiver_upper",
+    "sight_front"
+   ],
+   "side_per_part_pass": {
+    "handguard_area": true,
+    "receiver_upper": true,
+    "sight_front": true
+   },
+   "top": {
+    "stations": 101,
+    "width_err_p95_px": 4.79
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     1.03,
+     1.03
+    ],
+    "half_width_mm_range": [
+     47.69,
+     47.69
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x1.015": 648,
+    "top_allowed_x1.030": 670
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 8,
+    "dy": 0,
+    "window_iou": [
+     0.7128,
+     0.8012
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 4,
+   "kind": "ours_only",
+   "bbox_px": [
+    372,
+    196,
+    436,
+    242
+   ],
+   "px": 670,
+   "core_px_beyond_3": 428,
+   "max_dist_px": 14.56,
+   "objects": [
+    "lower_receiver"
+   ],
+   "trace_keys": [
+    "grip",
+    "hinge_block",
+    "mag_well",
+    "receiver_lower",
+    "stock_hinge_knuckle",
+    "trigger_guard"
+   ],
+   "side_per_part_pass": {
+    "grip": true,
+    "hinge_block": true,
+    "mag_well": true,
+    "receiver_lower": true,
+    "stock_hinge_knuckle": true,
+    "trigger_guard": true
+   },
+   "top": {
+    "stations": 11,
+    "width_err_p95_px": 6.45
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.94,
+     0.94
+    ],
+    "half_width_mm_range": [
+     34.2,
+     34.2
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.940": 343,
+    "top_allowed_x0.970": 384
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -8,
+    "dy": -3,
+    "window_iou": [
+     0.775,
+     0.8321
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 5,
+   "kind": "ref_only",
+   "bbox_px": [
+    27,
+    186,
+    87,
+    223
+   ],
+   "px": 551,
+   "core_px_beyond_3": 373,
+   "max_dist_px": 12.65,
+   "objects": [
+    "muzzle_device"
+   ],
+   "trace_keys": [
+    "muzzle_device"
+   ],
+   "side_per_part_pass": {
+    "muzzle_device": true
+   },
+   "top": {
+    "stations": 17,
+    "width_err_p95_px": 1.29
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.93,
+     1.17
+    ],
+    "half_width_mm_range": [
+     10.74,
+     13.51
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.930": 440,
+    "top_allowed_x0.965": 430,
+    "top_allowed_x1.085": 388,
+    "top_allowed_x1.170": 362
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -8,
+    "dy": 1,
+    "window_iou": [
+     0.7354,
+     0.7778
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 6,
+   "kind": "ref_only",
+   "bbox_px": [
+    540,
+    244,
+    596,
+    262
+   ],
+   "px": 526,
+   "core_px_beyond_3": 358,
+   "max_dist_px": 12.37,
+   "objects": [
+    "butt_pad"
+   ],
+   "trace_keys": [
+    "butt_pad"
+   ],
+   "side_per_part_pass": {
+    "butt_pad": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 433,
+    "width_x1.15": 334
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 0,
+    "dy": 8,
+    "window_iou": [
+     0.6506,
+     0.8174
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 7,
+   "kind": "ours_only",
+   "bbox_px": [
+    432,
+    123,
+    563,
+    150
+   ],
+   "px": 590,
+   "core_px_beyond_3": 196,
+   "max_dist_px": 12.17,
+   "objects": [
+    "stock_frame",
+    "butt_pad"
+   ],
+   "trace_keys": [
+    "butt_pad",
+    "stock_hinge_knuckle",
+    "stock_lower_strut",
+    "stock_neck",
+    "stock_rear_upright",
+    "stock_top_strut",
+    "stock_web"
+   ],
+   "side_per_part_pass": {
+    "butt_pad": true,
+    "stock_hinge_knuckle": true,
+    "stock_lower_strut": true,
+    "stock_neck": true,
+    "stock_rear_upright": true,
+    "stock_top_strut": true,
+    "stock_web": true
+   },
+   "top": {
+    "stations": 7,
+    "width_err_p95_px": 5.25
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     1.08,
+     1.08
+    ],
+    "half_width_mm_range": [
+     39.29,
+     39.29
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x1.040": 332,
+    "top_allowed_x1.080": 358
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -1,
+    "dy": 4,
+    "window_iou": [
+     0.8281,
+     0.9062
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 8,
+   "kind": "ref_only",
+   "bbox_px": [
+    172,
+    493,
+    232,
+    506
+   ],
+   "px": 314,
+   "core_px_beyond_3": 152,
+   "max_dist_px": 9.06,
+   "objects": [
+    "magazine_floor_plate"
+   ],
+   "trace_keys": [
+    "magazine"
+   ],
+   "side_per_part_pass": {
+    "magazine": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "magazine thickness band [27.0, 31.0] (R26)",
+    "thickness_mm_range": [
+     27.0,
+     31.0
+    ]
+   },
+   "width_test_core_px": {
+    "thickness_29mm": 152,
+    "thickness_31mm": 135
+   },
+   "magazine_thickness_dependence": {
+    "spec_thickness_mm": 27.0,
+    "panel_preferred_mm": 25.57,
+    "core_px_at_spec": 152,
+    "core_px_at_preferred": 165
+   },
+   "local_shift": {
+    "dx": -1,
+    "dy": 6,
+    "window_iou": [
+     0.7557,
+     0.872
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (magazine thickness band [27.0, 31.0] (R26)) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 9,
+   "kind": "ref_only",
+   "bbox_px": [
+    138,
+    85,
+    163,
+    131
+   ],
+   "px": 375,
+   "core_px_beyond_3": 135,
+   "max_dist_px": 7.81,
+   "objects": [
+    "sight_front_leaf",
+    "sight_front_base"
+   ],
+   "trace_keys": [
+    "sight_front"
+   ],
+   "side_per_part_pass": {
+    "sight_front": true
+   },
+   "top": {
+    "stations": 2,
+    "width_err_p95_px": 0.59
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.97,
+     1.05
+    ],
+    "half_width_mm_range": [
+     44.91,
+     48.62
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.970": 154,
+    "top_allowed_x0.985": 149,
+    "top_allowed_x1.025": 140,
+    "top_allowed_x1.050": 131
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 3,
+    "dy": -5,
+    "window_iou": [
+     0.7398,
+     0.8023
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 10,
+   "kind": "ref_only",
+   "bbox_px": [
+    336,
+    70,
+    365,
+    112
+   ],
+   "px": 318,
+   "core_px_beyond_3": 126,
+   "max_dist_px": 7.0,
+   "objects": [
+    "sight_rear_leaf",
+    "sight_rear_base"
+   ],
+   "trace_keys": [
+    "sight_rear"
+   ],
+   "side_per_part_pass": {
+    "sight_rear": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 182,
+    "width_x1.15": 85
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -5,
+    "dy": -4,
+    "window_iou": [
+     0.7973,
+     0.9009
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 11,
+   "kind": "ours_only",
+   "bbox_px": [
+    416,
+    122,
+    430,
+    139
+   ],
+   "px": 175,
+   "core_px_beyond_3": 107,
+   "max_dist_px": 12.65,
+   "objects": [
+    "lower_receiver"
+   ],
+   "trace_keys": [
+    "grip",
+    "hinge_block",
+    "mag_well",
+    "receiver_lower",
+    "stock_hinge_knuckle",
+    "trigger_guard"
+   ],
+   "side_per_part_pass": {
+    "grip": true,
+    "hinge_block": true,
+    "mag_well": true,
+    "receiver_lower": true,
+    "stock_hinge_knuckle": true,
+    "trigger_guard": true
+   },
+   "top": {
+    "stations": 11,
+    "width_err_p95_px": 6.45
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.94,
+     0.94
+    ],
+    "half_width_mm_range": [
+     34.2,
+     34.2
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.940": 80,
+    "top_allowed_x0.970": 94
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -8,
+    "dy": -3,
+    "window_iou": [
+     0.7256,
+     0.8361
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 12,
+   "kind": "ours_only",
+   "bbox_px": [
+    177,
+    247,
+    195,
+    278
+   ],
+   "px": 226,
+   "core_px_beyond_3": 97,
+   "max_dist_px": 7.81,
+   "objects": [
+    "lower_receiver"
+   ],
+   "trace_keys": [
+    "grip",
+    "hinge_block",
+    "mag_well",
+    "receiver_lower",
+    "stock_hinge_knuckle",
+    "trigger_guard"
+   ],
+   "side_per_part_pass": {
+    "grip": true,
+    "hinge_block": true,
+    "mag_well": true,
+    "receiver_lower": true,
+    "stock_hinge_knuckle": true,
+    "trigger_guard": true
+   },
+   "top": {
+    "stations": 11,
+    "width_err_p95_px": 6.45
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.94,
+     0.94
+    ],
+    "half_width_mm_range": [
+     34.2,
+     34.2
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.940": 64,
+    "top_allowed_x0.970": 83
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 6,
+    "dy": 1,
+    "window_iou": [
+     0.8074,
+     0.8735
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 13,
+   "kind": "ours_only",
+   "bbox_px": [
+    87,
+    216,
+    100,
+    232
+   ],
+   "px": 109,
+   "core_px_beyond_3": 45,
+   "max_dist_px": 7.21,
+   "objects": [
+    "upper_receiver"
+   ],
+   "trace_keys": [
+    "handguard_area",
+    "receiver_upper"
+   ],
+   "side_per_part_pass": {
+    "handguard_area": true,
+    "receiver_upper": true
+   },
+   "top": {
+    "stations": 99,
+    "width_err_p95_px": 4.83
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     1.03,
+     1.03
+    ],
+    "half_width_mm_range": [
+     35.63,
+     35.63
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x1.015": 50,
+    "top_allowed_x1.030": 50
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 7,
+    "dy": 1,
+    "window_iou": [
+     0.8291,
+     0.9033
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (TOP width error P95 <= 2 px) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 14,
+   "kind": "ours_only",
+   "bbox_px": [
+    598,
+    130,
+    604,
+    189
+   ],
+   "px": 167,
+   "core_px_beyond_3": 17,
+   "max_dist_px": 4.12,
+   "objects": [
+    "butt_pad"
+   ],
+   "trace_keys": [
+    "butt_pad"
+   ],
+   "side_per_part_pass": {
+    "butt_pad": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 0,
+    "width_x1.15": 285
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -2,
+    "dy": -4,
+    "window_iou": [
+     0.819,
+     0.9106
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the width that shrinks this region grows region(s) [6, 15] of the same parts (summed core 385 px built, {'width_x0.85': 443, 'width_x1.15': 628} by width): an offset between the views, which the side view (per-part L2 pass) decides",
+   "is_contradiction": true,
+   "is_r26_magazine": false,
+   "group_width_test": {
+    "regions": [
+     6,
+     14,
+     15
+    ],
+    "core_px_at_built": 385,
+    "core_px_by_test": {
+     "width_x0.85": 443,
+     "width_x1.15": 628
+    }
+   }
+  },
+  {
+   "id": 15,
+   "kind": "ref_only",
+   "bbox_px": [
+    565,
+    124,
+    598,
+    129
+   ],
+   "px": 100,
+   "core_px_beyond_3": 10,
+   "max_dist_px": 4.0,
+   "objects": [
+    "butt_pad"
+   ],
+   "trace_keys": [
+    "butt_pad"
+   ],
+   "side_per_part_pass": {
+    "butt_pad": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 10,
+    "width_x1.15": 9
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -4,
+    "dy": -3,
+    "window_iou": [
+     0.8171,
+     0.9081
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 16,
+   "kind": "ours_only",
+   "bbox_px": [
+    163,
+    128,
+    172,
+    135
+   ],
+   "px": 43,
+   "core_px_beyond_3": 8,
+   "max_dist_px": 4.12,
+   "objects": [
+    "top_rail"
+   ],
+   "trace_keys": [
+    "top_rail"
+   ],
+   "side_per_part_pass": {
+    "top_rail": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 2,
+    "width_x1.15": 9
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 7,
+    "dy": -1,
+    "window_iou": [
+     0.7958,
+     0.8772
+    ]
+   },
+   "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here",
+   "is_contradiction": false,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 17,
+   "kind": "ref_only",
+   "bbox_px": [
+    108,
+    235,
+    133,
+    253
+   ],
+   "px": 95,
+   "core_px_beyond_3": 5,
+   "max_dist_px": 4.12,
+   "objects": [
+    "lower_rail"
+   ],
+   "trace_keys": [
+    "lower_rail"
+   ],
+   "side_per_part_pass": {
+    "lower_rail": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 20,
+    "width_x1.15": 0
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -3,
+    "dy": 1,
+    "window_iou": [
+     0.8977,
+     0.9477
+    ]
+   },
+   "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here",
+   "is_contradiction": false,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 18,
+   "kind": "ours_only",
+   "bbox_px": [
+    368,
+    94,
+    373,
+    104
+   ],
+   "px": 36,
+   "core_px_beyond_3": 3,
+   "max_dist_px": 4.0,
+   "objects": [
+    "sight_rear_leaf",
+    "sight_rear_base"
+   ],
+   "trace_keys": [
+    "sight_rear"
+   ],
+   "side_per_part_pass": {
+    "sight_rear": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 5,
+    "width_x1.15": 6
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -3,
+    "dy": -3,
+    "window_iou": [
+     0.8853,
+     0.9004
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 19,
+   "kind": "ref_only",
+   "bbox_px": [
+    117,
+    123,
+    123,
+    127
+   ],
+   "px": 27,
+   "core_px_beyond_3": 3,
+   "max_dist_px": 4.0,
+   "objects": [
+    "sight_front_base"
+   ],
+   "trace_keys": [
+    "sight_front"
+   ],
+   "side_per_part_pass": {
+    "sight_front": true
+   },
+   "top": {
+    "stations": 2,
+    "width_err_p95_px": 0.59
+   },
+   "allowed_widths": {
+    "source": "TOP width error P95 <= 2 px",
+    "scale_range": [
+     0.97,
+     1.05
+    ],
+    "half_width_mm_range": [
+     44.91,
+     48.62
+    ]
+   },
+   "width_test_core_px": {
+    "top_allowed_x0.970": 3,
+    "top_allowed_x0.985": 3,
+    "top_allowed_x1.025": 2,
+    "top_allowed_x1.050": 0
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -3,
+    "dy": 2,
+    "window_iou": [
+     0.7225,
+     0.7691
+    ]
+   },
+   "verdict": "OURS: a width the authorities allow (TOP width error P95 <= 2 px) fits the 3/4 here",
+   "is_contradiction": false,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 20,
+   "kind": "ours_only",
+   "bbox_px": [
+    239,
+    293,
+    269,
+    455
+   ],
+   "px": 338,
+   "core_px_beyond_3": 2,
+   "max_dist_px": 3.61,
+   "objects": [
+    "magazine"
+   ],
+   "trace_keys": [
+    "magazine"
+   ],
+   "side_per_part_pass": {
+    "magazine": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "magazine thickness band [27.0, 31.0] (R26)",
+    "thickness_mm_range": [
+     27.0,
+     31.0
+    ]
+   },
+   "width_test_core_px": {
+    "thickness_29mm": 35,
+    "thickness_31mm": 166
+   },
+   "magazine_thickness_dependence": {
+    "spec_thickness_mm": 27.0,
+    "panel_preferred_mm": 25.57,
+    "core_px_at_spec": 2,
+    "core_px_at_preferred": 2
+   },
+   "local_shift": {
+    "dx": -2,
+    "dy": 1,
+    "window_iou": [
+     0.9242,
+     0.9693
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (magazine thickness band [27.0, 31.0] (R26)) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 21,
+   "kind": "ref_only",
+   "bbox_px": [
+    129,
+    86,
+    135,
+    92
+   ],
+   "px": 23,
+   "core_px_beyond_3": 2,
+   "max_dist_px": 3.61,
+   "objects": [
+    "sight_front_leaf"
+   ],
+   "trace_keys": [
+    "sight_front"
+   ],
+   "side_per_part_pass": {
+    "sight_front": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 7,
+    "width_x1.15": 0
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": 1,
+    "dy": -5,
+    "window_iou": [
+     0.7297,
+     0.8689
+    ]
+   },
+   "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here",
+   "is_contradiction": false,
+   "is_r26_magazine": false
+  },
+  {
+   "id": 22,
+   "kind": "ref_only",
+   "bbox_px": [
+    374,
+    105,
+    382,
+    108
+   ],
+   "px": 27,
+   "core_px_beyond_3": 2,
+   "max_dist_px": 4.0,
+   "objects": [
+    "sight_rear_base"
+   ],
+   "trace_keys": [
+    "sight_rear"
+   ],
+   "side_per_part_pass": {
+    "sight_rear": true
+   },
+   "top": null,
+   "allowed_widths": {
+    "source": "hidden part, +-15 %",
+    "scale_range": [
+     0.85,
+     1.15
+    ]
+   },
+   "width_test_core_px": {
+    "width_x0.85": 5,
+    "width_x1.15": 11
+   },
+   "magazine_thickness_dependence": null,
+   "local_shift": {
+    "dx": -4,
+    "dy": -3,
+    "window_iou": [
+     0.8284,
+     0.9127
+    ]
+   },
+   "verdict": "3/4 CONTRADICTS the authority views: the parts match LEFT (per-part L2) and no width the authorities allow (hidden part, +-15 %) removes it",
+   "is_contradiction": true,
+   "is_r26_magazine": false
+  }
+ ],
+ "exception": {
+  "rule": "R38: pass if IoU >= 0.93 and contour P95 <= 3 px; else pass only if the camera-solved IoU >= 0.915 (the AR-01's floor: the camera must explain the panel before regions can be called contradictions) AND, with the regions the study proves 3/4-panel contradictions (and the R26 magazine-thickness regions) left out of both masks, the rest meets the same bar and no region > 3 px is unexplained",
+  "floor_iou": 0.915,
+  "floor_pass": false,
+  "outright_pass": false,
+  "regions": 22,
+  "regions_over_3px": 22,
+  "contradictions": 18,
+  "r26_magazine": 0,
+  "excluded_px": 10619,
+  "iou_without_contradictions": 0.9876,
+  "contour_p95_without_contradictions": 2.828,
+  "not_explained": [
+   {
+    "id": 16,
+    "objects": [
+     "top_rail"
+    ],
+    "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here"
+   },
+   {
+    "id": 17,
+    "objects": [
+     "lower_rail"
+    ],
+    "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here"
+   },
+   {
+    "id": 19,
+    "objects": [
+     "sight_front_base"
+    ],
+    "verdict": "OURS: a width the authorities allow (TOP width error P95 <= 2 px) fits the 3/4 here"
+   },
+   {
+    "id": 21,
+    "objects": [
+     "sight_front_leaf"
+    ],
+    "verdict": "OURS: a width the authorities allow (hidden part, +-15 %) fits the 3/4 here"
+   }
+  ],
+  "pass": false,
+  "evidence_dir": "WorkFiles/guns/smg/review/form/q34_exception"
  }
 }

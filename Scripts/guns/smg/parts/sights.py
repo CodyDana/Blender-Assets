@@ -82,8 +82,21 @@ def rear_sight():
     cb_head = HW.place(HW.button_head(3.0, shank_len=1.0, nseg=32), (rx(cbx), W_BASE / 2.0, rz(cbz)), (0, 1, 0))
     nut = prism(HW._hex(5.5, 0.0), -W_BASE / 2.0 - 2.2, -W_BASE / 2.0 + 0.5, "XZ").translated((rx(cbx), 0.0, rz(cbz)))
     plunger = _plunger(rx(px), rz(pz), 215.0)   # its back end stays 0.5 over the rail top
+    # (W1b fix round, L2 per part) the base's raised rear as the sheet draws it behind the leaf (eye side): the base
+    # body rises to Z 51.2 from its rear end to X 288.5 (full base width) and a centre block (the cheeks' width) stands
+    # to Z 58.1 from X 288.5 to 0.2 behind the leaf's rear face (the leaf folds forward, away from it); the
+    # sight line (Z 68.8) passes 10.7 over it
+    zf_ = z0 + H + fl                                            # the base floor's top (M)
+    rb_lo = np.array([[bx[0], zf_ - 0.5], [bx[0], 48.0], [282.0, 50.2], [282.7, 50.8], [288.5, 51.2],
+                      [288.5, zf_ - 0.5]])
+    # the centre block up to 0.2 behind the leaf's rear face (folding forward, the face moves up and away from it)
+    rb_hi = np.array([[288.0, zf_ - 0.5], [288.0, 56.6], [289.6, 58.1], [float(SR["leaf_head_X"][0]) - 0.2, 58.1],
+                      [float(SR["leaf_head_X"][0]) - 0.2, zf_ - 0.5]])
+    hw_b = W_BASE / 2.0
+    rear_lo = prism(np.c_[rb_lo[:, 0] - x0, rb_lo[:, 1] - z0], -hw_b, hw_b, "XZ")
+    rear_hi = prism(np.c_[rb_hi[:, 0] - x0, rb_hi[:, 1] - z0], -(CH_IN + CH_T), CH_IN + CH_T, "XZ")
     pieces = [(base, SF.base_recipe(rec), [_pocket(rx(px), rz(pz), H, 4.2, 3.4)])] + [(m, []) for m in lugs] + \
-             [(m, BR) for m in cheeks] + [(cb_head, []), (nut, BR), (plunger, [])]
+             [(m, BR) for m in cheeks] + [(cb_head, []), (nut, BR), (plunger, []), (rear_lo, BR), (rear_hi, BR)]
     pin_bore = SF.pin_bore((rx(px), rz(pz)), PIN_R + 0.02, CH_IN + CH_T + 1.0)
     base_c = Comp("sight_rear_base", [(_T(p[0], M4), p[1]) + ((tuple(_T(c, M4) for c in p[2]),) if len(p) > 2 else ())
                                       for p in pieces], [_T(pin_bore, M4)], bone="body", cls="M-chamfer", slot=METAL,
@@ -161,8 +174,15 @@ def front_sight():
     arm = prism(arm_plate, -ARM_H, ARM_H, "XZ")
     end = cylinder((px, -ARM_H, pz), (px, ARM_H, pz), end_r, 40)
     ears = prism(SF.head_outline(ear_in, ear_out, web0, web1, etop, r_top=1.2), hx[0], hx[1], "YZ")
+    # (W1b fix round, L2 per part) the ears' side profile as the sheet draws it: full height (76.0) only over their
+    # rear 0.8 mm, then a 45 deg drop to Z 72.4 and a 1.4 chamfer at the front face (the side panel's head outline);
+    # the post (tip 68.8) stays 3.6 under the lowered tops
+    ear_cut = prism(np.array([[hx[0] + 0.8, etop + 1.0], [hx[0] + 0.8, etop], [hx[0] + 4.4, 72.4], [hx[1] - 1.0, 72.4],
+                              [hx[1], 71.0], [hx[1] + 1.0, 71.0], [hx[1] + 1.0, etop + 1.0]]), -ear_out - 1.0,
+                    ear_out + 1.0, "XZ")
     post = SF.post(tipx, web1 - 0.5, tipz, width=float(SFR["post_width"]), depth=1.85, brk=0.2)
-    leaf_c = Comp("sight_front_leaf", [(arm, BR), (end, []), (ears, SF.leaf_recipe(width_mm=0.3)), (post, [])],
+    leaf_c = Comp("sight_front_leaf", [(arm, BR), (end, []), (ears, SF.leaf_recipe(width_mm=0.3), (ear_cut,)),
+                                       (post, [])],
                   [SF.pin_bore((px, pz), PIN_R + PIN_CLR, 6.0)], bone="sight_front", cls="M-chamfer", slot=METAL,
                   spec_id="sight_front", joint=SF.joint((px, pz), float(SFR["fold_rotation_Y_deg"])))
     pin = HG.pin((px, 0.0, pz), (0, 1, 0), -(CH_IN + CH_T) + 0.02, CH_IN + CH_T - 0.02, PIN_R, chamfer=0.3)
