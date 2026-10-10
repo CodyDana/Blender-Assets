@@ -1,0 +1,1783 @@
+{
+ "t0": 1791606585.838207,
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "systems": {
+  "NS_Gun_MuzzleFlash_Rifle": {
+   "log": [
+    {
+     "op": "remove emitter Bullet_Shell_Eject",
+     "ok": true
+    },
+    {
+     "op": "user vars ['User.Global Scale']",
+     "ok": true
+    }
+   ],
+   "emitters_before": [
+    "Flash_Center",
+    "MuzzleFlash_Front",
+    "MuzzleFlash_Side",
+    "Muzzle_Sparks",
+    "Bullet_Shell_Eject",
+    "Muzzle_Smoke"
+   ],
+   "emitters_after": [
+    "Flash_Center",
+    "MuzzleFlash_Front",
+    "MuzzleFlash_Side",
+    "Muzzle_Sparks",
+    "Muzzle_Smoke"
+   ],
+   "compile": "",
+   "stack_issues": ""
+  },
+  "NS_Gun_CasingEject": {
+   "log": [
+    {
+     "op": "remove emitter Flash_Center",
+     "ok": true
+    },
+    {
+     "op": "remove emitter MuzzleFlash_Front",
+     "ok": true
+    },
+    {
+     "op": "remove emitter MuzzleFlash_Side",
+     "ok": true
+    },
+    {
+     "op": "remove emitter Muzzle_Sparks",
+     "ok": true
+    },
+    {
+     "op": "remove emitter Muzzle_Smoke",
+     "ok": true
+    },
+    {
+     "op": "user vars ['User.EjectVelocity']",
+     "ok": true
+    },
+    {
+     "op": "set Bullet_Shell_Eject/SpawnBurst_Instantaneous/Spawn Count",
+     "ok": true
+    },
+    {
+     "op": "set Bullet_Shell_Eject/InitializeParticle/Lifetime Min",
+     "ok": true
+    },
+    {
+     "op": "set Bullet_Shell_Eject/InitializeParticle/Lifetime Max",
+     "ok": true
+    },
+    {
+     "op": "set Bullet_Shell_Eject/InitializeParticle/UsePositionOffset",
+     "ok": true
+    },
+    {
+     "op": "set Bullet_Shell_Eject/InitializeParticle/Mesh Scale Mode",
+     "ok": true
+    },
+    {
+     "op": "module Bullet_Shell_Eject/AddVelocity enabled=False",
+     "ok": true
+    },
+    {
+     "op": "add SetParameters Bullet_Shell_Eject/ParticleSpawnScript after AddVelocity",
+     "ok": true
+    },
+    {
+     "op": "set Bullet_Shell_Eject/SetVariables_E581AD874AE39E7E331FF8B97C03F29E/Particles.Velocity",
+     "ok": true
+    },
+    {
+     "op": "set Bullet_Shell_Eject/Collision/Restitution",
+     "ok": true
+    },
+    {
+     "op": "renderer Bullet_Shell_Eject[0] ['Meshes', 'bOverrideMaterials']",
+     "ok": true
+    }
+   ],
+   "emitters_before": [
+    "Flash_Center",
+    "MuzzleFlash_Front",
+    "MuzzleFlash_Side",
+    "Muzzle_Sparks",
+    "Bullet_Shell_Eject",
+    "Muzzle_Smoke"
+   ],
+   "modules": {
+    "EmitterState": "EmitterUpdateScript",
+    "SpawnBurst_Instantaneous": "EmitterUpdateScript",
+    "InitializeParticle": "ParticleSpawnScript",
+    "InitialMeshOrientation": "ParticleSpawnScript",
+    "AddVelocity": "ParticleSpawnScript",
+    "MeshRotationForce": "ParticleSpawnScript",
+    "ApplyInitialForces": "ParticleSpawnScript",
+    "ParticleState": "ParticleUpdateScript",
+    "Drag": "ParticleUpdateScript",
+    "GravityForce": "ParticleUpdateScript",
+    "Collision": "ParticleUpdateScript",
+    "ScaleColor": "ParticleUpdateScript",
+    "SolveForcesAndVelocity": "ParticleUpdateScript"
+   },
+   "velocity_module": "SetVariables_E581AD874AE39E7E331FF8B97C03F29E",
+   "renderer_after": {
+    "Meshes": [
+     {
+      "meshParameterBinding": {
+       "resolvedParameter": {
+        "name": "None",
+        "typeDefHandle": {
+         "registeredTypeIndex": 105
+        }
+       },
+       "aliasedParameter": {
+        "name": "None",
+        "typeDefHandle": {
+         "registeredTypeIndex": 105
+        }
+       }
+      },
+      "lODMode": "LODLevel",
+      "lODLevelBinding": {
+       "defaultValue": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "resolvedParameter": {
+        "name": "None",
+        "typeDefHandle": {
+         "registeredTypeIndex": 110
+        }
+       },
+       "aliasedParameter": {
+        "name": "None",
+        "typeDefHandle": {
+         "registeredTypeIndex": 110
+        }
+       }
+      },
+      "lODBiasBinding": {
+       "defaultValue": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "resolvedParameter": {
+        "name": "None",
+        "typeDefHandle": {
+         "registeredTypeIndex": 110
+        }
+       },
+       "aliasedParameter": {
+        "name": "None",
+        "typeDefHandle": {
+         "registeredTypeIndex": 110
+        }
+       }
+      },
+      "lODLevel": 0,
+      "lODBias": 0,
+      "lODDistanceFactor": 1,
+      "bUseLODRange": false,
+      "lODRange": {
+       "x": 0,
+       "y": 8
+      },
+      "mesh": {
+       "refPath": "/Game/Guns/Shared/SM_Casing_762x39.SM_Casing_762x39"
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "rotation": {
+       "pitch": 0,
+       "yaw": 0,
+       "roll": 0
+      },
+      "pivotOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "pivotOffsetSpace": "Mesh"
+     }
+    ],
+    "bOverrideMaterials": false
+   },
+   "emitters_after": [
+    "Bullet_Shell_Eject"
+   ],
+   "compile": "",
+   "stack_issues": ""
+  },
+  "NS_Gun_Tracer": {
+   "log": [
+    {
+     "op": "remove emitter DirectionalBurst",
+     "ok": true
+    },
+    {
+     "op": "user vars ['User.TracerEnd']",
+     "ok": true
+    },
+    {
+     "op": "emitter LocationBasedRibbon ['CalculateBoundsMode', 'SimTarget', 'bLocalSpace']",
+     "ok": true
+    },
+    {
+     "op": "set LocationBasedRibbon/InitializeParticle/Lifetime Mode",
+     "ok": true
+    },
+    {
+     "op": "set LocationBasedRibbon/InitializeParticle/Lifetime",
+     "ok": true
+    },
+    {
+     "op": "set LocationBasedRibbon/InitializeParticle/Color",
+     "ok": true
+    },
+    {
+     "op": "set LocationBasedRibbon/InitializeParticle/Sprite Size Mode",
+     "ok": true
+    },
+    {
+     "op": "set LocationBasedRibbon/InitializeParticle/Sprite Size",
+     "ok": false,
+     "error": "SetStackInputData: Refusing to set input 'Sprite Size': input is hidden by static-switch / conditional logic and is not currently part of the executing graph. Adjust the parent switch first."
+    },
+    {
+     "op": "set LocationBasedRibbon/InitializeParticle/UsePositionOffset",
+     "ok": true
+    },
+    {
+     "op": "add SetParameters LocationBasedRibbon/ParticleSpawnScript after InitializeParticle",
+     "ok": true
+    },
+    {
+     "op": "set LocationBasedRibbon/SetVariables_2260B6F640293B2DB7AA6A8E6A150564/Particles.Velocity",
+     "ok": true
+    },
+    {
+     "op": "renderer LocationBasedRibbon[0] ['Alignment', 'Material', 'PivotInUVSpace']",
+     "ok": false,
+     "error": "SetRendererData: SetObjectProperties on '/Game/Guns/FX/NS_Gun_Tracer.NS_Gun_Tracer:LocationBasedRibbon_6.NiagaraRibbonRendererProperties_0' (NiagaraRibbonRendererProperties): the following properties could not be set: Alignment, PivotInUVSpace\nFailed to set properties on NiagaraRibbonRendererProperties 'NiagaraRibbonRendererProperties_0'. Check that property names and types are correct. Inspect the property schema for this class to discover valid property names."
+    }
+   ],
+   "created": "{'refPath': '/Game/Guns/FX/NS_Gun_Tracer.NS_Gun_Tracer'}",
+   "emitters_before": [
+    "LocationBasedRibbon",
+    "DirectionalBurst"
+   ],
+   "modules_before": {
+    "EmitterState": "EmitterUpdateScript",
+    "InitializeParticle": "ParticleSpawnScript",
+    "ParticleState": "ParticleUpdateScript",
+    "SolveForcesAndVelocity": "ParticleUpdateScript"
+   },
+   "inputs_before": [
+    {
+     "moduleName": "EmitterState",
+     "inputs": [
+      {
+       "name": "Life Cycle Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraEmitterLifeCycleMode.ENiagaraEmitterLifeCycleMode"
+         },
+         "enumName": "ENiagaraEmitterLifeCycleMode::NewEnumerator0",
+         "displayName": "System"
+        }
+       }
+      },
+      {
+       "name": "Inactive Response",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraInactiveMode.ENiagaraInactiveMode"
+         },
+         "enumName": "ENiagaraInactiveMode::NewEnumerator0",
+         "displayName": "Complete (Let Particles Finish then Kill Emitter)"
+        }
+       }
+      },
+      {
+       "name": "Loop Behavior",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_EmitterStateOptions.ENiagara_EmitterStateOptions"
+         },
+         "enumName": "ENiagara_EmitterStateOptions::NewEnumerator0",
+         "displayName": "Infinite"
+        }
+       }
+      },
+      {
+       "name": "Loop Duration Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_InfiniteLoopDuration.ENiagara_InfiniteLoopDuration"
+         },
+         "enumName": "ENiagara_InfiniteLoopDuration::NewEnumerator0",
+         "displayName": "Fixed"
+        }
+       }
+      },
+      {
+       "name": "Loop Count",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Loop Duration",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraFloat"
+        },
+        "value": {
+         "value": 1
+        }
+       }
+      },
+      {
+       "name": "Recalculate Duration Each Loop",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "UseLoopDelay",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Loop Delay",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraFloat"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Delay First Loop Only",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Scalability Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraEmitterScalabilityMode_Limited.ENiagaraEmitterScalabilityMode_Limited"
+         },
+         "enumName": "ENiagaraEmitterScalabilityMode_Limited::NewEnumerator0",
+         "displayName": "System"
+        }
+       }
+      },
+      {
+       "name": "Enable Distance Culling",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "MinDistance",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Min Distance Response",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "MaxDistance",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Max Distance Response",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Scale Spawn Count",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Spawn Count Scale",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Spawn Count Scale By Distance",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Enable Visibility Culling",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Visibility Cull Response",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Visibility Cull Delay",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Reset Age On Awaken",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      }
+     ]
+    },
+    {
+     "moduleName": "InitializeParticle",
+     "inputs": [
+      {
+       "name": "Lifetime Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_LifetimeMode.ENiagara_LifetimeMode"
+         },
+         "enumName": "ENiagara_LifetimeMode::NewEnumerator0",
+         "displayName": "Direct Set"
+        }
+       }
+      },
+      {
+       "name": "Lifetime Min",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Lifetime",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraFloat"
+        },
+        "value": {
+         "value": 0.6000000238418579
+        }
+       }
+      },
+      {
+       "name": "Lifetime Max",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Lifetime Randomness Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraRandomnessMode.ENiagaraRandomnessMode"
+         },
+         "enumName": "ENiagaraRandomnessMode::NewEnumerator0",
+         "displayName": "Simulation Defaults"
+        }
+       }
+      },
+      {
+       "name": "Color Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_ColorInitializationMode.ENiagara_ColorInitializationMode"
+         },
+         "enumName": "ENiagara_ColorInitializationMode::NewEnumerator1",
+         "displayName": "Direct Set"
+        }
+       }
+      },
+      {
+       "name": "Color Minimum",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Color",
+       "value": {
+        "struct": {
+         "refPath": "/Script/CoreUObject.LinearColor"
+        },
+        "value": {
+         "r": 1,
+         "g": 1,
+         "b": 1,
+         "a": 1
+        }
+       }
+      },
+      {
+       "name": "AdjustHue",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": -1
+        }
+       }
+      },
+      {
+       "name": "Hue Shift Range",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Color Maximum",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "AdjustSaturation",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Saturation Range",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "AdjustValue",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Value Range",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "AdjustAlpha",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Alpha Scale Range",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Color Channel Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraChannelCorrelation.ENiagaraChannelCorrelation"
+         },
+         "enumName": "ENiagaraChannelCorrelation::NewEnumerator1",
+         "displayName": "Link RGB / Link A"
+        }
+       }
+      },
+      {
+       "name": "Color Randomness Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraRandomnessMode.ENiagaraRandomnessMode"
+         },
+         "enumName": "ENiagaraRandomnessMode::NewEnumerator0",
+         "displayName": "Simulation Defaults"
+        }
+       }
+      },
+      {
+       "name": "Position Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_PositionInitializationMode.ENiagara_PositionInitializationMode"
+         },
+         "enumName": "ENiagara_PositionInitializationMode::NewEnumerator2",
+         "displayName": "Simulation Position"
+        }
+       }
+      },
+      {
+       "name": "Position",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "UsePositionOffset",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Position Offset",
+       "value": {
+        "struct": {
+         "refPath": "/Script/CoreUObject.Vector3f"
+        },
+        "value": {
+         "x": 0,
+         "y": 0,
+         "z": 0
+        }
+       }
+      },
+      {
+       "name": "Position Offset Coordinate Space",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Script/Niagara.ENiagaraCoordinateSpace"
+         },
+         "enumName": "ENiagaraCoordinateSpace::Simulation",
+         "displayName": "Simulation"
+        }
+       }
+      },
+      {
+       "name": "Mass Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_MassInitializationMode.ENiagara_MassInitializationMode"
+         },
+         "enumName": "ENiagara_MassInitializationMode::NewEnumerator0",
+         "displayName": "Unset / (Mass of 1)"
+        }
+       }
+      },
+      {
+       "name": "Mass Min",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mass",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mass Max",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mass Randomness Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraRandomnessMode.ENiagaraRandomnessMode"
+         },
+         "enumName": "ENiagaraRandomnessMode::NewEnumerator0",
+         "displayName": "Simulation Defaults"
+        }
+       }
+      },
+      {
+       "name": "Write Material Random",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": -1
+        }
+       }
+      },
+      {
+       "name": "Material Random",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Sprite Size Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_SizeScaleMode.ENiagara_SizeScaleMode"
+         },
+         "enumName": "ENiagara_SizeScaleMode::NewEnumerator0",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Sprite Size",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Uniform Sprite Size",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Uniform Sprite Size Min",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Sprite Size Min",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Sprite Size Max",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Uniform Sprite Size Max",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Sprite Size Randomness Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraRandomnessMode.ENiagaraRandomnessMode"
+         },
+         "enumName": "ENiagaraRandomnessMode::NewEnumerator0",
+         "displayName": "Simulation Defaults"
+        }
+       }
+      },
+      {
+       "name": "Sprite Rotation Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_SpriteRotationMode.ENiagara_SpriteRotationMode"
+         },
+         "enumName": "ENiagara_SpriteRotationMode::NewEnumerator3",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Sprite Rotation Angle Min",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Sprite Rotation Angle",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Sprite Rotation Angle Max",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Sprite Rotation Randomness Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraRandomnessMode.ENiagaraRandomnessMode"
+         },
+         "enumName": "ENiagaraRandomnessMode::NewEnumerator0",
+         "displayName": "Simulation Defaults"
+        }
+       }
+      },
+      {
+       "name": "Sprite UV Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_UVFlippingMode.ENiagara_UVFlippingMode"
+         },
+         "enumName": "ENiagara_UVFlippingMode::NewEnumerator0",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Sprite UV Randomness Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraRandomnessMode.ENiagaraRandomnessMode"
+         },
+         "enumName": "ENiagaraRandomnessMode::NewEnumerator0",
+         "displayName": "Simulation Defaults"
+        }
+       }
+      },
+      {
+       "name": "Sprite UV Scale",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Scale Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagara_SizeScaleMode.ENiagara_SizeScaleMode"
+         },
+         "enumName": "ENiagara_SizeScaleMode::NewEnumerator0",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Mesh Uniform Scale Min",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Uniform Scale",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Scale Min",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Scale",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Scale Max",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Uniform Scale Max",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Scale Randomness Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/ENiagaraRandomnessMode.ENiagaraRandomnessMode"
+         },
+         "enumName": "ENiagaraRandomnessMode::NewEnumerator0",
+         "displayName": "Simulation Defaults"
+        }
+       }
+      },
+      {
+       "name": "Mesh Renderer Array Visibility Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/Ribbons/ENiagara_UnsetDirectSetRandom.ENiagara_UnsetDirectSetRandom"
+         },
+         "enumName": "ENiagara_UnsetDirectSetRandom::NewEnumerator0",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Mesh Renderer Mesh Index",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Wrap Index By Mesh Count",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": -1
+        }
+       }
+      },
+      {
+       "name": "Mesh Renderer Info",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Mesh Renderer Random Seed",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Ribbon Width Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/Ribbons/ENiagara_UnsetDirectSet.ENiagara_UnsetDirectSet"
+         },
+         "enumName": "ENiagara_UnsetDirectSet::NewEnumerator0",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Ribbon Width",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Ribbon Facing Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/Ribbons/ENiagara_UnsetDirectSet.ENiagara_UnsetDirectSet"
+         },
+         "enumName": "ENiagara_UnsetDirectSet::NewEnumerator0",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Ribbon Facing Vector",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Ribbon Twist Mode",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Enum"
+        },
+        "value": {
+         "enum": {
+          "refPath": "/Niagara/Enums/Ribbons/ENiagara_UnsetDirectSet.ENiagara_UnsetDirectSet"
+         },
+         "enumName": "ENiagara_UnsetDirectSet::NewEnumerator0",
+         "displayName": "Unset"
+        }
+       }
+      },
+      {
+       "name": "Ribbon Twist ",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      }
+     ]
+    },
+    {
+     "moduleName": "ParticleState",
+     "inputs": [
+      {
+       "name": "Kill Particles When Lifetime Has Elapsed",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": -1
+        }
+       }
+      },
+      {
+       "name": "Loop Particles Lifetime",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Let Infinitely Lived Particles Die When Emitter Deactivates",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Unsupported"
+        },
+        "value": {}
+       }
+      },
+      {
+       "name": "Lifetime",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.Lifetime",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/Niagara.NiagaraFloat"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "DeltaTime",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Engine.DeltaTime",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/Niagara.NiagaraFloat"
+           }
+          }
+         }
+        }
+       }
+      }
+     ]
+    },
+    {
+     "moduleName": "SolveForcesAndVelocity",
+     "inputs": [
+      {
+       "name": "Clamp Velocity",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Speed Limit",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraFloat"
+        },
+        "value": {
+         "value": 1000
+        }
+       }
+      },
+      {
+       "name": "Limit Acceleration",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Acceleration Limit",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraFloat"
+        },
+        "value": {
+         "value": 9999
+        }
+       }
+      },
+      {
+       "name": "Manually Enable Rotational Solver",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": 0
+        }
+       }
+      },
+      {
+       "name": "Write to Intrinsic Properties",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": -1
+        }
+       }
+      },
+      {
+       "name": "Write to Presolve Properties",
+       "value": {
+        "struct": {
+         "refPath": "/Script/Niagara.NiagaraBool"
+        },
+        "value": {
+         "value": -1
+        }
+       }
+      },
+      {
+       "name": "DeltaTime",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Engine.DeltaTime",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/Niagara.NiagaraFloat"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Mass",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.Mass",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/Niagara.NiagaraFloat"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Position",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.Position",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/Niagara.NiagaraPosition"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Velocity",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.Velocity",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/CoreUObject.Vector3f"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "PreviousVelocity",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.Previous.Velocity",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/CoreUObject.Vector3f"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Force",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Transient.PhysicsForce",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/CoreUObject.Vector3f"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Mesh Orientation",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.MeshOrientation",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/CoreUObject.Quat4f"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Rotational Velocity",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.RotationalVelocity",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/CoreUObject.Vector3f"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Rotational Force",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Transient.PhysicsRotationalForce",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/CoreUObject.Vector3f"
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "name": "Rotational Inertia",
+       "value": {
+        "struct": {
+         "refPath": "/Script/NiagaraEditor.NiagaraExt_StackInputData_Linked"
+        },
+        "value": {
+         "linkedVariable": {
+          "name": "Particles.RotationalInertia",
+          "type": {
+           "classStructOrEnum": {
+            "refPath": "/Script/Niagara.NiagaraFloat"
+           }
+          }
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "velocity_module": "SetVariables_2260B6F640293B2DB7AA6A8E6A150564",
+   "modules_after": {
+    "EmitterState": "EmitterUpdateScript",
+    "InitializeParticle": "ParticleSpawnScript",
+    "SetVariables_2260B6F640293B2DB7AA6A8E6A150564": "ParticleSpawnScript",
+    "ParticleState": "ParticleUpdateScript",
+    "SolveForcesAndVelocity": "ParticleUpdateScript"
+   },
+   "renderer_after": {
+    "Material": {
+     "refPath": "/Game/NiagaraExamples/Materials/MI_Sparks.MI_Sparks"
+    }
+   },
+   "emitters_after": [
+    "LocationBasedRibbon"
+   ],
+   "compile": "",
+   "stack_issues": ""
+  },
+  "NS_Gun_Impact_Concrete": {
+   "log": [
+    {
+     "op": "set system/SystemSpawnScript/SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71/System.Burst Direction",
+     "ok": true
+    },
+    {
+     "op": "renderer LightDecal[2] ['bIsEnabled']",
+     "ok": true
+    }
+   ],
+   "emitters_before": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust",
+    "Debris"
+   ],
+   "burst_module": "SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71",
+   "decal_renderers_off": [
+    "LightDecal[2]"
+   ],
+   "emitters_after": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust",
+    "Debris"
+   ],
+   "compile": "",
+   "stack_issues": ""
+  },
+  "NS_Gun_Impact_Metal": {
+   "log": [
+    {
+     "op": "set system/SystemSpawnScript/SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71/System.Burst Direction",
+     "ok": true
+    },
+    {
+     "op": "renderer LightDecal[2] ['bIsEnabled']",
+     "ok": true
+    }
+   ],
+   "emitters_before": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust"
+   ],
+   "burst_module": "SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71",
+   "decal_renderers_off": [
+    "LightDecal[2]"
+   ],
+   "emitters_after": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust"
+   ],
+   "compile": "",
+   "stack_issues": ""
+  },
+  "NS_Gun_Impact_Wood": {
+   "log": [
+    {
+     "op": "set system/SystemSpawnScript/SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71/System.Burst Direction",
+     "ok": true
+    },
+    {
+     "op": "renderer LightDecal[2] ['bIsEnabled']",
+     "ok": true
+    }
+   ],
+   "emitters_before": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust",
+    "Debris"
+   ],
+   "burst_module": "SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71",
+   "decal_renderers_off": [
+    "LightDecal[2]"
+   ],
+   "emitters_after": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust",
+    "Debris"
+   ],
+   "compile": "",
+   "stack_issues": ""
+  },
+  "NS_Gun_Impact_Glass": {
+   "log": [
+    {
+     "op": "set system/SystemSpawnScript/SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71/System.Burst Direction",
+     "ok": true
+    },
+    {
+     "op": "renderer LightDecal[2] ['bIsEnabled']",
+     "ok": true
+    }
+   ],
+   "emitters_before": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust",
+    "Debris"
+   ],
+   "burst_module": "SetVariables_E8A1EB364DA39430478CC4A1A3E0BE71",
+   "decal_renderers_off": [
+    "LightDecal[2]"
+   ],
+   "emitters_after": [
+    "SecondarySparks",
+    "LightDecal",
+    "Sparks",
+    "Dust",
+    "Debris"
+   ],
+   "compile": "",
+   "stack_issues": ""
+  }
+ },
+ "materials": {},
+ "shake": {},
+ "saved": [
+  "/Game/Guns/FX/NS_Gun_MuzzleFlash_Rifle",
+  "/Game/Guns/FX/NS_Gun_CasingEject",
+  "/Game/Guns/FX/NS_Gun_Tracer",
+  "/Game/Guns/FX/NS_Gun_Impact_Concrete",
+  "/Game/Guns/FX/NS_Gun_Impact_Metal",
+  "/Game/Guns/FX/NS_Gun_Impact_Wood",
+  "/Game/Guns/FX/NS_Gun_Impact_Glass"
+ ],
+ "errors": [],
+ "seconds": 1696.3
+}

@@ -1,0 +1,817 @@
+{
+ "t0": 1791613065.1003306,
+ "gates": {
+  "V1 assets load": {
+   "pass": true,
+   "missing": []
+  },
+  "V2 ABP compiles": {
+   "pass": true,
+   "compile": {
+    "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+    "node_messages": []
+   },
+   "skeleton": "SK_AR01_Skeleton",
+   "parent": "NinjaGunAnimInstance"
+  },
+  "V3 BP_GunBase compiles": {
+   "pass": true,
+   "compile": {
+    "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+    "node_messages": []
+   },
+   "parent": "NinjaGun"
+  },
+  "V4 DA_Gun_AR01": {
+   "pass": true,
+   "empty": []
+  },
+  "V5 input": {
+   "pass": true
+  },
+  "V6 surfaces, config, impact set, decal": {
+   "pass": true
+  },
+  "V7 Niagara": {
+   "pass": true,
+   "checks": {
+    "flash_scale_0.4": true,
+    "flash_no_shells": true,
+    "casing_EjectVelocity": true,
+    "casing_mesh": true,
+    "tracer_TracerEnd": true,
+    "flesh_dust_only": true
+   },
+   "compile": {
+    "NS_Gun_MuzzleFlash_Rifle": null,
+    "NS_Gun_CasingEject": null,
+    "NS_Gun_Tracer": true,
+    "NS_Gun_Impact_Concrete": null,
+    "NS_Gun_Impact_Metal": null,
+    "NS_Gun_Impact_Wood": null,
+    "NS_Gun_Impact_Glass": null,
+    "NS_Gun_Impact_Flesh": null
+   },
+   "note": "compile_ok None = checked at runtime by g4_anim_check.py N"
+  },
+  "V8 camera shake": {
+   "pass": true,
+   "parent": "CameraShakeBase",
+   "pattern": "WaveOscillatorCameraShakePattern",
+   "duration": 0.11999999731779099,
+   "pitch_amp": 0.5
+  },
+  "V9 source sha256 unchanged since G2": {
+   "pass": true,
+   "differ": [],
+   "files": 38
+  }
+ },
+ "detail": {
+  "V1": {
+   "/Game/Guns/Core/ABP_Gun_LongGun": "AnimBlueprint",
+   "/Game/Guns/Core/BP_GunBase": "Blueprint",
+   "/Game/Guns/Core/DA_ImpactSet_Default": "NinjaGunImpactSet",
+   "/Game/Guns/AR01/DA_Gun_AR01": "NinjaGunData",
+   "/Game/Guns/Core/PM_Concrete": "PhysicalMaterial",
+   "/Game/Guns/Core/PM_Metal": "PhysicalMaterial",
+   "/Game/Guns/Core/PM_Wood": "PhysicalMaterial",
+   "/Game/Guns/Core/PM_Flesh": "PhysicalMaterial",
+   "/Game/Guns/Core/PM_Glass": "PhysicalMaterial",
+   "/Game/Guns/Input/IA_GunEquip": "InputAction",
+   "/Game/Guns/Input/IA_GunFire": "InputAction",
+   "/Game/Guns/Input/IA_GunAim": "InputAction",
+   "/Game/Guns/Input/IA_GunReload": "InputAction",
+   "/Game/Guns/Input/IA_GunSelector": "InputAction",
+   "/Game/Guns/Input/IA_GunView": "InputAction",
+   "/Game/Guns/Input/IMC_GunsBase": "InputMappingContext",
+   "/Game/Guns/Input/IMC_GunsEquipped": "InputMappingContext",
+   "/Game/Guns/Audio/Placeholder/SC_Gun": "SoundConcurrency",
+   "/Game/Guns/Audio/Placeholder/SA_Gun_Rifle": "SoundAttenuation",
+   "/Game/Guns/FX/M_Gun_BulletHole": "Material",
+   "/Game/Guns/FX/MI_Gun_BulletHole_Steel": "MaterialInstanceConstant",
+   "/Game/Guns/FX/CS_Gun_Rifle": "Blueprint",
+   "/Game/Guns/FX/NS_Gun_MuzzleFlash_Rifle": "NiagaraSystem",
+   "/Game/Guns/FX/NS_Gun_CasingEject": "NiagaraSystem",
+   "/Game/Guns/FX/NS_Gun_Tracer": "NiagaraSystem",
+   "/Game/Guns/FX/NS_Gun_Impact_Concrete": "NiagaraSystem",
+   "/Game/Guns/FX/NS_Gun_Impact_Metal": "NiagaraSystem",
+   "/Game/Guns/FX/NS_Gun_Impact_Wood": "NiagaraSystem",
+   "/Game/Guns/FX/NS_Gun_Impact_Glass": "NiagaraSystem",
+   "/Game/Guns/FX/NS_Gun_Impact_Flesh": "NiagaraSystem"
+  },
+  "V2": {
+   "compile": {
+    "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+    "node_messages": []
+   },
+   "skeleton": "SK_AR01_Skeleton",
+   "parent": "NinjaGunAnimInstance"
+  },
+  "V3": {
+   "compile": {
+    "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+    "node_messages": []
+   },
+   "parent": "NinjaGun"
+  },
+  "V4": {
+   "slots": {
+    "weapon_mesh": "/Game/Guns/AR01/SK_AR01.SK_AR01",
+    "mag_mesh": "/Game/Guns/AR01/SM_AR01_Mag.SM_AR01_Mag",
+    "pickup_mesh": "/Game/Guns/AR01/SM_AR01.SM_AR01",
+    "anim_class": "/Game/Guns/Core/ABP_Gun_LongGun.ABP_Gun_LongGun_C",
+    "casing_mesh": "/Game/Guns/Shared/SM_Casing_762x39.SM_Casing_762x39",
+    "fire_clip": "/Game/Guns/AR01/A_AR01_Fire.A_AR01_Fire",
+    "reload_clip": "/Game/Guns/AR01/A_AR01_Reload.A_AR01_Reload",
+    "reload_empty_clip": "/Game/Guns/AR01/A_AR01_ReloadEmpty.A_AR01_ReloadEmpty",
+    "charge_clip": "/Game/Guns/AR01/A_AR01_Charge.A_AR01_Charge",
+    "selector_clip": "/Game/Guns/AR01/A_AR01_Selector.A_AR01_Selector",
+    "muzzle_flash": "/Game/Guns/FX/NS_Gun_MuzzleFlash_Rifle.NS_Gun_MuzzleFlash_Rifle",
+    "casing_eject": "/Game/Guns/FX/NS_Gun_CasingEject.NS_Gun_CasingEject",
+    "tracer": "/Game/Guns/FX/NS_Gun_Tracer.NS_Gun_Tracer",
+    "impact_set": "/Game/Guns/Core/DA_ImpactSet_Default.DA_ImpactSet_Default",
+    "camera_shake": "/Game/Guns/FX/CS_Gun_Rifle.CS_Gun_Rifle_C",
+    "fire_concurrency": "/Game/Guns/Audio/Placeholder/SC_Gun.SC_Gun",
+    "fire_attenuation": "/Game/Guns/Audio/Placeholder/SA_Gun_Rifle.SA_Gun_Rifle",
+    "hold_pose": "/Game/Characters/Mannequins/Anims/Rifle/MF_Rifle_Idle_ADS.MF_Rifle_Idle_ADS",
+    "aim_offset": "/Game/Characters/Mannequins/Anims/Rifle/AIM/AO_Rifle.AO_Rifle",
+    "fire_anim": "/Game/Characters/Mannequins/Anims/Rifle/MM_Rifle_Fire.MM_Rifle_Fire",
+    "reload_anim": "/Game/Characters/Mannequins/Anims/Rifle/MM_Rifle_Reload.MM_Rifle_Reload",
+    "equip_anim": "/Game/Characters/Mannequins/Anims/Rifle/MM_Rifle_Equip.MM_Rifle_Equip"
+   },
+   "numbers": {
+    "rpm": 600.0,
+    "mag_size": 30,
+    "chamber": true,
+    "damage": 34.0,
+    "eye_relief_cm": 25.0,
+    "ads_fov": 55.0,
+    "ads_time": 0.18000000715255737,
+    "tracer_every": 4,
+    "muzzle_flash_scale": 0.4000000059604645,
+    "selector_cycle_end_time": 1.0,
+    "mag_mass_kg": 0.33000001311302185
+   },
+   "fire_modes": [
+    [
+     "SAFE: 0>",
+     0.0
+    ],
+    [
+     "AUTO: 3>",
+     0.26667
+    ],
+    [
+     "SEMI: 1>",
+     0.6
+    ]
+   ],
+   "fire_play_rate": 1.3333333730697632,
+   "full_load": 31
+  },
+  "V5": {
+   "actions": {
+    "IA_GunEquip": {
+     "type": "<InputActionValueType.BOOLEAN: 0>",
+     "consume": true,
+     "triggers": 0
+    },
+    "IA_GunFire": {
+     "type": "<InputActionValueType.BOOLEAN: 0>",
+     "consume": true,
+     "triggers": 0
+    },
+    "IA_GunAim": {
+     "type": "<InputActionValueType.BOOLEAN: 0>",
+     "consume": true,
+     "triggers": 0
+    },
+    "IA_GunReload": {
+     "type": "<InputActionValueType.BOOLEAN: 0>",
+     "consume": true,
+     "triggers": 0
+    },
+    "IA_GunSelector": {
+     "type": "<InputActionValueType.BOOLEAN: 0>",
+     "consume": true,
+     "triggers": 0
+    },
+    "IA_GunView": {
+     "type": "<InputActionValueType.BOOLEAN: 0>",
+     "consume": true,
+     "triggers": 0
+    }
+   },
+   "contexts": {
+    "IMC_GunsBase": [
+     [
+      "IA_GunEquip",
+      "X"
+     ]
+    ],
+    "IMC_GunsEquipped": [
+     [
+      "IA_GunAim",
+      "RightMouseButton"
+     ],
+     [
+      "IA_GunFire",
+      "LeftMouseButton"
+     ],
+     [
+      "IA_GunReload",
+      "R"
+     ],
+     [
+      "IA_GunSelector",
+      "B"
+     ],
+     [
+      "IA_GunView",
+      "V"
+     ]
+    ]
+   }
+  },
+  "V6": {
+   "pm": {
+    "Concrete": "<PhysicalSurface.SURFACE_TYPE1: 1>",
+    "Metal": "<PhysicalSurface.SURFACE_TYPE2: 2>",
+    "Wood": "<PhysicalSurface.SURFACE_TYPE3: 3>",
+    "Flesh": "<PhysicalSurface.SURFACE_TYPE4: 4>",
+    "Glass": "<PhysicalSurface.SURFACE_TYPE5: 5>"
+   },
+   "ini": {
+    "+DefaultChannelResponses=(Channel=ECC_GameTraceChannel4,DefaultResponse=ECR_Block,bTraceType=True,bStaticObject=False,Name=\"Weapon\")": true,
+    "+PhysicalSurfaces=(Type=SurfaceType1,Name=\"Concrete\")": true,
+    "+PhysicalSurfaces=(Type=SurfaceType2,Name=\"Metal\")": true,
+    "+PhysicalSurfaces=(Type=SurfaceType3,Name=\"Wood\")": true,
+    "+PhysicalSurfaces=(Type=SurfaceType4,Name=\"Flesh\")": true,
+    "+PhysicalSurfaces=(Type=SurfaceType5,Name=\"Glass\")": true
+   },
+   "physics_settings_surfaces": {
+    "error": "Exception: PhysicalSurfaceName: Property 'Name' for attribute 'name' on 'PhysicalSurfaceName' is protected and cannot be read"
+   },
+   "rows": [
+    [
+     "SURFACE_TYPE1: 1>",
+     "NS_Gun_Impact_Concrete",
+     "M_Gun_BulletHole",
+     1.600000023841858
+    ],
+    [
+     "SURFACE_TYPE2: 2>",
+     "NS_Gun_Impact_Metal",
+     "MI_Gun_BulletHole_Steel",
+     1.2000000476837158
+    ],
+    [
+     "SURFACE_TYPE3: 3>",
+     "NS_Gun_Impact_Wood",
+     "M_Gun_BulletHole",
+     1.600000023841858
+    ],
+    [
+     "SURFACE_TYPE4: 4>",
+     "NS_Gun_Impact_Flesh",
+     null,
+     0.0
+    ],
+    [
+     "SURFACE_TYPE5: 5>",
+     "NS_Gun_Impact_Glass",
+     "M_Gun_BulletHole",
+     1.2000000476837158
+    ]
+   ],
+   "default_row": [
+    "NS_Gun_Impact_Concrete",
+    "M_Gun_BulletHole"
+   ],
+   "max_decals": 64,
+   "decal_domain": "<MaterialDomain.MD_DEFERRED_DECAL: 1>"
+  },
+  "V7": {
+   "systems": {
+    "NS_Gun_MuzzleFlash_Rifle": {
+     "emitters": [
+      [
+       "Flash_Center",
+       true
+      ],
+      [
+       "MuzzleFlash_Front",
+       true
+      ],
+      [
+       "MuzzleFlash_Side",
+       true
+      ],
+      [
+       "Muzzle_Sparks",
+       true
+      ],
+      [
+       "Muzzle_Smoke",
+       true
+      ]
+     ],
+     "user_vars": {
+      "User.Bullet Shell Ofs": {
+       "x": -50,
+       "y": 0,
+       "z": 5
+      },
+      "User.Flash Base Color": {
+       "r": 100,
+       "g": 23.909069061279297,
+       "b": 1.215285062789917,
+       "a": 0.5
+      },
+      "User.Global Scale": {
+       "value": 0.4000000059604645
+      },
+      "User.Length Randomness": {
+       "value": 0.25
+      },
+      "User.Shell Eject Angle": {
+       "x": 0,
+       "y": 0,
+       "z": -10
+      },
+      "User.Side Flash Angle": {
+       "value": 30
+      },
+      "User.Side Flash Direction": {
+       "value": -1
+      },
+      "User.Side Flash Num": {
+       "value": 6
+      },
+      "User.Side Flash Probability": {
+       "value": 0.800000011920929
+      },
+      "User.Smoke Color": {
+       "r": 0.5,
+       "g": 0.5,
+       "b": 0.5,
+       "a": 0.20000000298023224
+      },
+      "User.Use Bullet Shell": {
+       "value": -1
+      },
+      "User.Use Flash Side": {
+       "value": -1
+      },
+      "User.Use Smoke": {
+       "value": -1
+      },
+      "User.Use Sparks": {
+       "value": -1
+      }
+     },
+     "compile": {
+      "incomplete": true,
+      "skipped": true
+     },
+     "compile_ok": null
+    },
+    "NS_Gun_CasingEject": {
+     "emitters": [
+      [
+       "Bullet_Shell_Eject",
+       true
+      ]
+     ],
+     "user_vars": {
+      "User.Bullet Shell Ofs": {
+       "x": -50,
+       "y": 0,
+       "z": 5
+      },
+      "User.EjectVelocity": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Flash Base Color": {
+       "r": 100,
+       "g": 23.909069061279297,
+       "b": 1.215285062789917,
+       "a": 0.5
+      },
+      "User.Global Scale": {
+       "value": 1
+      },
+      "User.Length Randomness": {
+       "value": 0.25
+      },
+      "User.Shell Eject Angle": {
+       "x": 0,
+       "y": 0,
+       "z": -10
+      },
+      "User.Side Flash Angle": {
+       "value": 30
+      },
+      "User.Side Flash Direction": {
+       "value": -1
+      },
+      "User.Side Flash Num": {
+       "value": 6
+      },
+      "User.Side Flash Probability": {
+       "value": 0.800000011920929
+      },
+      "User.Smoke Color": {
+       "r": 0.5,
+       "g": 0.5,
+       "b": 0.5,
+       "a": 0.20000000298023224
+      },
+      "User.Use Bullet Shell": {
+       "value": -1
+      },
+      "User.Use Flash Side": {
+       "value": -1
+      },
+      "User.Use Smoke": {
+       "value": -1
+      },
+      "User.Use Sparks": {
+       "value": -1
+      }
+     },
+     "compile": {
+      "incomplete": true,
+      "skipped": true
+     },
+     "compile_ok": null
+    },
+    "NS_Gun_Tracer": {
+     "emitters": [
+      [
+       "DirectionalBurst",
+       true
+      ]
+     ],
+     "user_vars": {
+      "User.TracerEnd": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      }
+     },
+     "compile": {
+      "aggregateStatus": "UpToDate",
+      "bIsCompiling": false,
+      "bIsStale": false,
+      "bHasErrors": false,
+      "bHasWarnings": false,
+      "scripts": [
+       {
+        "emitterName": "None",
+        "scriptName": "ENiagaraScriptUsage::SystemSpawnScript",
+        "lastCompileStatus": "UpToDate",
+        "errorSummary": "",
+        "compileEvents": []
+       },
+       {
+        "emitterName": "None",
+        "scriptName": "ENiagaraScriptUsage::SystemUpdateScript",
+        "lastCompileStatus": "UpToDate",
+        "errorSummary": "",
+        "compileEvents": []
+       },
+       {
+        "emitterName": "DirectionalBurst",
+        "scriptName": "ENiagaraScriptUsage::ParticleSpawnScriptInterpolated",
+        "lastCompileStatus": "UpToDate",
+        "errorSummary": "",
+        "compileEvents": []
+       },
+       {
+        "emitterName": "DirectionalBurst",
+        "scriptName": "ENiagaraScriptUsage::ParticleUpdateScript",
+        "lastCompileStatus": "UpToDate",
+        "errorSummary": "",
+        "compileEvents": []
+       }
+      ]
+     },
+     "compile_ok": true
+    },
+    "NS_Gun_Impact_Concrete": {
+     "emitters": [
+      [
+       "SecondarySparks",
+       true
+      ],
+      [
+       "LightDecal",
+       true
+      ],
+      [
+       "Sparks",
+       true
+      ],
+      [
+       "Dust",
+       true
+      ],
+      [
+       "Debris",
+       true
+      ]
+     ],
+     "user_vars": {
+      "User.Base Color": {
+       "r": 0.6600000262260437,
+       "g": 0.6600000262260437,
+       "b": 0.6600000262260437,
+       "a": 1
+      },
+      "User.Burst Amount": {
+       "value": 40
+      },
+      "User.Hit Direction": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Normal": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Velocity": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Variability": {
+       "value": 1
+      }
+     },
+     "compile": {
+      "incomplete": true,
+      "skipped": true
+     },
+     "compile_ok": null
+    },
+    "NS_Gun_Impact_Metal": {
+     "emitters": [
+      [
+       "SecondarySparks",
+       true
+      ],
+      [
+       "LightDecal",
+       true
+      ],
+      [
+       "Sparks",
+       true
+      ],
+      [
+       "Dust",
+       true
+      ]
+     ],
+     "user_vars": {
+      "User.Base Color": {
+       "r": 0.5,
+       "g": 0.5,
+       "b": 0.5,
+       "a": 1
+      },
+      "User.Burst Amount": {
+       "value": 25
+      },
+      "User.Hit Direction": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Normal": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Velocity": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Variability": {
+       "value": 1
+      }
+     },
+     "compile": {
+      "incomplete": true,
+      "skipped": true
+     },
+     "compile_ok": null
+    },
+    "NS_Gun_Impact_Wood": {
+     "emitters": [
+      [
+       "SecondarySparks",
+       true
+      ],
+      [
+       "LightDecal",
+       true
+      ],
+      [
+       "Sparks",
+       true
+      ],
+      [
+       "Dust",
+       true
+      ],
+      [
+       "Debris",
+       true
+      ]
+     ],
+     "user_vars": {
+      "User.Base Color": {
+       "r": 0.4322916567325592,
+       "g": 0.2730415463447571,
+       "b": 0.1553548127412796,
+       "a": 1
+      },
+      "User.Burst Amount": {
+       "value": 15
+      },
+      "User.Hit Direction": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Normal": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Velocity": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Variability": {
+       "value": 1
+      }
+     },
+     "compile": {
+      "incomplete": true,
+      "skipped": true
+     },
+     "compile_ok": null
+    },
+    "NS_Gun_Impact_Glass": {
+     "emitters": [
+      [
+       "SecondarySparks",
+       true
+      ],
+      [
+       "LightDecal",
+       true
+      ],
+      [
+       "Sparks",
+       true
+      ],
+      [
+       "Dust",
+       true
+      ],
+      [
+       "Debris",
+       true
+      ]
+     ],
+     "user_vars": {
+      "User.Base Color": {
+       "r": 0.75,
+       "g": 0.8452819585800171,
+       "b": 1,
+       "a": 0.75
+      },
+      "User.Burst Amount": {
+       "value": 20
+      },
+      "User.Hit Direction": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Normal": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Velocity": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Variability": {
+       "value": 1
+      }
+     },
+     "compile": {
+      "incomplete": true,
+      "skipped": true
+     },
+     "compile_ok": null
+    },
+    "NS_Gun_Impact_Flesh": {
+     "emitters": [
+      [
+       "SecondarySparks",
+       false
+      ],
+      [
+       "LightDecal",
+       false
+      ],
+      [
+       "Sparks",
+       false
+      ],
+      [
+       "Dust",
+       true
+      ],
+      [
+       "Debris",
+       false
+      ]
+     ],
+     "user_vars": {
+      "User.Base Color": {
+       "r": 0.1599999964237213,
+       "g": 0.14000000059604645,
+       "b": 0.11999999731779099,
+       "a": 1
+      },
+      "User.Burst Amount": {
+       "value": 18
+      },
+      "User.Hit Direction": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Normal": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Hit Velocity": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "User.Variability": {
+       "value": 1
+      }
+     },
+     "compile": {
+      "incomplete": true,
+      "skipped": true
+     },
+     "compile_ok": null
+    }
+   },
+   "checks": {
+    "flash_scale_0.4": true,
+    "flash_no_shells": true,
+    "casing_EjectVelocity": true,
+    "casing_mesh": true,
+    "tracer_TracerEnd": true,
+    "flesh_dust_only": true
+   }
+  },
+  "V8": {
+   "parent": "CameraShakeBase",
+   "pattern": "WaveOscillatorCameraShakePattern",
+   "duration": 0.11999999731779099,
+   "pitch_amp": 0.5
+  },
+  "V9": {
+   "files": 38,
+   "recorded": 38,
+   "differ": []
+  }
+ },
+ "errors": [],
+ "seconds": 6.0,
+ "pass": true,
+ "dirty_packages_not_saved": []
+}

@@ -1,0 +1,4216 @@
+{
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "probe": "G0 game",
+ "events": [
+  "0.0s registered",
+  "4.1s world ready {'pawn_class': '/Game/Ninja/Blueprints/BP_NinjaGasp.BP_NinjaGasp_C', 'game_mode': '/Game/ThirdPerson/Blueprints/BP_ThirdPersonGameMode.BP_ThirdPersonGameMode_C', 'map': 'L_NinjaTest'}",
+  "4.1s phase setup",
+  "5.1s phase P1",
+  "5.1s P1 collision",
+  "5.1s phase P2",
+  "5.1s P2 weapon_r",
+  "7.8s phase P4",
+  "7.8s P4 aim/strafe",
+  "190.1s phase P3",
+  "190.1s P3 rifle clips",
+  "214.9s phase P5",
+  "214.9s P5 first-person FOV",
+  "667.9s phase P6",
+  "667.9s P6 owner-no-see"
+ ],
+ "shots": [
+  "p3_montage_MM_Rifle_Reload_on_visible_manny.png",
+  "p3_montage_MM_Rifle_Fire_on_visible_manny.png"
+ ],
+ "P1": {
+  "player": {
+   "actor": "BP_NinjaGasp_C_0",
+   "class": "/Game/Ninja/Blueprints/BP_NinjaGasp.BP_NinjaGasp_C",
+   "components": [
+    {
+     "name": "CollisionCylinder",
+     "class": "CapsuleComponent",
+     "owner": "BP_NinjaGasp_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+     "profile": "Custom",
+     "object_type": "<CollisionChannel.ECC_PAWN: 2>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     },
+     "capsule": [
+      30.0,
+      86.0
+     ]
+    },
+    {
+     "name": "CharacterMesh0",
+     "class": "SkeletalMeshComponent",
+     "owner": "BP_NinjaGasp_C_0",
+     "visible": false,
+     "hidden_in_game": false,
+     "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+     "profile": "Custom",
+     "object_type": "<CollisionChannel.ECC_PAWN: 2>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     },
+     "mesh": "/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin",
+     "physics_asset_override": "None",
+     "mesh_physics_asset": "/Game/Characters/UEFN_Mannequin/Rigs/PA_UEFN_Mannequin.PA_UEFN_Mannequin",
+     "anim_class": "/Game/Blueprints/SandboxCharacter_CMC_ABP.SandboxCharacter_CMC_ABP_C",
+     "visibility_based_anim_tick": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>"
+    },
+    {
+     "name": "CameraProxyMeshComponent_0",
+     "class": "CameraProxyMeshComponent",
+     "owner": "BP_NinjaGasp_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    },
+    {
+     "name": "DrawFrustumComponent_0",
+     "class": "DrawFrustumComponent",
+     "owner": "BP_NinjaGasp_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    },
+    {
+     "name": "CameraProxyMeshComponent_1",
+     "class": "CameraProxyMeshComponent",
+     "owner": "BP_NinjaGasp_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    },
+    {
+     "name": "DrawFrustumComponent_1",
+     "class": "DrawFrustumComponent",
+     "owner": "BP_NinjaGasp_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    }
+   ],
+   "child_actors": [
+    {
+     "component": "VisualOverride",
+     "tags": [
+      "NinjaVisual"
+     ],
+     "child_actor": "VisualOverride_GEN_VARIABLE_BP_NinjaVisual_C_CAT_0",
+     "child_class": "/Game/Ninja/Blueprints/BP_NinjaVisual.BP_NinjaVisual_C",
+     "child_owner": null,
+     "components": [
+      {
+       "name": "Manny",
+       "class": "SkeletalMeshComponent",
+       "owner": "VisualOverride_GEN_VARIABLE_BP_NinjaVisual_C_CAT_0",
+       "visible": true,
+       "hidden_in_game": false,
+       "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+       "profile": "NoCollision",
+       "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+       "responses": {
+        "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+       },
+       "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+       "physics_asset_override": "None",
+       "mesh_physics_asset": "/Game/Characters/UE5_Mannequins/Rigs/PA_Mannequin.PA_Mannequin",
+       "anim_class": "/Game/Ninja/Animation/ABP_NinjaVisual.ABP_NinjaVisual_C",
+       "visibility_based_anim_tick": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>"
+      },
+      {
+       "name": "Cloak",
+       "class": "SkeletalMeshComponent",
+       "owner": "VisualOverride_GEN_VARIABLE_BP_NinjaVisual_C_CAT_0",
+       "visible": false,
+       "hidden_in_game": true,
+       "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+       "profile": "NoCollision",
+       "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+       "responses": {
+        "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+       },
+       "mesh": "/Game/Ninja/Cloak/SKM_BlackCloak.SKM_BlackCloak",
+       "physics_asset_override": "None",
+       "mesh_physics_asset": "None",
+       "anim_class": "/Game/Ninja/Cloak/ABP_Cloak.ABP_Cloak_C",
+       "visibility_based_anim_tick": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>"
+      },
+      {
+       "name": "CloakMH",
+       "class": "SkeletalMeshComponent",
+       "owner": "VisualOverride_GEN_VARIABLE_BP_NinjaVisual_C_CAT_0",
+       "visible": false,
+       "hidden_in_game": false,
+       "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+       "profile": "NoCollision",
+       "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+       "responses": {
+        "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+       },
+       "mesh": "/Game/Ninja/Cloak/SKM_BlackCloak_MH.SKM_BlackCloak_MH",
+       "physics_asset_override": "None",
+       "mesh_physics_asset": "None",
+       "anim_class": "{'error': \"AttributeError: 'NoneType' object has no attribute 'get_class'\"}",
+       "visibility_based_anim_tick": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>"
+      }
+     ]
+    }
+   ]
+  },
+  "dummy": {
+   "actor": "BP_TrainingDummy_C_0",
+   "class": "/Game/Duel/Blueprints/BP_TrainingDummy.BP_TrainingDummy_C",
+   "components": [
+    {
+     "name": "CollisionCylinder",
+     "class": "CapsuleComponent",
+     "owner": "BP_TrainingDummy_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+     "profile": "Custom",
+     "object_type": "<CollisionChannel.ECC_PAWN: 2>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     },
+     "capsule": [
+      30.0,
+      86.0
+     ]
+    },
+    {
+     "name": "CharacterMesh0",
+     "class": "SkeletalMeshComponent",
+     "owner": "BP_TrainingDummy_C_0",
+     "visible": false,
+     "hidden_in_game": false,
+     "collision_enabled": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>",
+     "profile": "Custom",
+     "object_type": "<CollisionChannel.ECC_PAWN: 2>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     },
+     "mesh": "/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin",
+     "physics_asset_override": "None",
+     "mesh_physics_asset": "/Game/Characters/UEFN_Mannequin/Rigs/PA_UEFN_Mannequin.PA_UEFN_Mannequin",
+     "anim_class": "/Game/Blueprints/SandboxCharacter_CMC_ABP.SandboxCharacter_CMC_ABP_C",
+     "visibility_based_anim_tick": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>"
+    },
+    {
+     "name": "CameraProxyMeshComponent_1",
+     "class": "CameraProxyMeshComponent",
+     "owner": "BP_TrainingDummy_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    },
+    {
+     "name": "DrawFrustumComponent_1",
+     "class": "DrawFrustumComponent",
+     "owner": "BP_TrainingDummy_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    },
+    {
+     "name": "CameraProxyMeshComponent_2",
+     "class": "CameraProxyMeshComponent",
+     "owner": "BP_TrainingDummy_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    },
+    {
+     "name": "DrawFrustumComponent_2",
+     "class": "DrawFrustumComponent",
+     "owner": "BP_TrainingDummy_C_0",
+     "visible": false,
+     "hidden_in_game": true,
+     "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+     "profile": "NoCollision",
+     "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+     "responses": {
+      "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+      "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+      "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+     }
+    }
+   ],
+   "child_actors": [
+    {
+     "component": "VisualOverride",
+     "tags": [
+      "NinjaVisual"
+     ],
+     "child_actor": "VisualOverride_GEN_VARIABLE_BP_DummyVisual_C_CAT_0",
+     "child_class": "/Game/Ninja/Blueprints/BP_DummyVisual.BP_DummyVisual_C",
+     "child_owner": null,
+     "components": [
+      {
+       "name": "Manny",
+       "class": "SkeletalMeshComponent",
+       "owner": "VisualOverride_GEN_VARIABLE_BP_DummyVisual_C_CAT_0",
+       "visible": true,
+       "hidden_in_game": false,
+       "collision_enabled": "<CollisionEnabled.NO_COLLISION: 0>",
+       "profile": "NoCollision",
+       "object_type": "<CollisionChannel.ECC_WORLD_STATIC: 0>",
+       "responses": {
+        "ECC_WORLD_STATIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_WORLD_DYNAMIC": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_PAWN": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VISIBILITY": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_CAMERA": "<CollisionResponseType.ECR_IGNORE: 0>",
+        "ECC_PHYSICS_BODY": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_VEHICLE": "<CollisionResponseType.ECR_BLOCK: 2>",
+        "ECC_DESTRUCTIBLE": "<CollisionResponseType.ECR_BLOCK: 2>"
+       },
+       "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+       "physics_asset_override": "None",
+       "mesh_physics_asset": "/Game/Characters/UE5_Mannequins/Rigs/PA_Mannequin.PA_Mannequin",
+       "anim_class": "/Game/Ninja/Animation/ABP_NinjaVisual.ABP_NinjaVisual_C",
+       "visibility_based_anim_tick": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>"
+      }
+     ]
+    }
+   ]
+  },
+  "dummy_traces": {
+   "pelvis": {
+    "Visibility": null,
+    "Camera": null,
+    "obj_Pawn": [
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CollisionCylinder (CapsuleComponent)",
+      "bone": "None",
+      "distance": 270.0
+     },
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "pelvis",
+      "distance": 292.2
+     },
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "spine_01",
+      "distance": 299.2
+     },
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "thigh_r",
+      "distance": 301.4
+     }
+    ],
+    "obj_PhysicsBody": [],
+    "obj_WorldDynamic": [],
+    "complex_Visibility": null
+   },
+   "chest": {
+    "Visibility": null,
+    "Camera": null,
+    "obj_Pawn": [
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CollisionCylinder (CapsuleComponent)",
+      "bone": "None",
+      "distance": 270.0
+     },
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "spine_05",
+      "distance": 291.1
+     },
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "spine_04",
+      "distance": 292.5
+     },
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "clavicle_r",
+      "distance": 303.1
+     }
+    ],
+    "obj_PhysicsBody": [],
+    "obj_WorldDynamic": [],
+    "complex_Visibility": null
+   },
+   "head": {
+    "Visibility": null,
+    "Camera": null,
+    "obj_Pawn": [
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CollisionCylinder (CapsuleComponent)",
+      "bone": "None",
+      "distance": 274.6
+     },
+     {
+      "blocking": true,
+      "actor": "BP_TrainingDummy_C_0",
+      "component": "BP_TrainingDummy_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "head",
+      "distance": 290.3
+     }
+    ],
+    "obj_PhysicsBody": [],
+    "obj_WorldDynamic": [],
+    "complex_Visibility": null
+   }
+  },
+  "player_traces": {
+   "pelvis": {
+    "Visibility": null,
+    "Camera": null,
+    "obj_Pawn": [
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CollisionCylinder (CapsuleComponent)",
+      "bone": "None",
+      "distance": 270.0
+     },
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "pelvis",
+      "distance": 292.1
+     },
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "spine_01",
+      "distance": 299.0
+     },
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "thigh_r",
+      "distance": 301.4
+     }
+    ],
+    "obj_PhysicsBody": [],
+    "obj_WorldDynamic": [],
+    "complex_Visibility": null
+   },
+   "chest": {
+    "Visibility": null,
+    "Camera": null,
+    "obj_Pawn": [
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CollisionCylinder (CapsuleComponent)",
+      "bone": "None",
+      "distance": 270.0
+     },
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "spine_05",
+      "distance": 291.1
+     },
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "spine_04",
+      "distance": 292.6
+     },
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "clavicle_r",
+      "distance": 302.8
+     }
+    ],
+    "obj_PhysicsBody": [],
+    "obj_WorldDynamic": [],
+    "complex_Visibility": null
+   },
+   "head": {
+    "Visibility": null,
+    "Camera": null,
+    "obj_Pawn": [
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CollisionCylinder (CapsuleComponent)",
+      "bone": "None",
+      "distance": 274.6
+     },
+     {
+      "blocking": true,
+      "actor": "BP_NinjaGasp_C_0",
+      "component": "BP_NinjaGasp_C_0.CharacterMesh0 (SkeletalMeshComponent)",
+      "bone": "head",
+      "distance": 290.3
+     }
+    ],
+    "obj_PhysicsBody": [],
+    "obj_WorldDynamic": [],
+    "complex_Visibility": null
+   }
+  },
+  "config_note": "TraceTypeQuery1=Visibility, 2=Camera; ObjectTypeQuery2=WorldDynamic, 3=Pawn, 4=PhysicsBody"
+ },
+ "P2": {
+  "visible_manny_idle": {
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "weapon_r": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "weapon_l": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "hand_r": {
+    "socket_exists": true,
+    "bone_index": 42,
+    "parent_bone": "lowerarm_r",
+    "socket_bone": "hand_r",
+    "cs": {
+     "loc": [
+      -25.53,
+      -19.577,
+      88.965
+     ],
+     "rot_pyr": [
+      74.2,
+      -30.009,
+      66.634
+     ],
+     "x": [
+      0.2358,
+      -0.1362,
+      0.9622
+     ],
+     "y": [
+      0.9633,
+      -0.0983,
+      -0.25
+     ],
+     "z": [
+      0.1287,
+      0.9858,
+      0.108
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -27.251,
+      0.0,
+      -0.0
+     ],
+     "rot_pyr": [
+      -2.404,
+      0.118,
+      -69.487
+     ],
+     "x": [
+      0.9991,
+      0.0021,
+      -0.0419
+     ],
+     "y": [
+      0.0386,
+      0.3505,
+      0.9358
+     ],
+     "z": [
+      0.0166,
+      -0.9366,
+      0.3501
+     ]
+    }
+   },
+   "ik_hand_gun": {
+    "socket_exists": true,
+    "bone_index": 84,
+    "parent_bone": "ik_hand_root",
+    "socket_bone": "ik_hand_gun",
+    "cs": {
+     "loc": [
+      -47.768,
+      15.699,
+      104.466
+     ],
+     "rot_pyr": [
+      39.41,
+      -53.667,
+      68.473
+     ],
+     "x": [
+      0.4578,
+      -0.6224,
+      0.6349
+     ],
+     "y": [
+      0.6455,
+      -0.2584,
+      -0.7187
+     ],
+     "z": [
+      0.6114,
+      0.7388,
+      0.2835
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -47.768,
+      15.699,
+      104.466
+     ],
+     "rot_pyr": [
+      39.41,
+      -53.667,
+      68.473
+     ],
+     "x": [
+      0.4578,
+      -0.6224,
+      0.6349
+     ],
+     "y": [
+      0.6455,
+      -0.2584,
+      -0.7187
+     ],
+     "z": [
+      0.6114,
+      0.7388,
+      0.2835
+     ]
+    }
+   },
+   "ik_hand_r": {
+    "socket_exists": true,
+    "bone_index": 86,
+    "parent_bone": "ik_hand_gun",
+    "socket_bone": "ik_hand_r",
+    "cs": {
+     "loc": [
+      -47.768,
+      15.699,
+      104.466
+     ],
+     "rot_pyr": [
+      39.41,
+      -53.667,
+      68.473
+     ],
+     "x": [
+      0.4578,
+      -0.6224,
+      0.6349
+     ],
+     "y": [
+      0.6455,
+      -0.2584,
+      -0.7187
+     ],
+     "z": [
+      0.6114,
+      0.7388,
+      0.2835
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rot_pyr": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "x": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y": [
+      -0.0,
+      1.0,
+      -0.0
+     ],
+     "z": [
+      -0.0,
+      0.0,
+      1.0
+     ]
+    }
+   },
+   "HandGrip_R": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "ik_hand_gun_in_hand_r": {
+    "loc": [
+     4.8686,
+     -28.7646,
+     33.5871
+    ],
+    "rot_pyr": [
+     -29.0856,
+     23.1426,
+     16.5722
+    ],
+    "x": [
+     0.8036,
+     0.3435,
+     -0.4861
+    ],
+    "y": [
+     -0.5042,
+     0.8268,
+     -0.2493
+    ],
+    "z": [
+     0.3163,
+     0.4454,
+     0.8376
+    ]
+   },
+   "num_bones": 89
+  },
+  "hidden_gasp_mesh": {
+   "mesh": "/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin",
+   "weapon_r": {
+    "socket_exists": true,
+    "bone_index": 59,
+    "parent_bone": "hand_r",
+    "socket_bone": "weapon_r",
+    "cs": {
+     "loc": [
+      -20.307,
+      -18.932,
+      85.551
+     ],
+     "rot_pyr": [
+      77.398,
+      -29.515,
+      67.693
+     ],
+     "x": [
+      0.1899,
+      -0.1075,
+      0.9759
+     ],
+     "y": [
+      0.9727,
+      -0.1145,
+      -0.2018
+     ],
+     "z": [
+      0.1334,
+      0.9876,
+      0.0828
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      0.197,
+      3.411,
+      -0.381
+     ],
+     "rot_pyr": [
+      -0.0,
+      -0.0,
+      0.0
+     ],
+     "x": [
+      1.0,
+      -0.0,
+      -0.0
+     ],
+     "y": [
+      0.0,
+      1.0,
+      -0.0
+     ],
+     "z": [
+      0.0,
+      0.0,
+      1.0
+     ]
+    }
+   },
+   "weapon_l": {
+    "socket_exists": true,
+    "bone_index": 31,
+    "parent_bone": "hand_l",
+    "socket_bone": "weapon_l",
+    "cs": {
+     "loc": [
+      26.932,
+      8.85,
+      85.369
+     ],
+     "rot_pyr": [
+      -66.463,
+      80.458,
+      -130.969
+     ],
+     "x": [
+      0.0662,
+      0.3938,
+      -0.9168
+     ],
+     "y": [
+      0.7613,
+      0.574,
+      0.3015
+     ],
+     "z": [
+      0.645,
+      -0.718,
+      -0.2618
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -0.197,
+      -3.411,
+      0.381
+     ],
+     "rot_pyr": [
+      0.0,
+      0.0,
+      -0.0
+     ],
+     "x": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "z": [
+      -0.0,
+      -0.0,
+      1.0
+     ]
+    }
+   },
+   "hand_r": {
+    "socket_exists": true,
+    "bone_index": 39,
+    "parent_bone": "lowerarm_r",
+    "socket_bone": "hand_r",
+    "cs": {
+     "loc": [
+      -23.612,
+      -18.144,
+      86.079
+     ],
+     "rot_pyr": [
+      77.398,
+      -29.515,
+      67.693
+     ],
+     "x": [
+      0.1899,
+      -0.1075,
+      0.9759
+     ],
+     "y": [
+      0.9727,
+      -0.1145,
+      -0.2018
+     ],
+     "z": [
+      0.1334,
+      0.9876,
+      0.0828
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -22.349,
+      0.0,
+      0.0
+     ],
+     "rot_pyr": [
+      -4.231,
+      -2.861,
+      -76.323
+     ],
+     "x": [
+      0.996,
+      -0.0498,
+      -0.0738
+     ],
+     "y": [
+      0.0834,
+      0.2326,
+      0.969
+     ],
+     "z": [
+      -0.0311,
+      -0.9713,
+      0.2358
+     ]
+    }
+   },
+   "ik_hand_gun": {
+    "socket_exists": true,
+    "bone_index": 85,
+    "parent_bone": "ik_hand_root",
+    "socket_bone": "ik_hand_gun",
+    "cs": {
+     "loc": [
+      -23.48,
+      -16.163,
+      85.415
+     ],
+     "rot_pyr": [
+      77.401,
+      -29.514,
+      67.696
+     ],
+     "x": [
+      0.1898,
+      -0.1075,
+      0.9759
+     ],
+     "y": [
+      0.9727,
+      -0.1145,
+      -0.2018
+     ],
+     "z": [
+      0.1335,
+      0.9876,
+      0.0828
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -23.48,
+      -16.163,
+      85.415
+     ],
+     "rot_pyr": [
+      77.401,
+      -29.514,
+      67.696
+     ],
+     "x": [
+      0.1898,
+      -0.1075,
+      0.9759
+     ],
+     "y": [
+      0.9727,
+      -0.1145,
+      -0.2018
+     ],
+     "z": [
+      0.1335,
+      0.9876,
+      0.0828
+     ]
+    }
+   },
+   "ik_hand_r": {
+    "socket_exists": true,
+    "bone_index": 87,
+    "parent_bone": "ik_hand_gun",
+    "socket_bone": "ik_hand_r",
+    "cs": {
+     "loc": [
+      -23.48,
+      -16.163,
+      85.415
+     ],
+     "rot_pyr": [
+      77.401,
+      -29.514,
+      67.696
+     ],
+     "x": [
+      0.1898,
+      -0.1075,
+      0.9759
+     ],
+     "y": [
+      0.9727,
+      -0.1145,
+      -0.2018
+     ],
+     "z": [
+      0.1335,
+      0.9876,
+      0.0828
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -0.0,
+      -0.0,
+      -0.0
+     ],
+     "rot_pyr": [
+      0.0,
+      -0.0,
+      0.0
+     ],
+     "x": [
+      1.0,
+      -0.0,
+      0.0
+     ],
+     "y": [
+      0.0,
+      1.0,
+      -0.0
+     ],
+     "z": [
+      -0.0,
+      0.0,
+      1.0
+     ]
+    }
+   },
+   "HandGrip_R": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "weapon_r_in_hand_r": {
+    "loc": [
+     0.1975,
+     3.4112,
+     -0.3811
+    ],
+    "rot_pyr": [
+     -0.0,
+     -0.0,
+     0.0
+    ],
+    "x": [
+     1.0,
+     -0.0,
+     -0.0
+    ],
+    "y": [
+     0.0,
+     1.0,
+     -0.0
+    ],
+    "z": [
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "ik_hand_gun_in_hand_r": {
+    "loc": [
+     -0.8358,
+     0.035,
+     1.9188
+    ],
+    "rot_pyr": [
+     0.0012,
+     -0.0025,
+     0.0018
+    ],
+    "x": [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    "y": [
+     0.0,
+     1.0,
+     -0.0
+    ],
+    "z": [
+     -0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "num_bones": 93
+  },
+  "dummy_visual": {
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "weapon_r": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "weapon_l": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "hand_r": {
+    "socket_exists": true,
+    "bone_index": 42,
+    "parent_bone": "lowerarm_r",
+    "socket_bone": "hand_r",
+    "cs": {
+     "loc": [
+      -25.53,
+      -19.577,
+      89.12
+     ],
+     "rot_pyr": [
+      74.2,
+      -30.009,
+      66.634
+     ],
+     "x": [
+      0.2358,
+      -0.1362,
+      0.9622
+     ],
+     "y": [
+      0.9633,
+      -0.0983,
+      -0.25
+     ],
+     "z": [
+      0.1287,
+      0.9858,
+      0.108
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -27.251,
+      0.0,
+      0.0
+     ],
+     "rot_pyr": [
+      -2.404,
+      0.118,
+      -69.487
+     ],
+     "x": [
+      0.9991,
+      0.0021,
+      -0.0419
+     ],
+     "y": [
+      0.0386,
+      0.3505,
+      0.9358
+     ],
+     "z": [
+      0.0166,
+      -0.9366,
+      0.3501
+     ]
+    }
+   },
+   "ik_hand_gun": {
+    "socket_exists": true,
+    "bone_index": 84,
+    "parent_bone": "ik_hand_root",
+    "socket_bone": "ik_hand_gun",
+    "cs": {
+     "loc": [
+      -47.768,
+      15.699,
+      104.466
+     ],
+     "rot_pyr": [
+      39.41,
+      -53.667,
+      68.473
+     ],
+     "x": [
+      0.4578,
+      -0.6224,
+      0.6349
+     ],
+     "y": [
+      0.6455,
+      -0.2584,
+      -0.7187
+     ],
+     "z": [
+      0.6114,
+      0.7388,
+      0.2835
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -47.768,
+      15.699,
+      104.466
+     ],
+     "rot_pyr": [
+      39.41,
+      -53.667,
+      68.473
+     ],
+     "x": [
+      0.4578,
+      -0.6224,
+      0.6349
+     ],
+     "y": [
+      0.6455,
+      -0.2584,
+      -0.7187
+     ],
+     "z": [
+      0.6114,
+      0.7388,
+      0.2835
+     ]
+    }
+   },
+   "ik_hand_r": {
+    "socket_exists": true,
+    "bone_index": 86,
+    "parent_bone": "ik_hand_gun",
+    "socket_bone": "ik_hand_r",
+    "cs": {
+     "loc": [
+      -47.768,
+      15.699,
+      104.466
+     ],
+     "rot_pyr": [
+      39.41,
+      -53.667,
+      68.473
+     ],
+     "x": [
+      0.4578,
+      -0.6224,
+      0.6349
+     ],
+     "y": [
+      0.6455,
+      -0.2584,
+      -0.7187
+     ],
+     "z": [
+      0.6114,
+      0.7388,
+      0.2835
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rot_pyr": [
+      0.0,
+      -0.0,
+      0.0
+     ],
+     "x": [
+      1.0,
+      -0.0,
+      0.0
+     ],
+     "y": [
+      0.0,
+      1.0,
+      -0.0
+     ],
+     "z": [
+      -0.0,
+      0.0,
+      1.0
+     ]
+    }
+   },
+   "HandGrip_R": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "ik_hand_gun_in_hand_r": {
+    "loc": [
+     4.7195,
+     -28.7258,
+     33.5704
+    ],
+    "rot_pyr": [
+     -29.0856,
+     23.1426,
+     16.5722
+    ],
+    "x": [
+     0.8036,
+     0.3435,
+     -0.4861
+    ],
+    "y": [
+     -0.5042,
+     0.8268,
+     -0.2493
+    ],
+    "z": [
+     0.3163,
+     0.4454,
+     0.8376
+    ]
+   },
+   "num_bones": 89
+  },
+  "visible_manny_walking": {
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "weapon_r": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "weapon_l": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "hand_r": {
+    "socket_exists": true,
+    "bone_index": 42,
+    "parent_bone": "lowerarm_r",
+    "socket_bone": "hand_r",
+    "cs": {
+     "loc": [
+      -36.626,
+      -15.691,
+      101.198
+     ],
+     "rot_pyr": [
+      31.116,
+      70.01,
+      100.49
+     ],
+     "x": [
+      0.2927,
+      0.8045,
+      0.5168
+     ],
+     "y": [
+      0.3448,
+      0.4153,
+      -0.8418
+     ],
+     "z": [
+      -0.8919,
+      0.4246,
+      -0.1559
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -27.264,
+      -0.01,
+      0.001
+     ],
+     "rot_pyr": [
+      -2.99,
+      -17.922,
+      -123.153
+     ],
+     "x": [
+      0.9502,
+      -0.3073,
+      -0.0522
+     ],
+     "y": [
+      -0.1267,
+      -0.5338,
+      0.8361
+     ],
+     "z": [
+      -0.2848,
+      -0.7878,
+      -0.5461
+     ]
+    }
+   },
+   "ik_hand_gun": {
+    "socket_exists": true,
+    "bone_index": 84,
+    "parent_bone": "ik_hand_root",
+    "socket_bone": "ik_hand_gun",
+    "cs": {
+     "loc": [
+      -36.606,
+      -15.875,
+      100.943
+     ],
+     "rot_pyr": [
+      31.112,
+      70.011,
+      100.478
+     ],
+     "x": [
+      0.2927,
+      0.8046,
+      0.5167
+     ],
+     "y": [
+      0.3446,
+      0.4153,
+      -0.8419
+     ],
+     "z": [
+      -0.892,
+      0.4244,
+      -0.1557
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      -36.606,
+      -15.875,
+      100.943
+     ],
+     "rot_pyr": [
+      31.112,
+      70.011,
+      100.478
+     ],
+     "x": [
+      0.2927,
+      0.8046,
+      0.5167
+     ],
+     "y": [
+      0.3446,
+      0.4153,
+      -0.8419
+     ],
+     "z": [
+      -0.892,
+      0.4244,
+      -0.1557
+     ]
+    }
+   },
+   "ik_hand_r": {
+    "socket_exists": true,
+    "bone_index": 86,
+    "parent_bone": "ik_hand_gun",
+    "socket_bone": "ik_hand_r",
+    "cs": {
+     "loc": [
+      -36.606,
+      -15.875,
+      100.943
+     ],
+     "rot_pyr": [
+      31.112,
+      70.011,
+      100.478
+     ],
+     "x": [
+      0.2927,
+      0.8046,
+      0.5167
+     ],
+     "y": [
+      0.3446,
+      0.4153,
+      -0.8419
+     ],
+     "z": [
+      -0.892,
+      0.4244,
+      -0.1557
+     ]
+    },
+    "parent_space": {
+     "loc": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rot_pyr": [
+      0.0,
+      0.0,
+      -0.0
+     ],
+     "x": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y": [
+      0.0,
+      1.0,
+      -0.0
+     ],
+     "z": [
+      -0.0,
+      0.0,
+      1.0
+     ]
+    }
+   },
+   "HandGrip_R": {
+    "socket_exists": false,
+    "bone_index": -1,
+    "parent_bone": "None",
+    "socket_bone": "None"
+   },
+   "ik_hand_gun_in_hand_r": {
+    "loc": [
+     -0.2736,
+     0.1453,
+     -0.0564
+    ],
+    "rot_pyr": [
+     0.0016,
+     0.0036,
+     -0.013
+    ],
+    "x": [
+     1.0,
+     0.0001,
+     0.0
+    ],
+    "y": [
+     -0.0001,
+     1.0,
+     0.0002
+    ],
+    "z": [
+     -0.0,
+     -0.0002,
+     1.0
+    ]
+   },
+   "num_bones": 89
+  }
+ },
+ "P3": {
+  "expectation_file": true,
+  "spawned_mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+  "single_node_ref_pose": {
+   "clip": null,
+   "time": 0.0,
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "anim_mode": "<AnimationMode.ANIMATION_BLUEPRINT: 0>",
+   "position": 0.0,
+   "measured_cs": {
+    "root": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pelvis": [
+     0.0,
+     2.281,
+     95.897
+    ],
+    "spine_01": [
+     0.0,
+     2.048,
+     99.566
+    ],
+    "spine_03": [
+     0.0,
+     4.251,
+     113.419
+    ],
+    "neck_01": [
+     -0.0,
+     -1.567,
+     152.804
+    ],
+    "head": [
+     -0.0,
+     0.663,
+     162.575
+    ],
+    "clavicle_r": [
+     -1.428,
+     -1.74,
+     146.301
+    ],
+    "upperarm_r": [
+     -19.01,
+     -2.557,
+     143.583
+    ],
+    "lowerarm_r": [
+     -35.007,
+     -1.907,
+     120.892
+    ],
+    "hand_r": [
+     -47.768,
+     15.699,
+     104.466
+    ],
+    "hand_l": [
+     47.769,
+     15.699,
+     104.467
+    ],
+    "lowerarm_l": [
+     35.007,
+     -1.907,
+     120.892
+    ],
+    "ik_hand_gun": [
+     -47.768,
+     15.699,
+     104.466
+    ],
+    "ik_hand_r": [
+     -47.768,
+     15.699,
+     104.466
+    ],
+    "ik_hand_l": [
+     47.769,
+     15.699,
+     104.467
+    ]
+   },
+   "vs_ref_pose": {
+    "max_cm": 0.001,
+    "mean_cm": 0.0,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 0.0,
+     "spine_01": 0.0,
+     "spine_03": 0.0,
+     "neck_01": 0.001,
+     "head": 0.0,
+     "clavicle_r": 0.0,
+     "upperarm_r": 0.0,
+     "lowerarm_r": 0.0,
+     "hand_r": 0.001,
+     "hand_l": 0.001,
+     "lowerarm_l": 0.0,
+     "ik_hand_gun": 0.001,
+     "ik_hand_r": 0.001,
+     "ik_hand_l": 0.001
+    }
+   }
+  },
+  "single_node_MF_Rifle_Idle_ADS@0.0": {
+   "clip": "MF_Rifle_Idle_ADS",
+   "time": 0.0,
+   "anim_class": "AnimSequence",
+   "anim_skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+   "play": "None",
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "anim_mode": "<AnimationMode.ANIMATION_SINGLE_NODE: 1>",
+   "position": 0.0,
+   "measured_cs": {
+    "root": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pelvis": [
+     2.984,
+     -2.391,
+     93.083
+    ],
+    "spine_01": [
+     3.593,
+     -2.816,
+     96.692
+    ],
+    "spine_03": [
+     0.944,
+     -2.268,
+     110.486
+    ],
+    "neck_01": [
+     -1.518,
+     -6.534,
+     150.091
+    ],
+    "head": [
+     -5.649,
+     -3.456,
+     158.701
+    ],
+    "clavicle_r": [
+     -1.014,
+     -7.11,
+     143.788
+    ],
+    "upperarm_r": [
+     -10.555,
+     -21.427,
+     148.517
+    ],
+    "lowerarm_r": [
+     -24.514,
+     -14.719,
+     125.403
+    ],
+    "hand_r": [
+     -16.829,
+     7.102,
+     139.899
+    ],
+    "hand_l": [
+     -7.629,
+     43.286,
+     141.575
+    ],
+    "lowerarm_l": [
+     14.079,
+     29.823,
+     131.938
+    ],
+    "ik_hand_gun": [
+     -15.237,
+     8.166,
+     137.853
+    ],
+    "ik_hand_r": [
+     -15.237,
+     8.166,
+     137.853
+    ],
+    "ik_hand_l": [
+     -8.084,
+     40.438,
+     139.622
+    ]
+   },
+   "vs_ref_pose": {
+    "max_cm": 72.159,
+    "mean_cm": 26.855,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 6.217,
+     "spine_01": 6.695,
+     "spine_03": 7.211,
+     "neck_01": 5.86,
+     "head": 7.993,
+     "clavicle_r": 5.944,
+     "upperarm_r": 21.258,
+     "lowerarm_r": 17.164,
+     "hand_r": 47.819,
+     "hand_l": 72.159,
+     "lowerarm_l": 39.583,
+     "ik_hand_gun": 47.22,
+     "ik_hand_r": 47.22,
+     "ik_hand_l": 70.48
+    }
+   },
+   "vs_expected": {
+    "max_cm": 0.011,
+    "mean_cm": 0.007,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 0.003,
+     "spine_01": 0.002,
+     "spine_03": 0.001,
+     "neck_01": 0.008,
+     "head": 0.009,
+     "clavicle_r": 0.006,
+     "upperarm_r": 0.008,
+     "lowerarm_r": 0.003,
+     "hand_r": 0.009,
+     "hand_l": 0.01,
+     "lowerarm_l": 0.008,
+     "ik_hand_gun": 0.01,
+     "ik_hand_r": 0.01,
+     "ik_hand_l": 0.011
+    }
+   }
+  },
+  "single_node_MF_Rifle_Idle_ADS@0.5": {
+   "clip": "MF_Rifle_Idle_ADS",
+   "time": 0.5,
+   "anim_class": "AnimSequence",
+   "anim_skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+   "play": "None",
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "anim_mode": "<AnimationMode.ANIMATION_SINGLE_NODE: 1>",
+   "position": 0.5,
+   "measured_cs": {
+    "root": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pelvis": [
+     2.897,
+     -2.32,
+     93.091
+    ],
+    "spine_01": [
+     3.501,
+     -2.742,
+     96.7
+    ],
+    "spine_03": [
+     0.845,
+     -2.187,
+     110.494
+    ],
+    "neck_01": [
+     -1.585,
+     -6.434,
+     150.103
+    ],
+    "head": [
+     -5.684,
+     -3.335,
+     158.72
+    ],
+    "clavicle_r": [
+     -1.088,
+     -7.014,
+     143.799
+    ],
+    "upperarm_r": [
+     -10.632,
+     -21.292,
+     148.635
+    ],
+    "lowerarm_r": [
+     -24.779,
+     -14.632,
+     125.622
+    ],
+    "hand_r": [
+     -16.941,
+     7.248,
+     139.946
+    ],
+    "hand_l": [
+     -7.643,
+     43.44,
+     141.577
+    ],
+    "lowerarm_l": [
+     14.055,
+     29.929,
+     131.984
+    ],
+    "ik_hand_gun": [
+     -15.351,
+     8.305,
+     137.886
+    ],
+    "ik_hand_r": [
+     -15.351,
+     8.305,
+     137.886
+    ],
+    "ik_hand_l": [
+     -8.11,
+     40.595,
+     139.628
+    ]
+   },
+   "vs_ref_pose": {
+    "max_cm": 72.23,
+    "mean_cm": 26.804,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 6.118,
+     "spine_01": 6.589,
+     "spine_03": 7.122,
+     "neck_01": 5.788,
+     "head": 7.947,
+     "clavicle_r": 5.847,
+     "upperarm_r": 21.135,
+     "lowerarm_r": 16.997,
+     "hand_r": 47.755,
+     "hand_l": 72.23,
+     "lowerarm_l": 39.693,
+     "ik_hand_gun": 47.143,
+     "ik_hand_r": 47.143,
+     "ik_hand_l": 70.559
+    }
+   },
+   "vs_expected": {
+    "max_cm": 0.012,
+    "mean_cm": 0.005,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 0.003,
+     "spine_01": 0.002,
+     "spine_03": 0.001,
+     "neck_01": 0.004,
+     "head": 0.004,
+     "clavicle_r": 0.003,
+     "upperarm_r": 0.005,
+     "lowerarm_r": 0.003,
+     "hand_r": 0.004,
+     "hand_l": 0.007,
+     "lowerarm_l": 0.004,
+     "ik_hand_gun": 0.012,
+     "ik_hand_r": 0.012,
+     "ik_hand_l": 0.011
+    }
+   }
+  },
+  "single_node_MM_Rifle_Fire@0.1": {
+   "clip": "MM_Rifle_Fire",
+   "time": 0.1,
+   "anim_class": "AnimSequence",
+   "anim_skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+   "play": "None",
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "anim_mode": "<AnimationMode.ANIMATION_SINGLE_NODE: 1>",
+   "position": 0.10000000149011612,
+   "measured_cs": {
+    "root": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pelvis": [
+     -0.32,
+     2.483,
+     95.855
+    ],
+    "spine_01": [
+     -0.302,
+     2.262,
+     99.525
+    ],
+    "spine_03": [
+     -0.169,
+     4.471,
+     113.376
+    ],
+    "neck_01": [
+     0.634,
+     -1.252,
+     152.768
+    ],
+    "head": [
+     0.7,
+     1.241,
+     162.475
+    ],
+    "clavicle_r": [
+     -0.868,
+     -1.515,
+     146.285
+    ],
+    "upperarm_r": [
+     -18.306,
+     -4.203,
+     143.859
+    ],
+    "lowerarm_r": [
+     -35.37,
+     -4.102,
+     121.95
+    ],
+    "hand_r": [
+     -49.486,
+     13.446,
+     106.605
+    ],
+    "hand_l": [
+     48.19,
+     19.302,
+     108.55
+    ],
+    "lowerarm_l": [
+     37.218,
+     -1.61,
+     122.148
+    ],
+    "ik_hand_gun": [
+     -48.155,
+     13.468,
+     104.982
+    ],
+    "ik_hand_r": [
+     -48.155,
+     13.468,
+     104.982
+    ],
+    "ik_hand_l": [
+     47.382,
+     15.579,
+     104.968
+    ]
+   },
+   "vs_ref_pose": {
+    "max_cm": 5.462,
+    "mean_cm": 1.626,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 0.381,
+     "spine_01": 0.373,
+     "spine_03": 0.281,
+     "neck_01": 0.709,
+     "head": 0.913,
+     "clavicle_r": 0.604,
+     "upperarm_r": 1.811,
+     "lowerarm_r": 2.464,
+     "hand_r": 3.55,
+     "hand_l": 5.462,
+     "lowerarm_l": 2.56,
+     "ik_hand_gun": 2.322,
+     "ik_hand_r": 2.322,
+     "ik_hand_l": 0.644
+    }
+   },
+   "vs_expected": {
+    "max_cm": 79.085,
+    "mean_cm": 26.604,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 7.671,
+     "spine_01": 7.824,
+     "spine_03": 6.556,
+     "neck_01": 7.465,
+     "head": 11.39,
+     "clavicle_r": 5.592,
+     "upperarm_r": 3.437,
+     "lowerarm_r": 8.885,
+     "hand_r": 45.212,
+     "hand_l": 76.186,
+     "lowerarm_l": 48.779,
+     "ik_hand_gun": 45.487,
+     "ik_hand_r": 45.487,
+     "ik_hand_l": 79.085
+    }
+   }
+  },
+  "single_node_MM_Rifle_Reload@1.0": {
+   "clip": "MM_Rifle_Reload",
+   "time": 1.0,
+   "anim_class": "AnimSequence",
+   "anim_skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+   "play": "None",
+   "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+   "anim_mode": "<AnimationMode.ANIMATION_SINGLE_NODE: 1>",
+   "position": 1.0,
+   "measured_cs": {
+    "root": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pelvis": [
+     3.666,
+     -2.427,
+     92.906
+    ],
+    "spine_01": [
+     3.84,
+     -3.129,
+     96.511
+    ],
+    "spine_03": [
+     0.402,
+     -1.642,
+     110.026
+    ],
+    "neck_01": [
+     -11.056,
+     -6.286,
+     147.883
+    ],
+    "head": [
+     -15.065,
+     -3.253,
+     156.519
+    ],
+    "clavicle_r": [
+     -9.772,
+     -7.2,
+     141.411
+    ],
+    "upperarm_r": [
+     -24.966,
+     -14.198,
+     135.302
+    ],
+    "lowerarm_r": [
+     -33.224,
+     2.917,
+     115.051
+    ],
+    "hand_r": [
+     -29.291,
+     16.752,
+     138.197
+    ],
+    "hand_l": [
+     -16.65,
+     39.886,
+     148.838
+    ],
+    "lowerarm_l": [
+     7.289,
+     30.707,
+     158.074
+    ],
+    "ik_hand_gun": [
+     -29.297,
+     16.744,
+     138.198
+    ],
+    "ik_hand_r": [
+     -29.297,
+     16.744,
+     138.198
+    ],
+    "ik_hand_l": [
+     -16.667,
+     39.879,
+     148.841
+    ]
+   },
+   "vs_ref_pose": {
+    "max_cm": 81.888,
+    "mean_cm": 28.037,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 6.674,
+     "spine_01": 7.133,
+     "spine_03": 6.812,
+     "neck_01": 12.99,
+     "head": 16.702,
+     "clavicle_r": 11.106,
+     "upperarm_r": 15.478,
+     "lowerarm_r": 7.782,
+     "hand_r": 38.474,
+     "hand_l": 81.876,
+     "lowerarm_l": 56.696,
+     "ik_hand_gun": 38.472,
+     "ik_hand_r": 38.472,
+     "ik_hand_l": 81.888
+    }
+   },
+   "vs_expected": {
+    "max_cm": 0.018,
+    "mean_cm": 0.006,
+    "per_bone": {
+     "root": 0.0,
+     "pelvis": 0.001,
+     "spine_01": 0.001,
+     "spine_03": 0.001,
+     "neck_01": 0.008,
+     "head": 0.01,
+     "clavicle_r": 0.006,
+     "upperarm_r": 0.009,
+     "lowerarm_r": 0.004,
+     "hand_r": 0.01,
+     "hand_l": 0.018,
+     "lowerarm_l": 0.015,
+     "ik_hand_gun": 0.0,
+     "ik_hand_r": 0.0,
+     "ik_hand_l": 0.002
+    }
+   }
+  },
+  "montage_MM_Rifle_Reload": {
+   "asset_class": "AnimSequence",
+   "additive": "{'error': \"Exception: AnimSequence: Failed to find property 'additive_anim_type' for attribute 'additive_anim_type' on 'AnimSequence'\"}",
+   "montage": "<Object '/Engine/Transient.AnimMontage_5' (0x000002672D418C00) Class 'AnimMontage'>",
+   "position": 1.000076174736023,
+   "is_playing": true,
+   "measured_pelvis_rel": {
+    "root": [
+     -3.666,
+     2.43,
+     -92.906
+    ],
+    "pelvis": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "spine_01": [
+     0.174,
+     -0.701,
+     3.605
+    ],
+    "spine_03": [
+     -3.264,
+     0.787,
+     17.12
+    ],
+    "neck_01": [
+     -14.721,
+     -3.854,
+     54.977
+    ],
+    "head": [
+     -18.73,
+     -0.821,
+     63.614
+    ],
+    "clavicle_r": [
+     -13.437,
+     -4.769,
+     48.506
+    ],
+    "upperarm_r": [
+     -28.631,
+     -11.769,
+     42.397
+    ],
+    "lowerarm_r": [
+     -36.891,
+     5.346,
+     22.148
+    ],
+    "hand_r": [
+     -32.959,
+     19.183,
+     45.294
+    ],
+    "hand_l": [
+     -20.323,
+     42.316,
+     55.931
+    ],
+    "lowerarm_l": [
+     3.617,
+     33.141,
+     65.168
+    ],
+    "ik_hand_gun": [
+     -32.965,
+     19.175,
+     45.295
+    ],
+    "ik_hand_r": [
+     -32.965,
+     19.175,
+     45.295
+    ],
+    "ik_hand_l": [
+     -20.341,
+     42.31,
+     55.933
+    ]
+   },
+   "vs_expected@1.0": {
+    "max_cm": 0.014,
+    "mean_cm": 0.008,
+    "per_bone": {
+     "root": 0.003,
+     "pelvis": 0.0,
+     "spine_01": 0.0,
+     "spine_03": 0.002,
+     "neck_01": 0.012,
+     "head": 0.014,
+     "clavicle_r": 0.01,
+     "upperarm_r": 0.011,
+     "lowerarm_r": 0.007,
+     "hand_r": 0.012,
+     "hand_l": 0.014,
+     "lowerarm_l": 0.013,
+     "ik_hand_gun": 0.005,
+     "ik_hand_r": 0.005,
+     "ik_hand_l": 0.01
+    }
+   },
+   "idle_before_vs_expected@1.0": {
+    "max_cm": 83.781,
+    "mean_cm": 29.911,
+    "per_bone": {
+     "root": 2.518,
+     "pelvis": 0.0,
+     "spine_01": 0.405,
+     "spine_03": 3.488,
+     "neck_01": 17.134,
+     "head": 20.09,
+     "clavicle_r": 14.759,
+     "upperarm_r": 14.822,
+     "lowerarm_r": 24.797,
+     "hand_r": 55.457,
+     "hand_l": 81.054,
+     "lowerarm_l": 55.921,
+     "ik_hand_gun": 37.217,
+     "ik_hand_r": 37.217,
+     "ik_hand_l": 83.781
+    }
+   },
+   "moved_from_idle_cm": {
+    "hand_r": 55.46,
+    "hand_l": 81.05,
+    "head": 20.08
+   }
+  },
+  "montage_MM_Rifle_Fire": {
+   "asset_class": "AnimSequence",
+   "additive": "{'error': \"Exception: AnimSequence: Failed to find property 'additive_anim_type' for attribute 'additive_anim_type' on 'AnimSequence'\"}",
+   "montage": "<Object '/Engine/Transient.AnimMontage_6' (0x000002672D417000) Class 'AnimMontage'>",
+   "position": 0.10011832416057587,
+   "is_playing": true,
+   "measured_pelvis_rel": {
+    "root": [
+     -2.741,
+     1.791,
+     -92.565
+    ],
+    "pelvis": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "spine_01": [
+     0.071,
+     -0.248,
+     3.668
+    ],
+    "spine_03": [
+     -0.758,
+     3.0,
+     17.295
+    ],
+    "neck_01": [
+     -0.308,
+     3.071,
+     57.102
+    ],
+    "head": [
+     -0.702,
+     4.977,
+     66.932
+    ],
+    "clavicle_r": [
+     -1.247,
+     1.541,
+     50.687
+    ],
+    "upperarm_r": [
+     -15.935,
+     -8.048,
+     47.605
+    ],
+    "lowerarm_r": [
+     -23.001,
+     -17.535,
+     22.48
+    ],
+    "hand_r": [
+     -32.428,
+     -13.329,
+     -2.74
+    ],
+    "hand_l": [
+     28.713,
+     23.292,
+     -1.258
+    ],
+    "lowerarm_l": [
+     27.903,
+     8.533,
+     21.636
+    ],
+    "ik_hand_gun": [
+     -50.898,
+     15.254,
+     12.418
+    ],
+    "ik_hand_r": [
+     -50.898,
+     15.254,
+     12.418
+    ],
+    "ik_hand_l": [
+     44.639,
+     17.374,
+     12.402
+    ]
+   },
+   "vs_expected@0.1": {
+    "max_cm": 79.936,
+    "mean_cm": 28.155,
+    "per_bone": {
+     "root": 1.962,
+     "pelvis": 0.0,
+     "spine_01": 0.131,
+     "spine_03": 1.041,
+     "neck_01": 6.052,
+     "head": 10.078,
+     "clavicle_r": 5.106,
+     "upperarm_r": 12.179,
+     "lowerarm_r": 28.008,
+     "hand_r": 64.241,
+     "hand_l": 75.81,
+     "lowerarm_l": 44.066,
+     "ik_hand_gun": 46.855,
+     "ik_hand_r": 46.855,
+     "ik_hand_l": 79.936
+    }
+   },
+   "idle_before_vs_expected@0.1": {
+    "max_cm": 81.567,
+    "mean_cm": 27.885,
+    "per_bone": {
+     "root": 2.504,
+     "pelvis": 0.0,
+     "spine_01": 0.081,
+     "spine_03": 1.196,
+     "neck_01": 5.646,
+     "head": 9.084,
+     "clavicle_r": 4.885,
+     "upperarm_r": 10.493,
+     "lowerarm_r": 25.879,
+     "hand_r": 61.551,
+     "hand_l": 79.471,
+     "lowerarm_l": 44.213,
+     "ik_hand_gun": 45.849,
+     "ik_hand_r": 45.849,
+     "ik_hand_l": 81.567
+    }
+   },
+   "moved_from_idle_cm": {
+    "hand_r": 3.62,
+    "hand_l": 3.86,
+    "head": 1.65
+   }
+  }
+ },
+ "P4": {
+  "input_state_fields": [
+   "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8",
+   "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9",
+   "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936",
+   "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9",
+   "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3"
+  ],
+  "initial": {
+   "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+   "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+   "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+   "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+   "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+  },
+  "S0_baseline": {
+   "flags_written": "(WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936=False,WantsToWalk_3_78963B154975E3BDE244A3BE438473E3=False,WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9=False,WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8=False,WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9=False)",
+   "start": {
+    "actor_yaw": 0.0,
+    "control_yaw": 90.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": true,
+    "use_controller_desired_rotation": false,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": -90.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -3.459,
+      1.507,
+      -92.039
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      0.062,
+      -0.422,
+      3.652
+     ],
+     "spine_03": [
+      -0.751,
+      2.539,
+      17.345
+     ],
+     "neck_01": [
+      -0.704,
+      3.196,
+      57.165
+     ],
+     "head": [
+      -1.346,
+      5.664,
+      66.858
+     ],
+     "clavicle_r": [
+      -1.539,
+      1.416,
+      50.802
+     ],
+     "upperarm_r": [
+      -16.301,
+      -7.832,
+      47.097
+     ],
+     "lowerarm_r": [
+      -21.061,
+      -18.648,
+      21.966
+     ],
+     "hand_r": [
+      -27.97,
+      -17.139,
+      -4.352
+     ],
+     "hand_l": [
+      26.467,
+      18.74,
+      0.381
+     ],
+     "lowerarm_l": [
+      28.698,
+      2.857,
+      22.413
+     ],
+     "ik_hand_gun": [
+      -51.227,
+      17.206,
+      12.427
+     ],
+     "ik_hand_r": [
+      -51.227,
+      17.206,
+      12.427
+     ],
+     "ik_hand_l": [
+      44.31,
+      17.206,
+      12.427
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "standing_2s": {
+    "actor_yaw": 0.0,
+    "control_yaw": 90.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": true,
+    "use_controller_desired_rotation": false,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": -90.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -2.779,
+      1.151,
+      -92.149
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      0.06,
+      -0.311,
+      3.663
+     ],
+     "spine_03": [
+      -0.86,
+      2.803,
+      17.316
+     ],
+     "neck_01": [
+      -0.923,
+      2.717,
+      57.129
+     ],
+     "head": [
+      -1.508,
+      4.508,
+      66.972
+     ],
+     "clavicle_r": [
+      -1.82,
+      1.206,
+      50.705
+     ],
+     "upperarm_r": [
+      -17.18,
+      -7.127,
+      47.27
+     ],
+     "lowerarm_r": [
+      -23.126,
+      -16.492,
+      21.811
+     ],
+     "hand_r": [
+      -30.967,
+      -12.754,
+      -4.019
+     ],
+     "hand_l": [
+      27.558,
+      18.836,
+      -3.988
+     ],
+     "lowerarm_l": [
+      25.625,
+      7.672,
+      20.796
+     ],
+     "ik_hand_gun": [
+      -50.548,
+      16.85,
+      12.317
+     ],
+     "ik_hand_r": [
+      -50.548,
+      16.85,
+      12.317
+     ],
+     "ik_hand_l": [
+      44.989,
+      16.85,
+      12.317
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "walking_W_1p6s": {
+    "actor_yaw": 90.0,
+    "control_yaw": 90.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": true,
+    "use_controller_desired_rotation": false,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 575.0,
+    "velocity_yaw": 90.0,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 414.6,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -6.619,
+      -1.978,
+      -91.125
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.69,
+      2.352,
+      2.738
+     ],
+     "spine_03": [
+      -2.06,
+      10.989,
+      13.712
+     ],
+     "neck_01": [
+      -11.903,
+      42.347,
+      36.197
+     ],
+     "head": [
+      -15.647,
+      50.938,
+      39.751
+     ],
+     "clavicle_r": [
+      -10.766,
+      36.136,
+      34.077
+     ],
+     "upperarm_r": [
+      -23.858,
+      24.947,
+      38.619
+     ],
+     "lowerarm_r": [
+      -31.816,
+      0.802,
+      27.458
+     ],
+     "hand_r": [
+      -45.011,
+      -16.821,
+      11.375
+     ],
+     "hand_l": [
+      -12.673,
+      80.51,
+      21.718
+     ],
+     "lowerarm_l": [
+      11.664,
+      70.042,
+      15.366
+     ],
+     "ik_hand_gun": [
+      -45.102,
+      -17.377,
+      10.748
+     ],
+     "ik_hand_r": [
+      -45.102,
+      -17.377,
+      10.748
+     ],
+     "ik_hand_l": [
+      -12.783,
+      79.931,
+      21.078
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "child_actors_same": true
+  },
+  "S1_aim": {
+   "flags_written": "(WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936=False,WantsToWalk_3_78963B154975E3BDE244A3BE438473E3=False,WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9=False,WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8=True,WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9=False)",
+   "start": {
+    "actor_yaw": 180.0,
+    "control_yaw": 180.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      3.02,
+      -0.07,
+      -91.862
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.233,
+      -0.47,
+      3.639
+     ],
+     "spine_03": [
+      1.44,
+      1.723,
+      17.393
+     ],
+     "neck_01": [
+      1.126,
+      3.201,
+      57.193
+     ],
+     "head": [
+      1.365,
+      6.433,
+      66.675
+     ],
+     "clavicle_r": [
+      -0.481,
+      2.02,
+      50.837
+     ],
+     "upperarm_r": [
+      -17.762,
+      3.712,
+      46.874
+     ],
+     "lowerarm_r": [
+      -28.78,
+      0.113,
+      21.638
+     ],
+     "hand_r": [
+      -31.964,
+      12.212,
+      -2.572
+     ],
+     "hand_l": [
+      32.435,
+      -9.534,
+      -1.691
+     ],
+     "lowerarm_l": [
+      24.218,
+      -15.506,
+      23.596
+     ],
+     "ik_hand_gun": [
+      -23.414,
+      42.703,
+      12.605
+     ],
+     "ik_hand_r": [
+      -23.414,
+      42.703,
+      12.605
+     ],
+     "ik_hand_l": [
+      49.674,
+      -18.823,
+      12.605
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": true,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "standing_2s": {
+    "actor_yaw": 180.0,
+    "control_yaw": 180.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -3.07,
+      2.169,
+      -92.43
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      0.07,
+      -0.332,
+      3.661
+     ],
+     "spine_03": [
+      -0.855,
+      2.475,
+      17.379
+     ],
+     "neck_01": [
+      -1.092,
+      3.284,
+      57.199
+     ],
+     "head": [
+      -1.857,
+      6.052,
+      66.802
+     ],
+     "clavicle_r": [
+      -1.882,
+      1.386,
+      50.864
+     ],
+     "upperarm_r": [
+      -16.841,
+      -7.654,
+      47.445
+     ],
+     "lowerarm_r": [
+      -22.121,
+      -17.932,
+      22.192
+     ],
+     "hand_r": [
+      -29.633,
+      -14.907,
+      -3.828
+     ],
+     "hand_l": [
+      27.631,
+      18.102,
+      -4.296
+     ],
+     "lowerarm_l": [
+      25.542,
+      7.47,
+      20.708
+     ],
+     "ik_hand_gun": [
+      -50.908,
+      17.656,
+      12.036
+     ],
+     "ik_hand_r": [
+      -50.908,
+      17.656,
+      12.036
+     ],
+     "ik_hand_l": [
+      44.628,
+      18.08,
+      12.036
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": true,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "walking_W_1p6s": {
+    "actor_yaw": 180.0,
+    "control_yaw": 180.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 575.0,
+    "velocity_yaw": 180.0,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 414.7,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -6.696,
+      -1.97,
+      -91.025
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.686,
+      2.351,
+      2.739
+     ],
+     "spine_03": [
+      -2.024,
+      10.983,
+      13.721
+     ],
+     "neck_01": [
+      -11.886,
+      42.334,
+      36.206
+     ],
+     "head": [
+      -15.652,
+      50.92,
+      39.75
+     ],
+     "clavicle_r": [
+      -10.732,
+      36.124,
+      34.095
+     ],
+     "upperarm_r": [
+      -23.798,
+      24.918,
+      38.674
+     ],
+     "lowerarm_r": [
+      -31.614,
+      0.695,
+      27.581
+     ],
+     "hand_r": [
+      -44.836,
+      -16.828,
+      11.411
+     ],
+     "hand_l": [
+      -12.705,
+      80.568,
+      21.828
+     ],
+     "lowerarm_l": [
+      11.633,
+      70.115,
+      15.455
+     ],
+     "ik_hand_gun": [
+      -44.976,
+      -17.371,
+      10.82
+     ],
+     "ik_hand_r": [
+      -44.976,
+      -17.371,
+      10.82
+     ],
+     "ik_hand_l": [
+      -12.867,
+      79.99,
+      21.213
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": true,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "child_actors_same": true
+  },
+  "S2_strafe": {
+   "flags_written": "(WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936=False,WantsToWalk_3_78963B154975E3BDE244A3BE438473E3=False,WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9=True,WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8=False,WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9=False)",
+   "start": {
+    "actor_yaw": -90.0,
+    "control_yaw": 270.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      4.587,
+      4.072,
+      -92.169
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.557,
+      -0.023,
+      3.635
+     ],
+     "spine_03": [
+      2.32,
+      0.738,
+      17.342
+     ],
+     "neck_01": [
+      5.437,
+      1.077,
+      57.045
+     ],
+     "head": [
+      7.388,
+      3.686,
+      66.508
+     ],
+     "clavicle_r": [
+      2.931,
+      1.395,
+      50.882
+     ],
+     "upperarm_r": [
+      -9.621,
+      13.876,
+      48.927
+     ],
+     "lowerarm_r": [
+      -20.775,
+      19.582,
+      24.143
+     ],
+     "hand_r": [
+      -17.278,
+      32.558,
+      0.436
+     ],
+     "hand_l": [
+      19.575,
+      -33.081,
+      -2.867
+     ],
+     "lowerarm_l": [
+      11.088,
+      -27.594,
+      22.441
+     ],
+     "ik_hand_gun": [
+      20.281,
+      51.842,
+      12.298
+     ],
+     "ik_hand_r": [
+      20.281,
+      51.842,
+      12.298
+     ],
+     "ik_hand_l": [
+      20.291,
+      -43.695,
+      12.298
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": true,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "standing_2s": {
+    "actor_yaw": -90.0,
+    "control_yaw": 270.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      1.903,
+      3.19,
+      -92.403
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.378,
+      -0.065,
+      3.657
+     ],
+     "spine_03": [
+      2.473,
+      0.906,
+      17.362
+     ],
+     "neck_01": [
+      3.053,
+      0.994,
+      57.184
+     ],
+     "head": [
+      4.702,
+      2.745,
+      66.909
+     ],
+     "clavicle_r": [
+      1.071,
+      1.219,
+      50.829
+     ],
+     "upperarm_r": [
+      -13.093,
+      11.213,
+      46.745
+     ],
+     "lowerarm_r": [
+      -21.962,
+      13.145,
+      20.499
+     ],
+     "hand_r": [
+      -21.265,
+      24.477,
+      -4.274
+     ],
+     "hand_l": [
+      22.645,
+      -24.402,
+      -5.037
+     ],
+     "lowerarm_l": [
+      13.495,
+      -23.569,
+      20.619
+     ],
+     "ik_hand_gun": [
+      17.597,
+      50.96,
+      12.064
+     ],
+     "ik_hand_r": [
+      17.597,
+      50.96,
+      12.064
+     ],
+     "ik_hand_l": [
+      17.607,
+      -44.577,
+      12.064
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": true,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "walking_W_1p6s": {
+    "actor_yaw": -90.0,
+    "control_yaw": 270.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 575.0,
+    "velocity_yaw": -90.0,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 414.7,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -6.491,
+      -1.902,
+      -90.985
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.688,
+      2.352,
+      2.738
+     ],
+     "spine_03": [
+      -2.043,
+      10.986,
+      13.717
+     ],
+     "neck_01": [
+      -11.894,
+      42.341,
+      36.201
+     ],
+     "head": [
+      -15.649,
+      50.929,
+      39.75
+     ],
+     "clavicle_r": [
+      -10.75,
+      36.13,
+      34.086
+     ],
+     "upperarm_r": [
+      -23.829,
+      24.933,
+      38.646
+     ],
+     "lowerarm_r": [
+      -31.718,
+      0.75,
+      27.517
+     ],
+     "hand_r": [
+      -44.926,
+      -16.825,
+      11.392
+     ],
+     "hand_l": [
+      -12.688,
+      80.538,
+      21.772
+     ],
+     "lowerarm_l": [
+      11.649,
+      70.077,
+      15.409
+     ],
+     "ik_hand_gun": [
+      -44.876,
+      -17.302,
+      10.874
+     ],
+     "ik_hand_r": [
+      -44.876,
+      -17.302,
+      10.874
+     ],
+     "ik_hand_l": [
+      -12.659,
+      80.032,
+      21.235
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": true,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "child_actors_same": true
+  },
+  "S3_aim_strafe": {
+   "flags_written": "(WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936=False,WantsToWalk_3_78963B154975E3BDE244A3BE438473E3=False,WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9=True,WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8=True,WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9=False)",
+   "start": {
+    "actor_yaw": 0.0,
+    "control_yaw": -0.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      3.043,
+      -0.107,
+      -91.857
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.232,
+      -0.472,
+      3.639
+     ],
+     "spine_03": [
+      1.432,
+      1.72,
+      17.394
+     ],
+     "neck_01": [
+      1.109,
+      3.223,
+      57.192
+     ],
+     "head": [
+      1.336,
+      6.463,
+      66.673
+     ],
+     "clavicle_r": [
+      -0.491,
+      2.022,
+      50.839
+     ],
+     "upperarm_r": [
+      -17.817,
+      3.232,
+      46.901
+     ],
+     "lowerarm_r": [
+      -28.728,
+      -0.469,
+      21.633
+     ],
+     "hand_r": [
+      -33.166,
+      12.065,
+      -2.155
+     ],
+     "hand_l": [
+      32.334,
+      -9.236,
+      -1.79
+     ],
+     "lowerarm_l": [
+      24.496,
+      -15.115,
+      23.638
+     ],
+     "ik_hand_gun": [
+      -23.662,
+      42.497,
+      12.609
+     ],
+     "ik_hand_r": [
+      -23.662,
+      42.497,
+      12.609
+     ],
+     "ik_hand_l": [
+      49.815,
+      -18.564,
+      12.609
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": true,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": true,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "standing_2s": {
+    "actor_yaw": 0.0,
+    "control_yaw": -0.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 0.0,
+    "velocity_yaw": null,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 369.3,
+     "lateral_cm": -0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -3.074,
+      2.188,
+      -92.433
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      0.07,
+      -0.332,
+      3.661
+     ],
+     "spine_03": [
+      -0.856,
+      2.475,
+      17.379
+     ],
+     "neck_01": [
+      -1.093,
+      3.283,
+      57.199
+     ],
+     "head": [
+      -1.859,
+      6.05,
+      66.802
+     ],
+     "clavicle_r": [
+      -1.883,
+      1.385,
+      50.864
+     ],
+     "upperarm_r": [
+      -16.841,
+      -7.657,
+      47.446
+     ],
+     "lowerarm_r": [
+      -22.12,
+      -17.934,
+      22.193
+     ],
+     "hand_r": [
+      -29.634,
+      -14.91,
+      -3.827
+     ],
+     "hand_l": [
+      27.624,
+      18.111,
+      -4.296
+     ],
+     "lowerarm_l": [
+      25.539,
+      7.478,
+      20.708
+     ],
+     "ik_hand_gun": [
+      -50.917,
+      17.657,
+      12.033
+     ],
+     "ik_hand_r": [
+      -50.917,
+      17.657,
+      12.033
+     ],
+     "ik_hand_l": [
+      44.619,
+      18.117,
+      12.033
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": true,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": true,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "walking_W_1p6s": {
+    "actor_yaw": 0.0,
+    "control_yaw": -0.0,
+    "control_pitch": -10.0,
+    "orient_rotation_to_movement": false,
+    "use_controller_desired_rotation": true,
+    "pawn_use_controller_rotation_yaw": false,
+    "max_walk_speed": 575.0,
+    "speed": 575.0,
+    "velocity_yaw": -0.0,
+    "body_minus_control_yaw": 0.0,
+    "camera": {
+     "name": "Camera(NotUsedByDefault)",
+     "fov": 85.0,
+     "behind_cm": 412.9,
+     "lateral_cm": 0.0,
+     "above_cm": 135.1
+    },
+    "pcm_fov": 85.0,
+    "arm": {
+     "length": 375.0,
+     "socket_offset": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target_offset": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "visual_pelvis_rel": {
+     "root": [
+      -6.708,
+      -1.927,
+      -90.797
+     ],
+     "pelvis": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "spine_01": [
+      -0.677,
+      2.349,
+      2.743
+     ],
+     "spine_03": [
+      -1.929,
+      10.971,
+      13.743
+     ],
+     "neck_01": [
+      -11.84,
+      42.305,
+      36.224
+     ],
+     "head": [
+      -15.664,
+      50.877,
+      39.74
+     ],
+     "clavicle_r": [
+      -10.644,
+      36.095,
+      34.136
+     ],
+     "upperarm_r": [
+      -23.642,
+      24.85,
+      38.812
+     ],
+     "lowerarm_r": [
+      -31.086,
+      0.427,
+      27.902
+     ],
+     "hand_r": [
+      -44.376,
+      -16.837,
+      11.512
+     ],
+     "hand_l": [
+      -12.787,
+      80.719,
+      22.106
+     ],
+     "lowerarm_l": [
+      11.552,
+      70.306,
+      15.675
+     ],
+     "ik_hand_gun": [
+      -44.46,
+      -17.335,
+      10.975
+     ],
+     "ik_hand_r": [
+      -44.46,
+      -17.335,
+      10.975
+     ],
+     "ik_hand_l": [
+      -12.894,
+      80.178,
+      21.537
+     ]
+    },
+    "input_state": {
+     "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+     "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+     "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": true,
+     "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": true,
+     "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+    }
+   },
+   "child_actors_same": true
+  },
+  "restored": {
+   "WantsToSprint_1_840C190D4B23289C5C46E0B5A4C5C936": false,
+   "WantsToWalk_3_78963B154975E3BDE244A3BE438473E3": false,
+   "WantsToStrafe_5_64E842184F7691CD179DFCBA7158A4D9": false,
+   "WantsToAim_7_3A4AA0AA4DE529A3B213E68BECD246F8": false,
+   "WantsToCrouch_9_47D0791142F36BB93FFD9EA12F96F2B9": false
+  }
+ },
+ "P5": {
+  "camera": "Camera(NotUsedByDefault)",
+  "fov_before": 85.0,
+  "fp_before": {
+   "enable_fov": false,
+   "fp_fov": 90.0,
+   "enable_scale": false
+  },
+  "fp_type_enum": "<class 'FirstPersonPrimitiveType'>",
+  "fp_after": {
+   "enable_fov": true,
+   "fp_fov": 40.0,
+   "fov": 85.0
+  },
+  "cube_fp_set": true,
+  "cube_types": [
+   "<FirstPersonPrimitiveType.NONE: 0>",
+   "<FirstPersonPrimitiveType.FIRST_PERSON: 1>"
+  ],
+  "niagara_owner": {
+   "flash": [
+    "BP_NinjaGasp_C_0",
+    "BP_NinjaGasp_C_0"
+   ],
+   "fountain": [
+    "BP_NinjaGasp_C_0",
+    "BP_NinjaGasp_C_0"
+   ]
+  },
+  "flash": {
+   "fp_set": true,
+   "types": [
+    "<FirstPersonPrimitiveType.NONE: 0>",
+    "<FirstPersonPrimitiveType.FIRST_PERSON: 1>"
+   ],
+   "system": "/Game/NiagaraExamples/FX_Weapons/MuzzleFlashes/NS_MuzzleFlash",
+   "pair_active": [
+    true,
+    true
+   ],
+   "control_active": [
+    true,
+    true
+   ]
+  },
+  "fountain": {
+   "fp_set": true,
+   "types": [
+    "<FirstPersonPrimitiveType.NONE: 0>",
+    "<FirstPersonPrimitiveType.FIRST_PERSON: 1>"
+   ],
+   "system": "/Niagara/DefaultAssets/Templates/Systems/FountainLightweight",
+   "pair_active": [
+    true,
+    true
+   ],
+   "control_active": [
+    true,
+    true
+   ]
+  },
+  "layout": {
+   "res": [
+    1280,
+    720
+   ],
+   "world_fov": 85.0,
+   "fp_fov": 40.0,
+   "pairs": {
+    "cube": {
+     "world_rel": [
+      100,
+      15,
+      0
+     ],
+     "fp_rel": [
+      100,
+      -15,
+      0
+     ]
+    },
+    "flash": {
+     "world_rel": [
+      100.0,
+      15.0,
+      0
+     ],
+     "fp_rel": [
+      100.0,
+      -15.0,
+      0
+     ]
+    },
+    "fountain": {
+     "world_rel": [
+      400.0,
+      60.0,
+      0
+     ],
+     "fp_rel": [
+      400.0,
+      -60.0,
+      0
+     ]
+    }
+   }
+  }
+ },
+ "P6": {
+  "visual_owner_chain": [
+   "VisualOverride_GEN_VARIABLE_BP_NinjaVisual_C_CAT_0"
+  ],
+  "view_target": "BP_NinjaGasp_C_0",
+  "pawn": "BP_NinjaGasp_C_0",
+  "prop_owner": "BP_NinjaGasp_C_0",
+  "state": {
+   "p6_00_base": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": false,
+    "body_visible": true
+   },
+   "p6_10_prop_wsr": {
+    "prop_fp": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": false,
+    "body_visible": true
+   },
+   "p6_11_prop_hidden": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": false,
+    "body_visible": true
+   },
+   "p6_12_prop_ownernosee": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": true,
+    "body_owner_no_see": false,
+    "body_visible": true
+   },
+   "p6_20_body_base": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": false,
+    "body_visible": true
+   },
+   "p6_21_body_wsr": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": false,
+    "body_visible": true
+   },
+   "p6_22_body_ownernosee": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": true,
+    "body_visible": true
+   },
+   "p6_23_body_hidden": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": false,
+    "body_visible": false
+   },
+   "p6_30_base_again": {
+    "prop_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "body_fp": "<FirstPersonPrimitiveType.NONE: 0>",
+    "prop_owner_no_see": false,
+    "body_owner_no_see": false,
+    "body_visible": true
+   }
+  },
+  "steps": {
+   "p6_10_prop_wsr": "True",
+   "p6_11_prop_hidden": "(True, None)",
+   "p6_12_prop_ownernosee": "(None, None)",
+   "p6_20_body_base": "None",
+   "p6_21_body_wsr": "True",
+   "p6_22_body_ownernosee": "(True, None)",
+   "p6_23_body_hidden": "(None, None)",
+   "p6_30_base_again": "None"
+  },
+  "body_wsr_was_recently_rendered_0p2": true,
+  "body_none_was_recently_rendered_0p2": true,
+  "child_actors_same": true
+ },
+ "errors": [],
+ "spawn": {
+  "pawn_class": "/Game/Ninja/Blueprints/BP_NinjaGasp.BP_NinjaGasp_C",
+  "game_mode": "/Game/ThirdPerson/Blueprints/BP_ThirdPersonGameMode.BP_ThirdPersonGameMode_C",
+  "map": "L_NinjaTest"
+ },
+ "dummies": [
+  "BP_TrainingDummy_C_0"
+ ],
+ "visual_child_actors_start": [
+  [
+   "VisualOverride",
+   "VisualOverride_GEN_VARIABLE_BP_NinjaVisual_C_CAT_0"
+  ]
+ ],
+ "sec": 1040.41,
+ "passed_script": true
+}

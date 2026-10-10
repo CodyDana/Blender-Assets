@@ -1,0 +1,445 @@
+{
+ "t0": 1791615466.7254195,
+ "log": [
+  "add_variable GunHoldWeight float: None",
+  "add_variable GunIKAlpha float: None",
+  "add_variable GunAimPitch float: None",
+  "add_variable GunSupportHandWS vector: None",
+  "add_variable GunSupportHandHS vector: None",
+  "add_variable GunSupportHandRotWS rotator: None",
+  "set Sequence Player 'MF_Rifle_Idle_ADS' ['Sequence', 'bLoopAnimation']: True",
+  "set AimOffset Player 'AO_Rifle' ['BlendSpace']: True",
+  "set Slot 'GunUpper' ['SlotName']: True",
+  "set Slot 'GunAdditive' ['SlotName']: True",
+  "set Layered blend per bone ['LayerSetup', 'bMeshSpaceRotationBlend', 'BlendWeights']: True",
+  "set Two Bone IK - Bone: hand_l ['IKBone', 'bAllowStretching', 'EffectorLocationSpace', 'EffectorTarget', 'JointTargetLocationSpace', 'JointTarget', 'bTakeRotationFromEffectorSpace', 'bMaintainEffectorRelRot']: True",
+  "connect Component To Local.Pose -> Layered blend per bone.BasePose: True",
+  "connect Sequence Player 'MF_Rifle_Idle_ADS'.Pose -> AimOffset Player 'AO_Rifle'.BasePose: True",
+  "connect AimOffset Player 'AO_Rifle'.Pose -> Slot 'GunUpper'.Source: True",
+  "connect Slot 'GunUpper'.Pose -> Slot 'GunAdditive'.Source: True",
+  "connect Slot 'GunAdditive'.Pose -> Layered blend per bone.BlendPoses_0: True",
+  "connect Layered blend per bone.Pose -> Local To Component.LocalPose: True",
+  "connect Local To Component.ComponentPose -> Two Bone IK - Bone: hand_l.ComponentPose: True",
+  "connect Two Bone IK - Bone: hand_l.Pose -> Component To Local.ComponentPose: True",
+  "connect Component To Local.Pose -> Output Pose.Result: True",
+  "connect Get GunHoldWeight.GunHoldWeight -> Layered blend per bone.BlendWeights_0: True",
+  "connect Get GunIKAlpha.GunIKAlpha -> Two Bone IK - Bone: hand_l.Alpha: True",
+  "connect Get GunSupportHandHS.GunSupportHandHS -> Two Bone IK - Bone: hand_l.EffectorLocation: True",
+  "connect Get GunAimPitch.GunAimPitch -> float * float.A: True",
+  "connect float * float.ReturnValue -> AimOffset Player 'AO_Rifle'.Y: True"
+ ],
+ "errors": [],
+ "saved": [
+  "/Game/Guns/Character/ABP_NinjaVisual_Gun",
+  "/Game/Guns/Character/BP_NinjaVisual_Gun",
+  "/Game/Guns/Character/BP_NinjaGasp_Gun",
+  "/Game/Guns/Character/GM_GunRange"
+ ],
+ "abp": {
+  "source_parent": "/Script/Engine.AnimInstance",
+  "source_chain_from_output": [
+   "Component To Local",
+   "Foot Placement",
+   "Stride Warping",
+   "Local To Component",
+   "Layered blend per bone",
+   "Slot 'DefaultSlot'",
+   "Use cached pose 'Retargeted'"
+  ],
+  "aimoffset_types": "[\"Utilities|Casting|CastToAimOffsetBlendSpace\", \"Utilities|Casting|CastToAimOffsetBlendSpaceClass\", \"Utilities|Casting|CastToAimOffsetBlendSpace1D\", \"Utilities|Casting|CastToAimOffsetBlendSpace1DClass\", \"Animation|BlendSpaces|AimOffsetPlayer\", \"Animation|BlendSpaces|AimOffsetBlendSpace\", \"Animation|BlendSpaces|AimOffsetBlendSpace1D\", \"Class|NinjaGunData|GetAimOffset\"]",
+  "node_types": {
+   "seqplayer": "Animation|Sequences|SequencePlayer",
+   "aimoffset": "Animation|BlendSpaces|AimOffsetPlayer",
+   "slot": "Animation|Montage|Slot'DefaultSlot'",
+   "layered": "Animation|Blends|Layeredblendperbone",
+   "l2c": "Animation|ConvertSpaces|LocalToComponent",
+   "c2l": "Animation|ConvertSpaces|ComponentToLocal",
+   "twobone": "Animation|SkeletalControls|TwoBoneIK"
+  },
+  "getter_candidates": {
+   "GunHoldWeight": "[]",
+   "GunIKAlpha": "[]",
+   "GunAimPitch": "[]",
+   "GunSupportHandWS": "[]",
+   "GunSupportHandHS": "[]",
+   "GunSupportHandRotWS": "[]"
+  },
+  "getter_types": {
+   "GunHoldWeight": null,
+   "GunIKAlpha": null,
+   "GunAimPitch": null,
+   "GunSupportHandWS": null,
+   "GunSupportHandHS": null,
+   "GunSupportHandRotWS": null
+  },
+  "variables_after_add": null,
+  "last_node_before_output": "Component To Local",
+  "aimoffset_pins": [
+   [
+    "X",
+    "in",
+    "Float (single-precision)"
+   ],
+   [
+    "Y",
+    "in",
+    "Float (single-precision)"
+   ],
+   [
+    "BasePose",
+    "in",
+    "Pose Link Structure"
+   ],
+   [
+    "Alpha",
+    "in",
+    "Float (single-precision)"
+   ],
+   [
+    "Pose",
+    "out",
+    "Pose Link Structure"
+   ]
+  ],
+  "multiply_types": [
+   "Utilities|Operators|Multiply",
+   "Math|Float|MultiplybyPi"
+  ],
+  "multiply": {
+   "type": "Utilities|Operators|Multiply",
+   "pins": [
+    [
+     "A",
+     "in",
+     "Float (double-precision)"
+    ],
+    [
+     "B",
+     "in",
+     "Float (double-precision)"
+    ],
+    [
+     "ReturnValue",
+     "out",
+     "Float (double-precision)"
+    ]
+   ],
+   "b": "0.01111111"
+  },
+  "ao_axis_pin": "Y",
+  "chain_from_output": [
+   "Component To Local",
+   "Two Bone IK - Bone: hand_l",
+   "Local To Component",
+   "Layered blend per bone",
+   "Component To Local",
+   "Foot Placement",
+   "Stride Warping",
+   "Local To Component",
+   "Layered blend per bone",
+   "Slot 'DefaultSlot'",
+   "Use cached pose 'Retargeted'"
+  ],
+  "upper_chain_from_layered_pose0": [
+   "Slot 'GunUpper'",
+   "AimOffset Player 'AO_Rifle'",
+   "Sequence Player 'MF_Rifle_Idle_ADS'"
+  ],
+  "compile": {
+   "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+   "node_messages": []
+  },
+  "readback": {
+   "ik": "{\"Node\":{\"iKBone\":{\"boneName\":\"hand_l\"},\"startStretchRatio\":1,\"maxStretchScale\":1.2000000476837158,\"effectorLocation\":{\"x\":0,\"y\":0,\"z\":0},\"effectorTarget\":{\"bUseSocket\":false,\"boneReference\":{\"boneName\":\"hand_r\"},\"socketReference\":{\"socketName\":\"None\"}},\"jointTargetLocation\":{\"x\":0,\"y\":0,\"z\":0},\"jointTarget\":{\"bUseSocket\":false,\"boneReference\":{\"boneName\":\"lowerarm_l\"},\"socketReference\":{\"socketName\":\"None\"}},\"twistAxis\":{\"axis\":{\"x\":1,\"y\":0,\"z\":0},\"bInLocalSpace\":true},\"effectorLocationSpace\":\"BCS_BoneSpace\",\"jointTargetLocationSpace\":\"BCS_BoneSpace\",\"bAllowStretching\":false,\"bTakeRotationFromEffectorSpace\":false,\"bMaintainEffectorRelRot\":false,\"bAllowTwist\":true,\"componentPose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"lODThreshold\":-1,\"alphaInputType\":\"Float\",\"bAlphaBoolEnabled\":true,\"alpha\":1,\"alphaScaleBias\":{\"scale\":1,\"bias\":0},\"alphaBoolBlend\":{\"blendInTime\":0,\"blendOutTime\":0,\"blendOption\":\"HermiteCubic\",\"customCurve\":\"None\"},\"alphaCurveName\":\"None\",\"alphaScaleBiasClamp\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+   "layered": "{\"Node\":{\"basePose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"blendPoses\":[{\"linkId\":-1,\"sourceLinkId\":-1}],\"blendMode\":\"BranchFilter\",\"blendMasks\":[],\"layerSetup\":[{\"branchFilters\":[{\"boneName\":\"spine_01\",\"blendDepth\":0}]}],\"blendWeights\":[1],\"perBoneBlendWeights\":[],\"skeletonGuid\":\"00000000-0000-0000-0000-000000000000\",\"virtualBoneGuid\":\"00000000-0000-0000-0000-000000000000\",\"lODThreshold\":-1,\"bMeshSpaceRotationBlend\":true,\"bRootSpaceRotationBlend\":false,\"bMeshSpaceScaleBlend\":false,\"curveBlendOption\":\"Override\",\"bBlendRootMotionBasedOnRootBone\":true,\"bUpdateBasePoseFirst\":false,\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+   "slot_up": "{\"Node\":{\"source\":{\"linkId\":-1,\"sourceLinkId\":-1},\"slotName\":\"GunUpper\",\"bAlwaysUpdateSourcePose\":false,\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+   "slot_add": "{\"Node\":{\"source\":{\"linkId\":-1,\"sourceLinkId\":-1},\"slotName\":\"GunAdditive\",\"bAlwaysUpdateSourcePose\":false,\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+   "seq": "{\"Node\":{\"groupName\":\"None\",\"groupRole\":\"CanBeLeader\",\"bOverridePositionWhenJoiningSyncGroupAsLeader\":false,\"method\":\"DoNotSync\",\"bIgnoreForRelevancyTest\":false,\"sequence\":{\"refPath\":\"/Game/Characters/Mannequins/Anims/Rifle/MF_Rifle_Idle_ADS.MF_Rifle_Idle_ADS\"},\"playRateBasis\":1,\"playRate\":1,\"playRateScaleBiasClampConstants\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"startPosition\":0,\"bLoopAnimation\":true,\"bStartFromMatchingPose\":false,\"playRateScaleBiasClampState\":{},\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+   "ao": "{\"Node\":{\"basePose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"bApplyAdditiveInRootSpace\":false,\"lODThreshold\":-1,\"alpha\":1,\"alphaScaleBias\":{\"scale\":1,\"bias\":0},\"alphaBoolBlend\":{\"blendInTime\":0,\"blendOutTime\":0,\"blendOption\":\"HermiteCubic\",\"customCurve\":\"None\"},\"alphaCurveName\":\"None\",\"alphaScaleBiasClamp\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"alphaInputType\":\"Float\",\"bAlphaBoolEnabled\":false,\"groupName\":\"None\",\"groupRole\":\"CanBeLeader\",\"bOverridePositionWhenJoiningSyncGroupAsLeader\":false,\"method\":\"DoNotSync\",\"bIgnoreForRelevancyTest\":false,\"x\":0,\"y\":0,\"playRate\":1,\"bLoop\":true,\"bResetPlayTimeWhenBlendSpaceChanges\":true,\"startPosition\":0,\"blendSpace\":{\"refPath\":\"/Game/Characters/Mannequins/Anims/Rifle/AIM/AO_Rifle.AO_Rifle\"},\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}"
+  },
+  "skeleton_dirty_after_compile": false,
+  "pass": true
+ },
+ "visual": {
+  "components": {
+   "None": "BP_NinjaVisual_Gun_C",
+   "Manny": "SkeletalMeshComponent",
+   "Cloak": "SkeletalMeshComponent",
+   "MetaHuman": "ChildActorComponent",
+   "CloakMH": "SkeletalMeshComponent",
+   "DefaultSceneRoot": "SceneComponent",
+   "NinjaVisualBody": "NinjaVisualBodyComponent"
+  },
+  "manny_anim_class_before": "<Object '/Game/Guns/Character/ABP_NinjaVisual_Gun.ABP_NinjaVisual_Gun_C' (0x0000023B97997000) Class 'AnimBlueprintGeneratedClass'>",
+  "compile": {
+   "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+   "node_messages": []
+  },
+  "manny_anim_class_after": "<Object '/Game/Guns/Character/ABP_NinjaVisual_Gun.ABP_NinjaVisual_Gun_C' (0x0000023B97997000) Class 'AnimBlueprintGeneratedClass'>",
+  "manny_mesh": "<Object '/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple' (0x0000023BAD463C00) Class 'SkeletalMesh'>",
+  "parent_manny_anim_class_after": "<Object '/Game/Ninja/Animation/ABP_NinjaVisual.ABP_NinjaVisual_C' (0x0000023B97993800) Class 'AnimBlueprintGeneratedClass'>",
+  "pass": true
+ },
+ "reused": [
+  "/Game/Guns/Character/BP_NinjaVisual_Gun",
+  "/Game/Guns/Character/BP_NinjaGasp_Gun",
+  "/Game/Guns/Character/GM_GunRange"
+ ],
+ "gasp": {
+  "components": {
+   "None": "BP_NinjaGasp_Gun_C",
+   "VisualOverride": "ChildActorComponent",
+   "Camera(NotUsedByDefault)": "CameraComponent",
+   "SpringArm": "SpringArmComponent",
+   "GameplayCamera": "GameplayCameraComponent",
+   "CapsuleComponent": "CapsuleComponent",
+   "Mesh": "SkeletalMeshComponent",
+   "ArrowComponent": null,
+   "CharacterMovement": "CharacterMovementComponent",
+   "AC_TraversalLogic": "AC_TraversalLogic_C",
+   "MotionWarping": "MotionWarpingComponent",
+   "AC_PreCMCTick": "AC_PreCMCTick_C",
+   "AC_FoleyEvents": "AC_FoleyEvents_C",
+   "AC_SmartObjectAnimation": "AC_SmartObjectAnimation_C",
+   "NinjaJutsu": "NinjaJutsuComponent",
+   "NinjaAirJump": "NinjaAirJumpComponent",
+   "NinjaLockOn": "NinjaLockOnComponent",
+   "NinjaStance": "NinjaStanceComponent",
+   "NinjaCombat": "NinjaCombatComponent",
+   "NinjaRunStyle": "NinjaRunStyleComponent",
+   "NinjaTurn": "NinjaTurnComponent",
+   "NinjaFreeLook": "NinjaFreeLookComponent",
+   "NinjaGun": "NinjaGunComponent"
+  },
+  "visual_override_before": "<Object '/Game/Guns/Character/BP_NinjaVisual_Gun.BP_NinjaVisual_Gun_C' (0x0000023BA273A100) Class 'BlueprintGeneratedClass'>",
+  "compile": {
+   "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+   "node_messages": []
+  },
+  "visual_override_after": "<Object '/Game/Guns/Character/BP_NinjaVisual_Gun.BP_NinjaVisual_Gun_C' (0x0000023BA273A100) Class 'BlueprintGeneratedClass'>",
+  "ninja_gun": {
+   "default_gun": "<Object '/Game/Guns/AR01/DA_Gun_AR01.DA_Gun_AR01' (0x0000023BB005CC00) Class 'NinjaGunData'>",
+   "gun_class": "<Object '/Game/Guns/Core/BP_GunBase.BP_GunBase_C' (0x0000023BC7DE0E00) Class 'BlueprintGeneratedClass'>",
+   "equip_action": "<Object '/Game/Guns/Input/IA_GunEquip.IA_GunEquip' (0x0000023B9DBB4500) Class 'InputAction'>",
+   "fire_action": "<Object '/Game/Guns/Input/IA_GunFire.IA_GunFire' (0x0000023B9DBB48C0) Class 'InputAction'>",
+   "aim_action": "<Object '/Game/Guns/Input/IA_GunAim.IA_GunAim' (0x0000023B9DBB4200) Class 'InputAction'>",
+   "reload_action": "<Object '/Game/Guns/Input/IA_GunReload.IA_GunReload' (0x0000023B9DBB4BC0) Class 'InputAction'>",
+   "selector_action": "<Object '/Game/Guns/Input/IA_GunSelector.IA_GunSelector' (0x0000023B9DBA3640) Class 'InputAction'>",
+   "view_action": "<Object '/Game/Guns/Input/IA_GunView.IA_GunView' (0x0000023B9DBB3F00) Class 'InputAction'>",
+   "base_context": "<Object '/Game/Guns/Input/IMC_GunsBase.IMC_GunsBase' (0x0000023C1CE42800) Class 'InputMappingContext'>",
+   "equipped_context": "<Object '/Game/Guns/Input/IMC_GunsEquipped.IMC_GunsEquipped' (0x0000023C1CE42A80) Class 'InputMappingContext'>",
+   "attach_bone": "weapon_r",
+   "fallback_attach_bone": "hand_r",
+   "fallback_attach_offset": "<Struct 'Transform' (0x0000023CB083B530) {rotation: {x: -0.086687, y: -0.122754, z: 0.986567, w: 0.064048}, translation: {x: -7.218102, y: 3.417867, z: -0.946828}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+   "support_hand_bone_space_variable": "GunSupportHandHS",
+   "support_hand_space_bone": "hand_r"
+  },
+  "parent_visual_override_after": "<Object '/Game/Ninja/Blueprints/BP_NinjaVisual.BP_NinjaVisual_C' (0x0000023BAEFB4600) Class 'BlueprintGeneratedClass'>",
+  "parent_dirty_in_memory": false,
+  "pass": true
+ },
+ "hold_offset": {
+  "samples": [
+   {
+    "t": 0.0,
+    "loc": [
+     -7.218,
+     3.418,
+     -0.947
+    ],
+    "pyr": [
+     -8.935,
+     171.404,
+     14.858
+    ],
+    "d_loc_cm": 0.0,
+    "d_rot_deg": 0.0,
+    "barrel_cs": [
+     -0.0448,
+     0.9989,
+     0.015
+    ]
+   },
+   {
+    "t": 1.0,
+    "loc": [
+     -7.243,
+     3.391,
+     -0.852
+    ],
+    "pyr": [
+     -8.57,
+     171.594,
+     15.35
+    ],
+    "d_loc_cm": 0.101,
+    "d_rot_deg": 0.663,
+    "barrel_cs": [
+     -0.0434,
+     0.9989,
+     0.0164
+    ]
+   },
+   {
+    "t": 2.0,
+    "loc": [
+     -7.287,
+     3.438,
+     -0.969
+    ],
+    "pyr": [
+     -9.295,
+     171.718,
+     15.217
+    ],
+    "d_loc_cm": 0.075,
+    "d_rot_deg": 0.627,
+    "barrel_cs": [
+     -0.0495,
+     0.9987,
+     0.0136
+    ]
+   },
+   {
+    "t": 3.0,
+    "loc": [
+     -7.278,
+     3.418,
+     -0.909
+    ],
+    "pyr": [
+     -9.044,
+     171.379,
+     15.41
+    ],
+    "d_loc_cm": 0.071,
+    "d_rot_deg": 0.56,
+    "barrel_cs": [
+     -0.0492,
+     0.9987,
+     0.0117
+    ]
+   },
+   {
+    "t": 4.0,
+    "loc": [
+     -7.265,
+     3.406,
+     -0.928
+    ],
+    "pyr": [
+     -9.174,
+     171.524,
+     15.115
+    ],
+    "d_loc_cm": 0.052,
+    "d_rot_deg": 0.384,
+    "barrel_cs": [
+     -0.0422,
+     0.999,
+     0.0114
+    ]
+   },
+   {
+    "t": 5.0,
+    "loc": [
+     -7.249,
+     3.391,
+     -0.913
+    ],
+    "pyr": [
+     -8.981,
+     171.151,
+     14.998
+    ],
+    "d_loc_cm": 0.053,
+    "d_rot_deg": 0.272,
+    "barrel_cs": [
+     -0.039,
+     0.9991,
+     0.0145
+    ]
+   },
+   {
+    "t": 6.0,
+    "loc": [
+     -7.257,
+     3.389,
+     -0.922
+    ],
+    "pyr": [
+     -8.895,
+     171.355,
+     15.39
+    ],
+    "d_loc_cm": 0.054,
+    "d_rot_deg": 0.528,
+    "barrel_cs": [
+     -0.0458,
+     0.9988,
+     0.0157
+    ]
+   },
+   {
+    "t": 7.0,
+    "loc": [
+     -7.252,
+     3.446,
+     -0.98
+    ],
+    "pyr": [
+     -9.007,
+     171.516,
+     14.748
+    ],
+    "d_loc_cm": 0.055,
+    "d_rot_deg": 0.161,
+    "barrel_cs": [
+     -0.048,
+     0.9988,
+     0.0103
+    ]
+   },
+   {
+    "t": 0.0,
+    "loc": [
+     -7.218,
+     3.418,
+     -0.947
+    ],
+    "pyr": [
+     -8.935,
+     171.404,
+     14.858
+    ],
+    "d_loc_cm": 0.0,
+    "d_rot_deg": 0.0,
+    "barrel_cs": [
+     -0.0448,
+     0.9989,
+     0.015
+    ]
+   }
+  ]
+ },
+ "gm": {
+  "compile": {
+   "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+   "node_messages": []
+  },
+  "default_pawn_class": "<Object '/Game/Guns/Character/BP_NinjaGasp_Gun.BP_NinjaGasp_Gun_C' (0x0000023C13BF7700) Class 'BlueprintGeneratedClass'>",
+  "player_controller_class": "<Object '/Script/Engine.PlayerController' (0x00007FF3DBF7BF70) Class 'Class'>",
+  "hud_class": "<Object '/Script/Engine.HUD' (0x00007FF3DBF88EF0) Class 'Class'>",
+  "pass": true
+ },
+ "compat": {
+  "wanted": true,
+  "before": [
+   "<Object '/Game/Characters/UE5_Mannequins/Meshes/SK_Mannequin.SK_Mannequin' (0x0000023BA6FC0600) Class 'Skeleton'>"
+  ],
+  "result": "already listed"
+ },
+ "dirty_outside_guns_not_saved": [],
+ "pass": true,
+ "seconds": 18.7
+}

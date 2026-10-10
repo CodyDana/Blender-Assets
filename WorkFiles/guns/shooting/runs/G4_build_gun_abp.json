@@ -1,0 +1,92 @@
+{
+ "t0": 1791611907.080832,
+ "log": [
+  "set Sequence Evaluator (by time) 'A_AR01_Sel ['Sequence', 'bShouldLoop']: True",
+  "set Sequence Evaluator (by time) 'A_AR01_Sel ['ShowPinForProperties']: True",
+  "set Sequence Evaluator (by time) 'A_AR01_Sel ['Sequence', 'bShouldLoop']: True",
+  "set Sequence Evaluator (by time) 'A_AR01_Sel ['ShowPinForProperties']: True",
+  "set Slot 'Weapon' ['SlotName']: True",
+  "set Layered blend per bone ['LayerSetup', 'bMeshSpaceRotationBlend', 'BlendWeights']: True",
+  "set Transform (Modify) Bone - Bone: trigger ['BoneToModify', 'RotationMode', 'RotationSpace', 'Rotation', 'TranslationMode', 'ScaleMode']: True",
+  "set Transform (Modify) Bone - Bone: bolt ['BoneToModify', 'TranslationMode', 'TranslationSpace', 'RotationMode', 'ScaleMode']: True",
+  "connect Sequence Evaluator (by time) 'A_AR01_Selector'.Pose -> Slot 'Weapon'.Source: True",
+  "connect Slot 'Weapon'.Pose -> Layered blend per bone.BasePose: True",
+  "connect Sequence Evaluator (by time) 'A_AR01_Selector'.Pose -> Layered blend per bone.BlendPoses_0: True",
+  "connect Layered blend per bone.Pose -> Local To Component.LocalPose: True",
+  "connect Local To Component.ComponentPose -> Transform (Modify) Bone - Bone: trigger.ComponentPose: True",
+  "connect Transform (Modify) Bone - Bone: trigger.Pose -> Transform (Modify) Bone - Bone: bolt.ComponentPose: True",
+  "connect Transform (Modify) Bone - Bone: bolt.Pose -> Component To Local.ComponentPose: True",
+  "connect Component To Local.Pose -> Output Pose.Result: True",
+  "connect Get SelectorTime.SelectorTime -> Sequence Evaluator (by time) 'A_AR01_Selector'.ExplicitTime: True",
+  "connect Get SelectorSequence.SelectorSequence -> Sequence Evaluator (by time).Sequence: True",
+  "connect Get SelectorTime.SelectorTime -> Sequence Evaluator (by time) 'A_AR01_Selector'.ExplicitTime: True",
+  "connect Get SelectorSequence.SelectorSequence -> Sequence Evaluator (by time).Sequence: True",
+  "connect Get TriggerPull.TriggerPull -> Transform (Modify) Bone - Bone: trigger.Alpha: True",
+  "connect Get BoltOffsetCm.BoltOffsetCm -> MakeVector.X: True",
+  "connect MakeVector.ReturnValue -> NegateVector.A: True",
+  "connect NegateVector.ReturnValue -> Transform (Modify) Bone - Bone: bolt.Translation: True",
+  "connect Get BoltLockAlpha.BoltLockAlpha -> Transform (Modify) Bone - Bone: bolt.Alpha: True"
+ ],
+ "errors": [],
+ "parent": "/Script/DemoGame_1.NinjaGunAnimInstance",
+ "node_types": {
+  "seqeval": "Animation|Sequences|SequenceEvaluator",
+  "slot": "Animation|Montage|Slot'DefaultSlot'",
+  "layered": "Animation|Blends|Layeredblendperbone",
+  "l2c": "Animation|ConvertSpaces|LocalToComponent",
+  "c2l": "Animation|ConvertSpaces|ComponentToLocal",
+  "modify": "Animation|SkeletalControls|Transform(Modify)Bone",
+  "makevector": "Math|Vector|MakeVector",
+  "negate": "Math|Vector|NegateVector",
+  "g_time": "Variables|Gun|GetSelectorTime",
+  "g_seq": "Variables|Gun|GetSelectorSequence",
+  "g_trig": "Variables|Gun|GetTriggerPull",
+  "g_bolt": "Variables|Gun|GetBoltOffsetCm",
+  "g_lock": "Variables|Gun|GetBoltLockAlpha"
+ },
+ "sequence_pin_exposed": {
+  "A": true,
+  "B": true
+ },
+ "trigger_rotation_pin_before": "0.000000,0.000000,0.000000",
+ "trigger_rotation_pin_after": "-12.000000,0.000000,0.000000",
+ "negate_pins": [
+  [
+   "A",
+   "in",
+   "Vector"
+  ],
+  [
+   "ReturnValue",
+   "out",
+   "Vector"
+  ]
+ ],
+ "chain_from_output": [
+  "Component To Local",
+  "Transform (Modify) Bone - Bone: bolt",
+  "Transform (Modify) Bone - Bone: trigger",
+  "Local To Component",
+  "Layered blend per bone",
+  "Slot 'Weapon'",
+  "Sequence Evaluator (by time)"
+ ],
+ "compile": {
+  "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+  "node_messages": []
+ },
+ "readback": {
+  "trigger": "{\"Node\":{\"boneToModify\":{\"boneName\":\"trigger\"},\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"rotation\":{\"pitch\":-12,\"yaw\":0,\"roll\":0},\"scale\":{\"x\":1,\"y\":1,\"z\":1},\"translationMode\":\"BMM_Ignore\",\"rotationMode\":\"BMM_Replace\",\"scaleMode\":\"BMM_Ignore\",\"translationSpace\":\"BCS_ComponentSpace\",\"rotationSpace\":\"BCS_ParentBoneSpace\",\"scaleSpace\":\"BCS_ComponentSpace\",\"componentPose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"lODThreshold\":-1,\"alphaInputType\":\"Float\",\"bAlphaBoolEnabled\":true,\"alpha\":1,\"alphaScaleBias\":{\"scale\":1,\"bias\":0},\"alphaBoolBlend\":{\"blendInTime\":0,\"blendOutTime\":0,\"blendOption\":\"HermiteCubic\",\"customCurve\":\"None\"},\"alphaCurveName\":\"None\",\"alphaScaleBiasClamp\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+  "bolt": "{\"Node\":{\"boneToModify\":{\"boneName\":\"bolt\"},\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"rotation\":{\"pitch\":0,\"yaw\":0,\"roll\":0},\"scale\":{\"x\":1,\"y\":1,\"z\":1},\"translationMode\":\"BMM_Additive\",\"rotationMode\":\"BMM_Ignore\",\"scaleMode\":\"BMM_Ignore\",\"translationSpace\":\"BCS_BoneSpace\",\"rotationSpace\":\"BCS_ComponentSpace\",\"scaleSpace\":\"BCS_ComponentSpace\",\"componentPose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"lODThreshold\":-1,\"alphaInputType\":\"Float\",\"bAlphaBoolEnabled\":true,\"alpha\":1,\"alphaScaleBias\":{\"scale\":1,\"bias\":0},\"alphaBoolBlend\":{\"blendInTime\":0,\"blendOutTime\":0,\"blendOption\":\"HermiteCubic\",\"customCurve\":\"None\"},\"alphaCurveName\":\"None\",\"alphaScaleBiasClamp\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+  "layered": "{\"Node\":{\"basePose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"blendPoses\":[{\"linkId\":-1,\"sourceLinkId\":-1}],\"blendMode\":\"BranchFilter\",\"blendMasks\":[],\"layerSetup\":[{\"branchFilters\":[{\"boneName\":\"selector\",\"blendDepth\":0}]}],\"blendWeights\":[1],\"perBoneBlendWeights\":[],\"skeletonGuid\":\"00000000-0000-0000-0000-000000000000\",\"virtualBoneGuid\":\"00000000-0000-0000-0000-000000000000\",\"lODThreshold\":-1,\"bMeshSpaceRotationBlend\":false,\"bRootSpaceRotationBlend\":false,\"bMeshSpaceScaleBlend\":false,\"curveBlendOption\":\"Override\",\"bBlendRootMotionBasedOnRootBone\":true,\"bUpdateBasePoseFirst\":false,\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+  "slot": "{\"Node\":{\"source\":{\"linkId\":-1,\"sourceLinkId\":-1},\"slotName\":\"Weapon\",\"bAlwaysUpdateSourcePose\":false,\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+  "seq_a": "{\"Node\":{\"groupName\":\"None\",\"groupRole\":\"CanBeLeader\",\"method\":\"DoNotSync\",\"bIgnoreForRelevancyTest\":false,\"sequence\":\"None\",\"explicitTime\":0,\"bUseExplicitFrame\":false,\"explicitFrame\":0,\"bShouldLoop\":false,\"bTeleportToExplicitTime\":true,\"reinitializationBehavior\":\"ExplicitTime\",\"startPosition\":0,\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}"
+ },
+ "skeleton_dirty_after_compile": false,
+ "saved": [
+  "/Game/Guns/Core/ABP_Gun_LongGun"
+ ],
+ "dirty_outside_guns_not_saved": [],
+ "pass": true,
+ "seconds": 8.7
+}
