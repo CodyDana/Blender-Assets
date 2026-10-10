@@ -39,6 +39,7 @@ CIP = {
 EXTRA = {"neck_inner_d": 7.92, "primer_d": 5.50, "dimple_d": 1.60, "dimple_depth": 0.30, "seam_w": 0.10,
          "sealant_w": 0.30}
 STEEL_DENSITY_G_CM3 = 7.85
+PRIMER_POCKET_DEPTH = 2.9
 
 _rr = CIP["R1"] / 2.0                     # 5.675 rim / P1 radius
 _rg = CIP["E1"] / 2.0                     # 4.78 groove floor radius
@@ -173,14 +174,14 @@ def outer_r(z: float) -> float:
 
 def real_inner_r(z: float) -> float:
     """Inner radius of the REAL hollow case (mass properties only; the mesh bore is a dark cone). Solid head to
-    z = 5.6 (web; the Berdan primer pocket is counted as filled: cup + anvil); body wall 0.80 -> 0.42 over the body,
-    0.38 in the shoulder, 0.34 in the neck (typical sectioned steel 7.62x39 cases)."""
-    if z < 5.6:
+    z = 4.6 (web); body wall 0.70 -> 0.40 over the body, 0.37 in the shoulder, 0.34 in the neck (typical sectioned
+    steel 7.62x39 cases). The Berdan primer pocket is handled in mass_properties."""
+    if z < 4.6:
         return 0.0
     if z <= CIP["L1"]:
-        wall = 0.80 + (0.42 - 0.80) * (z - 5.6) / (CIP["L1"] - 5.6)
+        wall = 0.70 + (0.40 - 0.70) * (z - 4.6) / (CIP["L1"] - 4.6)
     elif z <= CIP["L2"]:
-        wall = 0.38
+        wall = 0.37
     else:
         wall = 0.34
     return max(0.0, outer_r(z) - wall)
@@ -196,6 +197,8 @@ def mass_properties(steps: int = 4000) -> Dict[str, float]:
         z1 = L * (k + 1) / steps
         zm = 0.5 * (z0 + z1)
         a = math.pi * (outer_r(zm) ** 2 - real_inner_r(zm) ** 2)
+        if zm < PRIMER_POCKET_DEPTH:    # Berdan pocket 5.50 x 2.9 deep; the cup + anvil fill about a quarter of it
+            a -= math.pi * (EXTRA["primer_d"] / 2.0) ** 2 * 0.75
         dv = a * (z1 - z0)
         vol += dv
         mom += dv * zm
