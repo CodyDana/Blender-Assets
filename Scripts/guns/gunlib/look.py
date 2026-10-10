@@ -112,7 +112,7 @@ def _new_mat(name):
     return m, nt, bsdf
 
 
-def rough_steel(name="RL_Steel", base=STEEL_BASE, edge=STEEL_EDGE, edge_mm=0.5):
+def rough_steel(name="RL_Steel", base=STEEL_BASE, edge=STEEL_EDGE, edge_mm=0.5, metallic=0.88, rough_add=0.0):
     m, nt, bsdf = _new_mat(name)
     L = nt.links
     tc = nt.nodes.new("ShaderNodeTexCoord")
@@ -147,7 +147,7 @@ def rough_steel(name="RL_Steel", base=STEEL_BASE, edge=STEEL_EDGE, edge_mm=0.5):
     # roughness: two noise scales
     nr1 = _noise(nt, obj, 45.0, 4.0, 0.6)
     nr2 = _noise(nt, obj, 300.0, 2.0, 0.5)
-    r1 = _maprange(nt, _fac(nr1), 0.3, 0.7, 0.42, 0.64)     # detail fix: 0.34-0.58 -> 0.42-0.64 (no polished / chrome
+    r1 = _maprange(nt, _fac(nr1), 0.3, 0.7, 0.42 + rough_add, 0.64 + rough_add)     # detail fix: 0.34-0.58 -> 0.42-0.64 (no polished / chrome
                                                              # read on small curved parts: brake, trigger, pins)
     r2 = _maprange(nt, _fac(nr2), 0.3, 0.7, -0.06, 0.06)
     radd = nt.nodes.new("ShaderNodeMath")
@@ -172,10 +172,69 @@ def rough_steel(name="RL_Steel", base=STEEL_BASE, edge=STEEL_EDGE, edge_mm=0.5):
     c1 = _mix_rgb(nt, scr, c0, srgb_to_lin(tuple(min(255, v * 1.9) for v in base)))
     c2 = _mix_rgb(nt, wearv, c1, srgb_to_lin(edge))
     L.new(c2, _inp(bsdf, "Base Color"))
-    _set(bsdf, "Metallic", 0.88)
+    _set(bsdf, "Metallic", metallic)
     _set(bsdf, "Specular IOR Level", 0.5)
     m.diffuse_color = (*srgb_to_lin(base), 1.0)
     return m
+
+
+POLY_BASE = (36, 36, 38)           # sRGB: black glass-filled polymer (reads charcoal under light)
+POLY_EDGE = (70, 70, 72)           # handling polish on the edges
+
+
+def rough_polymer(name="RL_Polymer", base=POLY_BASE, edge=POLY_EDGE, edge_mm=0.6):
+    """Black moulded polymer (gunlib 0.2.1, SMG W1b): dielectric, matte with a fine moulded texture (two noise
+    scales on the roughness, a faint 0.3 mm grain bumped into the normal), slightly polished, lighter edges."""
+    m, nt, bsdf = _new_mat(name)
+    L = nt.links
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    obj = _out(tc, "Object")
+    bev = nt.nodes.new("ShaderNodeBevel")
+    _set(bev, "Radius", edge_mm / 1000.0)
+    bev.samples = 8
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    dot = nt.nodes.new("ShaderNodeVectorMath")
+    dot.operation = "DOT_PRODUCT"
+    L.new(_out(bev, "Normal"), dot.inputs[0])
+    L.new(_out(geo, "Normal"), dot.inputs[1])
+    inv = nt.nodes.new("ShaderNodeMath")
+    inv.operation = "SUBTRACT"
+    inv.inputs[0].default_value = 1.0
+    L.new(_out(dot, "Value"), inv.inputs[1])
+    edge_m = _maprange(nt, _out(inv, "Value", "VALUE"), 0.004, 0.08, 0.0, 0.8)
+    nr1 = _noise(nt, obj, 60.0, 4.0, 0.6)
+    nr2 = _noise(nt, obj, 900.0, 2.0, 0.5)
+    r1 = _maprange(nt, _fac(nr1), 0.3, 0.7, 0.56, 0.72)
+    r2 = _maprange(nt, _fac(nr2), 0.3, 0.7, -0.05, 0.05)
+    radd = nt.nodes.new("ShaderNodeMath")
+    radd.operation = "ADD"
+    L.new(r1, radd.inputs[0])
+    L.new(r2, radd.inputs[1])
+    rsub = nt.nodes.new("ShaderNodeMath")
+    rsub.operation = "MULTIPLY_ADD"
+    L.new(edge_m, rsub.inputs[0])
+    rsub.inputs[1].default_value = -0.2
+    L.new(_out(radd, "Value"), rsub.inputs[2])
+    L.new(_out(rsub, "Value"), _inp(bsdf, "Roughness"))
+    ncol = _noise(nt, obj, 25.0, 3.0, 0.6)
+    mot = _maprange(nt, _fac(ncol), 0.3, 0.7, 0.0, 1.0)
+    c0 = _mix_rgb(nt, mot, srgb_to_lin(tuple(v * 0.9 for v in base)), srgb_to_lin(base))
+    c1 = _mix_rgb(nt, edge_m, c0, srgb_to_lin(edge))
+    L.new(c1, _inp(bsdf, "Base Color"))
+    bump = nt.nodes.new("ShaderNodeBump")
+    _set(bump, "Strength", 0.12)
+    _set(bump, "Distance", 0.0002)
+    ng = _noise(nt, obj, 2600.0, 2.0, 0.5)
+    L.new(_fac(ng), _inp(bump, "Height"))
+    L.new(_out(bump, "Normal"), _inp(bsdf, "Normal"))
+    _set(bsdf, "Metallic", 0.0)
+    _set(bsdf, "Specular IOR Level", 0.45)
+    m.diffuse_color = (*srgb_to_lin(base), 1.0)
+    return m
+
+
+PHOS_BASE = (46, 46, 48)           # manganese / zinc phosphate: dark grey-black, matte
+PHOS_EDGE = (112, 112, 114)
 
 
 def rough_wood(name="RL_Wood", axis=(1.0, 0.0, 0.0)):

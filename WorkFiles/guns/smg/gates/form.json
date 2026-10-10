@@ -1,0 +1,3454 @@
+{
+ "stage": "W1b form",
+ "date": "2026-10-09T21:06:46",
+ "status": "fail",
+ "failed": [
+  "L2 RIGHT IoU (authority, port side)",
+  "L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2)",
+  "L2 3/4 FRONT (LEFT) IoU, camera solved",
+  "L2 3/4 contour P95 (sheet px)",
+  "L3 LEFT contour P95 (sheet px)",
+  "UD1 Unreal degenerate rule on every LOD0 part (drops; min triangle area)",
+  "MAGFIT M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
+  "MAGFIT M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)"
+ ],
+ "gates": [
+  {
+   "name": "L2 LEFT IoU (authority)",
+   "value": 0.9634,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 RIGHT IoU (authority, port side)",
+   "value": 0.9379,
+   "threshold": ">= 0.96 or within 0.005 of the sheet's own LEFT/RIGHT ceiling 0.948",
+   "pass": false
+  },
+  {
+   "name": "L2 TOP IoU (X >= 221.9)",
+   "value": 0.9373,
+   "threshold": ">= 0.93",
+   "pass": true
+  },
+  {
+   "name": "L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px; thin parts contour P95 <= 1 px, max <= 2)",
+   "value": "4 / 23 parts pass",
+   "threshold": "all",
+   "pass": false,
+   "note": "failing: barrel (IoU 0.569, P95 62.0), butt_pad (IoU 0.902, P95 2.0), handguard_area (IoU 0.874, P95 24.0), hinge_block (IoU 0.917, P95 4.0), lower_rail (IoU 0.722, P95 2.828), mag_release (IoU 0.256, P95 4.092), muzzle_device (IoU 0.877, P95 8.0), receiver_lower (IoU 0.904, P95 2.532), sight_front (IoU 0.620, P95 3.98), sight_rear (IoU 0.776, P95 5.0), stock_hinge_knuckle (IoU 0.861, P95 3.0), stock_lower_strut (IoU 0.869, P95 2.236), stock_neck (IoU 0.909, P95 3.561), stock_rear_upright (IoU 0.747, P95 4.006), stock_top_strut (IoU 0.905, P95 3.0), stock_web (IoU 0.836, P95 2.0), top_rail (IoU 0.758, P95 2.0), trigger (IoU 0.767, P95 9.105), trigger_guard (IoU 0.780, P95 2.0)"
+  },
+  {
+   "name": "L2 3/4 FRONT (LEFT) IoU, camera solved",
+   "value": 0.891,
+   "threshold": ">= 0.93",
+   "pass": false,
+   "note": "landmark RMS 8.006860570412881 px"
+  },
+  {
+   "name": "L2 3/4 contour P95 (sheet px)",
+   "value": 12.166,
+   "threshold": "<= 3",
+   "pass": false
+  },
+  {
+   "name": "L3 LEFT contour P95 (sheet px)",
+   "value": 3.0,
+   "threshold": "<= 2",
+   "pass": false
+  },
+  {
+   "name": "L3 feature positions (<= 2 sheet px = 2.13 mm)",
+   "value": "24 / 24",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "L4 key dimensions (<= 0.05 mm unless noted)",
+   "value": "20 / 20",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "B3 bolt sweep 0.0..67.9 (step 0.0750, 907 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.15,
+    "min_with": "barrel",
+    "rest_mm": 0.15,
+    "end_mm": 0.1529
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.15, 0.4]",
+   "pass": true
+  },
+  {
+   "name": "B3 charging sweep 0.0..67.9 (step 0.0750, 907 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.15,
+    "min_with": "barrel",
+    "rest_mm": 0.15,
+    "end_mm": 0.1529
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.15, 0.4]",
+   "pass": true
+  },
+  {
+   "name": "B3 charging_lock sweep 0.0..15.0 (step 0.1642, 93 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1359,
+    "min_with": "charging_slide",
+    "rest_mm": 0.1487,
+    "end_mm": 0.1487
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 trigger sweep 0.0..13.0 (step 0.1201, 110 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.138,
+    "min_with": "trigger_axle",
+    "rest_mm": 0.1493,
+    "end_mm": 0.1433
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 selector sweep -63.4..45.0 (step 0.1401, 775 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1372,
+    "min_with": "lower_receiver",
+    "rest_mm": 0.1381,
+    "end_mm": 0.1493
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 mag_release sweep 0.0..-11.0 (step -0.3001, 38 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1361,
+    "min_with": "lower_receiver",
+    "rest_mm": 0.1361,
+    "end_mm": 0.1382
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 stock_button sweep 0.0..2.5 (step 0.0750, 35 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1592,
+    "min_with": "stock_frame",
+    "rest_mm": 0.1592,
+    "end_mm": 0.1592
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.15, 0.4]",
+   "pass": true
+  },
+  {
+   "name": "B3 stock_fold sweep 0.0..180.0 (step 0.0200, 961 steps)",
+   "value": {
+    "intersecting_steps": 32,
+    "min_clearance_mm": 0.1432,
+    "min_with": "upper_receiver",
+    "rest_mm": 0.1497,
+    "end_mm": 0.1497,
+    "allowances": {
+     "allowed_steps": 32,
+     "worst_depth_mm": 0.7488,
+     "not_allowed": []
+    },
+    "coarse_proof": {
+     "rule": "radius-aware: every sample >= its own r x step / 2 from the other surface at every coarse step (r = distance from the axis)",
+     "step_deg": 0.25,
+     "steps_checked": 699,
+     "failing_values": [],
+     "worst_margin_mm": null
+    }
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 sight_rear sweep 0.0..90.0 (step 0.1904, 474 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.142,
+    "min_with": "sight_rear_pin",
+    "rest_mm": 0.1492,
+    "end_mm": 0.1493,
+    "allowances": {
+     "allowed_steps": 0,
+     "worst_depth_mm": 0.0,
+     "not_allowed": []
+    }
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "B3 sight_front sweep 0.0..-90.0 (step -0.2070, 436 steps)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1389,
+    "min_with": "sight_front_pin",
+    "rest_mm": 0.1439,
+    "end_mm": 0.1438,
+    "allowances": {
+     "allowed_steps": 0,
+     "worst_depth_mm": 0.0,
+     "not_allowed": []
+    }
+   },
+   "threshold": "0 intersections (declared allowances only); clearance in row [0.1, 0.3]",
+   "pass": true
+  },
+  {
+   "name": "G5 static intersections between parts at rest (LOD0)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "G5 butt-joint gaps",
+   "value": "min 0.0100 mm over 20 contact pairs",
+   "threshold": ">= 0.01 (0.009 sampling)",
+   "pass": true
+  },
+  {
+   "name": "F1 selector sweep SAFE..AUTO, swept minimum",
+   "value": 0.1372,
+   "threshold": ">= 0.10",
+   "pass": true
+  },
+  {
+   "name": "F2 folded length",
+   "value": 385.8,
+   "threshold": "383.6 +-3 (real 450 reported)",
+   "pass": true,
+   "note": "folded min Y by part {'stock_frame': -90.46, 'stock_latch_button': -91.46, 'stock_latch_bolt': -91.21, 'butt_pad': -88.11}"
+  },
+  {
+   "name": "F3 stock folded: barb under the port catch's lip",
+   "value": {
+    "engagement_X_mm": 1.3,
+    "barb_to_lip_min_distance_mm": 0.2,
+    "folded_intersections": {}
+   },
+   "threshold": "engagement >= 1.0; barb-to-lip 0.2-0.4; 0 intersections folded",
+   "pass": true
+  },
+  {
+   "name": "F4 charging handle: travel + lock, neck and arm clearances",
+   "value": {
+    "travel_min_mm": 0.15,
+    "travel_min_with": "barrel",
+    "lock_min_mm": 0.1359,
+    "lock_min_with": "charging_slide"
+   },
+   "threshold": "neck 0.15-0.40 to the slot / notch; arm >= 0.10 off the wall at every frame",
+   "pass": true
+  },
+  {
+   "name": "F5 magazine catch sweep 0..-11 deg, magazine seated",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1361,
+    "min_with": "lower_receiver"
+   },
+   "threshold": "0 intersections except the nose leaving the notch",
+   "pass": true
+  },
+  {
+   "name": "F5 bolt thumb recess visible in the port at rest",
+   "value": {
+    "rays_hitting_the_bolt_first": 91,
+    "of_which_in_the_recess": 81,
+    "pass": true,
+    "note": "rays from the right through the port centre region (13 x 7 grid, 1 mm)"
+   },
+   "threshold": ">= 10 grid rays in the recess",
+   "pass": true
+  },
+  {
+   "name": "F6 stock latch: full diameter in the lug's bore (released / pressed); fold exit clearance",
+   "value": {
+    "released_mm": 1.75,
+    "pressed_mm": 0.0,
+    "fold_sweep_min_mm": 0.1432,
+    "fold_min_with": "upper_receiver"
+   },
+   "threshold": ">= 1.5 released; 0 pressed; fold sweep >= 0.10",
+   "pass": true,
+   "note": "stroke 2.5 (spec 2.0): with 45 deg shoulders the spec's 2.0 stroke cannot carry a 6.4 neck across the 6.0 lug with 2.0 engaged"
+  },
+  {
+   "name": "F7 charging-handle lock: the neck's rise into the rear notch at the wall's inner face; knob rise",
+   "value": {
+    "neck_rise_mm": 2.093,
+    "neck_top_over_slot_top_mm": 1.654,
+    "knob_rise_mm": 5.152
+   },
+   "threshold": ">= 2.0 (spec 2.09); knob 5.15 reported",
+   "pass": true
+  },
+  {
+   "name": "B3b folded state: 0 intersections; casing throw cone (reported)",
+   "value": {
+    "folded_intersections": {},
+    "pass": true,
+    "throw_cone": {
+     "origin_M": [
+      435.55,
+      -31.6,
+      13.0
+     ],
+     "dir": [
+      0.2549000084400177,
+      -0.9513000249862671,
+      0.1736000031232834
+     ],
+     "vertices_inside": {
+      "stock_frame": 10,
+      "butt_pad": 9
+     },
+     "clear": false,
+     "note": "reported (Q5): the folded stock lies along the right side"
+    }
+   },
+   "threshold": "0 intersections",
+   "pass": true,
+   "note": "throw cone clear: False"
+  },
+  {
+   "name": "B4c sights folded",
+   "value": {
+    "sight_rear": {
+     "folded_max_Z": 59.8,
+     "limit": 60.1,
+     "min_Z": 46.3,
+     "lowest_allowed_Z": 45.4,
+     "pass": true
+    },
+    "sight_front": {
+     "folded_max_Z": 51.65,
+     "limit": 51.7,
+     "min_Z": 44.8,
+     "lowest_allowed_Z": 44.8,
+     "pass": true
+    },
+    "pass_all": true
+   },
+   "threshold": "rear <= Z 60.1, front <= Z 51.7; nothing below the rail top 45.4 (the front over its relief flat: >= 44.8, spec folded_Z)",
+   "pass": true
+  },
+  {
+   "name": "B4 sight picture (ADS 55 deg, eye 0.25 m behind the aperture)",
+   "value": {
+    "lateral_mm": 0.0,
+    "vertical_mm": 0.0,
+    "aperture_mm": 1.989,
+    "post_visible_mm": 0.991,
+    "occluders": {}
+   },
+   "threshold": "post tip at the aperture centre <= 0.2 mm; post visible; no occluder",
+   "pass": true,
+   "note": "WorkFiles/guns/smg/review/b4/b4_sight_picture.png"
+  },
+  {
+   "name": "B4b sight picture at the cheek-weld eye (90 mm behind the aperture), reported",
+   "value": {
+    "lateral_mm": 0.0,
+    "vertical_mm": -0.0,
+    "aperture_mm": 1.97,
+    "post_visible_mm": 0.988,
+    "occluders": {}
+   },
+   "threshold": "reported",
+   "pass": true,
+   "note": "WorkFiles/guns/smg/review/b4/b4b_cheek_weld.png"
+  },
+  {
+   "name": "B6a joined twin: qa_check topology + degenerate checks",
+   "value": true,
+   "threshold": "all pass",
+   "pass": true,
+   "note": "no_ngons: 0 n-gon(s) of 40208 faces; no_non_manifold_edges: 0 edge(s) with more than 2 faces, 0 wire edge(s), of 63311; open_boundary_edges: 0 boundary edge(s) of 63311 (informational: open meshes are allowed); no_loose_vertices: 0 loose vertex/vertices of 23101; no_zero_length_edges: 0 edge(s) at or below 1e-06 of 63311; shortest 5.10442e-05; no_degenerate_faces: 0 face(s) at or below 1e-12 area of 40208; smallest 5.97993e-09; no_coincident_vertices: 0 vertex pair(s) within 1e-06 of 23101"
+  },
+  {
+   "name": "B10 tokenised gun deny list on every object name",
+   "value": true,
+   "threshold": "clean",
+   "pass": true
+  },
+  {
+   "name": "B7 closed manifold parts",
+   "value": "32 / 32 closed",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "B8 LOD0 triangles, gun (target 25-40k, ceiling 50k)",
+   "value": 42914,
+   "threshold": "<= 50000 (target <= 40000)",
+   "pass": true,
+   "note": "above the 40k target"
+  },
+  {
+   "name": "B8 magazine LOD0 triangles (floor 3,000, qa budget 5,000)",
+   "value": 3292,
+   "threshold": "<= 5000",
+   "pass": true
+  },
+  {
+   "name": "UD1 Unreal degenerate rule on every LOD0 part (drops; min triangle area)",
+   "value": {
+    "unreal_drops": 0,
+    "min_area_mm2": 0.005979
+   },
+   "threshold": "0; >= 0.01 mm2",
+   "pass": false,
+   "note": "under the 2x margin: {'upper_receiver': 0.007826, 'lower_receiver': 0.005979, 'stock_frame': 0.006699} (Unreal's own drop rule, 0.005, passes)"
+  },
+  {
+   "name": "UD2 micro edges / needles / strips",
+   "value": {
+    "edges_under_0.05mm": 0,
+    "needles_under_0.02mm": 0,
+    "strip_polygons_under_0.1mm": 0
+   },
+   "threshold": "0 / 0 / 0",
+   "pass": true,
+   "note": "information (UD3-type, W2): gunlib zero-tangent-risk needle-corner groups {'upper_receiver': 3, 'lower_receiver': 1, 'top_rail': 1, 'sight_rear_base': 1, 'stock_frame': 2, 'butt_pad': 4}"
+  },
+  {
+   "name": "H1 early: grip girth vs real polymer SMG grips + 10 %",
+   "value": {
+    "perimeter_mm": 148.0,
+    "width_Y_mm": 30.9,
+    "depth_mm": 51.24
+   },
+   "threshold": "<= 167.3 mm (real band [143.8, 152.1] + 10 %)",
+   "pass": true
+  },
+  {
+   "name": "H1 early: trigger reach (web hollow -> trigger face)",
+   "value": 78.1,
+   "threshold": "<= 80 mm (real [57.2, 72.0])",
+   "pass": true,
+   "note": "the sheet's reach at 625 reads 82.0; a FAIL puts Q1 to the user (does not stop the build)"
+  },
+  {
+   "name": "H1 early: Grip depth vs the hand's palm centre (reported)",
+   "value": {
+    "standard_Grip_depth_mm": 46.0,
+    "hand_palm_centre_along_knuckle_line_mm": 45.9,
+    "web_line_point_M": [
+     319.59,
+     0.0,
+     -48.7
+    ],
+    "pass": true
+   },
+   "threshold": "|46 - palm| <= 1 mm",
+   "pass": true
+  },
+  {
+   "name": "H1 early: SupportHand on the magwell front (reported)",
+   "value": {
+    "SupportHand_M": [
+     460.2,
+     0.0,
+     -54.35
+    ],
+    "front_face_hit_X": 460.23,
+    "offset_from_surface_mm": -0.03,
+    "hand_separation_mm": 162.0,
+    "arm_length_mm": 563.2,
+    "pass": true
+   },
+   "threshold": "<= 1.5 mm, reachable",
+   "pass": true
+  },
+  {
+   "name": "H1 early: length of pull and cheek weld (reported)",
+   "value": {
+    "length_of_pull": {
+     "mm": 370.8,
+     "real_mm": [
+      350,
+      370
+     ],
+     "note": "butt rear (X 0) to the trigger face along X"
+    },
+    "cheek_weld": {
+     "sight_line_Z": 68.8,
+     "stock_top_Z_at_cheek": 22.6,
+     "eye_over_comb_mm": 46.2,
+     "note": "reported (B4b feeds on it)"
+    }
+   },
+   "threshold": "reported",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT M1 seated: intersecting triangle pairs, magazine vs the gun (LOD0)",
+   "value": {
+    "gun": 0,
+    "catch": 0
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
+   "value": {
+    "bearing_gap_mm": 0.26,
+    "overtravel_mm": 1.5589,
+    "seam_mm": {
+     "front": 1.6967,
+     "rear": 1.8621,
+     "left": 1.8578,
+     "right": 1.8578
+    }
+   },
+   "threshold": "0.0-0.3; 1.0-2.0; <= 0.6 mm",
+   "pass": false
+  },
+  {
+   "name": "MAGFIT M3 lateral per side; fore-aft; catch engagement depth",
+   "value": {
+    "clearance_mm": {
+     "left": 0.2715,
+     "right": 0.2715,
+     "front": 0.2715,
+     "rear": 0.2758
+    },
+    "engagement_mm": 1.55
+   },
+   "threshold": "0.2-0.6; 0.2-0.6; >= 1.5 mm",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)",
+   "value": {
+    "steps": 138,
+    "gun_contacts_at": [],
+    "catch_ride_mm": [
+     0.576,
+     26.076
+    ],
+    "catch_contacts": 52,
+    "worst_catch_depth_mm": 1.242
+   },
+   "threshold": "0 intersections except the catch nose riding the mag (depth <= engagement + 0.3 mm, last 6.00 mm only)",
+   "pass": false
+  },
+  {
+   "name": "MAGFIT M4b insert path with the catch released (-11.0 deg)",
+   "value": {
+    "steps": 138,
+    "intersecting_steps": 0
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT M5 removal path (reverse) with the catch released",
+   "value": {
+    "steps": 138,
+    "intersecting_steps": 0
+   },
+   "threshold": "0",
+   "pass": true,
+   "note": "the same pose set traversed backwards: identical intersection record"
+  },
+  {
+   "name": "MAGFIT M5b (info) removal with the catch at rest",
+   "value": {
+    "colliding_steps": 52
+   },
+   "threshold": "reported (expected to collide: the catch retains)",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT F5 catch sweep rest -> release with the magazine seated",
+   "value": {
+    "steps": 45,
+    "intersecting_steps": 0,
+    "worst_depth_mm": 0.0
+   },
+   "threshold": "0 intersections except the nose leaving the notch (depth <= the engagement)",
+   "pass": true
+  }
+ ],
+ "declared_deviations": [
+  "stock latch: stroke 2.5 (spec 2.0) and full-diameter engagement 1.75 (2.5 with the 45 deg inner shoulder): with real shoulders the spec's 2.0 stroke / 2.0 engagement / 6.4 neck / 6.0 lug do not close (F6 passes at 2.5)",
+  "stock latch: the end block lug's outer face relieved 0.8 under the button (X < 245.4): folding, the pressed button and the bolt's outer shoulder drift up to 0.46 inward; the head's lug recess 0.9 on its outer side",
+  "bolt: underside on the rails' shelf (Z -9.0, spec box -10.1): the spec bolt hung 1 mm under the R30 shelf and left the seated magazine 0.5 overtravel (M2 asks 1.0-2.0); invisible (the port shows Z >= 2.3); face boss 0.15 short of the breech (sliding row)",
+  "magazine: floor plate bottom at the traced -158.3 along the axis (spec floor_along_axis -160.57 sits 2.3 under the traced plate and under box_M Z -230)",
+  "ejection port: the visible front edge is the port catch's lip (spec catch X 463.1 < port X 464.3)",
+  "mag catch: nose top 0.2 under the notch's bearing face, tip +0.15 (M2 0.0-0.3, M3 >= 1.5 past the 0.3 break), top-front corner chamfered 0.8 (releasing, the nose lifts 0.14 at exit), pad's lower front corner R 2.0 (released it stops 0.1+ short of the magwell), the guard leg relieved 1.2 above the pin, the nose slot opened 3.6 rearward",
+  "charging slide: hook 0.2 off the bolt's lug at rest (449.2, spec 449.02: the sliding row's lower bound)",
+  "front sight leaf: round end R 2.25 about the pin (B4c folded <= 51.7)",
+  "muzzle device: six slots symmetric about the bore (the side panels draw the side slot ~2.5 mm high)",
+  "muzzle wrench flats: 0.5 deep at +-35 deg off the bottom (spec 'two 3 mm flats' read as their chord scale)",
+  "fore-end: the moulded charging-slide guide runs on to the front wall (the sheet's long vents read dark, not daylight)",
+  "stock head: narrower than the end block (Y -25..22) with the latch housing boss proud on the left to Y 28.6 (3/4 and TOP read); butt pad wrap lip 2.0 round the upright",
+  "grip: sections perpendicular to the raked axis held 16 mm on up into the housing (the front strap's top corner otherwise sat 14 mm under the housing)"
+ ],
+ "details": {
+  "silhouette": {
+   "stage": "form",
+   "npz": "form_tris.npz",
+   "triangles": 46206,
+   "views": {
+    "LEFT": {
+     "iou_identity": 0.9634,
+     "iou_fit": 0.9634,
+     "fit_params_s_rotdeg_tx_ty": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "contour_px": {
+      "p50": 0.0,
+      "p95": 3.0,
+      "max": 21.19,
+      "n": 5242
+     },
+     "ours_px": 48525,
+     "ref_px": 48173,
+     "magazine_iou": 0.7099,
+     "gun_without_mag_iou": 0.962,
+     "parts": {
+      "barrel": {
+       "area_px": 394.8,
+       "iou": 0.5691,
+       "contour_p95_px": 62.0,
+       "contour_max_px": 67.0,
+       "iou_filled": 0.5691,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": false
+      },
+      "butt_pad": {
+       "area_px": 2321.4,
+       "iou": 0.9017,
+       "contour_p95_px": 2.0,
+       "contour_max_px": 3.606,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "grip": {
+       "area_px": 4414.0,
+       "iou": 0.974,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 2.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "handguard_area": {
+       "area_px": 4395.4,
+       "iou": 0.8735,
+       "contour_p95_px": 24.0,
+       "contour_max_px": 27.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "hinge_block": {
+       "area_px": 1105.0,
+       "iou": 0.9167,
+       "contour_p95_px": 4.0,
+       "contour_max_px": 6.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "lower_rail": {
+       "area_px": 493.0,
+       "iou": 0.7216,
+       "contour_p95_px": 2.828,
+       "contour_max_px": 4.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "mag_release": {
+       "area_px": 166.9,
+       "iou": 0.2558,
+       "contour_p95_px": 4.092,
+       "contour_max_px": 5.0,
+       "iou_filled": 0.2558,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": false,
+       "declared": "mag_release.dims.declared_deviation: the paddle is built behind the drawn lever (C1); the per-part contour rule is waived; L3 gates the pin head and the Z range",
+       "pass_waived": true
+      },
+      "mag_well": {
+       "area_px": 2876.8,
+       "iou": 0.9503,
+       "contour_p95_px": 2.828,
+       "contour_max_px": 7.81,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "magazine": {
+       "area_px": 5873.6,
+       "iou": 0.9754,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 2.828,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "muzzle_device": {
+       "area_px": 802.9,
+       "iou": 0.8768,
+       "contour_p95_px": 8.0,
+       "contour_max_px": 8.062,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "receiver_lower": {
+       "area_px": 3682.7,
+       "iou": 0.9045,
+       "contour_p95_px": 2.532,
+       "contour_max_px": 8.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "receiver_upper": {
+       "area_px": 10241.3,
+       "iou": 0.9646,
+       "contour_p95_px": 8.0,
+       "contour_max_px": 23.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "sight_front": {
+       "area_px": 423.6,
+       "iou": 0.6203,
+       "contour_p95_px": 3.98,
+       "contour_max_px": 5.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "sight_rear": {
+       "area_px": 596.6,
+       "iou": 0.7758,
+       "contour_p95_px": 5.0,
+       "contour_max_px": 8.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "stock_hinge_knuckle": {
+       "area_px": 1062.5,
+       "iou": 0.8612,
+       "contour_p95_px": 3.0,
+       "contour_max_px": 5.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "stock_lower_strut": {
+       "area_px": 1874.4,
+       "iou": 0.8685,
+       "contour_p95_px": 2.236,
+       "contour_max_px": 5.385,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "stock_neck": {
+       "area_px": 1483.5,
+       "iou": 0.9087,
+       "contour_p95_px": 3.561,
+       "contour_max_px": 9.849,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "stock_rear_upright": {
+       "area_px": 694.1,
+       "iou": 0.7474,
+       "contour_p95_px": 4.006,
+       "contour_max_px": 11.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "stock_top_strut": {
+       "area_px": 1940.2,
+       "iou": 0.9047,
+       "contour_p95_px": 3.0,
+       "contour_max_px": 7.071,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "stock_web": {
+       "area_px": 344.1,
+       "iou": 0.8358,
+       "contour_p95_px": 2.0,
+       "contour_max_px": 3.162,
+       "iou_filled": 0.8358,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": false
+      },
+      "top_rail": {
+       "area_px": 1672.3,
+       "iou": 0.7577,
+       "contour_p95_px": 2.0,
+       "contour_max_px": 8.062,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "trigger": {
+       "area_px": 286.9,
+       "iou": 0.7674,
+       "contour_p95_px": 9.105,
+       "contour_max_px": 13.153,
+       "iou_filled": 0.7674,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": false
+      },
+      "trigger_guard": {
+       "area_px": 870.3,
+       "iou": 0.7802,
+       "contour_p95_px": 2.0,
+       "contour_max_px": 8.246,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      }
+     }
+    },
+    "RIGHT": {
+     "iou_identity": 0.9357,
+     "iou_fit": 0.9379,
+     "fit_params_s_rotdeg_tx_ty": [
+      0.0008009485856816116,
+      0.11894534656781867,
+      0.20007475514229411,
+      -0.5017492993447117
+     ],
+     "contour_px": {
+      "p50": 1.0,
+      "p95": 3.0,
+      "max": 11.314,
+      "n": 5172
+     },
+     "ours_px": 48663,
+     "ref_px": 48082,
+     "magazine_iou": 0.686,
+     "gun_without_mag_iou": 0.9341,
+     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT": 0.948,
+     "ours_minus_ceiling": -0.0123
+    },
+    "TOP": {
+     "iou_identity_valid": 0.9366,
+     "iou_fit_valid": 0.9373,
+     "iou_identity_all_pixels": 0.8921,
+     "fit_params_s_rotdeg_tx_ty": [
+      -0.00584019228740853,
+      0.14640473928311395,
+      -0.04559880513847267,
+      0.3816664253735147
+     ],
+     "valid_rule": "X >= 221.9 (spec gates.look.L2_TOP_exclusion_X)",
+     "contour_px": {
+      "p50": 1.0,
+      "p95": 5.831,
+      "max": 10.0,
+      "n": 1822
+     }
+    }
+   }
+  },
+  "q34": {
+   "stage": "form",
+   "panel_box_sheet_px": [
+    630,
+    611,
+    1247,
+    1207
+   ],
+   "landmark_rms_px": 8.006860570412881,
+   "landmark_err_px": {
+    "muzzle device front face centre": 7.83,
+    "rear sight frame top centre": 4.81,
+    "front sight ear tops centre": 8.41,
+    "butt pad top rear corner (near, left)": 3.32,
+    "butt pad bottom rear corner (near)": 8.08,
+    "grip bottom toe (near)": 5.78,
+    "mag floor plate front corner (near)": 10.01,
+    "mag floor plate rear corner (near)": 10.65,
+    "lower rail front bottom (near)": 6.51,
+    "charging knob centre": 10.96
+   },
+   "refine_soft_iou_no_mag": 0.8791853510858815,
+   "camera": {
+    "centre_M_mm": [
+     1957.6,
+     1336.8,
+     271.0
+    ],
+    "f_px": 2791.0,
+    "forward_M": [
+     -0.7576,
+     -0.6298,
+     -0.1716
+    ],
+    "hfov_deg": 12.64
+   },
+   "iou_raw_unfilled": 0.8785,
+   "iou": 0.891,
+   "contour_px": {
+    "p50": 3.0,
+    "p95": 12.166,
+    "max": 24.352,
+    "n": 4440
+   },
+   "iou_without_mag_zone": 0.8936,
+   "magazine_thickness_check": {
+    "iou_in_mag_zone_by_thickness_mm": {
+     "21": 0.8691,
+     "23": 0.8723,
+     "25": 0.874,
+     "27": 0.8771,
+     "29": 0.8806,
+     "31": 0.8822,
+     "33": 0.8696
+    },
+    "best_mm": 31,
+    "parabola_peak_mm": 30.23,
+    "spec_mm": 27.0,
+    "band_mm": [
+     27.0,
+     31.0
+    ],
+    "verdict": "27.0 kept (the panel peaks at 30.2; real minimum 27)"
+   },
+   "gate": {
+    "rule": "L2 3/4: IoU >= 0.93 and contour P95 <= 3 px (outer silhouettes, camera solved)",
+    "pass": false
+   }
+  },
+  "B3": {
+   "groups": {
+    "bolt": {
+     "summary": {
+      "steps": 907,
+      "range": [
+       0.0,
+       67.9
+      ],
+      "step": 0.075,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.15,
+      "min_at": 0.0,
+      "min_with": "barrel",
+      "rest_clearance_mm": 0.15,
+      "rest_nearest": "barrel",
+      "end_clearance_mm": 0.1529,
+      "end_nearest": "bolt_rails",
+      "seconds": 24.2,
+      "moving_samples": 162750,
+      "fixed_samples": 129623,
+      "row_mm": [
+       0.15,
+       0.4
+      ],
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true
+     },
+     "worst_steps": []
+    },
+    "charging": {
+     "summary": {
+      "steps": 907,
+      "range": [
+       0.0,
+       67.9
+      ],
+      "step": 0.075,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.15,
+      "min_at": 0.0,
+      "min_with": "barrel",
+      "rest_clearance_mm": 0.15,
+      "rest_nearest": "barrel",
+      "end_clearance_mm": 0.1529,
+      "end_nearest": "bolt_rails",
+      "seconds": 54.6,
+      "moving_samples": 275032,
+      "fixed_samples": 456151,
+      "row_mm": [
+       0.15,
+       0.4
+      ],
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true
+     },
+     "worst_steps": []
+    },
+    "charging_lock": {
+     "summary": {
+      "steps": 93,
+      "range": [
+       0.0,
+       15.0
+      ],
+      "step": 0.16415134970195774,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.1359,
+      "min_at": 7.058508037184183,
+      "min_with": "charging_slide",
+      "rest_clearance_mm": 0.1487,
+      "rest_nearest": "charging_slide",
+      "end_clearance_mm": 0.1487,
+      "end_nearest": "charging_slide",
+      "seconds": 10.3,
+      "moving_samples": 78780,
+      "fixed_samples": 41749,
+      "row_mm": [
+       0.1,
+       0.3
+      ],
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true,
+      "r_max_mm": 34.9
+     },
+     "worst_steps": []
+    },
+    "trigger": {
+     "summary": {
+      "steps": 110,
+      "range": [
+       0.0,
+       13.0
+      ],
+      "step": 0.1201212486750928,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.138,
+      "min_at": 5.16521369302899,
+      "min_with": "trigger_axle",
+      "rest_clearance_mm": 0.1493,
+      "rest_nearest": "trigger_axle",
+      "end_clearance_mm": 0.1433,
+      "end_nearest": "trigger_axle",
+      "seconds": 17.0,
+      "moving_samples": 74891,
+      "fixed_samples": 78350,
+      "row_mm": [
+       0.1,
+       0.3
+      ],
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true,
+      "r_max_mm": 47.7
+     },
+     "worst_steps": []
+    },
+    "selector": {
+     "summary": {
+      "steps": 775,
+      "range": [
+       -63.4,
+       45.0
+      ],
+      "step": 0.14006028782728208,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.1372,
+      "min_at": -61.99939712172718,
+      "min_with": "lower_receiver",
+      "rest_clearance_mm": 0.1381,
+      "rest_nearest": "lower_receiver",
+      "end_clearance_mm": 0.1493,
+      "end_nearest": "lower_receiver",
+      "seconds": 166.2,
+      "moving_samples": 144946,
+      "fixed_samples": 286509,
+      "row_mm": [
+       0.1,
+       0.3
+      ],
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true,
+      "r_max_mm": 40.91
+     },
+     "worst_steps": []
+    },
+    "mag_release": {
+     "summary": {
+      "steps": 38,
+      "range": [
+       0.0,
+       -11.0
+      ],
+      "step": -0.30012191441431163,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.1361,
+      "min_at": 0.0,
+      "min_with": "lower_receiver",
+      "rest_clearance_mm": 0.1361,
+      "rest_nearest": "lower_receiver",
+      "end_clearance_mm": 0.1382,
+      "end_nearest": "lower_receiver",
+      "seconds": 4.4,
+      "moving_samples": 38061,
+      "fixed_samples": 70103,
+      "row_mm": [
+       0.1,
+       0.3
+      ],
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true,
+      "r_max_mm": 19.09
+     },
+     "worst_steps": []
+    },
+    "stock_button": {
+     "summary": {
+      "steps": 35,
+      "range": [
+       0.0,
+       2.5
+      ],
+      "step": 0.075,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.1592,
+      "min_at": 0.0,
+      "min_with": "stock_frame",
+      "rest_clearance_mm": 0.1592,
+      "rest_nearest": "stock_frame",
+      "end_clearance_mm": 0.1592,
+      "end_nearest": "stock_frame",
+      "seconds": 0.4,
+      "moving_samples": 27667,
+      "fixed_samples": 43716,
+      "row_mm": [
+       0.15,
+       0.4
+      ],
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true
+     },
+     "worst_steps": []
+    },
+    "stock_fold": {
+     "summary": {
+      "steps": 961,
+      "range": [
+       0.0,
+       180.0
+      ],
+      "step": 0.02,
+      "intersecting_steps": 32,
+      "max_intersections": 16,
+      "parts_hit": [
+       "upper_receiver"
+      ],
+      "min_clearance_mm": 0.1432,
+      "min_at": 179.56,
+      "min_with": "upper_receiver",
+      "rest_clearance_mm": 0.1497,
+      "rest_nearest": "hinge_axle",
+      "end_clearance_mm": 0.1497,
+      "end_nearest": "hinge_axle",
+      "seconds": 2918.2,
+      "moving_samples": 748672,
+      "fixed_samples": 1640798,
+      "row_mm": [
+       0.1,
+       0.3
+      ],
+      "allowances": {
+       "allowed_steps": 32,
+       "worst_depth_mm": 0.7488,
+       "not_allowed": []
+      },
+      "pass_intersections": true,
+      "min_clearance_mm_all_steps": 0.0,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true,
+      "coarse_proof": {
+       "rule": "radius-aware: every sample >= its own r x step / 2 from the other surface at every coarse step (r = distance from the axis)",
+       "step_deg": 0.25,
+       "steps_checked": 699,
+       "failing_values": [],
+       "worst_margin_mm": null
+      },
+      "r_max_mm": 263.01
+     },
+     "worst_steps": [
+      {
+       "value": 179.7,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0004,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.4855
+      },
+      {
+       "value": 179.72,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0014,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.437
+      },
+      {
+       "value": 179.74,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0024,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.4027
+      },
+      {
+       "value": 179.75,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.4028
+      },
+      {
+       "value": 179.76,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0036,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.403
+      },
+      {
+       "value": 179.78,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0044,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.4036
+      },
+      {
+       "value": 179.8,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0001,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.3733
+      },
+      {
+       "value": 179.82,
+       "intersections": 16,
+       "hit_parts": [
+        "upper_receiver"
+       ],
+       "clearance_mm": 0.0047,
+       "nearest_part": "upper_receiver",
+       "allowance_depth_mm": 0.3121
+      }
+     ]
+    },
+    "sight_rear": {
+     "summary": {
+      "steps": 474,
+      "range": [
+       0.0,
+       90.0
+      ],
+      "step": 0.19039662889086076,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.142,
+      "min_at": 5.711898866725822,
+      "min_with": "sight_rear_pin",
+      "rest_clearance_mm": 0.1492,
+      "rest_nearest": "sight_rear_pin",
+      "end_clearance_mm": 0.1493,
+      "end_nearest": "sight_rear_pin",
+      "seconds": 34.3,
+      "moving_samples": 101961,
+      "fixed_samples": 86758,
+      "row_mm": [
+       0.1,
+       0.3
+      ],
+      "allowances": {
+       "allowed_steps": 0,
+       "worst_depth_mm": 0.0,
+       "not_allowed": []
+      },
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true,
+      "r_max_mm": 30.09
+     },
+     "worst_steps": []
+    },
+    "sight_front": {
+     "summary": {
+      "steps": 436,
+      "range": [
+       0.0,
+       -90.0
+      ],
+      "step": -0.2069595607803038,
+      "intersecting_steps": 0,
+      "max_intersections": 0,
+      "parts_hit": [],
+      "min_clearance_mm": 0.1389,
+      "min_at": -6.622705944969722,
+      "min_with": "sight_front_pin",
+      "rest_clearance_mm": 0.1439,
+      "rest_nearest": "sight_front_pin",
+      "end_clearance_mm": 0.1438,
+      "end_nearest": "sight_front_pin",
+      "seconds": 21.6,
+      "moving_samples": 49354,
+      "fixed_samples": 80507,
+      "row_mm": [
+       0.1,
+       0.3
+      ],
+      "allowances": {
+       "allowed_steps": 0,
+       "worst_depth_mm": 0.0,
+       "not_allowed": []
+      },
+      "pass_intersections": true,
+      "pass_clearance_lower": true,
+      "pass_guide_upper": true,
+      "pass": true,
+      "r_max_mm": 27.68
+     },
+     "worst_steps": []
+    }
+   },
+   "rule": "translation step <= min(c_min/2, 1 mm); rotation step <= min(1 deg, c_min / r_max); 0 intersections at every step; clearance (min distance to anything) >= the row's lower bound at rest, over the sweep and at both extremes; the guide clearance (the minimum) <= the row's upper bound",
+   "static_intersections": [],
+   "contact_gaps": [
+    {
+     "a": "barrel",
+     "b": "upper_receiver",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "bolt_rails",
+     "b": "upper_receiver",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "butt_pad",
+     "b": "stock_frame",
+     "min_gap_mm": 0.1524
+    },
+    {
+     "a": "grip_cover",
+     "b": "lower_receiver",
+     "min_gap_mm": 0.4
+    },
+    {
+     "a": "hinge_axle",
+     "b": "lower_receiver",
+     "min_gap_mm": 0.1411
+    },
+    {
+     "a": "lower_rail",
+     "b": "upper_receiver",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "lower_receiver",
+     "b": "upper_receiver",
+     "min_gap_mm": 0.1836
+    },
+    {
+     "a": "lower_receiver",
+     "b": "mag_release_pin",
+     "min_gap_mm": 0.0129
+    },
+    {
+     "a": "magazine",
+     "b": "magazine_floor_plate",
+     "min_gap_mm": 0.01
+    },
+    {
+     "a": "magazine",
+     "b": "magazine_follower",
+     "min_gap_mm": 0.3
+    },
+    {
+     "a": "barrel",
+     "b": "muzzle_device",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "rail_screws",
+     "b": "top_rail",
+     "min_gap_mm": 0.055
+    },
+    {
+     "a": "sight_front_base",
+     "b": "top_rail",
+     "min_gap_mm": 0.05
+    },
+    {
+     "a": "sight_front_base",
+     "b": "sight_front_pin",
+     "min_gap_mm": 0.0168
+    },
+    {
+     "a": "sight_rear_base",
+     "b": "top_rail",
+     "min_gap_mm": 0.05
+    },
+    {
+     "a": "sight_rear_base",
+     "b": "sight_rear_pin",
+     "min_gap_mm": 0.0145
+    },
+    {
+     "a": "stock_frame",
+     "b": "stock_latch_bolt",
+     "min_gap_mm": 0.1592
+    },
+    {
+     "a": "stock_frame",
+     "b": "stock_latch_button",
+     "min_gap_mm": 0.3183
+    },
+    {
+     "a": "top_rail",
+     "b": "upper_receiver",
+     "min_gap_mm": 0.0519
+    },
+    {
+     "a": "lower_receiver",
+     "b": "trigger_axle",
+     "min_gap_mm": 0.0227
+    }
+   ],
+   "suffix": ""
+  },
+  "B4": {
+   "camera": {
+    "eye_M": [
+     48.9,
+     0.0,
+     68.8
+    ],
+    "socket_M": [
+     298.9,
+     0.0,
+     68.8
+    ],
+    "pitch_deg": 0.0,
+    "fov_deg": 55.0,
+    "res": [
+     2560,
+     1440
+    ],
+    "eye_relief_mm": 250.0,
+    "supersample": 8,
+    "window_px": [
+     1170,
+     610,
+     1390,
+     830
+    ]
+   },
+   "mm_per_px_at_aperture": 0.10167,
+   "kind": "aperture",
+   "aperture": {
+    "centre_x_px": 1280.0,
+    "centre_y_px": 720.0,
+    "diameter_px": 19.562,
+    "diameter_mm_at_aperture": 1.989
+   },
+   "occluders_in_aperture_px": {},
+   "post": {
+    "centre_x_px": 1280.0,
+    "tip_y_px": 720.0,
+    "visible_height_in_aperture_mm_at_aperture": 0.991,
+    "visible_px_in_aperture": 85
+   },
+   "lateral_offset_px": 0.0,
+   "vertical_offset_px": 0.0,
+   "lateral_offset_mm": 0.0,
+   "vertical_offset_mm": 0.0,
+   "rule": "post tip at the aperture centre: |lateral|, |vertical| <= 0.20 mm at the aperture; post visible >= 0.80 mm inside the hole (0.4 x its diameter: the post fills the hole's lower half up to the centre); no occluder but the allowed parts",
+   "pass": true,
+   "image": "WorkFiles/guns/smg/review/b4/b4_sight_picture.png"
+  },
+  "B4b": {
+   "camera": {
+    "eye_M": [
+     208.9,
+     0.0,
+     68.8
+    ],
+    "socket_M": [
+     298.9,
+     0.0,
+     68.8
+    ],
+    "pitch_deg": 0.0,
+    "fov_deg": 55.0,
+    "res": [
+     2560,
+     1440
+    ],
+    "eye_relief_mm": 90.0,
+    "supersample": 8,
+    "window_px": [
+     1170,
+     610,
+     1390,
+     830
+    ]
+   },
+   "mm_per_px_at_aperture": 0.0366,
+   "kind": "aperture",
+   "aperture": {
+    "centre_x_px": 1280.0,
+    "centre_y_px": 720.0,
+    "diameter_px": 53.82,
+    "diameter_mm_at_aperture": 1.97
+   },
+   "occluders_in_aperture_px": {},
+   "post": {
+    "centre_x_px": 1280.0,
+    "tip_y_px": 720.0,
+    "visible_height_in_aperture_mm_at_aperture": 0.988,
+    "visible_px_in_aperture": 363
+   },
+   "lateral_offset_px": 0.0,
+   "vertical_offset_px": -0.0,
+   "lateral_offset_mm": 0.0,
+   "vertical_offset_mm": -0.0,
+   "rule": "post tip at the aperture centre: |lateral|, |vertical| <= 0.20 mm at the aperture; post visible >= 0.79 mm inside the hole (0.4 x its diameter: the post fills the hole's lower half up to the centre); no occluder but the allowed parts",
+   "pass": true,
+   "image": "WorkFiles/guns/smg/review/b4/b4b_cheek_weld.png"
+  },
+  "B6a": {
+   "object": "SM_SMG01_B6aCheck",
+   "parts": 32,
+   "triangles": 46206,
+   "checks": [
+    {
+     "name": "no_ngons",
+     "object": "SM_SMG01_B6aCheck",
+     "passed": true,
+     "detail": "0 n-gon(s) of 40208 faces"
+    },
+    {
+     "name": "no_non_manifold_edges",
+     "object": "SM_SMG01_B6aCheck",
+     "passed": true,
+     "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 63311"
+    },
+    {
+     "name": "open_boundary_edges",
+     "object": "SM_SMG01_B6aCheck",
+     "passed": true,
+     "detail": "0 boundary edge(s) of 63311 (informational: open meshes are allowed)"
+    },
+    {
+     "name": "no_loose_vertices",
+     "object": "SM_SMG01_B6aCheck",
+     "passed": true,
+     "detail": "0 loose vertex/vertices of 23101"
+    },
+    {
+     "name": "no_zero_length_edges",
+     "object": "SM_SMG01_B6aCheck",
+     "passed": true,
+     "detail": "0 edge(s) at or below 1e-06 of 63311; shortest 5.10442e-05"
+    },
+    {
+     "name": "no_degenerate_faces",
+     "object": "SM_SMG01_B6aCheck",
+     "passed": true,
+     "detail": "0 face(s) at or below 1e-12 area of 40208; smallest 5.97993e-09"
+    },
+    {
+     "name": "no_coincident_vertices",
+     "object": "SM_SMG01_B6aCheck",
+     "passed": true,
+     "detail": "0 vertex pair(s) within 1e-06 of 23101"
+    }
+   ],
+   "passed": true,
+   "uv_checks": "n/a until stage 3 (no UVs yet); B6a re-runs with uv_no_overlap once UVs exist",
+   "deny_list": {},
+   "deny_list_clean": true
+  },
+  "measure": {
+   "L3": [
+    {
+     "feature": "forward_long_vent_left",
+     "measured": {
+      "X": [
+       506.75,
+       543.85
+      ],
+      "Z": [
+       21.23,
+       27.98
+      ]
+     },
+     "spec": {
+      "X": [
+       506.7,
+       543.9
+      ],
+      "Z": [
+       21.3,
+       27.9
+      ]
+     },
+     "error_mm": 0.08,
+     "pass": true,
+     "note": "opening = rays deeper than the face - 1 mm"
+    },
+    {
+     "feature": "forward_long_vent_right",
+     "measured": {
+      "X": [
+       480.15,
+       539.65
+      ],
+      "Z": [
+       22.58,
+       30.73
+      ]
+     },
+     "spec": {
+      "X": [
+       480.2,
+       539.7
+      ],
+      "Z": [
+       22.6,
+       30.7
+      ]
+     },
+     "error_mm": 0.05,
+     "pass": true,
+     "note": "opening = rays deeper than the face - 1 mm"
+    },
+    {
+     "feature": "lower_vents_left",
+     "measured": [
+      [
+       491.95,
+       516.35
+      ],
+      [
+       523.85,
+       548.35
+      ]
+     ],
+     "spec": [
+      [
+       491.9,
+       516.4
+      ],
+      [
+       523.8,
+       548.4
+      ]
+     ],
+     "error_mm": 0.05,
+     "pass": true,
+     "note": "X edges at Z -3.1"
+    },
+    {
+     "feature": "lower_vents_right",
+     "measured": [
+      [
+       489.25,
+       514.75
+      ],
+      [
+       522.25,
+       546.55
+      ]
+     ],
+     "spec": [
+      [
+       489.2,
+       514.8
+      ],
+      [
+       522.2,
+       546.6
+      ]
+     ],
+     "error_mm": 0.05,
+     "pass": true,
+     "note": "X edges at Z -0.1"
+    },
+    {
+     "feature": "ejection port (X, Z)",
+     "measured": {
+      "X": [
+       406.45,
+       461.55
+      ],
+      "Z": [
+       2.08,
+       23.93
+      ]
+     },
+     "spec": {
+      "X": [
+       406.8,
+       461.6
+      ],
+      "Z": [
+       2.3,
+       23.7
+      ]
+     },
+     "error_mm": 0.35,
+     "pass": true,
+     "note": "rays past the right wall (upper only); the visible front edge = the catch's lip (spec contradiction: catch X 463.1 < port X 464.3); the deflector chamfer widens the rear edge"
+    },
+    {
+     "feature": "charging slot X (left)",
+     "measured": [
+      426.64,
+      500.54
+     ],
+     "spec": [
+      426.69,
+      500.51
+     ],
+     "error_mm": 0.05,
+     "pass": true,
+     "note": "at Z 17.0 (under the neck)"
+    },
+    {
+     "feature": "charging knob centre (X, Z)",
+     "measured": [
+      497.55,
+      19.02
+     ],
+     "spec": [
+      497.55,
+      19.02
+     ],
+     "error_mm": 0.0,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "selector hub centre (left)",
+     "measured": [
+      329.2,
+      -25.75
+     ],
+     "spec": [
+      329.2,
+      -25.8
+     ],
+     "error_mm": 0.049,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "selector hub centre (right)",
+     "measured": [
+      329.2,
+      -25.75
+     ],
+     "spec": [
+      329.2,
+      -25.8
+     ],
+     "error_mm": 0.049,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "selector blade tip (left)",
+     "measured": [
+      322.31,
+      -44.78
+     ],
+     "spec": [
+      322.8,
+      -45.0
+     ],
+     "error_mm": 0.533,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "mag release pin head",
+     "measured": [
+      404.0,
+      -57.6
+     ],
+     "spec": [
+      404.2,
+      -57.6
+     ],
+     "error_mm": 0.2,
+     "pass": true,
+     "note": "declared: pivot moved 0.2 back of the drawn head (wall rule)"
+    },
+    {
+     "feature": "paddle top / bottom Z",
+     "measured": [
+      -50.03,
+      -76.6
+     ],
+     "spec": [
+      -53.3,
+      -76.6
+     ],
+     "error_mm": 0.0,
+     "pass": true,
+     "note": "bottom Z gated; the top is inside the clevis (nose above it)"
+    },
+    {
+     "feature": "fastener heads (19 rows)",
+     "measured": [
+      {
+       "name": "front support bolt",
+       "side": "left",
+       "measured": [
+        462.7,
+        -21.3
+       ],
+       "spec": [
+        462.7,
+        -21.3
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "trigger-housing pin behind the magwell",
+       "side": "left",
+       "measured": [
+        400.5,
+        -35.2
+       ],
+       "spec": [
+        400.5,
+        -35.2
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "trigger-housing pin behind the magwell",
+       "side": "right",
+       "measured": [
+        400.6,
+        -33.8
+       ],
+       "spec": [
+        400.6,
+        -33.8
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "small head above it",
+       "side": "left",
+       "measured": [
+        398.9,
+        -23.0
+       ],
+       "spec": [
+        398.9,
+        -23.0
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "small head above it",
+       "side": "right",
+       "measured": [
+        400.1,
+        -22.1
+       ],
+       "spec": [
+        400.1,
+        -22.1
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "trigger axle",
+       "side": "left",
+       "measured": [
+        364.3,
+        -36.4
+       ],
+       "spec": [
+        364.3,
+        -36.4
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "trigger axle",
+       "side": "right",
+       "measured": [
+        364.3,
+        -36.4
+       ],
+       "spec": [
+        366.6,
+        -35.9
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "seam boss pin",
+       "side": "left",
+       "measured": [
+        318.0,
+        -12.5
+       ],
+       "spec": [
+        318.0,
+        -12.5
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "seam head upper (right)",
+       "side": "right",
+       "measured": [
+        318.4,
+        -11.7
+       ],
+       "spec": [
+        318.4,
+        -11.7
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "seam head lower (right)",
+       "side": "right",
+       "measured": [
+        318.8,
+        -17.4
+       ],
+       "spec": [
+        318.8,
+        -17.4
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "head behind the right selector hub",
+       "side": "right",
+       "measured": [
+        309.6,
+        -29.7
+       ],
+       "spec": [
+        309.6,
+        -29.7
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "end-block head",
+       "side": "left",
+       "measured": [
+        271.1,
+        -12.1
+       ],
+       "spec": [
+        271.1,
+        -12.1
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "end-block head",
+       "side": "right",
+       "measured": [
+        271.9,
+        -11.8
+       ],
+       "spec": [
+        271.9,
+        -11.8
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "rear locking pin",
+       "side": "left",
+       "measured": [
+        256.2,
+        -14.2
+       ],
+       "spec": [
+        256.2,
+        -14.2
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "rear locking pin",
+       "side": "right",
+       "measured": [
+        255.3,
+        -13.9
+       ],
+       "spec": [
+        255.3,
+        -13.9
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "mag release pin",
+       "side": "left",
+       "measured": [
+        404.0,
+        -57.6
+       ],
+       "spec": [
+        404.0,
+        -57.6
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "mag release pin",
+       "side": "right",
+       "measured": [
+        404.0,
+        -57.6
+       ],
+       "spec": [
+        404.0,
+        -57.6
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "selector shaft ends",
+       "side": "left",
+       "measured": [
+        329.2,
+        -25.8
+       ],
+       "spec": [
+        329.2,
+        -25.8
+       ],
+       "error_mm": 0.0
+      },
+      {
+       "name": "selector shaft ends",
+       "side": "right",
+       "measured": [
+        329.2,
+        -25.8
+       ],
+       "spec": [
+        329.2,
+        -25.8
+       ],
+       "error_mm": 0.0
+      }
+     ],
+     "spec": "pins_fasteners.list",
+     "error_mm": 0.0,
+     "pass": true,
+     "note": "head cap centre; 'both' through-parts at the LEFT position (the RIGHT panel's drift reported)"
+    },
+    {
+     "feature": "oblong recess X (left)",
+     "measured": [
+      365.93,
+      376.48
+     ],
+     "spec": [
+      365.9,
+      376.5
+     ],
+     "error_mm": 0.03,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "seam boss centre",
+     "measured": [
+      319.55,
+      -15.14
+     ],
+     "spec": [
+      319.6,
+      -15.2
+     ],
+     "error_mm": 0.075,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "front post tip (X, Z)",
+     "measured": [
+      541.27,
+      68.8
+     ],
+     "spec": [
+      542.2,
+      68.8
+     ],
+     "error_mm": 0.925,
+     "pass": true,
+     "note": "the post's flat tip (highest point near Y 0)"
+    },
+    {
+     "feature": "rear aperture centre (Y, Z)",
+     "measured": [
+      0.0,
+      68.8
+     ],
+     "spec": [
+      0.0,
+      68.8
+     ],
+     "error_mm": 0.0,
+     "pass": true,
+     "note": "see-through along X through the leaf"
+    },
+    {
+     "feature": "hinge axle (X, Y)",
+     "measured": [
+      246.8,
+      -30.93
+     ],
+     "spec": [
+      246.8,
+      -30.93
+     ],
+     "error_mm": 0.0,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "stock window 1 bbox",
+     "measured": [
+      40.76,
+      110.76,
+      -52.26,
+      2.99
+     ],
+     "spec": [
+      40.51,
+      110.9,
+      -52.51,
+      3.18
+     ],
+     "error_mm": 0.25,
+     "pass": true,
+     "note": "see-through region vs the traced hole"
+    },
+    {
+     "feature": "stock window 2 bbox",
+     "measured": [
+      123.86,
+      171.36,
+      -25.87,
+      0.13
+     ],
+     "spec": [
+      123.86,
+      171.59,
+      -26.12,
+      0.3
+     ],
+     "error_mm": 0.25,
+     "pass": true,
+     "note": "see-through region vs the traced hole"
+    },
+    {
+     "feature": "stock hole at [36.3, 8.6]",
+     "measured": [
+      36.35,
+      8.6
+     ],
+     "spec": [
+      36.3,
+      8.6
+     ],
+     "error_mm": 0.05,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "stock hole at [36.3, -59.3]",
+     "measured": [
+      36.35,
+      -59.3
+     ],
+     "spec": [
+      36.3,
+      -59.3
+     ],
+     "error_mm": 0.05,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "top rail ends X",
+     "measured": [
+      256.8,
+      559.9
+     ],
+     "spec": [
+      256.8,
+      559.9
+     ],
+     "error_mm": 0.0,
+     "pass": true,
+     "note": ""
+    },
+    {
+     "feature": "lower rail ends X",
+     "measured": [
+      484.5,
+      553.6
+     ],
+     "spec": [
+      484.5,
+      553.6
+     ],
+     "error_mm": 0.0,
+     "pass": true,
+     "note": ""
+    }
+   ],
+   "L4": [
+    {
+     "dimension": "knob tip Y",
+     "measured": 47.5,
+     "spec": 47.5,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "charging_handle bbox max Y"
+    },
+    {
+     "dimension": "paddle front face X",
+     "measured": 405.5,
+     "spec": 405.5,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "mag_release below the clevis"
+    },
+    {
+     "dimension": "paddle rear face X",
+     "measured": 402.5,
+     "spec": 402.5,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "mag_release below the clevis"
+    },
+    {
+     "dimension": "aperture diameter",
+     "measured": 1.992,
+     "spec": 2.0,
+     "error_mm": 0.008,
+     "pass": true,
+     "how": "see-through area along X"
+    },
+    {
+     "dimension": "butt pad rear X",
+     "measured": -0.0,
+     "spec": 0.0,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "butt_pad bbox"
+    },
+    {
+     "dimension": "butt pad height",
+     "measured": 104.56,
+     "spec": 102.6,
+     "error_mm": 1.96,
+     "pass": true,
+     "how": "butt_pad bbox"
+    },
+    {
+     "dimension": "top rail top Z",
+     "measured": 45.42,
+     "spec": 45.4,
+     "error_mm": 0.02,
+     "pass": true,
+     "how": "top_rail bbox"
+    },
+    {
+     "dimension": "overall length",
+     "measured": 625.0,
+     "spec": 625.0,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox X of every gun part (no mag)"
+    },
+    {
+     "dimension": "top Z (sights up)",
+     "measured": 76.4,
+     "spec": 76.4,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox max Z"
+    },
+    {
+     "dimension": "muzzle device front X",
+     "measured": 625.0,
+     "spec": 625.0,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox"
+    },
+    {
+     "dimension": "muzzle device OD",
+     "measured": 23.1,
+     "spec": 23.1,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox Z"
+    },
+    {
+     "dimension": "upper receiver width left face Y",
+     "measured": 30.8,
+     "spec": 30.8,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox max Y"
+    },
+    {
+     "dimension": "upper receiver right face Y",
+     "measured": -34.6,
+     "spec": -34.6,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox min Y (the port catch stands 3.0 proud)"
+    },
+    {
+     "dimension": "upper receiver front face X",
+     "measured": 563.3,
+     "spec": 563.3,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox max X"
+    },
+    {
+     "dimension": "bolt length",
+     "measured": 99.45,
+     "spec": 99.44999999999999,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox (boss 0.15 short of the breech)"
+    },
+    {
+     "dimension": "bolt width",
+     "measured": 23.6,
+     "spec": 23.6,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox Y (the lug excluded by the cap)"
+    },
+    {
+     "dimension": "magazine fore-aft (body)",
+     "measured": 42.2,
+     "spec": 42.2,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "mag frame X extent minus the 0.8 spine rib"
+    },
+    {
+     "dimension": "magazine thickness",
+     "measured": 27.0,
+     "spec": 27.0,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "Y extent"
+    },
+    {
+     "dimension": "trigger width",
+     "measured": 6.0,
+     "spec": 6.0,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "Y extent"
+    },
+    {
+     "dimension": "stock frame rear X",
+     "measured": 28.4,
+     "spec": 28.4,
+     "error_mm": 0.0,
+     "pass": true,
+     "how": "bbox (the pad seam 0.3 behind the pad's front face 28.1)"
+    }
+   ],
+   "tol_mm_side": 2.128,
+   "L3_pass": true,
+   "L4_pass": true
+  },
+  "H1": {
+   "body": "References/Characters/MH_PlayerDefault/MH_PlayerDefault_FitBody.blend",
+   "body_sha256_locked": "171b5b632b44204c836d57a883657ab004ad558696f2c165f3a7785cf4e57da9",
+   "mode": "early (measurement-based); posed H1 at W3",
+   "body_sha256_now": "171b5b632b44204c836d57a883657ab004ad558696f2c165f3a7785cf4e57da9",
+   "body_sha256_matches_lock": true,
+   "hand": {
+    "hand_length_mm": 173.6,
+    "web_to_index_DIP_mm": 85.3,
+    "web_to_index_pad_mm": 86.6,
+    "web_to_palm_centre_mm": 55.2,
+    "upper+lower arm_mm": 563.2
+   },
+   "girth": {
+    "section_at": "Grip origin, perpendicular to the grip axis (21.87 deg)",
+    "perimeter_mm": 148.0,
+    "width_Y_mm": 30.9,
+    "depth_mm": 51.24,
+    "real_band_mm": [
+     143.8,
+     152.1
+    ],
+    "limit_mm": 167.3,
+    "rule": "rounded oblong of the measured depth with the real width 30-33 and the spec strap radii; PASS = perimeter <= the band's top + 10 % (plan 14.2 H1 early)",
+    "pass": true
+   },
+   "reach": {
+    "web_point_M": [
+     294.44,
+     0.0,
+     -54.5
+    ],
+    "trigger_face_M": [
+     370.83,
+     0.0,
+     -70.56
+    ],
+    "reach_mm": 78.1,
+    "spec_reach_mm": 82.0,
+    "real_band_mm": [
+     57.2,
+     72.0
+    ],
+    "gate_max_mm": 80.0,
+    "hand_web_to_DIP_mm": 85.3,
+    "hand_web_to_pad_mm": 86.6,
+    "rule": "web hollow -> trigger face <= 80 mm (plan H1 early); the trigger is the sheet's, not moved",
+    "pass": true
+   },
+   "grip": {
+    "standard_Grip_depth_mm": 46.0,
+    "hand_palm_centre_along_knuckle_line_mm": 45.9,
+    "web_line_point_M": [
+     319.59,
+     0.0,
+     -48.7
+    ],
+    "pass": true
+   },
+   "support": {
+    "SupportHand_M": [
+     460.2,
+     0.0,
+     -54.35
+    ],
+    "front_face_hit_X": 460.23,
+    "offset_from_surface_mm": -0.03,
+    "hand_separation_mm": 162.0,
+    "arm_length_mm": 563.2,
+    "pass": true
+   },
+   "length_of_pull": {
+    "mm": 370.8,
+    "real_mm": [
+     350,
+     370
+    ],
+    "note": "butt rear (X 0) to the trigger face along X"
+   },
+   "cheek_weld": {
+    "sight_line_Z": 68.8,
+    "stock_top_Z_at_cheek": 22.6,
+    "eye_over_comb_mm": 46.2,
+    "note": "reported (B4b feeds on it)"
+   },
+   "real_world_sources": {
+    "grip_width_mm": {
+     "min": 30.0,
+     "max": 33.0,
+     "sources": [
+      {
+       "what": "spec pistol_grip.width_note: real polymer SMG grips 31-33 (craft norm)",
+       "url": null
+      },
+      {
+       "what": "IMI Defense AK47/AK74 EG polymer pistol grip",
+       "value": "Width 3 cm",
+       "url": "https://imidefense.com/product/ak47-ak74-eg-polymer-pistol-grip/"
+      },
+      {
+       "what": "Magpul MOE grip (AR-15 class)",
+       "value": "width 1.2 in (30.5 mm)",
+       "url": "https://blog.primaryarms.com/guide/what-is-the-best-ar-15-pistol-grip-guide/"
+      }
+     ]
+    },
+    "strap_radius_mm": {
+     "front": [
+      8.2,
+      9.1
+     ],
+     "back": [
+      10.9,
+      12.7
+     ],
+     "source": "spec pistol_grip dims"
+    },
+    "trigger_reach_mm": {
+     "real_band": [
+      57.2,
+      72.0
+     ],
+     "gate_max": 80.0,
+     "sources": [
+      {
+       "what": "AR-15 standard grip",
+       "value": "trigger length 2.25 in (57.2 mm)",
+       "url": "https://www.bluesheepdog.com/2015/03/18/new-accu-grip-ar-15-pistol-grip/"
+      },
+      {
+       "what": "Glock 17",
+       "value": "Trigger Distance 72 mm",
+       "url": "https://us.glock.com/en/products/law-enforcement/pistols/g17"
+      }
+     ]
+    }
+   },
+   "pass_early": true,
+   "pass_all_rows": true
+  },
+  "F": {
+   "F2": {
+    "folded_length_mm": 385.8,
+    "spec": 383.6,
+    "tol": 3.0,
+    "rearmost_X": 239.2,
+    "real_mm": 450,
+    "pass": true,
+    "folded_min_Y_by_part": {
+     "stock_frame": -90.46,
+     "stock_latch_button": -91.46,
+     "stock_latch_bolt": -91.21,
+     "butt_pad": -88.11
+    }
+   },
+   "B3b": {
+    "folded_intersections": {},
+    "pass": true,
+    "throw_cone": {
+     "origin_M": [
+      435.55,
+      -31.6,
+      13.0
+     ],
+     "dir": [
+      0.2549000084400177,
+      -0.9513000249862671,
+      0.1736000031232834
+     ],
+     "vertices_inside": {
+      "stock_frame": 10,
+      "butt_pad": 9
+     },
+     "clear": false,
+     "note": "reported (Q5): the folded stock lies along the right side"
+    }
+   },
+   "F3": {
+    "barb_X": [
+     461.3,
+     462.9
+    ],
+    "lip_X": [
+     461.6,
+     463.1
+    ],
+    "engagement_X_mm": 1.3,
+    "barb_to_lip_min_distance_mm": 0.2,
+    "barb_Y": [
+     -32.8,
+     -31.9
+    ],
+    "lip_Y": [
+     -34.6,
+     -33.1
+    ],
+    "folded_intersections": {},
+    "pass": true
+   },
+   "F6": {
+    "full_diameter_end_Y": 21.65,
+    "lug_Y": [
+     19.9,
+     25.9
+    ],
+    "engaged_full_diameter_released_mm": 1.75,
+    "engaged_full_diameter_pressed_mm": 0.0,
+    "neck_Y_released": [
+     22.4,
+     28.8
+    ],
+    "stroke_mm": 2.5,
+    "spec_stroke_mm": 2.0,
+    "declared": "stroke 2.5 (spec 2.0): with 45 deg shoulders the spec's 2.0 stroke cannot carry a 6.4 neck across the 6.0 lug with 2.0 engaged",
+    "pass": true
+   },
+   "F7": {
+    "neck_rise_at_wall_inner_face_mm": 2.093,
+    "neck_axis_rise_in_wall_plane_mm": 1.783,
+    "neck_top_over_slot_top_mm": 1.654,
+    "knob_rise_mm": 5.152,
+    "spec_knob_rise_mm": 5.15,
+    "pass": true
+   },
+   "F5b": {
+    "rays_hitting_the_bolt_first": 91,
+    "of_which_in_the_recess": 81,
+    "pass": true,
+    "note": "rays from the right through the port centre region (13 x 7 grid, 1 mm)"
+   },
+   "B4c": {
+    "sight_rear": {
+     "folded_max_Z": 59.8,
+     "limit": 60.1,
+     "min_Z": 46.3,
+     "lowest_allowed_Z": 45.4,
+     "pass": true
+    },
+    "sight_front": {
+     "folded_max_Z": 51.65,
+     "limit": 51.7,
+     "min_Z": 44.8,
+     "lowest_allowed_Z": 44.8,
+     "pass": true
+    },
+    "pass_all": true
+   }
+  },
+  "build_report": {
+   "upper_receiver": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2604,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.007826,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 3,
+     "edge_on_groups": 0,
+     "pass_ud1": false,
+     "pass_ud2": false
+    }
+   },
+   "lower_receiver": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 8178,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.005979,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 1,
+     "edge_on_groups": 0,
+     "pass_ud1": false,
+     "pass_ud2": false
+    }
+   },
+   "grip_cover": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 608,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.567061,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "bolt_rails": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 144,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.077942,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "top_rail": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2046,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.018699,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 1,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    }
+   },
+   "rail_screws": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 3168,
+    "shells": 4,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.018749,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "lower_rail": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 876,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.046891,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "sight_rear_base": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1220,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.011478,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 1,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    }
+   },
+   "sight_rear_leaf": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1570,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.011224,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "sight_rear_pin": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 256,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.04978,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "sight_front_base": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1642,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.011476,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "sight_front_leaf": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 412,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.022384,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "sight_front_pin": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 256,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.049779,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "barrel": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2176,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.158123,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "muzzle_device": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2228,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.023127,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "bolt": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1246,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.010572,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "charging_handle": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1504,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.012162,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "charging_slide": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 290,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.010787,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "selector": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2306,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.011922,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "trigger": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1224,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.01077,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "trigger_axle": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 256,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.085044,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "mag_release": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 514,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.019603,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "mag_release_pin": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 192,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.034462,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "pins_fasteners": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2614,
+    "shells": 13,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.020909,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "hinge_axle": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 384,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.09609,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "stock_frame": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2514,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.006699,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 2,
+     "edge_on_groups": 0,
+     "pass_ud1": false,
+     "pass_ud2": false
+    }
+   },
+   "stock_latch_button": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 556,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.010178,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "stock_latch_bolt": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 444,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.012145,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "butt_pad": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1486,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.011054,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 4,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    }
+   },
+   "magazine": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2580,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.029129,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "magazine_follower": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 156,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.014034,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   },
+   "magazine_floor_plate": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 556,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "unreal_drops_polygons": 0,
+     "min_area_mm2": 0.05127,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "needle_groups": 0,
+     "edge_on_groups": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    }
+   }
+  },
+  "early_realism": {
+   "renders": [
+    "WorkFiles/guns/smg/review/early_realism/g1_receiver_rails.png",
+    "WorkFiles/guns/smg/review/early_realism/g2_grip_trigger_sel.png",
+    "WorkFiles/guns/smg/review/early_realism/g3_magazine_well.png",
+    "WorkFiles/guns/smg/review/early_realism/g4_stock_extended.png",
+    "WorkFiles/guns/smg/review/early_realism/g5_stock_folded.png",
+    "WorkFiles/guns/smg/review/early_realism/g6_front_end.png",
+    "WorkFiles/guns/smg/review/early_realism/g7_rear_sight.png",
+    "WorkFiles/guns/smg/review/early_realism/fp_35cm.png",
+    "WorkFiles/guns/smg/review/early_realism/ads.png",
+    "WorkFiles/guns/smg/review/early_realism/hero_34.png",
+    "WorkFiles/guns/smg/review/early_realism/tp_3m.png"
+   ],
+   "contact": "WorkFiles/guns/smg/review/early_realism/contact.png",
+   "verdict": "pending: 2 realism judges per part group (plan 14.1 L8), not run by this stage"
+  }
+ },
+ "files": {
+  "blend": "Assets/Guns/SMG01.blend",
+  "form_stage_blend": "WorkFiles/guns/smg/scratch/SMG01_form_stage.blend",
+  "renders": [
+   "Renders/Guns/SMG01/form_grey_folded_right.png",
+   "Renders/Guns/SMG01/form_grey_folded_top.png",
+   "Renders/Guns/SMG01/form_grey_left.png",
+   "Renders/Guns/SMG01/form_grey_q34.png",
+   "Renders/Guns/SMG01/form_grey_right.png",
+   "Renders/Guns/SMG01/form_grey_top.png"
+  ],
+  "overlays": [
+   "WorkFiles/guns/smg/review/form/left_diff.png",
+   "WorkFiles/guns/smg/review/form/left_overlay.png",
+   "WorkFiles/guns/smg/review/form/q34_diff.png",
+   "WorkFiles/guns/smg/review/form/q34_overlay.png",
+   "WorkFiles/guns/smg/review/form/right_diff.png",
+   "WorkFiles/guns/smg/review/form/right_overlay.png",
+   "WorkFiles/guns/smg/review/form/top_diff.png",
+   "WorkFiles/guns/smg/review/form/top_overlay.png"
+  ],
+  "early_realism": [
+   "WorkFiles/guns/smg/review/early_realism/g1_receiver_rails.png",
+   "WorkFiles/guns/smg/review/early_realism/g2_grip_trigger_sel.png",
+   "WorkFiles/guns/smg/review/early_realism/g3_magazine_well.png",
+   "WorkFiles/guns/smg/review/early_realism/g4_stock_extended.png",
+   "WorkFiles/guns/smg/review/early_realism/g5_stock_folded.png",
+   "WorkFiles/guns/smg/review/early_realism/g6_front_end.png",
+   "WorkFiles/guns/smg/review/early_realism/g7_rear_sight.png",
+   "WorkFiles/guns/smg/review/early_realism/fp_35cm.png",
+   "WorkFiles/guns/smg/review/early_realism/ads.png",
+   "WorkFiles/guns/smg/review/early_realism/hero_34.png",
+   "WorkFiles/guns/smg/review/early_realism/tp_3m.png"
+  ]
+ }
+}

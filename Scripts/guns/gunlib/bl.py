@@ -158,12 +158,37 @@ def _bevel_once(ob, width_mm, segments, angle_deg, profile, harden, clamp, limit
     return ob
 
 
-def weighted_normals(ob, keep_sharp=True, sharp_deg=35.0):
+def clear_custom_normals(ob):
+    """Drop stored custom split normals (booleans and bevels can carry stale ones in from their operands)."""
+    me = ob.data
+    for nm in ("custom_normal",):
+        a = me.attributes.get(nm)
+        if a is not None:
+            me.attributes.remove(a)
+    if getattr(me, "has_custom_normals", False):
+        try:
+            with bpy.context.temp_override(object=ob, active_object=ob):
+                bpy.ops.mesh.customdata_custom_splitnormals_clear()
+        except Exception:  # noqa: BLE001
+            pass
+    me.update()
+
+
+def weighted_normals(ob, keep_sharp=True, sharp_deg=35.0, weight=None, clear_custom=False):
+    """Weighted normals (FACE_AREA). ``weight`` (gunlib 0.2.1, optional; the modifier's default 50 otherwise): 100
+    lets the largest face dominate fully, so a flat face next to a bevel keeps its own normal (hard-surface shading).
+    ``clear_custom`` (0.2.1): drop stale custom normals first; with them present the angle-based sharp marking and the
+    modifier work from the stale fans and flat faces shade with neighbours' normals (measured: 451/873 big-face
+    corners off by > 2 deg on the SMG01 receiver; 25/873 with the clear)."""
+    if clear_custom:
+        clear_custom_normals(ob)
     triangulate_ngons(ob)
     mark_sharp(ob, sharp_deg)
     mod = ob.modifiers.new("wn", "WEIGHTED_NORMAL")
     mod.keep_sharp = keep_sharp
     mod.mode = "FACE_AREA"
+    if weight is not None:
+        mod.weight = int(weight)
     try:
         mod.use_face_influence = True
     except Exception:  # noqa: BLE001
@@ -387,6 +412,74 @@ def bevel_weighted(ob, width_mm, segments, pred, offset_mm=(0, 0, 0), profile=0.
     if n:
         bevel(ob, width_mm, segments, limit="WEIGHT", profile=profile, harden=harden)
     return n
+
+
+def set_bevel_weights_convex(ob, pred, offset_mm=(0, 0, 0)) -> int:
+    """gunlib 0.2.0: like set_bevel_weights, but the predicate also gets the edge's convexity:
+    pred(mid_mm, dir, n1, n2, dihedral_deg, convex) -> weight. ``convex`` = the second face, leaving the edge, dips
+    behind the first face's plane (an outside edge). Lets a generator break only the OUTER edges of a part after its unions (the
+    curved and concave intersection edges a boolean leaves stay sharp: no bevel / boolean run-out strip, UD2)."""
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    lay = bm.edges.layers.float.get("bevel_weight_edge") or bm.edges.layers.float.new("bevel_weight_edge")
+    off = np.asarray(offset_mm, float)
+    n = 0
+    for e in bm.edges:
+        w = 0.0
+        if len(e.link_faces) == 2:
+            a, b = e.verts[0].co, e.verts[1].co
+            mid = np.array((a + b) / 2) * 1000.0 + off
+            d = np.array(b - a)
+            ln = np.linalg.norm(d)
+            if ln > 0:
+                d = d / ln
+                f1, f2 = e.link_faces
+                n1 = np.array(f1.normal)
+                n2 = np.array(f2.normal)
+                dih = float(np.degrees(np.arccos(np.clip(n1 @ n2, -1, 1))))
+                # face 2's in-plane direction away from the edge (left of the edge as face 2's loop runs it, for
+                # its CCW winding about n2); the edge is convex when that direction dips below face 1's plane (face
+                # centres misjudge large non-convex faces)
+                l2 = next(lp for lp in e.link_loops if lp.face == f2)
+                ed = np.array(l2.link_loop_next.vert.co - l2.vert.co)
+                t2 = np.cross(n2, ed)
+                convex = bool(t2 @ n1 < 0.0)
+                w = float(pred(mid, d, n1, n2, dih, convex))
+        e[lay] = w
+        n += w > 0
+    bm.to_mesh(ob.data)
+    bm.free()
+    ob.data.update()
+    return n
+
+
+def bevel_weighted_convex(ob, width_mm, segments, pred, offset_mm=(0, 0, 0), profile=0.5, harden=True):
+    from . import lod as _lod
+    if _lod.bevel(width_mm, segments) is None:
+        return 0
+    n = set_bevel_weights_convex(ob, pred, offset_mm)
+    if n:
+        bevel(ob, width_mm, segments, limit="WEIGHT", profile=profile, harden=harden)
+    return n
+
+
+def axis_aligned(v, tol=1e-3) -> bool:
+    v = np.abs(np.asarray(v, float))
+    return bool(v.max() > 1.0 - tol)
+
+
+def outer_edges_pred(exclude=None, dih_range=(80.0, 100.0)):
+    """A set_bevel_weights_convex predicate: convex edges between two axis-aligned planar faces, the dihedral inside
+    dih_range, the edge itself axis-aligned (machined / moulded block edges), minus ``exclude(mid_mm) -> bool``."""
+    def pred(mid, d, n1, n2, dih, convex):
+        if not convex or not (dih_range[0] <= dih <= dih_range[1]):
+            return 0.0
+        if not (axis_aligned(d) and axis_aligned(n1) and axis_aligned(n2)):
+            return 0.0
+        if exclude is not None and exclude(mid):
+            return 0.0
+        return 1.0
+    return pred
 
 
 def surface_normals_from(ob, sources, tol_mm=0.05, max_angle_deg=20.0, smooth_deg=35.0) -> int:

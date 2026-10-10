@@ -1,0 +1,178 @@
+{
+ "meta": {
+  "name": "Gun line standard (GUN_BUILDING_STUDY 5, 3.1, 3.7, 5.8, 7)",
+  "version": "0.2.0",
+  "date": "2026-10-09",
+  "loader": "Scripts/guns/gunlib/standard.py",
+  "rule": "one file for what every gun of the line shares; a gun's spec overrides a value only with a recorded resolution. Written for gunlib 0.2.0 (SMG_BUILD_PLAN 15 W1a); the AR-01 values it carries are the ones the pilot shipped with",
+  "units": "millimetres and degrees unless a key says otherwise"
+ },
+ "frame": {
+  "axes": "Blender metres, modelled in mm; +X = muzzle (bore parallel to X at Y = 0), +Z up, -Y = the gun's right side",
+  "unreal_mapping": "Unreal cm = (Bx, -By, Bz) / 10; Unreal +X forward, +Y right, +Z up",
+  "origin": "Grip: on the grip's centre axis in Y = 0, grip_origin_depth_mm down that axis from the web line",
+  "grip_origin_depth_mm": 46.0,
+  "grip_origin_depth_source": "AR-01 H1 early (the fit body's palm centre on the knuckle line; study 5.1 provisional 40 replaced)",
+  "blender_front_view": "from -Y shows the right side, muzzle to screen right"
+ },
+ "bones": {
+  "rule": "lowercase snake, no dots; every bone deforms except 'magazine' (attach only, no weighted vertices); rest rotation = root's (identity); the armature OBJECT is 'root' at Grip (no bone named root); missing bones omitted, never dummies; same bones on every LOD",
+  "parents": {
+   "body": [null],
+   "trigger": ["body"], "hammer": ["body"], "selector": ["body", "slide"], "mag_release": ["body"],
+   "bolt_catch": ["body"], "slide_stop": ["body"], "bolt": ["body"], "charging_handle": ["body"],
+   "slide": ["body"], "barrel": ["slide"], "dust_cover": ["body"], "magazine": ["body"],
+   "muzzle_device": ["body"], "stock": ["body"], "stock_ext": ["stock"], "cheek_riser": ["stock"],
+   "sight_front": ["body"], "sight_rear": ["body"], "bipod": ["body"], "bipod_leg_l": ["bipod"],
+   "bipod_leg_r": ["bipod"], "bipod_leg_l_ext": ["bipod_leg_l"], "bipod_leg_r_ext": ["bipod_leg_r"],
+   "pump": ["body"]
+  },
+  "motion_axes": {"bolt": "translate -X", "charging_handle": "translate -X", "trigger": "rotate about Y", "selector": "rotate about Y", "mag_release": "rotate about Y", "sight_rear": "rotate about Y", "sight_front": "rotate about Y", "stock (side fold)": "rotate about Z", "dust_cover": "rotate about Y"},
+  "class_pilots": {"long_gun": "SK_AR01_Skeleton", "pistol": "SK_HP01_Skeleton"},
+  "abp": "one ABP_Gun_<Class> on the class pilot; later guns list the pilot as a Compatible Skeleton; normalized inputs (bolt 0..1, trigger pull 0..1, selector detent index, release 0..1) mapped per gun by the sidecar's gun.abp_angle_table"
+ },
+ "sockets": {
+  "rule": "PascalCase; on bones in the skeletal sidecar; Empties + .sockets.json on the statics",
+  "gun": {
+   "Grip": {"bone": "body", "place": "the origin, weapon axes"},
+   "SupportHand": {"bone": "body", "place": "off-hand palm centre: handguard (long guns), magwell (SMG), support wrap (pistol); +X along the bore"},
+   "Muzzle": {"bone": "muzzle_device", "place": "bore exit, +X out of the bore"},
+   "MuzzleSeat": {"bone": "body", "place": "barrel shoulder where devices seat, +X forward"},
+   "ShellEject": {"bone": "bolt or body", "place": "port centre, +X = throw direction"},
+   "Sight": {"bone": "sight_rear or body", "place": "on the sight line at the rear notch / aperture, +X toward the front sight"},
+   "Mag": {"bone": "magazine", "place": "the mag's origin frame when seated"},
+   "MagInsertStart": {"bone": "body", "place": "reload path start (every mag)"},
+   "MagRockStart": {"bone": "body", "place": "rock-in mags only: the rock's start frame"},
+   "Rail_Top": {"bone": "body", "place": "centre of slot 0 (rearmost) on the rail-top plane, +X along the slots, +Z out of the rail"},
+   "Rail_Bottom": {"bone": "body", "place": "as Rail_Top (rolled 180 deg: +Z points down)"},
+   "Rail_Left": {"bone": "body", "place": "as Rail_Top"},
+   "Rail_Right": {"bone": "body", "place": "as Rail_Top"},
+   "Stock": {"bone": "body", "place": "stock interface (tube end or hinge face)"},
+   "SlingFront": {"bone": "body", "place": "swivel / QD centre"},
+   "SlingRear": {"bone": "body or stock", "place": "swivel / QD centre"},
+   "Holster": {"bone": "body", "place": "point the gun hangs from when stowed"},
+   "Shoulder": {"bone": "body or stock", "place": "butt-plate centre, +X = plate normal reversed"},
+   "CenterOfMass": {"bone": "body", "place": "computed"}
+  },
+  "optional_gun": ["Trigger", "Selector", "MagRelease", "ChargingHandle", "Laser", "Light"],
+  "mag": {
+   "Mag": "= the origin (seating pivot)", "HandReload": "left palm on the body", "Feed": "top of the lips",
+   "Base": "floor plate, impact FX", "CenterOfMass": "computed"
+  }
+ },
+ "magazine_interface": {
+  "origin": "the seating pivot; +X forward, +Z out of the well along the final insertion direction",
+  "straight": "the centre of the well-entry opening; insertion along -Z from MagInsertStart (lerp)",
+  "rock_in": "the front-lug hook point; MagInsertStart -> (lerp) -> MagRockStart -> (slerp about the lug) -> Mag",
+  "lod_screen_sizes": "derived: size_mag = size_gun x r_mag / r_gun (measured engine-equivalent bounds)"
+ },
+ "rail_1913": {
+  "authority": "MIL-STD-1913 (3 Feb 1995) Figure 1 'Accessory mounting rail profile' (inches) via Wikimedia Commons M1913A_Rail_CrossSection.svg; slot numbers also Wikipedia 'Picatinny rail'",
+  "sources": [
+   "https://commons.wikimedia.org/wiki/File:M1913A_Rail_CrossSection.svg",
+   "https://en.wikipedia.org/wiki/Picatinny_rail"
+  ],
+  "drawing_in": {
+   "width_across_V": "0.835 -0.005",
+   "gauge_width_C": "0.748 +-0.002 (on the 45 deg flanks, at two lines 0.108 basic apart)",
+   "top_to_lower_gauge_line": "0.164 -0.020",
+   "gauge_lines_apart": "0.108 basic",
+   "neck_width": "0.617 -0.010",
+   "flanks": "2x 45 deg above and below the V",
+   "neck_to_base_radius": "R 0.060 max",
+   "top_flatness": "0.005",
+   "slot_width": "0.206 (5.23 mm)",
+   "slot_pitch": "0.394 (10.01 mm)",
+   "slot_depth": "0.118 (3.00 mm)"
+  },
+  "mm": {
+   "width_across_V": 21.2,
+   "gauge_width": 19.0,
+   "lower_gauge_depth": 4.1,
+   "gauge_lines_apart": 2.743,
+   "neck_width": 15.67,
+   "flank_deg": 45.0,
+   "slot_width": 5.24,
+   "slot_width_range": [5.23, 5.26],
+   "slot_pitch": 10.01,
+   "slot_depth": 3.0,
+   "neck_base_radius_max": 1.52,
+   "height_default": 9.5,
+   "edge_chamfer": [0.3, 0.5],
+   "edge_chamfer_min": 0.1
+  },
+  "derived_mm": {
+   "note": "45 deg flanks through the gauge width at both gauge lines; the lower gauge line 4.10 below the top (0.1614 in, inside 0.144-0.164) puts the V face's lower end exactly at the 3.00 slot floor, so the slot floor meets the V face's edge with no sliver (UD2)",
+   "top_flat_width": 16.286,
+   "V_face_top_depth": 2.457,
+   "V_face_bottom_depth": 3.0,
+   "neck_top_depth": 5.765
+  },
+  "lods": {"LOD1": "every slot, half the bevel segments", "LOD2": "trapezoid section (no undercut), teeth as plain blocks", "LOD3": "box"},
+  "snap": "an attachment's Mount at Rail_X + k x slot_pitch along +X, integer k"
+ },
+ "clearance_mm": {
+  "butt": [0.01, 0.05],
+  "sliding": [0.15, 0.40],
+  "hinge": [0.10, 0.30],
+  "hinge_swept_min": 0.10,
+  "seated_mag": {"lateral": [0.2, 0.6], "foreaft": [0.2, 0.6], "top_stop": [0.1, 0.5], "lug_in_recess": [0.1, 0.4]},
+  "visible_seam": [0.2, 0.8],
+  "why_butt_never_exact": "qa_check no_coincident_vertices fails any vertex pair within 1e-6 m across the joined twin; 0.01 mm is 10x that"
+ },
+ "process_classes": {
+  "M-chamfer": {"edge_mm": [0.2, 0.6], "segments": [1, 1, 0], "what": "machined broken edge: barrel, blocks, bolt, rails, slide"},
+  "M-round": {"edge_mm": [0.8, 1.5], "segments": [3, 2, 1], "what": "machined radius: sight ears, slide top"},
+  "S-bend": {"edge_mm": "inside radius >= sheet thickness (~1 mm)", "segments": [3, 2, 1], "what": "stamped sheet bend"},
+  "S-cut": {"edge_mm": [0.2, 0.3], "segments": [1, 0, 0], "what": "stamped cut edge (sheet thickness shows)"},
+  "C-fillet": {"edge_mm": [1.0, 3.0], "segments": [3, 2, 1], "what": "cast / forged: hammers, triggers"},
+  "P-round": {"edge_mm": [0.6, 2.0], "segments": [3, 2, 1], "draft_deg": [1.0, 2.0], "what": "moulded polymer: SMG body, grips, stocks; parting line, sink at thick ribs, ejector circles on hidden faces"},
+  "W-round": {"edge_mm": [1.5, 4.0], "segments": [3, 2, 1], "what": "wood"},
+  "visibility_min_mm": {"rear": 0.4, "mid": [0.5, 0.7], "front": [0.7, 0.9]}
+ },
+ "hardware": {
+  "rule": "count and position from the sheet only; sizes from these norms where a head spans < 4 sheet px; written in mm, never 'M' + number (study 3.2, spec fastener_rule)",
+  "pin_dia": [3.0, 5.0],
+  "screw_head_dia": [5.5, 8.5],
+  "roll_pin": "split tube: wall 0.2 x dia, slit 0.2 x dia, ends chamfered",
+  "head_shapes": ["flush pin (inset ring)", "roll pin (split end)", "domed rivet", "flat rivet", "socket cap (hex socket)", "button head (hex socket)", "countersunk (hex socket)", "slotted pan"],
+  "real_pattern_sources": [
+   "ISO 7380-1 button head hexagon socket screws: dk 1.9 d, k 0.55 d, s 0.6-0.67 d, t ~0.31 d (M5: 9.5 / 2.75 / 3 / 1.56) https://fasten.it/en/norms/norm/din_en_iso_7380-1 , https://engineersedge.com/iso_socket_button_head.htm",
+   "ISO 4762 socket head cap screws: dk 1.5 d, k 1.0 d, s 0.75-0.8 d, t ~0.5 d (M5: 8.5 / 5 / 4 / 2.5) https://fasten.it/norms/norm/din_en_iso_4762",
+   "ISO 10642 countersunk hexagon socket: 90 deg head, dk 1.9-2.2 d (M5 9.43 actual min, 11.2 theoretical), s 0.6 d https://engineersedge.com/hardware/bs_en_iso_10642_14583.htm",
+   "ISO 8752 slotted spring (roll) pins: wall ~0.2 d"
+  ]
+ },
+ "camera": {
+  "target": [2560, 1440],
+  "hip_fp_hfov_deg": 70.0,
+  "ads_fp_hfov_deg": 55.0,
+  "ads_eye_relief_mm": 250.0,
+  "b4_supersample": 8,
+  "b4_window_half_px": 110,
+  "lod_pop": {"hfov_deg": 90.0, "distance_factor": 1.778, "rule": "d = 1.778 r / s (Unreal's 2 max(0.5 P00, 0.5 P11) r / d at 16:9, 90 deg)", "headings": [["right", -90, 10], ["left", 90, 10], ["front_right_34", -35, 10], ["rear_left_34", 145, 10]], "supersample": 2, "gate": "mean <= 1 px, max <= 3 px"},
+  "s2_gate_px": 0.5,
+  "b4_gate_mm": 0.2
+ },
+ "texel_classes_px_per_cm": {
+  "A": {"range": [80, 100], "what": "rear sight leaf / aperture, optic eyepiece, front post and hood (ADS 55 deg at 0.20-0.25 m)"},
+  "B": {"range": [60, 80], "what": "rear receiver, dust cover, selector, charging handle, grip top, comb"},
+  "C": {"range": [30, 40], "what": "mag, magwell, trigger guard, handguards, front receiver"},
+  "D": {"range": [25, 30], "what": "gas block, front sight base, barrel, brake"},
+  "E": {"range": [8, 15], "what": "hidden: undersides, insides, contact faces (reload-visible insides at the low end)"}
+ },
+ "unreal_degenerate_rule": {
+  "module": "Scripts/guns/gunlib/ud.py",
+  "UD1": {"unreal_drop_mm2": 0.005, "min_area_mm2": 0.01},
+  "UD2": {"min_edge_mm": 0.05, "min_height_mm": 0.02, "min_strip_mm": 0.1, "needle_corner_deg": 0.5, "edge_on_dot": 0.1},
+  "UD3": "tspace.collapsed(me, 'UV0', unreal=True) = 0 once UVs exist (W2)",
+  "rule": "every part generator checks its own output at every LOD before the part is accepted; export meshes are never patched (tspace.unreal_safe stays diagnostic)"
+ },
+ "budgets_triangles": {
+  "rifle": {"lod0": [30000, 45000], "ceiling": 50000},
+  "smg": {"lod0": [25000, 40000], "ceiling": 50000},
+  "lod_shares": {"LOD1": 0.45, "LOD2": 0.15},
+  "mag_straight": {"lod0": [2500, 4000], "ceiling": 5000}
+ },
+ "deny_list": "Scripts/guns/gunlib/qa_gun.py GUN_DENY (tokenised; whole runs of tokens only)"
+}

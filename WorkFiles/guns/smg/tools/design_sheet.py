@@ -41,6 +41,14 @@ KD = SPEC["key_dimensions"]
 FOLD = SPEC["fold"]
 S = 4.0
 W, H = 3700, 8000
+# R26 (orchestrator ruling 2026-10-09): the spec is at OVERALL mm (625); layout positions below were written at 690 and
+# go through sc(); every drawn dimension comes from the spec
+OVERALL = float(KD["overall_length"])
+SCF = OVERALL / 690.0
+
+
+def sc(v):
+    return v * SCF
 OX = 330
 
 POLY = (150, 156, 166)
@@ -188,7 +196,7 @@ def below_lip_poly():
     (xf, zf_), (xr, zr_) = LIP["lip_lower_edge_front_XZ"], LIP["lip_lower_edge_rear_XZ"]
     s_ = (zf_ - zr_) / (xf - xr)
     zat = lambda x: zr_ + s_ * (x - xr)
-    return [(380.0, zat(380.0)), (620.0, zat(620.0)), (620.0, -300.0), (380.0, -300.0)]
+    return [(sc(380.0), zat(sc(380.0))), (sc(620.0), zat(sc(620.0))), (sc(620.0), sc(-300.0)), (sc(380.0), sc(-300.0))]
 
 
 STEEL_SLOT = "M_SMG01_Metal"
@@ -380,53 +388,62 @@ for side in (-1, 1):
 # hidden: barrel inside the receiver, bolt at rest and back, mag top inside the well, port (right side) dashed
 bar = P["barrel"]["dims"]
 bz = KD["bore_Z_M"]
+RFF = P["upper_receiver"]["dims"]["front_face_X"]
 for z in (bz + bar["hidden_od"] / 2, bz - bar["hidden_od"] / 2):
-    dashed(A.c(bar["breech_X"], z), A.c(621.9, z), fill=(80, 80, 80), width=1)
-dashed(A.c(bar["breech_X"], bz + 8.85), A.c(bar["breech_X"], bz - 8.85), fill=(80, 80, 80), width=1)
+    dashed(A.c(bar["breech_X"], z), A.c(RFF, z), fill=(80, 80, 80), width=1)
+dashed(A.c(bar["breech_X"], bz + bar["hidden_od"] / 2), A.c(bar["breech_X"], bz - bar["hidden_od"] / 2), fill=(80, 80, 80), width=1)
 bo = P["bolt"]["box_M"]
 dashed_poly(A.poly(rect(bo["X"][0], bo["X"][1], bo["Z"][0], bo["Z"][1])), (110, 110, 110), 1)
-dashed_poly(A.poly(rect(bo["X"][0] - 75, bo["X"][1] - 75, bo["Z"][0], bo["Z"][1])), (190, 150, 150), 1)
+TRV = SPEC["clips"]["values"]["bolt_travel"]
+dashed_poly(A.poly(rect(bo["X"][0] - TRV, bo["X"][1] - TRV, bo["Z"][0], bo["Z"][1])), (190, 150, 150), 1)
 dashed_poly(A.poly(mag_outline()), (90, 90, 90), 1)
 pe = P["ejection_port_and_catch"]["dims"]
 dashed_poly(A.poly(rect(pe["port_X"][0], pe["port_X"][1], pe["port_Z"][0], pe["port_Z"][1])), RED, 2)
 text(A.c(pe["port_X"][0], pe["port_Z"][1] + 3.5), "port (right side)", F_XS, RED, "lb")
 # axes
-dashed(A.c(-15, bz), A.c(705, bz), fill=GREEN, width=1, dash=18, gap=8)
+dashed(A.c(-15, bz), A.c(sc(705), bz), fill=GREEN, width=1, dash=18, gap=8)
 text(A.c(-17, bz + 1.5), "bore", F_XS, GREEN, "rd")
 sl = ap[1]
 dashed(A.c(ap[0] - 30, sl), A.c(pt[0] + 20, sl), fill=ORANGE, width=1)
 gr = KD["grip"]
 k = math.tan(math.radians(gr["axis_rake_deg"]))
 jx, jz = gr["junction_M"]
-dashed(A.c(jx + k * (-20 - jz), -20), A.c(jx + k * (-175 - jz), -175), fill=VIOLET, width=1)
-text(A.c(jx + k * (-178 - jz) - 4, -178), f"grip axis {gr['axis_rake_deg']}° from vertical", F_XS, VIOLET, "rt")
+dashed(A.c(jx + k * (sc(-20) - jz), sc(-20)), A.c(jx + k * (sc(-175) - jz), sc(-175)), fill=VIOLET, width=1)
+text(A.c(jx + k * (sc(-178) - jz) - 4, sc(-178)), f"grip axis {gr['axis_rake_deg']}° from vertical", F_XS, VIOLET, "rt")
 gx, gz = gr["origin_M"][0], gr["origin_M"][2]
 # dimension rows
-hdim(A, 0, 690, 112, "overall 690.0", 0.0, 0.0, F_M)
-hdim(A, ap[0], pt[0], 98, f"sight radius {KD['sight_radius']}", ap[1], pt[1])
-hdim(A, 292.8, 621.9, 84, f"receiver {KD['receiver_length']}", 40, 40)
-hdim(A, 0, FOLD["axis_M"][0], 84, f"stock to hinge axis {KD['stock']['length_hinge_to_butt']}", 26, 14)
-hdim(A, rd["toothed_zone_X"][0], rd["toothed_zone_X"][1], 66, f"toothed zone: {rd['teeth_built']} teeth, 10.01 pitch",
+RCX = P["upper_receiver"]["box_M"]["X"]
+DSX = P["muzzle_device"]["box_M"]["X"]
+hdim(A, 0, OVERALL, sc(112), f"overall {OVERALL:.1f}", 0.0, 0.0, F_M)
+hdim(A, ap[0], pt[0], sc(98), f"sight radius {KD['sight_radius']}", ap[1], pt[1])
+hdim(A, RCX[0], RCX[1], sc(84), f"receiver {KD['receiver_length']}", sc(40), sc(40))
+hdim(A, 0, FOLD["axis_M"][0], sc(84), f"stock to hinge axis {KD['stock']['length_hinge_to_butt']}", sc(26), sc(14))
+hdim(A, rd["toothed_zone_X"][0], rd["toothed_zone_X"][1], sc(66), f"toothed zone: {rd['teeth_built']} teeth, 10.01 pitch",
      rd["top_Z"], rd["top_Z"], F_XS)
-hdim(A, bar["breech_X"], bar["crown_X"], -56, f"barrel {bar['length']:.0f} (breech {bar['breech_X']:.0f} to crown "
+hdim(A, bar["breech_X"], bar["crown_X"], sc(-56), f"barrel {bar['length']:.0f} (breech {bar['breech_X']:.0f} to crown "
      f"{bar['crown_X']:.0f}, hidden)", None, None, F_XS)
-hdim(A, 644.1, 690, -24, "device 46.0", -11, -11, F_XS)
+hdim(A, DSX[0], DSX[1], sc(-24), f"device {DSX[1] - DSX[0]:.1f}", sc(-11), sc(-11), F_XS)
 tg = P["trigger_guard"]["box_M"]
-hdim(A, tg["X"][0], tg["X"][1], -132, f"guard {P['trigger_guard']['dims']['length']}", tg["Z"][0], tg["Z"][0], F_XS)
+hdim(A, tg["X"][0], tg["X"][1], sc(-132), f"guard {P['trigger_guard']['dims']['length']}", tg["Z"][0], tg["Z"][0], F_XS)
 vdim(A, -22, PAD_Z0 := P["butt_pad"]["box_M"]["Z"][0], P["butt_pad"]["box_M"]["Z"][1],
      f"pad {P['butt_pad']['dims']['height']}", xref=0, left=True)
-hdim(A, 409.4, 409.4 - 90.5, -70, "", None, None)
-text(A.c(364, -66), f"reach {gr['trigger_reach']}", F_XS, DIM, "md")
+TFX = KD["length_of_pull"]
+hdim(A, TFX, TFX - gr["trigger_reach"], sc(-70), "", None, None)
+text(A.c(TFX - gr["trigger_reach"] / 2, sc(-66)), f"reach {gr['trigger_reach']}", F_XS, DIM, "md")
 mvo = P["magazine_body"]["box_M"]
-hdim(A, mvo["X"][0], mvo["X"][1], -268, f"magazine X {mvo['X'][0]}-{mvo['X'][1]}, rake {MD['rake_deg']}°, fore-aft "
-     f"{MD['foreaft']}", -254, -254, F_XS)
+hdim(A, mvo["X"][0], mvo["X"][1], sc(-268), f"magazine X {mvo['X'][0]}-{mvo['X'][1]}, rake {MD['rake_deg']}°, fore-aft "
+     f"{MD['foreaft']}", mvo["Z"][0], mvo["Z"][0], F_XS)
 # height ladder at the right
-LX = 712
-d.line([A.c(LX, 90), A.c(LX, -258)], fill=DIM, width=2)
-ladr = [(84.3, "+84.3 sight tops"), (ap[1], f"+{ap[1]} sight line (aperture / post tip)"), (rd["top_Z"], f"+{rd['top_Z']} rail top"),
+LX = sc(712)
+d.line([A.c(LX, sc(90)), A.c(LX, sc(-258))], fill=DIM, width=2)
+SEAM = P["lower_receiver"]["dims"]["seam_Z"]
+LRB = P["lower_rail"]["dims"]["bottom_Z"]
+GBZ = P["pistol_grip"]["dims"]["bottom_Z"]
+MFZ = mvo["Z"][0]
+ladr = [(KD["top_Z"], f"+{KD['top_Z']} sight tops"), (ap[1], f"+{ap[1]} sight line (aperture / post tip)"), (rd["top_Z"], f"+{rd['top_Z']} rail top"),
         (rd["underside_Z"], f"+{rd['underside_Z']} receiver top"), (bz, f"+{bz} bore"),
-        (-18.5, "-18.5 upper/lower seam"), (-41.1, "-41.1 lower rail bottom"), (tg["Z"][0], f"{tg['Z'][0]} guard bottom"),
-        (gz, f"{gz} Grip origin"), (-167.8, "-167.8 grip bottom"), (-253.9, "-253.9 magazine floor")]
+        (SEAM, f"{SEAM} upper/lower seam"), (LRB, f"{LRB} lower rail bottom"), (tg["Z"][0], f"{tg['Z'][0]} guard bottom"),
+        (gz, f"{gz} Grip origin"), (GBZ, f"{GBZ} grip bottom"), (MFZ, f"{MFZ} magazine floor")]
 last = None
 for z, s_ in sorted(ladr, key=lambda t: -t[0]):
     y = A.c(LX, z)[1]
@@ -499,7 +516,7 @@ for k_, rr in LEFT["parts"].items():
 for r in RIGHT["silhouette"]:
     q = B.poly(r["mm"])
     d.line(q + [q[0]], fill=RED, width=1)
-dashed(B.c(-15, bz), B.c(705, bz), fill=GREEN, width=1, dash=18, gap=8)
+dashed(B.c(-15, bz), B.c(sc(705), bz), fill=GREEN, width=1, dash=18, gap=8)
 ag = MEAS["agreement"]["left_vs_right"]
 text((OX, BY0 + 1475), f"LEFT vs mirrored RIGHT, frame-aligned: silhouette IoU {ag['iou_silhouette_frame_aligned']}, "
      f"without mag {ag['iou_gun_without_mag_frame_aligned']}, magazine {ag['iou_magazine_frame_aligned']}; boundary "
@@ -516,33 +533,39 @@ fl, fr = P["upper_receiver"]["dims"]["width_fore_end_X560_584"]
 top = []
 pad_w = P["butt_pad"]["dims"]["width"]
 fw = P["stock_frame"]["dims"]["width_Y"]
-stock_ext = [rect(31.0, 244.6, -fw / 2, fw / 2), rect(0.0, 31.0, -pad_w / 2, pad_w / 2)]
+PADX = P["butt_pad"]["box_M"]["X"][1]
+SFX = P["stock_frame"]["box_M"]["X"][1]
+stock_ext = [rect(PADX, SFX, -fw / 2, fw / 2), rect(0.0, PADX, -pad_w / 2, pad_w / 2)]
 top.append((stock_ext[0], POLY2))
 top.append((stock_ext[1], RUB))
 hk = P["stock_hinge"]["dims"]
-top.append((rect(244.6, 272.4, -fw / 2 - 2, fw / 2 + 2), POLY2))
+top.append((rect(SFX, hk["axis_X"], -fw / 2 - 2, fw / 2 + 2), POLY2))
 top.append((circle(hk["axis_X"], hk["axis_Y"], hk["knuckle_od"] / 2, 32), STEEL))
 eb = P["end_block"]["box_M"]
-top.append((rect(272.7, 292.8, eb["Y"][0], eb["Y"][1]), POLY))
-top.append((rect(292.8, 533.6, yr, yl), POLY))
-top.append((rect(533.6, 621.9, fr, fl), POLY))
-top.append((rect(292.8, 618.1, -17.5, 17.5), STEEL))
-top.append((rect(306.0, 618.1, -10.6, 10.6), (214, 218, 224)))
+top.append((rect(eb["X"][0], eb["X"][1], eb["Y"][0], eb["Y"][1]), POLY))
+top.append((rect(RCX[0], sc(533.6), yr, yl), POLY))
+top.append((rect(sc(533.6), RCX[1], fr, fl), POLY))
+RTX = P["top_rail"]["box_M"]["X"]
+RFW = P["top_rail"]["dims"]["base_flange"]["width"] / 2
+top.append((rect(RTX[0], RTX[1], -RFW, RFW), STEEL))
+top.append((rect(RTX[0] + sc(13.2), RTX[1], -10.6, 10.6), (214, 218, 224)))
 for x in rd["cut_slot_centres_X"]:
     top.append((rect(x - 2.62, x + 2.62, -10.6, 10.6), (170, 174, 182)))
 srb = P["sight_rear"]["dims"]
 top.append((rect(srb["base_X"][0], srb["base_X"][1], -14.0, 14.0), STEEL))
-top.append((rect(312.1, 355.3, 14.0, yl + 6.5), STEEL))
+WD = srb["windage_drum"]
+top.append((rect(WD["X"][0], WD["X"][1], 14.0, yl + WD["proud_of_body"]), STEEL))
 sfb = P["sight_front"]["dims"]
 top.append((rect(sfb["base_X"][0], sfb["base_X"][1], -14.0, 14.0), STEEL))
 ck = sfb["clamp_knob_right"]
 top.append((rect(ck["X"][0], ck["X"][1], ck["Y_extreme"], -14.0), STEEL))
-top.append((rect(ch["arm_rear_block"]["X"][0], ch["arm_rod"]["X"][1], yl, yl + 3.3), STEEL))
+top.append((rect(ch["arm_rear_block"]["X"][0], ch["arm_rod"]["X"][1], yl, yl + ch["arm_rear_block"]["proud_of_wall"]), STEEL))
 top.append((rect(ch["knob_centre_XZ"][0] - 3, ch["knob_centre_XZ"][0] + 3, yl, ch["knob_centre_Y"]), STEEL))
 top.append((circle(ch["knob_centre_XZ"][0], ch["knob_centre_Y"], ch["knob_dia"] / 2, 32), STEEL))
-top.append((rect(621.9, 644.1, -11.3, 11.3), STEEL))
+CR = bar["collar_ring"]["dia"] / 2
+top.append((rect(RCX[1], DSX[0], -CR, CR), STEEL))
 od = P["muzzle_device"]["dims"]["od"]
-top.append((rect(644.1, 690.0, -od / 2, od / 2), STEEL))
+top.append((rect(DSX[0], DSX[1], -od / 2, od / 2), STEEL))
 for pts, fill in top:
     fillpoly(C, pts, fill, width=2)
 # folded stock (dashed): rotate +180 deg about the axle
@@ -560,40 +583,41 @@ lg = P["stock_frame"]["dims"]["retention_lug"]
 lug_ext = rect(lg["body_X_ext"][0], lg["body_X_ext"][1], lg["tip_Y_ext"], lg["root_Y_ext"])
 fillpoly(C, lug_ext, POLY2, width=1)
 text(C.c(lg["body_X_ext"][1] + 3, lg["tip_Y_ext"] - 2), f"retention lug ({lg['proud_of_pad_side_ext']} beyond the "
-     "pad side, Q17)", F_XS, DIM, "lt")
+     "pad side, R28)", F_XS, DIM, "lt")
 ll = P["end_block"]["dims"]["latch_lug"]
 fillpoly(C, rect(ll["X"][0], ll["X"][1], ll["Y"][0], ll["Y"][1]), POLY, width=1)
 for pts in stock_ext + [lug_ext]:
     dashed_poly(C.poly(fold_pts(pts)), (200, 60, 60), 2)
-dashed(C.c(-15, 0), C.c(705, 0), fill=GREEN, width=1, dash=18, gap=8)
+dashed(C.c(-15, 0), C.c(sc(705), 0), fill=GREEN, width=1, dash=18, gap=8)
 cat = P["ejection_port_and_catch"]["dims"]
 fillpoly(C, rect(cat["catch_X"][0], cat["catch_X"][1], yr - 3.0, yr), (230, 120, 120), width=1)
 text(C.c(cat["catch_X"][0], yr - 4.5), "port catch", F_XS, RED, "rt")
-vdim(C, 420, yl, yr, f"receiver {round(yl - yr, 1)}", left=False, f=F_XS)
-vdim(C, 572, fl, fr, f"fore-end {round(fl - fr, 1)}", left=False, f=F_XS)
-vdim(C, 15, pad_w / 2, -pad_w / 2, f"pad {pad_w}", left=False, f=F_XS)
-vdim(C, 120, fw / 2, -fw / 2, f"frame {fw}", left=False, f=F_XS)
-vdim(C, 675, od / 2, -od / 2, f"device {od}", left=False, f=F_XS)
+vdim(C, sc(420), yl, yr, f"receiver {round(yl - yr, 1)}", left=False, f=F_XS)
+vdim(C, sc(572), fl, fr, f"fore-end {round(fl - fr, 1)}", left=False, f=F_XS)
+vdim(C, sc(15), pad_w / 2, -pad_w / 2, f"pad {pad_w}", left=False, f=F_XS)
+vdim(C, sc(120), fw / 2, -fw / 2, f"frame {fw}", left=False, f=F_XS)
+vdim(C, sc(675), od / 2, -od / 2, f"device {od}", left=False, f=F_XS)
 text(C.c(ch["knob_centre_XZ"][0], ch["knob_centre_Y"] + 12), f"knob tip Y +{P['charging_handle']['dims']['knob_tip_Y']}",
      F_XS, DIM, "md")
 text(C.c(ax, ay - 8), f"axle ({ax}, {ay}), knuckles {hk['knuckle_proud_of_right_wall_TOP']} proud (Q6)", F_XS, DIM, "mt")
 fx = FOLD["folded_pad_X"]
 text(C.c(fx[1] + 4, FOLD["folded_mid_plane_Y"] - 22), f"folded: mid-plane Y {FOLD['folded_mid_plane_Y']}, pad X "
      f"{fx[0]}-{fx[1]}", F_XS, (200, 60, 60), "la")
-hdim(C, FOLD["folded_rearmost_X"], 690.0, -122, f"folded length {FOLD['folded_length']} (real 450, R20)",
+hdim(C, FOLD["folded_rearmost_X"], OVERALL, sc(-122), f"folded length {FOLD['folded_length']} (real 450, R20)",
      FOLD["folded_min_Y"], -11, F_XS)
 
 # ================================================================== D: traced top
 DY0 = 4330
-text((60, DY0 - 40), "D  TRACED TOP silhouette (blue) over the TOP panel; X < 245 (the stock) is drawn obliquely on "
+XT = SPEC["gates"]["look"]["L2_TOP_exclusion_X"]
+text((60, DY0 - 40), f"D  TRACED TOP silhouette (blue) over the TOP panel; X < {XT:.0f} (the stock) is drawn obliquely on "
      "the sheet (R18)", F_H)
 Dp = Panel(oy=DY0 + 210)
 warp_into(TOPT, Dp, (0, DY0, W, DY0 + 420))
 for r in TOPT["silhouette"]:
     q = Dp.poly(r["mm"])
     d.line(q + [q[0]], fill=(30, 80, 220), width=2)
-d.line([Dp.c(245, 60), Dp.c(245, -60)], fill=ORANGE, width=2)
-dashed(Dp.c(-15, 0), Dp.c(705, 0), fill=GREEN, width=1, dash=18, gap=8)
+d.line([Dp.c(XT, sc(60)), Dp.c(XT, sc(-60))], fill=ORANGE, width=2)
+dashed(Dp.c(-15, 0), Dp.c(sc(705), 0), fill=GREEN, width=1, dash=18, gap=8)
 
 # ================================================================== E: folded side
 EY0 = 4880
@@ -603,7 +627,7 @@ E = Panel(oy=EY0 + 430)
 for pts, fill in side_shapes(include_stock=False)[1:]:
     fillpoly(E, pts, fill, width=1)
 for h in holes_M():
-    if min(p[0] for p in h) > 300:
+    if min(p[0] for p in h) > sc(300):
         q = E.poly(h)
         d.polygon(q, fill="white")
 fillpoly(E, rect(pe["port_X"][0], pe["port_X"][1], pe["port_Z"][0], pe["port_Z"][1]), DARK, width=1)
@@ -615,17 +639,17 @@ for k in ("stock_frame", "butt_pad", "stock_hinge"):
         d.polygon(q, fill=(225, 190, 190))
         d.line(q + [q[0]], fill=(170, 40, 40), width=2)
 for h in holes_M():
-    if max(p[0] for p in h) < 245:
+    if max(p[0] for p in h) < XT:
         q = E.poly([(2 * ax - x, z) for x, z in h])
         d.polygon(q, fill="white")
         d.line(q + [q[0]], fill=(170, 40, 40), width=1)
-hdim(E, FOLD["folded_rearmost_X"], 690.0, 100, f"folded length {FOLD['folded_length']}", 40, 0, F_S)
-text(E.c(300, -120), "The folded top strut crosses the port (Z 2.5-26.1) in this view; the stock is 14-40 mm outboard "
-     "of the wall (open question Q5); magazine not drawn.", F_S, INK, "la")
+hdim(E, FOLD["folded_rearmost_X"], OVERALL, sc(100), f"folded length {FOLD['folded_length']}", sc(40), 0, F_S)
+text(E.c(sc(300), sc(-120)), f"The folded top strut crosses the port (Z {pe['port_Z'][0]}-{pe['port_Z'][1]}) in this view; the "
+     "stock lies outboard of the wall (open question Q5, default: accept); magazine not drawn.", F_S, INK, "la")
 lgf = P["stock_frame"]["dims"]["retention_lug"]
 fx_l = [2 * ax - x for x in lgf["body_X_ext"]]
 fillpoly(E, rect(min(fx_l), max(fx_l), lgf["Z"][0], lgf["Z"][1]), (200, 120, 120), width=1)
-text(E.c(300, -135), f"Retention (check fix C3): the stock's lug (dark red) snaps under the port catch's rear lip, "
+text(E.c(sc(300), sc(-135)), f"Retention (check fix C3, R28): the stock's lug (dark red) snaps under the port catch's rear lip, "
      f"engagement {lgf['engagement_X_under_lip']} mm (gate F3); extended, the left button's latch bolt (gate F6).",
      F_S, INK, "la")
 
@@ -637,9 +661,10 @@ text((60, FY0 - 40), f"F  MAGAZINE SM_SMG01_Mag ({MS:.0f} px = 1 mm, its own fra
 Fp = Panel(oy=FY0 + 100 + 80 * MS, scale=MS, ox=380)
 fa = MD["foreaft"] / 2
 zt, zf = MD["top_along_axis"], MD["floor_along_axis"]
-body = [(-fa, zt - 4), (-fa + 4, zt), (fa - 2, zt + 3), (fa, zt + 1), (fa, zf + 7.5), (-fa, zf + 7.5)]
+FPH = P["magazine_floor_plate"]["dims"]["height"]
+body = [(-fa, zt - 4), (-fa + 4, zt), (fa - 2, zt + 3), (fa, zt + 1), (fa, zf + FPH), (-fa, zf + FPH)]
 fillpoly(Fp, body, MAGC)
-fillpoly(Fp, [(-fa - 0.6, zf), (fa + 1.0, zf), (fa + 1.0, zf + 7.5), (-fa - 0.6, zf + 7.5)], (150, 140, 128))
+fillpoly(Fp, [(-fa - 0.6, zf), (fa + 1.0, zf), (fa + 1.0, zf + FPH), (-fa - 0.6, zf + FPH)], (150, 140, 128))
 for side in (-1, 1):
     xa = side * lad["rib_between"] / 2
     xb = side * (lad["rib_between"] / 2 + lad["channel_width"])
@@ -672,19 +697,20 @@ arrow(Fp.c(fa + 10, 0), (0, -1), fill=RED)
 text(Fp.c(fa + 12, -L_ins / 2), f"insert path {L_ins:.1f} (MagInsertStart -> Mag, straight)", F_S, RED, "la")
 vdim(Fp, -fa - 30, zf, zt, f"length {MD['length_along_axis']}", left=True)
 hdim(Fp, -fa, fa, zf - 10, f"fore-aft {MD['foreaft']}", zf, zf)
-text(Fp.c(-fa, zt + 8), f"feed lips top (seated Z_M -14.0), {MD['top_along_axis']} above the lip", F_XS, INK, "la")
+text(Fp.c(-fa, zt + 8), f"feed lips top (seated Z_M {P['magazine_body']['box_M']['Z'][1]}), {MD['top_along_axis']} above the lip", F_XS, INK, "la")
 text(Fp.c(fa + 4, z_to_along(lad["tie_Z"][1])), f"ladder: 2 x {lad['channel_width']} channels, rib {lad['rib_between']}, "
      f"{lad['depth']} deep; ties at Z_M {lad['tie_Z']}", F_XS, INK, "la")
 # front section
 sx0 = 1350
 Fs = Panel(oy=Fp.oy, scale=MS, ox=sx0)
 T = MD["thickness"]
-fillpoly(Fs, rect(-T / 2, T / 2, zf + 7.5, zt), MAGC)
-fillpoly(Fs, rect(-T / 2 - 1.0, T / 2 + 1.0, zf, zf + 7.5), (150, 140, 128))
-fillpoly(Fs, rect(-3.0, 3.0, zf + 8, zt - 2), (190, 180, 168), width=1)
+SPW = MD["front_spine_rib"]["width"]
+fillpoly(Fs, rect(-T / 2, T / 2, zf + FPH, zt), MAGC)
+fillpoly(Fs, rect(-T / 2 - 1.0, T / 2 + 1.0, zf, zf + FPH), (150, 140, 128))
+fillpoly(Fs, rect(-SPW / 2, SPW / 2, zf + 8, zt - 2), (190, 180, 168), width=1)
 fillpoly(Fs, [(-T / 2, zt), (-6.0, zt + 2.5), (6.0, zt + 2.5), (T / 2, zt)], (150, 140, 128), width=1)
-hdim(Fs, -T / 2, T / 2, zf - 10, f"thickness {T} (R14)", zf, zf)
-text(Fs.c(0, zt + 8), "front (spine rib 6 x 0.8)", F_XS, INK, "mb")
+hdim(Fs, -T / 2, T / 2, zf - 10, f"thickness {T} (R14, R26)", zf, zf)
+text(Fs.c(0, zt + 8), f"front (spine rib {SPW} x {MD['front_spine_rib']['proud']})", F_XS, INK, "mb")
 
 # ================================================================== legend + QA
 mA = mask_from(side_shapes(), (W, H), A, holes_M())
@@ -694,28 +720,30 @@ mMagS = mask_from([(mag_visible_outline(), None)], (W, H), A) & mask_from([(belo
 mMagT = trace_mask(LEFT["magazine"], (W, H), A)
 iou_mag = iou(mMagS, mMagT)
 mC = mask_from(top, (W, H), C)
-mTop = trace_mask(TOPT["silhouette"], (W, H), C, xmin=245)
-mC[:, : int(C.c(245, 0)[0])] = False
+mTop = trace_mask(TOPT["silhouette"], (W, H), C, xmin=XT)
+mC[:, : int(C.c(XT, 0)[0])] = False
 iou_top = iou(mC, mTop)
 QX, QY = 2000, FY0 + 60
 lines = [
     ("QA (spec drawing vs traced silhouettes, 4 px/mm)", F_H),
     (f"side LEFT: IoU {iou_side:.3f} (panel A vs the LEFT trace; the part outlines ARE the trace)", F_M),
     (f"magazine (from spec numbers): IoU {iou_mag:.3f} vs the traced magazine", F_M),
-    (f"top, X >= 245: IoU {iou_top:.3f} (panel C boxes vs the TOP trace)", F_M),
+    (f"top, X >= {XT:.0f}: IoU {iou_top:.3f} (panel C boxes vs the TOP trace)", F_M),
     ("", F_S),
-    ("Key decisions (SMG_STUDY.md; smg_spec.json resolutions R1-R25)", F_H),
-    ("- labels true (LEFT = left); 690 mm at the measured px/mm; the ruler reads 86.8 cm", F_S),
+    ("Key decisions (SMG_STUDY.md; smg_spec.json resolutions R1-R29)", F_H),
+    (f"- SCALE {OVERALL:.0f} mm (R26, orchestrator ruling; the W0 merge was 690): the sheet's rail pitch is 10.01 at this "
+     f"scale; labels true (LEFT = left); the ruler reads {MEAS['scale']['sheet_ruler']['implied_overall_length_cm_LEFT']} cm", F_S),
     (f"- bore at Z_M {bz}: device OD {od} (side and top agree; the 20.8 read was a slot sliver)", F_S),
-    (f"- Grip 46 mm down the {gr['axis_rake_deg']}° grip axis; mag rake {MD['rake_deg']}°, 46.7 x {T}", F_S),
-    (f"- breech X {bar['breech_X']:.0f}, barrel {bar['length']:.0f} (Q2); bolt + handle travel 75; knob {ch['knob_dia']} (re-read)", F_S),
+    (f"- Grip 46 mm down the {gr['axis_rake_deg']}° grip axis; mag rake {MD['rake_deg']}°, {MD['foreaft']} x {T}", F_S),
+    (f"- breech X {bar['breech_X']:.0f}, barrel {bar['length']:.0f} (Q2); bolt + handle travel {TRV}; knob {ch['knob_dia']} (re-read)", F_S),
     (f"- top rail: {rd['teeth_built']} teeth / {len(rd['cut_slot_centres_X'])} cut slots at 10.01, flats as drawn", F_S),
     (f"- fold: axle ({ax}, {ay}), +180° to the right, folded {FOLD['folded_length']} (Q6, R19-R20)", F_S),
     ("- right long slot = a vent (not a mirror); boss at the port = stock catch", F_S),
     ("- drum on the rear sight's LEFT; front clamp knob on the right", F_S),
+    ("- selector detents = the design call (R27); folded retention = the moulded lug (R28)", F_S),
     ("", F_S),
     ("Check fixes C1-C16 (SMG_STUDY.md section 12)", F_H),
-    (f"- paddle behind the 4.0 magwell wall: pivot {P['mag_release']['dims']['pivot_XZ']}, "
+    (f"- paddle behind the {P['magwell']['dims']['wall']} magwell wall: pivot {P['mag_release']['dims']['pivot_XZ']}, "
      f"{P['mag_release']['dims']['declared_deviation']['front_face_vs_drawn']} mm vs the drawn lever (declared)", F_S),
     (f"- mag rake {MD['rake_deg']}° (straight-body fit); trigger pull +{P['trigger']['dims']['pull_rot_Y_deg']:.0f}° "
      f"about the drawn axle {P['trigger']['dims']['pivot_XZ']}", F_S),

@@ -25,10 +25,12 @@ from scipy.optimize import minimize
 class PanelFrame:
     """Panel px <-> gun mm, the trace's own mapping (trace_reference.Frame)."""
 
-    def __init__(self, s, u, p0, shape):
+    def __init__(self, s, u, p0, shape, n=None):
         self.s = float(s)
         self.u = np.array(u, float) / np.hypot(*u)
-        self.n = np.array([self.u[1], -self.u[0]])
+        # the second axis: the trace's own up_dir_px when it records one (gunlib 0.2.1: a panel whose muzzle points
+        # image-LEFT, the SMG's, needs it; the AR-01's traces have no up_dir_px and keep the rotated-u rule)
+        self.n = np.array([self.u[1], -self.u[0]]) if n is None else np.array(n, float) / np.hypot(*n)
         self.p0 = np.array(p0, float)
         self.shape = tuple(shape)          # (H, W)
 
@@ -71,7 +73,7 @@ def load_trace(trace_dir, view):
     box = j["panel_box_sheet_px"]
     shape = (box[3] - box[1] + 1, box[2] - box[0] + 1)
     if "origin_px" in j:
-        fr = PanelFrame(j["px_per_mm"], j["bore_dir_px"], j["origin_px"], shape)
+        fr = PanelFrame(j["px_per_mm"], j["bore_dir_px"], j["origin_px"], shape, j.get("up_dir_px"))
     else:
         P = np.vstack([np.array(r["px"]) for r in j["silhouette"]])
         Q = np.vstack([np.array(r["mm"]) for r in j["silhouette"]])

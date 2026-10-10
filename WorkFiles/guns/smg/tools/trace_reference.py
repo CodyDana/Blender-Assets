@@ -20,7 +20,7 @@ Frames
             Origin X = 0 at the rearmost point of the butt pad (stock extended), Z = 0 on the bore axis, Y = 0 on the
             mid-plane. The bore axis: its direction is the top 1913 rail (tooth-top line, the longest straight edge on
             the gun); its height is the muzzle device / exposed barrel centre line.
-  Each view gets its own frame (own axis, own X = 0, own scale so its overall length = 690 mm); views are compared
+  Each view gets its own frame (own axis, own X = 0, own scale so its overall length = OVERALL_MM, 625 mm since the 2026-10-09 ruling); views are compared
   in mm without fitting.
 
 Only numpy, scipy and Pillow are needed. Hand inputs (seams that are not on the silhouette, the magazine cut, face
@@ -49,7 +49,17 @@ TRACE = OUT / "trace"
 SCRATCH = OUT / "scratch"
 CROPS = SCRATCH / "crops"
 
-OVERALL_MM = 690.0          # chosen overall length, stock extended (butt pad rear to muzzle device tip); see notes
+OVERALL_MM = 625.0          # overall length, stock extended (butt pad rear to muzzle device tip): orchestrator ruling
+                            # 2026-10-09 (spec resolution R26): the sheet was drawn at ~625 (side rail pitch 10.01,
+                            # receiver width = the real 61); it was 690 (the real pattern's length) before
+SHEET_MM = 690.0            # the scale every mm window below was written at (measuring windows scale with the sheet)
+SW = OVERALL_MM / SHEET_MM
+
+
+def W(v):
+    """A measuring window / step written in mm at the 690 scale, at the current scale (same panel px)."""
+    return v * SW
+
 FOLDED_MM_REAL = 450.0      # real pattern, stock folded
 BARREL_MM_REAL = 200.0      # real pattern barrel
 HEIGHT_MM_REAL = 280.0      # real pattern height (maker's table, 11.02 in), with the 25-round magazine
@@ -718,9 +728,9 @@ def measure_left(view, A, fr):
     }
     # ---------------- muzzle device, barrel
     md, br = bx["muzzle_device"], bx["barrel"]
-    dd = [sp[1] - sp[0] for X in np.arange(md[0] + 4, md[1] - 4, 0.5) if (sp := col_span_mm(fr, sil, X, 0.0))]
-    nk = [sp[1] - sp[0] for X in np.arange(br[1] - 5.0, br[1] - 1.0, 0.25) if (sp := col_span_mm(fr, sil, X, 0.0))]
-    cl = [sp[1] - sp[0] for X in np.arange(br[0] + 1.5, br[0] + 12, 0.5) if (sp := col_span_mm(fr, sil, X, 0.0))]
+    dd = [sp[1] - sp[0] for X in np.arange(md[0] + W(4), md[1] - W(4), W(0.5)) if (sp := col_span_mm(fr, sil, X, 0.0))]
+    nk = [sp[1] - sp[0] for X in np.arange(br[1] - W(5.0), br[1] - W(1.0), W(0.25)) if (sp := col_span_mm(fr, sil, X, 0.0))]
+    cl = [sp[1] - sp[0] for X in np.arange(br[0] + W(1.5), br[0] + W(12), W(0.5)) if (sp := col_span_mm(fr, sil, X, 0.0))]
     out["muzzle_device"] = {
         "X": r1(md[:2]), "length": M(md[1] - md[0], s, ("sil", "seam"), how="tip to the rear of its collar (seam x 53.5)"),
         "diameter": M(np.median(dd), s, how="median outer diameter over the slotted body"),
@@ -739,7 +749,7 @@ def measure_left(view, A, fr):
     # ---------------- rails
     rails = {}
     rt = bx["top_rail"]
-    xs = np.arange(rt[0] + 0.5, rt[1] - 0.5, 0.25)
+    xs = np.arange(rt[0] + W(0.5), rt[1] - W(0.5), W(0.25))
     tz = []
     for X in xs:
         e = col_extent(fr, P["top_rail"], X)
@@ -748,12 +758,12 @@ def measure_left(view, A, fr):
     ok = ~np.isnan(tz)
     tooth_top = float(np.percentile(tz[ok], 90))
     slot_bot = float(np.percentile(tz[ok], 8))
-    runs = [r for r in teeth_runs(xs[ok], tz[ok], (tooth_top + slot_bot) / 2) if r[1] - r[0] > 1.0]
+    runs = [r for r in teeth_runs(xs[ok], tz[ok], (tooth_top + slot_bot) / 2) if r[1] - r[0] > W(1.0)]
     # periodic section between the sights
-    secX0 = bx["sight_rear"][1] + 2          # X grows toward the muzzle: rear sight first
-    secX1 = bx["sight_front"][0] - 2
+    secX0 = bx["sight_rear"][1] + W(2)         # X grows toward the muzzle: rear sight first
+    secX1 = bx["sight_front"][0] - W(2)
     sel = ok & (xs < secX1) & (xs > secX0)
-    p_mm, q = pitch_from_profile(xs[sel], tz[sel], 6, 16)
+    p_mm, q = pitch_from_profile(xs[sel], tz[sel], W(6), W(16))
     teeth_between = [r for r in runs if r[0] > secX0 and r[1] < secX1]
     centres = np.array([(a + b) / 2 for a, b in teeth_between])
     if len(centres) > 3:
@@ -778,12 +788,12 @@ def measure_left(view, A, fr):
     rails["top"]["slots_at_10.01_over_length"] = round((rt[1] - rt[0]) / RAIL_PITCH, 1)
     # lower rail (bottom profile)
     lr = bx["lower_rail"]
-    xs2 = np.arange(lr[0] + 0.3, lr[1] - 0.3, 0.25)
+    xs2 = np.arange(lr[0] + W(0.3), lr[1] - W(0.3), W(0.25))
     bz = np.array([(col_extent(fr, P["lower_rail"], X) or (np.nan, np.nan))[0] for X in xs2])
     ok2 = ~np.isnan(bz)
     t_lo = float(np.percentile(bz[ok2], 10))
     t_hi = float(np.percentile(bz[ok2], 92))
-    runs2 = [r for r in teeth_runs(xs2[ok2], -bz[ok2], -(t_lo + t_hi) / 2) if r[1] - r[0] > 1.0]
+    runs2 = [r for r in teeth_runs(xs2[ok2], -bz[ok2], -(t_lo + t_hi) / 2) if r[1] - r[0] > W(1.0)]
     c2 = np.array([(a + b) / 2 for a, b in runs2])
     k2 = R.fit_line(np.arange(len(c2), dtype=float), c2)[0] if len(c2) > 2 else float("nan")
     rails["bottom"] = {
@@ -800,9 +810,9 @@ def measure_left(view, A, fr):
         b = bx[nm]
         topz = b[3]
         # the upper part (above the base): X span 2-6 mm below the top
-        sp = [row_span_mm(fr, P[nm], topz - dz, (b[0] + b[1]) / 2) for dz in np.linspace(1.0, 6.0, 11)]
+        sp = [row_span_mm(fr, P[nm], topz - dz, (b[0] + b[1]) / 2) for dz in np.linspace(W(1.0), W(6.0), 11)]
         sp = np.array([t for t in sp if t])
-        base = [row_span_mm(fr, P[nm], tooth_top + dz, (b[0] + b[1]) / 2) for dz in (1.0, 2.0, 3.0)]
+        base = [row_span_mm(fr, P[nm], tooth_top + dz, (b[0] + b[1]) / 2) for dz in (W(1.0), W(2.0), W(3.0))]
         base = np.array([t for t in base if t])
         sg[nm] = {"X": r1(b[:2]), "top_Z": M(topz, s, ("sil",)),
                   "head_X_span_1to6mm_below_top": r1([sp[:, 0].mean(), sp[:, 1].mean()]),
@@ -874,7 +884,7 @@ def measure_left(view, A, fr):
     # ---------------- grip
     gp = bx["grip"]
     zweb = fr.mm(*view.px(300, 241))[1]
-    gz = np.linspace(gp[2] + 15, zweb - 10, 40)
+    gz = np.linspace(gp[2] + W(15), zweb - W(10), 40)
     fe, re_ = [], []
     for Z in gz:
         ints = row_intervals_mm(fr, P["grip"], Z)
@@ -883,7 +893,7 @@ def measure_left(view, A, fr):
             re_.append((Z, min(a for a, b in ints)))
     fe, re_ = np.array(fe), np.array(re_)
     kf, cf, rmsf = R.fit_line(fe[:, 0], fe[:, 1])
-    up = re_[:, 0] > gp[2] + 35                       # backstrap: its upper part (the palm swell below is curved)
+    up = re_[:, 0] > gp[2] + W(35)                      # backstrap: its upper part (the palm swell below is curved)
     kr, cr, rmsr = R.fit_line(re_[up, 0], re_[up, 1])
     ang_f = math.degrees(math.atan(kf))     # dX/dZ: + means the edge leans forward going up
     ang_r = math.degrees(math.atan(kr))
@@ -917,8 +927,8 @@ def measure_left(view, A, fr):
                                                      "face" % zf)
     out["trigger_reach_to_blade_rear_face"] = M(xrear - xback, s, ("sil", "sil"), extra_unc=1.5)
     out["trigger_reach_note"] = ("the finger pad rests on the blade's front face; real-pattern reach for a full-size "
-                                 "rifle-type grip is about 65-75 mm, so at 690 mm the sheet's trigger group is drawn "
-                                 "large (see the scale cross-checks)")
+                                 "rifle-type grip is about 65-75 mm (at 690 mm the sheet's trigger group was drawn 13-29 %% large; "
+                                 "at %.0f it reads as measured here; see the scale cross-checks)" % OVERALL_MM)
     # ---------------- stock
     out["stock"] = measure_stock(view, fr, A, bx)
     # ---------------- face features (charging handle, selector, pins, slots)
@@ -967,7 +977,7 @@ def measure_mag(view, fr, A):
     X0, X1, Z0, Z1 = Q[:, 0].min(), Q[:, 0].max(), Q[:, 1].min(), Q[:, 1].max()
     # check fix C2 (2026-10-09): fit the edges on the straight body only (Z0+14 .. Z1-14 = about Z -240 .. -90): the
     # old window (Z0+6 .. Z1-4) took in the lip-cut rear corner and the floor-plate flare and read 7.42 deg vs 8.25
-    zs = np.linspace(Z0 + 14, Z1 - 14, 40)
+    zs = np.linspace(Z0 + W(14), Z1 - W(14), 40)
     fe, re_ = [], []
     for Z in zs:
         ints = row_intervals_mm(fr, rings, Z)
@@ -991,13 +1001,13 @@ def measure_mag(view, fr, A):
         "front_edge_X_at_top_bottom": r1([kf * Z1 + cf, kf * Z0 + cf]),
         "front_edge_line": {"dX_dZ": round(kf, 4), "X_at_Z0": round(cf, 2)},
         "rear_edge_line": {"dX_dZ": round(kr, 4), "X_at_Z0": round(cr, 2)},
-        "front_edge_X_extended_to_receiver_seam_Z_-18.5": round(kf * -18.5 + cf, 1),
+        "front_edge_X_extended_to_receiver_seam_Z_-18.5": round(kf * W(-18.5) + cf, 1),
         "rear_edge_X_at_top_bottom": r1([kr * Z1 + cr, kr * Z0 + cr]),
         "floor_plate": {},
     }
     # floor plate: the widest few mm at the bottom
     fp = []
-    for Z in np.linspace(Z0 + 0.5, Z0 + 8, 16):
+    for Z in np.linspace(Z0 + W(0.5), Z0 + W(8), 16):
         ints = row_intervals_mm(fr, rings, Z)
         if ints:
             fp.append((Z, min(a for a, b in ints), max(b for a, b in ints)))
@@ -1038,7 +1048,7 @@ def measure_stock(view, fr, A, bx):
     for nm in ("stock_top_strut", "stock_lower_strut"):
         b = bx[nm]
         prof = []
-        for X in np.linspace(b[0] + 3, b[1] - 3, 9):
+        for X in np.linspace(b[0] + W(3), b[1] - W(3), 9):
             iv = col_intervals_mm(fr, P[nm], X)
             if iv:
                 prof.append((X, iv[0][0], iv[0][1]))
@@ -1089,7 +1099,7 @@ def dark_features(view, fr, A, thr=30.0):
         if max(w, h) < 6 or a > 1500 or a < 30:
             continue
         Q = fr.mm_arr(np.c_[[xs.min(), xs.max()], [ys.max(), ys.min()]])
-        if min(Q[:, 1]) > 38:                 # rail slots (reported under rails)
+        if min(Q[:, 1]) > W(38):                 # rail slots (reported under rails)
             continue
         out.append({"bbox_px": [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())], "area_px": a,
                     "X": r1(sorted(Q[:, 0])), "Z": r1(sorted(Q[:, 1]))})
@@ -1153,16 +1163,16 @@ def measure_top(T, ML):
     md = ML["muzzle_device"]["X"]
     rf = ML["barrel"]["receiver_front_face_X"]["mm"]
     rr = ML["receiver"]["X"][0]
-    out["muzzle_device_width"] = M(wmed(md[0] + 4, md[1] - 4), s)
-    out["receiver_body_width_plain"] = M(wmed(rr + 100, rf - 110), s,
+    out["muzzle_device_width"] = M(wmed(md[0] + W(4), md[1] - W(4)), s)
+    out["receiver_body_width_plain"] = M(wmed(rr + W(100), rf - W(110)), s,
                                          how="median over the plain middle of the receiver (X %.0f-%.0f, no lateral "
-                                             "features)" % (rr + 100, rf - 110))
-    out["front_body_width"] = M(wmed(rf - 62, rf - 38), s, how="slotted front section between the charging handle "
+                                             "features)" % (rr + W(100), rf - W(110)))
+    out["front_body_width"] = M(wmed(rf - W(62), rf - W(38)), s, how="slotted front section between the charging handle "
                                                                  "knob and the front sight base (X %.0f-%.0f)" % (
-                                                                     rf - 62, rf - 38))
-    out["front_sight_zone_width"] = M(wmed(rf - 30, rf - 8), s, how="front sight base / ears zone; protrudes to the "
+                                                                     rf - W(62), rf - W(38)))
+    out["front_sight_zone_width"] = M(wmed(rf - W(30), rf - W(8)), s, how="front sight base / ears zone; protrudes to the "
                                                                      "gun's right in TOP")
-    pb = band(rr + 100, rf - 110)
+    pb = band(rr + W(100), rf - W(110))
     out["receiver_body_Y_left_right"] = r1([np.median(pb[:, 1]), np.median(pb[:, 2])])
     out["receiver_offset_of_mid_plane"] = M(float(np.median((pb[:, 1] + pb[:, 2]) / 2)), s, how="body centre vs axis")
     # steps in the width profile: find the device -> body step, body -> stock step, stock -> butt pad step
@@ -1178,17 +1188,17 @@ def measure_top(T, ML):
     out["body_front_face_X"] = M(float(front), s, ("sil",))
     # the stock: the rear of the receiver block = where the width drops below 0.75 x the plain body width, behind it
     bw = out["receiver_body_width_plain"]["mm"]
-    behind = (X < rr + 40) & (sm < 0.85 * bw)
+    behind = (X < rr + W(40)) & (sm < 0.85 * bw)
     out["body_rear_end_X_width_drop"] = M(float(X[behind].max()), s, ("sil",),
                                           how="first width drop below 85 % of the plain body width, going rearward")
     # butt pad: the widest thing at the rear
-    rear = X < 60
+    rear = X < W(60)
     out["butt_pad_width"] = M(float(w[rear].max()), s)
     out["butt_pad_front_X_estimate"] = M(float(X[rear & (sm > 0.85 * w[rear].max())].max()), s, ("sil", "est"))
-    stock = (X > 60) & (X < X[behind].max() - 30)
+    stock = (X > W(60)) & (X < X[behind].max() - W(30))
     out["stock_width_profile_median"] = M(float(np.median(w[stock])), s)
     out["stock_width_by_X"] = {str(int(x)): round(float(np.median(w[(X > x - 3) & (X < x + 3)])), 1)
-                               for x in np.arange(70, X[behind].max() - 20, 20)}
+                               for x in np.arange(W(70), X[behind].max() - W(20), W(20))}
     # lateral features beyond the plain body (gun left = +Y, gun right = -Y)
     yl, yr = out["receiver_body_Y_left_right"]
     zone = (X > rr) & (X < front - 3)
@@ -1206,15 +1216,15 @@ def measure_top(T, ML):
         o = []
         for c in res:
             seg = prof[c]
-            if seg[-1, 0] - seg[0, 0] < 2.5:
+            if seg[-1, 0] - seg[0, 0] < W(2.5):
                 continue
             ext = seg[:, col].max() if sign > 0 else seg[:, col].min()
             o.append({"X": r1([seg[0, 0], seg[-1, 0]]), "Y_extreme": round(float(ext), 1),
                       "beyond_body_mm": round(float(abs(ext - base)), 1)})
         return o
 
-    out["lateral_features_gun_left_(+Y,image-down)"] = runs(prof[:, 1] > yl + 2.5, 1, 1, yl)
-    out["lateral_features_gun_right_(-Y,image-up)"] = runs(prof[:, 2] < yr - 2.5, 2, -1, yr)
+    out["lateral_features_gun_left_(+Y,image-down)"] = runs(prof[:, 1] > yl + W(2.5), 1, 1, yl)
+    out["lateral_features_gun_right_(-Y,image-up)"] = runs(prof[:, 2] < yr - W(2.5), 2, -1, yr)
     kx = [fr.mm(x, 300)[0] for x in T["cfg"]["charging_knob_x"]]
     out["charging_knob_X_hand_read"] = r1(sorted(kx))
     out["overall_width_max"] = M(float(w.max()), s, how="incl. the charging handle knob and the butt pad")
@@ -1222,7 +1232,7 @@ def measure_top(T, ML):
     # rail slot pitch from the luminance along the rail centre line (cross slots read as stripes)
     vals, xsr = [], []
     v = T["view"]
-    for Xs in np.arange(rr + 90, rf - 40, 0.25):
+    for Xs in np.arange(rr + W(90), rf - W(40), W(0.25)):
         p = fr.px(Xs, 0.0)
         xi, yi = p
         x0, y0 = int(np.floor(xi)), int(np.floor(yi))
@@ -1230,7 +1240,7 @@ def measure_top(T, ML):
         Lb = v.L[y0 - 6:y0 + 7, x0:x0 + 2].mean(axis=0)
         vals.append((1 - fx) * Lb[0] + fx * Lb[1])
         xsr.append(Xs)
-    p_mm, q = pitch_from_profile(np.array(xsr), np.array(vals), 6, 16)
+    p_mm, q = pitch_from_profile(np.array(xsr), np.array(vals), W(6), W(16))
     out["rail_stripe_pitch_autocorr"] = {"mm": round(p_mm, 2), "peak": round(q, 3),
                                          "implied_overall_mm_if_10.01": round(OVERALL_MM * RAIL_PITCH / p_mm, 1)}
     return out
@@ -1404,11 +1414,11 @@ def main():
         f["muzzle_tip_X"] = X1
         f["sight_top_Z"] = Z1
         # sights: columns where the top is > 8 mm above the rail line, clustered
-        tops = [(X, e[1]) for X in np.arange(X0 + 1, X1 - 1, 0.5) if (e := col_extent(fr, sil, X))]
+        tops = [(X, e[1]) for X in np.arange(X0 + W(1), X1 - W(1), W(0.5)) if (e := col_extent(fr, sil, X))]
         tops = np.array(tops)
-        hi = tops[tops[:, 1] > np.percentile(tops[:, 1], 60) + 8]
+        hi = tops[tops[:, 1] > np.percentile(tops[:, 1], 60) + W(8)]
         if len(hi):
-            gap = np.nonzero(np.diff(hi[:, 0]) > 20)[0]
+            gap = np.nonzero(np.diff(hi[:, 0]) > W(20))[0]
             groups = np.split(hi, gap + 1)
             groups.sort(key=lambda g: g[:, 0].mean())
             f["rear_sight_X_centre"] = float(groups[0][:, 0].mean())
@@ -1419,19 +1429,19 @@ def main():
         f["mag_rear_X"], f["mag_front_X"], f["mag_bottom_Z"] = mb[0], mb[1], mb[2]
         gun = A["gun"]
         g = fr.mm_arr(np.vstack(outer(gun)))
-        behind = g[g[:, 0] < mb[0] - 10]
+        behind = g[g[:, 0] < mb[0] - W(10)]
         low = behind[np.argmin(behind[:, 1])]
         f["grip_bottom_X"], f["grip_bottom_Z"] = float(low[0]), float(low[1])
         hol = [fr.mm_arr(np.array([[h["bbox_px"][0], h["bbox_px"][1]], [h["bbox_px"][2], h["bbox_px"][3]]]))
                for h in view.kept_holes]
         hol = sorted([(min(q[:, 0]), max(q[:, 0]), min(q[:, 1]), max(q[:, 1])) for q in hol], key=lambda t: t[0])
-        wins = [h for h in hol if h[1] < 240 and h[1] - h[0] > 15]
+        wins = [h for h in hol if h[1] < W(240) and h[1] - h[0] > W(15)]
         for nm, h in zip(("stock_rear_window", "stock_front_window"), wins):
             f[nm + "_X_centre"] = (h[0] + h[1]) / 2
             f[nm + "_Z_centre"] = (h[2] + h[3]) / 2
             f[nm + "_X_length"] = h[1] - h[0]
         for h in hol:
-            if h[3] < -40:
+            if h[3] < W(-40):
                 f["trigger_guard_opening_X_centre"] = (h[0] + h[1]) / 2
                 f["trigger_guard_opening_X_length"] = h[1] - h[0]
                 f["trigger_guard_opening_Z_height"] = h[3] - h[2]
@@ -1444,7 +1454,7 @@ def main():
     feat_cmp = {k: {"LEFT": round(fL[k], 1), "RIGHT": round(fR[k], 1), "RIGHT_minus_LEFT": round(fR[k] - fL[k], 1)}
                 for k in fL if k in fR}
     prof_cmp = []
-    for X in np.arange(10, 680, 10.0):
+    for X in np.arange(W(10), W(680), W(10.0)):
         a = col_extent(frL, left.rings, X)
         b = col_extent(frR, right.rings, X)
         if a and b:
@@ -1452,8 +1462,8 @@ def main():
     prof_cmp = np.array(prof_cmp)
     agreement_lr = {
         "method": "RIGHT panel mirrored; both side views in the gun frame independently (own rail-direction axis, "
-                  "own bore height, X = 0 at the rearmost butt pad point, own scale to 690 mm) and compared without "
-                  "fitting; a free similarity fit (max IoU) is the secondary number",
+                  "own bore height, X = 0 at the rearmost butt pad point, own scale to %.0f mm) and compared without "
+                  "fitting; a free similarity fit (max IoU) is the secondary number" % OVERALL_MM,
         "iou_silhouette_frame_aligned": round(iou_fr, 4), "iou_gun_without_mag_frame_aligned": round(iou_gun, 4),
         "iou_magazine_frame_aligned": round(iou_mag, 4),
         "boundary_distance_mm": {"median": round(float(np.median(dists)), 2),
@@ -1532,7 +1542,7 @@ def main():
                         "px_per_cm_LEFT": round(rulerL["tick_spacing_px_per_10cm"] / 10, 4),
                         "implied_overall_length_cm_LEFT": round(LpxL / (rulerL["tick_spacing_px_per_10cm"] / 10), 1),
                         "implied_overall_length_cm_RIGHT": round(LpxR / (rulerR["tick_spacing_px_per_10cm"] / 10), 1),
-                        "error_vs_690_pct": round(100 * (LpxL / (rulerL["tick_spacing_px_per_10cm"] / 10) * 10 /
+                        "error_vs_overall_pct": round(100 * (LpxL / (rulerL["tick_spacing_px_per_10cm"] / 10) * 10 /
                                                          OVERALL_MM - 1), 1)},
         "cross_checks": {
             "folded_length_muzzle_tip_to_hinge_gap": {"mm": round(folded_est, 1), "real": FOLDED_MM_REAL,
@@ -1545,7 +1555,7 @@ def main():
                                      "ratio_height_over_length_sheet": round(hgt / OVERALL_MM, 4),
                                      "ratio_real": round(HEIGHT_MM_REAL / OVERALL_MM, 4),
                                      "implied_overall_if_height_is_280": round(OVERALL_MM * HEIGHT_MM_REAL / hgt, 1)},
-            "top_rail_pitch": {"sheet_mm_at_690": rail_p, "standard": RAIL_PITCH,
+            "top_rail_pitch": {"sheet_mm": rail_p, "standard": RAIL_PITCH,
                                "implied_overall_if_pitch_is_10.01": ML["rails"]["top"][
                                    "implied_overall_mm_if_pitch_is_10.01"],
                                "TOP_view_stripes": MT["rail_stripe_pitch_autocorr"]},
@@ -1557,10 +1567,11 @@ def main():
                                                                          BARREL_MM_REAL, 1),
                 "ejection_port_X_from_RIGHT": None},
         },
-        "global_scale_note": "690 mm is a definition (the prompt and the real pattern's overall length; study 3.5: "
-                             "scale to the overall length). Every other real-pattern anchor disagrees with the sheet's "
-                             "own proportions by -7 % to +29 % (table above), so the sheet draws a taller, chunkier "
-                             "gun than the real pattern; that is the sheet's design, kept by the silhouette gates",
+        "global_scale_note": "%.0f mm is the orchestrator ruling of 2026-10-09 (spec resolution R26). At the real "
+                             "pattern's 690 the sheet's grip / trigger group was 13-29 %% larger than real (trigger reach "
+                             "90.5 vs ~70); at ~625 the side-view rail pitch is exactly 10.01 and the receiver width matches "
+                             "the real 61, so the sheet was evidently drawn at ~625. Every silhouette proportion stays the "
+                             "sheet's (one uniform scale); the anchors below show what remains off the real pattern" % OVERALL_MM,
         "uncertainty_note": "unc_mm = 1-sigma measurement uncertainty from the edge types (silhouette +-0.4 px, "
                             "hand-placed seam +-1 px, estimate +-2 px) at that view's scale; it does not include the "
                             "scale choice",
@@ -1573,13 +1584,15 @@ def main():
         "receiver_width_TOP": (MT["receiver_body_width_plain"]["mm"], WIDTH_MM_REAL, "maker's table 2.40 in"),
         "folded_length": (round(folded_est, 1), FOLDED_MM_REAL, "real pattern"),
     }
-    scale["real_anchor_ratios_sheet_at_690_over_real"] = {
+    scale["real_anchor_ratios_sheet_over_real"] = {
         k: {"sheet_mm": v[0], "real_mm": v[1], "ratio": round(v[0] / v[1], 3),
             "implied_overall_mm": round(OVERALL_MM * v[1] / v[0], 1), "source": v[2]} for k, v in anchors.items()}
-    scale["alternative_625_rail_pitch_scale"] = {
-        "factor": round(625.3 / OVERALL_MM, 4),
-        "note": "at ~625 mm overall the sheet's side-view rail pitch is exactly 10.01 and the receiver width matches "
-                "the real 61 mm (+2 %), but overall -9 %, folded -16 %, height +10 %: not chosen (default 690)"}
+    scale["scale_ruling"] = {
+        "overall_mm": OVERALL_MM, "was_mm": SHEET_MM, "factor_vs_690": round(SW, 6),
+        "rail_pitch_scale_overall_mm": 625.3,
+        "note": "orchestrator ruling 2026-10-09 (spec R26): 625 mm overall, all silhouette proportions the sheet's; at "
+                "~625 the side-view rail pitch is exactly 10.01 and the receiver width matches the real 61 mm; "
+                "overall 690 -> 625 (-9.4 %), folded and height follow the sheet's proportions"}
     # hidden barrel: the breech face must sit at the magazine's top front (feed) under the ejection port
     mag_top_front = ML["magazine"]["front_edge_X_extended_to_receiver_seam_Z_-18.5"]
     port = scale["cross_checks"]["barrel_200_check"]
@@ -1588,9 +1601,10 @@ def main():
         "behind the ejection port's rear edge; the sheet's feed geometry (magazine front wall extended up to the "
         "receiver seam: X %.0f; magwell front face X %.0f; port X ?) puts the breech face at about X %.0f-%.0f (just "
         "ahead of the magazine's top front, at the port's front edge), i.e. a hidden barrel of about %.0f-%.0f mm to a "
-        "crown inside the device collar (X ~655-660)" % (
+        "crown inside the device collar (X ~%.0f-%.0f)" % (
             ML["barrel"]["device_seat_X"]["mm"] - BARREL_MM_REAL, mag_top_front, ML["mag_well"]["front_face_X"]["mm"],
-            mag_top_front + 4, mag_top_front + 16, 655 - (mag_top_front + 16), 660 - (mag_top_front + 4)))
+            mag_top_front + W(4), mag_top_front + W(16), W(655) - (mag_top_front + W(16)), W(660) - (mag_top_front + W(4)),
+            W(655), W(660)))
     port = np.array(frR.mm_arr(right.poly(CONFIG["RIGHT"]["face_features"]["ejection_port"])))
     scale["cross_checks"]["barrel_200_check"]["ejection_port_X_from_RIGHT"] = r1([port[:, 0].min(), port[:, 0].max()])
     scale["cross_checks"]["barrel_200_check"]["note"] = scale["cross_checks"]["barrel_200_check"]["note"].replace(

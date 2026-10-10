@@ -1,0 +1,476 @@
+{
+ "stage": "W1b blockout",
+ "date": "2026-10-09T16:34:07",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "L1 LEFT IoU (similarity fit)",
+   "value": 0.9864,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L1 RIGHT IoU (similarity fit)",
+   "value": 0.9468,
+   "threshold": ">= 0.95 or within 0.005 of the sheet's own LEFT/RIGHT ceiling",
+   "pass": true,
+   "note": "the sheet's own LEFT trace vs its RIGHT panel reads 0.948: the two panels disagree by that much"
+  },
+  {
+   "name": "L1 TOP IoU (X >= 221.9)",
+   "value": 0.9386,
+   "threshold": ">= 0.92",
+   "pass": true
+  },
+  {
+   "name": "L1 stop rule (change the method below 0.90)",
+   "value": 0.9386,
+   "threshold": ">= 0.90",
+   "pass": true
+  },
+  {
+   "name": "B4 sight picture at blockout (aperture)",
+   "value": {
+    "lateral_mm": 0.0,
+    "vertical_mm": 0.0,
+    "aperture_mm": 1.989,
+    "post_visible_mm": 0.991
+   },
+   "threshold": "post tip at the aperture centre <= 0.2 mm; post visible >= 0.4 x hole",
+   "pass": true,
+   "note": "WorkFiles/guns/smg/review/blockout/b4_sight_picture.png"
+  },
+  {
+   "name": "3/4 camera solve at blockout (info)",
+   "value": {
+    "iou": 0.8945,
+    "landmark_rms_px": 8.006860570412881
+   },
+   "threshold": "reported",
+   "pass": true,
+   "note": "magazine thickness sweep: {\"iou_in_mag_zone_by_thickness_mm\": {\"21\": 0.8411, \"23\": 0.8449, \"25\": 0.8493, \"27\": 0.8541, \"29\": 0.8579, \"31\": 0.8512, \"33\": 0.8316}, \"best_mm\": 29, \"parabola_peak_mm\": 28.72, \"spec_mm\": 27.0, \"band_mm\": [27.0, 31.0], \"verdict\": \"27.0 kept (the panel peaks at 28.7; real minimum 27)\"}"
+  }
+ ],
+ "details": {
+  "silhouette": {
+   "stage": "blockout",
+   "npz": "blockout_tris.npz",
+   "triangles": 11042,
+   "views": {
+    "LEFT": {
+     "iou_identity": 0.9864,
+     "iou_fit": 0.9864,
+     "fit_params_s_rotdeg_tx_ty": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "contour_px": {
+      "p50": 0.0,
+      "p95": 1.0,
+      "max": 5.831,
+      "n": 5122
+     },
+     "ours_px": 48183,
+     "ref_px": 48173,
+     "magazine_iou": 0.9959,
+     "gun_without_mag_iou": 0.9851,
+     "parts": {
+      "barrel": {
+       "area_px": 394.8,
+       "iou": 0.9207,
+       "contour_p95_px": 1.619,
+       "contour_max_px": 2.0,
+       "iou_filled": 0.9207,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": false
+      },
+      "butt_pad": {
+       "area_px": 2321.4,
+       "iou": 0.9962,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "grip": {
+       "area_px": 4414.0,
+       "iou": 0.9966,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "handguard_area": {
+       "area_px": 4395.4,
+       "iou": 0.9993,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "hinge_block": {
+       "area_px": 1105.0,
+       "iou": 0.9991,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "lower_rail": {
+       "area_px": 493.0,
+       "iou": 0.9881,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "mag_release": {
+       "area_px": 166.9,
+       "iou": 0.9942,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "iou_filled": 0.9942,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": true,
+       "declared": "mag_release.dims.declared_deviation: the paddle is built behind the drawn lever (C1); the per-part contour rule is waived; L3 gates the pin head and the Z range",
+       "pass_waived": true
+      },
+      "mag_well": {
+       "area_px": 2876.8,
+       "iou": 0.9959,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "magazine": {
+       "area_px": 5873.6,
+       "iou": 0.9958,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "muzzle_device": {
+       "area_px": 802.9,
+       "iou": 0.9452,
+       "contour_p95_px": 4.0,
+       "contour_max_px": 4.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "receiver_lower": {
+       "area_px": 3682.7,
+       "iou": 0.9984,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "receiver_upper": {
+       "area_px": 10241.3,
+       "iou": 0.9996,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "sight_front": {
+       "area_px": 423.6,
+       "iou": 0.6181,
+       "contour_p95_px": 4.0,
+       "contour_max_px": 5.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "sight_rear": {
+       "area_px": 596.6,
+       "iou": 0.7758,
+       "contour_p95_px": 5.0,
+       "contour_max_px": 8.0,
+       "rule": "IoU >= 0.95",
+       "pass": false
+      },
+      "stock_hinge_knuckle": {
+       "area_px": 1062.5,
+       "iou": 1.0,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 0.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "stock_lower_strut": {
+       "area_px": 1874.4,
+       "iou": 0.9826,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "stock_neck": {
+       "area_px": 1483.5,
+       "iou": 0.994,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "stock_rear_upright": {
+       "area_px": 694.1,
+       "iou": 0.9887,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "stock_top_strut": {
+       "area_px": 1940.2,
+       "iou": 0.9948,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "stock_web": {
+       "area_px": 344.1,
+       "iou": 0.9885,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "iou_filled": 0.9885,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": true
+      },
+      "top_rail": {
+       "area_px": 1672.3,
+       "iou": 0.9837,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      },
+      "trigger": {
+       "area_px": 286.9,
+       "iou": 0.9667,
+       "contour_p95_px": 1.0,
+       "contour_max_px": 1.0,
+       "iou_filled": 0.9667,
+       "rule": "outer contour (holes filled) P95 <= 1.0 px, max <= 2 px",
+       "pass": true
+      },
+      "trigger_guard": {
+       "area_px": 870.3,
+       "iou": 0.9806,
+       "contour_p95_px": 0.0,
+       "contour_max_px": 1.0,
+       "rule": "IoU >= 0.95",
+       "pass": true
+      }
+     }
+    },
+    "RIGHT": {
+     "iou_identity": 0.9437,
+     "iou_fit": 0.9468,
+     "fit_params_s_rotdeg_tx_ty": [
+      -0.0004932954467275003,
+      0.05204514275182731,
+      0.5700212235568057,
+      -0.3289424648877461
+     ],
+     "contour_px": {
+      "p50": 1.0,
+      "p95": 3.0,
+      "max": 8.0,
+      "n": 5029
+     },
+     "ours_px": 48621,
+     "ref_px": 48082,
+     "magazine_iou": 0.9405,
+     "gun_without_mag_iou": 0.9409,
+     "sheet_ceiling_iou_LEFT_trace_vs_RIGHT": 0.948,
+     "ours_minus_ceiling": -0.0043
+    },
+    "TOP": {
+     "iou_identity_valid": 0.9375,
+     "iou_fit_valid": 0.9386,
+     "iou_identity_all_pixels": 0.8867,
+     "fit_params_s_rotdeg_tx_ty": [
+      -0.001815504729088454,
+      -0.04270407275623396,
+      0.8564512700006773,
+      0.048098800943167264
+     ],
+     "valid_rule": "X >= 221.9 (spec gates.look.L2_TOP_exclusion_X)",
+     "contour_px": {
+      "p50": 1.0,
+      "p95": 5.0,
+      "max": 10.0,
+      "n": 1815
+     }
+    }
+   },
+   "gates": [
+    {
+     "name": "L1 LEFT IoU (similarity fit)",
+     "value": 0.9864,
+     "threshold": ">= 0.95",
+     "pass": true
+    },
+    {
+     "name": "L1 RIGHT IoU (similarity fit)",
+     "value": 0.9468,
+     "threshold": ">= 0.95, or within 0.005 of the sheet's own LEFT/RIGHT ceiling (identity)",
+     "pass": true,
+     "note": "sheet ceiling (the LEFT trace vs the RIGHT panel, identity) 0.948; ours (identity) 0.9437; passes by the documented ceiling exception"
+    },
+    {
+     "name": "L1 TOP IoU (X >= 222, fit)",
+     "value": 0.9386,
+     "threshold": ">= 0.92",
+     "pass": true
+    },
+    {
+     "name": "L1 stop rule (change the method below 0.90)",
+     "value": 0.9386,
+     "threshold": ">= 0.90",
+     "pass": true
+    }
+   ]
+  },
+  "b4": {
+   "camera": {
+    "eye_M": [
+     48.9,
+     0.0,
+     68.8
+    ],
+    "socket_M": [
+     298.9,
+     0.0,
+     68.8
+    ],
+    "pitch_deg": 0.0,
+    "fov_deg": 55.0,
+    "res": [
+     2560,
+     1440
+    ],
+    "eye_relief_mm": 250.0,
+    "supersample": 8,
+    "window_px": [
+     1170,
+     610,
+     1390,
+     830
+    ]
+   },
+   "mm_per_px_at_aperture": 0.10167,
+   "kind": "aperture",
+   "aperture": {
+    "centre_x_px": 1280.0,
+    "centre_y_px": 720.0,
+    "diameter_px": 19.562,
+    "diameter_mm_at_aperture": 1.989
+   },
+   "occluders_in_aperture_px": {},
+   "post": {
+    "centre_x_px": 1280.0,
+    "tip_y_px": 720.0,
+    "visible_height_in_aperture_mm_at_aperture": 0.991,
+    "visible_px_in_aperture": 85
+   },
+   "lateral_offset_px": 0.0,
+   "vertical_offset_px": 0.0,
+   "lateral_offset_mm": 0.0,
+   "vertical_offset_mm": 0.0,
+   "rule": "post tip at the aperture centre: |lateral|, |vertical| <= 0.20 mm at the aperture; post visible >= 0.80 mm inside the hole (0.4 x its diameter: the post fills the hole's lower half up to the centre); no occluder but the allowed parts",
+   "pass": true,
+   "image": "WorkFiles/guns/smg/review/blockout/b4_sight_picture.png"
+  },
+  "q34": {
+   "stage": "blockout",
+   "panel_box_sheet_px": [
+    630,
+    611,
+    1247,
+    1207
+   ],
+   "landmark_rms_px": 8.006860570412881,
+   "landmark_err_px": {
+    "muzzle device front face centre": 7.83,
+    "rear sight frame top centre": 4.81,
+    "front sight ear tops centre": 8.41,
+    "butt pad top rear corner (near, left)": 3.32,
+    "butt pad bottom rear corner (near)": 8.08,
+    "grip bottom toe (near)": 5.78,
+    "mag floor plate front corner (near)": 10.01,
+    "mag floor plate rear corner (near)": 10.65,
+    "lower rail front bottom (near)": 6.51,
+    "charging knob centre": 10.96
+   },
+   "refine_soft_iou_no_mag": 0.8856372830268108,
+   "camera": {
+    "centre_M_mm": [
+     1957.3,
+     1331.3,
+     267.7
+    ],
+    "f_px": 2772.4,
+    "forward_M": [
+     -0.7592,
+     -0.6281,
+     -0.1707
+    ],
+    "hfov_deg": 12.72
+   },
+   "iou_raw_unfilled": 0.8802,
+   "iou": 0.8945,
+   "contour_px": {
+    "p50": 2.828,
+    "p95": 12.657,
+    "max": 22.627,
+    "n": 4399
+   },
+   "iou_without_mag_zone": 0.9021,
+   "magazine_thickness_check": {
+    "iou_in_mag_zone_by_thickness_mm": {
+     "21": 0.8411,
+     "23": 0.8449,
+     "25": 0.8493,
+     "27": 0.8541,
+     "29": 0.8579,
+     "31": 0.8512,
+     "33": 0.8316
+    },
+    "best_mm": 29,
+    "parabola_peak_mm": 28.72,
+    "spec_mm": 27.0,
+    "band_mm": [
+     27.0,
+     31.0
+    ],
+    "verdict": "27.0 kept (the panel peaks at 28.7; real minimum 27)"
+   },
+   "gate": {
+    "rule": "L2 3/4: IoU >= 0.93 and contour P95 <= 3 px (outer silhouettes, camera solved)",
+    "pass": false
+   }
+  }
+ },
+ "files": {
+  "blend": "WorkFiles/guns/smg/scratch/SMG01_blockout.blend",
+  "overlays": [
+   "WorkFiles/guns/smg/review/blockout/b4_sight_picture.png",
+   "WorkFiles/guns/smg/review/blockout/left_diff.png",
+   "WorkFiles/guns/smg/review/blockout/left_overlay.png",
+   "WorkFiles/guns/smg/review/blockout/q34_diff.png",
+   "WorkFiles/guns/smg/review/blockout/q34_overlay.png",
+   "WorkFiles/guns/smg/review/blockout/right_diff.png",
+   "WorkFiles/guns/smg/review/blockout/right_overlay.png",
+   "WorkFiles/guns/smg/review/blockout/top_diff.png",
+   "WorkFiles/guns/smg/review/blockout/top_overlay.png"
+  ]
+ }
+}

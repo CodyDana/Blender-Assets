@@ -1,0 +1,102 @@
+{
+ "stage": "form: magazine fit (straight insert, SMG_BUILD_PLAN 12.2 at form time)",
+ "spec": "smg_spec.json frames.mag, sockets Mag / MagInsertStart, mag_release dims",
+ "blend": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Assets\\Guns\\SMG01.blend",
+ "gates": [
+  {
+   "name": "M1 seated: intersecting triangle pairs, magazine vs the gun (LOD0)",
+   "value": {
+    "gun": 0,
+    "catch": 0
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
+   "value": {
+    "bearing_gap_mm": 0.26,
+    "overtravel_mm": 1.5589,
+    "seam_mm": {
+     "front": 1.6967,
+     "rear": 1.8621,
+     "left": 1.8578,
+     "right": 1.8578
+    }
+   },
+   "threshold": "0.0-0.3; 1.0-2.0; <= 0.6 mm",
+   "pass": false
+  },
+  {
+   "name": "M3 lateral per side; fore-aft; catch engagement depth",
+   "value": {
+    "clearance_mm": {
+     "left": 0.2715,
+     "right": 0.2715,
+     "front": 0.2715,
+     "rear": 0.2758
+    },
+    "engagement_mm": 1.55
+   },
+   "threshold": "0.2-0.6; 0.2-0.6; >= 1.5 mm",
+   "pass": true
+  },
+  {
+   "name": "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)",
+   "value": {
+    "steps": 138,
+    "gun_contacts_at": [],
+    "catch_ride_mm": [
+     0.576,
+     26.076
+    ],
+    "catch_contacts": 52,
+    "worst_catch_depth_mm": 1.242
+   },
+   "threshold": "0 intersections except the catch nose riding the mag (depth <= engagement + 0.3 mm, last 6.00 mm only)",
+   "pass": false
+  },
+  {
+   "name": "M4b insert path with the catch released (-11.0 deg)",
+   "value": {
+    "steps": 138,
+    "intersecting_steps": 0
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "M5 removal path (reverse) with the catch released",
+   "value": {
+    "steps": 138,
+    "intersecting_steps": 0
+   },
+   "threshold": "0",
+   "pass": true,
+   "note": "the same pose set traversed backwards: identical intersection record"
+  },
+  {
+   "name": "M5b (info) removal with the catch at rest",
+   "value": {
+    "colliding_steps": 52
+   },
+   "threshold": "reported (expected to collide: the catch retains)",
+   "pass": true
+  },
+  {
+   "name": "F5 catch sweep rest -> release with the magazine seated",
+   "value": {
+    "steps": 45,
+    "intersecting_steps": 0,
+    "worst_depth_mm": 0.0
+   },
+   "threshold": "0 intersections except the nose leaving the notch (depth <= the engagement)",
+   "pass": true
+  }
+ ],
+ "failed": [
+  "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
+  "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)"
+ ],
+ "status": "fail"
+}

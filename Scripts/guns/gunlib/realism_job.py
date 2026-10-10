@@ -8,6 +8,8 @@ job.json:
   {"offset_M": [x, y, z],              frame B = (M - offset) / 1000
    "samples": 128, "wood_slots": [...], "worn_steel_objects": [...], "env": 0.55, "light": 1.35,
    "bg_rgb": [126, 126, 126],           world / background colour (sRGB; rendered opaque)
+   "polymer_slots": [...], "steel_style": "phosphate"   (0.2.1) black polymer on those slots, phosphate on the rest
+   "poses": {object: 4x4}, "hide": [object, ...]        (0.2.1) rigid review poses (frame B, metres) / hidden objects
    "shots": [{"name": ..., "eye_M": [x, y, z], "target_M": [x, y, z], "fov_deg": 55.0, "res": [w, h],
               "light_dist_m": 1.1, "out": "<png>"}]}
 """
@@ -51,6 +53,29 @@ def main():
     sc.render.resolution_percentage = 100
     objs = [o for o in bpy.data.objects if o.type == "MESH" and not o.name.startswith("_")]
     LK.apply_rough_look(objs, is_wood, JOB.get("worn_steel_objects", []))
+    if JOB.get("polymer_slots") or JOB.get("steel_style") == "phosphate":     # gunlib 0.2.1 (SMG): polymer + phosphate
+        poly = LK.rough_polymer()
+        phos = LK.rough_steel("RL_Phosphate", LK.PHOS_BASE, LK.PHOS_EDGE, metallic=0.55, rough_add=0.12)             if JOB.get("steel_style") == "phosphate" else None
+        for ob in objs:
+            try:
+                slot = json.loads(ob.get("gun_part", "{}")).get("slot")
+            except Exception:  # noqa: BLE001
+                slot = None
+            if slot in set(JOB.get("polymer_slots", [])):
+                ob.data.materials.clear()
+                ob.data.materials.append(poly)
+            elif phos is not None and not is_wood(ob):
+                ob.data.materials.clear()
+                ob.data.materials.append(phos)
+    for nm, pose in JOB.get("poses", {}).items():               # optional rigid poses: {object: 4x4 frame-B metres}
+        ob = bpy.data.objects.get(nm)
+        if ob is not None:
+            from mathutils import Matrix
+            ob.matrix_world = Matrix(pose) @ ob.matrix_world
+    for nm in JOB.get("hide", []):
+        ob = bpy.data.objects.get(nm)
+        if ob is not None:
+            ob.hide_render = True
     cam = RD.camera_object("RL_RealismCam")
     for shot in JOB["shots"]:
         LK.rough_world(sc, tuple(JOB.get("bg_rgb", (126, 126, 126))), float(JOB.get("env", 0.55)))

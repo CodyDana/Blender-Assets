@@ -1,0 +1,499 @@
+{
+ "gate": "gunlib_regression (SMG_BUILD_PLAN 15 W1a; spec gunlib_additions_W1a.regression)",
+ "date": "2026-10-09T13:50:59",
+ "lib_version": "0.2.0",
+ "start_commit": "c70cc918",
+ "head": "c70cc918",
+ "status": "pass",
+ "failed": [],
+ "rule": "the AR-01's stage-2/4/5 gate drivers re-run through the promoted gunlib.drivers (rifle_* shims + rifle_gun.CFG) reproduce the committed values EXACTLY (every number to the bit; ignored keys: blend, image, seconds); the AR-01 export bytes stay unchanged (sha256 before = after = the build's recorded sha256; nothing re-exported)",
+ "method": "Scripts/guns/gunlib/tests/ar01_regression.sh: the stage-2 drivers on a COPY of WorkFiles/guns/rifle/scratch/AR01_form_stage.blend (the gated form-stage blend form.json was measured on), b4 / viewgates on the committed triangle dumps (scratch/form_tris.npz, scratch/game/lod<k>_tris.npz), G5 / B3 LOD1 / LOD0-tri on a COPY of Assets/Guns/AR01.blend, rig_verify and mag_fit on the shipped Exports/Guns/AR01 bytes in fresh processes; every output in WorkFiles/guns/smg/scratch/regression/ (gitignored)",
+ "stages_run": [
+  2,
+  4,
+  5,
+  6
+ ],
+ "checks": [
+  {
+   "stage": 2,
+   "name": "B3 motion sweeps + G5 static + contact gaps (LOD0)",
+   "new": "WorkFiles/guns/smg/scratch/regression/b3_result.json",
+   "committed": "WorkFiles/guns/rifle/gates/form.json details.B3",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 2,
+   "name": "B6a joined twin + B10 deny list",
+   "new": "WorkFiles/guns/smg/scratch/regression/b6a_result.json",
+   "committed": "form.json details.B6a",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 2,
+   "name": "L3 features + L4 dimensions (measure)",
+   "new": "WorkFiles/guns/smg/scratch/regression/measure_result.json",
+   "committed": "form.json details.measure",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 2,
+   "name": "B4 sight picture (notch, occlusion-aware)",
+   "new": "WorkFiles/guns/smg/scratch/regression/b4_result.json",
+   "committed": "form.json details.B4",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 2,
+   "name": "form_magfit F1-F8 (rock path)",
+   "new": "WorkFiles/guns/smg/scratch/regression/form_magfit.json",
+   "committed": "WorkFiles/guns/rifle/gates/form_magfit.json",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 2,
+   "name": "form.json gate records (B3 x5, B4, B6a, MAGFIT F1-F8)",
+   "new": "rebuilt from the outputs above",
+   "committed": "form.json gates",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 4,
+   "name": "LOD-pop + S2 at LOD0-3 (viewgates)",
+   "new": "WorkFiles/guns/smg/scratch/regression/game/viewgates.json",
+   "committed": "WorkFiles/guns/rifle/scratch/game/viewgates.json (fed gates/game.json)",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 4,
+   "name": "LOD screen sizes",
+   "new": "WorkFiles/guns/smg/scratch/regression/game_lod_sizes.json",
+   "committed": "WorkFiles/guns/rifle/gates/game_lod_sizes.json",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 4,
+   "name": "G5 at LOD2-3 (penetration px)",
+   "new": "WorkFiles/guns/smg/scratch/regression/game/g5_lods.json",
+   "committed": "WorkFiles/guns/rifle/scratch/game/g5_lods.json (rule, lods, pass; its 'visible' block is rifle_g5_visible.py's, not a promoted driver)",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 4,
+   "name": "B3 + G5 at LOD1",
+   "new": "WorkFiles/guns/smg/scratch/regression/b3_lod1.json",
+   "committed": "WorkFiles/guns/rifle/scratch/b3_lod1.json",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 4,
+   "name": "G5 at LOD0 on the shipped (triangulated) parts",
+   "new": "WorkFiles/guns/smg/scratch/regression/b3_lod0_tri.json",
+   "committed": "WorkFiles/guns/rifle/scratch/b3_lod0_tri.json",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 4,
+   "name": "game.json gate values (G5 LOD0-3, B3 LOD1, S2 LOD0-3, LOD-pop)",
+   "new": "rebuilt from the outputs above with rifle_stage34_gates.stage4's formulas",
+   "committed": "WorkFiles/guns/rifle/gates/game.json",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 5,
+   "name": "rig_export (B1-B5, clips, S1, sha256, B10) on the shipped bytes",
+   "new": "WorkFiles/guns/smg/scratch/regression/rig_export.json",
+   "committed": "WorkFiles/guns/rifle/gates/rig_export.json",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": []
+  },
+  {
+   "stage": 6,
+   "name": "mag fit M1-M8 + the mag build gates on the shipped bytes",
+   "new": "WorkFiles/guns/smg/scratch/regression/mag.json",
+   "committed": "WorkFiles/guns/rifle/gates/mag.json",
+   "equal": true,
+   "mismatches": 0,
+   "first_mismatches": [],
+   "note": "stage 6 is beyond the W1a scope (2/4/5); run because mag_fit is a promoted driver too"
+  }
+ ],
+ "bytes": {
+  "exports_files": 32,
+  "exports_unchanged_during_run": true,
+  "exports_unchanged_since_session_start": true,
+  "exports_equal_recorded_build_sha256 (rig_export.json + mag.json files)": true,
+  "recorded_files_checked": 15,
+  "input_blends_unchanged": true,
+  "git_tracked_changes_under_Exports_AR01_Assets_Guns_WorkFiles_guns_rifle": []
+ },
+ "new_modules": {
+  "test_parts": {
+   "status": "pass",
+   "failed": [],
+   "checks": [
+    {
+     "name": "LOD0: every new-module part closed, UD1 + UD2",
+     "pass": true,
+     "threshold": "closed manifold; unreal_drops 0, min area >= 0.01 mm2; 0 edges < 0.05, 0 needles, 0 strips, 0 needle / edge-on corners"
+    },
+    {
+     "name": "rail slot pitch / width / profile (ray-measured on the built LOD0 rail)",
+     "pass": true,
+     "threshold": "pitch 10.01 and width 5.24 within 0.01 mm; V 21.2, neck 15.67 within 0.01"
+    },
+    {
+     "name": "sights_flip demo pair: B4 aperture method (post tip at the aperture centre)",
+     "pass": true,
+     "threshold": "|lateral|, |vertical| <= 0.2 mm; post visible >= 1 mm; no occluder"
+    },
+    {
+     "name": "LOD1: every new-module part closed, UD1 + UD2",
+     "pass": true,
+     "threshold": "closed manifold; unreal_drops 0, min area >= 0.01 mm2; 0 edges < 0.05, 0 needles, 0 strips, 0 needle / edge-on corners"
+    },
+    {
+     "name": "LOD2: every new-module part closed, UD1 + UD2",
+     "pass": true,
+     "threshold": "closed manifold; unreal_drops 0, min area >= 0.01 mm2; 0 edges < 0.05, 0 needles, 0 strips, 0 needle / edge-on corners"
+    },
+    {
+     "name": "LOD3: every new-module part closed, UD1 + UD2",
+     "pass": true,
+     "threshold": "closed manifold; unreal_drops 0, min area >= 0.01 mm2; 0 edges < 0.05, 0 needles, 0 strips, 0 needle / edge-on corners"
+    },
+    {
+     "name": "magfit_check straight gate set on the test well (known answers)",
+     "pass": true,
+     "threshold": "M1, M2 (bearing 0.1, overtravel 1.5, seam 0.3), M3 (0.3, engagement 1.8), M4 (ride <= 2.1), M4b, M5, F5 pass"
+    }
+   ],
+   "rail_measured": {
+    "slots": {
+     "0": {
+      "x0": 1.001,
+      "x1": 6.241,
+      "width": 5.24,
+      "centre": 3.621
+     },
+     "2": {
+      "x0": 21.019,
+      "x1": 26.259,
+      "width": 5.24,
+      "centre": 23.639
+     },
+     "3": {
+      "x0": 31.029,
+      "x1": 36.269,
+      "width": 5.24,
+      "centre": 33.649
+     },
+     "12": {
+      "x0": 121.119,
+      "x1": 126.359,
+      "width": 5.24,
+      "centre": 123.739
+     },
+     "23": {
+      "x0": 231.231,
+      "x1": 236.469,
+      "width": 5.238,
+      "centre": 233.85
+     },
+     "27": {
+      "x0": 271.271,
+      "x1": 276.509,
+      "width": 5.238,
+      "centre": 273.89
+     }
+    },
+    "pitches": [
+     10.01,
+     10.01,
+     10.01009,
+     10.00996
+    ],
+    "max_pitch_err": 9e-05,
+    "max_width_err": 0.002,
+    "profile": {
+     "V_width (at the V faces)": 21.2,
+     "top_flat (0.05 below the top)": 16.386,
+     "neck (1 mm under the neck top)": 15.67
+    }
+   },
+   "magfit_straight": {
+    "M1 seated: intersecting triangle pairs, magazine vs the gun (LOD0)": {
+     "gun": 0,
+     "catch": 0
+    },
+    "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge": {
+     "bearing_gap_mm": 0.09,
+     "overtravel_mm": 1.4999,
+     "seam_mm": {
+      "front": 0.3,
+      "rear": 0.3,
+      "left": 0.3,
+      "right": 0.3
+     }
+    },
+    "M3 lateral per side; fore-aft; catch engagement depth": {
+     "clearance_mm": {
+      "left": 0.3,
+      "right": 0.3,
+      "front": 0.3,
+      "rear": 0.3
+     },
+     "engagement_mm": 1.8
+    },
+    "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest)": {
+     "steps": 161,
+     "gun_contacts_at": [],
+     "catch_ride_mm": [
+      0.5,
+      34.0
+     ],
+     "catch_contacts": 68,
+     "worst_catch_depth_mm": 1.8
+    },
+    "M4b insert path with the catch released (-11.0 deg)": {
+     "steps": 161,
+     "intersecting_steps": 0
+    },
+    "M5 removal path (reverse) with the catch released": {
+     "steps": 161,
+     "intersecting_steps": 0
+    },
+    "M5b (info) removal with the catch at rest": {
+     "colliding_steps": 68
+    },
+    "F5 catch sweep rest -> release with the magazine seated": {
+     "steps": 45,
+     "intersecting_steps": 0,
+     "worst_depth_mm": 0.0
+    }
+   },
+   "triangles_per_level": {
+    "LOD0": {
+     "rail": 3308,
+     "rear_sight_base": 244,
+     "rear_sight_leaf": 766,
+     "front_sight_base": 244,
+     "front_sight_leaf": 368,
+     "magazine": 1252,
+     "magazine_follower": 156,
+     "magazine_floor_plate": 556,
+     "hinge_fixed": 1024,
+     "hinge_moving": 512,
+     "hinge_axle": 384,
+     "latch_bolt": 512,
+     "detent_boss": 144,
+     "hw_flush_pin": 192,
+     "hw_roll_pin": 284,
+     "hw_rivet_domed": 336,
+     "hw_rivet_flat": 240,
+     "hw_socket_cap": 504,
+     "hw_button_head": 792,
+     "hw_countersunk": 432
+    },
+    "LOD1": {
+     "rail": 1868,
+     "rear_sight_base": 132,
+     "rear_sight_leaf": 342,
+     "front_sight_base": 132,
+     "front_sight_leaf": 206,
+     "magazine": 444,
+     "magazine_follower": 44,
+     "magazine_floor_plate": 108,
+     "hinge_fixed": 256,
+     "hinge_moving": 128,
+     "hinge_axle": 192,
+     "latch_bolt": 256,
+     "detent_boss": 72,
+     "hw_flush_pin": 96,
+     "hw_roll_pin": 140,
+     "hw_rivet_domed": 120,
+     "hw_rivet_flat": 120,
+     "hw_socket_cap": 252,
+     "hw_button_head": 324,
+     "hw_countersunk": 216
+    },
+    "LOD2": {
+     "rail": 620,
+     "rear_sight_base": 116,
+     "rear_sight_leaf": 92,
+     "front_sight_base": 116,
+     "front_sight_leaf": 104,
+     "magazine": 292,
+     "magazine_follower": 28,
+     "magazine_floor_plate": 28,
+     "hinge_fixed": 96,
+     "hinge_moving": 48,
+     "hinge_axle": 72,
+     "latch_bolt": 96,
+     "detent_boss": 36,
+     "hw_flush_pin": 48,
+     "hw_roll_pin": 68,
+     "hw_rivet_domed": 48,
+     "hw_rivet_flat": 60,
+     "hw_socket_cap": 168,
+     "hw_button_head": 192,
+     "hw_countersunk": 144
+    },
+    "LOD3": {
+     "rail": 12,
+     "magazine": 292,
+     "magazine_follower": 28,
+     "magazine_floor_plate": 28,
+     "hinge_fixed": 96,
+     "hinge_moving": 48,
+     "hinge_axle": 72,
+     "latch_bolt": 96,
+     "detent_boss": 36,
+     "hw_flush_pin": 48,
+     "hw_roll_pin": 68,
+     "hw_rivet_domed": 48,
+     "hw_rivet_flat": 60,
+     "hw_socket_cap": 168,
+     "hw_button_head": 192,
+     "hw_countersunk": 144
+    }
+   },
+   "file": "WorkFiles/guns/smg/scratch/regression/parts_test.json"
+  },
+  "standard_vs_rig_bone_table": {
+   "equal": true,
+   "only_json": [],
+   "only_rig": [],
+   "different": []
+  },
+  "ud_on_ar01_form_parts (info)": {
+   "gates": [
+    {
+     "name": "UD1 Unreal degenerate rule (AR-01 form-stage LOD0 parts, info)",
+     "value": {
+      "objects": 37,
+      "unreal_drops": 5644,
+      "tris_under_0.01mm2": 7615,
+      "min_area_mm2": 1e-06,
+      "failing": [
+       "receiver",
+       "dust_cover",
+       "recoil_spring_button",
+       "rivets",
+       "bolt_carrier",
+       "rear_tang",
+       "rear_sight_block",
+       "rear_sight_leaf",
+       "gas_tube_rear_cap",
+       "upper_handguard",
+       "lower_handguard",
+       "handguard_front_band",
+       "gas_tube",
+       "gas_block",
+       "front_sight_block",
+       "muzzle_brake",
+       "trigger",
+       "trigger_guard",
+       "pistol_grip",
+       "buttstock",
+       "butt_plate",
+       "butt_screws",
+       "sling_swivel_base",
+       "stock_hardware",
+       "selector",
+       "magazine",
+       "magazine_floor_plate"
+      ]
+     },
+     "threshold": "unreal_drops = 0 (area < 0.005 mm2, float32 cm); min triangle area >= 0.01 mm2",
+     "pass": false
+    },
+    {
+     "name": "UD2 micro strips / needles / zero-tangent risk (AR-01 form-stage LOD0 parts, info)",
+     "value": {
+      "edges_under_0.05mm": 6540,
+      "min_edge_mm": 0.00215,
+      "needles_under_0.02mm": 9750,
+      "strip_polygons_under_0.1mm": 5699,
+      "needle_groups": 16,
+      "edge_on_groups": 164,
+      "failing": [
+       "receiver",
+       "dust_cover",
+       "rivets",
+       "bolt_carrier",
+       "mag_catch",
+       "rear_tang",
+       "rear_sight_block",
+       "rear_sight_leaf",
+       "handguard_retainer",
+       "gas_tube_rear_cap",
+       "upper_handguard",
+       "lower_handguard",
+       "handguard_front_band",
+       "gas_tube",
+       "gas_block",
+       "barrel",
+       "cleaning_rod",
+       "front_sight_block",
+       "muzzle_brake",
+       "trigger",
+       "trigger_guard",
+       "pistol_grip",
+       "buttstock",
+       "butt_plate",
+       "butt_screws",
+       "sling_swivel_base",
+       "sling_swivel_loop",
+       "stock_hardware",
+       "selector",
+       "magazine",
+       "magazine_floor_plate"
+      ]
+     },
+     "threshold": "0 edges < 0.05 mm; 0 triangles < 0.02 mm high; 0 strip polygons < 0.1 mm wide; 0 tangent groups (vertex + corner normal) all of needle corners (< 0.5 deg) or all edge-on (|n.n| < 0.1)",
+     "pass": false
+    }
+   ],
+   "file": "WorkFiles/guns/smg/scratch/regression/ud_ar01_form.json",
+   "note": "information: the AR-01 predates UD1-UD2 (its stage-8 Unreal import dropped 4,584 triangles, U5; U10 zero tangents); the SMG gates it from the form stage"
+  }
+ },
+ "drivers": [
+  "gunlib.drivers.b3",
+  "gunlib.drivers.b4",
+  "gunlib.drivers.b6a",
+  "gunlib.drivers.measure",
+  "gunlib.drivers.magfit_check",
+  "gunlib.drivers.viewgates",
+  "gunlib.drivers.g5_lods",
+  "gunlib.drivers.rig_verify",
+  "gunlib.drivers.mag_fit"
+ ],
+ "config": "Scripts/guns/rifle/rifle_gun.py (+ rifle_gun_measure.py, rifle_gun_magfit.py)"
+}

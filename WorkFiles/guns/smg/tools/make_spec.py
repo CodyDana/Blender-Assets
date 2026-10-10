@@ -37,6 +37,18 @@ D = MEAS["dimensions_LEFT"]
 TV = MEAS["top_view"]
 RF = MEAS["right_side_features"]
 BOX = D["part_boxes_mm_X0_X1_Z0_Z1"]
+# ---- SCALE (orchestrator ruling 2026-10-09, resolution R26): the trace is measured at OVERALL mm (625; it was 690). Every
+# number below that was READ OFF THE SHEET in mm at the 690 scale is written sc(value_at_690); numbers that are real-pattern
+# or line-standard values (rail profile, clearances, wall thicknesses, pin and bore norms, sight hardware) stay absolute.
+OVERALL = float(MEAS["scale"]["overall_length_mm_chosen"])
+S = OVERALL / 690.0
+
+
+def sc(v, n=2):
+    """A sheet read in mm at the 690 scale -> the ruled scale (lists recurse)."""
+    if isinstance(v, (list, tuple)):
+        return [sc(x, n) for x in v]
+    return round(float(v) * S, n) + 0.0
 
 
 def r1(v, n=1):
@@ -126,11 +138,11 @@ def top_width(x0, x1):
 # of 20.8 mm. Its own silhouette rings say the device is 25.3-25.7 tall at X 656-685 (the 20.8 came from a sliver
 # where a see-through slot splits the ring). Centre of the OUTER crossings over the exposed barrel + device:
 cent_L, cent_R, dia_L = [], [], []
-for X in np.arange(632.0, 686.0, 2.0):
+for X in np.arange(sc(632.0), sc(686.0), sc(2.0, 4)):
     zl, zr = cross_z(SIL_L, X), cross_z(SIL_R, X)
     if len(zl) >= 2:
         cent_L.append((zl[0] + zl[-1]) / 2)
-        if X >= 656:
+        if X >= sc(656.0):
             dia_L.append(zl[-1] - zl[0])
     if len(zr) >= 2:
         cent_R.append((zr[0] + zr[-1]) / 2)
@@ -142,7 +154,7 @@ DEVICE_W_TOP = TV["muzzle_device_width"]["mm"]
 # ---- pistol grip axis: midline of the traced grip between Z -70 and -140 (below the beaver-tail flare, above the heel)
 grip_r = rings_of(LEFT["parts"]["grip"])
 rows = []
-for Z in np.arange(-70.0, -141.0, -2.0):
+for Z in np.arange(sc(-70.0), sc(-141.0), sc(-2.0, 4)):
     x = cross_x(grip_r, Z)
     if len(x) >= 2:
         rows.append((Z, x[0], x[-1]))
@@ -152,7 +164,7 @@ GRIP_RAKE = round(math.degrees(math.atan(k_axis)), 2)                        # b
 JZ = D["reference_points"]["grip_junction_web_Z"]                            # web line (grip front meets the guard)
 J = np.array([k_axis * JZ + c_axis, JZ])
 u_dn = np.array([-k_axis, -1.0]) / math.hypot(k_axis, 1.0)
-GRIP_DEPTH = 46.0                                                            # plan (AR-01 H1 value), not the study's 40
+GRIP_DEPTH = 46.0                                                            # plan (AR-01 H1 value; hand anatomy: absolute)
 G = J + GRIP_DEPTH * u_dn
 GX, GZ = round(float(G[0]), 2), round(float(G[1]), 2)
 GRIP_WIDTH_FOREAFT = r1(np.median(GR[:, 2] - GR[:, 1]) * math.cos(math.atan(k_axis)), 1)
@@ -160,29 +172,29 @@ GRIP_WIDTH_FOREAFT = r1(np.median(GR[:, 2] - GR[:, 1]) * math.cos(math.atan(k_ax
 # ---- receiver widths (TOP; the merge's check shows TOP round parts agree with the side views within 3 %)
 W_REC_L, W_REC_R = TV["receiver_body_Y_left_right"]
 W_REC = TV["receiver_body_width_plain"]["mm"]
-FRONT_L, FRONT_R = top_width(560, 584)
-HINGE_L, HINGE_R = top_width(275, 292)
-LATCH_Y_L = top_width(258, 272)[0]                     # latch housing's left face (TOP over the stock knuckle zone)
+FRONT_L, FRONT_R = top_width(sc(560), sc(584))
+HINGE_L, HINGE_R = top_width(sc(275), sc(292))
+LATCH_Y_L = top_width(sc(258), sc(272))[0]                     # latch housing's left face (TOP over the stock knuckle zone)
 LATCH_BUTTON_PROUD = 1.0
 
 # ---- charging handle (merge re-read at 8x, scratch/merge/zL_knob.png; TOP agrees on the knob size)
-KNOB_D = 18.5
-KNOB_C = (549.3, 21.0)
+KNOB_D = sc(18.5)
+KNOB_C = (sc(549.3), sc(21.0))
 KNOB_TIP_Y = round(W_REC_L + TV["lateral_features_gun_left_(+Y,image-down)"][2]["beyond_body_mm"], 1)   # 52.4
 KNOB_CY = round(KNOB_TIP_Y - KNOB_D / 2, 2)
-ARM_ROD = {"X": [514.0, 539.7], "Z": [16.3, 24.3]}
-ARM_BLOCK = {"X": [501.5, 514.0], "Z": [13.0, 24.7], "proud_of_wall": 3.3}
-CH_TRAVEL = 75.0
-SLOT_H = 6.5
+ARM_ROD = {"X": sc([514.0, 539.7]), "Z": sc([16.3, 24.3])}
+ARM_BLOCK = {"X": sc([501.5, 514.0]), "Z": sc([13.0, 24.7]), "proud_of_wall": sc(3.3)}
+CH_TRAVEL = round(75.0 * S, 1)       # the real ~75 mm (craft RP5, from the 85 mm photo slot) scales with the gun (R26)
+SLOT_H = sc(6.5)
 SLOT_Z = [round(KNOB_C[1] - SLOT_H / 2, 2), round(KNOB_C[1] + SLOT_H / 2, 2)]
-NECK_D = 6.0
+NECK_D = sc(6.0)
 SLOT_X = [round(KNOB_C[0] - CH_TRAVEL - NECK_D / 2 - 0.25, 2), round(KNOB_C[0] + NECK_D / 2 + 0.25, 2)]
 # lock (check fix C4): the real pattern's lever pivots on a roll pin in the slide (axis parallel to X) and the slide does
 # not rotate. The pin sits in the slide's upper inboard corner so that every point of the outer arm (Y 34.2, Z 13.0-24.7)
 # moves OUTWARD over the 15 deg lock (an axis at the slide centre Y 20, Z 21 drove the arm 1.24 mm through the wall)
 W_IN_L = round(W_REC_L - 3.5, 1)                                  # left wall inner face (wall 3.5 at the slot)
-SLIDE = {"Y": [14.0, 26.0], "Z": [17.5, 29.5], "note": "12 x 12 steel slide in a moulded guide above the bolt; does not rotate"}
-LOCK_PIN = (22.0, 27.0)                                           # (Y, Z), roll pin dia 3.0 through the slide
+SLIDE = {"Y": sc([14.0, 26.0]), "Z": sc([17.5, 29.5]), "note": "%.1f x %.1f steel slide in a moulded guide above the bolt; does not rotate" % (sc(12.0, 1), sc(12.0, 1))}
+LOCK_PIN = (sc(22.0), sc(27.0))                                          # (Y, Z), roll pin dia 3.0 through the slide
 LOCK_DEG = 15.0
 ARM_Y_IN = round(W_REC_L + 0.2, 2)                                # arm inner face, 0.2 off the wall
 
@@ -204,10 +216,10 @@ NOTCH_RISE = round(math.ceil((NECK_RISE_OUT + 0.4) * 2) / 2, 1)            # not
 # ---- bolt / barrel (measurer's feed geometry; craft's X 485 would put the chamber over the magazine)
 MAG = D["magazine"]
 FE, RE = MAG["front_edge_line"], MAG["rear_edge_line"]
-BREECH_X = 503.0
+BREECH_X = sc(503.0, 1)
 BOLT_REST_FACE_X = BREECH_X
 BOLT_BACK_FACE_X = BREECH_X - CH_TRAVEL
-CROWN_X = 659.0                                       # inside the device's thread collar (device seat 644.1 + 15)
+CROWN_X = sc(659.0, 1)                                      # inside the device's thread collar (device seat 644.1 + 15)
 BARREL_LEN = CROWN_X - BREECH_X
 
 # ---- magazine frame: axis = midline of the traced front and rear edges; origin = where it crosses the well lip line
@@ -223,9 +235,14 @@ for _ in range(30):
 MAG_O = np.array([k_mag * Zm + c_mag, 0.0, Zm])
 U_UP = np.array([k_mag, 0.0, 1.0]) / math.hypot(k_mag, 1.0)                    # mag +Z (up the insertion axis)
 U_FW = np.array([U_UP[2], 0.0, -U_UP[0]])                                      # mag +X (forward, perpendicular)
-MAG_T = 29.0                                                                   # thickness (decision, resolution R14)
+MAG_T = 27.0                                                                   # thickness (R14, re-decided by R26 at
+#                                                                                625: the 3/4 read 27.8 +-5.2, real minimum 27)
 MAG_FA = MAG["width_front_to_back_perpendicular_to_axis"]["mm"]                # 46.7
-MAG_TOP_Z = -14.0                                                              # feed-lip top, seated (below the bolt)
+# R30 (W1b): the bolt's underside (bolt box Z) and the magazine's RAKED top face: the top face is perpendicular to the
+# mag axis, so its front edge stands (fore-aft / 2) x sin(rake) above the centre; the whole top (incl. the lips) stays
+# 0.5 under the bolt's underside (the bolt strips the top round over it; no cartridge is modelled)
+BOLT_Z = [round(BORE_Z - sc(13.0), 1), round(BORE_Z + sc(15.0), 1)]
+MAG_TOP_Z = round(BOLT_Z[0] - 0.5 - (MAG_FA / 2.0) * math.sin(math.radians(abs(MAG_RAKE))), 2)   # centre of the top
 MAG_TOP_ALONG = (MAG_TOP_Z - MAG_O[2]) / U_UP[2]
 MAG_FLOOR_ALONG = (MAG["floor_bottom_Z"]["mm"] - MAG_O[2]) / U_UP[2]
 INSERT_START_ALONG = -(MAG_TOP_ALONG + 10.0)
@@ -250,15 +267,19 @@ def mag_world(xl, yl, zl):
 # the magazine and the paddle, so the paddle hangs in an open slot behind that wall, ahead of the guard's front leg, with
 # its pin in a clevis of the lower (real-pattern layout). Its nose reaches the notch through the catch window.
 MAG_REAR = lambda Z: RE["dX_dZ"] * Z + RE["X_at_Z0"]               # traced magazine rear face (straight-body fit)
-MW_WALL, MW_CLR = 4.0, 0.3
+MW_WALL, MW_CLR = sc(4.0, 1), 0.3                                 # C1 wall, scaled with the sheet (R26)
 WALL_OUT = lambda Z: MAG_REAR(Z) - MW_CLR - MW_WALL                 # magwell rear wall, outer face
 PAD_DRAWN = BOX["mag_release"]                                      # drawn lever X0, X1, Z0, Z1
 PAD_PIN_DRAWN = D["face_features"]["mag_release_pin_head"]["centre_XZ"]
 PAD_REL = -11.0                                                     # lower end forward, nose rearward (R_y: - = fwd)
-PAD_DEPTH, PAD_WIDTH, PAD_PIN_D, PAD_BOSS_D = 3.5, 9.0, 2.0, 4.0
+PAD_DEPTH, PAD_WIDTH, PAD_PIN_D, PAD_BOSS_D = 3.0, 9.0, 2.0, 4.0     # depth 3.0 at 625 (R26: guard leg)
+# R31: magwell outer width from the 3/4 view (front-face ratio magwell lip / magazine, independent of the view angle)
+MW_RATIO = D["mag_well"]["outer_width_estimate_from_3q"]["mm"] / MAG["thickness_estimate_from_3q"]["mm"]
+MW_OUT_LIP = round(MAG_T * MW_RATIO, 1)
+MW_OUT_BODY = round(MW_OUT_LIP - 4.0, 1)
 PAD_TOP_Z, PAD_BOT_Z = PAD_DRAWN[3], PAD_DRAWN[2]
 LIP_REAR_Z = D["mag_well"]["lip_lower_edge_rear_XZ"][1]
-NOTCH_Z, PAD_ENGAGE, NOTCH_DEPTH = -44.0, 1.5, 2.5
+NOTCH_Z, PAD_ENGAGE, NOTCH_DEPTH = sc(-44.0), 1.5, 2.5
 
 
 def _rotY(px, pz, cx, cz, deg):
@@ -296,8 +317,8 @@ GUARD_LEG = round(PAD_REAR_X - 0.3 - GUARD_OPENING_FRONT_X, 2)
 
 
 # ---- magazine side ladder (merge re-read, scratch/merge/zL_mag.png)
-LADDER = {"channel_top_Z": -97.9, "channel_bottom_Z": -237.4, "tie_Z": [-143.4, -178.7, -214.5],
-          "channel_width": 12.5, "rib_between": 3.0, "depth": 1.0}
+LADDER = {"channel_top_Z": sc(-97.9), "channel_bottom_Z": sc(-237.4), "tie_Z": sc([-143.4, -178.7, -214.5]),
+          "channel_width": sc(12.5), "rib_between": sc(3.0), "depth": 1.0}
 
 # ---- top rail slot lattice (MIL-STD-1913 pitch in the drawn toothed zone; resolution R9)
 PITCH = 10.01
@@ -324,6 +345,7 @@ SLOT_X_LIST = [round(SLOT0_X + k * PITCH, 2) for k in CUT_SLOTS]
 RAIL_TOP_Z = tr["tooth_top_Z"]["mm"]
 RAIL_UNDER_Z = tr["underside_Z_seam"]["mm"]
 
+TOPF_X0 = sc(283.5, 1)                         # R32: the D rim's rear end (end_block.dims.top_frame X0)
 lrl = D["rails"]["bottom"]
 # check fix C8: 7 slots centred on the rail (end webs ~5.4 mm); round(76.2 / 10.01) = 8 left 0.45 mm end walls
 LR_END_WEB_MIN = 3.0
@@ -335,7 +357,7 @@ LR_Z = lrl["tooth_bottom_Z"]["mm"]
 # ---- sights (merge re-read, scratch/merge/zL_rear.png / zL_front.png): aperture centre and post tip on one line
 # check fix C9: the sight line is anchored on the drawn aperture ring (panel px (320.7, 130.5), rows 129-132; Z_M 76.0
 # +-0.6); the earlier 73.0 matched the dark band in the front sight, which hides the post in a side view
-APERTURE = (330.0, 76.0)
+APERTURE = (sc(330.0, 1), sc(76.0, 1))
 POST_TIP = (D["sights"]["sight_front"]["head_centre_X"]["mm"], APERTURE[1])
 SIGHT_RADIUS = round(POST_TIP[0] - APERTURE[0], 1)
 # check fix C6: the rear leaf folds FORWARD, so its pin sits at the leaf's front-lower corner (a pin at the leaf's rear
@@ -374,18 +396,18 @@ SEL_ROT = {"SEMI (bind = sheet pose)": 0.0, "SAFE": round(-(PHI_SAFE - phi_bind)
 ST = D["stock"]
 HINGE_X = ST["hinge_axis_estimate"]["X"]["mm"]                                          # 272.4
 PAD = ST["butt_pad"]
-PAD_W = 58.0                                       # craft read of the pad's top face; the TOP trace 67.3 is oblique
-FRAME_W = 29.5                                     # top strut width (TOP, top face only)
+PAD_W = sc(58.0, 1)                                      # craft read of the pad's top face; the TOP trace 67.3 is oblique
+FRAME_W = sc(29.5, 1)                                    # top strut width (TOP, top face only)
 CATCH = RF["boss_front_of_port"]
-CATCH_PROUD = 3.0
+CATCH_PROUD = 3.0                                  # real moulded catch boss (absolute)
 R_WALL = W_REC_R                                   # -34.9
 PAD_CLEAR = 1.0
 FOLD_MID_Y = round(R_WALL - CATCH_PROUD - PAD_CLEAR - PAD_W / 2, 2)                     # folded stock mid-plane
 HINGE_Y = round(FOLD_MID_Y / 2, 2)                                                       # 180 deg rigid fold
-KNUCKLE_OD = 12.0
+KNUCKLE_OD = sc(12.0, 1)                           # the drawn knuckle stack (TOP) scales with the sheet
 KNUCKLE_PROUD_R = round(-(HINGE_Y - KNUCKLE_OD / 2) + R_WALL, 1)                       # beyond the right wall (+ = out)
 FOLD_REAR_X = round(HINGE_X - KNUCKLE_OD / 2, 1)
-FOLDED_LEN = round(690.0 - FOLD_REAR_X, 1)
+FOLDED_LEN = round(OVERALL - FOLD_REAR_X, 1)
 
 
 def fold_pt(x, y):
@@ -424,9 +446,10 @@ CATCH_LIP = {"edge": "rear edge of the catch (faces the folded upright)", "X": L
 
 # ---- extended-stock latch (check fix C14): a necked push-button bolt in the stock's upper hinge band engages a lug that
 # projects rearward from the end block's left rear ABOVE the drawn see-through gap (X 272.4, Z -12.8..+14.2)
-LATCH_AXIS_XZ = (round(HINGE_X - 6.0, 1), 18.5)
+LATCH_AXIS_XZ = (round(HINGE_X - sc(6.0), 1), sc(18.5, 1))
 LATCH = {"lug": {"on": "end block, left rear, moulded; projects rearward into a recess in the stock's upper band",
-                 "X": [round(HINGE_X - 8.4, 1), round(BOX["hinge_block"][0], 1)], "Y": [22.0, 28.0], "Z": [15.0, 22.0],
+                 "X": [round(HINGE_X - sc(8.4), 1), round(BOX["hinge_block"][0], 1)], "Y": [sc(22.0, 1), round(sc(22.0, 1) + 6.0, 1)],
+                 "Z": [sc(15.0, 1), sc(22.0, 1)],
                  "bore": {"axis": "Y", "dia": 4.3, "centre_XZ": list(LATCH_AXIS_XZ)},
                  "exit_slot": {"width_Z": 2.8, "from": "the bore centre rearward to the lug's rear end",
                                "why": "folding moves the stock rearward relative to the lug at the latch"}},
@@ -447,8 +470,8 @@ def bounds_r(x0, x1, y0, y1, z0, z1):
 Y_MIN = min(TV["lateral_features_gun_right_(-Y,image-up)"][0]["Y_extreme"], HINGE_Y - KNUCKLE_OD / 2)
 Y_MAX = KNUCKLE_TIP = KNOB_TIP_Y
 OV = D["overall"]
-R_GUN = bounds_r(0, 690, Y_MIN, Y_MAX, OV["bottom_Z_without_mag"]["mm"], OV["top_Z"]["mm"])
-R_GUN_MAG = bounds_r(0, 690, Y_MIN, Y_MAX, OV["bottom_Z_with_mag"]["mm"], OV["top_Z"]["mm"])
+R_GUN = bounds_r(0, OVERALL, Y_MIN, Y_MAX, OV["bottom_Z_without_mag"]["mm"], OV["top_Z"]["mm"])
+R_GUN_MAG = bounds_r(0, OVERALL, Y_MIN, Y_MAX, OV["bottom_Z_with_mag"]["mm"], OV["top_Z"]["mm"])
 MAG_PTS = [mag_world(sx * MAG_FA / 2, sy * MAG_T / 2, z) for sx in (-1, 1) for sy in (-1, 1)
            for z in (MAG_FLOOR_ALONG, MAG_TOP_ALONG)]
 MP = np.array(MAG_PTS)
@@ -461,7 +484,7 @@ STOCK_BONE_Y_MAX = {"stock_frame": FRAME_W / 2, "butt_pad": PAD_W / 2,
 FOLD_Y_MIN_BY = {k: round(2 * HINGE_Y - v, 1) for k, v in STOCK_BONE_Y_MAX.items()}
 FOLD_Y_MIN = min(FOLD_Y_MIN_BY.values())
 FOLD_Y_MIN_PART = min(FOLD_Y_MIN_BY, key=FOLD_Y_MIN_BY.get)
-R_FOLDED = bounds_r(FOLD_REAR_X, 690, FOLD_Y_MIN, Y_MAX, OV["bottom_Z_without_mag"]["mm"], OV["top_Z"]["mm"])
+R_FOLDED = bounds_r(FOLD_REAR_X, OVERALL, FOLD_Y_MIN, Y_MAX, OV["bottom_Z_without_mag"]["mm"], OV["top_Z"]["mm"])
 SS_GUN = [1.0, 0.25, 0.10, 0.033]
 SS_MAG = [1.0] + [round(s * R_MAG / R_GUN, 4) for s in SS_GUN[1:]]
 
@@ -493,7 +516,7 @@ def msock(name, local, r=None, use="", src="", state="final"):
 
 # ================================================================================================ sockets
 mw = rings_of(LEFT["parts"]["mag_well"])
-MW_FRONT_AT_60 = cross_x(mw, -60.0)[-1]
+MW_FRONT_AT_60 = cross_x(mw, sc(-60.0))[-1]
 PORT = RF["ejection_port"]
 mag_pitch_ue = round(-THETA_MAG_Y, 2)
 GUN_SOCKETS = [
@@ -501,13 +524,13 @@ GUN_SOCKETS = [
          "from the web line (plan / AR-01 H1 value); H1 early confirms or moves it and the sidecar records hand_offset",
          src=f"computed: grip-axis midline (trace parts.grip, Z -70..-140, rake {GRIP_RAKE} deg) + 46 mm from the "
              f"junction at the web line Z {JZ}"),
-    sock("SupportHand", "body", (round(MW_FRONT_AT_60, 2), 0.0, -60.0), use="hand_l two-bone IK target: off-hand palm "
+    sock("SupportHand", "body", (round(MW_FRONT_AT_60, 2), 0.0, sc(-60.0)), use="hand_l two-bone IK target: off-hand palm "
          "on the magwell front (study 5.3 SMG default); PROVISIONAL until H1 (may move to the lower rail)",
-         src="trace parts.mag_well front edge at Z -60", state="provisional (H1)"),
-    sock("Trigger", "trigger", (409.4, 0.0, -77.9), use="index finger target", src="trace: trigger finger face at its "
+         src="trace parts.mag_well front edge at Z %.1f" % sc(-60.0), state="provisional (H1)"),
+    sock("Trigger", "trigger", (sc(409.4), 0.0, sc(-77.9)), use="index finger target", src="trace: trigger finger face at its "
          "lower third (measure face_profile)"),
-    sock("Muzzle", "muzzle_device", (690.0, 0.0, BORE_Z), use="flash, smoke, tracer; on the bore within 0.5 mm / 0.05 deg",
-         src="device tip X 690.0; bore Z from the outer silhouette centre (resolution R2)"),
+    sock("Muzzle", "muzzle_device", (OVERALL, 0.0, BORE_Z), use="flash, smoke, tracer; on the bore within 0.5 mm / 0.05 deg",
+         src=f"device tip X {OVERALL}; bore Z from the outer silhouette centre (resolution R2)"),
     sock("MuzzleSeat", "body", (D["barrel"]["device_seat_X"]["mm"], 0.0, BORE_Z), use="suppressor / device seat",
          src="measure barrel.device_seat_X"),
     sock("Sight", "sight_rear", (APERTURE[0], 0.0, APERTURE[1]), use="ADS: aperture centre, +X toward the front post tip "
@@ -528,7 +551,7 @@ GUN_SOCKETS = [
              "right and slightly forward)", src="RIGHT trace ejection_port centre on the right wall"),
     sock("ChargingHandle", "charging_handle", (KNOB_C[0], KNOB_CY, KNOB_C[1]), use="hand target (knob centre)",
          src="merge re-read (zL_knob.png) + TOP knob protrusion"),
-    sock("Selector", "selector", (357.7, round(W_REC_L + 2.5, 1), -45.6), use="thumb target: left lever tab, 4 mm in "
+    sock("Selector", "selector", (sc(357.7), round(W_REC_L + 2.5, 1), sc(-45.6)), use="thumb target: left lever tab, 4 mm in "
          "from the tip", src="measure selector_left tip"),
     sock("MagRelease", "mag_release", (PAD_REAR_X, 0.0, round(PAD_BOT_Z + 6.0, 2)), use="finger target: the paddle's "
          "rear face 6 mm above its bottom (the trigger finger pushes it forward)", src="mag_release dims (check fix C1)"),
@@ -541,21 +564,21 @@ GUN_SOCKETS = [
          "rear (hinge) face", src="trace parts.hinge_block rear"),
     sock("Shoulder", "stock", (0.0, 0.0, round((PAD["Z"][0] + PAD["Z"][1]) / 2, 2)), use="TP aim offsets; butt-pad centre, "
          "+X = pad normal reversed; follows the fold", src="trace parts.butt_pad"),
-    sock("SlingFront", "body", (D["barrel"]["receiver_front_face_X"]["mm"], 24.0, 31.0), use="sling: the front-left "
+    sock("SlingFront", "body", (D["barrel"]["receiver_front_face_X"]["mm"], sc(24.0), sc(31.0)), use="sling: the front-left "
          "eyelet hole on the receiver front face (3/4 view)", src="craft RP17 + merge read of the 3/4 (zQ_front.png)"),
-    sock("SlingRear", "stock", (40.1, 0.0, -65.5), r=rot(), use="sling: the lower through-hole of the stock's rear "
+    sock("SlingRear", "stock", (sc(40.1), 0.0, sc(-65.5)), r=rot(), use="sling: the lower through-hole of the stock's rear "
          "upright (axis Y)", src="merge re-read (zL_butt.png)"),
-    sock("CenterOfMass", "body", (440.0, 0.0, -15.0), use="physics CoM (stock extended, mag out); the folded CoM is "
+    sock("CenterOfMass", "body", (sc(440.0), 0.0, sc(-15.0)), use="physics CoM (stock extended, mag out); the folded CoM is "
          "reported in the sidecar", src="PROVISIONAL estimate; computed by the form stage from part volumes x densities "
          "(polymer 1.4, steel 7.85 g/cm3) scaled to 2.5 kg", state="computed at W1"),
-    sock("Holster", "body", (440.0, 0.0, -15.0), use="= CenterOfMass until the game sets it", src="= CenterOfMass",
+    sock("Holster", "body", (sc(440.0), 0.0, sc(-15.0)), use="= CenterOfMass until the game sets it", src="= CenterOfMass",
          state="computed at W1"),
 ]
 MAG_SOCKETS = [
     msock("Mag", [0.0, 0.0, 0.0], use="origin: centre of the well-entry opening when seated (the seating pivot)",
           src="computed"),
-    msock("HandReload", [0.0, MAG_T / 2, round(-90.0, 1)], use="left palm on the body", src="mid-exposed body, left face"),
-    msock("Feed", [0.0, 0.0, round(MAG_TOP_ALONG, 2)], use="top centre of the feed lips", src=f"lips top Z {MAG_TOP_Z} "
+    msock("HandReload", [0.0, MAG_T / 2, sc(-90.0, 1)], use="left palm on the body", src="mid-exposed body, left face"),
+    msock("Feed", [0.0, 0.0, round(MAG_TOP_ALONG, 2)], use="top centre of the feed lips", src=f"lips top Z {MAG_TOP_Z} (R30) "
           "seated (below the bolt path)"),
     msock("Base", [0.0, 0.0, round(MAG_FLOOR_ALONG, 2)], r=rot(pitch=-90.0, blender=[0.0, 90.0, 0.0]),
           use="floor-plate centre, +X = outward normal (down the mag axis); impact FX", src="trace floor plate"),
@@ -566,14 +589,14 @@ MAG_SOCKETS = [
 # ================================================================================================ fasteners (C7)
 FFL, FFR = D["face_features"], RF
 PINS = [
-    {"name": "front support bolt", "side": "left", "XZ": FFL["pin_front_takedown"]["centre_XZ"], "dia": 7.7,
+    {"name": "front support bolt", "side": "left", "XZ": FFL["pin_front_takedown"]["centre_XZ"], "dia": sc(7.7, 1),
      "note": "the RIGHT draws nothing there (the port catch's front)"},
     {"name": "trigger-housing pin behind the magwell", "side": "both", "XZ": FFL["pin_lower_rear_of_magwell"]["centre_XZ"],
-     "XZ_RIGHT": FFR["pin_lower_rear_of_magwell"]["centre_XZ"], "dia": 7.8, "head": "ring"},
+     "XZ_RIGHT": FFR["pin_lower_rear_of_magwell"]["centre_XZ"], "dia": sc(7.8, 1), "head": "ring"},
     {"name": "small head above it", "side": "both", "XZ": FFL["head_above_rear_pin"]["centre_XZ"],
      "XZ_RIGHT": FFR["head_above_rear_pin"]["centre_XZ"], "dia": 3.5},
     {"name": "trigger axle", "side": "both", "XZ": FFL["trigger_axle_head"]["centre_XZ"],
-     "XZ_RIGHT": FFR["trigger_axle_head"]["centre_XZ"], "dia": 5.2, "note": "= the trigger bone's pivot"},
+     "XZ_RIGHT": FFR["trigger_axle_head"]["centre_XZ"], "dia": sc(5.2, 1), "note": "= the trigger bone's pivot"},
     {"name": "seam boss pin", "side": "left", "XZ": FFL["seam_boss_pin"]["centre_XZ"], "dia": 3.0,
      "note": "inside the LEFT seam boss (lower_receiver.features seam_boss)"},
     {"name": "seam head upper (right)", "side": "right", "XZ": FFR["seam_head_upper"]["centre_XZ"], "dia": 3.5},
@@ -582,8 +605,8 @@ PINS = [
      "dia": 3.5},
     {"name": "end-block head", "side": "both", "XZ": FFL["head_end_block"]["centre_XZ"],
      "XZ_RIGHT": FFR["head_end_block"]["centre_XZ"], "dia": 4.0},
-    {"name": "rear locking pin", "side": "both", "XZ": FFL["pin_hinge_block"]["centre_XZ"], "dia": 6.6,
-     "XZ_RIGHT": FFR["locking_pin_end"]["centre_XZ"], "head": "left: round head; right: square-ish plain end 4.7"},
+    {"name": "rear locking pin", "side": "both", "XZ": FFL["pin_hinge_block"]["centre_XZ"], "dia": sc(6.6, 1),
+     "XZ_RIGHT": FFR["locking_pin_end"]["centre_XZ"], "head": "left: round head; right: square-ish plain end %.1f" % sc(4.7, 1)},
     {"name": "mag release pin", "side": "both", "XZ": list(PAD_PIVOT), "dia": PAD_PIN_D,
      "note": "in the clevis ears; drawn on the LEFT at %s (the RIGHT's lever area is too dark to read)" % PAD_PIN_DRAWN},
     {"name": "selector shaft ends", "side": "both", "XZ": SEL_P, "dia": 5.0, "note": "in the hubs"}]
@@ -628,7 +651,7 @@ part(id="upper_receiver", display="Upper receiver (fibre-reinforced polymer shel
            "fore_end_bottom_Z_above_lower_rail": D["receiver"]["front_body_bottom_Z_above_lower_rail"]["mm"],
            "width_plain_X393_512": W_REC, "width_Y_left_right": [W_REC_L, W_REC_R],
            "width_fore_end_X560_584": [FRONT_L, FRONT_R], "front_face_X": D["barrel"]["receiver_front_face_X"]["mm"],
-           "wall": [3.0, 3.5], "side_ledge_step": {"Z": [12.0, 15.0], "step": [0.5, 0.8],
+           "wall": [3.0, 3.5], "side_ledge_step": {"Z": sc([12.0, 15.0], 1), "step": [0.5, 0.8],
                                                  "note": "full-length moulded shoulder on both sides; upper band set in"},
            "front_left_corner": "vertical chamfered corner between the front face and the left side (3/4 view)",
            "edge_R": [0.6, 2.0], "draft_deg": [1.0, 2.0]},
@@ -643,24 +666,24 @@ part(id="upper_receiver", display="Upper receiver (fibre-reinforced polymer shel
          {"name": "forward_long_vent_left", "side": "left", "X": D["face_features"]["front_upper_slot"]["X"],
           "Z": D["face_features"]["front_upper_slot"]["Z"], "shape": "stadium through-vent, 3 mm wall, 1 deg draft, "
           "0.4 mm outer break", "ruling": "RP4", "conf": "+-1.2 mm (measure)"},
-         {"name": "forward_long_vent_right", "side": "right", "X": [530.1, 595.8], "Z": [25.0, 33.9],
+         {"name": "forward_long_vent_right", "side": "right", "X": sc([530.1, 595.8], 1), "Z": sc([25.0, 33.9], 1),
           "shape": "as left", "ruling": "RP4", "conf": "+-1.5 mm (merge read of the RIGHT panel, zR_slot.png; the "
           "measurer did not trace it)"},
-         {"name": "lower_vents_left", "side": "left", "X": [[543.1, 570.1], [578.3, 605.4]], "Z_centre": -3.4,
-          "height": 8.7, "shape": "stadium through-vents (the barrel shows through)", "conf": "+-1.2 (dark-feature "
+         {"name": "lower_vents_left", "side": "left", "X": sc([[543.1, 570.1], [578.3, 605.4]], 1), "Z_centre": sc(-3.4, 1),
+          "height": sc(8.7, 1), "shape": "stadium through-vents (the barrel shows through)", "conf": "+-1.2 (dark-feature "
           "boxes + 0.6 mm lip)"},
-         {"name": "lower_vents_right", "side": "right", "X": [[540.1, 568.3], [576.5, 603.5]], "Z_centre": -0.1,
-          "height": 8.7, "shape": "as left", "conf": "+-1.2 (RIGHT frame)"},
+         {"name": "lower_vents_right", "side": "right", "X": sc([[540.1, 568.3], [576.5, 603.5]], 1), "Z_centre": sc(-0.1, 1),
+          "height": sc(8.7, 1), "shape": "as left", "conf": "+-1.2 (RIGHT frame)"},
          {"name": "charging_slot", "side": "left", "X": SLOT_X, "Z": SLOT_Z, "rear_lock_notch": {"rise_above_slot_top": NOTCH_RISE,
           "width": 7.0, "bottom": "full round", "ramp": "follows the neck's arc about the lock pin (rise %.2f at the "
           "wall's inner face, %.2f at its outer face)" % (NECK_RISE_IN, NECK_RISE_OUT)}, "ruling": "RP3", "note": "through the left wall; covered by the "
-          "handle's arm at rest except X 470-501.5 behind the arm's rear block (a small visible change, C-Q1)"},
-         {"name": "front_sling_eyelet", "side": "front face, upper left", "centre_YZ": [24.0, 31.0], "dia": 6.5,
-          "axis": "X, 12 mm deep into the solid corner boss, then out into the vent cavity (a sling hook passes in)",
+          "handle's arm at rest except X %.1f-%.1f behind the arm's rear block (a small visible change, C-Q1)" % (SLOT_X[0], ARM_BLOCK["X"][0])},
+         {"name": "front_sling_eyelet", "side": "front face, upper left", "centre_YZ": sc([24.0, 31.0], 1), "dia": 6.0,
+          "axis": "X, 11 mm deep into the solid corner boss, then out into the vent cavity (a sling hook passes in)",
           "sleeve": "steel, 0.6 mm proud", "ruling": "RP17"},
-         {"name": "barrel_collar_counterbore", "side": "front face", "dia": 25.4, "note": "the steel collar ring sits in it"},
+         {"name": "barrel_collar_counterbore", "side": "front face", "dia": round(D["barrel"]["front_collar_diameter"]["mm"] + 0.6, 1), "note": "the steel collar ring sits in it"},
          {"name": "front_takedown_pin", "side": "left", "XZ": D["face_features"]["pin_front_takedown"]["centre_XZ"],
-          "head": "flush steel ring dia 7.7, 0.15 proud", "ruling": "RP18 (support bolt head)"}],
+          "head": "flush steel ring dia %.1f, 0.15 proud" % sc(7.7, 1), "ruling": "RP18 (support bolt head)"}],
      wear="whitening on the vertical corners, the front-face rim and the fore-end lower edge; support-hand polish on "
           "the fore-end belly and left side; fine fore-aft scratches; vent lips whitened",
      trace=tref("receiver_upper", "handguard_area"),
@@ -680,13 +703,13 @@ part(id="lower_receiver", display="Lower receiver (trigger housing; one moulding
      "Design seam 0.3-0.5 mm wide, 0.6 deep along the drawn upper/lower line (V-tongue at the front, as traced).",
      features=[{"name": "pin_behind_magwell", "side": "both (through pin)",
                 "XZ": D["face_features"]["pin_lower_rear_of_magwell"]["centre_XZ"],
-                "XZ_RIGHT": RF["pin_lower_rear_of_magwell"]["centre_XZ"], "head": "flush steel ring dia 7.8"},
-               {"name": "selector_seats", "side": "both", "XZ": SEL_P, "dia": 22.7, "proud": 1.0},
+                "XZ_RIGHT": RF["pin_lower_rear_of_magwell"]["centre_XZ"], "head": "flush steel ring dia %.1f" % sc(7.8, 1)},
+               {"name": "selector_seats", "side": "both", "XZ": SEL_P, "dia": round(SEL["ring_diameter"]["mm"] + 2.0, 1), "proud": 1.0},
                {"name": "oblong_recess", "side": "left", "X": D["face_features"]["recess_oblong"]["X"],
-                "Z": D["face_features"]["recess_oblong"]["Z"], "shape": "stadium pocket 11.8 x 4.0, 0.8 deep, R 0.3 "
+                "Z": D["face_features"]["recess_oblong"]["Z"], "shape": "stadium pocket %.1f x %.1f, 0.8 deep, R 0.3 " % (sc(11.8, 1), sc(4.0, 1)) +
                 "rim (drawn on the LEFT only; the RIGHT shows nothing there)"},
                {"name": "seam_boss", "side": "left", "XZ": D["face_features"]["seam_boss_ring"]["centre_XZ"],
-                "dia": 16.4, "proud": 0.8, "note": "round boss straddling the upper/lower seam behind and above the "
+                "dia": sc(16.4, 1), "proud": 0.8, "note": "round boss straddling the upper/lower seam behind and above the "
                 "selector hub (LEFT); the seam steps around it; its pin head at "
                 + str(D["face_features"]["seam_boss_pin"]["centre_XZ"]) + " (RIGHT: two plain heads instead, see "
                 "pins_fasteners)"}],
@@ -697,18 +720,21 @@ part(id="lower_receiver", display="Lower receiver (trigger housing; one moulding
 part(id="magwell", display="Magazine well (integral with the lower)", bone="body", process="P-round",
      joint={"type": "integral", "parent": "lower_receiver"}, slot=SLOT_FURN, finish=F_POLY,
      texel_class="C outside / E inside (seen with the mag out)",
-     box_M={**boxM("mag_well"), "Y": [-19.0, 19.0]},
+     box_M={**boxM("mag_well"), "Y": [-MW_OUT_LIP / 2.0, MW_OUT_LIP / 2.0]},
      dims={"front_face_X": D["mag_well"]["front_face_X"]["mm"], "lip_lower_edge_front_XZ": lf,
            "lip_lower_edge_rear_XZ": lr, "lip_slope_deg": D["mag_well"]["lip_slope_deg"],
-           "outer_width_body": 38.0, "outer_width_lip": 42.0, "inner_width": round(MAG_T + 0.6, 1),
+           "outer_width_body": MW_OUT_BODY, "outer_width_lip": MW_OUT_LIP,
+           "outer_width_rule": "R31: the 3/4 view's magwell-lip / magazine front-face width ratio (%.3f, view-angle "
+                               "free) x the magazine thickness; the body is the lip minus the 2 x 2.0 flare" % MW_RATIO,
+           "inner_width": round(MAG_T + 0.6, 1),
            "inner_foreaft": round(MAG_FA + 0.6, 1), "wall": MW_WALL, "flare_per_side": [1.5, 2.0],
-           "flare_height": [8.0, 10.0], "top_shelf_above_seated_mag": [1.0, 2.0], "inner_draft_deg": 1.0,
+           "flare_height": sc([8.0, 10.0], 1), "top_shelf_above_seated_mag": [1.0, 2.0], "inner_draft_deg": 1.0,
            "rear_wall": {"inner_face": "magazine rear face + %.1f" % MW_CLR, "thickness": MW_WALL,
                          "outer_face_line_XZ": "X = %.4f Z + %.2f (parallel to the magazine's rear face)" % (
                              RE["dX_dZ"], RE["X_at_Z0"] - MW_CLR - MW_WALL),
                          "outer_face_X_at_paddle_top_and_lip": [round(WALL_OUT(PAD_TOP_Z), 2),
                                                                 round(WALL_OUT(LIP_REAR_Z), 2)],
-                         "drawn_rear_line": "the sheet's magwell rear line (X ~452 at Z -60) is kept as a 0.3 mm "
+                         "drawn_rear_line": "the sheet's magwell rear line (X ~%.0f at Z %.0f) is kept as a 0.3 mm " % (sc(452), sc(-60)) +
                                             "moulded step on the outer face; the wall itself follows the magazine"},
            "catch_window": {"in": "rear wall", "Z": [round(NOTCH_Z - 6.0, 1), round(NOTCH_Z + 4.0, 1)],
                             "width_Y": round(PAD_WIDTH - 2.0, 1), "note": "the paddle's nose passes through it to the notch"},
@@ -717,8 +743,9 @@ part(id="magwell", display="Magazine well (integral with the lower)", bone="body
      "the fore-end (traced). The drawn lip band is the insertion flare: the mouth widens 1.5-2.0 mm per side over its "
      "lowest 8-10 mm with an R 1.5 rolled lip. Inner walls 1 deg draft opening downward; 0.3 mm per side to the "
      "magazine. NO guide ribs (the magazine's ladder is recessed, RP21). Catch window in the rear wall for the paddle "
-     "nose; hard top shelf (feed-ramp ledge) above the seated magazine. Outer width: 3/4 view reads 48.9 +-7.3 at the "
-     "lip; built 42 at the lip, 38 above (wall 4 + flare), checked by the 3/4 L2 gate.",
+     "nose; hard top shelf (feed-ramp ledge) above the seated magazine. Outer width: 3/4 view reads %.1f +-%.1f at the "
+     "lip; built %.1f at the lip, %.1f above (inner + 2 x the %.1f wall; + 2 x 2.0 flare), checked by the 3/4 L2 gate." % (
+         sc(48.9, 1), sc(7.3, 1), MAG_T + 0.6 + 2 * MW_WALL + 4.0, MAG_T + 0.6 + 2 * MW_WALL, MW_WALL),
      wear="insertion scratch fan into the mouth; lip whitening; support-hand polish on the front face",
      trace=tref("mag_well"), side_profile_M=profile("mag_well"), authority="LEFT (outline; the old trace key "
      "'mag_release' box X 449-462 is now part of mag_well: check fix C1), 3/4 (width)",
@@ -726,9 +753,9 @@ part(id="magwell", display="Magazine well (integral with the lower)", bone="body
 
 part(id="trigger_guard", display="Trigger guard (integral polymer loop)", bone="body", process="P-round",
      joint={"type": "integral", "parent": "lower_receiver"}, slot=SLOT_FURN, finish=F_POLY, texel_class="C",
-     box_M={**boxM("trigger_guard"), "Y": [-6.0, 6.0]},
+     box_M={**boxM("trigger_guard"), "Y": sc([-6.0, 6.0], 1)},
      dims={"length": D["trigger_guard"]["length"]["mm"], "bottom_Z": D["trigger_guard"]["bottom_Z"]["mm"],
-           "opening": [62.2, 35.4], "bar_width_Y": 12.0, "inner_corner_R": [6.0, 8.0], "edge_R": [1.5, 2.0],
+           "opening": sc([62.2, 35.4], 1), "bar_width_Y": sc(12.0, 1), "inner_corner_R": [6.0, 8.0], "edge_R": [1.5, 2.0],
            "front_leg": {"X": [GUARD_OPENING_FRONT_X, round(PAD_REAR_X - 0.3, 2)], "thickness_X": GUARD_LEG,
                          "note": "behind the paddle slot; the opening's front edge as drawn"},
            "paddle_clevis": {"Z": [round(PAD_TOP_Z, 1), round(PAD_PIVOT[1] - 4.0, 1)], "ear_thickness_Y": 2.0,
@@ -744,9 +771,9 @@ part(id="pistol_grip", display="Pistol grip (integral) + grip cover", bone="body
      joint={"type": "integral", "parent": "lower_receiver"}, slot=SLOT_FURN, finish=F_POLY + " + " + F_STIP,
      texel_class="B", box_M={**boxM("grip"), "Y": [-16.0, 16.0]},
      dims={"axis_rake_deg_from_vertical": GRIP_RAKE, "foreaft_perpendicular_median": GRIP_WIDTH_FOREAFT,
-           "width_Y": 32.0, "width_note": "unseen on the sheet: real polymer SMG grips 31-33 (craft norm)",
-           "bottom_Z": D["grip"]["bottom_Z"]["mm"], "front_strap_R": [9.0, 10.0], "back_strap_R": [12.0, 14.0],
-           "base_lip_proud": 3.0, "cover_height": 9.0, "cover_seam": [0.3, 0.5],
+           "width_Y": 32.0, "width_note": "unseen on the sheet: real polymer SMG grips 31-33 (craft norm; absolute, R26)",
+           "bottom_Z": D["grip"]["bottom_Z"]["mm"], "front_strap_R": sc([9.0, 10.0], 1), "back_strap_R": sc([12.0, 14.0], 1),
+           "base_lip_proud": 3.0, "cover_height": sc(9.0, 1), "cover_seam": [0.3, 0.5],
            "stipple_panel": {"top_inset_frac": 0.20, "bottom_inset_frac": 0.12, "strap_inset": 5.0,
                              "border_step": [0.5, 0.6], "border_break": 0.3,
                              "stipple": "normal map only: pebbles 0.5-0.8 pitch, 0.1-0.15 tall"}},
@@ -761,9 +788,10 @@ part(id="end_block", display="End block (the lower's integrated backplate; recei
      process="P-round", joint={"type": "integral", "parent": "lower_receiver", "seam_front_mm": [0.3, 0.5]},
      slot=SLOT_FURN, finish=F_POLY, texel_class="B", box_M={**boxM("hinge_block"), "Y": [HINGE_R, HINGE_L]},
      dims={"length": ST["hinge_block_length"]["mm"], "locking_pin": {"XZ": D["face_features"]["pin_hinge_block"]["centre_XZ"],
-           "dia": 6.6, "side": "left head (flush steel, 0.5 chamfer); right: square-ish plain end 4.7 x 4.7 at "
-           + str(RF["locking_pin_end"]["centre_XZ"]) + " (RIGHT read)"},
-           "top_frame": {"X": [283.5, 310.4], "Y": [-19.0, 19.0], "window_X": [289.4, 304.6], "window_Y": [-14.0, 14.0],
+           "dia": sc(6.6, 1), "side": "left head (flush steel, 0.5 chamfer); right: square-ish plain end %.1f x %.1f at " % (sc(4.7, 1), sc(4.7, 1)) +
+           str(RF["locking_pin_end"]["centre_XZ"]) + " (RIGHT read)"},
+           "top_frame": {"X": sc([283.5, 310.4], 1), "Y": sc([-19.0, 19.0], 1), "window_X": sc([289.4, 304.6], 1),
+                         "window_Y": sc([-14.0, 14.0], 1),
                          "shape": "raised D-shaped rim (round end to the rear) on top of the end block and the rail's "
                                   "rear plain zone, around a rectangular recess 2.0 deep (dark, not see-through)",
                          "source": "TOP (scratch/checker/z_top_rear.png; panel px x 336-359, y 257-292); Y centred "
@@ -793,13 +821,13 @@ part(id="charging_handle", display="Charging handle (non-reciprocating cocking l
                            "arm_min_outward_motion": ARM_MIN_DY},
            "slide": SLIDE, "wall_inner_face_Y": W_IN_L, "slot": {"X": SLOT_X, "Z": SLOT_Z}},
      construction="Ball knob on a dia 6 neck through the slot in the left wall; the drawn rod and rear block behind it "
-     "are the lever's outer arm, riding 0.2 mm off the wall (the TOP shows the block 3.3 mm proud, so no recess) and "
+     "are the lever's outer arm, riding 0.2 mm off the wall (the TOP shows the block %.1f mm proud, so no recess) and " % ARM_BLOCK["proud_of_wall"] +
      "moving with the knob. Inside: a steel slide in a moulded guide above the barrel with a hook that pushes the "
      "bolt's charging lug; its own return spring (not modelled). At rest the knob is at the FRONT of its slot; pulled "
-     "75 mm back, the lever pivots %.0f deg about the roll pin in the slide (Y %.1f, Z %.1f; the slide itself does not "
+     "%.1f mm back, the lever pivots %.0f deg about the roll pin in the slide (Y %.1f, Z %.1f; the slide itself does not "
      "rotate) so the neck rises %.1f mm into the lock notch at the slot's rear and the knob %.1f mm; the outer arm swings "
      "outward, away from the wall. When fired, the bolt leaves the slide behind." % (
-         LOCK_DEG, LOCK_PIN[0], LOCK_PIN[1], NECK_RISE_IN, KNOB_RISE),
+         CH_TRAVEL, LOCK_DEG, LOCK_PIN[0], LOCK_PIN[1], NECK_RISE_IN, KNOB_RISE),
      ruling="RP3", wear="polished knob crown with a bright rim; polished slot lips along the travel",
      trace={"file": TRL, "keys": ["face_features.charging_handle_knob", "face_features.charging_handle_rod",
             "face_features.charging_handle_rear_block"], "view": "LEFT", "frame": "M",
@@ -809,13 +837,13 @@ part(id="charging_handle", display="Charging handle (non-reciprocating cocking l
 
 part(id="bolt", display="Bolt (blowback block, visible through the port)", bone="bolt", process="M-chamfer",
      joint={"type": "sliding", "parent": "body", "clearance_mm": [0.15, 0.40]}, slot=SLOT_METAL, finish=F_BOLT,
-     texel_class="B (port-visible right face) / E", box_M={"X": [BOLT_REST_FACE_X - 110.0, BOLT_REST_FACE_X],
-     "Z": [round(BORE_Z - 13.0, 1), round(BORE_Z + 15.0, 1)], "Y": [-13.0, 13.0]},
-     dims={"face_X_rest": BOLT_REST_FACE_X, "face_X_back": BOLT_BACK_FACE_X, "travel": CH_TRAVEL, "width": 26.0,
-           "length": 110.0, "case_head_boss_dia": 12.0, "firing_pin_hole_dia": 1.5,
-           "extractor": {"size": [5.0, 25.0], "hook_over_face": 1.0, "side": "right"},
-           "thumb_recess": {"size": [16.0, 9.0], "depth": 1.5, "side": "right", "centre_X_rest": 481.0,
-                            "note": "centred in the port at rest (port X 449.1-512.6)"},
+     texel_class="B (port-visible right face) / E", box_M={"X": [round(BOLT_REST_FACE_X - sc(110.0, 1), 1), BOLT_REST_FACE_X],
+     "Z": BOLT_Z, "Y": sc([-13.0, 13.0], 1)},
+     dims={"face_X_rest": BOLT_REST_FACE_X, "face_X_back": BOLT_BACK_FACE_X, "travel": CH_TRAVEL, "width": sc(26.0, 1),
+           "length": sc(110.0, 1), "case_head_boss_dia": 12.0, "firing_pin_hole_dia": 1.5,
+           "extractor": {"size": sc([5.0, 25.0], 1), "hook_over_face": 1.0, "side": "right"},
+           "thumb_recess": {"size": sc([16.0, 9.0], 1), "depth": 1.5, "side": "right", "centre_X_rest": sc(481.0, 1),
+                            "note": "centred in the port at rest (port X %.1f-%.1f)" % tuple(RF["ejection_port"]["X"])},
            "guide_grooves": "both lower edges, 0.2 mm per side on the receiver rails", "chamfer": 0.4},
      construction="Heavy rectangular steel block; the upper section overhangs rearward with the recoil-spring guide bore "
      "at the top front; bolt face with the case-head boss and firing-pin hole; extractor claw inset in the right face; "
@@ -844,26 +872,26 @@ part(id="ejection_port_and_catch", display="Ejection port (right) and the integr
 part(id="barrel", display="Barrel (+ collar ring at the receiver face)", bone="body", process="M-chamfer",
      joint={"type": "fixed", "parent": "upper_receiver", "pin": "transverse roll pin (hidden)"}, slot=SLOT_METAL,
      finish=F_STEEL, texel_class="D exposed / E inside",
-     box_M={"X": [BREECH_X, CROWN_X], "Z": [round(BORE_Z - 12.4, 1), round(BORE_Z + 12.4, 1)], "Y": [-12.4, 12.4]},
+     box_M={"X": [BREECH_X, CROWN_X], "Z": [round(BORE_Z - sc(12.4), 1), round(BORE_Z + sc(12.4), 1)], "Y": sc([-12.4, 12.4], 1)},
      dims={"breech_X": BREECH_X, "crown_X": CROWN_X, "length": BARREL_LEN, "bore_dia": 11.4,
            "bore_depth_visible_min": 22.8, "exposed_X": D["barrel"]["exposed_X"],
-           "collar_ring": {"X": [D["barrel"]["exposed_X"][0], 632.4], "dia": D["barrel"]["front_collar_diameter"]["mm"]},
-           "neck": {"X": [632.4, D["barrel"]["device_seat_X"]["mm"]], "dia": D["barrel"]["neck_diameter"]["mm"]},
-           "hidden_od": 17.7},
+           "collar_ring": {"X": [D["barrel"]["exposed_X"][0], sc(632.4, 1)], "dia": D["barrel"]["front_collar_diameter"]["mm"]},
+           "neck": {"X": [sc(632.4, 1), D["barrel"]["device_seat_X"]["mm"]], "dia": D["barrel"]["neck_diameter"]["mm"]},
+           "hidden_od": sc(17.7, 1)},
      construction="Phosphated steel barrel pinned in the upper. Visible: the collar ring seated in the receiver face, "
      "then the neck (thread collar) to the device seat. Bore .45-class, dark, >= 2 calibres deep from the device front; "
-     "polygonal rifling as texture only. Hidden length 156 mm (sheet feed geometry, open question Q2).",
+     "polygonal rifling as texture only. Hidden length %.0f mm (sheet feed geometry, open question Q2)." % BARREL_LEN,
      wear="edge brightening on the collar ring", trace=tref("barrel"), side_profile_M=profile("barrel", 0.2),
      authority="LEFT", confidence="high (visible), medium (hidden length)", sources=["measure", "craft barrel", "merge"])
 
 part(id="muzzle_device", display="Muzzle device (6-slot cage flash hider + jam-nut collar)", bone="muzzle_device",
      process="M-chamfer", joint={"type": "fixed", "parent": "barrel"}, slot=SLOT_METAL, finish=F_STEEL, texel_class="D",
-     box_M={"X": [D["barrel"]["device_seat_X"]["mm"], 690.0], "Z": [round(BORE_Z - DEVICE_OD / 2, 1),
+     box_M={"X": [D["barrel"]["device_seat_X"]["mm"], OVERALL], "Z": [round(BORE_Z - DEVICE_OD / 2, 1),
             round(BORE_Z + DEVICE_OD / 2, 1)], "Y": [-DEVICE_OD / 2, DEVICE_OD / 2]},
      dims={"length": D["muzzle_device"]["length"]["mm"], "od": DEVICE_OD, "od_TOP": DEVICE_W_TOP,
-           "cage_X": [652.2, 690.0], "rear_collar_X": [D["barrel"]["device_seat_X"]["mm"], 652.2],
-           "groove_ring_width": 2.0, "slots": {"count": 6, "spacing_deg": 60, "one_centred_on_each_side": True,
-           "width": 4.0, "length": 26.0, "ends": "round"}, "front_rim_length": 5.0, "front_chamfer_out": 0.6,
+           "cage_X": [sc(652.2, 1), OVERALL], "rear_collar_X": [D["barrel"]["device_seat_X"]["mm"], sc(652.2, 1)],
+           "groove_ring_width": sc(2.0, 1), "slots": {"count": 6, "spacing_deg": 60, "one_centred_on_each_side": True,
+           "width": sc(4.0, 1), "length": sc(26.0, 1), "ends": "round"}, "front_rim_length": sc(5.0, 1), "front_chamfer_out": 0.6,
            "bore_chamfer": 1.0, "inner_dia": 13.5, "wrench_flats": "two 3 mm flats on the underside of the collar only"},
      construction="Slotted cage, open front, six through-slots at 60 deg with one centred on each side (3 slots in the "
      "side views, 2 from the top, matching the sheet), solid front rim, rear collar with the drawn groove ring. Seams "
@@ -874,15 +902,18 @@ part(id="muzzle_device", display="Muzzle device (6-slot cage flash hider + jam-n
 part(id="top_rail", display="Top rail (1913 profile, gunlib.rail_1913)", bone="body", process="M-chamfer",
      joint={"type": "butt", "parent": "upper_receiver", "gap_mm": [0.01, 0.05]}, slot=SLOT_METAL, finish=F_STEEL,
      texel_class="B for X < 400 (rear, seen at ADS) / C forward (check fix C15; class A is the sights only)",
-     box_M={"X": tr["X"], "Z": [RAIL_UNDER_Z, RAIL_TOP_Z], "Y": [-17.5, 17.5]},
-     dims={"length": tr["length"]["mm"], "top_Z": RAIL_TOP_Z, "underside_Z": RAIL_UNDER_Z,
+     box_M={"X": [TOPF_X0, tr["X"][1]], "Z": [RAIL_UNDER_Z, RAIL_TOP_Z], "Y": sc([-17.5, 17.5], 1)},
+     dims={"length": round(tr["X"][1] - TOPF_X0, 1), "rear_end_X": TOPF_X0,
+           "rear_end_rule": "R32: the end block's TOP-drawn D-shaped rim is the rail's machined rear end (round in plan, "
+                            "with the drawn rectangular pocket 2.0 deep in its rear relief flat); the rail starts at the "
+                            "D's rear end and sits on the end block's top there", "top_Z": RAIL_TOP_Z, "underside_Z": RAIL_UNDER_Z,
            "height": round(RAIL_TOP_Z - RAIL_UNDER_Z, 1), "dovetail_width": 21.2, "flank_deg": 45,
-           "base_flange": {"width": 35.0, "height": 4.0, "note": "TOP band ~35 mm (RP14)"},
+           "base_flange": {"width": sc(35.0, 1), "height": 4.0, "note": "TOP band (RP14)"},
            "slot_width": SLOT_W, "slot_pitch": PITCH, "slot_depth": 3.0, "slot_depth_drawn": tr["slot_depth_side_view"]["mm"],
            "lattice_slot0_X": round(SLOT0_X, 2), "cut_slot_indices": CUT_SLOTS, "cut_slot_centres_X": SLOT_X_LIST,
            "teeth_drawn": tr["n_teeth_visible_total"] - 1, "teeth_built": n_teeth,
            "toothed_zone_X": [round(tooth0 - SLOT_W, 2), round(tooth0 + span + SLOT_W, 2)],
-           "plain_zones": {"rear_X": [tr["X"][0], round(REAR_BASE[0], 1)],
+           "plain_zones": {"rear_X": [TOPF_X0, round(REAR_BASE[0], 1)],
                            "front_relief_X": [round(tooth0 + span + SLOT_W, 2), round(FRONT_BASE[0], 1)],
                            "rule": "as drawn: the rail top is at the slot-floor level there (a milled relief flat); "
                                    "the dovetail flanks continue"},
@@ -913,7 +944,7 @@ part(id="sight_rear", display="Rear flip sight (rail clamp, diopter aperture)", 
      process="M-chamfer (base) + M-round (ears)", joint={"type": "hinge", "parent": "body", "clearance_mm": [0.10, 0.30]},
      slot=SLOT_METAL, finish=F_STEEL, texel_class="A",
      box_M={"X": D["sights"]["sight_rear"]["X"], "Z": [RAIL_TOP_Z - 6.0, D["sights"]["sight_rear"]["top_Z"]["mm"]],
-            "Y": [-14.0, round(W_REC_L + 6.5, 1)]},
+            "Y": [-14.0, round(W_REC_L + sc(6.5), 1)]},
      dims={"base_X": REAR_BASE, "leaf_head_X": D["sights"]["sight_rear"]["head_X_span_1to6mm_below_top"],
            "top_Z": D["sights"]["sight_rear"]["top_Z"]["mm"], "aperture_centre_XZ": APERTURE, "aperture_dia": 2.0,
            "aperture_disc_dia": 10.0, "eye_side_countersink_deg": 45, "pivot_XZ": REAR_PIVOT, "pivot_pin_dia": 3.0,
@@ -921,8 +952,8 @@ part(id="sight_rear", display="Rear flip sight (rail clamp, diopter aperture)", 
                          "rail top, the leaf between its cheeks",
            "fold": "forward (about Y)", "fold_rotation_Y_deg": 90.0, "folded_max_Z": REAR_FOLDED_TOP,
            "folded_max_Z_over_rail_top": round(REAR_FOLDED_TOP - RAIL_TOP_Z, 1),
-           "lug_slot": 0, "cross_bolt_head": "left, XZ (329.3, 48.9)",
-           "windage_drum": {"side": "LEFT", "X": [312.1, 355.3], "proud_of_body": 6.5,
+           "lug_slot": 0, "cross_bolt_head": "left, XZ (%.1f, %.1f)" % (sc(329.3), sc(48.9)),
+           "windage_drum": {"side": "LEFT", "X": sc([312.1, 355.3], 1), "proud_of_body": sc(6.5, 1),
                             "note": "TOP lateral feature + 3/4 view (left side) show it on the left; plain, knurl in the "
                                     "normal map, no ticks"}},
      construction="Rail-clamp base (a U-channel) with its recoil lug in slot 0 and a transverse cross-bolt (head left, "
@@ -946,7 +977,7 @@ part(id="sight_front", display="Front flip sight (rail clamp, post between ears)
                           "%.1f)" % (FRONT_FOLDED_Z[0], RAIL_TOP_Z - 3.0), "lug_slot": FRONT_LUG,
            "clamp_knob_right": {"X": TV["lateral_features_gun_right_(-Y,image-up)"][0]["X"],
                                 "Y_extreme": TV["lateral_features_gun_right_(-Y,image-up)"][0]["Y_extreme"],
-                                "note": "TOP shows the clamp's nut end on the right as a round knob, 16 mm proud"}},
+                                "note": "TOP shows the clamp's nut end on the right as a round knob, %.1f mm proud" % sc(16.0, 1)}},
      construction="Rail-clamp base (lug in a hidden slot, cross-bolt head left, round clamp knob right as TOP shows); "
      "leaf with two ears and a square post between them, tip flat with a 0.2 mm break, the tip on the sight line "
      f"(Z {POST_TIP[1]}, {round(D['sights']['sight_front']['top_Z']['mm'] - POST_TIP[1], 1)} mm under the ear tops); "
@@ -957,9 +988,9 @@ part(id="sight_front", display="Front flip sight (rail clamp, post between ears)
 part(id="selector", display="Selector (ambidextrous: one shaft, two teardrop levers)", bone="selector",
      process="M-chamfer (steel plate)", joint={"type": "hinge", "parent": "body", "clearance_mm": [0.10, 0.30]},
      slot=SLOT_METAL, finish=F_STEEL, texel_class="B",
-     box_M={"X": [353.1, 373.7], "Z": [-50.8, -18.1], "Y": [round(W_REC_R - 5.0, 1), round(W_REC_L + 5.0, 1)]},
-     dims={"pivot_XZ": SEL_P, "hub_dia": SEL["ring_diameter"]["mm"], "hub_dia_right": 20.7,
-           "blade_tip_XZ_left": SEL_TIP, "blade_root_width": 12.0, "blade_tip_width": 6.0, "tip_R": 3.0,
+     box_M={"X": sc([353.1, 373.7], 1), "Z": sc([-50.8, -18.1], 1), "Y": [round(W_REC_R - 5.0, 1), round(W_REC_L + 5.0, 1)]},
+     dims={"pivot_XZ": SEL_P, "hub_dia": SEL["ring_diameter"]["mm"], "hub_dia_right": SEL["ring_diameter"]["mm"],
+           "blade_tip_XZ_left": SEL_TIP, "blade_root_width": sc(12.0, 1), "blade_tip_width": sc(6.0, 1), "tip_R": sc(3.0, 1),
            "plate": [2.5, 3.0], "seat_boss_proud": 1.0, "edge_R": 0.8, "thumb_ledge": 0.5,
            "index_groove": [0.5, 0.3], "positions_rot_Y_deg_from_bind": SEL_ROT,
            "bind_blade_angle_deg_from_plusX": round(phi_bind, 1),
@@ -978,9 +1009,9 @@ part(id="trigger", display="Trigger", bone="trigger", process="C-fillet", joint=
            "pivot_source": "the drawn axle head on both side views (LEFT %s, RIGHT %s)" % (
                TRIG_PIVOT, RF["trigger_axle_head"]["centre_XZ"]),
            "pull_sign": "+ about Y (Blender R_y moves points below the pivot toward -X = rearward); AR-01 ships 0..+12",
-           "finger_face_X_at_Z_-77.9": 409.4, "reach_backstrap_to_face": D["trigger_reach_to_blade_front_face"]["mm"]},
+           "finger_face_XZ": [sc(409.4, 1), sc(-77.9, 1)], "reach_backstrap_to_face": D["trigger_reach_to_blade_front_face"]["mm"]},
      construction="Curved steel blade, smooth crowned face, hanging from a transverse axle at the drawn head (flush pin "
-     "heads both sides, about 14 mm above the blade's top). Pull = +%.0f deg about Y: the lower end moves rearward."
+     "heads both sides, about %.0f mm above the blade's top). Pull" % sc(14.0) + " = +%.0f deg about Y: the lower end moves rearward."
      % TRIG_PULL, ruling="RP11", wear="bright face",
      trace=tref("trigger"), side_profile_M=profile("trigger", 0.15), authority="LEFT", confidence="high",
      sources=["measure", "craft trigger"])
@@ -1000,7 +1031,7 @@ part(id="mag_release", display="Magazine release paddle (centred, ambidextrous)"
                            "trace": "parts.mag_release (the lever drawn inside the guard's front leg)"},
            "declared_deviation": {"front_face_vs_drawn": PAD_SHIFT_FRONT,
                                   "pivot_vs_drawn_pin_head": round(PAD_PIVOT[0] - PAD_PIN_DRAWN[0], 2),
-                                  "why": "the magwell's 4.0 rear wall (+0.3 to the magazine) and the release swing "
+                                  "why": "the magwell's %.1f rear wall (+0.3 to the magazine)" % MW_WALL + " and the release swing "
                                          "(>= 0.10 to the wall down to the lip) set the paddle's front face; the "
                                          "sheet draws the lever over the wall's position (an AI-sheet contradiction "
                                          "on a small part: the real pattern decides construction)",
@@ -1056,9 +1087,9 @@ part(id="stock_frame", display="Skeleton stock frame (one-piece moulding)", bone
            "strut shows beside the top strut), so the traced 35-45 mm is not a width",
            "windows": "the two traced see-through holes (LEFT silhouette holes)", "opening_border_step": [0.8, 1.0],
            "opening_border_inset": 1.5, "opening_inner_R": 1.5, "draft_deg_each_way": 1.0,
-           "through_holes": [{"XZ": [40.1, 9.5], "dia": 6.0, "use": "plain"},
-                             {"XZ": [40.1, -65.5], "dia": 6.0, "use": "SlingRear"}],
-           "neck_slot": {"X": [188.9, 219.4], "Z": [-4.7, 0.0], "note": "drawn dark slot = the locking-pin storage "
+           "through_holes": [{"XZ": sc([40.1, 9.5], 1), "dia": sc(6.0, 1), "use": "plain"},
+                             {"XZ": sc([40.1, -65.5], 1), "dia": sc(6.0, 1), "use": "SlingRear"}],
+           "neck_slot": {"X": sc([188.9, 219.4], 1), "Z": sc([-4.7, 0.0], 1), "note": "drawn dark slot = the locking-pin storage "
                          "hole (real pattern), built as drawn"},
            "retention_lug": LUG},
      construction="One-piece polymer frame symmetric about its mid-plane (parting witness around the middle, texture "
@@ -1093,9 +1124,9 @@ part(id="magazine_body", asset="SM_SMG01_Mag (+ merged in SM_SMG01)", display="M
            "foreaft": MAG_FA, "thickness": MAG_T, "length_along_axis": round(MAG_LEN, 1),
            "exposed_along_axis": MAG["exposed_length_along_axis"]["mm"], "top_along_axis": round(MAG_TOP_ALONG, 2),
            "floor_along_axis": round(MAG_FLOOR_ALONG, 2), "corner_R": {"front": 3.0, "rear": 2.5},
-           "ladder": LADDER, "front_spine_rib": {"width": 6.0, "proud": 0.8},
-           "catch_notch": {"size": [8.0, 4.0], "depth": 2.5, "Z_seated": -44.0, "bearing_face": "square, top"},
-           "feed_lips": {"wall": 2.0, "single_feed_taper_height": 30.0, "front_top_stepped_higher": True},
+           "ladder": LADDER, "front_spine_rib": {"width": sc(6.0, 1), "proud": 0.8},
+           "catch_notch": {"size": [8.0, 4.0], "depth": 2.5, "Z_seated": NOTCH_Z, "bearing_face": "square, top"},
+           "feed_lips": {"wall": 2.0, "single_feed_taper_height": sc(30.0, 1), "front_top_stepped_higher": True},
            "follower": "dark polymer, visible between the lips; no cartridge", "inner_draft_deg": 0.25,
            "mass_empty_kg": 0.17},
      construction="Straight polymer housing, double stack tapering to a single-feed top. Two parallel recessed channels "
@@ -1112,7 +1143,7 @@ part(id="magazine_floor_plate", asset="SM_SMG01_Mag (+ merged in SM_SMG01)", dis
      box_M={"X": [MAG["floor_plate"]["profile_Z_Xrear_Xfront"][-1][1], MAG["floor_plate"]["profile_Z_Xrear_Xfront"][-1][2]],
             "Z": [MAG["floor_bottom_Z"]["mm"], MAG["floor_plate"]["profile_Z_Xrear_Xfront"][-1][0]],
             "Y": [-MAG_T / 2 - 1.0, MAG_T / 2 + 1.0]},
-     dims={"length": MAG["floor_plate"]["max_length_X"]["mm"], "height": 7.5, "lip_proud": [1.0, 2.0], "front_R": 4.0,
+     dims={"length": MAG["floor_plate"]["max_length_X"]["mm"], "height": sc(7.5, 1), "lip_proud": [1.0, 2.0], "front_R": 4.0,
            "locking_tab_hole_dia": 8.0, "profile_Z_Xrear_Xfront": MAG["floor_plate"]["profile_Z_Xrear_Xfront"]},
      construction="Separate cap sliding on from the rear on rails moulded into the housing's bottom flange; the locking "
      "plate's dark tab shows flush in a dia 8 hole on the bottom face (unseen face).", ruling="RP10",
@@ -1136,18 +1167,19 @@ RULINGS = []
 for r in CRAFT["rulings"]:
     RULINGS.append(dict(r))
 RULING_OVERRIDES = {
-    "RP3": "Knob at rest where drawn (merge read: dia 18.5, centre (549.3, 21.0)); slot X %.1f-%.1f behind it, lock "
-           "notch at its rear; the arm rides 0.2 mm off the wall (no recess: TOP shows the block 3.3 proud)." % tuple(SLOT_X),
+    "RP3": "Knob at rest where drawn (merge read: dia %.1f, centre (%.1f, %.1f)); slot X %.1f-%.1f behind it, lock "
+           "notch at its rear; the arm rides 0.2 mm off the wall (no recess: TOP shows the block %.1f proud)." % (
+               KNOB_D, KNOB_C[0], KNOB_C[1], SLOT_X[0], SLOT_X[1], ARM_BLOCK["proud_of_wall"]),
     "RP5": "Bolt face at rest X %.1f (the measurer's feed geometry; the craft's X 485 sits over the magazine's top "
-           "round), travel 75 to X %.1f." % (BOLT_REST_FACE_X, BOLT_BACK_FACE_X),
-    "RP7": "Hub 20.7 on BOTH sides (both traces draw the same size; the craft's 10 %% smaller right lever is dropped); "
-           "positions as rotations about Y from the bind pose: %s." % SEL_ROT,
+           "round), travel %.1f to X %.1f (the real ~75 scaled with the gun, R26)." % (BOLT_REST_FACE_X, CH_TRAVEL, BOLT_BACK_FACE_X),
+    "RP7": "Hub %.1f on BOTH sides (both traces draw the same size; the craft's 10 %% smaller right lever is dropped); "
+           "positions as rotations about Y from the bind pose: %s." % (SEL["ring_diameter"]["mm"], SEL_ROT),
     "RP2": "As ruled, with the axle at Y %.1f (1 mm inside the right wall plane, knuckles ~%.0f mm proud in TOP) so the "
            "rigid 180 deg fold clears the right side (resolution R19)." % (HINGE_Y, KNUCKLE_PROUD_R),
-    "RP10": "Thickness 29.0 (resolution R14); ladder channels 12.5 wide x 2 with a 3.0 rib, ties at Z %s (the craft's "
-            "4.5 mm channels were a misread)." % LADDER["tie_Z"],
+    "RP10": "Thickness %.1f (resolutions R14, R26); ladder channels %.1f wide x 2 with a %.1f rib, ties at Z %s (the craft's "
+            "4.5 mm channels were a misread)." % (MAG_T, LADDER["channel_width"], LADDER["rib_between"], LADDER["tie_Z"]),
     "RP15": "Fold directions as ruled; the rear windage drum is on the LEFT (TOP + 3/4), not the right; the front "
-            "sight's clamp knob stands 16 mm proud on the right (TOP).",
+            "sight's clamp knob stands %.1f mm proud on the right (TOP)." % sc(16.0, 1),
     "RP14": "Slots only where the sheet draws teeth (%d slots, %d teeth) + one hidden lug slot under each sight; "
             "the drawn flats stay (the craft's ~29 slots over X 308-607 overruled)." % (len(TOOTHED_SLOTS), n_teeth),
     "RP16": "Device OD %.1f (the trace's outer edges; TOP %.1f)." % (DEVICE_OD, DEVICE_W_TOP),
@@ -1276,6 +1308,54 @@ RES = [
      "rule": "agreed"},
     {"id": "R25", "topic": "Stock fold side (plan R10/Q2)", "conflict": "none: craft RP1 (manual) = right, TOP agrees",
      "resolution": "folds to the right; plan Q2 closed", "rule": "agreed"},
+    {"id": "R26", "topic": "Scale (open question Q1): orchestrator ruling 2026-10-09", "conflict": "the W0 merge built "
+     "the sheet at the real pattern's 690 mm; there the sheet's grip / trigger group is 13-29 % larger than real "
+     "(trigger reach 90.5 vs ~70, side rail pitch 11.05, receiver width 68.8 vs 61-63.5)",
+     "resolution": "SCALE = %.0f mm overall with the stock extended (factor %.6f on every sheet proportion): at ~625 the "
+     "side-view rail pitch is exactly 10.01 and the receiver width matches the real 61 mm, so the sheet was evidently "
+     "drawn at ~625. All silhouette proportions stay exactly the sheet's. Implemented in the measurement "
+     "(tools/trace_reference.py OVERALL_MM = 625, its mm windows scaled with it) and here (every number read off the "
+     "sheet in mm at 690 is written sc(v)); line-standard and real-pattern hardware stays absolute: the 1913 rail "
+     "profile, every clearance row, wall thicknesses (3.0-3.5 receiver, 4.0 magwell rear wall), the .45-class bore "
+     "(11.4) and case head (12.0), pin / screw norms (< 4 sheet px), the sight aperture (2.0) and disc (10), the paddle "
+     "(9.0 wide; 3.0 deep at 625 so the guard's front leg keeps 2 mm of polymer), the latch bolt (4.0 / 2.5), the grip width (32, unseen, real norm) and the Grip depth (46, hand). "
+     "Derived at 625: bolt and charging travel %.1f (the real ~75 scaled with the gun; still > the .45 round's 32.4 + "
+     "feed), magazine thickness %.1f (the 3/4 read is 27.8 +-5.2 at 625; the real minimum 27, so R14's 29 becomes 27), "
+     "trigger reach %.1f, length of pull %.1f, folded length %.1f. The text of R1-R25 records the W0 merge at 690; "
+     "every number the build reads (parts, sockets, bones, gates, fold) is regenerated at 625" % (
+         OVERALL, S, CH_TRAVEL, MAG_T, D["trigger_reach_to_blade_front_face"]["mm"], sc(409.4, 1), FOLDED_LEN),
+     "rule": "orchestrator ruling (binding); plan Q1 closed"},
+    {"id": "R27", "topic": "Selector detents (open question Q16): orchestrator ruling 2026-10-09",
+     "conflict": "design call (sheet pose = SEMI, SAFE 45 deg below forward, AUTO 45 deg further rearward) vs the "
+     "manual's figures (SAFE ~25 deg below forward, SEMI / AUTO ~15-20 deg below rearward)",
+     "resolution": "the study's design call: bind = the sheet pose = SEMI; rotations about Y from bind %s; Q16 closed" % SEL_ROT,
+     "rule": "orchestrator ruling (binding)"},
+    {"id": "R28", "topic": "Folded-stock retention (open question Q17): orchestrator ruling 2026-10-09",
+     "conflict": "a moulded lug on the rear upright's right face (not drawn) vs a joggled stock arm (changes TOP)",
+     "resolution": "the moulded lug (stock_frame.dims.retention_lug: barb under the port catch's rear lip, engagement "
+     "%.1f in X); side views unchanged; Q17 closed" % F3_ENGAGE_X, "rule": "orchestrator ruling (binding)"},
+    {"id": "R29", "topic": "Every other open question (Q2-Q15)", "conflict": "none", "resolution": "the plan's default, "
+     "as listed in open_questions (orchestrator ruling 2026-10-09 (4))", "rule": "orchestrator ruling (binding)"},
+    {"id": "R30", "topic": "Magazine top vs the bolt (W1b form build)", "conflict": "the W0 top Z (feed lips, seated) "
+     "was a centre value; with the 8.27 deg rake the top face's front edge stood %.1f mm higher, into the bolt's path "
+     "(bolt underside Z %.1f)" % ((MAG_FA / 2.0) * math.sin(math.radians(abs(MAG_RAKE))), BOLT_Z[0]),
+     "resolution": "the magazine's top centre at Z %.2f, so its whole raked top (incl. the lips) stays 0.5 under the "
+     "bolt; the top shelf (M2 overtravel 1.0-2.0) is the bolt rails' lower flanges over the mag's side walls (outside "
+     "the bolt's width); Feed, MagInsertStart and the mag length follow" % MAG_TOP_Z,
+     "rule": "mechanism check (form stage), numbers regenerated here"},
+    {"id": "R31", "topic": "Magwell outer width (W1b form build)", "conflict": "W0 built the well from the magazine + "
+     "walls (34.8 / 38.8 at 625); the 3/4 view reads %.1f +-%.1f at the lip" % (
+         D["mag_well"]["outer_width_estimate_from_3q"]["mm"], D["mag_well"]["outer_width_estimate_from_3q"]["unc_mm"]),
+     "resolution": "lip %.1f / body %.1f: the 3/4 view's magwell-lip / magazine front-face ratio (%.3f, the same view "
+     "angle for both faces, so the ratio carries no camera error) x the magazine thickness %.1f; checked by the camera-"
+     "solved 3/4 L2 gate" % (MW_OUT_LIP, MW_OUT_BODY, MW_RATIO, MAG_T), "rule": "measurement (3/4 ratio)"},
+    {"id": "R32", "topic": "Top rail rear end and the end block's D-frame (W1b form build)", "conflict": "the trace's "
+     "top_rail key starts at the end block's front seam (X %.1f) while the TOP draws a raised D-shaped rim with a "
+     "rectangular pocket over X %.1f-%.1f, across that seam" % (tr["X"][0], TOPF_X0, sc(310.4, 1)),
+     "resolution": "the D rim is the steel rail's machined rear end: the rail starts at X %.1f (round in plan, R 8 "
+     "corners), sits on the end block's top behind the seam, and carries the drawn pocket (2.0 deep) in its rear "
+     "relief flat; the side silhouette is unchanged (same top Z)" % TOPF_X0, "rule": "TOP authority (widths), side "
+     "silhouette kept"},
 ]
 
 # ================================================================================================ gates
@@ -1284,13 +1364,13 @@ GATES = {
     "spec": {"S0": "this file: 0 missing fields per part (process, slot, finish, texel class, bone, joint, authority, "
                    "box or dims), 0 unresolved values; validator output in spec['S0']"},
     "look": {
-        "L1": "blockout IoU: LEFT >= 0.95, RIGHT >= 0.95, TOP (X >= 245) >= 0.92; < 0.90 = stop and change the method",
-        "L2": "form IoU: LEFT >= 0.96, RIGHT >= 0.96 (labels consistent: both sides are authority views), TOP (X >= 245) "
+        "L1": "blockout IoU: LEFT >= 0.95, RIGHT >= 0.95, TOP (X >= %.0f) >= 0.92; < 0.90 = stop and change the method" % sc(245),
+        "L2": "form IoU: LEFT >= 0.96, RIGHT >= 0.96 (labels consistent: both sides are authority views), TOP (X >= %.0f) " % sc(245) +
               ">= 0.93, 3/4 FRONT (LEFT) camera-solved IoU >= 0.93 and contour P95 <= 3 px; per part (LEFT trace keys) "
               "IoU >= 0.95 where area >= 400 px, else contour P95 <= 1 px / max <= 2 px",
         "L2_thin_parts": sorted(k for k in LEFT["parts"] if area_px(k) < 400.0),
         "L2_part_areas_px": {k: area_px(k) for k in LEFT["parts"]},
-        "L2_TOP_exclusion": "X < 245 (oblique stock) is replaced by the widths in R18 (+-1 mm)",
+        "L2_TOP_exclusion_X": sc(245, 1), "L2_TOP_exclusion": "X < %.0f (oblique stock)" % sc(245) + " is replaced by the widths in R18 (+-1 mm)",
         "L3": "side contour P95 <= 2 sheet px; feature positions <= 2 sheet px for: vents (4 per side + the 2 long "
               "vents), port corners, catch, knob centre, arm block, selector hub, trigger face, the paddle's pin head "
               "and top/bottom Z (its fore-aft faces are a declared deviation: mag_release.dims.declared_deviation), "
@@ -1312,10 +1392,10 @@ GATES = {
     "blender": {
         "B1": "skeleton: root object identity; 11 bones (no bolt_catch); every bone deforms but magazine; rest = root's",
         "B2": "rigid skin qa_skeletal(max_influences=1)",
-        "B3": "sweeps LOD0-1, 0 intersections, joints inside their 3.7 rows: bolt 0..75 (-X), charging handle 0..75 + "
+        "B3": "sweeps LOD0-1, 0 intersections, joints inside their 3.7 rows: bolt 0..%.1f (-X), charging handle 0..%.1f + " % (CH_TRAVEL, CH_TRAVEL) +
               "lock 0..15 deg about the lever's roll pin (Y %.1f, Z %.1f; pusher-lug contact 0.0-0.05, no "
               "penetration), trigger 0..+%.0f deg, selector over SAFE..AUTO (both levers), paddle 0..%.0f deg, stock "
-              "0..180 deg (step min(1 deg, 0.10/r_max) ~0.021 deg at r 272 mm, or 0.25 deg steps each proving >= 0.6 "
+              "0..180 deg (step min(1 deg, 0.10/r_max) ~0.023 deg at r 250 mm, or 0.25 deg steps each proving >= 0.55 "
               "mm outside the latch and catch zones), sights 0..+-90 deg; declared allowances only: sight detents <= 0.3 "
               "mm in the last 2 deg, the catch lip over the lug's barb <= %.1f mm in the last 3 deg (snap); LOD2-3 < 1 "
               "px at the switch distance" % (LOCK_PIN[0], LOCK_PIN[1], TRIG_PULL, PAD_REL, F3_ENGAGE_X + 0.2),
@@ -1339,10 +1419,10 @@ GATES = {
                "the bind AABB + extension; the folded envelope from EVERY stock-bone part (spec fold.folded_min_Y_by_part: "
                "the latch housing and button fold furthest out, check fix C10)",
         "G5": "0 static intersections LOD0-1; butt gaps >= 0.01 mm; LOD2-3 < 1 px",
-        "H1_early": "W1: PASS = trigger reach <= 80 mm AND grip girth <= real polymer SMG grips + 10 %; Grip depth "
-                    "within 1 mm of the fit body's palm; SupportHand reachable <= 1.5 mm; length of pull (sheet 409.4 "
-                    "vs real 350-370) and cheek-weld eye height reported. A FAIL does not stop the build: it puts Q1 "
-                    "(rescale to ~625) to the user with the numbers (the sheet's reach 90.5 is expected to fail)",
+        "H1_early": "W1: PASS = trigger reach <= 80 mm AND grip girth <= real polymer SMG grips + 10 %%; Grip depth "
+                    "within 1 mm of the fit body's palm; SupportHand reachable <= 1.5 mm; length of pull (sheet %.1f "
+                    "vs real 350-370) and cheek-weld eye height reported. At 625 (R26) the sheet's reach reads %.1f; a "
+                    "FAIL does not stop the build: it is reported to the user with the numbers" % (sc(409.4, 1), D["trigger_reach_to_blade_front_face"]["mm"]),
         "H1_full": "W3: MH_PlayerDefault posed fit, 0 hand-gun intersections at rest and clip extremes incl. stock "
                    "folded and mag out; records hand_offset",
         "UD1": "gunlib.tspace.unreal_drops(ob) == 0 on every part object at LOD0-3, the joined twin and each SK LOD; "
@@ -1357,7 +1437,7 @@ GATES = {
         "F3": "stock folded: the lug's barb under the port catch's rear lip, engagement >= 1.0 mm in X (spec %.1f) "
               "and barb-to-lip gap 0.2-0.4 in Y; 0 intersections when seated; swept minimum over the fold >= 0.10 mm "
               "outside the declared snap allowance" % F3_ENGAGE_X,
-        "F4": "charging handle sweep (translate 75, then the lock 0..15 deg about the lever's roll pin, the slide not "
+        "F4": "charging handle sweep (translate %.1f, then the lock" % CH_TRAVEL + " 0..15 deg about the lever's roll pin, the slide not "
               "rotating): the neck clear of the slot and notch by 0.15-0.40 mm; the outer arm >= 0.10 mm off the wall "
               "at every frame (spec: every arm point moves outward, min %+.2f)" % ARM_MIN_DY,
         "F6": "stock latch (extended): the bolt's full diameter >= 1.5 mm into the end-block lug's bore when released "
@@ -1397,7 +1477,7 @@ CLIP_TEXT = {
                                "deg; the latch bolt's ramp rides over the end-block lug and snaps into its bore",
     "A_SMG01_ReloadEmpty.fbx": "starts with the bolt held open by the internal hold-open (not modelled; no bolt_catch "
                                "bone, R24) and the charging handle FORWARD; paddle press, mag out, new mag in; then "
-                               "the charging handle pulled fully back (75) and released: the hold-open lets go and the "
+                               "the charging handle pulled fully back (%.1f) and released:" % CH_TRAVEL + " the hold-open lets go and the "
                                "bolt runs forward with the handle",
     "A_SMG01_Fire.fbx": "trigger pull 0 -> +%.0f deg; bolt 0 -> travel -> 0; the charging handle does not move" % TRIG_PULL,
     "A_SMG01_Reload.fbx": "paddle 0 -> %.0f deg (nose out of the notch); magazine straight down along -Z, drop, new "
@@ -1437,8 +1517,9 @@ BUDGETS["gun"]["top_rail_note"] = ("24 chamfered slots at ~140 triangles each + 
 # ================================================================================================ spec assembly
 spec = {
     "meta": {
-        "name": "Compact SMG SM-01", "code": "SMG01", "version": "1.1", "date": "2026-10-09",
-        "revision": "1.1: checker findings C1-C16 verified and fixed (spec check_findings; SMG_STUDY.md section 12)",
+        "name": "Compact SMG SM-01", "code": "SMG01", "version": "1.2", "date": "2026-10-09",
+        "revision": "1.2: orchestrator rulings R26-R29 (scale 625 mm, selector design call, retention lug, plan defaults); "
+                    "1.1: checker findings C1-C16 verified and fixed (spec check_findings; SMG_STUDY.md section 12)",
         "assets": {"skeletal": "SK_SMG01 (+ _LOD1..3, SK_SMG01_Skeleton, PHYS_SMG01, clips A_SMG01_*)",
                    "static_twin": "SM_SMG01 (stock extended, mag merged)", "magazine": "SM_SMG01_Mag"},
         "units": "millimetres (Blender builds in metres: / 1000; Unreal cm: / 10)",
@@ -1465,13 +1546,15 @@ spec = {
         "Q34": {"box_sheet_px": MEAS["panels_sheet_px_x0_y0_x1_y1_inclusive"]["Q34_FRONT_LEFT"], "is": "3/4 front "
                 "view of the LEFT side", "authority": "magazine thickness, magwell width, front face (eyelet), front "
                 "sight ears (camera-solved L2)"},
-        "ruler": f"wrong: reads {MEAS['scale']['sheet_ruler']['implied_overall_length_cm_LEFT']} cm for the 69 cm gun"},
+        "ruler": f"wrong: reads {MEAS['scale']['sheet_ruler']['implied_overall_length_cm_LEFT']} cm for the {OVERALL / 10:.1f} cm gun"},
     "frames": {
         "M": {"name": "measurement / spec frame (all part dimensions and trace outlines)",
               "axes": "+X toward the muzzle along the bore, +Z up, +Y = gun LEFT (right-handed)",
               "origin": "X = 0 at the rearmost point of the butt pad (stock extended); Z = 0 = the measurer's datum "
                         f"(the bore axis is at Z_M {BORE_Z}, resolution R2); Y = 0 on the mid-plane",
-              "scale": "LEFT 0.85114 px/mm (1.1749 mm/px); RIGHT 0.85196; TOP 0.84613; overall length 690.0 set by us"},
+              "scale": "LEFT %.5f px/mm (%.4f mm/px); RIGHT %.5f; TOP %.5f; overall length %.1f (orchestrator ruling, R26)" % (
+                  MEAS["scale"]["px_per_mm"]["LEFT"], MEAS["scale"]["mm_per_px"]["LEFT"], MEAS["scale"]["px_per_mm"]["RIGHT"],
+                  MEAS["scale"]["px_per_mm"]["TOP"], OVERALL)},
         "B": {"name": "Blender build frame (GUN_BUILDING_STUDY 5.1)", "axes": "+X muzzle, +Z up, -Y = gun RIGHT "
               "(same axes as M)", "origin": "Grip", "Grip_in_M": [GX, 0.0, GZ], "transform": "B = M - Grip_in_M (pure "
               "translation)", "bore_axis_in_B": f"Y = 0, Z = {round(BORE_Z - GZ, 2)} (parallel to X)",
@@ -1481,13 +1564,15 @@ spec = {
         "mag": {"origin": "the Mag socket (well-entry centre on the traced lip line)", "Mag_in_M": r1(MAG_O, 2),
                 "axes": f"+Z up the insertion axis = M rotated {THETA_MAG_Y:.3f} deg about +Y; +X forward perpendicular; "
                         "+Y = gun left", "z_axis_in_M": r1(U_UP, 5), "x_axis_in_M": r1(U_FW, 5)}},
-    "scale": {"overall_length": 690.0, "folded_length_sheet": FOLDED_LEN, "folded_length_real": 450.0,
+    "scale": {"overall_length": OVERALL, "ruling": "R26 (orchestrator 2026-10-09): 625 mm, not 690; one uniform scale on every "
+              "sheet proportion (factor %.6f vs the W0 merge); line-standard and real-pattern hardware stay absolute" % S,
+              "factor_vs_690": round(S, 6), "folded_length_sheet": FOLDED_LEN, "folded_length_real": 450.0,
               "barrel_length": BARREL_LEN, "barrel_length_real": 200.0, "mass_kg": 2.5,
               "mass_note": "line standard (manual 2.26 without magazine; C-Q4 default 2.5)",
-              "sheet_vs_real": MEAS["scale"]["real_anchor_ratios_sheet_at_690_over_real"],
-              "alternative": MEAS["scale"]["alternative_625_rail_pitch_scale"]},
+              "sheet_vs_real": MEAS["scale"]["real_anchor_ratios_sheet_over_real"],
+              "scale_ruling": MEAS["scale"]["scale_ruling"]},
     "key_dimensions": {
-        "overall_length": 690.0, "height_with_mag": OV["height_with_magazine"]["mm"],
+        "overall_length": OVERALL, "height_with_mag": OV["height_with_magazine"]["mm"],
         "height_without_mag": OV["height_without_magazine"]["mm"], "top_Z": OV["top_Z"]["mm"],
         "bore_Z_M": BORE_Z, "sight_line_Z_M": APERTURE[1], "sight_height_over_bore": round(APERTURE[1] - BORE_Z, 1),
         "sight_radius": SIGHT_RADIUS, "rail_top_Z": RAIL_TOP_Z, "receiver_length": D["receiver"]["length_front_face_to_rear_end"]["mm"],
@@ -1496,29 +1581,29 @@ spec = {
                  "trigger_reach": D["trigger_reach_to_blade_front_face"]["mm"]},
         "magazine": {"rake_deg": MAG_RAKE, "foreaft": MAG_FA, "thickness": MAG_T, "length_along_axis": round(MAG_LEN, 1),
                      "exposed": MAG["exposed_length_along_axis"]["mm"]},
-        "muzzle_device": {"X": [D["barrel"]["device_seat_X"]["mm"], 690.0], "od": DEVICE_OD},
+        "muzzle_device": {"X": [D["barrel"]["device_seat_X"]["mm"], OVERALL], "od": DEVICE_OD},
         "stock": {"hinge_axis_XY": [HINGE_X, HINGE_Y], "length_hinge_to_butt": ST["length_hinge_gap_to_butt_rear"]["mm"],
                   "pad": [PAD["thickness_side"]["mm"], PAD["height"]["mm"], PAD_W]},
-        "length_of_pull": round(409.4 - 0.0, 1), "length_of_pull_note": "butt rear to the trigger face along the bore "
+        "length_of_pull": sc(409.4, 1), "length_of_pull_note": "butt rear to the trigger face along the bore "
                                                                           "(real ~350-370; reported at H1)"},
     "stations_X": {
         "butt_pad_rear": 0.0, "butt_pad_front": PAD["X"][1], "stock_web": ST["stock_web"]["X"],
         "stock_neck": ST["parts_X_Z"]["stock_neck"][:2], "stock_knuckle": BOX["stock_hinge_knuckle"][:2],
         "hinge_axis": HINGE_X, "end_block": BOX["hinge_block"][:2], "receiver_rear": D["receiver"]["X"][0],
         "rear_sight_base": REAR_BASE, "aperture": APERTURE[0], "rail_slot0": round(SLOT0_X, 2), "grip_top": BOX["grip"][:2],
-        "selector_pivot": SEL_P[0], "trigger_face": 409.4, "trigger_guard": BOX["trigger_guard"][:2],
+        "selector_pivot": SEL_P[0], "trigger_face": sc(409.4, 1), "trigger_guard": BOX["trigger_guard"][:2],
         "mag_release": BOX["mag_release"][:2], "ejection_port": PORT["X"], "magazine": MAG["X"],
         "bolt_face_back": BOLT_BACK_FACE_X, "breech_bolt_face_rest": BREECH_X, "stock_catch": CATCH["X"],
         "charging_slot": SLOT_X, "charging_knob": KNOB_C[0], "magwell_front_face": D["mag_well"]["front_face_X"]["mm"],
         "lower_rail": lrl["X"], "forward_vent_left": D["face_features"]["front_upper_slot"]["X"],
         "front_sight_base": FRONT_BASE, "front_post": POST_TIP[0], "receiver_front_face": D["barrel"]["receiver_front_face_X"]["mm"],
-        "device_seat": D["barrel"]["device_seat_X"]["mm"], "crown": CROWN_X, "muzzle": 690.0},
+        "device_seat": D["barrel"]["device_seat_X"]["mm"], "crown": CROWN_X, "muzzle": OVERALL},
     "parts": parts,
     "fastener_rule": "count and position from the sheet only (pins_fasteners + per-part features); sizes from norms "
                      "where a head spans < 4 sheet px; written in mm, never 'M' + number",
     "real_pattern_rulings": {"source": "CRAFT_STUDY.md section 4 (RP1-RP22), with this merge's adjustments",
                              "items": RULINGS,
-                             "plan_rulings_answered": "plan R1-R20: R4 -> RP3; R5 -> RP5 (75 mm); R9 -> RP9 (no catch); "
+                             "plan_rulings_answered": "plan R1-R20: R4 -> RP3; R5 -> RP5 (%.1f mm at 625);" % CH_TRAVEL + " R9 -> RP9 (no catch); "
                              "R10 -> RP1/RP2 (right, port catch); R12 -> RP15; R16/R17 -> RP10/RP21 (no guide ribs); "
                              "R18 -> RP4 (vent); the rest confirmed"},
     "bones": {
@@ -1530,7 +1615,7 @@ spec = {
             {"bone": "bolt", "parent": "body", "head_M": [BOLT_REST_FACE_X, 0.0, BORE_Z], "motion": "translate -X",
              "limits_mm": [0.0, CH_TRAVEL], "joint": "sliding 0.15-0.40"},
             {"bone": "charging_handle", "parent": "body", "head_M": [KNOB_C[0], KNOB_CY, KNOB_C[1]],
-             "motion": "translate -X 0..75; at full travel rotate about X 0..+15 deg (lock)",
+             "motion": "translate -X 0..%.1f; at full travel rotate about X 0..+15 deg (lock)" % CH_TRAVEL,
              "lock_axis_M": [None, LOCK_PIN[0], LOCK_PIN[1]],
              "joint": "sliding 0.15-0.40", "note": "the lock rotation is keyed about the lever's roll pin in the slide "
              "(Y %.1f, Z %.1f) by the rig (the slide does not rotate); the bone head stays at the knob for the socket"
@@ -1646,9 +1731,6 @@ spec = {
 }
 
 OPEN_Q = [
-    {"id": "Q1", "question": "Scale: keep 690 mm with the sheet's chunky middle (trigger reach 90.5 vs ~70 real, height "
-     "338, width 68.8, folded 424), or rescale to ~625 mm (side rail pitch and width become real)?",
-     "default": "690; H1 early reports the hand fit and the rescale is offered only if it fails", "from": "measure Q1"},
     {"id": "Q2", "question": f"Hidden barrel: {BARREL_LEN:.0f} mm (sheet feed geometry) instead of the real 200 mm?",
      "default": "follow the sheet (nothing visible changes)", "from": "measure Q2"},
     {"id": "Q3", "question": "Charging handle: knob where drawn with a real 75 mm slot behind it (visible only X 470-501 "
@@ -1677,27 +1759,19 @@ OPEN_Q = [
      "folded drop", "from": "plan Q8"},
     {"id": "Q15", "question": "Fab design changes (craft list of 10)?", "default": "listed, not applied", "from": "plan Q9"},
 ]
-OPEN_Q += [
-    {"id": "Q16", "question": "Selector detents: keep the design call (the sheet's pose = SEMI, SAFE 45 deg below "
-     "forward, AUTO 45 deg further rearward) or follow the real figures (SAFE ~25 deg below forward, SEMI and AUTO "
-     "~15-20 deg below rearward), which would mean the sheet's drawn lever is in no detent?",
-     "default": "design call (bind = the sheet pose = SEMI)", "from": "check C11"},
-    {"id": "Q17", "question": "Folded-stock retention: a moulded lug on the rear upright's right face (X %.1f-%.1f, "
-     "%.1f mm proud of the pad's side; not drawn on the sheet) snapping under the port catch's lip, or a joggled stock "
-     "arm that brings the frame in (changes the TOP view of the stock)?" % (LUG["body_X_ext"][0], LUG["body_X_ext"][1],
-                                                                          LUG["proud_of_pad_side_ext"]),
-     "default": "the lug (side views unchanged)", "from": "check C3"}]
 spec["open_questions"] = OPEN_Q
+spec["open_questions_rule"] = ("orchestrator ruling 2026-10-09 (R29): the build follows each listed default; Q1, Q16 and "
+                               "Q17 were ruled (R26-R28) and moved to closed_questions")
 spec["check_findings"] = {
     "source": "SMG checker, 2026-10-09 (scratch/checker/, local); each finding verified on the sheet before fixing",
     "items": [
         {"id": "C1", "area": "magazine release paddle", "verdict": "fixed",
          "resolution": "trace: the old box X 449-462 relabelled mag_well; the drawn lever inside the guard's front leg "
                        "traced as mag_release (X %.1f-%.1f, Z %.1f..%.1f, pin head %s). Built: pivot %s, paddle X "
-                       "%.2f-%.2f behind the 4.0 rear wall (+0.3), nose tip %s (engagement 1.5, travel %.1f at -11 deg); "
+                       "%.2f-%.2f behind the %.1f rear wall (+0.3), nose tip %s (engagement 1.5, travel %.1f at -11 deg); "
                        "the %.1f mm fore-aft shift vs the drawn lever is declared" % (
                            PAD_DRAWN[0], PAD_DRAWN[1], PAD_DRAWN[2], PAD_DRAWN[3], PAD_PIN_DRAWN, list(PAD_PIVOT),
-                           PAD_REAR_X, PAD_FRONT_X, list(PAD_NOSE), PAD_NOSE_TRAVEL, PAD_SHIFT_FRONT)},
+                           PAD_REAR_X, PAD_FRONT_X, MW_WALL, list(PAD_NOSE), PAD_NOSE_TRAVEL, PAD_SHIFT_FRONT)},
         {"id": "C2", "area": "magazine rake", "verdict": "fixed",
          "resolution": "edge fit on the straight body (Z0+14 .. Z1-14): rake %.2f deg (was 7.42); Mag, MagInsertStart, "
                        "magwell axis and mag frame regenerated" % MAG_RAKE},
@@ -1738,7 +1812,11 @@ spec["closed_questions"] = [
     {"id": "plan Q2 (fold side)", "closed_by": "R25: right"},
     {"id": "plan Q7 (bolt_catch)", "closed_by": "R24: not built"},
     {"id": "measure Q5 (boss in front of the port)", "closed_by": "R11: the integral stock catch"},
-    {"id": "measure Q6 (charging-handle path)", "closed_by": "R6 / RP3"}]
+    {"id": "measure Q6 (charging-handle path)", "closed_by": "R6 / RP3"},
+    {"id": "Q1 (scale 690 or ~625)", "closed_by": "R26: 625 mm (orchestrator ruling 2026-10-09)"},
+    {"id": "Q16 (selector detents)", "closed_by": "R27: the design call, sheet pose = SEMI (orchestrator ruling)"},
+    {"id": "Q17 (folded-stock retention)", "closed_by": "R28: the moulded lug, X %.1f-%.1f, %.1f mm proud of the pad's "
+     "side (orchestrator ruling)" % (LUG["body_X_ext"][0], LUG["body_X_ext"][1], LUG["proud_of_pad_side_ext"])}]
 
 
 # ================================================================================================ S0 validator
@@ -1791,7 +1869,7 @@ spec["S0"] = {"missing_fields": missing, "inconsistencies": incons,
               "consistency_checks": {k: bool(v) for k, v in checks.items()},
               "status": "PASS" if not missing and not incons else "FAIL",
               "provisional": [s["socket"] for s in GUN_SOCKETS + MAG_SOCKETS if s["state"] != "final"],
-              "real_figures_within_5pct": {"overall": "690 = 690", "barrel": f"{BARREL_LEN:.0f} vs 200 (Q2, sheet)",
+              "real_figures_within_5pct": {"overall": f"{OVERALL:.0f} vs the real pattern's 690 (R26 ruling)", "barrel": f"{BARREL_LEN:.0f} vs 200 (Q2, sheet)",
                                            "folded": f"{FOLDED_LEN} vs 450 (R20, sheet)"}}
 spec["counts"] = {"parts": len(parts), "gun_sockets": len(GUN_SOCKETS), "mag_sockets": len(MAG_SOCKETS),
                   "bones": 11, "rulings": len(RULINGS), "resolutions": len(RES), "open_questions": len(OPEN_Q),

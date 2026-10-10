@@ -61,3 +61,34 @@ class GunSpec:
     @property
     def gates(self):
         return self.d["gates_look"]
+
+    # ------------------------------------------------------------------ gun-agnostic socket access (gunlib 0.2.0)
+    @property
+    def gun_socket_key(self) -> str:
+        """The spec's key for the gun's socket list: 'rifle' on the AR-01 spec, 'gun' from the SMG on."""
+        s = self.d["sockets"]
+        for k in ("gun", "rifle"):
+            if isinstance(s.get(k), list):
+                return k
+        raise KeyError("no gun socket list in the spec (sockets.gun / sockets.rifle)")
+
+    def gun_sockets(self) -> List[Dict[str, Any]]:
+        """The gun's socket records, each with ``unreal_rotation_deg`` filled in (the SMG spec nests it under
+        ``rotation.unreal``; the AR-01 spec has it at the top level)."""
+        out = []
+        for r in self.d["sockets"][self.gun_socket_key]:
+            if "unreal_rotation_deg" not in r and isinstance(r.get("rotation"), dict) and "unreal" in r["rotation"]:
+                r = dict(r, unreal_rotation_deg=r["rotation"]["unreal"])
+            out.append(r)
+        return out
+
+    def socket(self, name) -> Dict[str, Any]:
+        return {r["socket"]: r for r in self.gun_sockets()}[name]
+
+    def mag_sockets(self) -> List[Dict[str, Any]]:
+        out = []
+        for r in self.d["sockets"].get("mag", []):
+            if "unreal_rotation_deg" not in r and isinstance(r.get("rotation"), dict) and "unreal" in r["rotation"]:
+                r = dict(r, unreal_rotation_deg=r["rotation"]["unreal"])
+            out.append(r)
+        return out

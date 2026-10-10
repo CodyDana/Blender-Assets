@@ -67,9 +67,34 @@ def nearest_dist(points, t: BVHTree, cap):
     return best, arg
 
 
+def _axis_radius(P, pivot, axis):
+    a = np.asarray(axis, float)
+    a = a / np.linalg.norm(a)
+    d = np.asarray(P, float) - np.asarray(pivot, float)
+    return np.linalg.norm(d - np.outer(d @ a, a), axis=1)
+
+
+def _proof(points, need, t: BVHTree):
+    """Radius-aware coarse-step proof (gunlib 0.2.1): every point must lie at least its own need (r x step / 2: how far
+    it travels off the swept chord between two steps) from the other surface. Returns (failures, worst margin)."""
+    fails, worst = 0, None
+    cap = float(need.max()) if len(need) else 0.0
+    for p, nd in zip(points, need):
+        h = t.find_nearest(Vector(p), cap)
+        if h[0] is not None and h[3] < nd:
+            fails += 1
+            m = h[3] - nd
+            worst = m if worst is None else min(worst, m)
+    return fails, worst
+
+
 def sweep(moving: Dict[str, tuple], fixed: Dict[str, tuple], motion, values: Sequence[float],
-          clearance_every: int = 1, cap_mm: float = 3.0, sample_mm: float = 0.5):
-    """motion(v) -> 4x4 matrix (mm, frame B). Returns per-step records and a summary."""
+          clearance_every: int = 1, cap_mm: float = 3.0, sample_mm: float = 0.5, proof=None):
+    """motion(v) -> 4x4 matrix (mm, frame B). Returns per-step records and a summary.
+    ``proof`` (gunlib 0.2.1, rotations): {"pivot", "axis", "step_deg", "skip": v -> bool}: at every step not skipped,
+    every moving sample stands >= r x step / 2 from the fixed surfaces and every nearby fixed sample >= its own
+    r x step / 2 from the moving surface (r = distance from the rotation axis), so nothing can cross between steps;
+    records proof_fails / proof_margin per step."""
     # fixed union tree with part ids per triangle
     FV, FT, Fid, names = [], [], [], []
     n = 0
@@ -104,6 +129,10 @@ def sweep(moving: Dict[str, tuple], fixed: Dict[str, tuple], motion, values: Seq
     fs = fs[np.all((fs >= lo) & (fs <= hi), axis=1)]
     recs = []
     t0 = time.time()
+    if proof:
+        k = math.radians(float(proof["step_deg"])) / 2.0
+        need_m = _axis_radius(msamp, proof["pivot"], proof["axis"]) * k + 1e-4
+        need_f = _axis_radius(fs, proof["pivot"], proof["axis"]) * k + 1e-4
     for i, v in enumerate(values):
         M = motion(v)
         Q = apply(M, MV)
@@ -111,6 +140,12 @@ def sweep(moving: Dict[str, tuple], fixed: Dict[str, tuple], motion, values: Seq
         pairs = ftree.overlap(mt)
         hit_parts = sorted({names[Fid[a]] for a, _ in pairs})
         rec = {"value": float(v), "intersections": len(pairs), "hit_parts": hit_parts}
+        if proof and not proof["skip"](v) and not pairs:
+            f1, w1 = _proof(apply(M, msamp), need_m, ftree)
+            f2, w2 = _proof(fs, need_f, mt)
+            rec["proof_fails"] = f1 + f2
+            ws = [w for w in (w1, w2) if w is not None]
+            rec["proof_margin"] = round(min(ws), 4) if ws else None
         last = i == len(values) - 1
         if i % clearance_every == 0 or last or i == 0:
             d1, a1 = nearest_dist(apply(M, msamp), ftree, cap_mm)

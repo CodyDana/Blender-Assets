@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Sequence
 
 import numpy as np
 
-from .mesh import Mesh
+from ..mesh import Mesh
 
 RECIPES = {
     "M-chamfer": [(0.45, 1, 30.0)],
@@ -57,12 +57,23 @@ class PartDef:
 
 
 SMALL_FEATURE_MM = {2: 14.0}          # LOD2+: unions / cutters whose box diagonal is under this are left out
+#: gunlib 0.2.0 wire-in (SMG_BUILD_PLAN 4.1 / 14 UD1-UD2): every built part checks its own output (gunlib.ud) at the
+#: LOD it was built for; the summary goes to its report (``p.report["ud"]``) and the object (``gun_part_ud``)
+UD_CHECK = True
+
+
+def _ud_summary(ob):
+    from .. import ud
+    r = ud.check_object(ob)
+    keys = ("unreal_drops", "unreal_drops_polygons", "min_area_mm2", "edges_under_0.05mm", "needles_under_0.02mm",
+            "strip_polygons_under_0.1mm", "needle_groups", "edge_on_groups", "pass_ud1", "pass_ud2")
+    return {k: r.get(k) for k in keys}
 
 
 def _lod_filter(meshes):
     """At gunlib.lod level >= 2 drop small boolean features (pins, pin holes, tiny slots and bumps: under ~1 px at the
     LOD2 switch distance); the texture painted from LOD0 still shows them."""
-    from . import lod as _lod
+    from .. import lod as _lod
     lim = SMALL_FEATURE_MM.get(min(_lod.LEVEL, 2))
     if not lim:
         return list(meshes)
@@ -77,7 +88,7 @@ def _lod_filter(meshes):
 
 def build_part(p: PartDef, coll, offset) -> "bpy.types.Object":
     import bpy                      # lazy: PartDef itself is plain Python (numpy sweeps import the part modules)
-    from . import bl
+    from .. import bl
     t0 = time.time()
     p.unions, p.cutters, p.post_cutters = _lod_filter(p.unions), _lod_filter(p.cutters), _lod_filter(p.post_cutters)
     base = Mesh()
@@ -96,7 +107,9 @@ def build_part(p: PartDef, coll, offset) -> "bpy.types.Object":
         bl.boolean_many(ob, p.cutters, "DIFFERENCE", offset=offset)
     bl.clean(ob)
     for step in p.recipe:
-        if len(step) == 4:                      # (width, segments, "W", predicate) weighted pass
+        if len(step) == 4 and step[2] == "WC":  # (width, segments, "WC", pred) convex-aware weighted pass (0.2.0)
+            bl.bevel_weighted_convex(ob, step[0], step[1], step[3], offset)
+        elif len(step) == 4:                    # (width, segments, "W", predicate) weighted pass
             bl.bevel_weighted(ob, step[0], step[1], step[3], offset)
         else:
             bl.bevel(ob, step[0], step[1], step[2])
@@ -111,9 +124,13 @@ def build_part(p: PartDef, coll, offset) -> "bpy.types.Object":
     else:
         bl.mark_sharp(ob, p.smooth_deg)
     rec = {"bone": p.bone, "class": p.cls, "slot": p.slot, "joint": p.joint, "spec_id": p.spec_id,
-           "recipe": [[s[0], s[1], s[2] if len(s) == 3 else "weighted"] for s in p.recipe]}
+           "recipe": [[s[0], s[1], s[2] if len(s) == 3 else ("weighted_convex" if s[2] == "WC" else "weighted")]
+                      for s in p.recipe]}
     ob["gun_part"] = json.dumps(rec)
     p.report = bl.manifold_report(ob)
+    if UD_CHECK:
+        p.report["ud"] = _ud_summary(ob)
+        ob["gun_part_ud"] = json.dumps(p.report["ud"])
     p.report["seconds"] = round(time.time() - t0, 2)
     p.obj = ob
     return ob
@@ -151,3 +168,50 @@ class BuildCtx:
             objs = [build_part(q, self.coll, self.offset) for q in (r if isinstance(r, tuple) else (r,))]
         self.built[key] = objs
         return objs
+
+
+def build_composite(name: str, pieces, coll, offset, bone="body", cls="M-chamfer", slot="M_Metal",
+                    cutters: Sequence[Mesh] = (), joint: Optional[Dict[str, Any]] = None, spec_id=None,
+                    smooth_deg=30.0, wn=True):
+    """gunlib 0.2.0: a part made of pieces that are each edge-broken BEFORE they are united (a leaf plate + its head
+    + ears; a clamp base + its cheeks). ``pieces`` = [(Mesh, recipe)], the recipe as build_part's (angle passes or
+    (w, seg, "W" / "WC", pred) weighted passes). The union seams stay sharp and every bevel strip is cut across, never
+    along, so no bevel / boolean run-out strip forms (the AR-01's U5 / U10 lesson; gates UD1-UD2). Then the cutters
+    (bores, windows), the final clean, weighted normals and the gun_part record. Returns the object."""
+    import bpy
+    from .. import bl
+    t0 = time.time()
+    objs = []
+    for k, (m, recipe) in enumerate(pieces):
+        ob = m.to_object(name if k == 0 else f"_{name}_piece{k}", coll, offset, smooth_deg=smooth_deg)
+        bl.clean(ob)
+        for step in recipe:
+            if len(step) == 4 and step[2] == "WC":
+                bl.bevel_weighted_convex(ob, step[0], step[1], step[3], offset)
+            elif len(step) == 4:
+                bl.bevel_weighted(ob, step[0], step[1], step[3], offset)
+            else:
+                bl.bevel(ob, step[0], step[1], step[2])
+        objs.append(ob)
+    ob = objs[0]
+    for other in objs[1:]:
+        bl.boolean(ob, other, "UNION", offset=offset)
+        bpy.data.objects.remove(other, do_unlink=True)
+    if cutters:
+        bl.boolean_many(ob, _lod_filter(cutters), "DIFFERENCE", offset=offset)
+    bl.clean(ob)
+    bl.finish(ob)
+    if wn:
+        bl.weighted_normals(ob)
+    else:
+        bl.mark_sharp(ob, smooth_deg)
+    rec = {"bone": bone, "class": cls, "slot": slot, "joint": joint or {"type": "butt", "gap_mm": [0.01, 0.05]},
+           "spec_id": spec_id or name, "recipe": "composite: per-piece breaks, then unions (gunlib.parts.build_composite)"}
+    ob["gun_part"] = json.dumps(rec)
+    rep = dict(bl.manifold_report(ob))
+    if UD_CHECK:
+        rep["ud"] = _ud_summary(ob)
+        ob["gun_part_ud"] = json.dumps(rep["ud"])
+    rep["seconds"] = round(time.time() - t0, 2)
+    ob["gun_part_report"] = json.dumps(rep)
+    return ob
