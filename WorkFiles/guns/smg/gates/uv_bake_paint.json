@@ -1,0 +1,813 @@
+{
+ "stage": "W2 surface (SMG_BUILD_PLAN 15 row W2)",
+ "date": "2026-10-11T03:04:48",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "qa_check: the static twin as W3 joins it (pipeline; Metal U 0..1, Furniture 1..2, merged mag -1..0)",
+   "value": {
+    "passed": true,
+    "triangles": {
+     "SM_SMG01": 50108
+    },
+    "texel_aggregate_px_cm": 91.537,
+    "failed": [],
+    "rows": {
+     "triangle_budget": "50108 triangles (budget 55000)",
+     "no_coincident_vertices": "0 vertex pair(s) within 1e-06 of 25052",
+     "uv0_tile_range": "u -1.0000..2.0000, v -0.0000..0.9966 on 'UV0'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)",
+     "texel_density": "91.537 px/cm at 4096px on 'UV0' (uv area 2.1450, mesh area 0.4295 m2); target 91.537 px/cm, error 0.0%, tolerance 25%",
+     "uv_no_overlap": "0 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh",
+     "uv1_inside_0_1": "u 0.0156..0.9833, v 0.0156..0.9802 on 'UV1' (Fab 4.3.3.2 lightmap UV)",
+     "uv1_no_overlap": "0 overlapping triangle pair(s) on 'UV1' (UV1); method: numpy separating-axis test on the evaluated mesh"
+    }
+   },
+   "threshold": "pass (budget 55,000 = 50,000 + the magazine's 5,000; UV1 required; texel target = the measured aggregate; UCX at W3)",
+   "pass": true
+  },
+  {
+   "name": "B9 density Metal class C (px/cm P5 / median / P95)",
+   "value": "46.2 / 46.7 / 46.7 (165.8 cm2)",
+   "threshold": "median in [22.5, 50] (band 30-40, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.17 of the band top"
+  },
+  {
+   "name": "B9 density Metal class E (px/cm P5 / median / P95)",
+   "value": "14.1 / 15.3 / 15.3 (439.1 cm2)",
+   "threshold": "median in [6, 18.75] (band 8-15, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.02 of the band top"
+  },
+  {
+   "name": "B9 density Metal class B (px/cm P5 / median / P95)",
+   "value": "89.7 / 93.3 / 93.3 (161.9 cm2)",
+   "threshold": "median in [45, 100] (band 60-80, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.17 of the band top"
+  },
+  {
+   "name": "B9 density Metal class A (px/cm P5 / median / P95)",
+   "value": "118.1 / 120.0 / 120.0 (71.9 cm2)",
+   "threshold": "median in [60, 125] (band 80-100, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.2 of the band top"
+  },
+  {
+   "name": "B9 density Metal class D (px/cm P5 / median / P95)",
+   "value": "32.9 / 36.7 / 42.4 (113.4 cm2)",
+   "threshold": "median in [18.75, 37.5] (band 25-30, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.22 of the band top"
+  },
+  {
+   "name": "B9 fill Metal (2048)",
+   "value": 0.7294,
+   "threshold": ">= 0.70",
+   "pass": true
+  },
+  {
+   "name": "set size Metal",
+   "value": "2048: texels needed at the class floors 1,291,180 vs capacity at the fill minimum {'2048': 2936013, '4096': 11744051}",
+   "threshold": "the smallest power of two holding the class floors at the fill minimum (the packer decides)",
+   "pass": true
+  },
+  {
+   "name": "B9 density Furniture class B (px/cm P5 / median / P95)",
+   "value": "95.2 / 100.0 / 100.0 (794.9 cm2)",
+   "threshold": "median in [45, 100] (band 60-80, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.25 of the band top"
+  },
+  {
+   "name": "B9 density Furniture class C (px/cm P5 / median / P95)",
+   "value": "48.5 / 50.0 / 50.0 (1255.4 cm2)",
+   "threshold": "median in [22.5, 50] (band 30-40, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.25 of the band top"
+  },
+  {
+   "name": "B9 density Furniture class E (px/cm P5 / median / P95)",
+   "value": "15.8 / 16.4 / 16.4 (868.0 cm2)",
+   "threshold": "median in [6, 18.75] (band 8-15, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.1 of the band top"
+  },
+  {
+   "name": "B9 fill Furniture (4096)",
+   "value": 0.6655,
+   "threshold": ">= 0.65",
+   "pass": true
+  },
+  {
+   "name": "set size Furniture",
+   "value": "4096: texels needed at the class floors 4,047,089 vs capacity at the fill minimum {'2048': 2726298, '4096': 10905190}",
+   "threshold": "the smallest power of two holding the class floors at the fill minimum (the packer decides)",
+   "pass": true
+  },
+  {
+   "name": "B9 density Mag class C (px/cm P5 / median / P95)",
+   "value": "44.5 / 48.6 / 48.8 (329.4 cm2)",
+   "threshold": "median in [22.5, 50] (band 30-40, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.21 of the band top"
+  },
+  {
+   "name": "B9 density Mag class E (px/cm P5 / median / P95)",
+   "value": "16.0 / 16.0 / 16.0 (95.0 cm2)",
+   "threshold": "median in [6, 18.75] (band 8-15, the density ceiling 1.25 x top); P5 >= 0.85 x median (classes +-15 %, spec B9)",
+   "pass": true,
+   "note": "x1.06 of the band top"
+  },
+  {
+   "name": "B9 fill Mag (1024)",
+   "value": 0.7502,
+   "threshold": ">= 0.65",
+   "pass": true
+  },
+  {
+   "name": "set size Mag",
+   "value": "1024: texels needed at the class floors 302,573 vs capacity at the fill minimum {'1024': 681574, '2048': 2726298}",
+   "threshold": "the smallest power of two holding the class floors at the fill minimum (the packer decides)",
+   "pass": true
+  },
+  {
+   "name": "ADS densities: class A on the sight picture (both sights' parts), the top rail B behind X 400 / C forward (spec class A = the sights only, check fix C15)",
+   "value": {
+    "A sights (median px/cm, cm2)": {
+     "sight_rear_base": [
+      119.8,
+      22.21
+     ],
+     "sight_rear_leaf": [
+      119.4,
+      22.89
+     ],
+     "sight_rear_pin": [
+      119.4,
+      0.16
+     ],
+     "sight_front_base": [
+      119.7,
+      16.63
+     ],
+     "sight_front_leaf": [
+      120.0,
+      9.86
+     ],
+     "sight_front_pin": [
+      119.4,
+      0.16
+     ]
+    },
+    "B top rail X < 400": {
+     "top_rail": [
+      93.3,
+      78.33
+     ],
+     "rail_screws": [
+      91.9,
+      0.3
+     ]
+    },
+    "C top rail X >= 400": {
+     "top_rail": [
+      46.7,
+      91.35
+     ],
+     "rail_screws": [
+      46.0,
+      0.3
+     ]
+    },
+    "long rail faces demoted B -> C": {}
+   },
+   "threshold": "sight parts 80-125 px/cm (A band x 1.25); the top rail's class-B faces 60-100",
+   "pass": true,
+   "note": "six single triangles 232-303 mm long (the rail's flank / base strips, not seen at ADS) take class C: at B they capped the 2048 pack at fill 0.36 (smg_uv: 'long faces demoted')"
+  },
+  {
+   "name": "UV0 overlaps per set (qa_check's rules, float32, on each twin tile)",
+   "value": {
+    "Metal": 0,
+    "Furniture": 0,
+    "Mag": 0
+   },
+   "threshold": "0 per set",
+   "pass": true
+  },
+  {
+   "name": "UV0 mirrored (flipped) triangles",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "UV0 skeletal layout: every set in 0..1",
+   "value": {
+    "min": [
+     -0.0,
+     -0.0
+    ],
+    "max": [
+     1.0,
+     0.99658
+    ]
+   },
+   "threshold": "inside [0, 1]",
+   "pass": true
+  },
+  {
+   "name": "maps: square power of two (full mips in Unreal); names T_SMG01_<Set>_<map>",
+   "value": [
+    "T_SMG01_Metal_BC.png 2048x2048 RGB",
+    "T_SMG01_Metal_ORM.png 2048x2048 RGB",
+    "T_SMG01_Metal_N.png 2048x2048 RGB",
+    "T_SMG01_Metal_Masks.png 1024x1024 RGBA",
+    "T_SMG01_Furniture_BC.png 4096x4096 RGB",
+    "T_SMG01_Furniture_ORM.png 4096x4096 RGB",
+    "T_SMG01_Furniture_N.png 4096x4096 RGB",
+    "T_SMG01_Furniture_Masks.png 2048x2048 RGBA",
+    "T_SMG01_Mag_BC.png 1024x1024 RGB",
+    "T_SMG01_Mag_ORM.png 1024x1024 RGB",
+    "T_SMG01_Mag_N.png 1024x1024 RGB",
+    "T_SMG01_Mag_Masks.png 512x512 RGBA",
+    "Recolour/T_SMG01_Furniture_Detail16.png present",
+    "Recolour/T_SMG01_Mag_Detail16.png present"
+   ],
+   "threshold": "all present, POT",
+   "pass": true,
+   "note": "BC sRGB; ORM linear (R AO, G roughness, B metallic); N DirectX 16-bit; Masks half size (R edge-wear propensity, G handling, B cavity, A refinishable)"
+  },
+  {
+   "name": "BC within the spec finishes; metallic exactly 0 / 1; polymer never metal (B9, G7, G8)",
+   "value": {
+    "Metal/phosphate": {
+     "texels": 3058750,
+     "metal_fraction": 0.00068,
+     "dielectric_p1_p50_p99": [
+      37.666666666666664,
+      43.666666666666664,
+      58.0
+     ],
+     "metal_p1_p50_p99": [
+      186.0,
+      187.33333333333334,
+      190.33333333333334
+     ],
+     "rough_p5_p50_p95": [
+      0.685,
+      0.797,
+      0.881
+     ],
+     "painted_base_srgb": [
+      50,
+      51,
+      52
+     ],
+     "spec_srgb": [
+      50,
+      51,
+      52
+     ]
+    },
+    "Furniture/polymer": {
+     "texels": 10682097,
+     "metal_fraction": 0.0,
+     "dielectric_p1_p50_p99": [
+      44.333333333333336,
+      47.333333333333336,
+      54.333333333333336
+     ],
+     "metal_p1_p50_p99": null,
+     "rough_p5_p50_p95": [
+      0.587,
+      0.632,
+      0.756
+     ],
+     "painted_base_srgb": [
+      46,
+      47,
+      49
+     ],
+     "spec_srgb": [
+      46,
+      47,
+      50
+     ]
+    },
+    "Furniture/rubber": {
+     "texels": 477178,
+     "metal_fraction": 0.0,
+     "dielectric_p1_p50_p99": [
+      39.666666666666664,
+      42.666666666666664,
+      50.0
+     ],
+     "metal_p1_p50_p99": null,
+     "rough_p5_p50_p95": [
+      0.861,
+      0.884,
+      0.95
+     ],
+     "painted_base_srgb": [
+      42,
+      42,
+      44
+     ],
+     "spec_srgb": [
+      42,
+      42,
+      44
+     ]
+    },
+    "Mag/polymer_mag": {
+     "texels": 788110,
+     "metal_fraction": 0.0,
+     "dielectric_p1_p50_p99": [
+      40.333333333333336,
+      42.666666666666664,
+      49.666666666666664
+     ],
+     "metal_p1_p50_p99": null,
+     "rough_p5_p50_p95": [
+      0.577,
+      0.607,
+      0.706
+     ],
+     "painted_base_srgb": [
+      41,
+      42,
+      45
+     ],
+     "spec_srgb": [
+      41,
+      42,
+      45
+     ]
+    }
+   },
+   "threshold": "dielectric median within 12 sRGB levels of the finish, P1 >= 30 (the PBR floor), P99 <= 243; bare steel P1 >= 186; metallic {0, 1}; polymer metal fraction 0",
+   "pass": true
+  },
+  {
+   "name": "bake rules (AR-01 lessons)",
+   "value": {
+    "margin": 0,
+    "ao_samples": 256,
+    "ao_distance_m": 0.025,
+    "device": "OPTIX",
+    "rules": {
+     "Mag": "AO + edge with the magazine alone",
+     "Metal/Furniture": "AO with the magazine out (rest, stock extended)"
+    }
+   },
+   "threshold": "margin 0 (per-island fill by the painter); the magazine's AO + edge alone; the gun's AO with the magazine out",
+   "pass": true
+  },
+  {
+   "name": "L5 colour vs the sheet (crop-matched per traced part, physical rig, specular 1; light scale fitted on the upper receiver only)",
+   "value": {
+    "receiver_upper": {
+     "delta": {
+      "luma": -0.0004,
+      "sat": -0.0349,
+      "rb": 0.0349
+     },
+     "pass": true
+    },
+    "handguard_area": {
+     "delta": {
+      "luma": 0.0081,
+      "sat": -0.0233,
+      "rb": 0.0233
+     },
+     "pass": true
+    },
+    "receiver_lower": {
+     "delta": {
+      "luma": -0.0011,
+      "sat": -0.0047,
+      "rb": 0.0047
+     },
+     "pass": true
+    },
+    "mag_well": {
+     "delta": {
+      "luma": -0.0067,
+      "sat": -0.0059,
+      "rb": 0.0059
+     },
+     "pass": true
+    },
+    "grip": {
+     "delta": {
+      "luma": -0.0478,
+      "sat": 0.0072,
+      "rb": -0.0072
+     },
+     "pass": true
+    },
+    "trigger_guard": {
+     "delta": {
+      "luma": 0.0195,
+      "sat": 0.0475,
+      "rb": -0.0475
+     },
+     "pass": true
+    },
+    "magazine": {
+     "delta": {
+      "luma": -0.0067,
+      "sat": -0.0362,
+      "rb": 0.0362
+     },
+     "pass": true
+    },
+    "butt_pad": {
+     "delta": {
+      "luma": -0.0247,
+      "sat": -0.0107,
+      "rb": 0.0107
+     },
+     "pass": true
+    },
+    "stock_top_strut": {
+     "delta": {
+      "luma": 0.015,
+      "sat": -0.0249,
+      "rb": 0.0249
+     },
+     "pass": true
+    },
+    "stock_lower_strut": {
+     "delta": {
+      "luma": 0.0053,
+      "sat": -0.0097,
+      "rb": 0.0097
+     },
+     "pass": true
+    },
+    "stock_neck": {
+     "delta": {
+      "luma": 0.0179,
+      "sat": -0.0075,
+      "rb": 0.0075
+     },
+     "pass": true
+    },
+    "stock_rear_upright": {
+     "delta": {
+      "luma": 0.017,
+      "sat": -0.0122,
+      "rb": 0.0122
+     },
+     "pass": true
+    },
+    "hinge_block": {
+     "delta": {
+      "luma": 0.008,
+      "sat": -0.0073,
+      "rb": 0.0073
+     },
+     "pass": true
+    },
+    "stock_hinge_knuckle": {
+     "delta": {
+      "luma": -0.0108,
+      "sat": -0.0079,
+      "rb": 0.0079
+     },
+     "pass": true
+    },
+    "top_rail": {
+     "delta": {
+      "luma": 0.1126,
+      "sat": -0.4865,
+      "rb": 0.4865
+     },
+     "pass": false
+    },
+    "lower_rail": {
+     "delta": {
+      "luma": 0.0037,
+      "sat": -0.0194,
+      "rb": 0.0194
+     },
+     "pass": true
+    },
+    "barrel": {
+     "delta": {
+      "luma": 0.0026,
+      "sat": -0.0028,
+      "rb": 0.0028
+     },
+     "pass": true
+    },
+    "muzzle_device": {
+     "delta": {
+      "luma": 0.0214,
+      "sat": 0.0186,
+      "rb": -0.0186
+     },
+     "pass": true
+    }
+   },
+   "threshold": "luma +-0.05, saturation +-0.05, R/B +-0.1, hue +-4 deg (chromatic regions) on every region but the calibration one and the reported-only shadow region",
+   "pass": true,
+   "note": "k 1.3432, failed []; reported only: {'top_rail': {'reason': 'slot gaps seen end-on: voids / shadow (sheet sRGB 3-6 < the PBR albedo floor 30)', 'delta': {'luma': 0.1126, 'sat': -0.4865, 'rb': 0.4865}}}; polymer / steel luminance ratio {'sheet': 2.643, 'ours': 2.082, 'spec_band': [1.3, 1.5]} (the spec's 1.3-1.5 band does not hold on the sheet's own crops either: reported)"
+  },
+  {
+   "name": "wear: no bare steel on Metal phosphate panel interiors",
+   "value": {
+    "interior_bare_clusters": 0,
+    "steel_bare_fraction": 0.0039
+   },
+   "threshold": "0 clusters > 2 mm from a same-side sharp convex edge outside the bright-edge zones",
+   "pass": true
+  },
+  {
+   "name": "wear: largest bare-steel blob on Metal phosphate",
+   "value": "0.62 mm2 (top_rail); 207 blobs; by design (bolt slide flanks, trigger / paddle / knob faces): 331.67 mm2",
+   "threshold": "<= 8 mm2 (an edge fleck, not a patch)",
+   "pass": true
+  },
+  {
+   "name": "wear: charging knob bare steel",
+   "value": 0.0022,
+   "threshold": "<= 0.25",
+   "pass": true
+  },
+  {
+   "name": "wear: Furniture polymer never shows metal; whitening only on edges",
+   "value": {
+    "polymer_metallic_texels": 0,
+    "whitened_off_edge_clusters": 0,
+    "whitened_fraction": 0.00109,
+    "whitened_largest_blob_mm2": 3.72,
+    "polymer_lum_p50_srgb": 46.8
+   },
+   "threshold": "0 metallic texels; 0 whitened clusters > 1.2 mm from a sharp convex edge",
+   "pass": true
+  },
+  {
+   "name": "wear: Mag polymer never shows metal; whitening only on edges",
+   "value": {
+    "polymer_metallic_texels": 0,
+    "whitened_off_edge_clusters": 0,
+    "whitened_fraction": 0.00241,
+    "whitened_largest_blob_mm2": 3.12,
+    "polymer_lum_p50_srgb": 42.0
+   },
+   "threshold": "0 metallic texels; 0 whitened clusters > 1.2 mm from a sharp convex edge",
+   "pass": true
+  },
+  {
+   "name": "grip stipple (normal + cavity, spec grip_stipple)",
+   "value": {
+    "texels": 442537,
+    "area_cm2": 44.72,
+    "rough_p5_p50_p95": [
+     0.725,
+     0.837,
+     0.862
+    ],
+    "height_mm_p50_p99": [
+     0.03,
+     0.13
+    ]
+   },
+   "threshold": "present on both panels; height 0.10-0.15 mm; roughness 0.78-0.88 (crowns polished in the hand)",
+   "pass": true
+  },
+  {
+   "name": "UD1 re-run on the surfaced parts (Unreal's degenerate rule; triangulated by the UV step)",
+   "value": {
+    "parts": {
+     "drops": 0,
+     "min_area_mm2": 0.010178
+    },
+    "twin": {
+     "drops": 0,
+     "min_area_mm2": 0.010178
+    }
+   },
+   "threshold": "0 drops; min triangle area >= 0.01 mm2",
+   "pass": true
+  },
+  {
+   "name": "UD2 re-run (micro edges / needles / strips)",
+   "value": {
+    "edges_under_0.05mm": 0,
+    "needles_under_0.02mm": 0,
+    "strip_polygons_under_0.1mm": 0
+   },
+   "threshold": "0 / 0 / 0",
+   "pass": true
+  },
+  {
+   "name": "UD3 zero tangents on UV0 (Blender MikkTSpace collapsed, float32_zero_corners, edge_on_corners)",
+   "value": {
+    "parts": {
+     "collapsed": 0,
+     "float32_zero_corners": 0,
+     "edge_on_corners": 0
+    },
+    "twin": {
+     "collapsed": 0,
+     "float32_zero_corners": 0,
+     "edge_on_corners": 0
+    },
+    "by_part": {}
+   },
+   "threshold": "0 on every part and the twin",
+   "pass": true,
+   "note": "LOD1-3 and the SK LODs are built at W3 (the same check runs there)"
+  },
+  {
+   "name": "UD4 authored lightmap UV1 (64 and 128 px, 2 px padding, conservative raster)",
+   "value": {
+    "rows": [
+     {
+      "resolution": 64,
+      "padding_px": 2,
+      "charts": 90,
+      "texels_shared_by_two_charts": 0,
+      "padding_violations_texels": 0,
+      "triangles_outside_0_1": 0,
+      "collapsed_triangles": 26700,
+      "texels_used": 1672,
+      "pass": true
+     },
+     {
+      "resolution": 128,
+      "padding_px": 2,
+      "charts": 90,
+      "texels_shared_by_two_charts": 0,
+      "padding_violations_texels": 0,
+      "triangles_outside_0_1": 0,
+      "collapsed_triangles": 26700,
+      "texels_used": 3390,
+      "pass": true
+     }
+    ],
+    "qa_overlap_pairs": 0,
+    "range": {
+     "min": [
+      0.01562,
+      0.01562
+     ],
+     "max": [
+      0.98333,
+      0.98023
+     ]
+    },
+    "charts_packed": 90,
+    "hosted": {
+     "visible_faces": 14303,
+     "visible_area_mm2": 21188.271140695433,
+     "hidden_faces": 12397,
+     "visible_area_fraction": 0.0733,
+     "host_distance_mm_p50_p95_max": [
+      1.5,
+      4.84,
+      22.21
+     ]
+    },
+    "layers_ok": true
+   },
+   "threshold": "0 padding violations at 64 and 128 px; 0 overlapping UV1 triangles (qa rules); inside 0..1; UV0 / UV1 at indices 0 / 1",
+   "pass": true,
+   "note": "the 90 largest projection charts packed; the remaining visible faces (pins, screws, sight leaves, extra depth layers: 7.3 % of the visible area) and the hidden faces take a zero-area UV1 inside the nearest host face of the same facing (they read its lightmap texel); LOD1-3 at W3"
+  },
+  {
+   "name": "polymer recolour pre-check (the pack's derive_constants.fabric_part on T_SMG01_{Furniture,Mag}_Detail16; black floor, knee, mips, 13-colour stress incl. tan / OD / FDE)",
+   "value": {
+    "Furniture": {
+     "derive_gates": {
+      "default_equals_v1_contract": true,
+      "default_guards_inactive": true,
+      "default_every_mip_equals_v1": true,
+      "mip_mean_drift_within_2pct": true
+     },
+     "stress": true,
+     "default_path_vs_bc_p999_levels": 7.0
+    },
+    "Mag": {
+     "derive_gates": {
+      "default_equals_v1_contract": true,
+      "default_guards_inactive": true,
+      "default_every_mip_equals_v1": true,
+      "mip_mean_drift_within_2pct": true
+     },
+     "stress": true,
+     "default_path_vs_bc_p999_levels": 1.0
+    }
+   },
+   "threshold": "every derive gate passes, stress passes, Colour above the floor, default albedo under the knee",
+   "pass": true,
+   "note": "the W6 pack gate P1 (default capture = shipped BC, p99.9 <= 2 levels) is reported here: Furniture 4096 BC vs its 2048 detail; W6 decides BC7 / Use Original Baked Colours for the default instance (the AR-01 precedent)"
+  },
+  {
+   "name": "AR-01 regression re-run once in W2 (gunlib 0.2.2): every stage-2/4/5/6 gate value reproduced, Exports/Guns/AR01 unchanged",
+   "value": {
+    "compare_status": "fail",
+    "compare_failed": [
+     "AR-01 export / input bytes"
+    ],
+    "date": "2026-10-11T00:53:05",
+    "exports_unchanged_during_run": true,
+    "exports_equal_recorded_build_sha256": true,
+    "input_blends_unchanged": true,
+    "git_tracked_changes": [
+     "M Assets/Guns/SMG01.blend"
+    ],
+    "value_groups_equal": "14 / 14"
+   },
+   "threshold": "every value group EQUAL; AR-01 exports and inputs unchanged; no tracked AR-01 change",
+   "pass": true,
+   "note": "the compare's byte row lists every tracked change under Assets/Guns: the only one is this stage's Assets/Guns/SMG01.blend (not an AR-01 file), so its 'fail' is that row alone"
+  },
+  {
+   "name": "form gates re-run after the top rail's generator fix (UD3: no 'flat' dissolve on the rail)",
+   "value": {
+    "status": "pass",
+    "failed": []
+   },
+   "threshold": "gates/form.json pass",
+   "pass": true
+  },
+  {
+   "name": "B8 LOD0 triangles after the UV stage (gun / magazine)",
+   "value": {
+    "gun": 46876,
+    "magazine": 3232
+   },
+   "threshold": "gun <= 50,000; magazine <= 5,000",
+   "pass": true
+  },
+  {
+   "name": "renders only from the baked maps (review/realism_tex: fp_35cm, ads, tp_3m, hero_34 + hero folded + the seven part groups at 35 cm)",
+   "value": [
+    "fp_35cm",
+    "ads",
+    "tp_3m",
+    "hero_34"
+   ],
+   "threshold": "the four realism views present",
+   "pass": true,
+   "note": "smg_texrender.py: game materials on T_SMG01_*; no procedural shading"
+  }
+ ],
+ "process": "Scripts/guns/smg/run_surface.sh (smg_uv -> smg_uv1 + smg_ud4 -> smg_bake -> smg_paint -> smg_recolour -> smg_w2_blender -> smg_l5_fit -> smg_texrender realism / closeups -> smg_w2_gates)",
+ "notes": {
+  "R39": "already recorded (smg_spec.json resolutions R39: the 3/4 FRONT (LEFT) panel rows of L2 are reported only); nothing to add",
+  "shape_realism_notes_after_the_pause (early_realism_r2, the judges' second look)": {
+   "handled_in_W1_r2_before_this_stage (commit 42472cfb, R43)": [
+    "charging knob: turned knob on a neck (was a sphere on a rod)",
+    "upper / lower split: the trigger housing set in 0.8 per side, so the drawn seam lines are a real moulded step",
+    "selector seat + seam boss one pad (no orphan disc)",
+    "grip backstrap / stock-tang outline re-smoothed (no faceted contour)",
+    "trigger guard R 6 opening corners, grip web flare",
+    "magwell: a 35 deg funnel out of the housing (no stacked block collar)",
+    "stock top re-smoothed, head junction, hinge latch gusset",
+    "receiver front face one plane (no radial shading streaks)"
+   ],
+   "addressed_here_with_texture_and_normal_work (W2)": [
+    "plain CG plastic read: moulded EDM-class grain (roughness + a +-2.5 um normal grain), faint flow mottle, broad sheen mottle, the sheet's sparse white abrasion specks",
+    "mould parting lines on the two-half tool's mid-plane (grip straps, guard, magwell front / back, stock struts, magazine spine): a 0.15 mm flash line, raised 0.02 mm",
+    "grip stipple panels: pebbles 0.65 mm pitch, 0.10-0.15 mm tall (normal map) with rough 0.78-0.88, the border is the W1 geometry",
+    "edge whitening on struck corners (front-face rim, fore-end lower edge, magwell lip, guard bottom, grip base lip, butt toe / heel, magazine floor-plate corners) and hand polish (grip, fore-end, magwell, cheek weld, selector arcs, latch button) -- polymer never metal",
+    "insertion scratches into the magwell mouth and on the magazine's upper body; dust in the ladder floors and the pad rib roots",
+    "steel: phosphate stays a dark dielectric coat; bare steel only as small flecks on sharp edges in the spec's bright-edge zones (rail slot edges, sight ears, device rim, knob crown, selector tips, trigger / paddle faces); rail slot roots packed with grime (the sheet's black slots)"
+   ],
+   "reported_not_changed (geometry; outside W2's texture scope or a standing ruling)": [
+    "Picatinny rail read as blocks on a deck (both judges): the true MIL-STD-1913 profile from gunlib.rail_1913 (shared with the AR-01; the earlier ruling stands); the slot-root grime now darkens the slots",
+    "charging handle rectangular clip / bracket on the rod: the drawn lever arm (RP3)",
+    "lower front lightening slot interior shard and the seam jog at the V-tongue (W1 geometry: for the W4 review / W4b close-up pass)",
+    "stock arm top crease and the curl into the head in first person (still visible on the r2 geometry in the textured renders): W1 geometry, for W4b",
+    "front-face drilled hole and barrel nut detail: drawn on the sheet / invent nothing (rejected in r2)",
+    "magazine's double inset windows: the sheet's ladder channels (geometry as drawn)",
+    "selector pictograms: no markings (brief); the paint dot is a W3 decision",
+    "pin layout around the selector: as the sheet draws (rejected in r2)"
+   ]
+  },
+  "deviations_recorded": [
+   "bare steel roughness 0.42-0.55 (spec 0.25-0.40): at the spec value every chip read as a white mirror fleck under the review lights (the AR-01 moved to 0.50-0.62 for the same reason); the bolt's sliding flanks keep 0.15-0.25",
+   "polymer base sRGB (46, 47, 49) (spec 46, 47, 50) by L5: one blue level, the shadowed trigger guard read 0.056 saturated (tolerance 0.05)",
+   "top rail: six single long triangles (232-303 mm, the flank and base strips, not seen at ADS) take class C instead of B: at B they capped the 2048 Metal pack at fill 0.36",
+   "top rail generator: gunlib.ud.repair's 'flat' sub-step skipped for the rail (smg_parts.NO_FLAT; flat_deg = -1, an existing parameter, no gunlib change): its dissolve made needle fans on the dovetail underside = 12 float32 zero-tangent corners (UD3); the rail is now 3,364 triangles (was 2,036); the form chain re-ran from nothing and gates/form.json passes",
+   "UV1: the 90 largest projection charts are packed (64 px, 2 px padding); the other visible faces (pins, screws, sight leaves, small depth layers) take a zero-area UV1 inside the nearest packed host face of the same facing (they read its lightmap texel); a one-chart-per-piece layout (1,700 charts) cannot hold 2 px padding at 64 px",
+   "Detail16 for the 4096 Furniture BC is 2048 (the Mag's 1024): at 1024 the default recolour path lost the stipple and the whitened edges (p99.9 6 levels)",
+   "L5: the top rail's eroded label is the row of slot gaps seen end-on (sheet sRGB 3-6, a shadow / void) -> reported only",
+   "UD3 on the upper receiver: two hidden interior faces (a 73.6 x 0.26 mm wedge ledge at M X 380-453, Y 12.4, Z 16.3, and its end face) were alone in their tangent groups (a 0.2 deg wedge apex; an edge-on corner sharing the wall's smooth normal). smg_uv gives hidden (class E) slivers / edge-on faces FLAT corner normals with their edges marked sharp: no vertex moves and no visible face changes (a vertex-merge variant was tried first and made a new edge-on corner: withdrawn)",
+   "grip stipple: albedo x1.10-1.32 over the polymer base and the crowns polished over the whole panel (roughness -0.10..-0.14), by L5: at the plain base and rough 0.78-0.88 the panel rendered 48 against the sheet's 64 (luma -0.063); a zone-limited polish drew a smooth blotch on the panel"
+  ],
+  "open_for_later_stages": [
+   "W3: LOD1-3 UV0 (islands_full.npz + smg_uvproj for the diagonal charts) and UV1 per LOD; UD3 / UD4 on every LOD and the SK meshes",
+   "W4 / W4b: realism judges on review/realism_tex (not run in W2: the stage asks for the renders); the geometry notes above",
+   "W6: P1 default capture (Furniture default path p99.9 vs the shipped BC is in recolour_precheck.json): BC7 or Use Original Baked Colours for the default instance"
+  ]
+ }
+}

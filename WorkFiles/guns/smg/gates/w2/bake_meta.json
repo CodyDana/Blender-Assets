@@ -1,0 +1,123 @@
+{
+ "parts": {
+  "barrel": 1,
+  "bolt": 2,
+  "bolt_rails": 3,
+  "butt_pad": 4,
+  "charging_handle": 5,
+  "charging_slide": 6,
+  "grip_cover": 7,
+  "hinge_axle": 8,
+  "lower_rail": 9,
+  "lower_receiver": 10,
+  "mag_release": 11,
+  "mag_release_pin": 12,
+  "magazine": 13,
+  "magazine_floor_plate": 14,
+  "magazine_follower": 15,
+  "muzzle_device": 16,
+  "pins_fasteners": 17,
+  "rail_screws": 18,
+  "selector": 19,
+  "sight_front_base": 20,
+  "sight_front_leaf": 21,
+  "sight_front_pin": 22,
+  "sight_rear_base": 23,
+  "sight_rear_leaf": 24,
+  "sight_rear_pin": 25,
+  "stock_frame": 26,
+  "stock_latch_bolt": 27,
+  "stock_latch_button": 28,
+  "top_rail": 29,
+  "trigger": 30,
+  "trigger_axle": 31,
+  "upper_receiver": 32
+ },
+ "ao_samples": 256,
+ "ao_distance_m": 0.025,
+ "edge_samples": 64,
+ "device": "OPTIX",
+ "margin": 0,
+ "sets": {
+  "Metal": {
+   "size": 2048,
+   "objects": [
+    "barrel",
+    "bolt",
+    "bolt_rails",
+    "charging_handle",
+    "charging_slide",
+    "hinge_axle",
+    "lower_rail",
+    "mag_release",
+    "mag_release_pin",
+    "muzzle_device",
+    "pins_fasteners",
+    "rail_screws",
+    "selector",
+    "sight_front_base",
+    "sight_front_leaf",
+    "sight_front_pin",
+    "sight_rear_base",
+    "sight_rear_leaf",
+    "sight_rear_pin",
+    "stock_latch_bolt",
+    "top_rail",
+    "trigger",
+    "trigger_axle"
+   ],
+   "seconds": {
+    "pos": 21.2,
+    "nrm": 21.4,
+    "ids": 21.4,
+    "edge": 26.9,
+    "ao": 38.3
+   }
+  },
+  "Furniture": {
+   "size": 4096,
+   "objects": [
+    "butt_pad",
+    "grip_cover",
+    "lower_receiver",
+    "stock_frame",
+    "stock_latch_button",
+    "upper_receiver"
+   ],
+   "seconds": {
+    "pos": 21.0,
+    "nrm": 20.9,
+    "ids": 21.0,
+    "edge": 31.2,
+    "ao": 65.5
+   }
+  },
+  "Mag": {
+   "size": 1024,
+   "objects": [
+    "magazine",
+    "magazine_floor_plate",
+    "magazine_follower"
+   ],
+   "seconds": {
+    "pos": 1.4,
+    "nrm": 1.4,
+    "ids": 1.3,
+    "edge": 2.3,
+    "ao": 4.6
+   }
+  }
+ },
+ "rules": {
+  "Mag": "AO + edge with the magazine alone",
+  "Metal/Furniture": "AO with the magazine out (rest, stock extended)"
+ },
+ "encoding": {
+  "pos": "metres frame B + 1.0",
+  "nrm": "n * 0.5 + 0.5 (world)",
+  "ids": "R part index + 1 (0 = empty), G class code (smg_surface.CLASS_CODE), B island id + 1",
+  "edge": "R 1 - Nbevel(0.6 mm).N, G 1 - Nbevel(2.0 mm).N, B pointiness",
+  "ao": "Cycles AO",
+  "rows": "bottom-up (Blender pixel order)"
+ }
+}

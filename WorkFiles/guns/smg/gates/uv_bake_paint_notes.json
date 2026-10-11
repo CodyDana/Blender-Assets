@@ -1,0 +1,49 @@
+{
+ "R39": "already recorded (smg_spec.json resolutions R39: the 3/4 FRONT (LEFT) panel rows of L2 are reported only); nothing to add",
+ "shape_realism_notes_after_the_pause (early_realism_r2, the judges' second look)": {
+  "handled_in_W1_r2_before_this_stage (commit 42472cfb, R43)": [
+   "charging knob: turned knob on a neck (was a sphere on a rod)",
+   "upper / lower split: the trigger housing set in 0.8 per side, so the drawn seam lines are a real moulded step",
+   "selector seat + seam boss one pad (no orphan disc)",
+   "grip backstrap / stock-tang outline re-smoothed (no faceted contour)",
+   "trigger guard R 6 opening corners, grip web flare",
+   "magwell: a 35 deg funnel out of the housing (no stacked block collar)",
+   "stock top re-smoothed, head junction, hinge latch gusset",
+   "receiver front face one plane (no radial shading streaks)"
+  ],
+  "addressed_here_with_texture_and_normal_work (W2)": [
+   "plain CG plastic read: moulded EDM-class grain (roughness + a +-2.5 um normal grain), faint flow mottle, broad sheen mottle, the sheet's sparse white abrasion specks",
+   "mould parting lines on the two-half tool's mid-plane (grip straps, guard, magwell front / back, stock struts, magazine spine): a 0.15 mm flash line, raised 0.02 mm",
+   "grip stipple panels: pebbles 0.65 mm pitch, 0.10-0.15 mm tall (normal map) with rough 0.78-0.88, the border is the W1 geometry",
+   "edge whitening on struck corners (front-face rim, fore-end lower edge, magwell lip, guard bottom, grip base lip, butt toe / heel, magazine floor-plate corners) and hand polish (grip, fore-end, magwell, cheek weld, selector arcs, latch button) -- polymer never metal",
+   "insertion scratches into the magwell mouth and on the magazine's upper body; dust in the ladder floors and the pad rib roots",
+   "steel: phosphate stays a dark dielectric coat; bare steel only as small flecks on sharp edges in the spec's bright-edge zones (rail slot edges, sight ears, device rim, knob crown, selector tips, trigger / paddle faces); rail slot roots packed with grime (the sheet's black slots)"
+  ],
+  "reported_not_changed (geometry; outside W2's texture scope or a standing ruling)": [
+   "Picatinny rail read as blocks on a deck (both judges): the true MIL-STD-1913 profile from gunlib.rail_1913 (shared with the AR-01; the earlier ruling stands); the slot-root grime now darkens the slots",
+   "charging handle rectangular clip / bracket on the rod: the drawn lever arm (RP3)",
+   "lower front lightening slot interior shard and the seam jog at the V-tongue (W1 geometry: for the W4 review / W4b close-up pass)",
+   "stock arm top crease and the curl into the head in first person (still visible on the r2 geometry in the textured renders): W1 geometry, for W4b",
+   "front-face drilled hole and barrel nut detail: drawn on the sheet / invent nothing (rejected in r2)",
+   "magazine's double inset windows: the sheet's ladder channels (geometry as drawn)",
+   "selector pictograms: no markings (brief); the paint dot is a W3 decision",
+   "pin layout around the selector: as the sheet draws (rejected in r2)"
+  ]
+ },
+ "deviations_recorded": [
+  "bare steel roughness 0.42-0.55 (spec 0.25-0.40): at the spec value every chip read as a white mirror fleck under the review lights (the AR-01 moved to 0.50-0.62 for the same reason); the bolt's sliding flanks keep 0.15-0.25",
+  "polymer base sRGB (46, 47, 49) (spec 46, 47, 50) by L5: one blue level, the shadowed trigger guard read 0.056 saturated (tolerance 0.05)",
+  "top rail: six single long triangles (232-303 mm, the flank and base strips, not seen at ADS) take class C instead of B: at B they capped the 2048 Metal pack at fill 0.36",
+  "top rail generator: gunlib.ud.repair's 'flat' sub-step skipped for the rail (smg_parts.NO_FLAT; flat_deg = -1, an existing parameter, no gunlib change): its dissolve made needle fans on the dovetail underside = 12 float32 zero-tangent corners (UD3); the rail is now 3,364 triangles (was 2,036); the form chain re-ran from nothing and gates/form.json passes",
+  "UV1: the 90 largest projection charts are packed (64 px, 2 px padding); the other visible faces (pins, screws, sight leaves, small depth layers) take a zero-area UV1 inside the nearest packed host face of the same facing (they read its lightmap texel); a one-chart-per-piece layout (1,700 charts) cannot hold 2 px padding at 64 px",
+  "Detail16 for the 4096 Furniture BC is 2048 (the Mag's 1024): at 1024 the default recolour path lost the stipple and the whitened edges (p99.9 6 levels)",
+  "L5: the top rail's eroded label is the row of slot gaps seen end-on (sheet sRGB 3-6, a shadow / void) -> reported only",
+  "UD3 on the upper receiver: two hidden interior faces (a 73.6 x 0.26 mm wedge ledge at M X 380-453, Y 12.4, Z 16.3, and its end face) were alone in their tangent groups (a 0.2 deg wedge apex; an edge-on corner sharing the wall's smooth normal). smg_uv gives hidden (class E) slivers / edge-on faces FLAT corner normals with their edges marked sharp: no vertex moves and no visible face changes (a vertex-merge variant was tried first and made a new edge-on corner: withdrawn)",
+  "grip stipple: albedo x1.10-1.32 over the polymer base and the crowns polished over the whole panel (roughness -0.10..-0.14), by L5: at the plain base and rough 0.78-0.88 the panel rendered 48 against the sheet's 64 (luma -0.063); a zone-limited polish drew a smooth blotch on the panel"
+ ],
+ "open_for_later_stages": [
+  "W3: LOD1-3 UV0 (islands_full.npz + smg_uvproj for the diagonal charts) and UV1 per LOD; UD3 / UD4 on every LOD and the SK meshes",
+  "W4 / W4b: realism judges on review/realism_tex (not run in W2: the stage asks for the renders); the geometry notes above",
+  "W6: P1 default capture (Furniture default path p99.9 vs the shipped BC is in recolour_precheck.json): BC7 or Use Original Baked Colours for the default instance"
+ ]
+}

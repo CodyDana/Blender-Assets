@@ -336,13 +336,23 @@ def build_comp(c, coll, offset):
     return ob
 
 
+# W2 (UD3): parts whose repair must NOT run gunlib.ud.repair's 'flat' sub-step (limited dissolve of coplanar faces and
+# collinear vertices + beauty re-triangulation). On the top rail it dissolved the slot stations off the dovetail's long
+# straight edges, and the 45 deg underside strips came back as fans of needle triangles (one apex, 0.03 deg corners);
+# alone in their tangent group (sharp edges both sides) those corners get a zero MikkTSpace tangent in Unreal
+# (float32_zero_corners: 12 on the top rail). Without the dissolve the rail keeps its quads per station: 0 needles,
+# UD1 / UD2 pass (probe 2026-10-10: 3,364 triangles instead of 2,036). flat_deg = -1 makes the dissolve a no-op.
+NO_FLAT = ("top_rail",)
+
+
 def _repair(ob):
     """gunlib.ud.repair inside the part's own build (UD1-UD2 at form time), before the weighted normals."""
     from gunlib import ud as UD
     r0 = UD.check_object(ob)
     if r0["pass_ud1"] and r0["edges_under_0.05mm"] == 0 and r0["needles_under_0.02mm"] == 0 and             r0.get("strip_polygons_under_0.1mm", 0) == 0:
         return {"needed": False}
-    out = UD.repair(ob, rounds=30)          # relaxed_final moved vertices up to 0.6 mm: B3 rows broke (not used)
+    kw = {"flat_deg": -1.0} if ob.name in NO_FLAT else {}
+    out = UD.repair(ob, rounds=30, **kw)    # relaxed_final moved vertices up to 0.6 mm: B3 rows broke (not used)
     out["needed"] = True
     out["area_flip"] = _area_flip(ob)
     return out
