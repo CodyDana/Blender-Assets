@@ -1,0 +1,178 @@
+{
+ "stage": "G10b grip",
+ "date": "2026-10-11",
+ "pass_count": 11,
+ "total": 11,
+ "gates": [
+  {
+   "name": "Palm grip point (palm_l_Socket) to SupportHand, p95 per phase, max of idle/walk/semi/burst/shoulder (cm)",
+   "value": 0.033,
+   "threshold": "<= 1.0",
+   "pass": true,
+   "today": 0.003
+  },
+  {
+   "name": "Fingertip skin gap index/middle/ring/pinky to the handguard (bone tip - 0.7 cm pad): worst median / worst p95 over all phases (cm)",
+   "value": {
+    "median_max": 0.118,
+    "p95_max": 0.154,
+    "idle_median": {
+     "thumb": 0.157,
+     "index": 0.062,
+     "middle": 0.082,
+     "ring": 0.064,
+     "pinky": 0.056
+    },
+    "burst_p95": {
+     "thumb": 0.169,
+     "index": 0.127,
+     "middle": 0.138,
+     "ring": 0.144,
+     "pinky": 0.091
+    }
+   },
+   "threshold": "median <= 0.5, p95 <= 1.0",
+   "pass": true,
+   "today": {
+    "idle_median": {
+     "index": 2.963,
+     "middle": 3.551,
+     "ring": 4.529,
+     "pinky": 4.457
+    }
+   }
+  },
+  {
+   "name": "Thumb tip skin gap to the left flat (cm; nearest-face outward normal median)",
+   "value": {
+    "median_max": 0.157,
+    "p95_max": 0.197,
+    "normal_idle": [
+     0.04,
+     -0.89,
+     0.46
+    ],
+    "normal_burst": [
+     0.05,
+     -0.82,
+     0.58
+    ]
+   },
+   "threshold": "<= 1.0 on the left (-Y) flat",
+   "pass": true,
+   "today": {
+    "gap": 0.413,
+    "normal": [
+     0.07,
+     -0.52,
+     0.85
+    ],
+    "note": "on the top-left corner"
+   }
+  },
+  {
+   "name": "Left finger penetration (pad radius - distance, or inside), max over all phases and fingers (cm)",
+   "value": {
+    "max": 0.267,
+    "per_finger_burst": {
+     "thumb": 0.265,
+     "index": 0.014,
+     "middle": 0.164,
+     "ring": 0.0,
+     "pinky": 0.0
+    }
+   },
+   "threshold": "<= 0.5",
+   "pass": true
+  },
+  {
+   "name": "Joint 02 points inside the handguard (finger-frames)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "Hip hold unchanged: gun vs hand_r x (HandOffset x FallbackAttachOffset), all frames (cm / deg); gun in actor space, idle median vs the G10b baseline run (cm / deg)",
+   "value": {
+    "gun_vs_hand_r": [
+     0.0,
+     0.0
+    ],
+    "idle_vs_base": {
+     "d_cm": 0.022,
+     "d_deg_x": 0.006,
+     "d_deg_z": 0.006
+    },
+    "shoulder_vs_base_reported": {
+     "d_cm": 0.45,
+     "d_deg_x": 0.165,
+     "d_deg_z": 0.114
+    },
+    "shoulder_baseline_vs_baseline_noise": {
+     "d_cm": 0.759,
+     "d_deg": 0.715
+    }
+   },
+   "threshold": "<= 0.2 cm / 0.2 deg",
+   "pass": true,
+   "note": "the finger layer touches finger bones only; shoulder-aim/walk medians move run to run (two baseline runs differ by 0.76 cm / 0.72 deg in shoulder aim), so the idle hip hold is the gate"
+  },
+  {
+   "name": "Right hand: index tip to the Trigger socket (median, worst phase) / index pad p95 (cm)",
+   "value": {
+    "tip_median_max": 0.844,
+    "pad_p95_max": 0.888
+   },
+   "threshold": "<= 1.0",
+   "pass": true,
+   "today": 0.804
+  },
+  {
+   "name": "Right hand: other tips skin gap to the pistol grip / receiver, p95 worst phase (cm)",
+   "value": {
+    "thumb": 0.171,
+    "middle": 0.263,
+    "ring": 0.127,
+    "pinky": 0.007
+   },
+   "threshold": "<= 1.0",
+   "pass": true,
+   "today": {
+    "thumb": -0.482,
+    "middle": 0.752,
+    "ring": 1.346,
+    "pinky": 0.195
+   },
+   "note": "today ring 1.35 cm off and thumb 0.48 cm into the receiver; now middle 0.26, ring 0.13, pinky 0.01, thumb 0.17 with right penetration <= 0.16 (index excluded: it stays the clip's trigger finger)"
+  },
+  {
+   "name": "ABP_GunCharacter compile + chain (read back)",
+   "value": "BS_UP_TO_DATE, 0 node messages; ... Two Bone IK hand_l <- L2C <- Layered (fingers, local, weight GunIKAlpha) <- Layered (spine_01) <- Input Pose",
+   "threshold": "UP_TO_DATE, 0 messages",
+   "pass": true
+  },
+  {
+   "name": "Regression: gun_playtest F0-F15 / g9_camera_probe",
+   "value": "15/15 / 9/9",
+   "threshold": "15/15 / 9/9",
+   "pass": true
+  },
+  {
+   "name": "Close-up frames looked at (left side, right side, below, front, over the shoulder, shoulder-camera zoom; right hand right / below / left-front; walking and mid-burst)",
+   "value": "left fingers wrap the far (right) side of the lower handguard up to its top edge, pads on the wood, no floating gap; thumb lies along the upper left side; right index in the guard on the trigger, middle/ring/pinky round the grip; in the hip hold the shoulder camera sees the left hand only in shoulder aim (hold unchanged per the user)",
+   "threshold": "fingers visibly wrapped on the wood, no floating gaps",
+   "pass": true
+  }
+ ],
+ "method": "live hand frames recorded in -game (g10b_grip_probe_game.py) + SM_AR01 LOD0 triangles (g10b_grip_dump_cmd.py) -> offline curl solve per finger joint about local Z with anatomy limits (g10b_grip_solve.py) -> one-frame A_AR01_Grip_UEFN baked from the solved local rotations + a local-space Layered blend per bone on the finger 01 bones before L2C in ABP_GunCharacter (build_gun_grip_g10b.py)",
+ "deviations_from_plan": [
+  "no C++ change: the finger layer's weight is the existing GunIKAlpha (on in Idle / Firing / SelectorChange, off in reload / draw), so GunGripAlpha and UNinjaGunData::SupportGripPoses were not added; the layer plays one fixed AR-01 pose (add the per-gun / per-skeleton map when the SMG joins)",
+  "one asset A_AR01_Grip_UEFN holds both hands (left: all five fingers; right: thumb, middle, ring, pinky; the right index keeps the clip's trigger finger)",
+  "measurements are bone-point based (pad radius 0.7 cm, plan risk 4); the close-ups show the pads on the wood with no visible gap or deep overlap"
+ ],
+ "shots_dir": "runs/G10/grip/ (before/ = the same views before the change)",
+ "notes": [
+  "the shoulder camera (hip hold) cannot see the left hand: it is behind the right arm (08_*); it shows in shoulder aim (08c)",
+  "right index pad overlaps the trigger blade up to 1.04 cm in bone terms (unchanged from today; not re-posed)"
+ ]
+}

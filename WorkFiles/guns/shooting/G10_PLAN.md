@@ -117,6 +117,28 @@ chracter is gripping the gun when in idle and shooting, the left hand is not gri
 - **Fallback if retargeting slips.** The solver and the ABP layer are skeleton-agnostic. Run against
   `SKM_Manny` / `ABP_NinjaVisual_Gun`, the result is `A_AR01_GripL_UE5`.
 
+### G10b as built (2026-10-11, `runs/G10/grip.json`, 11/11 gates)
+- **Method.** `g10b_grip_probe_game.py` records the live hand bone frames in the AR-01's mesh space every tick (idle, walk, 6 semi
+  shots, a 2 s auto burst, shoulder aim). `g10b_grip_dump_cmd.py` dumps the `SM_AR01` LOD0 triangles. `g10b_grip_solve.py` (plain
+  Python, numpy + scipy) curls joints 01/02/03 of each finger about their local Z (flexion is -Z on the UEFN chains) against the
+  real surface, with anatomy limits (no hyper-extension, MCP <= 90, PIP <= 105, DIP <= 80, DIP coupled to PIP). The thumb also
+  turns about its 01 local Y and must land on a left-facing face. `build_gun_grip_g10b.py` bakes the result into
+  `/Game/Guns/AR01/A_AR01_Grip_UEFN` (one frame) and adds the finger layer to `ABP_GunCharacter`.
+- **Changed from the plan:** no C++. The finger layer's weight is the existing `GunIKAlpha` (on in Idle / Firing / SelectorChange,
+  off for the reload and the draw), so `GunGripAlpha` / `SupportGripPoses` are not added yet; G10c and the SMG add them when a
+  second pose or gun needs them. One asset holds both hands: left = all five fingers; right = thumb, middle, ring, pinky (the right
+  index keeps the clip's trigger finger).
+- **Result (bone tip - 0.7 cm pad):** left fingertips 0.05-0.12 cm median, p95 <= 0.16 in every phase (were 2.96-4.53); thumb 0.10-0.16 cm
+  on the upper left side (outward normal -0.89 Y; was on the top-left corner); penetration <= 0.27; palm point on SupportHand
+  <= 0.033 cm; the gun vs `hand_r` 0.0 and the idle hip hold 0.022 cm / 0.006 deg from the baseline. Right: middle 0.26, ring 0.13
+  (was 1.35), pinky 0.01, thumb 0.17 (was 0.48 cm into the receiver); index tip 0.78-0.84 cm from the Trigger socket.
+  Play test 15/15, g9 9/9.
+- **Seen in the close-ups** (`runs/G10/grip/`, `before/` for the same views today): the fingers wrap the far side of the lower
+  handguard up to its top edge, and the thumb lies along the upper left side. In the hip hold the shoulder camera does not see the
+  left hand (it is behind the right arm). It shows in shoulder aim.
+- **Re-run after any ABP rebuild:** `build_gun_character_g10.py` with `GUNS_G10_REBUILD_ABP=1`, then `build_gun_grip_g10b.py` with
+  `GUNS_G10B_POSE=runs/G10/grip/g10b_grip_pose.json`.
+
 ### G10c: the third-person reload with hands
 - **The clock is the AR-01 clip's notifies** (sidecar times, read through `UAnimNotify_NinjaGun::FindEventTime`), so
   the ammo logic, the sounds and the server timing do not change.
