@@ -702,11 +702,13 @@ part(id="lower_receiver", display="Lower receiver (trigger housing; one moulding
      "depth_mm": 0.6}, slot=SLOT_FURN, finish=F_POLY, texel_class="B",
      box_M={**boxM("receiver_lower"), "Y": [W_REC_R, W_REC_L]},
      dims={"seam_Z": D["receiver"]["upper_lower_seam_Z"]["mm"], "front_tab_top_Z": D["receiver"]["lower_front_tab_top_Z"]["mm"],
-           "width": W_REC, "width_note": "the lower is not seen from the top; its sides are built flush with the upper"},
+           "width": W_REC, "width_note": "the lower is not seen from the top; its trigger-housing sides are set in 0.8 per side under "
+           "the upper's (the split reads as a step, R43); the end block keeps its own spec width"},
      construction="One polymer moulding: trigger housing, integral magwell, integral trigger guard, integral pistol grip "
      "and the integrated backplate (the end block). Front hooked lugs engage the upper's support bolts; the rear is held "
      "by one removable locking pin through the end block. Selector seat bosses (1.0 mm proud, round) on both sides. "
-     "Design seam 0.3-0.5 mm wide, 0.6 deep along the drawn upper/lower line (V-tongue at the front, as traced).",
+     "Design seam 0.3-0.5 mm wide, 0.6 deep along the drawn upper/lower line (V-tongue at the front, as traced); the "
+     "housing's sides 0.8 under the upper's, the magwell flaring out of the housing on a 35 deg funnel (R43).",
      features=[{"name": "pin_behind_magwell", "side": "both (through pin)",
                 "XZ": D["face_features"]["pin_lower_rear_of_magwell"]["centre_XZ"],
                 "XZ_RIGHT": RF["pin_lower_rear_of_magwell"]["centre_XZ"], "head": "flush steel ring dia %.1f" % sc(7.8, 1)},
@@ -715,8 +717,9 @@ part(id="lower_receiver", display="Lower receiver (trigger housing; one moulding
                 "Z": D["face_features"]["recess_oblong"]["Z"], "shape": "stadium pocket %.1f x %.1f, 0.8 deep, R 0.3 " % (sc(11.8, 1), sc(4.0, 1)) +
                 "rim (drawn on the LEFT only; the RIGHT shows nothing there)"},
                {"name": "seam_boss", "side": "left", "XZ": D["face_features"]["seam_boss_ring"]["centre_XZ"],
-                "dia": sc(16.4, 1), "proud": 0.8, "note": "round boss straddling the upper/lower seam behind and above the "
-                "selector hub (LEFT); the seam steps around it; its pin head at "
+                "dia": sc(16.4, 1), "proud": 1.0, "note": "round boss straddling the upper/lower seam behind and above the "
+                "selector hub (LEFT), one moulded pad with the selector seat (R 3.0 waist fillets, the seat's height, "
+                "R43); the seam steps around it; its pin head at "
                 + str(D["face_features"]["seam_boss_pin"]["centre_XZ"]) + " (RIGHT: two plain heads instead, see "
                 "pins_fasteners)"}],
      wear="thumb-arc polish around the selector seat; edge whitening",
@@ -1478,6 +1481,28 @@ RES = [
      "built top by 1.2 mm); the stock's head, hinge leaf and latch boss rounded with the frame (R 1.0) and the neck "
      "flaring into the head in plan; the upper's seam edges and the shoulder set-in round the front chamfer kept off "
      "the rounds (UD)",
+     "rule": "real pattern + realism judges, inside the sheet's side / top gates"},
+    {"id": "R43", "topic": "W1 realism round 2: construction fixes (the last shape round before texturing)",
+     "conflict": "judged fake at 35 cm: the drawn upper / lower split read as decorative panel lines on one flush "
+     "plane; the seam boss, 0.2 lower than the selector seat and half under the lever's hub, read as a loose second "
+     "disc; the magwell a block stacked under a 10 mm shelf of the full-width housing; the guard a crisp octagonal "
+     "stamping butting the grip; the stock top's bend and the tang behind the grip faceted (fair_ring's corner clusters "
+     "between long flats); a 0.5 trough across the stock top where the head met the neck; the hinge leaf a pasted "
+     "box; the charging knob a full sphere on the slot; radial shading streaks on the receiver's front face",
+     "resolution": "the trigger housing set in 0.8 per side under the upper (end block at its spec width; pins centred "
+     "below the seam seat on the set-in face); the LEFT seat and seam boss one pad (two circles, R 3.0 waist fillets, "
+     "1.0 over the upper's face, 0.6 top round; the upper's pocket 0.22 round it); the housing zone cut by a 35 deg "
+     "funnel through its set-in faces at Z -49.6 with a skirt beside the well (X 0.4 inside the rear wall .. the front "
+     "face), so the well flares out of the housing; the guard opening's corners at the spec's inner R 6 (after a 0.2 "
+     "simplification so the arcs fit), the master outline's guard corners and the bar / grip notch smoothed (sigma "
+     "1.5-2.0), the rear bar flaring into the grip (half width 9.0 -> 5.45 below Z -74); MASTER_CURVES: the stock top "
+     "X 181-233.7 and the tang X 253-294.9 re-smoothed (sigma 3.0, 1.0 mm chords); the stock head's top / bottom on "
+     "the outline with a 0.5 ramp crossing the neck's eased end once (X 221.5-224), its plan flare 11 long; the "
+     "leaf's front end a 45 deg gusset (material removed only); the knob a flattened ball (Y semi-axis 6.9, crown flat "
+     "dia 7.0) over an R 2.4 cove and a dia 8.0 stem 2.0 off the shoulder band (dia 16.76, centre and tip Y 47.5 "
+     "kept); the receiver's front face above the barrel's flange one plane (X 563.3) up to its traced top chamfer "
+     "(11.7 deg, meeting at Z 20.68) instead of the trace's zig-zag strips that fanned streaks round the eyelet "
+     "(smg_geom.MASTER_POLYS); every large flat region shaded with its plane normal (smg_parts._flatten_planar)",
      "rule": "real pattern + realism judges, inside the sheet's side / top gates"},
 ]
 

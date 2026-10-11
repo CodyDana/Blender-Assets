@@ -67,7 +67,7 @@ DIRS = {"left": (0, 1, 0), "right": (0, -1, 0), "top": (0, 0, 1), "bottom": (0, 
         "rear": (-1, 0, 0), "q34": (0.75, 0.62, 0.25), "q34r": (0.75, -0.62, 0.25), "q34b": (-0.6, 0.7, -0.35),
         "q34rb": (-0.6, -0.7, 0.35)}
 for v in views:
-    d = np.array(DIRS[v], float)
+    d = np.array(DIRS[v] if v in DIRS else [float(t) for t in v.split(":")], float)
     d /= np.linalg.norm(d)
     cam_d.type = "ORTHO"
     # fit the projected extent (view-plane width / height) with the render aspect
@@ -88,6 +88,6 @@ for v in views:
     if ax_up.dot(up) < 0:
         cam.rotation_euler.rotate_axis("Z", math.pi)
     cam_d.clip_end = 10.0
-    sc.render.filepath = str(out / f"{v}.png")
+    sc.render.filepath = str(out / ("%s.png" % (v if v in DIRS else "dir_" + v.replace(":", "_").replace("-", "m"))))
     bpy.ops.render.render(write_still=True)
 print("QUICKVIEW_DONE", out)

@@ -1,0 +1,824 @@
+{
+ "stage": "W1 early-realism fix round 2 (the last shape round before texturing)",
+ "date": "2026-10-10T21:57:31",
+ "judged_set": "WorkFiles/guns/smg/review/early_realism_r2 (ROUGH LOOK; judged again after the pause)",
+ "new_set": "WorkFiles/guns/smg/review/early_realism_r3",
+ "summary": {
+  "partly": 3,
+  "fixed": 8,
+  "n/a": 2,
+  "rejected": 7
+ },
+ "resolutions": [
+  "R43"
+ ],
+ "items": [
+  {
+   "images": [
+    "g1_receiver_rails"
+   ],
+   "reason": "Charging handle a perfectly smooth sphere on a thin rod through a plain slot, no knurling, neck or real lever shape (a CG primitive)",
+   "verdict": "partly fixed",
+   "checked_against": "LEFT / RIGHT draw the knob as a circle dia 16.76, TOP its tip at Y 47.5; the sheet's 3/4 shows a smooth satin ball with a flatter crown on a short neck, the drawn bar + rear block behind it (the lever's outer arm); craft study 2.3: ball ~18 on a short round neck ~8 dia, ~6 long. The built knob was a full sphere whose inner pole sat 0.4 off the arm level: no neck showed",
+   "fix": "R43: a turned knob: flattened ball (Y semi-axis 6.9) with a crown flat dia 7.0 (R 0.8 edge), an R 2.4 cove into a dia 8.0 stem standing 2.0 off the shoulder band, the dia 5.43 neck through the slot showing below it; dia, centre and tip kept (LEFT / TOP). Not done: knurling (the sheet draws a smooth knob; nothing to copy); the slot and the arm are the drawn channel and lever (RP3)",
+   "files": [
+    "Scripts/guns/smg/parts/mechanism.py"
+   ]
+  },
+  {
+   "images": [
+    "g1_receiver_rails",
+    "g3_magazine_well",
+    "g3_magazine_well (2nd judge)",
+    "g2_grip_trigger_sel (2nd judge)"
+   ],
+   "reason": "Stepped diagonal / polygonal / V-zigzag panel lines on the receiver side read as decorative sci-fi paneling, not a real upper / lower split or a moulding parting line",
+   "verdict": "fixed (construction); lines kept",
+   "checked_against": "LEFT and RIGHT draw every one of these lines (the horizontal run, the lower's front tab, the V tongue, the magwell front face: smg_geom.SEAM_PX; L3 measures features along them); the sheet draws them as moulded steps with a light edge and a shadow, not as engraved lines on one plane; real two-piece polymer receivers (an upper shell over a narrower trigger housing) show the split as a step",
+   "fix": "R43: the trigger housing is set in 0.8 per side under the upper, so the whole drawn split is a real step (the upper's edge proud over the housing); side / top silhouettes unchanged (the upper is the wider moulding, the end block keeps its spec width); pin heads below the seam seat on the set-in face",
+   "files": [
+    "Scripts/guns/smg/parts/receiver.py",
+    "Scripts/guns/smg/parts/lower.py",
+    "Scripts/guns/smg/parts/mechanism.py",
+    "Scripts/guns/smg/smg_measure.py"
+   ]
+  },
+  {
+   "images": [
+    "g1_receiver_rails"
+   ],
+   "reason": "Front-end vent slots and the rail acceptable; rail teeth believable",
+   "verdict": "n/a (judged real)",
+   "checked_against": "-",
+   "fix": "none",
+   "files": []
+  },
+  {
+   "images": [
+    "g2_grip_trigger_sel",
+    "g2_grip_trigger_sel (2nd judge)"
+   ],
+   "reason": "A second round disc with a screw behind / above and partly under the selector lever, overlapping the seam: a duplicated or orphan part, a floating plate half-covering the selector",
+   "verdict": "fixed",
+   "checked_against": "LEFT draws the round boss behind and above the selector hub where the seam crosses, its pin, the hub partly over it (spec lower_receiver.features seam_boss; L3 'seam boss centre'); the built boss was a separate disc 0.2 lower than the seat (0.8 vs 1.0 proud), overlapping it by 3.5 mm, so it read as a second loose disc under the lever",
+   "fix": "R43: the seat and the boss are ONE moulded pad (two circles joined by R 3.0 waist fillets, one height: 1.0 over the upper's face, 1.8 over the set-in housing; 0.6 top round); the upper's lower edge pockets round it (0.22); the pin 1.8 deep in the boss lobe. Both drawn circles stay (L3)",
+   "files": [
+    "Scripts/guns/smg/parts/receiver.py",
+    "Scripts/guns/smg/parts/lower.py",
+    "Scripts/guns/smg/parts/mechanism.py"
+   ]
+  },
+  {
+   "images": [
+    "g2_grip_trigger_sel",
+    "g2_grip_trigger_sel (2nd judge)"
+   ],
+   "reason": "No selector position markings (safe / semi / auto pictograms or letters) or detent / index marks on the receiver; the lever carries only an abstract circle-and-slash icon",
+   "verdict": "rejected (deferred to W3)",
+   "checked_against": "the brief: generic names only, NO markings on this asset; the sheet's only mark there is a small red paint dot left of the selector (paint, a W3 texture decision); the lever's 'icon' is the drawn index groove across the hub and the shaft-end ring",
+   "fix": "none in geometry (no invented engraving); W3 decides the paint dot within the no-markings rule",
+   "files": []
+  },
+  {
+   "images": [
+    "g2_grip_trigger_sel (2nd judge)"
+   ],
+   "reason": "The pin heads around the selector randomly scattered",
+   "verdict": "rejected",
+   "checked_against": "every head is at its drawn position (spec pins_fasteners from the LEFT / RIGHT traces; L3 fastener heads within 2 sheet px)",
+   "fix": "none (invent nothing / remove nothing the sheet draws)",
+   "files": []
+  },
+  {
+   "images": [
+    "g2_grip_trigger_sel (2nd judge)"
+   ],
+   "reason": "Where the grip back strap meets the stock mount the outline is lumpy and faceted, polygonal steps along the top right (low-poly, unfinished)",
+   "verdict": "fixed",
+   "checked_against": "the sheet draws one smooth concave sweep from the end block's bottom down into the back strap; fair_ring kept three 20-25 deg corner clusters between long flats (X 269 / 285 / 292) and the full-width tang showed each as a crease",
+   "fix": "R43 MASTER_CURVES: the run X 253 .. 294.9 re-smoothed (Gaussian sigma 3.0, ends held, 1.0 mm chords, max turn per chord 1.8 deg); deviation from the faired outline <= 0.5 mm",
+   "files": [
+    "Scripts/guns/smg/smg_geom.py"
+   ]
+  },
+  {
+   "images": [
+    "g2_grip_trigger_sel (2nd judge)",
+    "g3_magazine_well (2nd judge)"
+   ],
+   "reason": "The trigger guard a thin octagonal loop of uniform section; its front end butts the mag release / magwell side with a visible gap or step (stamped and pasted on); its rear runs into the grip front as a thin bar with no web or blend",
+   "verdict": "partly fixed",
+   "checked_against": "LEFT draws the opening with 45 deg chamfered corners and the bar's side thickness (L2 per part trigger_guard: contour max <= 2 px); spec trigger_guard inner_corner_R 6-8 (the corners were built crisp); the gap in front of the leg is the mag release paddle's slot (spec trigger_guard.paddle_clevis, visible in both side views; the HK-pattern paddle release sits exactly there); the bar's Y width 10.9 is the spec's real norm (no view draws wider)",
+   "fix": "R43: the opening's corners at the spec's R 6 (arcs on each chamfer), the outline's guard corners and the bar / grip notch smoothed (sigma 1.5-2.0), the rear bar flaring into the grip's front strap (half width 9.0 -> 5.45, below Z -74). Kept: the paddle slot (functional, drawn), the bar thickness (sheet)",
+   "files": [
+    "Scripts/guns/smg/parts/lower.py",
+    "Scripts/guns/smg/smg_geom.py"
+   ]
+  },
+  {
+   "images": [
+    "g2_grip_trigger_sel (2nd judge)"
+   ],
+   "reason": "The grip has an arbitrary straight seam across its side",
+   "verdict": "rejected",
+   "checked_against": "it is the top border of the drawn stippled panel (LEFT / RIGHT draw the panel; spec pistol_grip.stipple_panel, 0.55 step); the rough-look material shows the border without the stipple",
+   "fix": "none (W3 textures the stipple inside the border)",
+   "files": []
+  },
+  {
+   "images": [
+    "g3_magazine_well",
+    "g3_magazine_well (2nd judge)"
+   ],
+   "reason": "The lower front rail hangs off a sloped wedge 'awning' block jutting under the receiver nose over the mag well; cantilevered on a separate plate with an angled hanger (a floating shelf glued on)",
+   "verdict": "partly fixed",
+   "checked_against": "LEFT draws the lower rail under the fore-end bottom (Z -27.5) and the lower's 45 deg front face from the rail's end down to the magwell front (master outline 477.5 / -32.9 -> 462.8 / -46.1; L2 / L3); the full-width housing then hung 10.5 mm per side over the narrower well (R31) as a flat shelf, which is what made it read stacked",
+   "fix": "R43: the housing zone cut by a 35 deg funnel through its set-in faces at Z -49.6, with a skirt beside the well, so the well flares out of the housing as one moulding; the drawn front face and the rail kept",
+   "files": [
+    "Scripts/guns/smg/parts/lower.py"
+   ]
+  },
+  {
+   "images": [
+    "g3_magazine_well",
+    "g3_magazine_well (2nd judge)"
+   ],
+   "reason": "The mag-well collar a separate stacked block with a lip under another shelf (stacked boxes, not one flared polymer well)",
+   "verdict": "fixed (the shelf); the lip kept",
+   "checked_against": "the flare lip is drawn (LEFT: the bulge to X 462.3 at Z -63; spec magwell flare 7.2-9.1 high); the 'shelf over it' was the housing's flat underside",
+   "fix": "R43 funnel (above); the lip's 45 deg top chamfer (R42) kept",
+   "files": [
+    "Scripts/guns/smg/parts/lower.py"
+   ]
+  },
+  {
+   "images": [
+    "g3_magazine_well"
+   ],
+   "reason": "Seen from below the rail teeth look like separate tabs under a flat spine, not cross-slots through a dovetail",
+   "verdict": "rejected",
+   "checked_against": "MIL-STD-1913 (gunlib.parts.rail_1913, the AR-01's rail): square 5.24 x 3.0 slots cut across the head on one body; seen from the side-below the continuous part is the rail body above the head, the 'tabs' are the head's teeth with their 45 deg flanks between the slots",
+   "fix": "none (line standard; GunLib untouched, the AR-01 exports stay exact)",
+   "files": []
+  },
+  {
+   "images": [
+    "g4_stock_extended"
+   ],
+   "reason": "The curved top of the stock arm visibly faceted: hard crease lines across the bend",
+   "verdict": "fixed",
+   "checked_against": "the sheet draws the top strut rising into the head in one smooth curve; fair_ring left corner clusters (X 209-211, 216-219: up to 23 deg in 2 mm) between long straight snaps",
+   "fix": "R43 MASTER_CURVES: X 181 .. 233.7 re-smoothed (sigma 3.0, 1.0 mm chords, max turn 3.1 deg per chord); the head's top follows the same outline to X 245",
+   "files": [
+    "Scripts/guns/smg/smg_geom.py",
+    "Scripts/guns/smg/parts/stock.py"
+   ]
+  },
+  {
+   "images": [
+    "g4_stock_extended"
+   ],
+   "reason": "The hinge hub has a raised strip / step at the bend that looks arbitrary",
+   "verdict": "fixed",
+   "checked_against": "r1 left a 0.5 trough 1.6 long across the top (the head held 0.5 under the neck's end, then its own traced top), and the head's plan flare was 6 long (read as a block)",
+   "fix": "R43: the head's top / bottom on the outline with a 0.5 ramp that crosses the neck's eased end once, off any vertex row (X 221.5-224, dip at the crossing <= 0.1); the plan flare 11 long",
+   "files": [
+    "Scripts/guns/smg/parts/stock.py"
+   ]
+  },
+  {
+   "images": [
+    "g4_stock_extended"
+   ],
+   "reason": "The rectangular latch block on the receiver's right rear looks pasted onto the surface",
+   "verdict": "fixed",
+   "checked_against": "the block is the stock-side hinge leaf from the head's right face to the knuckle (real barrel hinge pattern, Q6), built as a plain box",
+   "fix": "R43: its front end a 45 deg gusset rising off the head's face (material removed only: the fold sweep can only gain clearance), rounded with the head",
+   "files": [
+    "Scripts/guns/smg/parts/stock.py"
+   ]
+  },
+  {
+   "images": [
+    "g6_front_end"
+   ],
+   "reason": "Radial shading streaks fan out from the hole on the receiver's flat front face (smoothing / n-gon)",
+   "verdict": "fixed",
+   "checked_against": "traced: the master outline's front edge above the barrel's flange zig-zags (563.1 / 15.6 -> 564.1 / 16.7 -> 563.8 / 20.9 -> back to 562.9 / 19.0 -> 562.3 / 19.6 .. 25.5): a 1 mm step back and a stack of near-parallel full-width prism strips, triangulated as fans round the eyelet; measured also: the face's weighted normals left corners up to 9.9 deg off the plane. The drawn face is one plane up to the top chamfer (spec front_face_X 563.3)",
+   "fix": "R43 smg_geom.MASTER_POLYS: the face one plane (X 563.3) up to its own traced 11.7 deg top chamfer, meeting at Z 20.68 (the trace's 562.28 / 25.46 lies on that line within 0.03); smg_parts._flatten_planar: every large flat region shades with its plane normal (thin slivers lying on the plane join within 8 deg), boundary edges >= 10 deg sharp; the geometry is not moved. Checked in early_realism_r3/g6 (no streaks)",
+   "files": [
+    "Scripts/guns/smg/smg_parts.py"
+   ]
+  },
+  {
+   "images": [
+    "g6_front_end"
+   ],
+   "reason": "An unexplained round through-hole in the upper corner of the front face, placed like a second bore",
+   "verdict": "rejected",
+   "checked_against": "the front sling eyelet the LEFT and 3/4 views draw there (spec upper_receiver feature front_sling_eyelet); with the streaks gone it reads as a socket in a flat face",
+   "fix": "none",
+   "files": []
+  },
+  {
+   "images": [
+    "g6_front_end"
+   ],
+   "reason": "The barrel stub comes straight out of a flat box face with no barrel nut, trunnion cap or front-end detail",
+   "verdict": "rejected",
+   "checked_against": "the drawn collar ring at the face is built (face flange dia 26.4 x 3.6 over the collar dia 22.5 seated in the counterbore; L2 per part barrel); the sheet's 3/4 shows that plain collar, nothing more",
+   "fix": "none (invent nothing)",
+   "files": []
+  },
+  {
+   "images": [
+    "g6_front_end"
+   ],
+   "reason": "An A2 birdcage flash hider on a .45 blowback looks off; the stub and collar look thin for the bore",
+   "verdict": "rejected",
+   "checked_against": "the device is the sheet's own (LEFT / RIGHT / TOP / 3/4): a rear collar with a groove ring, a cage of six closed through-slots and a solid front rim (not an open-tined A2 birdcage); the neck dia 20.4 on the 11.4 bore leaves a 4.5 wall, a normal .45 SMG barrel",
+   "fix": "none",
+   "files": []
+  },
+  {
+   "images": [
+    "g6_front_end"
+   ],
+   "reason": "The front flip sight and the side vent slots acceptable",
+   "verdict": "n/a (judged real)",
+   "checked_against": "-",
+   "fix": "none",
+   "files": []
+  }
+ ],
+ "stage2_gates_after": {
+  "status": "pass",
+  "failed": [],
+  "rows": [
+   {
+    "name": "L2 LEFT IoU (authority; R34 side conventions)",
+    "value": 0.9824,
+    "pass": true
+   },
+   {
+    "name": "L2 RIGHT IoU (authority, port side; R34 side conventions)",
+    "value": 0.9552,
+    "pass": true
+   },
+   {
+    "name": "L2 TOP IoU (X >= 221.9)",
+    "value": 0.9315,
+    "pass": true
+   },
+   {
+    "name": "L2 per part, LEFT (IoU >= 0.95 for masks >= 400 px and mean width >= 7 px; thin parts contour P95 <= 1 px, max <= 2; fold-resized sights >= ceiling - 0.05; R33 conventions; the paddle waived, declared C1)",
+    "value": "23 / 23 parts pass",
+    "pass": true
+   },
+   {
+    "name": "L2 3/4 FRONT (LEFT) IoU, camera solved (reported, R39)",
+    "value": 0.9036,
+    "pass": true
+   },
+   {
+    "name": "L2 3/4 contour P95 (sheet px) (reported, R39)",
+    "value": 12.083,
+    "pass": true
+   },
+   {
+    "name": "L3 LEFT contour P95 (sheet px; R34 conventions, the paddle zone out)",
+    "value": 2.0,
+    "pass": true
+   },
+   {
+    "name": "L3 feature positions (<= 2 sheet px = 2.13 mm)",
+    "value": "24 / 24",
+    "pass": true
+   },
+   {
+    "name": "L4 key dimensions (<= 0.05 mm unless noted)",
+    "value": "20 / 20",
+    "pass": true
+   },
+   {
+    "name": "B3 bolt sweep 0.0..67.9 (step 0.0750, 907 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.15,
+     "min_with": "barrel",
+     "rest_mm": 0.15,
+     "end_mm": 0.1529
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 charging sweep 0.0..67.9 (step 0.0750, 907 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.15,
+     "min_with": "barrel",
+     "rest_mm": 0.15,
+     "end_mm": 0.1529
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 charging_lock sweep 0.0..15.0 (step 0.1604, 95 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1359,
+     "min_with": "charging_slide",
+     "rest_mm": 0.1487,
+     "end_mm": 0.1487
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 trigger sweep 0.0..13.0 (step 0.1203, 110 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.138,
+     "min_with": "trigger_axle",
+     "rest_mm": 0.1493,
+     "end_mm": 0.1433
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 selector sweep -63.4..45.0 (step 0.1401, 775 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1372,
+     "min_with": "lower_receiver",
+     "rest_mm": 0.1381,
+     "end_mm": 0.1493
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 mag_release sweep 0.0..-11.0 (step -0.3001, 38 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1301,
+     "min_with": "lower_receiver",
+     "rest_mm": 0.1301,
+     "end_mm": 0.142
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 stock_button sweep 0.0..2.5 (step 0.0750, 35 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1592,
+     "min_with": "stock_frame",
+     "rest_mm": 0.1592,
+     "end_mm": 0.1592
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 stock_fold sweep 0.0..180.0 (step 0.0200, 961 steps)",
+    "value": {
+     "intersecting_steps": 32,
+     "min_clearance_mm": 0.1432,
+     "min_with": "upper_receiver",
+     "rest_mm": 0.1497,
+     "end_mm": 0.1497,
+     "allowances": {
+      "allowed_steps": 32,
+      "worst_depth_mm": 0.7487,
+      "not_allowed": []
+     },
+     "coarse_proof": {
+      "rule": "radius-aware: every sample >= its own r x step / 2 from the other surface at every coarse step (r = distance from the axis)",
+      "step_deg": 0.25,
+      "steps_checked": 699,
+      "failing_values": [],
+      "worst_margin_mm": null
+     }
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 sight_rear sweep 0.0..90.0 (step 0.1904, 474 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.142,
+     "min_with": "sight_rear_pin",
+     "rest_mm": 0.1492,
+     "end_mm": 0.1493,
+     "allowances": {
+      "allowed_steps": 0,
+      "worst_depth_mm": 0.0,
+      "not_allowed": []
+     }
+    },
+    "pass": true
+   },
+   {
+    "name": "B3 sight_front sweep 0.0..-90.0 (step -0.2070, 436 steps)",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1389,
+     "min_with": "sight_front_pin",
+     "rest_mm": 0.1439,
+     "end_mm": 0.1438,
+     "allowances": {
+      "allowed_steps": 0,
+      "worst_depth_mm": 0.0,
+      "not_allowed": []
+     }
+    },
+    "pass": true
+   },
+   {
+    "name": "G5 static intersections between parts at rest (LOD0)",
+    "value": 0,
+    "pass": true
+   },
+   {
+    "name": "G5 butt-joint gaps",
+    "value": "min 0.0100 mm over 20 contact pairs",
+    "pass": true
+   },
+   {
+    "name": "F1 selector sweep SAFE..AUTO, swept minimum",
+    "value": 0.1372,
+    "pass": true
+   },
+   {
+    "name": "F2 folded length",
+    "value": 385.8,
+    "pass": true
+   },
+   {
+    "name": "F3 stock folded: barb under the port catch's lip",
+    "value": {
+     "engagement_X_mm": 1.287,
+     "barb_to_lip_min_distance_mm": 0.213,
+     "folded_intersections": {}
+    },
+    "pass": true
+   },
+   {
+    "name": "F4 charging handle: travel + lock, neck and arm clearances",
+    "value": {
+     "travel_min_mm": 0.15,
+     "travel_min_with": "barrel",
+     "lock_min_mm": 0.1359,
+     "lock_min_with": "charging_slide"
+    },
+    "pass": true
+   },
+   {
+    "name": "F5 magazine catch sweep 0..-11 deg, magazine seated",
+    "value": {
+     "intersecting_steps": 0,
+     "min_clearance_mm": 0.1301,
+     "min_with": "lower_receiver"
+    },
+    "pass": true
+   },
+   {
+    "name": "F5 bolt thumb recess visible in the port at rest",
+    "value": {
+     "rays_hitting_the_bolt_first": 91,
+     "of_which_in_the_recess": 81,
+     "pass": true,
+     "note": "rays from the right through the port centre region (13 x 7 grid, 1 mm)"
+    },
+    "pass": true
+   },
+   {
+    "name": "F6 stock latch: full diameter in the lug's bore (released / pressed); fold exit clearance",
+    "value": {
+     "released_mm": 1.75,
+     "pressed_mm": 0.0,
+     "fold_sweep_min_mm": 0.1432,
+     "fold_min_with": "upper_receiver"
+    },
+    "pass": true
+   },
+   {
+    "name": "F7 charging-handle lock: the neck's rise into the rear notch at the wall's inner face; knob rise",
+    "value": {
+     "neck_rise_mm": 2.093,
+     "neck_top_over_slot_top_mm": 1.654,
+     "knob_rise_mm": 5.704
+    },
+    "pass": true
+   },
+   {
+    "name": "B3b folded state: 0 intersections; casing throw cone (reported)",
+    "value": {
+     "folded_intersections": {},
+     "pass": true,
+     "throw_cone": {
+      "origin_M": [
+       435.55,
+       -31.6,
+       13.0
+      ],
+      "dir": [
+       0.2549000084400177,
+       -0.9513000249862671,
+       0.1736000031232834
+      ],
+      "vertices_inside": {
+       "stock_frame": 9,
+       "butt_pad": 20
+      },
+      "clear": false,
+      "note": "reported (Q5): the folded stock lies along the right side"
+     }
+    },
+    "pass": true
+   },
+   {
+    "name": "B4c sights folded",
+    "value": {
+     "sight_rear": {
+      "folded_max_Z": 59.8,
+      "limit": 60.1,
+      "min_Z": 46.3,
+      "lowest_allowed_Z": 45.4,
+      "pass": true
+     },
+     "sight_front": {
+      "folded_max_Z": 51.65,
+      "limit": 51.7,
+      "min_Z": 44.8,
+      "lowest_allowed_Z": 44.8,
+      "pass": true
+     },
+     "pass_all": true
+    },
+    "pass": true
+   },
+   {
+    "name": "B4 sight picture (ADS 55 deg, eye 0.25 m behind the aperture)",
+    "value": {
+     "lateral_mm": 0.0,
+     "vertical_mm": 0.0,
+     "aperture_mm": 1.989,
+     "post_visible_mm": 0.991,
+     "occluders": {}
+    },
+    "pass": true
+   },
+   {
+    "name": "B4b sight picture at the cheek-weld eye (90 mm behind the aperture), reported",
+    "value": {
+     "lateral_mm": 0.0,
+     "vertical_mm": -0.0,
+     "aperture_mm": 1.97,
+     "post_visible_mm": 0.988,
+     "occluders": {}
+    },
+    "pass": true
+   },
+   {
+    "name": "B6a joined twin: qa_check topology + degenerate checks",
+    "value": true,
+    "pass": true
+   },
+   {
+    "name": "B10 tokenised gun deny list on every object name",
+    "value": true,
+    "pass": true
+   },
+   {
+    "name": "B7 closed manifold parts",
+    "value": "32 / 32 closed",
+    "pass": true
+   },
+   {
+    "name": "B8 LOD0 triangles, gun (target 25-40k, ceiling 50k)",
+    "value": 45550,
+    "pass": true
+   },
+   {
+    "name": "B8 magazine LOD0 triangles (floor 3,000, qa budget 5,000)",
+    "value": 3232,
+    "pass": true
+   },
+   {
+    "name": "UD1 Unreal degenerate rule on every LOD0 part (drops; min triangle area)",
+    "value": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.010178
+    },
+    "pass": true
+   },
+   {
+    "name": "UD2 micro edges / needles / strips",
+    "value": {
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "pass": true
+   },
+   {
+    "name": "H1 early: grip girth vs real polymer SMG grips + 10 %",
+    "value": {
+     "perimeter_mm": 148.1,
+     "width_Y_mm": 30.9,
+     "depth_mm": 51.29
+    },
+    "pass": true
+   },
+   {
+    "name": "H1 early: trigger reach (web hollow -> trigger face)",
+    "value": 77.6,
+    "pass": true
+   },
+   {
+    "name": "H1 early: Grip depth vs the hand's palm centre (reported)",
+    "value": {
+     "standard_Grip_depth_mm": 46.0,
+     "hand_palm_centre_along_knuckle_line_mm": 45.9,
+     "web_line_point_M": [
+      319.59,
+      0.0,
+      -48.7
+     ],
+     "pass": true
+    },
+    "pass": true
+   },
+   {
+    "name": "H1 early: SupportHand on the magwell front (reported)",
+    "value": {
+     "SupportHand_M": [
+      460.2,
+      0.0,
+      -54.35
+     ],
+     "front_face_hit_X": 460.2,
+     "offset_from_surface_mm": 0.0,
+     "hand_separation_mm": 162.0,
+     "arm_length_mm": 563.2,
+     "pass": true
+    },
+    "pass": true
+   },
+   {
+    "name": "H1 early: length of pull and cheek weld (reported)",
+    "value": {
+     "length_of_pull": {
+      "mm": 370.8,
+      "real_mm": [
+       350,
+       370
+      ],
+      "note": "butt rear (X 0) to the trigger face along X"
+     },
+     "cheek_weld": {
+      "sight_line_Z": 68.8,
+      "stock_top_Z_at_cheek": 22.6,
+      "eye_over_comb_mm": 46.2,
+      "note": "reported (B4b feeds on it)"
+     }
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT M1 seated: intersecting triangle pairs, magazine vs the gun (LOD0)",
+    "value": {
+     "gun": 0,
+     "catch": 0
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge",
+    "value": {
+     "bearing_gap_mm": 0.26,
+     "overtravel_mm": 1.5679,
+     "seam_mm": {
+      "front": 0.5194,
+      "rear": 0.3479,
+      "left": 0.3548,
+      "right": 0.3548
+     }
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT M3 lateral per side; fore-aft; catch engagement depth",
+    "value": {
+     "clearance_mm": {
+      "left": 0.2715,
+      "right": 0.2715,
+      "front": 0.2715,
+      "rear": 0.2758
+     },
+     "engagement_mm": 1.6
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT M4 insert path MagInsertStart -> Mag (0.5 mm steps, spring-loaded catch cammed by the magazine)",
+    "value": {
+     "steps": 138,
+     "gun_contacts_at": [],
+     "catch_displaced_over_mm": [
+      0.699,
+      26.199
+     ],
+     "max_catch_angle_deg": 5.62,
+     "release_angle_deg": -11.0,
+     "max_nose_travel_mm": 1.802,
+     "cam_max_nose_move_per_step_mm": 0.556,
+     "snap_max_return_per_step_mm": 1.508,
+     "no_clearing_angle_at": [],
+     "snapped_at_seat": true,
+     "static_catch_record": {
+      "catch_ride_mm": [
+       0.699,
+       26.199
+      ],
+      "worst_catch_depth_mm": 1.239
+     }
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT M4b insert path with the catch released (-11.0 deg)",
+    "value": {
+     "steps": 138,
+     "intersecting_steps": 0
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT M5 removal path (reverse) with the catch released",
+    "value": {
+     "steps": 138,
+     "intersecting_steps": 0
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT M5b (info) removal with the catch at rest",
+    "value": {
+     "colliding_steps": 52
+    },
+    "pass": true
+   },
+   {
+    "name": "MAGFIT F5 catch sweep rest -> release with the magazine seated",
+    "value": {
+     "steps": 45,
+     "intersecting_steps": 0,
+     "worst_depth_mm": 0.0
+    },
+    "pass": true
+   }
+  ]
+ },
+ "extra": {
+  "triangles": {
+   "gun_LOD0_before": 41560,
+   "gun_LOD0_after": 45550,
+   "ceiling": 50000,
+   "target": 40000,
+   "note": "above the 40k target as before (r1 41.6k); +4.0k from the guard's R 6 corners and smoothed outline runs, the dense 1.0 mm chords on the smoothed curves and the turned knob (32 x 26)"
+  },
+  "silhouette_before_after": {
+   "L2_LEFT": [
+    0.983,
+    0.9824
+   ],
+   "L2_RIGHT": [
+    0.9556,
+    0.9552
+   ],
+   "L2_TOP": [
+    0.9327,
+    0.9315
+   ],
+   "L3_P95_px": [
+    2.0,
+    2.0
+   ],
+   "note": "TOP keeps 0.0015 over its 0.93 bar (the knob's inner half is now a neck, the funnel and inset are unseen from the top)"
+  },
+  "outline_changes_mm": {
+   "MASTER_CURVES max deviation from the faired outline": 0.49,
+   "guard opening max deviation (R 6 corners)": 0.23,
+   "front face (MASTER_POLYS)": "<= 1.0 over Z 16 .. 20.7 (the trace's 1 mm step removed)"
+  },
+  "process": [
+   "run_smg.sh --skip-renders (blockout + form chain, every stage-2 gate) -> gates/form.json pass",
+   "smg_realism.py --out review/early_realism_r3 --samples 64 (same 12 shots as r1/r2)",
+   "smg_gates.py --stage form --early early_realism_r3"
+  ],
+  "not_done_open": [
+   "selector paint / pictograms: W3 decision within the no-markings rule",
+   "the magwell flare lip keeps its drawn bulge under the funnel (reads as a lip, not a box)"
+  ]
+ }
+}

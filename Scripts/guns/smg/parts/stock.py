@@ -41,8 +41,18 @@ HW_ = float(SF["width_Y"]) / 2.0                 # 13.35
 X_PAD = float(BP["thickness_X"])                 # 28.1 (the pad's front face)
 SEAM_PAD = 0.3
 X_F0 = X_PAD + SEAM_PAD                          # the frame starts behind the pad seam
-X_NECK1 = 222.0                                  # the neck's end, 1.0 inside the head (the head starts at 221.0)
+X_NECK1 = 224.0                                  # the neck's end, 3.0 inside the head (the head starts at 221.0)
 X_HEAD0 = 221.0
+# (W1 realism round 2) the neck / head junction without a dip: the judges read a raised strip across the top at the
+# bend (r1: the head held 0.5 under the neck's end from X 221 to the neck's end at 222, then its own traced top: a 0.5
+# trough 1.6 long). Now both follow the master outline and cross once, transversally, off any vertex row: the head's
+# top / bottom ramp from 0.5 inside at X 221 to the outline at 223.4 (and stay on it to 224.5, then the head's traced
+# ring, within 0.08 of the outline); the neck runs on to 224, its last 1.4 mm eased 0.3 inside (no coplanar faces).
+# The head's top follows the (smoothed, MASTER_CURVES) outline to X 245 and its bottom to X 235, where the head's own
+# traced ring meets it within 0.06; the ring beyond (its front face against the end block)
+HEAD_RAMP = (X_HEAD0, 223.4, 0.5)
+NECK_EASE = (222.6, X_NECK1, 0.3)
+HEAD_MASTER_TOP_X1, HEAD_MASTER_BOT_X1 = 245.0, 235.0
 X_HEAD1 = X_EBR - 0.3                            # the head's front face (0.3 seam to the end block)
 AX = np.array([SH["axis_X"], SH["axis_Y"]], float)
 R_K = SH["knuckle_od"] / 2.0
@@ -68,7 +78,34 @@ HEAD_Y = (-25.0, 22.0)            # the 3/4 and TOP views: the head is narrower 
 
 
 def frame_outline():
-    return G.ccw(G.clip_x(SG.master_outer(0.45), X_F0, X_NECK1))
+    P = G.ccw(G.clip_x(SG.master_outer(0.45), X_F0, X_NECK1))
+    x0, x1, e = NECK_EASE
+    out = []
+    for x, z in P:
+        if x > x0:
+            k = e * (min(x, x1) - x0) / (x1 - x0)
+            zb, zt = _master_span(min(x, x1 - 1e-3))
+            z = z - k if z > 0.5 * (zb + zt) else z + k
+        out.append((x, z))
+    return G.ccw(np.array(out))
+
+
+def _densify(P, step=0.3):
+    """Subdivide every mostly horizontal edge (|dX| > |dZ|) into pieces <= step (the vertices kept)."""
+    P = np.asarray(P, float)
+    out = []
+    for i in range(len(P)):
+        a, b = P[i], P[(i + 1) % len(P)]
+        out.append(a)
+        if abs(b[0] - a[0]) > max(0.05, abs(b[1] - a[1])):
+            k = int(np.ceil(np.linalg.norm(b - a) / step))
+            for t in np.arange(1, k) / k:
+                out.append(a + t * (b - a))
+    return np.array(out)
+
+
+def _master_span(x):
+    return _z_span_at(SG.master_outer(0.45), x)
 
 
 def windows():
@@ -91,20 +128,23 @@ def windows_and_borders():
 
 
 def head_outline():
+    """The traced head (part ring stock_hinge_knuckle) between X 221 and its front face against the end block, its top
+    on the master outline up to X 245 and its bottom up to X 235, with the junction ramp (HEAD_RAMP) at its rear."""
     r = SG.part_ring("stock_hinge_knuckle", 0.3)
-    P = G.clip_x(r, X_HEAD0, X_HEAD1)
-    # the traced head entire (W1b fix round, L2 per part): its top rises to Z 31 toward the end block and its bottom
-    # sits 2-3 mm under the neck's; the earlier clip to the neck's height (-19.2 .. 22.2) cut both off. Where the head
-    # overlaps the neck's end (X < 222.6) the two traced outlines share the same pixel boundary: the head's top and
-    # bottom are held 0.5 inside the neck's there (no near-coplanar faces at the union)
-    fo = frame_outline()
-    Q = []
+    P = _densify(G.ccw(G.clip_x(r, X_HEAD0, X_HEAD1)), 1.0)
+    xa, xb, e = HEAD_RAMP
+    out = []
     for x, z in P:
-        if x < X_NECK1 + 0.6:
-            zb, zt = _z_span_at(fo, min(x, X_NECK1 - 0.05))
-            z = min(max(z, zb + 0.5), zt - 0.5)
-        Q.append((x, z))
-    return G.ccw(G.dedupe(np.array(Q)))
+        xm = min(max(x, X_HEAD0 + 1e-4), X_HEAD1 - 1e-4)
+        zb, zt = _master_span(xm)
+        rp = e * max(0.0, (xb - x) / (xb - xa))
+        if z > 0.5 * (zb + zt):
+            if x < HEAD_MASTER_TOP_X1:
+                z = zt - rp
+        elif x < HEAD_MASTER_BOT_X1:
+            z = zb + rp
+        out.append((x, z))
+    return G.ccw(G.dedupe(np.array(out), 0.05))
 
 
 def _z_span_at(P, x):
@@ -112,7 +152,7 @@ def _z_span_at(P, x):
     n = len(P)
     for i in range(n):
         a, b = P[i - 1], P[i]
-        if (a[0] - x) * (b[0] - x) < 0:
+        if (a[0] - x) * (b[0] - x) <= 0 and abs(b[0] - a[0]) > 1e-9:
             zs.append(a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]))
     return min(zs), max(zs)
 
@@ -131,7 +171,11 @@ def stock_frame():
                  "XZ")
     # ---- the head
     head = prism(head_outline(), HEAD_Y[0], HEAD_Y[1], "XZ")
-    arm = box(234.0, float(AX[0]), float(AX[1]) - 0.1, HEAD_Y[0] + 0.5, KZ[0], KZ[1])
+    # the hinge leaf from the head's right face out to the knuckle; (W1 realism round 2) its front end a 45 deg
+    # gusset rising off the head's face (judges: a rectangular block pasted onto the surface); material only removed
+    # from the r1 box, so the fold sweep can only gain clearance
+    arm = prism(np.array([[234.0, HEAD_Y[0] + 0.5], [240.0, float(AX[1]) - 0.1], [float(AX[0]), float(AX[1]) - 0.1],
+                          [float(AX[0]), HEAD_Y[0] + 0.5]]), KZ[0], KZ[1], "XY")
     knuckle = pcyl((AX[0], AX[1], KZ[0]), (AX[0], AX[1], KZ[1]), R_K, 48)
     hb = stadium_xz(BOLT_XZ[1] - 9.5, BOLT_XZ[1] + 9.5, BOLT_XZ[0], 9.0, 8)       # (Z, X) -> swap below
     hb = np.c_[hb[:, 1], hb[:, 0]]                                                 # a vertical oval boss in XZ
@@ -182,7 +226,8 @@ def stock_frame():
     # (r1) the neck flares into the wider head in plan (real moulded transition) instead of a square shoulder: the
     # head's corners outside the lines from just outside the neck's faces at X 220.8 to the head's full width at X 227 cut away
     # (the judges: a crude faceted step-up chunk, the hinge block a plain oversized cube)
-    fx0, fx1 = X_HEAD0 - 0.2, X_HEAD0 + 6.0         # the lines start 0.4 outside the neck's faces (touching them,
+    # (r2: the flare 11 long, was 6: read as a block)
+    fx0, fx1 = X_HEAD0 - 0.2, X_HEAD0 + 11.0        # the lines start 0.4 outside the neck's faces (touching them,
     #                                                 the cut left slivers in the neck's top round)
     flare = [prism(np.array([[fx0, HW_ + 0.4], [fx1, HEAD_Y[1] + 0.5], [fx0, HEAD_Y[1] + 8.0]]), -40.0, 40.0, "XY"),
              prism(np.array([[fx0, -HW_ - 0.4], [fx0, HEAD_Y[0] - 8.0], [fx1, HEAD_Y[0] - 0.5]]), -40.0, 40.0, "XY")]

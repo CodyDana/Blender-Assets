@@ -213,6 +213,65 @@ def straight_span(P, a, b):
 # jagged geometry above the magwell). The sheet draws one rounded step there: a straight chamfer between the two.
 MASTER_SPANS = [((485.08, -32.04), (490.04, -37.28))]
 
+# (W1 realism round 2) Two drawn concave curves kept a few 20-25 deg corner clusters after fair_ring (its corner rule
+# holds them crisp, its 0.04 sag simplification leaves long flats between): across the full-width prisms they read as
+# hard crease lines (judges: the stock arm's curved top 'visibly faceted', the tang behind the grip 'lumpy, faceted,
+# polygonal steps'). The sheet draws both as one smooth sweep. Each run between two held vertices on straight stretches
+# is re-smoothed (Gaussian sigma 3.0 mm, ends held) and kept dense (1.0 mm chords, turn per chord <= ~5 deg):
+#   the top strut rising into the hinge head (X 181 .. 233.7), the tang from the end block's flat bottom down into the
+#   grip's back strap (X 253 .. 294.9)
+#   and (sigma 1.5-2.0) the trigger guard's outer corners: its front-bottom chamfer down to the foot under the paddle
+#   (X 386 .. 412.8) and the notch where the bottom bar meets the grip's front strap (X 331 .. 349.7; judges: the bar
+#   runs into the grip with no blend; real guards are moulded into the grip with a radius)
+MASTER_CURVES = [((181.25, 13.26), (233.68, 25.05), 3.0), ((253.1, -29.1), (294.9, -57.7), 3.0),
+                 ((386.18, -89.55), (412.8, -78.07), 1.5, 1.6), ((331.19, -97.3), (349.65, -89.34), 2.0, 1.6)]
+
+
+def smooth_span(P, a, b, sigma, step=0.3, out_step=1.0):
+    """Replace the ring's run between the vertices nearest a and b (the shorter way round) by its Gaussian-smoothed
+    version (ends held), resampled at out_step."""
+    P = G.ccw(np.asarray(P, float))
+    n = len(P)
+    ia = int(np.argmin(np.linalg.norm(P - np.asarray(a, float), axis=1)))
+    P = np.roll(P, -ia, axis=0)
+    ib = int(np.argmin(np.linalg.norm(P - np.asarray(b, float), axis=1)))
+    rev = ib > n - ib
+    if rev:                                                     # the shorter run goes backwards: walk it forwards
+        P = np.vstack([P[:1], P[1:][::-1]])
+        ib = n - ib
+    run = P[:ib + 1]
+    R = G.resample(run, step, closed=False)
+    R[0], R[-1] = run[0], run[-1]
+    S = _smooth_open(R, sigma / step)
+    S2 = G.resample(S, out_step, closed=False)
+    S2[0], S2[-1] = run[0], run[-1]
+    Q = np.vstack([S2, P[ib + 1:]])
+    return G.ccw(G.dedupe(Q, 0.05))
+
+
+# (W1 realism round 2) the receiver's front face above the barrel's flange: the trace zig-zags there (563.1 / 15.6 ->
+# 564.1 / 16.7 -> 563.8 / 20.9 -> back down to 562.9 / 19.0 -> 562.3 / 19.6 .. 25.5 -> 561.9 / 27.5), a 1 mm step back
+# and a stack of near-parallel prism strips across the whole width; round the eyelet they fanned into the streaks the
+# judges saw on the 'flat front face'. The drawn face is one plane (X 563.3, spec front_face_X) up to the top chamfer,
+# whose own traced line (561.9 / 27.46 -> 559.95 / 36.9, 11.7 deg) meets it at Z 20.68 (the trace's 562.28 / 25.46
+# lies on that line within 0.03).
+MASTER_POLYS = [((563.86, 15.41), (559.95, 36.9), [(563.3, 16.0), (563.3, 20.68)])]
+
+
+def replace_span(P, a, b, pts):
+    """Replace the ring's run between the vertices nearest a and b (the shorter way round) by a -> pts -> b."""
+    P = G.ccw(np.asarray(P, float))
+    n = len(P)
+    ia = int(np.argmin(np.linalg.norm(P - np.asarray(a, float), axis=1)))
+    P = np.roll(P, -ia, axis=0)
+    ib = int(np.argmin(np.linalg.norm(P - np.asarray(b, float), axis=1)))
+    mid = np.asarray(pts, float)
+    if ib > n - ib:                       # the shorter run goes backwards (a, n-1, .., b): forwards it is b .. a
+        Q = np.vstack([P[:ib + 1], mid[::-1]])
+    else:
+        Q = np.vstack([P[:1], mid, P[ib:]])
+    return G.ccw(G.dedupe(Q, 0.05))
+
 
 def master_outer(tol=0.3):
     rr = [r for r in trace("LEFT")["gun_without_magazine"] if r["kind"] == "outer"]
@@ -220,6 +279,10 @@ def master_outer(tol=0.3):
     P = fair_ring(np.array(r["mm"], float))
     for a, b in MASTER_SPANS:
         P = straight_span(P, a, b)
+    for a, b, pts in MASTER_POLYS:
+        P = replace_span(P, a, b, pts)
+    for c in MASTER_CURVES:
+        P = smooth_span(P, c[0], c[1], c[2], out_step=c[3] if len(c) > 3 else 1.0)
     return G.ccw(P)
 
 

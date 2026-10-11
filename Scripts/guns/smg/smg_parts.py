@@ -70,6 +70,141 @@ def _deform(ob, fn, offset):
     me.update()
 
 
+# (W1 realism round 2) Flat faces shade flat. The big flat faces come out of the booleans, bevel clamping and the UD
+# repair (collapses move vertices up to 0.35 mm) very slightly warped: the receiver's front face round the barrel collar
+# and the eyelet measured 75 triangles whose normals spread 2.1 deg, and bl.weighted_normals (which triangulates the
+# n-gons first, so its FACE_AREA weight sees thin triangles that lose to the bevel strips) left 24 corners 0.7-9.9 deg
+# off: the shading fans streaks across the face (judges: radial streaks from the hole on the front face). Each large
+# flat region is grown from a seed face (>= 20 mm2) over neighbours within 3.0 deg of the seed's normal and 0.6 mm of
+# its plane (the front face's upper band is warped up to 0.5 mm round the eyelet; seed-relative, so a gently curved
+# surface cannot creep in transitively); a region of >= 100 mm2 with area / perimeter >= 1.5 mm (never a bevel
+# strip) has every corner set to its area-weighted plane normal and its boundary edges at >= 10 deg marked sharp (the neighbours keep theirs). Thin slivers lying on the plane join within 8 deg (a
+# 0.08 mm vertex offset tilts a 1.1 mm wide sliver 4 deg). The geometry is not moved. (The streaks the judges saw were
+# mostly the traced front edge's zig-zag strips: smg_geom.MASTER_POLYS.)
+FLAT_SLIVER_DEG = 8.0
+FLAT_SEED_MM2, FLAT_MIN_AREA_MM2, FLAT_MIN_THICK_MM, FLAT_SHARP_DEG, FLAT_TOL_DEG, FLAT_TOL_MM = (20.0, 100.0, 1.5,
+                                                                                                10.0, 3.0, 0.6)
+
+
+def _flatten_planar(ob):
+    import math as _m
+    from collections import deque
+    me = ob.data
+    nP, nL, nE, nV = len(me.polygons), len(me.loops), len(me.edges), len(me.vertices)
+    if nP == 0:
+        return 0
+    cn = np.empty(nL * 3)
+    me.corner_normals.foreach_get("vector", cn)
+    cn = cn.reshape(-1, 3)
+    pn = np.empty(nP * 3)
+    me.polygons.foreach_get("normal", pn)
+    pn = pn.reshape(-1, 3)
+    pa = np.empty(nP)
+    me.polygons.foreach_get("area", pa)
+    pa = pa * 1e6                                              # mm2
+    pc = np.empty(nP * 3)
+    me.polygons.foreach_get("center", pc)
+    pc = pc.reshape(-1, 3) * 1000.0                            # mm (object space)
+    ls = np.empty(nP, int)
+    me.polygons.foreach_get("loop_start", ls)
+    lt = np.empty(nP, int)
+    me.polygons.foreach_get("loop_total", lt)
+    le = np.empty(nL, int)
+    me.loops.foreach_get("edge_index", le)
+    lv = np.empty(nL, int)
+    me.loops.foreach_get("vertex_index", lv)
+    lp = np.repeat(np.arange(nP), lt)
+    ev = np.empty(nE * 2, int)
+    me.edges.foreach_get("vertices", ev)
+    ev = ev.reshape(-1, 2)
+    co = np.empty(nV * 3)
+    me.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3) * 1000.0
+    ef = [[] for _ in range(nE)]
+    for k in range(nL):
+        ef[le[k]].append(lp[k])
+    fe = [le[ls[i]:ls[i] + lt[i]] for i in range(nP)]
+    fv = [lv[ls[i]:ls[i] + lt[i]] for i in range(nP)]
+    cos_tol = _m.cos(_m.radians(FLAT_TOL_DEG))
+    cos_sliver = _m.cos(_m.radians(FLAT_SLIVER_DEG))
+    # slivers (longest edge / area > 3 per mm, under 8 mm2) tilt several degrees on a 0.08 mm vertex offset: they join
+    # within FLAT_SLIVER_DEG when every vertex lies on the seed's plane (the bevel strips' 22.5 deg never do)
+    thin = np.zeros(nP, bool)
+    for i in range(nP):
+        if pa[i] < 8.0:
+            P_ = co[fv[i]]
+            emax = max(float(np.linalg.norm(P_[k] - P_[(k + 1) % len(P_)])) for k in range(len(P_)))
+            thin[i] = emax / max(pa[i], 1e-9) > 3.0
+    owner = np.full(nP, -1)
+    regions = []
+    for f in np.argsort(-pa):
+        if pa[f] < FLAT_SEED_MM2:
+            break
+        if owner[f] >= 0:
+            continue
+        n0, p0 = pn[f], pc[f]
+        reg = [f]
+        owner[f] = len(regions)
+        q = deque([f])
+        while q:
+            a = q.popleft()
+            for e in fe[a]:
+                for g in ef[e]:
+                    if owner[g] >= 0:
+                        continue
+                    if pn[g] @ n0 < cos_tol and not (pn[g] @ n0 >= cos_sliver and thin[g]):
+                        continue
+                    if np.max(np.abs((co[fv[g]] - p0) @ n0)) > FLAT_TOL_MM:
+                        continue
+                    owner[g] = len(regions)
+                    reg.append(g)
+                    q.append(g)
+        regions.append(reg)
+    sel = []
+    for r, reg in enumerate(regions):
+        area = float(pa[reg].sum())
+        if area < FLAT_MIN_AREA_MM2:
+            continue
+        per = 0.0
+        for a in reg:
+            for e in fe[a]:
+                fs = ef[e]
+                if not (len(fs) == 2 and owner[fs[0]] == owner[fs[1]]):
+                    per += float(np.linalg.norm(co[ev[e, 0]] - co[ev[e, 1]]))
+        if area / max(per, 1e-9) >= FLAT_MIN_THICK_MM:
+            sel.append(r)
+    if not sel:
+        return 0
+    plane = {}
+    for r in sel:
+        reg = regions[r]
+        n = (pn[reg] * pa[reg][:, None]).sum(0)
+        plane[r] = n / np.linalg.norm(n)
+    pn = np.empty(nP * 3)
+    me.polygons.foreach_get("normal", pn)
+    pn = pn.reshape(-1, 3)
+    sharp_cos = _m.cos(_m.radians(FLAT_SHARP_DEG))
+    att = me.attributes.get("sharp_edge")
+    if att is None:
+        att = me.attributes.new("sharp_edge", "BOOLEAN", "EDGE")
+    sh = np.zeros(nE, bool)
+    att.data.foreach_get("value", sh)
+    selset = set(sel)
+    for e in range(nE):
+        fs = ef[e]
+        if len(fs) != 2 or owner[fs[0]] == owner[fs[1]]:
+            continue
+        if (owner[fs[0]] in selset or owner[fs[1]] in selset) and pn[fs[0]] @ pn[fs[1]] < sharp_cos:
+            sh[e] = True
+    att.data.foreach_set("value", sh)
+    for i in range(nP):
+        if owner[i] in selset:
+            cn[ls[i]:ls[i] + lt[i]] = plane[owner[i]]
+    me.normals_split_custom_set([tuple(v) for v in cn])
+    me.update()
+    return len(sel)
+
+
 def build_ops(o: Ops, coll, offset):
     import bpy
     from gunlib import bl
@@ -94,7 +229,8 @@ def build_ops(o: Ops, coll, offset):
                     bl.clean(ob)
                     if DEBUG_OPS == "seq":
                         r = bl.manifold_report(ob)
-                        print("    [seq] %s %s #%d  bnd %d multi %d" % (o.name, kind, k, r["boundary_edges"],
+                        print("    [seq] %s %s #%d  tris %d shells %d bnd %d multi %d" % (
+                            o.name, kind, k, r["triangles"], r["shells"], r["boundary_edges"],
                                                                         r["multi_face_edges"]), flush=True)
             bl.clean(ob)
             steps.append(f"{kind} x{len(meshes)}")
@@ -143,6 +279,7 @@ def build_ops(o: Ops, coll, offset):
                                                                    r_["multi_face_edges"], fix), flush=True)
     if o.wn:
         bl.weighted_normals(ob, weight=WN_WEIGHT, clear_custom=True)
+        _flatten_planar(ob)
     else:
         bl.mark_sharp(ob, o.smooth_deg)
     _record(ob, o.bone, o.cls, o.slot, o.joint, o.spec_id, steps)
@@ -188,6 +325,7 @@ def build_comp(c, coll, offset):
     bl.finish(ob)
     fix = _repair(ob)
     bl.weighted_normals(ob, weight=WN_WEIGHT, clear_custom=True)
+    _flatten_planar(ob)
     _record(ob, c.bone, c.cls, c.slot, c.joint, c.spec_id, "composite: per-piece cuts + breaks, then unions")
     rep = dict(bl.manifold_report(ob))
     rep["ud_repair"] = fix
@@ -347,6 +485,7 @@ def build_one(item, coll, offset):
             _repair(ob)
         if item.wn:
             bl.weighted_normals(ob, weight=WN_WEIGHT, clear_custom=True)
+            _flatten_planar(ob)
         ob["gun_part_ud"] = json.dumps(_ud(ob))
         return ob
     if isinstance(item, Comp):

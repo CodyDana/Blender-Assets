@@ -200,7 +200,9 @@ def features(M):
     # ---- oblong recess (left), seam boss
     orc = feature("lower_receiver", "oblong_recess")
     lo_t = M.tree(["lower_receiver"])
-    ex = opening_extent(M, 1, np.arange(orc["X"][0] - 4, orc["X"][1] + 4, 0.05), 0.5 * sum(orc["Z"]), SG.Y_L, 0.5,
+    from parts.receiver import LO_INSET                  # (r2) the trigger housing's face is set in under the upper
+    ex = opening_extent(M, 1, np.arange(orc["X"][0] - 4, orc["X"][1] + 4, 0.05), 0.5 * sum(orc["Z"]),
+                        SG.Y_L - LO_INSET, 0.5,
                         lo_t)
     M.l3("oblong recess X (left)", ex, orc["X"], None if not ex else max(abs(ex[0] - orc["X"][0]),
                                                                           abs(ex[1] - orc["X"][1])))

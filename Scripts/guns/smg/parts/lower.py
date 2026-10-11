@@ -34,7 +34,8 @@ from smg_parts import Ops
 from . import FURN, METAL, GAP, pcyl, loft_capped
 from .receiver import (SEAM, H, X_EBF, X_EBR, X_RAIL0, Z_TOP, Z_BODY_BOT, EB_Y, MW, TG, PG, EB, MR, SE, TRG, MAGD,
                        mag_M, mag_M4, MAG_Z, MAG_X, MAG_O, wall_line_x, mag_rear_x, region_lower, master_prism,
-                       pin_holes, face_y, LEDGE, Z_LEDGE, stadium_xz, SH)
+                       pin_holes, face_y, LEDGE, Z_LEDGE, stadium_xz, SH, LO_INSET, face_y_lower, pin_face_y,
+                       selector_pad_xz)
 
 GRIP_W = float(PG["width_Y"])                          # 32 (real norm, unseen)
 RF, RB = 0.5 * sum(PG["front_strap_R"]), 0.5 * sum(PG["back_strap_R"])
@@ -44,6 +45,8 @@ V_FW = np.array([math.cos(RAKE), -math.sin(RAKE)])      # forward, perpendicular
 GRIP_O = np.array([SPECD["frames"]["B"]["Grip_in_M"][0], SPECD["frames"]["B"]["Grip_in_M"][2]])
 MW_BODY = float(MW["outer_width_body"]) / 2.0
 MW_LIP = float(MW["outer_width_lip"]) / 2.0
+PAD_TOP_L = float(face_y(1.0, *SE["pivot_XZ"])) + float(SE["seat_boss_proud"])      # the LEFT pad's top (Y_L + 1.0)
+PAD_TOP_R = float(face_y(-1.0, *SE["pivot_XZ"])) - float(SE["seat_boss_proud"])     # the RIGHT seat's top
 
 
 def _crossings(rings, p, d):
@@ -270,7 +273,7 @@ def splice_front(P, F, x_edge, tol=1e-6):
     return P
 
 
-def guard_opening():
+def guard_opening(fillet=True):
     """The trigger guard's opening (XZ, CCW): the traced hole wraps round the DRAWN blade (a peninsula hanging from the
     housing); its run along the blade (points within 2.5 of the fair blade) is dropped and the opening closes along
     its straight top, then faired. (Split in two holes by a blade drawn to the bottom bar, the chains are joined rear ->
@@ -321,7 +324,35 @@ def guard_opening():
         P = np.vstack([c, [[xr0, ztf], [xr0 - (ztf - zr), zr]]]) if c[-1, 0] > c[0, 0] else c
     else:
         P = np.vstack(chains)
-    return G.ccw(SG.fair_ring(P, corner_deg=25.0, sigma=0.8))   # the drawn 45 deg corner chamfers kept crisp
+    P = G.ccw(SG.fair_ring(P, corner_deg=25.0, sigma=0.8))
+    if not fillet:
+        return P                                     # the loop's outer offset is grown from the unrounded opening
+    # (W1 realism round 2) the drawn 45 deg corner chamfers rounded at the spec's inner corner radius (trigger_guard
+    # inner_corner_R 6-8; the tangent clamp keeps each arc on its chamfer): the judges read the crisp-cornered loop as a
+    # thin octagonal stamping
+    # (the faired ring's dense short edges clamp a fillet to nothing: simplified at 0.2 first, so each chamfer is one
+    # edge and the R 6 arcs fit)
+    Q = G.ccw(G.dedupe(G.dp_simplify(P, 0.2), 0.3))
+    return G.ccw(G.fillet(Q, float(TG["inner_corner_R"][0]), 3, min_turn_deg=8.0))
+
+
+FUNNEL_DEG = 35.0                                      # the funnel chamfer from horizontal
+FUNNEL_Z0 = -49.6                                      # its start on the housing's side faces (the housing's bottom at
+#                                                        the well's front, X 462; behind it the bottom lies up to 1.15
+#                                                        lower: a matching 35 deg chamfer along its bottom edges)
+
+
+def magwell_funnel():
+    """A YZ section prism (along X) intersected with the housing zone only: everything outside the two 35 deg lines
+    through the set-in side faces at Z FUNNEL_Z0 (down to 1.0 inside the well's body width, which the magwell zone
+    fills) goes."""
+    t = math.tan(math.radians(FUNNEL_DEG))
+    al, ar = SG.Y_L - LO_INSET, -(SG.Y_R + LO_INSET)
+    yi = MW_BODY - 1.0
+    sec = np.array([[-yi, -130.0], [yi, -130.0], [yi, FUNNEL_Z0 - (al - yi) * t], [60.0, FUNNEL_Z0 + (60.0 - al) * t],
+                    [60.0, 40.0], [-60.0, 40.0], [-60.0, FUNNEL_Z0 + (60.0 - ar) * t],
+                    [-yi, FUNNEL_Z0 - (ar - yi) * t]])
+    return prism(G.ccw(sec), X_EBF - H - 5.0, 505.0, "YZ")
 
 
 def lower_receiver():
@@ -329,9 +360,14 @@ def lower_receiver():
     opening = guard_opening()
     # ---------------- zones (XZ outline x Y range)
     eb = prism(G.rounded_rect(X_EBR + 0.2, X_EBF - H + 0.6, -60.0, 60.0, 0.0), EB_Y[0], EB_Y[1], "XZ")
-    body_xz = SG.polygon_from([(X_EBF - H, 20.0), (500.0, 20.0), (500.0, Z_BODY_BOT), (409.2, -50.7),
+    # (W1 realism round 2) the skirt beside the magwell (X 0.4 inside the well's rear wall .. the front face, down to
+    # Z -58) cut by the 35 deg funnel chamfer (magwell_funnel): the full-width housing flares into the narrower well as
+    # one moulding (the judges: the well a separate block stacked under a shelf)
+    zl462 = Z_BODY_BOT + (462.0 - 500.0) * ((-50.7 - Z_BODY_BOT) / (409.2 - 500.0))
+    body_xz = SG.polygon_from([(X_EBF - H, 20.0), (500.0, 20.0), (500.0, Z_BODY_BOT), (462.0, zl462), (462.0, -58.0),
+                               (wall_line_x(-58.0) + 0.4, -58.0), (wall_line_x(-50.75) + 0.4, -50.75),
                                (341.4, -50.8), (323.4, -48.7), (289.3, -43.4), (272.2, -32.8), (X_EBF - H, -30.0)])
-    body = prism(body_xz, SG.Y_R, SG.Y_L, "XZ")
+    body = prism(body_xz, SG.Y_R + LO_INSET, SG.Y_L - LO_INSET, "XZ")
     zw0 = Z_BODY_BOT + 1.0
     mw_xz = SG.polygon_from([(wall_line_x(zw0), zw0), (520.0, zw0), (520.0, -110.0), (wall_line_x(-110.0), -110.0)])
     mw_body = prism(mw_xz, -MW_BODY, MW_BODY, "XZ")
@@ -350,7 +386,7 @@ def lower_receiver():
     xl_ = float(TG["front_leg"]["X"][1]) - 0.15      # the leg's front face 0.15 behind the drawn 402.2: the paddle's
     #                                                 rear face sweeps 0.02 off it there (B3 row >= 0.1; the old traced
     #                                                 ring's face wandered 0.1-0.3 behind the line)
-    g_out = G.ccw(G.clip_x(G.offset(opening, 8.0), None, xl_))
+    g_out = G.ccw(G.clip_x(G.offset(guard_opening(fillet=False), 8.0), None, xl_))
     # the guard's front foot as drawn (the bar's lower front corner runs on forward under the paddle to the magwell,
     # X 402..409, Z -75..-80): the guard part ring in front of the leg below Z -74 (away from the opening), spliced
     # into the loop's front edge (one outline: a separate prism met the loop coplanar, multi-face edges)
@@ -363,6 +399,13 @@ def lower_receiver():
     # and the guard opening
     web = box(336.0, 356.0, -TG["bar_width_Y"] / 2.0, TG["bar_width_Y"] / 2.0, -88.0, Z_BODY_BOT + 1.0)   # (r1: its floor
     #                                   at -84.0 left a 0.02 mm sliver under the joined opening's bottom run; the master clips it)
+    # (W1 realism round 2) the guard's rear bar flares into the grip's front strap (a moulded web, half width 9.0 at
+    # X 330 inside the strap -> the bar's 5.45 at X 352, below Z -74; clipped by the master outline, hollowed by the
+    # opening): the
+    # judges read the bar running into the grip as a thin bar with no blend
+    hw_ = TG["bar_width_Y"] / 2.0
+    web_flare = prism(np.array([[330.0, -9.0], [352.0, -hw_], [352.0, hw_], [330.0, 9.0]]), -95.0, -74.0,
+                      "XY")
     # clevis ears (2.0 thick each side of the paddle, 0.3 off it), from the housing bottom down past the pin
     pz_top, pz_bot = TG["paddle_clevis"]["Z"][0], TG["paddle_clevis"]["Z"][1]
     pw = MR["width_Y"] / 2.0
@@ -501,15 +544,15 @@ def lower_receiver():
     # oblong recess (LEFT only, 0.8 deep, R 0.3 rim)
     orc = feature("lower_receiver", "oblong_recess")
     cuts.append(prism(stadium_xz(orc["X"][0], orc["X"][1], 0.5 * sum(orc["Z"]), orc["Z"][1] - orc["Z"][0]),
-                      SG.Y_L - 0.8, SG.Y_L + 1.0, "XZ"))
+                      SG.Y_L - LO_INSET - 0.8, SG.Y_L + 1.0, "XZ"))
     # flush pin holes
     for name, side, xz, d in pin_holes("lower"):
-        yf = face_y(side, xz[0], xz[1])
+        yf = pin_face_y(side, xz[0], xz[1])
         cuts.append(HW.place(HW.pin_hole_cutter(d, 2.6, 0.15), (xz[0], yf, xz[1]), (0, side, 0)))
     sbp = [q for q in dims("pins_fasteners")["list"] if q["name"] == "seam boss pin"][0]
     sbf = feature("lower_receiver", "seam_boss")
-    cuts.append(HW.place(HW.pin_hole_cutter(sbp["dia"], 2.6, 0.15), (sbp["XZ"][0], SG.Y_L + float(sbf["proud"]),
-                                                                      sbp["XZ"][1]), (0, 1.0, 0)))
+    cuts.append(HW.place(HW.pin_hole_cutter(sbp["dia"], 2.0, 0.15), (sbp["XZ"][0], PAD_TOP_L, sbp["XZ"][1]),
+                         (0, 1.0, 0)))           # in the pad's boss lobe (2.4 thick over the upper's pocket): 2.0 deep
     # the stipple panel's border: the panel set in 0.55 on both grip sides (a rounded rect along the grip axis)
     s_top, s_seam, s_bot = grip_loft()[1]
     pan = PG["stipple_panel"]
@@ -530,12 +573,23 @@ def lower_receiver():
         y0 = sgn * (GRIP_W / 2.0 - step)
         cuts.append(prism(panel, min(y0, sgn * (GRIP_W / 2.0 + 3.0)), max(y0, sgn * (GRIP_W / 2.0 + 3.0)), "XZ"))
     # ---------------- unions after the main rounds: seat bosses, seam boss, hinge knuckles, latch lug
-    seats = [pcyl((sp[0], s * (abs(face_y(s, sp[0], sp[1])) - 0.6), sp[1]),
-                      (sp[0], s * (abs(face_y(s, sp[0], sp[1])) + float(SE["seat_boss_proud"])), sp[1]),
-                      float(LO_feature("selector_seats")["dia"]) / 2.0, 64) for s in (1.0, -1.0)]
-    sb = feature("lower_receiver", "seam_boss")
-    seam_boss = pcyl((sb["XZ"][0], SG.Y_L - 3.6, sb["XZ"][1]), (sb["XZ"][0], SG.Y_L + float(sb["proud"]),
-                                                                      sb["XZ"][1]), sb["dia"] / 2.0, 64)
+    # the seats rise from the set-in housing face to 1.0 over the upper's face (the selector rides on them as before);
+    # LEFT: the seat and the seam boss are one pad (selector_pad_xz)
+    seat_r_ = float(LO_feature("selector_seats")["dia"]) / 2.0
+    seats = [pcyl((sp[0], -(abs(face_y_lower(-1.0, sp[0], sp[1])) - 0.6), sp[1]), (sp[0], PAD_TOP_R, sp[1]), seat_r_,
+                  64)]
+    pad = selector_pad_xz()
+    seam_boss = prism(pad, face_y_lower(1.0, sp[0], sp[1]) - 0.6, PAD_TOP_L, "XZ")
+    pad_g = G.offset(pad, 0.6)
+
+    def pad_round(mid, d, n1, n2, dih, convex):
+        if not convex or dih < 35.0:
+            return 0.0
+        if abs(mid[1] - PAD_TOP_L) < 0.06 and G.point_in_poly((mid[0], mid[2]), pad_g):
+            return 1.0
+        if abs(mid[1] - PAD_TOP_R) < 0.06 and math.hypot(mid[0] - sp[0], mid[2] - sp[1]) < seat_r_ + 0.6:
+            return 1.0
+        return 0.0
     ax, ay = SH["axis_X"], SH["axis_Y"]
     r_k = SH["knuckle_od"] / 2.0
     kn = HG.knuckle_stack((ax, ay, 0.0), (0, 0, 1), [(-22.0, -10.0, "fixed"), (-10.0, 18.0, "moving"),
@@ -556,7 +610,8 @@ def lower_receiver():
                      # the stock-side centre knuckle's clearance in the end block's corner (hinge row 0.3)
                      cylinder((ax, ay, -10.0 - 0.15), (ax, ay, 18.0 + 0.15), r_k + 0.3, 64)]
 
-    faces = [SG.Y_L, SG.Y_R, MW_BODY, -MW_BODY, MW_LIP, -MW_LIP, TG["bar_width_Y"] / 2.0, -TG["bar_width_Y"] / 2.0,
+    faces = [SG.Y_L - LO_INSET, SG.Y_R + LO_INSET, MW_BODY, -MW_BODY, MW_LIP, -MW_LIP, TG["bar_width_Y"] / 2.0,
+             -TG["bar_width_Y"] / 2.0,
              EB_Y[0], EB_Y[1], GRIP_W / 2.0 - step, -(GRIP_W / 2.0 - step)]
 
     def lip_break(mid, d, n1, n2, dih, convex):
@@ -568,13 +623,15 @@ def lower_receiver():
 
     base = body
     gl, _ = grip_loft()
-    ops = [("union", [eb, mw_body, band, guard, foot] + ears),     # (r1: the web is inside the grown guard now)
+    ops = [("intersect", [magwell_funnel()]),
+           ("union", [eb, mw_body, band, guard, foot, web_flare] + ears),     # (r1: the web is inside the grown guard)
            ("intersect", [master_prism()]), ("intersect", [prism(region_lower(), -60.0, 60.0, "XZ")]),
            ("union", [gl]),
            ("diff", [prism(opening, -20.0, 20.0, "XZ")]),
            ("bevel_wc", (1.8, 1, flare_chamfer)),
            ("bevel_wc", (1.4, 2, outer_round)), ("bevel_wc", (0.4, 1, seam_break)),
            ("union", seats + [seam_boss] + kn["fixed"] + [lug_box]),
+           ("bevel_wc", (0.6, 2, pad_round)),
            ("diff", cuts + lug_cuts + knuckle_bores),
            ("bevel_wc", (0.35, 1, lip_break))]
     return Ops("lower_receiver", base, ops, bone="body", cls="P-round", slot=FURN, spec_id="lower_receiver",
