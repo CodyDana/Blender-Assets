@@ -14,9 +14,10 @@ map's pawn.
 
 | Key | Action |
 |---|---|
-| **X** | Draw / holster the rifle (it starts holstered) |
+| **X** | Holster / draw the rifle (it starts in your hands) |
 | **Left mouse** | Fire (hold for full auto, one shot per press in semi) |
-| **Right mouse (hold)** | Aim down the sights (the view moves into the rear sight; release to go back to the hip) |
+| **Right mouse, hold** | Shoulder aim: the camera comes in over the right shoulder (tighter spread) while held |
+| **Right mouse, tap** | Aim down the sights; tap again (or press RMB) to leave. A sprint also leaves them |
 | **R** | Reload (tactical with rounds left: 30+1; empty: the bolt is charged, 29+1) |
 | **B** | Fire selector, in the real AK lever order: Safe -> Auto -> Semi -> Safe (the lever on the gun moves too) |
 | **V** | First-person view toggle (experimental, step G9; not tested yet) |
@@ -43,7 +44,7 @@ While the rifle is out, LMB and RMB belong to the gun (no combo / block). Holste
 
 ## Things you will notice (found by the G7 play test, left for the tuning step G9)
 
-- **You barely see the rifle from the default camera when firing from the hip.** The camera is centred behind the ninja
+- **Camera (fixed 2026-10-11):** with the gun out the camera sits over the right shoulder (DemoGame_1 commit 1670bc0, probe g9_camera_probe.py 9/9). From the hip the template hold pose still keeps most of the rifle in front of the chest; hold RMB to see it clearly.
   and the body turns to face the camera while the gun is out, so the hip-held rifle is behind the body (only its shadow,
   the flash and the tracers show). An over-the-shoulder camera offset fixes it; that is a tuning choice for G9.
 - **Bloom never builds up in full auto** with the current numbers: each shot adds 0.25 deg but it fades at 4 deg/s, which
