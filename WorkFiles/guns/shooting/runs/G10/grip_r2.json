@@ -1,0 +1,267 @@
+{
+ "stage": "G10b grip, review round 2",
+ "date": "2026-10-11",
+ "pass_count": 17,
+ "total": 17,
+ "gates": [
+  {
+   "name": "Palm grip point to SupportHand (IK error), p95 per phase, worst of idle/walk/semi/burst/shoulder (cm)",
+   "value": 0.046,
+   "threshold": "<= 1.0",
+   "pass": true,
+   "round1": 0.033
+  },
+  {
+   "name": "Left fingertip skin gap index/middle/ring/pinky to the handguard (bone tip - 0.7 cm pad): worst median / worst p95 over all phases (cm)",
+   "value": {
+    "median_max": 0.292,
+    "p95_max": 0.324,
+    "idle_median": {
+     "thumb": -0.021,
+     "index": 0.258,
+     "middle": 0.138,
+     "ring": 0.221,
+     "pinky": 0.115
+    },
+    "burst_p95": {
+     "thumb": -0.027,
+     "index": 0.318,
+     "middle": 0.224,
+     "ring": 0.308,
+     "pinky": 0.177
+    },
+    "pinky_p95_all_phases": {
+     "idle": 0.125,
+     "walk": 0.108,
+     "semi": 0.195,
+     "burst": 0.177,
+     "shoulder": 0.116
+    }
+   },
+   "threshold": "every tip incl. the pinky <= 0.5 (median and p95)",
+   "pass": true
+  },
+  {
+   "name": "Left pinky tip on the handguard's right face, not hanging below it: tip face normal (median) and lowest tip height in gun space (cm; the lower handguard's bottom is ~z 2)",
+   "value": {
+    "pinky_normal": [
+     0.0,
+     1.0,
+     0.02
+    ],
+    "pinky_tip_z_min": {
+     "idle": 7.38,
+     "walk": 7.38,
+     "semi": 7.3,
+     "burst": 7.26,
+     "shoulder": 7.37
+    }
+   },
+   "threshold": "normal +Y (right face), tip z well above the bottom",
+   "pass": true
+  },
+  {
+   "name": "Left thumb tip skin gap to the left flat, worst p95 (cm)",
+   "value": 0.026,
+   "threshold": "<= 1.0 (and not deeper than -0.5)",
+   "pass": true,
+   "normal_idle": [
+    0.01,
+    -0.98,
+    0.2
+   ]
+  },
+  {
+   "name": "Left finger penetration (pad radius - distance, or inside), max over all phases and fingers (cm)",
+   "value": 0.239,
+   "threshold": "<= 0.5",
+   "pass": true,
+   "per_finger_burst": {
+    "thumb": 0.173,
+    "index": 0.207,
+    "middle": 0.191,
+    "ring": 0.228,
+    "pinky": 0.224
+   }
+  },
+  {
+   "name": "Joint 02 points inside the handguard (finger-frames, all phases)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "Left fingers side by side (no splay, no crossing): joint 02 / tip spacing of adjacent fingers, idle median (cm; UEFN finger ~2.0 wide)",
+   "value": {
+    "j02": {
+     "index-middle": 2.47,
+     "middle-ring": 2.22,
+     "ring-pinky": 2.15
+    },
+    "tip": {
+     "index-middle": 2.28,
+     "middle-ring": 1.67,
+     "ring-pinky": 1.96
+    },
+    "round2_first_try_j02": {
+     "index-middle": 2.55,
+     "middle-ring": 2.68,
+     "ring-pinky": 2.11
+    },
+    "round2_first_try_tip": {
+     "index-middle": 1.8,
+     "middle-ring": 1.68,
+     "ring-pinky": 2.28
+    }
+   },
+   "threshold": "02 <= 2.5, tips 1.5-2.4 (touching, not crossing)",
+   "pass": true
+  },
+  {
+   "name": "Left knuckle line snug to the lower rear of the handguard: finger-base skin gap per knuckle, median, worst phase (cm)",
+   "value": {
+    "idle": {
+     "index": -0.195,
+     "middle": 0.093,
+     "ring": 0.368,
+     "pinky": 0.301
+    },
+    "max": 0.374,
+    "min": -0.223,
+    "round1_committed": {
+     "index": 0.265,
+     "middle": 0.553,
+     "ring": 2.113,
+     "pinky": 3.334
+    }
+   },
+   "threshold": "each knuckle within 0.5 of the wood, none deeper than -0.5",
+   "pass": true
+  },
+  {
+   "name": "Left palm contact: palm skin patch nearest gap (median) / deepest penetration (cm)",
+   "value": {
+    "palm_gap_min_median_idle": -0.118,
+    "palm_pen_max": 0.181
+   },
+   "threshold": "touching (|gap| <= 0.3), pen <= 0.5",
+   "pass": true
+  },
+  {
+   "name": "Hip hold unchanged: gun vs hand_r (root err, all frames) and gun in actor space idle median vs the G10b baseline run (cm / deg)",
+   "value": {
+    "gun_vs_hand_r": [
+     0.0,
+     0.0
+    ],
+    "idle_vs_base": {
+     "d_cm": 0.004,
+     "d_deg_x": 0.0,
+     "d_deg_z": 0.0
+    },
+    "shoulder_vs_base_reported": {
+     "d_cm": 0.553,
+     "d_deg_x": 0.058,
+     "d_deg_z": 0.288
+    }
+   },
+   "threshold": "<= 0.2 cm / 0.2 deg (idle hip hold)",
+   "pass": true,
+   "note": "the shoulder-aim median moves run to run (two baseline runs differ by 0.76 cm / 0.72 deg), as in the committed grip stage"
+  },
+  {
+   "name": "Right middle tip on the pistol grip: skin gap p95, worst phase (cm)",
+   "value": 0.101,
+   "threshold": "<= 0.15 (was 0.31)",
+   "pass": true,
+   "round1": 0.263,
+   "solved": {
+    "curl_deg": [
+     12.5,
+     5.5,
+     -5.0
+    ],
+    "spread_deg": 16.0
+   }
+  },
+  {
+   "name": "Right thumb / ring / pinky tip skin gap to the grip / receiver, p95 worst phase (cm)",
+   "value": {
+    "thumb": 0.15,
+    "ring": 0.113,
+    "pinky": 0.039
+   },
+   "threshold": "<= 1.0",
+   "pass": true
+  },
+  {
+   "name": "Right thumb / middle / ring / pinky penetration, max (cm)",
+   "value": {
+    "thumb": 0.155,
+    "middle": 0.146,
+    "ring": 0.125,
+    "pinky": 0.079
+   },
+   "threshold": "<= 0.5",
+   "pass": true,
+   "note": "index excluded: it keeps the clip's trigger finger (pad overlaps the trigger blade up to 1.06 cm in bone terms, unchanged)"
+  },
+  {
+   "name": "Right index tip to the Trigger socket, median worst phase (cm)",
+   "value": 0.825,
+   "threshold": "<= 1.0",
+   "pass": true
+  },
+  {
+   "name": "Build: A_AR01_Grip_UEFN baked, ABP_GunCharacter compile (UP_TO_DATE, 0 messages) with hand_l Transform (Modify) Bone before the Two Bone IK, BP_GunCharacter SupportHandGripOffset",
+   "value": {
+    "pass": true,
+    "errors": [],
+    "saved": [
+     "/Game/Guns/AR01/A_AR01_Grip_UEFN",
+     "/Game/Guns/Character/ABP_GunCharacter",
+     "/Game/Guns/Character/BP_GunCharacter"
+    ],
+    "grip_offset": [
+     10.4091,
+     -2.8643,
+     -1.4247
+    ],
+    "hand_rot": {
+     "pitch": 18.224,
+     "yaw": -10.4251,
+     "roll": -19.9649
+    }
+   },
+   "threshold": "pass, 0 errors, only /Game/Guns saved",
+   "pass": true
+  },
+  {
+   "name": "Regression: gun_playtest F0-F15 / g9_camera_probe",
+   "value": "15/15 / 9/9",
+   "threshold": "15/15 / 9/9",
+   "pass": true
+  },
+  {
+   "name": "Close-up frames looked at (left hand: right side plain / low / high, below, front, left side, over the left shoulder; walking and mid-burst right side, low right side and below; right hand right side, below, left-front-below)",
+   "value": "left pinky lies on the right face beside the ring in idle, walking and burst; the four left fingers lie side by side and touch along their length (no fan, the index no longer crosses the middle), bending at the bottom-right bevel and running up the right face; palm cradles the bottom, thumb along the upper left side; from below the fingers read as one wrapped group; right middle pad on the upper left of the pistol grip under the guard, index on the trigger",
+   "threshold": "fingers visibly wrapped on the wood, no hanging pinky, no splay, no floating gaps",
+   "pass": true
+  }
+ ],
+ "method": "round 2 (left from the paused session, kept): the HAND is re-placed on the handguard - a solved rotation of hand_l in its own space (Transform (Modify) Bone, additive, before the Two Bone IK, alpha GunIKAlpha) and a new palm grip point (NinjaGun.SupportHandGripOffset on BP_GunCharacter); the gun and the hold do not move. Round 2b (this session): the finger solve gets a side turn at 02 as well as 01, a side-by-side term (joints 02 / 03 one finger width apart along the bore) and a second pass against both neighbours, so the fingers lie together instead of fanning; the right middle gets a side turn so its pad lands on the grip. Solver g10b_grip_solve_r2.py, builder build_gun_grip_g10b.py, frames g10b_grip_probe_game.py (adds right-side views from below and above).",
+ "shots_dir": "runs/G10/grip_r2/ (before/ = the committed 500d840 frames)",
+ "review_issues_addressed": {
+  "pinky hangs below the handguard": "pinky tip on the right face (normal +Y, tip z >= 7.2 cm, gap 0.12-0.18 cm) in idle, walking and burst",
+  "index/middle/ring straight, splayed, gaps": "fingers lie side by side (02 spacing 2.15-2.47 cm, was 2.11-2.68; tips 1.67-2.28) and the index no longer crosses the middle; the curl at the bottom-right bevel shows from the low right view",
+  "knuckle line 250-300 px below": "knuckles now 0.09-0.37 cm from the wood (index 0.2 cm into it) vs 0.27-3.33 cm in 500d840; what shows below the bottom edge from the right is the back of the UEFN hand (about 3 cm thick)",
+  "fist from below": "the finger gaps seen from below closed (side-by-side term)",
+  "right middle off the grip": "tip gap 0.10 cm (was 0.31) on the grip's upper left side"
+ },
+ "honest_notes": [
+  "the back of the hand still shows below the handguard from the right side: it is the hand's thickness under the wood, the knuckles themselves are on it",
+  "a thin strip of wood shows at the very top between the ring and middle fingertips from the plain right view (rounded tips); the fingers touch along their length",
+  "the right index is not re-posed (clip's trigger finger); bone-terms overlap with the trigger blade up to 1.06 cm, as before",
+  "the gameplay shoulder camera still cannot see the left hand in the hip hold (hidden by the arm); the hold was not to be changed"
+ ]
+}

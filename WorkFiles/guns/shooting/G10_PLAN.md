@@ -137,7 +137,23 @@ chracter is gripping the gun when in idle and shooting, the left hand is not gri
   handguard up to its top edge, and the thumb lies along the upper left side. In the hip hold the shoulder camera does not see the
   left hand (it is behind the right arm). It shows in shoulder aim.
 - **Re-run after any ABP rebuild:** `build_gun_character_g10.py` with `GUNS_G10_REBUILD_ABP=1`, then `build_gun_grip_g10b.py` with
-  `GUNS_G10B_POSE=runs/G10/grip/g10b_grip_pose.json`.
+  `GUNS_G10B_POSE=runs/G10/grip_r2/g10b_grip_pose_r2.json` (superseded `runs/G10/grip/g10b_grip_pose.json`).
+
+### G10b review round 2 (2026-10-11, `runs/G10/grip_r2.json`, 17/17 gates)
+- **Why.** The image review failed the round-1 grip: the left pinky hung below the handguard, the other fingers ran stiff and fanned
+  up the right side, the knuckle line sat well below the wood, and the right middle tip was 0.31 cm off the grip.
+- **Method.** `g10b_grip_solve_r2.py`: the HAND is re-placed first (a solved rotation of `hand_l` in its own space, applied by a
+  Transform (Modify) Bone, additive, before the Two Bone IK, alpha `GunIKAlpha`; plus a new palm point,
+  `NinjaGun.SupportHandGripOffset` = (10.41, -2.86, -1.42) on `BP_GunCharacter`). The gun and the hold do not move. Then the fingers:
+  a side turn at 02 as well as 01, joints 02 / 03 one finger width (~2 cm) apart along the bore, and a second pass against both
+  neighbours. The right middle gets a +-16 deg side turn so its pad reaches the grip.
+- **Result.** Knuckles 0.09-0.37 cm from the wood (round 1: 0.27-3.33). Pinky tip on the right face in every phase (normal +Y, tip at
+  z >= 7.2 cm, gap <= 0.18). Left tips <= 0.32 cm p95, penetration <= 0.24, palm point <= 0.05 cm. Adjacent 02 joints 2.15-2.47 cm
+  apart (were up to 2.68), the index no longer crosses the middle. Right middle 0.10 cm (was 0.31). Idle hip hold 0.004 cm / 0.0 deg
+  from the baseline. Play test 15/15, g9 9/9.
+- **Still visible** (`runs/G10/grip_r2/`, `before/` = the 500d840 frames, new right-side views from below and above): from the
+  right side the back of the hand still shows below the handguard. That is the ~3 cm thickness of the UEFN hand under the wood; the
+  knuckles are on it. A thin strip of wood shows between the ring and middle fingertips.
 
 ### G10c: the third-person reload with hands
 - **The clock is the AR-01 clip's notifies** (sidecar times, read through `UAnimNotify_NinjaGun::FindEventTime`), so
