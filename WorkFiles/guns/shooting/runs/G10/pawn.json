@@ -1,0 +1,135 @@
+{
+ "stage": "G10a pawn",
+ "date": "2026-10-11",
+ "approach": "gun layer as a per-component post-process ABP (duplicate of ABP_UEFN_Mannequin_PostProcess + gun layer), main ABP stays SandboxCharacter_CMC_ABP: its choosers take SandboxCharacter_CMC_ABP_C as context, so a duplicated main ABP cannot drive motion matching (pawn/g10a_abp_probe.json)",
+ "gates": [
+  {
+   "name": "ABP_GunCharacter / BP_GunCharacter / GM_GunRange compile",
+   "value": "<BlueprintStatus.BS_UP_TO_DATE: 3> / <BlueprintStatus.BS_UP_TO_DATE: 3> / <BlueprintStatus.BS_UP_TO_DATE: 3>, node messages 0",
+   "threshold": "UP_TO_DATE, 0 messages",
+   "pass": true
+  },
+  {
+   "name": "Chain from Output (post-process ABP)",
+   "value": "Component To Local <- Transform (Modify) Bone - Bone: foot_r <- Transform (Modify) Bone - Bone: thigh_r <- Transform (Modify) Bone - Bone: foot_l <- Transform (Modify) Bone - Bone: thigh_l <- Transform (Modify) Bone - Bone: head <- Local To Component <- Component To Local <- Two Bone IK - Bone: hand_l <- Local To Component <- Layered blend per bone <- Input Pose",
+   "threshold": "C2L, Two Bone IK, L2C, Layered(spine_01), Input Pose; stock PP chain after",
+   "pass": true
+  },
+  {
+   "name": "BP_GunCharacter components",
+   "value": "added ['NinjaGun'], ninja []; in game ninja []",
+   "threshold": "parent set + NinjaGun only",
+   "pass": true
+  },
+  {
+   "name": "Epic assets untouched",
+   "value": "dirty Epic in memory [] (never saved); guard: 0 writes outside Content/Guns",
+   "threshold": "never saved",
+   "pass": true
+  },
+  {
+   "name": "Retarget: right wrist vs head, template scaled by arm ratio (cm)",
+   "value": 1.977,
+   "threshold": "<= 3.0",
+   "pass": true
+  },
+  {
+   "name": "Retarget: hand separation change (%)",
+   "value": 6.9,
+   "threshold": "<= 10",
+   "pass": true
+  },
+  {
+   "name": "Barrel yaw vs control, standing (deg)",
+   "value": "-5.95 (today's BP_NinjaGasp_Gun ~5.8 from G5_g5_game.json; hold not changed per user)",
+   "threshold": "<= 3",
+   "pass": false
+  },
+  {
+   "name": "Barrel pitch follows control -60..+60 (deg error)",
+   "value": {
+    "+30": -0.36,
+    "-30": 1.14,
+    "+60": 0.01,
+    "-60": 1.24
+   },
+   "threshold": "<= 5",
+   "pass": true
+  },
+  {
+   "name": "Gun mesh box to head (cm)",
+   "value": 11.48,
+   "threshold": ">= 2",
+   "pass": true
+  },
+  {
+   "name": "Gun relative to hand_r vs BP_NinjaGasp_Gun offset (cm / deg)",
+   "value": "{'d_cm': 0.0, 'd_deg': 0.0}; in game root err max 0.0 cm",
+   "threshold": "<= 0.01 / 0.01",
+   "pass": true
+  },
+  {
+   "name": "Palm grip point to SupportHand, idle/walk/fire/shoulder (cm max)",
+   "value": [
+    0.0032,
+    0.0329,
+    0.0212,
+    0.0012
+   ],
+   "threshold": "<= 1.0",
+   "pass": true
+  },
+  {
+   "name": "Holstered parity vs stock SandboxCharacter_CMC, same frame (cm max: walking / idle after walk)",
+   "value": [
+    0.0,
+    0.0
+   ],
+   "threshold": "<= 1.0",
+   "pass": true
+  },
+  {
+   "name": "Gait speeds vs class (walk/run/sprint/crouch %)",
+   "value": {
+    "walk": 0.0,
+    "run": 0.0,
+    "sprint": 0.0,
+    "crouch": 0.0
+   },
+   "threshold": "within 1 %",
+   "pass": true
+  },
+  {
+   "name": "Shoulder offset right of base view at hip (cm)",
+   "value": 80.0,
+   "threshold": "80 +- 2",
+   "pass": true
+  },
+  {
+   "name": "MMB strafe re-asserted (body yaw err after 90 deg turn, deg)",
+   "value": 0.0,
+   "threshold": "<= 10",
+   "pass": true
+  },
+  {
+   "name": "g9_camera_probe",
+   "value": "9/9",
+   "threshold": "9/9",
+   "pass": true
+  },
+  {
+   "name": "gun_playtest F0-F15 (F14 reported)",
+   "value": "15/15",
+   "threshold": "15/15",
+   "pass": true
+  },
+  {
+   "name": "Frames looked at (idle 3P, side idle, walking, firing, shoulder aim, ADS, parity)",
+   "value": "gun in right hand, left hand at handguard (open fingers: G10b), card-shop run, no T-pose, no ninja pose; 3P back view hides most of the gun (hip hold unchanged per user)",
+   "threshold": "looked at",
+   "pass": true
+  }
+ ],
+ "pass_count": 17,
+ "total": 18
+}

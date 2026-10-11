@@ -1,0 +1,338 @@
+{
+ "t0": 1791713613.3870916,
+ "log": [
+  "add_variable GunHoldWeight float: None",
+  "add_variable GunIKAlpha float: None",
+  "add_variable GunAimPitch float: None",
+  "add_variable GunSupportHandWS vector: None",
+  "add_variable GunSupportHandHS vector: None",
+  "add_variable GunSupportHandRotWS rotator: None",
+  "set Sequence Player 'MF_Rifle_Idle_ADS_UEFN' ['Sequence', 'bLoopAnimation']: True",
+  "set AimOffset Player 'AO_Rifle_UEFN' ['BlendSpace']: True",
+  "set Slot 'GunUpper' ['SlotName']: True",
+  "set Slot 'GunAdditive' ['SlotName']: True",
+  "set Layered blend per bone ['LayerSetup', 'bMeshSpaceRotationBlend', 'BlendWeights']: True",
+  "set Two Bone IK - Bone: hand_l ['IKBone', 'bAllowStretching', 'StartStretchRatio', 'MaxStretchScale', 'EffectorLocationSpace', 'EffectorTarget', 'JointTargetLocationSpace', 'JointTarget', 'bTakeRotationFromEffectorSpace', 'bMaintainEffectorRelRot']: True",
+  "connect Input Pose.Pose -> Layered blend per bone.BasePose: True",
+  "connect Sequence Player 'MF_Rifle_Idle_ADS_UEFN'.Pose -> AimOffset Player 'AO_Rifle_UEFN'.BasePose: True",
+  "connect AimOffset Player 'AO_Rifle_UEFN'.Pose -> Slot 'GunUpper'.Source: True",
+  "connect Slot 'GunUpper'.Pose -> Slot 'GunAdditive'.Source: True",
+  "connect Slot 'GunAdditive'.Pose -> Layered blend per bone.BlendPoses_0: True",
+  "connect Layered blend per bone.Pose -> Local To Component.LocalPose: True",
+  "connect Local To Component.ComponentPose -> Two Bone IK - Bone: hand_l.ComponentPose: True",
+  "connect Two Bone IK - Bone: hand_l.Pose -> Component To Local.ComponentPose: True",
+  "connect Component To Local.Pose -> Local To Component.LocalPose: True",
+  "connect Get GunHoldWeight.GunHoldWeight -> Layered blend per bone.BlendWeights_0: True",
+  "connect Get GunIKAlpha.GunIKAlpha -> Two Bone IK - Bone: hand_l.Alpha: True",
+  "connect Get GunSupportHandHS.GunSupportHandHS -> Two Bone IK - Bone: hand_l.EffectorLocation: True",
+  "connect Get GunAimPitch.GunAimPitch -> float * float.A: True",
+  "connect float * float.ReturnValue -> AimOffset Player 'AO_Rifle_UEFN'.Y: True"
+ ],
+ "errors": [],
+ "saved": [
+  "/Game/Guns/Character/ABP_GunCharacter",
+  "/Game/Guns/Character/BP_GunCharacter",
+  "/Game/Guns/Character/GM_GunRange"
+ ],
+ "retargeter": {
+  "reused": true
+ },
+ "retarget": {
+  "targets": {
+   "hold": "/Game/Guns/Character/Anims_UEFN/MF_Rifle_Idle_ADS_UEFN",
+   "ao": "/Game/Guns/Character/Anims_UEFN/AO_Rifle_UEFN",
+   "fire": "/Game/Guns/Character/Anims_UEFN/MM_Rifle_Fire_UEFN",
+   "reload": "/Game/Guns/Character/Anims_UEFN/MM_Rifle_Reload_UEFN",
+   "equip": "/Game/Guns/Character/Anims_UEFN/MM_Rifle_Equip_UEFN"
+  },
+  "reused": true,
+  "info": {
+   "hold": {
+    "class": "AnimSequence",
+    "skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+    "length": 8.0,
+    "source_length": 8.0,
+    "additive": "<AdditiveAnimationType.AAT_NONE: 0>",
+    "source_additive": "<AdditiveAnimationType.AAT_NONE: 0>",
+    "ref_pose_type": "<AdditiveBasePoseType.ABPT_NONE: 0>",
+    "ref_pose_seq": null
+   },
+   "ao": {
+    "class": "AimOffsetBlendSpace",
+    "skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+    "samples": [
+     "/Game/Guns/Character/Anims_UEFN/MM_Rifle_Idle_ADS_AO_CU_UEFN.MM_Rifle_Idle_ADS_AO_CU_UEFN",
+     "/Game/Guns/Character/Anims_UEFN/MM_Rifle_Idle_ADS_AO_CD_UEFN.MM_Rifle_Idle_ADS_AO_CD_UEFN",
+     "/Game/Guns/Character/Anims_UEFN/MM_Rifle_Idle_ADS_AO_CC_UEFN.MM_Rifle_Idle_ADS_AO_CC_UEFN"
+    ]
+   },
+   "fire": {
+    "class": "AnimSequence",
+    "skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+    "length": 0.5333,
+    "source_length": 0.5333,
+    "additive": "<AdditiveAnimationType.AAT_ROTATION_OFFSET_MESH_SPACE: 2>",
+    "source_additive": "<AdditiveAnimationType.AAT_ROTATION_OFFSET_MESH_SPACE: 2>",
+    "ref_pose_type": "<AdditiveBasePoseType.ABPT_ANIM_FRAME: 3>",
+    "ref_pose_seq": "/Game/Guns/Character/Anims_UEFN/MM_Rifle_Fire_UEFN.MM_Rifle_Fire_UEFN"
+   },
+   "reload": {
+    "class": "AnimSequence",
+    "skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+    "length": 2.2,
+    "source_length": 2.2,
+    "additive": "<AdditiveAnimationType.AAT_NONE: 0>",
+    "source_additive": "<AdditiveAnimationType.AAT_NONE: 0>",
+    "ref_pose_type": "<AdditiveBasePoseType.ABPT_NONE: 0>",
+    "ref_pose_seq": null
+   },
+   "equip": {
+    "class": "AnimSequence",
+    "skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+    "length": 1.6667,
+    "source_length": 1.6667,
+    "additive": "<AdditiveAnimationType.AAT_NONE: 0>",
+    "source_additive": "<AdditiveAnimationType.AAT_NONE: 0>",
+    "ref_pose_type": "<AdditiveBasePoseType.ABPT_NONE: 0>",
+    "ref_pose_seq": null
+   }
+  },
+  "quality": [
+   {
+    "t": 0.0,
+    "arm_ratio": 0.8889,
+    "handr_head_template_scaled": [
+     -9.94,
+     9.39,
+     -16.71
+    ],
+    "handr_head_uefn": [
+     -10.95,
+     9.29,
+     -18.39
+    ],
+    "wrist_vs_head_err_cm": 1.962,
+    "hand_sep_template": 37.37,
+    "hand_sep_uefn": 34.8,
+    "hand_sep_change_pct": -6.88
+   },
+   {
+    "t": 1.0,
+    "arm_ratio": 0.8889,
+    "handr_head_template_scaled": [
+     -10.01,
+     9.5,
+     -16.69
+    ],
+    "handr_head_uefn": [
+     -11.01,
+     9.4,
+     -18.37
+    ],
+    "wrist_vs_head_err_cm": 1.959,
+    "hand_sep_template": 37.37,
+    "hand_sep_uefn": 34.8,
+    "hand_sep_change_pct": -6.88
+   },
+   {
+    "t": 2.0,
+    "arm_ratio": 0.8889,
+    "handr_head_template_scaled": [
+     -10.11,
+     9.28,
+     -16.67
+    ],
+    "handr_head_uefn": [
+     -11.13,
+     9.17,
+     -18.36
+    ],
+    "wrist_vs_head_err_cm": 1.977,
+    "hand_sep_template": 37.42,
+    "hand_sep_uefn": 34.84,
+    "hand_sep_change_pct": -6.9
+   },
+   {
+    "t": 4.0,
+    "arm_ratio": 0.8889,
+    "handr_head_template_scaled": [
+     -9.66,
+     9.45,
+     -16.69
+    ],
+    "handr_head_uefn": [
+     -10.64,
+     9.34,
+     -18.38
+    ],
+    "wrist_vs_head_err_cm": 1.961,
+    "hand_sep_template": 37.41,
+    "hand_sep_uefn": 34.84,
+    "hand_sep_change_pct": -6.85
+   }
+  ],
+  "gate_wrist_vs_head_cm": 1.977,
+  "gate_hand_sep_pct": 6.9,
+  "pass": true
+ },
+ "abp": {
+  "source_chain_from_output": [
+   "Component To Local <AnimGraphNode_ComponentToLocalSpace>",
+   "Transform (Modify) Bone - Bone: foot_r <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: thigh_r <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: foot_l <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: thigh_l <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: head <AnimGraphNode_ModifyBone>",
+   "Local To Component <AnimGraphNode_LocalToComponentSpace>",
+   "Input Pose <AnimGraphNode_LinkedInputPose>"
+  ],
+  "source_nodes": [
+   "AnimGraphNode_ApplyMeshSpaceAdditive",
+   "AnimGraphNode_ComponentToLocalSpace",
+   "AnimGraphNode_LinkedInputPose",
+   "AnimGraphNode_LocalToComponentSpace",
+   "AnimGraphNode_ModifyBone",
+   "AnimGraphNode_Root",
+   "AnimGraphNode_SequencePlayer"
+  ],
+  "target_skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+  "node_types": {
+   "seqplayer": "Animation|Sequences|SequencePlayer",
+   "aimoffset": "Animation|BlendSpaces|AimOffsetPlayer",
+   "slot": "Animation|Montage|Slot'DefaultSlot'",
+   "layered": "Animation|Blends|Layeredblendperbone",
+   "l2c": "Animation|ConvertSpaces|LocalToComponent",
+   "c2l": "Animation|ConvertSpaces|ComponentToLocal",
+   "twobone": "Animation|SkeletalControls|TwoBoneIK"
+  },
+  "getter_types": {
+   "GunHoldWeight": null,
+   "GunIKAlpha": null,
+   "GunAimPitch": null,
+   "GunSupportHandWS": null,
+   "GunSupportHandHS": null,
+   "GunSupportHandRotWS": null
+  },
+  "input_pose_consumers": [
+   "Local To Component.LocalPose"
+  ],
+  "chain_from_output": [
+   "Component To Local <AnimGraphNode_ComponentToLocalSpace>",
+   "Transform (Modify) Bone - Bone: foot_r <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: thigh_r <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: foot_l <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: thigh_l <AnimGraphNode_ModifyBone>",
+   "Transform (Modify) Bone - Bone: head <AnimGraphNode_ModifyBone>",
+   "Local To Component <AnimGraphNode_LocalToComponentSpace>",
+   "Component To Local <AnimGraphNode_ComponentToLocalSpace>",
+   "Two Bone IK - Bone: hand_l <AnimGraphNode_TwoBoneIK>",
+   "Local To Component <AnimGraphNode_LocalToComponentSpace>",
+   "Layered blend per bone <AnimGraphNode_LayeredBoneBlend>",
+   "Input Pose <AnimGraphNode_LinkedInputPose>"
+  ],
+  "upper_chain_from_layered_pose0": [
+   "Slot 'GunUpper' <AnimGraphNode_Slot>",
+   "AimOffset Player 'AO_Rifle_UEFN' <AnimGraphNode_RotationOffsetBlendSpace>",
+   "Sequence Player 'MF_Rifle_Idle_ADS_UEFN' <AnimGraphNode_SequencePlayer>"
+  ],
+  "compile": {
+   "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+   "node_messages": []
+  },
+  "readback": {
+   "ik": "{\"Node\":{\"iKBone\":{\"boneName\":\"hand_l\"},\"startStretchRatio\":1,\"maxStretchScale\":1.05,\"effectorLocation\":{\"x\":0,\"y\":0,\"z\":0},\"effectorTarget\":{\"bUseSocket\":false,\"boneReference\":{\"boneName\":\"hand_r\"},\"socketReference\":{\"socketName\":\"None\"}},\"jointTargetLocation\":{\"x\":0,\"y\":0,\"z\":0},\"jointTarget\":{\"bUseSocket\":false,\"boneReference\":{\"boneName\":\"lowerarm_l\"},\"socketReference\":{\"socketName\":\"None\"}},\"twistAxis\":{\"axis\":{\"x\":1,\"y\":0,\"z\":0},\"bInLocalSpace\":true},\"effectorLocationSpace\":\"BCS_BoneSpace\",\"jointTargetLocationSpace\":\"BCS_BoneSpace\",\"bAllowStretching\":true,\"bTakeRotationFromEffectorSpace\":false,\"bMaintainEffectorRelRot\":false,\"bAllowTwist\":true,\"componentPose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"lODThreshold\":-1,\"alphaInputType\":\"Float\",\"bAlphaBoolEnabled\":true,\"alpha\":1,\"alphaScaleBias\":{\"scale\":1,\"bias\":0},\"alphaBoolBlend\":{\"blendInTime\":0,\"blendOutTime\":0,\"blendOption\":\"HermiteCubic\",\"customCurve\":\"None\"},\"alphaCurveName\":\"None\",\"alphaScaleBiasClamp\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"initialUpd",
+   "layered": "{\"Node\":{\"basePose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"blendPoses\":[{\"linkId\":-1,\"sourceLinkId\":-1}],\"blendMode\":\"BranchFilter\",\"blendMasks\":[],\"layerSetup\":[{\"branchFilters\":[{\"boneName\":\"spine_01\",\"blendDepth\":0}]}],\"blendWeights\":[1],\"perBoneBlendWeights\":[],\"skeletonGuid\":\"00000000-0000-0000-0000-000000000000\",\"virtualBoneGuid\":\"00000000-0000-0000-0000-000000000000\",\"lODThreshold\":-1,\"bMeshSpaceRotationBlend\":true,\"bRootSpaceRotationBlend\":false,\"bMeshSpaceScaleBlend\":false,\"curveBlendOption\":\"Override\",\"bBlendRootMotionBasedOnRootBone\":true,\"bUpdateBasePoseFirst\":false,\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+   "seq": "{\"Node\":{\"groupName\":\"None\",\"groupRole\":\"CanBeLeader\",\"bOverridePositionWhenJoiningSyncGroupAsLeader\":false,\"method\":\"DoNotSync\",\"bIgnoreForRelevancyTest\":false,\"sequence\":{\"refPath\":\"/Game/Guns/Character/Anims_UEFN/MF_Rifle_Idle_ADS_UEFN.MF_Rifle_Idle_ADS_UEFN\"},\"playRateBasis\":1,\"playRate\":1,\"playRateScaleBiasClampConstants\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"startPosition\":0,\"bLoopAnimation\":true,\"bStartFromMatchingPose\":false,\"playRateScaleBiasClampState\":{},\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}",
+   "ao": "{\"Node\":{\"basePose\":{\"linkId\":-1,\"sourceLinkId\":-1},\"bApplyAdditiveInRootSpace\":false,\"lODThreshold\":-1,\"alpha\":1,\"alphaScaleBias\":{\"scale\":1,\"bias\":0},\"alphaBoolBlend\":{\"blendInTime\":0,\"blendOutTime\":0,\"blendOption\":\"HermiteCubic\",\"customCurve\":\"None\"},\"alphaCurveName\":\"None\",\"alphaScaleBiasClamp\":{\"bMapRange\":false,\"bClampResult\":false,\"bInterpResult\":false,\"inRange\":{\"min\":0,\"max\":1},\"outRange\":{\"min\":0,\"max\":1},\"scale\":1,\"bias\":0,\"clampMin\":0,\"clampMax\":1,\"interpSpeedIncreasing\":10,\"interpSpeedDecreasing\":10},\"alphaInputType\":\"Float\",\"bAlphaBoolEnabled\":false,\"groupName\":\"None\",\"groupRole\":\"CanBeLeader\",\"bOverridePositionWhenJoiningSyncGroupAsLeader\":false,\"method\":\"DoNotSync\",\"bIgnoreForRelevancyTest\":false,\"x\":0,\"y\":0,\"playRate\":1,\"bLoop\":true,\"bResetPlayTimeWhenBlendSpaceChanges\":true,\"startPosition\":0,\"blendSpace\":{\"refPath\":\"/Game/Guns/Character/Anims_UEFN/AO_Rifle_UEFN.AO_Rifle_UEFN\"},\"initialUpdateFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"becomeRelevantFunction\":{\"className\":\"None\",\"functionName\":\"None\"},\"updateFunction\":{\"className\":\"None\",\"functionName\":\"None\"}}}"
+  },
+  "pass": true
+ },
+ "pawn": {
+  "parent_components": [
+   "AC_FoleyEvents",
+   "AC_PreCMCTick",
+   "AC_SmartObjectAnimation",
+   "AC_TraversalLogic",
+   "ArrowComponent",
+   "BP_VisualOverrideManager",
+   "Camera(NotUsedByDefault)",
+   "CapsuleComponent",
+   "CharacterMovement",
+   "GameplayCamera",
+   "Mesh",
+   "MotionWarping",
+   "None",
+   "SpringArm",
+   "VisualOverride"
+  ],
+  "compile": {
+   "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+   "node_messages": []
+  },
+  "ninja_gun": {
+   "default_gun": "<Object '/Game/Guns/AR01/DA_Gun_AR01.DA_Gun_AR01' (0x000001CA4F3A5400) Class 'NinjaGunData'>",
+   "gun_class": "<Object '/Game/Guns/Core/BP_GunBase.BP_GunBase_C' (0x000001C96E2B2A00) Class 'BlueprintGeneratedClass'>",
+   "equip_action": "<Object '/Game/Guns/Input/IA_GunEquip.IA_GunEquip' (0x000001C956794140) Class 'InputAction'>",
+   "fire_action": "<Object '/Game/Guns/Input/IA_GunFire.IA_GunFire' (0x000001C956794500) Class 'InputAction'>",
+   "aim_action": "<Object '/Game/Guns/Input/IA_GunAim.IA_GunAim' (0x000001C9567D0B60) Class 'InputAction'>",
+   "reload_action": "<Object '/Game/Guns/Input/IA_GunReload.IA_GunReload' (0x000001C956794800) Class 'InputAction'>",
+   "selector_action": "<Object '/Game/Guns/Input/IA_GunSelector.IA_GunSelector' (0x000001C956794B00) Class 'InputAction'>",
+   "view_action": "<Object '/Game/Guns/Input/IA_GunView.IA_GunView' (0x000001C9567D0FC0) Class 'InputAction'>",
+   "base_context": "<Object '/Game/Guns/Input/IMC_GunsBase.IMC_GunsBase' (0x000001C97EDC8C00) Class 'InputMappingContext'>",
+   "equipped_context": "<Object '/Game/Guns/Input/IMC_GunsEquipped.IMC_GunsEquipped' (0x000001C97EDC9380) Class 'InputMappingContext'>",
+   "fallback_attach_bone": "hand_r",
+   "fallback_attach_offset": "<Struct 'Transform' (0x000001C96AC97930) {rotation: {x: -0.086687, y: -0.122754, z: 0.986567, w: 0.064048}, translation: {x: -7.218102, y: 3.417867, z: -0.946828}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+   "spawn_equipped": "True",
+   "attach_bone": "None",
+   "body_post_process_anim_class": "<Object '/Game/Guns/Character/ABP_GunCharacter.ABP_GunCharacter_C' (0x000001C94E993800) Class 'AnimBlueprintGeneratedClass'>",
+   "support_hand_grip_offset": "<Struct 'Vector' (0x000001C96AC97A88) {x: 7.500000, y: -2.350000, z: 0.000000}>"
+  },
+  "body_clip_overrides": {
+   "MF_Rifle_Idle_ADS": "MF_Rifle_Idle_ADS_UEFN",
+   "MM_Rifle_Fire": "MM_Rifle_Fire_UEFN",
+   "MM_Rifle_Reload": "MM_Rifle_Reload_UEFN",
+   "MM_Rifle_Equip": "MM_Rifle_Equip_UEFN"
+  },
+  "fallback_offset_vs_ninja": {
+   "d_cm": 0.0,
+   "d_deg": 0.0
+  },
+  "components": {
+   "None": "BP_GunCharacter_C",
+   "SpringArm": "SpringArmComponent",
+   "GameplayCamera": "GameplayCameraComponent",
+   "VisualOverride": "ChildActorComponent",
+   "Camera(NotUsedByDefault)": "CameraComponent",
+   "CapsuleComponent": "CapsuleComponent",
+   "ArrowComponent": null,
+   "Mesh": "SkeletalMeshComponent",
+   "CharacterMovement": "CharacterMovementComponent",
+   "AC_PreCMCTick": "AC_PreCMCTick_C",
+   "AC_FoleyEvents": "AC_FoleyEvents_C",
+   "MotionWarping": "MotionWarpingComponent",
+   "AC_TraversalLogic": "AC_TraversalLogic_C",
+   "BP_VisualOverrideManager": "AC_VisualOverrideManager_C",
+   "AC_SmartObjectAnimation": "AC_SmartObjectAnimation_C",
+   "NinjaGun": "NinjaGunComponent"
+  },
+  "added_components": [
+   "NinjaGun"
+  ],
+  "ninja_components": [],
+  "pass": true
+ },
+ "gm": {
+  "default_pawn_class_before": "<Object '/Game/Guns/Character/BP_GunCharacter.BP_GunCharacter_C' (0x000001C973864D00) Class 'BlueprintGeneratedClass'>",
+  "compile": {
+   "status": "<BlueprintStatus.BS_UP_TO_DATE: 3>",
+   "node_messages": []
+  },
+  "default_pawn_class": "<Object '/Game/Guns/Character/BP_GunCharacter.BP_GunCharacter_C' (0x000001C973864D00) Class 'BlueprintGeneratedClass'>",
+  "player_controller_class": "<Object '/Script/Engine.PlayerController' (0x00007FF41F6FBF70) Class 'Class'>",
+  "pass": true
+ },
+ "dirty_outside_guns_not_saved": [],
+ "epic_dirty_in_memory_not_saved": [],
+ "pass": true,
+ "seconds": 15.4
+}

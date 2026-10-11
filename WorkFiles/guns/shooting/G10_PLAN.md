@@ -72,6 +72,26 @@ chracter is gripping the gun when in idle and shooting, the left hand is not gri
   - `BP_NinjaGasp_Gun` stays in the project, untouched, so the ninja prototype keeps working.
   - The player controller stays the engine's (stock `PlayerCameraManager`, which the probe showed works with modifiers).
 
+### G10a as built (2026-10-11, `runs/G10/pawn.json`, 17/18 gates)
+- **Changed from the plan: the gun layer is a post-process ABP, not a duplicate of `SandboxCharacter_CMC_ABP`.** GASP's
+  choosers (`CHT_PoseSearchDatabases`, `CHT_CMCCharacterAnimations`) take `SandboxCharacter_CMC_ABP_C` as their context class,
+  so a duplicate could not drive motion matching (`runs/G10/pawn/g10a_abp_probe.json`).
+  - `/Game/Guns/Character/ABP_GunCharacter` is a duplicate of the mesh's own `ABP_UEFN_Mannequin_PostProcess`. The gun layer sits
+    between its Input Pose and the stock chain.
+  - `UNinjaGunComponent::BodyPostProcessAnimClass` installs it per component at BeginPlay (`SetOverridePostProcessAnimBP`).
+    The gun variables and body montages go to that instance (`INinjaGunHolder::GetGunBodyAnimInstance`).
+  - **G10b/G10c edit `ABP_GunCharacter`**, using the builder `Tools/Claude/Guns/build_gun_character_g10.py`.
+- **Retarget:** `RTG_Gun_UE5_to_UEFN` has the default ops plus a Pin Bones op, so `hand_r` and `hand_l` take the source's
+  global rotation. Without it the barrel pointed 17 deg left; with it, 5.95 deg, which is today's ninja value (about 5.8).
+  The plan's 3 deg gate is not met. The hold is left as it is, as the user asked.
+- **Left-hand reach:** Two Bone IK allows up to 5 % stretch. UEFN's arm is 11 % shorter, so the reach is about 101.9 % at idle.
+- **Damage without the ninja lock-on:** `INinjaGunHolder::IsGunHostileTo`. The ninja pawn keeps the lock-on rule; the gun pawn
+  uses `GunTeamId` 0 against the dummy's lock-on TeamId 1.
+- **Other changes:** strafe and aim are re-asserted every tick while the gun is out. `BodyClipOverrides` maps the template
+  clips to `Anims_UEFN/*_UEFN`.
+- **Play test (`gun_playtest.py`):** `GUNS_PAWN` (default `BP_GunCharacter`). F0 is now drawn at spawn, then X holsters and X
+  draws again. ADS is a tap of RMB. F13 searches crouched too, because the card-shop camera sits lower.
+
 ### G10b: grip (the requested change)
 - **Method: a solved, baked finger pose on the finger chains only.** No new IK and no change to the hold.
   - A commandlet solver (`g10b_grip_solve.py`) evaluates the retargeted hold pose on `SKM_UEFN_Mannequin` and places

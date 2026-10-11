@@ -1,0 +1,547 @@
+{
+ "probe": "G10a pawn",
+ "events": [
+  "0.0s registered",
+  "4.1s world ready",
+  "4.1s world {'pawn': True, 'game_mode': True, 'no_ninja_components': True, 'mesh': True, 'main_abp_stock': True, 'post_process_gun_layer': True, 'drawn_at_spawn': True}",
+  "56.3s gates {'world': True, 'hold_idle_walk_fire_shoulder': True, 'barrel_yaw_le_3': False, 'pitch_follows_within_5': True, 'head_clearance_ge_2': True, 'shoulder_offset_80pm2': True, 'strafe_reasserted': True, 'shots_fired': True, 'gait_within_1pct': True, 'parity_le_1cm': True}"
+ ],
+ "shots": [
+  "01_idle_3p.png",
+  "02_side_idle.png",
+  "02b_front_idle.png",
+  "03_walking.png",
+  "04_firing.png",
+  "04b_side_firing.png",
+  "05_shoulder_aim.png",
+  "06_ads.png",
+  "07_holstered.png",
+  "08_parity_walking_stock_left_gun_right.png"
+ ],
+ "errors": [],
+ "world": {
+  "pawn_class": "/Game/Guns/Character/BP_GunCharacter.BP_GunCharacter_C",
+  "game_mode": "/Game/Guns/Character/GM_GunRange.GM_GunRange_C",
+  "map": "L_GunRange",
+  "components": [
+   "AC_FoleyEvents:AC_FoleyEvents_C",
+   "AC_PreCMCTick:AC_PreCMCTick_C",
+   "AC_SmartObjectAnimation:AC_SmartObjectAnimation_C",
+   "AC_TraversalLogic:AC_TraversalLogic_C",
+   "BP_VisualOverrideManager:AC_VisualOverrideManager_C",
+   "Camera(NotUsedByDefault):CameraComponent",
+   "CameraProxyMeshComponent_0:CameraProxyMeshComponent",
+   "CameraProxyMeshComponent_1:CameraProxyMeshComponent",
+   "CharMoveComp:CharacterMovementComponent",
+   "CharacterMesh0:SkeletalMeshComponent",
+   "CollisionCylinder:CapsuleComponent",
+   "DrawFrustumComponent_0:DrawFrustumComponent",
+   "DrawFrustumComponent_1:DrawFrustumComponent",
+   "GameplayCamera:GameplayCameraComponent",
+   "MotionWarping:MotionWarpingComponent",
+   "NinjaGun:NinjaGunComponent",
+   "OutputCameraComponent:CineCameraComponent",
+   "PawnInputComponent0:EnhancedInputComponent",
+   "SpringArm:SpringArmComponent",
+   "VisualOverride:ChildActorComponent"
+  ],
+  "ninja_components": [],
+  "mesh": "/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin",
+  "main_anim_class": "/Game/Blueprints/SandboxCharacter_CMC_ABP.SandboxCharacter_CMC_ABP_C",
+  "post_process_class": "/Game/Guns/Character/ABP_GunCharacter.ABP_GunCharacter_C",
+  "child_actors": [
+   null
+  ],
+  "gun": "/Game/Guns/Core/BP_GunBase.BP_GunBase_C",
+  "drawn_at_spawn": true,
+  "state_at_start": "<NinjaGunState.IDLE: 2>",
+  "checks": {
+   "pawn": true,
+   "game_mode": true,
+   "no_ninja_components": true,
+   "mesh": true,
+   "main_abp_stock": true,
+   "post_process_gun_layer": true,
+   "drawn_at_spawn": true
+  }
+ },
+ "hold": {
+  "idle": {
+   "frames": 60,
+   "frames_used": 60,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0032,
+   "palm_err_cm_median": 0.0008,
+   "reach_ratio_max": 1.0,
+   "barrel_yaw_err_median": -5.95,
+   "barrel_pitch_median": 8.9,
+   "head_box_cm_min": 11.65,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true
+  },
+  "idle_first": {
+   "phase": "idle",
+   "state": "<NinjaGunState.IDLE: 2>",
+   "attach": "hand_r",
+   "tp_parent": "CharacterMesh0",
+   "tp_socket": "hand_r",
+   "root_err_cm": 0.0,
+   "root_err_deg": 0.0,
+   "palm_err_cm": 0.0014,
+   "reach_ratio": 1.0,
+   "ik": 1.0,
+   "hold": 1.0,
+   "aim_pitch_var": 0.0,
+   "ctrl_pitch": 0.0,
+   "barrel_yaw_err": -5.88,
+   "barrel_pitch": 8.82,
+   "head_box_cm": 11.69,
+   "speed": 0.0,
+   "actor_yaw_err": 0.0
+  },
+  "walk": {
+   "frames": 15,
+   "frames_used": 15,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0329,
+   "palm_err_cm_median": 0.004,
+   "reach_ratio_max": 1.0,
+   "barrel_yaw_err_median": -5.95,
+   "barrel_pitch_median": 8.89,
+   "head_box_cm_min": 11.65,
+   "speed_median": 500.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true
+  },
+  "fire_mode": "<NinjaGunFireMode.AUTO: 3>",
+  "fire": {
+   "frames": 30,
+   "frames_used": 30,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0212,
+   "palm_err_cm_median": 0.01,
+   "reach_ratio_max": 0.992,
+   "barrel_yaw_err_median": -4.73,
+   "barrel_pitch_median": 10.87,
+   "head_box_cm_min": 11.48,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.FIRING: 3>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true
+  },
+  "shots_fired": 6,
+  "shoulder_aim": {
+   "frames": 10,
+   "frames_used": 10,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0012,
+   "palm_err_cm_median": 0.0005,
+   "reach_ratio_max": 1.0,
+   "barrel_yaw_err_median": -5.83,
+   "barrel_pitch_median": 8.78,
+   "head_box_cm_min": 11.85,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true
+  }
+ },
+ "aim": {
+  "+30": {
+   "frames": 12,
+   "frames_used": 12,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0018,
+   "palm_err_cm_median": 0.0011,
+   "reach_ratio_max": 0.976,
+   "barrel_yaw_err_median": -8.57,
+   "barrel_pitch_median": 38.62,
+   "head_box_cm_min": 11.07,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true,
+   "ctrl_pitch": 30.0
+  },
+  "-30": {
+   "frames": 12,
+   "frames_used": 12,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.001,
+   "palm_err_cm_median": 0.0007,
+   "reach_ratio_max": 0.9778,
+   "barrel_yaw_err_median": -6.81,
+   "barrel_pitch_median": -19.88,
+   "head_box_cm_min": 12.25,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true,
+   "ctrl_pitch": -30.0
+  },
+  "+60": {
+   "frames": 12,
+   "frames_used": 12,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0016,
+   "palm_err_cm_median": 0.0003,
+   "reach_ratio_max": 0.9304,
+   "barrel_yaw_err_median": -21.13,
+   "barrel_pitch_median": 68.99,
+   "head_box_cm_min": 10.04,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true,
+   "ctrl_pitch": 60.0
+  },
+  "-60": {
+   "frames": 12,
+   "frames_used": 12,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0008,
+   "palm_err_cm_median": 0.0007,
+   "reach_ratio_max": 0.9574,
+   "barrel_yaw_err_median": -11.05,
+   "barrel_pitch_median": -49.78,
+   "head_box_cm_min": 12.64,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true,
+   "ctrl_pitch": -60.0
+  },
+  "+0": {
+   "frames": 12,
+   "frames_used": 12,
+   "root_err_cm_max": 0.0,
+   "root_err_deg_max": 0.0,
+   "palm_err_cm_max": 0.0008,
+   "palm_err_cm_median": 0.0006,
+   "reach_ratio_max": 1.0,
+   "barrel_yaw_err_median": -5.84,
+   "barrel_pitch_median": 8.98,
+   "head_box_cm_min": 11.87,
+   "speed_median": 0.0,
+   "hold_min": 1.0,
+   "states": [
+    "<NinjaGunState.IDLE: 2>"
+   ],
+   "attach": [
+    "CharacterMesh0:hand_r"
+   ],
+   "pass": true,
+   "ctrl_pitch": 0.0
+  },
+  "follow_err_deg": {
+   "+30": -0.36,
+   "-30": 1.14,
+   "+60": 0.01,
+   "-60": 1.24
+  },
+  "barrel_vs_control_abs_deg": {
+   "+30": 8.62,
+   "-30": 10.12,
+   "+60": 8.99,
+   "-60": 10.22,
+   "+0": 8.98
+  }
+ },
+ "camera": {
+  "hip": {
+   "cam": [
+    467.7,
+    80.0,
+    110.2
+   ],
+   "rot": [
+    0.0,
+    0.0
+   ],
+   "fov": 90.0,
+   "right_cm": 80.0,
+   "fwd_cm": -240.0,
+   "up_cm": 22.0,
+   "ads": 0.0
+  },
+  "shoulder_aim": {
+   "cam": [
+    547.7,
+    75.0,
+    108.2
+   ],
+   "rot": [
+    0.0,
+    0.0
+   ],
+   "fov": 65.0,
+   "right_cm": 75.0,
+   "fwd_cm": -160.0,
+   "up_cm": 20.0,
+   "ads": 0.0
+  },
+  "ads": {
+   "cam": [
+    733.8,
+    11.4,
+    142.4
+   ],
+   "rot": [
+    0.0,
+    0.0
+   ],
+   "fov": 55.0,
+   "right_cm": 11.35,
+   "fwd_cm": 26.14,
+   "up_cm": 54.2,
+   "ads": 1.0
+  },
+  "after_ads": {
+   "cam": [
+    467.7,
+    80.0,
+    110.2
+   ],
+   "rot": [
+    0.0,
+    0.0
+   ],
+   "fov": 90.0,
+   "right_cm": 80.0,
+   "fwd_cm": -240.0,
+   "up_cm": 22.0,
+   "ads": 0.0
+  },
+  "gun_out": {
+   "cam": [
+    467.7,
+    80.0,
+    110.2
+   ],
+   "rot": [
+    0.0,
+    0.0
+   ],
+   "fov": 90.0,
+   "right_cm": 80.0,
+   "fwd_cm": -240.0,
+   "up_cm": 22.0,
+   "ads": 0.0
+  },
+  "holstered": {
+   "cam": [
+    407.7,
+    -0.0,
+    100.2
+   ],
+   "rot": [
+    0.0,
+    0.0
+   ],
+   "fov": 90.0,
+   "right_cm": -0.0,
+   "fwd_cm": -300.0,
+   "up_cm": 12.0,
+   "ads": 0.0
+  },
+  "shoulder_offset_right_cm": 80.0
+ },
+ "strafe": {
+  "after_mmb_turn90": {
+   "actor_yaw_err": 0.0
+  },
+  "back": {
+   "actor_yaw_err": 0.0
+  }
+ },
+ "gait": {
+  "class_speeds": {
+   "WalkSpeeds": [
+    200.0,
+    180.0,
+    150.0
+   ],
+   "RunSpeeds": [
+    500.0,
+    350.0,
+    300.0
+   ],
+   "SprintSpeeds": [
+    700.0,
+    700.0,
+    700.0
+   ],
+   "CrouchSpeeds": [
+    225.0,
+    200.0,
+    180.0
+   ]
+  },
+  "walk": {
+   "speed_median": 200.0,
+   "speed_min": 200.0,
+   "speed_max": 200.0
+  },
+  "run": {
+   "speed_median": 500.0,
+   "speed_min": 500.0,
+   "speed_max": 500.0
+  },
+  "sprint": {
+   "speed_median": 700.0,
+   "speed_min": 700.0,
+   "speed_max": 700.0
+  },
+  "crouch": {
+   "speed_median": 225.0,
+   "speed_min": 225.0,
+   "speed_max": 225.0
+  },
+  "vs_class": {
+   "walk": {
+    "want": 200.0,
+    "got": 200.0,
+    "err_pct": 0.0
+   },
+   "run": {
+    "want": 500.0,
+    "got": 500.0,
+    "err_pct": 0.0
+   },
+   "sprint": {
+    "want": 700.0,
+    "got": 700.0,
+    "err_pct": 0.0
+   },
+   "crouch": {
+    "want": 225.0,
+    "got": 225.0,
+    "err_pct": 0.0
+   }
+  }
+ },
+ "parity": {
+  "summoned": {
+   "stock": "SandboxCharacter_CMC_C_0",
+   "gun": "BP_GunCharacter_C_1"
+  },
+  "gun_pawn_gun_at_summon": true,
+  "gun_pawn_after_holster": {
+   "equipped": false,
+   "hold": 0.0
+  },
+  "idle": {
+   "max_cm": {
+    "hand_r": 1.604,
+    "hand_l": 0.946,
+    "head": 0.419,
+    "pelvis": 0.185
+   },
+   "median_cm": {
+    "hand_r": 1.496,
+    "hand_l": 0.819,
+    "head": 0.347,
+    "pelvis": 0.139
+   },
+   "speed_a_median": 0.0,
+   "speed_b_median": 0.0
+  },
+  "walking": {
+   "max_cm": {
+    "hand_r": 0.0,
+    "hand_l": 0.0,
+    "head": 0.0,
+    "pelvis": 0.0
+   },
+   "median_cm": {
+    "hand_r": 0.0,
+    "hand_l": 0.0,
+    "head": 0.0,
+    "pelvis": 0.0
+   },
+   "speed_a_median": 500.0,
+   "speed_b_median": 500.0
+  },
+  "idle_after_walk": {
+   "max_cm": {
+    "hand_r": 0.0,
+    "hand_l": 0.0,
+    "head": 0.0,
+    "pelvis": 0.0
+   },
+   "median_cm": {
+    "hand_r": 0.0,
+    "hand_l": 0.0,
+    "head": 0.0,
+    "pelvis": 0.0
+   },
+   "speed_a_median": 0.0,
+   "speed_b_median": 0.0
+  }
+ },
+ "gates": {
+  "world": true,
+  "hold_idle_walk_fire_shoulder": true,
+  "barrel_yaw_le_3": false,
+  "pitch_follows_within_5": true,
+  "head_clearance_ge_2": true,
+  "shoulder_offset_80pm2": true,
+  "strafe_reasserted": true,
+  "shots_fired": true,
+  "gait_within_1pct": true,
+  "parity_le_1cm": true
+ },
+ "pass": false,
+ "passed_script": true
+}
