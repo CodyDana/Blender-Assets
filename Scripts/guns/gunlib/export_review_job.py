@@ -10,6 +10,7 @@ job.json:
    "offset_M": [x, y, z],                 frame B = (M - offset) / 1000 (the exported files are in frame B)
    "gun_lods": ["SK_X.fbx", "SK_X_LOD1.fbx", ...],  "mag_fbx": "SM_X_Mag.fbx", "mag_lod_prefix": "SM_X_Mag_LOD",
    "mag_bone": "magazine", "clips": ["A_X_Charge", ...],
+   "mag_socket_rel_rows": optional 3x3: the magazine socket's rotation relative to mag_bone (applied after the bone),
    "materials": {"M_X_Metal": "T_X_Metal", ...},     material base name -> texture stem
    "samples": 128, "result": "<json>",
    "shots": [{"name", "out", "ss": 1, "transparent": false, "samples": optional,
@@ -246,6 +247,11 @@ def place_mag(mag, arm, sock=None):
     if sock is None:
         loc, rot = bone_world(arm, JOB["mag_bone"])
         mag.matrix_world = Matrix.Translation(loc) @ rot.to_matrix().to_4x4()
+        if "mag_socket_rel_rows" in JOB:
+            # (SMG01 W4) the magazine attaches to a SOCKET on its bone whose rotation is not the bone's own (the
+            # SMG01 Mag socket carries the 8.27 deg rake; its bone is unrotated): mag = bone @ socket-relative 3x3
+            Rrel = Matrix([list(r) for r in JOB["mag_socket_rel_rows"]]).to_4x4()
+            mag.matrix_world = mag.matrix_world @ Rrel
     else:
         R = Matrix([list(r) for r in sock["matrix_rows"]]).to_4x4()
         mag.matrix_world = Matrix.Translation(Vector([v / 1000.0 for v in sock["location_B_mm"]])) @ R

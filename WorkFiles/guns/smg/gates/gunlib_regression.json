@@ -1,13 +1,11 @@
 {
  "gate": "gunlib_regression (SMG_BUILD_PLAN 15 W1a; spec gunlib_additions_W1a.regression)",
- "date": "2026-10-11T00:53:05",
+ "date": "2026-10-11T15:55:35",
  "lib_version": "0.2.2",
  "start_commit": "c70cc918",
- "head": "42472cfb",
- "status": "fail",
- "failed": [
-  "AR-01 export / input bytes"
- ],
+ "head": "4b91f300",
+ "status": "pass",
+ "failed": [],
  "rule": "the AR-01's stage-2/4/5 gate drivers re-run through the promoted gunlib.drivers (rifle_* shims + rifle_gun.CFG) reproduce the committed values EXACTLY (every number to the bit; ignored keys: blend, image, seconds); the AR-01 export bytes stay unchanged (sha256 before = after = the build's recorded sha256; nothing re-exported)",
  "method": "Scripts/guns/gunlib/tests/ar01_regression.sh: the stage-2 drivers on a COPY of WorkFiles/guns/rifle/scratch/AR01_form_stage.blend (the gated form-stage blend form.json was measured on), b4 / viewgates on the committed triangle dumps (scratch/form_tris.npz, scratch/game/lod<k>_tris.npz), G5 / B3 LOD1 / LOD0-tri on a COPY of Assets/Guns/AR01.blend, rig_verify and mag_fit on the shipped Exports/Guns/AR01 bytes in fresh processes; every output in WorkFiles/guns/smg/scratch/regression/ (gitignored)",
  "stages_run": [
@@ -152,9 +150,7 @@
   "exports_equal_recorded_build_sha256 (rig_export.json + mag.json files)": true,
   "recorded_files_checked": 15,
   "input_blends_unchanged": true,
-  "git_tracked_changes_under_Exports_AR01_Assets_Guns_WorkFiles_guns_rifle": [
-   "M Assets/Guns/SMG01.blend"
-  ]
+  "git_tracked_changes_under_Exports_AR01_Assets_Guns_WorkFiles_guns_rifle": []
  },
  "new_modules": {
   "test_parts": {
