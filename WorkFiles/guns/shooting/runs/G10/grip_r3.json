@@ -1,0 +1,261 @@
+{
+ "stage": "G10b grip, review round 3 (last)",
+ "date": "2026-10-11",
+ "pass_count": 14,
+ "total": 15,
+ "gates": [
+  {
+   "name": "Right middle UNDER the trigger guard: its highest skin point forward of the grip's front edge (x > 2.4 cm, |y| < 2.6), z in gun space, worst per phase (cm; guard bar underside z 1.0)",
+   "value": {
+    "middle": {
+     "idle": 0.617,
+     "walk": 0.617,
+     "semi": 0.615,
+     "burst": 0.613,
+     "shoulder": 0.612
+    },
+    "ring_pinky_thumb": "no point forward of the grip front",
+    "round2": "middle 02 joint at (5.26, 1.83, 2.17): inside the guard opening"
+   },
+   "threshold": "<= 1.0 in every phase; no right finger but the index inside the guard",
+   "pass": true
+  },
+  {
+   "name": "Right index pad on the trigger blade's front face: distal phalanx to the pad point (blade face + 0.7 cm), p95 per phase (cm); tip past the blade's left side (max tip y, cm)",
+   "value": {
+    "pad_p95": {
+     "idle": 0.188,
+     "walk": 0.186,
+     "semi": 0.18,
+     "burst": 0.181,
+     "shoulder": 0.185
+    },
+    "tip_y_max": -0.625,
+    "index_pen_max": 0.2
+   },
+   "threshold": "pad <= 0.25, tip y <= -0.5, index penetration <= 0.5 (round 2: the clip's finger, 1.06 cm into the blade)",
+   "pass": true,
+   "note": "replaces round 2's 'index tip to the Trigger socket <= 1.0' (now 1.82 cm): the socket is inside the blade, so that gate rewarded a tip sunk in the metal; the pad on the face with the tip past the blade is the trigger contact"
+  },
+  {
+   "name": "Right thumb / middle / ring / pinky tip skin gap to the grip, p95 worst phase (cm); right penetration max incl. the index (cm)",
+   "value": {
+    "tip_p95": {
+     "thumb": 0.156,
+     "middle": -0.103,
+     "ring": 0.186,
+     "pinky": 0.162
+    },
+    "pen_max": {
+     "thumb": 0.079,
+     "index": 0.2,
+     "middle": 0.191,
+     "ring": 0.073,
+     "pinky": 0.15
+    },
+    "pinky_tip_z_min": -4.5
+   },
+   "threshold": "tips <= 1.0 (middle <= 0.15), pen <= 0.5, pinky tip >= 0.9 above the grip's bottom (z -5.4)",
+   "pass": true
+  },
+  {
+   "name": "Hip hold unchanged: gun in actor space idle median vs the G10b baseline run; gun vs hand_r incl. GripSlide (root err, all frames) (cm / deg)",
+   "value": {
+    "idle_vs_base": {
+     "d_cm": 0.021,
+     "d_deg_x": 0.006,
+     "d_deg_z": 0.006
+    },
+    "root_err": [
+     0.0,
+     0.0
+    ],
+    "shoulder_vs_base_reported": {
+     "d_cm": 0.478,
+     "d_deg_x": 0.058,
+     "d_deg_z": 0.253
+    }
+   },
+   "threshold": "<= 0.2 cm / 0.2 deg idle; root err 0",
+   "pass": true,
+   "note": "shoulder aim 0.48 cm = the run-to-run spread (baseline-era runs differ by 0.45-0.55); a probe try with longer burst frames gave 1.48 cm and so did a zero-slide control build, so that was the probe sequence, not the slide"
+  },
+  {
+   "name": "Palm grip point to SupportHand (IK error), p95 per phase (cm)",
+   "value": {
+    "idle": 0.002,
+    "walk": 0.006,
+    "semi": 0.028,
+    "burst": 0.045,
+    "shoulder": 0.004
+   },
+   "threshold": "<= 1.0",
+   "pass": true
+  },
+  {
+   "name": "Left fingertip skin gap to the handguard: worst median / worst p95 over all phases, index-pinky (cm)",
+   "value": {
+    "median_max": 0.349,
+    "p95_max": 0.391,
+    "pinky_p95": {
+     "idle": 0.185,
+     "walk": 0.17,
+     "semi": 0.255,
+     "burst": 0.236,
+     "shoulder": 0.176
+    }
+   },
+   "threshold": "<= 0.5",
+   "pass": true
+  },
+  {
+   "name": "Left pinky on the handguard's right face: tip normal y (median) and lowest tip z per phase (cm)",
+   "value": {
+    "normal_y": {
+     "idle": 1.0,
+     "walk": 1.0,
+     "semi": 1.0,
+     "burst": 1.0,
+     "shoulder": 1.0
+    },
+    "tip_z_min": {
+     "idle": 7.33,
+     "walk": 7.34,
+     "semi": 7.25,
+     "burst": 7.21,
+     "shoulder": 7.33
+    }
+   },
+   "threshold": "normal +Y, tip z >= 6",
+   "pass": true
+  },
+  {
+   "name": "Left thumb tip skin gap, p95 range over phases (cm)",
+   "value": [
+    -0.027,
+    0.026
+   ],
+   "threshold": "<= 1.0, not deeper than -0.5",
+   "pass": true
+  },
+  {
+   "name": "Left finger penetration max (cm) / joint 02 inside frames",
+   "value": [
+    0.236,
+    0
+   ],
+   "threshold": "<= 0.5 / 0",
+   "pass": true
+  },
+  {
+   "name": "Left fingers side by side, idle median spacing of adjacent joints 02 / tips (cm)",
+   "value": {
+    "j02": {
+     "index-middle": 2.37,
+     "middle-ring": 2.1,
+     "ring-pinky": 2.09
+    },
+    "tip": {
+     "index-middle": 2.25,
+     "middle-ring": 1.4,
+     "ring-pinky": 1.92
+    },
+    "round2_j02": {
+     "index-middle": 2.47,
+     "middle-ring": 2.22,
+     "ring-pinky": 2.15
+    },
+    "round2_tip": {
+     "index-middle": 2.28,
+     "middle-ring": 1.67,
+     "ring-pinky": 1.96
+    }
+   },
+   "threshold": "02 <= 2.5; tips 1.4-2.4 (1.4 = two 0.7 cm pads touching; round 2's band was 1.5-2.4)",
+   "pass": true,
+   "note": "the middle-ring tips are 1.40 cm apart, so the pads touch without overlapping; this closes the strip of wood the review saw between those fingers. Before/after: grip_r3/cmp_02_left_hand_right_side_idle_r2_left_r3_right.png"
+  },
+  {
+   "name": "Left knuckle skin gap to the wood, median per phase (cm)",
+   "value": {
+    "idle": {
+     "index": -0.195,
+     "middle": 0.094,
+     "ring": 0.368,
+     "pinky": 0.301
+    },
+    "max": 0.374,
+    "min": -0.222
+   },
+   "threshold": "within 0.5, none deeper than -0.5",
+   "pass": true
+  },
+  {
+   "name": "Left palm contact: nearest gap median idle / deepest penetration (cm)",
+   "value": [
+    -0.118,
+    0.202
+   ],
+   "threshold": "|gap| <= 0.3, pen <= 0.5",
+   "pass": true
+  },
+  {
+   "name": "Build: A_AR01_Grip_UEFN baked (incl. the right index), ABP_GunCharacter (left finger layer GunIKAlpha, right finger layer GunHoldWeight, hand_r Two Bone IK on GunGripSlideHS) and BP_GunCharacter (GripSlide) compile UP_TO_DATE with 0 messages; only /Game/Guns saved",
+   "value": {
+    "pass": true,
+    "errors": [],
+    "saved": [
+     "/Game/Guns/AR01/A_AR01_Grip_UEFN",
+     "/Game/Guns/Character/ABP_GunCharacter",
+     "/Game/Guns/Character/BP_GunCharacter"
+    ],
+    "readback_err_max_deg": 0.0,
+    "grip_slide": [
+     -0.6924,
+     0.0,
+     -1.6615
+    ],
+    "dirty_outside_guns": []
+   },
+   "threshold": "pass, 0 errors",
+   "pass": true
+  },
+  {
+   "name": "Regression: gun_playtest F0-F15 / g9_camera_probe",
+   "value": {
+    "playtest": "14/15",
+    "failed": [
+     "F7 reloads"
+    ],
+    "g9": "9/9",
+    "F7_runs_this_session": "6 runs: F7 failed in 4 of them, always on the DROPPED magazine's physics (tactical or empty): it came to rest at 3.006 or 3.33 s against the 3.0 s gate, tunnelled 1.6 cm into the floor, or came to rest on the first magazine. A zero-slide control build failed the same way. In every run the spawn matched the socket within 0.005-0.006 cm, and the ammo, event order and timing passed. After the play test learned GripSlide, F12 (attach / IK) read 0.0 cm in every run."
+   },
+   "threshold": "15/15 / 9/9",
+   "pass": false,
+   "note": "Not met: F7 dropped-magazine physics noise, which the grip change does not touch (see F7_runs_this_session)"
+  },
+  {
+   "name": "Close-up frames looked at (grip_r3/, before/ = round 2)",
+   "value": "Right hand: only the index is in the guard, with its pad on the trigger. Middle, ring and pinky wrap the pistol grip under the guard. From the right side the guard opening below the index is clear, idle and mid-burst. From left-front-below the middle sits just under the guard's rear bar, and the thumb is on the grip's left side. Left hand: as in round 2, but ring and middle now touch along their length (no wood strip). The no-flash burst frames (05c) and the shoulder-aim close-ups (07b, including a wide two-hand view) show both grips while firing and aiming.",
+   "threshold": "only the index in the guard, fingers wrapped, no wood strip between left ring / middle",
+   "pass": true
+  }
+ ],
+ "method": "Right hand: slid 1.8 cm down the pistol grip (NinjaGun.GripSlide in gun space; the attach is T(-GripSlide) x HandOffset; a hand_r Two Bone IK on GunGripSlideHS with alpha GunHoldWeight), so the gun stays put. The right fingers are re-solved with a guard term and the index on the trigger face, in their own GunHoldWeight layer. The left fingers are re-solved with narrower spacing (all four, two passes). Files: solver Tools/Claude/Guns/g10b_grip_solve_r3.py, builder build_gun_grip_g10b.py (round-3 branch), probe g10b_grip_probe_game.py (05c no-flash third burst, 07b shoulder-aim close-ups, root_err with GripSlide), gun_playtest.py (F12 with GripSlide).",
+ "review_issues": {
+  "right middle inside the trigger guard (03 left_front_below, 03 / 05b right side)": "FIXED. A real defect, confirmed in the frames and in numbers (middle 02 joint at z 2.17, inside the opening). Its highest skin forward of the grip is now z 0.62, under the bar's underside at 1.0. Before/after crops: cmp_03_*.",
+  "index tip pressed into the front of the guard (03 left_front_below)": "REJECTED as stated. That finger was the middle; the index pad was on the trigger, about 3.5 cm behind the guard's front. The index pad now sits on the blade's face (0.18 cm), with the tip past the blade's left side.",
+  "left fingers stiff, straight, vertical, flat like paddles": "PARTLY REJECTED. The mesh shows the AR-01 lower handguard's right face is flat, with only the bottom corners rounded. The fingers bend at the bottom-right corner (bends 58-70 / 24-40 / 22-31 deg) and then lie flat on that face, as a real wrap on this section does. The paddle look comes from the UEFN mannequin's blocky, square-tipped fingers.",
+  "left fingers split into two pairs (wood between ring and middle)": "FIXED. Middle-ring tips 1.67 -> 1.40 cm and joint 03 2.06 -> 1.85; the fingers touch along their length (cmp_02_left_hand_right_side_idle).",
+  "hand hangs ~250 px below the handguard (right-side views)": "REJECTED; the reviewer also marked it cosmetic. The palm touches the underside (gap -0.12 cm) and the knuckles are 0.09-0.37 cm from the wood. What shows below is the UEFN hand's ~3 cm thickness: its long fingers need the palm under the wood to reach up the 4.4 cm right face.",
+  "07 shoulder aim hides the hands": "ADDRESSED with evidence, nothing to fix. New close-ups of the same shoulder-aim pose (07b: right and left hand, below, left-front-below, a wide two-hand view) show the grip.",
+  "muzzle flash blows out the burst frames": "ADDRESSED. New mid-burst frames (05c) hide the muzzle light and flash particles from the capture only. They were taken while firing (shots 9-26 of that burst); the hands keep their idle placement."
+ },
+ "honest_notes": [
+  "Play test 14/15. F7 (reloads) failed on dropped-magazine physics in 4 of 6 runs this session, including a zero-slide control build. The spawn transform matched the socket within 0.006 cm every time. The grip is not the cause, but the result is not 15/15.",
+  "The right hand now sits 1.8 cm lower on the pistol grip than the retargeted rifle clip put it. The pinky tip is at the grip's bottom edge (z -4.5; the grip bottom is -5.4).",
+  "The right fingers keep the grip pose in the reload too (layer weight GunHoldWeight). The G10c reload work should know this.",
+  "G10d (FP body) must use T(-GripSlide) x HandOffset and the same hand_r IK, or the FP hand returns to the old height."
+ ],
+ "shots_dir": "runs/G10/grip_r3/ (before/ = round-2 frames, cmp_* = before/after crops)"
+}

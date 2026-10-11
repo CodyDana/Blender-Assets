@@ -155,6 +155,24 @@ chracter is gripping the gun when in idle and shooting, the left hand is not gri
   right side the back of the hand still shows below the handguard. That is the ~3 cm thickness of the UEFN hand under the wood; the
   knuckles are on it. A thin strip of wood shows between the ring and middle fingertips.
 
+### G10b review round 3 (2026-10-11, `runs/G10/grip_r3.json`)
+- **Why.** The round-2 frames showed the right middle finger INSIDE the trigger guard (on the bottom bar, tip at the trigger).
+  Cause, measured: the round-2 solve counted the guard as grip surface, and the hold put the hand so high on the pistol grip that
+  the middle knuckle sat level with the guard bar (01 at z 2.47 cm; bar underside z 1.0): no curl of that finger passes under it.
+- **Fix (the gun does not move).** The right hand slides 1.8 cm down the pistol grip's axis (22.6 deg back from up):
+  `NinjaGun.GripSlide` = (-0.69, 0, -1.66) cm in gun space on `BP_GunCharacter` (new C++ property, zero for every other holder).
+  The attach becomes T(-GripSlide) x HandOffset, and a Two Bone IK on `hand_r` in `ABP_GunCharacter` (effector `GunGripSlideHS`,
+  written by the C++ in `hand_r` space; joint `lowerarm_r`; alpha `GunHoldWeight`) moves the hand and arm by the same vector, so the
+  gun stays where the hold puts it (idle 0.021 cm from the baseline; F12 grip 0.0 cm). Right fingers re-solved
+  (`g10b_grip_solve_r3.py`): the middle / ring / pinky wrap the grip under the guard (guard term), and the index pad sits on the
+  trigger blade's front face, 0.18 cm from the pad point, instead of keeping the clip's finger inside the blade. The right
+  fingers are a layer of their own on `GunHoldWeight`, so they grip during the reload as well. The left middle and ring close
+  the wood strip between them.
+- **For G10d:** the FP body's `FP_Weapon` attach must use the same T(-GripSlide) x HandOffset and the same `hand_r` IK.
+- **Probe note:** the no-flash burst frames run in a third burst after the shoulder phase. A first try inside the second burst
+  emptied the magazine and moved the shoulder-aim median by 0.9 cm. A zero-slide control build gave the same 1.48 cm, so the
+  slide was not the cause.
+
 ### G10c: the third-person reload with hands
 - **The clock is the AR-01 clip's notifies** (sidecar times, read through `UAnimNotify_NinjaGun::FindEventTime`), so
   the ammo logic, the sounds and the server timing do not change.
