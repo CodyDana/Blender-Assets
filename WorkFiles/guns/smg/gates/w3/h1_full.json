@@ -1,0 +1,312 @@
+{
+ "body": "References/Characters/MH_PlayerDefault/MH_PlayerDefault_FitBody.blend",
+ "body_sha256_locked": "171b5b632b44204c836d57a883657ab004ad558696f2c165f3a7785cf4e57da9",
+ "body_sha256_now": "171b5b632b44204c836d57a883657ab004ad558696f2c165f3a7785cf4e57da9",
+ "body_sha256_matches_lock": true,
+ "palm": {
+  "min_signed_gap_mm": 3.18,
+  "penetration_mm": 0.0,
+  "threshold": "<= 1 mm",
+  "pass": true
+ },
+ "index": {
+  "pad_to_trigger_face_mm": 0.548,
+  "pad_to_trigger_socket_point_mm": 8.49,
+  "nearest_part": "trigger",
+  "nearest_gap_mm": 0.548,
+  "search": {
+   "pad_to_trigger_surface_mm": 0.548,
+   "gap_to_frame_mm": 1.089
+  },
+  "threshold": "the index pad within 3 mm of the trigger face at the rest curl (study 7.2), the finger clear of the frame",
+  "pass": true
+ },
+ "clip_extremes": [
+  {
+   "config": "rest",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "bolt back",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "charging handle back",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "trigger pulled",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "selector SAFE",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "selector AUTO",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "paddle pressed",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "magazine out",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "stock folded",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  },
+  {
+   "config": "sights folded",
+   "triangle_pairs": {},
+   "penetration_mm": {},
+   "min_gap_mm": 0.5
+  }
+ ],
+ "intersections": {
+  "configs_with_any": [],
+  "pass": true
+ },
+ "cheek_weld": {
+  "eye_world_mm": [
+   -32.0,
+   -94.9,
+   1764.7
+  ],
+  "eye_offset_from_head_joint_mm": [
+   -32.0,
+   -95.0,
+   85.0
+  ],
+  "eye_relief_mm": 90.0,
+  "assumption": "right eye 32 mm right, 95 mm forward, 85 mm above the 'head' joint (MetaHuman proportions; the body skeleton has no eye joint); bore level, facing the body's front",
+  "buttpad_centre_to_right_shoulder_joint_mm": 271.4
+ },
+ "ik_right": {
+  "distance_mm": 238.4,
+  "reach_mm": 563.2,
+  "residual_mm": 0.0,
+  "elbow_flexion_deg": 129.9,
+  "pass": true,
+  "what": "right arm to the held grip (hand frame as in the hold)"
+ },
+ "ik_left": {
+  "distance_mm": 478.5,
+  "reach_mm": 562.6,
+  "residual_mm": 0.0,
+  "elbow_flexion_deg": 63.5,
+  "pass": true,
+  "what": "left arm: wrist to SupportHand (the palm on the magwell front)"
+ },
+ "hand_offset": {
+  "frame": "hand_r bone (MH_PlayerDefault metahuman_base_skel, Blender armature axes)",
+  "Grip_location_mm": [
+   -83.966,
+   -41.604,
+   8.628
+  ],
+  "Grip_rotation_quaternion_wxyz": [
+   0.024967,
+   0.085443,
+   0.08737,
+   0.992191
+  ],
+  "grip_pose_deg_about_local_Z": {
+   "middle_01_r": 19.38,
+   "middle_02_r": 60.0,
+   "middle_03_r": -4.75,
+   "ring_01_r": 22.38,
+   "ring_02_r": 34.12,
+   "ring_03_r": 46.88,
+   "pinky_01_r": 0.12,
+   "pinky_02_r": 3.75,
+   "pinky_03_r": 70.88,
+   "thumb_01_r": {
+    "about_local_X_deg": 30,
+    "about_local_Z_deg": 60,
+    "gap_mm": 0.64
+   },
+   "thumb_02_r": 34.25,
+   "thumb_03_r": 40.0,
+   "index_01_r": {
+    "curl_deg": -37.5,
+    "abduction_deg_about_local_X": -35.0
+   },
+   "index_02_r": 50.0,
+   "index_03_r": 40.5
+  },
+  "note": "U11 reproduces it in engine (Grip on a socket of hand_r at this offset)"
+ },
+ "placement_pushes": [
+  {
+   "axial_offset_mm": 24.0,
+   "seat": {
+    "iter": 9,
+    "side_gap": 1.898,
+    "heel_gap": -10.513,
+    "notes": [
+     null,
+     [
+      -10.513,
+      -14.286
+     ]
+    ]
+   },
+   "iters": 10,
+   "index_base_gap": 4.16,
+   "open_fingers_gap": 7.516
+  },
+  {
+   "axial_offset_mm": 21.0,
+   "seat": {
+    "iter": 4,
+    "side_gap": 0.3,
+    "heel_gap": 0.3,
+    "notes": [
+     null,
+     null
+    ]
+   },
+   "iters": 5,
+   "index_base_gap": -6.544,
+   "open_fingers_gap": -7.8
+  },
+  {
+   "axial_offset_mm": 18.0,
+   "seat": {
+    "iter": 9,
+    "side_gap": 2.783,
+    "heel_gap": -11.215,
+    "notes": [
+     null,
+     [
+      -11.215,
+      -16.369
+     ]
+    ]
+   },
+   "iters": 10,
+   "index_base_gap": 2.783,
+   "open_fingers_gap": 6.701
+  },
+  {
+   "axial_offset_mm": 15.0,
+   "seat": {
+    "iter": 3,
+    "side_gap": 0.3,
+    "heel_gap": 0.3,
+    "notes": [
+     null,
+     null
+    ]
+   },
+   "iters": 4,
+   "index_base_gap": -2.144,
+   "open_fingers_gap": -2.693
+  },
+  {
+   "axial_offset_mm": 12.0,
+   "seat": {
+    "iter": 3,
+    "side_gap": 0.3,
+    "heel_gap": 0.3,
+    "notes": [
+     null,
+     null
+    ]
+   },
+   "iters": 4,
+   "index_base_gap": -0.653,
+   "open_fingers_gap": -0.653
+  },
+  {
+   "axial_offset_mm": 9.0,
+   "seat": {
+    "iter": 3,
+    "side_gap": 0.3,
+    "heel_gap": 0.3,
+    "notes": [
+     null,
+     null
+    ]
+   },
+   "iters": 4,
+   "index_base_gap": 0.164,
+   "open_fingers_gap": 0.164
+  },
+  {
+   "axial_offset_mm": 6.0,
+   "seat": {
+    "iter": 2,
+    "side_gap": 0.3,
+    "heel_gap": 0.3,
+    "notes": [
+     null,
+     null
+    ]
+   },
+   "iters": 3,
+   "index_base_gap": 0.057,
+   "open_fingers_gap": 0.057
+  },
+  {
+   "axial_offset_mm": 3.0,
+   "seat": {
+    "iter": 2,
+    "side_gap": 0.301,
+    "heel_gap": 0.3,
+    "notes": [
+     null,
+     null
+    ]
+   },
+   "iters": 3,
+   "index_base_gap": 0.301,
+   "open_fingers_gap": 0.581
+  },
+  {
+   "seat": "web in the hollow",
+   "last": {
+    "iter": 0,
+    "side_gap": 0.3,
+    "web_gap": 0.3
+   },
+   "index_base_gap": -0.021,
+   "open_fingers_gap": -0.021,
+   "open_pad_to_trigger_mm": 28.68
+  }
+ ],
+ "summary": {
+  "palm_penetration_mm": 0.0,
+  "index_pad_to_trigger_face_mm": 0.548,
+  "index_nearest_part": "trigger",
+  "intersections_at_extremes": [],
+  "ik_left_residual_mm": 0.0,
+  "ik_left_elbow_deg": 63.5,
+  "ik_right_residual_mm": 0.0,
+  "ik_right_elbow_deg": 129.9
+ },
+ "threshold": "palm penetration <= 1 mm; index pad <= 3 mm from the trigger face at the rest curl (the finger clear of the frame); 0 hand-gun intersections at rest and at every clip extreme; both arms' two-bone IK < 0.5 mm with the elbow inside 0..150 deg",
+ "pass": true,
+ "note": "measured on the locked fit body in Blender (study 7.2 H1); U11 confirms in engine at W5"
+}

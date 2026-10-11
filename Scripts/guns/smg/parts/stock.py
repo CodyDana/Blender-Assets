@@ -162,6 +162,9 @@ def stock_frame():
     base = prism(out, -HW_, HW_, "XZ")
     win = windows()
     borders = [prism(bd, -(HW_ + 0.9), HW_ + 0.9, "XZ") for _, bd in windows_and_borders()]
+    from gunlib import lod as _lod
+    if _lod.LEVEL >= 2:
+        borders = []           # (W3) LOD2+: the windows' 0.9 mm raised rims are 0.2 px at the LOD2 switch
     win_cuts = [prism(w, -30.0, 30.0, "XZ") for w in win]
     # through-holes and the neck's storage slot (left, 6 deep)
     holes = [cylinder((h["XZ"][0], -30.0, h["XZ"][1]), (h["XZ"][0], 30.0, h["XZ"][1]), h["dia"] / 2.0, 32)
@@ -289,6 +292,9 @@ def butt_pad():
         g = np.array([[-1.0, zc - 1.05], [depth - 0.25, zc - 0.55], [depth, zc - 0.3], [depth, zc + 0.3],
                       [depth - 0.25, zc + 0.55], [-1.0, zc + 1.05]])
         grooves.append(prism(g, -hw + 3.4, hw - 3.4, "XZ"))       # closed ends inside the R 3 side rounds
+    from gunlib import lod as _lod
+    if _lod.LEVEL >= 2:
+        grooves = []           # (W3) LOD2+: the 3.2 mm serration (1.2 deep) is 0.7 / 0.25 px at the LOD2 switch
     # (W1b fix round, L2 per part: the 2 mm wrap lip round the upright is gone; the sheet draws the pad ending at the
     # seam, X 28.1, with the upright's own faces behind it)
     return Comp("butt_pad", [(body, [(3.0, 3, 30.0)])], cutters=grooves,

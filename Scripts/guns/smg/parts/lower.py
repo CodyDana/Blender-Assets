@@ -129,7 +129,13 @@ def grip_edges(ss):
 def grip_sections(s_top, s_bot, step=3.0, n=40, grow=0.0, s_valid=None):
     """Rounded sections (n points) perpendicular to the grip axis at stations s_top..s_bot: fore-aft from the traced
     back / front edges (the master outline and its holes), width GRIP_W, corner radii RF (front) / RB (back). Above
-    s_valid (the highest station the trace reads) the section is held: the loft runs on up into the housing."""
+    s_valid (the highest station the trace reads) the section is held: the loft runs on up into the housing.
+    (W3) From gunlib.lod level 2 on the loft thins with the level's rules: n points per section x RING_FACTOR, the
+    station step x STEP_FACTOR (LOD0 and LOD1 unchanged: LOD1 keeps the grip / cover fit of LOD0)."""
+    from gunlib import lod as _lod
+    if _lod.LEVEL >= 2:
+        n = _lod.ring(n)
+        step = _lod.step(step)
     ss = np.arange(s_top, s_bot + 1e-6, step)
     if ss[-1] < s_bot - 1e-6:
         ss = np.r_[ss, s_bot]

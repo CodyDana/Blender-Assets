@@ -52,6 +52,9 @@ def barrel():
     # (W1b fix round, L2 per part) the face flange both side panels and the 3/4 draw against the receiver face: a ring
     # dia 26.4 over the first 3.6 mm in front of the face (the collar ring seated in the counterbore behind it)
     xf0, xf1, R_FL = X_FF + GAP, X_FF + 3.6, 13.2
+    from gunlib import lod as _lod
+    if _lod.LEVEL >= 2:
+        xb = xc0 - 4.0       # (W3) LOD2+: the barrel's 100 mm inside the receiver is never seen (hidden surface removed)
     loop = [(xb, R_BORE + 0.6), (xb, R_HID - c), (xb + c, R_HID),
             (xc0, R_HID), (xc0, R_COL - c), (xc0 + c, R_COL), (xf0, R_COL), (xf0, R_FL - c), (xf0 + c, R_FL),
             (xf1 - c, R_FL), (xf1, R_FL - c), (xf1, R_COL), (xc1 - c, R_COL), (xc1, R_COL - c),
@@ -104,6 +107,9 @@ def muzzle_device():
     sx1 = X_MUZ - front_rim
     sx0 = sx1 - float(sl["length"])
     cuts = [_slot_cutter(a, sx0, sx1, float(sl["width"])) for a in (30.0, 90.0, 150.0, 210.0, 270.0, 330.0)]
+    from gunlib import lod as _lod
+    if _lod.LEVEL >= 2:
+        cuts = []        # (W3) LOD2+: the slots are 3 mm-class, 0.6 px at the LOD2 switch (the painted soot stays)
     # two wrench flats on the collar's underside (0.5 deep, at +-35 deg off -Z), behind the groove
     flats = []
     for a in (180.0 - 35.0, 180.0 + 35.0):

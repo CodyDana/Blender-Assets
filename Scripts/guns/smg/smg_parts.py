@@ -215,6 +215,11 @@ def build_ops(o: Ops, coll, offset):
     for kind, pay in o.ops:
         if kind in ("union", "intersect", "diff"):
             meshes = [m for m in pay if m is not None]
+            if kind != "intersect":
+                # (W3) gunlib.parts' small-feature rule at LOD2+ (unions / cutters under 14 mm box diagonal: pin holes,
+                # pin bosses, small slots; under ~1 px at the LOD2 switch) applies to the Ops path too; LOD0-1 unchanged
+                from gunlib.parts import _lod_filter
+                meshes = _lod_filter(meshes)
             if not meshes:
                 continue
             op = {"union": "UNION", "intersect": "INTERSECT", "diff": "DIFFERENCE"}[kind]
@@ -305,6 +310,9 @@ def build_comp(c, coll, offset):
         ob = m.to_object(c.name if k == 0 else f"_{c.name}_piece{k}", coll, offset, smooth_deg=c.smooth_deg)
         bl.clean(ob)
         if cuts:
+            from gunlib.parts import _lod_filter          # (W3) the small-feature rule at LOD2+, as build_ops
+            cuts = _lod_filter(cuts)
+        if cuts:
             bl.boolean_many(ob, cuts, "DIFFERENCE", offset=offset)
             bl.clean(ob)
         for step in recipe:
@@ -319,8 +327,9 @@ def build_comp(c, coll, offset):
     for other in objs[1:]:
         bl.boolean(ob, other, "UNION", offset=offset)
         bpy.data.objects.remove(other, do_unlink=True)
-    if c.cutters:
-        bl.boolean_many(ob, list(c.cutters), "DIFFERENCE", offset=offset)
+    from gunlib.parts import _lod_filter
+    if c.cutters and _lod_filter(list(c.cutters)):
+        bl.boolean_many(ob, _lod_filter(list(c.cutters)), "DIFFERENCE", offset=offset)
     bl.clean(ob)
     bl.finish(ob)
     fix = _repair(ob)

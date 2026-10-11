@@ -1,0 +1,2207 @@
+{
+ "stage": "W3c rig + export",
+ "spec_version": "1.2",
+ "fit_set_sockets": {
+  "MagInsertStart": {
+   "blender_mm": [
+    140.54976,
+    0.0,
+    -47.2808
+   ],
+   "spec_blender_mm": [
+    140.55,
+    0.0,
+    -47.28
+   ],
+   "delta_mm": 0.0008,
+   "rule": "Mag - 68.2 x the magazine's +Z (straight path, R_y(-8.267))"
+  },
+  "CenterOfMass": {
+   "blender_mm": [
+    47.8765,
+    0.65178,
+    83.14268
+   ],
+   "delta_mm": 0.0035,
+   "rule": "the W3b CoM empty on SM_SMG01_LOD0 (game_report rounds to 0.01 mm)"
+  },
+  "Holster": {
+   "blender_mm": [
+    47.8765,
+    0.65178,
+    83.14268
+   ],
+   "delta_mm": 0.0035,
+   "rule": "the W3b CoM empty on SM_SMG01_LOD0 (game_report rounds to 0.01 mm)"
+  }
+ },
+ "motion": {
+  "bolt_travel_mm": 67.9,
+  "handle_travel_mm": 67.9,
+  "insert_mm": 68.2,
+  "mag_axis_B": [
+   -0.143838,
+   0.0,
+   0.989601
+  ],
+  "drop_mm": 160.0
+ },
+ "bones": {
+  "body": {
+   "head_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "parent": null
+  },
+  "bolt": {
+   "head_mm": [
+    153.15,
+    0.0,
+    93.08
+   ],
+   "parent": "body"
+  },
+  "charging_handle": {
+   "head_mm": [
+    195.1,
+    39.12,
+    110.41
+   ],
+   "parent": "body"
+  },
+  "trigger": {
+   "head_mm": [
+    61.85,
+    0.0,
+    54.99
+   ],
+   "parent": "body"
+  },
+  "selector": {
+   "head_mm": [
+    26.75,
+    0.0,
+    65.59
+   ],
+   "parent": "body"
+  },
+  "mag_release": {
+   "head_mm": [
+    101.55,
+    0.0,
+    33.79
+   ],
+   "parent": "body"
+  },
+  "magazine": {
+   "head_mm": [
+    130.74,
+    0.0,
+    20.21
+   ],
+   "parent": "body"
+  },
+  "stock": {
+   "head_mm": [
+    -55.65,
+    -30.93,
+    93.08
+   ],
+   "parent": "body"
+  },
+  "sight_rear": {
+   "head_mm": [
+    2.15,
+    0.0,
+    140.29
+   ],
+   "parent": "body"
+  },
+  "sight_front": {
+   "head_mm": [
+    241.05,
+    0.0,
+    140.79
+   ],
+   "parent": "body"
+  },
+  "muzzle_device": {
+   "head_mm": [
+    280.95,
+    0.0,
+    93.08
+   ],
+   "parent": "body"
+  }
+ },
+ "lods": {
+  "SK_SMG01": {
+   "triangles": 46876,
+   "parts": 29,
+   "uv0_collapsed_fix": {
+    "collapsed_before": 0,
+    "collapsed_after": 0,
+    "delta_uv": 4e-06
+   },
+   "bones_weighted": [
+    "body",
+    "bolt",
+    "charging_handle",
+    "mag_release",
+    "muzzle_device",
+    "selector",
+    "sight_front",
+    "sight_rear",
+    "stock",
+    "trigger"
+   ]
+  },
+  "SK_SMG01_LOD1": {
+   "triangles": 23344,
+   "parts": 29,
+   "uv0_collapsed_fix": {
+    "collapsed_before": 0,
+    "collapsed_after": 0,
+    "delta_uv": 4e-06
+   },
+   "bones_weighted": [
+    "body",
+    "bolt",
+    "charging_handle",
+    "mag_release",
+    "muzzle_device",
+    "selector",
+    "sight_front",
+    "sight_rear",
+    "stock",
+    "trigger"
+   ]
+  },
+  "SK_SMG01_LOD2": {
+   "triangles": 9400,
+   "parts": 22,
+   "uv0_collapsed_fix": {
+    "collapsed_before": 0,
+    "collapsed_after": 0,
+    "delta_uv": 4e-06
+   },
+   "bones_weighted": [
+    "body",
+    "bolt",
+    "charging_handle",
+    "mag_release",
+    "muzzle_device",
+    "selector",
+    "sight_front",
+    "sight_rear",
+    "stock",
+    "trigger"
+   ]
+  },
+  "SK_SMG01_LOD3": {
+   "triangles": 1420,
+   "parts": 24,
+   "uv0_collapsed_fix": {
+    "collapsed_before": 0,
+    "collapsed_after": 0,
+    "delta_uv": 4e-06
+   },
+   "bones_weighted": [
+    "body",
+    "charging_handle",
+    "mag_release",
+    "muzzle_device",
+    "selector",
+    "sight_front",
+    "sight_rear",
+    "stock",
+    "trigger"
+   ]
+  }
+ },
+ "qa_skeletal": {
+  "passed": true,
+  "n": 73,
+  "failed": []
+ },
+ "skeleton_standard": {
+  "passed": true,
+  "checks": [
+   {
+    "name": "root_object_identity",
+    "object": "root",
+    "passed": true,
+    "detail": "object 'root', |M - I| 0.00e+00"
+   },
+   {
+    "name": "bone_names_from_standard",
+    "object": "root",
+    "passed": true,
+    "detail": "11 bones"
+   },
+   {
+    "name": "parents_from_standard",
+    "object": "root",
+    "passed": true,
+    "detail": "all"
+   },
+   {
+    "name": "bones_as_spec",
+    "object": "root",
+    "passed": true,
+    "detail": "missing [], extra []"
+   },
+   {
+    "name": "every_bone_deforms",
+    "object": "root",
+    "passed": true,
+    "detail": "all"
+   },
+   {
+    "name": "rest_rotation_equals_root",
+    "object": "root",
+    "passed": true,
+    "detail": "max |R - I| 0.00e+00"
+   }
+  ]
+ },
+ "rigid_skin": {
+  "passed": true,
+  "checks": [
+   {
+    "name": "rigid_one_influence_per_vertex",
+    "object": "SK_SMG01",
+    "passed": true,
+    "detail": "0 with none, 0 with more than one, of 23430"
+   },
+   {
+    "name": "rigid_weight_exactly_1",
+    "object": "SK_SMG01",
+    "passed": true,
+    "detail": "0 influences != 1.0"
+   },
+   {
+    "name": "rigid_on_deform_bones",
+    "object": "SK_SMG01",
+    "passed": true,
+    "detail": "0 influences on non-deform groups"
+   },
+   {
+    "name": "rigid_vertices_per_bone",
+    "object": "SK_SMG01",
+    "passed": true,
+    "detail": "body 14448, bolt 627, charging_handle 1390, mag_release 257, muzzle_device 1102, selector 1155, sight_front 230, sight_rear 781, stock 2557, trigger 883"
+   },
+   {
+    "name": "rigid_one_influence_per_vertex",
+    "object": "SK_SMG01_LOD1",
+    "passed": true,
+    "detail": "0 with none, 0 with more than one, of 11666"
+   },
+   {
+    "name": "rigid_weight_exactly_1",
+    "object": "SK_SMG01_LOD1",
+    "passed": true,
+    "detail": "0 influences != 1.0"
+   },
+   {
+    "name": "rigid_on_deform_bones",
+    "object": "SK_SMG01_LOD1",
+    "passed": true,
+    "detail": "0 influences on non-deform groups"
+   },
+   {
+    "name": "rigid_vertices_per_bone",
+    "object": "SK_SMG01_LOD1",
+    "passed": true,
+    "detail": "body 6943, bolt 197, charging_handle 628, mag_release 257, muzzle_device 684, selector 628, sight_front 124, sight_rear 392, stock 1545, trigger 268"
+   },
+   {
+    "name": "rigid_one_influence_per_vertex",
+    "object": "SK_SMG01_LOD2",
+    "passed": true,
+    "detail": "0 with none, 0 with more than one, of 4672"
+   },
+   {
+    "name": "rigid_weight_exactly_1",
+    "object": "SK_SMG01_LOD2",
+    "passed": true,
+    "detail": "0 influences != 1.0"
+   },
+   {
+    "name": "rigid_on_deform_bones",
+    "object": "SK_SMG01_LOD2",
+    "passed": true,
+    "detail": "0 influences on non-deform groups"
+   },
+   {
+    "name": "rigid_vertices_per_bone",
+    "object": "SK_SMG01_LOD2",
+    "passed": true,
+    "detail": "body 2754, bolt 104, charging_handle 286, mag_release 44, muzzle_device 192, selector 266, sight_front 66, sight_rear 166, stock 746, trigger 48"
+   },
+   {
+    "name": "rigid_one_influence_per_vertex",
+    "object": "SK_SMG01_LOD3",
+    "passed": true,
+    "detail": "0 with none, 0 with more than one, of 764"
+   },
+   {
+    "name": "rigid_weight_exactly_1",
+    "object": "SK_SMG01_LOD3",
+    "passed": true,
+    "detail": "0 influences != 1.0"
+   },
+   {
+    "name": "rigid_on_deform_bones",
+    "object": "SK_SMG01_LOD3",
+    "passed": true,
+    "detail": "0 influences on non-deform groups"
+   },
+   {
+    "name": "rigid_vertices_per_bone",
+    "object": "SK_SMG01_LOD3",
+    "passed": true,
+    "detail": "body 440, charging_handle 32, mag_release 12, muzzle_device 12, selector 24, sight_front 26, sight_rear 34, stock 156, trigger 28"
+   }
+  ]
+ },
+ "sk_ud": {
+  "SK_SMG01": {
+   "ud1_drops": 0,
+   "min_area_mm2": 0.010178,
+   "ud3_collapsed_unreal": 0
+  },
+  "SK_SMG01_LOD1": {
+   "ud1_drops": 0,
+   "min_area_mm2": 0.011048,
+   "ud3_collapsed_unreal": 0
+  },
+  "SK_SMG01_LOD2": {
+   "ud1_drops": 0,
+   "min_area_mm2": 0.012827,
+   "ud3_collapsed_unreal": 0
+  },
+  "SK_SMG01_LOD3": {
+   "ud1_drops": 0,
+   "min_area_mm2": 0.336931,
+   "ud3_collapsed_unreal": 0
+  }
+ },
+ "clips": {
+  "A_SMG01_Fire": {
+   "fps": 60,
+   "frames": [
+    0,
+    6
+   ],
+   "seconds": 0.1,
+   "starts_at_rest": true,
+   "ends_at_rest": true,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    45.0
+   ],
+   "values": {
+    "0": {
+     "selector": 45.0
+    },
+    "1": {
+     "trigger": 13.0,
+     "selector": 45.0
+    },
+    "2": {
+     "bolt": 42.098,
+     "trigger": 13.0,
+     "selector": 45.0
+    },
+    "3": {
+     "bolt": 67.9,
+     "trigger": 13.0,
+     "selector": 45.0
+    },
+    "4": {
+     "bolt": 40.74,
+     "trigger": 13.0,
+     "selector": 45.0
+    },
+    "5": {
+     "bolt": 13.58,
+     "trigger": 6.5,
+     "selector": 45.0
+    },
+    "6": {
+     "selector": 45.0
+    }
+   }
+  },
+  "A_SMG01_Charge": {
+   "fps": 30,
+   "frames": [
+    0,
+    22
+   ],
+   "seconds": 0.7333,
+   "starts_at_rest": true,
+   "ends_at_rest": true,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    45.0
+   ],
+   "values": {
+    "0": {
+     "selector": 45.0
+    },
+    "1": {
+     "handle": 1.9012,
+     "bolt": 1.9012,
+     "selector": 45.0
+    },
+    "2": {
+     "handle": 7.0616,
+     "bolt": 7.0616,
+     "selector": 45.0
+    },
+    "3": {
+     "handle": 14.6664,
+     "bolt": 14.6664,
+     "selector": 45.0
+    },
+    "4": {
+     "handle": 23.9008,
+     "bolt": 23.9008,
+     "selector": 45.0
+    },
+    "5": {
+     "handle": 33.95,
+     "bolt": 33.95,
+     "selector": 45.0
+    },
+    "6": {
+     "handle": 43.9992,
+     "bolt": 43.9992,
+     "selector": 45.0
+    },
+    "7": {
+     "handle": 53.2336,
+     "bolt": 53.2336,
+     "selector": 45.0
+    },
+    "8": {
+     "handle": 60.8384,
+     "bolt": 60.8384,
+     "selector": 45.0
+    },
+    "9": {
+     "handle": 65.9988,
+     "bolt": 65.9988,
+     "selector": 45.0
+    },
+    "10": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "11": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "12": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "13": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "14": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "15": {
+     "handle": 50.925,
+     "bolt": 50.925,
+     "selector": 45.0
+    },
+    "16": {
+     "selector": 45.0
+    },
+    "17": {
+     "selector": 45.0
+    },
+    "18": {
+     "selector": 45.0
+    },
+    "19": {
+     "selector": 45.0
+    },
+    "20": {
+     "selector": 45.0
+    },
+    "21": {
+     "selector": 45.0
+    },
+    "22": {
+     "selector": 45.0
+    }
+   }
+  },
+  "A_SMG01_Reload": {
+   "fps": 30,
+   "frames": [
+    0,
+    55
+   ],
+   "seconds": 1.8333,
+   "starts_at_rest": true,
+   "ends_at_rest": true,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    0.0
+   ],
+   "values": {
+    "0": {},
+    "1": {
+     "release": -2.8519
+    },
+    "2": {
+     "release": -8.1481
+    },
+    "3": {
+     "release": -11.0
+    },
+    "4": {
+     "release": -11.0,
+     "insert": 5.0519
+    },
+    "5": {
+     "release": -11.0,
+     "insert": 17.6815
+    },
+    "6": {
+     "release": -11.0,
+     "insert": 34.1
+    },
+    "7": {
+     "release": -11.0,
+     "insert": 50.5185
+    },
+    "8": {
+     "release": -11.0,
+     "insert": 63.1481
+    },
+    "9": {
+     "release": -11.0,
+     "insert": 68.2
+    },
+    "10": {
+     "release": -11.0,
+     "insert": 68.2,
+     "drop": 2.5
+    },
+    "11": {
+     "release": -5.5,
+     "insert": 68.2,
+     "drop": 10.0
+    },
+    "12": {
+     "insert": 68.2,
+     "drop": 22.5
+    },
+    "13": {
+     "insert": 68.2,
+     "drop": 40.0
+    },
+    "14": {
+     "insert": 68.2,
+     "drop": 62.5
+    },
+    "15": {
+     "insert": 68.2,
+     "drop": 90.0
+    },
+    "16": {
+     "insert": 68.2,
+     "drop": 122.5
+    },
+    "17": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "18": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "19": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "20": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "21": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "22": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "23": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "24": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "25": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "26": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "27": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "28": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "29": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "30": {
+     "insert": 68.2,
+     "drop": 160.0
+    },
+    "31": {
+     "insert": 68.2,
+     "drop": 155.52
+    },
+    "32": {
+     "insert": 68.2,
+     "drop": 143.36
+    },
+    "33": {
+     "insert": 68.2,
+     "drop": 125.44
+    },
+    "34": {
+     "insert": 68.2,
+     "drop": 103.68
+    },
+    "35": {
+     "insert": 68.2,
+     "drop": 80.0
+    },
+    "36": {
+     "insert": 68.2,
+     "drop": 56.32
+    },
+    "37": {
+     "insert": 68.2,
+     "drop": 34.56
+    },
+    "38": {
+     "insert": 68.2,
+     "drop": 16.64
+    },
+    "39": {
+     "insert": 68.2,
+     "drop": 4.48
+    },
+    "40": {
+     "insert": 68.2
+    },
+    "41": {
+     "insert": 65.2695
+    },
+    "42": {
+     "insert": 57.5438
+    },
+    "43": {
+     "release": -5.5,
+     "insert": 46.6211
+    },
+    "44": {
+     "release": -11.0,
+     "insert": 34.1
+    },
+    "45": {
+     "release": -11.0,
+     "insert": 21.5789
+    },
+    "46": {
+     "release": -11.0,
+     "insert": 10.6562
+    },
+    "47": {
+     "release": -11.0,
+     "insert": 2.9305
+    },
+    "48": {
+     "release": -11.0
+    },
+    "49": {},
+    "50": {},
+    "51": {},
+    "52": {},
+    "53": {},
+    "54": {},
+    "55": {}
+   }
+  },
+  "A_SMG01_ReloadEmpty": {
+   "fps": 30,
+   "frames": [
+    0,
+    80
+   ],
+   "seconds": 2.6667,
+   "starts_at_rest": false,
+   "ends_at_rest": true,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    45.0
+   ],
+   "values": {
+    "0": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "1": {
+     "release": -2.8519,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "2": {
+     "release": -8.1481,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "3": {
+     "release": -11.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "4": {
+     "release": -11.0,
+     "insert": 5.0519,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "5": {
+     "release": -11.0,
+     "insert": 17.6815,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "6": {
+     "release": -11.0,
+     "insert": 34.1,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "7": {
+     "release": -11.0,
+     "insert": 50.5185,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "8": {
+     "release": -11.0,
+     "insert": 63.1481,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "9": {
+     "release": -11.0,
+     "insert": 68.2,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "10": {
+     "release": -11.0,
+     "insert": 68.2,
+     "drop": 2.5,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "11": {
+     "release": -5.5,
+     "insert": 68.2,
+     "drop": 10.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "12": {
+     "insert": 68.2,
+     "drop": 22.5,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "13": {
+     "insert": 68.2,
+     "drop": 40.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "14": {
+     "insert": 68.2,
+     "drop": 62.5,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "15": {
+     "insert": 68.2,
+     "drop": 90.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "16": {
+     "insert": 68.2,
+     "drop": 122.5,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "17": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "18": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "19": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "20": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "21": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "22": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "23": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "24": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "25": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "26": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "27": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "28": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "29": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "30": {
+     "insert": 68.2,
+     "drop": 160.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "31": {
+     "insert": 68.2,
+     "drop": 155.52,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "32": {
+     "insert": 68.2,
+     "drop": 143.36,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "33": {
+     "insert": 68.2,
+     "drop": 125.44,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "34": {
+     "insert": 68.2,
+     "drop": 103.68,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "35": {
+     "insert": 68.2,
+     "drop": 80.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "36": {
+     "insert": 68.2,
+     "drop": 56.32,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "37": {
+     "insert": 68.2,
+     "drop": 34.56,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "38": {
+     "insert": 68.2,
+     "drop": 16.64,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "39": {
+     "insert": 68.2,
+     "drop": 4.48,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "40": {
+     "insert": 68.2,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "41": {
+     "insert": 65.2695,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "42": {
+     "insert": 57.5438,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "43": {
+     "release": -5.5,
+     "insert": 46.6211,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "44": {
+     "release": -11.0,
+     "insert": 34.1,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "45": {
+     "release": -11.0,
+     "insert": 21.5789,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "46": {
+     "release": -11.0,
+     "insert": 10.6562,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "47": {
+     "release": -11.0,
+     "insert": 2.9305,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "48": {
+     "release": -11.0,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "49": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "50": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "51": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "52": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "53": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "54": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "55": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "56": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "57": {
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "58": {
+     "handle": 1.9012,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "59": {
+     "handle": 7.0616,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "60": {
+     "handle": 14.6664,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "61": {
+     "handle": 23.9008,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "62": {
+     "handle": 33.95,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "63": {
+     "handle": 43.9992,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "64": {
+     "handle": 53.2336,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "65": {
+     "handle": 60.8384,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "66": {
+     "handle": 65.9988,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "67": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "68": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "69": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "70": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "71": {
+     "handle": 67.9,
+     "bolt": 67.9,
+     "selector": 45.0
+    },
+    "72": {
+     "handle": 50.925,
+     "bolt": 50.925,
+     "selector": 45.0
+    },
+    "73": {
+     "selector": 45.0
+    },
+    "74": {
+     "selector": 45.0
+    },
+    "75": {
+     "selector": 45.0
+    },
+    "76": {
+     "selector": 45.0
+    },
+    "77": {
+     "selector": 45.0
+    },
+    "78": {
+     "selector": 45.0
+    },
+    "79": {
+     "selector": 45.0
+    },
+    "80": {
+     "selector": 45.0
+    }
+   }
+  },
+  "A_SMG01_Selector": {
+   "fps": 30,
+   "frames": [
+    0,
+    30
+   ],
+   "seconds": 1.0,
+   "starts_at_rest": true,
+   "ends_at_rest": true,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    -63.4,
+    -56.806,
+    -41.083,
+    -22.317,
+    -6.594,
+    0.0,
+    4.68,
+    15.84,
+    29.16,
+    40.32,
+    45.0
+   ],
+   "values": {
+    "0": {},
+    "1": {
+     "selector": -6.5936
+    },
+    "2": {
+     "selector": -22.3168
+    },
+    "3": {
+     "selector": -41.0832
+    },
+    "4": {
+     "selector": -56.8064
+    },
+    "5": {
+     "selector": -63.4
+    },
+    "6": {
+     "selector": -63.4
+    },
+    "7": {
+     "selector": -63.4
+    },
+    "8": {
+     "selector": -63.4
+    },
+    "9": {
+     "selector": -63.4
+    },
+    "10": {
+     "selector": -56.8064
+    },
+    "11": {
+     "selector": -41.0832
+    },
+    "12": {
+     "selector": -22.3168
+    },
+    "13": {
+     "selector": -6.5936
+    },
+    "14": {},
+    "15": {},
+    "16": {},
+    "17": {
+     "selector": 4.68
+    },
+    "18": {
+     "selector": 15.84
+    },
+    "19": {
+     "selector": 29.16
+    },
+    "20": {
+     "selector": 40.32
+    },
+    "21": {
+     "selector": 45.0
+    },
+    "22": {
+     "selector": 45.0
+    },
+    "23": {
+     "selector": 45.0
+    },
+    "24": {
+     "selector": 45.0
+    },
+    "25": {
+     "selector": 45.0
+    },
+    "26": {
+     "selector": 40.32
+    },
+    "27": {
+     "selector": 29.16
+    },
+    "28": {
+     "selector": 15.84
+    },
+    "29": {
+     "selector": 4.68
+    },
+    "30": {}
+   }
+  },
+  "A_SMG01_StockFold": {
+   "fps": 30,
+   "frames": [
+    0,
+    24
+   ],
+   "seconds": 0.8,
+   "starts_at_rest": true,
+   "ends_at_rest": false,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    0.0
+   ],
+   "values": {
+    "0": {},
+    "1": {},
+    "2": {},
+    "3": {
+     "stock": 1.4434
+    },
+    "4": {
+     "stock": 5.5635
+    },
+    "5": {
+     "stock": 12.0455
+    },
+    "6": {
+     "stock": 20.5744
+    },
+    "7": {
+     "stock": 30.8354
+    },
+    "8": {
+     "stock": 42.5135
+    },
+    "9": {
+     "stock": 55.2938
+    },
+    "10": {
+     "stock": 68.8614
+    },
+    "11": {
+     "stock": 82.9013
+    },
+    "12": {
+     "stock": 97.0987
+    },
+    "13": {
+     "stock": 111.1386
+    },
+    "14": {
+     "stock": 124.7062
+    },
+    "15": {
+     "stock": 137.4865
+    },
+    "16": {
+     "stock": 149.1646
+    },
+    "17": {
+     "stock": 159.4256
+    },
+    "18": {
+     "stock": 167.9545
+    },
+    "19": {
+     "stock": 174.4365
+    },
+    "20": {
+     "stock": 178.5566
+    },
+    "21": {
+     "stock": 180.0
+    },
+    "22": {
+     "stock": 180.0
+    },
+    "23": {
+     "stock": 180.0
+    },
+    "24": {
+     "stock": 180.0
+    }
+   }
+  },
+  "A_SMG01_StockUnfold": {
+   "fps": 30,
+   "frames": [
+    0,
+    24
+   ],
+   "seconds": 0.8,
+   "starts_at_rest": false,
+   "ends_at_rest": true,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    0.0
+   ],
+   "values": {
+    "0": {
+     "stock": 180.0
+    },
+    "1": {
+     "stock": 180.0
+    },
+    "2": {
+     "stock": 180.0
+    },
+    "3": {
+     "stock": 178.5566
+    },
+    "4": {
+     "stock": 174.4365
+    },
+    "5": {
+     "stock": 167.9545
+    },
+    "6": {
+     "stock": 159.4256
+    },
+    "7": {
+     "stock": 149.1646
+    },
+    "8": {
+     "stock": 137.4865
+    },
+    "9": {
+     "stock": 124.7062
+    },
+    "10": {
+     "stock": 111.1386
+    },
+    "11": {
+     "stock": 97.0987
+    },
+    "12": {
+     "stock": 82.9013
+    },
+    "13": {
+     "stock": 68.8614
+    },
+    "14": {
+     "stock": 55.2938
+    },
+    "15": {
+     "stock": 42.5135
+    },
+    "16": {
+     "stock": 30.8354
+    },
+    "17": {
+     "stock": 20.5744
+    },
+    "18": {
+     "stock": 12.0455
+    },
+    "19": {
+     "stock": 5.5635
+    },
+    "20": {
+     "stock": 1.4434
+    },
+    "21": {},
+    "22": {},
+    "23": {},
+    "24": {}
+   }
+  },
+  "A_SMG01_SightFlip": {
+   "fps": 30,
+   "frames": [
+    0,
+    20
+   ],
+   "seconds": 0.6667,
+   "starts_at_rest": true,
+   "ends_at_rest": true,
+   "rest_as_declared": true,
+   "selector_held_deg": [
+    0.0
+   ],
+   "values": {
+    "0": {},
+    "1": {},
+    "2": {},
+    "3": {
+     "rear": 6.6667,
+     "front": -6.6667
+    },
+    "4": {
+     "rear": 23.3333,
+     "front": -23.3333
+    },
+    "5": {
+     "rear": 45.0,
+     "front": -45.0
+    },
+    "6": {
+     "rear": 66.6667,
+     "front": -66.6667
+    },
+    "7": {
+     "rear": 83.3333,
+     "front": -83.3333
+    },
+    "8": {
+     "rear": 90.0,
+     "front": -90.0
+    },
+    "9": {
+     "rear": 90.0,
+     "front": -90.0
+    },
+    "10": {
+     "rear": 90.0,
+     "front": -90.0
+    },
+    "11": {
+     "rear": 90.0,
+     "front": -90.0
+    },
+    "12": {
+     "rear": 90.0,
+     "front": -90.0
+    },
+    "13": {
+     "rear": 83.3333,
+     "front": -83.3333
+    },
+    "14": {
+     "rear": 66.6667,
+     "front": -66.6667
+    },
+    "15": {
+     "rear": 45.0,
+     "front": -45.0
+    },
+    "16": {
+     "rear": 23.3333,
+     "front": -23.3333
+    },
+    "17": {
+     "rear": 6.6667,
+     "front": -6.6667
+    },
+    "18": {},
+    "19": {},
+    "20": {}
+   }
+  }
+ },
+ "notifies": [
+  {
+   "clip": "A_SMG01_Fire",
+   "name": "Fire",
+   "frame": 1,
+   "time_s": 0.0167
+  },
+  {
+   "clip": "A_SMG01_Fire",
+   "name": "ShellEject",
+   "frame": 3,
+   "time_s": 0.05
+  },
+  {
+   "clip": "A_SMG01_Fire",
+   "name": "TriggerReset",
+   "frame": 6,
+   "time_s": 0.1
+  },
+  {
+   "clip": "A_SMG01_Charge",
+   "name": "ChargeRear",
+   "frame": 10,
+   "time_s": 0.3333
+  },
+  {
+   "clip": "A_SMG01_Charge",
+   "name": "BoltRelease",
+   "frame": 14,
+   "time_s": 0.4667
+  },
+  {
+   "clip": "A_SMG01_Reload",
+   "name": "MagRelease",
+   "frame": 2,
+   "time_s": 0.0667
+  },
+  {
+   "clip": "A_SMG01_Reload",
+   "name": "MagOut",
+   "frame": 10,
+   "time_s": 0.3333
+  },
+  {
+   "clip": "A_SMG01_Reload",
+   "name": "MagDrop",
+   "frame": 17,
+   "time_s": 0.5667
+  },
+  {
+   "clip": "A_SMG01_Reload",
+   "name": "MagIn",
+   "frame": 48,
+   "time_s": 1.6
+  },
+  {
+   "clip": "A_SMG01_ReloadEmpty",
+   "name": "MagRelease",
+   "frame": 2,
+   "time_s": 0.0667
+  },
+  {
+   "clip": "A_SMG01_ReloadEmpty",
+   "name": "MagOut",
+   "frame": 10,
+   "time_s": 0.3333
+  },
+  {
+   "clip": "A_SMG01_ReloadEmpty",
+   "name": "MagDrop",
+   "frame": 17,
+   "time_s": 0.5667
+  },
+  {
+   "clip": "A_SMG01_ReloadEmpty",
+   "name": "MagIn",
+   "frame": 48,
+   "time_s": 1.6
+  },
+  {
+   "clip": "A_SMG01_ReloadEmpty",
+   "name": "ChargeRear",
+   "frame": 67,
+   "time_s": 2.2333
+  },
+  {
+   "clip": "A_SMG01_ReloadEmpty",
+   "name": "BoltRelease",
+   "frame": 71,
+   "time_s": 2.3667
+  },
+  {
+   "clip": "A_SMG01_StockFold",
+   "name": "StockUnlock",
+   "frame": 1,
+   "time_s": 0.0333
+  },
+  {
+   "clip": "A_SMG01_StockFold",
+   "name": "StockLocked",
+   "frame": 24,
+   "time_s": 0.8
+  },
+  {
+   "clip": "A_SMG01_StockUnfold",
+   "name": "StockUnlock",
+   "frame": 1,
+   "time_s": 0.0333
+  },
+  {
+   "clip": "A_SMG01_StockUnfold",
+   "name": "StockLocked",
+   "frame": 24,
+   "time_s": 0.8
+  }
+ ],
+ "selector_rule": {
+  "A_SMG01_Fire": {
+   "moves_bolt": true,
+   "selector_values": [
+    45.0
+   ],
+   "ok": true
+  },
+  "A_SMG01_Charge": {
+   "moves_bolt": true,
+   "selector_values": [
+    45.0
+   ],
+   "ok": true
+  },
+  "A_SMG01_Reload": {
+   "moves_bolt": false,
+   "selector_values": [
+    0.0
+   ],
+   "ok": true
+  },
+  "A_SMG01_ReloadEmpty": {
+   "moves_bolt": true,
+   "selector_values": [
+    45.0
+   ],
+   "ok": true
+  },
+  "A_SMG01_Selector": {
+   "moves_bolt": false,
+   "selector_values": [
+    -63.4,
+    -56.806,
+    -41.083,
+    -22.317,
+    -6.594,
+    0.0,
+    4.68,
+    15.84,
+    29.16,
+    40.32,
+    45.0
+   ],
+   "ok": true
+  },
+  "A_SMG01_StockFold": {
+   "moves_bolt": false,
+   "selector_values": [
+    0.0
+   ],
+   "ok": true
+  },
+  "A_SMG01_StockUnfold": {
+   "moves_bolt": false,
+   "selector_values": [
+    0.0
+   ],
+   "ok": true
+  },
+  "A_SMG01_SightFlip": {
+   "moves_bolt": false,
+   "selector_values": [
+    0.0
+   ],
+   "ok": true
+  }
+ },
+ "b3_coverage": {
+  "bolt": [
+   0.0,
+   67.9
+  ],
+  "handle": [
+   0.0,
+   67.9
+  ],
+  "trigger": [
+   0.0,
+   13.0
+  ],
+  "selector": [
+   -63.4,
+   45.0
+  ],
+  "release": [
+   -11.0,
+   0.0
+  ],
+  "stock": [
+   0.0,
+   180.0
+  ],
+  "rear": [
+   0.0,
+   90.0
+  ],
+  "front": [
+   -90.0,
+   0.0
+  ]
+ },
+ "fold_latch_path": {
+  "frames": [
+   {
+    "frame": 0,
+    "stock_deg": 0.0,
+    "hits": {}
+   },
+   {
+    "frame": 1,
+    "stock_deg": 0.0,
+    "hits": {}
+   },
+   {
+    "frame": 2,
+    "stock_deg": 0.0,
+    "hits": {}
+   },
+   {
+    "frame": 3,
+    "stock_deg": 1.443,
+    "hits": {
+     "stock_latch_bolt/lower_receiver": {
+      "pairs": 65,
+      "depth_mm": 0.458
+     }
+    }
+   },
+   {
+    "frame": 4,
+    "stock_deg": 5.563,
+    "hits": {}
+   },
+   {
+    "frame": 5,
+    "stock_deg": 12.045,
+    "hits": {}
+   },
+   {
+    "frame": 6,
+    "stock_deg": 20.574,
+    "hits": {}
+   },
+   {
+    "frame": 7,
+    "stock_deg": 30.835,
+    "hits": {}
+   },
+   {
+    "frame": 8,
+    "stock_deg": 42.513,
+    "hits": {}
+   },
+   {
+    "frame": 9,
+    "stock_deg": 55.294,
+    "hits": {}
+   },
+   {
+    "frame": 10,
+    "stock_deg": 68.861,
+    "hits": {}
+   },
+   {
+    "frame": 11,
+    "stock_deg": 82.901,
+    "hits": {}
+   },
+   {
+    "frame": 12,
+    "stock_deg": 97.099,
+    "hits": {}
+   },
+   {
+    "frame": 13,
+    "stock_deg": 111.139,
+    "hits": {}
+   },
+   {
+    "frame": 14,
+    "stock_deg": 124.706,
+    "hits": {}
+   },
+   {
+    "frame": 15,
+    "stock_deg": 137.487,
+    "hits": {}
+   },
+   {
+    "frame": 16,
+    "stock_deg": 149.165,
+    "hits": {}
+   },
+   {
+    "frame": 17,
+    "stock_deg": 159.426,
+    "hits": {}
+   },
+   {
+    "frame": 18,
+    "stock_deg": 167.955,
+    "hits": {}
+   },
+   {
+    "frame": 19,
+    "stock_deg": 174.437,
+    "hits": {}
+   },
+   {
+    "frame": 20,
+    "stock_deg": 178.557,
+    "hits": {}
+   },
+   {
+    "frame": 21,
+    "stock_deg": 180.0,
+    "hits": {}
+   },
+   {
+    "frame": 22,
+    "stock_deg": 180.0,
+    "hits": {}
+   },
+   {
+    "frame": 23,
+    "stock_deg": 180.0,
+    "hits": {}
+   },
+   {
+    "frame": 24,
+    "stock_deg": 180.0,
+    "hits": {}
+   }
+  ],
+  "worst_depth_mm": 0.458,
+  "parts_hit": [
+   "stock_latch_bolt/lower_receiver"
+  ],
+  "note": "the latch button / bolt ride on the 'stock' bone (11 bones, plan 2.2): the clip cannot press the button, so the latch bolt's end swings through the end-block lug's bore for the first degrees; B3 swept the fold with the button pressed (gates/form.json, b3_lod1.json)"
+ },
+ "bounds_extension": {
+  "positive_cm": [
+   0.0,
+   24.752,
+   0.257
+  ],
+  "negative_cm": [
+   0.749,
+   0.0,
+   0.0
+  ],
+  "rest_aabb_mm": [
+   [
+    -302.45,
+    -36.38,
+    -61.686
+   ],
+   [
+    322.55,
+    47.5,
+    167.79
+   ]
+  ],
+  "posed_aabb_mm": [
+   [
+    -308.944,
+    -282.9,
+    -61.686
+   ],
+   [
+    322.55,
+    47.5,
+    169.355
+   ]
+  ],
+  "extended_aabb_mm": [
+   [
+    -309.944,
+    -283.9,
+    -61.686
+   ],
+   [
+    322.55,
+    47.5,
+    170.355
+   ]
+  ],
+  "worst_excursion_mm_per_clip": {
+   "A_SMG01_Fire": 0.0,
+   "A_SMG01_Charge": 0.0,
+   "A_SMG01_Reload": 0.0,
+   "A_SMG01_ReloadEmpty": 0.0,
+   "A_SMG01_Selector": 0.0,
+   "A_SMG01_StockFold": 248.814,
+   "A_SMG01_StockUnfold": 248.814,
+   "A_SMG01_SightFlip": 1.565
+  },
+  "why": "LOD0-3 posed at every frame of every clip (the folded stock: StockFold / StockUnfold; the folded sights: SightFlip) vs LOD0's bind AABB (Unreal's stored bounds), per axis (+1 mm where it grows; Unreal axes: y flipped): the mesh's Positive/Negative Bounds Extension. The attached magazine is its own component with its own bounds"
+ },
+ "lod_screen_sizes": {
+  "SM": [
+   1.0,
+   0.225,
+   0.06561,
+   0.033
+  ],
+  "SK": [
+   1.0,
+   0.24078,
+   0.07021,
+   0.03531
+  ],
+  "r_twin_m": 0.3508,
+  "r_sk_engine_m": 0.3754,
+  "switch_distances_m": [
+   2.772,
+   9.507,
+   18.901
+  ]
+ },
+ "qa_check_SM_SMG01": {
+  "passed": true,
+  "triangles": {
+   "SM_SMG01_LOD0": 50108,
+   "SM_SMG01_LOD1": 24420,
+   "SM_SMG01_LOD2": 10028,
+   "SM_SMG01_LOD3": 1444
+  },
+  "texel_target_px_cm": 91.537,
+  "failed": [],
+  "checks": 320
+ },
+ "sk_ud_ok": true,
+ "export_static": {
+  "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\SM_SMG01.fbx",
+  "sidecar": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\SM_SMG01.sockets.json",
+  "warnings": [
+   "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_SMG01_LOD0_CenterOfMass, SOCKET_SM_SMG01_LOD0_ChargingHandle, SOCKET_SM_SMG01_LOD0_Grip, SOCKET_SM_SMG01_LOD0_Holster, SOCKET_SM_SMG01_LOD0_Mag, SOCKET_SM_SMG01_LOD0_MagInsertStart, SOCKET_SM_SMG01_LOD0_MagRelease, SOCKET_SM_SMG01_LOD0_Muzzle, SOCKET_SM_SMG01_LOD0_MuzzleSeat, SOCKET_SM_SMG01_LOD0_Rail_Bottom, SOCKET_SM_SMG01_LOD0_Rail_Top, SOCKET_SM_SMG01_LOD0_Selector, SOCKET_SM_SMG01_LOD0_ShellEject, SOCKET_SM_SMG01_LOD0_Shoulder, SOCKET_SM_SMG01_LOD0_Sight, SOCKET_SM_SMG01_LOD0_SightFront, SOCKET_SM_SMG01_LOD0_SlingFront, SOCKET_SM_SMG01_LOD0_SlingRear, SOCKET_SM_SMG01_LOD0_Stock, SOCKET_SM_SMG01_LOD0_SupportHand, SOCKET_SM_SMG01_LOD0_Trigger"
+  ],
+  "lod_screen_sizes": [
+   1.0,
+   0.225,
+   0.06561,
+   0.033
+  ]
+ },
+ "export_skeletal": {
+  "meshes": [
+   {
+    "lod": 0,
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\SK_SMG01.fbx",
+    "warnings": []
+   },
+   {
+    "lod": 1,
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\SK_SMG01_LOD1.fbx",
+    "warnings": []
+   },
+   {
+    "lod": 2,
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\SK_SMG01_LOD2.fbx",
+    "warnings": []
+   },
+   {
+    "lod": 3,
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\SK_SMG01_LOD3.fbx",
+    "warnings": []
+   }
+  ],
+  "animations": [
+   {
+    "action": "A_SMG01_Fire",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_Fire.fbx",
+    "frames": [
+     0,
+     6
+    ],
+    "fps": 60,
+    "warnings": []
+   },
+   {
+    "action": "A_SMG01_Charge",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_Charge.fbx",
+    "frames": [
+     0,
+     22
+    ],
+    "fps": 30,
+    "warnings": []
+   },
+   {
+    "action": "A_SMG01_Reload",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_Reload.fbx",
+    "frames": [
+     0,
+     55
+    ],
+    "fps": 30,
+    "warnings": []
+   },
+   {
+    "action": "A_SMG01_ReloadEmpty",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_ReloadEmpty.fbx",
+    "frames": [
+     0,
+     80
+    ],
+    "fps": 30,
+    "warnings": []
+   },
+   {
+    "action": "A_SMG01_Selector",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_Selector.fbx",
+    "frames": [
+     0,
+     30
+    ],
+    "fps": 30,
+    "warnings": []
+   },
+   {
+    "action": "A_SMG01_StockFold",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_StockFold.fbx",
+    "frames": [
+     0,
+     24
+    ],
+    "fps": 30,
+    "warnings": []
+   },
+   {
+    "action": "A_SMG01_StockUnfold",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_StockUnfold.fbx",
+    "frames": [
+     0,
+     24
+    ],
+    "fps": 30,
+    "warnings": []
+   },
+   {
+    "action": "A_SMG01_SightFlip",
+    "fbx": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\A_SMG01_SightFlip.fbx",
+    "frames": [
+     0,
+     20
+    ],
+    "fps": 30,
+    "warnings": []
+   }
+  ],
+  "physics_proxy": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\Physics\\SK_SMG01_PhysicsProxy.fbx"
+ },
+ "files": {
+  "Exports/Guns/SMG01/SK_SMG01.fbx": {
+   "sha256": "bf23148184ffda771ecb5400d183b475a259b502f4bdf89ab31f5cd26b96d668",
+   "bytes": 1764508
+  },
+  "Exports/Guns/SMG01/SK_SMG01_LOD1.fbx": {
+   "sha256": "2c77ea08109cbf43dfac4cea968823e5ab7668ce2cc529affae91f337a23f043",
+   "bytes": 1034812
+  },
+  "Exports/Guns/SMG01/SK_SMG01_LOD2.fbx": {
+   "sha256": "f61db29fdf34f12e227243a8603770f9a4c0b76aebbe59ade5cc684f9b592568",
+   "bytes": 458780
+  },
+  "Exports/Guns/SMG01/SK_SMG01_LOD3.fbx": {
+   "sha256": "3815127ed45cbf148bcb974a18387cb9ef2aa73de6744b74d5543c89dc11fea7",
+   "bytes": 106364
+  },
+  "Exports/Guns/SMG01/A_SMG01_Fire.fbx": {
+   "sha256": "e28f8bca4f281e7cecc835601226247c5e190501c8dac882477bcbcae3ae51ad",
+   "bytes": 86892
+  },
+  "Exports/Guns/SMG01/A_SMG01_Charge.fbx": {
+   "sha256": "4f9589a90e4bdd7faafcf0048a093480fbddf6d30a1ee7aa513b37e172f9eb63",
+   "bytes": 103628
+  },
+  "Exports/Guns/SMG01/A_SMG01_Reload.fbx": {
+   "sha256": "6fd83beaf80481a8435d6fdb6d1922043c4182dff57c25e2881b71e04a493300",
+   "bytes": 116940
+  },
+  "Exports/Guns/SMG01/A_SMG01_ReloadEmpty.fbx": {
+   "sha256": "b69d3fc16f35e8521fe768c09a631ad9c7e135aef15f3510cefefb5b79f6c7e9",
+   "bytes": 132012
+  },
+  "Exports/Guns/SMG01/A_SMG01_Selector.fbx": {
+   "sha256": "a2102c3651dd0bb427657f7c5fa3c225f49b9d928d2ba23c13df534c75343854",
+   "bytes": 112492
+  },
+  "Exports/Guns/SMG01/A_SMG01_StockFold.fbx": {
+   "sha256": "1ac6f2ffb7527bd2df17892081964ec680082c06ab6c6fdc5356d54403fe788f",
+   "bytes": 105900
+  },
+  "Exports/Guns/SMG01/A_SMG01_StockUnfold.fbx": {
+   "sha256": "64b2d558ff272ab3e8ccc300b1d3aa7f846fc3375708da143d58444bbdfcb3f9",
+   "bytes": 105900
+  },
+  "Exports/Guns/SMG01/A_SMG01_SightFlip.fbx": {
+   "sha256": "8980f2c8ee7104f5c663f3ba323245ac2230510312741c20e6655f9aa3988c41",
+   "bytes": 101468
+  },
+  "Exports/Guns/SMG01/Physics/SK_SMG01_PhysicsProxy.fbx": {
+   "sha256": "67064f86705d23e8f02e3ea2159633cda5c7c6028f739c56a2ab0b50f6844e5d",
+   "bytes": 36204
+  },
+  "Exports/Guns/SMG01/SK_SMG01.skeletal.json": {
+   "sha256": "aec39538d3778df923589783e033fae50994ed4fd48504ac4d543bb3d498ea38",
+   "bytes": 51857
+  },
+  "Exports/Guns/SMG01/SM_SMG01.fbx": {
+   "sha256": "1a3b4892d40b4dc58d1315ffbc0bb423fd294011bfc8ff9913fa30e13236b909",
+   "bytes": 4172364
+  },
+  "Exports/Guns/SMG01/SM_SMG01.sockets.json": {
+   "sha256": "3cbcfccadff9478a27107b38f9acf3df7c8e5976106df7312bfddcfadd760043",
+   "bytes": 10440
+  }
+ },
+ "deny_tokens": {
+  "checked": 81,
+  "hits": {},
+  "sidecar_text_hits": [],
+  "pass": true
+ },
+ "seconds": 16.3
+}

@@ -25,7 +25,7 @@ CFG = GunConfig(CODE, WORK, SPEC_PATH, log_tag=CODE)
 
 # ------------------------------------------------------------------------------------------------ B4 (aperture sight)
 CFG.b4 = {"kind": "aperture", "socket": "Sight", "rear": ["sight_rear_leaf"], "post": "sight_front_leaf",
-          "ignore": [], "tol_mm": 0.2, "fov": 55.0, "relief": 250.0, "W": 2560, "H": 1440, "ss": 8, "half": 110,
+          "ignore": [], "tol_mm": 0.2, "min_post_mm": 0.5, "fov": 55.0, "relief": 250.0, "W": 2560, "H": 1440, "ss": 8, "half": 110,
           "img": CFG.review / "b4" / "b4_sight_picture.png"}
 
 # ------------------------------------------------------------------------------------------------ B6a
@@ -72,5 +72,53 @@ CFG.magfit = {
     "header": lambda S: {"stage": "form: magazine fit (straight insert, SMG_BUILD_PLAN 12.2 at form time)",
                          "spec": "smg_spec.json frames.mag, sockets Mag / MagInsertStart, mag_release dims"}}
 
-CFG.viewgates = {}
+# ------------------------------------------------------------------------------------------------ W3 view gates
+def _lod_npz(k, state):
+    return CFG.scratch / "game" / (f"lod{k}_tris.npz" if state in (None, "extended") else f"lod{k}_{state}_tris.npz")
+
+
+CFG.viewgates = {"radius": lambda rep: rep["bounds_radius_m"]["twin_with_mag_box_half_diagonal"],
+                 "start_sizes": [float(v) for v in D["lods"]["gun_screen_sizes_start"]],
+                 "states": ["extended", "folded"], "lod_npz": _lod_npz,
+                 "s2_requires": ["sight_front_leaf", "sight_rear_leaf"],
+                 "s2_method": "gunlib.drivers.b4 aperture (occlusion-aware; post tip centred in the aperture)"}
 CFG.g5_lods = {}
+
+
+# ------------------------------------------------------------------------------------------------ W3 rig verify
+def _clips(rep):
+    import smg_clips as CL
+    m = rep["motion"]
+    CL.MAG_Z = np.array(m["mag_axis_B"], float)
+    CL.configure(m["bolt_travel_mm"], m["handle_travel_mm"], m["insert_mm"])
+    clips = CL.all_clips()
+    by_id = {id(fr): name for name, (fr, _n, _f) in clips.items()}
+
+    def rest_rule(frames):
+        # first / last frame = rest unless the clip declares otherwise (ReloadEmpty starts with the bolt open,
+        # StockFold ends folded, StockUnfold starts folded): a declared non-rest end must not be rest either
+        return CL.rest_as_declared(frames, by_id.get(id(frames)))
+    return clips, CL.basis_from, rest_rule
+
+
+CFG.rig_verify = {
+    "stage": "W3 rig + export (SK_SMG01 set, SM_SMG01)", "noun": "gun", "clips": _clips, "clip_table_name": "smg_clips",
+    "bore_z_B": float(D["key_dimensions"]["bore_Z_M"]) - float(CFG.grip[2]), "ucx_count": 8,
+    "b3_coverage_text": "bolt / handle 0..67.9 mm, trigger 0..13, selector -63.4..45, release -11..0, stock 0..180, rear "
+                        "sight 0..90, front sight -90..0 deg: the ranges B3 swept with 0 intersections (gates/form.json "
+                        "LOD0, scratch/b3_lod1.json LOD1; the fold with the latch pressed)",
+    "bounds_note": "LOD0-3 posed vs LOD0's bind box at every frame of every clip (the stock mid-fold sweeps 25 cm to "
+                   "the right: Y extension 24.75 cm); U5 re-checks in engine",
+    "qa_budget_text": "pass (budget 55,000 = 50,000 gun + 5,000 merged mag; UV1 authored; UCX keyed to the node; texel = "
+                      "measured aggregate +-25 %)"}
+
+
+# ------------------------------------------------------------------------------------------------ W3 mag fit (shipped)
+def _fit_gates(F, out):
+    import smg_magfit
+    return smg_magfit.stage_gates(F, out)
+
+
+CFG.mag_fit = {"noun": "gun", "gates": _fit_gates, "stage": "W3 magazine (SM_SMG01_Mag build + fit on the shipped bytes)",
+               # the magwell's interior (frame M): magazine surface inside it never shows at any LOD
+               "well_box_M": {"X": (410.0, 482.0), "Y": (-14.5, 14.5), "Z": (-78.6, 0.0)}}

@@ -1,0 +1,2568 @@
+{
+  "schema": "ninjapack.skeletal_prop/1",
+  "fbx": "SK_SMG01.fbx",
+  "pipeline_module": "1.0.0",
+  "axes": {
+    "blender": "armature space, mm, right-handed, Z up",
+    "unreal": "component space, cm, left-handed (Blender y flipped), Z up"
+  },
+  "asset": "SK_SMG01",
+  "skeleton": "SK_SMG01_Skeleton",
+  "physics_asset": "PHYS_SMG01",
+  "compatible_skeletons": [
+    "SK_AR01_Skeleton"
+  ],
+  "bones": [
+    "body",
+    "bolt",
+    "charging_handle",
+    "trigger",
+    "selector",
+    "mag_release",
+    "magazine",
+    "stock",
+    "sight_rear",
+    "sight_front",
+    "muzzle_device"
+  ],
+  "root_bone": "root",
+  "bones_rest": {
+    "body": {
+      "head_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "head_cm": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "parent": "root",
+      "motion": "fixed; the physics body"
+    },
+    "bolt": {
+      "head_mm": [
+        153.15,
+        0.0,
+        93.08
+      ],
+      "head_cm": [
+        15.315,
+        -0.0,
+        9.308
+      ],
+      "parent": "body",
+      "motion": "translate -X"
+    },
+    "charging_handle": {
+      "head_mm": [
+        195.1,
+        39.12,
+        110.41
+      ],
+      "head_cm": [
+        19.51,
+        -3.912,
+        11.041
+      ],
+      "parent": "body",
+      "motion": "translate -X 0..67.9; at full travel rotate about X 0..+15 deg (lock)"
+    },
+    "trigger": {
+      "head_mm": [
+        61.85,
+        0.0,
+        54.99
+      ],
+      "head_cm": [
+        6.185,
+        -0.0,
+        5.499
+      ],
+      "parent": "body",
+      "motion": "rotate about Y (+ = pull: lower end rearward)"
+    },
+    "selector": {
+      "head_mm": [
+        26.75,
+        0.0,
+        65.59
+      ],
+      "head_cm": [
+        2.675,
+        -0.0,
+        6.559
+      ],
+      "parent": "body",
+      "motion": "rotate about Y"
+    },
+    "mag_release": {
+      "head_mm": [
+        101.55,
+        0.0,
+        33.79
+      ],
+      "head_cm": [
+        10.155,
+        -0.0,
+        3.379
+      ],
+      "parent": "body",
+      "motion": "rotate about Y (- = release: lower end forward, nose rearward)"
+    },
+    "magazine": {
+      "head_mm": [
+        130.74,
+        0.0,
+        20.21
+      ],
+      "head_cm": [
+        13.074,
+        -0.0,
+        2.021
+      ],
+      "parent": "body",
+      "motion": "attach only, no weighted vertices; head = Mag socket"
+    },
+    "stock": {
+      "head_mm": [
+        -55.65,
+        -30.93,
+        93.08
+      ],
+      "head_cm": [
+        -5.565,
+        3.093,
+        9.308
+      ],
+      "parent": "body",
+      "motion": "rotate about Z"
+    },
+    "sight_rear": {
+      "head_mm": [
+        2.15,
+        0.0,
+        140.29
+      ],
+      "head_cm": [
+        0.215,
+        -0.0,
+        14.029
+      ],
+      "parent": "body",
+      "motion": "rotate about Y (folds forward)"
+    },
+    "sight_front": {
+      "head_mm": [
+        241.05,
+        0.0,
+        140.79
+      ],
+      "head_cm": [
+        24.105,
+        -0.0,
+        14.079
+      ],
+      "parent": "body",
+      "motion": "rotate about Y (folds rearward)"
+    },
+    "muzzle_device": {
+      "head_mm": [
+        280.95,
+        0.0,
+        93.08
+      ],
+      "head_cm": [
+        28.095,
+        -0.0,
+        9.308
+      ],
+      "parent": "body",
+      "motion": "none (hidden when a suppressor mounts)"
+    }
+  },
+  "lod_files": [
+    "SK_SMG01.fbx",
+    "SK_SMG01_LOD1.fbx",
+    "SK_SMG01_LOD2.fbx",
+    "SK_SMG01_LOD3.fbx"
+  ],
+  "lod_screen_sizes": [
+    1.0,
+    0.24078,
+    0.07021,
+    0.03531
+  ],
+  "lod_note": "import LOD1-3 with SkeletalMeshEditorSubsystem.import_lod (same skeleton, same root; no bones removed). The sizes are the LOD-pop gate's switch distances at the SK's engine radius (bind box + bounds extension). First-person components force LOD0 (ForcedLodModel = 1)",
+  "lod_triangles": {
+    "SK_SMG01": 46876,
+    "SK_SMG01_LOD1": 23344,
+    "SK_SMG01_LOD2": 9400,
+    "SK_SMG01_LOD3": 1420
+  },
+  "animations": [
+    {
+      "file": "A_SMG01_Fire.fbx",
+      "frames": [
+        0,
+        6
+      ],
+      "fps": 60,
+      "loop": false,
+      "starts_at_rest": true,
+      "ends_at_rest": true,
+      "selector_held_deg": [
+        45.0
+      ]
+    },
+    {
+      "file": "A_SMG01_Charge.fbx",
+      "frames": [
+        0,
+        22
+      ],
+      "fps": 30,
+      "loop": false,
+      "starts_at_rest": true,
+      "ends_at_rest": true,
+      "selector_held_deg": [
+        45.0
+      ]
+    },
+    {
+      "file": "A_SMG01_Reload.fbx",
+      "frames": [
+        0,
+        55
+      ],
+      "fps": 30,
+      "loop": false,
+      "starts_at_rest": true,
+      "ends_at_rest": true,
+      "selector_held_deg": [
+        0.0
+      ]
+    },
+    {
+      "file": "A_SMG01_ReloadEmpty.fbx",
+      "frames": [
+        0,
+        80
+      ],
+      "fps": 30,
+      "loop": false,
+      "starts_at_rest": false,
+      "ends_at_rest": true,
+      "selector_held_deg": [
+        45.0
+      ]
+    },
+    {
+      "file": "A_SMG01_Selector.fbx",
+      "frames": [
+        0,
+        30
+      ],
+      "fps": 30,
+      "loop": false,
+      "starts_at_rest": true,
+      "ends_at_rest": true,
+      "selector_held_deg": [
+        -63.4,
+        -56.806,
+        -41.083,
+        -22.317,
+        -6.594,
+        0.0,
+        4.68,
+        15.84,
+        29.16,
+        40.32,
+        45.0
+      ]
+    },
+    {
+      "file": "A_SMG01_StockFold.fbx",
+      "frames": [
+        0,
+        24
+      ],
+      "fps": 30,
+      "loop": false,
+      "starts_at_rest": true,
+      "ends_at_rest": false,
+      "selector_held_deg": [
+        0.0
+      ]
+    },
+    {
+      "file": "A_SMG01_StockUnfold.fbx",
+      "frames": [
+        0,
+        24
+      ],
+      "fps": 30,
+      "loop": false,
+      "starts_at_rest": false,
+      "ends_at_rest": true,
+      "selector_held_deg": [
+        0.0
+      ]
+    },
+    {
+      "file": "A_SMG01_SightFlip.fbx",
+      "frames": [
+        0,
+        20
+      ],
+      "fps": 30,
+      "loop": false,
+      "starts_at_rest": true,
+      "ends_at_rest": true,
+      "selector_held_deg": [
+        0.0
+      ]
+    }
+  ],
+  "notifies": [
+    {
+      "clip": "A_SMG01_Fire",
+      "name": "Fire",
+      "frame": 1,
+      "time_s": 0.0167
+    },
+    {
+      "clip": "A_SMG01_Fire",
+      "name": "ShellEject",
+      "frame": 3,
+      "time_s": 0.05
+    },
+    {
+      "clip": "A_SMG01_Fire",
+      "name": "TriggerReset",
+      "frame": 6,
+      "time_s": 0.1
+    },
+    {
+      "clip": "A_SMG01_Charge",
+      "name": "ChargeRear",
+      "frame": 10,
+      "time_s": 0.3333
+    },
+    {
+      "clip": "A_SMG01_Charge",
+      "name": "BoltRelease",
+      "frame": 14,
+      "time_s": 0.4667
+    },
+    {
+      "clip": "A_SMG01_Reload",
+      "name": "MagRelease",
+      "frame": 2,
+      "time_s": 0.0667
+    },
+    {
+      "clip": "A_SMG01_Reload",
+      "name": "MagOut",
+      "frame": 10,
+      "time_s": 0.3333
+    },
+    {
+      "clip": "A_SMG01_Reload",
+      "name": "MagDrop",
+      "frame": 17,
+      "time_s": 0.5667
+    },
+    {
+      "clip": "A_SMG01_Reload",
+      "name": "MagIn",
+      "frame": 48,
+      "time_s": 1.6
+    },
+    {
+      "clip": "A_SMG01_ReloadEmpty",
+      "name": "MagRelease",
+      "frame": 2,
+      "time_s": 0.0667
+    },
+    {
+      "clip": "A_SMG01_ReloadEmpty",
+      "name": "MagOut",
+      "frame": 10,
+      "time_s": 0.3333
+    },
+    {
+      "clip": "A_SMG01_ReloadEmpty",
+      "name": "MagDrop",
+      "frame": 17,
+      "time_s": 0.5667
+    },
+    {
+      "clip": "A_SMG01_ReloadEmpty",
+      "name": "MagIn",
+      "frame": 48,
+      "time_s": 1.6
+    },
+    {
+      "clip": "A_SMG01_ReloadEmpty",
+      "name": "ChargeRear",
+      "frame": 67,
+      "time_s": 2.2333
+    },
+    {
+      "clip": "A_SMG01_ReloadEmpty",
+      "name": "BoltRelease",
+      "frame": 71,
+      "time_s": 2.3667
+    },
+    {
+      "clip": "A_SMG01_StockFold",
+      "name": "StockUnlock",
+      "frame": 1,
+      "time_s": 0.0333
+    },
+    {
+      "clip": "A_SMG01_StockFold",
+      "name": "StockLocked",
+      "frame": 24,
+      "time_s": 0.8
+    },
+    {
+      "clip": "A_SMG01_StockUnfold",
+      "name": "StockUnlock",
+      "frame": 1,
+      "time_s": 0.0333
+    },
+    {
+      "clip": "A_SMG01_StockUnfold",
+      "name": "StockLocked",
+      "frame": 24,
+      "time_s": 0.8
+    }
+  ],
+  "notifies_note": "FBX carries no notifies: the Unreal harness adds them at these frames (U9). ReloadEmpty starts with the bolt held open (starts_at_rest false); StockFold ends folded and StockUnfold starts folded. Clips that move the bolt hold the selector at AUTO (45 deg); blend the player's fire mode from A_SMG01_Selector per bone",
+  "import": {
+    "use_t0_as_ref_pose": false,
+    "update_skeleton_reference_pose": false,
+    "import_morph_targets": false,
+    "create_physics_asset": false,
+    "normals": "import normals",
+    "convert_scene": true,
+    "force_front_x_axis": false,
+    "custom_sample_rate": "the file's rate",
+    "bone_compression": "/Engine/Animation/DefaultRecorderBoneCompression",
+    "bone_compression_why": "rigid parts: ACL cracked rigid parts by ~1.1 mm on the fan (gun study 4.10.9); U9 gates <= 0.1 mm",
+    "bounds_extension_cm": {
+      "positive_cm": [
+        0.0,
+        24.752,
+        0.257
+      ],
+      "negative_cm": [
+        0.749,
+        0.0,
+        0.0
+      ],
+      "rest_aabb_mm": [
+        [
+          -302.45,
+          -36.38,
+          -61.686
+        ],
+        [
+          322.55,
+          47.5,
+          167.79
+        ]
+      ],
+      "posed_aabb_mm": [
+        [
+          -308.944,
+          -282.9,
+          -61.686
+        ],
+        [
+          322.55,
+          47.5,
+          169.355
+        ]
+      ],
+      "extended_aabb_mm": [
+        [
+          -309.944,
+          -283.9,
+          -61.686
+        ],
+        [
+          322.55,
+          47.5,
+          170.355
+        ]
+      ],
+      "worst_excursion_mm_per_clip": {
+        "A_SMG01_Fire": 0.0,
+        "A_SMG01_Charge": 0.0,
+        "A_SMG01_Reload": 0.0,
+        "A_SMG01_ReloadEmpty": 0.0,
+        "A_SMG01_Selector": 0.0,
+        "A_SMG01_StockFold": 248.814,
+        "A_SMG01_StockUnfold": 248.814,
+        "A_SMG01_SightFlip": 1.565
+      },
+      "why": "LOD0-3 posed at every frame of every clip (the folded stock: StockFold / StockUnfold; the folded sights: SightFlip) vs LOD0's bind AABB (Unreal's stored bounds), per axis (+1 mm where it grows; Unreal axes: y flipped): the mesh's Positive/Negative Bounds Extension. The attached magazine is its own component with its own bounds"
+    }
+  },
+  "physics_proxies": {
+    "SK_SMG01": "Physics/SK_SMG01_PhysicsProxy.fbx",
+    "how": "import the proxy onto SK_SMG01_Skeleton with Create Physics Asset ON (one 250 mm cube on 'body'), rewrite the body from physics_bodies, rename it PHYS_SMG01, assign it to SK_SMG01, delete the proxy mesh"
+  },
+  "physics_bodies": [
+    {
+      "bone": "body",
+      "unreal_bone_any_of": [
+        "body"
+      ],
+      "physics_type": "Default",
+      "consider_for_bounds": true,
+      "mass_kg": 2.5,
+      "elements": [
+        {
+          "shape": "box",
+          "covers": "receiver (upper, housing, end block, top rail, bolt, handle, selector)",
+          "centre_mm": [
+            98.8,
+            5.56,
+            88.955
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "size_mm": [
+            324.1,
+            83.88,
+            95.709
+          ],
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              9.88,
+              -0.556,
+              8.8955
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "size_cm": [
+            32.41,
+            8.388,
+            9.5709
+          ]
+        },
+        {
+          "shape": "box",
+          "covers": "trigger guard + trigger",
+          "centre_mm": [
+            68.484,
+            -0.4,
+            30.437
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "size_mm": [
+            71.729,
+            57.515,
+            57.506
+          ],
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              6.8484,
+              0.04,
+              3.0437
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "size_cm": [
+            7.1729,
+            5.7515,
+            5.7506
+          ]
+        },
+        {
+          "shape": "box",
+          "covers": "pistol grip + cover (raked)",
+          "centre_mm": [
+            4.166,
+            -0.4,
+            -2.505
+          ],
+          "matrix": [
+            [
+              0.9280314,
+              0.0,
+              0.3725019
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -0.3725019,
+              0.0,
+              0.9280314
+            ]
+          ],
+          "size_mm": [
+            66.2,
+            57.372,
+            108.188
+          ],
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              0.4166,
+              0.04,
+              -0.2505
+            ],
+            "rotation_matrix": [
+              [
+                0.9280314,
+                0.0,
+                0.3725019
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                -0.3725019,
+                0.0,
+                0.9280314
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.1896952,
+              0.0,
+              0.981843
+            ]
+          },
+          "size_cm": [
+            6.62,
+            5.7372,
+            10.8188
+          ]
+        },
+        {
+          "shape": "box",
+          "covers": "magwell",
+          "centre_mm": [
+            145.086,
+            -0.4,
+            46.563
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "size_mm": [
+            81.43,
+            60.8,
+            67.658
+          ],
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              14.5086,
+              0.04,
+              4.6563
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "size_cm": [
+            8.143,
+            6.08,
+            6.7658
+          ]
+        },
+        {
+          "shape": "box",
+          "covers": "stock frame + buttpad (extended)",
+          "centre_mm": [
+            -176.325,
+            -3.89,
+            67.03
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "size_mm": [
+            252.25,
+            64.98,
+            109.621
+          ],
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              -17.6325,
+              0.389,
+              6.703
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "size_cm": [
+            25.225,
+            6.498,
+            10.9621
+          ]
+        },
+        {
+          "shape": "box",
+          "covers": "rear flip sight",
+          "centre_mm": [
+            -8.15,
+            -0.275,
+            149.682
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "size_mm": [
+            27.2,
+            31.85,
+            36.216
+          ],
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              -0.815,
+              0.0275,
+              14.9682
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "size_cm": [
+            2.72,
+            3.185,
+            3.6216
+          ]
+        },
+        {
+          "shape": "box",
+          "covers": "front flip sight",
+          "centre_mm": [
+            241.0,
+            -0.275,
+            149.482
+          ],
+          "matrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "size_mm": [
+            22.3,
+            31.85,
+            35.816
+          ],
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              24.1,
+              0.0275,
+              14.9482
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "size_cm": [
+            2.23,
+            3.185,
+            3.5816
+          ]
+        },
+        {
+          "shape": "capsule",
+          "covers": "barrel + muzzle device ahead of the receiver face",
+          "centre_mm": [
+            291.71,
+            0.0,
+            93.08
+          ],
+          "matrix": [
+            [
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "radius_mm": 13.2,
+          "length_mm": 35.28,
+          "axis": "Z -> +X",
+          "collision": true,
+          "contribute_to_mass": true,
+          "unreal_component": {
+            "location_cm": [
+              29.171,
+              -0.0,
+              9.308
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                -1.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.7071068,
+              0.0,
+              0.7071068
+            ]
+          }
+        }
+      ],
+      "role": "ONE rigid body on 'body' (every other bone is its child): Kinematic while held (NoCollision / QueryOnly in hand), simulated when dropped; a folded SK keeps the extended stock shapes (Q14, U7 reports a folded drop); the seated magazine is its own component with collision off while attached"
+    }
+  ],
+  "mass_kg": 2.5,
+  "center_of_mass_mm": [
+    47.876,
+    0.652,
+    83.143
+  ],
+  "sockets": [
+    {
+      "name": "Grip",
+      "bone": "body",
+      "location_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "origin; attach to the character's weapon_r. 46 mm down the grip axis from the web line (plan / AR-01 H1 value); H1 early confirms or moves it and the sidecar records hand_offset",
+      "unreal_component": {
+        "location_cm": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "SupportHand",
+      "bone": "body",
+      "location_mm": [
+        157.75,
+        0.0,
+        37.04
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "hand_l two-bone IK target: off-hand palm on the magwell front (study 5.3 SMG default); PROVISIONAL until H1 (may move to the lower rail)",
+      "unreal_component": {
+        "location_cm": [
+          15.775,
+          -0.0,
+          3.704
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Trigger",
+      "bone": "trigger",
+      "location_mm": [
+        68.38,
+        0.0,
+        20.83
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "index finger target",
+      "unreal_component": {
+        "location_cm": [
+          6.838,
+          -0.0,
+          2.083
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Muzzle",
+      "bone": "muzzle_device",
+      "location_mm": [
+        322.55,
+        0.0,
+        93.08
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "flash, smoke, tracer; on the bore within 0.5 mm / 0.05 deg",
+      "unreal_component": {
+        "location_cm": [
+          32.255,
+          -0.0,
+          9.308
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "MuzzleSeat",
+      "bone": "body",
+      "location_mm": [
+        280.95,
+        0.0,
+        93.08
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "suppressor / device seat",
+      "unreal_component": {
+        "location_cm": [
+          28.095,
+          -0.0,
+          9.308
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Sight",
+      "bone": "sight_rear",
+      "location_mm": [
+        -3.55,
+        0.0,
+        160.19
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "ADS: aperture centre, +X toward the front post tip (sight line parallel to the bore)",
+      "unreal_component": {
+        "location_cm": [
+          -0.355,
+          -0.0,
+          16.019
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "SightFront",
+      "bone": "sight_front",
+      "location_mm": [
+        239.75,
+        0.0,
+        160.19
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "front post tip (folded-state check, review camera)",
+      "unreal_component": {
+        "location_cm": [
+          23.975,
+          -0.0,
+          16.019
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Mag",
+      "bone": "magazine",
+      "location_mm": [
+        130.74,
+        0.0,
+        20.21
+      ],
+      "matrix": [
+        [
+          0.989601194858551,
+          -0.0,
+          -0.14383818209171295
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.14383818209171295,
+          0.0,
+          0.989601194858551
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 8.27,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "SM_SMG01_Mag attaches with zero relative transform; +Z up the insertion axis (tilted with the 8.27 deg rake), +X forward",
+      "unreal_component": {
+        "location_cm": [
+          13.074,
+          -0.0,
+          2.021
+        ],
+        "rotation_matrix": [
+          [
+            0.9896012,
+            0.0,
+            -0.1438382
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.1438382,
+            0.0,
+            0.9896012
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          -0.0721068,
+          0.0,
+          0.9973969
+        ]
+      }
+    },
+    {
+      "name": "MagInsertStart",
+      "bone": "body",
+      "location_mm": [
+        140.5498,
+        0.0,
+        -47.2808
+      ],
+      "matrix": [
+        [
+          0.989601194858551,
+          -0.0,
+          -0.14383818209171295
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.14383818209171295,
+          0.0,
+          0.989601194858551
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 8.27,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": true,
+      "use": "straight reload path start: Mag moved 68.2 mm along its -Z (insert depth 58.2 + 10)",
+      "unreal_component": {
+        "location_cm": [
+          14.05498,
+          -0.0,
+          -4.72808
+        ],
+        "rotation_matrix": [
+          [
+            0.9896012,
+            0.0,
+            -0.1438382
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.1438382,
+            0.0,
+            0.9896012
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          -0.0721068,
+          0.0,
+          0.9973969
+        ]
+      }
+    },
+    {
+      "name": "ShellEject",
+      "bone": "body",
+      "location_mm": [
+        133.1,
+        -31.6,
+        104.39
+      ],
+      "matrix": [
+        [
+          0.25488701462745667,
+          0.9659258127212524,
+          -0.04494345188140869
+        ],
+        [
+          -0.9512512683868408,
+          0.2588190734386444,
+          0.16773122549057007
+        ],
+        [
+          0.1736481487751007,
+          0.0,
+          0.9848077297210693
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 10.0,
+        "yaw": 75.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "casing spawn; +X = throw: to the right, 15 deg forward of square, 10 deg up (real blowback ports throw right and slightly forward)",
+      "unreal_component": {
+        "location_cm": [
+          13.31,
+          3.16,
+          10.439
+        ],
+        "rotation_matrix": [
+          [
+            0.254887,
+            -0.9659258,
+            -0.0449435
+          ],
+          [
+            0.9512513,
+            0.2588191,
+            -0.1677312
+          ],
+          [
+            0.1736481,
+            0.0,
+            0.9848077
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.053057,
+          -0.0691453,
+          0.6064449,
+          0.7903344
+        ]
+      }
+    },
+    {
+      "name": "ChargingHandle",
+      "bone": "charging_handle",
+      "location_mm": [
+        195.1,
+        39.12,
+        110.41
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "hand target (knob centre)",
+      "unreal_component": {
+        "location_cm": [
+          19.51,
+          -3.912,
+          11.041
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Selector",
+      "bone": "selector",
+      "location_mm": [
+        21.55,
+        33.3,
+        50.09
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "thumb target: left lever tab, 4 mm in from the tip",
+      "unreal_component": {
+        "location_cm": [
+          2.155,
+          -3.33,
+          5.009
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "MagRelease",
+      "bone": "mag_release",
+      "location_mm": [
+        100.05,
+        0.0,
+        20.79
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "finger target: the paddle's rear face 6 mm above its bottom (the trigger finger pushes it forward)",
+      "unreal_component": {
+        "location_cm": [
+          10.005,
+          -0.0,
+          2.079
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Rail_Top",
+      "bone": "body",
+      "location_mm": [
+        -6.76,
+        0.0,
+        136.79
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "attachments: slot 0 centre (rearmost cut slot, under the rear sight's lug) on the rail-top plane, +X along the slots, +Z up; mounts snap at k x 10.01",
+      "unreal_component": {
+        "location_cm": [
+          -0.676,
+          -0.0,
+          13.679
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Rail_Bottom",
+      "bone": "body",
+      "location_mm": [
+        191.57,
+        0.0,
+        54.19
+      ],
+      "matrix": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -1.0,
+          1.5099999473022763e-07
+        ],
+        [
+          0.0,
+          -1.5099999473022763e-07,
+          -1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 180.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "lower rail slot 0 centre, +X along the slots, +Z out of the rail (down)",
+      "unreal_component": {
+        "location_cm": [
+          19.157,
+          -0.0,
+          5.419
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            -2e-07
+          ],
+          [
+            0.0,
+            2e-07,
+            -1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          1.0,
+          0.0,
+          0.0,
+          1e-07
+        ]
+      }
+    },
+    {
+      "name": "Stock",
+      "bone": "body",
+      "location_mm": [
+        -55.35,
+        0.0,
+        93.08
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "modular stocks: the receiver's rear (hinge) face",
+      "unreal_component": {
+        "location_cm": [
+          -5.535,
+          -0.0,
+          9.308
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Shoulder",
+      "bone": "stock",
+      "location_mm": [
+        -302.45,
+        0.0,
+        63.39
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "TP aim offsets; butt-pad centre, +X = pad normal reversed; follows the fold",
+      "unreal_component": {
+        "location_cm": [
+          -30.245,
+          -0.0,
+          6.339
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "SlingFront",
+      "bone": "body",
+      "location_mm": [
+        260.85,
+        21.74,
+        119.47
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "sling: the front-left eyelet hole on the receiver front face (3/4 view)",
+      "unreal_component": {
+        "location_cm": [
+          26.085,
+          -2.174,
+          11.947
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "SlingRear",
+      "bone": "stock",
+      "location_mm": [
+        -266.13,
+        0.0,
+        32.06
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": false,
+      "fit_set": false,
+      "use": "sling: the lower through-hole of the stock's rear upright (axis Y)",
+      "unreal_component": {
+        "location_cm": [
+          -26.613,
+          -0.0,
+          3.206
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "CenterOfMass",
+      "bone": "body",
+      "location_mm": [
+        47.8765,
+        0.6518,
+        83.1427
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": true,
+      "fit_set": true,
+      "use": "physics CoM (stock extended, mag out); the folded CoM is reported in the sidecar",
+      "unreal_component": {
+        "location_cm": [
+          4.78765,
+          -0.06518,
+          8.31427
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "Holster",
+      "bone": "body",
+      "location_mm": [
+        47.8765,
+        0.6518,
+        83.1427
+      ],
+      "matrix": [
+        [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "unreal_rotation_deg": {
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "computed": true,
+      "fit_set": true,
+      "use": "= CenterOfMass until the game sets it",
+      "unreal_component": {
+        "location_cm": [
+          4.78765,
+          -0.06518,
+          8.31427
+        ],
+        "rotation_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    }
+  ],
+  "magazine": {
+    "asset": "SM_SMG01_Mag",
+    "socket": "Mag",
+    "bone": "magazine",
+    "attach": "zero relative transform (SnapToTarget) on the Mag socket; straight reload path MagInsertStart -> (lerp along the magazine's -Z, rotation constant) -> Mag",
+    "insert_mm": 68.2
+  },
+  "materials": {
+    "M_SMG01_Metal": {
+      "slot": 0,
+      "master": "M_Steel_Master",
+      "metal_from_orm": true,
+      "user_control": "Steel Tint",
+      "textures": {
+        "BC": "T_SMG01_Metal_BC",
+        "ORM": "T_SMG01_Metal_ORM",
+        "N": "T_SMG01_Metal_N",
+        "Masks": "T_SMG01_Metal_Masks"
+      }
+    },
+    "M_SMG01_Furniture": {
+      "slot": 1,
+      "master": "M_Fabric_Master",
+      "metal_from_orm": false,
+      "user_control": "Colour (recolour group SMG01, default the shipped black)",
+      "textures": {
+        "BC": "T_SMG01_Furniture_BC",
+        "ORM": "T_SMG01_Furniture_ORM",
+        "N": "T_SMG01_Furniture_N",
+        "Masks": "T_SMG01_Furniture_Masks"
+      },
+      "detail16": "Recolour/T_SMG01_Furniture_Detail16"
+    },
+    "_source": "smg_spec.json materials.slots (the slot table, not a literal)"
+  },
+  "gun": {
+    "class": "long_gun",
+    "compatible_with": "SK_AR01_Skeleton",
+    "grip_axis_deg": 21.87,
+    "rail_slots": {
+      "Rail_Top": {
+        "cut": 22,
+        "sights": [
+          0,
+          25
+        ]
+      },
+      "Rail_Bottom": {
+        "cut": 6
+      }
+    },
+    "muzzle_class": ".45-class pistol calibre (data only)",
+    "mag_family": "SMG01 straight 25",
+    "stock_states": {
+      "extended_deg": 0.0,
+      "folded_deg": 180.0
+    },
+    "texel_classes_px_per_cm": {
+      "A": [
+        80,
+        100
+      ],
+      "B": [
+        60,
+        80
+      ],
+      "C": [
+        30,
+        40
+      ],
+      "D": [
+        25,
+        30
+      ],
+      "E": [
+        8,
+        15
+      ]
+    },
+    "hand_offset": {
+      "frame": "hand_r bone (MH_PlayerDefault metahuman_base_skel, Blender armature axes)",
+      "Grip_location_mm": [
+        -83.966,
+        -41.604,
+        8.628
+      ],
+      "Grip_rotation_quaternion_wxyz": [
+        0.024967,
+        0.085443,
+        0.08737,
+        0.992191
+      ],
+      "grip_pose_deg_about_local_Z": {
+        "middle_01_r": 19.38,
+        "middle_02_r": 60.0,
+        "middle_03_r": -4.75,
+        "ring_01_r": 22.38,
+        "ring_02_r": 34.12,
+        "ring_03_r": 46.88,
+        "pinky_01_r": 0.12,
+        "pinky_02_r": 3.75,
+        "pinky_03_r": 70.88,
+        "thumb_01_r": {
+          "about_local_X_deg": 30,
+          "about_local_Z_deg": 60,
+          "gap_mm": 0.64
+        },
+        "thumb_02_r": 34.25,
+        "thumb_03_r": 40.0,
+        "index_01_r": {
+          "curl_deg": -37.5,
+          "abduction_deg_about_local_X": -35.0
+        },
+        "index_02_r": 50.0,
+        "index_03_r": 40.5
+      },
+      "note": "U11 reproduces it in engine (Grip on a socket of hand_r at this offset)"
+    },
+    "abp_angle_table": {
+      "trigger_pull": [
+        0.0,
+        13.0
+      ],
+      "selector_detents_deg": {
+        "SEMI (bind = sheet pose)": 0.0,
+        "SAFE": -63.4,
+        "AUTO": 45.0
+      },
+      "mag_release": [
+        0.0,
+        -11.0
+      ],
+      "bolt_mm": [
+        0.0,
+        67.9
+      ],
+      "rule": "the shared ABP drives 0..1 / detent index; this table maps to angles (U2b)"
+    },
+    "first_person": "FP_Weapon + TP_Weapon (SK_SMG01) and FP_Mag + TP_Mag (SM_SMG01_Mag on Mag); every FP component FirstPersonPrimitiveType = FirstPerson and ForcedLodModel = 1",
+    "center_of_mass_folded_mm": [
+      99.97,
+      -9.95,
+      83.14
+    ]
+  }
+}

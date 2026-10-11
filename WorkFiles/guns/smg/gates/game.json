@@ -1,0 +1,902 @@
+{
+ "stage": "W3 game (LODs, twin, view gates)",
+ "gates": [
+  {
+   "name": "qa_check (twin SM_SMG01_LOD0..3, pipeline)",
+   "value": {
+    "SM_SMG01_LOD0": 50108,
+    "SM_SMG01_LOD1": 24420,
+    "SM_SMG01_LOD2": 10028,
+    "SM_SMG01_LOD3": 1444
+   },
+   "threshold": "pass (budget 55,000; UV1; UCX keyed to the node; texel = measured aggregate)",
+   "pass": true
+  },
+  {
+   "name": "LODs strictly descending (twin)",
+   "value": [
+    50108,
+    24420,
+    10028,
+    1444
+   ],
+   "threshold": "LOD0 > LOD1 > LOD2 > LOD3",
+   "pass": true
+  },
+  {
+   "name": "B8 gun LOD0 tris (without the magazine)",
+   "value": 46876,
+   "threshold": "<= 50,000 (target 25-40k)",
+   "pass": true,
+   "note": "over the 40k target, under the ceiling (W1 form: accepted)"
+  },
+  {
+   "name": "B8 merged magazine LOD0 tris",
+   "value": 3232,
+   "threshold": "<= 5,000 (target 2.5-4k)",
+   "pass": true
+  },
+  {
+   "name": "LOD1 gun tris (share of LOD0)",
+   "value": "23344 (49.8%)",
+   "threshold": "<= 50 % (study 5.7 ~45 %; the AR-01 gate)",
+   "pass": true
+  },
+  {
+   "name": "LOD2 gun tris (share of LOD0), reported",
+   "value": "9400 (20.1%)",
+   "threshold": "study 5.7 target ~15 % (reported; the B8 gates are the ceilings and the LOD-pop switch)",
+   "pass": true,
+   "note": "over the ~15 % target (the AR-01 shipped 17.5 %): the lower receiver's boolean chain only stays whole at LOD0's outline tolerances, the rounds keep 1/5 of their segments; LOD-pop moved the LOD1->2 switch to 9.5 m"
+  },
+  {
+   "name": "LOD3 gun tris",
+   "value": 1420,
+   "threshold": "1200-2000",
+   "pass": true
+  },
+  {
+   "name": "magazine LOD tris (merged = shipped SM_SMG01_Mag), reported",
+   "value": [
+    3232,
+    1076,
+    628,
+    24
+   ],
+   "threshold": "targets ~1180 / ~380 / [150, 250]",
+   "pass": true,
+   "note": "LOD3 under its target (the traced silhouette prism, cheaper; the LOD-pop gate passes); LOD2 keeps the ladder channels (its texel density must stay within 25 % of LOD0 for qa_check)"
+  },
+  {
+   "name": "UD1 Unreal degenerate rule on every LOD1-3 part",
+   "value": {
+    "LOD1": [
+     0,
+     0.011048
+    ],
+    "LOD2": [
+     0,
+     0.012827
+    ],
+    "LOD3": [
+     0,
+     0.336931
+    ]
+   },
+   "threshold": "0 drops; min triangle area >= 0.01 mm2",
+   "pass": true
+  },
+  {
+   "name": "UD2 micro edges / needles / strips (LOD1-3)",
+   "value": {
+    "LOD1": {
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "LOD2": {
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "LOD3": {
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "UD3 zero tangents (LOD1-3 parts; collapsed + float32 zero corners + edge-on = tspace unreal=True)",
+   "value": {
+    "LOD1": {
+     "collapsed": 0,
+     "float32_zero_corners": 0,
+     "edge_on_corners": 0
+    },
+    "LOD2": {
+     "collapsed": 0,
+     "float32_zero_corners": 0,
+     "edge_on_corners": 0
+    },
+    "LOD3": {
+     "collapsed": 0,
+     "float32_zero_corners": 0,
+     "edge_on_corners": 0
+    }
+   },
+   "threshold": "0",
+   "pass": true,
+   "note": "LOD faces whose UV collapsed (snapped onto an island edge) got a 0.25-texel copy of their shape; overlapping LOD triangles shrink / move inside their island instead of collapsing; sub-pixel slivers flipped (coplanar) or their lone corner normal tilted (scratch/uv/lod_uv_report.json)"
+  },
+  {
+   "name": "UD1 / UD3 on the joined twin LODs",
+   "value": {
+    "SM_SMG01_LOD0": {
+     "ud1_drops": 0,
+     "min_area_mm2": 0.010178,
+     "ud3_collapsed_unreal": 0,
+     "layers": [
+      "UV0",
+      "UV1"
+     ]
+    },
+    "SM_SMG01_LOD1": {
+     "ud1_drops": 0,
+     "min_area_mm2": 0.011048,
+     "ud3_collapsed_unreal": 0,
+     "layers": [
+      "UV0",
+      "UV1"
+     ]
+    },
+    "SM_SMG01_LOD2": {
+     "ud1_drops": 0,
+     "min_area_mm2": 0.012827,
+     "ud3_collapsed_unreal": 0,
+     "layers": [
+      "UV0",
+      "UV1"
+     ]
+    },
+    "SM_SMG01_LOD3": {
+     "ud1_drops": 0,
+     "min_area_mm2": 0.336931,
+     "ud3_collapsed_unreal": 0,
+     "layers": [
+      "UV0",
+      "UV1"
+     ]
+    }
+   },
+   "threshold": "0 drops, min area >= 0.01 mm2, 0 collapsed (unreal)",
+   "pass": true
+  },
+  {
+   "name": "UD4 authored UV1 on LOD1-3 (64 and 128 px, 2 px padding)",
+   "value": {
+    "LOD1": true,
+    "LOD2": true,
+    "LOD3": true
+   },
+   "threshold": "pass at both resolutions",
+   "pass": true,
+   "note": "LOD0: gates/uv_bake_paint.json"
+  },
+  {
+   "name": "UV0 overlaps LOD1-3 (per set = per twin tile; qa epsilon)",
+   "value": {
+    "LOD1/Metal": 0,
+    "LOD1/Furniture": 0,
+    "LOD1/Mag": 0,
+    "LOD2/Metal": 0,
+    "LOD2/Furniture": 0,
+    "LOD2/Mag": 0,
+    "LOD3/Metal": 0,
+    "LOD3/Furniture": 0,
+    "LOD3/Mag": 0
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "UV0 skeletal layout: LOD1-3 inside 0..1",
+   "value": {
+    "min": [
+     -0.0,
+     -0.0
+    ],
+    "max": [
+     1.0,
+     0.99658
+    ]
+   },
+   "threshold": "inside [0, 1]",
+   "pass": true
+  },
+  {
+   "name": "LOD1-2 parts closed + the LOD0 solid kept (volume 0.85-1.30, bbox <= 2 / 4 mm)",
+   "value": {
+    "LOD1": {
+     "trigger_axle": "shape check failed with the coarse outlines: rebuilt with LOD0's outline tolerances",
+     "mag_release_pin": "shape check failed with the coarse outlines: rebuilt with LOD0's outline tolerances"
+    },
+    "LOD1_non_manifold": [],
+    "LOD2": {
+     "grip_cover": 2,
+     "stock_latch_bolt": 2
+    },
+    "LOD2_non_manifold": []
+   },
+   "threshold": "every part closed and manifold; a part failing the shape check rebuilt (recorded)",
+   "pass": true
+  },
+  {
+   "name": "G5 at LOD0 on the shipped (triangulated) parts",
+   "value": "0 pairs; min butt gap 0.01 mm",
+   "threshold": "0; >= 0.01 mm",
+   "pass": true
+  },
+  {
+   "name": "B3 at LOD1: 0 intersections over every rig-driven sweep (declared allowances only)",
+   "value": {
+    "bolt": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    },
+    "charging": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    },
+    "trigger": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    },
+    "selector": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    },
+    "mag_release": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    },
+    "stock_button": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    },
+    "stock_fold": {
+     "intersecting_steps": 33,
+     "pass_intersections": true
+    },
+    "sight_rear": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    },
+    "sight_front": {
+     "intersecting_steps": 0,
+     "pass_intersections": true
+    }
+   },
+   "threshold": "0 (the stock fold's port-catch snap allowance as declared)",
+   "pass": true,
+   "note": "charging_lock is not a rig motion (no clip, no ABP input; the slide shares the 'charging_handle' bone and must not rotate): at LOD1 its lever meets the receiver's notch (20 steps); B3 at LOD0 holds it (gates/form.json)"
+  },
+  {
+   "name": "B3 at LOD1: clearance rows (reported)",
+   "value": {
+    "selector": {
+     "min_clearance_mm": 0.0991,
+     "row_mm": [
+      0.1,
+      0.3
+     ],
+     "with": "lower_receiver"
+    },
+    "mag_release": {
+     "min_clearance_mm": 0.0519,
+     "row_mm": [
+      0.1,
+      0.3
+     ],
+     "with": "magazine"
+    }
+   },
+   "threshold": "joint rows 3.7 (LOD0 holds them: gates/form.json); LOD1 reported",
+   "pass": true,
+   "note": "LOD1's halved rounds bring these joints under their LOD0 rows without touching (seen from >= 2.77 m: 0.1 mm = 0.05 px); the paddle is held at LOD0 resolution at LOD1 (its nose met the magazine's notch)"
+  },
+  {
+   "name": "G5 at LOD1 (static intersecting pairs)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true,
+   "note": "[]"
+  },
+  {
+   "name": "G5 at LOD1 butt-joint gaps (reported)",
+   "value": 0.0014,
+   "threshold": ">= 0.01 mm at LOD0 (gates/form.json); LOD1 reported",
+   "pass": true,
+   "note": "below 0.01 mm without touching: [{\"a\": \"sight_rear_base\", \"b\": \"sight_rear_pin\", \"min_gap_mm\": 0.0014}]"
+  },
+  {
+   "name": "G5 at LOD2 (penetration depth at the switch-in distance)",
+   "value": "7 pairs; deepest 0.418 px at 9.507 m (top_rail_LOD2/sight_front_base_LOD2 3.103 mm)",
+   "threshold": "< 1 px at 1440p",
+   "pass": true,
+   "note": "info, visible change of the intersecting parts vs LOD1 (4 headings, the LOD's whole silhouette change included): worst mean 1.575 px, max 5.0 px"
+  },
+  {
+   "name": "G5 at LOD3 (penetration depth at the switch-in distance)",
+   "value": "17 pairs; deepest 0.451 px at 18.901 m (upper_fore_end_LOD3/barrel_LOD3 6.66 mm)",
+   "threshold": "< 1 px at 1440p",
+   "pass": true,
+   "note": "info, visible change of the intersecting parts vs LOD2 (4 headings, the LOD's whole silhouette change included): worst mean 1.699 px, max 6.27 px"
+  },
+  {
+   "name": "C1 hull containment",
+   "value": "0 of 37,373,326 jittered 0.5 mm LOD0 samples, 0 of 43,030 LOD0-3 vertices outside",
+   "threshold": "0 and 0; 8 hulls (C3), <= 32 vertices",
+   "pass": true,
+   "note": "hull vertices [27, 27, 27, 27, 27, 27, 27, 27]"
+  },
+  {
+   "name": "S1 sockets (test-exported sidecar vs build / spec)",
+   "value": "21 sockets, worst 0.0005 mm / 0.0 deg",
+   "threshold": "21 = spec names; <= 0.001 mm and <= 0.001 deg",
+   "pass": true
+  },
+  {
+   "name": "S2 sight picture at LOD0 (aperture: post tip centred, B4 method)",
+   "value": "lateral 0.0 px, vertical 0.0 px, post visible 0.991 mm",
+   "threshold": "|lateral|, |vertical| <= 0.5 px (55 deg, 0.25 m eye relief, 2560 x 1440); post visible >= 0.5 mm in the 2 mm aperture; no occluder",
+   "pass": true
+  },
+  {
+   "name": "S2 sight picture at LOD1",
+   "value": "lateral 0.0 px, vertical 0.0 px",
+   "threshold": "|lateral|, |vertical| <= 0.5 px",
+   "pass": true,
+   "note": "first person forces LOD0 (ForcedLodModel 1): informative for the coarse LODs"
+  },
+  {
+   "name": "S2 sight picture at LOD2",
+   "value": "lateral 0.0 px, vertical 0.0 px",
+   "threshold": "|lateral|, |vertical| <= 0.5 px",
+   "pass": true,
+   "note": "first person forces LOD0 (ForcedLodModel 1): informative for the coarse LODs"
+  },
+  {
+   "name": "S2 sight picture at LOD3",
+   "value": "n/a",
+   "threshold": "|lateral|, |vertical| <= 0.5 px",
+   "pass": true,
+   "note": "no rear sight leaf / front post at this LOD (the blockout silhouette level): no sight picture to test"
+  },
+  {
+   "name": "LOD-pop LOD0 -> LOD1 (extended + folded stock)",
+   "value": "size 0.225 (2.772 m): mean 0.036 px, max 1.581 px (worst of 4 headings x 2 stock states)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true
+  },
+  {
+   "name": "LOD-pop LOD1 -> LOD2 (extended + folded stock)",
+   "value": "size 0.06561 (9.507 m): mean 0.07 px, max 1.803 px (worst of 4 headings x 2 stock states)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true
+  },
+  {
+   "name": "LOD-pop LOD2 -> LOD3 (extended + folded stock)",
+   "value": "size 0.033 (18.901 m): mean 0.209 px, max 2.062 px (worst of 4 headings x 2 stock states)",
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg",
+   "pass": true
+  },
+  {
+   "name": "names (tokenised gun deny list)",
+   "value": "clean",
+   "threshold": "no hit",
+   "pass": true
+  }
+ ],
+ "failed": [],
+ "lod_screen_sizes": [
+  1.0,
+  0.225,
+  0.06561,
+  0.033
+ ],
+ "bounds_radius_m": {
+  "twin_with_mag_box_half_diagonal": 0.3508,
+  "gun_without_mag": 0.3355,
+  "gun_folded_without_mag": 0.235,
+  "spec": {
+   "gun_extended_no_mag": 0.336,
+   "gun_extended_with_mag": 0.3512,
+   "gun_folded_no_mag": 0.2338,
+   "mag": 0.1177
+  }
+ },
+ "triangles": {
+  "twin": [
+   50108,
+   24420,
+   10028,
+   1444
+  ],
+  "gun": [
+   46876,
+   23344,
+   9400,
+   1420
+  ],
+  "mag": [
+   3232,
+   1076,
+   628,
+   24
+  ]
+ },
+ "hulls": [
+  {
+   "name": "UCX_SM_SMG01_00",
+   "covers": "receiver body + top rail (end block, bolt, charging handle, selector, pins)",
+   "vertices": 27,
+   "points": 7484557
+  },
+  {
+   "name": "UCX_SM_SMG01_01",
+   "covers": "rear flip sight",
+   "vertices": 27,
+   "points": 126457
+  },
+  {
+   "name": "UCX_SM_SMG01_02",
+   "covers": "front flip sight",
+   "vertices": 27,
+   "points": 85789
+  },
+  {
+   "name": "UCX_SM_SMG01_03",
+   "covers": "fore-end below the bore + lower rail",
+   "vertices": 27,
+   "points": 258715
+  },
+  {
+   "name": "UCX_SM_SMG01_04",
+   "covers": "barrel (exposed) + muzzle device",
+   "vertices": 27,
+   "points": 622553
+  },
+  {
+   "name": "UCX_SM_SMG01_05",
+   "covers": "grip + trigger guard (trigger, paddle, grip cover)",
+   "vertices": 27,
+   "points": 498043
+  },
+  {
+   "name": "UCX_SM_SMG01_06",
+   "covers": "merged magazine + magwell (twin only)",
+   "vertices": 27,
+   "points": 2374002
+  },
+  {
+   "name": "UCX_SM_SMG01_07",
+   "covers": "stock frame + buttpad (extended; latch, axle)",
+   "vertices": 27,
+   "points": 1687451
+  }
+ ],
+ "mass": {
+  "modelled_g": 3112.8,
+  "mass_kg": 2.5,
+  "com_B_mm": [
+   47.88,
+   0.65,
+   83.14
+  ],
+  "com_folded_B_mm": [
+   99.97,
+   -9.95,
+   83.14
+  ],
+  "parts_g": {
+   "upper_receiver": 345.1,
+   "bolt_rails": 36.1,
+   "lower_receiver": 830.3,
+   "grip_cover": 20.3,
+   "top_rail": 423.6,
+   "rail_screws": 1.1,
+   "lower_rail": 85.4,
+   "sight_rear_base": 36.6,
+   "sight_rear_leaf": 21.7,
+   "sight_rear_pin": 0.7,
+   "sight_front_base": 22.1,
+   "sight_front_leaf": 7.7,
+   "sight_front_pin": 0.7,
+   "barrel": 142.5,
+   "muzzle_device": 63.9,
+   "bolt": 383.4,
+   "charging_handle": 26.2,
+   "charging_slide": 47.1,
+   "selector": 27.4,
+   "trigger": 19.1,
+   "trigger_axle": 8.3,
+   "mag_release": 6.3,
+   "mag_release_pin": 0.3,
+   "pins_fasteners": 4.9,
+   "hinge_axle": 11.4,
+   "stock_frame": 345.7,
+   "stock_latch_button": 0.1,
+   "stock_latch_bolt": 1.0,
+   "butt_pad": 193.7
+  },
+  "densities_g_cm3": {
+   "M_SMG01_Metal": 7.85,
+   "M_SMG01_Furniture": 1.4,
+   "M_SMG01_Mag": 1.4
+  },
+  "note": "part volumes x densities (glass-filled polymer 1.4, steel 7.85; spec collision.physics_asset), the total scaled to the spec's 2.5 kg (the CoM is the modelled parts'; hollow internals are not modelled): stock extended, magazine out; the folded CoM is reported"
+ },
+ "sockets": [
+  {
+   "socket": "CenterOfMass",
+   "location_cm": [
+    4.7876,
+    -0.0652,
+    8.3143
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0005,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": null,
+   "computed": true
+  },
+  {
+   "socket": "ChargingHandle",
+   "location_cm": [
+    19.51,
+    -3.912,
+    11.041
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Grip",
+   "location_cm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Holster",
+   "location_cm": [
+    4.7876,
+    -0.0652,
+    8.3143
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0005,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": null,
+   "computed": true
+  },
+  {
+   "socket": "Mag",
+   "location_cm": [
+    13.074,
+    0.0,
+    2.021
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 8.27,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "MagInsertStart",
+   "location_cm": [
+    14.055,
+    0.0,
+    -4.728
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 8.27,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "MagRelease",
+   "location_cm": [
+    10.005,
+    0.0,
+    2.079
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Muzzle",
+   "location_cm": [
+    32.255,
+    0.0,
+    9.308
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "MuzzleSeat",
+   "location_cm": [
+    28.095,
+    0.0,
+    9.308
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Rail_Bottom",
+   "location_cm": [
+    19.157,
+    0.0,
+    5.419
+   ],
+   "rotation_deg": {
+    "roll": 180.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Rail_Top",
+   "location_cm": [
+    -0.676,
+    0.0,
+    13.679
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Selector",
+   "location_cm": [
+    2.155,
+    -3.33,
+    5.009
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "ShellEject",
+   "location_cm": [
+    13.31,
+    3.16,
+    10.439
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 10.0,
+    "yaw": 75.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Shoulder",
+   "location_cm": [
+    -30.245,
+    0.0,
+    6.339
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Sight",
+   "location_cm": [
+    -0.355,
+    0.0,
+    16.019
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "SightFront",
+   "location_cm": [
+    23.975,
+    0.0,
+    16.019
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "SlingFront",
+   "location_cm": [
+    26.085,
+    -2.174,
+    11.947
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "SlingRear",
+   "location_cm": [
+    -26.613,
+    0.0,
+    3.206
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Stock",
+   "location_cm": [
+    -5.535,
+    0.0,
+    9.308
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "SupportHand",
+   "location_cm": [
+    15.775,
+    0.0,
+    3.704
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  },
+  {
+   "socket": "Trigger",
+   "location_cm": [
+    6.838,
+    0.0,
+    2.083
+   ],
+   "rotation_deg": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 0.0
+   },
+   "d_build_mm": 0.0,
+   "d_rot_deg": 0.0,
+   "d_spec_mm": 0.0,
+   "computed": false
+  }
+ ],
+ "status": "pass"
+}
