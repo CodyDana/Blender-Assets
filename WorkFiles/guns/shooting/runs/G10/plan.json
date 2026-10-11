@@ -1,0 +1,33 @@
+﻿{
+  "stage": "G10 plan (read-only study)",
+  "date": "2026-10-11",
+  "probes": {
+    "commandlet": {"script": "DemoGame_1/Tools/Claude/Guns/g10_probe_cmd.py", "runs": 2, "final_errors": 0, "seconds": 22,
+                   "guard4": "0 snapshot differences, 0 project files written"},
+    "demogame_commit": "de3d75b (fluidninja-trial)",
+    "game": {"script": "DemoGame_1/Tools/Claude/Guns/g10_probe_game.py", "runs": 1, "errors": 0, "seconds": 50,
+             "guard4": "0 snapshot differences, 0 project files written"}
+  },
+  "gates": [
+    {"name": "probe errors (commandlet final run + game run)", "value": "0 + 0", "threshold": "0", "pass": true},
+    {"name": "project files written by Unreal during probes", "value": "0", "threshold": "0", "pass": true},
+    {"name": "camera modifiers reach the card-shop pawn's camera (shake POV spread, cm)", "value": "3.07 / 2.15 / 6.22 (x/y/z), base 0.0", "threshold": "> 0.5 on any axis", "pass": true},
+    {"name": "WantsToAim changes the card-shop camera (behind / right / up, FOV)", "value": "300 / 0 / 12, FOV 90 in default, aim, strafe-off: no change", "threshold": "info (no aim framing to fight the shoulder offset)", "pass": true},
+    {"name": "today's left-hand fingertip gap to the AR-01 handguard (bone tip to nearest vertex, cm, t=0/2/4/6 s)", "value": "index 3.56-3.63, middle 3.55-3.59, ring 3.95-3.98, pinky 3.53-3.54, thumb 2.30-2.35", "threshold": "diagnosis (target <= 0.5 skin gap after G10b)", "pass": true},
+    {"name": "today's palm grip point on SupportHand (cm)", "value": "0.00 (IK places it; 0.99 to nearest vertex), arm reach 38.6 of 55.1", "threshold": "<= 1.0", "pass": true},
+    {"name": "today's 3P reload: palm to magazine at MagOut / MagDrop / MagIn (cm)", "value": "67.1 / 88.8 / 18.6 (min 5.8 at 0.3 s)", "threshold": "diagnosis (target <= 1.5 while holding after G10c)", "pass": true},
+    {"name": "AR-01 reload clip parks the new magazine under the gun with no hand (s)", "value": "0.67-1.15 (magazine bone static at the insert start)", "threshold": "diagnosis", "pass": true},
+    {"name": "plan written and committed", "value": "WorkFiles/guns/shooting/G10_PLAN.md", "threshold": "exists, committed by path", "pass": true}
+  ],
+  "facts": {
+    "card_shop_pawn": "CardShopLab GM_CardShop (child of GM_Sandbox) uses /Game/Blueprints/SandboxCharacter_CMC",
+    "cmc_mesh": "Mesh = SKM_UEFN_Mannequin (SK_UEFN_Mannequin, 93 bones, visible) running SandboxCharacter_CMC_ABP; VisualOverride child actor class None, tag 'VisualOverride' (not 'NinjaVisual') so NinjaVisual::FindVisualMesh falls back to Mesh",
+    "cmc_input_state": "CharacterInputState {WantsToSprint, WantsToWalk, WantsToStrafe (default TRUE), WantsToAim, WantsToCrouch} with GUID suffixes; UpdateInputState_Server custom event present",
+    "cmc_camera": "SpringArm 300 + Camera(NotUsedByDefault) FOV 90 and GameplayCamera (auto-activate, SetupCamera -> ActivateCameraForPlayerController); PC classes use the stock PlayerCameraManager; the summoned+possessed pawn viewed through the 300 cm arm, FOV 90",
+    "skeletons": "rifle clips are on the template SK_Mannequin (161 bones, = UE5); UEFN has weapon_r (different frame), ik_hand_gun, all finger + metacarpal bones, palm_l_Socket (7.5,-2.35,0); arms shorter: upperarm 26.65 vs 27.77, lowerarm 22.35 vs 27.25, pelvis-head 58.9 vs 66.7 cm",
+    "retarget_assets": "RTG_UEFN_to_UE5_Mannequin (UEFN->UE5 only), IK_UEFN_Mannequin and IK_UE5_Mannequin_Retarget with matching chain names incl. fingers and metacarpals; no UE5->UEFN retargeter",
+    "imc_sandbox": "W/A/S/D move, Mouse2D look, RMB IA_Aim, MMB IA_Strafe, LeftControl IA_Walk, LeftShift IA_Sprint, Space IA_Jump + IA_Traverse, C IA_Crouch; Left Alt, X, R, B, V unmapped; IMC_GunsEquipped maps RMB too (consumes while equipped, priority 3)",
+    "handguard_section_at_SupportHand": "gun space Y -2.12..2.12, Z 5.38..12.12 (SupportHand at Z 5.39 = the underside)",
+    "reload_clip_mag_track": "A_AR01_Reload: mag rocks out 0.2-0.67 s, parked at the insert start 0.67-1.15 s, inserted 1.15-1.6 s, MagIn 1.767 s; body clip MM_Rifle_Reload is 2.2 s, its hand leaves for a hip spot (67-106 cm away) at 0.5-0.8 s"
+  }
+}

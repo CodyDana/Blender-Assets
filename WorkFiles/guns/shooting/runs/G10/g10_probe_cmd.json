@@ -1,0 +1,3841 @@
+{
+ "t0": 1791711368.2120216,
+ "errors": {},
+ "pawn": {
+  "/Game/Blueprints/SandboxCharacter_CMC": {
+   "parent": "/Script/Engine.Character",
+   "components": {
+    "None": {
+     "class": "SandboxCharacter_CMC_C"
+    },
+    "SpringArm": {
+     "class": "SpringArmComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"targetArmLength\":{\"type\":\"number\",\"description\":\"Natural length of the spring arm when there are no collisions\"},\"socketOffset\":{\"title\":\"Vector\",\"description\":\"offset at end of spring arm; use this instead of the relative offset of the attached component to ensure the line trace works as desired\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"targetOffset\":{\"title\":\"Vector\",\"description\":\"Offset at start of spring, applied in world space. Use this if you want a world-space offset from the parent component instead of the usual relative-space offset.\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"probeSize\":{\"type\":\"number\",\"description\":\"How big should the query probe sphere be (in unreal units)\"},\"probeChannel\":{\"type\":\"string\",\"title\":\"ECollisionChannel\",\"enum\":[\"ECC_WorldStatic\",\"ECC_WorldDynamic\",\"ECC_Pawn\",\"ECC_Visibility\",\"ECC_Camera\",\"ECC_PhysicsBody\",\"ECC_Vehicle\",\"ECC_Destructible\",\"ECC_EngineTraceChannel1\",\"ECC_EngineTraceChannel2\",\"ECC_EngineTraceChannel3\",\"ECC_EngineTraceChannel4\",\"ECC_EngineTraceChannel5\",\"ECC_EngineTraceChannel6\",\"ECC_GameTraceChannel1\",\"ECC_GameTraceChannel2\",\"ECC_GameTraceChannel3\",\"ECC_GameTraceChannel4\",\"ECC_GameTraceChannel5\",\"ECC_GameTraceChannel6\",\"ECC_GameTraceChannel7\",\"ECC_GameTraceChannel8\",\"ECC_GameTraceChannel9\",\"ECC_GameTraceChannel10\",\"ECC_GameTraceChannel11\",\"ECC_GameTraceChannel12\",\"ECC_GameTraceChannel13\",\"ECC_GameTraceChannel14\",\"ECC_GameTraceChannel15\",\"ECC_GameTraceChannel16\",\"ECC_GameTraceChannel17\",\"ECC_GameTraceChannel18\",\"ECC_GameTraceChannel19\",\"ECC_GameTraceChannel20\",\"ECC_GameTraceChannel21\",\"ECC_GameTraceChannel22\",\"ECC_GameTraceChannel23\",\"ECC_GameTraceChannel24\",\"ECC_GameTraceChannel25\",\"ECC_GameTraceChannel26\",\"ECC_GameTraceChannel27\",\"ECC_GameTraceChannel28\",\"ECC_GameTraceChannel29\",\"ECC_GameTraceChannel30\",\"ECC_GameTraceChannel31\",\"ECC_GameTraceChannel32\",\"ECC_GameTraceChannel33\",\"ECC_GameTraceChannel34\",\"ECC_GameTraceChannel35\",\"ECC_GameTraceChannel36\",\"ECC_GameTraceChannel37\",\"ECC_GameTraceChannel38\",\"ECC_GameTraceChannel39\",\"ECC_GameTraceChannel40\",\"ECC_GameTraceChannel41\",\"ECC_GameTraceChannel42\",\"ECC_GameTraceChannel43\",\"ECC_GameTraceChannel44\",\"ECC_GameTraceChannel45\",\"ECC_GameTraceChannel46\",\"ECC_GameTraceChannel47\",\"ECC_GameTraceChannel48\",\"ECC_GameTraceChannel49\",\"ECC_GameTraceChannel50\",\"ECC_OverlapAll_Deprecated\"],\"description\":\"Collision channel of the query probe (defaults to ECC_Camera)\"},\"bDoCollisionTest\":{\"type\":\"boolean\",\"description\":\"If true, do a collision test using ProbeChannel and ProbeSize to prevent camera clipping into level.\"},\"bUsePawnControlRotation\":{\"type\":\"boolean\",\"description\":\"If this component is placed on a pawn, should it use the view/control rotation of the pawn where possible?\\nWhen disabled, the component will revert to using the stored RelativeRotation of the component.\\nNote that this ",
+     "target_arm_length": "300.0",
+     "use_pawn_control_rotation": "True",
+     "auto_activate": "True"
+    },
+    "GameplayCamera": {
+     "class": "GameplayCameraComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"cameraReference\":{\"title\":\"CameraAssetReference\",\"description\":\"The camera asset to run.\",\"type\":\"object\",\"properties\":{\"cameraAsset\":{\"type\":\"object\",\"title\":\"/Script/GameplayCameras.CameraAsset\",\"description\":\"The referenced camera asset.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"parameters\":{\"title\":\"InstancedOverridablePropertyBag\",\"description\":\"The camera asset's parameters.\",\"type\":\"object\",\"properties\":{\"value\":{\"type\":\"object\",\"title\":\"FInstancedStruct\",\"description\":\"Polymorphic struct. Provide _structType with the UScriptStruct path (e.g. /Script/Module.StructName) to create from scratch.\",\"properties\":{\"_structType\":{\"type\":\"string\",\"description\":\"UScriptStruct path name for polymorphic type identification (e.g. /Script/Module.StructName).\"}}}},\"required\":[\"value\"]}},\"required\":[\"cameraAsset\",\"parameters\"]},\"defaultPlayer\":{\"type\":\"string\",\"title\":\"EAutoReceiveInput\",\"enum\":[\"Disabled\",\"Player0\",\"Player1\",\"Player2\",\"Player3\",\"Player4\",\"Player5\",\"Player6\",\"Player7\"],\"description\":\"The player controller to bind to by default.\\n\\nAuto-activation and explicit calls to Activate will use this player, if valid. Calls to\\nActivateCameraForPlayerIndex and ActivateCameraForPlayerController will use their given player,\\nbut fall back to this player if they are given an invalid parameter.\"},\"bRunStandaloneCameraSystem\":{\"type\":\"boolean\",\"description\":\"When enabled, this camera component runs its own camera system when activated, which\\nmakes it possible for it to run independently. When disabled, this camera component\\nonly creates an evaluation context that must be run with an external camera system,\\nsuch as the Gameplay Cameras Player Camera Manager.\"},\"bSetControlRotationWhenViewTarget\":{\"type\":\"boolean\",\"description\":\"Specifies whether this component should set the player controller's control rotation\\nto the computed point of view's orientation every frame. This is only used when a\\nplayer controller is associated with this component, and the view target is that\\ncomponent.\"},\"bPlaybackMode\":{\"type\":\"boolean\",\"description\":\"Enables or disables playback mode, which turns of any standalone camera system evaluation\\nand lets the output camera component be manipulated externally. This is useful when the\\nevaluated camera was recorded (e.g. with Take Recorder) and turned into keyframed animation.\"},\"bRunInEditor\":{\"type\":\"boolean\",\"description\":\"Whether to run this camera in editor.\"},\"editorPreviewCameraRigIndex\":{\"type\":\"integer\",\"description\":\"The camera rig to run in the editor.\"},\"editorSpriteHiddenWhenOutputCameraWithinDistance\":{\"type\":\"number\",\"description\":\"When the output camera's location is within this distance of the root, hide the editor sprite.\\nSet this value to zero or negative to never hide the editor sprite.\"},\"relativeLocation\":{\"title\":\"Vector\",\"description\":\"Location of the component relative to its parent\",\"type\":\"object\",\"properties\":",
+     "auto_activate": "True",
+     "auto_activate_for_player": "<AutoReceiveInput.PLAYER0: 1>"
+    },
+    "VisualOverride": {
+     "class": "ChildActorComponent",
+     "component_tags": "[\"VisualOverride\"]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "child_actor_class": "None"
+    },
+    "Camera(NotUsedByDefault)": {
+     "class": "CameraComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"fieldOfView\":{\"type\":\"number\",\"description\":\"The horizontal field of view (in degrees) in perspective mode (ignored in Orthographic mode)\\n\\nIf the aspect ratio axis constraint (from ULocalPlayer, ALevelSequenceActor, etc.) is set to maintain vertical FOV, the AspectRatio\\nproperty will be used to convert this property's value to a vertical FOV.\",\"minimum\":0.001,\"maximum\":360},\"firstPersonFieldOfView\":{\"type\":\"number\",\"description\":\"The horizontal field of view (in degrees) used for primitives tagged as \\\"IsFirstPerson\\\".\",\"minimum\":0.001,\"maximum\":360},\"firstPersonScale\":{\"type\":\"number\",\"description\":\"The scale to apply to primitives tagged as \\\"IsFirstPerson\\\". This is used to scale down primitives towards the camera such that they are small enough not to intersect with the scene.\",\"minimum\":0.001,\"maximum\":1},\"orthoWidth\":{\"type\":\"number\",\"description\":\"The desired width (in world units) of the orthographic view (ignored in Perspective mode)\"},\"bAutoCalculateOrthoPlanes\":{\"type\":\"boolean\",\"description\":\"Automatically determine a min/max Near/Far clip plane position depending on OrthoWidth value\"},\"autoPlaneShift\":{\"type\":\"number\",\"description\":\"Manually adjusts the planes of this camera, maintaining the distance between them. Positive moves out to the farplane, negative towards the near plane\"},\"orthoNearClipPlane\":{\"type\":\"number\",\"description\":\"The near plane distance of the orthographic view (in world units)\"},\"orthoFarClipPlane\":{\"type\":\"number\",\"description\":\"The far plane distance of the orthographic view (in world units)\"},\"bUpdateOrthoPlanes\":{\"type\":\"boolean\",\"description\":\"Adjusts the near/far planes and the view origin of the current camera automatically to avoid clipping and light artefacting\"},\"bUseCameraHeightAsViewTarget\":{\"type\":\"boolean\",\"description\":\"If UpdateOrthoPlanes is enabled, this setting will use the cameras current height to compensate the distance to the general view (as a pseudo distance to view target when one isn't present)\"},\"aspectRatio\":{\"type\":\"number\",\"description\":\"Aspect Ratio (Width/Height)\",\"minimum\":0.10000000000000001,\"maximum\":100},\"aspectRatioAxisConstraint\":{\"type\":\"string\",\"title\":\"EAspectRatioAxisConstraint\",\"enum\":[\"AspectRatio_MaintainYFOV\",\"AspectRatio_MaintainXFOV\",\"AspectRatio_MajorAxisFOV\"],\"description\":\"Override for the default aspect ratio axis constraint defined on the local player\"},\"bConstrainAspectRatio\":{\"type\":\"boolean\",\"description\":\"If bConstrainAspectRatio is true, black bars will be added if the destination view has a different aspect ratio than this camera requested.\"},\"bOverrideAspectRatioAxisConstraint\":{\"type\":\"boolean\",\"description\":\"Whether to override the default aspect ratio axis constraint defined on the local player\"},\"bUseFieldOfViewForLOD\":{\"type\":\"boolean\",\"description\":\"If true, account for the field of view angle when computing which level of detail to use for meshes.\"},\"overscan\":{\"type\":\"number\",\"description\":\"Amount to increase the view frustum by, from 0.0",
+     "field_of_view": "90.0",
+     "use_pawn_control_rotation": "False",
+     "auto_activate": "False"
+    },
+    "CapsuleComponent": {
+     "class": "CapsuleComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "True"
+    },
+    "ArrowComponent": null,
+    "Mesh": {
+     "class": "SkeletalMeshComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "skeletal_mesh_asset": "<Object '/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin' (0x0000022922E01E00) Class 'SkeletalMesh'>",
+     "anim_class": "<Object '/Game/Blueprints/SandboxCharacter_CMC_ABP.SandboxCharacter_CMC_ABP_C' (0x00000229308C1C00) Class 'AnimBlueprintGeneratedClass'>",
+     "visibility_based_anim_tick_option": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>",
+     "first_person_primitive_type": "<FirstPersonPrimitiveType.NONE: 0>"
+    },
+    "CharacterMovement": {
+     "class": "CharacterMovementComponent",
+     "component_tags": "[]"
+    },
+    "AC_PreCMCTick": {
+     "class": "AC_PreCMCTick_C",
+     "component_tags": "[]"
+    },
+    "AC_FoleyEvents": {
+     "class": "AC_FoleyEvents_C",
+     "component_tags": "[]"
+    },
+    "MotionWarping": {
+     "class": "MotionWarpingComponent",
+     "component_tags": "[]"
+    },
+    "AC_TraversalLogic": {
+     "class": "AC_TraversalLogic_C",
+     "component_tags": "[]"
+    },
+    "BP_VisualOverrideManager": {
+     "class": "AC_VisualOverrideManager_C",
+     "component_tags": "[]"
+    },
+    "AC_SmartObjectAnimation": {
+     "class": "AC_SmartObjectAnimation_C",
+     "component_tags": "[]"
+    }
+   },
+   "vars": "[\"MovementStickMode\", \"CameraStyle\", \"AnalogWalk/RunThreshold\", \"StrafeSpeedMapCurve\", \"Gait\", \"WalkSpeeds\", \"RunSpeeds\", \"SprintSpeeds\", \"WalkSpeeds_Demo\", \"RunSpeeds_Demo\", \"SprintSpeeds_Demo\", \"CrouchSpeeds\", \"JustLanded\", \"LandVelocity\", \"CharacterInputState\", \"WasMovingOnGroundLastFrame_Simulated\", \"LastUpdateVelocity\", \"UsingAttributeBasedRootMotion\", \"IsRagdolling\", \"On Request Interact\"]",
+   "functions": [
+    "CalculateBrakingDeceleration",
+    "CalculateBrakingFriction",
+    "CalculateGroundFriction",
+    "CalculateMaxAcceleration",
+    "CalculateMaxCrouchSpeed",
+    "CalculateMaxSpeed",
+    "CanJumpInternal",
+    "CanPerformJumpAction",
+    "CanSprint",
+    "GetDesiredGait",
+    "GetMovementInputScaleValue",
+    "GetTraversalCheckInputs",
+    "Get_MMIResult",
+    "Get_PropertiesForAnimation",
+    "Get_PropertiesForCamera",
+    "Get_PropertiesForRagdoll",
+    "Get_PropertiesForTraversal",
+    "HasMovementInputVector",
+    "Ragdoll_End",
+    "Ragdoll_Start",
+    "SetupCamera",
+    "SetupInput",
+    "UpdateMovement_PreCMC",
+    "UpdateRotation_PreCMC",
+    "UpdatedMovementSimulated",
+    "UserConstructionScript"
+   ],
+   "events": [
+    "AddTarget",
+    "Custom OnJumped Event",
+    "Custom OnLanded Event",
+    "Event Possessed_Client",
+    "K2_OnBecomeViewTarget",
+    "K2_OnEndCrouch",
+    "K2_OnEndViewTarget",
+    "K2_OnMovementModeChanged",
+    "K2_OnReset",
+    "K2_OnStartCrouch",
+    "K2_UpdateCustomMovement",
+    "OnCharacterMovementUpdated_Event",
+    "OnJumped",
+    "OnLanded",
+    "OnLaunched",
+    "OnWalkingOffLedge",
+    "PreCMCTick",
+    "ReceiveActorBeginCursorOver",
+    "ReceiveActorBeginOverlap",
+    "ReceiveActorEndCursorOver",
+    "ReceiveActorEndOverlap",
+    "ReceiveActorOnClicked",
+    "ReceiveActorOnInputTouchBegin",
+    "ReceiveActorOnInputTouchEnd",
+    "ReceiveActorOnInputTouchEnter",
+    "ReceiveActorOnInputTouchLeave",
+    "ReceiveActorOnReleased",
+    "ReceiveAnyDamage",
+    "ReceiveAsyncPhysicsTick",
+    "ReceiveBeginPlay",
+    "ReceiveControllerChanged",
+    "ReceiveDestroyed",
+    "ReceiveEndPlay",
+    "ReceiveHit",
+    "ReceivePointDamage",
+    "ReceivePossessed",
+    "ReceiveRadialDamage",
+    "ReceiveRestarted",
+    "ReceiveTick",
+    "ReceiveUnpossessed",
+    "RemoveTarget",
+    "Set_CharacterInputState",
+    "Set_IsPlayingRootMotion",
+    "Set_PhysicsProfile",
+    "UpdateInputState_Server"
+   ],
+   "graphs": [
+    "UserConstructionScript",
+    "GetMovementInputScaleValue",
+    "SetupInput",
+    "UpdateMovement_PreCMC",
+    "UpdateRotation_PreCMC",
+    "SetupCamera",
+    "GetDesiredGait",
+    "CalculateMaxAcceleration",
+    "CalculateBrakingDeceleration",
+    "CalculateBrakingFriction",
+    "CalculateGroundFriction",
+    "CalculateMaxSpeed",
+    "GetTraversalCheckInputs",
+    "CalculateMaxCrouchSpeed",
+    "HasMovementInputVector",
+    "CanSprint",
+    "UpdatedMovementSimulated",
+    "Ragdoll_Start",
+    "Ragdoll_End",
+    "CanPerformJumpAction",
+    "EventGraph",
+    "On Request Interact",
+    "Get_PropertiesForAnimation",
+    "Get_PropertiesForCamera",
+    "Get_PropertiesForTraversal",
+    "Get_MMIResult",
+    "Get_PropertiesForRagdoll"
+   ],
+   "class_props": "{\"aC_SmartObjectAnimation\":{\"type\":\"object\",\"title\":\"/Game/Blueprints/SmartObjects/AC_SmartObjectAnimation.AC_SmartObjectAnimation_C\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"bP_VisualOverrideManager\":{\"type\":\"object\",\"title\":\"/Game/Blueprints/AC_VisualOverrideManager.AC_VisualOverrideManager_C\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"gameplayCamera\":{\"type\":\"object\",\"title\":\"/Script/GameplayCameras.GameplayCameraComponent\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"aC_FoleyEvents\":{\"type\":\"object\",\"title\":\"/Game/Audio/Foley/AC_FoleyEvents.AC_FoleyEvents_C\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"aC_TraversalLogic\":{\"type\":\"object\",\"title\":\"/Game/Blueprints/AC_TraversalLogic.AC_TraversalLogic_C\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"visualOverride\":{\"type\":\"object\",\"title\":\"/Script/Engine.ChildActorComponent\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"springArm\":{\"type\":\"object\",\"title\":\"/Script/Engine.SpringArmComponent\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"camera(NotUsedByDefault)\":{\"type\":\"object\",\"title\":\"/Script/Engine.CameraComponent\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"aC_PreCMCTick\":{\"type\":\"object\",\"title\":\"/Game/Blueprints/AC_PreCMCTick.AC_PreCMCTick_C\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"motionWarping\":{\"type\":\"object\",\"title\":\"/Script/MotionWarping.MotionWarpingComponent\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"movementStickMode\":{\"type\":\"string\",\"title\":\"E_AnalogStickBehavior\",\"enum\":[\"Fixed Speed - Single Gait\",\"Fixed Speed - Walk / Run\",\"Variable Speed - Single Gait\",\"Variable Speed - Walk / Run\"]},\"cameraStyle\":{\"type\":\"string\",\"title\":\"E_CameraStyle\",\"enum\":[\"Close\",\"Medium\",\"Far\",\"Debug\"]},\"analogWalk/RunThreshold\":{\"type\":\"number\"},\"strafeSpeedMapCurve\":{\"type\":\"object\",\"title\":\"/Script/Engine.CurveFloat\",\"description\":\"Represents a reference to a UObject or UClass.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"gait\":{\"type\":\"string\",\"title\":\"E_Gait\",\"enum\":[\"Walk\",\"Run\",\"Sprint\"]},\"walkSpeeds\":{\"title\":\"Vector\",\"description\":\"X = Forward Speed, Y = Strafe Speed, Z = Backwards Speed\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"runSpeeds\":{\"title\":\"Vector\",\"description\":\"X = Forward Speed, Y = Strafe Speed, Z = Backwards Speed\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"sprintSpeeds\":{\"title\":\"Vector\",\"description\":\"X = Forward Speed, Y = Strafe Speed, Z = Backwards Speed\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"walkSpeeds_Demo\":{\"title\":\"Vector\",\"description\":\"X = Forward Speed, Y = Strafe Speed, Z = Backwards Speed\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"runSpeeds_Demo\":{\"title\":\"Vector\",\"description\":\"X = Forward Speed, Y = Strafe Speed, Z = Backwards Speed\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"sprintSpeeds_Demo\":{\"title\":\"Vector\",\"description\":\"X = Forward Speed, Y = Strafe Speed, Z = Backwards Speed\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"crouchSpeeds\":{\"title\":\"Vector\",\"description\":\"X = Forward Speed, Y = Strafe Speed, Z = Backwards Speed\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"justLanded\":{\"type\":\"boolean\"},\"landVelocity\":{\"title\":\"Vector\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"characterInputState\":{\"title\":\"S_PlayerInputState\",\"type\":\"object\",\"properties\":{\"wantsToSprint\":{\"type\":\"boolean\"},\"wantsToWalk\":{\"type\":\"boolean\"},\"wantsToStrafe\":{\"type\":\"boolean\"},\"wantsToAim\":{\"type\":\"boolean\"},\"wantsToCrouch\":{\"type\":\"boolean\"}},\"required\":[\"wantsToSprint\",\"wantsToWalk\",\"wantsToStrafe\",\"wantsToAim\",\"wantsToCrouch\"]},\"wasMovingOnGroundLastFrame_Simulated\":{\"type\":\"boolean\"},\"lastUpdateVelocity\":{\"title\":\"Vector\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"usingAttributeBasedRootMotion\":{\"type\":\"boolean\"},\"isRagdolling\":{\"type\":\"boolean\"},\"on Request Interact\":{},\"mesh\":{\"type\":\"object\",\"title\":\"/Script/Engine.SkeletalMeshComponent\",\"description\":\"The main skeletal mesh associated with this Character (optional sub-object).\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"characterMovement\":{\"type\":\"object\",\"title\":\"/Script/Engine.CharacterMovementComponent\",\"description\":\"Movement component used for movement logic in various movement modes (walking, falling, etc), containing relevant settings and functions to control movement.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"capsuleComponent\":{\"type\":\"object\",\"title\":\"/Script/Engine.CapsuleComponent\",\"description\":\"The CapsuleComponent being used for movement collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"crouchedEyeHeight\":{\"type\":\"number\",\"description\":\"Default crouched eye height\"},\"bIsCrouched\":{\"type\":\"boolean\",\"description\":\"Set by character movement to specify that this Character is currently crouched.\"},\"bPressedJump\":{\"type\":\"boolean\",\"description\":\"When true, player wants to jump\"},\"bWasJumping\":{\"type\":\"boolean\",\"description\":\"Tracks whether or not the character was already jumping last frame.\"},\"jumpKeyHoldTime\":{\"type\":\"number\",\"description\":\"Jump key Held Time.\\nThis is the time that the player has held the jump key, in seconds.\"},\"jumpForceTimeRemaining\":{\"type\":\"number\",\"description\":\"Amount of jump force time remaining, if JumpMaxHoldTime > 0.\"},\"proxyJumpForceStartedTime\":{\"type\":\"number\",\"description\":\"Track last time a jump force started for a proxy.\"},\"jumpMaxHoldTime\":{\"type\":\"number\",\"description\":\"The max time the jump key can be held.\\nNote that if StopJumping() is not called before the max jump hold",
+   "input_state": {
+    "CharacterInputState": {
+     "wantsToSprint": false,
+     "wantsToWalk": false,
+     "wantsToStrafe": true,
+     "wantsToAim": false,
+     "wantsToCrouch": false
+    }
+   },
+   "input_camera_nodes": [
+    {
+     "graph": "SetupCamera",
+     "title": "SetupCamera",
+     "class": "K2Node_FunctionEntry",
+     "pins": {}
+    },
+    {
+     "graph": "SetupCamera",
+     "title": "Get Camera(NotUsedByDefault)",
+     "class": "K2Node_VariableGet",
+     "pins": {}
+    },
+    {
+     "graph": "SetupCamera",
+     "title": "ActivateCameraForPlayerController",
+     "class": "K2Node_CallFunction",
+     "pins": {
+      "bSetAsViewTarget": "true"
+     }
+    },
+    {
+     "graph": "SetupCamera",
+     "title": "Get GameplayCamera",
+     "class": "K2Node_VariableGet",
+     "pins": {}
+    },
+    {
+     "graph": "GetDesiredGait",
+     "title": "Get IA_Move",
+     "class": "K2Node_GetInputActionValue",
+     "pins": {}
+    },
+    {
+     "graph": "GetDesiredGait",
+     "title": "Get IA_Move_WorldSpace",
+     "class": "K2Node_GetInputActionValue",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Move",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Move_WorldSpace",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Look",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Look_Gamepad",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Sprint",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Walk",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Jump",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Crouch",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Strafe",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "EnhancedInputAction IA_Aim",
+     "class": "K2Node_EnhancedInputAction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "SetupCamera",
+     "class": "K2Node_CallFunction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "UpdateInputState_Server",
+     "class": "K2Node_CustomEvent",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "UpdateInputState_Server",
+     "class": "K2Node_CallFunction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "UpdateInputState_Server",
+     "class": "K2Node_CallFunction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "UpdateInputState_Server",
+     "class": "K2Node_CallFunction",
+     "pins": {}
+    },
+    {
+     "graph": "EventGraph",
+     "title": "UpdateInputState_Server",
+     "class": "K2Node_CallFunction",
+     "pins": {}
+    },
+    {
+     "graph": "Get_PropertiesForCamera",
+     "title": "Get_PropertiesForCamera",
+     "class": "K2Node_FunctionEntry",
+     "pins": {}
+    },
+    {
+     "graph": "Get_PropertiesForCamera",
+     "title": "Make S Character Properties for Camera",
+     "class": "K2Node_MakeStruct",
+     "pins": {
+      "CameraStyle_9_3AB8E4E240527073591DBC8A5CC26A59": "NewEnumerator0",
+      "CameraMode_6_A59B5561435DC3553D7444B49C47015A": "NewEnumerator0",
+      "Gait_23_479D639548BC1B9BF402EEAB5E71E3C3": "NewEnumerator0",
+      "Stance_10_65A83BF64BE8EDFA2FA9FC817B1ECD53": "NewEnumerator0",
+      "MovementMode_29_9179014C47EBE85BE880F78CB6E2E69D": "NewEnumerator4"
+     }
+    },
+    {
+     "graph": "Get_PropertiesForCamera",
+     "title": "Get CameraStyle",
+     "class": "K2Node_VariableGet",
+     "pins": {}
+    }
+   ]
+  },
+  "/Game/Ninja/Blueprints/BP_NinjaGasp": {
+   "parent": "/Script/Engine.Character",
+   "components": {
+    "None": {
+     "class": "BP_NinjaGasp_C"
+    },
+    "GameplayCamera": {
+     "class": "GameplayCameraComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"cameraReference\":{\"title\":\"CameraAssetReference\",\"description\":\"The camera asset to run.\",\"type\":\"object\",\"properties\":{\"cameraAsset\":{\"type\":\"object\",\"title\":\"/Script/GameplayCameras.CameraAsset\",\"description\":\"The referenced camera asset.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"parameters\":{\"title\":\"InstancedOverridablePropertyBag\",\"description\":\"The camera asset's parameters.\",\"type\":\"object\",\"properties\":{\"value\":{\"type\":\"object\",\"title\":\"FInstancedStruct\",\"description\":\"Polymorphic struct. Provide _structType with the UScriptStruct path (e.g. /Script/Module.StructName) to create from scratch.\",\"properties\":{\"_structType\":{\"type\":\"string\",\"description\":\"UScriptStruct path name for polymorphic type identification (e.g. /Script/Module.StructName).\"}}}},\"required\":[\"value\"]}},\"required\":[\"cameraAsset\",\"parameters\"]},\"defaultPlayer\":{\"type\":\"string\",\"title\":\"EAutoReceiveInput\",\"enum\":[\"Disabled\",\"Player0\",\"Player1\",\"Player2\",\"Player3\",\"Player4\",\"Player5\",\"Player6\",\"Player7\"],\"description\":\"The player controller to bind to by default.\\n\\nAuto-activation and explicit calls to Activate will use this player, if valid. Calls to\\nActivateCameraForPlayerIndex and ActivateCameraForPlayerController will use their given player,\\nbut fall back to this player if they are given an invalid parameter.\"},\"bRunStandaloneCameraSystem\":{\"type\":\"boolean\",\"description\":\"When enabled, this camera component runs its own camera system when activated, which\\nmakes it possible for it to run independently. When disabled, this camera component\\nonly creates an evaluation context that must be run with an external camera system,\\nsuch as the Gameplay Cameras Player Camera Manager.\"},\"bSetControlRotationWhenViewTarget\":{\"type\":\"boolean\",\"description\":\"Specifies whether this component should set the player controller's control rotation\\nto the computed point of view's orientation every frame. This is only used when a\\nplayer controller is associated with this component, and the view target is that\\ncomponent.\"},\"bPlaybackMode\":{\"type\":\"boolean\",\"description\":\"Enables or disables playback mode, which turns of any standalone camera system evaluation\\nand lets the output camera component be manipulated externally. This is useful when the\\nevaluated camera was recorded (e.g. with Take Recorder) and turned into keyframed animation.\"},\"bRunInEditor\":{\"type\":\"boolean\",\"description\":\"Whether to run this camera in editor.\"},\"editorPreviewCameraRigIndex\":{\"type\":\"integer\",\"description\":\"The camera rig to run in the editor.\"},\"editorSpriteHiddenWhenOutputCameraWithinDistance\":{\"type\":\"number\",\"description\":\"When the output camera's location is within this distance of the root, hide the editor sprite.\\nSet this value to zero or negative to never hide the editor sprite.\"},\"relativeLocation\":{\"title\":\"Vector\",\"description\":\"Location of the component relative to its parent\",\"type\":\"object\",\"properties\":",
+     "auto_activate": "False",
+     "auto_activate_for_player": "<AutoReceiveInput.PLAYER0: 1>"
+    },
+    "Camera(NotUsedByDefault)": {
+     "class": "CameraComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"fieldOfView\":{\"type\":\"number\",\"description\":\"The horizontal field of view (in degrees) in perspective mode (ignored in Orthographic mode)\\n\\nIf the aspect ratio axis constraint (from ULocalPlayer, ALevelSequenceActor, etc.) is set to maintain vertical FOV, the AspectRatio\\nproperty will be used to convert this property's value to a vertical FOV.\",\"minimum\":0.001,\"maximum\":360},\"firstPersonFieldOfView\":{\"type\":\"number\",\"description\":\"The horizontal field of view (in degrees) used for primitives tagged as \\\"IsFirstPerson\\\".\",\"minimum\":0.001,\"maximum\":360},\"firstPersonScale\":{\"type\":\"number\",\"description\":\"The scale to apply to primitives tagged as \\\"IsFirstPerson\\\". This is used to scale down primitives towards the camera such that they are small enough not to intersect with the scene.\",\"minimum\":0.001,\"maximum\":1},\"orthoWidth\":{\"type\":\"number\",\"description\":\"The desired width (in world units) of the orthographic view (ignored in Perspective mode)\"},\"bAutoCalculateOrthoPlanes\":{\"type\":\"boolean\",\"description\":\"Automatically determine a min/max Near/Far clip plane position depending on OrthoWidth value\"},\"autoPlaneShift\":{\"type\":\"number\",\"description\":\"Manually adjusts the planes of this camera, maintaining the distance between them. Positive moves out to the farplane, negative towards the near plane\"},\"orthoNearClipPlane\":{\"type\":\"number\",\"description\":\"The near plane distance of the orthographic view (in world units)\"},\"orthoFarClipPlane\":{\"type\":\"number\",\"description\":\"The far plane distance of the orthographic view (in world units)\"},\"bUpdateOrthoPlanes\":{\"type\":\"boolean\",\"description\":\"Adjusts the near/far planes and the view origin of the current camera automatically to avoid clipping and light artefacting\"},\"bUseCameraHeightAsViewTarget\":{\"type\":\"boolean\",\"description\":\"If UpdateOrthoPlanes is enabled, this setting will use the cameras current height to compensate the distance to the general view (as a pseudo distance to view target when one isn't present)\"},\"aspectRatio\":{\"type\":\"number\",\"description\":\"Aspect Ratio (Width/Height)\",\"minimum\":0.10000000000000001,\"maximum\":100},\"aspectRatioAxisConstraint\":{\"type\":\"string\",\"title\":\"EAspectRatioAxisConstraint\",\"enum\":[\"AspectRatio_MaintainYFOV\",\"AspectRatio_MaintainXFOV\",\"AspectRatio_MajorAxisFOV\"],\"description\":\"Override for the default aspect ratio axis constraint defined on the local player\"},\"bConstrainAspectRatio\":{\"type\":\"boolean\",\"description\":\"If bConstrainAspectRatio is true, black bars will be added if the destination view has a different aspect ratio than this camera requested.\"},\"bOverrideAspectRatioAxisConstraint\":{\"type\":\"boolean\",\"description\":\"Whether to override the default aspect ratio axis constraint defined on the local player\"},\"bUseFieldOfViewForLOD\":{\"type\":\"boolean\",\"description\":\"If true, account for the field of view angle when computing which level of detail to use for meshes.\"},\"overscan\":{\"type\":\"number\",\"description\":\"Amount to increase the view frustum by, from 0.0",
+     "field_of_view": "85.0",
+     "use_pawn_control_rotation": "False",
+     "auto_activate": "True"
+    },
+    "SpringArm": {
+     "class": "SpringArmComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"targetArmLength\":{\"type\":\"number\",\"description\":\"Natural length of the spring arm when there are no collisions\"},\"socketOffset\":{\"title\":\"Vector\",\"description\":\"offset at end of spring arm; use this instead of the relative offset of the attached component to ensure the line trace works as desired\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"targetOffset\":{\"title\":\"Vector\",\"description\":\"Offset at start of spring, applied in world space. Use this if you want a world-space offset from the parent component instead of the usual relative-space offset.\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"probeSize\":{\"type\":\"number\",\"description\":\"How big should the query probe sphere be (in unreal units)\"},\"probeChannel\":{\"type\":\"string\",\"title\":\"ECollisionChannel\",\"enum\":[\"ECC_WorldStatic\",\"ECC_WorldDynamic\",\"ECC_Pawn\",\"ECC_Visibility\",\"ECC_Camera\",\"ECC_PhysicsBody\",\"ECC_Vehicle\",\"ECC_Destructible\",\"ECC_EngineTraceChannel1\",\"ECC_EngineTraceChannel2\",\"ECC_EngineTraceChannel3\",\"ECC_EngineTraceChannel4\",\"ECC_EngineTraceChannel5\",\"ECC_EngineTraceChannel6\",\"ECC_GameTraceChannel1\",\"ECC_GameTraceChannel2\",\"ECC_GameTraceChannel3\",\"ECC_GameTraceChannel4\",\"ECC_GameTraceChannel5\",\"ECC_GameTraceChannel6\",\"ECC_GameTraceChannel7\",\"ECC_GameTraceChannel8\",\"ECC_GameTraceChannel9\",\"ECC_GameTraceChannel10\",\"ECC_GameTraceChannel11\",\"ECC_GameTraceChannel12\",\"ECC_GameTraceChannel13\",\"ECC_GameTraceChannel14\",\"ECC_GameTraceChannel15\",\"ECC_GameTraceChannel16\",\"ECC_GameTraceChannel17\",\"ECC_GameTraceChannel18\",\"ECC_GameTraceChannel19\",\"ECC_GameTraceChannel20\",\"ECC_GameTraceChannel21\",\"ECC_GameTraceChannel22\",\"ECC_GameTraceChannel23\",\"ECC_GameTraceChannel24\",\"ECC_GameTraceChannel25\",\"ECC_GameTraceChannel26\",\"ECC_GameTraceChannel27\",\"ECC_GameTraceChannel28\",\"ECC_GameTraceChannel29\",\"ECC_GameTraceChannel30\",\"ECC_GameTraceChannel31\",\"ECC_GameTraceChannel32\",\"ECC_GameTraceChannel33\",\"ECC_GameTraceChannel34\",\"ECC_GameTraceChannel35\",\"ECC_GameTraceChannel36\",\"ECC_GameTraceChannel37\",\"ECC_GameTraceChannel38\",\"ECC_GameTraceChannel39\",\"ECC_GameTraceChannel40\",\"ECC_GameTraceChannel41\",\"ECC_GameTraceChannel42\",\"ECC_GameTraceChannel43\",\"ECC_GameTraceChannel44\",\"ECC_GameTraceChannel45\",\"ECC_GameTraceChannel46\",\"ECC_GameTraceChannel47\",\"ECC_GameTraceChannel48\",\"ECC_GameTraceChannel49\",\"ECC_GameTraceChannel50\",\"ECC_OverlapAll_Deprecated\"],\"description\":\"Collision channel of the query probe (defaults to ECC_Camera)\"},\"bDoCollisionTest\":{\"type\":\"boolean\",\"description\":\"If true, do a collision test using ProbeChannel and ProbeSize to prevent camera clipping into level.\"},\"bUsePawnControlRotation\":{\"type\":\"boolean\",\"description\":\"If this component is placed on a pawn, should it use the view/control rotation of the pawn where possible?\\nWhen disabled, the component will revert to using the stored RelativeRotation of the component.\\nNote that this ",
+     "target_arm_length": "375.0",
+     "use_pawn_control_rotation": "True",
+     "auto_activate": "True"
+    },
+    "VisualOverride": {
+     "class": "ChildActorComponent",
+     "component_tags": "[\"NinjaVisual\"]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "child_actor_class": "<Object '/Game/Ninja/Blueprints/BP_NinjaVisual.BP_NinjaVisual_C' (0x0000022ACB757E00) Class 'BlueprintGeneratedClass'>"
+    },
+    "CapsuleComponent": {
+     "class": "CapsuleComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "True"
+    },
+    "Mesh": {
+     "class": "SkeletalMeshComponent",
+     "component_tags": "[]",
+     "visible": "False",
+     "hidden_in_game": "False",
+     "skeletal_mesh_asset": "<Object '/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin' (0x0000022922E01E00) Class 'SkeletalMesh'>",
+     "anim_class": "<Object '/Game/Blueprints/SandboxCharacter_CMC_ABP.SandboxCharacter_CMC_ABP_C' (0x00000229308C1C00) Class 'AnimBlueprintGeneratedClass'>",
+     "visibility_based_anim_tick_option": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>",
+     "first_person_primitive_type": "<FirstPersonPrimitiveType.NONE: 0>"
+    },
+    "ArrowComponent": null,
+    "CharacterMovement": {
+     "class": "CharacterMovementComponent",
+     "component_tags": "[]"
+    },
+    "MotionWarping": {
+     "class": "MotionWarpingComponent",
+     "component_tags": "[]"
+    },
+    "AC_PreCMCTick": {
+     "class": "AC_PreCMCTick_C",
+     "component_tags": "[]"
+    },
+    "AC_FoleyEvents": {
+     "class": "AC_FoleyEvents_C",
+     "component_tags": "[]"
+    },
+    "AC_TraversalLogic": {
+     "class": "AC_TraversalLogic_C",
+     "component_tags": "[]"
+    },
+    "AC_SmartObjectAnimation": {
+     "class": "AC_SmartObjectAnimation_C",
+     "component_tags": "[]"
+    },
+    "NinjaJutsu": {
+     "class": "NinjaJutsuComponent",
+     "component_tags": "[]"
+    },
+    "NinjaAirJump": {
+     "class": "NinjaAirJumpComponent",
+     "component_tags": "[]"
+    },
+    "NinjaLockOn": {
+     "class": "NinjaLockOnComponent",
+     "component_tags": "[]"
+    },
+    "NinjaStance": {
+     "class": "NinjaStanceComponent",
+     "component_tags": "[]"
+    },
+    "NinjaCombat": {
+     "class": "NinjaCombatComponent",
+     "component_tags": "[]"
+    },
+    "NinjaRunStyle": {
+     "class": "NinjaRunStyleComponent",
+     "component_tags": "[]"
+    },
+    "NinjaTurn": {
+     "class": "NinjaTurnComponent",
+     "component_tags": "[]"
+    },
+    "NinjaFreeLook": {
+     "class": "NinjaFreeLookComponent",
+     "component_tags": "[]"
+    }
+   }
+  },
+  "/Game/Guns/Character/BP_NinjaGasp_Gun": {
+   "parent": "/Game/Ninja/Blueprints/BP_NinjaGasp.BP_NinjaGasp_C",
+   "components": {
+    "None": {
+     "class": "BP_NinjaGasp_Gun_C"
+    },
+    "VisualOverride": {
+     "class": "ChildActorComponent",
+     "component_tags": "[\"NinjaVisual\"]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "child_actor_class": "<Object '/Game/Guns/Character/BP_NinjaVisual_Gun.BP_NinjaVisual_Gun_C' (0x0000022ACACD6900) Class 'BlueprintGeneratedClass'>"
+    },
+    "Camera(NotUsedByDefault)": {
+     "class": "CameraComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"fieldOfView\":{\"type\":\"number\",\"description\":\"The horizontal field of view (in degrees) in perspective mode (ignored in Orthographic mode)\\n\\nIf the aspect ratio axis constraint (from ULocalPlayer, ALevelSequenceActor, etc.) is set to maintain vertical FOV, the AspectRatio\\nproperty will be used to convert this property's value to a vertical FOV.\",\"minimum\":0.001,\"maximum\":360},\"firstPersonFieldOfView\":{\"type\":\"number\",\"description\":\"The horizontal field of view (in degrees) used for primitives tagged as \\\"IsFirstPerson\\\".\",\"minimum\":0.001,\"maximum\":360},\"firstPersonScale\":{\"type\":\"number\",\"description\":\"The scale to apply to primitives tagged as \\\"IsFirstPerson\\\". This is used to scale down primitives towards the camera such that they are small enough not to intersect with the scene.\",\"minimum\":0.001,\"maximum\":1},\"orthoWidth\":{\"type\":\"number\",\"description\":\"The desired width (in world units) of the orthographic view (ignored in Perspective mode)\"},\"bAutoCalculateOrthoPlanes\":{\"type\":\"boolean\",\"description\":\"Automatically determine a min/max Near/Far clip plane position depending on OrthoWidth value\"},\"autoPlaneShift\":{\"type\":\"number\",\"description\":\"Manually adjusts the planes of this camera, maintaining the distance between them. Positive moves out to the farplane, negative towards the near plane\"},\"orthoNearClipPlane\":{\"type\":\"number\",\"description\":\"The near plane distance of the orthographic view (in world units)\"},\"orthoFarClipPlane\":{\"type\":\"number\",\"description\":\"The far plane distance of the orthographic view (in world units)\"},\"bUpdateOrthoPlanes\":{\"type\":\"boolean\",\"description\":\"Adjusts the near/far planes and the view origin of the current camera automatically to avoid clipping and light artefacting\"},\"bUseCameraHeightAsViewTarget\":{\"type\":\"boolean\",\"description\":\"If UpdateOrthoPlanes is enabled, this setting will use the cameras current height to compensate the distance to the general view (as a pseudo distance to view target when one isn't present)\"},\"aspectRatio\":{\"type\":\"number\",\"description\":\"Aspect Ratio (Width/Height)\",\"minimum\":0.10000000000000001,\"maximum\":100},\"aspectRatioAxisConstraint\":{\"type\":\"string\",\"title\":\"EAspectRatioAxisConstraint\",\"enum\":[\"AspectRatio_MaintainYFOV\",\"AspectRatio_MaintainXFOV\",\"AspectRatio_MajorAxisFOV\"],\"description\":\"Override for the default aspect ratio axis constraint defined on the local player\"},\"bConstrainAspectRatio\":{\"type\":\"boolean\",\"description\":\"If bConstrainAspectRatio is true, black bars will be added if the destination view has a different aspect ratio than this camera requested.\"},\"bOverrideAspectRatioAxisConstraint\":{\"type\":\"boolean\",\"description\":\"Whether to override the default aspect ratio axis constraint defined on the local player\"},\"bUseFieldOfViewForLOD\":{\"type\":\"boolean\",\"description\":\"If true, account for the field of view angle when computing which level of detail to use for meshes.\"},\"overscan\":{\"type\":\"number\",\"description\":\"Amount to increase the view frustum by, from 0.0",
+     "field_of_view": "85.0",
+     "use_pawn_control_rotation": "False",
+     "auto_activate": "True"
+    },
+    "SpringArm": {
+     "class": "SpringArmComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"targetArmLength\":{\"type\":\"number\",\"description\":\"Natural length of the spring arm when there are no collisions\"},\"socketOffset\":{\"title\":\"Vector\",\"description\":\"offset at end of spring arm; use this instead of the relative offset of the attached component to ensure the line trace works as desired\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"targetOffset\":{\"title\":\"Vector\",\"description\":\"Offset at start of spring, applied in world space. Use this if you want a world-space offset from the parent component instead of the usual relative-space offset.\",\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"},\"z\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\",\"z\"]},\"probeSize\":{\"type\":\"number\",\"description\":\"How big should the query probe sphere be (in unreal units)\"},\"probeChannel\":{\"type\":\"string\",\"title\":\"ECollisionChannel\",\"enum\":[\"ECC_WorldStatic\",\"ECC_WorldDynamic\",\"ECC_Pawn\",\"ECC_Visibility\",\"ECC_Camera\",\"ECC_PhysicsBody\",\"ECC_Vehicle\",\"ECC_Destructible\",\"ECC_EngineTraceChannel1\",\"ECC_EngineTraceChannel2\",\"ECC_EngineTraceChannel3\",\"ECC_EngineTraceChannel4\",\"ECC_EngineTraceChannel5\",\"ECC_EngineTraceChannel6\",\"ECC_GameTraceChannel1\",\"ECC_GameTraceChannel2\",\"ECC_GameTraceChannel3\",\"ECC_GameTraceChannel4\",\"ECC_GameTraceChannel5\",\"ECC_GameTraceChannel6\",\"ECC_GameTraceChannel7\",\"ECC_GameTraceChannel8\",\"ECC_GameTraceChannel9\",\"ECC_GameTraceChannel10\",\"ECC_GameTraceChannel11\",\"ECC_GameTraceChannel12\",\"ECC_GameTraceChannel13\",\"ECC_GameTraceChannel14\",\"ECC_GameTraceChannel15\",\"ECC_GameTraceChannel16\",\"ECC_GameTraceChannel17\",\"ECC_GameTraceChannel18\",\"ECC_GameTraceChannel19\",\"ECC_GameTraceChannel20\",\"ECC_GameTraceChannel21\",\"ECC_GameTraceChannel22\",\"ECC_GameTraceChannel23\",\"ECC_GameTraceChannel24\",\"ECC_GameTraceChannel25\",\"ECC_GameTraceChannel26\",\"ECC_GameTraceChannel27\",\"ECC_GameTraceChannel28\",\"ECC_GameTraceChannel29\",\"ECC_GameTraceChannel30\",\"ECC_GameTraceChannel31\",\"ECC_GameTraceChannel32\",\"ECC_GameTraceChannel33\",\"ECC_GameTraceChannel34\",\"ECC_GameTraceChannel35\",\"ECC_GameTraceChannel36\",\"ECC_GameTraceChannel37\",\"ECC_GameTraceChannel38\",\"ECC_GameTraceChannel39\",\"ECC_GameTraceChannel40\",\"ECC_GameTraceChannel41\",\"ECC_GameTraceChannel42\",\"ECC_GameTraceChannel43\",\"ECC_GameTraceChannel44\",\"ECC_GameTraceChannel45\",\"ECC_GameTraceChannel46\",\"ECC_GameTraceChannel47\",\"ECC_GameTraceChannel48\",\"ECC_GameTraceChannel49\",\"ECC_GameTraceChannel50\",\"ECC_OverlapAll_Deprecated\"],\"description\":\"Collision channel of the query probe (defaults to ECC_Camera)\"},\"bDoCollisionTest\":{\"type\":\"boolean\",\"description\":\"If true, do a collision test using ProbeChannel and ProbeSize to prevent camera clipping into level.\"},\"bUsePawnControlRotation\":{\"type\":\"boolean\",\"description\":\"If this component is placed on a pawn, should it use the view/control rotation of the pawn where possible?\\nWhen disabled, the component will revert to using the stored RelativeRotation of the component.\\nNote that this ",
+     "target_arm_length": "375.0",
+     "use_pawn_control_rotation": "True",
+     "auto_activate": "True"
+    },
+    "GameplayCamera": {
+     "class": "GameplayCameraComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "False",
+     "props_list": "{\"cameraReference\":{\"title\":\"CameraAssetReference\",\"description\":\"The camera asset to run.\",\"type\":\"object\",\"properties\":{\"cameraAsset\":{\"type\":\"object\",\"title\":\"/Script/GameplayCameras.CameraAsset\",\"description\":\"The referenced camera asset.\",\"properties\":{\"refPath\":{\"type\":\"string\",\"description\":\"The reference stored as a soft path string.\"}},\"required\":[\"refPath\"]},\"parameters\":{\"title\":\"InstancedOverridablePropertyBag\",\"description\":\"The camera asset's parameters.\",\"type\":\"object\",\"properties\":{\"value\":{\"type\":\"object\",\"title\":\"FInstancedStruct\",\"description\":\"Polymorphic struct. Provide _structType with the UScriptStruct path (e.g. /Script/Module.StructName) to create from scratch.\",\"properties\":{\"_structType\":{\"type\":\"string\",\"description\":\"UScriptStruct path name for polymorphic type identification (e.g. /Script/Module.StructName).\"}}}},\"required\":[\"value\"]}},\"required\":[\"cameraAsset\",\"parameters\"]},\"defaultPlayer\":{\"type\":\"string\",\"title\":\"EAutoReceiveInput\",\"enum\":[\"Disabled\",\"Player0\",\"Player1\",\"Player2\",\"Player3\",\"Player4\",\"Player5\",\"Player6\",\"Player7\"],\"description\":\"The player controller to bind to by default.\\n\\nAuto-activation and explicit calls to Activate will use this player, if valid. Calls to\\nActivateCameraForPlayerIndex and ActivateCameraForPlayerController will use their given player,\\nbut fall back to this player if they are given an invalid parameter.\"},\"bRunStandaloneCameraSystem\":{\"type\":\"boolean\",\"description\":\"When enabled, this camera component runs its own camera system when activated, which\\nmakes it possible for it to run independently. When disabled, this camera component\\nonly creates an evaluation context that must be run with an external camera system,\\nsuch as the Gameplay Cameras Player Camera Manager.\"},\"bSetControlRotationWhenViewTarget\":{\"type\":\"boolean\",\"description\":\"Specifies whether this component should set the player controller's control rotation\\nto the computed point of view's orientation every frame. This is only used when a\\nplayer controller is associated with this component, and the view target is that\\ncomponent.\"},\"bPlaybackMode\":{\"type\":\"boolean\",\"description\":\"Enables or disables playback mode, which turns of any standalone camera system evaluation\\nand lets the output camera component be manipulated externally. This is useful when the\\nevaluated camera was recorded (e.g. with Take Recorder) and turned into keyframed animation.\"},\"bRunInEditor\":{\"type\":\"boolean\",\"description\":\"Whether to run this camera in editor.\"},\"editorPreviewCameraRigIndex\":{\"type\":\"integer\",\"description\":\"The camera rig to run in the editor.\"},\"editorSpriteHiddenWhenOutputCameraWithinDistance\":{\"type\":\"number\",\"description\":\"When the output camera's location is within this distance of the root, hide the editor sprite.\\nSet this value to zero or negative to never hide the editor sprite.\"},\"relativeLocation\":{\"title\":\"Vector\",\"description\":\"Location of the component relative to its parent\",\"type\":\"object\",\"properties\":",
+     "auto_activate": "False",
+     "auto_activate_for_player": "<AutoReceiveInput.PLAYER0: 1>"
+    },
+    "CapsuleComponent": {
+     "class": "CapsuleComponent",
+     "component_tags": "[]",
+     "visible": "True",
+     "hidden_in_game": "True"
+    },
+    "Mesh": {
+     "class": "SkeletalMeshComponent",
+     "component_tags": "[]",
+     "visible": "False",
+     "hidden_in_game": "False",
+     "skeletal_mesh_asset": "<Object '/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin' (0x0000022922E01E00) Class 'SkeletalMesh'>",
+     "anim_class": "<Object '/Game/Blueprints/SandboxCharacter_CMC_ABP.SandboxCharacter_CMC_ABP_C' (0x00000229308C1C00) Class 'AnimBlueprintGeneratedClass'>",
+     "visibility_based_anim_tick_option": "<VisibilityBasedAnimTickOption.ALWAYS_TICK_POSE_AND_REFRESH_BONES: 0>",
+     "first_person_primitive_type": "<FirstPersonPrimitiveType.NONE: 0>"
+    },
+    "ArrowComponent": null,
+    "CharacterMovement": {
+     "class": "CharacterMovementComponent",
+     "component_tags": "[]"
+    },
+    "AC_TraversalLogic": {
+     "class": "AC_TraversalLogic_C",
+     "component_tags": "[]"
+    },
+    "MotionWarping": {
+     "class": "MotionWarpingComponent",
+     "component_tags": "[]"
+    },
+    "AC_PreCMCTick": {
+     "class": "AC_PreCMCTick_C",
+     "component_tags": "[]"
+    },
+    "AC_FoleyEvents": {
+     "class": "AC_FoleyEvents_C",
+     "component_tags": "[]"
+    },
+    "AC_SmartObjectAnimation": {
+     "class": "AC_SmartObjectAnimation_C",
+     "component_tags": "[]"
+    },
+    "NinjaJutsu": {
+     "class": "NinjaJutsuComponent",
+     "component_tags": "[]"
+    },
+    "NinjaAirJump": {
+     "class": "NinjaAirJumpComponent",
+     "component_tags": "[]"
+    },
+    "NinjaLockOn": {
+     "class": "NinjaLockOnComponent",
+     "component_tags": "[]"
+    },
+    "NinjaStance": {
+     "class": "NinjaStanceComponent",
+     "component_tags": "[]"
+    },
+    "NinjaCombat": {
+     "class": "NinjaCombatComponent",
+     "component_tags": "[]"
+    },
+    "NinjaRunStyle": {
+     "class": "NinjaRunStyleComponent",
+     "component_tags": "[]"
+    },
+    "NinjaTurn": {
+     "class": "NinjaTurnComponent",
+     "component_tags": "[]"
+    },
+    "NinjaFreeLook": {
+     "class": "NinjaFreeLookComponent",
+     "component_tags": "[]"
+    },
+    "NinjaGun": {
+     "class": "NinjaGunComponent",
+     "component_tags": "[]"
+    }
+   }
+  }
+ },
+ "seconds": {
+  "pawn": 12.9,
+  "abp": 0.0,
+  "skel": 0.3,
+  "inputs": 0.0,
+  "camera": 0.0,
+  "clips": 0.0,
+  "grip": 0.1,
+  "reload": 0.0
+ },
+ "abp": {
+  "/Game/Blueprints/SandboxCharacter_CMC_ABP": {
+   "parent": "/Script/Engine.AnimInstance",
+   "skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+   "graphs": [
+    "AnimGraph",
+    "AnimationBlendStackGraph_0",
+    "State Controller",
+    "Idle Loop",
+    "Transition to Idle",
+    "Transition to Locomotion",
+    "Locomotion Loop",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Transition to In Air",
+    "In Air Loop",
+    "AnimationTransitionGraph_0",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Idle Break",
+    "Transition",
+    "Conduit",
+    "Transition",
+    "Transition",
+    "Transition",
+    "Transition",
+    "CustomTransition",
+    "AnimationBlendStackGraph_0",
+    "EnableSteering",
+    "Update_PropertiesFromCharacter",
+    "Update_Trajectory",
+    "Update_EssentialValues",
+    "IsMoving",
+    "IsStarting",
+    "Update_MotionMatching",
+    "Update_States",
+    "Get_DesiredFacing",
+    "IsPivoting",
+    "MM Pivot conditions",
+    "SM Pivot Condition",
+    "CalculateRelativeAccelerationAmount",
+    "ShouldTurnInPlace",
+    "ShouldSpinTransition",
+    "JustTraversed",
+    "JustLanded_Light",
+    "Enable_AO",
+    "Get_AOValue",
+    "Update_MotionMatching_PostSelection",
+    "Get_MMBlendTime",
+    "Get_MMInterruptMode",
+    "Get_LeanAmount",
+    "JustLanded_Heavy",
+    "Get_LandVelocity",
+    "Get_OffsetRootRotationMode",
+    "Get_OffsetRootTranslationMode",
+    "Get_OffsetRootTranslationHalfLife",
+    "Get_OffsetRootTranslationRadius",
+    "Get_OrientationWarpingWarpingSpace",
+    "SetBlendStackAnimFromChooser",
+    "IsAnimationAlmostComplete",
+    "Get_DynamicPlayRate",
+    "OnStateEntry_IdleLoop",
+    "OnStateEntry_TransitionToIdle",
+    "OnStateEntry_LocomotionLoop",
+    "OnStateEntry_TransitionToLocomotion",
+    "OnUpdate_TransitionToLocomotion",
+    "OnStateEntry_InAirLoop",
+    "OnStateEntry_TransitionToInAir",
+    "OnStateEntry_IdleBreak",
+    "Update_MovementDirection",
+    "Get_MovementDirectionThresholds",
+    "Get_FootPlacementPlantSettings",
+    "Get_FootPlacementInterpolationSettings",
+    "Get_TrajectoryTurnAngle",
+    "PlayLand",
+    "PlayMovingLand",
+    "Update_TargetRotation",
+    "Get_StrafeYawRotationOffset",
+    "Debug_ExperimentalStateMachine",
+    "Get_MMNotifyRecencyTimeOut",
+    "Update_CVarDrivenVariables",
+    "BlueprintThreadSafeUpdateAnimation",
+    "Update_Logic",
+    "Get_AO_Yaw",
+    "Get_PoseHistoryReference",
+    "OnStateEntry_SlideLoop",
+    "OnStateEntry_TransitionToSlide",
+    "AllowFootPinning",
+    "EventGraph",
+    "SM Transition Debug Events",
+    "SetInteractionTransform_Old",
+    "GetInteractionTransform_Old",
+    "Get_PoseHistory_Old",
+    "Get_PoseHistory",
+    "Get_InteractionTransform",
+    "Set_InteractionTransform",
+    "Set_NotifyTransition_ReTransition",
+    "Set_NotifyTransition_ToLoop",
+    "Get_Gait",
+    "Get_Trajectory"
+   ],
+   "chain_from_output": [
+    "Pose History <AnimGraphNode_PoseSearchHistoryCollector>",
+    "Component To Local <AnimGraphNode_ComponentToLocalSpace>",
+    "Leg IK <AnimGraphNode_LegIK>",
+    "Foot Placement <AnimGraphNode_FootPlacement>",
+    "Local To Component <AnimGraphNode_LocalToComponentSpace>",
+    "Remap Curves <AnimGraphNode_RemapCurves>",
+    "Offset Root Bone <AnimGraphNode_OffsetRootBone>",
+    "Slot 'DefaultSlot' <AnimGraphNode_Slot>",
+    "Apply Mesh Space Additive <AnimGraphNode_ApplyMeshSpaceAdditive>",
+    "Apply Mesh Space Additive <AnimGraphNode_ApplyMeshSpaceAdditive>",
+    "Blend Poses by int <AnimGraphNode_BlendListByInt>",
+    "Motion Matching <AnimGraphNode_MotionMatching>"
+   ],
+   "anim_graph_node_classes": {
+    "AnimGraphNode_Root": 1,
+    "AnimGraphNode_PoseSearchHistoryCollector": 1,
+    "AnimGraphNode_Slot": 1,
+    "AnimGraphNode_OffsetRootBone": 1,
+    "AnimGraphNode_ApplyMeshSpaceAdditive": 2,
+    "AnimGraphNode_MotionMatching": 1,
+    "AnimGraphNode_BlendListByBool": 1,
+    "AnimGraphNode_IdentityPose": 1,
+    "AnimGraphNode_BlendSpacePlayer": 2,
+    "AnimGraphNode_DeadBlending": 1,
+    "AnimGraphNode_TwoWayBlend": 1,
+    "AnimGraphNode_StateMachine": 1,
+    "AnimGraphNode_BlendStack": 1,
+    "AnimGraphNode_BlendListByInt": 1,
+    "AnimGraphNode_Inertialization": 1,
+    "AnimGraphNode_LocalToComponentSpace": 1,
+    "AnimGraphNode_ComponentToLocalSpace": 1,
+    "AnimGraphNode_LegIK": 1,
+    "AnimGraphNode_FootPlacement": 1,
+    "AnimGraphNode_RemapCurves": 1
+   },
+   "linked": [],
+   "vars": "[\"MovementMode\", \"MovementMode_LastFrame\", \"RotationMode\", \"RotationMode_LastFrame\", \"MovementState\", \"MovementState_LastFrame\", \"Gait\", \"Gait_LastFrame\", \"Stance\", \"Stance_LastFrame\", \"CharacterProperties\", \"CharacterTransform\", \"CharacterTransform_LastFrame\", \"RootTransform\", \"HasAcceleration\", \"Acceleration\", \"Acceleration_LastFrame\", \"AccelerationAmount\", \"HasVelocity\", \"Velocity\", \"Velocity_LastFrame\", \"RelativeAcceleration\", \"VelocityAcceleration\", \"LastNonZeroVelocity\", \"Speed2D\", \"TrajectoryGenerationData_Idle\", \"TrajectoryGenerationData_Moving\", \"Trajectory\", \"TrajectoryCollision\", \"PreviousDesiredControllerYaw\", \"MMDatabaseLOD\", \"CurrentSelectedAnim\", \"CurrentSelectedDatabase\", \"ValidDatabases\", \"MM Search Cost\", \"CurrentDatabaseTags\", \"HeavyLandSpeedThreshold\", \"InteractionTransform\", \"Trj_PastVelocity\", \"Trj_CurrentVelocity\", \"Trj_FutureVelocity\", \"OffsetRootBoneEnabled\", \"BlendStackInputs\", \"Previous_BlendStackInputs\", \"StateMachineState\", \"NoValidAnim\", \"NotifyTransition_Re-Transition\", \"NotifyTransition_ToLoop\", \"DebugExperimentalStateMachine\", \"UseExperimentalStateMachine\", \"PlantSettings_Default\", \"PlantSettings_Stops\", \"InterpolationSettings_Default\", \"InterpolationSettings_Stops\", \"MovementDirection\", \"MovementDirectionLastFrame\", \"MovementDirectionBias\", \"MovementDirectionThresholds\", \"TargetRotation\", \"TargetRotationOnTransitionStart\", \"OffsetRootTranslationRadius\", \"HasOwningActor\", \"UseThreadSafeUpdateAnimation\", \"Search Cost\", \"TargetRotationDelta\", \"LocomotionSetup\", \"Mover\", \"FootPlacementMode\", \"ValidAnims\", \"TransitionHistory\", \"PawnSpeedHistory\", \"MoveData_Speed_History\", \"Phase_History\", \"Contact_L_History\", \"Contact_R_History\", \"Enable_Warping_History\"]"
+  },
+  "/Game/Guns/Character/ABP_NinjaVisual_Gun": {
+   "parent": "/Script/Engine.AnimInstance",
+   "skeleton": null,
+   "graphs": [
+    "AnimGraph",
+    "UpdateRetargetProfile",
+    "EventGraph"
+   ],
+   "chain_from_output": [
+    "Component To Local <AnimGraphNode_ComponentToLocalSpace>",
+    "Two Bone IK - Bone: hand_l <AnimGraphNode_TwoBoneIK>",
+    "Local To Component <AnimGraphNode_LocalToComponentSpace>",
+    "Layered blend per bone <AnimGraphNode_LayeredBoneBlend>",
+    "Component To Local <AnimGraphNode_ComponentToLocalSpace>",
+    "Foot Placement <AnimGraphNode_FootPlacement>",
+    "Stride Warping <AnimGraphNode_StrideWarping>",
+    "Local To Component <AnimGraphNode_LocalToComponentSpace>",
+    "Layered blend per bone <AnimGraphNode_LayeredBoneBlend>",
+    "Slot 'DefaultSlot' <AnimGraphNode_Slot>",
+    "Use cached pose 'Retargeted' <AnimGraphNode_UseCachedPose>"
+   ],
+   "anim_graph_node_classes": {
+    "AnimGraphNode_Root": 1,
+    "AnimGraphNode_RetargetPoseFromMesh": 1,
+    "AnimGraphNode_CopyPoseFromMesh": 1,
+    "AnimGraphNode_SaveCachedPose": 1,
+    "AnimGraphNode_UseCachedPose": 2,
+    "AnimGraphNode_Slot": 4,
+    "AnimGraphNode_LayeredBoneBlend": 2,
+    "K2Node_VariableGet": 10,
+    "AnimGraphNode_StrideWarping": 1,
+    "AnimGraphNode_FootPlacement": 1,
+    "AnimGraphNode_LocalToComponentSpace": 2,
+    "AnimGraphNode_ComponentToLocalSpace": 2,
+    "AnimGraphNode_SequencePlayer": 1,
+    "AnimGraphNode_RotationOffsetBlendSpace": 1,
+    "AnimGraphNode_TwoBoneIK": 1,
+    "K2Node_PromotableOperator": 1
+   },
+   "linked": []
+  }
+ },
+ "skel": {
+  "uefn": {
+   "skeleton": "/Game/Characters/UEFN_Mannequin/Meshes/SK_UEFN_Mannequin.SK_UEFN_Mannequin",
+   "bones": 93,
+   "has": {
+    "weapon_r": true,
+    "weapon_l": true,
+    "ik_hand_gun": true,
+    "ik_hand_r": true,
+    "ik_hand_l": true,
+    "hand_r": true,
+    "hand_l": true,
+    "spine_05": true,
+    "neck_02": true,
+    "index_metacarpal_l": true,
+    "index_01_l": true,
+    "index_03_l": true
+   },
+   "sockets": {
+    "palm_l_Socket": [
+     "hand_l",
+     [
+      7.5,
+      -2.35,
+      0.0
+     ]
+    ],
+    "palm_r_Socket": [
+     "hand_r",
+     [
+      -7.5,
+      2.0,
+      0.0
+     ]
+    ],
+    "RagdollTrace": [
+     "spine_03",
+     [
+      20.0,
+      0.0,
+      0.0
+     ]
+    ],
+    "prop_01_Socket": [
+     "prop_01",
+     [
+      0.0,
+      0.0,
+      0.0
+     ]
+    ],
+    "VB hand_r_prop_01_Socket": [
+     "VB hand_r_prop_01",
+     [
+      0.0,
+      0.0,
+      0.0
+     ]
+    ]
+   },
+   "ref_cs": {
+    "clavicle_l": [
+     2.322,
+     -4.065,
+     135.491
+    ],
+    "upperarm_l": [
+     17.779,
+     -4.844,
+     134.45
+    ],
+    "lowerarm_l": [
+     37.685,
+     -5.793,
+     116.754
+    ],
+    "hand_l": [
+     51.973,
+     4.088,
+     102.694
+    ],
+    "clavicle_r": [
+     -2.322,
+     -4.065,
+     135.491
+    ],
+    "upperarm_r": [
+     -17.779,
+     -4.844,
+     134.45
+    ],
+    "lowerarm_r": [
+     -37.685,
+     -5.793,
+     116.754
+    ],
+    "hand_r": [
+     -51.973,
+     4.088,
+     102.693
+    ],
+    "head": [
+     0.0,
+     -1.687,
+     152.034
+    ],
+    "spine_01": [
+     0.0,
+     -1.104,
+     99.887
+    ],
+    "spine_03": [
+     0.0,
+     -1.851,
+     113.125
+    ],
+    "spine_05": [
+     -0.0,
+     -3.569,
+     131.159
+    ],
+    "pelvis": [
+     0.0,
+     -0.707,
+     93.119
+    ],
+    "thumb_01_l": [
+     51.557,
+     6.763,
+     101.958
+    ],
+    "thumb_02_l": [
+     49.886,
+     9.877,
+     97.191
+    ],
+    "thumb_03_l": [
+     49.7,
+     10.298,
+     94.984
+    ],
+    "index_01_l": [
+     56.22,
+     10.633,
+     95.728
+    ],
+    "index_02_l": [
+     57.364,
+     11.375,
+     92.643
+    ],
+    "index_03_l": [
+     56.75,
+     11.5,
+     90.16
+    ],
+    "middle_01_l": [
+     56.761,
+     7.779,
+     95.346
+    ],
+    "middle_02_l": [
+     58.667,
+     8.888,
+     91.989
+    ],
+    "middle_03_l": [
+     58.171,
+     8.982,
+     89.426
+    ],
+    "ring_01_l": [
+     57.143,
+     5.25,
+     94.828
+    ],
+    "ring_02_l": [
+     58.593,
+     6.279,
+     91.642
+    ],
+    "ring_03_l": [
+     58.049,
+     6.68,
+     89.32
+    ],
+    "pinky_01_l": [
+     57.594,
+     3.055,
+     94.586
+    ],
+    "pinky_02_l": [
+     58.429,
+     3.74,
+     91.97
+    ],
+    "pinky_03_l": [
+     57.793,
+     4.103,
+     89.89
+    ],
+    "index_metacarpal_l": [
+     51.828,
+     7.401,
+     101.987
+    ],
+    "middle_metacarpal_l": [
+     52.749,
+     5.385,
+     100.996
+    ],
+    "ring_metacarpal_l": [
+     53.274,
+     3.555,
+     100.483
+    ],
+    "pinky_metacarpal_l": [
+     53.246,
+     1.438,
+     100.077
+    ]
+   },
+   "lengths": {
+    "upperarm_l": 26.651,
+    "lowerarm_l": 22.349,
+    "hand_l_to_middle_01": 9.515,
+    "middle_01_02": 4.016,
+    "middle_02_03": 2.612,
+    "pelvis_head": 58.923
+   }
+  },
+  "ue5": {
+   "skeleton": "/Game/Characters/UE5_Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+   "bones": 161,
+   "has": {
+    "weapon_r": true,
+    "weapon_l": true,
+    "ik_hand_gun": true,
+    "ik_hand_r": true,
+    "ik_hand_l": true,
+    "hand_r": true,
+    "hand_l": true,
+    "spine_05": true,
+    "neck_02": true,
+    "index_metacarpal_l": true,
+    "index_01_l": true,
+    "index_03_l": true
+   },
+   "sockets": {
+    "weapon_r_muzzle": [
+     "weapon_r",
+     [
+      45.0,
+      0.0,
+      25.0
+     ]
+    ],
+    "foot_r_Socket": [
+     "foot_r",
+     [
+      0.0,
+      0.0,
+      0.0
+     ]
+    ],
+    "foot_l_Socket": [
+     "foot_l",
+     [
+      0.0,
+      0.0,
+      0.0
+     ]
+    ]
+   },
+   "ref_cs": {
+    "clavicle_l": [
+     1.428,
+     -1.74,
+     146.301
+    ],
+    "upperarm_l": [
+     19.01,
+     -2.557,
+     143.583
+    ],
+    "lowerarm_l": [
+     35.007,
+     -1.907,
+     120.892
+    ],
+    "hand_l": [
+     47.769,
+     15.699,
+     104.467
+    ],
+    "clavicle_r": [
+     -1.428,
+     -1.74,
+     146.301
+    ],
+    "upperarm_r": [
+     -19.01,
+     -2.557,
+     143.583
+    ],
+    "lowerarm_r": [
+     -35.007,
+     -1.907,
+     120.892
+    ],
+    "hand_r": [
+     -47.768,
+     15.699,
+     104.466
+    ],
+    "head": [
+     -0.0,
+     0.663,
+     162.575
+    ],
+    "spine_01": [
+     0.0,
+     2.048,
+     99.566
+    ],
+    "spine_03": [
+     -0.0,
+     4.251,
+     113.419
+    ],
+    "spine_05": [
+     0.0,
+     0.525,
+     141.102
+    ],
+    "pelvis": [
+     -0.0,
+     2.281,
+     95.897
+    ],
+    "thumb_01_l": [
+     46.227,
+     18.496,
+     102.958
+    ],
+    "thumb_02_l": [
+     45.19,
+     22.225,
+     100.912
+    ],
+    "thumb_03_l": [
+     45.049,
+     24.226,
+     98.567
+    ],
+    "index_01_l": [
+     50.532,
+     23.732,
+     99.678
+    ],
+    "index_02_l": [
+     50.992,
+     25.939,
+     96.278
+    ],
+    "index_03_l": [
+     50.806,
+     26.93,
+     93.887
+    ],
+    "middle_01_l": [
+     52.646,
+     21.976,
+     99.222
+    ],
+    "middle_02_l": [
+     52.967,
+     24.274,
+     94.603
+    ],
+    "middle_03_l": [
+     52.388,
+     24.88,
+     92.275
+    ],
+    "ring_01_l": [
+     53.689,
+     19.777,
+     98.716
+    ],
+    "ring_02_l": [
+     54.466,
+     21.689,
+     94.187
+    ],
+    "ring_03_l": [
+     54.151,
+     22.248,
+     92.015
+    ],
+    "pinky_01_l": [
+     53.54,
+     17.628,
+     97.969
+    ],
+    "pinky_02_l": [
+     54.546,
+     18.761,
+     94.466
+    ],
+    "pinky_03_l": [
+     54.357,
+     19.198,
+     92.482
+    ],
+    "index_metacarpal_l": [
+     48.139,
+     19.7,
+     103.231
+    ],
+    "middle_metacarpal_l": [
+     49.689,
+     18.13,
+     102.917
+    ],
+    "ring_metacarpal_l": [
+     50.331,
+     17.133,
+     102.405
+    ],
+    "pinky_metacarpal_l": [
+     50.945,
+     16.074,
+     101.904
+    ]
+   },
+   "lengths": {
+    "upperarm_l": 27.771,
+    "lowerarm_l": 27.251,
+    "hand_l_to_middle_01": 9.523,
+    "middle_01_02": 5.169,
+    "middle_02_03": 2.474,
+    "pelvis_head": 66.698
+   }
+  },
+  "ue5_simple": {
+   "skeleton": "/Game/Characters/UE5_Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+   "bones": 161,
+   "has": {
+    "weapon_r": true,
+    "weapon_l": true,
+    "ik_hand_gun": true,
+    "ik_hand_r": true,
+    "ik_hand_l": true,
+    "hand_r": true,
+    "hand_l": true,
+    "spine_05": true,
+    "neck_02": true,
+    "index_metacarpal_l": true,
+    "index_01_l": true,
+    "index_03_l": true
+   },
+   "sockets": {
+    "weapon_r_muzzle": [
+     "weapon_r",
+     [
+      45.0,
+      0.0,
+      25.0
+     ]
+    ],
+    "foot_r_Socket": [
+     "foot_r",
+     [
+      0.0,
+      0.0,
+      0.0
+     ]
+    ],
+    "foot_l_Socket": [
+     "foot_l",
+     [
+      0.0,
+      0.0,
+      0.0
+     ]
+    ]
+   },
+   "ref_cs": {
+    "clavicle_l": [
+     1.428,
+     -1.74,
+     146.301
+    ],
+    "upperarm_l": [
+     19.01,
+     -2.557,
+     143.583
+    ],
+    "lowerarm_l": [
+     35.007,
+     -1.907,
+     120.892
+    ],
+    "hand_l": [
+     47.769,
+     15.699,
+     104.467
+    ],
+    "clavicle_r": [
+     -1.428,
+     -1.74,
+     146.301
+    ],
+    "upperarm_r": [
+     -19.01,
+     -2.557,
+     143.583
+    ],
+    "lowerarm_r": [
+     -35.007,
+     -1.907,
+     120.892
+    ],
+    "hand_r": [
+     -47.768,
+     15.699,
+     104.466
+    ],
+    "head": [
+     -0.0,
+     0.663,
+     162.575
+    ],
+    "spine_01": [
+     0.0,
+     2.048,
+     99.566
+    ],
+    "spine_03": [
+     -0.0,
+     4.251,
+     113.419
+    ],
+    "spine_05": [
+     0.0,
+     0.525,
+     141.102
+    ],
+    "pelvis": [
+     -0.0,
+     2.281,
+     95.897
+    ],
+    "thumb_01_l": [
+     46.227,
+     18.496,
+     102.958
+    ],
+    "thumb_02_l": [
+     45.19,
+     22.225,
+     100.912
+    ],
+    "thumb_03_l": [
+     45.049,
+     24.226,
+     98.567
+    ],
+    "index_01_l": [
+     50.532,
+     23.732,
+     99.678
+    ],
+    "index_02_l": [
+     50.992,
+     25.939,
+     96.278
+    ],
+    "index_03_l": [
+     50.806,
+     26.93,
+     93.887
+    ],
+    "middle_01_l": [
+     52.646,
+     21.976,
+     99.222
+    ],
+    "middle_02_l": [
+     52.967,
+     24.274,
+     94.603
+    ],
+    "middle_03_l": [
+     52.388,
+     24.88,
+     92.275
+    ],
+    "ring_01_l": [
+     53.689,
+     19.777,
+     98.716
+    ],
+    "ring_02_l": [
+     54.466,
+     21.689,
+     94.187
+    ],
+    "ring_03_l": [
+     54.151,
+     22.248,
+     92.015
+    ],
+    "pinky_01_l": [
+     53.54,
+     17.628,
+     97.969
+    ],
+    "pinky_02_l": [
+     54.546,
+     18.761,
+     94.466
+    ],
+    "pinky_03_l": [
+     54.357,
+     19.198,
+     92.482
+    ],
+    "index_metacarpal_l": [
+     48.139,
+     19.7,
+     103.231
+    ],
+    "middle_metacarpal_l": [
+     49.689,
+     18.13,
+     102.917
+    ],
+    "ring_metacarpal_l": [
+     50.331,
+     17.133,
+     102.405
+    ],
+    "pinky_metacarpal_l": [
+     50.945,
+     16.074,
+     101.904
+    ]
+   },
+   "lengths": {
+    "upperarm_l": 27.771,
+    "lowerarm_l": 27.251,
+    "hand_l_to_middle_01": 9.523,
+    "middle_01_02": 5.169,
+    "middle_02_03": 2.474,
+    "pelvis_head": 66.698
+   }
+  },
+  "uefn_minus_ue5": [
+   "VB hand_l_prop_01",
+   "VB hand_r_prop_01",
+   "attach",
+   "poi",
+   "prop_01",
+   "props_root"
+  ],
+  "ue5_minus_uefn": [
+   "ankle_bck_l",
+   "ankle_bck_r",
+   "ankle_fwd_l",
+   "ankle_fwd_r",
+   "calf_correctiveRoot_l",
+   "calf_correctiveRoot_r",
+   "calf_kneeBack_l",
+   "calf_kneeBack_r",
+   "calf_knee_l",
+   "calf_knee_r",
+   "calf_twistCor_02_l",
+   "calf_twistCor_02_r",
+   "center_of_mass",
+   "clavicle_out_l",
+   "clavicle_out_r",
+   "clavicle_pec_l",
+   "clavicle_pec_r",
+   "clavicle_scap_l",
+   "clavicle_scap_r",
+   "interaction",
+   "lowerarm_bck_l",
+   "lowerarm_bck_r",
+   "lowerarm_correctiveRoot_l",
+   "lowerarm_correctiveRoot_r",
+   "lowerarm_fwd_l",
+   "lowerarm_fwd_r",
+   "lowerarm_in_l",
+   "lowerarm_in_r",
+   "lowerarm_out_l",
+   "lowerarm_out_r",
+   "spine_04_latissimus_l",
+   "spine_04_latissimus_r",
+   "thigh_bck_l",
+   "thigh_bck_lwr_l",
+   "thigh_bck_lwr_r",
+   "thigh_bck_r",
+   "thigh_correctiveRoot_l",
+   "thigh_correctiveRoot_r",
+   "thigh_fwd_l",
+   "thigh_fwd_lwr_l",
+   "thigh_fwd_lwr_r",
+   "thigh_fwd_r",
+   "thigh_in_l",
+   "thigh_in_r",
+   "thigh_out_l",
+   "thigh_out_r",
+   "thigh_twistCor_01_l",
+   "thigh_twistCor_01_r",
+   "thigh_twistCor_02_l",
+   "thigh_twistCor_02_r",
+   "thigh_twist_02_l",
+   "thigh_twist_02_r",
+   "upperarm_bck_l",
+   "upperarm_bck_r",
+   "upperarm_bicep_l",
+   "upperarm_bicep_r",
+   "upperarm_correctiveRoot_l",
+   "upperarm_correctiveRoot_r",
+   "upperarm_fwd_l",
+   "upperarm_fwd_r",
+   "upperarm_in_l",
+   "upperarm_in_r",
+   "upperarm_out_l",
+   "upperarm_out_r",
+   "upperarm_tricep_l",
+   "upperarm_tricep_r",
+   "upperarm_twistCor_01_l",
+   "upperarm_twistCor_01_r",
+   "upperarm_twistCor_02_l",
+   "upperarm_twistCor_02_r",
+   "wrist_inner_l",
+   "wrist_inner_r",
+   "wrist_outer_l",
+   "wrist_outer_r"
+  ],
+  "hold_skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+  "hold_on_uefn": {
+   "hand_r": [
+    -16.346,
+    2.018,
+    125.708
+   ],
+   "hand_l": [
+    -3.292,
+    37.721,
+    128.336
+   ],
+   "head": [
+    -4.116,
+    -5.581,
+    147.594
+   ]
+  },
+  "hold_on_uefn_valid": true,
+  "hold_on_ue5": {
+   "hand_r": [
+    -16.938,
+    7.246,
+    139.947
+   ],
+   "hand_l": [
+    -7.643,
+    43.438,
+    141.584
+   ],
+   "head": [
+    -5.685,
+    -3.338,
+    158.72
+   ]
+  },
+  "hold_on_ue5_valid": true,
+  "ik_assets": {
+   "IKRetargeter": [
+    "/Game/BareNinja_AnimSet/demo/Characters/Mannequin_UE4/Rigs/RTG_UE4Manny_UE5Manny",
+    "/Game/BareNinja_AnimSet/demo/Characters/Mannequin_UE4/Rigs/RTG_UE5Manny_UE4Manny",
+    "/Game/BareNinja_AnimSet/demo/Characters/Mannequins/Rigs/RTG_Mannequin",
+    "/Game/Characters/UE5_Mannequins/Rigs/RTG_UEFN_to_UE5_Mannequin",
+    "/Game/Ninja/Animation/Retarget/RTG_Kallari_to_Manny",
+    "/Game/Ninja/Character/Retarget/RTG_Manny_to_MH",
+    "/Game/Ninja/Character/Retarget/RTG_Manny_to_MHFemale",
+    "/Game/muayThai_Animset/demo/Characters/Mannequin_UE4/Rigs/RTG_UE4Manny_UE5Manny",
+    "/Game/muayThai_Animset/demo/Characters/Mannequin_UE4/Rigs/RTG_UE5Manny_UE4Manny",
+    "/Game/muayThai_Animset/demo/Characters/Mannequins/Rigs/RTG_Mannequin"
+   ],
+   "IKRigDefinition": [
+    "/Game/BareNinja_AnimSet/demo/Characters/Mannequin_UE4/Rigs/IK_UE4_Mannequin",
+    "/Game/BareNinja_AnimSet/demo/Characters/Mannequins/Rigs/IK_Mannequin",
+    "/Game/Characters/UE5_Mannequins/Rigs/IK_UE5_Mannequin_Retarget",
+    "/Game/Characters/UEFN_Mannequin/Rigs/IK_UEFN_Mannequin",
+    "/Game/Ninja/Animation/Retarget/IK_Kallari",
+    "/Game/Ninja/Animation/Retarget/IK_Manny",
+    "/Game/Ninja/Character/Retarget/IK_MH_PlayerDefault",
+    "/Game/Ninja/Character/Retarget/IK_MH_PlayerFemale",
+    "/Game/muayThai_Animset/demo/Characters/Mannequin_UE4/Rigs/IK_UE4_Mannequin",
+    "/Game/muayThai_Animset/demo/Characters/Mannequins/Rigs/IK_Mannequin"
+   ]
+  },
+  "retargeters": {
+   "/Game/Characters/UE5_Mannequins/Rigs/RTG_UEFN_to_UE5_Mannequin": {
+    "src_rig": "/Game/Characters/UEFN_Mannequin/Rigs/IK_UEFN_Mannequin.IK_UEFN_Mannequin",
+    "tgt_rig": "/Game/Characters/UE5_Mannequins/Rigs/IK_UE5_Mannequin_Retarget.IK_UE5_Mannequin_Retarget",
+    "src_mesh": "/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin",
+    "tgt_mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny.SKM_Manny"
+   }
+  },
+  "ik_rigs": {
+   "/Game/Characters/UE5_Mannequins/Rigs/IK_UE5_Mannequin_Retarget": {
+    "mesh": "/Game/Characters/UE5_Mannequins/Meshes/SKM_Manny.SKM_Manny",
+    "chains": [
+     "root",
+     "Spine",
+     "Neck",
+     "head",
+     "LeftLeg",
+     "LeftClavicle",
+     "LeftArm",
+     "LeftThumb",
+     "LeftIndex",
+     "LeftMiddle",
+     "LeftRing",
+     "LeftPinky",
+     "LeftIndexMetacarpal",
+     "LeftMiddleMetacarpal",
+     "LeftRingMetacarpal",
+     "LeftPinkyMetacarpal",
+     "RightLeg",
+     "RightClavicle",
+     "RightArm",
+     "RightThumb",
+     "RightIndex",
+     "RightMiddle",
+     "RightRing",
+     "RightPinky",
+     "RightIndexMetacarpal",
+     "RightMiddleMetacarpal",
+     "RightRingMetacarpal",
+     "RightPinkyMetacarpal",
+     "LeftToe",
+     "RightToe"
+    ]
+   },
+   "/Game/Characters/UEFN_Mannequin/Rigs/IK_UEFN_Mannequin": {
+    "mesh": "/Game/Characters/UEFN_Mannequin/Meshes/SKM_UEFN_Mannequin.SKM_UEFN_Mannequin",
+    "chains": [
+     "Root",
+     "Spine",
+     "Neck",
+     "Head",
+     "LeftLeg",
+     "LeftClavicle",
+     "LeftArm",
+     "LeftThumb",
+     "LeftIndex",
+     "LeftMiddle",
+     "LeftRing",
+     "LeftPinky",
+     "LeftIndexMetacarpal",
+     "LeftMiddleMetacarpal",
+     "LeftRingMetacarpal",
+     "LeftPinkyMetacarpal",
+     "RightLeg",
+     "RightClavicle",
+     "RightArm",
+     "RightThumb",
+     "RightIndex",
+     "RightMiddle",
+     "RightRing",
+     "RightPinky",
+     "RightIndexMetacarpal",
+     "RightMiddleMetacarpal",
+     "RightRingMetacarpal",
+     "RightPinkyMetacarpal",
+     "RightToe",
+     "LeftToe"
+    ]
+   }
+  }
+ },
+ "input": {
+  "/Game/Input/IMC_Sandbox": [
+   {
+    "action": "IA_Move",
+    "key": "W",
+    "triggers": [],
+    "modifiers": [
+     "InputModifierSwizzleAxis"
+    ]
+   },
+   {
+    "action": "IA_Move",
+    "key": "S",
+    "triggers": [],
+    "modifiers": [
+     "InputModifierSwizzleAxis",
+     "InputModifierNegate"
+    ]
+   },
+   {
+    "action": "IA_Move",
+    "key": "A",
+    "triggers": [],
+    "modifiers": [
+     "InputModifierNegate"
+    ]
+   },
+   {
+    "action": "IA_Move",
+    "key": "D",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Move",
+    "key": "Gamepad_Left2D",
+    "triggers": [],
+    "modifiers": [
+     "InputModifierDeadZone"
+    ]
+   },
+   {
+    "action": "IA_Aim",
+    "key": "RightMouseButton",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Strafe",
+    "key": "Gamepad_RightThumbstick",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Strafe",
+    "key": "MiddleMouseButton",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_TwinStick_AimDirection",
+    "key": "Gamepad_Right2D",
+    "triggers": [],
+    "modifiers": [
+     "InputModifierSwizzleAxis",
+     "InputModifierDeadZone"
+    ]
+   },
+   {
+    "action": "IA_Look",
+    "key": "Mouse2D",
+    "triggers": [],
+    "modifiers": [
+     "InputModifierScalar"
+    ]
+   },
+   {
+    "action": "IA_Look_Gamepad",
+    "key": "Gamepad_Right2D",
+    "triggers": [],
+    "modifiers": [
+     "InputModifierDeadZone",
+     "InputModifierResponseCurveExponential",
+     "InputModifierScalar"
+    ]
+   },
+   {
+    "action": "IA_Walk",
+    "key": "LeftControl",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Walk",
+    "key": "Gamepad_RightShoulder",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Sprint",
+    "key": "LeftShift",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Sprint",
+    "key": "Gamepad_LeftShoulder",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Jump",
+    "key": "SpaceBar",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Jump",
+    "key": "Gamepad_FaceButton_Bottom",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Traverse",
+    "key": "SpaceBar",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Traverse",
+    "key": "Gamepad_FaceButton_Bottom",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Crouch",
+    "key": "C",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Crouch",
+    "key": "Gamepad_FaceButton_Right",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_Aim",
+    "key": "Gamepad_LeftTrigger",
+    "triggers": [],
+    "modifiers": []
+   }
+  ],
+  "/Game/Guns/Input/IMC_GunsBase": [
+   {
+    "action": "IA_GunEquip",
+    "key": "X",
+    "triggers": [],
+    "modifiers": []
+   }
+  ],
+  "/Game/Guns/Input/IMC_GunsEquipped": [
+   {
+    "action": "IA_GunFire",
+    "key": "LeftMouseButton",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_GunAim",
+    "key": "RightMouseButton",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_GunReload",
+    "key": "R",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_GunSelector",
+    "key": "B",
+    "triggers": [],
+    "modifiers": []
+   },
+   {
+    "action": "IA_GunView",
+    "key": "V",
+    "triggers": [],
+    "modifiers": []
+   }
+  ],
+  "actions": {
+   "/Game/Input/IA_Aim": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Crouch": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Jump": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Look": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Look_Gamepad": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Move": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Move_WorldSpace": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Sprint": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Strafe": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Walk": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Interact": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Traverse": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_TwinStick_AimDirection": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "_contexts": [
+    "/Game/Input/IMC_Sandbox",
+    "/Game/Input/IMC_Default",
+    "/Game/Input/IMC_MouseLook",
+    "/Game/Guns/Input/IMC_GunsBase",
+    "/Game/Guns/Input/IMC_GunsEquipped"
+   ],
+   "/Game/Input/IA_NextPawn": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_NextVisualOverride": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_TeleportToTarget": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_Takedown": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/IA_TriggerRagdoll": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/Actions/IA_Jump": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/Actions/IA_Look": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/Actions/IA_MouseLook": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Input/Actions/IA_Move": {
+    "ValueType": "Axis2D",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Guns/Input/IA_GunAim": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Guns/Input/IA_GunEquip": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Guns/Input/IA_GunFire": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Guns/Input/IA_GunReload": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Guns/Input/IA_GunSelector": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   },
+   "/Game/Guns/Input/IA_GunView": {
+    "ValueType": "Boolean",
+    "bConsumeInput": true,
+    "bConsumesActionAndAxisMappings": false,
+    "bTriggerWhenPaused": false
+   }
+  }
+ },
+ "camera": {
+  "/Game/Blueprints/GM_Sandbox": {
+   "parent": "/Script/Engine.GameModeBase",
+   "default_pawn_class": "<Object '/Game/Blueprints/SandboxCharacter_Mover.SandboxCharacter_Mover_C' (0x0000022A86799300) Class 'BlueprintGeneratedClass'>",
+   "player_controller_class": "<Object '/Game/Blueprints/PC_Sandbox.PC_Sandbox_C' (0x0000022A86799A00) Class 'BlueprintGeneratedClass'>",
+   "hud_class": "<Object '/Script/Engine.HUD' (0x00007FF402838EF0) Class 'Class'>"
+  },
+  "/Game/Blueprints/PC_Sandbox": {
+   "parent": "/Script/Engine.PlayerController",
+   "player_camera_manager_class": "<Object '/Script/Engine.PlayerCameraManager' (0x00007FF402862F70) Class 'Class'>",
+   "components": {
+    "None": {
+     "class": "PC_Sandbox_C"
+    },
+    "TransformComponent": null
+   },
+   "nodes": [
+    "TeleportToTarget: GetActorEyesViewPoint"
+   ]
+  },
+  "/Game/ThirdPerson/Blueprints/BP_ThirdPersonGameMode": {
+   "parent": "/Script/Engine.GameModeBase",
+   "default_pawn_class": "<Object '/Game/Ninja/Blueprints/BP_NinjaGasp.BP_NinjaGasp_C' (0x0000022AB7F82300) Class 'BlueprintGeneratedClass'>",
+   "player_controller_class": "<Object '/Script/Engine.PlayerController' (0x00007FF40282BF70) Class 'Class'>",
+   "hud_class": "<Object '/Script/Engine.HUD' (0x00007FF402838EF0) Class 'Class'>"
+  },
+  "/Game/Guns/Character/GM_GunRange": {
+   "parent": "/Game/ThirdPerson/Blueprints/BP_ThirdPersonGameMode.BP_ThirdPersonGameMode_C",
+   "default_pawn_class": "<Object '/Game/Guns/Character/BP_NinjaGasp_Gun.BP_NinjaGasp_Gun_C' (0x0000022ADBA4E700) Class 'BlueprintGeneratedClass'>",
+   "player_controller_class": "<Object '/Script/Engine.PlayerController' (0x00007FF40282BF70) Class 'Class'>",
+   "hud_class": "<Object '/Script/Engine.HUD' (0x00007FF402838EF0) Class 'Class'>"
+  }
+ },
+ "clips": {
+  "/Game/Characters/Mannequins/Anims": [
+   "ABP_Unarmed <AnimBlueprint>",
+   "AO_Pistol <AimOffsetBlendSpace>",
+   "AO_Rifle <AimOffsetBlendSpace>",
+   "BS_Idle_Walk_Run <BlendSpace>",
+   "MF_Pistol_Idle_ADS <AnimSequence>",
+   "MF_Pistol_Idle_ADS1 <AnimSequence>",
+   "MF_Pistol_Idle_ADS_AO_CD <AnimSequence>",
+   "MF_Pistol_Idle_ADS_AO_CU <AnimSequence>",
+   "MF_Pistol_Jog_Bwd <AnimSequence>",
+   "MF_Pistol_Jog_Bwd_Left <AnimSequence>",
+   "MF_Pistol_Jog_Bwd_Right <AnimSequence>",
+   "MF_Pistol_Jog_Fwd <AnimSequence>",
+   "MF_Pistol_Jog_Fwd_Left <AnimSequence>",
+   "MF_Pistol_Jog_Fwd_Right <AnimSequence>",
+   "MF_Pistol_Jog_Left <AnimSequence>",
+   "MF_Pistol_Jog_Right <AnimSequence>",
+   "MF_Pistol_Walk_Bwd <AnimSequence>",
+   "MF_Pistol_Walk_Bwd_Left <AnimSequence>",
+   "MF_Pistol_Walk_Bwd_Right <AnimSequence>",
+   "MF_Pistol_Walk_Fwd <AnimSequence>",
+   "MF_Pistol_Walk_Fwd_Left <AnimSequence>",
+   "MF_Pistol_Walk_Fwd_Right <AnimSequence>",
+   "MF_Pistol_Walk_Left <AnimSequence>",
+   "MF_Pistol_Walk_Right <AnimSequence>",
+   "MF_Rifle_Idle_ADS <AnimSequence>",
+   "MF_Rifle_Jog_Bwd <AnimSequence>",
+   "MF_Rifle_Jog_Bwd_Left <AnimSequence>",
+   "MF_Rifle_Jog_Bwd_Right <AnimSequence>",
+   "MF_Rifle_Jog_Fwd <AnimSequence>",
+   "MF_Rifle_Jog_Fwd_Left <AnimSequence>",
+   "MF_Rifle_Jog_Fwd_Right <AnimSequence>",
+   "MF_Rifle_Jog_Left <AnimSequence>",
+   "MF_Rifle_Jog_Right <AnimSequence>",
+   "MF_Rifle_Walk_Bwd <AnimSequence>",
+   "MF_Rifle_Walk_Bwd_Left <AnimSequence>",
+   "MF_Rifle_Walk_Bwd_Right <AnimSequence>",
+   "MF_Rifle_Walk_Fwd <AnimSequence>",
+   "MF_Rifle_Walk_Fwd_Left <AnimSequence>",
+   "MF_Rifle_Walk_Fwd_Right <AnimSequence>",
+   "MF_Rifle_Walk_Left <AnimSequence>",
+   "MF_Rifle_Walk_Right <AnimSequence>",
+   "MF_Unarmed_Jog_Bwd <AnimSequence>",
+   "MF_Unarmed_Jog_Bwd_Left <AnimSequence>",
+   "MF_Unarmed_Jog_Bwd_Right <AnimSequence>",
+   "MF_Unarmed_Jog_Fwd <AnimSequence>",
+   "MF_Unarmed_Jog_Fwd_Left <AnimSequence>",
+   "MF_Unarmed_Jog_Fwd_Right <AnimSequence>",
+   "MF_Unarmed_Jog_Left <AnimSequence>",
+   "MF_Unarmed_Jog_Right <AnimSequence>",
+   "MF_Unarmed_Walk_Bwd <AnimSequence>",
+   "MF_Unarmed_Walk_Bwd_Left <AnimSequence>",
+   "MF_Unarmed_Walk_Bwd_Right <AnimSequence>",
+   "MF_Unarmed_Walk_Fwd <AnimSequence>",
+   "MF_Unarmed_Walk_Fwd_Left <AnimSequence>",
+   "MF_Unarmed_Walk_Fwd_Right <AnimSequence>",
+   "MF_Unarmed_Walk_Left <AnimSequence>",
+   "MF_Unarmed_Walk_Right <AnimSequence>",
+   "MM_Attack_01 <AnimSequence>",
+   "MM_Attack_02 <AnimSequence>",
+   "MM_Attack_03 <AnimSequence>",
+   "MM_ChargedAttack <AnimSequence>",
+   "MM_Dash <AnimSequence>",
+   "MM_Death_Back_01 <AnimSequence>",
+   "MM_Death_Front_01 <AnimSequence>",
+   "MM_Death_Front_02 <AnimSequence>",
+   "MM_Death_Front_03 <AnimSequence>",
+   "MM_Death_Left_01 <AnimSequence>",
+   "MM_Death_Right_01 <AnimSequence>",
+   "MM_Fall_Loop <AnimSequence>",
+   "MM_HitReact_Back_Med_01 <AnimSequence>",
+   "MM_HitReact_Front_Hvy_01 <AnimSequence>",
+   "MM_HitReact_Front_Lgt_01 <AnimSequence>",
+   "MM_HitReact_Front_Lgt_02 <AnimSequence>",
+   "MM_HitReact_Front_Lgt_03 <AnimSequence>",
+   "MM_HitReact_Front_Lgt_04 <AnimSequence>",
+   "MM_HitReact_Front_Med_01 <AnimSequence>",
+   "MM_HitReact_Front_Med_02 <AnimSequence>",
+   "MM_Idle <AnimSequence>",
+   "MM_Jump <AnimSequence>",
+   "MM_Land <AnimSequence>",
+   "MM_Pistol_DryFire <AnimSequence>",
+   "MM_Pistol_Equip <AnimSequence>",
+   "MM_Pistol_Fire <AnimSequence>",
+   "MM_Pistol_Fire_Montage <AnimMontage>",
+   "MM_Pistol_Jump_Fall_Loop <AnimSequence>",
+   "MM_Pistol_Jump_RecoveryAdditive <AnimSequence>",
+   "MM_Pistol_Jump_Start <AnimSequence>",
+   "MM_Pistol_Reload <AnimSequence>",
+   "MM_Rifle_DryFire <AnimSequence>",
+   "MM_Rifle_Equip <AnimSequence>",
+   "MM_Rifle_Fire <AnimSequence>",
+   "MM_Rifle_Idle_ADS_AO_CC <AnimSequence>",
+   "MM_Rifle_Idle_ADS_AO_CD <AnimSequence>",
+   "MM_Rifle_Idle_ADS_AO_CU <AnimSequence>",
+   "MM_Rifle_Jump_Apex <AnimSequence>",
+   "MM_Rifle_Jump_Fall_Land <AnimSequence>",
+   "MM_Rifle_Jump_Fall_Loop <AnimSequence>",
+   "MM_Rifle_Jump_RecoveryAdditive <AnimSequence>",
+   "MM_Rifle_Jump_Start <AnimSequence>",
+   "MM_Rifle_Jump_Start_Loop <AnimSequence>",
+   "MM_Rifle_Reload <AnimSequence>",
+   "MM_WallJump <AnimSequence>"
+  ],
+  "/Game/FirstPerson": [],
+  "/Game/FirstPersonArms": [],
+  "/Game/Characters/Mannequins/Meshes": [
+   "SKM_Manny_Simple <SkeletalMesh>",
+   "SKM_Quinn_Simple <SkeletalMesh>",
+   "SK_Mannequin <Skeleton>"
+  ],
+  "/Game/Blueprints/RetargetedCharacters": [
+   "ABP_GenericRetarget <AnimBlueprint>",
+   "BP_Manny <Blueprint>"
+  ],
+  "/Game/Guns/Character": [
+   "ABP_NinjaVisual_Gun <AnimBlueprint>",
+   "BP_NinjaGasp_Gun <Blueprint>",
+   "BP_NinjaVisual_Gun <Blueprint>",
+   "GM_GunRange <Blueprint>"
+  ],
+  "da_character": {
+   "hold_pose": "<Object '/Game/Characters/Mannequins/Anims/Rifle/MF_Rifle_Idle_ADS.MF_Rifle_Idle_ADS' (0x0000022ACB756200) Class 'AnimSequence'>",
+   "aim_offset": "<Object '/Game/Characters/Mannequins/Anims/Rifle/AIM/AO_Rifle.AO_Rifle' (0x0000022ABDF99300) Class 'AimOffsetBlendSpace'>",
+   "fire_anim": "<Object '/Game/Characters/Mannequins/Anims/Rifle/MM_Rifle_Fire.MM_Rifle_Fire' (0x0000022ACB755400) Class 'AnimSequence'>",
+   "reload_anim": "<Object '/Game/Characters/Mannequins/Anims/Rifle/MM_Rifle_Reload.MM_Rifle_Reload' (0x0000022ACB755B00) Class 'AnimSequence'>",
+   "equip_anim": "<Object '/Game/Characters/Mannequins/Anims/Rifle/MM_Rifle_Equip.MM_Rifle_Equip' (0x0000022ACB756900) Class 'AnimSequence'>",
+   "reload_clip": "<Object '/Game/Guns/AR01/A_AR01_Reload.A_AR01_Reload' (0x0000022ACACDA800) Class 'AnimSequence'>",
+   "reload_empty_clip": "<Object '/Game/Guns/AR01/A_AR01_ReloadEmpty.A_AR01_ReloadEmpty' (0x0000022ACACDAF00) Class 'AnimSequence'>",
+   "hand_offset": "<Struct 'Transform' (0x0000022ADBE24520) {rotation: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}, translation: {x: 0.000000, y: 0.000000, z: 0.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+   "first_person_hip_offset": "<Struct 'Transform' (0x0000022ADBE24650) {rotation: {x: 0.000000, y: -0.000000, z: 0.000000, w: 1.000000}, translation: {x: 28.000000, y: 14.000000, z: -16.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>"
+  }
+ },
+ "grip": {
+  "gun_in_hand_r": {
+   "loc": [
+    -7.218,
+    3.418,
+    -0.947
+   ],
+   "pyr": [
+    -8.935,
+    171.404,
+    14.858
+   ]
+  },
+  "fallback_attach_offset": {
+   "loc": [
+    -7.218,
+    3.418,
+    -0.947
+   ],
+   "pyr": [
+    -8.935,
+    171.404,
+    14.858
+   ]
+  },
+  "hand_offset": {
+   "loc": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "pyr": [
+    0.0,
+    0.0,
+    -0.0
+   ]
+  },
+  "support_hand_grip_offset": [
+   7.521,
+   -2.529,
+   0.0
+  ],
+  "support_socket_gun": {
+   "loc": [
+    29.932,
+    0.0,
+    5.394
+   ],
+   "pyr": [
+    0.0,
+    0.0,
+    -0.0
+   ]
+  },
+  "sm_vertices": 27582,
+  "handguard_vertices": 6284,
+  "section_at_support": {
+   "y": [
+    -2.12,
+    2.12
+   ],
+   "z": [
+    5.38,
+    12.12
+   ],
+   "n": 86
+  },
+  "samples": [
+   {
+    "t": 0.0,
+    "palm_to_support_before_ik_cm": 5.23,
+    "ik_shift_cm": 5.23,
+    "reach_cm": 38.58,
+    "arm_len_cm": 55.12,
+    "reachable": true,
+    "fingers_after_ik": {
+     "thumb": {
+      "tip_gun": [
+       34.09,
+       -2.8,
+       13.16
+      ],
+      "tip_nearest": [
+       2.35,
+       [
+        34.38,
+        -1.06,
+        11.6
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.14,
+       [
+        29.57,
+        -2.07,
+        9.01
+       ]
+      ],
+      "j02_inside": false
+     },
+     "index": {
+      "tip_gun": [
+       35.86,
+       5.06,
+       5.93
+      ],
+      "tip_nearest": [
+       3.56,
+       [
+        37.35,
+        1.98,
+        6.92
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.12,
+       [
+        37.35,
+        0.64,
+        5.62
+       ]
+      ],
+      "j02_inside": false
+     },
+     "middle": {
+      "tip_gun": [
+       34.19,
+       5.38,
+       7.66
+      ],
+      "tip_nearest": [
+       3.55,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.13,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "ring": {
+      "tip_gun": [
+       32.11,
+       5.69,
+       7.73
+      ],
+      "tip_nearest": [
+       3.95,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.42,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "pinky": {
+      "tip_gun": [
+       29.82,
+       5.61,
+       6.82
+      ],
+      "tip_nearest": [
+       3.53,
+       [
+        29.31,
+        2.12,
+        6.68
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.64,
+       [
+        29.31,
+        1.69,
+        5.76
+       ]
+      ],
+      "j02_inside": false
+     }
+    },
+    "palm_gun": [
+     29.93,
+     0.0,
+     5.39
+    ],
+    "palm_nearest": [
+     0.99,
+     [
+      29.31,
+      0.77,
+      5.38
+     ]
+    ],
+    "palm_inside": false,
+    "hand_l_axes_gun": {
+     "x": [
+      0.861,
+      0.505,
+      -0.063
+     ],
+     "y": [
+      0.361,
+      -0.693,
+      -0.624
+     ],
+     "z": [
+      -0.358,
+      0.514,
+      -0.779
+     ]
+    }
+   },
+   {
+    "t": 2.0,
+    "palm_to_support_before_ik_cm": 5.27,
+    "ik_shift_cm": 5.27,
+    "reach_cm": 38.63,
+    "arm_len_cm": 55.12,
+    "reachable": true,
+    "fingers_after_ik": {
+     "thumb": {
+      "tip_gun": [
+       34.15,
+       -2.72,
+       13.16
+      ],
+      "tip_nearest": [
+       2.3,
+       [
+        34.38,
+        -1.06,
+        11.6
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.13,
+       [
+        29.57,
+        -2.07,
+        9.01
+       ]
+      ],
+      "j02_inside": false
+     },
+     "index": {
+      "tip_gun": [
+       35.84,
+       5.1,
+       5.84
+      ],
+      "tip_nearest": [
+       3.63,
+       [
+        37.35,
+        1.89,
+        6.59
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.17,
+       [
+        37.35,
+        0.64,
+        5.62
+       ]
+      ],
+      "j02_inside": false
+     },
+     "middle": {
+      "tip_gun": [
+       34.17,
+       5.44,
+       7.59
+      ],
+      "tip_nearest": [
+       3.59,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.17,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "ring": {
+      "tip_gun": [
+       32.08,
+       5.73,
+       7.67
+      ],
+      "tip_nearest": [
+       3.98,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.46,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "pinky": {
+      "tip_gun": [
+       29.78,
+       5.61,
+       6.78
+      ],
+      "tip_nearest": [
+       3.53,
+       [
+        29.31,
+        2.12,
+        6.68
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.64,
+       [
+        29.31,
+        1.69,
+        5.76
+       ]
+      ],
+      "j02_inside": false
+     }
+    },
+    "palm_gun": [
+     29.93,
+     -0.0,
+     5.39
+    ],
+    "palm_nearest": [
+     0.99,
+     [
+      29.31,
+      0.77,
+      5.38
+     ]
+    ],
+    "palm_inside": false,
+    "hand_l_axes_gun": {
+     "x": [
+      0.857,
+      0.511,
+      -0.07
+     ],
+     "y": [
+      0.363,
+      -0.695,
+      -0.621
+     ],
+     "z": [
+      -0.366,
+      0.506,
+      -0.781
+     ]
+    }
+   },
+   {
+    "t": 4.0,
+    "palm_to_support_before_ik_cm": 5.25,
+    "ik_shift_cm": 5.25,
+    "reach_cm": 38.57,
+    "arm_len_cm": 55.13,
+    "reachable": true,
+    "fingers_after_ik": {
+     "thumb": {
+      "tip_gun": [
+       34.12,
+       -2.74,
+       13.16
+      ],
+      "tip_nearest": [
+       2.31,
+       [
+        34.38,
+        -1.06,
+        11.6
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.13,
+       [
+        29.57,
+        -2.07,
+        9.01
+       ]
+      ],
+      "j02_inside": false
+     },
+     "index": {
+      "tip_gun": [
+       35.85,
+       5.07,
+       5.9
+      ],
+      "tip_nearest": [
+       3.58,
+       [
+        37.35,
+        1.89,
+        6.59
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.14,
+       [
+        37.35,
+        0.64,
+        5.62
+       ]
+      ],
+      "j02_inside": false
+     },
+     "middle": {
+      "tip_gun": [
+       34.18,
+       5.4,
+       7.63
+      ],
+      "tip_nearest": [
+       3.56,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.15,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "ring": {
+      "tip_gun": [
+       32.1,
+       5.7,
+       7.69
+      ],
+      "tip_nearest": [
+       3.96,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.43,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "pinky": {
+      "tip_gun": [
+       29.81,
+       5.62,
+       6.79
+      ],
+      "tip_nearest": [
+       3.54,
+       [
+        29.31,
+        2.12,
+        6.68
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.64,
+       [
+        29.31,
+        1.69,
+        5.76
+       ]
+      ],
+      "j02_inside": false
+     }
+    },
+    "palm_gun": [
+     29.93,
+     0.0,
+     5.39
+    ],
+    "palm_nearest": [
+     0.99,
+     [
+      29.31,
+      0.77,
+      5.38
+     ]
+    ],
+    "palm_inside": false,
+    "hand_l_axes_gun": {
+     "x": [
+      0.859,
+      0.508,
+      -0.068
+     ],
+     "y": [
+      0.361,
+      -0.695,
+      -0.622
+     ],
+     "z": [
+      -0.363,
+      0.509,
+      -0.78
+     ]
+    }
+   },
+   {
+    "t": 6.0,
+    "palm_to_support_before_ik_cm": 5.2,
+    "ik_shift_cm": 5.2,
+    "reach_cm": 38.69,
+    "arm_len_cm": 55.13,
+    "reachable": true,
+    "fingers_after_ik": {
+     "thumb": {
+      "tip_gun": [
+       34.08,
+       -2.73,
+       13.18
+      ],
+      "tip_nearest": [
+       2.32,
+       [
+        34.38,
+        -1.06,
+        11.6
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.11,
+       [
+        29.57,
+        -2.07,
+        9.01
+       ]
+      ],
+      "j02_inside": false
+     },
+     "index": {
+      "tip_gun": [
+       35.87,
+       5.05,
+       5.89
+      ],
+      "tip_nearest": [
+       3.56,
+       [
+        37.35,
+        1.89,
+        6.59
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       2.12,
+       [
+        37.35,
+        0.64,
+        5.62
+       ]
+      ],
+      "j02_inside": false
+     },
+     "middle": {
+      "tip_gun": [
+       34.19,
+       5.4,
+       7.62
+      ],
+      "tip_nearest": [
+       3.56,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.14,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "ring": {
+      "tip_gun": [
+       32.11,
+       5.7,
+       7.68
+      ],
+      "tip_nearest": [
+       3.95,
+       [
+        33.33,
+        2.05,
+        6.78
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.42,
+       [
+        33.33,
+        1.63,
+        5.86
+       ]
+      ],
+      "j02_inside": false
+     },
+     "pinky": {
+      "tip_gun": [
+       29.82,
+       5.62,
+       6.77
+      ],
+      "tip_nearest": [
+       3.54,
+       [
+        29.31,
+        2.12,
+        6.68
+       ]
+      ],
+      "tip_inside": false,
+      "j02_nearest": [
+       3.65,
+       [
+        29.31,
+        1.69,
+        5.76
+       ]
+      ],
+      "j02_inside": false
+     }
+    },
+    "palm_gun": [
+     29.93,
+     -0.0,
+     5.39
+    ],
+    "palm_nearest": [
+     0.99,
+     [
+      29.31,
+      0.77,
+      5.38
+     ]
+    ],
+    "palm_inside": false,
+    "hand_l_axes_gun": {
+     "x": [
+      0.861,
+      0.504,
+      -0.067
+     ],
+     "y": [
+      0.361,
+      -0.699,
+      -0.617
+     ],
+     "z": [
+      -0.358,
+      0.507,
+      -0.784
+     ]
+    }
+   }
+  ]
+ },
+ "reload": {
+  "mag_bounds": {
+   "origin": [
+    0.462,
+    -0.0,
+    -6.981
+   ],
+   "extent": [
+    6.401,
+    1.45,
+    8.541
+   ]
+  },
+  "body_clip_len": 2.2,
+  "A_AR01_Reload": {
+   "length": 2.0,
+   "min_palm_to_mag": 5.8,
+   "at_events": {
+    "MagRelease": {
+     "t": 0.067,
+     "palm_to_mag_cm": 14.0,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -35.3,
+      11.5,
+      -0.4
+     ]
+    },
+    "MagOut": {
+     "t": 0.5,
+     "palm_to_mag_cm": 67.1,
+     "mag_r": [
+      -23.8,
+      7.2,
+      -8.3
+     ],
+     "palm_r": [
+      9.4,
+      63.2,
+      -24.4
+     ]
+    },
+    "MagDrop": {
+     "t": 0.667,
+     "palm_to_mag_cm": 88.8,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      58.7,
+      44.1,
+      -40.4
+     ]
+    },
+    "MagIn": {
+     "t": 1.767,
+     "palm_to_mag_cm": 18.6,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -16.4,
+      22.6,
+      -11.2
+     ]
+    },
+    "ChargeRear": null,
+    "BoltRelease": null
+   },
+   "rows": [
+    {
+     "t": 0.0,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 0.1,
+     "palm_to_mag_cm": 13.0,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -32.1,
+      14.8,
+      -0.7
+     ]
+    },
+    {
+     "t": 0.2,
+     "palm_to_mag_cm": 11.6,
+     "mag_r": [
+      -23.8,
+      6.4,
+      -5.4
+     ],
+     "palm_r": [
+      -19.4,
+      17.0,
+      -6.9
+     ]
+    },
+    {
+     "t": 0.3,
+     "palm_to_mag_cm": 5.8,
+     "mag_r": [
+      -24.3,
+      6.5,
+      -5.4
+     ],
+     "palm_r": [
+      -20.6,
+      10.9,
+      -5.3
+     ]
+    },
+    {
+     "t": 0.4,
+     "palm_to_mag_cm": 19.4,
+     "mag_r": [
+      -24.2,
+      6.7,
+      -6.2
+     ],
+     "palm_r": [
+      -18.0,
+      24.8,
+      -9.3
+     ]
+    },
+    {
+     "t": 0.5,
+     "palm_to_mag_cm": 67.1,
+     "mag_r": [
+      -23.8,
+      7.2,
+      -8.3
+     ],
+     "palm_r": [
+      9.4,
+      63.2,
+      -24.4
+     ]
+    },
+    {
+     "t": 0.6,
+     "palm_to_mag_cm": 106.3,
+     "mag_r": [
+      -22.5,
+      8.7,
+      -14.8
+     ],
+     "palm_r": [
+      64.3,
+      66.9,
+      -34.7
+     ]
+    },
+    {
+     "t": 0.7,
+     "palm_to_mag_cm": 73.5,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      45.1,
+      37.5,
+      -37.7
+     ]
+    },
+    {
+     "t": 0.8,
+     "palm_to_mag_cm": 53.0,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      26.1,
+      32.7,
+      -29.8
+     ]
+    },
+    {
+     "t": 0.9,
+     "palm_to_mag_cm": 25.9,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      -6.5,
+      30.2,
+      -13.8
+     ]
+    },
+    {
+     "t": 1.0,
+     "palm_to_mag_cm": 18.0,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      -21.6,
+      16.3,
+      -4.5
+     ]
+    },
+    {
+     "t": 1.1,
+     "palm_to_mag_cm": 17.3,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      -16.9,
+      13.5,
+      -5.1
+     ]
+    },
+    {
+     "t": 1.2,
+     "palm_to_mag_cm": 17.7,
+     "mag_r": [
+      -21.5,
+      10.0,
+      -19.9
+     ],
+     "palm_r": [
+      -12.8,
+      17.1,
+      -6.2
+     ]
+    },
+    {
+     "t": 1.3,
+     "palm_to_mag_cm": 18.5,
+     "mag_r": [
+      -22.7,
+      8.5,
+      -13.8
+     ],
+     "palm_r": [
+      -4.4,
+      9.9,
+      -11.8
+     ]
+    },
+    {
+     "t": 1.4,
+     "palm_to_mag_cm": 13.7,
+     "mag_r": [
+      -23.9,
+      7.0,
+      -7.8
+     ],
+     "palm_r": [
+      -16.6,
+      -3.7,
+      -12.1
+     ]
+    },
+    {
+     "t": 1.5,
+     "palm_to_mag_cm": 11.7,
+     "mag_r": [
+      -24.2,
+      6.6,
+      -6.0
+     ],
+     "palm_r": [
+      -26.6,
+      -3.1,
+      0.0
+     ]
+    },
+    {
+     "t": 1.6,
+     "palm_to_mag_cm": 34.6,
+     "mag_r": [
+      -24.2,
+      6.5,
+      -5.4
+     ],
+     "palm_r": [
+      3.4,
+      -14.4,
+      -6.1
+     ]
+    },
+    {
+     "t": 1.7,
+     "palm_to_mag_cm": 31.7,
+     "mag_r": [
+      -23.5,
+      6.4,
+      -5.4
+     ],
+     "palm_r": [
+      1.4,
+      13.2,
+      -23.6
+     ]
+    },
+    {
+     "t": 1.8,
+     "palm_to_mag_cm": 13.0,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -24.8,
+      19.2,
+      -6.9
+     ]
+    },
+    {
+     "t": 1.9,
+     "palm_to_mag_cm": 14.3,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -35.7,
+      11.5,
+      -0.5
+     ]
+    },
+    {
+     "t": 1.999,
+     "palm_to_mag_cm": 14.7,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      9.7,
+      -0.1
+     ]
+    }
+   ]
+  },
+  "A_AR01_ReloadEmpty": {
+   "length": 2.8,
+   "min_palm_to_mag": 5.8,
+   "at_events": {
+    "MagRelease": {
+     "t": 0.067,
+     "palm_to_mag_cm": 14.0,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -35.3,
+      11.5,
+      -0.4
+     ]
+    },
+    "MagOut": {
+     "t": 0.5,
+     "palm_to_mag_cm": 67.1,
+     "mag_r": [
+      -23.8,
+      7.2,
+      -8.3
+     ],
+     "palm_r": [
+      9.4,
+      63.2,
+      -24.4
+     ]
+    },
+    "MagDrop": {
+     "t": 0.667,
+     "palm_to_mag_cm": 88.8,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      58.7,
+      44.1,
+      -40.4
+     ]
+    },
+    "MagIn": {
+     "t": 1.767,
+     "palm_to_mag_cm": 18.6,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -16.4,
+      22.6,
+      -11.2
+     ]
+    },
+    "ChargeRear": {
+     "t": 2.467,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    "BoltRelease": {
+     "t": 2.667,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    }
+   },
+   "rows": [
+    {
+     "t": 0.0,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 0.1,
+     "palm_to_mag_cm": 13.0,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -32.1,
+      14.8,
+      -0.7
+     ]
+    },
+    {
+     "t": 0.2,
+     "palm_to_mag_cm": 11.6,
+     "mag_r": [
+      -23.8,
+      6.4,
+      -5.4
+     ],
+     "palm_r": [
+      -19.4,
+      17.0,
+      -6.9
+     ]
+    },
+    {
+     "t": 0.3,
+     "palm_to_mag_cm": 5.8,
+     "mag_r": [
+      -24.3,
+      6.5,
+      -5.4
+     ],
+     "palm_r": [
+      -20.6,
+      10.9,
+      -5.3
+     ]
+    },
+    {
+     "t": 0.4,
+     "palm_to_mag_cm": 19.4,
+     "mag_r": [
+      -24.2,
+      6.7,
+      -6.2
+     ],
+     "palm_r": [
+      -18.0,
+      24.8,
+      -9.3
+     ]
+    },
+    {
+     "t": 0.5,
+     "palm_to_mag_cm": 67.1,
+     "mag_r": [
+      -23.8,
+      7.2,
+      -8.3
+     ],
+     "palm_r": [
+      9.4,
+      63.2,
+      -24.4
+     ]
+    },
+    {
+     "t": 0.6,
+     "palm_to_mag_cm": 106.3,
+     "mag_r": [
+      -22.5,
+      8.7,
+      -14.8
+     ],
+     "palm_r": [
+      64.3,
+      66.9,
+      -34.7
+     ]
+    },
+    {
+     "t": 0.7,
+     "palm_to_mag_cm": 73.5,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      45.1,
+      37.5,
+      -37.7
+     ]
+    },
+    {
+     "t": 0.8,
+     "palm_to_mag_cm": 53.0,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      26.1,
+      32.7,
+      -29.8
+     ]
+    },
+    {
+     "t": 0.9,
+     "palm_to_mag_cm": 25.9,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      -6.5,
+      30.2,
+      -13.8
+     ]
+    },
+    {
+     "t": 1.0,
+     "palm_to_mag_cm": 18.0,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      -21.6,
+      16.3,
+      -4.5
+     ]
+    },
+    {
+     "t": 1.1,
+     "palm_to_mag_cm": 17.3,
+     "mag_r": [
+      -21.2,
+      10.4,
+      -21.5
+     ],
+     "palm_r": [
+      -16.9,
+      13.5,
+      -5.1
+     ]
+    },
+    {
+     "t": 1.2,
+     "palm_to_mag_cm": 17.7,
+     "mag_r": [
+      -21.5,
+      10.0,
+      -19.9
+     ],
+     "palm_r": [
+      -12.8,
+      17.1,
+      -6.2
+     ]
+    },
+    {
+     "t": 1.3,
+     "palm_to_mag_cm": 18.5,
+     "mag_r": [
+      -22.7,
+      8.5,
+      -13.8
+     ],
+     "palm_r": [
+      -4.4,
+      9.9,
+      -11.8
+     ]
+    },
+    {
+     "t": 1.4,
+     "palm_to_mag_cm": 13.7,
+     "mag_r": [
+      -23.9,
+      7.0,
+      -7.8
+     ],
+     "palm_r": [
+      -16.6,
+      -3.7,
+      -12.1
+     ]
+    },
+    {
+     "t": 1.5,
+     "palm_to_mag_cm": 11.7,
+     "mag_r": [
+      -24.2,
+      6.6,
+      -6.0
+     ],
+     "palm_r": [
+      -26.6,
+      -3.1,
+      0.0
+     ]
+    },
+    {
+     "t": 1.6,
+     "palm_to_mag_cm": 34.6,
+     "mag_r": [
+      -24.2,
+      6.5,
+      -5.4
+     ],
+     "palm_r": [
+      3.4,
+      -14.4,
+      -6.1
+     ]
+    },
+    {
+     "t": 1.7,
+     "palm_to_mag_cm": 31.7,
+     "mag_r": [
+      -23.5,
+      6.4,
+      -5.4
+     ],
+     "palm_r": [
+      1.4,
+      13.2,
+      -23.6
+     ]
+    },
+    {
+     "t": 1.8,
+     "palm_to_mag_cm": 13.0,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -24.8,
+      19.2,
+      -6.9
+     ]
+    },
+    {
+     "t": 1.9,
+     "palm_to_mag_cm": 14.3,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -35.7,
+      11.5,
+      -0.5
+     ]
+    },
+    {
+     "t": 2.0,
+     "palm_to_mag_cm": 14.7,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      9.6,
+      -0.1
+     ]
+    },
+    {
+     "t": 2.1,
+     "palm_to_mag_cm": 14.7,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.9,
+      6.8,
+      0.1
+     ]
+    },
+    {
+     "t": 2.2,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 2.3,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 2.4,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 2.5,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 2.6,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 2.7,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    },
+    {
+     "t": 2.799,
+     "palm_to_mag_cm": 14.5,
+     "mag_r": [
+      -23.3,
+      6.3,
+      -5.4
+     ],
+     "palm_r": [
+      -36.6,
+      6.4,
+      0.3
+     ]
+    }
+   ]
+  }
+ },
+ "dirty_not_saved": [],
+ "total_seconds": 13.4
+}
