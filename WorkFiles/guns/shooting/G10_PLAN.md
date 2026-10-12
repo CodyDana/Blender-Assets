@@ -261,6 +261,46 @@ chracter is gripping the gun when in idle and shooting, the left hand is not gri
 - **Re-run after any ABP rebuild:** `build_gun_character_g10.py` (GUNS_G10_REBUILD_ABP=1), `build_gun_grip_g10b.py` (r2 pose),
   then `build_gun_reload_g10c.py` with `GUNS_G10C_POSE=runs/G10/reload/g10c_reload_pose.json`.
 
+### G10c fix round (2026-10-11, `runs/G10/reload_r2.json`; frames and sheets in `runs/G10/reload_r2/`)
+- **First-person arms, measured first** (`g10d_fp_diag_game.py`). The plain root solve put the FP body's head 8 cm in front of
+  the camera at the hip and 16 cm in front during the reload, with the left shoulder 8-12 cm below the eye: the arms ran
+  forward at eye level past the lens (eye to the left upper arm 23-26 cm), so the upper arm and elbow filled the lower left.
+  Fix: `NinjaGun.FirstPersonBodyOffset` (6, 0, -16) cm and `FirstPersonReloadBodyOffset` (8, 0, -28) cm, camera space. The
+  FP body's hand_r Two Bone IK takes the opposite shift (`GunGripSlideHS` += the shift in hand_r's bone space), the hand_l IK
+  rides the moved hand_r, and the root solve then puts that hand back on `FP_Weapon`: the body moves, the gun does not
+  (framing 0.0 cm / 0.0 deg, root error 0.0 cm). Eye to the left upper arm is now >= 35 cm, the elbow sits below the frame.
+- **The same character.** The FP body wore SKM_UEFN_Mannequin's default material (`M_UEFN_Mannequin`, flat orange); the
+  card-shop pawn's body wears `MI_UEFN_Mannequin_CMC`. The FP body now copies the visible body's materials slot for slot
+  when it is shown (`bFirstPersonBodyCopiesMaterials`) and is held at LOD 0.
+- **The washed-out FP rifle was the probe, not the game.** G10c filmed first person after the 3P views with the capture's
+  30000-unit fill light still by the gun. A/B (`sheet_fp_fill_light_ab.png`): the same frame with the light on is silver,
+  with it off the receiver is the 3P gunmetal. The materials are the same on both copies (MI_AR01_Metal / _Furniture).
+  The new probe turns the light off for the FP film.
+- **FP reload framing.** `FirstPersonReloadOffset` = (32, 10, -5) cm, pitch 20 / yaw -6 / roll 15 deg (was (40, 12, -15),
+  10 / -4 / 12): the magwell comes up into the lower middle so the hand and magazine are on screen while pulling
+  (phase 2: screen y -0.75..-0.05) and while seating (phase 6: -0.77..-0.05; -1 = bottom edge). The hand leaves the frame
+  only for the pouch trip (about 0.75-1.1 s). `FirstPersonPouchOffset` (36, -9, 34) (the 3P pouch is unchanged).
+  The framing and the body offset now follow the hand path's weight (`FPReloadAlpha` -> Pose.Weight, 0.1 s), so the gun is
+  back at the hip when the hand is back on the handguard (with the old 0.2 s lag the arm ran out of reach, 1.0, on the
+  raised handguard).
+- **F10 casing timing, explained and fixed.** Over all 15 G10c play tests, 5954 of 5954 ShellEject events came exactly
+  0.0375 s (3/60 / FirePlayRate) after the START of the frame in which their shot fired, and no frame fired two shots. The
+  weapon meshes tick after the gun in the same frame, so a fire clip started in `ANinjaGun::Tick` was advanced by the whole
+  frame at once: the casing (and bolt) ran up to one frame ahead of the shot, and a 23 ms frame in the F14 burst took it out
+  of F10's tolerance. `ANinjaGun` now pauses a just-started fire clip (both copies) for the frame it starts in
+  (`HoldClipThisFrame`; resumed at the first Tick of a later frame, so a shot fired from input before the gun's Tick is held
+  too), so the clip's clock starts with the shot, flash and sound (`g10d_fireclip_probe_game.py`: position 0.0 at the end of
+  the shot frame, then one frame's delta per frame; Fire 0.014-0.020 s, ShellEject 0.0375-0.043 s after the shot). A play rate
+  of 0 was tried first and does nothing: the montage's sub-stepper banks DeltaTime while playing and spent the held frame at
+  the next non-zero rate (measured 2 frames' advance at once). The gate is unchanged.
+- **Gates** (`runs/G10/reload_r2.json`, 17/17): eye to the FP left upper arm >= 35.3 cm (was 23-26), FP materials = 3P
+  (`MI_UEFN_Mannequin_CMC`), magazine point on screen in every pulling / seating frame, hand to magazine <= 0.73 cm (3P) /
+  1.00 cm (FP), 0 floating frames, FP path reach 0.957, root 0.0 cm, framing 0.0 cm / 0.0 deg; play test 15/15 in 3 of 3
+  final runs (casing timing 393/393, 394/394, 397/397, every event at the shot frame's end + 0.0375 s), g9 9/9.
+- **Still open:** the UEFN fingers are chunky round the magazine; no pouch mesh; the 3P reviewer notes (a light patch on the
+  shaded left upper arm, the charging-handle rack hard to read from the left) were not worked this round.
+
+
 ### G10d: first-person arms
 - **The FP body.** A second skeletal mesh component, `FPBody`, on `BP_GunCharacter`:
   - `SKM_UEFN_Mannequin`, FirstPerson primitive type, no shadow, visible only in the FP and ADS views;

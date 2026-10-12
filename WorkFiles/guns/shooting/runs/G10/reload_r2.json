@@ -1,0 +1,406 @@
+{
+ "stage": "G10c reload fix round (first-person arms, look, magazine hand in view; F10 casing timing)",
+ "date": "2026-10-11",
+ "pass_count": 17,
+ "total": 17,
+ "gates": [
+  {
+   "name": "First-person arms out of the lens: eye to the FP left upper arm / forearm segment, every FP row (idle + tactical reload) (cm, min)",
+   "value": {
+    "upper_arm_min": 35.33,
+    "forearm_min": 39.69,
+    "before_G10c": "23.0 idle / 25.8-26.1 reload (upper arm), the shoulders 8-12 cm below the eye and the head 8 cm (hip) / 16 cm (reload) in front of the camera (fp_tuning, variant A)"
+   },
+   "threshold": ">= 30 cm (frames looked at: the arm enters from the bottom edge, no elbow / upper arm across the lower left)",
+   "pass": true
+  },
+  {
+   "name": "FP body = the third-person character: materials slot for slot, LOD 0",
+   "value": {
+    "tp_body": [
+     "/Game/Characters/UEFN_Mannequin/Materials/MI_UEFN_Mannequin_CMC.MI_UEFN_Mannequin_CMC"
+    ],
+    "fp_body": [
+     "/Game/Characters/UEFN_Mannequin/Materials/MI_UEFN_Mannequin_CMC.MI_UEFN_Mannequin_CMC"
+    ],
+    "same": true,
+    "fp_forced_lod": 1,
+    "before": "M_UEFN_Mannequin (the mesh default, flat orange)"
+   },
+   "threshold": "same materials",
+   "pass": true
+  },
+  {
+   "name": "FP rifle looks like the 3P rifle: same materials on both copies; the G10c silver look reproduced by the probe's fill light (A/B frame) and absent without it",
+   "value": {
+    "fp_weapon": [
+     "/Game/NinjaPack/MaterialInstances/MI_AR01_Metal.MI_AR01_Metal",
+     "/Game/NinjaPack/MaterialInstances/MI_AR01_Furniture.MI_AR01_Furniture"
+    ],
+    "tp_weapon": [
+     "/Game/NinjaPack/MaterialInstances/MI_AR01_Metal.MI_AR01_Metal",
+     "/Game/NinjaPack/MaterialInstances/MI_AR01_Furniture.MI_AR01_Furniture"
+    ],
+    "ab": "sheet_fp_fill_light_ab.png: fill light ON = silver-white receiver (the G10c FP film), OFF = gunmetal + wood; every FP frame of this round is filmed with it OFF"
+   },
+   "threshold": "same materials, frames gunmetal",
+   "pass": true
+  },
+  {
+   "name": "FP: the hand's magazine point on screen while pulling (phase 2) and seating (phase 6), every frame (normalised screen position, FP FOV 70, 16:9; +-1 = the edges)",
+   "value": {
+    "pulling": {
+     "frames": 119,
+     "y_min": -0.7347,
+     "y_max": -0.0546,
+     "x_min": 0.0456,
+     "x_max": 0.1938
+    },
+    "seating": {
+     "frames": 139,
+     "y_min": -0.7664,
+     "y_max": -0.0547,
+     "x_min": 0.0388,
+     "x_max": 0.194
+    },
+    "off_screen": "only the pouch trip (about 0.75-1.1 s), as in FP shooters"
+   },
+   "threshold": "|x| <= 1 and |y| <= 1 every phase 2 / 6 frame",
+   "pass": true
+  },
+  {
+   "name": "Hand to magazine while carried, every frame (cm, max / p95; frames)",
+   "value": {
+    "tactical_3p": [
+     0.727,
+     0.31,
+     311
+    ],
+    "empty_3p": [
+     0.61,
+     0.305,
+     301
+    ],
+    "tactical_fp": [
+     1.001,
+     0.627,
+     312
+    ]
+   },
+   "threshold": "<= 2.0 every frame",
+   "pass": true
+  },
+  {
+   "name": "Magazine visible but neither seated nor within 2 cm of the hand, MagOut to MagIn",
+   "value": {
+    "tactical_3p": 0,
+    "empty_3p": 0,
+    "tactical_fp": 0
+   },
+   "threshold": "0 frames",
+   "pass": true
+  },
+  {
+   "name": "Seated at MagIn (offset cm / deg) and the hand-over jump at 1.14 s (cm)",
+   "value": {
+    "tactical_3p": {
+     "at_magin": [
+      0.0,
+      0.0
+     ],
+     "handover": 0.05
+    },
+    "empty_3p": {
+     "at_magin": [
+      0.0,
+      0.0
+     ],
+     "handover": 0.065
+    },
+    "tactical_fp": {
+     "at_magin": [
+      0.0,
+      0.0
+     ],
+     "handover": 0.1
+    }
+   },
+   "threshold": "<= 0.05 cm / 0.1 deg; jump <= 1.0 cm",
+   "pass": true
+  },
+  {
+   "name": "Back on the handguard after the hand path (palm to SupportHand, next 5 frames; weights 0, IK 1)",
+   "value": {
+    "tactical_3p": 0.003,
+    "empty_3p": 0.006,
+    "tactical_fp": 0.083
+   },
+   "threshold": "<= 1.0 cm",
+   "pass": true
+  },
+  {
+   "name": "ReloadEmpty: hand to the charging handle, ChargeRear - 0.4 s to BoltRelease (cm, max; frames)",
+   "value": [
+    0.228,
+    131
+   ],
+   "threshold": "<= 2.0",
+   "pass": true
+  },
+  {
+   "name": "IK reach on the hand path; hand_l to the spine (cm)",
+   "value": {
+    "path_reach_max": {
+     "tactical_3p": 0.9815,
+     "empty_3p": 0.9797,
+     "tactical_fp": 0.9568
+    },
+    "fp_all_rows_max": 0.9602,
+    "to_spine_min_cm": {
+     "tactical_3p": 30.09,
+     "empty_3p": 31.37,
+     "tactical_fp": 39.39
+    },
+    "note_3p": "3P 0.98 = the handguard hold itself (0.985 at idle, G10a), as in G10c"
+   },
+   "threshold": "FP path <= 0.97 (it hit 1.0 on the way back to the handguard until the FP framing followed the hand path's weight); spine > 8 cm",
+   "pass": true
+  },
+  {
+   "name": "First person (V): FP root solve (cm) and FP_Weapon framing (Grip vs FirstPersonHipOffset x camera, cm / deg) with the body offset",
+   "value": {
+    "fp_root_err_max_cm": 0.0,
+    "fp_framing": {
+     "d_cm": 0.0,
+     "d_deg": 0.0
+    },
+    "offsets": {
+     "first_person_body_offset": "<Struct 'Vector' (0x0000024861BAD430) {x: 6.000000, y: 0.000000, z: -16.000000}>",
+     "first_person_reload_body_offset": "<Struct 'Vector' (0x0000024861BAD448) {x: 8.000000, y: 0.000000, z: -28.000000}>",
+     "first_person_pouch_offset": "<Struct 'Vector' (0x0000024861BAD468) {x: 36.000000, y: -9.000000, z: 34.000000}>",
+     "first_person_reload_offset": "<Struct 'Transform' (0x0000024861BAD4B0) {rotation: {x: -0.137377, y: -0.165199, z: -0.073734, w: 0.973858}, translation: {x: 32.000000, y: 10.000000, z: -5.000000}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>"
+    }
+   },
+   "threshold": "root <= 0.5 cm; framing <= 0.5 cm / 0.5 deg",
+   "pass": true
+  },
+  {
+   "name": "FP views besides the reload (V idle, walking, burst, V + tap RMB sights, looking down; back to 3P): palm to SupportHand, left reach, eye to upper arm; FP body hidden in 3P",
+   "value": [
+    {
+     "tag": "3p_idle_before",
+     "ads": 0.0,
+     "fp_visible": null,
+     "palm_err_cm": null,
+     "reach_l": null,
+     "eye_ua_l_cm": null
+    },
+    {
+     "tag": "v_idle",
+     "ads": 0.0,
+     "fp_visible": true,
+     "palm_err_cm": 0.002,
+     "reach_l": 0.962,
+     "eye_ua_l_cm": 36.667
+    },
+    {
+     "tag": "v_walk",
+     "ads": 0.0,
+     "fp_visible": true,
+     "palm_err_cm": 0.001,
+     "reach_l": 0.964,
+     "eye_ua_l_cm": 36.725
+    },
+    {
+     "tag": "v_burst",
+     "ads": 0.0,
+     "fp_visible": true,
+     "palm_err_cm": 0.0,
+     "reach_l": 0.964,
+     "eye_ua_l_cm": 36.449
+    },
+    {
+     "tag": "v_ads",
+     "ads": 1.0,
+     "fp_visible": true,
+     "palm_err_cm": 0.003,
+     "reach_l": 0.959,
+     "eye_ua_l_cm": 32.59
+    },
+    {
+     "tag": "v_after_ads",
+     "ads": 0.0,
+     "fp_visible": true,
+     "palm_err_cm": 0.001,
+     "reach_l": 0.959,
+     "eye_ua_l_cm": 36.717
+    },
+    {
+     "tag": "v_look_down",
+     "ads": 0.0,
+     "fp_visible": true,
+     "palm_err_cm": 0.001,
+     "reach_l": 0.959,
+     "eye_ua_l_cm": 36.526
+    },
+    {
+     "tag": "3p_after",
+     "ads": 0.0,
+     "fp_visible": false,
+     "palm_err_cm": null,
+     "reach_l": null,
+     "eye_ua_l_cm": null
+    }
+   ],
+   "threshold": "palm <= 1.0 cm, reach <= 0.97; FP body not visible in 3P; frames looked at (fp_views/)",
+   "pass": true
+  },
+  {
+   "name": "F10 casing timing: cause measured and fixed (gate unchanged)",
+   "value": {
+    "cause": "all 15 G10c play tests: 5954 / 5954 ShellEject events 0.0375 s after the START of the shot's frame, 0 frames with two shots: the weapon meshes tick after the gun, so a fire clip started in the gun's Tick was advanced by the whole frame (a 23 ms frame in the F14 burst put 1-2 casings out of tolerance). Not catch-up shots.",
+    "fix": "ANinjaGun::HoldClipThisFrame pauses the just-started fire clip (both copies) until the first Tick of a later frame",
+    "first_try": "play rate 0 instead of pause: no effect (FAnimMontageInstance's sub-stepper banks DeltaTime and spent it at the restored rate: 2 frames' advance in one, fireclip probe); a run on that build failed F10 391/393",
+    "fireclip_probe_after": {
+     "shot_frame_end_position": 0.0,
+     "fire_and_shell_s_after_shot": [
+      [
+       0,
+       0.0168,
+       0.0423
+      ],
+      [
+       1,
+       0.0139,
+       0.0395
+      ],
+      [
+       2,
+       0.0204,
+       0.0375
+      ],
+      [
+       3,
+       0.0155,
+       0.0422
+      ],
+      [
+       4,
+       0.016,
+       0.0416
+      ],
+      [
+       5,
+       0.0166,
+       0.0382
+      ],
+      [
+       6,
+       0.0161,
+       0.0385
+      ],
+      [
+       7,
+       0.0146,
+       0.0417
+      ],
+      [
+       8,
+       0.0153,
+       0.0424
+      ],
+      [
+       9,
+       0.0153,
+       0.0427
+      ],
+      [
+       10,
+       0.0147,
+       0.0395
+      ]
+     ]
+    },
+    "final_playtests": [
+     {
+      "run": 1,
+      "gated": "15/15",
+      "casing_timing": "393/393",
+      "casing_found": "353/353",
+      "dt_median": 0.0404,
+      "dt_max": 0.0462,
+      "fits_shot_frame_end": "393/393",
+      "fits_shot_frame_start": "33/393",
+      "F14_delta_ms": 1.306,
+      "F14_burst_max_ms": 14.62
+     },
+     {
+      "run": 2,
+      "gated": "15/15",
+      "casing_timing": "394/394",
+      "casing_found": "354/354",
+      "dt_median": 0.0403,
+      "dt_max": 0.05,
+      "fits_shot_frame_end": "394/394",
+      "fits_shot_frame_start": "37/394",
+      "F14_delta_ms": 1.103,
+      "F14_burst_max_ms": 15.4
+     },
+     {
+      "run": 3,
+      "gated": "15/15",
+      "casing_timing": "397/397",
+      "casing_found": "357/357",
+      "dt_median": 0.0419,
+      "dt_max": 0.0619,
+      "fits_shot_frame_end": "397/397",
+      "fits_shot_frame_start": "52/397",
+      "F14_delta_ms": -0.138,
+      "F14_burst_max_ms": 13.64
+     }
+    ]
+   },
+   "threshold": "F10 casing timing all events, every run; events fit the shot-frame-end model",
+   "pass": true
+  },
+  {
+   "name": "Regression: gun_playtest F0-F15, 3 runs on the final binaries",
+   "value": [
+    "15/15",
+    "15/15",
+    "15/15"
+   ],
+   "threshold": "15/15 every run",
+   "pass": true
+  },
+  {
+   "name": "g9_camera_probe (final binaries)",
+   "value": "9/9",
+   "threshold": "9/9",
+   "pass": true
+  },
+  {
+   "name": "Ammo logic unchanged",
+   "value": "F7 tactical [30, chambered], empty [29, chambered] in all 3 runs; the probe's empty reload ended [29, True]",
+   "threshold": "as before",
+   "pass": true
+  },
+  {
+   "name": "Frames looked at (reload_r2/: tactical 3P 14 x front-left + close-left + 4 player views, empty 3P 11 x 2 + 1, tactical FP 13 player views, FP fill A/B, before/after, fp_views 7)",
+   "value": "FP: white card-shop arms with skin joints, the forearm from the bottom edge to the handguard at idle; for the reload the gun comes up and cants, the left hand grips the magazine at the magwell (0.12-0.5 s), pulls it down in view (0.62 s), it falls (0.75 s), the hand dips below the frame for the pouch (0.9-1.05 s) and comes back with the new magazine at the bottom (1.15 s), seats it in view (1.3-1.65 s) and returns to the handguard (1.9 s). Rifle gunmetal + wood. 3P unchanged from G10c.",
+   "threshold": "arms natural and out of the way, same character, magazine hand in view pulling / seating",
+   "pass": true,
+   "note": "the UEFN hand's fingers are still chunky round the magazine (the mesh); the pouch is still a point with no mesh"
+  }
+ ],
+ "method": "Diagnose (g10d_fp_diag_game.py: bones in camera space, material lists, A/B frames, runtime offset variants A-I), then C++: UNinjaGunComponent FirstPersonBodyOffset / FirstPersonReloadBodyOffset (hand_r IK shift in hand_r space -> root solve moves the body), material copy + LOD 0 on show, FirstPersonPouchOffset, FirstPersonReloadOffset retuned, FPReloadAlpha follows the hand path weight (0.1 s); ANinjaGun HoldClipThisFrame (pause). Measured and filmed by g10d_reload_probe_game.py (G10c's probe + FP screen / arm checks, fill light off for FP), FP views by g10d_fp_views_game.py, fire clip by g10d_fireclip_probe_game.py; sheets by g10d_contact_sheet.py.",
+ "honest_notes": [
+  "No content was rebuilt this round (C++ and tool scripts only); ABP_GunCharacter, BP_GunCharacter and the clips are as G10c left them.",
+  "The FP body and the 3P body now differ by design: the FP body sits 16 cm lower (28 cm during the reload) than a body holding FP_Weapon with the 3P pose would; only the owner sees it.",
+  "The FP pouch is higher and further forward than the 3P pouch (36, -9, 34 vs 32, -9, 26) so the off-screen dip is short; the 3P pouch is unchanged.",
+  "An intermediate play test (rate-0 hold build) failed F10 391/393 - the reason the hold was changed to a pause. The final runs' longest burst frame was 13.6-15.4 ms, so the 23 ms case did not recur; by construction the casing now lands in [0.0375, 0.0375 + its frame) after the shot frame, inside F10's tolerance (its frame + 12.5 ms).",
+  "Not addressed (3P, reported by the reviewer, the orchestrator judged 3P right): a light patch on the shaded left upper arm when it bends (shading, the arm is on the sun's shadow side), no pouch mesh, the charging-handle rack is hard to read from the left, the forearm near the chest at 0.86-0.90 s.",
+  "The CardShopLab editor (another project) may have been open; builds used the normal UBT path; DemoGame_1 was closed throughout."
+ ],
+ "shots_dir": "runs/G10/reload_r2/"
+}
