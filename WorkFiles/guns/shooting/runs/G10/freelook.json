@@ -1,0 +1,144 @@
+{
+ "stage": "G10e free look (Left Alt, PUBG)",
+ "date": "2026-10-11",
+ "pass_count": 19,
+ "total": 19,
+ "gates": [
+  {
+   "name": "Gun out, hip, Alt + 90 deg yaw: control rotation change / actor yaw change",
+   "value": "0 / 0 deg",
+   "threshold": "<= 0.1 / <= 0.5 deg (task: <= 1)",
+   "pass": true
+  },
+  {
+   "name": "Gun out: camera yaw change / orbit radius change (no wall)",
+   "value": "90 deg / 0 cm",
+   "threshold": "90 +- 1 deg / <= 5 cm",
+   "pass": true
+  },
+  {
+   "name": "Aim view during free look vs before",
+   "value": "0 deg",
+   "threshold": "<= 0.1 deg",
+   "pass": true
+  },
+  {
+   "name": "Semi shot during free look (camera 90 deg off): shot direction vs pre-free-look aim; impact (10 m dummy) from that ray",
+   "value": "0.00004 deg; 0.001 cm at 978 cm (BP_TrainingDummy_C_3); shot vs camera 90 deg",
+   "threshold": "<= 0.1 deg; <= 2 cm",
+   "pass": true
+  },
+  {
+   "name": "Recoil during free look goes to the aim (control); camera = aim + offset",
+   "value": "control pitch +0.6362 deg, offset change 0, camera vs aim+offset 0 deg",
+   "threshold": "control moves, offset unchanged, <= 0.2 deg",
+   "pass": true
+  },
+  {
+   "name": "Pitch +30 / clamps (yaw offset 170, pitch offset -60..60, view -75..75)",
+   "value": "cam pitch +30 (control 0); after +200 yaw / +60 pitch: offset [60,170]; after -200 pitch: [-60,170]",
+   "threshold": "30 +- 1 / clamped",
+   "pass": true
+  },
+  {
+   "name": "Release: camera back on the aim view",
+   "value": "frame 2 after the key-up (0.000 deg, 0.000 cm; the key-up reaches the game's input on frame 1)",
+   "threshold": "<= 0.5 deg within 2 frames (plan: 1 frame after the release is processed)",
+   "pass": true
+  },
+  {
+   "name": "Gun out, W (GASP run) + Alt +120 deg: velocity heading drift / control / actor yaw",
+   "value": "0 deg / 0 / 0 deg at 500 cm/s (125 frames), camera 120 deg",
+   "threshold": "<= 3 / <= 0.1 / <= 1 deg",
+   "pass": true
+  },
+  {
+   "name": "Gun out, W + LeftShift (sprint) + Alt -90 deg: velocity heading drift / control / actor yaw",
+   "value": "0 deg / 0 / 0 deg at 700 cm/s (151 frames), camera -90 deg",
+   "threshold": "<= 3 / <= 0.1 / <= 1 deg",
+   "pass": true
+  },
+  {
+   "name": "Alt during shoulder aim (RMB held) / during ADS (RMB tapped)",
+   "value": "shoulder: free false, offset 0, the mouse turned the aim 30 deg; ADS (alpha 1): free false, offset 0, aim -20 deg",
+   "threshold": "ignored (the mouse aims as usual)",
+   "pass": true
+  },
+  {
+   "name": "RMB pressed during free look",
+   "value": "offset 60 -> 0 within 2 frames; 0.6 s later FOV 65 (shoulder aim), camera vs aim 0 deg",
+   "threshold": "ends free look, aims as today",
+   "pass": true
+  },
+  {
+   "name": "First person (V) Alt + 90: control / actor yaw / camera yaw / camera at the eye; shot along the aim; release",
+   "value": "0 / 0 / 90 deg / 0 cm; shot 0.00005 deg; back in frame 2",
+   "threshold": "<= 0.1 / <= 0.5 / 90 +- 1 / <= 0.5 cm; <= 0.1; <= 2 frames",
+   "pass": true
+  },
+  {
+   "name": "Holstered (X): Alt + 90 and W + Alt + 120",
+   "value": "control 0, actor 0, camera 90 deg, radius 0 cm; run drift 0 deg at 500 cm/s; drawn again: IDLE",
+   "threshold": "the same gates",
+   "pass": true
+  },
+  {
+   "name": "Wall (pawn 100 cm from Wall_20m, orbit towards it)",
+   "value": "unswept orbit target x 2125 (wall x 1985-2015); camera x 1973, 12 cm in front of the face; inside the wall: false; trace pivot->camera blocked: false",
+   "threshold": "camera never inside geometry, trace from the pivot clear",
+   "pass": true
+  },
+  {
+   "name": "Crosshair hidden during free look (HUD frames fl01u / fl02u, looked at)",
+   "value": "shown on the dummy at the base view; gone with the camera 30 deg off",
+   "threshold": "hidden when > 2 deg off",
+   "pass": true
+  },
+  {
+   "name": "Content build (IA_GunFreeLook, IMC_GunsBase + LeftAlt, BP_GunCharacter.FreeLookAction)",
+   "value": "BP UP_TO_DATE; IMC_GunsBase = [X -> IA_GunEquip, LeftAlt -> IA_GunFreeLook]; consume_input false; nothing dirty outside /Game/Guns",
+   "threshold": "pass",
+   "pass": true
+  },
+  {
+   "name": "Regression: gun_playtest F0-F15 on the final binaries",
+   "value": [
+    "15/15",
+    "15/15",
+    "15/15"
+   ],
+   "threshold": "15/15 every run",
+   "pass": true,
+   "detail": "run 1 15/15; run 2 first attempt 14/15 (F15 repo-unchanged failed only because this session committed the stage in DemoGame_1 while it ran: the snapshot saw the committed files go clean), re-run 15/15; run 3 15/15"
+  },
+  {
+   "name": "g9_camera_probe (final binaries)",
+   "value": "9/9 (drawn at spawn, shoulder right, hold = shoulder aim, fires in shoulder aim, release returns, tap enters ADS, ADS stays, tap leaves ADS, holster centres)",
+   "threshold": "9/9",
+   "pass": true
+  },
+  {
+   "name": "Frames looked at (freelook/, 16 + contact sheet)",
+   "value": "3P: body and gun keep facing the dummies while the camera looks 90 deg right, up 30, and around while running and sprinting; holstered the same; V: the eye turns, the FP gun and arms stay on the aim (the gun leaves the view at 90 deg); wall: the camera stops at the wall behind it, no clipping; the ADS frame with Alt held shows the normal sights",
+   "threshold": "free look reads like PUBG",
+   "pass": true
+  }
+ ],
+ "decisions": [
+  "Alt is ignored during ADS, shoulder aim and while RMB is down; an RMB press during free look ends it (the camera snaps to the aim) and aims as before; a new Alt press is needed after aiming.",
+  "Release snaps back in one frame (FreeLookReturnTime 0, as in PUBG); an eased return is a property.",
+  "First person: the eye turns in place and the FP gun and arms stay on the aim (they leave the view when looking far to the side), so the screen never shows the gun pointing where the shots do not go.",
+  "Limits: yaw offset +-170, pitch offset -60..+60, looked-at view -75..+75; the crosshair hides beyond 2 deg off the aim."
+ ],
+ "method": "C++ UNinjaGunComponent: FreeLookAction binding; ProcessGunViewRotation moves the look delta into FreeLookOffset before the recoil code; ModifyGunCamera stores the aim view, then ApplyFreeLook orbits (3P, ECC_Camera sweep from the pivot) or turns (FP) the POV; the HUD hides the crosshair. Content via build_gun_freelook_g10e.py (commandlet, /Game/Guns only). Probe g10_freelook_probe.py (-game, read-only; look input through AddYawInput / AddPitchInput so it passes ProcessViewRotation; real keys via Input.+key). Play test x3 + g9.",
+ "honest_notes": [
+  "Python cannot call APawn::GetPawnViewLocation; the probe uses the actor location + BaseEyeHeight (the same for ACharacter).",
+  "In V with the camera turned 30 deg, the FP gun is drawn with the first-person scale (0.6), which squashes along the turned view axis, so the off-axis gun and forearm look a little large (fl09_fp_freelook_yaw30). It points correctly at the aim.",
+  "Pitching the free look up moves the orbiting camera down towards the floor (swept, so it never goes through it), which gives a low angle (fl03).",
+  "HighResShot frames do not include the canvas HUD; the crosshair check uses two lower-resolution \"shot showui\" frames (fl01u, fl02u).",
+  "Multiplayer: shots are built on the client from the aim view (unchanged); the server side was not exercised (single-player prototype).",
+  "BP_NinjaGasp_Gun is not given FreeLookAction; Left Alt there stays with the ninja free look (IA_GunFreeLook does not consume input).",
+  "One play-test run was invalidated by this session committing mid-run (F15 repo snapshot); it was re-run on the same binaries: 15/15."
+ ],
+ "shots_dir": "runs/G10/freelook/"
+}

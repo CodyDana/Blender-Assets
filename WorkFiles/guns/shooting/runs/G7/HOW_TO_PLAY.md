@@ -21,6 +21,7 @@ map's pawn.
 | **R** | Reload (tactical with rounds left: 30+1; empty: the bolt is charged, 29+1) |
 | **B** | Fire selector, in the real AK lever order: Safe -> Auto -> Semi -> Safe (the lever on the gun moves too) |
 | **V** | First-person view toggle (experimental, step G9; not tested yet) |
+| **Left Alt, hold + mouse** | Free look (G10e, like PUBG): the camera looks around while the body keeps facing and moving where it was and the gun stays on its aim (shots go there, the crosshair hides). Release = back to the aim. Works holstered and in V; ignored while aiming (RMB ends it) |
 | WASD, mouse, Shift... | The normal ninja movement and camera |
 
 While the rifle is out, LMB and RMB belong to the gun (no combo / block). Holster with X to get them back.

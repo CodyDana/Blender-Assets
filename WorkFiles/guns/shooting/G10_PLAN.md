@@ -373,6 +373,40 @@ Tools for this round are prefixed `g10e_` (reload round 3); they are not the fre
 - **The holstered pawn** goes through the same code. It needs only the free-look action and the camera modifier, which
   are installed whether or not a gun exists.
 
+### G10e as built (2026-10-11, `runs/G10/freelook.json`; frames and contact sheet in `runs/G10/freelook/`)
+- **What the player gets.** Hold Left Alt and move the mouse: the camera turns (yaw +-170, pitch offset -60..+60, the
+  looked-at view kept within -75..+75) while the body keeps facing and running where it was. The aim does not move:
+  the control rotation, the aim offset, the aim ray and the shots stay on the pre-free-look aim. Recoil still goes to
+  the aim, and the camera rides it. The crosshair hides while the camera is more than 2 deg off the aim. Releasing Alt
+  puts the camera back on the aim in the next frame (`FreeLookReturnTime` 0; set it above 0 to ease back instead).
+- **Where it works.** Gun out (hip, third person), standing, running (W) and sprinting (W + Shift), holstered (X), and
+  in first person (V). In V the eye turns in place and the first-person gun and arms stay on the aim, so looking far to
+  the side takes the gun out of view, as in PUBG.
+- **Aiming wins (the ADS decision).** Alt is ignored during ADS, during shoulder aim, and while RMB is down: the mouse
+  aims as usual. An RMB press during free look ends free look (the camera snaps to the aim) and then aims as before.
+  After aiming, Alt has to be pressed again.
+- **How it is built.** C++ only, in `UNinjaGunComponent`:
+  - `FreeLookAction` is bound Started/Completed/Canceled.
+  - `ProcessGunViewRotation` runs first, before the no-gun early return. While Alt is held it moves the mouse delta into
+    `FreeLookOffset` and zeroes it in the delta, so the recoil compensation also ignores it.
+  - `ModifyGunCamera` stores the aim view (`LastViewLocation` / `LastViewRotation`, which the aim ray uses) and then calls
+    `ApplyFreeLook`. In third person the camera orbits `GetPawnViewLocation()` and keeps its framing in the turned view:
+    Loc' = P + Looked x Unrotate(Loc - P). It is swept from the pivot on `ECC_Camera` (radius `ShoulderProbeRadius`),
+    ignoring the pawn, its body and the gun. In FP / ADS the eye turns in place.
+  - New pure getters for probes: `IsFreeLooking`, `GetFreeLookOffset`, `GetAimViewLocation`, `GetAimViewRotation`.
+- **Content** (`build_gun_freelook_g10e.py`, a targeted step, because `build_gun_content.py` would recreate
+  DA_Gun_AR01): `IA_GunFreeLook` is Boolean with **no consume**, so the ninja's own Left Alt free look in
+  `IMC_NinjaGasp` still fires on `BP_NinjaGasp_Gun`. Left Alt is added to `IMC_GunsBase` (always on), and
+  `BP_GunCharacter.NinjaGun.FreeLookAction` is set. `build_gun_content.py` lists the action too, for a clean rebuild.
+  `BP_NinjaGasp_Gun` is untouched.
+- **Probe** `Tools/Claude/Guns/g10_freelook_probe.py` (the plan's `g10e_freelook_probe_game.py`; the g10e_* names were
+  already taken by the reload fix round). Look input goes through `AddYawInput` / `AddPitchInput`, measured at 2.5 /
+  -2.5 deg per unit. In every case: control change 0.000 deg, actor yaw change 0.000 deg, camera +90.000 deg, orbit
+  radius change 0.000 cm. The shot during free look left 0.00004 deg off the pre-free-look aim and hit the 10 m dummy
+  0.001 cm from that ray. Run and sprint with a 120 / -90 deg look: velocity heading drift 0.000 deg at 500 / 700 cm/s.
+  Wall: the orbit would have put the camera at x 2125, past the whole 30 cm wall (near face x 1985). The sweep held
+  it 12 cm in front of the near face, and the trace from the pivot is clear.
+
 ## Stages, files and gates
 
 Every stage follows the same rules:
