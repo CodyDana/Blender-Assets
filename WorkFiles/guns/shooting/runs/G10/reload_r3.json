@@ -1,0 +1,137 @@
+{
+ "stage": "G10c reload fix round 2 (reload_r3): visible magazine pouch, the charge lets go, first-person handguard hold, first-person legs, the game's lighting in the probes, honest magazine labels",
+ "date": "2026-10-11",
+ "pass_count": 16,
+ "total": 16,
+ "reviewer_items": [
+  {"item": "3P pouch: the hand fetches the new magazine from the bare belly (magic spawn)", "verdict": "real", "action": "fixed: a double magazine pouch (chest rig on the belly, two spare AR-01 magazines) on the visible body; the hand takes the first magazine where it stands"},
+  {"item": "3P white blotches on the black left upper arm pressed to the chest", "verdict": "probe artifact, not the game", "action": "measured: present with the probe's 30000-unit fill light (also with its specular at 0), absent with the game's lighting, where the arm is not black at all (the capture's auto exposure darkened everything the fill light did not hit); no torso through the sleeve in the game-lit frames. The probe now films with the game's lighting (no fill light, capture exposure +2.6 EV)"},
+  {"item": "3P charge: the hand rests on the receiver top, no pull or release readable from the front-left", "verdict": "partly real", "action": "the 10.3 cm pull was there (hand x 19.73 -> 9.41 cm along the gun, riding the handle) but on the far side and foreshortened from the front-left; the release was wrong: the hand rode the released handle forward. Fixed: the hand lets go at the rear, stays 0.05 s while the handle runs forward, lifts off up and out, then returns. Filmed from the right (the handle's side) and from the player's view"},
+  {"item": "FP left hand on the handguard: a flat white paddle, the tan wrist end-on as a disc", "verdict": "real", "action": "fixed: first-person hold (hand_l turned -35 deg about the handguard axis, palm kept on SupportHand 0.30 cm): the thumb lies along the handguard, the palm under it, the wrist lower and no longer end-on. The UEFN hand's fingers are still one block (the mesh)"},
+  {"item": "FP ADS: the wrist ball intrudes into the sight picture; receiver top blotchy", "verdict": "wrist real, receiver = the AR-01 texture", "action": "wrist fixed by the FP hold (only a sliver in the bottom-left corner). The receiver top looks the same with r.Streaming.FullyLoadUsedTextures 1 (05b frame), so it is the AR-01 paint-wear texture at 10-20 cm, not streaming; the AR-01 asset is not changed in this stage"},
+  {"item": "Magazine tone: silver in 3P, charcoal in FP", "verdict": "probe artifact", "action": "the same fill light: the A/B at 1.06 s shows the silver magazine with the fill light on and a dark one without; the game-lit 3P frames now show the magazine dark like FP (the same SM_AR01_Mag on every copy)"},
+  {"item": "State labels ahead of the picture ('mag: seated' while still in the hand)", "verdict": "real (label), not a game bug", "action": "the label meant 'the gun's TP_Mag is visible'; from 1.14 s that copy rides the hand on its way in. Frames now record its offset from the socket: 3P 1.25 s = 12.2 cm, 1.45 s = 1.0 cm, seated (0.0) from 1.70 s; FP 1.15 s 16.6, 1.30 s 8.8, 1.45 s 1.0, 1.65 s 0.0. 'seated' is printed only at <= 0.05 cm"},
+  {"item": "FP looking down: no legs or torso under the camera, while the shadow shows the body", "verdict": "real", "action": "fixed: first-person legs (a poseable copy of the visible body's pose, owner only, no shadow, spine_03 and above hidden): hips, legs and the pouch show when looking down in V; hidden in third person"}
+ ],
+ "gates": [
+  {
+   "name": "Pouch: the hand's magazine frame on the pouch magazine at the grab (cm), the pouch magazine hidden from the grab (phase 4) to the end of the hand path and back after it, frames with both shown",
+   "value": {"tactical_3p": {"grab_cm": 0.014, "taken_at_s": 0.903, "taken_phase": 4, "back_after": true, "both_shown_frames": 0},
+             "empty_3p": {"grab_cm": 0.019, "taken_at_s": 0.901, "taken_phase": 4, "back_after": true, "both_shown_frames": 0}},
+   "threshold": "<= 1.0 cm; taken in phase 4; back after; 0 frames",
+   "pass": true
+  },
+  {
+   "name": "Pouch placement looked at (side, front, close-left, front-low; sheet_pouch_tuning.png, sheet_tactical_3p_pouch_front.png)",
+   "value": "Q1 of 3 runtime variants: spare magazine top 17 cm forward, 11 cm left, 24 cm up from the actor, turned 8 deg to the left hand; back panel on the belly above the belt, clear of the thighs; reach at the pouch 0.69 (elbow bent), hand to spine >= 20.1 cm",
+   "threshold": "on the body, readable from the front and the side, the hand visibly in it at 0.86-0.95 s",
+   "pass": true
+  },
+  {
+   "name": "Upper-arm blotches: lighting A/B on the reviewer's frame (0.86 s) and the final game-lit film",
+   "value": {"fill_on": "two white blotches on a black upper arm (the G10d look)", "fill_specular_0": "blotches still there (not a specular highlight)",
+             "no_fill": "upper arm evenly lit light grey, no blotch (capture underexposed; brightened copy checked)",
+             "final_film": "no blotch in any tactical / empty 3P frame (sheet_tactical_3p_left_close.png 0.72-1.06 s)"},
+   "threshold": "absent in the game's lighting",
+   "pass": true
+  },
+  {
+   "name": "Charge: hand on the charging handle ChargeRear - 0.4 s to BoltRelease (cm, max; frames); the pull; the release (hand move in the 0.02-0.06 s after BoltRelease, hand to handle after)",
+   "value": {"on_handle_max_cm": 0.307, "frames": 98, "pull_hand_x_cm": [19.73, 9.41], "handle_x_cm": [18.78, 8.46],
+             "release": {"hand_move_cm": 0.62, "handle_x_after_cm": 18.78, "hand_to_handle_after_cm": 11.84}},
+   "threshold": "<= 2.0 cm on the handle; release: hand <= 2.0 cm while the handle is >= 4 cm away",
+   "pass": true
+  },
+  {
+   "name": "First-person hold (V, every view row): palm grip point to SupportHand (cm), left reach, rotation alpha; eye to the left upper arm (cm)",
+   "value": {"palm_cm": [0.299, 0.301], "reach_l": [0.924, 0.927], "hand_rot_alpha": 1.0, "eye_ua_l_min_cm": 35.9,
+             "tuned": "FirstPersonSupportHandTurn roll -35 deg of -65 / -50 / -35 / -20 / 0 / +20 / +35 / +65 (G10e_tune; shifts along the handguard ran out of reach, 1.0)"},
+   "threshold": "palm <= 1.0 cm, reach <= 0.97, eye >= 30 cm; frames: a gripping hand (thumb along the handguard), no end-on wrist disc, wrist out of the ADS sight picture",
+   "pass": true
+  },
+  {
+   "name": "First-person legs: visible in every V row (idle, walk, burst, ADS, look down 35 / 70), hidden in third person; frames looked at",
+   "value": {"v_rows_visible": "7/7", "3p_visible": false, "frames": "06_v_look_down, 06b_v_look_down_70 (knee, pouch), G10e_tune legs_pitch85 (both legs, feet, pouch, the dropped magazines)"},
+   "threshold": "visible in V, hidden in 3P",
+   "pass": true
+  },
+  {
+   "name": "Magazine tone 3P vs FP (same lighting)",
+   "value": "A/B at 1.06 s: silver with the fill light, dark without; final game-lit 3P frames dark charcoal like FP; materials of both bodies' weapons identical (MI_AR01_Metal / MI_AR01_Furniture), the magazine is the same SM_AR01_Mag mesh on the hand, seated and pouch copies",
+   "threshold": "consistent",
+   "pass": true
+  },
+  {
+   "name": "Labels follow the picture: the seated magazine's offset from its socket per filmed frame (cm)",
+   "value": {"tactical_3p": {"1.06": "in the hand (16.8 cm, hand's copy)", "1.25": 12.21, "1.45": 1.02, "1.70": 0.0, "1.85": 0.0},
+             "tactical_fp": {"1.05": "in the hand", "1.15": 16.56, "1.30": 8.75, "1.45": 1.02, "1.65": 0.0}},
+   "threshold": "'seated' only at <= 0.05 cm",
+   "pass": true
+  },
+  {
+   "name": "Reload regression, every frame (cm): hand to magazine max / p95; floating frames; seated at MagIn; hand-over jump; back on the handguard",
+   "value": {"tactical_3p": {"max": 0.665, "p95": 0.371, "floating": 0, "magin": [0.0, 0.0], "handover": 0.088, "back": true},
+             "empty_3p": {"max": 0.824, "p95": 0.437, "floating": 0, "magin": [0.0, 0.0], "handover": 0.087, "back": true},
+             "tactical_fp": {"max": 0.973, "p95": 0.787, "floating": 0, "magin": [0.0, 0.0], "handover": 0.183, "back": true}},
+   "threshold": "<= 2.0; 0; <= 0.05 cm / 0.1 deg; <= 1.0; palm <= 1.0 cm (FP keeps rotation alpha 1 = the FP hold)",
+   "pass": true
+  },
+  {
+   "name": "FP reload: magazine point on screen while pulling / seating (NDC), path reach, root solve, eye to upper arm",
+   "value": {"pulling": {"frames": 93, "x": [0.049, 0.194], "y": [-0.716, -0.055]}, "seating": {"frames": 102, "x": [0.038, 0.194], "y": [-0.768, -0.055]},
+             "reach_max": 0.921, "fp_root_err_max_cm": 0.0, "eye_ua_l_min_cm": 35.31},
+   "threshold": "|x|, |y| <= 1; reach <= 0.97; root <= 0.5 cm; eye >= 30 cm",
+   "pass": true
+  },
+  {
+   "name": "3P path reach and hand to spine",
+   "value": {"reach_max": {"tactical_3p": 0.9811, "empty_3p": 0.9787}, "to_spine_min_cm": {"tactical_3p": 20.11, "empty_3p": 20.1}, "note": "0.98 = the handguard hold itself (as G10a-G10d)"},
+   "threshold": "spine > 8 cm",
+   "pass": true
+  },
+  {
+   "name": "FP body = 3P character (materials), FP framing",
+   "value": {"same_materials": true, "material": "MI_UEFN_Mannequin_CMC"},
+   "threshold": "same",
+   "pass": true
+  },
+  {
+   "name": "Ammo logic unchanged",
+   "value": "probe: tactical [30, chambered], empty: MagIn [30, not chambered] -> after the charge [29, chambered]; play test F7 tactical [30, True], empty [29, True] in 3/3",
+   "threshold": "as before",
+   "pass": true
+  },
+  {
+   "name": "Regression: gun_playtest F0-F15, 3 runs on the final binaries",
+   "value": ["15/15", "15/15", "15/15"],
+   "detail": {"F10_casing_timing": ["393/393", "398/398", "394/394"], "F7_mag_spawn_max_cm": [0.0042, 0.0063, 0.0064],
+              "F14_reported": "burst - idle mean 1.99 / 1.86 / 1.75 ms, burst max 22.8 / 20.3 / 23.7 ms, 0 hitches > 50 ms (idle 5.2-5.8 ms vs 4.5 ms in G10d: another app was running on the machine)"},
+   "threshold": "15/15 every run",
+   "pass": true
+  },
+  {
+   "name": "g9_camera_probe (final binaries)",
+   "value": "9/9 (drawn at spawn, shoulder right, hold = shoulder aim, fires in shoulder aim, release returns, tap enters ADS, ADS stays, tap leaves ADS, holster centres)",
+   "threshold": "9/9",
+   "pass": true
+  },
+  {
+   "name": "Frames looked at (reload_r3/: tactical 3P 14 x front-left / close-left / pouch-front + 4 player, empty 3P 13 x front-left / right-close + 6 player, tactical FP 13, lighting A/B 12, FP hold variants 6, pouch variants 9, FP views 9, before/after 8)",
+   "value": "3P: the hand pulls the old magazine, drops it, goes into the pouch on the belly (0.86 s), comes out with a magazine (0.95 s, the pocket shows one magazine left), seats it; the pouch is full again after the reload. Empty: from the right the hand hooks the handle over the top (2.08 s), pulls it 10 cm back (2.30-2.45 s), holds (2.62 s), lets go and lifts off (2.70-2.78 s). FP: the left hand holds the handguard from the side with the thumb along it; ADS clear of the wrist; looking down shows legs and the pouch. Bodies in the scene captures look blue-grey (sky light on the shaded side, lifted exposure); the player's own views show them white.",
+   "threshold": "every reviewer item addressed or shown to be a probe artifact",
+   "pass": true
+  }
+ ],
+ "method": "Measure (g10e_measure_game.py: hand / socket / pouch transforms, lighting A/B on the reviewer's frames), C++ (UNinjaGunComponent: visible pouch with PouchMount on spine_02 and the 3P hand path taking the pouch magazine; charge release hold + lift; FP hold FirstPersonSupportHand* through the existing GunHandRotCS / IK path; UNinjaGunLegsComponent poseable copy for FP legs), runtime tuning of the pouch and the FP hold (g10e_tune_game.py, two rounds), then the final film and gates (g10e_reload_probe_game.py, g10e_fp_views_game.py) on the final binaries, sheets by g10e_contact_sheet.py, play test x3 + g9.",
+ "honest_notes": [
+  "No content asset was changed (C++ and tool scripts only). The pouch is built at run time from the engine cube and the range's surface material (M_Range_Surface, olive Color); for a packaged build the two soft references (PouchBoxMesh, PouchMaterial) must be cooked (referenced from a cooked asset or always-cook list).",
+  "The pouch is two boxes and a back panel: it reads as a magazine carrier at game distance but is a placeholder, not a modelled pouch (no flaps, straps or stitching).",
+  "The taken magazine re-appears in the pouch when the reload ends (an endless pouch), usually off camera from the shoulder view.",
+  "The FP hand path still goes to its own off-screen pouch point (FirstPersonPouchOffset), not to the 3P pouch on the real body; only visible if a player looks down during a V reload.",
+  "The UEFN hand's fingers stay one rounded block (the mannequin mesh); the FP hold shows the thumb but not separate fingers.",
+  "The AR-01 receiver top's paint-wear pattern looks coarse at ADS distance; it is the asset's texture (unchanged with all textures fully loaded), out of this stage's scope.",
+  "Script prefix g10e_ here = reload round 3 tools; the plan's future free-look stage (G10e) is a different stage.",
+  "The first G10e probe run returned guard exit 6 because I edited tool / source comments while it ran; every final result (views, probe, 3 play tests, g9) ran after the final build with 0 snapshot differences."
+ ],
+ "shots_dir": "runs/G10/reload_r3/"
+}

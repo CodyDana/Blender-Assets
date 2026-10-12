@@ -300,6 +300,40 @@ chracter is gripping the gun when in idle and shooting, the left hand is not gri
 - **Still open:** the UEFN fingers are chunky round the magazine; no pouch mesh; the 3P reviewer notes (a light patch on the
   shaded left upper arm, the charging-handle rack hard to read from the left) were not worked this round.
 
+### G10c fix round 2 (2026-10-11, `runs/G10/reload_r3.json`, 16/16; frames and sheets in `runs/G10/reload_r3/`)
+Tools for this round are prefixed `g10e_` (reload round 3); they are not the free-look stage below.
+- **A visible magazine pouch.** The hand used to fetch the new magazine from an empty point in front of the belly. The
+  visible body now wears a double pouch (two pockets and a back panel, a chest rig on the belly above the belt) with a
+  spare AR-01 magazine in each pocket: `NinjaGun.bShowPouch`, `PouchMountBone` spine_02, `PouchMount` (tuned at run time,
+  3 variants: top 17 cm forward, 11 cm left, 24 cm up from the actor, turned 8 deg). The 3P hand path takes the first
+  magazine where it stands (hand frame to pouch magazine 0.014-0.019 cm at the grab). That magazine hides from the grab
+  until the reload ends and is then back in the pouch. Built at run time from the engine cube and `M_Range_Surface`
+  (olive); these are soft references a packaged build must cook. The owner sees it with the FP legs.
+- **The upper-arm blotches and the silver 3P magazine came from the probe.** A/B on the reviewer's frames: both appear
+  with the capture's 30000-unit fill light (also at specular 0) and are gone in the game's lighting, where the arm is not
+  black at all (the capture's auto exposure had darkened everything the fill light missed). The probe now films with the
+  game's lighting: no fill light, capture exposure +2.6 EV. Bodies look blue-grey in scene captures and white in the
+  player's views.
+- **The charge lets go.** The 10 cm pull was always there (hand x 19.7 -> 9.4 cm on the handle), but from the front-left it
+  was foreshortened and on the far side. The release was wrong: the hand rode the released handle forward. It now lets go
+  at the rear, stays `ChargeReleaseHoldTime` 0.05 s while the handle runs forward (hand moves 0.62 cm, handle 11.8 cm
+  away), lifts off by `ChargeReleaseLift` (-1, -3, 4) cm and returns. Filmed from the right and from the player's view.
+- **First-person hold.** Seen from the eye, the 3P hold showed the back of the hand with the wrist end-on (a paddle with a
+  disc). In V, hand_l now goes to `FirstPersonSupportHandBase` (the 3P hold, measured, in SupportHand space) turned by
+  `FirstPersonSupportHandTurn` roll -35 deg about the handguard axis, through the existing `GunHandRotCS` + IK path. The palm
+  stays on SupportHand (0.30 cm), reach is 0.92-0.93, the thumb lies along the handguard, and the wrist is lower and out
+  of the ADS sight picture. Tuned at run time from -65 to +65 deg; shifts along the handguard ran out of reach.
+- **First-person legs.** `UNinjaGunLegsComponent` (new, `NinjaGunLegs.*`) is a poseable copy of the visible body. It copies
+  the body's pose each frame after the body ticks, only the owner sees it, it casts no shadow, and spine_03 and everything
+  above it are hidden. It shows in V (`bFirstPersonLegs`), so looking down shows hips, legs and the pouch.
+- **Honest labels.** The sheets print "seated" only when the gun's magazine is within 0.05 cm of its socket. The old label
+  meant "TP_Mag visible", and from 1.14 s that copy rides the hand on its way in (12.2 cm out at 1.25 s, 1.0 cm at 1.45 s,
+  seated from 1.70 s).
+- **Not changed:** the AR-01 receiver top's paint wear looks coarse at ADS distance, identically with all textures fully
+  loaded, so it is the asset's texture. The UEFN fingers are one block. The FP hand path keeps its own off-screen pouch
+  point.
+- **Gates:** 16/16. Play test 15/15 in 3 of 3 runs on the final binaries (casing timing 393/393, 398/398, 394/394), g9 9/9.
+
 
 ### G10d: first-person arms
 - **The FP body.** A second skeletal mesh component, `FPBody`, on `BP_GunCharacter`:
