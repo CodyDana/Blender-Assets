@@ -2,7 +2,7 @@
 
 ## Open it
 
-1. Open `DemoGame_1` in Unreal Editor 5.8.
+1. Open `C:/Users/Cody/Documents/Unreal Projects/DemoGame_1_Guns/DemoGame_1.uproject` in Unreal Editor 5.8. Since 2026-10-11 the gun work lives on its own git branch `guns`, checked out in that folder (a worktree of the DemoGame_1 repo, like DemoGame_1_private2b). The original `DemoGame_1` folder (branch `fluidninja-trial`) no longer has the guns.
 2. In the Content Browser, open `/Game/Maps/L_GunRange` (Content > Maps > L_GunRange).
 3. Press **Play** (PIE or Standalone Game). The map's World Settings use `GM_GunRange`, so you spawn on the firing line,
    looking down range, as **`BP_GunCharacter`**, with the rifle already in your hands.
