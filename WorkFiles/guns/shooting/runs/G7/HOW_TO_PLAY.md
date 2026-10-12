@@ -1,68 +1,95 @@
-# How to play the AR-01 range (shooting prototype, step G7)
+# How to play the AR-01 range (shooting prototype, updated for G10, 2026-10-11)
 
 ## Open it
 
 1. Open `DemoGame_1` in Unreal Editor 5.8.
-2. In the Content Browser open `/Game/Maps/L_GunRange` (Content > Maps > L_GunRange).
-3. Press **Play** (PIE, or Standalone Game). The map's World Settings already use `GM_GunRange`, so you spawn as
-   `BP_NinjaGasp_Gun` (the ninja with the gun holder) on the firing line, looking down range.
+2. In the Content Browser, open `/Game/Maps/L_GunRange` (Content > Maps > L_GunRange).
+3. Press **Play** (PIE or Standalone Game). The map's World Settings use `GM_GunRange`, so you spawn on the firing line,
+   looking down range, as **`BP_GunCharacter`**, with the rifle already in your hands.
 
-Nothing else in the game changed: `L_NinjaTest`, `BP_NinjaGasp` and its inputs are untouched. The gun lives only on this
-map's pawn.
+`BP_GunCharacter` (G10) is the card-shop character: a child of Epic's Game Animation Sample pawn `SandboxCharacter_CMC`.
+It uses the same mannequin, motion-matched movement, camera and keys as the card shop. Nothing comes from the ninja: no
+jutsu, combat, stances or ninja animations. The only things added are the gun component and its first-person arms.
+
+Nothing else in the game changed. `L_NinjaTest`, `BP_NinjaGasp` and its inputs are untouched. The older ninja gun pawn
+`BP_NinjaGasp_Gun` is still in the project but is no longer used by this map.
 
 ## Controls
 
+**Moving (the card shop's keys)**
+
 | Key | Action |
 |---|---|
-| **X** | Holster / draw the rifle (it starts in your hands) |
-| **Left mouse** | Fire (hold for full auto, one shot per press in semi) |
-| **Right mouse, hold** | Shoulder aim: the camera comes in over the right shoulder (tighter spread) while held |
-| **Right mouse, tap** | Aim down the sights; tap again (or press RMB) to leave. A sprint also leaves them |
-| **R** | Reload (tactical with rounds left: 30+1; empty: the bolt is charged, 29+1) |
-| **B** | Fire selector, in the real AK lever order: Safe -> Auto -> Semi -> Safe (the lever on the gun moves too) |
-| **V** | First-person view toggle (experimental, step G9; not tested yet) |
-| **Left Alt, hold + mouse** | Free look (G10e, like PUBG): the camera looks around while the body keeps facing and moving where it was and the gun stays on its aim (shots go there, the crosshair hides). Release = back to the aim. Works holstered and in V; ignored while aiming (RMB ends it) |
-| WASD, mouse, Shift... | The normal ninja movement and camera |
+| **W A S D** | Move (the default pace is a run) |
+| **Left Shift, hold** | Sprint (it also takes you out of the sights) |
+| **Left Ctrl, hold** | Walk |
+| **C** | Crouch |
+| **Space** | Jump, or vault / climb over obstacles (GASP traversal) |
+| **Mouse** | Look. With the gun out, the body turns to face where you aim |
 
-While the rifle is out, LMB and RMB belong to the gun (no combo / block). Holster with X to get them back.
+**Using the gun**
+
+| Key | Action |
+|---|---|
+| **X** | Holster or draw the rifle (you start with it drawn) |
+| **Left mouse** | Fire. Hold for full auto; in semi, one shot per press |
+| **Right mouse, hold** | Shoulder aim: the camera moves in over the right shoulder and the spread tightens, for as long as you hold |
+| **Right mouse, tap** | Aim down the sights. Tap again to leave; a sprint also leaves them |
+| **R** | Reload. With rounds left (tactical): 30+1. When empty, the left hand also pulls the charging handle: 29+1 |
+| **B** | Fire selector, in the real AK lever order: Safe -> Auto -> Semi -> Safe (the lever on the gun moves too) |
+| **V** | First-person view on or off. You see your own arms holding the gun, your legs when you look down, and the reload |
+| **Left Alt, hold + mouse** | **Free look, as in PUBG.** The camera looks around (up to 170 deg to either side, 60 deg up or down) while the body keeps facing and moving where it was. The gun stays on its aim, so shots still go there, and the crosshair hides. Let go of Alt and the view snaps back to the aim. Works while running and sprinting, holstered, and in V. It is ignored while you aim, and pressing RMB ends it |
+
+While the rifle is out, LMB and RMB belong to the gun. Holster with X to give them back to the character.
+
+## What you will see (G10)
+
+- **Grip:** the left hand wraps the handguard with all four fingers side by side and the thumb underneath. The right
+  hand wraps the pistol grip, and only the index finger is inside the trigger guard. The grip is the same at idle,
+  walking, firing and in shoulder aim. The hip hold position itself was not changed.
+- **Reload, third person:** the left hand takes the old magazine out and drops it. It then fetches a fresh magazine from
+  the pouch on the belly (the pouch shows one magazine fewer while you carry it) and seats it. On an empty reload the hand
+  then pulls the charging handle and lets it go.
+- **Reload, first person (V):** the gun tilts, and you see the left hand pull the old magazine and bring the new one in.
 
 ## What is on the range
 
-- Training dummies at **10 m, 25 m and 50 m**: 34 damage per hit (3 hits kill), they get up again after 3 s.
-- Four 1 m target boards at 15 m: **concrete, steel, wood, glass** (each has its own impact effect and bullet hole).
-- A wall at 20 m (spread pattern), a low cover block 1.5 m in front of the line on the left (shoot over it with the
-  muzzle behind it and the rounds hit the cover), a black panel with a white card at 25 m (sight picture), distance
-  markers every 5 m.
+- Training dummies at **10 m, 25 m and 50 m**. Each hit does 34 damage (3 hits kill), and they get up again after 3 s.
+- Four 1 m target boards at 15 m: **concrete, steel, wood and glass**. Each has its own impact effect and bullet hole.
+- A wall at 20 m for the spread pattern.
+- A low cover block 1.5 m in front of the line, on the left. Shoot over it with the muzzle behind it and the rounds hit
+  the cover.
+- A black panel with a white card at 25 m for the sight picture, and distance markers every 5 m.
 
-## What is placeholder
+## What is still placeholder
 
-- **Silent**: the sound slots are empty until real gun audio is supplied.
-- **Hands**: the third-person hold / fire / reload poses are Epic's template rifle clips; in ADS the rifle shows without
-  arms (step G8 adds first-person arms).
-- **Infinite reserve** (30+1 in the gun, reserve never runs out).
-- **Reload hands**: the magazine drops out and the new one seats (the gun's own clip), but the left hand does not carry
-  the magazine (Epic's body reload clip is used and the hand IK is switched off for the reload).
-
-## Things you will notice (found by the G7 play test, left for the tuning step G9)
-
-- **Camera (fixed 2026-10-11):** with the gun out the camera sits over the right shoulder (DemoGame_1 commit 1670bc0, probe g9_camera_probe.py 9/9). From the hip the template hold pose still keeps most of the rifle in front of the chest; hold RMB to see it clearly.
-  and the body turns to face the camera while the gun is out, so the hip-held rifle is behind the body (only its shadow,
-  the flash and the tracers show). An over-the-shoulder camera offset fixes it; that is a tuning choice for G9.
-- **Bloom never builds up in full auto** with the current numbers: each shot adds 0.25 deg but it fades at 4 deg/s, which
-  is 0.4 deg between two shots at 600 rpm. If you want the cone to grow during a long burst, the fade needs a delay
-  (like the recoil's) or a slower rate.
+- **Sound:** only the fire sound is in: a CC0 AK single shot (DemoGame_1 commit dbb3504). There is no magazine, bolt,
+  charging-handle or selector sound yet, and no footstep or handling sound tied to the gun.
+- **Infinite reserve:** 30+1 in the gun, and the reserve never runs out.
+- **The hip hold** is still the template rifle's hold, left as asked. The barrel points about 6 deg left of the aim at
+  the hip, and the over-the-shoulder camera sees most of the rifle behind the body. Hold RMB to see it clearly.
+- **The grip and reload hand poses are solved for the AR-01 only.** Another gun will need its own solve.
+- **Free look in first person:** when you turn far to the side, the gun and arms leave the view, because they stay on
+  the aim. At about 30 deg off the aim the first-person gun looks a little large.
+- **The bloom never builds up in full auto** with the current numbers. Each shot adds 0.25 deg, but the bloom fades at
+  4 deg/s, which removes 0.4 deg between two shots at 600 rpm. A fade delay or a slower fade rate would fix it.
 
 ## Console helpers (press the ` key in PIE)
 
-- `ninja.gun.debug 1` logs every shot / event / reload as `NGUN` lines; `2` also draws the traces.
-- `ninja.gun.nospread 1` every round flies exactly along the aim.
-- `ninja.gun.infiniteammo 1` the magazine never empties (`0` counts rounds, `-1` the gun's own rule).
+- `ninja.gun.debug 1` logs every shot, event and reload as `NGUN` lines; `2` also draws the traces.
+- `ninja.gun.nospread 1` sends every round exactly along the aim.
+- `ninja.gun.infiniteammo 1` stops the magazine from emptying (`0` counts rounds, `-1` uses the gun's own rule).
 
-## Test harness
-
-The automated play test is `Tools/Claude/Guns/gun_playtest.py` (run with the editor closed):
+## Test harness (close the editor first)
 
 ```
-Tools/Claude/Guns/run_guns.ps1 -Mode game -Script gun_playtest.py -Tag G7 -ReadOnly -ResX 1920 -ResY 1080
-py -3 -B Tools/Claude/Guns/g7_analyse.py C:/Users/Cody/AppData/Local/Temp/ClaudeGuns/G7
+Tools/Claude/Guns/run_guns.ps1 -Mode game -Script gun_playtest.py        -Tag G10f_pt1      -ReadOnly -ResX 1920 -ResY 1080
+py -3 -B Tools/Claude/Guns/g7_analyse.py C:/Users/Cody/AppData/Local/Temp/ClaudeGuns/G10f_pt1
+Tools/Claude/Guns/run_guns.ps1 -Mode game -Script g9_camera_probe.py     -Tag G10f_g9       -ReadOnly -ResX 1920 -ResY 1080
+Tools/Claude/Guns/run_guns.ps1 -Mode game -Script g10b_grip_probe_game.py   -Tag G10f_grip  -ReadOnly -ResX 1920 -ResY 1080
+Tools/Claude/Guns/run_guns.ps1 -Mode game -Script g10e_reload_probe_game.py -Tag G10f_reload -ReadOnly -ResX 1920 -ResY 1080
+Tools/Claude/Guns/run_guns.ps1 -Mode game -Script g10_freelook_probe.py  -Tag G10f_freelook -ReadOnly -ResX 1920 -ResY 1080
 ```
+
+The latest results are in `WorkFiles/guns/shooting/runs/G10/G10_REPORT.md`: play test 15/15 three times, g9 9/9, and
+grip, reload and free look all passing.

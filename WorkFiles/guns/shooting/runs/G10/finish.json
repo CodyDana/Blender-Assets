@@ -1,0 +1,229 @@
+{
+ "stage": "G10 finish (regression and hand-off)",
+ "date": "2026-10-11",
+ "pass_count": 15,
+ "total": 15,
+ "gates": [
+  {
+   "name": "gun_playtest F0-F15 on L_GunRange, 3 fresh -game runs on the final binaries (DemoGame_1 f1a9c29; F14 reported only)",
+   "value": [
+    "15/15",
+    "15/15",
+    "15/15"
+   ],
+   "threshold": "15/15 every run",
+   "pass": true,
+   "detail": "F0 pawn BP_GunCharacter, drawn at spawn, X holsters / draws 0.51 s; F2 20 shots in 2.0 s; F4 post tip 0.36 px; F7 tactical [30,+1] / empty [29,+1], mag spawn vs socket <= 0.0072 cm; F10 casing timing 397/397; F12 palm on SupportHand <= 0.061 cm (fire); F15 0 gun warnings, 0 Accessed None, repo unchanged"
+  },
+  {
+   "name": "g9_camera_probe",
+   "value": "9/9 (drawn at spawn, shoulder right, hold = shoulder aim, fires in shoulder aim, release returns, tap enters ADS, ADS stays, tap leaves ADS, holster centres)",
+   "threshold": "9/9",
+   "pass": true
+  },
+  {
+   "name": "Pawn = card-shop character (request 1)",
+   "value": "pawn /Game/Guns/Character/BP_GunCharacter (child of Epic's SandboxCharacter_CMC, SKM_UEFN_Mannequin, GASP motion matching), game mode GM_GunRange; GASP run 500 cm/s, sprint 700 cm/s with the gun out (free-look probe); no ninja component (G10a); the G10 commits touch only Content/Guns, Source/DemoGame_1/Guns, Tools/Claude/Guns (61 files)",
+   "threshold": "card-shop pawn, nothing ninja",
+   "pass": true
+  },
+  {
+   "name": "Grip (request 2), all phases idle / walk / semi / burst / shoulder aim: left fingertip skin gap to the handguard, median max / p95 max (cm); left knuckle gap idle median (cm); palm grip point to SupportHand p95 (cm); finger penetration max L / R (cm); joint 02 inside frames",
+   "value": {
+    "tip_median_max": 0.352,
+    "tip_p95_max": 0.395,
+    "knuckle_idle_median": [
+     -0.196,
+     0.369
+    ],
+    "palm_p95": {
+     "idle": 0.003,
+     "walk": 0.007,
+     "semi": 0.032,
+     "burst": 0.049,
+     "shoulder": 0.004
+    },
+    "pen_max_left": 0.22,
+    "pen_max_right": 0.2,
+    "j02_inside": 0
+   },
+   "threshold": "<= 0.5 / <= 0.5; within 0.5; <= 1.0; <= 0.5; 0",
+   "pass": true
+  },
+  {
+   "name": "Grip, right hand: middle finger under the trigger guard (highest skin z, cm; bar underside 1.0); index pad to the trigger face p95 max (cm); index tip y max (cm)",
+   "value": {
+    "middle_top_skin_max": 0.617,
+    "index_pad_p95_max": 0.188,
+    "index_tip_y_max": -0.626
+   },
+   "threshold": "<= 1.0; <= 0.25; <= -0.5",
+   "pass": true
+  },
+  {
+   "name": "Hip hold not changed (request 2): gun in actor space, idle median vs the G10b baseline run (cm / deg); gun vs hand_r root error",
+   "value": {
+    "d_cm": 0.016,
+    "d_deg_x": 0.006,
+    "d_deg_z": 0.008,
+    "root_err_cm": 0.0,
+    "shoulder_vs_base_reported_cm": 0.755
+   },
+   "threshold": "<= 0.2 cm / 0.2 deg; 0",
+   "pass": true
+  },
+  {
+   "name": "3P reload with hands (request 3), tactical / empty: hand to magazine every carried frame max / p95 (cm); floating frames; seated at MagIn (cm); hand-over jump (cm); back on the handguard",
+   "value": {
+    "tactical_3p": {
+     "max": 0.696,
+     "p95": 0.335,
+     "carried_frames": 284,
+     "floating": 0,
+     "magin_cm": 0.0,
+     "handover": 0.064,
+     "back": true
+    },
+    "empty_3p": {
+     "max": 0.567,
+     "p95": 0.336,
+     "carried_frames": 273,
+     "floating": 0,
+     "magin_cm": 0.0,
+     "handover": 0.061,
+     "back": true
+    }
+   },
+   "threshold": "<= 2.0; 0; <= 0.05; <= 1.0; yes",
+   "pass": true
+  },
+  {
+   "name": "3P reload: pouch (hand's magazine frame on the pouch magazine at the grab, cm; pouch magazine shown while carried; back after) and charge (hand to handle max, cm; hand move at the release while the handle runs away, cm)",
+   "value": {
+    "pouch_grab_cm": [
+     0.009,
+     0.017
+    ],
+    "taken_at_s": [
+     0.899,
+     0.898
+    ],
+    "shown_while_carried_frames": 0,
+    "back_after": true,
+    "charge_hand_to_handle_max_cm": 0.228,
+    "charge_frames": 115,
+    "release_hand_move_cm": 0.667,
+    "handle_away_cm": 10.87,
+    "final_ammo": [
+     29,
+     true
+    ]
+   },
+   "threshold": "<= 1.0; 0; yes; <= 2.0; <= 2.0 with the handle >= 4 cm away",
+   "pass": true
+  },
+  {
+   "name": "FP reload (request 3, V): hand to magazine max / p95 (cm); floating; seated at MagIn; path reach; FP root solve error",
+   "value": {
+    "max": 1.019,
+    "p95": 0.692,
+    "carried_frames": 284,
+    "floating": 0,
+    "magin_cm": 0.0,
+    "reach_max": 0.9225,
+    "root_err_cm": 0.0
+   },
+   "threshold": "<= 2.0; 0; <= 0.05; <= 0.97; <= 0.5",
+   "pass": true
+  },
+  {
+   "name": "FP views (V idle, walk, burst, ADS, look down 35 / 70): palm to SupportHand (cm); left reach; eye to left upper arm (cm); FP legs visible in V / hidden in 3P",
+   "value": {
+    "palm_cm": [
+     0.299,
+     0.301
+    ],
+    "reach_max": 0.928,
+    "eye_ua_min_cm": 36.4,
+    "legs_v": "7/7",
+    "legs_3p": false
+   },
+   "threshold": "<= 1.0; <= 0.97; >= 30; visible / hidden",
+   "pass": true
+  },
+  {
+   "name": "Free look (request 4, Left Alt), hip Alt + 90 deg: control / actor yaw change; camera yaw change; orbit radius change; a shot during free look vs the pre-free-look aim and its impact from that ray at the 10 m dummy; release",
+   "value": {
+    "ctrl_deg": 0.0,
+    "actor_deg": 0.0,
+    "cam_yaw_deg": 90.0,
+    "radius_cm": 0.0,
+    "shot_deg": 4e-05,
+    "impact_cm": 0.001,
+    "impact_at_cm": 978,
+    "release_frame": 2
+   },
+   "threshold": "<= 0.1 / <= 0.5; 90 +- 1; <= 5; <= 0.1 / <= 2; <= 2 frames",
+   "pass": true
+  },
+  {
+   "name": "Free look while moving and in the other modes: run (W) + 120 deg and sprint - 90 deg heading drift; FP (V) camera at the eye; holstered; ignored in shoulder aim / ADS, RMB ends it; wall",
+   "value": {
+    "run_drift_deg": 0.0,
+    "sprint_drift_deg": 0.0,
+    "fp_cam_vs_eye_cm": 0.0,
+    "fp_shot_deg": 3e-05,
+    "holstered": "ctrl 0, actor 0, cam 90, radius 0, run drift 0",
+    "aim_block": "shoulder / ADS ignored, RMB ends it, FOV 65 after 0.6 s",
+    "wall": "camera never inside the wall, trace clear",
+    "summary": "scale, gun_hip, gun_move, aim_block, fp, holstered, wall: all true"
+   },
+   "threshold": "<= 3 deg; <= 0.5 cm; same gates; ignored; clear",
+   "pass": true
+  },
+  {
+   "name": "Logs: warnings / errors from our code (LogNinjaGun, /Game/Guns, gun classes, Accessed None, ensures, Python after startup) in the 8 fresh -game logs",
+   "value": {
+    "ours": 0,
+    "accessed_none": 0,
+    "all_warnings_errors_per_log": [
+     108,
+     109
+    ],
+    "rest": "engine Toolsets plugins' Python init tracebacks at frame 0 (58-59 lines), LogEditorDataStorageUI 21, LogPoseSearch 18 (GASP databases still building at start), LogConsoleManager 10 (GASP cvars), LogTextureGraph 1: all stock, the same in every run"
+   },
+   "threshold": "0 new from our code",
+   "pass": true
+  },
+  {
+   "name": "Read-only guard: repo snapshot before / after each of the 8 runs",
+   "value": "0 snapshot differences, 0 project files written, every run",
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "Frames looked at (finish/contact_sheet_G10_finish.png: idle grip, firing, shoulder aim, ADS, 3P reload, FP reload, free look)",
+   "value": "Left hand wraps the handguard with the fingers side by side, idle / burst / shoulder aim alike; right hand on the pistol grip, only the index in the guard on the trigger. 3P reload: the hand takes the magazine out, drops it, goes into the belly pouch, brings a new one and seats it; in the empty reload the hand is on the charging handle. FP reload: the gun cants, the left hand pulls the old magazine and brings the new one into view. Free look: the body and gun keep facing down range while the camera looks right, up and around while running and sprinting; the wall stops the camera; release returns to the aim.",
+   "threshold": "all four requests visible",
+   "pass": true
+  }
+ ],
+ "runs": {
+  "G10f_pt1/2/3": "gun_playtest.py + g7_analyse.py",
+  "G10f_g9": "g9_camera_probe.py",
+  "G10f_grip": "g10b_grip_probe_game.py + g10b_grip_solve_r3.py measure (pose r3, base G10b_base)",
+  "G10f_reload": "g10e_reload_probe_game.py",
+  "G10f_freelook": "g10_freelook_probe.py",
+  "G10f_views": "g10e_fp_views_game.py",
+  "harness": "run_guns.ps1 -Mode game -ReadOnly -ResX 1920 -ResY 1080; DemoGame_1 f1a9c29; DLL 2026-10-11 22:45:46, fresh"
+ },
+ "honest_notes": [
+  "No code or content changed in this stage; DemoGame_1 has nothing new to commit. All runs are read-only on the binaries of the free-look commit f1a9c29.",
+  "The plan's F16-F20 (grip, reload hands, FP arms, free look, card-shop parity) were not folded into gun_playtest.py; the dedicated probes re-run here cover them (grip, reload, FP views, free look). Card-shop movement parity (holstered pose vs the stock SandboxCharacter_CMC 0.0 cm, gait speeds 0 %) was measured in G10a and not re-measured; the free-look probe saw the GASP speeds (run 500, sprint 700 cm/s) with the gun out.",
+  "F14 performance is reported only: the burst's frame time is 1.4-1.6 ms over idle (mean 6.5-6.6 ms, max 16-19 ms, 0 hitches).",
+  "The play-test script itself logs one Python DeprecationWarning (TraceTypeQuery.TRACE_TYPE_QUERY1 at gun_playtest.py:1522): a test-script warning, not game code.",
+  "Hip hold left as the user asked: barrel yaw 5.95 deg (G10a), and from the hip the over-the-shoulder camera sees most of the rifle behind the body; hold RMB to see it.",
+  "Placeholder: only the fire sound is in (CC0 AK shot, DemoGame_1 dbb3504); no magazine / bolt / selector foley; infinite reserve; the first-person view (V) is experimental."
+ ],
+ "shots_dir": "runs/G10/finish/"
+}
