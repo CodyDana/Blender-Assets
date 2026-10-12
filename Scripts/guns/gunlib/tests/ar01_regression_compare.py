@@ -177,7 +177,10 @@ def main():
     recorded = {**{k: v["sha256"] for k, v in rig["files"].items()},
                 **{k: v["sha256"] for k, v in magj["files"].items() if not k.endswith("(input)")}}
     rec_ok = all(ea.get(k) == v for k, v in recorded.items())
-    git = subprocess.run(["git", "status", "--porcelain", "--", "Exports/Guns/AR01", "Assets/Guns", "WorkFiles/guns/rifle"],
+    # (SMG01 W4 resume) the AR-01's own blends only: 'Assets/Guns' as a whole also matched the SMG01 build's own
+    # Assets/Guns/SMG01.blend (modified by every SMG01 run) and failed the AR-01 bytes row falsely
+    git = subprocess.run(["git", "status", "--porcelain", "--", "Exports/Guns/AR01", "Assets/Guns/AR01.blend",
+                          "Assets/Guns/AR01_Mag.blend", "WorkFiles/guns/rifle"],
                          cwd=ROOT, capture_output=True, text=True).stdout.strip().splitlines()
     tracked_changes = [x for x in git if not x.startswith("??")]
     ib, ia = shas(R / "inputs_sha256_before.txt"), shas(R / "inputs_sha256_after.txt")
@@ -193,7 +196,9 @@ def main():
     pt = R / "parts_test.json"
     if pt.exists():
         d = j(pt)
-        new_mod["test_parts"] = {"status": d["status"], "failed": d["failed"],
+        # (SMG01 W4 resume) a test process that ended before its final write leaves no status: report it, do not crash
+        new_mod["test_parts"] = {"status": d.get("status", "incomplete: no final record (the test process ended early)"),
+                                 "failed": d.get("failed", ["incomplete"]),
                                  "checks": [{"name": c["name"], "pass": c["pass"], "threshold": c["threshold"]}
                                             for c in d["checks"]],
                                  "rail_measured": d.get("rail", {}).get("measured", {}),

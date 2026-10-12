@@ -122,9 +122,36 @@ def windows_and_borders():
               if r["kind"] == "hole"]:                   # (simplified to 0.6 below; the legacy clean-up keeps EXACT clean)
         if not (h[:, 0].min() > X_F0 + 2.0 and h[:, 0].max() < X_NECK1 - 2.0):
             continue
-        P = G.ccw(G.dp_simplify(G.ccw(h), 0.6))
-        out.append((G.ccw(G.fillet(P, r_in, 4)), G.ccw(G.fillet(G.offset(P, b), r_in + b, 4))))
+        # (W4 review fixes, craft G17) the trace's pixel noise left a 0.7 mm bump and notch on the rear window's lower
+        # edge and 2-3 straight segments at each corner (DP 0.6 + R 1.5 x 4 segments): now DP 1.0 (the edges' noise
+        # under 1 mm goes; the runs are the drawn straight lines), then every corner a true moulded radius: R 3.0
+        # (the trace's corner rounds; the spec's 1.5 was the floor) at <= 7.5 deg per segment, a gentle bend (< 25 deg
+        # turn, the trace's slightly bowed lower edge) a long R 25 blend, so no edge kinks
+        P = G.ccw(G.dp_simplify(G.ccw(h), 1.0))
+        out.append((G.ccw(_round_window(P, 0.0)), G.ccw(_round_window(G.offset(P, b), b))))
     return out
+
+
+def _round_window(P, grow):
+    P = G.ccw(np.asarray(P, float))
+    n = len(P)
+    radii, segs = [], []
+    for i in range(n):
+        a, b, c = P[i - 1], P[i], P[(i + 1) % n]
+        u, v = b - a, c - b
+        turn = math.degrees(abs(math.atan2(u[0] * v[1] - u[1] * v[0], u @ v)))
+        radii.append((25.0 if turn < 25.0 else 3.0) + grow)
+    out = []
+    for i in range(n):
+        a, b, c = P[i - 1], P[i], P[(i + 1) % n]
+        u, v = b - a, c - b
+        turn = abs(math.atan2(u[0] * v[1] - u[1] * v[0], u @ v))
+        r_ = radii[i]
+        th = 2.0 * math.degrees(math.acos(max(-1.0, 1.0 - 0.02 / r_)))      # chord error <= 0.02 mm
+        seg = max(2, int(math.ceil(math.degrees(turn) / min(7.5 if r_ >= 6.0 else 15.0, th))))
+        q = G.fillet(np.array([a, b, c]), 0.0, seg, min_turn_deg=1.0, radii=[0.0, radii[i], 0.0])
+        out.append(q[1:-1] if len(q) > 2 else q[1:2])
+    return G.dedupe(np.vstack(out), 0.02)
 
 
 def head_outline():
@@ -180,7 +207,7 @@ def stock_frame():
     arm = prism(np.array([[234.0, HEAD_Y[0] + 0.5], [240.0, float(AX[1]) - 0.1], [float(AX[0]), float(AX[1]) - 0.1],
                           [float(AX[0]), HEAD_Y[0] + 0.5]]), KZ[0], KZ[1], "XY")
     knuckle = pcyl((AX[0], AX[1], KZ[0]), (AX[0], AX[1], KZ[1]), R_K, 48)
-    hb = stadium_xz(BOLT_XZ[1] - 9.5, BOLT_XZ[1] + 9.5, BOLT_XZ[0], 9.0, 8)       # (Z, X) -> swap below
+    hb = stadium_xz(BOLT_XZ[1] - 9.5, BOLT_XZ[1] + 9.5, BOLT_XZ[0], 9.0, g3=False)       # (Z, X) -> swap below
     hb = np.c_[hb[:, 1], hb[:, 0]]                                                 # a vertical oval boss in XZ
     housing = prism(G.ccw(hb), HEAD_Y[1] - 4.0, Y_HOUSING, "XZ")     # Y 18.0 .. 28.6
     # ---- the retention lug (rear upright, right face) with its barb (35 deg rear ramp)
@@ -249,7 +276,7 @@ def stock_frame():
 def button_outline():
     """The vertical oval button (7 x 16) in XZ."""
     bw, bh = BTN["size"]
-    bp = stadium_xz(BOLT_XZ[1] - bh / 2.0, BOLT_XZ[1] + bh / 2.0, BOLT_XZ[0], bw, 10)
+    bp = stadium_xz(BOLT_XZ[1] - bh / 2.0, BOLT_XZ[1] + bh / 2.0, BOLT_XZ[0], bw, g3=False)
     return np.c_[bp[:, 1], bp[:, 0]]
 
 
@@ -276,23 +303,55 @@ def stock_latch_button():
                    spec_id="stock_hinge")
 
 
+def pad_face_line(ring):
+    """The pad's rear face as drawn: a straight line x = a + b z fitted to the trace's tooth TIPS (the iterated lower
+    envelope of the rear run's points: the sheet draws the face leaning ~1 deg, X 2.1 at the toe to 0.4 at the heel)."""
+    P = ring[(ring[:, 0] < 4.5) & (ring[:, 1] > PAD_RUN_Z[0]) & (ring[:, 1] < PAD_RUN_Z[1])]
+    z, x = P[:, 1], P[:, 0]
+    A = np.c_[np.ones_like(z), z]
+    m = np.ones(len(z), bool)
+    c = np.zeros(2)
+    for _ in range(5):
+        c = np.linalg.lstsq(A[m], x[m], rcond=None)[0]
+        res = x - A @ c
+        m = res <= np.percentile(res, 40)
+    return float(c[0]), float(c[1])
+
+
+PAD_RUN_Z = (-75.7, 17.5)                        # the traced rear run between the toe and heel corner rounds
+PAD_FACE_Z0 = 12.0
+
+
 def butt_pad():
     ring = SG.part_ring("butt_pad", 0.3)
-    flat_x = 1.4
-    P = G.clip_x(ring, flat_x, X_PAD)
-    P = np.c_[np.where(P[:, 0] <= flat_x + 1e-6, 0.0, P[:, 0]), P[:, 1]]
-    P = G.ccw(G.dedupe(P))
+    # (W4 review fixes, craft G17) the traced rear edge is the sheet's serration seen in profile, pixel-noisy (teeth
+    # 1.2-3.5 deep at 1.6-3.4 pitch); kept as the ring (W1-W3) it gave an irregular rib profile under the regular
+    # grooves. The rear run is now the drawn face line through the tooth tips (pad_face_line; the toe and heel corner
+    # rounds kept from the trace) and the grooves run the full width (open at both sides) at the spec's one pitch and
+    # depth (3.2 / 1.2), so the side view shows regular moulded ribs. (A flat face at X 0 was tried first: the per-part
+    # L2 IoU of the pad fell to 0.931, the sheet's face leans.)
+    a, b = pad_face_line(ring)
+    # the face held at X 0 (the spec's butt rear, L4) over its top ~5 mm (Z >= 12) and leaning forward below it at the
+    # fitted slope (X 1.55 at the toe; the fit's own intercept left the rear at X 0.42: L4 overall length 624.58)
+    xf = lambda z: np.maximum(0.0, b * (np.asarray(z, float) - PAD_FACE_Z0))      # noqa: E731
+    P = np.asarray(ring, float).copy()
+    run = (P[:, 1] >= PAD_RUN_Z[0]) & (P[:, 1] <= PAD_RUN_Z[1]) & (P[:, 0] < xf(P[:, 1]) + 2.5)
+    P[run, 0] = xf(P[run, 1])
+    P = G.ccw(G.dedupe(P, 0.05))
     hw = float(BP["width"]) / 2.0
     body = prism(P, -hw, hw, "XZ")
-    zr = P[P[:, 0] < 0.5][:, 1]
-    z_lo, z_hi = float(zr.min()) + 4.5, float(zr.max()) - 4.5
+    z_lo, z_hi = PAD_RUN_Z[0] + 4.5, PAD_RUN_Z[1] - 4.5
     pitch, depth = 3.2, 1.2
     grooves = []
-    for zc in np.arange(z_lo, z_hi, pitch):
-        g = np.array([[-1.0, zc - 1.05], [depth - 0.25, zc - 0.55], [depth, zc - 0.3], [depth, zc + 0.3],
-                      [depth - 0.25, zc + 0.55], [-1.0, zc + 1.05]])
-        grooves.append(prism(g, -hw + 3.4, hw - 3.4, "XZ"))       # closed ends inside the R 3 side rounds
     from gunlib import lod as _lod
+    # (W4 resume) LOD1: the grooves closed inside the side rounds again (as W3): cut open through the 2-segment LOD1
+    # rounds they left 3 needle / sub-0.01 mm2 triangles (UD1 / UD2); 1.2 mm at the LOD1 switch (~2.6 m) is < 1 px
+    y_end = hw + 1.0 if _lod.LEVEL == 0 else hw - 3.4
+    for zc in np.arange(z_lo, z_hi, pitch):
+        x0 = xf(zc)
+        g = np.array([[-1.0, zc - 1.05], [depth - 0.25, zc - 0.55], [depth, zc - 0.3], [depth, zc + 0.3],
+                      [depth - 0.25, zc + 0.55], [-1.0, zc + 1.05]]) + np.array([x0, 0.0])
+        grooves.append(prism(g, -y_end, y_end, "XZ"))       # LOD0 open at both sides (W4: the profile shows them)
     if _lod.LEVEL >= 2:
         grooves = []           # (W3) LOD2+: the 3.2 mm serration (1.2 deep) is 0.7 / 0.25 px at the LOD2 switch
     # (W1b fix round, L2 per part: the 2 mm wrap lip round the upright is gone; the sheet draws the pad ending at the

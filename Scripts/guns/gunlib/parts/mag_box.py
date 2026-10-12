@@ -21,6 +21,8 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Sequence, Tuple
 
+import math
+
 import numpy as np
 
 from .. import lod as _lod
@@ -102,13 +104,34 @@ def housing(sec_outer: np.ndarray, wall: float, z_bottom: float, z_top: float, l
         else inner
     zc = (z_top - 4.0 * wall) if cavity_floor_z is None else cavity_floor_z
     rings = []
-    zs_out = [z_bottom, z_top]
-    for z in zs_out:
-        P = scaled(sec_outer, z)
-        rings.append(np.c_[P, np.full(n, z)])
+    roll = float(lips.get("roll", 0.0))
+    if roll <= 0.0:
+        zs_out = [z_bottom, z_top]
+        for z in zs_out:
+            P = scaled(sec_outer, z)
+            rings.append(np.c_[P, np.full(n, z)])
+    else:
+        # (0.2.x, optional; SMG01 W4) the rolled lip: the outer top edge a quarter round of radius ``roll`` (``roll_seg``
+        # segments) running inward toward the inner wall, so the moulded lips read folded over, not a flat rim
+        nr = int(lips.get("roll_seg", 3))
+        for z in (z_bottom, z_top - roll):
+            P = scaled(sec_outer, z)
+            rings.append(np.c_[P, np.full(n, z)])
+        Po = scaled(sec_outer, z_top)
+        Pin = scaled(inner, z_top)
+        u = Pin - Po
+        u /= np.maximum(np.linalg.norm(u, axis=1, keepdims=True), 1e-9)
+        for k in range(1, nr + 1):
+            th = 0.5 * math.pi * k / nr
+            z = z_top - roll + roll * math.sin(th)
+            rings.append(np.c_[Po + u * roll * (1.0 - math.cos(th)), np.full(n, z)])
     # the top rim inward, then down the cavity
     Pl = scaled(lr, z_top)
     rings.append(np.c_[Pl, np.full(n, z_top)])
+    tip = float(lips.get("tip", 0.0))
+    if 0.0 < tip < lip_h:
+        # (optional) the lip's inner edge a vertical tip face ``tip`` tall before its underside turns out to the wall
+        rings.append(np.c_[scaled(lr, z_top - tip), np.full(n, z_top - tip)])
     Pi = scaled(inner, z_top - lip_h)
     rings.append(np.c_[Pi, np.full(n, z_top - lip_h)])
     Pc = scaled(inner, zc)
@@ -117,7 +140,7 @@ def housing(sec_outer: np.ndarray, wall: float, z_bottom: float, z_top: float, l
 
 
 def ladder_cutters(x0: float, x1: float, z0: float, z1: float, depth: float, side_y: float, ties: Sequence[float] = (),
-                   tie_w: float = 3.0, r: float = 1.0) -> List[Mesh]:
+                   tie_w: float = 3.0, r: float = 1.0, seg: int = 3) -> List[Mesh]:
     """Recessed side channels (one per side) from z0 to z1 between x0 and x1, ``depth`` into the wall at |y| =
     side_y, broken by flush ties (bands of ``tie_w`` mm where the wall stays) at the ``ties`` heights. Returns
     cutter prisms (rounded ends, radius r) for both sides."""
@@ -128,7 +151,7 @@ def ladder_cutters(x0: float, x1: float, z0: float, z1: float, depth: float, sid
         b2 = b - (tie_w / 2.0 if b != z1 else 0.0)
         if b2 - a2 < 2.0 * r + 0.2:
             continue
-        outline = rounded_rect(x0, x1, a2, b2, r, seg=3)
+        outline = rounded_rect(x0, x1, a2, b2, r, seg=seg)        # (0.2.x: seg optional, default 3 as before)
         for s in (1.0, -1.0):
             y_in, y_out = s * (side_y - depth), s * (side_y + 1.0)
             out.append(prism(outline, min(y_in, y_out), max(y_in, y_out), "XZ"))

@@ -127,8 +127,21 @@ def master_prism():
     return prism(SG.master_outer(0.45), -60.0, 60.0, "XZ")
 
 
-def stadium_xz(x0, x1, zc, h, n=8):
+# (W4 review fixes, craft G3) the stadium ends at G3's 7.5 deg facet limit: 24 segments per semicircle (25 points) for
+# r >= 2.5 (the vents r 3.85-4.35, the channel's lock notch r 3.5); 16 below (sagitta <= 0.01 mm). The W1-W3 ends had
+# 7 segments (25.7 deg), visibly polygonal at 3x and in the 3/4 views.
+def stadium_seg_points(r, g3=True):
+    """Points per semicircle: g3 (the moulded vents and the charging channel the review called out): 24 segments
+    (7.5 deg); otherwise (the stock's latch boss and button, r 3.5-4.5) 12 segments (15 deg, sagitta <= 0.04 mm; was
+    7-9: the counts 11, 13 left a UD1 needle in the boss / button booleans)."""
+    if g3:
+        return 25 if r >= 2.5 else 17
+    return 13
+
+
+def stadium_xz(x0, x1, zc, h, n=None, g3=True):
     r = h / 2.0
+    n = stadium_seg_points(r, g3) if n is None else n
     pts = list(G.arc(x1 - r, zc, r, -90.0, 90.0, n)) + list(G.arc(x0 + r, zc, r, 90.0, 270.0, n))
     return np.array(pts, float)
 
@@ -375,7 +388,7 @@ def upper_receiver():
     for x0, x1 in lvr["X"]:
         cuts.append(wall_cut(stadium_xz(x0, x1, lvr["Z_centre"], lvr["height"]), SG.F_R, +1))
     px, pz = EP["port_X"], EP["port_Z"]
-    cuts.append(wall_cut(G.rounded_rect(px[0], px[1], pz[0], pz[1], EP["port_corner_R"], 4), SG.Y_R, +1,
+    cuts.append(wall_cut(G.rounded_rect(px[0], px[1], pz[0], pz[1], EP["port_corner_R"], 6), SG.Y_R, +1,   # (W4 G3o: 4 -> 6)
                          depth_in=WALL + 12.0))
     # the port's 45 deg deflector chamfer along its rear edge (2.0)
     cuts.append(prism(np.array([[px[0] - 3.0, SG.Y_R - 1.0], [px[0] + 0.5, SG.Y_R - 1.0], [px[0] + 0.5, SG.Y_R + 2.5]]),
@@ -385,7 +398,8 @@ def upper_receiver():
     rise = cs["rear_lock_notch"]["rise_above_slot_top"]
     nw = cs["rear_lock_notch"]["width"]
     slot = np.vstack([[[sx[0], sz[0]], [sx[1], sz[0]], [sx[1], sz[1]], [sx[0] + nw, sz[1]]],
-                      G.arc(sx[0] + nw / 2.0, sz[1] + rise - nw / 2.0, nw / 2.0, 0.0, 180.0, 7)[:-1],
+                      G.arc(sx[0] + nw / 2.0, sz[1] + rise - nw / 2.0, nw / 2.0, 0.0, 180.0,
+                            stadium_seg_points(nw / 2.0))[:-1],
                       [[sx[0], sz[1] + rise - nw / 2.0]]])
     cuts.append(wall_cut(slot, SG.Y_L, -1, depth_in=SG.Y_L - sg["Y"][1] + 0.6, draft=False))
     c = 0.25

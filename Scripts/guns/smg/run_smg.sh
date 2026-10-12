@@ -35,6 +35,7 @@ py -3 -B "$HERE/smg_gates.py" --stage blockout
 echo "== form"
 run_blender form --python "$HERE/build_smg.py" -- --stage form
 grep -E "total tris" "$LOG/form.log"
+py -3 -B "$HERE/smg_facet_check.py" --npz "$S/form_tris.npz" | tail -1
 # the gated form-stage blend, kept for the later stages
 cp "$ROOT/Assets/Guns/SMG01.blend" "$S/SMG01_form_stage.blend"
 py -3 -B "$HERE/smg_silhouette.py" --npz "$S/form_tris.npz" --stage form --json "$S/sil_form.json" > /dev/null

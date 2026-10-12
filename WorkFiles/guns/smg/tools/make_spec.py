@@ -554,7 +554,9 @@ GUN_SOCKETS = [
     sock("ShellEject", "body", ((PORT["X"][0] + PORT["X"][1]) / 2, R_WALL, (PORT["Z"][0] + PORT["Z"][1]) / 2),
          r=rot(pitch=10.0, yaw=75.0, blender=[0.0, -10.0, -75.0]),
          use="casing spawn; +X = throw: to the right, 15 deg forward of square, 10 deg up (real blowback ports throw "
-             "right and slightly forward)", src="RIGHT trace ejection_port centre on the right wall"),
+             "right and slightly forward). Stock folded: the throw cone meets the folded stock (B3b: 29 stock / pad "
+             "vertices inside it; Q5 open), so spawned casings ignore the gun's own collision (W4 tech review)",
+         src="RIGHT trace ejection_port centre on the right wall"),
     sock("ChargingHandle", "charging_handle", (KNOB_C[0], KNOB_CY, KNOB_C[1]), use="hand target (knob centre)",
          src="merge re-read (zL_knob.png) + TOP knob protrusion"),
     sock("Selector", "selector", (sc(357.7), round(W_REC_L + 2.5, 1), sc(-45.6)), use="thumb target: left lever tab, 4 mm in "
@@ -1504,6 +1506,43 @@ RES = [
      "(11.7 deg, meeting at Z 20.68) instead of the trace's zig-zag strips that fanned streaks round the eyelet "
      "(smg_geom.MASTER_POLYS); every large flat region shaded with its plane normal (smg_parts._flatten_planar)",
      "rule": "real pattern + realism judges, inside the sheet's side / top gates"},
+    {"id": "R44", "topic": "W4 review fixes (craft + tech review, 2 realism judges on the final textures)",
+     "conflict": "realism: every view judged fake (one flat clay material, steel = polymer, no micro-texture, no wear "
+     "logic, firefly specks); craft: vent / channel ends 25.7 deg facets, the knob a speckled blob, bare steel as 196 "
+     "isolated flecks (0.07 %), the polymer's normal map flat (2.3 % of texels), the steel LIGHTER than the polymer "
+     "(base 50-52 vs 46-49, against the sheet's device 40 / rail 49 vs receiver 63), soot invisible on phosphate, no "
+     "drum knurl, trace noise in the stock window and the pad's rib profile, the housing's tongue 3.1 mm proud of the "
+     "fore-end at the V, the twin's LOD sizes at the box half-diagonal",
+     "resolution": "phosphate base sRGB (40, 41, 42), rough 0.62-0.76 dry / 0.52-0.62 oiled (the craft table's 48-54 "
+     "contradicted its own 'steel darker' rule; the sheet's crops decide); soot at the PBR floor (lin 0.013, sRGB 30); "
+     "bare steel as continuous 0.25-0.8 mm lines on the sharp convex crests (curvature x exposure x handling, <= 1.2 mm "
+     "from the edge, clusters >= 14 texels, <= 1.6 mm wide); the knob a satin crown with a bright rim; the polymer's "
+     "moulded texture in the normal map at the texel scale the maps carry (0.6 mm grain + 1.8 mm peel; the study's "
+     "0.05-0.15 mm sits under a texel and shows only as roughness), albedo mottle, continuous whitening bands, fore-aft "
+     "scratches; drum knurl 0.55 pitch in Metal_N; Masks G on the metal; stadium ends 24 segments per semicircle "
+     "(7.5 deg) and a G3o gate on opening loops (chord error <= 0.035 mm; 7.5 deg at r >= 5); the guard / grip cover "
+     "rounds finer; stock windows DP 1.0 + true radii; the pad's rear face flat with open ribs at the one pitch 3.2; "
+     "the housing set in 0.8 under the upper's plan incl. its 45 deg fore-end step; the follower 1.0 under the lips "
+     "(lips rolled R 1.2); the static twin's and the magazine's LOD sizes at Unreal's static-mesh sphere radius "
+     "(max |v - box centre|); texel classes: shipped medians up to 1.25 x the band top (W2 B9 rule), the measured "
+     "medians written into the sidecar beside the bands",
+     "rule": "realism judges + real pattern, inside the sheet's side / top gates; the sheet's crops for colour"},
+    {"id": "R45", "topic": "W4 resume: why the realism judges saw 'one flat clay' (measured), and the fix",
+     "conflict": "both realism judges called every close view one flat matte clay although the maps exist. Measured: "
+     "the maps reach the review renders (FBX UV0, BC sRGB / ORM + N Non-Color, DirectX green flipped, BC-emission "
+     "renders show the paint), but the paint was near-uniform at render scale: even after the first W4 fix pass "
+     "(polymer BC std 3.9 levels; W3 shipped 2.3) the maps sat only 1.8-3.5 sRGB levels (mean over the object) off a "
+     "constant per-set clay material in the 7 close-ups, and the review rigs' flat grey world left a dark rough finish "
+     "nothing to reflect (no sheen, no edge highlights)",
+     "resolution": "paint: real-scale roughness variation on the polymer (sheen fields at ~30 mm and ~8 mm, about "
+     "0.25 / 0.22 x fbm; 0.45 / 0.25 was tried and read as camouflage clouds at hero distance), recess dust on the polymer x 1.8, a settled dust film on up-facing faces (lighter, drier, "
+     "wiped off in the handling zones), the phosphate's mottle x 1.8 and its sheen field; albedo mottle stays at the "
+     "craft table's +-4 levels. Renders: the realism views lit by a photographic studio rig (Blender's bundled studio "
+     "HDRI, neutral, for light and reflections + softboxes; the camera sees the same grey backdrop), with the L5 "
+     "calibration rig's versions kept beside them; the review set and the colour test stay on L5. Measured after: the maps "
+     "3.28 / 3.37 levels (rough / studio rig, mean of the 7 close-ups) off the clay, x 1.23 over the first pass "
+     "(review/diag/maps_vs_clay.json)",
+     "rule": "realism judges; measurement (maps vs clay)"},
 ]
 
 # ================================================================================================ gates
@@ -1836,10 +1875,14 @@ spec = {
             "grip_stipple": CRAFT["materials"]["grip_stipple"],
             "polymer_mag": CRAFT["materials"]["polymer_mag"],
             "rubber_pad": CRAFT["materials"]["rubber"],
-            "phosphate_steel": CRAFT["materials"]["phosphate_steel"],
+            "phosphate_steel": dict(CRAFT["materials"]["phosphate_steel"], base_srgb=[40, 41, 42],
+                                    base_linear=[0.021, 0.023], roughness_dry=[0.62, 0.76], roughness_oiled=[0.52, 0.62],
+                                    craft_table_base_srgb=CRAFT["materials"]["phosphate_steel"].get("base_srgb"),
+                                    ruling="R44: the steel darker than the polymer, as the sheet's crops show"),
             "bare_steel_wear": CRAFT["materials"]["bare_steel"],
             "bolt_steel": {"base": "phosphate_steel", "flanks_and_face": "bare_steel_wear (sliding 0.15-0.25)"},
-            "soot": CRAFT["materials"]["soot"]},
+            "soot": dict(CRAFT["materials"]["soot"], base_linear_painted=0.013,
+                         ruling="R44: at the PBR floor (sRGB 30), visibly under the darkened phosphate")},
         "sheet_samples_srgb": CRAFT["materials"]["sheet_samples_srgb_median"],
         "wear_logic": CRAFT["wear_logic"],
         "slots": PLAN["materials"]["slots"], "recolour": PLAN["materials"]["recolour"],

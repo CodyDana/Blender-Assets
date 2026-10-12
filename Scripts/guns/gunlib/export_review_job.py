@@ -314,6 +314,45 @@ def lights(cam, L):
         LK.rough_world(sc, bg, float(L.get("env", 0.55)))
         LK.rough_lights(cam, tuple(B(L["target_M"])), float(L.get("dist_m", 1.1)), k)
         return
+    if L["rig"] == "studio":
+        # (gunlib 0.2.x, SMG01 W4 resume; optional, no AR-01 job uses it) a photographic studio for the realism views:
+        # lighting and reflections from Blender's bundled studio HDRI (studiolights/world/<hdri>.exr, CC0) made
+        # neutral (saturation 0) at `strength`, plus the rough rig's softboxes at k; the camera still sees the flat
+        # bg_rgb backdrop. The flat grey world of the 'l5' / 'rough' rigs gives a dark, rough surface nothing to
+        # reflect, so every finish reads as one matte clay (the W4 realism judges' tell); the L5 rig stays the colour
+        # calibration rig
+        w = bpy.data.worlds.new("ER_Studio")
+        sc.world = w
+        w.use_nodes = True
+        nt = w.node_tree
+        bgn = next(n for n in nt.nodes if n.type == "BACKGROUND")
+        bgn.inputs["Color"].default_value = (*RD.srgb_to_lin(bg), 1.0)
+        bgn.inputs["Strength"].default_value = 1.0
+        d = Path(bpy.utils.system_resource("DATAFILES", path="studiolights/world"))
+        env = nt.nodes.new("ShaderNodeTexEnvironment")
+        env.image = bpy.data.images.load(str(d / f"{L.get('hdri', 'studio')}.exr"), check_existing=True)
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        mp = nt.nodes.new("ShaderNodeMapping")
+        mp.inputs["Rotation"].default_value[2] = math.radians(float(L.get("hdri_rot_deg", 0.0)))
+        nt.links.new(tc.outputs["Generated"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs["Vector"], env.inputs["Vector"])
+        hs = nt.nodes.new("ShaderNodeHueSaturation")
+        hs.inputs["Saturation"].default_value = float(L.get("saturation", 0.0))
+        nt.links.new(env.outputs["Color"], hs.inputs["Color"])
+        bg2 = nt.nodes.new("ShaderNodeBackground")
+        bg2.inputs["Strength"].default_value = float(L.get("strength", 0.6))
+        nt.links.new(hs.outputs["Color"], bg2.inputs["Color"])
+        lp = nt.nodes.new("ShaderNodeLightPath")
+        mix = nt.nodes.new("ShaderNodeMixShader")
+        out = next(n for n in nt.nodes if n.type == "OUTPUT_WORLD")
+        nt.links.new(lp.outputs["Is Camera Ray"], mix.inputs["Fac"])
+        nt.links.new(bg2.outputs["Background"], mix.inputs[1])
+        nt.links.new(bgn.outputs["Background"], mix.inputs[2])
+        nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+        LK.clear_lights()
+        if k > 0.0:
+            LK.rough_lights(cam, tuple(B(L["target_M"])), float(L.get("dist_m", 1.1)), k)
+        return
     # 'l5': the physical L5 rig of rifle_texrender.sheet_lights_physical (overhead key tipped toward the camera side,
     # rim behind, the grey world as fill and reflection environment), mirrored for a view from the left
     RD.world_flat(sc, RD.srgb_to_lin(bg), 1.0, env=float(L.get("env", 0.2)) * k)

@@ -224,7 +224,9 @@ MASTER_SPANS = [((485.08, -32.04), (490.04, -37.28))]
 #   (X 386 .. 412.8) and the notch where the bottom bar meets the grip's front strap (X 331 .. 349.7; judges: the bar
 #   runs into the grip with no blend; real guards are moulded into the grip with a radius)
 MASTER_CURVES = [((181.25, 13.26), (233.68, 25.05), 3.0), ((253.1, -29.1), (294.9, -57.7), 3.0),
-                 ((386.18, -89.55), (412.8, -78.07), 1.5, 1.6), ((331.19, -97.3), (349.65, -89.34), 2.0, 1.6)]
+                 ((386.18, -89.55), (412.8, -78.07), 1.5, 0.5), ((331.19, -97.3), (349.65, -89.34), 2.0, 0.5)]
+# (W4 review fixes, craft G3) the guard's two smoothed corners kept at 0.5 mm chords (were 1.6: on their ~3 mm radii
+# that is 2-4 flat facets of ~30 deg each at 3x); 0.5 keeps each chord <= ~9 deg, sagitta <= 0.01 mm
 
 
 def smooth_span(P, a, b, sigma, step=0.3, out_step=1.0):

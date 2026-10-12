@@ -77,7 +77,7 @@ def _lod_npz(k, state):
     return CFG.scratch / "game" / (f"lod{k}_tris.npz" if state in (None, "extended") else f"lod{k}_{state}_tris.npz")
 
 
-CFG.viewgates = {"radius": lambda rep: rep["bounds_radius_m"]["twin_with_mag_box_half_diagonal"],
+CFG.viewgates = {"radius": lambda rep: rep["bounds_radius_m"]["twin_engine_sphere_radius"],   # (W4: engine rule)
                  "start_sizes": [float(v) for v in D["lods"]["gun_screen_sizes_start"]],
                  "states": ["extended", "folded"], "lod_npz": _lod_npz,
                  "s2_requires": ["sight_front_leaf", "sight_rear_leaf"],

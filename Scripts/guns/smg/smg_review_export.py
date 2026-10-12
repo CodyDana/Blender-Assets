@@ -21,6 +21,8 @@ hold the selector at a firing position, the magazine on its bone).
     1x = 2560 px across the 625 mm gun (4.096 px/mm); 2x = 8.19 px/mm; 3x = 12.29 px/mm.
 Light: the L5 physical rig the colour was calibrated on (scratch/l5/l5.json fit: k 1.3432, key 70 deg, world 0.2),
 centred on each shot's target; the 3/4 panel pairs use the rough rig on the panel's fitted backdrop (AR-01 method).
+(W4 resume) the realism views review/realism/<name>.png use the photographic STUDIO rig (gunlib export_review_job
+'studio'); their L5 versions are in review/realism/l5/.
 Writes gates/review_export.json (counts of images made, poses read back and the framing checks).
 """
 from __future__ import annotations
@@ -151,6 +153,11 @@ def l5_params():
 
 def l5_l(target, fill=0.0, bg=(126, 126, 126)):
     return dict(l5_params(), rig="l5", bg_rgb=list(bg), target_M=[float(v) for v in target], fill=float(fill))
+
+
+# (W4 resume) the realism views' studio rig (gunlib export_review_job 'studio'): Blender's bundled studio.exr (CC0),
+# saturation 0, strength 0.6, + the rough rig's softboxes at k 0.3 (0.85 x 0.35: the W2 texrender's rough light scaled)
+STUDIO = {"rig": "studio", "hdri": "studio", "strength": 0.6, "saturation": 0.0, "k": 0.30, "bg_rgb": [126, 126, 126]}
 
 
 def form_fits():
@@ -355,8 +362,20 @@ def realism_shots(samples):
          ("hero_34_folded", persp_look(fold_t + 1500.0 * unit([0.55, -0.78, 0.30]), fold_t, 38.0, (1600, 900)),
           l5_l(fold_t), {"pose": {"clip": "A_SMG01_StockFold", "frame": 24}},
           "hero 3/4 front right, stock folded (A_SMG01_StockFold last frame, StockLocked), 1.5 m, 38 deg FOV")]
-    return [dict({"name": n, "out": str(REAL / f"{n}.png"), "camera": c, "lights": L, "samples": samples,
-                  "note": note}, **kw) for n, c, L, kw, note in S]
+    # (W4 resume) the judges' views under the photographic studio rig (gunlib export_review_job 'studio': the bundled
+    # studio HDRI made neutral for light and reflections + the rough rig's softboxes at 0.3; the camera sees the same
+    # grey 126 backdrop); the L5 colour-calibration rig's versions beside them in realism/l5/ (the W3-W4 look). Under
+    # the flat grey world of L5 a dark rough finish has nothing to reflect (with the paint near-uniform too, spec R45:
+    # the maps 1.8-3.5 sRGB levels off a constant clay), which the judges called "one flat matte clay"
+    dist = {"fp_35cm": 1.1, "ads_55deg": 1.1, "tp_3m": 3.2, "hero_34": 1.6, "hero_34_folded": 1.6}
+    out = []
+    for n, c, L, kw, note in S:
+        st = dict(STUDIO, target_M=L["target_M"], dist_m=dist[n])
+        out.append(dict({"name": n, "out": str(REAL / f"{n}.png"), "camera": c, "lights": st, "samples": samples,
+                         "note": note + " [studio rig]"}, **kw))
+        out.append(dict({"name": n + "_l5", "out": str(REAL / "l5" / f"{n}.png"), "camera": c, "lights": L,
+                         "samples": samples, "note": note + " [L5 calibration rig]"}, **kw))
+    return out
 
 
 def set_shots(samples):
@@ -678,7 +697,11 @@ def main():
             sh = [s_ for s_ in sh if s_["name"] in names]
         if not a.no_render:
             run_job("realism", sh, a.samples)
-        contact([(s_["out"], s_["name"] + ": " + s_["note"]) for s_ in sh], REAL / "contact.png")
+        contact([(s_["out"], s_["name"] + ": " + s_["note"]) for s_ in sh if not s_["name"].endswith("_l5")],
+                REAL / "contact.png")
+        if any(s_["name"].endswith("_l5") for s_ in sh):
+            contact([(s_["out"], s_["name"] + ": " + s_["note"]) for s_ in sh if s_["name"].endswith("_l5")],
+                    REAL / "l5" / "contact.png")
         (REAL / "shots.json").write_text(json.dumps({"source": "EXPORTED bytes (SK_SMG01 + SM_SMG01_Mag + shipped "
                                                                "textures + shipped clips)",
                                                      "shots": [dict(s_, out=rel(s_["out"])) for s_ in sh]}, indent=1))

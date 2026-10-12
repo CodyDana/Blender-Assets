@@ -41,6 +41,8 @@ R_DEV = MD["od"] / 2.0                              # 11.55
 R_DEV_IN = MD["inner_dia"] / 2.0                    # 6.75
 X_MUZ = float(SPECD["parts"][[p["id"] for p in SPECD["parts"]].index("muzzle_device")]["box_M"]["X"][1])   # 625.0
 NSEG = 64
+# the barrel at 64 sides (W4 tried the plan's 48 for budget; kept 64, the W3 geometry)
+NSEG_BARREL = 64
 
 
 def barrel():
@@ -55,6 +57,11 @@ def barrel():
     from gunlib import lod as _lod
     if _lod.LEVEL >= 2:
         xb = xc0 - 4.0       # (W3) LOD2+: the barrel's 100 mm inside the receiver is never seen (hidden surface removed)
+    # (W4 review fixes) the chamber mouth: with the bolt back the port shows the breech face's upper half (the bore
+    # centre Z 1.87 is just under the port's lower edge, Z 2.3); the 0.6 chamfer is kept (1.0 was tried: its sloped
+    # faces under the barrel's cylinder chart pulled class D's density P5 under B9's 0.85 x median) and painted as the
+    # rounds' rubbed bright cone with a bare rim (smg_paint). The feed ramp sits under the bore, below the port's edge:
+    # never seen, not modelled
     loop = [(xb, R_BORE + 0.6), (xb, R_HID - c), (xb + c, R_HID),
             (xc0, R_HID), (xc0, R_COL - c), (xc0 + c, R_COL), (xf0, R_COL), (xf0, R_FL - c), (xf0 + c, R_FL),
             (xf1 - c, R_FL), (xf1, R_FL - c), (xf1, R_COL), (xc1 - c, R_COL), (xc1, R_COL - c),
@@ -62,7 +69,7 @@ def barrel():
             (X_SEAT - GAP, R_TEN), (X_CROWN - 0.3, R_TEN), (X_CROWN, R_TEN - 0.3),
             (X_CROWN, R_BORE + 0.8), (X_CROWN - 0.8, R_BORE),          # the recessed crown's 45 deg bore chamfer
             (xb + 0.6, R_BORE)]                                      # breech chamfer (the feed ramp is not modelled)
-    m = revolve_loop([(t, r) for t, r in loop], AXIS_O, AXIS, NSEG)
+    m = revolve_loop([(t, r) for t, r in loop], AXIS_O, AXIS, NSEG_BARREL)
     return PartDef("barrel", [m], bone="body", cls="M-chamfer", slot=METAL, recipe=[],
                    joint={"type": "fixed", "parent": "upper_receiver", "pin": "transverse roll pin (hidden)"},
                    spec_id="barrel")

@@ -29,6 +29,7 @@ THICK = float(MAGD["thickness"])             # 27.0
 WALL = 2.6                                    # notch depth 2.5 leaves 0.1 (gunlib check)
 Z_TOP = float(MAGD["top_along_axis"])        # 58.07
 PLATE_H = float(FP["height"])                # 6.8
+FOLLOWER_DEPTH = 1.0                          # under the lips' underside (gunlib default 6.0)
 
 
 def _trace_floor():
@@ -58,8 +59,11 @@ def build_all():
     ties = [z_local(t, 0.0) for t in lad["tie_Z"]]
     notch_top = z_local(MAGD["catch_notch"]["Z_seated"], -LENGTH / 2.0)
     nt = MAGD["catch_notch"]
+    # (W4 review fixes, craft 2.14) the lips rolled (outer top edge R 1.2, a 0.9 vertical tip face, so they read folded
+    # inward, not a flat rim round a trapezoid) and the follower raised to 1.0 under the lips' underside (3.0 under the
+    # lip tips; was 6.0 / 8.0: lost in the black cavity in mag_top_3x)
     lips = {"opening": 10.0, "x_front": LENGTH / 2.0 - WALL - 8.0, "x_rear": -LENGTH / 2.0, "height": 2.0,
-            "flare": 3.0}
+            "flare": 3.0, "roll": 1.2, "roll_seg": 3, "tip": 0.9}
     parts, rec = MB.magazine(LENGTH, THICK, Z_BOT, Z_TOP, wall=WALL, r_front=MAGD["corner_R"]["front"],
                              r_rear=MAGD["corner_R"]["rear"], lips=lips,
                              notch={"z_top": notch_top, "width": nt["size"][0], "height": nt["size"][1],
@@ -69,10 +73,11 @@ def build_all():
                                     "proud": MAGD["front_spine_rib"]["proud"]},
                              plate={"thickness": PLATE_H, "overhang": 1.2, "tab_hole": (-4.0, 0.0,
                                                                                          FP["locking_tab_hole_dia"])},
-                             M4=M4, slot=MAGS, prefix="magazine")
+                             follower_depth=FOLLOWER_DEPTH, M4=M4, slot=MAGS, prefix="magazine")
     body, fol, plate = parts
     for x0, x1 in ((-rib / 2.0 - cw, -rib / 2.0), (rib / 2.0, rib / 2.0 + cw)):
-        for c in MB.ladder_cutters(x0, x1, z0, z1, float(lad["depth"]), THICK / 2.0, ties, tie_w=3.0, r=1.0):
+        # (W4, G3o) the recess corners at 5 segments (18 deg, chord error 0.012 mm; were 3: 30 deg, 0.047 mm)
+        for c in MB.ladder_cutters(x0, x1, z0, z1, float(lad["depth"]), THICK / 2.0, ties, tie_w=3.0, r=1.0, seg=5):
             body.cutters.append(c.transformed(M4))
     fol.name = "magazine_follower"
     plate.name = "magazine_floor_plate"

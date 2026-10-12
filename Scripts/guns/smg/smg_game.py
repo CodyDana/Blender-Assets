@@ -287,7 +287,11 @@ def main():
             V = ((V + GRIP) @ Mf[:3, :3].T + Mf[:3, 3]) - GRIP
         Vfold.append(V)
     Vfold = np.vstack(Vfold)
-    rep["bounds_radius_m"] = {"twin_with_mag_box_half_diagonal": half_diag(V0), "gun_without_mag": half_diag(Vg),
+    # (W4 review fixes) the twin's LOD sizes convert at Unreal's static-mesh sphere radius (max |v - box centre|,
+    # gunlib.game.static_sphere_radius; the AR-01's engine numbers confirm the rule), not the box half-diagonal: W3's
+    # half-diagonal (0.3508) put the twin's switches 6.4 % closer than the LOD-pop distances
+    rep["bounds_radius_m"] = {"twin_engine_sphere_radius": round(GM.static_sphere_radius(V0) / 1000.0, 5),
+                              "twin_with_mag_box_half_diagonal": half_diag(V0), "gun_without_mag": half_diag(Vg),
                               "gun_folded_without_mag": half_diag(Vfold),
                               "spec": D["lods"]["bounds_radius_m"]}
     rep["names"] = {"group": grp.name, "lods": [o.name for o in lods], "hulls": [h.name for h in hulls],

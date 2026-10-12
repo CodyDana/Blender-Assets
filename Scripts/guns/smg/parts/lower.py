@@ -170,7 +170,8 @@ def grip_cover():
     s_bot = grip_bottom_s()
     cover_h = float(PG["cover_height"])
     s0 = s_bot - cover_h + 0.2
-    rings, ss = grip_sections(s0, s_bot, 1.6)
+    rings, ss = grip_sections(s0, s_bot, 0.8)      # (W4 review fixes, G3: 1.6 -> 0.8 mm stations, the flared lip's
+    #                                                 front corner read as 2-4 flat facets at 3x)
     m = loft_capped(rings)
     from gunlib.parts import PartDef
     zb = float(np.min(np.vstack(rings)[:, 2]))
@@ -178,7 +179,7 @@ def grip_cover():
 
     def bottom_rim(mid, d, n1, n2, dih, convex):
         return 1.0 if convex and dih > 40.0 and max(abs(n1 @ nb), abs(n2 @ nb)) > 0.95 and             (mid[:2] @ np.array([0.0, 0.0]) == 0.0) and ((mid[[0, 2]] - GRIP_O) @ U_DN) > s_bot - 2.5 else 0.0
-    return PartDef("grip_cover", [m], bone="body", cls="P-round", slot=FURN, recipe=[(1.0, 2, "WC", bottom_rim)],
+    return PartDef("grip_cover", [m], bone="body", cls="P-round", slot=FURN, recipe=[(1.0, 4, "WC", bottom_rim)],
                    joint={"type": "butt", "parent": "lower_receiver", "gap_mm": [0.3, 0.5]}, spec_id="pistol_grip")
 
 
@@ -339,7 +340,28 @@ def guard_opening(fillet=True):
     # (the faired ring's dense short edges clamp a fillet to nothing: simplified at 0.2 first, so each chamfer is one
     # edge and the R 6 arcs fit)
     Q = G.ccw(G.dedupe(G.dp_simplify(P, 0.2), 0.3))
-    return G.ccw(G.fillet(Q, float(TG["inner_corner_R"][0]), 3, min_turn_deg=8.0))
+    # (W4 review fixes, craft G3) 8 segments per corner (was 3: 15 deg facets on the R 6 rounds at 3x)
+    return G.ccw(G.fillet(Q, float(TG["inner_corner_R"][0]), _guard_seg(), min_turn_deg=8.0))
+
+
+def _guard_seg():
+    """The guard's corner segments: 8 at LOD0; at LOD1+ the LOD count (4). (W4 resume: at LOD1 the 8-segment rounds of
+    the gentle corners put 0.3 mm chords on the guard's flat side faces, and their triangulation left 2 needles,
+    0.005-0.007 mm high: UD1 / UD2; 4 segments double the chord and quadruple that height)"""
+    from gunlib import lod as _lod
+    return _lod.count(8, 2)
+
+
+def _round_outer(P, r, x_keep):
+    P = G.ccw(G.dedupe(G.dp_simplify(G.ccw(P), 0.1), 0.3))
+    n = len(P)
+    radii = []
+    for i in range(n):
+        a, b, c = P[i - 1], P[i], P[(i + 1) % n]
+        u, v = b - a, c - b
+        turn = math.degrees(abs(math.atan2(u[0] * v[1] - u[1] * v[0], float(u @ v))))
+        radii.append(r if (12.0 < turn < 60.0 and b[0] < x_keep - 1.0) else 0.0)
+    return G.ccw(G.fillet(P, r, _guard_seg(), min_turn_deg=8.0, radii=radii))
 
 
 FUNNEL_DEG = 35.0                                      # the funnel chamfer from horizontal
@@ -393,6 +415,10 @@ def lower_receiver():
     #                                                 rear face sweeps 0.02 off it there (B3 row >= 0.1; the old traced
     #                                                 ring's face wandered 0.1-0.3 behind the line)
     g_out = G.ccw(G.clip_x(G.offset(guard_opening(fillet=False), 8.0), None, xl_))
+    # (W4 review fixes, craft G3) the offset's mitred chamfer corners (one 22-45 deg kink each, the guard's 'chunky
+    # bends' at 3x) take the inner corners' radius + the bar (R 14), <= 7.5 deg per segment; the clip line's corners at
+    # the front leg (X xl_) stay sharp (the paddle's slot and the foot splice need them)
+    g_out = _round_outer(g_out, float(TG["inner_corner_R"][0]) + 8.0, xl_)
     # the guard's front foot as drawn (the bar's lower front corner runs on forward under the paddle to the magwell,
     # X 402..409, Z -75..-80): the guard part ring in front of the leg below Z -74 (away from the opening), spliced
     # into the loop's front edge (one outline: a separate prism met the loop coplanar, multi-face edges)
@@ -629,7 +655,19 @@ def lower_receiver():
 
     base = body
     gl, _ = grip_loft()
-    ops = [("intersect", [magwell_funnel()]),
+    # (W4 review fixes, craft G17 / G5) the housing's tongue (the V's lower leg, up to the apex at X 484) follows the
+    # upper's plan, set in LO_INSET under it all the way: in front of the upper's 45 deg fore-end step (X 482.6-486.5)
+    # it was held at the body width (Y_R + 0.8 = -30.8), 3.1 mm proud of the fore-end's face (F_R -27.7; left 1.0 over
+    # F_L 29.0): a standing wedge face along the V's front leg (the review's stair-stepped edge and black sliver at the
+    # catch / V-panel junction, and the dark seam segment on the left)
+    xs = SG.FORE_END_STEP_X
+    plan = np.array([[X_EBF - H - 6.0, SG.Y_R + LO_INSET], [xs - (SG.F_R - SG.Y_R), SG.Y_R + LO_INSET],
+                     [xs, SG.F_R + LO_INSET], [530.0, SG.F_R + LO_INSET], [530.0, SG.F_L - LO_INSET],
+                     [xs, SG.F_L - LO_INSET], [xs - (SG.Y_L - SG.F_L), SG.Y_L - LO_INSET],
+                     [X_EBF - H - 6.0, SG.Y_L - LO_INSET]])
+    plan_lower = prism(G.ccw(plan), -200.0, 80.0, "XY")
+    faces += [SG.F_L - LO_INSET, SG.F_R + LO_INSET]
+    ops = [("intersect", [magwell_funnel()]), ("intersect", [plan_lower]),
            ("union", [eb, mw_body, band, guard, foot, web_flare] + ears),     # (r1: the web is inside the grown guard)
            ("intersect", [master_prism()]), ("intersect", [prism(region_lower(), -60.0, 60.0, "XZ")]),
            ("union", [gl]),

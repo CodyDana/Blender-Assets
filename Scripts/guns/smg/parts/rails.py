@@ -103,6 +103,11 @@ def lower_rail():
     return [p], rec
 
 
+# (W4 review fixes, budget) the four screw heads (dia 4.75, seen only looking down into their slots) at 24 segments
+# (15 deg, sagitta 0.02 mm; were 36): -1,056 triangles for the vents' and the guard's G3 rounds under the 50k ceiling
+SCREW_SEG = 24
+
+
 def rail_screws():
     """Low button-head cap screws (heads dia 4.8, 0.3 under the slot floor) in the top rail's slots 4 and 20 and the
     lower rail's slots 1 and 4: ISO 7380 proportions on a 2.5 mm screw (head 4.75, height 1.38, socket 1.5)."""
@@ -112,14 +117,14 @@ def rail_screws():
     d = 2.5
     for k in TR["screws"]["in_slots"]:
         xc = float(TR["lattice_slot0_X"]) + k * PITCH
-        head = HW.button_head(d, shank_len=4.0, nseg=36)
+        head = HW.button_head(d, shank_len=4.0, nseg=SCREW_SEG)
         m.extend(HW.place(head, (xc, 0.0, floor - 0.3 - 0.55 * d - 0.02 - 0.0), (0, 0, 1)).translated((0, 0, 0)))
     M4l, kwl = lower_rail_geometry()
     c = [float(v) for v in LR["slot_centres_X"]]
     Hl = kwl["height"]
     floor_l = float(LR["top_seam_Z"]) - GAP - (Hl - RL.D_VBOT)
     for k in (1, len(c) - 2):
-        head = HW.button_head(d, shank_len=4.0, nseg=36)
+        head = HW.button_head(d, shank_len=4.0, nseg=SCREW_SEG)
         m.extend(HW.place(head, (c[k], 0.0, floor_l + 0.3 + 0.55 * d + 0.02), (0, 0, -1)))
     return [PartDef("rail_screws", [m], bone="body", cls="M-chamfer", slot=METAL, recipe=[],
                     joint={"type": "fixed", "parent": "top_rail"}, spec_id="top_rail")]

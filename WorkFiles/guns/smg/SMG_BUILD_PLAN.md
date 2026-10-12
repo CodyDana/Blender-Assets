@@ -469,7 +469,7 @@ the bore within 0.5 mm / 0.05 deg).
 | M1 | Seated, co-visible gun/mag LOD pairs (k, k) and (k, k+-1) | 0 intersecting triangles (LOD0-1); LOD2-3 depth < 1 px at the switch distance |
 | M2 | Seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge (side + front views) | 0.0-0.3 mm; 1.0-2.0 mm; seam <= 0.6 mm |
 | M3 | Lateral per side; fore-aft; catch engagement depth | 0.2-0.6 mm; 0.2-0.6 mm; >= 1.5 mm |
-| M4 | Insert path `MagInsertStart` -> `Mag` in 0.5 mm steps, catch at rest | 0 intersections except the declared allowance: the catch nose riding the mag's rear face/ramp, <= engagement depth + 0.3 mm, only in the catch zone (the last engagement + overtravel mm); reported per step |
+| M4 | Insert path `MagInsertStart` -> `Mag` in 0.5 mm steps, catch at rest | 0 intersections except the declared allowance: the catch nose riding the mag's rear face/ramp, <= engagement depth + 0.3 mm, only in the catch zone; reported per step. **Ruling R36 (recorded at the W4 tech review):** the catch zone is the whole ride of the nose over the magazine's rear face, from the mag's top edge passing the nose down to the notch (26 mm here, not "the last engagement + overtravel"): the real pattern's catch is spring-loaded and cammed by the magazine, so M4 checks at every step that a clearing catch angle exists inside the travel, the nose moves <= 0.87 mm per 0.5 mm step (a ramp) with depth <= engagement + 0.3, 0 intersections with the rest of the gun, and the catch back at rest when seated. W5 M9 and later guns use this definition |
 | M4b | The same path with `mag_release` at its release angle | **0 intersections** (proves the cam geometry is clean, not just tolerated) |
 | M5 | Removal path (reverse), `mag_release` at its release angle | 0 intersections |
 | M5b (info) | Removal with the catch at rest | reported; expected to collide (proves the catch retains) |
@@ -560,7 +560,7 @@ each gun's SAFE / SEMI / AUTO, each release moves its own release way; no error 
 the line; check fix C5); U3 sockets on bones within 0.001 cm; U4 FP/WSR full component set (gun, mag); U5 LOD counts,
 **triangles equal Blender/FBX/Unreal (expected PASS this time, thanks to UD1)**, screen sizes, bounds containing every
 clip vertex incl. both stock states, and whether the extension enters the LOD radius (records it); U6 mag composition;
-U7 physics (extended drop + folded drop reported); U8 lightmap per Q6; U9 clips + notifies; **U10 0 asset warnings
+U7 physics (extended drop + folded drop reported; **W4 review addition: the COMPONENT's runtime bounds of a dropped, simulating SK_SMG01 with the stock folded must contain every vertex** (with bodies instanced a SkeletalMeshComponent takes its bounds from the physics asset, whose one body on `body` spans only the rest box: the folded stock, Y -91.5, sits ~55 mm outside it on paper); if it fails: a kinematic / QueryOnly stock body on `stock` with consider_for_bounds, or `bComponentUseFixedSkelBounds` for world / pickup instances in the README, then the dropped gun's LOD radius re-derived; U5 also checks SM_SMG01 / SM_SMG01_Mag against the engine's sphere radius (the W4 sizes use max |v - box centre|)); U8 lightmap per Q6; U9 clips + notifies; **U10 0 asset warnings
 (expected PASS: UD1-UD3)**; U11 if a player MetaHuman exists in the verification project (else reported); U12 top-mip
 residency at hip and ADS; C2 hulls; M9.
 

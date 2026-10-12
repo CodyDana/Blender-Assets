@@ -279,6 +279,21 @@ def proxy_mesh(arm, mat, coll, com_B):
     return ob
 
 
+def measured_texel_classes():
+    """{set: {class: median px/cm}} from the W2 gate file's B9 density rows ('P5 / median / P95 (area)')."""
+    import re
+    out = {}
+    up = GATES / "uv_bake_paint.json"
+    if not up.exists():
+        return out
+    for g in json.loads(up.read_text()).get("gates", []):
+        m = re.match(r"B9 density (\w+) class (\w)", g.get("name", ""))
+        if m:
+            vals = [float(x) for x in re.findall(r"[\d.]+", str(g.get("value")))[:3]]
+            out.setdefault(m.group(1), {})[m.group(2)] = {"p5": vals[0], "median": vals[1], "p95": vals[2]}
+    return out
+
+
 def main():
     from pipeline import lock as L
     L.assert_owner(CODE, "claude")
@@ -491,6 +506,12 @@ def main():
     h1 = json.loads(h1p.read_text()) if h1p.exists() else None
     gun = dict(D["sidecar_gun_block"])
     gun["texel_classes_px_per_cm"] = D["textures"]["texel_classes_px_per_cm"]
+    # (W4 review fixes) the SHIPPED densities beside the spec bands (W2 packs each class at up to 1.25 x its band top,
+    # spec R44): medians measured on the UV0 of every set (gates/uv_bake_paint.json, B9 rows), so buyers and the line
+    # standard read the real numbers
+    gun["texel_classes_measured_px_per_cm"] = measured_texel_classes()
+    gun["texel_class_rule"] = ("spec bands = targets; shipped class medians up to 1.25 x the band top (W2 B9, spec R44); "
+                               "measured medians in texel_classes_measured_px_per_cm")
     gun["hand_offset"] = (h1 or {}).get("hand_offset", {"weapon_r_to_Grip": "identity (provisional)",
                                                          "note": "H1 full not run"})
     gun["first_person"] = ("FP_Weapon + TP_Weapon (SK_SMG01) and FP_Mag + TP_Mag (SM_SMG01_Mag on Mag); every FP "

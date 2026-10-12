@@ -15,6 +15,16 @@ from mathutils import Euler, Matrix, Vector
 
 
 # ====================================================================== materials
+def static_sphere_radius(V):
+    """Unreal's static-mesh bounds sphere radius for vertices V (any unit; returned in that unit): the largest vertex
+    distance from the bounding BOX's centre (FBoxSphereBounds from points), not the box's half-diagonal (that is a
+    skeletal mesh's rule). Measured on the AR-01 (arB_verify): SM_AR01 44.391 cm (half-diagonal 45.64), SM_AR01_Mag
+    10.555 (10.77). (gunlib 0.2.x, SMG01 W4 review fix; the AR-01's own shipped sizes are not changed.)"""
+    V = np.asarray(V, float)
+    c = 0.5 * (V.min(0) + V.max(0))
+    return float(np.max(np.linalg.norm(V - c, axis=1)))
+
+
 def game_material(name, stem, tex_dir):
     """Principled preview of the shipped maps: BC (sRGB), ORM (linear: R AO, G roughness, B metallic), N (DirectX:
     green flipped back for Blender). Image names are the texture file names (qa_check's colour-space rules key on the

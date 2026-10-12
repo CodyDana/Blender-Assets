@@ -217,7 +217,7 @@ def main():
         if coll not in o.users_collection:
             coll.objects.link(o)
     sk_sizes, r_sk = rig["lod_screen_sizes"]["SK"], float(rig["lod_screen_sizes"]["r_sk_engine_m"])
-    r_mag = 0.5 * float(np.linalg.norm(V0.max(0) - V0.min(0))) / 1000.0
+    r_mag = GM.static_sphere_radius(V0) / 1000.0          # (W4) Unreal's static-mesh sphere radius (was the half-diagonal)
     sizes = [1.0] + [round(s * r_mag / r_sk, 5) for s in sk_sizes[1:]]
     grp["lod_screen_sizes"] = json.dumps(sizes)
     rep["lod_screen_sizes"] = {"sizes": sizes, "r_mag_m": round(r_mag, 4), "r_SK_engine_m": r_sk, "SK_sizes": sk_sizes,

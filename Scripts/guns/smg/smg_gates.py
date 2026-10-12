@@ -236,6 +236,16 @@ def stage_form():
     closed = [k for k, v in rep.items() if v["boundary_edges"] or v["multi_face_edges"]]
     gates.append(g("B7 closed manifold parts", "%d / %d closed" % (len(rep) - len(closed), len(rep)), "all", not closed,
                    ", ".join(closed)))
+    # (W4 review fixes) G3o: facets on the openings' boundary loops (smg_facet_check.py on the form triangles)
+    fc_p = SCRATCH / "facet_check.json"
+    if fc_p.exists():
+        fc = json.loads(fc_p.read_text())
+        gates.append(g("G3o facets on opening loops (vents, channel + lock notch, port, recesses, windows)",
+                       {k: {"holes": v["holes"], "max_facet_deg_r_ge_5": v["max_facet_deg"],
+                            "max_sagitta_mm": v["max_sagitta_mm"], "fails": len(v["fail"])} for k, v in fc["parts"].items()},
+                       "chord error <= 0.035 mm on every arc; <= 7.5 deg where r >= 5 mm", fc["pass"]))
+    else:
+        gates.append(g("G3o facets on opening loops", "not run", "smg_facet_check.py", False))
     tri_total = sum(v["triangles"] for v in rep.values())
     tri_mag = sum(v["triangles"] for k, v in rep.items() if k.startswith("magazine"))
     tri_gun = tri_total - tri_mag

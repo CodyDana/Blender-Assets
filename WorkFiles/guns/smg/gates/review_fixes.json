@@ -1,0 +1,1020 @@
+{
+ "stage": "W4 review fixes (SMG_BUILD_PLAN 15 row W4)",
+ "date": "2026-10-12T18:01:55",
+ "status": "pass",
+ "failed": [],
+ "stage_files": {
+  "form": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": "2026-10-12T10:46:02"
+  },
+  "form_magfit": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": null
+  },
+  "uv_bake_paint": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": "2026-10-12T17:53:47"
+  },
+  "game": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": null
+  },
+  "rig_export": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": null
+  },
+  "mag": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": null
+  },
+  "review_export": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": "2026-10-12"
+  },
+  "gunlib_regression": {
+   "status": "pass",
+   "failed": [],
+   "pass": true,
+   "date": "2026-10-12T11:27:38"
+  }
+ },
+ "counts": {
+  "items": 37,
+  "fixed": 25,
+  "rejected": 6,
+  "deferred": 4
+ },
+ "items": [
+  {
+   "id": "C1",
+   "source": "craft/tech",
+   "area": "G3 faceted rounds: vent and charging-slot radius ends",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "stadium ends 24 segments per semicircle (7.5 deg; were 7: 25.7 deg) on every vent, the channel's lock notch; the port corners 6 segments, the magazine recesses 5; new gate G3o on the openings' boundary loops",
+   "evidence": {
+    "G3o": {
+     "upper_receiver": {
+      "holes": 12,
+      "max_facet_deg_r_ge_5": 4.01,
+      "max_sagitta_mm": 0.0312,
+      "fails": 0
+     },
+     "lower_receiver": {
+      "holes": 19,
+      "max_facet_deg_r_ge_5": 0.0,
+      "max_sagitta_mm": 0.0317,
+      "fails": 0
+     },
+     "stock_frame": {
+      "holes": 1,
+      "max_facet_deg_r_ge_5": 0.0,
+      "max_sagitta_mm": 0.0104,
+      "fails": 0
+     },
+     "magazine": {
+      "holes": 13,
+      "max_facet_deg_r_ge_5": 0.0,
+      "max_sagitta_mm": 0.0173,
+      "fails": 0
+     },
+     "grip_cover": {
+      "holes": 0,
+      "max_facet_deg_r_ge_5": 0.0,
+      "max_sagitta_mm": 0.0,
+      "fails": 0
+     },
+     "butt_pad": {
+      "holes": 0,
+      "max_facet_deg_r_ge_5": 0.0,
+      "max_sagitta_mm": 0.0,
+      "fails": 0
+     }
+    },
+    "B8_gun_LOD0": 48238,
+    "B8_magazine": 4300
+   },
+   "pass": true
+  },
+  {
+   "id": "C2",
+   "source": "craft",
+   "area": "Charging knob texture",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "the knob's coat even (mottle x 0.25), the flat crown a polished satin (rough 0.45-0.55, base x 1.32), a thin continuous bare rim just outside the crown edge (normals 18-26 deg off the axis); no noise flecks",
+   "evidence": {
+    "info": {
+     "drum_knurl_texels": 6560,
+     "knob_crown_texels": 3409,
+     "knob_rim_bare_texels": 245,
+     "chamber_mouth_texels": 390
+    },
+    "charging_knob_bare_fraction": 0.0065
+   },
+   "pass": true
+  },
+  {
+   "id": "C3",
+   "source": "craft",
+   "area": "Bare-steel wear as scattered specks",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "continuous 0.18-0.5 mm bright lines on the sharp convex crests (same-side distance to the edge x AO exposure x the bright-edge zones), long dashes from a 4 mm field, <= 1.2 mm from the edge, clusters >= 14 texels; the rails' base flange and the device's slot edges excluded; rubbed phosphate varied along the part (no repeated per-tooth frame); UV0 has 0 stacked / mirrored islands (W2 gate)",
+   "evidence": {
+    "gate": {
+     "bare_line_width_max_mm": 0.781,
+     "bare_clusters": 169,
+     "bare_cluster_min_texels": 14,
+     "bare_cluster_median_texels": 50,
+     "bare_texels_far_from_edge": 0,
+     "steel_bare_fraction": 0.00698,
+     "largest_bare_blob_mm2": 19.78,
+     "largest_bare_blob_part": "barrel",
+     "by_design_bare_largest_mm2": 331.67
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "C4",
+   "source": "craft",
+   "area": "Polymer too clean, no micro-texture",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "moulded texture in the normal map at the texel scale (0.6 mm grain +-9 um over a 1.8 mm orange peel +-12 um; magazine +-12 / 15 um), the same grain as +-0.03 roughness and albedo speckle, low-frequency mottle, longer whitening bands (WHITEN_BASE 0.35), fore-aft scratches on the receiver and stock flats, a lighter glossier follower",
+   "evidence": {
+    "gate": {
+     "Furniture/polymer": {
+      "bc_std_srgb_levels": 4.25,
+      "normal_tilt_gt_1deg_fraction": 0.2206,
+      "whitened_fraction": 0.00336
+     },
+     "Mag/polymer_mag": {
+      "bc_std_srgb_levels": 3.88,
+      "normal_tilt_gt_1deg_fraction": 0.2339,
+      "whitened_fraction": 0.00565
+     }
+    },
+    "bc_std": {
+     "Metal": {
+      "phosphate": 2.78
+     },
+     "Furniture": {
+      "polymer": 4.25,
+      "rubber": 3.85
+     },
+     "Mag": {
+      "polymer_mag": 3.88
+     }
+    },
+    "normal_tilt_gt_1deg": {
+     "Metal": {
+      "phosphate": 0.0046
+     },
+     "Furniture": {
+      "polymer": 0.2206,
+      "rubber": 0.2303
+     },
+     "Mag": {
+      "polymer_mag": 0.2339
+     }
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "C5",
+   "source": "craft/tech",
+   "area": "G20 steel vs polymer value",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "phosphate base (40, 41, 42) (was 50-52), dry 0.62-0.76 / oiled 0.52-0.62; spec R44; CRAFT_STUDY table corrected; L5 now grades the sRGB-luma ratio receiver / (barrel + device)",
+   "evidence": {
+    "G20": {
+     "sheet": 1.453,
+     "ours": 1.488,
+     "per_region_ours": {
+      "barrel": 1.361,
+      "muzzle_device": 1.56
+     },
+     "per_region_sheet": {
+      "barrel": 1.283,
+      "muzzle_device": 1.553
+     }
+    },
+    "L5": {
+     "pass": true,
+     "muzzle_device": {
+      "median_srgb": [
+       40.4,
+       40.8,
+       41.3
+      ],
+      "luma": 0.1599,
+      "sat": 0.0215,
+      "hue_deg": 210.0,
+      "rb": 0.9785,
+      "lin_lum": 0.02195363174214202
+     },
+     "barrel": {
+      "median_srgb": [
+       46.3,
+       46.8,
+       47.6
+      ],
+      "luma": 0.1833,
+      "sat": 0.0257,
+      "hue_deg": 218.18,
+      "rb": 0.9743,
+      "lin_lum": 0.028136701863472256
+     }
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "m1",
+   "source": "craft",
+   "area": "Rear-sight windage drum knurl",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "straight knurl 0.55 mm pitch, 0.05 deep in Metal_N on the drum rim (R 4.5), crests rubbed lighter",
+   "evidence": {
+    "drum_knurl_texels": 6560
+   },
+   "pass": true
+  },
+  {
+   "id": "m2",
+   "source": "craft",
+   "area": "Ejection port with the bolt back shows an empty box",
+   "severity": "minor",
+   "verdict": "FIXED (part) / REJECTED (part)",
+   "fix": "the chamber mouth's 0.6 chamfer painted as the rounds' rubbed bright cone with a bare rim (1.0 was tried: B9 class D P5), the bore soot deepening inward; port soot 0.6 (was 0.35). Rejected: the feed ramp and the magazine top: the bore centre (Z 1.87) sits under the port's lower edge (Z 2.3) and the magazine's lips (seated, Z ~ -13.6) 16 mm under it behind the wall and the bolt rails: no side or 3/4 view reaches them",
+   "evidence": {
+    "chamber_mouth_texels": 390,
+    "F5_recess": {
+     "rays_hitting_the_bolt_first": 91,
+     "of_which_in_the_recess": 81,
+     "pass": true,
+     "note": "rays from the right through the port centre region (13 x 7 grid, 1 mm)"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "m3",
+   "source": "craft",
+   "area": "Trace noise and junction geometry",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "(a) stock windows: DP 1.0 + true R 3 corners and R 25 blends at gentle bends (the 0.7 mm bump / notch gone); (b) the pad's rear face flat (ring clipped at X 3.6) with open ribs at one pitch 3.2 / depth 1.2; (c) the housing set in 0.8 under the upper's plan incl. its 45 deg fore-end step (its tongue stood 3.1 mm proud of the fore-end at the V: the wedge face / black sliver)",
+   "evidence": {
+    "L2_L3": {
+     "L2 LEFT IoU": 0.981,
+     "L2 RIGHT IoU": 0.9552,
+     "L2 TOP IoU": 0.9321,
+     "L3 LEFT contour P95": 2.0,
+     "L3 feature positions": "24 / 24"
+    },
+    "G5": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "m4",
+   "source": "craft",
+   "area": "Minor G3 facets on the grip cover and trigger guard",
+   "severity": "minor",
+   "verdict": "FIXED (LOD0) / REJECTED (LOD2)",
+   "fix": "the guard's smoothed master corners at 0.5 mm chords (were 1.6), the opening's R 6 corners 8 segments (were 3), the guard loop's mitred offset corners rounded R 14, the grip cover's stations 0.8 mm (were 1.6) and its bottom rim 4 segments (were 2). LOD2's grip shading: REJECTED (LOD2 only from the LOD-pop switch, ~9.5 m; LOD-pop passes on both stock states)",
+   "evidence": {
+    "G3o": true,
+    "LOD-pop": {
+     "LOD-pop LOD1 -> LOD2": "size 0.05314 (10.974 m): mean 0.073 px, max 1.803 px (worst of 4 headings x 2 stock states)",
+     "LOD-pop LOD2 -> LOD3": "size 0.033 (17.673 m): mean 0.223 px, max 2.0 px (worst of 4 headings x 2 stock states)"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "m5",
+   "source": "craft",
+   "area": "Muzzle device soot and crown",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "soot at the PBR floor (lin 0.013, sRGB 30; was 0.025 = on the phosphate) over the inner cage faces and bore, the slot walls, a ring on the front face round the bore and a gradient out from each slot's edge; the slots' edges no longer bare (carbon)",
+   "evidence": {
+    "L5_muzzle_device": {
+     "luma": -0.001,
+     "sat": 0.0095,
+     "rb": -0.0095
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "m6",
+   "source": "craft",
+   "area": "Magazine top",
+   "severity": "minor",
+   "verdict": "FIXED (part) / REJECTED (part)",
+   "fix": "the lips rolled (outer top edge R 1.2, 3 segments, a 0.9 vertical tip face), the follower 1.0 under the lips' underside (3.0 under the tips; was 8.0) and painted lighter / glossier. Rejected: the front-top step: the bolt rails stand 1.5 mm over the magazine's front top edge by design (R30) and M2's overtravel (1.0-2.0) leaves no room for a raised front edge",
+   "evidence": {
+    "mag_gates": "pass",
+    "form_magfit": "pass"
+   },
+   "pass": true
+  },
+  {
+   "id": "m7",
+   "source": "tech",
+   "area": "LOD screen sizes (SM_SMG01 twin)",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "the twin's and the magazine's sizes convert at Unreal's static-mesh sphere radius (max |v - box centre|, gunlib.game.static_sphere_radius) instead of the box half-diagonal; U5 checks them against the engine's sphere_radius (plan 14.3)",
+   "evidence": {
+    "bounds_radius_m": 0.32801,
+    "SM_SMG01_sizes": [
+     1.0,
+     0.25,
+     0.05314,
+     0.033
+    ],
+    "SK_engine_radius_m": 0.3754,
+    "SM_SMG01_Mag_sizes": [
+     1.0,
+     0.08465,
+     0.01799,
+     0.01117
+    ]
+   },
+   "pass": true
+  },
+  {
+   "id": "m8",
+   "source": "tech",
+   "area": "Physics asset vs runtime bounds (folded stock)",
+   "severity": "minor",
+   "verdict": "DEFERRED to W5 (U7)",
+   "fix": "needs the engine: plan 14.3 U7 now measures the component's runtime bounds of a dropped, simulating gun with the stock folded; if it fails, a kinematic / QueryOnly stock body on 'stock' with consider_for_bounds or bComponentUseFixedSkelBounds in the README, then the dropped LOD radius re-derived. Held guns (NoCollision) are unaffected",
+   "evidence": {
+    "plan": "SMG_BUILD_PLAN 14.3 U7"
+   },
+   "pass": true
+  },
+  {
+   "id": "m9",
+   "source": "tech",
+   "area": "Texel density classes (sidecar claim)",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "the sidecar carries the measured medians per set and class beside the spec bands, and the rule (shipped medians up to 1.25 x the band top: spec R44 records W2's B9 ceiling)",
+   "evidence": {
+    "texel_classes_measured_px_per_cm": {
+     "Metal": {
+      "C": {
+       "p5": 46.2,
+       "median": 46.7,
+       "p95": 46.7
+      },
+      "E": {
+       "p5": 14.1,
+       "median": 15.3,
+       "p95": 15.3
+      },
+      "B": {
+       "p5": 89.7,
+       "median": 93.3,
+       "p95": 93.3
+      },
+      "A": {
+       "p5": 118.1,
+       "median": 120.0,
+       "p95": 120.0
+      },
+      "D": {
+       "p5": 32.9,
+       "median": 36.7,
+       "p95": 42.4
+      }
+     },
+     "Furniture": {
+      "B": {
+       "p5": 95.3,
+       "median": 100.0,
+       "p95": 100.0
+      },
+      "C": {
+       "p5": 48.6,
+       "median": 50.0,
+       "p95": 50.0
+      },
+      "E": {
+       "p5": 15.8,
+       "median": 16.4,
+       "p95": 16.4
+      }
+     },
+     "Mag": {
+      "C": {
+       "p5": 44.6,
+       "median": 48.6,
+       "p95": 48.9
+      },
+      "E": {
+       "p5": 15.9,
+       "median": 16.0,
+       "p95": 16.1
+      }
+     }
+    },
+    "texel_class_rule": "spec bands = targets; shipped class medians up to 1.25 x the band top (W2 B9, spec R44); measured medians in texel_classes_measured_px_per_cm"
+   },
+   "pass": true
+  },
+  {
+   "id": "m10",
+   "source": "tech",
+   "area": "Masks (Metal set) handling channel",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "m_hand written for the phosphate too (trigger / paddle faces, knob crown, selector thumb arcs, the handling zones); the selector's thumb arcs polished in the phosphate pass",
+   "evidence": {
+    "gate": {
+     "masks_g_handling_fraction": {
+      "phosphate": 0.0786
+     },
+     "info": {
+      "drum_knurl_texels": 6560,
+      "knob_crown_texels": 3409,
+      "knob_rim_bare_texels": 245,
+      "chamber_mouth_texels": 390
+     }
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "R1",
+   "source": "realism",
+   "area": "One flat matte material on every part (clay)",
+   "severity": "fake call x8",
+   "verdict": "FIXED",
+   "fix": "cause measured (review/diag/maps_vs_clay.json): the maps DO reach the review renders (the exported FBX carry UV0, the game material reads BC sRGB / ORM + N Non-Color with the DirectX green flipped, and a BC-emission render shows the painted variation), but (1) the paint was near-uniform at render scale: even after the first W4 fix pass (polymer BC std 3.9 levels; W3 shipped 2.3) the maps sat only 1.8-3.5 sRGB levels (mean over the object) off a constant per-set clay material in the 7 close-ups, and (2) the review lights' flat grey world gave the dark rough finishes nothing to reflect. Fixed: C3-C5 + the visible-variation pass (roughness sheen at 30 / 8 mm, recess dust, an up-facing dust film, phosphate mottle x 1.8; R45) and the realism views under the photographic studio rig (R12)",
+   "evidence": {
+    "maps_vs_clay": {
+     "date": "2026-10-12T17:55:41",
+     "consts_flat": {
+      "Metal": {
+       "bc_srgb": [
+        37.0,
+        37.0,
+        37.0
+       ],
+       "rough": 0.7647
+      },
+      "Furniture": {
+       "bc_srgb": [
+        46.0,
+        47.0,
+        48.0
+       ],
+       "rough": 0.651
+      },
+      "Mag": {
+       "bc_srgb": [
+        41.0,
+        42.0,
+        45.0
+       ],
+       "rough": 0.6196
+      }
+     },
+     "rigs": {
+      "rough": {
+       "closeups": {
+        "g1_receiver_rails": {
+         "mean": 3.81,
+         "p90": 8.0,
+         "object_px": 895768,
+         "tex_object_luma": 75.0
+        },
+        "g2_grip_trigger_sel": {
+         "mean": 2.14,
+         "p90": 6.0,
+         "object_px": 1391906,
+         "tex_object_luma": 81.4
+        },
+        "g3_magazine_well": {
+         "mean": 2.71,
+         "p90": 6.0,
+         "object_px": 715453,
+         "tex_object_luma": 68.3
+        },
+        "g4_stock_extended": {
+         "mean": 3.17,
+         "p90": 7.0,
+         "object_px": 732403,
+         "tex_object_luma": 82.9
+        },
+        "g5_stock_folded": {
+         "mean": 3.34,
+         "p90": 6.8,
+         "object_px": 1026968,
+         "tex_object_luma": 70.2
+        },
+        "g6_front_end": {
+         "mean": 4.03,
+         "p90": 8.7,
+         "object_px": 515920,
+         "tex_object_luma": 78.7
+        },
+        "g7_rear_sight": {
+         "mean": 3.78,
+         "p90": 7.7,
+         "object_px": 627438,
+         "tex_object_luma": 85.4
+        }
+       },
+       "mean_of_means": 3.28,
+       "min_p90": 6.0
+      },
+      "studio": {
+       "closeups": {
+        "g1_receiver_rails": {
+         "mean": 3.65,
+         "p90": 7.9,
+         "object_px": 897564,
+         "tex_object_luma": 66.1
+        },
+        "g2_grip_trigger_sel": {
+         "mean": 2.08,
+         "p90": 6.1,
+         "object_px": 1310566,
+         "tex_object_luma": 96.8
+        },
+        "g3_magazine_well": {
+         "mean": 5.44,
+         "p90": 13.0,
+         "object_px": 740877,
+         "tex_object_luma": 80.1
+        },
+        "g4_stock_extended": {
+         "mean": 3.04,
+         "p90": 5.9,
+         "object_px": 743956,
+         "tex_object_luma": 79.7
+        },
+        "g5_stock_folded": {
+         "mean": 3.34,
+         "p90": 9.4,
+         "object_px": 1131995,
+         "tex_object_luma": 68.1
+        },
+        "g6_front_end": {
+         "mean": 3.16,
+         "p90": 6.9,
+         "object_px": 542154,
+         "tex_object_luma": 75.4
+        },
+        "g7_rear_sight": {
+         "mean": 2.85,
+         "p90": 5.7,
+         "object_px": 660064,
+         "tex_object_luma": 66.9
+        }
+       },
+       "mean_of_means": 3.37,
+       "min_p90": 5.7
+      }
+     },
+     "before_first_W4_pass_mean": {
+      "rough": {
+       "g1_receiver_rails": 3.43,
+       "g2_grip_trigger_sel": 1.81,
+       "g3_magazine_well": 2.23,
+       "g4_stock_extended": 2.67,
+       "g5_stock_folded": 3.07,
+       "g6_front_end": 3.2,
+       "g7_rear_sight": 3.31
+      },
+      "studio": {
+       "g1_receiver_rails": 3.15,
+       "g2_grip_trigger_sel": 1.77,
+       "g3_magazine_well": 3.54,
+       "g4_stock_extended": 2.47,
+       "g5_stock_folded": 3.13,
+       "g6_front_end": 2.55,
+       "g7_rear_sight": 2.5
+      }
+     },
+     "method": "SMG01 W4 resume (spec R45): do the painted maps READ in a render, or is the surface clay? (plain Python; renders via",
+     "gate": {
+      "rule": "reported: studio rig mean of the 7 close-ups' mean |tex - flat| vs the first W4 pass's (2.73); pass = ratio > 1 (the maps read more than before; the judges decide realism)",
+      "value": {
+       "mean_of_means": 3.37,
+       "first_pass": 2.73,
+       "ratio": 1.234,
+       "min_p90": 5.7
+      },
+      "tried_and_rejected": {
+       "sheen_fields": [
+        0.45,
+        0.25
+       ],
+       "studio_mean_of_means": 3.88,
+       "ratio": 1.42,
+       "why": "read as camouflage clouds on the receiver at hero distance"
+      }
+     },
+     "pass": true,
+     "maps": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\gun-assets-creation-261bad\\Exports\\Guns\\SMG01\\Textures"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "R2",
+   "source": "realism",
+   "area": "No wear, edge rub, dust or grime",
+   "severity": "fake call x6",
+   "verdict": "FIXED",
+   "fix": "C3 (bright crest lines), C4 (whitening bands, scratches), the cavity dust / grime and the soot (m5) kept",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R3",
+   "source": "realism",
+   "area": "Firefly / sparkle specks on the rail",
+   "severity": "fake call x2",
+   "verdict": "FIXED",
+   "fix": "C3: no bare cluster under 14 texels, no bright texel off an edge",
+   "evidence": {
+    "gate": true
+   },
+   "pass": true
+  },
+  {
+   "id": "R4",
+   "source": "realism",
+   "area": "FP stock top 'a thin curved sheet'",
+   "severity": "fake call x2",
+   "verdict": "FIXED (part)",
+   "fix": "the cheek strut is right under the 35 cm eye at a grazing angle: its matte top mirrored the grey world as a smooth light plane; it now carries the moulded texture, roughness variation and the parting line (C4). The geometry is the traced strut (26.7 mm wide, R 1.4 edges): unchanged",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R5",
+   "source": "realism",
+   "area": "No markings (selector pictograms, serial, maker)",
+   "severity": "fake call x5",
+   "verdict": "REJECTED",
+   "fix": "the asset rule: generic, no markings (brief; CLAUDE.md IP: everything sold is the user's own design, no franchise / maker names); a buyer adds decals",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R6",
+   "source": "realism",
+   "area": "Magazine ladder 'invented decorative windows'",
+   "severity": "fake call x1",
+   "verdict": "REJECTED",
+   "fix": "the sheet draws the ladder (two recessed channels crossed by flush ties, CRAFT 2.14; trace 4 ties on the LEFT view); 'exact on the sheet' wins",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R7",
+   "source": "realism",
+   "area": "Receiver panel lines / flat panels without draft",
+   "severity": "fake call x3",
+   "verdict": "REJECTED (part)",
+   "fix": "the seam is the sheet's drawn upper / lower split, built as the real two-piece step (R43); the side faces are formed by side actions (no draft on the faces, the openings' walls drafted 1 deg: CRAFT 2.1); the moulded texture and parting lines now read (C4)",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R8",
+   "source": "realism",
+   "area": "Rear sight base a kitbash trapezoid / chevron inlay",
+   "severity": "fake call x2",
+   "verdict": "REJECTED",
+   "fix": "the generic rail-clamp BUIS base (RP15): a clamp with its recoil lug and the leaf's pocket, as the sheet draws the base; its bright dashed edge is gone with C3",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R9",
+   "source": "realism",
+   "area": "ADS front post a speck",
+   "severity": "fake call x2",
+   "verdict": "REJECTED",
+   "fix": "B4: the post tip centred in the 2.0 mm aperture at 0.25 m (lateral 0.0, vertical 0.0, post visible 0.99 mm): the true sight picture of a 1.85 mm post at 243 mm sight radius",
+   "evidence": {
+    "B4": {
+     "lateral_mm": 0.0,
+     "vertical_mm": 0.0,
+     "aperture_mm": 1.989,
+     "post_visible_mm": 0.991,
+     "occluders": {}
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "R10",
+   "source": "realism",
+   "area": "Grip without stippling; guard thin; magwell plain",
+   "severity": "fake call x2",
+   "verdict": "REJECTED (part)",
+   "fix": "the stipple panels are built (pebbles 0.5-0.8 mm, 0.10-0.15 mm tall; W2 gate) and read at 35 cm, not at the hero distance; the guard bar and the flare band / funnel are the sheet's and the real pattern's",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R11",
+   "source": "realism",
+   "area": "Folded stock: pad grooves a greeble, hinge cap a placeholder, arm heavy",
+   "severity": "fake call x2",
+   "verdict": "FIXED (part) / REJECTED (part)",
+   "fix": "the pad's ribs now one constant pitch, open at the sides as a moulded rubber pad (m3 b); the hinge knuckle stack, axle and latch are built on the right (the view sees the left); the arm is the traced skeleton",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "R12",
+   "source": "realism",
+   "area": "Flat grey backdrop, even lighting",
+   "severity": "fake call x1",
+   "verdict": "FIXED",
+   "fix": "the realism views (review/realism/<name>.png) are lit by the photographic studio rig (gunlib export_review_job 'studio': Blender's bundled studio HDRI, neutral, for light and reflections + softboxes; the camera still sees the grey 126 backdrop); the L5 calibration rig's versions are kept in review/realism/l5/ and the review set stays on L5 (the colour test is unchanged)",
+   "evidence": {
+    "realism_files": [
+     "WorkFiles/guns/smg/review/realism/fp_35cm.png",
+     "WorkFiles/guns/smg/review/realism/l5/fp_35cm.png",
+     "WorkFiles/guns/smg/review/realism/ads_55deg.png",
+     "WorkFiles/guns/smg/review/realism/l5/ads_55deg.png",
+     "WorkFiles/guns/smg/review/realism/tp_3m.png",
+     "WorkFiles/guns/smg/review/realism/l5/tp_3m.png",
+     "WorkFiles/guns/smg/review/realism/hero_34.png",
+     "WorkFiles/guns/smg/review/realism/l5/hero_34.png",
+     "WorkFiles/guns/smg/review/realism/hero_34_folded.png",
+     "WorkFiles/guns/smg/review/realism/l5/hero_34_folded.png"
+    ]
+   },
+   "pass": true
+  },
+  {
+   "id": "n1",
+   "source": "tech",
+   "area": "Mag fit M4 definition (ruling)",
+   "severity": "note",
+   "verdict": "FIXED (record)",
+   "fix": "R36's spring-catch M4 (the catch zone = the nose's whole ride over the magazine's rear face, depth <= engagement + 0.3, <= 0.87 mm per 0.5 mm step, the catch back at rest when seated) written into SMG_BUILD_PLAN 12.2 for W5 M9 and later guns; smg_spec gates.magazine.M4 already carried it",
+   "evidence": {
+    "spec_M4": "smg_spec.json gates.magazine.M4"
+   },
+   "pass": true
+  },
+  {
+   "id": "n2",
+   "source": "tech",
+   "area": "Budgets (LOD0 46.9k over the 25-40k target, LOD2 20 %, mag LOD2 628 / LOD3 24)",
+   "severity": "note",
+   "verdict": "ACCEPTED (reported)",
+   "fix": "inside the 50k ceiling and the qa budget; LOD-pop and the M1 LOD pairs pass, so none is visible; recorded as accepted deviations from spec section 7 (README at W6)",
+   "evidence": {
+    "B8_gun": 48238,
+    "B8_mag": 4300
+   },
+   "pass": true
+  },
+  {
+   "id": "n3",
+   "source": "tech",
+   "area": "UD4 not reproducible from the shipped bytes (chart ids in the build npz)",
+   "severity": "note",
+   "verdict": "DEFERRED to W5 (U8)",
+   "fix": "U8 measures the lightmap in the engine; the 1,320 shared texels at 64 px are the projection charts' design (one chart, disconnected same-facing faces). LightMapResolution stays a W5 / U8 decision",
+   "evidence": {
+    "UD4_build": {
+     "rows": [
+      {
+       "resolution": 64,
+       "padding_px": 2,
+       "charts": 90,
+       "texels_shared_by_two_charts": 0,
+       "padding_violations_texels": 0,
+       "triangles_outside_0_1": 0,
+       "collapsed_triangles": 26531,
+       "texels_used": 1663,
+       "pass": true
+      },
+      {
+       "resolution": 128,
+       "padding_px": 2,
+       "charts": 90,
+       "texels_shared_by_two_charts": 0,
+       "padding_violations_texels": 0,
+       "triangles_outside_0_1": 0,
+       "collapsed_triangles": 26531,
+       "texels_used": 3392,
+       "pass": true
+      }
+     ],
+     "qa_overlap_pairs": 0,
+     "range": {
+      "min": [
+       0.01562,
+       0.01562
+      ],
+      "max": [
+       0.98333,
+       0.9788
+      ]
+     },
+     "charts_packed": 90,
+     "hosted": {
+      "visible_faces": 14701,
+      "visible_area_mm2": 22963.922748721143,
+      "hidden_faces": 11830,
+      "visible_area_fraction": 0.0792,
+      "host_distance_mm_p50_p95_max": [
+       1.4,
+       4.81,
+       22.21
+      ]
+     },
+     "layers_ok": true
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "n4",
+   "source": "tech",
+   "area": "ShellEject with the stock folded",
+   "severity": "note",
+   "verdict": "FIXED (record)",
+   "fix": "the ShellEject socket's use text (spec -> sidecar) now says the throw cone meets the folded stock (B3b: 29 vertices; Q5 open) and that spawned casings ignore the gun's own collision",
+   "evidence": {
+    "ShellEject_use": "casing spawn; +X = throw: to the right, 15 deg forward of square, 10 deg up (real blowback ports throw right and slightly forward). Stock folded: the throw cone meets the folded stock (B3b: 29 stock / pad vertices inside it; Q5 open), so spawned casings ignore the gun's own collision (W4 tech review)"
+   },
+   "pass": true
+  },
+  {
+   "id": "n5",
+   "source": "tech",
+   "area": "W5 U2b needs the AR-01's abp_angle_table",
+   "severity": "note",
+   "verdict": "DEFERRED to W5 (harness data)",
+   "fix": "the AR-01 bytes stay as shipped; the W5 harness takes the AR-01 table from Scripts/guns/rifle/rifle_rig.py (trigger 0..12, selector 0 / 16 / 32, release 0..10) as harness data",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "n6",
+   "source": "tech",
+   "area": "FBX NativeFilePath carries the absolute source path",
+   "severity": "note",
+   "verdict": "DEFERRED to W6 / P (pipeline)",
+   "fix": "pipeline-wide (Scripts/pipeline/export_fbx, AR-01 N1): fixed once before the Fab release, not per gun",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "n7",
+   "source": "tech",
+   "area": "UCX_SM_SMG01_LOD0_02 not strictly convex (0.445 mm)",
+   "severity": "note",
+   "verdict": "ACCEPTED",
+   "fix": "Unreal rebuilds the hull from the vertices; C1 found 0 of 400k samples outside",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "n8",
+   "source": "tech",
+   "area": "Report wording (W3 tris 23,346 vs 23,344; UD4 on the SK; worst_excursion; latch-bolt 0.458)",
+   "severity": "note",
+   "verdict": "FIXED (record)",
+   "fix": "corrected in review/FIX_LOG.md section 4; no asset change",
+   "evidence": {},
+   "pass": true
+  },
+  {
+   "id": "n9",
+   "source": "W4 resume",
+   "area": "AR-01 regression compare crashed (KeyError 'status') and flagged the SMG blend",
+   "severity": "process",
+   "verdict": "FIXED",
+   "fix": "ar01_regression_compare.py reports an incomplete test record instead of crashing, and its git check covers the AR-01's own blends only (Assets/Guns as a whole matched Assets/Guns/SMG01.blend)",
+   "evidence": {
+    "status": "pass",
+    "failed": []
+   },
+   "pass": true
+  },
+  {
+   "id": "n10",
+   "source": "W4 resume",
+   "area": "LOD1 needles from the first fix pass (butt pad grooves, guard corner rounds)",
+   "severity": "process",
+   "verdict": "FIXED",
+   "fix": "W3's UD gates failed at LOD1 (3, then 2 Unreal drops). The pad's grooves, open through LOD1's 2-segment side rounds: LOD1+ closes them inside the rounds again; the guard's 8-segment corner rounds (0.3 mm chords on its flat side faces): LOD1+ uses the LOD count (4). LOD0 unchanged",
+   "evidence": {
+    "UD1 Unreal degenerate rule on every LOD1-3 part": {
+     "LOD1": [
+      0,
+      0.011011
+     ],
+     "LOD2": [
+      0,
+      0.012827
+     ],
+     "LOD3": [
+      0,
+      0.336931
+     ]
+    },
+    "UD2 micro edges / needles / strips (LOD1-3)": {
+     "LOD1": {
+      "edges_under_0.05mm": 0,
+      "needles_under_0.02mm": 0,
+      "strip_polygons_under_0.1mm": 0
+     },
+     "LOD2": {
+      "edges_under_0.05mm": 0,
+      "needles_under_0.02mm": 0,
+      "strip_polygons_under_0.1mm": 0
+     },
+     "LOD3": {
+      "edges_under_0.05mm": 0,
+      "needles_under_0.02mm": 0,
+      "strip_polygons_under_0.1mm": 0
+     }
+    },
+    "UD1 / UD3 on the joined twin LODs": {
+     "SM_SMG01_LOD0": {
+      "ud1_drops": 0,
+      "min_area_mm2": 0.010178,
+      "ud3_collapsed_unreal": 0,
+      "layers": [
+       "UV0",
+       "UV1"
+      ]
+     },
+     "SM_SMG01_LOD1": {
+      "ud1_drops": 0,
+      "min_area_mm2": 0.011011,
+      "ud3_collapsed_unreal": 0,
+      "layers": [
+       "UV0",
+       "UV1"
+      ]
+     },
+     "SM_SMG01_LOD2": {
+      "ud1_drops": 0,
+      "min_area_mm2": 0.012827,
+      "ud3_collapsed_unreal": 0,
+      "layers": [
+       "UV0",
+       "UV1"
+      ]
+     },
+     "SM_SMG01_LOD3": {
+      "ud1_drops": 0,
+      "min_area_mm2": 0.336931,
+      "ud3_collapsed_unreal": 0,
+      "layers": [
+       "UV0",
+       "UV1"
+      ]
+     }
+    }
+   },
+   "pass": true
+  }
+ ],
+ "log": "WorkFiles/guns/smg/review/FIX_LOG.md",
+ "process": "every fix in the generators; then Scripts/guns/smg/run_all.sh from nothing: run_smg.sh -> run_surface.sh -> AR-01 regression -> run_rig_mag.sh -> smg_review_export.py -> this record"
+}

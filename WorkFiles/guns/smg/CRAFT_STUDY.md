@@ -419,10 +419,10 @@ The hue is neutral with a faint cool cast (B - R = +2 to +3). The sheet's polyme
 | Grip stipple panel | 0 | as polymer | 0.78-0.88 | pebbles 0.5-0.8 mm pitch, 0.1-0.15 mm tall (normal + AO) | crowns polished (palm) |
 | **Magazine polymer** | 0 | (41, 42, 45) ~0.022-0.025 | 0.55-0.65 | finer matte, 0.04-0.1 mm | polish on the upper 40 mm, the spine and the lips; whitening on the floor plate corners |
 | **Rubber** (butt pad) | 0 | (42, 42, 44) ~0.023 | 0.82-0.92 | fine rubber grain 0.05 mm, mould flash at the rib ends (texture) | barely; dust in the rib roots |
-| **Manganese phosphate (parkerized) steel** (barrel, collar, device, rails, sight bodies if steel, knob, selector, release paddle, trigger, pins, bolt outside) | 0 | (48-52, 49-53, 50-54) ~0.03-0.035 | 0.66-0.80 dry, 0.55-0.65 where oiled (bolt, rail slots) | crystalline phosphate grain 0.02-0.05 mm (roughness noise +-0.05) | bare steel |
+| **Manganese phosphate (parkerized) steel** (barrel, collar, device, rails, sight bodies if steel, knob, selector, release paddle, trigger, pins, bolt outside) | 0 | **(40, 41, 42) ~0.021-0.023** (spec R44, W4 review: this row first read (48-52, 49-53, 50-54), which put the steel LIGHTER than the polymer against the sheet samples above and the ratio rule below) | 0.62-0.76 dry, 0.52-0.62 where oiled (bolt, rail slots) | crystalline phosphate grain 0.02-0.05 mm (roughness noise +-0.05) | bare steel |
 | Bare / worn steel (edges, rail crests, slot edges, knob crown, bolt flanks, trigger face) | 1 | 0.53-0.56 linear (190-196) | 0.25-0.40; sliding-polished 0.15-0.25 | lengthwise scratches | - |
 | Anodized aluminium (only if the sight bodies are aluminium) | 0 | (45-55) | 0.45-0.60 | | bright aluminium: metallic 1, 0.91, rough 0.30-0.45 |
-| Soot (muzzle slots, crown, port) | 0 | 0.02-0.03 | 0.85-0.95 | | gradient from each slot |
+| Soot (muzzle slots, crown, port) | 0 | 0.013 (sRGB 30, the PBR floor; R44: 0.02-0.03 sat on the darkened phosphate and could not be seen) | 0.85-0.95 | | gradient from each slot |
 
 Calibrate each finish against a sheet crop under matched light before the first look review (study 3.3). The ratio
 polymer / steel ~ 1.3-1.5 on the sheet must hold: the steel parts read darker and slightly glossier-edged than the

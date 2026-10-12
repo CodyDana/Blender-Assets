@@ -56,6 +56,15 @@ from gunlib import edgemask as EM  # noqa: E402
 GRIP = np.array(SS.GRIP_M, np.float32)
 LW = np.array([0.2126, 0.7152, 0.0722], np.float32)
 GEOEDGE_VERSION = 1
+# (W4) moulded micro-texture height amplitudes (mm): (fine 0.6 mm grain, 1.8 mm orange peel) per finish
+MICRO = {"polymer": (0.009, 0.012), "polymer_mag": (0.012, 0.015), "rubber": (0.013, 0.008)}
+# (W4 resume, the "flat clay" finding) visible real-scale variation: polymer sheen (roughness) at ~30 mm and ~8 mm,
+# dust in the deep recesses (polymer), a settled dust film on up-facing faces, the phosphate's mottle gain
+SHEEN_BROAD = 0.25           # (0.45 / 0.25 tried: camouflage clouds on the receiver at hero distance)
+SHEEN_MID = 0.22
+DUST_POLY = 0.8
+DUST_FILM = 1.0
+PHOS_MOTTLE = 1.8
 
 
 def lin(rgb):
@@ -64,6 +73,27 @@ def lin(rgb):
 
 def log(*a):
     print("[SMG01-paint]", *a, flush=True)
+
+
+# (W4 review fixes) bare steel: never further than BARE_MAX_DIST from a sharp convex edge; clusters under MIN_BARE_PX
+# texels dropped (the review's minimum cluster: ~14 texels at class density)
+BARE_MAX_DIST = 1.2
+MIN_BARE_PX = 14
+PAINT_INFO = {}
+
+
+def _drop_small(mask_k, kk, idx, S, min_px):
+    """mask_k over the set's texels kk (indices into the valid-texel list idx): drop 8-connected texture-space
+    clusters smaller than min_px texels."""
+    im = np.zeros(S * S, bool)
+    im[idx[kk[mask_k]]] = True
+    lab, nl = ndi.label(im.reshape(S, S), structure=np.ones((3, 3), int))
+    if not nl:
+        return mask_k
+    sizes = np.bincount(lab.ravel())
+    keep = sizes >= min_px
+    keep[0] = False
+    return mask_k & keep[lab.ravel()[idx[kk]]]
 
 
 def zone_field(P, zones, part_names=None, is_mag=None):
@@ -178,11 +208,20 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         base = lin(F["srgb"])
         m_mold = PT.chunked(PT.fbm3, Pk, 0.35, 2, 90)                     # EDM-spark grain (sub-mm)
         flow = PT.chunked(PT.aniso, Pk, (1.0, 0.0, 0.0), 18.0, 3.0, 3, 91)   # faint moulding flow mottle
-        var = 1.0 + 0.045 * (v_lo[k] - 0.5) + 0.025 * (flow - 0.5) + 0.02 * (v_far[k] - 0.5)
+        # (W4 review fixes, G15) the moulded-in matte texture at the texel scale the maps can carry (class B/C: 0.1-0.2
+        # mm per texel; the study's 0.05-0.15 mm EDM spark sits under it and only shows as roughness): a fine sand
+        # grain (0.6 mm, +-9 um) over a soft orange-peel (1.8 mm, +-12 um) in the normal map, the same grain as a
+        # +-0.03 roughness and a +-1.5 level albedo speckle; the low-frequency mottle +-3 levels (craft 3: +-4). W1-W3
+        # carried +-2.5 um at 0.35 mm (1.7 texels): the normal map was flat but for the stipple (2.3 % of texels tilted
+        # vs the AR-01's 24 %) and the polymer read as clay
+        fine = PT.chunked(PT.fbm3, Pk, 0.6, 2, 130)
+        peel = PT.chunked(PT.fbm3, Pk, 1.8, 2, 131)
+        amp_t = MICRO.get(f, MICRO["polymer"])
+        var = 1.0 + 0.45 * (v_lo[k] - 0.5) + 0.08 * (flow - 0.5) + 0.50 * (v_far[k] - 0.5) + 0.70 * (fine - 0.5)
         col = base[None, :] * var[:, None]
         r0, r1 = F["rough"]
-        r = r0 + (r1 - r0) * (0.3 + 0.5 * v_lo[k] + 0.4 * (m_mold - 0.5))
-        hh = 0.0025 * (m_mold - 0.5) * 2.0                                   # +-2.5 um moulded grain
+        r = r0 + (r1 - r0) * (0.3 + 0.5 * v_lo[k] + 0.4 * (m_mold - 0.5)) + 0.06 * (fine - 0.5)
+        hh = 0.0025 * (m_mold - 0.5) * 2.0 + amp_t[0] * (fine - 0.5) * 2.0 + amp_t[1] * (peel - 0.5) * 2.0
         # ---- stipple panels (lower receiver's grip sides, the recessed panel floor at |Y| = 15.45)
         stip = np.zeros(int(k.sum()), bool)
         if f == "polymer":
@@ -227,9 +266,11 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         wk = SS.WHITEN_BASE + (1.0 - SS.WHITEN_BASE) * wz[k]
         band = 0.3 + 0.7 * PT.chunked(PT.fbm3, Pk, 5.0, 2, 94)
         near = PT.smoothstep(band, band * 0.35, dist_e[k])
-        brk = PT.smoothstep(0.38, 0.62, flake[k]) * PT.smoothstep(0.30, 0.55, PT.chunked(PT.fbm3, Pk, 9.0, 3, 95))
-        white = np.clip(near * edge_fine[k] * 1.6, 0, 1) * wk * brk
-        white = np.where(wz[k] > 0.25, white, white * 0.45)                  # outside the zones: faint
+        # (W4 review fixes, G15) bands broken less (0.14 % of the polymer whitened in W2: the study's corner / lip /
+        # well-lip bands were essentially absent): long runs with gaps, the flake field only thinning them
+        brk = (0.35 + 0.65 * PT.smoothstep(0.30, 0.55, flake[k])) *             PT.smoothstep(0.22, 0.45, PT.chunked(PT.fbm3, Pk, 9.0, 3, 95))
+        white = np.clip(near * edge_fine[k] * 1.8, 0, 1) * wk * brk
+        white = np.where(wz[k] > 0.25, white, white * 0.6)                   # outside the zones: fainter
         if f == "rubber":
             white *= 0.6
         lv = 15.0 + 20.0 * PT.chunked(PT.fbm3, Pk, 2.0, 2, 96)              # +15..+35 sRGB levels
@@ -246,8 +287,13 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         col *= (1.0 + (gain - 1.0) * 0.8 * sg)[:, None]
         r = r + 0.04 * sg
         white = np.maximum(white, sg * 0.0)
-        # broad sheen mottle (handled, wiped, dusty areas: roughness +-0.03 over ~30 mm)
-        r = r + 0.06 * (PT.chunked(PT.fbm3, Pk, 30.0, 2, 123) - 0.5)
+        # broad sheen mottle (handled, wiped, dusty areas over ~30 mm) and a wiped / handled field at ~8 mm. (W4 resume:
+        # the review renders measured the painted maps only 1.8-3.5 sRGB levels (mean) off a constant per-set clay
+        # material under the review light: the moulded surface's sheen is what breaks a real gun's flats up, so the
+        # roughness carries visible, real-scale variation (SHEEN_BROAD / SHEEN_MID; 0.45 / 0.25 read as camouflage clouds at
+        # hero distance, 0.25 / 0.22 kept); was 0.06 x (fbm - 0.5),
+        # +-0.01 in effect)
+        r = r + SHEEN_BROAD * (PT.chunked(PT.fbm3, Pk, 30.0, 2, 123) - 0.5) +             SHEEN_MID * (PT.chunked(PT.fbm3, Pk, 8.0, 2, 124) - 0.5)
         white_all[k] = white
         # ---- insertion scratches: into the magwell mouth (lower) and on the magazine's upper body
         ins = np.zeros(int(k.sum()), np.float32)
@@ -266,16 +312,40 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
                     (np.abs(Nk[up][:, 1]) > 0.5)
         col *= (1.0 + 0.35 * ins)[:, None]
         r = r - 0.05 * ins
+        # (W4 review fixes, craft 3) small light-grey scratches, under 0.2 mm, mostly fore-aft on the receiver sides
+        # (and the stock's flats): sparse, in patches, never in cavities
+        if f == "polymer":
+            sides = np.isin(pk[k], ["upper_receiver", "lower_receiver", "stock_frame"]) & (np.abs(Nk[:, 1]) > 0.8)
+            if sides.any():
+                Ps = Pk[sides]
+                sc = PT.chunked(PT.aniso, Ps, (1.0, 0.0, 0.10), 7.0, 0.14, 2, 132)
+                patch = PT.smoothstep(0.52, 0.66, PT.chunked(PT.fbm3, Ps, 16.0, 2, 133))
+                scr = np.zeros(int(k.sum()), np.float32)
+                scr[sides] = PT.smoothstep(0.79, 0.86, sc) * patch * (ao[k][sides] > 0.8)
+                col *= (1.0 + 0.45 * scr)[:, None]
+                r = r + 0.03 * scr
+                white = np.maximum(white, 0.0 * scr)
+        if f == "polymer_mag":
+            # the follower: a slightly lighter, glossier polymer than the housing, so it reads in the cavity (review)
+            fol = pk[k] == "magazine_follower"
+            col[fol] *= 1.35
+            r[fol] = r[fol] - 0.12
         # ---- cavities: dust in the deep ones (lighter, dry), grime in the tight ones
         ck = cav[k]
         deep = PT.smoothstep(0.55, 0.9, ck) * PT.smoothstep(0.45, 0.70, PT.chunked(PT.fbm3, Pk, 4.0, 2, 99))
-        dust_w = 0.9 if f in ("rubber", "polymer_mag") else 0.45
+        dust_w = 0.9 if f in ("rubber", "polymer_mag") else DUST_POLY
         col = col * (1.0 - 0.10 * ck)[:, None]
         col = col * (1.0 + dust_w * 0.55 * deep)[:, None]
         r = r + 0.10 * ck * (1.0 - 0.5 * deep) + 0.08 * deep
+        # (W4 resume) a settled dust film on the up-facing faces (the gun is stored and carried): faint, lighter and
+        # drier, broken in patches, thinner where hands wipe it (the handling zones) and on the sharp edges
+        upf = PT.smoothstep(0.55, 0.95, Nk[:, 2]) * PT.smoothstep(0.75, 0.95, ao[k]) * (1.0 - pol)
+        film = upf * PT.smoothstep(0.35, 0.75, PT.chunked(PT.fbm3, Pk, 6.0, 3, 125)) * DUST_FILM
+        col = col * (1.0 + 0.30 * film)[:, None]
+        r = r + 0.10 * film
         # ---- soot (port rear edge on the receiver)
         s_ = soot[k]
-        col = col * (1 - 0.6 * s_)[:, None] + 0.022 * (0.6 * s_)[:, None]
+        col = col * (1 - 0.6 * s_)[:, None] + float(SS.FIN["soot"]["lin"]) * (0.6 * s_)[:, None]
         r = r * (1 - s_) + 0.9 * s_
         bc[k] = col
         rough[k] = r
@@ -289,51 +359,113 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
     k = fin == "phosphate"
     if k.any():
         F = SS.FIN["phosphate"]
+        kk = np.nonzero(k)[0]
         Pk, Nk, pkk = P[k], N[k], pk[k]
+        nk = len(kk)
         base = lin(F["srgb"]) * np.array([0.985, 1.0, 1.02], np.float32)     # neutral, B - R +2 (spec samples)
         cry = PT.chunked(PT.vnoise3, Pk / 0.12, 60)                            # crystalline grain at the texel
-        var = 1.0 + 0.12 * (v_mid[k] - 0.5) + 0.08 * (v_lo[k] - 0.5) + 0.05 * (cry - 0.5)
+        knob = (pkk == "charging_handle") & (Pk[:, 1] > SS.KNOB_Y_MIN)
+        # (W4 review fixes) the knob's coat even (the 2.6 mm mottle read as camouflage on its ball)
+        mott = np.where(knob, 0.25, 1.0).astype(np.float32)
+        # (W4 resume) the phosphate's uneven take (parkerizing reads blotchy grey at arm's length): the mottle x 1.8
+        var = 1.0 + mott * PHOS_MOTTLE * (0.12 * (v_mid[k] - 0.5) + 0.08 * (v_lo[k] - 0.5)) + 0.05 * (cry - 0.5)
         col = base[None, :] * var[:, None]
         r0, r1 = F["rough"]
         r = r0 + (r1 - r0) * (0.3 + 0.5 * v_lo[k]) + 0.05 * (cry - 0.5) * 2.0
+        r = r + SHEEN_MID * (PT.chunked(PT.fbm3, Pk, 8.0, 2, 126) - 0.5)        # (W4 resume) handled / oiled sheen
         oily = np.isin(pkk, ["bolt", "bolt_rails", "charging_slide", "barrel"])
         oil = PT.smoothstep(0.45, 0.75, PT.chunked(PT.fbm3, Pk, 12.0, 3, 61)) * (0.4 + 0.6 * oily)
         o0, o1 = F["oiled"]
         r = r * (1 - oil) + (o0 + (o1 - o0) * v_mid[k]) * oil
         col *= (1.0 - 0.08 * oil)[:, None]
         wear = SS.STEEL_BASE + (1.0 - SS.STEEL_BASE) * sz[k]
-        # rubbed phosphate short of a chip: thinned, a touch lighter and smoother along the worn edges
-        rub = PT.smoothstep(0.35, 0.80, edge_broad[k]) * wear * (0.25 + 0.9 * flake[k])
+        expo = PT.smoothstep(0.55, 0.92, ao[k])                 # open faces wear; recesses and slot roots do not
+        # rubbed phosphate short of bare steel: thinned, lighter, smoother along the worn edges. (W4) varied along the
+        # part (a 12 mm field) so identical rail teeth do not repeat one light frame each (review: a bake pattern)
+        along = PT.chunked(PT.fbm3, Pk, 12.0, 2, 67)
+        rub = PT.smoothstep(0.35, 0.80, edge_broad[k]) * wear * (0.15 + 0.9 * flake[k]) * (0.25 + 1.1 * along) * expo
         col *= (1.0 + 0.55 * rub)[:, None]
         r = r - 0.08 * rub
-        # bare steel: hard flecks ON a sharp convex edge in the bright-edge zones (never a band, never a flat)
-        near = (dist_e[k] < 0.6) | ((sz[k] > 0.5) & (dist_e[k] < 1.0))
-        clus = PT.smoothstep(0.40, 0.70, PT.chunked(PT.fbm3, Pk, 8.0, 3, 45)) * (0.3 + 0.7 * sz[k])
-        amt = edge_fine[k] * (0.35 + 1.2 * wear) * (0.4 + 0.9 * flake[k])
-        chip = (amt > 0.86 - 0.10 * sz[k]) & (flk[k] > 0.55) & near & (clus > 0.40)
-        # the trigger face and the paddle face: worn bright on their high middle (the finger), not only the edges
-        face = np.zeros(int(k.sum()), bool)
+        # (W4 review fixes, G7 / G9 / G15) bare steel as CONTINUOUS bright lines on the sharp convex crests (the study's
+        # rail slot edges and flank crests, sight ear tops, device rim and slot edges, selector tips, trigger face
+        # edges): curvature (the same-side distance to a sharp convex edge) x exposure (AO) x handling (the bright-edge
+        # zones), 0.25-0.8 mm wide, in long dashes (a 4 mm field: runs of several mm), never further than 1.2 mm from the
+        # edge; clusters under MIN_BARE_PX texels dropped below. W2's hard flecks (196 clusters, median 12 texels, 0.07 %)
+        # sparkled as fireflies in the middles of the tooth faces
+        dash = PT.chunked(PT.fbm3, Pk, 4.0, 2, 68)
+        wfield = PT.chunked(PT.fbm3, Pk, 2.0, 2, 69)
+        width = np.clip((0.18 + 0.32 * wear * (0.5 + 0.8 * wfield)) * (0.4 + 0.6 * expo), 0.0, BARE_MAX_DIST)
+        chip = (dist_e[k] < width) & (dash > 0.80 - 0.34 * sz[k]) & (edge_fine[k] > 0.25) & (expo > 0.3)
+        # where hands and gear actually rub: the rails' tooth crests and dovetail flanks, not the base flange's edges
+        # along the receiver (a dashed white line there in the dev renders); the device's front rim, not its slot
+        # edges (carbon-black, the soot gradient below)
+        top_r = pkk == "top_rail"
+        chip &= ~(top_r & (Pk[:, 2] < SS.RAIL_TOP_Z - 3.6))
+        low_r = pkk == "lower_rail"
+        chip &= ~(low_r & (Pk[:, 2] > SS.RAIL_LOW_Z + 3.6))
+        chip &= ~((pkk == "muzzle_device") & (Pk[:, 0] < SS.X_MUZ - 1.2))
+        # the trigger face and the paddle face: rubbed satin where the finger rests (no white flecks)
+        face = np.zeros(nk, bool)
         trg = pkk == "trigger"
         if trg.any():
-            face[trg] = (Nk[trg][:, 0] > 0.6) & (Pk[trg][:, 2] < -45.0) & (Pk[trg][:, 2] > -70.0) & \
-                (PT.chunked(PT.fbm3, Pk[trg], 1.2, 2, 62) > 0.52)
+            face[trg] = (Nk[trg][:, 0] > 0.6) & (Pk[trg][:, 2] < -45.0) & (Pk[trg][:, 2] > -70.0)
         pad = pkk == "mag_release"
         if pad.any():
-            face[pad] = (Nk[pad][:, 0] < -0.6) & (PT.chunked(PT.fbm3, Pk[pad], 1.2, 2, 63) > 0.55)
-        knob = (pkk == "charging_handle") & (Pk[:, 1] > 43.0)
-        face |= knob & (Nk[:, 1] > 0.85)
-        # (dev review: whole white blotches on the trigger face and the knob crown) the finger / palm rubs the
-        # phosphate thin and smooth there (lighter, satin) and wears through only in small flecks at the high point
+            face[pad] = Nk[pad][:, 0] < -0.6
         fr = PT.chunked(PT.fbm3, Pk, 0.8, 3, 66)
-        col *= (1.0 + 0.9 * face * PT.smoothstep(0.35, 0.65, fr))[:, None]
-        r = r - 0.18 * face
-        face = face & (fr > 0.70) & (flk[k] > 0.55)
-        chip |= face
+        col *= (1.0 + 0.7 * face * PT.smoothstep(0.30, 0.70, fr))[:, None]
+        r = r - 0.16 * face
+        # the knob (CRAFT 2.3: a satin dark knob with a polished crown and a bright rim): the flat crown (dia 7.0) worn
+        # to a smooth satin (rough 0.45-0.55, the coat thinned), a thin continuous bright ring just outside its edge
+        # (normals 18-26 deg off the knob axis: the crown edge is 20.7 deg, under the 25 deg sharp-edge rule)
+        crown = knob & (Nk[:, 1] > 0.955)
+        rim = knob & (Nk[:, 1] > 0.895) & (Nk[:, 1] <= 0.955)
+        col[crown] *= 1.32
+        r[crown] = 0.45 + 0.10 * v_mid[k][crown]
+        chip &= ~knob
+        chip |= rim
+        # the selector's thumb arcs (both levers; the right-hand thumb on the left, the index finger on the right):
+        # the levers' outer faces polished in the handling zones
+        selp = (pkk == "selector") & (np.abs(Nk[:, 1]) > 0.7)
+        sp_ = np.where(selp, hz[k], 0.0).astype(np.float32)
+        col *= (1.0 + 0.30 * sp_)[:, None]
+        r = r - 0.12 * sp_
         # sliding polish: the bolt's flanks where they ride the rails (inside the receiver)
-        slide = (pkk == "bolt") & (np.abs(Nk[:, 1]) > SS.BOLT_SLIDE["normal_y_min"]) & (Pk[:, 2] < -1.5) &             (Pk[:, 2] > -9.5)
+        slide = (pkk == "bolt") & (np.abs(Nk[:, 1]) > SS.BOLT_SLIDE["normal_y_min"]) & (Pk[:, 2] < -1.5) & \
+            (Pk[:, 2] > -9.5)
         sp = PT.chunked(PT.aniso, Pk, (1.0, 0.0, 0.0), 14.0, 0.25, 2, 65)
         slide &= sp > 0.42
         chip &= ~slide
+        # the chamber mouth (W4): the breech's 45 deg chamfer rubbed bright satin by the rounds, its outer rim bare
+        brl = pkk == "barrel"
+        rad_b = np.hypot(Pk[:, 1], Pk[:, 2] - SS.BORE_Z_B - SS.GRIP_M[2])
+        cham = brl & (Pk[:, 0] < SS.BREECH_X + 0.75) & (rad_b > SS.R_BORE - 0.1) & (rad_b < SS.R_BORE + 0.7)
+        col[cham] *= 1.55
+        r[cham] = 0.42 + 0.08 * v_mid[k][cham]
+        chip |= brl & (Pk[:, 0] < SS.BREECH_X + 0.15) & (rad_b > SS.R_BORE + 0.5) & (rad_b < SS.R_BORE + 0.95)
+        # the rear sight's windage drum: straight knurl on its rim (CRAFT 2.13: fine knurl in the normal map), 0.55 mm
+        # pitch, 0.05 deep, the crests rubbed lighter
+        hh = np.zeros(nk, np.float32)
+        drum = (pkk == "sight_rear_leaf") & (Pk[:, 1] > SS.DRUM_Y[0]) & (Pk[:, 1] < SS.DRUM_Y[1]) & \
+            (np.abs(Nk[:, 1]) < 0.35)
+        n_drum = 0
+        if drum.any():
+            Pd, Nd = Pk[drum], Nk[drum]
+            c = np.median((Pd - Nd * SS.DRUM_R)[:, [0, 2]], axis=0)
+            rr = np.hypot(Pd[:, 0] - c[0], Pd[:, 2] - c[1])
+            ok = np.abs(rr - SS.DRUM_R) < 0.2
+            ang = np.arctan2(Pd[:, 2] - c[1], Pd[:, 0] - c[0])
+            nt = int(round(2.0 * math.pi * SS.DRUM_R / SS.KNURL_PITCH))
+            ph = (ang / (2.0 * math.pi) * nt) % 1.0
+            tri = (1.0 - 2.0 * np.abs(ph - 0.5)).astype(np.float32)          # 1 at the crest, 0 in the groove
+            dsel = np.nonzero(drum)[0][ok]
+            hh[dsel] = SS.KNURL_DEPTH * tri[ok]
+            crest = PT.smoothstep(0.65, 0.95, tri[ok])
+            col[dsel] *= (1.0 + 0.35 * crest)[:, None]
+            r[dsel] = r[dsel] - 0.10 * crest
+            n_drum = int(ok.sum())
+        # drop bare clusters smaller than MIN_BARE_PX texels (no isolated sparkle); by-design faces kept
+        chip = _drop_small(chip, kk, idx, S, MIN_BARE_PX)
         bare_all[k] = chip | slide
         col[chip] = bare[None, :] * (0.93 + 0.10 * v_mid[k][chip])[:, None]
         if slide.any():
@@ -343,40 +475,58 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         r = np.where(chip, b0 + (b1 - b0) * v_mid[k], r)
         r = np.where(slide, s0 + (s1 - s0) * sp, r)
         met = np.where(chip | slide, 1.0, 0.0).astype(np.float32)
-        hh = np.where(chip & ~face, -0.008, 0.0).astype(np.float32)          # the coat's step at a chip
+        hh = hh + np.where(chip & ~face, -0.008, 0.0).astype(np.float32)          # the coat's step at a chip
         # cavity grime (slot roots, pin surrounds) and soot (device slots and crown, bore mouth): dielectric dirt
         g = np.clip(cav[k] * 0.6, 0, 1)
-        # rail slot roots (spec wear: 'grime in the slot roots'): the slot floors and the tooth walls' lowest mm,
-        # oily dirt packed in (the sheet's slots read black; the albedo stops at the PBR floor)
         tr = SS.RAIL_TOP_Z - SS.RAIL_SLOT_D
         lr = SS.RAIL_LOW_Z + SS.RAIL_SLOT_D
-        root = ((pkk == "top_rail") & (Pk[:, 2] < tr + 1.0) & (Pk[:, 2] > tr - 0.4) & (np.abs(Pk[:, 1]) < 10.7)) |             ((pkk == "lower_rail") & (Pk[:, 2] > lr - 1.0) & (Pk[:, 2] < lr + 0.4) & (np.abs(Pk[:, 1]) < 10.7))
+        root = ((pkk == "top_rail") & (Pk[:, 2] < tr + 1.0) & (Pk[:, 2] > tr - 0.4) & (np.abs(Pk[:, 1]) < 10.7)) | \
+            ((pkk == "lower_rail") & (Pk[:, 2] > lr - 1.0) & (Pk[:, 2] < lr + 0.4) & (np.abs(Pk[:, 1]) < 10.7))
         g = np.maximum(g, root * (0.55 + 0.35 * v_mid[k]))
-        s_ = soot[k]
+        s_ = soot[k].copy()
+        # (W4 review fixes, G11) the muzzle device's carbon: the inner cage faces and the bore, the slot walls, a ring
+        # on the crown / front face round the bore, a gradient out from each slot's edge on the outside
+        dev = pkk == "muzzle_device"
+        if dev.any():
+            Pd, Nd = Pk[dev], Nk[dev]
+            ry, rz = Pd[:, 1], Pd[:, 2] - SS.BORE_Z_B - SS.GRIP_M[2]
+            rr = np.maximum(np.hypot(ry, rz), 1e-6)
+            ndot = (Nd[:, 1] * ry + Nd[:, 2] * rz) / rr
+            inslot = (Pd[:, 0] > SS.DEV_SLOT_X[0] - 0.5) & (Pd[:, 0] < SS.DEV_SLOT_X[1] + 0.5)
+            inner = ndot < -0.4
+            wall = (np.abs(ndot) < 0.55) & inslot & (np.abs(Nd[:, 0]) < 0.7)
+            front = (Nd[:, 0] > 0.8) & (Pd[:, 0] > SS.X_MUZ - 1.5)
+            ring = front * PT.smoothstep(10.5, 7.0, rr)
+            grad = inslot * (ndot > 0.5) * PT.smoothstep(2.6, 0.2, dist_e[k][dev])
+            vv = 0.75 + 0.25 * v_mid[k][dev]
+            sd = np.maximum.reduce([inner * 0.95 * vv, wall * 0.9 * vv, ring * 0.85 * vv, grad * 0.7 * vv])
+            s_[dev] = np.maximum(s_[dev], sd)
+        soot_lin = float(SS.FIN["soot"]["lin"])
         dirt = (met > 0.5) & ((g * (0.6 + 0.8 * v_mid[k]) > 0.45) | (s_ > 0.45))
         met = np.where(dirt, 0.0, met)
         col = np.where(dirt[:, None], grime[None, :] * (0.85 + 0.3 * v_mid[k][:, None]), col)
         isd = met < 0.5
         col = np.where(isd[:, None], col * (1 - g)[:, None] + grime[None, :] * g[:, None], col)
-        col = np.where(isd[:, None], col * (1 - 0.85 * s_)[:, None] + 0.022 * (0.85 * s_)[:, None], col)
+        col = np.where(isd[:, None], col * (1 - 0.92 * s_)[:, None] + soot_lin * (0.92 * s_)[:, None], col)
         r = r + 0.20 * g
         r = np.where(isd, r * (1 - s_) + 0.90 * s_, r)
-        # the bore: soot deepening inward
-        brl = pkk == "barrel"
+        # the bore: soot deepening inward (the chamber mouth's chamfer excluded: it is rubbed bright)
         if brl.any():
-            rad = np.hypot(Pk[brl][:, 1], Pk[brl][:, 2] - SS.BORE_Z_B - SS.GRIP_M[2])
-            inner = rad < 6.5
-            cb = col[brl]
-            cb[inner] *= 0.45
-            col[brl] = cb
+            inner_b = brl & (rad_b < 6.5) & ~cham
+            col[inner_b] *= 0.45
         bc[k] = col
         rough[k] = r
         metal[k] = met
         h[k] = hh
         m_edge[k] = np.clip(edge_fine[k] * wear, 0, 1)
+        # (W4 review fixes) the handling mask on the metal too (Masks G): trigger / paddle faces, knob crown, selector
+        # thumb arcs, the handling zones (W2 wrote it for the polymer only: G = 0 on every Metal texel)
+        m_hand[k] = np.clip(np.maximum.reduce([hz[k], face * 1.0, crown * 1.0, sp_]), 0, 1)
         refin[k] = np.where(met > 0.5, 0.0, 1.0)
         sight = np.isin(pkk, list(SS.SIGHT_PARTS))
-        refin[np.nonzero(k)[0][sight]] = 0.0
+        refin[kk[sight]] = 0.0
+        PAINT_INFO[st] = {"drum_knurl_texels": n_drum, "knob_crown_texels": int(crown.sum()),
+                          "knob_rim_bare_texels": int((rim & chip).sum()), "chamber_mouth_texels": int(cham.sum())}
 
     # ---------------------------------------------------------------- limits (gate B9 / G7)
     is_m = metal > 0.5
@@ -433,6 +583,17 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
                           "rough_p5_p50_p95": [round(float(np.percentile(rough[stip_t], q)), 3) for q in (5, 50, 95)],
                           "height_mm_p50_p99": [round(float(np.percentile(h[stip_t], q)), 3) for q in (50, 99)]}
     rep["metallic_values"] = sorted(set(np.unique(M).tolist()))
+    # (W4 review fixes) the polymer's surface statistics the review measured: BC standard deviation (sRGB levels, per
+    # finish, dielectric texels), the share of texels whose normal tilts > 1 deg from flat (the moulded texture)
+    b8 = PT.lin_to_srgb(bc) @ LW * 255.0
+    rep["bc_std_srgb_levels"] = {str(f): round(float(np.std(b8[(fin == f) & (metal < 0.5)])), 2)
+                                 for f in np.unique(fin) if ((fin == f) & (metal < 0.5)).any()}
+    tilt = nrm.reshape(-1, 3)[idx][:, 2]
+    rep["normal_tilt_gt_1deg_fraction"] = {str(f): round(float((tilt[fin == f] < math.cos(math.radians(1.0))).mean()), 4)
+                                           for f in np.unique(fin)}
+    rep["normal_tilt_gt_1deg_fraction_set"] = round(float((tilt < math.cos(math.radians(1.0))).mean()), 4)
+    rep["info"] = PAINT_INFO.get(st, {})
+    rep["masks_g_handling_fraction"] = {str(f): round(float((m_hand[fin == f] > 0.05).mean()), 4) for f in np.unique(fin)}
     rep["wear_audit"] = audit
     log(st, "DONE %.1fs" % (time.time() - t0))
     return rep
@@ -480,6 +641,23 @@ def wear_audit(S, idx, du, dv, fin, pk, tp, part, bare_all, white_all, dist_e, s
         out["bare_blobs"] = nb
         _n2, big2, _ = blobs(img(bare_all & ph & by_design))
         out["by_design_bare_largest_mm2"] = round(big2, 2)
+        # (W4 review fixes) bare steel as LINES: the widest point of any bare cluster (2 x the distance transform's
+        # maximum, mm; a line, not a patch: <= 1.6), the smallest cluster (texels; >= MIN_BARE_PX), bare texels further
+        # than BARE_MAX_DIST from a same-side sharp convex edge (outside the by-design faces and the knob's rim)
+        bimg = img(bare_all & ph & ~np.isin(pk, ["bolt"]))
+        lab, nl = ndi.label(bimg, structure=np.ones((3, 3), int))
+        if nl:
+            mmpx = np.sqrt(np.maximum(area, 1e-12))
+            edt = ndi.distance_transform_edt(bimg)
+            wmax = ndi.maximum(edt * mmpx, lab, index=np.arange(1, nl + 1))
+            sizes = np.bincount(lab.ravel())[1:]
+            out["bare_line_width_max_mm"] = round(float(2.0 * np.max(wmax)), 3)
+            out["bare_clusters"] = int(nl)
+            out["bare_cluster_min_texels"] = int(sizes.min())
+            out["bare_cluster_median_texels"] = int(np.median(sizes))
+        knob_rim = (pk == "charging_handle") & (P[:, 1] > SS.KNOB_Y_MIN)
+        far = bare_all & ph & (dist_e > BARE_MAX_DIST + 0.05) & ~np.isin(pk, ["bolt"]) & ~knob_rim
+        out["bare_texels_far_from_edge"] = int(far.sum())
         knob = (pk == "charging_handle") & (P[:, 1] > 40.0)
         if knob.any():
             out["charging_knob_bare_fraction"] = round(float(bare_all[knob].mean()), 4)

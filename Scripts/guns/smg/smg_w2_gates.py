@@ -152,6 +152,12 @@ def main():
                       f"k {fit.get('light_scale')}, failed {l5['failed']}; reported only: {l5.get('reported_only')}; "
                       f"polymer / steel luminance ratio {l5.get('polymer_steel_ratio')} (the spec's 1.3-1.5 band does "
                       f"not hold on the sheet's own crops either: reported)"))
+        pr = l5.get("polymer_steel_luma_ratio") or {}
+        G.append(gate("G20 steel darker than the polymer (W4 review): sRGB luma ratio receiver / steel crops (barrel + "
+                      "muzzle device + lower rail side) in the L5 render vs the sheet's own", pr,
+                      "ours within the CRAFT 3 band 1.3-1.5 (+-0.05) and within 0.15 of the sheet's own ratio (W2: "
+                      "polymer 46-49 over steel 50-52, the steel read lighter)",
+                      bool(pr) and 1.25 <= pr.get("ours", 0) <= 1.55 and abs(pr.get("ours", 0) - pr.get("sheet", 0)) <= 0.15))
     else:
         G.append(gate("L5", "missing", "present", False))
     # ---------------------------------------------------------------- wear audits
@@ -162,10 +168,19 @@ def main():
                           {k: wa[k] for k in ("interior_bare_clusters", "steel_bare_fraction")},
                           "0 clusters > 2 mm from a same-side sharp convex edge outside the bright-edge zones",
                           wa["interior_bare_clusters"] == 0))
-            G.append(gate(f"wear: largest bare-steel blob on {st} phosphate",
-                          f"{wa['largest_bare_blob_mm2']} mm2 ({wa['largest_bare_blob_part']}); {wa['bare_blobs']} blobs; "
-                          f"by design (bolt slide flanks, trigger / paddle / knob faces): {wa['by_design_bare_largest_mm2']} mm2",
-                          "<= 8 mm2 (an edge fleck, not a patch)", wa["largest_bare_blob_mm2"] <= 8.0))
+            # (W4 review fixes) bare steel is continuous LINES on the crests now, so the W2 area cap (<= 8 mm2, made for
+            # flecks) gives way to the width of a line: no bare cluster wider than 1.6 mm anywhere (a line, not a
+            # patch), none under MIN cluster texels (no isolated sparkle), none further than 1.2 mm from a same-side
+            # sharp convex edge (the review's rules; the bolt's slide flanks by design)
+            G.append(gate(f"wear: bare steel on {st} phosphate is edge LINES (W4 review: no fireflies, no patches)",
+                          {k: wa.get(k) for k in ("bare_line_width_max_mm", "bare_clusters", "bare_cluster_min_texels",
+                                                  "bare_cluster_median_texels", "bare_texels_far_from_edge",
+                                                  "steel_bare_fraction", "largest_bare_blob_mm2",
+                                                  "largest_bare_blob_part", "by_design_bare_largest_mm2")},
+                          "widest point <= 1.6 mm; smallest cluster >= 14 texels; 0 bare texels > 1.2 mm from a sharp "
+                          "convex edge; bare fraction 0.3-4 % (W2: 0.07 % in 196 flecks)",
+                          (wa.get("bare_line_width_max_mm") or 99) <= 1.6 and (wa.get("bare_cluster_min_texels") or 0) >= 14
+                          and wa.get("bare_texels_far_from_edge", 1) == 0 and 0.003 <= wa["steel_bare_fraction"] <= 0.04))
             if "charging_knob_bare_fraction" in wa:
                 G.append(gate("wear: charging knob bare steel", wa["charging_knob_bare_fraction"], "<= 0.25",
                               wa["charging_knob_bare_fraction"] <= 0.25))
@@ -175,6 +190,28 @@ def main():
                                               "whitened_largest_blob_mm2", "polymer_lum_p50_srgb")},
                           "0 metallic texels; 0 whitened clusters > 1.2 mm from a sharp convex edge",
                           wa["polymer_metallic_texels"] == 0 and wa["whitened_off_edge_clusters"] == 0))
+    # ---------------------------------------------------------------- (W4 review fixes) the polymer's surface
+    rows, ok = {}, True
+    for st, f, std_min, tilt_min in (("Furniture", "polymer", 3.0, 0.18), ("Mag", "polymer_mag", 3.0, 0.15)):
+        v = paint[st]
+        sd = (v.get("bc_std_srgb_levels") or {}).get(f, 0.0)
+        tl = (v.get("normal_tilt_gt_1deg_fraction") or {}).get(f, 0.0)
+        wf = v["wear_audit"].get("whitened_fraction", 0.0)
+        rows[f"{st}/{f}"] = {"bc_std_srgb_levels": sd, "normal_tilt_gt_1deg_fraction": tl, "whitened_fraction": wf}
+        ok &= sd >= std_min and tl >= tilt_min and wf >= 0.002
+    G.append(gate("polymer surface (W4 review G15): moulded micro-texture in the normal map, albedo mottle, edge "
+                  "whitening present", rows,
+                  "BC luma std >= 3.0 sRGB levels; >= 18 % (furniture) / 15 % (magazine) of texels tilted > 1 deg "
+                  "(the AR-01 furniture: 24 %); whitened >= 0.2 % of texels (W2: Furniture 0.14 %, the normal map "
+                  "2.3 %)", ok))
+    mt = paint["Metal"]
+    G.append(gate("Metal Masks G (handling) written (W4 review: G was 0 on every Metal texel)",
+                  {"masks_g_handling_fraction": mt.get("masks_g_handling_fraction"), "info": mt.get("info")},
+                  "> 0 on the phosphate (trigger / paddle faces, knob crown, selector thumb arcs, handling zones); the "
+                  "drum knurl, the knob's crown and rim and the chamber mouth painted",
+                  (mt.get("masks_g_handling_fraction") or {}).get("phosphate", 0.0) > 0.001 and
+                  (mt.get("info") or {}).get("drum_knurl_texels", 0) > 0 and
+                  (mt.get("info") or {}).get("knob_rim_bare_texels", 0) > 0))
     st_ = paint["Furniture"].get("stipple")
     G.append(gate("grip stipple (normal + cavity, spec grip_stipple)", st_,
                   "present on both panels; height 0.10-0.15 mm; roughness 0.78-0.88 (crowns polished in the hand)",

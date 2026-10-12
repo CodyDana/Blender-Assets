@@ -114,17 +114,24 @@ def face_class(part, set_name, P_M, n, visible):
 FIN = {
     # polymer (46, 47, 49): spec (46, 47, 50) one blue level down by L5 (the sheet's shadowed polymer reads neutral;
     # the spec's B - R +4 made the trigger guard's shadowed leg 0.056 saturated in sRGB, tolerance 0.05)
-    "polymer": {"metal": 0, "srgb": (46, 47, 49), "spec_srgb": (46, 47, 50), "rough": (0.58, 0.66), "rough_hand": 0.52},
-    "stipple": {"metal": 0, "srgb": (46, 47, 49), "rough": (0.78, 0.88)},
+    # (W4) B 48.5: with the moulded texture the guard's shadowed crop read 0.0535 saturated (L5 tolerance 0.05)
+    "polymer": {"metal": 0, "srgb": (46, 47, 48.5), "spec_srgb": (46, 47, 50), "rough": (0.58, 0.66), "rough_hand": 0.52},
+    "stipple": {"metal": 0, "srgb": (46, 47, 48.5), "rough": (0.78, 0.88)},
     "polymer_mag": {"metal": 0, "srgb": (41, 42, 45), "rough": (0.55, 0.65)},
     "rubber": {"metal": 0, "srgb": (42, 42, 44), "rough": (0.82, 0.92)},
-    "phosphate": {"metal": 0, "srgb": (50, 51, 52), "rough": (0.66, 0.80), "oiled": (0.55, 0.65)},
+    # (W4 review fixes, G20; spec R44) the steel DARKER than the polymer, as the sheet shows it (CRAFT 3 samples: the
+    # device 40, the rail side 49-50 against the receiver 63-64 under one light; the table's 48-54 base contradicted
+    # its own 'steel darker' rule): base (40, 41, 42) (W2: 50-52 read lighter than the polymer's 46-49, so the device,
+    # sights, rails and knob were the receiver's material); dry 0.62-0.76, oiled 0.52-0.62 ('slightly glossier-edged')
+    "phosphate": {"metal": 0, "srgb": (40, 41, 42), "rough": (0.62, 0.76), "oiled": (0.52, 0.62)},
     # worn steel at the spec's bare value but micro-scratched: rough 0.42-0.55 (spec 0.25-0.40; the AR-01's realism
     # rounds moved it to 0.50-0.62: at 0.25-0.40 every chip flashed as a white mirror fleck under the review lights);
     # the bolt's sliding flanks keep the spec's polished 0.15-0.25
     "bare": {"metal": 1, "srgb": (190, 190, 188), "rough": (0.42, 0.55), "spec_rough": (0.25, 0.40),
              "sliding": (0.15, 0.25)},
-    "soot": {"metal": 0, "lin": 0.025, "rough": (0.85, 0.95)},
+    # (W4 review fixes, G11) soot at the PBR floor (sRGB 30, lin 0.013): the spec's 0.02-0.03 linear (sRGB 39-48) sat ON
+    # the phosphate base and could not be seen; now ~10 levels under the darkened phosphate
+    "soot": {"metal": 0, "lin": 0.0130, "spec_lin": (0.02, 0.03), "rough": (0.85, 0.95)},
     "grime": {"metal": 0, "srgb": (34, 33, 32), "rough": 0.85},
 }
 PART_FINISH = {
@@ -189,7 +196,7 @@ WHITEN = [
      "part": "mag"},
     {"what": "magazine feed lips", "center_M": (430.0, 0.0, -24.0), "radius": 18.0, "w": 0.6, "part": "mag"},
 ]
-WHITEN_BASE = 0.22           # outside the zones, only the strongest sharp corners whiten (faint)
+WHITEN_BASE = 0.35           # outside the zones the sharp corners whiten faintly (W4: 0.22 -> 0.35, review G15)
 STEEL_BRIGHT = [
     {"what": "rail slot edges and flank crests (top rail rear, the hands and optics on and off)",
      "center_M": (330.0, 0.0, 41.0), "radius": 60.0, "w": 0.55},
@@ -208,6 +215,21 @@ STEEL_BASE = 0.25
 # soot (spec: device slots and crown; light at the port's rear edge); frame M centres, radii, weights
 SOOT = [{"what": "muzzle device slots and crown", "center_M": (612.0, 0.0, 1.7), "radius": 20.0, "w": 1.0},
         {"what": "bore mouth", "center_M": (597.0, 0.0, 1.7), "radius": 7.0, "w": 0.9},
-        {"what": "port rear edge (right)", "center_M": (408.0, -31.0, 8.0), "radius": 12.0, "w": 0.35}]
+        {"what": "port rear edge (right)", "center_M": (408.0, -31.0, 8.0), "radius": 12.0, "w": 0.6}]   # (W4: 0.35)
 # sliding polish (bare steel, rough 0.15-0.25): the bolt's flanks where they ride the rails
 BOLT_SLIDE = {"part": "bolt", "normal_y_min": 0.75}
+
+
+# ---------------------------------------------------------------- (W4 review fixes) small-part paint stations
+KNOB_Y_MIN = 43.0                                  # the charging knob's ball (Y > 43, frame M)
+_BA = dims("barrel")
+BREECH_X = float(_BA["breech_X"])                  # the chamber mouth (its 1.0 chamfer: front.py)
+R_BORE = float(_BA["bore_dia"]) / 2.0
+DRUM_Y = (7.65, 9.35)                              # the rear sight's windage drum rim (sights.py: Y 7.6-9.4, R 4.5)
+DRUM_R = 4.5
+KNURL_PITCH = 0.55                                 # straight knurl (CRAFT 2.13), 0.05 deep
+KNURL_DEPTH = 0.05
+_MD = dims("muzzle_device")
+X_MUZ = float(_MD["cage_X"][1])                    # 625.0
+DEV_SLOT_X = (X_MUZ - float(_MD["front_rim_length"]) - float(_MD["slots"]["length"]),
+              X_MUZ - float(_MD["front_rim_length"]))

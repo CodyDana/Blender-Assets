@@ -105,6 +105,17 @@ def main():
         o_steel = float(np.average([r["ours"]["lin_lum"] for r in st], weights=ws))
         out["polymer_steel_ratio"] = {"sheet": round(rec["sheet"]["lin_lum"] / s_steel, 3),
                                       "ours": round(rec["ours"]["lin_lum"] / o_steel, 3), "spec_band": [1.3, 1.5]}
+        # (W4 review fixes, G20) the CRAFT 3 ratio is a sRGB-luma ratio (receiver 63-64 / device 40, rail side 49-50):
+        # graded on the steel crops that carry their own colour (barrel, device; the lower rail's side is shadowed)
+        lit = [r for n, r in out["regions"].items() if n in ("barrel", "muzzle_device")]
+        wl = np.array([r["pixels"] for r in lit], float)
+        out["polymer_steel_luma_ratio"] = {
+            "sheet": round(rec["sheet"]["luma"] / float(np.average([r["sheet"]["luma"] for r in lit], weights=wl)), 3),
+            "ours": round(rec["ours"]["luma"] / float(np.average([r["ours"]["luma"] for r in lit], weights=wl)), 3),
+            "per_region_ours": {n: round(rec["ours"]["luma"] / r["ours"]["luma"], 3) for n, r in out["regions"].items()
+                                if n in ("barrel", "muzzle_device")},
+            "per_region_sheet": {n: round(rec["sheet"]["luma"] / r["sheet"]["luma"], 3) for n, r in out["regions"].items()
+                                 if n in ("barrel", "muzzle_device")}}
     calib = set(a.calib.split(","))
     tested = {k: v for k, v in out["regions"].items() if k not in calib and k not in SHADOW_REGIONS}
     out["reported_only"] = {k: dict(reason=SHADOW_REGIONS[k], delta=out["regions"][k]["delta"])
