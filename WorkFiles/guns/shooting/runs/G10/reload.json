@@ -1,0 +1,103 @@
+{
+ "stage": "G10c reload with hands (third person + first-person arms) and the F7 dropped-magazine fix",
+ "date": "2026-10-11",
+ "pass_count": 13,
+ "total": 14,
+ "gates": [
+  {
+   "name": "Build: A_AR01_MagGrip_UEFN baked (left fingers, read-back), ABP_GunCharacter (hand_l rotation Replace in component space on GunHandRotCS/GunHandRotAlpha before the hand_l IK; mag-grip finger layer on GunMagGripAlpha) and BP_GunCharacter (bReloadHands, MagHandGrip, ChargeHandGrip, FP body mesh + anim class) compile UP_TO_DATE with 0 messages; only /Game/Guns saved",
+   "value": {"bake_readback_err_max_deg": 0.0, "abp": "BS_UP_TO_DATE, 0 messages", "pawn": "BS_UP_TO_DATE, 0 messages", "mag_grip_readback": {"cm": 0.0, "deg": 0.073}, "dirty_outside_guns": [], "file": "reload/build_gun_reload_g10c.json"},
+   "threshold": "pass, 0 errors",
+   "pass": true
+  },
+  {
+   "name": "Hand to magazine while carried, every frame (the HandReload point where the hand holds a magazine vs the visible magazine's HandReload socket: the hand's copy, or the seated one while it rides the clip in) (cm, max / p95; frames)",
+   "value": {"tactical_3p": [0.745, 0.366, 255], "empty_3p": [0.722, 0.353, 264], "tactical_fp": [1.366, 0.691, 269]},
+   "threshold": "<= 2.0 every frame",
+   "pass": true
+  },
+  {
+   "name": "Magazine visible but neither seated nor within 2 cm of the hand, MagOut to MagIn (the drop excepted: the hand's copy hides at MagDrop as the dropped magazine spawns)",
+   "value": {"tactical_3p": 0, "empty_3p": 0, "tactical_fp": 0, "before": "the clip parked the new magazine under the gun with no hand for 0.48 s; palm to magazine 67 / 89 / 19 cm at MagOut / MagDrop / MagIn"},
+   "threshold": "0 frames",
+   "pass": true
+  },
+  {
+   "name": "Seated at MagIn: first frame at or after MagIn, the seated magazine visible at its socket (offset cm / deg)",
+   "value": {"tactical_3p": [0.0, 0.0], "empty_3p": [0.0, 0.0], "tactical_fp": [0.0, 0.0]},
+   "threshold": "visible, <= 0.05 cm / 0.1 deg",
+   "pass": true
+  },
+  {
+   "name": "Hand-over jump at 1.14 s: the hand's copy (0.0 cm off the hand) -> the seated magazine on the clip path, next frame (cm)",
+   "value": {"tactical_3p": 0.063, "empty_3p": 0.075, "tactical_fp": 0.095},
+   "threshold": "<= 1.0",
+   "pass": true
+  },
+  {
+   "name": "Back on the handguard after the hand path ends: palm grip point to SupportHand on the next 5 frames (cm), rotation and mag-grip weights 0, IK 1",
+   "value": {"tactical_3p_palm_max": 0.014, "empty_3p_palm_max": 0.013, "tactical_fp_palm_max": 0.125, "weights": "0 / 0, IK 1.0 in every row"},
+   "threshold": "<= 1.0 cm within 0.25 s after the path end (path end = MagIn + 0.2 s, BoltRelease + 0.2 s on an empty reload)",
+   "pass": true
+  },
+  {
+   "name": "ReloadEmpty: hand to the charging handle (hand_l x ChargeHandGrip^-1 vs the ChargingHandle socket), ChargeRear - 0.4 s to BoltRelease (cm, max; frames)",
+   "value": [0.313, 116],
+   "threshold": "<= 2.0",
+   "pass": true
+  },
+  {
+   "name": "IK reach / arm length on the hand path (weight 1) and hand_l to the spine (spine_02-spine_05 segment, cm)",
+   "value": {"path_reach_max": {"tactical_3p": 0.9542, "empty_3p": 0.955, "tactical_fp": 0.9527}, "all_frames_reach_max": 0.9803, "idle_hold_reach": 0.985, "to_spine_min_cm": {"tactical_3p": 30.1, "empty_3p": 31.34, "tactical_fp": 34.99}},
+   "threshold": "reach <= 0.97 on the path; spine > 8 cm",
+   "pass": true,
+   "note": "the 0.98 maximum over all frames is the handguard hold itself (0.985 at idle before the reload: the G10a hold stretches the shorter UEFN arm), not the reload path"
+  },
+  {
+   "name": "First person (V): FP body shown, its gun hand on FP_Weapon (root solve error, cm), FP_Weapon framing unchanged (Grip vs FirstPersonHipOffset x camera, cm / deg)",
+   "value": {"fp_body": "exists, visible in V, ABP_GunCharacter_C", "fp_root_err_max_cm": 0.0, "fp_framing": [0.0, 0.0]},
+   "threshold": "root <= 0.5 cm; framing <= 0.5 cm / 0.5 deg",
+   "pass": true
+  },
+  {
+   "name": "gun_playtest F7 (reloads: notify order and timing, ammo at MagIn, seated mag back before MagIn, dropped mag at rest <= 3 s, never under the floor) 5 runs in a row on the final binaries (series C)",
+   "value": {"runs": "5/5 pass, 10/10 drops", "rest_s": [1.9457, 0.8232, 1.6923, 1.6915, 1.3914, 1.3322, 1.5415, 1.4272, 1.6441, 1.4634], "min_collision_z_cm": [-0.004, -0.004, -0.004, -0.004, -0.019, -0.045, -0.048, -0.048, -0.004, -0.004], "seated_shown_again_s": "1.140-1.145 (MagIn 1.767)", "before": "F7 failed 4 of 6 grip-stage runs: rest 3.006 / 3.33 s, a 1.6 cm sink, rest on the previous magazine", "series_A": "4/5 F7 (CCD + material + damping only: one magazine sank 1.156 cm)", "series_B": "5/5 F7 (+ MACD, 16/2 iterations; one rest at 2.98 s with sleep x4, angular damping 1.5)", "files": "reload/playtest_series_*.json, reload/playtest_C*_result.json"},
+   "threshold": "F7 passes 5 runs in a row, the gate unchanged",
+   "pass": true
+  },
+  {
+   "name": "Regression: gun_playtest F0-F15 gated, series C (final binaries)",
+   "value": {"C1": "15/15", "C2": "14/15 (F10)", "C3": "15/15", "C4": "15/15", "C5": "14/15 (F10)", "F10_detail": "casing timing 395/397 and 396/397: in the F14 performance burst one or two ShellEject events came 0.018-0.019 s after the shot instead of 0.0375 +- 1 frame (a frame that fired two catch-up rounds); flash, casing presence, impacts and decals all pass", "F14_reported": "burst - idle frame time 1.5-2.4 ms (was 1.0 ms at the grip stage); the CardShopLab editor was open on the machine during every G10c run"},
+   "threshold": "15/15 every run",
+   "pass": false,
+   "note": "not caused by the reload (F10 measures the fire clip during the F14 burst), but not proven otherwise either: reported as a new flake. Series A/B had F10 pass in 10/10 runs."
+  },
+  {
+   "name": "g9_camera_probe",
+   "value": "9/9",
+   "threshold": "9/9",
+   "pass": true
+  },
+  {
+   "name": "Ammo logic unchanged",
+   "value": "F7 tactical: 30+1 at MagIn, empty: 30 at MagIn then 29+1 at BoltRelease, in every series-C run; the probe's empty reload ended [29, chambered]",
+   "threshold": "as before",
+   "pass": true
+  },
+  {
+   "name": "Frames looked at (reload/: tactical 3P 14 times x front-left + close-left + 4 player views, empty 3P 11 x 2 + 1 player view, tactical FP 11 player views; reload_contact_sheet.png)",
+   "value": "3P: the hand is on the magazine from 0.12 s (palm on the left face, fingers round the front), pulls it, the magazine falls from the hand at MagDrop, the hand goes to the belt and comes back with the new magazine in hand, rides it in and returns to the handguard; the empty reload goes round the left side of the receiver to the charging handle and rides it back. FP: the gun comes up for the reload; the hand pulls the magazine, drops below the frame to the pouch and comes back, and seats the magazine in view.",
+   "threshold": "hand carries the magazine, nothing floats, nothing through the gun",
+   "pass": true,
+   "note": "FP: the UEFN arms render all orange and the upper arm's open shell shows at the left edge during the reload; the new magazine is small at the bottom edge between 1.0 and 1.2 s"
+  }
+ ],
+ "method": "C++: ANinjaGun::SampleClipSocket (the clip's bone tracks at any time) + GetReloadClipTime / SetSeatedMagHeldByHolder; UNinjaGunComponent::EvaluateReloadHand (phases on the clip notifies, wrist targets in hand_r space, rotation in component space), PushGunLayer per body, hand magazine components, the FP body and its root solve, FirstPersonReloadOffset; INinjaGunHolder::UsesReloadHands (no body reload clip). ANinjaDroppedMag: material, damping, sleep, CCD, MACD, iterations. Content via build_gun_reload_g10c.py; grips from g10c_reload_solve.py; measured and filmed by g10c_reload_probe_game.py; sheets by g10c_contact_sheet.py.",
+ "honest_notes": [
+  "Third person plays no body reload clip now (option (i) of the plan): the gun stays in the hold and only the left arm reloads.",
+  "The pouch is a point at the left front of the belt (PouchOffset (32, -9, 26) cm from the pelvis in the pawn's axes); there is no pouch mesh.",
+  "Builds ran with UBT -NoHotReloadFromIDE because the user's CardShopLab editor (another project) held the engine's Live Coding mutex; DemoGame_1 itself was closed throughout.",
+  "One series-B run (B1) failed F15 because I edited a tool script in DemoGame_1 while it ran (the repo guard caught it); not a game issue."
+ ],
+ "shots_dir": "runs/G10/reload/"
+}

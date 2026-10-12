@@ -204,6 +204,63 @@ chracter is gripping the gun when in idle and shooting, the left hand is not gri
   built, and the one that passes the gates and the close-up review is kept. The default is (i) if both pass, because
   it is simpler.
 
+### G10c as built (2026-10-11, `runs/G10/reload.json`, 13/14 gates; frames in `runs/G10/reload/`)
+- **What the user sees now.** Third person: the left hand reaches the magazine as the clip rocks it (0.12 s), pulls it
+  out and lets it fall at MagDrop, goes to a spare magazine at the left front of the belt, brings it up, rides it into the
+  magwell and returns to the handguard 0.2 s after MagIn. ReloadEmpty then takes the hand round the receiver's left side
+  (a 10 cm arc, so the fingers never sweep through the gun) to the charging handle overhand, rides the bolt back and lets
+  go at BoltRelease. No body reload clip plays any more (Epic's `MM_Rifle_Reload` moved the hands on its own timing).
+  First person (V): the same hands on a first-person body, and the gun comes up and forward a little for the reload
+  (`FirstPersonReloadOffset`) so the magazine well and the hand are in view.
+- **The clock** is still the weapon clip: its notifies (MagOut 0.5, MagDrop 0.667, MagIn 1.767, ChargeRear 2.467,
+  BoltRelease 2.667 s) and its magazine / bolt bone tracks. `ANinjaGun::SampleClipSocket` evaluates the clip's bone
+  tracks at any time, so the hand is sent to where the magazine or the bolt **is at that clip time** (no last-frame lag).
+  The ammo, sounds, dropped magazine and server timing are untouched (F7 passes).
+- **Measured clip path** (`build_gun_reload_g10c.json`, inspect): the magazine rocks 8 deg from 0.10 to 0.30 s, drops
+  16.8 cm from 0.40 to 0.667 s, stays parked (hidden) to 1.133 s, is inserted 1.133-1.467 s, rocks in to MagIn. The bolt
+  goes back 2.07-2.467 s and snaps forward at 2.667-2.733 s. Hence `ReloadGrabTime` 0.12, `MagHandoverTime` 1.14,
+  `ChargeLeadTime` 0.43 (on the handle at 2.04 s).
+- **Hand placement, solved offline** (`g10c_reload_solve.py` on the G10b live rows and the SM_AR01 dump, whose merged
+  magazine is SM_AR01_Mag seated): palm flat on the magazine's left face at its `HandReload` socket (palm gap 0.04 cm, mean
+  0.37), fingers round the front edge (tips 0.06-0.40 cm), thumb up the back by the catch, wrist bend 33 deg, reach 0.75.
+  Baked as `/Game/Guns/AR01/A_AR01_MagGrip_UEFN` (left fingers only, read-back 0.0 deg). `NinjaGun.MagHandGrip` is that
+  hand_l frame in the magazine's space. The charge grip (`ChargeHandGrip`, overhand, middle pad 0.81 cm from the knob)
+  keeps the handguard finger pose.
+- **The magazine in the hand.** `UNinjaGunComponent` makes `GunHandMagTP` (on the body's hand_l) and `GunHandMagFP` (on
+  the FP body's hand_l) at `MagHandGrip^-1`. The old magazine rides the hand from the grab to MagDrop and the new one from
+  the pouch to the hand-over at 1.14 s; meanwhile the seated `TP_Mag` / `FP_Mag` are hidden
+  (`ANinjaGun::SetSeatedMagHeldByHolder`). From 1.14 s the seated magazine rides the clip into the well and the hand rides
+  it (0.05-0.10 cm jump at the hand-over). So the magazine can never float off the hand at any frame rate.
+- **ABP_GunCharacter** (`build_gun_reload_g10c.py`): a Transform (Modify) Bone on hand_l, rotation REPLACE in component
+  space = `GunHandRotCS`, alpha `GunHandRotAlpha`, between the round-2 additive hand turn and the hand_l Two Bone IK (the IK
+  keeps the end bone's rotation); a third finger layer (left 01 bones, `A_AR01_MagGrip_UEFN`, weight `GunMagGripAlpha`). The
+  IK now stays on through the reload when `bReloadHands`.
+- **First-person body.** `NinjaGun.FirstPersonBodyMesh` = SKM_UEFN_Mannequin running `ABP_GunCharacter` as its main instance
+  (its Input Pose is the reference pose; neck_01 and both thighs are hidden bones). Created on the local player only, shown
+  only in the V mode (third-person ADS keeps the bare FP gun, so F4 / F11 are unchanged). Its root is solved every camera
+  update so its gun hand carries `FP_Weapon` exactly as the third-person hand carries `TP_Weapon` (the attach with
+  `T(-GripSlide)`, measured root error 0.0 cm); `FP_Weapon`'s own placement is unchanged (Grip vs FirstPersonHipOffset 0.0
+  cm / 0.0 deg). It gets the same hand path (its pouch is on its own pelvis).
+- **The F7 flake** (the dropped magazine): fixed in `ANinjaDroppedMag`, not in the gate. A physical material (restitution
+  0.05 combine Min, friction 0.9 combine Max), angular damping 3, a custom sleep threshold x10, CCD, MACD and 16 position /
+  2 projection iterations. Rest times went from 3.0-3.3 s to 0.8-2.2 s and the lowest collision point stays within 0.13 cm
+  of the floor. The intermediate settings each failed once on the way: CCD alone let one magazine sink 1.16 cm (run 3 of
+  the first series); a sleep multiplier of 4 with angular damping 1.5 came to rest at 2.98 s once (series B).
+- **Known, not fixed here.** In first person the UEFN arms render all orange and the upper arm shows its open shell at the
+  left screen edge during the reload (the full body is close to the camera; Epic's template uses dedicated arms). The pouch
+  is a point in the air at the left front of the belt (there is no pouch mesh); the new magazine appears in the hand
+  halfway through the 0.06 s grab. The third-person review frames use a fill light by the capture (the left hand is on the
+  sun's shadow side). The play test's reported-only F14 frame-time delta during the burst rose to 1.5-2.4 ms (was 1.0 ms);
+  the CardShopLab editor was open on the same machine during these runs.
+- **Gates** (`runs/G10/reload.json`): hand to magazine while carried <= 0.75 cm (3P) / 1.37 cm (FP), 0 floating frames,
+  seated at MagIn 0.0 cm, hand-over 0.06-0.10 cm, hand on the charging handle <= 0.31 cm, path reach <= 0.955, F7 5/5
+  (series C, final binaries), g9 9/9. **Failed:** play test 15/15 in only 3 of 5 final runs; the other two lost F10 on one
+  or two of ~397 casing timings in the F14 burst (see the JSON note).
+- **G10d is partly done here** (the FP body, its root solve and the FP reload); its remaining gates (arms pixel mask, ADS
+  sight picture with arms, shadow) are still G10d's. Third-person ADS deliberately shows no arms.
+- **Re-run after any ABP rebuild:** `build_gun_character_g10.py` (GUNS_G10_REBUILD_ABP=1), `build_gun_grip_g10b.py` (r2 pose),
+  then `build_gun_reload_g10c.py` with `GUNS_G10C_POSE=runs/G10/reload/g10c_reload_pose.json`.
+
 ### G10d: first-person arms
 - **The FP body.** A second skeletal mesh component, `FPBody`, on `BP_GunCharacter`:
   - `SKM_UEFN_Mannequin`, FirstPerson primitive type, no shadow, visible only in the FP and ADS views;
