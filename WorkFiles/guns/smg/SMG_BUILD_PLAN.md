@@ -446,6 +446,9 @@ the bore within 0.5 mm / 0.05 deg).
 - `PHYS_SMG01`: one body on `body` (boxes/capsules: receiver, grip, barrel, extended stock), mass 2.5 kg, CoM from part
   volumes x densities (polymer ~1.4 g/cm3 glass-filled, steel 7.85) scaled to the total. A dropped folded SK keeps the
   extended-state stock shapes (Q8 default); U7 reports a folded drop. In hand: NoCollision / QueryOnly.
+  **As built (W5 U7):** the body also carries a box with no collision and no mass spanning the mesh's extended bounds
+  (bind AABB + bounds extension): a SkeletalMeshComponent with bodies takes its bounds from the physics asset, and
+  without it the folded stock sat 5.5 cm outside and the LOD radius was 33.6 cm instead of 37.54 cm.
 
 ---
 

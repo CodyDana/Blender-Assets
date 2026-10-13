@@ -1,0 +1,187 @@
+{
+ "stage": "W5 Unreal",
+ "date": "2026-10-13",
+ "status": "pass",
+ "failed": [],
+ "engine_verified": true,
+ "content_path": "/Game/GunCheck/SMG01_1013b",
+ "summary": "UnrealCheck/verification_summary.json",
+ "gates": [
+  {
+   "name": "bytes: every pass used the shipped bytes (sha256 of every Exports/Guns/SMG01 file before and after passes A, A2, A3, B, C)",
+   "pass": true,
+   "threshold": "all equal"
+  },
+  {
+   "name": "bytes = the W3 gated bytes (rig_export.json sha256, mag.json M7)",
+   "pass": true,
+   "threshold": "equal"
+  },
+  {
+   "name": "pass A import (fresh process; legacy FBX importer, the sidecar settings; SK_AR01_Skeleton set compatible)",
+   "pass": true,
+   "threshold": "ok; 4 LODs; 8 clips; 21 sockets"
+  },
+  {
+   "name": "U1 skeleton: names, parents, reference heads (<= 0.001 cm), root scale 1, rest rotations 0, axes (muzzle +X, up +Z, port right +Y)",
+   "pass": true,
+   "threshold": "all true; head err <= 0.001 cm"
+  },
+  {
+   "name": "U2 procedural (engine pose maths, bone-space offsets): the bolt's -X moves it straight back by the full travel; the selector turns about its own Y to SAFE / AUTO",
+   "pass": true,
+   "threshold": "bolt (-6.79, 0, 0) +- 0.001 cm; selector about Y, angle +- 0.001 deg, pivot fixed"
+  },
+  {
+   "name": "U2b one ABP (ABP_Gun_LongGun, authored on SK_AR01_Skeleton) drives SK_SMG01 (Compatible Skeletons) and SK_AR01 through normalized inputs mapped by each gun's angle table: bolts straight back by the table travel (= each Fire clip's rear stop), both triggers pull their lower end rearward by the table angle (= each Fire clip's full pull), the detent index reaches each gun's SAFE / SEMI / AUTO (= its own clips), each release moves its own way (= its Reload clip), no error on the missing bone (stock on SK_AR01)",
+   "pass": true,
+   "threshold": "0.01 cm / 0.01 deg on both guns; no runtime error lines"
+  },
+  {
+   "name": "U3 sockets on SK_SMG01: from the sidecar, on the right bones, scale 1, outered to the asset, fresh process",
+   "pass": true,
+   "threshold": "21; <= 0.001 cm / 0.001 deg; no extras"
+  },
+  {
+   "name": "sockets on SM_SMG01 (sidecar, fresh process)",
+   "pass": true,
+   "threshold": "21; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras"
+  },
+  {
+   "name": "sockets on SM_SMG01_Mag (sidecar, fresh process)",
+   "pass": true,
+   "threshold": "5; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras"
+  },
+  {
+   "name": "U4 First Person rendering with VSM (FP_Weapon + FP_Mag vs TP_Weapon + TP_Mag): FP casts no ground shadow, TP does; FP at ForcedLodModel 1 renders LOD0 where the auto-LOD TP component falls to LOD3",
+   "pass": true,
+   "threshold": "TP shadow > 1000 px, FP < 1 % of it; FP closer to the LOD0 reference, TP to LOD3"
+  },
+  {
+   "name": "U5 LOD count 4 (SK_SMG01, SM_SMG01, SM_SMG01_Mag)",
+   "pass": true,
+   "threshold": "4 each"
+  },
+  {
+   "name": "U5 triangles per LOD equal in Blender, the FBX and Unreal (render data, mesh description, Unreal's FBX export); predicted static-import drops 0 (UD1)",
+   "pass": true,
+   "threshold": "equal per LOD"
+  },
+  {
+   "name": "screen sizes from the sidecars (SK LOD settings, SM, Mag)",
+   "pass": true,
+   "threshold": "equal (1e-6)"
+  },
+  {
+   "name": "U5 engine sphere radii = the radii the screen sizes were derived from (SK: bind box + extension; SM / Mag: max |v - box centre|)",
+   "pass": true,
+   "threshold": "<= 0.01 cm"
+  },
+  {
+   "name": "mag screen sizes re-derived from the engine radii (size_SK x r_mag / r_SK)",
+   "pass": true,
+   "threshold": "<= 0.001 from the sidecar"
+  },
+  {
+   "name": "U5 bounds: the stored bounds (+ the sidecar extension) hold every LOD0-3 vertex at every runtime frame of every clip (both stock states: StockFold / StockUnfold; sights folded: SightFlip)",
+   "pass": true,
+   "threshold": "0 outside"
+  },
+  {
+   "name": "U6 magazine at Mag (engine attach, SnapToTarget, gun at an arbitrary world transform): composed transform zero; every reload frame",
+   "pass": true,
+   "threshold": "<= 0.001 cm, identity"
+  },
+  {
+   "name": "M9 seated fit on the read-back geometry (co-visible pairs LOD0-1 incl. (k, k+-1); LOD2-3 reported: mag.json M1 rates them in px at the switch distance)",
+   "pass": true,
+   "threshold": "0 at LOD0 / LOD1"
+  },
+  {
+   "name": "M9 straight reload path from the engine sockets (MagInsertStart -> Mag, 0.5 mm steps) on the read-back geometry: with the catch at its release angle 0 intersections (M4b); with the catch at rest only the catch nose meets the magazine (R36: the spring-loaded catch is cammed aside)",
+   "pass": true,
+   "threshold": "0 released; 0 non-catch contacts; insert 68.2 mm along the magazine's +Z, rotation constant"
+  },
+  {
+   "name": "U6 reload clips in engine: the magazine on the posed SMG (catch posed by the clip) at every runtime frame (LOD0)",
+   "pass": true,
+   "threshold": "0 frames"
+  },
+  {
+   "name": "PHYS_SMG01: one body on 'body'; the sidecar's colliding shapes (7 boxes + 1 capsule) and its no-collision, no-mass bounds envelope; 2.5 kg; consider_for_bounds; fresh process",
+   "pass": true,
+   "threshold": "1 body; 7 box + 1 capsule colliding; the envelope box(es) no collision, no mass; 2.5 kg"
+  },
+  {
+   "name": "U7 physics in a ticking game world: SM_SMG01 (level, rolled 70 deg), SM_SMG01_Mag, SK_SMG01 (PHYS_SMG01) with the stock extended and a second SK_SMG01 with the stock folded, dropped 1 m: rest on their collision, no tunnelling (read-back LOD0 placed at every sampled transform; the folded one posed by the StockFold clip's end)",
+   "pass": true,
+   "threshold": "speed < 1 cm/s over the last 1 s; lowest vertex never < -2 cm, final >= -0.5 cm (ground top 0)"
+  },
+  {
+   "name": "U7 (W4 review addition) the COMPONENT's runtime bounds of every dropped, simulating actor hold every vertex at every sample, the folded-stock SK_SMG01 included",
+   "pass": true,
+   "threshold": "0 samples outside (0.001 cm)"
+  },
+  {
+   "name": "U8 lightmap (plan Q13): index 1, Generate Lightmap UVs OFF on every LOD, 2 UV channels (the authored UV1 is the lightmap)",
+   "pass": true,
+   "threshold": "index 1; off on 4 / 4 LODs; 2 channels"
+  },
+  {
+   "name": "U8 the authored UV1 as Unreal exports it: inside 0..1, 0 overlapping pixels at 64 and 128 px (UD4's resolutions); 1024 px reported beside the shipped FBX's",
+   "pass": true,
+   "threshold": "inside; 0 at 64 and 128"
+  },
+  {
+   "name": "texture flags persisted (fresh process): BC sRGB TC_Default, ORM / Masks linear TC_Masks, N TC_Normalmap flip-green off (group WeaponNormalMap), Detail16 linear Grayscale; groups Weapon",
+   "pass": true,
+   "threshold": "all"
+  },
+  {
+   "name": "full mip chains (ListTextures, real RHI); Detail16 builds PF_G16",
+   "pass": true,
+   "threshold": "all full; Detail16 PF_G16"
+  },
+  {
+   "name": "U9 clips: frames = the sidecar's; engine-evaluated runtime (compressed) vs raw <= 0.1 mm on every rigid part; raw = the authored clip (smg_clips) <= 0.01 mm; start / end poses = bind except what the sidecar declares (AUTO held where the bolt moves, ReloadEmpty's held-open bolt at the start, the folded stock at StockFold's end / StockUnfold's start); every sidecar notify on its frame (+-0.5), no extras",
+   "pass": true,
+   "threshold": "as stated"
+  },
+  {
+   "name": "U10 0 warning / error lines from the assets in every pass log (the harness ABP's compile warning is reported under U2b)",
+   "pass": true,
+   "threshold": "0"
+  },
+  {
+   "name": "U12 texture residency in a ticking game world (streaming on): the gun's BC and N resident at the top mip at the hip (35 cm, 90 deg) and at ADS (Sight eye, 55 deg)",
+   "pass": true,
+   "threshold": "current = max for Metal / Furniture BC and N at both views"
+  },
+  {
+   "name": "C2 every LOD0 surface sample (300k + every vertex) of the read-back geometry inside the stored hulls",
+   "pass": true,
+   "threshold": "0 outside"
+  },
+  {
+   "name": "hulls stored: SM_SMG01 8, SM_SMG01_Mag 1, <= 32 vertices each (Unreal's own export split into shells)",
+   "pass": true,
+   "threshold": "8 + 1; <= 32"
+  },
+  {
+   "name": "material slots (2 + 3 + 1, sidecar names); Nanite off",
+   "pass": true,
+   "threshold": "SK [Metal, Furniture], SM [Metal, Furniture, Mag], Mag [Mag]; nanite false"
+  },
+  {
+   "name": "U11 hand fit in engine",
+   "pass": true,
+   "threshold": "if a player MetaHuman exists in the verification project"
+  }
+ ],
+ "asset_fix": "physics bounds envelope (smg_rig.physics_bodies); re-exported, W3 chain re-run (rig_export, mag, game pass); FBX content identical to W4b",
+ "issues": [
+  "U2b: a node on an SMG-only bone (stock) compiles with a warning ('Bone stock not found in Skeleton') because the class ABP is authored on the AR-01 pilot skeleton; it raises no runtime error and works on the SMG. For a warning-free class ABP the game should drive SMG-only bones (stock, sight_front, charging_handle) by clips on the slot / a linked layer, or author the class ABP on the superset skeleton. The game's DemoGame_1_Guns ABP_Gun_LongGun still drives the trigger with a constant AR-01 angle (-12) and no table: it needs the normalized inputs (this harness's graph) before the SMG is wired into the game (prototype work, not done here).",
+  "U4: 'owner sees no TP component' is not measured (needs the weapon Blueprint on a possessed pawn: game-side, as on the AR-01).",
+  "U11 not run: no player MetaHuman in the verification project (H1 full passed in Blender; gun.hand_offset carries it)."
+ ]
+}

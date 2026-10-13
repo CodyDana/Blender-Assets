@@ -1,0 +1,16 @@
+[
+ {"gate": "U7 (W4 review addition): runtime bounds of the dropped SK with the stock folded",
+  "cause": "Measured on the W4b bytes (run /Game/GunCheck/SMG01_1013a): a SkeletalMeshComponent whose physics asset has bodies takes its bounds from UPhysicsAsset::CalcAABB over the bodies flagged consider_for_bounds (always in the editor, in game whenever bodies exist, e.g. QueryOnly in hand or simulating when dropped). PHYS_SMG01's one body holds only the extended-state shapes, so the folded stock lay 5.508 cm outside the component's bounds in 4,204 of 4,270 samples, and every SK_SMG01 on that route had a 33.61 cm LOD radius instead of the 37.54 cm the sidecar screen sizes use.",
+  "fix": "Generator: Scripts/guns/smg/smg_rig.py physics_bodies(envelope) adds a box with NO collision and NO mass to the 'body' body spanning the mesh's extended bounds (bind AABB + bounds extension, both stock states). The physics-route bounds now equal the mesh's extended bounds: 0 samples outside on the folded and the extended drop, the LOD radius is the same on every route; collision shapes, mass (2.5 kg) and CoM unchanged. Re-exported with run_rig_mag.sh --from rig (rig, verify, mag, fit, h1, look, gates all pass): every FBX's meshes, UVs, vertex groups and actions are identical to the W4b export (sm_reexport_diff.json, max difference 0.0); only the skeletal sidecar's physics_bodies changed. All Unreal passes re-ran on the new bytes (/Game/GunCheck/SMG01_1013b)."},
+ {"gate": "U7 harness (not an asset fault)",
+  "cause": "-game spawns its DefaultPawn (a 35 cm sphere) at the world origin; the first run's extended SK dropped at the origin came to rest on it (line traces found DefaultPawn_0 under it).",
+  "fix": "smA2_level.py places every drop 4 m off the origin."},
+ {"gate": "U4 harness (not an asset fault)",
+  "cause": "The AR-01's top view cannot tell the SMG's LOD0 from LOD3 (the refs differed by 252 px, noise): from above the LOD3 receiver and rail carry the same baked detail.",
+  "fix": "smC_render.py compares the LODs from the right side (70 cm, perspective); the shadow test keeps the top view."},
+ {"gate": "U2b (reported)",
+  "cause": "ABP_Gun_LongGun is authored on SK_AR01_Skeleton; its node on the SMG-only bone 'stock' compiles with the warning 'Bone stock not found in Skeleton' (status UP_TO_DATE_WITH_WARNINGS). At runtime it raises nothing on SK_AR01 (no bone moves) and folds the SMG's stock exactly to the StockFold clip's end.",
+  "recommendation": "Game side: drive SMG-only bones (stock, sight_front, charging_handle) by clips on the Weapon slot or a linked layer, or author the class ABP on a superset skeleton; give the game's ABP_Gun_LongGun (DemoGame_1_Guns, constant AR-01 trigger angle) the normalized inputs and per-gun angle table proven here before the SMG is wired in."},
+ {"gate": "U8 (reported)",
+  "cause": "Unreal's export of the authored UV1 shows 0 overlapping pixels at 64 and 128 px (the gate) but 17-22 px at 1024 on SM_SMG01 LOD0-2 and 2 px on the magazine LOD0, where the shipped FBX has 0: UV precision in Unreal's stored mesh (sub-texel at the lightmap's own resolution)."}
+]
