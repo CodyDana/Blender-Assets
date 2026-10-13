@@ -352,6 +352,7 @@ def lights(cam, L):
         LK.clear_lights()
         if k > 0.0:
             LK.rough_lights(cam, tuple(B(L["target_M"])), float(L.get("dist_m", 1.1)), k)
+        extra_lights(cam, L)
         return
     # 'l5': the physical L5 rig of rifle_texrender.sheet_lights_physical (overhead key tipped toward the camera side,
     # rim behind, the grey world as fill and reflection environment), mirrored for a view from the left
@@ -378,6 +379,54 @@ def lights(cam, L):
                       float(L["fill"]) * k)
 
 
+def extra_lights(cam, L):
+    """(gunlib 0.2.x, SMG01 W4b close-up r2; optional, no AR-01 job uses it) explicit rectangular softboxes / strip
+    lights for the 'studio' rig, the way a black product is photographed: a broad overhead box whose mirror image lands
+    on the top faces and strip lights whose reflections run along the edges. Each entry: name, a direction from the
+    shot's target either in the camera's axes ("dir_cam": [right, up, back]) or in frame M ("dir_M"), "dist" (m),
+    "size" [x, y] (m), "energy" (W), "spread_deg" (optional). Never seen directly by the camera (the backdrop stays
+    the flat bg_rgb)."""
+    if not L.get("extra_lights"):
+        return
+    Mw = cam.matrix_world
+    rgt = Vector(Mw.col[0][:3]).normalized()
+    up = Vector(Mw.col[1][:3]).normalized()
+    back = Vector(Mw.col[2][:3]).normalized()
+    t = Vector(B(L["target_M"]))
+    for e in L["extra_lights"]:
+        if "mirror_n_M" in e:
+            # the mirror direction of the view about a face normal (frame M): the box's reflection lands on that face
+            # (a black satin flat reads by the reflection it carries); "nudge_cam" moves it in the camera's axes so
+            # the box's edge falls across the face as a gradient
+            v = (Vector(cam.matrix_world.translation) - t).normalized()
+            if e["mirror_n_M"] == "flank":          # the side face toward the camera (+Y seen from the left)
+                n = Vector((0.0, 1.0 if v.y >= 0.0 else -1.0, 0.0))
+            else:
+                n = Vector(e["mirror_n_M"]).normalized()
+            d = (2.0 * n.dot(v) * n - v).normalized()
+            r_, u_, b_ = e.get("nudge_cam", (0.0, 0.0, 0.0))
+            d = (d + rgt * r_ + up * u_ + back * b_).normalized()
+        elif "dir_cam" in e:
+            r_, u_, b_ = e["dir_cam"]
+            d = (rgt * r_ + up * u_ + back * b_).normalized()
+        else:
+            d = Vector(e["dir_M"]).normalized()
+        ld = bpy.data.lights.new(e["name"], "AREA")
+        ld.shape = "RECTANGLE"
+        ld.size, ld.size_y = float(e["size"][0]), float(e["size"][1])
+        ld.energy = float(e["energy"])
+        if "spread_deg" in e:
+            ld.spread = math.radians(float(e["spread_deg"]))
+        ob = bpy.data.objects.new(e["name"], ld)
+        sc.collection.objects.link(ob)
+        ob.location = t + d * float(e.get("dist", 1.0))
+        ob.rotation_euler = (t - ob.location).to_track_quat("-Z", "Y").to_euler()
+        if "roll_deg" in e:
+            ob.rotation_euler = (ob.rotation_euler.to_matrix() @ Matrix.Rotation(math.radians(float(e["roll_deg"])),
+                                                                                 3, "Z")).to_euler()
+        ob.visible_camera = False
+
+
 # ------------------------------------------------------------------------------------------------ shots
 def main():
     RD.engine(sc, "CYCLES", int(JOB.get("samples", 128)))
@@ -386,6 +435,9 @@ def main():
     results = []
     for shot in JOB["shots"]:
         sc.cycles.samples = int(shot.get("samples", JOB.get("samples", 128)))
+        # (SMG01 W4b r2, optional) the denoiser smooths sub-millimetre texture (moulded grain, stipple, wear flecks)
+        # into a clean plastic look at the close views; a shot may switch it off and pay in samples instead
+        sc.cycles.use_denoising = bool(shot.get("denoise", True))
         lod = int(shot.get("lod", 0))
         show = shot.get("show", ["gun", "mag"])
         for _a, m in GUN:

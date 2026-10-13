@@ -60,6 +60,11 @@ GEOEDGE_VERSION = 1
 # (W4b r1) polymer (0.012, 0.020): at 35 cm the grazing tops mirrored the environment as one smooth plane ("a flat
 # slab", "untextured clay"); the moulded skin's grain now breaks the reflection up (R45: 0.009 / 0.012)
 MICRO = {"polymer": (0.012, 0.020), "polymer_mag": (0.012, 0.018), "rubber": (0.013, 0.008)}
+# (W4b close-up r2) the 1.8 mm orange peel at +-20 um read as cast concrete / stone wherever a light grazes a flat (the
+# product rig's softboxes found it on the receiver's front face at 24 cm); a moulded texture is FINE: the peel down to
+# a trace and a 0.25 mm spark grain (the EDM texture's own scale, 2.5 texels at class B) carries the matte skin
+MICRO_R2 = {"polymer": (0.009, 0.005), "polymer_mag": (0.009, 0.005), "rubber": (0.011, 0.004)}
+SPARK_H = 0.005              # +-5 um at 0.25 mm: the moulded skin's sparkle under a softbox
 # (W4 resume, the "flat clay" finding) visible real-scale variation: polymer sheen (roughness) at ~30 mm and ~8 mm,
 # dust in the deep recesses (polymer), a settled dust film on up-facing faces, the phosphate's mottle gain
 # (W4b close-up r1, spec R46) the realism judges (8 / 8 close views fake) read the R45 fields as "large, soft, cloudy
@@ -70,12 +75,31 @@ MICRO = {"polymer": (0.012, 0.020), "polymer_mag": (0.012, 0.018), "rubber": (0.
 # the per-texel speckle (0.6 mm, 2 px at 35 cm: "concrete") to a hair; the moulded grain stays in the normal map
 SHEEN_BROAD = 0.05           # R45 0.25 (clouds); 0.45 tried earlier (camouflage)
 SHEEN_MID = 0.05             # R45 0.22
+SMUDGE_R2 = 0.07             # (W4b r2) handling smudges: +-0.07 roughness at ~3 mm on the exposed faces (breakup)
 ALB_LO, ALB_FAR, ALB_FINE = 0.10, 0.06, 0.14     # R45 0.45 / 0.50 / 0.70 (x (fbm - 0.5))
 DUST_POLY = 0.8
 DUST_FILM = 1.0
 PHOS_MOTTLE = 1.2            # R45 1.8
 EDGE_RUB_GAIN = 0.35         # (W4b r1) polymer edge rub: up to +35 % linear (~ +6 sRGB levels), rough -0.10
+# (W4b close-up r2) the r1 rub was invisible at every review distance (both judges: "no edge rub on the rail, sight
+# ears, crown, magwell, stock pad"; "razor-clean edges"). The sheet draws every exposed edge of the black polymer as a
+# light worn line and the flats with light scuffs (spec wear_level 'moderate, as the sheet: white specks and edge
+# scuffs'); real used black polymer goes grey and smooth at the crest of an exposed edge (sRGB ~70-90 at full rub).
+# Rub up to x 2.6 linear at the crest (+~30 levels), polished (rough -0.20) so the edge also catches the light
+# A multiplied gain (r2 first try x 2.6) still did not read in the lit renders: on a black dielectric the coat's 4 %
+# specular swamps an albedo step of 0.03 -> 0.07. Worn features MIX toward a worn grey instead (sRGB targets below,
+# the sheet's specks and edges read 90-120 against a 55-65 body at its exposure)
+EDGE_RUB_SRGB, EDGE_RUB_MIX = 100.0, 0.85
+EDGE_RUB_ROUGH_R2 = 0.22
+SCUFF_SRGB, SCUFF_MIX = 96.0, 0.75           # (r2) light scuffs and scratches on the exposed flats
+SPECK_SRGB = 112.0                           # (r2) the sheet's white specks
+PHOS_RUB_SRGB, PHOS_RUB_MIX = 100.0, 0.70    # (r2) worn phosphate grey along the handled steel edges
 DUST_MIX = 0.30              # (W4b r1) deep-recess dust mixed toward DUST_SRGB
+# (W4b close-up r2) the vents' and slots' walls read "flat grey, no depth darkening" (both judges, c3): the r1 dust
+# (30 % toward sRGB 94) lightened every deep recess, walls included. Dust settles on floors (up-facing): 12 % there,
+# none on walls; the recess walls darken (occluded skin and grime: x (1 - 0.28 cav))
+DUST_MIX_R2 = 0.12
+CAV_DARK_R2 = 0.28
 DUST_SRGB = (96, 92, 86)
 PHOS_SHEEN = 0.08            # R45 SHEEN_MID 0.22 on the steel too
 # (W4b r1) phosphate's crystalline coat in the normal map (parkerizing reads as a dead-flat, finely sparkling charcoal
@@ -235,12 +259,14 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         # vs the AR-01's 24 %) and the polymer read as clay
         fine = PT.chunked(PT.fbm3, Pk, 0.6, 2, 130)
         peel = PT.chunked(PT.fbm3, Pk, 1.8, 2, 131)
-        amp_t = MICRO.get(f, MICRO["polymer"])
+        amp_t = MICRO_R2.get(f, MICRO_R2["polymer"])
+        spark = PT.chunked(PT.vnoise3, Pk / 0.25, 136)                    # (r2) the moulded skin's spark grain
         var = 1.0 + ALB_LO * (v_lo[k] - 0.5) + 0.04 * (flow - 0.5) + ALB_FAR * (v_far[k] - 0.5) +             ALB_FINE * (fine - 0.5)
         col = base[None, :] * var[:, None]
         r0, r1 = F["rough"]
         r = r0 + (r1 - r0) * (0.3 + 0.5 * v_lo[k] + 0.4 * (m_mold - 0.5)) + 0.06 * (fine - 0.5)
-        hh = 0.0025 * (m_mold - 0.5) * 2.0 + amp_t[0] * (fine - 0.5) * 2.0 + amp_t[1] * (peel - 0.5) * 2.0
+        hh = 0.0025 * (m_mold - 0.5) * 2.0 + amp_t[0] * (fine - 0.5) * 2.0 + amp_t[1] * (peel - 0.5) * 2.0 +             SPARK_H * (spark - 0.5) * 2.0
+        r = r + 0.05 * (spark - 0.5)
         # ---- stipple panels (lower receiver's grip sides, the recessed panel floor at |Y| = 15.45)
         stip = np.zeros(int(k.sum()), bool)
         if f == "polymer":
@@ -264,7 +290,8 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
                 # than the smooth moulding (L5: the sheet's grip panel reads as light as the receiver, 64 vs 64)
                 r_st -= (0.10 + 0.04 * hz[k][stip]) * crown
                 r[stip] = r_st
-                col[stip] *= (1.24 + 0.22 * dome)[:, None]      # (R46: 1.10; L5 grip luma -0.059 with the satin, -0.051 at 1.14)
+                # (W4b r2) x 1.34: the glossier satin lowered the L5 fit's light (grip -0.061 at 1.24)
+                col[stip] *= (1.34 + 0.22 * dome)[:, None]      # (R46: 1.10; L5 grip luma -0.059 with the satin, -0.051 at 1.14)
         # ---- mould parting lines (mid-plane Y = 0 on surfaces crossing it edge-on: grip straps, guard, magwell
         # front / back, stock struts, magazine spine and back): a 0.15 mm flash line, raised 0.02, a hair lighter
         # (W4b r1) only on the straps and narrow faces where a two-half tool parts: the grip / guard / magwell (lower
@@ -306,11 +333,14 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         r = r + 0.05 * white
         # the sheet's white specks (spec wear_level: 'moderate, as the sheet (white specks and edge scuffs)'): sparse
         # 0.1-0.3 mm abrasion / dust specks in patches, more on the exposed outer faces (high AO), never in cavities
-        spk = (PT.chunked(PT.vnoise3, Pk / 0.22, 120) > 0.935) &             (PT.chunked(PT.fbm3, Pk, 20.0, 2, 121) > 0.50) & (ao[k] > 0.8)
-        sg = np.where(spk, 0.35 + 0.5 * PT.chunked(PT.fbm3, Pk, 0.5, 1, 122), 0.0).astype(np.float32)
+        # (W4b close-up r2) the sheet's specks are visible at arm's length (light grey, 0.2-0.6 mm): r1's (0.22 mm cells
+        # over 0.935, x 0.8 of the whitening gain) did not reach a review render
+        spk = (PT.chunked(PT.vnoise3, Pk / 0.32, 120) > 0.90) &             (PT.chunked(PT.fbm3, Pk, 20.0, 2, 121) > 0.45) & (ao[k] > 0.8)
+        sg = np.where(spk, 0.55 + 0.45 * PT.chunked(PT.fbm3, Pk, 0.5, 1, 122), 0.0).astype(np.float32)
         if f == "rubber":
             sg *= 0.5
-        col *= (1.0 + (gain - 1.0) * 0.8 * sg)[:, None]
+        a_s = (0.85 * sg)[:, None]
+        col = col * (1.0 - a_s) + lin((SPECK_SRGB,) * 3)[None, :] * a_s
         r = r + 0.04 * sg
         white = np.maximum(white, sg * 0.0)
         # broad sheen mottle (handled, wiped, dusty areas over ~30 mm) and a wiped / handled field at ~8 mm. (W4 resume:
@@ -319,6 +349,7 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         # roughness carries visible, real-scale variation (SHEEN_BROAD / SHEEN_MID; 0.45 / 0.25 read as camouflage clouds at
         # hero distance, 0.25 / 0.22 kept); was 0.06 x (fbm - 0.5),
         # +-0.01 in effect)
+        r = r + SMUDGE_R2 * (PT.chunked(PT.fbm3, Pk, 3.0, 3, 138) - 0.5) * PT.smoothstep(0.6, 0.9, ao[k])
         r = r + SHEEN_BROAD * (PT.chunked(PT.fbm3, Pk, 30.0, 2, 123) - 0.5) +             SHEEN_MID * (PT.chunked(PT.fbm3, Pk, 8.0, 2, 124) - 0.5)
         white_all[k] = white
         # ---- insertion scratches: into the magwell mouth (lower) and on the magazine's upper body
@@ -340,17 +371,22 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         r = r - 0.05 * ins
         # (W4 review fixes, craft 3) small light-grey scratches, under 0.2 mm, mostly fore-aft on the receiver sides
         # (and the stock's flats): sparse, in patches, never in cavities
-        if f == "polymer":
-            sides = np.isin(pk[k], ["upper_receiver", "lower_receiver", "stock_frame"]) & (np.abs(Nk[:, 1]) > 0.8)
-            if sides.any():
-                Ps = Pk[sides]
-                sc = PT.chunked(PT.aniso, Ps, (1.0, 0.0, 0.10), 7.0, 0.14, 2, 132)
-                patch = PT.smoothstep(0.52, 0.66, PT.chunked(PT.fbm3, Ps, 16.0, 2, 133))
-                scr = np.zeros(int(k.sum()), np.float32)
-                scr[sides] = PT.smoothstep(0.79, 0.86, sc) * patch * (ao[k][sides] > 0.8)
-                col *= (1.0 + 0.45 * scr)[:, None]
-                r = r + 0.03 * scr
-                white = np.maximum(white, 0.0 * scr)
+        # (W4b close-up r2) the scuffs the sheet shows on the flats (light, short, mostly fore-aft where the gun slides on
+        # gear and benches; a second, steeper set where it is set down) on the receiver, the stock's flats and the
+        # magazine body: x 2.3 linear at full (r1 x 1.45 did not read), broader patches, the lower body favoured
+        sides = (np.isin(pk[k], ["upper_receiver", "lower_receiver", "stock_frame", "magazine", "grip_cover"]) &
+                 (np.abs(Nk[:, 1]) > 0.75))
+        if sides.any():
+            Ps = Pk[sides]
+            sc = PT.chunked(PT.aniso, Ps, (1.0, 0.0, 0.10), 7.0, 0.14, 2, 132)
+            sc2 = PT.chunked(PT.aniso, Ps, (0.55, 0.0, 0.84), 4.0, 0.12, 2, 137)
+            patch = PT.smoothstep(0.46, 0.62, PT.chunked(PT.fbm3, Ps, 16.0, 2, 133))
+            low = 0.6 + 0.4 * PT.smoothstep(40.0, -40.0, Ps[:, 2])            # the lower body takes more
+            scr = np.zeros(int(k.sum()), np.float32)
+            scr[sides] = np.maximum(PT.smoothstep(0.78, 0.85, sc), 0.7 * PT.smoothstep(0.82, 0.88, sc2)) * patch * low *                 (ao[k][sides] > 0.8)
+            a_c = (SCUFF_MIX * scr)[:, None]
+            col = col * (1.0 - a_c) + lin((SCUFF_SRGB,) * 3)[None, :] * a_c
+            r = r + 0.04 * scr
         if f == "polymer_mag":
             # the follower: a slightly lighter, glossier polymer than the housing, so it reads in the cavity (review)
             fol = pk[k] == "magazine_follower"
@@ -362,17 +398,23 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         # edge rub", "the blotches are spread evenly instead of sitting at contact points")
         expo_p = PT.smoothstep(0.60, 0.92, ao[k])
         rb_w = 0.2 + 0.5 * PT.chunked(PT.fbm3, Pk, 6.0, 2, 134)
-        rubp = PT.smoothstep(rb_w, rb_w * 0.3, dist_e[k]) * edge_fine[k] * expo_p *             (0.45 + 0.55 * np.maximum(hk, wz[k])) * (0.4 + 0.6 * PT.smoothstep(0.30, 0.70, PT.chunked(PT.fbm3, Pk, 10.0, 2, 135)))
+        # (r2) wider (0.25-0.8 mm), less gated by the zones (every exposed edge is handled), x 2.6 at the crest
+        rb_w = 0.35 + 0.65 * PT.chunked(PT.fbm3, Pk, 6.0, 2, 134)
+        rubp = PT.smoothstep(rb_w, rb_w * 0.25, dist_e[k]) * edge_fine[k] * expo_p *             (0.60 + 0.40 * np.maximum(hk, wz[k])) * (0.45 + 0.55 * PT.smoothstep(0.30, 0.70, PT.chunked(PT.fbm3, Pk, 10.0, 2, 135)))
         rubp = np.where(stip, 0.0, np.clip(rubp, 0.0, 1.0)).astype(np.float32)
-        col *= (1.0 + EDGE_RUB_GAIN * rubp)[:, None]
-        r = r - 0.10 * rubp
+        if f == "rubber":
+            rubp *= 0.5                                  # rubber scuffs grey but does not polish like the moulding
+        a_r = (EDGE_RUB_MIX * rubp)[:, None]
+        col = col * (1.0 - a_r) + lin((EDGE_RUB_SRGB,) * 3)[None, :] * a_r
+        r = r - EDGE_RUB_ROUGH_R2 * rubp
         # ---- cavities: dust in the deep ones (lighter, dry), grime in the tight ones
         ck = cav[k]
         deep = PT.smoothstep(0.55, 0.9, ck) * PT.smoothstep(0.45, 0.70, PT.chunked(PT.fbm3, Pk, 4.0, 2, 99))
         dust_w = 0.9 if f in ("rubber", "polymer_mag") else DUST_POLY
-        col = col * (1.0 - 0.10 * ck)[:, None]
+        col = col * (1.0 - CAV_DARK_R2 * ck)[:, None]
         # (W4b r1) dust as a dry grey-beige deposit mixed in (was x (1 + 0.44): a darker-than-dust grey)
-        a_d = (dust_w * DUST_MIX * deep)[:, None]
+        # (r2) on the floors only (up-facing), 12 %: the walls of the vents and slots stay dark
+        a_d = (dust_w * DUST_MIX_R2 * deep * PT.smoothstep(0.15, 0.6, Nk[:, 2]))[:, None]
         col = col * (1.0 - a_d) + DUST_LIN[None, :] * a_d
         r = r + 0.10 * ck * (1.0 - 0.5 * deep) + 0.08 * deep
         # (W4 resume) a settled dust film on the up-facing faces (the gun is stored and carried): faint, lighter and
@@ -406,6 +448,8 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         knob = (pkk == "charging_handle") & (Pk[:, 1] > SS.KNOB_Y_MIN)
         # (W4 review fixes) the knob's coat even (the 2.6 mm mottle read as camouflage on its ball)
         mott = np.where(knob, 0.25, 1.0).astype(np.float32)
+        # (W4b close-up r2) the selector's disc too: the 2.6 mm mottle drew a dark diagonal blot across it at 23 cm
+        mott = np.where(pkk == "selector", 0.25, mott).astype(np.float32)
         # (W4 resume) the phosphate's uneven take (parkerizing reads blotchy grey at arm's length): the mottle x 1.8
         var = 1.0 + mott * PHOS_MOTTLE * (0.12 * (v_mid[k] - 0.5) + 0.08 * (v_lo[k] - 0.5)) + 0.05 * (cry - 0.5)
         col = base[None, :] * var[:, None]
@@ -423,8 +467,11 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         # part (a 12 mm field) so identical rail teeth do not repeat one light frame each (review: a bake pattern)
         along = PT.chunked(PT.fbm3, Pk, 12.0, 2, 67)
         rub = PT.smoothstep(0.35, 0.80, edge_broad[k]) * wear * (0.15 + 0.9 * flake[k]) * (0.25 + 1.1 * along) * expo
-        col *= (1.0 + 0.55 * rub)[:, None]
-        r = r - 0.08 * rub
+        # (W4b close-up r2) worn phosphate reads grey along the handled edges (judges: "no wear on the rail edges,
+        # sight ears, muzzle crown"): x 2.1 linear at full (r1 x 1.55), smoother (-0.14)
+        a_p = (PHOS_RUB_MIX * np.clip(rub, 0.0, 1.0))[:, None]
+        col = col * (1.0 - a_p) + lin((PHOS_RUB_SRGB,) * 3)[None, :] * a_p
+        r = r - 0.14 * rub
         # (W4 review fixes, G7 / G9 / G15) bare steel as CONTINUOUS bright lines on the sharp convex crests (the study's
         # rail slot edges and flank crests, sight ear tops, device rim and slot edges, selector tips, trigger face
         # edges): curvature (the same-side distance to a sharp convex edge) x exposure (AO) x handling (the bright-edge
@@ -446,6 +493,10 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         low_r = pkk == "lower_rail"
         chip &= ~(low_r & (Pk[:, 2] > SS.RAIL_LOW_Z + 3.6))
         chip &= ~((pkk == "muzzle_device") & (Pk[:, 0] < SS.X_MUZ - 1.2))
+        # (W4b close-up r2) no bare steel on the sights or the selector: their 1-3 px bare dashes on the base corners,
+        # the cheeks, the drum and the lever's edge read as "bright white hairline glints / slivers on random edges"
+        # (both judges, c1 / c2 / ADS); their edges are rubbed phosphate (above), the drum's knurl crests rubbed
+        chip &= ~np.isin(pkk, list(SS.SIGHT_PARTS) + ["selector"])
         # the trigger face and the paddle face: rubbed satin where the finger rests (no white flecks)
         face = np.zeros(nk, bool)
         trg = pkk == "trigger"
@@ -465,7 +516,9 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         col[crown] *= 1.32
         r[crown] = 0.45 + 0.10 * v_mid[k][crown]
         chip &= ~knob
-        chip |= rim
+        # (r2) the rim a rubbed satin ring, not bare (a "stray bright specular edge" round the crown at 24 cm)
+        col[rim] *= 1.9
+        r[rim] = 0.40 + 0.06 * v_mid[k][rim]
         # the selector's thumb arcs (both levers; the right-hand thumb on the left, the index finger on the right):
         # the levers' outer faces polished in the handling zones
         selp = (pkk == "selector") & (np.abs(Nk[:, 1]) > 0.7)
@@ -569,7 +622,10 @@ def paint(st, meta, bake, uvd, tex, rep_dir):
         sight = np.isin(pkk, list(SS.SIGHT_PARTS))
         refin[kk[sight]] = 0.0
         PAINT_INFO[st] = {"drum_knurl_texels": n_drum, "knob_crown_texels": int(crown.sum()),
-                          "knob_rim_bare_texels": int((rim & chip).sum()), "chamber_mouth_texels": int(cham.sum())}
+                          "knob_rim_bare_texels": int((rim & chip).sum()),
+                          "knob_rim_texels": int(rim.sum()),
+                          "sight_selector_bare_texels": int((chip & np.isin(pkk, list(SS.SIGHT_PARTS) +
+                                                                            ["selector"])).sum()), "chamber_mouth_texels": int(cham.sum())}
 
     # ---------------------------------------------------------------- limits (gate B9 / G7)
     is_m = metal > 0.5

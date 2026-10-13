@@ -211,7 +211,9 @@ def main():
                   "drum knurl, the knob's crown and rim and the chamber mouth painted",
                   (mt.get("masks_g_handling_fraction") or {}).get("phosphate", 0.0) > 0.001 and
                   (mt.get("info") or {}).get("drum_knurl_texels", 0) > 0 and
-                  (mt.get("info") or {}).get("knob_rim_bare_texels", 0) > 0))
+                  # (W4b close-up r2) the rim is a rubbed satin ring now (bare, it read as a stray specular edge)
+                  max((mt.get("info") or {}).get("knob_rim_bare_texels", 0),
+                      (mt.get("info") or {}).get("knob_rim_texels", 0)) > 0))
     st_ = paint["Furniture"].get("stipple")
     G.append(gate("grip stipple (normal + cavity, spec grip_stipple)", st_,
                   "present on both panels; height 0.10-0.15 mm; roughness 0.78-0.88 (crowns polished in the hand)",

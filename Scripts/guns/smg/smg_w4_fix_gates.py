@@ -84,10 +84,12 @@ def main():
          g3o.get("pass") and b8.get("pass") and b8m.get("pass"))
     item("C2", "craft", "Charging knob texture", "major", "FIXED",
          "the knob's coat even (mottle x 0.25), the flat crown a polished satin (rough 0.45-0.55, base x 1.32), a thin "
-         "continuous bare rim just outside the crown edge (normals 18-26 deg off the axis); no noise flecks",
+         "continuous bare rim just outside the crown edge (normals 18-26 deg off the axis); no noise flecks. (W4b "
+         "close-up r2, spec R47) the rim is a rubbed satin ring now: bare, it read as a 'stray bright specular edge'",
          {"info": (mt.get("info") or {}), "charging_knob_bare_fraction": mt.get("wear_audit", {}).get(
              "charging_knob_bare_fraction")},
-         (mt.get("info") or {}).get("knob_rim_bare_texels", 0) > 0 and
+         max((mt.get("info") or {}).get("knob_rim_bare_texels", 0),
+             (mt.get("info") or {}).get("knob_rim_texels", 0)) > 0 and
          mt.get("wear_audit", {}).get("charging_knob_bare_fraction", 1) <= 0.25)
     item("C3", "craft", "Bare-steel wear as scattered specks", "major", "FIXED",
          "continuous 0.18-0.5 mm bright lines on the sharp convex crests (same-side distance to the edge x AO exposure x "

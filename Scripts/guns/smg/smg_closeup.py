@@ -66,8 +66,9 @@ def close_shots(out, samples):
         t = np.array(tgt)
         cam = R.persp_look(t + dist * U(d), t, 40.0, (1600, 900))
         L = dict(R.STUDIO, target_M=[float(v) for v in t], dist_m=0.7)
-        S.append({"name": name, "out": str(out / f"{name}.png"), "camera": cam, "lights": L, "samples": samples,
-                  "note": note + " [realism rig]"})
+        S.append({"name": name, "out": str(out / f"{name}.png"), "camera": cam, "lights": L,
+                  "samples": max(samples, R.STUDIO_SAMPLES) if not R.STUDIO_DENOISE else samples,
+                  "denoise": R.STUDIO_DENOISE, "note": note + " [realism rig]"})
     return S
 
 

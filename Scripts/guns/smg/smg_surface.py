@@ -118,9 +118,14 @@ FIN = {
     # (W4b close-up r1, spec R46) the moulded polymer a satin (0.50-0.58, hand polish 0.44), the phosphate a dead-flat
     # crystalline charcoal (dry 0.70-0.82, oiled 0.58-0.68): at one albedo ratio (G20, the sheet's 1.45) the two read as
     # different materials by their sheen, as on the reference photos (R44: 0.58-0.66 / 0.62-0.76 overlapped)
-    "polymer": {"metal": 0, "srgb": (46, 47, 48.5), "spec_srgb": (46, 47, 50), "rough": (0.50, 0.58), "rough_hand": 0.44},
+    # (W4b close-up r2) the satin a step glossier, 0.47-0.55 (hand 0.41), the magazine 0.48-0.58: at 0.50-0.58 the
+    # product rig's softboxes spread into a matte grey with no sheen gradient (both judges: "matte clay", "no roughness
+    # breakup"); the sheet's 3/4 view and the reference photos show a satin black with a soft sheen on every flat.
+    # 0.40-0.48 was tried first: the L5 fit's light fell to k 1.04 (the glossier receiver brighter under the key), the
+    # grip read -0.061 luma (tolerance 0.05) and G20 1.636 (band <= 1.55); 0.46-0.54: G20 1.552
+    "polymer": {"metal": 0, "srgb": (46, 47, 48.5), "spec_srgb": (46, 47, 50), "rough": (0.47, 0.55), "rough_hand": 0.41},
     "stipple": {"metal": 0, "srgb": (46, 47, 48.5), "rough": (0.72, 0.82)},   # (R46: -0.06 with the polymer)
-    "polymer_mag": {"metal": 0, "srgb": (41, 42, 45), "rough": (0.55, 0.65)},
+    "polymer_mag": {"metal": 0, "srgb": (41, 42, 45), "rough": (0.48, 0.58)},
     "rubber": {"metal": 0, "srgb": (42, 42, 44), "rough": (0.82, 0.92)},
     # (W4 review fixes, G20; spec R44) the steel DARKER than the polymer, as the sheet shows it (CRAFT 3 samples: the
     # device 40, the rail side 49-50 against the receiver 63-64 under one light; the table's 48-54 base contradicted
@@ -129,7 +134,9 @@ FIN = {
     # (R46) base (45, 46, 47), dry 0.66-0.78: with the rougher coat the L5 render's receiver / steel ratio rose to 1.635 at
     # (40, 41, 42) / 0.70-0.82 and 1.573 at (44, 45, 46) / 0.70-0.82 (G20 band 1.3-1.5, the sheet 1.453); the albedo stays
     # under the polymer's (46, 47, 48.5)
-    "phosphate": {"metal": 0, "srgb": (45, 46, 47), "rough": (0.66, 0.78), "oiled": (0.56, 0.66)},
+    # (W4b close-up r2) base (46, 47, 48): with the satin polymer a step glossier the L5 receiver / steel ratio rose
+    # (G20); the albedo stays at / under the polymer's (46, 47, 48.5)
+    "phosphate": {"metal": 0, "srgb": (46, 47, 48), "rough": (0.66, 0.78), "oiled": (0.56, 0.66)},
     # worn steel at the spec's bare value but micro-scratched: rough 0.42-0.55 (spec 0.25-0.40; the AR-01's realism
     # rounds moved it to 0.50-0.62: at 0.25-0.40 every chip flashed as a white mirror fleck under the review lights);
     # the bolt's sliding flanks keep the spec's polished 0.15-0.25

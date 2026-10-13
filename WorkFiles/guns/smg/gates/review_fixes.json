@@ -1,6 +1,6 @@
 {
  "stage": "W4 review fixes (SMG_BUILD_PLAN 15 row W4)",
- "date": "2026-10-12T19:17:34",
+ "date": "2026-10-12T23:48:38",
  "status": "pass",
  "failed": [],
  "stage_files": {
@@ -8,7 +8,7 @@
    "status": "pass",
    "failed": [],
    "pass": true,
-   "date": "2026-10-12T10:46:02"
+   "date": "2026-10-12T21:16:39"
   },
   "form_magfit": {
    "status": "pass",
@@ -20,7 +20,7 @@
    "status": "pass",
    "failed": [],
    "pass": true,
-   "date": "2026-10-12T19:12:33"
+   "date": "2026-10-12T22:26:08"
   },
   "game": {
    "status": "pass",
@@ -50,7 +50,7 @@
    "status": "pass",
    "failed": [],
    "pass": true,
-   "date": "2026-10-12T11:27:38"
+   "date": "2026-10-12T22:06:09"
   }
  },
  "counts": {
@@ -117,15 +117,17 @@
    "area": "Charging knob texture",
    "severity": "major",
    "verdict": "FIXED",
-   "fix": "the knob's coat even (mottle x 0.25), the flat crown a polished satin (rough 0.45-0.55, base x 1.32), a thin continuous bare rim just outside the crown edge (normals 18-26 deg off the axis); no noise flecks",
+   "fix": "the knob's coat even (mottle x 0.25), the flat crown a polished satin (rough 0.45-0.55, base x 1.32), a thin continuous bare rim just outside the crown edge (normals 18-26 deg off the axis); no noise flecks. (W4b close-up r2, spec R47) the rim is a rubbed satin ring now: bare, it read as a 'stray bright specular edge'",
    "evidence": {
     "info": {
      "drum_knurl_texels": 6560,
      "knob_crown_texels": 3409,
-     "knob_rim_bare_texels": 245,
+     "knob_rim_bare_texels": 0,
+     "knob_rim_texels": 245,
+     "sight_selector_bare_texels": 0,
      "chamber_mouth_texels": 390
     },
-    "charging_knob_bare_fraction": 0.0065
+    "charging_knob_bare_fraction": 0.0
    },
    "pass": true
   },
@@ -139,11 +141,11 @@
    "evidence": {
     "gate": {
      "bare_line_width_max_mm": 0.781,
-     "bare_clusters": 122,
+     "bare_clusters": 18,
      "bare_cluster_min_texels": 14,
-     "bare_cluster_median_texels": 47,
+     "bare_cluster_median_texels": 27,
      "bare_texels_far_from_edge": 0,
-     "steel_bare_fraction": 0.00603,
+     "steel_bare_fraction": 0.00337,
      "largest_bare_blob_mm2": 19.78,
      "largest_bare_blob_part": "barrel",
      "by_design_bare_largest_mm2": 331.67
@@ -161,38 +163,38 @@
    "evidence": {
     "gate": {
      "Furniture/polymer": {
-      "bc_std_srgb_levels": 3.74,
-      "normal_tilt_gt_1deg_fraction": 0.4221,
+      "bc_std_srgb_levels": 6.05,
+      "normal_tilt_gt_1deg_fraction": 0.4148,
       "whitened_fraction": 0.00336
      },
      "Mag/polymer_mag": {
-      "bc_std_srgb_levels": 3.15,
-      "normal_tilt_gt_1deg_fraction": 0.2664,
+      "bc_std_srgb_levels": 6.86,
+      "normal_tilt_gt_1deg_fraction": 0.2135,
       "whitened_fraction": 0.00565
      }
     },
     "bc_std": {
      "Metal": {
-      "phosphate": 4.02
+      "phosphate": 6.54
      },
      "Furniture": {
-      "polymer": 3.74,
-      "rubber": 4.46
+      "polymer": 6.05,
+      "rubber": 5.85
      },
      "Mag": {
-      "polymer_mag": 3.15
+      "polymer_mag": 6.86
      }
     },
     "normal_tilt_gt_1deg": {
      "Metal": {
-      "phosphate": 0.2422
+      "phosphate": 0.242
      },
      "Furniture": {
-      "polymer": 0.4221,
-      "rubber": 0.2303
+      "polymer": 0.4148,
+      "rubber": 0.2765
      },
      "Mag": {
-      "polymer_mag": 0.2664
+      "polymer_mag": 0.2135
      }
     }
    },
@@ -208,10 +210,10 @@
    "evidence": {
     "G20": {
      "sheet": 1.453,
-     "ours": 1.537,
+     "ours": 1.543,
      "per_region_ours": {
-      "barrel": 1.406,
-      "muzzle_device": 1.611
+      "barrel": 1.424,
+      "muzzle_device": 1.608
      },
      "per_region_sheet": {
       "barrel": 1.283,
@@ -223,26 +225,26 @@
      "muzzle_device": {
       "median_srgb": [
        39.2,
-       39.6,
+       39.7,
        40.2
       ],
-      "luma": 0.1551,
+      "luma": 0.1553,
       "sat": 0.0249,
       "hue_deg": 213.33,
       "rb": 0.9751,
-      "lin_lum": 0.020804317385315248
+      "lin_lum": 0.020856123090621854
      },
      "barrel": {
       "median_srgb": [
+       44.3,
        44.8,
-       45.4,
-       46.1
+       45.5
       ],
-      "luma": 0.1777,
-      "sat": 0.0289,
-      "hue_deg": 212.5,
-      "rb": 0.9711,
-      "lin_lum": 0.026575806925189828
+      "luma": 0.1754,
+      "sat": 0.0256,
+      "hue_deg": 217.14,
+      "rb": 0.9744,
+      "lin_lum": 0.025960801778614415
      }
     }
    },
@@ -322,7 +324,7 @@
    "fix": "soot at the PBR floor (lin 0.013, sRGB 30; was 0.025 = on the phosphate) over the inner cage faces and bore, the slot walls, a ring on the front face round the bore and a gradient out from each slot's edge; the slots' edges no longer bare (carbon)",
    "evidence": {
     "L5_muzzle_device": {
-     "luma": -0.0058,
+     "luma": -0.0056,
      "sat": 0.0129,
      "rb": -0.0129
     }
@@ -464,7 +466,9 @@
      "info": {
       "drum_knurl_texels": 6560,
       "knob_crown_texels": 3409,
-      "knob_rim_bare_texels": 245,
+      "knob_rim_bare_texels": 0,
+      "knob_rim_texels": 245,
+      "sight_selector_bare_texels": 0,
       "chamber_mouth_texels": 390
      }
     }

@@ -1564,6 +1564,28 @@ RES = [
      "the magazine and the stock's struts. Renders: the realism rig is the bundled interior.exr (CC0) at 0.45 + "
      "softboxes k 0.12, its exposure within 1.3 x the L5 calibration (review/closeup_r1, gates/closeup_r1.json)",
      "rule": "realism judges; reference photos (realref/craft); measurement (closeup K1-K5)"},
+    {"id": "R47", "topic": "W4b close-up realism pass r2: the banded stock head, one value / no sheen, no visible wear, "
+     "slivers on the sights",
+     "conflict": "both realism judges failed every r1 close view: the FP / ADS foreground stock head 'a smooth slanted "
+     "sheet like a bent ribbon, banded, with soft streaks'; 'one flat charcoal value with one roughness, steel = "
+     "polymer'; 'no edge wear, finger polish or holster rub'; 'white hairline glints on random edges of the rear sight'; "
+     "vent walls 'flat grey, no depth darkening'. Measured: the stock head's curved top (and every curved prism surface: "
+     "the strut bends, the grip, the pad top) was FLATTENED by smg_parts._flatten_planar into 3-6 deg planar bands "
+     "(area-weighted shading / geometric spread 0.11 on the curved regions; clay renders show the bands); the r1 rig left "
+     "a rough black finish nothing in its mirror direction (no sheen to tell 0.55 from 0.80); r1's edge rub (+6 sRGB "
+     "levels) and specks never reached a render (a multiplied albedo step on black is swamped by the 4 % specular); the "
+     "sights' 1-3 px bare-steel dashes were the slivers; r1's recess dust (30 % to sRGB 94) lit the vent walls",
+     "resolution": "geometry: curved regions (deviation field R^2 >= 0.8, span >= 1.5 deg, >= 3 faces) keep smooth "
+     "shading (corner-angle weighted normals), only true flats are flattened (W1 onward rebuilt; shading / geometric "
+     "spread 0.27 -> 0.98 on the 22 curved regions); paint: polymer satin 0.47-0.55 (hand 0.41; magazine 0.48-0.58; "
+     "0.40-0.48 failed L5 grip and G20), the phosphate base (46, 47, 48), the stipple x 1.34 (L5 grip), the orange peel "
+     "to a trace + a 0.25 mm spark grain, wear MIXED toward a "
+     "worn grey (edge rub to sRGB 100 at the crest 0.35-1.0 mm wide, rough -0.22; scuffs to 96; the sheet's specks to "
+     "112; worn phosphate edges to 100), handling smudges +-0.07 rough at 3 mm, dust on floors only (12 %), recess walls "
+     "darkened x (1 - 0.28 cav), no bare steel on the sights / selector, the knob rim a rubbed ring; renders: the "
+     "product rig (smg_review_export.STUDIO: mirror-placed softboxes for the side and top faces, edge strips, weak key, "
+     "interior HDRI 0.15, backdrop sRGB 150), no denoiser at 1024 samples (review/closeup_r2, gates/closeup_r2.json)",
+     "rule": "realism judges; the sheet's 3/4 view (specks, edge scuffs, satin sheen); measurement (closeup r2 K1-K6)"},
 ]
 
 # ================================================================================================ gates

@@ -1,0 +1,349 @@
+{
+ "stage": "W4b close-up realism pass round 2",
+ "date": "2026-10-12T23:49:49",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "K1 shading follows the curved surfaces: area-weighted shading spread / geometric spread over the curved regions (W2 blends)",
+   "value": {
+    "before_r1": {
+     "curved_regions": 22,
+     "curved_area_mm2": 5447.9,
+     "area_weighted_shading_ratio": 0.269
+    },
+    "after_r2": {
+     "curved_regions": 22,
+     "curved_area_mm2": 5447.9,
+     "area_weighted_shading_ratio": 0.976
+    },
+    "stock_frame_after": [
+     {
+      "area_mm2": 1374.7,
+      "geometric_spread_deg": 1.5,
+      "shading_spread_deg": 1.18,
+      "ratio": 0.786,
+      "maxdev": 1.5,
+      "r2": 0.937,
+      "span": 2.99
+     },
+     {
+      "area_mm2": 253.3,
+      "geometric_spread_deg": 2.02,
+      "shading_spread_deg": 0.97,
+      "ratio": 0.481,
+      "maxdev": 2.02,
+      "r2": 0.836,
+      "span": 3.49
+     },
+     {
+      "area_mm2": 144.6,
+      "geometric_spread_deg": 5.63,
+      "shading_spread_deg": 4.69,
+      "ratio": 0.833,
+      "maxdev": 5.63,
+      "r2": 0.903,
+      "span": 13.41
+     },
+     {
+      "area_mm2": 144.6,
+      "geometric_spread_deg": 7.13,
+      "shading_spread_deg": 9.07,
+      "ratio": 1.273,
+      "maxdev": 7.13,
+      "r2": 0.864,
+      "span": 13.98
+     },
+     {
+      "area_mm2": 162.4,
+      "geometric_spread_deg": 2.16,
+      "shading_spread_deg": 3.2,
+      "ratio": 1.48,
+      "maxdev": 2.16,
+      "r2": 0.974,
+      "span": 3.96
+     },
+     {
+      "area_mm2": 147.0,
+      "geometric_spread_deg": 2.16,
+      "shading_spread_deg": 2.47,
+      "ratio": 1.145,
+      "maxdev": 2.16,
+      "r2": 0.871,
+      "span": 3.23
+     },
+     {
+      "area_mm2": 124.4,
+      "geometric_spread_deg": 4.86,
+      "shading_spread_deg": 6.84,
+      "ratio": 1.407,
+      "maxdev": 4.86,
+      "r2": 0.833,
+      "span": 6.89
+     },
+     {
+      "area_mm2": 256.1,
+      "geometric_spread_deg": 2.37,
+      "shading_spread_deg": 2.66,
+      "ratio": 1.124,
+      "maxdev": 2.37,
+      "r2": 0.915,
+      "span": 3.98
+     },
+     {
+      "area_mm2": 109.4,
+      "geometric_spread_deg": 5.24,
+      "shading_spread_deg": 4.46,
+      "ratio": 0.852,
+      "maxdev": 5.24,
+      "r2": 0.846,
+      "span": 6.29
+     }
+    ]
+   },
+   "threshold": "after >= 0.85",
+   "pass": true,
+   "note": "the 'banded, streaky ribbon' on the stock head (FP / ADS): smg_parts._flatten_planar flattened every curved region into 3-6 deg planes; diag/clay_before_after.png"
+  },
+  {
+   "name": "K2 exposure: hero_34 receiver side, realism rig / L5 calibration rig (mean sRGB luma)",
+   "value": {
+    "realism_rig": 43.7,
+    "l5_rig": 35.3,
+    "ratio": 1.239
+   },
+   "threshold": "<= 1.3",
+   "pass": true,
+   "note": "the r2 product rig keeps the black polymer black (backdrop sRGB 150)"
+  },
+  {
+   "name": "K3 material split: roughness P50 phosphate - polymer (the maps), G20 passing",
+   "value": {
+    "phosphate_p50": 0.795,
+    "polymer_p50": 0.526,
+    "split": 0.269,
+    "G20": {
+     "sheet": 1.453,
+     "ours": 1.543,
+     "per_region_ours": {
+      "barrel": 1.424,
+      "muzzle_device": 1.608
+     },
+     "per_region_sheet": {
+      "barrel": 1.283,
+      "muzzle_device": 1.553
+     }
+    },
+    "G20_pass": true
+   },
+   "threshold": ">= 0.20 with G20 passing",
+   "pass": true,
+   "note": "satin polymer 0.40-0.48 against the dead-flat phosphate 0.66-0.78"
+  },
+  {
+   "name": "K4 sparkle: isolated hot pixels (clusters <= 3 px at >= 235) on fp_35cm, ads_55deg, c1",
+   "value": {
+    "after": {
+     "fp_35cm": {
+      "isolated": 0,
+      "hot_px": 0
+     },
+     "ads_55deg": {
+      "isolated": 3,
+      "hot_px": 5
+     },
+     "c1_rear_sight_rail": {
+      "isolated": 0,
+      "hot_px": 4
+     }
+    },
+    "before_r1": {
+     "fp_35cm": {
+      "isolated": 0,
+      "hot_px": 0
+     },
+     "ads_55deg": {
+      "isolated": 0,
+      "hot_px": 4
+     },
+     "c1_rear_sight_rail": {
+      "isolated": 1,
+      "hot_px": 1
+     }
+    }
+   },
+   "threshold": "after <= 5 in total",
+   "pass": true,
+   "note": "the judges' 'white hairline glints on random edges' of the rear sight and its base"
+  },
+  {
+   "name": "K5 no bare steel on the sights or the selector (rubbed phosphate only)",
+   "value": {
+    "sight_selector_bare_texels": 0
+   },
+   "threshold": "0",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "K6 wear present in the maps: polymer BC P99 - P50 (sRGB levels)",
+   "value": {
+    "before_r1": 13.0,
+    "after_r2": 27.0,
+    "mag_after": 37.3
+   },
+   "threshold": ">= 20",
+   "pass": true,
+   "note": "edge rub, scuffs and the sheet's specks (r1's rub was ~6 levels)"
+  },
+  {
+   "name": "K7 every stage gate of the rebuilt chain passes",
+   "value": {
+    "form": "pass",
+    "form_magfit": "pass",
+    "uv_bake_paint": "pass",
+    "game": "pass",
+    "rig_export": "pass",
+    "mag": "pass",
+    "review_export": "pass",
+    "gunlib_regression": "pass"
+   },
+   "threshold": "all 'pass'",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "K8 the close-up set rendered from the exported bytes",
+   "value": {
+    "images": 16,
+    "missing": []
+   },
+   "threshold": "5 views x 2 rigs + 3 close-ups + 3 clay diagnostics",
+   "pass": true,
+   "note": ""
+  }
+ ],
+ "folder": "WorkFiles/guns/smg/review/closeup_r2",
+ "rig": {
+  "rig": "studio",
+  "hdri": "interior",
+  "strength": 0.15,
+  "saturation": 0.0,
+  "k": 0.0,
+  "bg_rgb": [
+   150,
+   150,
+   150
+  ],
+  "extra_lights": [
+   {
+    "name": "Flank",
+    "mirror_n_M": "flank",
+    "nudge_cam": [
+     0.0,
+     0.55,
+     0.0
+    ],
+    "dist": 1.3,
+    "size": [
+     1.2,
+     0.3
+    ],
+    "energy": 2.5
+   },
+   {
+    "name": "Top",
+    "mirror_n_M": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "nudge_cam": [
+     0.0,
+     0.1,
+     0.0
+    ],
+    "dist": 1.3,
+    "size": [
+     1.4,
+     0.3
+    ],
+    "energy": 7.0
+   },
+   {
+    "name": "StripL",
+    "dir_cam": [
+     -0.9,
+     0.25,
+     -0.45
+    ],
+    "dist": 1.2,
+    "size": [
+     0.1,
+     1.4
+    ],
+    "energy": 22.0
+   },
+   {
+    "name": "StripR",
+    "dir_cam": [
+     0.9,
+     0.25,
+     -0.45
+    ],
+    "dist": 1.2,
+    "size": [
+     0.1,
+     1.4
+    ],
+    "energy": 22.0
+   },
+   {
+    "name": "Key",
+    "dir_cam": [
+     -0.5,
+     0.7,
+     0.5
+    ],
+    "dist": 1.4,
+    "size": [
+     0.6,
+     0.6
+    ],
+    "energy": 2.5
+   }
+  ]
+ },
+ "denoise": false,
+ "samples": 1024,
+ "spec_ruling": "R47",
+ "inputs_sha256": {
+  "Exports/Guns/SMG01/A_SMG01_Charge.fbx": "b36229af14fc853ea04ff583bf16f5b59f873678f7cfed8668037249e68ba4cd",
+  "Exports/Guns/SMG01/A_SMG01_Fire.fbx": "489e716992e13516fd256ff658f7685e87868237370e20891c7668a989cb0579",
+  "Exports/Guns/SMG01/A_SMG01_Reload.fbx": "99e9f57b6a49f1b7f940f514238176351f0bb5b222fdbd83083ae425bbcda55d",
+  "Exports/Guns/SMG01/A_SMG01_ReloadEmpty.fbx": "c821ebc88488cb948ca7ebdaa877b0ccd7d216ef32c949d2a9671ba43a1c0b75",
+  "Exports/Guns/SMG01/A_SMG01_Selector.fbx": "e95dff79cd4a17caaab9439b6df3c87e6faa9cd83a3afa55f62c4f04969a5ff2",
+  "Exports/Guns/SMG01/A_SMG01_SightFlip.fbx": "072e7e27c77cce57f104f9f05a94913f31097cdbc8411463b351995d03dfba56",
+  "Exports/Guns/SMG01/A_SMG01_StockFold.fbx": "7814177ad03675d7d624f5d08f6a572a0d49f6135b3bb21eb4332d97f9e24501",
+  "Exports/Guns/SMG01/A_SMG01_StockUnfold.fbx": "aad62c1d0051817f9d5bf253f2e1930288022be5b85fba172d23496582462765",
+  "Exports/Guns/SMG01/SK_SMG01.fbx": "f9a23c0f4f4d888ac331267466f6e59a2e35583b8d913314223595dffd017e72",
+  "Exports/Guns/SMG01/SK_SMG01_LOD1.fbx": "08d4fdbeec4facbf66d939f1db32af463131405fa7da3e57be9c3b078e2664c9",
+  "Exports/Guns/SMG01/SK_SMG01_LOD2.fbx": "f0d0755294d9127a1a755ccab5460a72161589f1e9f655448b955ac3c97ab0dc",
+  "Exports/Guns/SMG01/SK_SMG01_LOD3.fbx": "8e85310d8777645bfe95892cc125fcd46f4bb8077f41e3bd43ab49a04ab1e853",
+  "Exports/Guns/SMG01/SM_SMG01.fbx": "2340f254bc0d25add5f0d83f9a4dd627dc145e01a17543ec2357dd795852e371",
+  "Exports/Guns/SMG01/SM_SMG01_Mag.fbx": "5a5042d83510b762ed1f72c1f4ba2a2acc3421b623d6f3f9a1885509c0c689b3",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_BC.png": "fe4aacbe116d7c9b5fb280c674948b98c81072ed08442be0ec7079f7ce3e07ab",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_Masks.png": "a0e75c1352a9e7cf168f48d9cae222386505776a34e403fbb0f3ad848f44f969",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_N.png": "e846cc1303aedf28a1cd91672f601125c06acd3c2d4eb2dae18aeb4351a65d97",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_ORM.png": "93873666503c1e32bb1d1159a2cd112aff3c7485723b1a4cb12465b0db50a842",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Mag_BC.png": "bafba4ef1bab4e921f0a2cc666ac3c17738ddbbcde412d582bf466bc27b21736",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Mag_Masks.png": "cfd6224520d8a38ac7bd38f73b7322751bed1efbeaa73f6d87bf9ba3a832263e",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Mag_N.png": "76c206a29a214071038afba1158145d3c71b1e0d0d4b5b975a7c94004d2f1fef",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Mag_ORM.png": "04ec43c73597c13df09bf9bd4cf95d4ceef65f4ece42991562d82d5aea8db2b8",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Metal_BC.png": "b91701cb59dc9931cb3af31796f3bd35b4a76684cdb4a1c2faa2747ebed6ba36",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Metal_Masks.png": "ed5906b7d6f317f1db582c8fdaf2fe75da136e33d6b8d81c6c894a35a027225b",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Metal_N.png": "cb926711ac403b924ae55a99d60f61a648e4634eee4e4a2f6881b1cd30cf18ee",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Metal_ORM.png": "00616831d4764faf752feff7cabf37fc5ceb055673972bc9f58eab2f1eb8ac63"
+ },
+ "note": "the realism verdict (both judges on the close views) is the judges', reported, not self-judged"
+}

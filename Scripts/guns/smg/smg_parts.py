@@ -84,6 +84,52 @@ def _deform(ob, fn, offset):
 FLAT_SLIVER_DEG = 8.0
 FLAT_SEED_MM2, FLAT_MIN_AREA_MM2, FLAT_MIN_THICK_MM, FLAT_SHARP_DEG, FLAT_TOL_DEG, FLAT_TOL_MM = (20.0, 100.0, 1.5,
                                                                                                 10.0, 3.0, 0.6)
+# (W4b close-up r2) CURVED regions are not flat. A gently curved surface (the stock's S-curved top strut and head, the
+# grip's back strap and toe, the magwell's flare, the butt pad's top: prism strips of a curved traced outline) passes
+# the seed test strip by strip (each strip within 3 deg and 0.6 mm of the seed), so the rule above flattened it into
+# 3-6 deg BANDS, each shaded as one plane with its edges marked sharp: the realism judges' "banded surface with soft
+# streaks", "a smooth slanted sheet like a bent ribbon" on the stock head in FP / ADS (clay renders show the bands; the
+# maps are not the cause). A region whose face-normal deviations follow a smooth field over its area (linear fit of the
+# deviation on position, area-weighted R^2 >= 0.8) and span >= 1.5 deg (maximum deviation > 1.0 deg, carried by >= 3
+# faces deviating more than 0.3 x the maximum: one tilted repair face is not a curve) is CURVED: its
+# corners get the smooth normal (corner-angle weighted over the vertex's faces in the same region, plus neighbours
+# within FLAT_SHARP_DEG) and no edge of it is marked sharp. The warped flat faces this rule was written for scatter
+# their deviations at random round holes and repairs (R^2 0.01-0.4 measured on the receiver flanks, the stock's side
+# faces and the pad's sides; the rear sight leaf's right face, one 2.6 deg repair face: R^2 0.72) and stay flat.
+CURVED_R2, CURVED_SPAN_DEG, CURVED_MAXDEV_DEG, CURVED_MIN_FACES = 0.8, 1.5, 1.0, 3
+CURVED_RULE = True
+
+
+def _curved_region(reg, pn, pa, pc):
+    """(curved?, metrics) for a grown region: the face-normal deviation field's linear fit over position."""
+    import math as _m
+    reg = np.asarray(reg)
+    w = pa[reg]
+    N = pn[reg]
+    n0 = (N * w[:, None]).sum(0)
+    n0 = n0 / np.linalg.norm(n0)
+    devs = np.degrees(np.arccos(np.clip(N @ n0, -1.0, 1.0)))
+    maxdev = float(devs.max())
+    if len(reg) < 3 or maxdev <= CURVED_MAXDEV_DEG or int((devs > 0.3 * maxdev).sum()) < CURVED_MIN_FACES:
+        return False, {"maxdev": round(maxdev, 2)}
+    u = np.cross(n0, [0.0, 0.0, 1.0])
+    if np.linalg.norm(u) < 0.1:
+        u = np.cross(n0, [1.0, 0.0, 0.0])
+    u /= np.linalg.norm(u)
+    v = np.cross(n0, u)
+    c = (pc[reg] * w[:, None]).sum(0) / w.sum()
+    P = np.c_[(pc[reg] - c) @ u, (pc[reg] - c) @ v, np.ones(len(reg))]
+    D = np.c_[N @ u, N @ v]
+    sw = np.sqrt(w)[:, None]
+    coef, *_ = np.linalg.lstsq(P * sw, D * sw, rcond=None)
+    pred = P @ coef
+    mu = (D * w[:, None]).sum(0) / w.sum()
+    sst = float((w[:, None] * (D - mu) ** 2).sum())
+    ssr = float((w[:, None] * (D - pred) ** 2).sum())
+    r2 = 1.0 - ssr / max(sst, 1e-18)
+    span = float(_m.degrees(2.0 * np.max(np.linalg.norm(pred - pred.mean(0), axis=1))))
+    curved = r2 >= CURVED_R2 and span >= CURVED_SPAN_DEG
+    return curved, {"maxdev": round(maxdev, 2), "r2": round(r2, 3), "span": round(span, 2)}
 
 
 def _flatten_planar(ob):
@@ -161,10 +207,16 @@ def _flatten_planar(ob):
                     q.append(g)
         regions.append(reg)
     sel = []
+    curved = []
     for r, reg in enumerate(regions):
         area = float(pa[reg].sum())
         if area < FLAT_MIN_AREA_MM2:
             continue
+        if CURVED_RULE:
+            cv, _met = _curved_region(reg, pn, pa, pc)
+            if cv:
+                curved.append(r)
+                continue
         per = 0.0
         for a in reg:
             for e in fe[a]:
@@ -173,7 +225,12 @@ def _flatten_planar(ob):
                     per += float(np.linalg.norm(co[ev[e, 0]] - co[ev[e, 1]]))
         if area / max(per, 1e-9) >= FLAT_MIN_THICK_MM:
             sel.append(r)
+    if curved:
+        _smooth_curved(me, [regions[r] for r in curved], owner, pn, ls, lt, lv, co, cn)
     if not sel:
+        if curved:
+            me.normals_split_custom_set([tuple(v) for v in cn])
+            me.update()
         return 0
     plane = {}
     for r in sel:
@@ -203,6 +260,53 @@ def _flatten_planar(ob):
     me.normals_split_custom_set([tuple(v) for v in cn])
     me.update()
     return len(sel)
+
+
+def _smooth_curved(me, regs, owner, pn, ls, lt, lv, co, cn):
+    """Set the corners of every face in the curved regions to the smooth normal: the corner-angle weighted mean of the
+    normals of the faces at that vertex lying in the same region or within FLAT_SHARP_DEG of the corner's own face
+    (in place on cn). Clears the sharp marks on edges between two faces of one curved region."""
+    import math as _m
+    nP = len(pn)
+    vf = {}
+    ang = np.zeros(len(lv))
+    for i in range(nP):
+        n_ = lt[i]
+        idx = lv[ls[i]:ls[i] + n_]
+        P = co[idx]
+        for k in range(n_):
+            a, b = P[k - 1] - P[k], P[(k + 1) % n_] - P[k]
+            na, nb = np.linalg.norm(a), np.linalg.norm(b)
+            ang[ls[i] + k] = _m.acos(max(-1.0, min(1.0, float(a @ b) / max(na * nb, 1e-18))))
+            vf.setdefault(int(idx[k]), []).append((i, ls[i] + k))
+    cos_s = _m.cos(_m.radians(FLAT_SHARP_DEG))
+    inreg = np.full(nP, -1)
+    for r, reg in enumerate(regs):
+        inreg[np.asarray(reg)] = r
+    for i in np.nonzero(inreg >= 0)[0]:
+        for k in range(lt[i]):
+            vi = int(lv[ls[i] + k])
+            acc = np.zeros(3)
+            for (g, lg) in vf[vi]:
+                if inreg[g] == inreg[i] or float(pn[g] @ pn[i]) >= cos_s:
+                    acc += pn[g] * ang[lg]
+            nrm = np.linalg.norm(acc)
+            cn[ls[i] + k] = acc / nrm if nrm > 1e-12 else pn[i]
+    att = me.attributes.get("sharp_edge")
+    if att is not None:
+        nE = len(me.edges)
+        sh = np.zeros(nE, bool)
+        att.data.foreach_get("value", sh)
+        le = np.empty(len(lv), int)
+        me.loops.foreach_get("edge_index", le)
+        ecount = {}
+        for i in np.nonzero(inreg >= 0)[0]:
+            for e in le[ls[i]:ls[i] + lt[i]]:
+                ecount.setdefault(int(e), []).append(int(inreg[i]))
+        for e, rs in ecount.items():
+            if len(rs) == 2 and rs[0] == rs[1]:
+                sh[e] = False
+        att.data.foreach_set("value", sh)
 
 
 def build_ops(o: Ops, coll, offset):

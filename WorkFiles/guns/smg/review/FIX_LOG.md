@@ -176,3 +176,71 @@ The finish-level tells (clouds, clay exposure, one material, seam, glints) are f
 foreground is still the geometry of the stock head and the receiver's end block. It reads cleaner now, but at 35 cm it
 can still look like a bent sheet or a plain block, which is the likely remaining fake call. The realism verdict belongs
 to the judges, on `review/closeup_r1/` (realism rig; the L5 versions are in `l5/`).
+
+---
+
+# W4b close-up realism pass, round 2 (spec R47)
+
+Both realism judges failed every r1 close view (studio + L5, plus the three close-ups and before / after). Each reason
+was checked against the r1 renders, clay / BC-emission / clay+normal looks of the exported bytes, the maps, the sheet's
+3/4 view and the real photos (`scratch/realref/craft`). The fixes are in the generators; the chain was rebuilt from W1
+(the shading change is a W1 change): W1 (blockout, form, magfit gates), W2, the AR-01 regression (gunlib changed), W3,
+the W4 review renders and fix record, then `review/closeup_r2/` from the exported bytes (5 views x {product rig, L5 rig}
++ 3 close-ups at ~21-24 cm + `before_after.png` against r1 + `diag/clay_before_after.png`). Numbers:
+`gates/closeup_r2.json` (K1-K8, all pass).
+
+## First: do the review renders show the final maps?
+
+Yes. The game material wiring is right (BC sRGB, ORM linear R AO / G rough / B metal, N DirectX green flipped back,
+UV0); BC-emission looks show every painted feature. The denoiser was checked (1024 samples without it): it softened the
+fine grain but was not the cause of "one flat clay". Three measured causes:
+
+1. **The rig.** The r1 rig (interior HDRI 0.45 + four softboxes at k 0.12, 0.8-3.6 W) put nothing bright in the mirror
+   direction of any flat. On a black dielectric the 4 % specular IS the look: with no reflection to carry, a 0.55 satin
+   and a 0.80 phosphate both render as diffuse black-grey, which is "one material" and "clay". Brighter softboxes only
+   gave brighter grey clay (66 on the receiver side, 1.8 x the L5 exposure); mirror-placed boxes gave sheen and a
+   visible steel / polymer split.
+2. **The wear was too faint to reach any render.** r1's edge rub was +6 sRGB levels, its specks and scratches +2-4: a
+   multiplied albedo step from 0.028 to 0.04 linear is swamped by the coat's specular. The BC map had them; the lit
+   image did not.
+3. **The stock head's banding was geometry shading, not texture** (below).
+
+## Measured causes and fixes
+
+| Tell (judge calls) | Verdict | Cause (measured) | Fix | Evidence |
+|---|---|---|---|---|
+| Stock head in FP / ADS: a smooth slanted sheet, "bent ribbon", banded with soft smeared streaks, cloth-like (8) | REAL, fixed (shading); geometry kept | `smg_parts._flatten_planar` grew regions within 3 deg / 0.6 mm of a seed and set each to ONE plane normal: every gently curved prism surface (the stock's S-curved top strut and head, the strut bends, the grip strap and toe, the magwell flare, the pad top) was shaded as 3-6 deg flat bands with the gradients piled at their borders. Clay renders of the r1 bytes show the stripes; the maps are not involved | A region whose face-normal deviation follows a smooth field (linear fit on position, area-weighted R^2 >= 0.8, span >= 1.5 deg, carried by >= 3 faces) is CURVED: corner-angle weighted smooth normals, no sharp marks inside it; true flats (receiver flanks, stock sides, pad sides: R^2 0.01-0.4; the rear sight leaf's face with one 2.6 deg repair face: 0.72) still flatten. W1 onward rebuilt | K1: shading spread / geometric spread over the 22 curved LOD0 regions 0.27 -> 0.98 (`smg_curved_check.py`); `diag/clay_before_after.png` |
+| One flat charcoal value with one roughness; steel (device, barrel, sights, rail, pins, trigger) = polymer (all) | REAL, fixed | Cause 1 (the rig); the maps' split (0.55 / 0.80) was right but nothing showed it | Product rig (`smg_review_export.STUDIO`): a long softbox in the mirror direction of the side face the camera sees, nudged up so its edge crosses the face as a sheen gradient; one in the top faces' mirror direction; two narrow strips behind-left / right for the edges; a weak key; interior HDRI 0.15 for ambient reflections; backdrop sRGB 150 (the sheet's reads 151); no denoiser, 1024 samples. The polymer a step glossier (0.47-0.55, hand 0.41; magazine 0.48-0.58) | K2 receiver side 43.7 vs L5 35.3 (1.24, <= 1.3: still black); K3 roughness P50 0.795 vs 0.526 (split 0.27), G20 1.543 |
+| No wear, polish or edge rub on rail edges, sight ears, crown, magwell lip, mag feet, hinge, stock pad; razor-clean edges; CG-clean slabs (all) | REAL, fixed | Cause 2: r1's rub / scuffs / specks were multiplied steps of +2-6 levels | Wear MIXES toward a worn grey: polymer edge rub to sRGB 100 at the crest, 0.35-1.0 mm wide, polished (rough -0.22) so it also catches the strips; scuffs (a fore-aft and a set-down set) to 96 on the receiver, stock, magazine and grip-cover flats, the lower body favoured; the sheet's specks to 112; worn phosphate edges to 100 (rough -0.14). The spec's wear level stays 'moderate, as the sheet (white specks and edge scuffs)' | K6 polymer BC P99 - P50 13 -> 27 sRGB levels (magazine 37); c2 / c3 close-ups |
+| No mould texture / roughness breakup; flats perfectly uniform (4) | REAL, fixed | r1's moulded grain (12 um at 0.6 mm) is sub-pixel at 35 cm; its 1.8 mm orange peel (20 um) read as cast concrete once a softbox grazed it | Peel to 5 um; a 0.25 mm spark grain (5 um, +-0.025 rough) carries the matte skin; handling smudges +-0.07 roughness at ~3 mm on the open faces (no low-frequency clouds: those were r1's "blotches") | c3 front face, c1 receiver top |
+| Bright white hairline glints / slivers on random edges of the rear sight, its base, a rail tooth (4) | REAL, fixed | The sights' bare-steel dashes: 1-3 px metallic (sRGB 190) lines on the base corners, cheeks and drum | No bare steel on the sights or the selector; their edges rubbed phosphate, the drum's knurl crests rubbed | K5 0 bare texels there; K4 isolated hot pixels on fp / ads / c1: 0 / 3 / 0 (two on the hinge axle head's ring, one on the base edge) |
+| Thin bright rim on the charging knob face; one bright white diagonal line on the selector (2) | REAL, fixed | The knob's bare rim (CRAFT 2.3) and the selector's bare lever edge; the selector disc also carried the phosphate mottle (a dark diagonal blot at 23 cm) | The knob rim a rubbed satin ring (x 1.9, rough 0.40); the selector bare-free, its mottle x 0.25 | c2, c3 |
+| Vent walls and bore flat grey, no depth darkening (2) | REAL, fixed | r1's dust mixed 30 % toward sRGB 94 into every deep recess, walls included | Dust on floors only (up-facing, 12 %); recess walls darkened x (1 - 0.28 cav); the bore's soot as before | c3 vents |
+| Butt pad ribs read as hard plastic, not rubber (2) | PARTLY | The rubber already differs (0.82-0.92 rough); at hero distance it reads by shape | Rubber rub at half the polymer's (scuffs grey, no polish); with the glossier satin round it the matte pad separates | hero_34_folded |
+| Faint circular shading disc below the charging knob (1) | REJECTED | It is the knob's own soft shadow from the r1 key (BC-emission and clay looks show nothing there) | - | - |
+| Receiver rear face a plain box: no sling point, latch button, texture (2) | PARTLY | The sheet draws no sling point or latch on the end block's rear face (the rear sling point is the stock's lower hole); inventing one breaks "invent nothing" | Finish only: rubbed edges and corners, scuffs, grain; under the product rig the face reads as black moulding | ads_55deg |
+| Hinge cylinder's flat bright top cap like a primitive (1) | PARTLY | The knuckle's top and the axle head are the spec's (stock_hinge); r1 lit the cap's flat top directly | The rig no longer floods it; the cap carries the finish and a rubbed rim. Geometry unchanged | ads_55deg |
+| Sight base and its rear ramp read as thin sheets laid on the receiver (1) | REJECTED (geometry) | The base's raised rear is the sheet's drawn shape, 2-7 mm thick; r1's flat light hid the step's shadow | Product rig (the step now shades) | c1 |
+| No markings: roll marks, selector pictograms, serial, mag capacity, slot numbers (all) | REJECTED | - | Asset rule: generic, no markings; buyers add decals (as in r1 and W4) | - |
+| Diagonal V grooves / panel lines beside the magwell look invented / decorative (2) | REJECTED (as in W4, r1) | The sheet's two-piece step (R43) | - | - |
+
+## Gates
+
+- `gates/closeup_r2.json`: K1 curved shading 0.27 -> 0.98; K2 exposure 1.24; K3 split 0.27 with G20 1.543; K4 isolated
+  hot pixels 3 (<= 5); K5 sight / selector bare 0; K6 wear spread 13 -> 27 levels; K7 every stage gate of the chain
+  (form, form_magfit, uv_bake_paint, game, rig_export, mag, review_export, gunlib_regression): pass; K8 16 images.
+- W2 on the way: polymer 0.40-0.48 first failed L5 (grip luma -0.061, tolerance 0.05) and G20 (1.636); 0.46-0.54 with the
+  stipple x 1.34 and the phosphate base (46, 47, 48) passed L5 but G20 read 1.552; 0.47-0.55 passes both (G20 1.543,
+  L5 k 1.13, every region inside tolerance).
+- W4 review export R3 (frames not cut) now measures each frame against its own backdrop (the realism rig's is 150); the
+  W4 fix record's C2 accepts the knob's rubbed rim ring. gunlib changed (export_review_job: optional `extra_lights`,
+  `mirror_n_M`, per-shot `denoise`; no AR-01 job uses them): the AR-01 regression re-ran and passes.
+- W3's G5-visible measure at LOD3 (recorded beside the depth gate, not a gate) reads worst mean 1.805 px.
+
+## Honest status
+
+The finish-level tells of r1 (one value, no sheen, no wear, slivers, grey vent walls) and the stock head's banding are
+fixed and measured. The stock head's curved top keeps the traced wave (slope 0.15 -> 0.5 at X 226-238 in the side view,
+the sheet's own profile): with smooth shading it reads as a moulded curve, but a soft highlight still runs across it in
+FP / ADS, and a judge may still read the head as a bent surface; reshaping it would leave the trace. The realism verdict
+belongs to the judges, on `review/closeup_r2/` (product rig; the L5 versions in `l5/`).
