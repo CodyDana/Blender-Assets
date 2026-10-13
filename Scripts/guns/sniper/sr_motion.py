@@ -18,6 +18,12 @@ RELEASE_PIVOT = np.array([408.6, 0.0, -74.0])
 HUB = np.array([719.6, 0.0, -62.3])
 CANT_Z = float(D["bipod"]["cant"]["axis_Z"])            # -46.0
 LEG_Y = 19.5
+# user 2026-10-13: the legs SPLAY when deployed (tension-swivel pattern). Each leg pin is rolled about the leg's own
+# axis (X through the hub) by SPLAY, outboard-down, so a 90 deg swing ends with the leg leaning SPLAY out sideways;
+# folded (0 deg) the leg is unchanged along the forend. 12 deg: the middle of the 10-15 deg spread of fixed-splay
+# swivel bipods; it gives a 2.0x wider stance than parallel legs at ext 0 and keeps the deployed legs inside the
+# +-15 deg cant (the downhill leg never passes vertical by more than 3 deg)
+SPLAY = 12.0
 RISER = tuple(dims("cheek_riser")["travel_Z"])          # (-12.9, 12.0)
 
 
@@ -74,9 +80,21 @@ def cant(deg):
     return R("x", deg, (0.0, 0.0, CANT_Z))
 
 
-def leg(side, fold_deg, cant_deg=0.0):
+def leg_roll(side):
+    """the leg frame's roll about its own axis (X through the hub): the pin axis Y goes to (0, cos s, +-sin s)."""
     y = LEG_Y if side == "l" else -LEG_Y
-    return cant(cant_deg) @ R("y", fold_deg, (HUB[0], y, HUB[2]))
+    return R("x", SPLAY if side == "l" else -SPLAY, (0.0, y, HUB[2]))
+
+
+def pin_axis(side):
+    return leg_roll(side)[:3, :3] @ np.array([0.0, 1.0, 0.0])
+
+
+def leg(side, fold_deg, cant_deg=0.0):
+    """swing about the angled pin: roll . R_y(fold) . roll^-1 (the leg meshes are already built rolled)."""
+    y = LEG_Y if side == "l" else -LEG_Y
+    Rr = leg_roll(side)
+    return cant(cant_deg) @ Rr @ R("y", fold_deg, (HUB[0], y, HUB[2])) @ np.linalg.inv(Rr)
 
 
 def leg_ext(side, fold_deg, ext, cant_deg=0.0):

@@ -154,14 +154,14 @@ Rough-real finishes and a physical light rig from the first look (the SMG "flat 
 | # | Question | Default |
 |---|---|---|
 | Q1 | Scale 1100 mm (.308 class, sheet-anchored) instead of the study's 1270 (AWM class)? | 1100, 22 in barrel, 5.9 kg |
-| Q2 | Deployed legs straight down and parallel (real tension-swivel pattern) or splayed? | straight down |
+| Q2 | Deployed legs straight down and parallel (real tension-swivel pattern) or splayed? | **SPLAY 12 deg each side (user decision 2026-10-13, replaces "straight down")** |
 | Q3 | Keep the sheet's chunky heavy barrel (35 -> 32 mm) and 36 mm compensator? | yes (silhouette authority) |
 | Q4 | Butt fixed (nothing folding is drawn) or add a side-folding hinge? | fixed |
 | Q5 | A second static twin with the bipod deployed, for set dressing? | no |
 | Q6 | Scope lens opaque glossy now (study Q19)? | yes |
 
 **Status 2026-10-13 (W1 start): Q1-Q6 ACCEPTED at the defaults** (the user said to continue with the defaults):
-1100 mm / 22 in / 5.9 kg; deployed legs straight down; thick barrel + 36 mm device kept; butt fixed; no deployed-bipod
+1100 mm / 22 in / 5.9 kg; deployed legs splayed 12 deg each side (user 2026-10-13; was straight down); thick barrel + 36 mm device kept; butt fixed; no deployed-bipod
 static twin; opaque glossy lens. New user rule the same day: generic markings (safety letters / pictograms, rail
 numbers) are allowed, never a real maker / model name or logo (applies from W2).
 
@@ -177,3 +177,16 @@ list (`gunlib.qa_gun`); its negative tests (`SM_AWM01`, `T_Barrett_BC`, `SM_MLok
 The scale ruling (Q1); the deployed pose has no drawn reference (realism judges on a deployed hero, Q2); the bipod
 sweep cost (coarse-step proof); the declared paddle shift; no real photos gathered yet (unattended run: W1 opens
 with the photo pass); the gunlib proposals (P1 fallback: a static riser rather than a dummy bone).
+
+### Q2 update (user decision 2026-10-13): the bipod legs SPLAY when deployed
+
+Both W1 realism judges asked for splayed legs; the user ruled for splay. Construction (real tension-swivel pattern):
+each leg pivot pin is angled, rolled 12 deg about the leg's own axis (X through the hub, outboard side down), so the
+90 deg swing carries the leg down AND outward; deployed, each leg leans 12 deg out of vertical. Folded (0 deg) the leg
+lies along the forend exactly as before (the sheet's side views are unchanged). Why 12 deg: the middle of the
+10-15 deg spread of fixed-splay swivel bipods; it doubles the stance of parallel legs at ext 0 (foot centres ~119 mm
+apart instead of 39 mm) and stays inside the +-15 deg cant, so the downhill leg never passes 3 deg beyond vertical.
+The cheeks, pins, leg bores and the yoke's side faces roll with the pins (the knuckle keeps 0.25 to a face square
+to its own pin). Derived (sr01_spec.json bipod.splay): ground Z by detent = HUB_Z - 206 cos 12 - 14 sin 12 - ext cos 12
+(the foot's end rim is the lowest point): -266.71 / -285.30 / -303.88 / -322.47 / -341.05 for ext 0/19/38/57/76;
+gated against the built bytes in F3 (feet coplanar, splay 12 +-0.05 deg, outward, ground Z +-0.1).

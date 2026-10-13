@@ -1,0 +1,1186 @@
+{
+ "stage": "W2 surface (UV by class, bakes, paint, Masks, Detail16, L5; gun + scope attachment)",
+ "date": "2026-10-13T13:14:23",
+ "status": "partial",
+ "failed": [
+  "gun: B9 density Metal class C (px/cm P5 / median / P95)",
+  "gun: UD2 re-run",
+  "gun: UD3 zero tangents on UV0",
+  "scope: B9 density Scope_Body class C (px/cm P5 / median / P95)"
+ ],
+ "gates": [
+  {
+   "gate": "gun: qa_check on the static twin as W3 joins it (slot k on U tile k)",
+   "value": {
+    "passed": true,
+    "triangles": {
+     "SM_SR01": 35080
+    },
+    "texel_aggregate_px_cm": 75.41,
+    "failed": [],
+    "rows": {
+     "triangle_budget": "35080 triangles (budget 55000)",
+     "no_coincident_vertices": "0 vertex pair(s) within 1e-06 of 17588",
+     "uv0_tile_range": "u -1.0000..1.9999, v -0.0000..0.9966 on 'UV0'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)",
+     "texel_density": "75.410 px/cm at 4096px on 'UV0' (uv area 2.2012, mesh area 0.6494 m2); target 75.41 px/cm, error 0.0%, tolerance 25%",
+     "uv_no_overlap": "0 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh",
+     "uv1_inside_0_1": "u 0.0156..0.9663, v 0.0156..0.9824 on 'UV1' (Fab 4.3.3.2 lightmap UV)",
+     "uv1_no_overlap": "0 overlapping triangle pair(s) on 'UV1' (UV1); method: numpy separating-axis test on the evaluated mesh"
+    }
+   },
+   "threshold": "pass",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Metal class C (px/cm P5 / median / P95)",
+   "value": "31.3 / 37.1 / 37.2 (146.8 cm2)",
+   "threshold": "median in [22.5, 50]; P5 >= 0.85 x median",
+   "pass": false
+  },
+  {
+   "gate": "gun: B9 density Metal class E (px/cm P5 / median / P95)",
+   "value": "11.1 / 12.2 / 13.4 (420.2 cm2)",
+   "threshold": "median in [6, 18.75]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Metal class B (px/cm P5 / median / P95)",
+   "value": "69.5 / 74.4 / 84.9 (445.4 cm2)",
+   "threshold": "median in [45, 100]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Metal class D (px/cm P5 / median / P95)",
+   "value": "24.6 / 28.2 / 29.2 (540.7 cm2)",
+   "threshold": "median in [18.75, 37.5]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 fill Metal (2048)",
+   "value": 0.7739,
+   "threshold": ">= 0.70",
+   "pass": true
+  },
+  {
+   "gate": "gun: set size Metal (the packer decides)",
+   "value": "2048: needed at the class floors 2,100,532 vs capacity {'1024': 734003, '2048': 2936013, '4096': 11744051}",
+   "threshold": "smallest power of two at the fill minimum",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Chassis class B (px/cm P5 / median / P95)",
+   "value": "98.4 / 100.0 / 100.0 (267.4 cm2)",
+   "threshold": "median in [45, 100]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Chassis class C (px/cm P5 / median / P95)",
+   "value": "48.1 / 50.0 / 50.0 (3444.8 cm2)",
+   "threshold": "median in [22.5, 50]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Chassis class E (px/cm P5 / median / P95)",
+   "value": "14.2 / 16.4 / 16.4 (868.9 cm2)",
+   "threshold": "median in [6, 18.75]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 fill Chassis (4096)",
+   "value": 0.6786,
+   "threshold": ">= 0.65",
+   "pass": true
+  },
+  {
+   "gate": "gun: set size Chassis (the packer decides)",
+   "value": "4096: needed at the class floors 4,118,615 vs capacity {'2048': 2726298, '4096': 10905190}",
+   "threshold": "smallest power of two at the fill minimum",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Mag class C (px/cm P5 / median / P95)",
+   "value": "48.1 / 50.0 / 50.0 (312.7 cm2)",
+   "threshold": "median in [22.5, 50]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 density Mag class E (px/cm P5 / median / P95)",
+   "value": "16.4 / 16.4 / 16.4 (47.0 cm2)",
+   "threshold": "median in [6, 18.75]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "gun: B9 fill Mag (1024)",
+   "value": 0.7486,
+   "threshold": ">= 0.65",
+   "pass": true
+  },
+  {
+   "gate": "gun: set size Mag (the packer decides)",
+   "value": "1024: needed at the class floors 284,453 vs capacity {'512': 170394, '1024': 681574, '2048': 2726298}",
+   "threshold": "smallest power of two at the fill minimum",
+   "pass": true
+  },
+  {
+   "gate": "gun: UV0 overlaps per set",
+   "value": {
+    "Metal": 0,
+    "Chassis": 0,
+    "Mag": 0
+   },
+   "threshold": "0 per set",
+   "pass": true
+  },
+  {
+   "gate": "gun: UV0 flipped triangles",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "gate": "gun: UV0 in 0..1 (skeletal / attachment layout)",
+   "value": {
+    "min": [
+     -0.0,
+     -0.0
+    ],
+    "max": [
+     0.99994,
+     0.9966
+    ]
+   },
+   "threshold": "inside [0, 1]",
+   "pass": true
+  },
+  {
+   "gate": "gun: maps square power of two, named T_SR01_<Set>_<map>",
+   "value": [
+    "T_SR01_Metal_BC.png 2048x2048",
+    "T_SR01_Metal_ORM.png 2048x2048",
+    "T_SR01_Metal_N.png 2048x2048",
+    "T_SR01_Metal_Masks.png 1024x1024",
+    "T_SR01_Chassis_BC.png 4096x4096",
+    "T_SR01_Chassis_ORM.png 4096x4096",
+    "T_SR01_Chassis_N.png 4096x4096",
+    "T_SR01_Chassis_Masks.png 2048x2048",
+    "T_SR01_Mag_BC.png 1024x1024",
+    "T_SR01_Mag_ORM.png 1024x1024",
+    "T_SR01_Mag_N.png 1024x1024",
+    "T_SR01_Mag_Masks.png 512x512"
+   ],
+   "threshold": "all present, POT",
+   "pass": true,
+   "note": "BC sRGB; ORM linear (R AO, G rough, B metal); N DirectX 16-bit; Masks half size"
+  },
+  {
+   "gate": "gun: BC in range (dielectric >= 30 sRGB, <= 243), metallic exactly 0 / 1, polymer and rubber never metal",
+   "value": {
+    "Metal/anod": {
+     "texels": 652281,
+     "metal_fraction": 0.00157,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      48.666666666666664,
+      55.666666666666664,
+      69.66666666666667
+     ],
+     "bc_srgb_median_rgb": [
+      55.0,
+      55.0,
+      56.0
+     ],
+     "rough_p5_p50_p95": [
+      0.353,
+      0.429,
+      0.495
+     ]
+    },
+    "Metal/bolt_polish": {
+     "texels": 561484,
+     "metal_fraction": 1.0,
+     "bc_srgb_dielectric_p1_p50_p99": null,
+     "bc_srgb_median_rgb": null,
+     "rough_p5_p50_p95": [
+      0.318,
+      0.361,
+      0.406
+     ]
+    },
+    "Metal/leg_polish": {
+     "texels": 119278,
+     "metal_fraction": 1.0,
+     "bc_srgb_dielectric_p1_p50_p99": null,
+     "bc_srgb_median_rgb": null,
+     "rough_p5_p50_p95": [
+      0.258,
+      0.29,
+      0.322
+     ]
+    },
+    "Metal/phos": {
+     "texels": 1465915,
+     "metal_fraction": 0.00019,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      50.666666666666664,
+      53.0,
+      62.666666666666664
+     ],
+     "bc_srgb_median_rgb": [
+      55.0,
+      54.0,
+      50.0
+     ],
+     "rough_p5_p50_p95": [
+      0.597,
+      0.84,
+      0.895
+     ]
+    },
+    "Metal/phos_barrel": {
+     "texels": 384490,
+     "metal_fraction": 0.0,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      40.0,
+      47.0,
+      50.0
+     ],
+     "bc_srgb_median_rgb": [
+      47.0,
+      47.0,
+      47.0
+     ],
+     "rough_p5_p50_p95": [
+      0.647,
+      0.698,
+      0.788
+     ]
+    },
+    "Metal/phos_device": {
+     "texels": 68975,
+     "metal_fraction": 0.0,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      30.0,
+      36.333333333333336,
+      41.0
+     ],
+     "bc_srgb_median_rgb": [
+      36.0,
+      36.0,
+      37.0
+     ],
+     "rough_p5_p50_p95": [
+      0.723,
+      0.759,
+      0.924
+     ]
+    },
+    "Chassis/anod": {
+     "texels": 1049088,
+     "metal_fraction": 0.0,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      48.333333333333336,
+      54.666666666666664,
+      64.0
+     ],
+     "bc_srgb_median_rgb": [
+      55.0,
+      54.0,
+      55.0
+     ],
+     "rough_p5_p50_p95": [
+      0.379,
+      0.442,
+      0.499
+     ]
+    },
+    "Chassis/od": {
+     "texels": 8122836,
+     "metal_fraction": 1e-05,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      67.0,
+      80.33333333333333,
+      95.66666666666667
+     ],
+     "bc_srgb_median_rgb": [
+      84.0,
+      85.0,
+      72.0
+     ],
+     "rough_p5_p50_p95": [
+      0.564,
+      0.622,
+      0.727
+     ]
+    },
+    "Chassis/polymer": {
+     "texels": 1089384,
+     "metal_fraction": 0.0,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      38.333333333333336,
+      44.666666666666664,
+      53.666666666666664
+     ],
+     "bc_srgb_median_rgb": [
+      44.0,
+      44.0,
+      46.0
+     ],
+     "rough_p5_p50_p95": [
+      0.485,
+      0.607,
+      0.745
+     ]
+    },
+    "Chassis/rubber": {
+     "texels": 1118948,
+     "metal_fraction": 0.0,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      31.333333333333332,
+      38.666666666666664,
+      51.333333333333336
+     ],
+     "bc_srgb_median_rgb": [
+      38.0,
+      38.0,
+      40.0
+     ],
+     "rough_p5_p50_p95": [
+      0.9,
+      0.913,
+      0.95
+     ]
+    },
+    "Mag/phos": {
+     "texels": 683914,
+     "metal_fraction": 0.0003,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      51.666666666666664,
+      59.333333333333336,
+      66.66666666666667
+     ],
+     "bc_srgb_median_rgb": [
+      62.0,
+      60.0,
+      56.0
+     ],
+     "rough_p5_p50_p95": [
+      0.764,
+      0.797,
+      0.836
+     ]
+    },
+    "Mag/polymer": {
+     "texels": 100210,
+     "metal_fraction": 0.0,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      38.333333333333336,
+      44.666666666666664,
+      51.333333333333336
+     ],
+     "bc_srgb_median_rgb": [
+      44.0,
+      44.0,
+      46.0
+     ],
+     "rough_p5_p50_p95": [
+      0.584,
+      0.601,
+      0.674
+     ]
+    }
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "gate": "gun: dark families differ in value or roughness (no single charcoal)",
+   "value": {
+    "families (median sRGB, median rough)": {
+     "anod": [
+      54.7,
+      0.442
+     ],
+     "phos": [
+      59.3,
+      0.797
+     ],
+     "phos_barrel": [
+      47.0,
+      0.698
+     ],
+     "phos_device": [
+      36.3,
+      0.759
+     ],
+     "od": [
+      80.3,
+      0.622
+     ],
+     "polymer": [
+      44.7,
+      0.601
+     ],
+     "rubber": [
+      38.7,
+      0.913
+     ]
+    },
+    "indistinct pairs": []
+   },
+   "threshold": "every dark pair differs by >= 1.5 levels or >= 0.06 roughness",
+   "pass": true
+  },
+  {
+   "gate": "gun: Masks A = 1 only on the OD paint (user colour never tints rubber / polymer / metal)",
+   "value": {
+    "A on non-OD texels": {
+     "Metal": 0,
+     "Chassis": 0,
+     "Mag": 0
+    },
+    "A mean on OD": {
+     "Metal": null,
+     "Chassis": 1.0,
+     "Mag": null
+    }
+   },
+   "threshold": "0 non-OD texels",
+   "pass": true
+  },
+  {
+   "gate": "gun: wear by cause (paint info)",
+   "value": {
+    "Metal": {
+     "anod": {
+      "bright_wear_texels": 1023
+     },
+     "knob_checker_texels": 99583,
+     "phos": {
+      "bare_texels": 277
+     }
+    },
+    "Chassis": {
+     "od": {
+      "chip_texels": 1546,
+      "bare_al_texels": 114,
+      "chip_fraction": 0.00019,
+      "rub_texels_gt_0.3": 119634
+     },
+     "anod": {
+      "bright_wear_texels": 0
+     },
+     "grip_panel_texels": 360276,
+     "markings_texels": 0
+    },
+    "Mag": {
+     "phos": {
+      "bare_texels": 204
+     }
+    }
+   },
+   "threshold": "reported",
+   "pass": true
+  },
+  {
+   "gate": "gun: bake rules",
+   "value": {
+    "margin": 0,
+    "ao_samples": 256,
+    "rules": {
+     "Mag": "AO + edge with the magazine alone",
+     "Metal/Furniture": "AO with the magazine out (rest, stock extended)"
+    }
+   },
+   "threshold": "margin 0; the magazine's AO alone",
+   "pass": true
+  },
+  {
+   "gate": "gun: UD1 re-run on the surfaced parts",
+   "value": {
+    "drops": 0,
+    "min_area_mm2": 0.010543
+   },
+   "threshold": "0 drops",
+   "pass": true
+  },
+  {
+   "gate": "gun: UD2 re-run",
+   "value": {
+    "edges_under_0.05mm": 3,
+    "needles_under_0.02mm": 4,
+    "strip_polygons_under_0.1mm": 0
+   },
+   "threshold": "0 / 0 / 0 (margin gate)",
+   "pass": false
+  },
+  {
+   "gate": "gun: UD3 zero tangents on UV0",
+   "value": {
+    "collapsed": 0,
+    "float32_zero_corners": 8,
+    "edge_on_corners": 0
+   },
+   "threshold": "0 / 0 / 0",
+   "pass": false,
+   "note": "{\"chassis\": {\"collapsed\": 0, \"float32_zero_corners\": 2, \"edge_on_corners\": 0}, \"barrel\": {\"collapsed\": 0, \"float32_zero_corners\": 4, \"edge_on_corners\": 0}, \"bipod_clamp\": {\"collapsed\": 0, \"float32_zero_corners\": 1, \"edge_on_corners\": 0}, \"bipod_swivel\": {\"collapsed\": 0, \"float32_zero_corners\": 1, \"edge_on_corners\": 0}}"
+  },
+  {
+   "gate": "gun: layers UV0 / UV1 by index",
+   "value": true,
+   "threshold": "true",
+   "pass": true
+  },
+  {
+   "gate": "gun: twin UD1 / UD3",
+   "value": {
+    "ud1": {
+     "drops": 0,
+     "min_area_mm2": 0.010543
+    },
+    "ud3": {
+     "collapsed": 0,
+     "float32_zero_corners": 8,
+     "edge_on_corners": 0
+    }
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "gate": "gun: UD4 authored lightmap UV1 (64 / 128 px, 2 px padding)",
+   "value": {
+    "input": "uv1_lod0.npz",
+    "rows": [
+     {
+      "resolution": 64,
+      "padding_px": 2,
+      "charts": 90,
+      "texels_shared_by_two_charts": 0,
+      "padding_violations_texels": 0,
+      "triangles_outside_0_1": 0,
+      "collapsed_triangles": 19990,
+      "texels_used": 1692,
+      "pass": true
+     },
+     {
+      "resolution": 128,
+      "padding_px": 2,
+      "charts": 90,
+      "texels_shared_by_two_charts": 0,
+      "padding_violations_texels": 0,
+      "triangles_outside_0_1": 0,
+      "collapsed_triangles": 19990,
+      "texels_used": 3560,
+      "pass": true
+     }
+    ],
+    "pass": true
+   },
+   "threshold": "0 conflicts at both",
+   "pass": true
+  },
+  {
+   "gate": "scope: qa_check on the static twin as W3 joins it (slot k on U tile k)",
+   "value": {
+    "passed": true,
+    "triangles": {
+     "SM_Att_Scope_LongRange": 5884
+    },
+    "texel_aggregate_px_cm": 55.723,
+    "failed": [],
+    "rows": {
+     "triangle_budget": "5884 triangles (budget 8000)",
+     "no_coincident_vertices": "0 vertex pair(s) within 1e-06 of 2976",
+     "uv0_tile_range": "u -0.0000..1.9995, v -0.0000..0.9976 on 'UV0'; allowed -1.0..2.0 (study 3.3 offsets mirrored shells by +1 in U)",
+     "texel_density": "55.723 px/cm at 2048px on 'UV0' (uv area 1.0014, mesh area 0.1353 m2); target 55.723 px/cm, error 0.0%, tolerance 25%",
+     "uv_no_overlap": "0 overlapping triangle pair(s) on 'UV0' (UV0); method: numpy separating-axis test on the evaluated mesh",
+     "uv1_inside_0_1": "u 0.0156..0.9781, v 0.0156..0.9670 on 'UV1' (Fab 4.3.3.2 lightmap UV)",
+     "uv1_no_overlap": "0 overlapping triangle pair(s) on 'UV1' (UV1); method: numpy separating-axis test on the evaluated mesh"
+    }
+   },
+   "threshold": "pass",
+   "pass": true
+  },
+  {
+   "gate": "scope: B9 density Scope_Body class A (px/cm P5 / median / P95)",
+   "value": "112.1 / 118.8 / 120.8 (27.2 cm2)",
+   "threshold": "median in [60, 125]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "scope: B9 density Scope_Body class C (px/cm P5 / median / P95)",
+   "value": "40.9 / 48.4 / 55.3 (681.4 cm2)",
+   "threshold": "median in [22.5, 50]; P5 >= 0.85 x median",
+   "pass": false
+  },
+  {
+   "gate": "scope: B9 density Scope_Body class E (px/cm P5 / median / P95)",
+   "value": "15.9 / 18.0 / 18.2 (573.0 cm2)",
+   "threshold": "median in [6, 18.75]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "scope: B9 fill Scope_Body (2048)",
+   "value": 0.491,
+   "threshold": ">= 0.45",
+   "pass": true
+  },
+  {
+   "gate": "scope: set size Scope_Body (the packer decides)",
+   "value": "2048: needed at the class floors 823,902 vs capacity {'1024': 471859, '2048': 1887437, '4096': 7549747}",
+   "threshold": "smallest power of two at the fill minimum",
+   "pass": true
+  },
+  {
+   "gate": "scope: B9 density Scope_Lens class A (px/cm P5 / median / P95)",
+   "value": "61.3 / 61.3 / 61.3 (35.1 cm2)",
+   "threshold": "median in [60, 125]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "scope: B9 density Scope_Lens class E (px/cm P5 / median / P95)",
+   "value": "7.8 / 7.8 / 7.8 (36.0 cm2)",
+   "threshold": "median in [6, 18.75]; P5 >= 0.85 x median",
+   "pass": true
+  },
+  {
+   "gate": "scope: B9 fill Scope_Lens (512)",
+   "value": 0.5104,
+   "threshold": ">= 0.45",
+   "pass": true
+  },
+  {
+   "gate": "scope: set size Scope_Lens (the packer decides)",
+   "value": "512: needed at the class floors 226,925 vs capacity {'256': 29491, '512': 117965}",
+   "threshold": "smallest power of two at the fill minimum",
+   "pass": true
+  },
+  {
+   "gate": "scope: UV0 overlaps per set",
+   "value": {
+    "Scope_Body": 0,
+    "Scope_Lens": 0
+   },
+   "threshold": "0 per set",
+   "pass": true
+  },
+  {
+   "gate": "scope: UV0 flipped triangles",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "gate": "scope: UV0 in 0..1 (skeletal / attachment layout)",
+   "value": {
+    "min": [
+     -0.0,
+     -0.0
+    ],
+    "max": [
+     0.99997,
+     0.99757
+    ]
+   },
+   "threshold": "inside [0, 1]",
+   "pass": true
+  },
+  {
+   "gate": "scope: maps square power of two, named T_Att_Scope_LongRange_<Set>_<map>",
+   "value": [
+    "T_Att_Scope_LongRange_Scope_Body_BC.png 2048x2048",
+    "T_Att_Scope_LongRange_Scope_Body_ORM.png 2048x2048",
+    "T_Att_Scope_LongRange_Scope_Body_N.png 2048x2048",
+    "T_Att_Scope_LongRange_Scope_Body_Masks.png 1024x1024",
+    "T_Att_Scope_LongRange_Scope_Lens_BC.png 512x512",
+    "T_Att_Scope_LongRange_Scope_Lens_ORM.png 512x512",
+    "T_Att_Scope_LongRange_Scope_Lens_N.png 512x512",
+    "T_Att_Scope_LongRange_Scope_Lens_Masks.png 256x256"
+   ],
+   "threshold": "all present, POT",
+   "pass": true,
+   "note": "BC sRGB; ORM linear (R AO, G rough, B metal); N DirectX 16-bit; Masks half size"
+  },
+  {
+   "gate": "scope: BC in range (dielectric >= 30 sRGB, <= 243), metallic exactly 0 / 1, polymer and rubber never metal",
+   "value": {
+    "Scope_Body/scope_anod": {
+     "texels": 2057689,
+     "metal_fraction": 0.00027,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      31.0,
+      31.0,
+      36.333333333333336
+     ],
+     "bc_srgb_median_rgb": [
+      30.0,
+      30.0,
+      33.0
+     ],
+     "rough_p5_p50_p95": [
+      0.268,
+      0.292,
+      0.386
+     ]
+    },
+    "Scope_Lens/lens": {
+     "texels": 133752,
+     "metal_fraction": 0.0,
+     "bc_srgb_dielectric_p1_p50_p99": [
+      35.0,
+      35.0,
+      35.0
+     ],
+     "bc_srgb_median_rgb": [
+      30.0,
+      28.0,
+      47.0
+     ],
+     "rough_p5_p50_p95": [
+      0.05,
+      0.05,
+      0.05
+     ]
+    }
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "gate": "scope: dark families differ in value or roughness (no single charcoal)",
+   "value": {
+    "families (median sRGB, median rough)": {
+     "scope_anod": [
+      31.0,
+      0.292
+     ],
+     "lens": [
+      35.0,
+      0.05
+     ]
+    },
+    "indistinct pairs": []
+   },
+   "threshold": "every dark pair differs by >= 1.5 levels or >= 0.06 roughness",
+   "pass": true
+  },
+  {
+   "gate": "scope: Masks A = 1 only on the OD paint (user colour never tints rubber / polymer / metal)",
+   "value": {
+    "A on non-OD texels": {
+     "Scope_Body": 0,
+     "Scope_Lens": 0
+    },
+    "A mean on OD": {
+     "Scope_Body": null,
+     "Scope_Lens": null
+    }
+   },
+   "threshold": "0 non-OD texels",
+   "pass": true
+  },
+  {
+   "gate": "scope: wear by cause (paint info)",
+   "value": {
+    "Scope_Body": {
+     "scope_anod": {
+      "bright_wear_texels": 549
+     }
+    },
+    "Scope_Lens": {}
+   },
+   "threshold": "reported",
+   "pass": true
+  },
+  {
+   "gate": "scope: bake rules",
+   "value": {
+    "margin": 0,
+    "ao_samples": 256,
+    "rules": {
+     "Mag": "AO + edge with the magazine alone",
+     "Metal/Furniture": "AO with the magazine out (rest, stock extended)"
+    }
+   },
+   "threshold": "margin 0; the magazine's AO alone",
+   "pass": true
+  },
+  {
+   "gate": "scope: UD1 re-run on the surfaced parts",
+   "value": {
+    "drops": 0,
+    "min_area_mm2": 0.014437
+   },
+   "threshold": "0 drops",
+   "pass": true
+  },
+  {
+   "gate": "scope: UD2 re-run",
+   "value": {
+    "edges_under_0.05mm": 0,
+    "needles_under_0.02mm": 0,
+    "strip_polygons_under_0.1mm": 0
+   },
+   "threshold": "0 / 0 / 0 (margin gate)",
+   "pass": true
+  },
+  {
+   "gate": "scope: UD3 zero tangents on UV0",
+   "value": {
+    "collapsed": 0,
+    "float32_zero_corners": 0,
+    "edge_on_corners": 0
+   },
+   "threshold": "0 / 0 / 0",
+   "pass": true
+  },
+  {
+   "gate": "scope: layers UV0 / UV1 by index",
+   "value": true,
+   "threshold": "true",
+   "pass": true
+  },
+  {
+   "gate": "scope: twin UD1 / UD3",
+   "value": {
+    "ud1": {
+     "drops": 0,
+     "min_area_mm2": 0.014437
+    },
+    "ud3": {
+     "collapsed": 0,
+     "float32_zero_corners": 0,
+     "edge_on_corners": 0
+    }
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "gate": "scope: UD4 authored lightmap UV1 (64 / 128 px, 2 px padding)",
+   "value": {
+    "input": "uv1_lod0.npz",
+    "rows": [
+     {
+      "resolution": 64,
+      "padding_px": 2,
+      "charts": 32,
+      "texels_shared_by_two_charts": 0,
+      "padding_violations_texels": 0,
+      "triangles_outside_0_1": 0,
+      "collapsed_triangles": 2292,
+      "texels_used": 1915,
+      "pass": true
+     },
+     {
+      "resolution": 128,
+      "padding_px": 2,
+      "charts": 32,
+      "texels_shared_by_two_charts": 0,
+      "padding_violations_texels": 0,
+      "triangles_outside_0_1": 0,
+      "collapsed_triangles": 2292,
+      "texels_used": 5527,
+      "pass": true
+     }
+    ],
+    "pass": true
+   },
+   "threshold": "0 conflicts at both",
+   "pass": true
+  },
+  {
+   "gate": "B8 LOD0 triangles after the UV stage (gun / magazine)",
+   "value": {
+    "gun": 34202,
+    "magazine": 878
+   },
+   "threshold": "gun <= 50,000; magazine <= 5,000",
+   "pass": true
+  },
+  {
+   "gate": "L5 colour vs the sheet (GR crop-matched per traced part, physical rig; ONE light scale fitted on the forend OD)",
+   "value": {
+    "light_k": 1.2548,
+    "od_rendered_srgb": [
+     88.0,
+     89.0,
+     78.0
+    ],
+    "od_sheet_srgb": [
+     88.0,
+     88.0,
+     78.0
+    ],
+    "passed": "12 / 12",
+    "regions": {
+     "chassis_forend": {
+      "sheet": [
+       88.0,
+       88.0,
+       78.0
+      ],
+      "ours": [
+       88.0,
+       89.0,
+       78.0
+      ],
+      "d_luma": 0.0028,
+      "d_sat": 0.01,
+      "d_hue": null,
+      "pass": true
+     },
+     "chassis_centre": {
+      "sheet": [
+       90.0,
+       89.0,
+       78.0
+      ],
+      "ours": [
+       86.0,
+       87.0,
+       77.0
+      ],
+      "d_luma": -0.0092,
+      "d_sat": -0.0184,
+      "d_hue": null,
+      "pass": true
+     },
+     "butt": {
+      "sheet": [
+       80.0,
+       80.0,
+       69.0
+      ],
+      "ours": [
+       82.0,
+       83.0,
+       74.0
+      ],
+      "d_luma": 0.0115,
+      "d_sat": -0.0291,
+      "d_hue": null,
+      "pass": true
+     },
+     "cheek_riser": {
+      "sheet": [
+       80.0,
+       79.0,
+       70.0
+      ],
+      "ours": [
+       86.0,
+       87.0,
+       77.0
+      ],
+      "d_luma": 0.0294,
+      "d_sat": -0.0101,
+      "d_hue": null,
+      "pass": true
+     },
+     "grip": {
+      "sheet": [
+       59.0,
+       59.0,
+       59.0
+      ],
+      "ours": [
+       54.0,
+       54.0,
+       55.0
+      ],
+      "d_luma": -0.0194,
+      "d_sat": 0.0182,
+      "d_hue": null,
+      "pass": true
+     },
+     "butt_pad": {
+      "sheet": [
+       49.0,
+       49.0,
+       49.0
+      ],
+      "ours": [
+       47.0,
+       47.0,
+       48.0
+      ],
+      "d_luma": -0.0076,
+      "d_sat": 0.0208,
+      "d_hue": null,
+      "pass": true
+     },
+     "pad_plate": {
+      "sheet": [
+       65.0,
+       66.0,
+       57.0
+      ],
+      "ours": [
+       67.0,
+       67.0,
+       60.0
+      ],
+      "d_luma": 0.0054,
+      "d_sat": -0.0319,
+      "d_hue": null,
+      "pass": true
+     },
+     "barrel": {
+      "sheet": [
+       51.0,
+       51.0,
+       52.0
+      ],
+      "ours": [
+       49.0,
+       49.0,
+       49.0
+      ],
+      "d_luma": -0.0081,
+      "d_sat": -0.0192,
+      "d_hue": null,
+      "pass": true
+     },
+     "magazine": {
+      "sheet": [
+       52.0,
+       52.0,
+       54.0
+      ],
+      "ours": [
+       54.0,
+       53.0,
+       51.0
+      ],
+      "d_luma": 0.0036,
+      "d_sat": 0.0186,
+      "d_hue": null,
+      "pass": true
+     },
+     "muzzle_device": {
+      "sheet": [
+       43.0,
+       43.0,
+       44.0
+      ],
+      "ours": [
+       51.0,
+       51.0,
+       51.0
+      ],
+      "d_luma": 0.0311,
+      "d_sat": -0.0227,
+      "d_hue": null,
+      "pass": true
+     },
+     "rail": {
+      "sheet": [
+       14.0,
+       14.0,
+       14.0
+      ],
+      "ours": [
+       15.0,
+       14.0,
+       15.0
+      ],
+      "d_luma": 0.0011,
+      "d_sat": 0.0,
+      "d_hue": null,
+      "pass": true
+     },
+     "bipod": {
+      "sheet": [
+       54.0,
+       54.0,
+       54.0
+      ],
+      "ours": [
+       45.0,
+       45.0,
+       46.0
+      ],
+      "d_luma": -0.035,
+      "d_sat": 0.0217,
+      "d_hue": null,
+      "pass": true
+     },
+     "receiver": {
+      "sheet": [
+       59.0,
+       57.0,
+       59.0
+      ],
+      "ours": [
+       61.0,
+       60.0,
+       59.0
+      ],
+      "d_luma": 0.01,
+      "d_sat": -0.0011,
+      "d_hue": null,
+      "pass": true
+     }
+    }
+   },
+   "threshold": "luma +-0.05, sat +-0.05, hue +-4 deg (both sat >= 0.15)",
+   "pass": true
+  },
+  {
+   "gate": "recolour pre-check (Detail16 on the OD, A = 0 elsewhere)",
+   "value": {
+    "recon_error_srgb_levels_p50_p99_p999": [
+     0.07,
+     1.56,
+     2.66
+    ],
+    "od_texels": 8194468,
+    "masks_A_on_non_od_texels_per_set": {
+     "Metal": 0,
+     "Chassis": 0,
+     "Mag": 0
+    },
+    "pass": true,
+    "rule": "p99.9 reconstruction <= 6 levels (the OD carries chip / rub hue the single Colour flattens: the pack's P1 <= 2 applies to its derived constants in W6); A = 0 off the OD"
+   },
+   "threshold": "p99.9 reconstruction <= 6 levels (the OD carries chip / rub hue the single Colour flattens: the pack's P1 <= 2 applies to its derived constants in W6); A = 0 off the OD",
+   "pass": true
+  },
+  {
+   "gate": "renders from the baked maps only, studio-HDRI realism rig",
+   "value": [
+    "tex_action_close.png",
+    "tex_bipod_close.png",
+    "tex_deployed_hero.png",
+    "tex_fp_action.png",
+    "tex_left.png",
+    "tex_q34.png",
+    "tex_right.png",
+    "tex_scope_close.png",
+    "tex_top.png"
+   ],
+   "threshold": "right, left, 3/4, top, deployed hero, FP-ish action, scope close",
+   "pass": true
+  },
+  {
+   "gate": "realism judges on the textured renders (two independent judges)",
+   "value": {
+    "judge_A": "FAKE-LOOKING 7 / 7 (q34, deployed_hero, fp_action, action_close, scope_close, bipod_close, right)",
+    "judge_B": "FAKE 7 / 7 (left, top, q34, fp_action, action_close, scope_close, deployed_hero)"
+   },
+   "threshold": "reported; at most one paint fix round",
+   "pass": true,
+   "note": "both judges FAKE on every round-1 view; geometry tells (rail teeth, scope facets, flat facets) go to W4b"
+  }
+ ],
+ "declared": [
+  "Bipod legs splay 12 deg (user 2026-10-13) are part of the surfaced geometry (W1 follow-up)",
+  "Generic markings only (user 2026-10-13): S / F engraved at the safety; no maker / model / serial",
+  "The pack's derive step (P1 <= 2 levels) runs in W6 under the PackMaterials lock; here the recolour reconstruction is pre-checked on the OD only",
+  "Scope sets sit at the density ceiling at 2048 / 512 (1024 / 256 cannot hold the class floors): fill 0.49 / 0.51 against a declared 0.45 minimum (the gun's 0.65-0.70 rule cannot be met under the ceiling)",
+  "B9 uniformity near-misses: Metal class C P5 31.3 vs 31.5 needed, scope class C P5 40.9 vs 41.1 (the cylinder charts' box-projected ends); a per-island scale normalisation is a W3 UV item",
+  "UD2 3 / 4 / 0 on the chassis (the only part outside the repair pass) and UD3 8 float32 zero-tangent corners (barrel 4, chassis 2, bipod clamp 1, swivel 1): both must be 0 before the W3 export; a generator / UV-stage wedge fix, not done in this run",
+  "Generic markings: the S / F stamp at the safety selected the safety pocket and painted 0 texels (paint report markings_texels 0): not delivered in W2",
+  "L5 rail: the sheet's rail sits in the scope's shadow (sRGB 14): the L5 render carries the textured scope; saturation is not tested under 30 sRGB levels (a 2-level step is sat 0.12)"
+ ]
+}

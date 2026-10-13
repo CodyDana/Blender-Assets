@@ -689,7 +689,7 @@
    "dims": {
     "plate_Z": [
      -3.5,
-     32.0
+     31.0
     ],
     "width": 69.0,
     "travel_Z": [
@@ -701,7 +701,8 @@
      95.0,
      150.0
     ],
-    "low_stop_gap": 0.3
+    "low_stop_gap": 0.3,
+    "plate_Z_note": "W1 follow-up L2: GR and GL both draw the riser top 1 px (1.9 mm) under 32.0; 31.0"
    },
    "authority": "GR + TOP",
    "confidence": "high",
@@ -1457,7 +1458,11 @@
      1.32
     ],
     "catch_notch_Z": -50.0,
-    "ribs_per_side": 2
+    "ribs_per_side": 2,
+    "floor_slope": {
+     "deg": 5.4,
+     "note": "W1 follow-up L2: GR and GL both draw the magazine floor rising toward the front (bottom Z -131.4 at X 420 to -123.9 at X 500); body bottom -128.0 at the rear wall X 414.1, rising 0.0945/mm"
+    }
    },
    "authority": "GR + GL (outline); Q34 (thickness, ribs)",
    "confidence": "high (outline), medium (thickness)",
@@ -2633,20 +2638,42 @@
    "deployed": 32.41
   },
   "ground_Z_deployed": {
+   "ext_0": -266.71,
+   "ext_19": -285.29,
+   "ext_38": -303.88,
+   "ext_57": -322.46,
+   "ext_76": -341.05
+  },
+  "bore_height_deployed": {
+   "ext_0": 266.71,
+   "ext_19": 285.29,
+   "ext_38": 303.88,
+   "ext_57": 322.46,
+   "ext_76": 341.05
+  },
+  "sheet": "folded in GR, GL and Q34 (R5); deployed = real pattern",
+  "splay": {
+   "deg_each_side": 12.0,
+   "decided": "user 2026-10-13 (replaces Q2 straight down)",
+   "construction": "leg pin rolled 12 deg about the leg axis (X through hub Z -62.3, Y +-19.5), outboard down; fold = roll . R_y(0..90) . roll^-1; folded pose unchanged",
+   "why_12": "middle of the 10-15 deg fixed-splay swivel-bipod spread; ~2x the parallel stance; inside the +-15 cant",
+   "foot_lowest_point": "end rim (axial 206, r 14) of the spool foot",
+   "ground_Z_formula": "-62.3 - 206 cos12 - 14 sin12 - ext cos12"
+  },
+  "ground_Z_deployed_straight_W1": {
    "ext_0": -268.3,
    "ext_19": -287.3,
    "ext_38": -306.3,
    "ext_57": -325.3,
    "ext_76": -344.3
   },
-  "bore_height_deployed": {
-   "ext_0": 268.3,
-   "ext_19": 287.3,
-   "ext_38": 306.3,
-   "ext_57": 325.3,
-   "ext_76": 344.3
-  },
-  "sheet": "folded in GR, GL and Q34 (R5); deployed = real pattern"
+  "foot_centre_track_deployed_mm": {
+   "ext_0": 118.6,
+   "ext_19": 126.5,
+   "ext_38": 134.4,
+   "ext_57": 142.3,
+   "ext_76": 150.2
+  }
  },
  "bolt_cycle": {
   "face_X": 505.0,
@@ -3637,7 +3664,7 @@
     ]
    },
    "posed_extremes_M": {
-    "Z_min_bipod_deployed_ext76_cant15": -344.3,
+    "Z_min_bipod_deployed_ext76_cant15": "re-derived in W1 follow-up (gates/form.json F3 + bounds)",
     "Y_abs_max_bipod_cant15": 113.9,
     "knob_open_Z": 41.7,
     "knob_back_X": 279.9,

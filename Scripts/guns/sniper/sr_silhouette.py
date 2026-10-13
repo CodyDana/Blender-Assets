@@ -32,6 +32,25 @@ PART_MAP = {
 }
 
 
+def _trigger_blade_only(tm):
+    """declared trace fix: the GR 'trigger' label also carries the guard's bottom bar (a component wider than tall
+    under the blade, which is chassis); keep the components taller than wide (the blade)."""
+    from scipy import ndimage
+    lab, n = ndimage.label(tm)
+    keep = np.zeros_like(tm)
+    dropped = 0
+    for k, sl in enumerate(ndimage.find_objects(lab), 1):
+        h, w = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
+        if h >= w:
+            keep |= lab == k
+        else:
+            dropped += int((lab == k).sum())
+    return keep, {"dropped_px": dropped, "why": "guard bottom bar labelled trigger in the trace (it is chassis)"}
+
+
+TRACE_LABEL_FIX = {"trigger": _trigger_blade_only}
+
+
 def affine(rings_px, rings_mm):
     P = np.vstack([np.asarray(r, float) for r in rings_px])
     Q = np.vstack([np.asarray(r, float) for r in rings_mm])
@@ -45,6 +64,41 @@ def project(V, view, X):
     plane, _ = VIEWS[view]
     Q = np.c_[V[:, 0], V[:, 2]] if plane == "XZ" else np.c_[V[:, 0], V[:, 1]]
     return np.c_[Q, np.ones(len(Q))] @ X
+
+
+def raster_zbuffer(P2, T, depth, labels, shape, ss=3):
+    """Per-pixel z-buffer label map (W1 follow-up: the painter's order by triangle MEAN depth let the long n-gon fans
+    of the chassis faces paint over the trigger and the release paddle, which read 0.0). Smaller depth = nearer.
+    Returns the label image (H, W) at pixel centres of an ss x ss supersample, majority-reduced (-1 = empty)."""
+    H, W = shape
+    Hs, Ws = H * ss, W * ss
+    zb = np.full((Hs, Ws), np.inf)
+    lb = np.full((Hs, Ws), -1, np.int32)
+    Q = (np.asarray(P2, float) + 0.5) * ss - 0.5
+    dv = np.asarray(depth, float)
+    for i in range(len(T)):
+        a, b, c = Q[T[i, 0]], Q[T[i, 1]], Q[T[i, 2]]
+        x0, x1 = int(max(np.floor(min(a[0], b[0], c[0])), 0)), int(min(np.ceil(max(a[0], b[0], c[0])), Ws - 1))
+        y0, y1 = int(max(np.floor(min(a[1], b[1], c[1])), 0)), int(min(np.ceil(max(a[1], b[1], c[1])), Hs - 1))
+        if x1 < x0 or y1 < y0:
+            continue
+        den = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1])
+        if abs(den) < 1e-12:
+            continue
+        yy, xx = np.mgrid[y0:y1 + 1, x0:x1 + 1]
+        w0 = ((b[1] - c[1]) * (xx - c[0]) + (c[0] - b[0]) * (yy - c[1])) / den
+        w1 = ((c[1] - a[1]) * (xx - c[0]) + (a[0] - c[0]) * (yy - c[1])) / den
+        w2 = 1.0 - w0 - w1
+        ins = (w0 >= -1e-9) & (w1 >= -1e-9) & (w2 >= -1e-9)
+        if not ins.any():
+            continue
+        z = w0 * dv[T[i, 0]] + w1 * dv[T[i, 1]] + w2 * dv[T[i, 2]]
+        sub_z = zb[y0:y1 + 1, x0:x1 + 1]
+        sub_l = lb[y0:y1 + 1, x0:x1 + 1]
+        win = ins & (z < sub_z)
+        sub_z[win] = z[win]
+        sub_l[win] = labels[i]
+    return lb
 
 
 def ref_mask(view):
@@ -92,6 +146,17 @@ def run(npz, stage, out_json=None, img_dir=None, exclude=(), with_npz=None, with
                               "contour_p95_px": round(cd["p95"], 2), "contour_max_px": round(cd["max"], 2),
                               "mapping_fit_p95_px": round(fit_p95, 3),
                               "ours_px": int(ours.sum()), "ref_px": int(ref.sum())}
+        if view == "GL":
+            # declared sheet window (W1 follow-up, sr_l2_columns evidence): GL draws the forend underside X 555..700
+            # 5-13 mm higher than GR does (GR matches the build there within 1 px); compared with that band left out
+            H, W = ref.shape
+            yy, xx = np.mgrid[0:H, 0:W].astype(float)
+            Ai = np.linalg.inv(np.r_[X.T, [[0.0, 0.0, 1.0]]])
+            mmx = Ai[0, 0] * xx + Ai[0, 1] * yy + Ai[0, 2]
+            mmz = Ai[1, 0] * xx + Ai[1, 1] * yy + Ai[1, 2]
+            valid = ~((mmx > 555) & (mmx < 700) & (mmz < -38.0) & (mmz > -66.0))
+            res["views"]["GL"]["iou_forend_underside_window_out"] = round(C.iou(ours, ref, valid), 4)
+            res["views"]["GL"]["contour_p95_px_window_out"] = round(C.contour_distance(ours & valid, ref & valid)["p95"], 2)
         if view == "TOP":
             # declared convention (spec I2 + the TOP's +6-10 % round-part inflation, MEASUREMENT_NOTES): the TOP's right
             # edge (image-down) carries a floor-shadow bias and its round parts are drawn wide, so the build is also
@@ -123,8 +188,16 @@ def run(npz, stage, out_json=None, img_dir=None, exclude=(), with_npz=None, with
                                        "contour_p95_px": round(cs["p95"], 2),
                                        "note": "bounded Y-only fit for the TOP's shadow bias + round-part inflation"}
         if view == "GR":
-            # per part: painter's order (viewer at -Y: larger Y = farther)
-            L = C.raster_labels(P2, T, V[:, 1], lab, ref.shape, ss=4, nlab=len(names))
+            # per part: z-buffer (viewer at -Y: smaller Y = nearer), coverage per label from the ss x ss samples
+            ss = 3
+            LB = raster_zbuffer(P2, T, V[:, 1], lab, ref.shape, ss=ss)
+            Hh, Ww = ref.shape
+
+            class _Cov:
+                def __getitem__(self, ids):
+                    m = np.isin(LB, ids).astype(float)
+                    return m.reshape(Hh, ss, Ww, ss).mean(axis=(1, 3))[None]
+            L = _Cov()
             parts = {}
             for key, rec in j["parts"].items():
                 pref = PART_MAP.get(key, [key])
@@ -132,6 +205,9 @@ def run(npz, stage, out_json=None, img_dir=None, exclude=(), with_npz=None, with
                 if not ids:
                     continue
                 tm = C.rings_mask(rec["px"], ref.shape)
+                fix = None
+                if key in TRACE_LABEL_FIX:
+                    tm, fix = TRACE_LABEL_FIX[key](tm)
                 om = L[ids].sum(0) > 0.5
                 # the trace splits the chassis into three labels: compare inside the label's own box (+2 px)
                 if pref == ["chassis"]:
@@ -145,6 +221,14 @@ def run(npz, stage, out_json=None, img_dir=None, exclude=(), with_npz=None, with
                             others |= C.rings_mask(r2["px"], ref.shape)
                     om &= ~others
                 parts[key] = {"iou": round(C.iou(om, tm), 4), "area_px": int(tm.sum())}
+                if fix:
+                    parts[key]["trace_label_fix"] = fix
+                # what covers the traced label where we disagree (label, not silhouette, disagreements)
+                miss = tm & ~om
+                lbm = LB.reshape(Hh, ss, Ww, ss)[:, ss // 2, :, ss // 2]
+                u, c = np.unique(lbm[miss], return_counts=True)
+                parts[key]["missed_px_covered_by"] = {("empty" if q < 0 else names[q]): int(n)
+                                                      for q, n in sorted(zip(u, c), key=lambda t: -t[1])[:3]}
             res["views"][view]["parts"] = parts
     if out_json:
         Path(out_json).write_text(json.dumps(res, indent=1), encoding="utf-8")

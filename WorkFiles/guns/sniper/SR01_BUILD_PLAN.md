@@ -119,7 +119,7 @@ authority = GR/GL, checked again by the camera-solved 3/4 gate. Deployed = the r
 folded ext 76 foot front X 1001.6, knob open Z +41.7, open bolt rear X 257.4, riser up Z +44.0. Taken over every LOD.
 
 **Gates F1-F5** (spec `gates.craft_bipod_bolt`): F1 folded (0 intersections, rows above); F2 deploy sweep at ext 0
-and 76; F3 deployed feet coplanar +-0.1, legs vertical +-0.05 deg, ground by detent; F4 extension sweep in both
+and 76; F3 deployed feet coplanar +-0.1, legs splayed 12 +-0.05 deg outward (user 2026-10-13), ground by detent; F4 extension sweep in both
 poses (sliding row, notches at 19.0); F5 cant +-15 deployed and folded. B3's rotation step for a 296 mm leg radius
 is 0.019 deg, so use the coarse-step-with-proof method (`gunlib.fit.sweep`, as the SMG stock fold).
 
@@ -252,6 +252,14 @@ scope attachment are the two items without an SMG precedent.
 | new | `sniper_parts.Part`: ordered boolean steps (U / I / D), loose-edge cleanup, `ud.repair` only when UD fails and only kept when not worse, `weighted_normals(clear_custom=True, weight=100)` | the last two are the SMG 0.2.1 lessons applied by default |
 | new | `sr_silhouette.py`: mm -> px mapping fitted from the trace's own px / mm ring pairs; TOP raw + a bounded Y-only fit (shadow bias) + a declared knob window; `--with-npz` stand-in parts (the blockout scope until W1b) | for sheets whose trace JSONs carry px + mm pairs but no origin |
 | new | `sr_scope.py`: the first attachment generator (34 mm tube revolve-loop with lens recesses, toothed-prism knurled turrets, rings with recoil lugs keyed to rail slots) | P4's attachment block; the ring / lug rule measured by A1-A2 |
+
+
+**W2 sniper-side helpers (2026-10-13), candidates for gunlib (not changed here):** per-part cylinder UV frames
+(`sr_surface.CYL`: origin / axis / seam per round part, incl. the splayed legs); visibility configurations straight
+from the motion module (`sr_uv.configs` on `sr_motion`); the studio-HDRI product rig as a render function
+(`sr_render.studio_rig`); a panel-matched L5 render driven by the trace JSON (`sr_render.l5_render` + `sr_l5.py`);
+z-buffer per-part silhouette labels with trace-label fixes (`sr_silhouette.raster_zbuffer`); the generator-side weld
+step (`sniper_parts.Part(weld_mm=...)`).
 
 ## 11. Risks
 

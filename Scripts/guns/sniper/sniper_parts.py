@@ -119,10 +119,11 @@ class Part:
     """Ordered boolean steps (ops: ("U"|"I"|"D", [Mesh])) then the bevel recipe, post cutters, finish, record."""
 
     def __init__(self, name, base, ops=(), bone="body", cls="M-chamfer", slot=SLOT_METAL, recipe=CH, jnt=None,
-                 post=(), spec_id=None, smooth_deg=30.0, motion=None):
+                 post=(), spec_id=None, smooth_deg=30.0, motion=None, weld_mm=None):
         self.name, self.base, self.ops, self.bone, self.cls, self.slot = name, base, list(ops), bone, cls, slot
         self.recipe, self.jnt, self.post, self.spec_id = recipe, jnt or joint("butt"), list(post), spec_id or name
         self.smooth_deg, self.motion = smooth_deg, motion
+        self.weld_mm = weld_mm
 
     def build(self, coll):
         t0 = time.time()
@@ -141,6 +142,10 @@ class Part:
         if self.post:
             bl.boolean_many(ob, self.post, "DIFFERENCE", offset=GRIP)
             bl.clean(ob)
+        if self.weld_mm:
+            # generator step (W1 follow-up UD1): weld the near-duplicate vertex pairs (0.005-0.01 mm apart) the exact
+            # boolean leaves where the round meets the traced outline; max move weld_mm / 2, no strip collapse (0.016: 0 drops and manifold; 0.02+ made 2 multi-face edges)
+            bl.clean(ob, dist_m=self.weld_mm * 1e-3)
         bl.finish(ob)
         import bmesh
         bm = bmesh.new()
@@ -197,52 +202,55 @@ def chassis():
     cen = clip(ring("chassis_centre", 1.3), x0=X_BUTT_JOINT + 0.02)
     fore = G.offset(ring("chassis_forend", 1.3), 0.25)
     fore = clip(fore, x0=560.0)
-    guard = G.offset(ring("trigger_guard", 0.8), 0.25)
+    guard = G.offset(ring("trigger_guard", 1.3), 0.25)   # UD1: 1.3 like the centre (0.8 left sub-width segments)
     base = MS.prism(cen, -BIG / 4, BIG / 4)
     unions = [MS.prism(fore, -BIG / 4, BIG / 4), MS.prism(guard, -9.0, 9.0),
-              MS.box(344.0, 395.0, -27.0, 27.0, -50.0, -11.0),                 # under the bolt knob (hidden in GR)
-              MS.box(560.0, 600.0, -36.9, 36.9, -39.58, 15.9),                 # forend root
+              MS.box(344.0, 395.0, -27.0, 27.0, -50.0, -11.6),                 # under the bolt knob (hidden in GR)
+              MS.box(558.0, 600.0, -36.9, 36.9, -39.58, 15.9),                 # forend root (overlaps the clip at 560)
               MS.prism(np.array([(X_BUTT_JOINT + 0.02, -40.0), (346.0, -40.0), (346.0, -10.5), (326.0, -10.5),
                                  (318.0, -14.0), (X_BUTT_JOINT + 0.02, -14.0)]), -BIG / 4, BIG / 4)]
     plan = plan_prism(CHASSIS_HALF, x_ext=(X_BUTT_JOINT + 0.02, 840.0))
     # guard opening = the traced silhouette hole
     hole = [np.array(r, float) for r in trace("GR")["silhouette"]["mm"]
             if signed_area(r) < 0 and np.array(r)[:, 0].min() > 330 and np.array(r)[:, 0].max() < 400][0]
-    cut = [MS.prism(G.ccw(G.dp_simplify(hole, 0.5)), -40.0, 40.0),
+    cut = [MS.prism(G.ccw(G.dp_simplify(hole, 1.0)), -40.0, 40.0),
            MS.prism(np.array([(X_BUTT_JOINT - 1.0, -14.0), (318.0, -14.0), (326.0, -10.5), (346.5, -10.5),
                               (346.5, 60.0), (X_BUTT_JOINT - 1.0, 60.0)]), -BIG / 4, BIG / 4),   # clean top line
            MS.box(240.0, X_GRIP_FRONT, -40.0, 40.0, -200.0, Z_GRIP_SPLIT),       # the grip's seat
            MS.box(740.0, 845.0, -40.0, 40.0, -200.0, -39.58)]                   # flat dovetail seat for the clamp
+    # UD1 at the source (W1 follow-up): the internal pockets and bores go AFTER the 1.0 round (post cutters), so the
+    # bevel never meets them (it left 35 Unreal-drop slivers where it ran into the inlet, pocket and bore edges)
+    post = []
     # receiver inlet (butt 0.02), bolt raceway behind the receiver (r 12.5), barrel channel (>= 3.0 radial, U open)
-    cut += [xcyl(381.96, 567.34, 17.19, nseg=48), xcyl(250.0, 382.5, 12.5, nseg=40),
-            xcyl(567.0, 845.0, 20.6, nseg=48), MS.box(567.0, 845.0, -20.6, 20.6, 0.0, 40.0)]
+    post += [xcyl(381.96, 567.34, 17.19, nseg=48), xcyl(250.0, 382.5, 12.5, nseg=40),
+            xcyl(566.0, 845.0, 20.6, nseg=48), MS.box(566.0, 845.0, -20.6, 20.6, 0.0, 40.0)]   # 1.34 into the inlet: no strip
     # bolt-stem relief (right) and the safety pocket (right tang)
-    cut += [MS.prism(rrect(376.0, 397.0, -24.0, 2.0, 5.0), -60.0, -10.5),
+    post += [MS.prism(rrect(376.0, 397.0, -24.0, 2.0, 5.0), -60.0, -10.5),
             MS.prism(rrect(351.5, 369.5, -22.5, 1.0, 3.0), -40.0, -17.0)]
     # magazine well (mag 414.1..503.3 x +-13.25, clearance 0.3; body top -20.0 -> shelf -19.7), feed opening
-    cut += [MS.box(413.8, 503.6, -13.55, 13.55, -90.0, -19.7), MS.box(417.5, 488.5, -9.0, 9.0, -19.8, -8.0)]
+    post += [MS.box(413.8, 503.6, -13.55, 13.55, -90.0, -19.7), MS.box(417.5, 488.5, -9.0, 9.0, -19.8, -8.0)]
     # release clevis: the paddle (X 405.6..410.6, Y +-5) swings -4.5 (hook back above the pivot, pad forward below);
     # the catch window through the well's rear wall at the hook
-    cut += [MS.prism(np.array([(403.0, -74.0), (403.0, -46.5), (410.9, -46.5), (410.9, -74.0), (416.5, -74.0),
+    post += [MS.prism(np.array([(403.0, -74.0), (403.0, -46.5), (410.9, -46.5), (410.9, -74.0), (416.5, -74.0),
                                (416.5, -130.0), (405.0, -130.0), (405.0, -74.0)])[::-1], -5.3, 5.3),
             MS.box(410.0, 414.5, -5.3, 5.3, -53.0, -46.5),
             ycyl(408.6, -74.0, -9.5, 9.5, 1.52, 24)]
     # trigger pocket (hub r 4.2 + blade root), pin bore
-    cut += [ycyl(368.0, -57.0, -3.2, 3.2, 4.2, 32), MS.box(363.6, 373.4, -3.2, 3.2, -64.0, -57.0),
+    post += [ycyl(368.0, -57.0, -3.2, 3.2, 4.2, 32), MS.box(363.6, 373.4, -3.2, 3.2, -64.0, -57.0),
             ycyl(368.0, -57.0, -30.0, 30.0, 1.52, 24)]
     # safety pin bore
-    cut += [ycyl(360.0, -16.0, -30.0, -12.0, 1.52, 24)]
+    post += [ycyl(360.0, -16.0, -30.0, -12.0, 1.52, 24)]
     # forend slots (through), dovetail band flanks (45 deg, depth 6 under Z -25.1), forend top chamfers (4 x 45)
     for s in dims("chassis")["slots"]:
         cut.append(MS.prism(stadium(s["X"][0], s["X"][1], s["Z"][0], s["Z"][1]), -50.0, 50.0))
     b0, b1 = dims("chassis")["dovetail_band"]["X"]
     for sg in (1, -1):
-        cut.append(yz_prism(np.array([(sg * 45.0, -25.1), (sg * 36.95, -25.1), (sg * 30.9, -31.15), (sg * 30.9, -80.0),
+        cut.append(yz_prism(np.array([(sg * 45.0, -24.55), (sg * 37.5, -24.55), (sg * 30.9, -31.15), (sg * 30.9, -80.0),
                                       (sg * 45.0, -80.0)])[::(1 if sg > 0 else -1)], b0, b1))
     # fastener seats (counterbores the drawn heads sit in)
-    cut += [ycyl(389.6, -38.3, -40.0, -25.6, 4.0, 24)]
+    post += [ycyl(389.6, -38.3, -40.0, -25.6, 4.0, 24)]
     return Part("chassis", base, [("U", unions), ("I", [plan]), ("D", cut)], slot=SLOT_CHASSIS, recipe=RND1,
-                spec_id="chassis")
+                post=post, spec_id="chassis", weld_mm=0.016)
 
 
 # ------------------------------------------------------------------------------------------------ butt group
@@ -295,8 +303,8 @@ def cheek_riser():
     rr = rings("butt", 1.3, min_area=300.0)
     main = max(rr, key=lambda r: abs(G.area(r)))
     for t in [r for r in rr if r is not main]:
-        skirts.append(MS.prism(clip(G.offset(t, 0.2), x0=179.0, z0=-4.7, z1=31.98), -29.0, 29.0))
-        skirts.append(MS.box(179.5, 185.0, -29.0, 29.0, -4.7, 31.5))
+        skirts.append(MS.prism(clip(G.offset(t, 0.2), x0=179.0, z0=-4.7, z1=31.0), -29.0, 29.0))   # top 31.0 (L2)
+        skirts.append(MS.box(179.5, 185.0, -29.0, 29.0, -4.7, 30.9))
     # cheek dish on the left top (1.5 mm), comb top edges 3 mm chamfers
     cut = [MS.ellipsoid((128.0, 26.0, z1 + 60.0), 60.0, 30.0, 61.5, 48, 16)]
     for sg in (1, -1):
@@ -311,7 +319,7 @@ def riser_posts():
     d = dims("cheek_riser")
     m = MS.Mesh()
     for x in d["posts_X"]:
-        m.extend(MS.revolve([(0.0, 0.0), (0.0, 4.4), (0.6, 5.0), (43.15 - 0.6, 5.0), (43.15, 4.4), (43.15, 0.0)],
+        m.extend(MS.revolve([(0.0, 0.0), (0.0, 4.38), (0.6, 4.98), (43.15 - 0.6, 4.98), (43.15, 4.38), (43.15, 0.0)],
                             (x, 0, -46.7), (0, 0, 1), 32))
     return Part("riser_posts", m, bone="cheek_riser", recipe=[], jnt=joint("sliding", parent="butt"),
                 spec_id="cheek_riser", motion={"kind": "translate", "axis": [0, 0, 1], "range": list(d["travel_Z"])})
@@ -340,8 +348,8 @@ def butt_knobs():
         y0 = -half_at(BUTT_HALF, x)
         for i in range(16):
             a = 2 * math.pi * i / 16
-            c = np.array([x + r * math.cos(a), 0, z + r * math.sin(a)])
-            cut.append(MS.cylinder(c + [0, y0 - 0.5, 0], c + [0, y0 - 1.9, 0], 0.45, 6))
+            c = np.array([x + (r + 0.1) * math.cos(a), 0, z + (r + 0.1) * math.sin(a)])
+            cut.append(MS.cylinder(c + [0, y0 + 0.6, 0], c + [0, y0 - 2.6, 0], 0.45, 8))
     return Part("butt_knobs", m, [("D", cut)], recipe=[], spec_id="butt")
 
 
@@ -411,13 +419,17 @@ def bolt_handle():
     L = np.linalg.norm(d)
     u = d / L
     stem_end = kc - u * (rk - 1.0)
-    m = MS.revolve([(0.0, 0.0), (0.0, 6.0), (4.0, 5.6), (12.0, 4.7), (L - rk - 4.0, 4.0), (L - rk - 1.5, 4.0),
-                    (L - rk - 1.2, 3.6), (L - rk + 0.5, 3.6), (L - rk + 0.5, 0.0)], root - u * 1.5, u, 24)
-    knob = MS.ellipsoid(kc, rk, rk, rk, 28, 12)
-    boss = MS.cylinder(root - u * 1.0 + np.array([-5.0, 0, 0]), root - u * 1.0 + np.array([5.0, 0, 0]), 5.6, 24)
+    tc = L + 1.5                                                               # knob centre on the profile axis
+    f0 = math.asin(3.6 / rk)
+    ball = [(tc - rk * math.cos(f), rk * math.sin(f)) for f in np.linspace(f0, math.pi, 14)]
+    ball[-1] = (tc + rk, 0.0)
+    m = MS.revolve([(-1.5, 0.0), (-1.5, 6.0), (4.0, 5.6), (12.0, 4.7), (L - rk - 4.0, 4.0), (L - rk - 1.5, 4.0),
+                    (L - rk - 1.2, 3.6)] + ball, root - u * 1.5, u, 28)
+    # the boss runs 2 mm past the stem's base disk at the rear (the stem poked 1.1 mm out of its end face: slivers)
+    boss = MS.cylinder(root - u * 1.0 + np.array([-7.5, 0, 0]), root - u * 1.0 + np.array([5.0, 0, 0]), 5.6, 24)
     mo = {"kind": "bolt", "rotate_x_deg": [0.0, MO.BOLT_ROT], "slide_mm": [0.0, MO.BOLT_TRAVEL]}
-    return Part("bolt_handle", m, [("U", [knob, boss]), ("D", [xcyl(370.0, 410.0, 8.95, nseg=40)])], bone="bolt", cls="M-round",
-                recipe=[(0.4, 1, 40.0)], jnt=joint("integral", parent="bolt"), motion=mo)
+    return Part("bolt_handle", m, [("U", [boss]), ("D", [xcyl(370.0, 410.0, 8.95, nseg=40)])], bone="bolt", cls="M-round",
+                recipe=[], jnt=joint("integral", parent="bolt"), motion=mo)
 
 
 def safety():
@@ -506,38 +518,54 @@ def muzzle_device():
     """Closed-sleeve linear compensator as one revolved loop (no booleans): tenon bore, expansion chamber, a baffle
     with a 9.2 mm hole, the 12 mm exit, the rear collar step and the 2 x 45 front chamfer."""
     from gunlib.parts.sights_flip import revolve_loop
-    x0 = 1049.72
-    loop = [(0.9, 8.02), (0.0, 8.9), (0.0, 17.55), (2.28, 17.55), (2.58, 18.05), (48.28, 18.05), (50.28, 16.05), (50.28, 6.0),
+    x0 = 1049.74                       # (W1 follow-up G5) 0.04 axial to the barrel shoulder (0.02 sampled 0.0072)
+    loop = [(0.9, 8.04), (0.0, 8.9), (0.0, 17.55), (2.28, 17.55), (2.58, 18.05), (48.28, 18.05), (50.28, 16.05), (50.28, 6.0),
             (44.28, 6.0), (44.28, 12.0), (31.28, 12.0), (31.28, 4.6), (29.28, 4.6), (29.28, 12.0), (14.88, 12.0),
-            (14.88, 8.02)]
+            (14.88, 8.04)]
     m = revolve_loop(loop, (x0, 0, 0), (1, 0, 0), 32)
     return Part("muzzle_device", m, bone="muzzle_device", recipe=[(0.4, 1, 30.0)])
 
 
 # ------------------------------------------------------------------------------------------------ magazine
 MAG = dict(x0=414.1, x1=503.3, hy=13.25, z_bottom=-128.0, z_body_top=-20.0)
+MAG_FLOOR_K = 0.0945     # W1 follow-up L2: both side views draw the floor rising 5.4 deg toward the front (spec)
+
+
+def mag_floor_z(x, dz=0.0):
+    return MAG["z_bottom"] + MAG_FLOOR_K * (np.asarray(x, float) - MAG["x0"]) + dz
 
 
 def magazine():
     g = MAG
-    sec = G.rounded_rect(g["x0"], g["x1"], -g["hy"], g["hy"], 2.0, 4)
-    base = MS.prism(sec, g["z_bottom"], g["z_body_top"], "XY")
-    lips = MS.prism(G.rounded_rect(418.0, 488.0, -8.0, 8.0, 1.5, 3), g["z_body_top"] - 0.5, -14.3, "XY")
-    rnd = MS.revolve([(0.0, 0.0), (0.0, 3.0), (2.0, 3.9), (52.0, 3.9), (60.0, 2.4), (62.0, 0.0)],
+    def rr3(c, z):
+        P = G.rounded_rect(g["x0"] + c, g["x1"] - c, -g["hy"] + c, g["hy"] - c, 2.0 - c, 4)
+        return np.c_[P, np.full(len(P), z)]
+    ch = 0.6                                                                    # the 0.6 x 45 chamfers, as geometry
+    def rrf(c, dz):                                                             # a ring on the sloped floor
+        P = rr3(c, 0.0)
+        P[:, 2] = mag_floor_z(P[:, 0], dz)
+        return P
+    base = MS.loft([rrf(ch, 0.0), rrf(0.0, ch), rr3(0.0, g["z_body_top"] - ch), rr3(ch, g["z_body_top"])])
+    lp = lambda c, z: np.c_[G.rounded_rect(418.0 + c, 488.0 - c, -8.0 + c, 8.0 - c, 1.5 - c, 3),
+                            np.full(len(G.rounded_rect(418.0 + c, 488.0 - c, -8.0 + c, 8.0 - c, 1.5 - c, 3)), z)]
+    lips = MS.loft([lp(0.0, g["z_body_top"] - 1.0), lp(0.0, -14.3)])          # square top: the round's nose cuts one plane
+    # top round (its nose ends square at r 2.8: the lip plane 0.6 over its axis then cuts the end disk, not the tip)
+    rnd = MS.revolve([(0.0, 0.0), (0.0, 3.0), (2.0, 3.9), (52.0, 3.9), (58.0, 2.8), (58.0, 0.0)],
                      (425.0, 2.2, -14.9), (1, 0, 0), 24)
     cut = [MS.box(g["x0"] - 1.0, g["x0"] + 1.7, -4.8, 4.8, -52.4, -47.3)]           # catch notch (rear wall)
     for x in (440.0, 478.0):                                                    # pressed ribs (recessed 0.8)
         for sg in (1, -1):
-            cut.append(MS.prism(stadium(-120.0, -74.0, x - 2.0, x + 2.0)[:, ::-1], sg * (g["hy"] - 0.8), sg * 20.0))
+            cut.append(MS.prism(stadium(-117.0, -74.0, x - 2.0, x + 2.0)[:, ::-1], sg * (g["hy"] - 0.8), sg * 20.0))
     mo = {"kind": "translate", "axis": [0, 0, -1], "range": [0.0, 67.8], "path": "straight"}
     return Part("magazine", base, [("U", [lips, rnd]), ("D", cut)], bone="magazine", cls="S-bend", slot=SLOT_MAG,
-                recipe=[(0.6, 2, 30.0)], jnt=joint("seated_mag"), motion=mo)
+                recipe=[], jnt=joint("seated_mag"), motion=mo)
 
 
 def magazine_floorplate():
     g = MAG
     sec = G.rounded_rect(g["x0"] - 1.5, g["x1"] + 1.5, -g["hy"] - 1.5, g["hy"] + 1.5, 3.0, 4)
-    m = MS.prism(sec, -132.3, g["z_bottom"] - 0.03, "XY")
+    ring = lambda dz: np.c_[sec, mag_floor_z(sec[:, 0], dz)]                     # follows the sloped floor
+    m = MS.loft([ring(-4.3), ring(-0.03)])
     return Part("magazine_floorplate", m, bone="magazine", cls="P-round", slot=SLOT_MAG, recipe=[(1.0, 2, 30.0)],
                 jnt=joint("seated_mag"), spec_id="magazine")
 
@@ -575,13 +603,23 @@ def bipod_swivel():
     # L8 fix round: a real yoke: a rear web behind the knuckles (free in both leg poses) carrying two outboard pivot
     # cheeks (|Y| 29.5..32.4, 0.3 off the knuckles), all below Z -54 so the bracket cants +-15 under the forend
     web = MS.box(691.0, 704.0, -32.4, 32.4, -79.0, -54.0)
-    cheeks = []
-    for sg in (1, -1):
+    cheeks, cut = [], []
+    for side, sg in (("l", 1), ("r", -1)):
+        # splay (user 2026-10-13): each pin is rolled SPLAY about its leg axis; the cheek, its bore and the yoke's
+        # side face roll with it (the knuckle sits 0.25 off a face square to its own pin)
+        Rr = MO.leg_roll(side)
         cp = [(HUBX + 11.5 * math.cos(t), HUBZ + 11.5 * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 28, endpoint=False)]
         ya, yb = min(sg * 29.5, sg * 32.4), max(sg * 29.5, sg * 32.4)
-        cheeks.append(MS.prism(clip(G.ccw(np.array(cp)), z1=-54.0), ya, yb))
-        cheeks.append(MS.box(690.5, HUBX, ya, yb, HUBZ - 11.5, -54.0))
-    cut = [ycyl(HUBX, HUBZ, -36.0, 36.0, 2.52, 24)]                              # leg pins bore
+        # (the roll lifts the cheek's outer top ~2.7 mm: clipped at -56.8 so it stays under Z -54 as in W1; at -54
+        # the rolled cheeks met the forend underside at cant +-15)
+        cheeks.append(MS.prism(clip(G.ccw(np.array(cp)), z1=-56.8), ya, yb).transformed(Rr))
+        cheeks.append(MS.box(690.5, HUBX, ya, yb, HUBZ - 11.5, -56.8).transformed(Rr))
+        yl = sg * MO.LEG_Y
+        cut.append(ycyl(HUBX, HUBZ, min(yl - sg * 16.5, yl + sg * 16.5), max(yl - sg * 16.5, yl + sg * 16.5), 2.52,
+                        24).transformed(Rr))                                       # leg pin bore
+        y0, y1 = yl - sg * 9.95, yl - sg * 9.95 + sg * 12.0                      # the knuckle's slot in the yoke
+        cut.append(MS.box(704.5, 745.0, min(y0, y1), max(y0, y1), -95.0, -40.0).transformed(Rr))
+    # (the web behind the knuckles, X < 704, stays whole: the slot cutters start at 704.5)
     mo = {"kind": "rotate", "axis": [1, 0, 0], "pivot_M": [0.0, 0.0, MO.CANT_Z], "range": [-15.0, 15.0]}
     return Part("bipod_swivel", m, [("U", [yoke, neck, arm, knob_sh, web] + cheeks), ("D", cut)], bone="bipod", slot=SLOT_CHASSIS,
                 recipe=[(0.5, 1, 30.0)], jnt=joint("hinge"), spec_id="bipod_mount", motion=mo)
@@ -602,10 +640,11 @@ def bipod_knob():
 
 def bipod_pins():
     m = MS.Mesh()
-    for sg in (1, -1):
+    for side, sg in (("l", 1), ("r", -1)):
+        Rr = MO.leg_roll(side)                                                  # angled pins (splay)
         y0, y1 = sg * 9.6, sg * 32.5
-        m.extend(ycyl(HUBX, HUBZ, min(y0, y1), max(y0, y1), 2.45, 24))
-        m.extend(ycyl(HUBX, HUBZ, min(sg * 32.42, sg * 34.0), max(sg * 32.42, sg * 34.0), 4.5, 24))
+        m.extend(ycyl(HUBX, HUBZ, min(y0, y1), max(y0, y1), 2.45, 24).transformed(Rr))
+        m.extend(ycyl(HUBX, HUBZ, min(sg * 32.42, sg * 34.0), max(sg * 32.42, sg * 34.0), 4.5, 24).transformed(Rr))
     mo = {"kind": "rotate", "axis": [1, 0, 0], "pivot_M": [0.0, 0.0, MO.CANT_Z], "range": [-15.0, 15.0]}
     return Part("bipod_pins", m, bone="bipod", recipe=[(0.2, 1, 30.0)], spec_id="bipod_mount", motion=mo)
 
@@ -618,7 +657,7 @@ def bipod_leg(side):
     collar = MS.revolve([(0.0, 0.0), (0.0, 13.2), (0.8, 14.0), (18.0, 14.0), (18.8, 13.2), (18.8, 0.0)],
                         (COLLAR[0], y, HUBZ), (1, 0, 0), 20)
     knuckle = ycyl(HUBX, HUBZ, y - LEG_R, y + LEG_R, 9.0, 24)
-    button = MS.revolve([(0.0, 0.0), (0.0, 3.5), (2.0, 3.5), (2.6, 2.9), (2.6, 0.0)], (887.0, y + sg * 13.9, HUBZ),
+    button = MS.revolve([(0.0, 0.0), (0.0, 3.5), (3.0, 3.5), (3.6, 2.9), (3.6, 0.0)], (887.0, y + sg * 12.9, HUBZ),
                         (0, sg, 0), 20)
     detent = ycyl(HUBX, HUBZ, y + sg * (LEG_R - 0.5), y + sg * (LEG_R + 0.1), 7.0, 24)   # notched hub disk
     cut = [ycyl(HUBX, HUBZ, y - 12, y + 12, 2.65, 20),                          # pin bore (hinge 0.15)
@@ -629,6 +668,9 @@ def bipod_leg(side):
         cut.append(MS.cylinder(c + [0, y + sg * (LEG_R - 0.6), 0], c + [0, y + sg * (LEG_R + 1.5), 0], 1.1, 12))
     # the mount bottom 0.2 above the folded leg: the knuckle's top under the swivel yoke is trimmed by the yoke gap
     mo = {"kind": "rotate", "axis": [0, 1, 0], "pivot_M": [HUBX, y, HUBZ], "range": [0.0, 90.0], "detents": [0.0, 90.0]}
+    Rr = MO.leg_roll(side)                                                      # built on the angled pin (splay)
+    m, collar, knuckle, button, detent = (x.transformed(Rr) for x in (m, collar, knuckle, button, detent))
+    cut = [c.transformed(Rr) for c in cut]
     return Part(f"bipod_leg_{side}", m, [("U", [collar, knuckle, button, detent]), ("D", cut)],
                 bone=f"bipod_leg_{side}", cls="M-round", slot=SLOT_CHASSIS, recipe=[(0.6, 1, 30.0)],
                 jnt=joint("hinge"), spec_id=f"bipod_leg_{side}", motion=mo)
@@ -642,6 +684,8 @@ def bipod_ext(side):
         x = 801.0 + 19.0 * k + 10.0
         cut.append(MS.tube((x, y, HUBZ), (x + 2.4, y, HUBZ), 7.15, 9.0, 20))
     mo = {"kind": "translate", "axis_in_leg": [1, 0, 0], "range": [0.0, 76.0], "detents": [0.0, 19.0, 38.0, 57.0, 76.0]}
+    Rr = MO.leg_roll(side)
+    m, cut = m.transformed(Rr), [c.transformed(Rr) for c in cut]
     return Part(f"bipod_ext_{side}", m, [("D", cut)], bone=f"bipod_leg_{side}_ext", cls="M-round",
                 recipe=[(0.3, 1, 30.0)], jnt=joint("sliding"), spec_id=f"bipod_ext_{side}", motion=mo)
 
@@ -657,6 +701,8 @@ def bipod_foot(side):
     for xr in (x0 + 7.0, x0 + 22.0):                                            # moulded tread rings
         cut.append(MS.tube((xr, y, HUBZ), (xr + 1.4, y, HUBZ), 17.4, 20.0, 28))
     mo = {"kind": "translate", "axis_in_leg": [1, 0, 0], "range": [0.0, 76.0]}
+    Rr = MO.leg_roll(side)
+    m, cut = m.transformed(Rr), [c.transformed(Rr) for c in cut]
     return Part(f"bipod_foot_{side}", m, [("D", cut)], bone=f"bipod_leg_{side}_ext", cls="P-round",
                 slot=SLOT_CHASSIS, recipe=[(0.8, 1, 30.0)], spec_id=f"bipod_ext_{side}", motion=mo)
 

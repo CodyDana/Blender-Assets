@@ -93,8 +93,9 @@ def silhouette(v, fill=(214, 216, 205), outline=(120, 120, 110), keys=("silhouet
 def leg(v, theta, ext, col=(30, 30, 30), dash=None, w=2):
     hx, hz = BP["hub_axis"]["X"], BP["hub_axis"]["Z"]
     th = math.radians(theta)
-    dvec = (math.cos(th), -math.sin(th))
-    nvec = (math.sin(th), math.cos(th))
+    cs = math.cos(math.radians(BP.get("splay", {}).get("deg_each_side", 0.0)))   # splay: Z foreshortened (user 2026-10-13)
+    dvec = (math.cos(th), -math.sin(th) * cs)
+    nvec = (math.sin(th) * cs, math.cos(th))
     L_out = P["bipod_leg_l"]["box_M"]["X"][1] - hx
     foot = P["bipod_ext_l"]["dims"]["foot"]
     f0, f1 = foot["X"][0] - hx + ext, foot["X"][1] - hx + ext
@@ -194,7 +195,7 @@ label(v1, 1020, 0, "bore Z 0", fill=(160, 0, 160))
 
 # ------------------------------------------------------------------------------------------- 2 deployed
 y2 = 500
-title(y2, "2  Right side, bipod DEPLOYED (real pattern): legs +90 deg about the hub (Y axis), ext 0 solid / 38 clip / 76 dashed; fold arc")
+title(y2, "2  Right side, bipod DEPLOYED (real pattern): legs +90 deg about angled pins (splay 12 deg), ext 0 solid / 38 clip / 76 dashed; fold arc")
 v2 = View(60, y2 + 175)
 silhouette(v2, fill=(232, 233, 226), keys=("gun_body", "magazine", "scope"))
 # cover the drawn folded bipod (it moves)
@@ -205,7 +206,8 @@ leg(v2, 90, 76, col=(80, 80, 80), dash=6)
 leg(v2, 0, 0, col=(170, 170, 170), dash=5, w=1)
 hx, hz = BP["hub_axis"]["X"], BP["hub_axis"]["Z"]
 Lf = BP["leg_length_hub_to_foot_end"]
-arc = [(hx + Lf * math.cos(math.radians(t)), hz - Lf * math.sin(math.radians(t))) for t in np.linspace(0, 90, 30)]
+_cs = math.cos(math.radians(BP.get("splay", {}).get("deg_each_side", 0.0)))
+arc = [(hx + Lf * math.cos(math.radians(t)), hz - _cs * Lf * math.sin(math.radians(t))) for t in np.linspace(0, 90, 30)]
 line(v2, arc, fill=(200, 0, 0), dash=5)
 label(v2, arc[12][0], arc[12][1], "foot path, detents 0 / +90 (spring ball)", fill=(180, 0, 0))
 for k, z in BP["ground_Z_deployed"].items():
@@ -220,7 +222,7 @@ d.text((60, y2 + 655), f"Sweep 0..90 deg, ext 0 and 76, 0.5 deg steps: min to mo
 
 # ------------------------------------------------------------------------------------------- 3 front view
 y3 = 1185
-title(y3, "3  Front view (from the muzzle, gun right = screen left): deployed legs at Y +-19.5, cant 0 and 15 deg")
+title(y3, "3  Front view (from the muzzle, gun right = screen left): deployed legs SPLAYED 12 deg each side (angled pins, user 2026-10-13), cant 0 and 15 deg")
 v3 = View(330, y3 + 75, 1.1)
 
 
@@ -228,9 +230,13 @@ def front_leg(v, yc, cant, ext, col, dash=None):
     a = math.radians(cant)
     cz = BP["cant"]["axis_Z"]
     top = BP["hub_axis"]["Z"]
-    bot = BP["ground_Z_deployed"]["ext_0"] - ext
+    sp = math.radians(BP.get("splay", {}).get("deg_each_side", 0.0)) * (1 if yc > 0 else -1)
+    L = BP["leg_length_hub_to_foot_end"] + ext
     pts = []
-    for (yy, zz) in ((yc - 9.7, top), (yc + 9.7, top), (yc + 9.7, bot + 29), (yc + 18.5, bot + 29), (yc + 18.5, bot), (yc - 18.5, bot), (yc - 18.5, bot + 29), (yc - 9.7, bot + 29), (yc - 9.7, top)):
+    # in the leg's own frame (w across, t down the leg from the hub), then splayed about the hub, then canted
+    for (w_, t_) in ((-9.7, 0), (9.7, 0), (9.7, L - 29), (18.5, L - 29), (18.5, L), (-18.5, L), (-18.5, L - 29), (-9.7, L - 29), (-9.7, 0)):
+        yy = yc + w_ * math.cos(sp) + t_ * math.sin(sp)
+        zz = top + w_ * math.sin(sp) - t_ * math.cos(sp)
         z0 = zz - cz
         Y = yy * math.cos(a) - z0 * math.sin(a)
         Z = cz + yy * math.sin(a) + z0 * math.cos(a)
@@ -245,7 +251,7 @@ for yc in (19.5, -19.5):
     front_leg(v3, yc, 0, 0, (30, 30, 30))
     front_leg(v3, yc, 15, 0, (200, 80, 0), dash=5)
 label(v3, 40, -150, "solid: cant 0;  dashed: cant +15 (about X at Z %.1f)" % BP["cant"]["axis_Z"], fill=(160, 70, 0))
-label(v3, -150, BP["ground_Z_deployed"]["ext_0"], "feet 37 dia, 2.0 apart", fill=(0, 0, 0), dy=4)
+label(v3, -150, BP["ground_Z_deployed"]["ext_0"], "feet 37 dia; foot centres %.0f apart at ext 0 (splay 12)" % BP.get("foot_centre_track_deployed_mm", {}).get("ext_0", 0), fill=(0, 0, 0), dy=4)
 tk = P["bipod_mount"]["dims"]["tension_knob"]
 circle(v3, 0, tk["Zc"], tk["r"], outline=(0, 0, 0))
 label(v3, 10, tk["Zc"], f"tension knob (legs clear it by {BP['clearances']['leg_to_tension_knob_Y']} in Y)", dy=-6)

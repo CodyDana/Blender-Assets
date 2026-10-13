@@ -179,7 +179,31 @@ FINISH = {"chassis": "od", "butt": "od", "cheek_riser": "od", "pad_plate": "od",
           "riser_lever": "anod"}
 
 
+TEXM = {}
+
+
+def tex_materials():
+    """W2: the game materials on the BAKED maps only (gunlib.game.game_material; no procedural shading)."""
+    from gunlib import game as GM
+    tex = Path(arg("--tex", str(Path(RENDERS).parents[2] / "Exports" / "Guns" / "SR01" / "Textures")))
+    for slot, stem in (("M_SR01_Metal", "T_SR01_Metal"), ("M_SR01_Chassis", "T_SR01_Chassis"),
+                       ("M_SR01_Mag", "T_SR01_Mag"), ("M_Att_Scope_Body", "T_Att_Scope_LongRange_Scope_Body"),
+                       ("M_Att_Scope_Lens", "T_Att_Scope_LongRange_Scope_Lens")):
+        if (tex / f"{stem}_BC.png").exists():
+            TEXM[slot] = GM.game_material(slot + "_tex", stem, tex)
+
+
 def assign(look, M):
+    if look == "tex":
+        if not TEXM:
+            tex_materials()
+        for n, o in OBJS.items():
+            o.data.materials.clear()
+            m = TEXM.get(rec(o).get("slot"))
+            if m is None:
+                raise SystemExit(f"no baked material for {n} slot {rec(o).get('slot')}")
+            o.data.materials.append(m)
+        return
     for n, o in OBJS.items():
         o.data.materials.clear()
         f = FINISH.get(n, "anod" if n.startswith("scope") else "phos")
@@ -209,6 +233,17 @@ SHOTS = {
         ("l8_bipod_deployed", ((1010, -470, -150), (725, 0, -175), 40.0), DEPLOY, None),
         ("l8_bipod_yoke", ((830, -260, -120), (712, 0, -70), 34.0), DEPLOY, None),
     ],
+    "tex": [
+        ("right", "ortho_r", {}, None),
+        ("left", "ortho_l", {}, None),
+        ("top", "ortho_t", {}, None),
+        ("q34", ((1180, -820, 300), (560, 0, -20), 30.0), {}, None),
+        ("deployed_hero", ((1500, -1050, 80), (560, 0, -90), 36.0), DEPLOY, None),
+        ("fp_action", ((150, -150, 120), (430, -10, 10), 52.0), {}, None),
+        ("scope_close", ((330, -260, 150), (420, 0, 60), 34.0), {}, None),
+        ("action_close", ((430, -300, 40), (390, 0, -20), 34.0), {}, None),
+        ("bipod_close", ((960, -420, -160), (760, 0, -150), 36.0), DEPLOY, None),
+    ],
     "scope": [
         ("scope_right", "ortho_r", {}, None),
         ("scope_q34", ((1180, -820, 300), (560, 0, -20), 30.0), {}, None),
@@ -217,6 +252,62 @@ SHOTS = {
         ("scope_deployed_hero", ((1500, -1050, 80), (560, 0, -90), 36.0), DEPLOY, None),
     ],
 }
+
+
+def studio_rig(cam, target_B):
+    """W2 realism rig (the SMG close-up r2 product set, gunlib export_review_job 'studio'): Blender's bundled
+    interior.exr (CC0) neutral at 0.15 for ambient reflections, a long softbox in the mirror direction of the side face
+    the camera sees, one in the top faces' mirror direction, two strip lights behind left / right whose reflections run
+    along the edges; the camera sees a flat sRGB 150 backdrop."""
+    w = bpy.data.worlds.new("SR_Studio")
+    sc.world = w
+    w.use_nodes = True
+    nt = w.node_tree
+    bgn = next(n for n in nt.nodes if n.type == "BACKGROUND")
+    bgn.inputs["Color"].default_value = (*RD.srgb_to_lin((150, 150, 150)), 1.0)
+    d = Path(bpy.utils.system_resource("DATAFILES", path="studiolights/world"))
+    env = nt.nodes.new("ShaderNodeTexEnvironment")
+    env.image = bpy.data.images.load(str(d / "interior.exr"), check_existing=True)
+    hs = nt.nodes.new("ShaderNodeHueSaturation")
+    hs.inputs["Saturation"].default_value = 0.0
+    nt.links.new(env.outputs["Color"], hs.inputs["Color"])
+    bg2 = nt.nodes.new("ShaderNodeBackground")
+    bg2.inputs["Strength"].default_value = 0.15
+    nt.links.new(hs.outputs["Color"], bg2.inputs["Color"])
+    lp = nt.nodes.new("ShaderNodeLightPath")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    out = next(n for n in nt.nodes if n.type == "OUTPUT_WORLD")
+    nt.links.new(lp.outputs["Is Camera Ray"], mix.inputs["Fac"])
+    nt.links.new(bg2.outputs["Background"], mix.inputs[1])
+    nt.links.new(bgn.outputs["Background"], mix.inputs[2])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    LK.clear_lights()
+    Mw = cam.matrix_world
+    rgt, up, back = (Vector(Mw.col[i][:3]).normalized() for i in range(3))
+    t = Vector(target_B)
+    v = (Vector(Mw.translation) - t).normalized()
+    if cam.data.type == "ORTHO":
+        v = back
+    lights = [("Flank", "flank", (0.0, 0.55, 0.0), 1.3, (1.2, 0.3), 2.5),
+              ("Top", (0.0, 0.0, 1.0), (0.0, 0.1, 0.0), 1.3, (1.4, 0.3), 7.0),
+              ("StripL", None, (-0.9, 0.25, -0.45), 1.2, (0.1, 1.4), 22.0),
+              ("StripR", None, (0.9, 0.25, -0.45), 1.2, (0.1, 1.4), 22.0)]
+    for name, nrm, nud, dist, size, energy in lights:
+        if nrm is None:
+            dd = (rgt * nud[0] + up * nud[1] + back * nud[2]).normalized()
+        else:
+            n = Vector((0.0, 1.0 if v.y >= 0.0 else -1.0, 0.0)) if nrm == "flank" else Vector(nrm)
+            dd = (2.0 * n.dot(v) * n - v).normalized()
+            dd = (dd + rgt * nud[0] + up * nud[1] + back * nud[2]).normalized()
+        ld = bpy.data.lights.new(name, "AREA")
+        ld.shape = "RECTANGLE"
+        ld.size, ld.size_y = size
+        ld.energy = energy
+        ob = bpy.data.objects.new(name, ld)
+        sc.collection.objects.link(ob)
+        ob.location = t + dd * dist
+        ob.rotation_euler = (t - ob.location).to_track_quat("-Z", "Y").to_euler()
+        ob.visible_camera = False
 
 
 def ortho(cam, view):
@@ -235,6 +326,42 @@ def ortho(cam, view):
     return c
 
 
+def l5_render(k, ss=4):
+    """W2 L5: the GR panel's own px <-> mm map (trace GR_outline: px_per_mm, x_rear_px, bore_y_px; the panel crop's
+    size) as an ortho right view at ss x, the physical rig (overhead key tipped toward the camera, a rim behind, the grey
+    world 126 as fill; gunlib export_review_job 'l5'), light scale k. -> scratch/w2/l5/side_k<k>.png"""
+    from sr_common import TRACE, WORK
+    j = json.loads((TRACE / "GR_outline.json").read_text())
+    W, H = (int(v) for v in arg("--panel", "619,563").split(","))          # the GR crop's size (sr_l5 passes it)
+    ppm, x0, y0 = j["px_per_mm"], j["x_rear_px"], j["bore_y_px"]
+    cx, cz = (W / 2.0 - x0) / ppm, (y0 - H / 2.0) / ppm
+    cam = RD.camera_object("SR_L5")
+    sc.camera = cam
+    cam.data.type = "ORTHO"
+    cam.data.ortho_scale = max(W, H) / ppm / 1000.0
+    c = Vector(((np.array([cx, 0.0, cz]) - GRIP) / 1000.0).tolist())
+    cam.location = c + Vector((0, -3.0, 0))
+    cam.rotation_euler = (math.radians(90), 0, 0)
+    cam.data.clip_start, cam.data.clip_end = 0.01, 50.0
+    sc.render.resolution_x, sc.render.resolution_y = W * ss, H * ss
+    sc.render.film_transparent = False
+    RD.world_flat(sc, RD.srgb_to_lin((126, 126, 126)), 1.0, env=0.2 * k)
+    LK.clear_lights()
+    bpy.context.view_layer.update()
+    Mw = cam.matrix_world
+    rgt, up, back = (np.array(Mw.col[i][:3]) for i in range(3))
+    tgt = np.array(c)
+    e = math.radians(70.0)
+    RD.area_light("Key", tuple(tgt + 1.4 * (0.05 * rgt + math.cos(e) * back + math.sin(e) * up)), tuple(tgt), 2.4, 60 * k)
+    RD.area_light("Rim", tuple(tgt - back + 0.6 * up), tuple(tgt), 1.5, 10 * k)
+    out = WORK / "scratch" / "w2" / "l5"
+    out.mkdir(parents=True, exist_ok=True)
+    sc.render.image_settings.file_format = "PNG"
+    sc.render.filepath = str(out / f"side_k{k:.3f}.png")
+    bpy.ops.render.render(write_still=True)
+    print("[SR01] RENDERED", sc.render.filepath)
+
+
 def main():
     RD.engine(sc, "CYCLES", int(arg("--samples", "64")))
     try:
@@ -250,6 +377,11 @@ def main():
     out = Path(arg("--out", str(RENDERS)))
     out.mkdir(parents=True, exist_ok=True)
     sets = arg("--set", "form")
+    if sets == "l5":
+        assign("tex", M)
+        for kk in arg("--light", "1.0").split(","):
+            l5_render(float(kk))
+        return
     looks = arg("--looks", "grey,real").split(",")
     only = [v for v in arg("--only", "").split(",") if v]
     cam = RD.camera_object("SR_Cam")
@@ -263,7 +395,8 @@ def main():
                 if sname == "l8" and look == "grey":
                     continue
                 assign(look, M)
-                LK.rough_world(sc, (128, 128, 128), 0.55)
+                if arg("--rig", "rough") == "rough":
+                    LK.rough_world(sc, (128, 128, 128), 0.55)
                 sc.render.film_transparent = False
                 if isinstance(view, str):
                     tgt = ortho(cam, view)
@@ -281,11 +414,15 @@ def main():
                     sc.render.resolution_x, sc.render.resolution_y = 1600, 1000
                 cam.data.clip_start, cam.data.clip_end = 0.01, 50.0
                 bpy.context.view_layer.update()
-                LK.rough_lights(cam, tuple(tgt), 1.4, 1.2)
+                if arg("--rig", "rough") == "studio":
+                    studio_rig(cam, tuple(tgt))
+                else:
+                    LK.rough_lights(cam, tuple(tgt), 1.4, 1.2)
                 sc.render.image_settings.file_format = "PNG"
-                d = out if sname in ("form", "scope") else REVIEW / "l8"
+                d = out if sname in ("form", "scope", "tex") else REVIEW / "l8"
                 d.mkdir(parents=True, exist_ok=True)
-                sc.render.filepath = str(d / f"form_{look}_{name}.png")
+                stem = f"form_{look}_{name}" if look != "tex" else f"tex_{name}"
+                sc.render.filepath = str(d / f"{stem}.png")
                 bpy.ops.render.render(write_still=True)
                 print("[SR01] RENDERED", sc.render.filepath)
     apply_pose({})

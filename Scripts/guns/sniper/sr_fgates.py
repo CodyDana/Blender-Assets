@@ -111,7 +111,8 @@ if "b3" in ONLY:
                        for n, (V, T) in mv.items()}
             B3[f"fold_{side}_ext{int(ext)}"] = sweep(
                 f"fold_{side}_ext{int(ext)}", ext_geo, fx, lambda v, s=side: MO.leg(s, v), np.arange(0.0, 90.0001, fold_step),
-                "hinge", proof={"pivot": (MO.HUB[0], 0, MO.HUB[2]), "axis": (0, 1, 0), "step_deg": fold_step,
+                "hinge", proof={"pivot": (MO.HUB[0], MO.LEG_Y if side == "l" else -MO.LEG_Y, MO.HUB[2]),
+                                "axis": tuple(MO.pin_axis(side)), "step_deg": fold_step,
                                 "skip": lambda v: False}, every=8)
         for pose, deg in (("folded", 0.0), ("deployed", 90.0)):
             ext_mv = by_bone(f"bipod_leg_{side}_ext")
@@ -158,8 +159,13 @@ if "f" in ONLY:
         zr = zmin(["bipod_foot_r"], MO.leg_ext("r", 90.0, ext))
         feet[f"ext_{int(ext)}"] = {"left_Z": round(zl, 3), "right_Z": round(zr, 3),
                                    "spec": D["bipod"]["ground_Z_deployed"][f"ext_{int(ext)}"]}
-    axis = MO.leg("l", 90.0)[:3, :3] @ np.array([1.0, 0, 0])
-    F["F3_deployed"] = {"feet": feet, "leg_axis_deg_from_vertical": round(math.degrees(math.acos(abs(axis[2]))), 4),
+    ax = {s: MO.leg(s, 90.0)[:3, :3] @ np.array([1.0, 0, 0]) for s in ("l", "r")}
+    yfoot = {s: float(fit.apply(MO.leg_ext(s, 90.0, 0.0), GEO[f"bipod_foot_{s}"][0])[:, 1].mean()) for s in ("l", "r")}
+    F["F3_deployed"] = {"feet": feet, "splay_spec_deg": MO.SPLAY,
+                        "leg_splay_deg": {s: round(math.degrees(math.acos(abs(a[2]))), 4) for s, a in ax.items()},
+                        "leg_outward": {s: bool(np.sign(a[1]) == (1 if s == "l" else -1)) for s, a in ax.items()},
+                        "leg_axis_deg_from_vertical": round(math.degrees(math.acos(abs(ax["l"][2]))), 4),
+                        "foot_centre_track_ext0_mm": round(yfoot["l"] - yfoot["r"], 2),
                         "coplanar_mm": round(max(abs(v["left_Z"] - v["right_Z"]) for v in feet.values()), 4)}
     # F6 knob vs the mounted scope (blockout stand-in until W1b), over rotate + slide
     sc = np.load(SCRATCH / "blockout_tris.npz", allow_pickle=True)

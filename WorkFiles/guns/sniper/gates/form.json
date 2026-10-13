@@ -1,37 +1,37 @@
 {
  "stage": "W1a form (gun without the scope)",
- "date": "2026-10-13T10:28:10",
+ "date": "2026-10-13T12:54:53",
  "status": "partial",
  "failed": [
-  "L2 GR IoU (scope = the blockout stand-in until W1b)",
   "L2 GL IoU (scope stand-in)",
   "L2 TOP IoU raw / declared fit",
   "L2 per part on GR (IoU >= 0.95)",
   "L3 GR contour P95 (sheet px)",
   "L4 key dimensions (<= 0.05 mm)",
-  "B3 riser -12.9..12.000000000000059 (step 0.3)",
-  "G5 butt-joint gaps",
-  "UD1 Unreal degenerate rule on every LOD0 part",
   "UD2 micro edges / needles / strips"
  ],
  "gates": [
   {
    "name": "L2 GR IoU (scope = the blockout stand-in until W1b)",
-   "value": 0.9574,
+   "value": 0.9612,
    "threshold": ">= 0.96",
-   "pass": false
+   "pass": true
   },
   {
    "name": "L2 GL IoU (scope stand-in)",
-   "value": 0.9415,
+   "value": [
+    0.9434,
+    0.9514
+   ],
    "threshold": ">= 0.958",
-   "pass": false
+   "pass": false,
+   "note": "raw / declared forend-underside window out; GL's silhouette is 602 px (1.8 %) smaller than GR's for the same object (ours differ by 108 px): the sheet's GL is drawn thinner, see scratch/w1/l2_columns.json"
   },
   {
    "name": "L2 TOP IoU raw / declared fit",
    "value": [
-    0.8372,
-    0.9022
+    0.8373,
+    0.9015
    ],
    "threshold": ">= 0.93",
    "pass": false
@@ -41,11 +41,11 @@
    "value": "2 / 19",
    "threshold": "all",
    "pass": false,
-   "note": "reported per part in details.silhouette; thin and occluded labels (trigger, paddle, shroud, receiver behind the chassis wall) are below"
+   "note": "z-buffer labels (W1 follow-up; the painter's order was replaced); per part with what covers the missed pixels in details.silhouette: most misses are label disagreements (our bolt through the port vs the sheet's 'receiver', our rail over the drawn receiver top, the riser skirts over 'butt'), the trigger blade is drawn ~3 px (5-6 mm) behind ours, the paddle sits behind the chassis wall"
   },
   {
    "name": "L3 GR contour P95 (sheet px)",
-   "value": 4.0,
+   "value": 3.23,
    "threshold": "<= 2",
    "pass": false
   },
@@ -114,12 +114,12 @@
    "name": "B3 riser -12.9..12.000000000000059 (step 0.3)",
    "value": {
     "intersecting_steps": 0,
-    "min_clearance_mm": 0.1402,
+    "min_clearance_mm": 0.1601,
     "min_with": "butt",
     "proof_fails": null
    },
    "threshold": "0 intersections; min >= sliding row low",
-   "pass": false
+   "pass": true
   },
   {
    "name": "B3 fold_l_ext0 0.0..90.0 (step 1.0)",
@@ -239,21 +239,21 @@
   },
   {
    "name": "G5 butt-joint gaps",
-   "value": "min 0.0072 over 16 pairs",
+   "value": "min 0.0152 over 16 pairs",
    "threshold": ">= 0.01 (sampling 0.5 mm)",
-   "pass": false
+   "pass": true
   },
   {
    "name": "F1 bipod folded gaps (leg-clamp, feet-forend, feet, legs-knob)",
    "value": {
-    "bipod_leg_l|bipod_clamp": 4.8703,
-    "bipod_leg_r|bipod_clamp": 4.8669,
+    "bipod_leg_l|bipod_clamp": 4.7617,
+    "bipod_leg_r|bipod_clamp": 4.7549,
     "bipod_foot_l|chassis": 8.0,
     "bipod_foot_r|chassis": 8.0,
-    "bipod_foot_l|bipod_foot_r": 2.0511,
+    "bipod_foot_l|bipod_foot_r": 2.0553,
     "bipod_leg_l|bipod_knob": 8.0,
     "bipod_leg_r|bipod_knob": 8.0,
-    "bipod_leg_l|bipod_swivel": 0.1908,
+    "bipod_leg_l|bipod_swivel": 0.2,
     "bipod_foot_l|barrel": 8.0
    },
    "threshold": "0 intersections; feet >= 2.0 apart",
@@ -271,39 +271,49 @@
    "pass": true
   },
   {
-   "name": "F3 deployed: feet coplanar, legs vertical, ground Z by detent",
+   "name": "F3 deployed: feet coplanar, legs splayed outward by the spec angle, ground Z by detent",
    "value": {
     "feet": {
      "ext_0": {
-      "left_Z": -268.3,
-      "right_Z": -268.3,
-      "spec": -268.3
+      "left_Z": -266.709,
+      "right_Z": -266.709,
+      "spec": -266.71
      },
      "ext_19": {
-      "left_Z": -287.3,
-      "right_Z": -287.3,
-      "spec": -287.3
+      "left_Z": -285.294,
+      "right_Z": -285.294,
+      "spec": -285.29
      },
      "ext_38": {
-      "left_Z": -306.3,
-      "right_Z": -306.3,
-      "spec": -306.3
+      "left_Z": -303.879,
+      "right_Z": -303.879,
+      "spec": -303.88
      },
      "ext_57": {
-      "left_Z": -325.3,
-      "right_Z": -325.3,
-      "spec": -325.3
+      "left_Z": -322.464,
+      "right_Z": -322.464,
+      "spec": -322.46
      },
      "ext_76": {
-      "left_Z": -344.3,
-      "right_Z": -344.3,
-      "spec": -344.3
+      "left_Z": -341.048,
+      "right_Z": -341.048,
+      "spec": -341.05
      }
     },
-    "leg_axis_deg_from_vertical": 0.0,
+    "splay_spec_deg": 12.0,
+    "leg_splay_deg": {
+     "l": 12.0,
+     "r": 12.0
+    },
+    "leg_outward": {
+     "l": true,
+     "r": true
+    },
+    "leg_axis_deg_from_vertical": 12.0,
+    "foot_centre_track_ext0_mm": 118.97,
     "coplanar_mm": 0.0
    },
-   "threshold": "+-0.1 / 0.05 deg",
+   "threshold": "+-0.1 mm / splay +-0.05 deg",
    "pass": true
   },
   {
@@ -328,7 +338,7 @@
   },
   {
    "name": "F6 bolt handle to the mounted scope over rotate + slide (scope = blockout stand-in)",
-   "value": 20.54,
+   "value": 20.56,
    "threshold": ">= 20",
    "pass": true
   },
@@ -353,7 +363,7 @@
   },
   {
    "name": "F9 trigger at full pull to the chassis (guard / pocket)",
-   "value": 0.2037,
+   "value": 0.2045,
    "threshold": ">= 0.10 (W0 tip-to-guard 3.27)",
    "pass": true,
    "note": "the minimum is the hub in its pocket; the blade tip to the guard is larger"
@@ -375,25 +385,25 @@
   },
   {
    "name": "B8 LOD0 triangles, gun without the scope (target 35-45k, ceiling 50k)",
-   "value": 36338,
+   "value": 35080,
    "threshold": "<= 50000 (target <= 45000)",
    "pass": true
   },
   {
    "name": "UD1 Unreal degenerate rule on every LOD0 part",
    "value": {
-    "unreal_drops": 647,
-    "min_area_mm2": 1e-06
+    "unreal_drops": 0,
+    "min_area_mm2": 0.010543
    },
    "threshold": "0; >= 0.01 mm2",
-   "pass": false
+   "pass": true
   },
   {
    "name": "UD2 micro edges / needles / strips",
    "value": {
-    "edges_under_0.05mm": 1061,
-    "needles_under_0.02mm": 1753,
-    "strip_polygons_under_0.1mm": 801
+    "edges_under_0.05mm": 3,
+    "needles_under_0.02mm": 4,
+    "strip_polygons_under_0.1mm": 2
    },
    "threshold": "0 / 0 / 0",
    "pass": false
@@ -450,127 +460,224 @@
   "Pressed magazine ribs are recessed 0.8 (proud ribs would not pass the 0.3 well clearance)",
   "Edge breaks on the chassis / butt / riser 1.0 x 45 (spec 0.6): the L8 fix round (judges: razor slab edges)",
   "Grip bottom Z -166.19 vs spec -166.4 (the polymer contour smoothing of the traced bottom; 0.2 mm, under 0.1 px)",
-  "UD repair (gunlib ud.repair, strip collapses limited to 0.03 mm, kept only when not worse) on every part except chassis, bolt_handle and magazine, where it moved gate-critical surfaces (the inlet lip into the receiver, the knob, the well walls); their remaining Unreal drops are a W2 generator fix at the source",
-  "L8 judges: both round-2 judges and round-1 asked for splayed bipod legs; Q2 (straight down) is the user's decision and is kept"
+  "UD repair (gunlib ud.repair, strip collapses limited to 0.03 mm, kept only when not worse) on every part except chassis, bolt_handle and magazine; those three are now clean at the source (W1 follow-up): chassis internal pockets/bores cut after the round, guard outline at the centre's 1.3 tolerance, 1.34 mm inlet/channel overlap, dovetail flank 0.6 into the side, plus a 0.016 mm weld of the boolean's near-duplicate vertex pairs (max move 0.008 mm); bolt handle = one revolve (stem + ball, no bevel modifier) on a boss 2 mm past the stem base; magazine = lofted body with its 0.6 chamfers as geometry, square lips, the top round's nose square at r 2.8; butt knob flutes run through both cap chamfers",
+  "Bipod legs SPLAY 12 deg each side when deployed (user 2026-10-13, replaces Q2 straight down): angled pins (each rolled 12 deg about its leg axis), cheeks / bores / yoke faces rolled with them; folded pose unchanged",
+  "L2 (W1 follow-up): riser top 32.0 -> 31.0 and the magazine floor sloped 5.4 deg, where GR and GL both put the sheet's edge 1+ px off ours; left as sheet problems (GR and GL disagree): GL's forend underside X 555..700 drawn 5-13 mm higher than GR, the barrel top jitters 1 px between views, GL drawn 1.8 % thinner overall",
+  "L3 contour P95 is dominated by the declared TOP/GL differences and the scope stand-in; GR P95 3.2 px"
  ],
  "details": {
   "silhouette": {
    "stage": "form",
    "npz": "form_tris.npz",
-   "triangles": 56798,
+   "triangles": 55540,
    "views": {
     "GR": {
-     "iou": 0.9574,
+     "iou": 0.9612,
      "contour_p50_px": 0.0,
-     "contour_p95_px": 4.0,
+     "contour_p95_px": 3.23,
      "contour_max_px": 15.03,
      "mapping_fit_p95_px": 0.006,
-     "ours_px": 34641,
+     "ours_px": 34465,
      "ref_px": 34180,
      "parts": {
       "scope": {
-       "iou": 0.9647,
-       "area_px": 5654
+       "iou": 0.9611,
+       "area_px": 5654,
+       "missed_px_covered_by": {
+        "empty": 202,
+        "rail": 12,
+        "scope_blockout": 4
+       }
       },
       "bipod": {
-       "iou": 0.7932,
-       "area_px": 2123
+       "iou": 0.7923,
+       "area_px": 2123,
+       "missed_px_covered_by": {
+        "empty": 208,
+        "chassis": 134
+       }
       },
       "magazine": {
-       "iou": 0.8723,
-       "area_px": 1597
+       "iou": 0.9356,
+       "area_px": 1597,
+       "missed_px_covered_by": {
+        "empty": 55,
+        "chassis": 46
+       }
       },
       "muzzle_device": {
-       "iou": 0.9245,
-       "area_px": 508
+       "iou": 0.9263,
+       "area_px": 508,
+       "missed_px_covered_by": {
+        "barrel": 15,
+        "empty": 3
+       }
       },
       "barrel": {
-       "iou": 0.8218,
-       "area_px": 2081
+       "iou": 0.803,
+       "area_px": 2081,
+       "missed_px_covered_by": {
+        "empty": 127,
+        "chassis": 34,
+        "muzzle_device": 16
+       }
       },
       "rail": {
-       "iou": 0.7492,
-       "area_px": 511
+       "iou": 0.6604,
+       "area_px": 511,
+       "missed_px_covered_by": {
+        "empty": 32,
+        "scope_rings": 22
+       }
       },
       "bolt_handle": {
-       "iou": 0.3529,
-       "area_px": 471
+       "iou": 0.3517,
+       "area_px": 471,
+       "missed_px_covered_by": {
+        "chassis": 242,
+        "safety": 24,
+        "bolt": 17
+       }
       },
       "bolt_shroud": {
-       "iou": 0.2645,
-       "area_px": 319
+       "iou": 0.2813,
+       "area_px": 319,
+       "missed_px_covered_by": {
+        "empty": 40,
+        "safety": 24,
+        "chassis": 23
+       }
       },
       "receiver": {
-       "iou": 0.4772,
-       "area_px": 1791
+       "iou": 0.4599,
+       "area_px": 1791,
+       "missed_px_covered_by": {
+        "rail": 335,
+        "bolt": 289,
+        "chassis": 265
+       }
       },
       "cheek_riser": {
-       "iou": 0.7306,
-       "area_px": 1520
+       "iou": 0.7384,
+       "area_px": 1520,
+       "missed_px_covered_by": {
+        "empty": 84,
+        "butt": 61,
+        "pad_plate": 9
+       }
       },
       "butt_pad": {
-       "iou": 0.9606,
-       "area_px": 2562
+       "iou": 0.9617,
+       "area_px": 2562,
+       "missed_px_covered_by": {
+        "pad_plate": 72,
+        "empty": 26
+       }
       },
       "pad_plate": {
        "iou": 0.679,
-       "area_px": 754
+       "area_px": 754,
+       "missed_px_covered_by": {
+        "empty": 73,
+        "butt_pad": 70,
+        "butt": 67
+       }
       },
       "trigger": {
        "iou": 0.0,
-       "area_px": 94
+       "area_px": 29,
+       "trace_label_fix": {
+        "dropped_px": 65,
+        "why": "guard bottom bar labelled trigger in the trace (it is chassis)"
+       },
+       "missed_px_covered_by": {
+        "empty": 27,
+        "chassis": 2
+       }
       },
       "mag_release": {
        "iou": 0.0,
-       "area_px": 87
+       "area_px": 87,
+       "missed_px_covered_by": {
+        "empty": 34,
+        "chassis": 30,
+        "magazine": 20
+       }
       },
       "trigger_guard": {
-       "iou": 0.7722,
-       "area_px": 569
+       "iou": 0.7578,
+       "area_px": 569,
+       "missed_px_covered_by": {
+        "chassis": 100,
+        "grip": 21,
+        "empty": 6
+       }
       },
       "grip": {
-       "iou": 0.9404,
-       "area_px": 1825
+       "iou": 0.9474,
+       "area_px": 1825,
+       "missed_px_covered_by": {
+        "chassis": 67,
+        "empty": 18,
+        "butt": 10
+       }
       },
       "butt": {
-       "iou": 0.5812,
-       "area_px": 4509
+       "iou": 0.5807,
+       "area_px": 4509,
+       "missed_px_covered_by": {
+        "empty": 211,
+        "cheek_riser": 204,
+        "chassis": 21
+       }
       },
       "chassis_forend": {
-       "iou": 0.9084,
-       "area_px": 4614
+       "iou": 0.9098,
+       "area_px": 4614,
+       "missed_px_covered_by": {
+        "barrel": 290,
+        "chassis": 80,
+        "empty": 19
+       }
       },
       "chassis_centre": {
-       "iou": 0.8784,
-       "area_px": 4897
+       "iou": 0.8768,
+       "area_px": 4897,
+       "missed_px_covered_by": {
+        "chassis": 176,
+        "scope_blockout": 58,
+        "magazine": 47
+       }
       }
      }
     },
     "GL": {
-     "iou": 0.9415,
-     "contour_p50_px": 1.0,
-     "contour_p95_px": 5.0,
+     "iou": 0.9434,
+     "contour_p50_px": 0.0,
+     "contour_p95_px": 4.15,
      "contour_max_px": 15.0,
      "mapping_fit_p95_px": 0.006,
-     "ours_px": 34540,
-     "ref_px": 33578
+     "ours_px": 34357,
+     "ref_px": 33578,
+     "iou_forend_underside_window_out": 0.9514,
+     "contour_p95_px_window_out": 3.16
     },
     "TOP": {
-     "iou": 0.8372,
+     "iou": 0.8373,
      "contour_p50_px": 1.0,
      "contour_p95_px": 7.0,
      "contour_max_px": 16.0,
      "mapping_fit_p95_px": 0.003,
-     "ours_px": 19407,
+     "ours_px": 19404,
      "ref_px": 20360,
-     "iou_knob_window_out": 0.8696,
+     "iou_knob_window_out": 0.8697,
      "sheet_1px_sensitivity_iou": 0.9326
     },
     "TOP_fit": {
-     "iou": 0.9022,
+     "iou": 0.9015,
      "y_scale": 1.05,
      "y_shift_mm": -3.5,
-     "contour_p95_px": 7.05,
+     "contour_p95_px": 7.04,
      "note": "bounded Y-only fit for the TOP's shadow bias + round-part inflation"
     }
    }
@@ -578,16 +685,16 @@
   "L4": [
    {
     "feature": "overall length X",
-    "measured": 1100.0,
+    "measured": 1100.02,
     "spec": 1100.0,
-    "error_mm": 0.0,
+    "error_mm": 0.02,
     "pass": true
    },
    {
     "feature": "muzzle X",
-    "measured": 1100.0,
+    "measured": 1100.02,
     "spec": 1100.0,
-    "error_mm": 0.0,
+    "error_mm": 0.02,
     "pass": true
    },
    {
@@ -648,9 +755,9 @@
    },
    {
     "feature": "magazine bottom Z",
-    "measured": -132.3,
+    "measured": -132.348,
     "spec": -132.3,
-    "error_mm": 0.0,
+    "error_mm": 0.048,
     "pass": true
    },
    {
@@ -662,8 +769,8 @@
    },
    {
     "feature": "riser top Z",
-    "measured": 32.0,
-    "spec": 32.0,
+    "measured": 31.0,
+    "spec": 31.0,
     "error_mm": 0.0,
     "pass": true
    },
@@ -726,7 +833,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1924,
+     "triangles": 1922,
      "shells": 1
     },
     "bipod_foot_r": {
@@ -736,7 +843,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1920,
+     "triangles": 1924,
      "shells": 1
     },
     "bipod_knob": {
@@ -756,7 +863,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 2032,
+     "triangles": 1992,
      "shells": 2
     },
     "bipod_leg_r": {
@@ -766,7 +873,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 2024,
+     "triangles": 1992,
      "shells": 2
     },
     "bipod_pins": {
@@ -786,7 +893,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1526,
+     "triangles": 2062,
      "shells": 2
     },
     "bolt": {
@@ -806,8 +913,8 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1494,
-     "shells": 2
+     "triangles": 1210,
+     "shells": 1
     },
     "butt": {
      "multi_face_edges": 0,
@@ -826,7 +933,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1076,
+     "triangles": 984,
      "shells": 2
     },
     "butt_pad": {
@@ -846,7 +953,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 2634,
+     "triangles": 2454,
      "shells": 1
     },
     "cheek_riser": {
@@ -856,7 +963,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 386,
+     "triangles": 380,
      "shells": 1
     },
     "fasteners": {
@@ -896,7 +1003,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1804,
+     "triangles": 642,
      "shells": 1
     },
     "magazine_floorplate": {
@@ -1011,18 +1118,18 @@
     }
    },
    "B7_closed": 33,
-   "B8_triangles": 36338,
+   "B8_triangles": 35080,
    "G5_rest_intersections": [],
    "G5_butt_gaps": [
     {
      "a": "butt",
      "b": "chassis",
-     "min_gap_mm": 0.0513
+     "min_gap_mm": 0.0507
     },
     {
      "a": "grip",
      "b": "chassis",
-     "min_gap_mm": 0.0639
+     "min_gap_mm": 0.0633
     },
     {
      "a": "grip",
@@ -1042,7 +1149,7 @@
     {
      "a": "receiver",
      "b": "chassis",
-     "min_gap_mm": 0.0399
+     "min_gap_mm": 0.0405
     },
     {
      "a": "rail",
@@ -1057,12 +1164,12 @@
     {
      "a": "muzzle_device",
      "b": "barrel",
-     "min_gap_mm": 0.0072
+     "min_gap_mm": 0.0272
     },
     {
      "a": "bipod_clamp",
      "b": "chassis",
-     "min_gap_mm": 0.1249
+     "min_gap_mm": 0.1248
     },
     {
      "a": "fasteners",
@@ -1072,7 +1179,7 @@
     {
      "a": "fasteners",
      "b": "chassis",
-     "min_gap_mm": 0.0192
+     "min_gap_mm": 0.02
     },
     {
      "a": "butt_knobs",
@@ -1087,12 +1194,12 @@
     {
      "a": "magazine_floorplate",
      "b": "magazine",
-     "min_gap_mm": 0.03
+     "min_gap_mm": 0.0299
     },
     {
      "a": "pins",
      "b": "chassis",
-     "min_gap_mm": 0.0389
+     "min_gap_mm": 0.0396
     }
    ],
    "B3": {
@@ -1113,9 +1220,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.21,
      "end_nearest": "receiver",
-     "seconds": 266.7,
-     "moving_samples": 265636,
-     "fixed_samples": 846999,
+     "seconds": 527.8,
+     "moving_samples": 270086,
+     "fixed_samples": 793534,
      "row": "sliding",
      "pass": true,
      "proof_fails": 0,
@@ -1138,9 +1245,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.154,
      "end_nearest": "receiver",
-     "seconds": 77.9,
-     "moving_samples": 265636,
-     "fixed_samples": 883626,
+     "seconds": 202.7,
+     "moving_samples": 270086,
+     "fixed_samples": 832724,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1162,9 +1269,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1742,
      "end_nearest": "pins",
-     "seconds": 2.3,
+     "seconds": 5.3,
      "moving_samples": 18422,
-     "fixed_samples": 25093,
+     "fixed_samples": 24889,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1186,9 +1293,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1991,
      "end_nearest": "pins",
-     "seconds": 3.9,
+     "seconds": 9.5,
      "moving_samples": 20198,
-     "fixed_samples": 18512,
+     "fixed_samples": 18420,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1210,9 +1317,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1613,
      "end_nearest": "pins",
-     "seconds": 11.7,
+     "seconds": 28.1,
      "moving_samples": 77868,
-     "fixed_samples": 76774,
+     "fixed_samples": 72660,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1227,18 +1334,18 @@
      "intersecting_steps": 0,
      "max_intersections": 0,
      "parts_hit": [],
-     "min_clearance_mm": 0.1402,
+     "min_clearance_mm": 0.1601,
      "min_at": -12.9,
      "min_with": "butt",
-     "rest_clearance_mm": 0.1402,
+     "rest_clearance_mm": 0.1601,
      "rest_nearest": "butt",
-     "end_clearance_mm": 0.1526,
+     "end_clearance_mm": 0.1726,
      "end_nearest": "butt",
-     "seconds": 17.2,
-     "moving_samples": 281348,
-     "fixed_samples": 212826,
+     "seconds": 43.1,
+     "moving_samples": 279929,
+     "fixed_samples": 212546,
      "row": "sliding",
-     "pass": false,
+     "pass": true,
      "hits_at": []
     },
     "fold_l_ext0": {
@@ -1252,15 +1359,15 @@
      "max_intersections": 0,
      "parts_hit": [],
      "min_clearance_mm": 0.1673,
-     "min_at": 24.0,
+     "min_at": 0.0,
      "min_with": "bipod_pins",
-     "rest_clearance_mm": 0.1674,
+     "rest_clearance_mm": 0.1673,
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 65.0,
-     "moving_samples": 510169,
-     "fixed_samples": 267152,
+     "seconds": 164.5,
+     "moving_samples": 509228,
+     "fixed_samples": 266295,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1277,15 +1384,15 @@
      "max_intersections": 0,
      "parts_hit": [],
      "min_clearance_mm": 0.1673,
-     "min_at": 24.0,
+     "min_at": 0.0,
      "min_with": "bipod_pins",
-     "rest_clearance_mm": 0.1674,
+     "rest_clearance_mm": 0.1673,
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 65.3,
-     "moving_samples": 510169,
-     "fixed_samples": 267152,
+     "seconds": 165.3,
+     "moving_samples": 509228,
+     "fixed_samples": 266295,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1308,9 +1415,9 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 14.5,
-     "moving_samples": 272511,
-     "fixed_samples": 173102,
+     "seconds": 35.1,
+     "moving_samples": 272294,
+     "fixed_samples": 172262,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1332,9 +1439,9 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 22.8,
-     "moving_samples": 272511,
-     "fixed_samples": 504810,
+     "seconds": 58.4,
+     "moving_samples": 272294,
+     "fixed_samples": 498937,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1350,15 +1457,15 @@
      "max_intersections": 0,
      "parts_hit": [],
      "min_clearance_mm": 0.1673,
-     "min_at": 0.0,
+     "min_at": 24.0,
      "min_with": "bipod_pins",
-     "rest_clearance_mm": 0.1673,
+     "rest_clearance_mm": 0.1674,
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 64.3,
-     "moving_samples": 509804,
-     "fixed_samples": 251261,
+     "seconds": 162.3,
+     "moving_samples": 509823,
+     "fixed_samples": 250748,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1375,15 +1482,15 @@
      "max_intersections": 0,
      "parts_hit": [],
      "min_clearance_mm": 0.1673,
-     "min_at": 0.0,
+     "min_at": 24.0,
      "min_with": "bipod_pins",
-     "rest_clearance_mm": 0.1673,
+     "rest_clearance_mm": 0.1674,
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 63.5,
-     "moving_samples": 509804,
-     "fixed_samples": 251261,
+     "seconds": 160.5,
+     "moving_samples": 509823,
+     "fixed_samples": 250748,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1406,9 +1513,9 @@
      "rest_nearest": "bipod_leg_r",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_r",
-     "seconds": 14.6,
-     "moving_samples": 272277,
-     "fixed_samples": 171092,
+     "seconds": 35.7,
+     "moving_samples": 272713,
+     "fixed_samples": 170673,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1430,9 +1537,9 @@
      "rest_nearest": "bipod_leg_r",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_r",
-     "seconds": 22.7,
-     "moving_samples": 272277,
-     "fixed_samples": 488788,
+     "seconds": 58.3,
+     "moving_samples": 272713,
+     "fixed_samples": 483556,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1454,9 +1561,9 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 82.6,
-     "moving_samples": 1471094,
-     "fixed_samples": 129321,
+     "seconds": 237.0,
+     "moving_samples": 1493936,
+     "fixed_samples": 127238,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1479,9 +1586,9 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 79.2,
-     "moving_samples": 1471094,
-     "fixed_samples": 117539,
+     "seconds": 218.2,
+     "moving_samples": 1493936,
+     "fixed_samples": 116572,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1493,12 +1600,12 @@
      {
       "a": "bipod_leg_l",
       "b": "bipod_clamp",
-      "min_gap_mm": 4.8703
+      "min_gap_mm": 4.7617
      },
      {
       "a": "bipod_leg_r",
       "b": "bipod_clamp",
-      "min_gap_mm": 4.8669
+      "min_gap_mm": 4.7549
      },
      {
       "a": "bipod_foot_l",
@@ -1513,7 +1620,7 @@
      {
       "a": "bipod_foot_l",
       "b": "bipod_foot_r",
-      "min_gap_mm": 2.0511
+      "min_gap_mm": 2.0553
      },
      {
       "a": "bipod_leg_l",
@@ -1528,7 +1635,7 @@
      {
       "a": "bipod_leg_l",
       "b": "bipod_swivel",
-      "min_gap_mm": 0.1908
+      "min_gap_mm": 0.2
      },
      {
       "a": "bipod_foot_l",
@@ -1539,35 +1646,45 @@
     "F3_deployed": {
      "feet": {
       "ext_0": {
-       "left_Z": -268.3,
-       "right_Z": -268.3,
-       "spec": -268.3
+       "left_Z": -266.709,
+       "right_Z": -266.709,
+       "spec": -266.71
       },
       "ext_19": {
-       "left_Z": -287.3,
-       "right_Z": -287.3,
-       "spec": -287.3
+       "left_Z": -285.294,
+       "right_Z": -285.294,
+       "spec": -285.29
       },
       "ext_38": {
-       "left_Z": -306.3,
-       "right_Z": -306.3,
-       "spec": -306.3
+       "left_Z": -303.879,
+       "right_Z": -303.879,
+       "spec": -303.88
       },
       "ext_57": {
-       "left_Z": -325.3,
-       "right_Z": -325.3,
-       "spec": -325.3
+       "left_Z": -322.464,
+       "right_Z": -322.464,
+       "spec": -322.46
       },
       "ext_76": {
-       "left_Z": -344.3,
-       "right_Z": -344.3,
-       "spec": -344.3
+       "left_Z": -341.048,
+       "right_Z": -341.048,
+       "spec": -341.05
       }
      },
-     "leg_axis_deg_from_vertical": 0.0,
+     "splay_spec_deg": 12.0,
+     "leg_splay_deg": {
+      "l": 12.0,
+      "r": 12.0
+     },
+     "leg_outward": {
+      "l": true,
+      "r": true
+     },
+     "leg_axis_deg_from_vertical": 12.0,
+     "foot_centre_track_ext0_mm": 118.97,
      "coplanar_mm": 0.0
     },
-    "F6_handle_to_scope_mm": 20.54,
+    "F6_handle_to_scope_mm": 20.56,
     "F7_release": {
      "hook_tip_X_rest": 415.509,
      "mag_rear_X": 414.1,
@@ -1587,7 +1704,7 @@
      {
       "a": "trigger",
       "b": "chassis",
-      "min_gap_mm": 0.2037
+      "min_gap_mm": 0.2045
      }
     ]
    },
@@ -1597,7 +1714,7 @@
      {
       "a": "magazine",
       "b": "chassis",
-      "min_gap_mm": 0.2991
+      "min_gap_mm": 0.3
      },
      {
       "a": "magazine",
@@ -1615,16 +1732,16 @@
      "intersecting_steps": 0,
      "max_intersections": 0,
      "parts_hit": [],
-     "min_clearance_mm": 0.2991,
-     "min_at": 2.5,
+     "min_clearance_mm": 0.3,
+     "min_at": 48.5,
      "min_with": "chassis",
      "rest_clearance_mm": 0.5341,
      "rest_nearest": "mag_release",
-     "end_clearance_mm": 0.2991,
+     "end_clearance_mm": 0.3,
      "end_nearest": "chassis",
-     "seconds": 58.8,
-     "moving_samples": 370705,
-     "fixed_samples": 198422,
+     "seconds": 144.6,
+     "moving_samples": 247536,
+     "fixed_samples": 190248,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1636,8 +1753,8 @@
       67.5
      ],
      "step": 0.5,
-     "intersecting_steps": 63,
-     "max_intersections": 22,
+     "intersecting_steps": 62,
+     "max_intersections": 16,
      "parts_hit": [
       "mag_release"
      ],
@@ -1648,9 +1765,9 @@
      "rest_nearest": "mag_release",
      "end_clearance_mm": 3.0,
      "end_nearest": null,
-     "seconds": 58.1,
-     "moving_samples": 370705,
-     "fixed_samples": 196676,
+     "seconds": 112.8,
+     "moving_samples": 247536,
+     "fixed_samples": 188502,
      "row": "sliding",
      "pass": false,
      "hits_at": [
@@ -1673,49 +1790,49 @@
    "B6a": {
     "object": "SM_SR01_B6aCheck",
     "parts": 33,
-    "triangles": 36338,
+    "triangles": 35080,
     "checks": [
      {
       "name": "no_ngons",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 n-gon(s) of 30344 faces"
+      "detail": "0 n-gon(s) of 29806 faces"
      },
      {
       "name": "no_non_manifold_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 48513"
+      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 47346"
      },
      {
       "name": "open_boundary_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 boundary edge(s) of 48513 (informational: open meshes are allowed)"
+      "detail": "0 boundary edge(s) of 47346 (informational: open meshes are allowed)"
      },
      {
       "name": "no_loose_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 loose vertex/vertices of 18217"
+      "detail": "0 loose vertex/vertices of 17588"
      },
      {
       "name": "no_zero_length_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) at or below 1e-06 of 48513; shortest 1.80941e-06"
+      "detail": "0 edge(s) at or below 1e-06 of 47346; shortest 3.54326e-05"
      },
      {
       "name": "no_degenerate_faces",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 face(s) at or below 1e-12 area of 30344; smallest 1.29623e-11"
+      "detail": "0 face(s) at or below 1e-12 area of 29806; smallest 1.05373e-08"
      },
      {
       "name": "no_coincident_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 vertex pair(s) within 1e-06 of 18217"
+      "detail": "0 vertex pair(s) within 1e-06 of 17588"
      }
     ],
     "passed": true,
@@ -1740,25 +1857,25 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2634,
+    "triangles": 2454,
     "shells": 1,
     "ud": {
-     "unreal_drops": 35,
-     "min_area_mm2": 3e-06,
-     "edges_under_0.05mm": 74,
-     "needles_under_0.02mm": 140,
-     "strip_polygons_under_0.1mm": 9,
-     "pass_ud1": false,
+     "unreal_drops": 0,
+     "min_area_mm2": 0.015367,
+     "edges_under_0.05mm": 3,
+     "needles_under_0.02mm": 4,
+     "strip_polygons_under_0.1mm": 2,
+     "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.76,
+    "seconds": 0.88,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 35,
-     "edges_under_0.05mm": 74,
-     "needles_under_0.02mm": 140,
-     "strip_polygons_under_0.1mm": 9
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 3,
+     "needles_under_0.02mm": 4,
+     "strip_polygons_under_0.1mm": 2
     }
    },
    "butt": {
@@ -1779,7 +1896,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.34,
+    "seconds": 0.35,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -1807,7 +1924,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.31,
+    "seconds": 0.37,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -1835,7 +1952,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.01,
+    "seconds": 0.02,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -1852,25 +1969,25 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 386,
+    "triangles": 380,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.056892,
+     "min_area_mm2": 0.183283,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.32,
+    "seconds": 0.64,
     "bone": "cheek_riser",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 114,
-     "edges_under_0.05mm": 304,
-     "needles_under_0.02mm": 320,
-     "strip_polygons_under_0.1mm": 161
+     "unreal_drops": 118,
+     "edges_under_0.05mm": 302,
+     "needles_under_0.02mm": 315,
+     "strip_polygons_under_0.1mm": 159
     }
    },
    "riser_posts": {
@@ -1884,14 +2001,14 @@
     "shells": 2,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.365061,
+     "min_area_mm2": 0.363402,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.03,
+    "seconds": 0.08,
     "bone": "cheek_riser",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -1919,7 +2036,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.09,
+    "seconds": 0.2,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -1936,25 +2053,25 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1076,
+    "triangles": 984,
     "shells": 2,
     "ud": {
-     "unreal_drops": 8,
-     "min_area_mm2": 0.002274,
+     "unreal_drops": 0,
+     "min_area_mm2": 0.030663,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
-     "pass_ud1": false,
+     "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.32,
+    "seconds": 0.61,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
-     "unreal_drops": 52,
-     "edges_under_0.05mm": 32,
-     "needles_under_0.02mm": 40,
-     "strip_polygons_under_0.1mm": 28
+     "unreal_drops": 128,
+     "edges_under_0.05mm": 64,
+     "needles_under_0.02mm": 128,
+     "strip_polygons_under_0.1mm": 32
     }
    },
    "receiver": {
@@ -1975,7 +2092,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.46,
+    "seconds": 3.0,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2003,7 +2120,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.34,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2031,7 +2148,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.1,
+    "seconds": 0.25,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2059,7 +2176,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.53,
+    "seconds": 1.11,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2076,25 +2193,25 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1494,
-    "shells": 2,
+    "triangles": 1210,
+    "shells": 1,
     "ud": {
-     "unreal_drops": 361,
-     "min_area_mm2": 1e-05,
-     "edges_under_0.05mm": 212,
-     "needles_under_0.02mm": 381,
-     "strip_polygons_under_0.1mm": 181,
-     "pass_ud1": false,
-     "pass_ud2": false
+     "unreal_drops": 0,
+     "min_area_mm2": 0.016275,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
     },
-    "seconds": 0.23,
+    "seconds": 0.33,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
-     "unreal_drops": 361,
-     "edges_under_0.05mm": 212,
-     "needles_under_0.02mm": 381,
-     "strip_polygons_under_0.1mm": 181
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
     }
    },
    "safety": {
@@ -2115,7 +2232,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.15,
+    "seconds": 0.31,
     "bone": "selector",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2143,7 +2260,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.04,
+    "seconds": 0.09,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2171,7 +2288,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.18,
+    "seconds": 0.39,
     "bone": "trigger",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2199,7 +2316,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.31,
     "bone": "mag_release",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2227,7 +2344,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.36,
+    "seconds": 0.8,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2255,7 +2372,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.0,
+    "seconds": 2.14,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2283,7 +2400,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.11,
+    "seconds": 0.28,
     "bone": "muzzle_device",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2300,25 +2417,25 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1804,
+    "triangles": 642,
     "shells": 1,
     "ud": {
-     "unreal_drops": 241,
-     "min_area_mm2": 2.8e-05,
-     "edges_under_0.05mm": 775,
-     "needles_under_0.02mm": 1230,
-     "strip_polygons_under_0.1mm": 610,
-     "pass_ud1": false,
-     "pass_ud2": false
+     "unreal_drops": 0,
+     "min_area_mm2": 0.030037,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
     },
-    "seconds": 0.23,
+    "seconds": 0.36,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
-     "unreal_drops": 241,
-     "edges_under_0.05mm": 775,
-     "needles_under_0.02mm": 1230,
-     "strip_polygons_under_0.1mm": 610
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
     }
    },
    "magazine_floorplate": {
@@ -2332,14 +2449,14 @@
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.11425,
+     "min_area_mm2": 0.115019,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.02,
+    "seconds": 0.04,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
@@ -2367,7 +2484,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.22,
+    "seconds": 0.5,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2384,25 +2501,25 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1526,
+    "triangles": 2062,
     "shells": 2,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.023022,
+     "min_area_mm2": 0.011037,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.52,
+    "seconds": 1.37,
     "bone": "bipod",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 76,
-     "edges_under_0.05mm": 2,
-     "needles_under_0.02mm": 0,
-     "strip_polygons_under_0.1mm": 484
+     "unreal_drops": 2,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 2,
+     "strip_polygons_under_0.1mm": 0
     }
    },
    "bipod_knob": {
@@ -2423,7 +2540,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.32,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2451,7 +2568,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.05,
+    "seconds": 0.12,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2468,35 +2585,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2032,
-    "shells": 2,
-    "ud": {
-     "unreal_drops": 2,
-     "min_area_mm2": 1e-06,
-     "edges_under_0.05mm": 0,
-     "needles_under_0.02mm": 2,
-     "strip_polygons_under_0.1mm": 1,
-     "pass_ud1": false,
-     "pass_ud2": false
-    },
-    "seconds": 0.68,
-    "bone": "bipod_leg_l",
-    "slot": "M_SR01_Chassis",
-    "ud_pre_repair": {
-     "unreal_drops": 72,
-     "edges_under_0.05mm": 14,
-     "needles_under_0.02mm": 44,
-     "strip_polygons_under_0.1mm": 547
-    }
-   },
-   "bipod_leg_r": {
-    "multi_face_edges": 0,
-    "boundary_edges": 0,
-    "wire_edges": 0,
-    "ngons": 0,
-    "zero_area_faces": 0,
-    "zero_length_edges": 0,
-    "triangles": 2024,
+    "triangles": 1992,
     "shells": 2,
     "ud": {
      "unreal_drops": 0,
@@ -2507,14 +2596,42 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.64,
+    "seconds": 1.38,
+    "bone": "bipod_leg_l",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 43,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 528
+    }
+   },
+   "bipod_leg_r": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1992,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.010576,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 1.42,
     "bone": "bipod_leg_r",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 74,
-     "edges_under_0.05mm": 14,
-     "needles_under_0.02mm": 44,
-     "strip_polygons_under_0.1mm": 548
+     "unreal_drops": 45,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 529
     }
    },
    "bipod_ext_l": {
@@ -2528,14 +2645,14 @@
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.221717,
+     "min_area_mm2": 0.221715,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.37,
+    "seconds": 0.78,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2556,14 +2673,14 @@
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.221717,
+     "min_area_mm2": 0.221715,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.38,
+    "seconds": 0.78,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2580,7 +2697,7 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1924,
+    "triangles": 1922,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
@@ -2591,7 +2708,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.43,
+    "seconds": 0.95,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2608,18 +2725,18 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1920,
+    "triangles": 1924,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.059001,
+     "min_area_mm2": 0.037155,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.43,
+    "seconds": 0.89,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2647,7 +2764,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.08,
+    "seconds": 0.21,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {

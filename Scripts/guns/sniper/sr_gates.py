@@ -101,14 +101,22 @@ def form():
     J = load("l8_judges.json")
     gates = []
     gates.append(g("L2 GR IoU (scope = the blockout stand-in until W1b)", s["GR"]["iou"], ">= 0.96", s["GR"]["iou"] >= 0.96))
-    gates.append(g("L2 GL IoU (scope stand-in)", s["GL"]["iou"], ">= 0.958", s["GL"]["iou"] >= 0.958))
+    gates.append(g("L2 GL IoU (scope stand-in)", [s["GL"]["iou"], s["GL"].get("iou_forend_underside_window_out")],
+                   ">= 0.958", s["GL"]["iou"] >= 0.958,
+                   "raw / declared forend-underside window out; GL's silhouette is %d px (%.1f %%) smaller than GR's "
+                   "for the same object (ours differ by %d px): the sheet's GL is drawn thinner, see "
+                   "scratch/w1/l2_columns.json" % (s["GR"]["ref_px"] - s["GL"]["ref_px"],
+                                                   100.0 * (s["GR"]["ref_px"] - s["GL"]["ref_px"]) / s["GR"]["ref_px"],
+                                                   s["GR"]["ours_px"] - s["GL"]["ours_px"])))
     gates.append(g("L2 TOP IoU raw / declared fit", [s["TOP"]["iou"], s["TOP_fit"]["iou"]], ">= 0.93",
                    s["TOP_fit"]["iou"] >= 0.93))
     parts = s["GR"].get("parts", {})
     np_ok = sum(1 for v in parts.values() if v["iou"] >= 0.95)
     gates.append(g("L2 per part on GR (IoU >= 0.95)", f"{np_ok} / {len(parts)}", "all", np_ok == len(parts),
-                   "reported per part in details.silhouette; thin and occluded labels (trigger, paddle, shroud, receiver "
-                   "behind the chassis wall) are below"))
+                   "z-buffer labels (W1 follow-up; the painter's order was replaced); per part with what covers the "
+                   "missed pixels in details.silhouette: most misses are label disagreements (our bolt through the port "
+                   "vs the sheet's 'receiver', our rail over the drawn receiver top, the riser skirts over 'butt'), the "
+                   "trigger blade is drawn ~3 px (5-6 mm) behind ours, the paddle sits behind the chassis wall"))
     gates.append(g("L3 GR contour P95 (sheet px)", s["GR"]["contour_p95_px"], "<= 2", s["GR"]["contour_p95_px"] <= 2))
     L4 = l4()
     gates.append(g("L4 key dimensions (<= 0.05 mm)", f"{sum(r['pass'] for r in L4)} / {len(L4)}", "all",
@@ -132,9 +140,12 @@ def form():
     f2 = [B3.get(k, {}).get("pass") for k in ("fold_l_ext0", "fold_l_ext76", "fold_r_ext0", "fold_r_ext76")]
     gates.append(g("F2 deploy sweep 0..90 at ext 0 / 76 (both legs)", f2, "all pass", all(f2) and f2))
     f3 = f.get("F3_deployed", {})
-    ok3 = f3 and f3["coplanar_mm"] <= 0.1 and f3["leg_axis_deg_from_vertical"] <= 0.05 and all(
-        abs(v["left_Z"] - v["spec"]) <= 0.1 for v in f3["feet"].values())
-    gates.append(g("F3 deployed: feet coplanar, legs vertical, ground Z by detent", f3, "+-0.1 / 0.05 deg", ok3))
+    # user 2026-10-13: the legs splay (spec bipod.splay); was "legs vertical" in W1
+    sp = f3.get("splay_spec_deg", 0.0) if f3 else 0.0
+    ok3 = bool(f3) and f3["coplanar_mm"] <= 0.1 and all(abs(v - sp) <= 0.05 for v in f3["leg_splay_deg"].values())         and all(f3["leg_outward"].values()) and all(abs(v["left_Z"] - v["spec"]) <= 0.1 and abs(v["right_Z"] - v["spec"]) <= 0.1
+                                                  for v in f3["feet"].values())
+    gates.append(g("F3 deployed: feet coplanar, legs splayed outward by the spec angle, ground Z by detent", f3,
+                   "+-0.1 mm / splay +-0.05 deg", ok3))
     f4 = [B3.get(k, {}).get("pass") for k in ("ext_l_folded", "ext_l_deployed", "ext_r_folded", "ext_r_deployed")]
     gates.append(g("F4 extension sweep 0..76 in both poses (sliding row)", f4, "all pass", all(f4) and f4))
     f5 = [B3.get(k, {}).get("pass") for k in ("cant_folded", "cant_deployed")]
@@ -226,10 +237,18 @@ DECLARED = [
     "Edge breaks on the chassis / butt / riser 1.0 x 45 (spec 0.6): the L8 fix round (judges: razor slab edges)",
     "Grip bottom Z -166.19 vs spec -166.4 (the polymer contour smoothing of the traced bottom; 0.2 mm, under 0.1 px)",
     "UD repair (gunlib ud.repair, strip collapses limited to 0.03 mm, kept only when not worse) on every part except "
-    "chassis, bolt_handle and magazine, where it moved gate-critical surfaces (the inlet lip into the receiver, the "
-    "knob, the well walls); their remaining Unreal drops are a W2 generator fix at the source",
-    "L8 judges: both round-2 judges and round-1 asked for splayed bipod legs; Q2 (straight down) is the user's decision "
-    "and is kept",
+    "chassis, bolt_handle and magazine; those three are now clean at the source (W1 follow-up): chassis internal "
+    "pockets/bores cut after the round, guard outline at the centre's 1.3 tolerance, 1.34 mm inlet/channel overlap, "
+    "dovetail flank 0.6 into the side, plus a 0.016 mm weld of the boolean's near-duplicate vertex pairs (max move "
+    "0.008 mm); bolt handle = one revolve (stem + ball, no bevel modifier) on a boss 2 mm past the stem base; magazine "
+    "= lofted body with its 0.6 chamfers as geometry, square lips, the top round's nose square at r 2.8; butt knob "
+    "flutes run through both cap chamfers",
+    "Bipod legs SPLAY 12 deg each side when deployed (user 2026-10-13, replaces Q2 straight down): angled pins (each "
+    "rolled 12 deg about its leg axis), cheeks / bores / yoke faces rolled with them; folded pose unchanged",
+    "L2 (W1 follow-up): riser top 32.0 -> 31.0 and the magazine floor sloped 5.4 deg, where GR and GL both put the "
+    "sheet's edge 1+ px off ours; left as sheet problems (GR and GL disagree): GL's forend underside X 555..700 drawn "
+    "5-13 mm higher than GR, the barrel top jitters 1 px between views, GL drawn 1.8 % thinner overall",
+    "L3 contour P95 is dominated by the declared TOP/GL differences and the scope stand-in; GR P95 3.2 px",
 ]
 
 if __name__ == "__main__":
