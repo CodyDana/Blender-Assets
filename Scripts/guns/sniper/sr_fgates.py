@@ -82,6 +82,11 @@ if "g5" in ONLY:
     print("[G5] gaps", R["G5_butt_gaps"])
 
 # ------------------------------------------------------------------------------------------------ B3 sweeps
+if "b3t" in ONLY:          # (W3 Part 0) the trigger sweep alone, for the blade-move iteration
+    R["B3_trigger_only"] = sweep("trigger", by_bone("trigger"), fixed_except("trigger"), MO.trigger,
+                                 np.arange(0.0, 6.0001, 0.1), "hinge")
+    print("[B3t]", json.dumps(R["B3_trigger_only"])[:400])
+
 if "b3" in ONLY:
     B3 = {}
     bolt_mv = by_bone("bolt")
@@ -253,7 +258,8 @@ if "h1" in ONLY:
         per = sum(e.calc_length() for e in cut) * 1000.0
         H[f"girth_at_{int(depth)}mm_mm"] = round(per, 1)
         bm.free()
-    face = 363.2
+    tv = GEO["trigger"][0]                                     # the built blade's face at Z -75 (W3: 5 mm back)
+    face = float(tv[np.abs(tv[:, 2] + 75.0) < 1.0][:, 0].min())
     web = D["frames"]["grip"]["web_point_M"]
     H["trigger_reach_mm"] = round(math.hypot(face - web[0], -75.0 - web[1]), 1)
     H["length_of_pull_mm"] = round(face - float(GEO["butt_pad"][0][:, 0].min()), 1)

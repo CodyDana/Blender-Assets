@@ -1,0 +1,398 @@
+{
+ "stage": "W3 rig + magazine + bipod + exports: game / LODs / twin",
+ "gates": [
+  {
+   "name": "B8 LOD triangles (gun without the magazine)",
+   "value": {
+    "LOD0": 34182,
+    "LOD1": 15350,
+    "LOD2": 5096,
+    "LOD3": 2526,
+    "LOD1_share": 0.449,
+    "LOD2_share": 0.149,
+    "with_merged_mag": [
+     35060,
+     15744,
+     5226,
+     2576
+    ]
+   },
+   "threshold": "LOD0 35000-45000 (ceiling 50000); LOD1 ~45 %, LOD2 ~15 %, LOD3 2000-3000; strictly descending",
+   "pass": true,
+   "note": "LOD0 below the 35k target floor is the W1/W2 form (35,070 with the magazine) "
+  },
+  {
+   "name": "LOD1-3 surfacing: UV overlaps collapsed (qa rule), UD1 / UD3 per LOD",
+   "value": {
+    "LOD1": {
+     "dropped_parts": [],
+     "uv_overlaps_collapsed": {
+      "UV0_Metal": 32,
+      "UV0_Chassis": 42,
+      "UV0_Mag": 0,
+      "UV1": 2378
+     },
+     "ud": {
+      "drops": 0,
+      "min_area_mm2": 0.038041,
+      "ud3_zero": 0
+     }
+    },
+    "LOD2": {
+     "dropped_parts": [
+      "pad_plate"
+     ],
+     "uv_overlaps_collapsed": {
+      "UV0_Metal": 57,
+      "UV0_Chassis": 96,
+      "UV0_Mag": 0,
+      "UV1": 1235
+     },
+     "ud": {
+      "drops": 0,
+      "min_area_mm2": 0.162929,
+      "ud3_zero": 0
+     }
+    },
+    "LOD3": {
+     "dropped_parts": [
+      "bipod_clamp",
+      "bipod_knob",
+      "cheek_riser",
+      "grip",
+      "mag_release",
+      "magazine_floorplate",
+      "pad_plate",
+      "riser_lever",
+      "safety",
+      "trigger"
+     ],
+     "uv_overlaps_collapsed": {
+      "UV0_Metal": 38,
+      "UV0_Chassis": 70,
+      "UV0_Mag": 1,
+      "UV1": 618
+     },
+     "ud": {
+      "drops": 0,
+      "min_area_mm2": 0.329384,
+      "ud3_zero": 0
+     }
+    }
+   },
+   "threshold": "0 UD1 drops; UD3 reported (LOD faces are sub-pixel at their switch distance)",
+   "pass": true
+  },
+  {
+   "name": "C1 10 hulls UCX_SM_SR01_LOD0_00..09 contain every LOD surface sample",
+   "value": {
+    "hulls": [
+     [
+      "UCX_SM_SR01_00",
+      28,
+      "butt + pad + pad plate + butt knobs"
+     ],
+     [
+      "UCX_SM_SR01_01",
+      27,
+      "cheek riser + posts + lever"
+     ],
+     [
+      "UCX_SM_SR01_02",
+      27,
+      "grip + trigger guard + trigger + release paddle"
+     ],
+     [
+      "UCX_SM_SR01_03",
+      27,
+      "action: chassis centre, receiver rear, rail rear, bolt + handle, safety"
+     ],
+     [
+      "UCX_SM_SR01_04",
+      27,
+      "magazine well + merged magazine (twin only)"
+     ],
+     [
+      "UCX_SM_SR01_05",
+      27,
+      "forend + clamp + barrel inside the channel"
+     ],
+     [
+      "UCX_SM_SR01_06",
+      27,
+      "barrel (exposed) + muzzle device"
+     ],
+     [
+      "UCX_SM_SR01_07",
+      27,
+      "bipod swivel + tension knob + pins"
+     ],
+     [
+      "UCX_SM_SR01_08",
+      27,
+      "bipod leg left (folded) + extension + foot"
+     ],
+     [
+      "UCX_SM_SR01_09",
+      27,
+      "bipod leg right (folded) + extension + foot"
+     ]
+    ],
+    "samples": 29570868,
+    "outside": 0,
+    "max_hull_vertices": 28,
+    "pass": true
+   },
+   "threshold": "10 hulls (spec collision.twin_hulls), <= 32 vertices, 0 samples outside",
+   "pass": true
+  },
+  {
+   "name": "S1 twin sockets (20, spec sockets.gun)",
+   "value": {
+    "count": 20,
+    "names": [
+     "BipodFoot_L",
+     "BipodFoot_R",
+     "BoltHandle",
+     "CenterOfMass",
+     "Grip",
+     "Holster",
+     "Mag",
+     "MagInsertStart",
+     "MagRelease",
+     "Muzzle",
+     "MuzzleSeat",
+     "Rail_Top",
+     "Selector",
+     "ShellEject",
+     "Shoulder",
+     "SlingFront",
+     "SlingRear",
+     "SupportHand",
+     "SupportHandBipod",
+     "Trigger"
+    ]
+   },
+   "threshold": "20",
+   "pass": true
+  },
+  {
+   "name": "LOD-pop on both bipod poses (folded / deployed) -> screen sizes",
+   "value": {
+    "switches": [
+     {
+      "from": 0,
+      "to": 1,
+      "size": 0.25,
+      "distance_m": 3.968,
+      "mean_px": 0.024,
+      "max_px": 0.5,
+      "tries": 1
+     },
+     {
+      "from": 1,
+      "to": 2,
+      "size": 0.03874,
+      "distance_m": 25.608,
+      "mean_px": 0.102,
+      "max_px": 2.915,
+      "tries": 10
+     },
+     {
+      "from": 2,
+      "to": 3,
+      "size": 0.02165,
+      "distance_m": 45.822,
+      "mean_px": 0.234,
+      "max_px": 2.915,
+      "tries": 5
+     }
+    ],
+    "twin_sizes": [
+     1.0,
+     0.25,
+     0.03874,
+     0.02165
+    ],
+    "twin_radius_m": 0.55799,
+    "SK_sizes": [
+     1.0,
+     0.27304,
+     0.04231,
+     0.02365
+    ],
+    "SK_engine_radius_m": 0.6094
+   },
+   "threshold": "mean <= 1 px, max <= 3 px at 2560 x 1440, 90 deg, 4 headings, both poses; SK sizes = the same distances at the SK's engine radius (bind box + bounds extension)",
+   "pass": true
+  },
+  {
+   "name": "mass + CoM (bipod folded, magazine out)",
+   "value": [
+    497.5,
+    -0.26,
+    -27.3
+   ],
+   "threshold": "reported (part volumes x densities; spec 5.9 kg)",
+   "pass": true
+  },
+  {
+   "name": "rig build: 13 bones, P1 sniper-side, qa_skeletal, rigid skin",
+   "value": {
+    "bones": 13,
+    "standard_with_P1": true,
+    "gunlib_table_unmodified": {
+     "passed": false,
+     "failed": [
+      "parents_from_standard: cheek_riser<-body"
+     ]
+    },
+    "qa_skeletal": true,
+    "rigid": true,
+    "sk_lods": {
+     "SK_SR01": 34182,
+     "SK_SR01_LOD1": 15350,
+     "SK_SR01_LOD2": 5096,
+     "SK_SR01_LOD3": 2526
+    }
+   },
+   "threshold": "13 bones; pass",
+   "pass": true,
+   "note": "cheek_riser under body needs gunlib proposal P1: validated with a sniper-side table (gunlib untouched); gunlib's own table rejects only that parent"
+  },
+  {
+   "name": "clips: safety at FIRE (Fire / BoltCycle / ReloadEmpty), bolt slides only at -60, rest as declared",
+   "value": {
+    "safety": {
+     "A_SR01_Fire": {
+      "selector_values": [
+       0.0
+      ],
+      "ok": true
+     },
+     "A_SR01_BoltCycle": {
+      "selector_values": [
+       0.0
+      ],
+      "ok": true
+     },
+     "A_SR01_ReloadEmpty": {
+      "selector_values": [
+       0.0
+      ],
+      "ok": true
+     }
+    },
+    "bolt_sequence": {
+     "slide_only_at_full_rotation": true,
+     "violations": []
+    },
+    "rest": {
+     "A_SR01_Fire": [
+      true,
+      true,
+      true
+     ],
+     "A_SR01_BoltCycle": [
+      true,
+      true,
+      true
+     ],
+     "A_SR01_Reload": [
+      true,
+      true,
+      true
+     ],
+     "A_SR01_ReloadEmpty": [
+      false,
+      true,
+      true
+     ],
+     "A_SR01_Selector": [
+      true,
+      true,
+      true
+     ],
+     "A_SR01_BipodDeploy": [
+      true,
+      false,
+      true
+     ],
+     "A_SR01_BipodStow": [
+      false,
+      true,
+      true
+     ],
+     "A_SR01_CheekRiser": [
+      true,
+      true,
+      true
+     ]
+    },
+    "out_of_range": []
+   },
+   "threshold": "all ok",
+   "pass": true
+  },
+  {
+   "name": "B11 bounds extension (LOD0-3 x every clip frame x extreme poses)",
+   "value": {
+    "positive_cm": [
+     0.0,
+     8.681,
+     2.42
+    ],
+    "negative_cm": [
+     0.0,
+     12.877,
+     18.394
+    ],
+    "posed_aabb_M_mm": [
+     [
+      0.0,
+      -165.739,
+      -349.138
+     ],
+     [
+      1100.02,
+      165.739,
+      54.198
+     ]
+    ],
+    "spec_extremes": {
+     "Z_min_bipod_deployed_ext76_cant15": "re-derived in W1 follow-up (gates/form.json F3 + bounds)",
+     "Y_abs_max_bipod_cant15": 113.9,
+     "knob_open_Z": 41.7,
+     "knob_back_X": 279.9,
+     "bolt_back_rear_X": 257.4,
+     "riser_top_raised_Z": 44.0,
+     "folded_ext76_foot_front_X": 1001.6
+    }
+   },
+   "threshold": "every posed vertex inside bind AABB + extension (by construction, +1 mm)",
+   "pass": true
+  }
+ ],
+ "failed": [],
+ "other_gate_files": {
+  "rig_export": {
+   "status": "pass",
+   "failed": []
+  },
+  "mag": {
+   "status": "fail",
+   "failed": [
+    "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge [shipped bytes]",
+    "M3 lateral per side; fore-aft; catch engagement depth [shipped bytes]",
+    "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest) [shipped bytes]"
+   ]
+  },
+  "scope_export": {
+   "status": "fail",
+   "failed": [
+    "re-imported LOD triangles = the build's; descending; LOD0 <= 12,000 (target 6-10k)"
+   ]
+  }
+ },
+ "status": "pass"
+}

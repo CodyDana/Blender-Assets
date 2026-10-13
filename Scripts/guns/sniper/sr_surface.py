@@ -225,5 +225,7 @@ SOOT = [{"what": "muzzle device exit and baffle", "center_M": (1095.0, 0.0, 0.0)
 # grip texture panel (own polymer texture: a fine raised pyramid / pebble on the sides below the tang)
 GRIP_PANEL = {"z": (-150.0, -70.0), "abs_ny_min": 0.6, "pitch": 0.9, "height": (0.08, 0.13)}
 # generic markings allowed (user 2026-10-13): S / F at the safety, rail slot numbers; never a maker / model / serial
-MARKINGS = {"safety_S_F": {"center_M": (360.0, -27.0, -8.0), "height_mm": 3.0},
+# W3 Part 0: the S / F stamp sits on the visible outer face (Y -27) just under the safety pocket (pocket Z -22.5..1.0,
+# floor at Y -17); at Z -8 it fell inside the pocket and painted 0 texels
+MARKINGS = {"safety_S_F": {"center_M": (360.0, -27.0, -26.6), "height_mm": 3.0},
             "rail_numbers": {"every": 2, "height_mm": 2.2}}

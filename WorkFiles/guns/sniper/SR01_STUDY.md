@@ -190,3 +190,16 @@ The cheeks, pins, leg bores and the yoke's side faces roll with the pins (the kn
 to its own pin). Derived (sr01_spec.json bipod.splay): ground Z by detent = HUB_Z - 206 cos 12 - 14 sin 12 - ext cos 12
 (the foot's end rim is the lowest point): -266.71 / -285.30 / -303.88 / -322.47 / -341.05 for ext 0/19/38/57/76;
 gated against the built bytes in F3 (feet coplanar, splay 12 +-0.05 deg, outward, ground Z +-0.1).
+
+### Silhouette conventions accepted (user, 2026-10-13, recorded in W3)
+
+- **TOP view:** the declared conventions are ACCEPTED as the TOP authority: the knob window I1 left out, and a bounded
+  Y-only fit for the floor-shadow bias on the right edge (I2). The TOP stays non-authority for the bipod feet width and
+  round parts drawn wide. L1 / L2 TOP are reported against these conventions (W1: 0.908 / 0.902 declared), not as
+  blocking gates.
+- **GL window:** the declared GL window is ACCEPTED: the sheet's GL forend underside (X 555..700) is drawn 5-13 mm
+  higher than GR, and GR matches the build within 1 px. With that band out, GL measures 0.951 (W2). GR stays the
+  side-view authority.
+- **Trigger blade (W3 Part 0, user OK):** the blade moved 5 mm rearward to the drawn position. The root stays at the
+  spec pivot X 368, and the chassis trigger slot runs 6 mm further back. B3 trigger: 0 intersections (min 0.155 mm,
+  the pin). F9: 0.185 mm. H1 reach: 44.7 mm.

@@ -420,8 +420,8 @@ def paint(st, meta, bake, tex):
     # ---------------------------------------------------------------- markings (generic: S / F at the safety)
     if SS.TARGET == "gun" and st == "Chassis":
         m = SS.MARKINGS["safety_S_F"]
-        sel = (pk == "chassis") & (N[:, 1] < -0.8) & (np.abs(P[:, 0] - m["center_M"][0]) < 14) & \
-            (np.abs(P[:, 2] - m["center_M"][2]) < 10)
+        sel = (pk == "chassis") & (N[:, 1] < -0.8) & (P[:, 1] < m["center_M"][1] + 0.5) & \
+            (np.abs(P[:, 0] - m["center_M"][0]) < 14) & (np.abs(P[:, 2] - m["center_M"][2]) < 3.0)
         if sel.any():
             Q = P[sel][:, [0, 2]]
             Q[:, 0] = -Q[:, 0]                                      # seen from the right (-Y): +X runs to the left

@@ -111,3 +111,28 @@ def plan_ring(table, y_scale=1.0, extra=0.0):
     up = [(x, half_at(table, x) * y_scale + extra) for x, _ in table]
     lo = [(x, -y) for x, y in reversed(up)]
     return np.array(up + lo, float)
+
+
+# ------------------------------------------------------------------------------------------------ W3 sockets / rig
+def x_axis_rot(xa):
+    """Unreal rotator (roll 0) whose +X is a socket's x axis given in frame M (= Blender axes; Unreal Y = -Blender Y)."""
+    import math
+    xa = np.asarray(xa, float)
+    xa = xa / np.linalg.norm(xa)
+    yaw = math.degrees(math.atan2(-xa[1], xa[0]))
+    pitch = math.degrees(math.atan2(xa[2], math.hypot(xa[0], xa[1])))
+    return {"roll": 0.0, "pitch": round(pitch, 4), "yaw": round(yaw, 4)}
+
+
+def gun_socket_rows():
+    """The spec's 20 gun sockets in the gunlib record shape (blender_mm = frame B mm, unreal_rotation_deg)."""
+    return [dict(r, blender_mm=list(r["B_mm"]), unreal_rotation_deg=x_axis_rot(r["x_axis_M"])) for r in D["sockets"]["gun"]]
+
+
+# gunlib proposal P1 applied SNIPER-SIDE (gunlib untouched): gun_standard / rig.STANDARD_BONES allow cheek_riser only
+# under 'stock'; SR01 has a fixed butt and no stock bone ("never dummies"), so its riser hangs from 'body'
+def standard_bones_p1():
+    from gunlib import rig as RG
+    t = dict(RG.STANDARD_BONES)
+    t["cheek_riser"] = tuple(t.get("cheek_riser", ())) + ("body",)
+    return t

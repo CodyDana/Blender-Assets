@@ -38,6 +38,7 @@ from gunlib import fit as F  # noqa: E402
 
 WEDGES = {}
 COLLAPSED = {}
+F32 = {}
 OUT = SCRATCH / "uv"
 OUT.mkdir(parents=True, exist_ok=True)
 LONG_FRAC = 0.80
@@ -384,6 +385,68 @@ def pack_set(st, names, pms, isl):
     return info, aff, gmeta
 
 
+def f32_visible(parts):
+    """UD3 (W3 Part 0; the SMG's W3 smg_lods step), with NO geometry move, once UV0 exists: a VISIBLE sliver whose
+    corner still gets no float32 MikkTSpace weight (W2: 8 corners on 0.3-0.5 mm bevel strips 30-190 mm long: barrel
+    flute run-outs, the forend nose, the clamp jaw edge, the swivel web) takes flat normals on its corners
+    (flatten_hidden's move, sub-pixel faces); a corner still flagged (its true angle is under the limit itself) tilts
+    its normal toward its two edges' mean direction until the projected corner angle reaches 0.15 deg (one corner;
+    nothing else moves). Generator-side cuts were tried first and made more micro strips than they removed (report)."""
+    from gunlib import tspace as TS
+    for n, o in parts.items():
+        me = o.data
+        z = TS.float32_zero_corners(me, "UV0")
+        if not len(z):
+            continue
+        pm = UB.part_mesh(o)
+        faces = np.unique(pm.loop_f[z])
+        P3 = pm.V[pm.loop_v]
+        ang = np.full(pm.nf, 180.0)
+        for j in range(3):
+            a_ = P3[pm.ps + (j + 1) % 3] - P3[pm.ps + j]
+            b_ = P3[pm.ps + (j + 2) % 3] - P3[pm.ps + j]
+            ang = np.minimum(ang, np.degrees(np.arctan2(np.linalg.norm(np.cross(a_, b_), axis=1),
+                                                        np.einsum("ij,ij->i", a_, b_))))
+        rec = {"corners_before": int(len(z)), "faces": faces.tolist()}
+        faces = faces[ang[faces] < 1.0]
+        if len(faces):
+            hv = np.ones(pm.nf, bool)
+            hv[faces] = False
+            rec["flattened"] = flatten_hidden(o, pm, hv, max_deg=1.0, edge_on_dot=1.01)
+        z = TS.float32_zero_corners(me, "UV0")
+        tilts = []
+        if len(z):
+            cn = np.empty(len(me.loops) * 3)
+            me.corner_normals.foreach_get("vector", cn)
+            cn = cn.reshape(-1, 3)
+            for li in z:
+                f = int(pm.loop_f[li])
+                s0 = pm.ps[f]
+                j = int(li - s0)
+                P = pm.V[pm.loop_v[s0 + j]]
+                e1 = pm.V[pm.loop_v[s0 + (j + 1) % 3]] - P
+                e2 = pm.V[pm.loop_v[s0 + (j + 2) % 3]] - P
+                d = e1 / np.linalg.norm(e1) + e2 / np.linalg.norm(e2)
+                d /= max(np.linalg.norm(d), 1e-12)
+                n0 = cn[li] / np.linalg.norm(cn[li])
+                for tdeg in range(5, 86, 5):
+                    t = np.radians(tdeg)
+                    n1 = np.cos(t) * n0 + np.sin(t) * d
+                    n1 /= np.linalg.norm(n1)
+                    a1 = e1 - n1 * (e1 @ n1)
+                    a2 = e2 - n1 * (e2 @ n1)
+                    if np.degrees(np.arctan2(np.linalg.norm(np.cross(a1, a2)), a1 @ a2)) >= 0.15:
+                        cn[li] = n1
+                        tilts.append(tdeg)
+                        break
+            me.normals_split_custom_set(cn.tolist())
+        rec["corner_tilts_deg"] = tilts
+        rec["corners_after"] = int(len(TS.float32_zero_corners(me, "UV0")))
+        F32[n] = rec
+    log("UD3 visible slivers (flat normals / corner tilts)", json.dumps(F32))
+    return F32
+
+
 def main():
     assert_lock()
     t0 = time.time()
@@ -638,9 +701,12 @@ def main():
                                                     "meta": {str(k): {"part": vv["part"], "cls": vv["cls"]}
                                                              for k, vv in v["meta"].items()}}
                                                for st, v in sizes.items()}, indent=0))
+    report["ud3_visible_slivers"] = f32_visible(parts)
+    (OUT / "uv_report.json").write_text(json.dumps(report, indent=1, default=float))
     bpy.ops.wm.save_as_mainfile(filepath=str(BLEND))
     log("sets", json.dumps({k: {"size": v["size"], "fill": v["fill"]} for k, v in out_sets.items()}))
     log("UV_DONE %.1fs" % (time.time() - t0))
 
 
-main()
+if __name__ == "__main__":
+    main()

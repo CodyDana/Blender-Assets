@@ -71,6 +71,9 @@ def plan_prism(table, z0=-250.0, z1=150.0, x_ext=(None, None)):
         up = [(x_ext[0], up[0][1])] + up
     if x_ext[1] is not None:
         up = up + [(x_ext[1], up[-1][1])]
+    # W3 Part 0 (UD3): drop collinear points (the table's last point stayed on the extended side face and left a
+    # zero-tangent sliver at the forend nose after the round)
+    up = [p for i, p in enumerate(up) if i in (0, len(up) - 1) or not (up[i - 1][1] == p[1] == up[i + 1][1])]
     P = np.array(up + [(x, -y) for x, y in reversed(up)])
     return MS.prism(P, z0, z1, "XY")
 
@@ -192,6 +195,7 @@ class Part:
         return ob, rep
 
 
+
 # ------------------------------------------------------------------------------------------------ chassis
 Z_GRIP_SPLIT = -55.97          # chassis | grip butt joint (grip below -56.00)
 X_GRIP_FRONT = 330.6           # grip | guard boundary
@@ -205,8 +209,11 @@ def chassis():
     guard = G.offset(ring("trigger_guard", 1.3), 0.25)   # UD1: 1.3 like the centre (0.8 left sub-width segments)
     base = MS.prism(cen, -BIG / 4, BIG / 4)
     unions = [MS.prism(fore, -BIG / 4, BIG / 4), MS.prism(guard, -9.0, 9.0),
-              MS.box(344.0, 395.0, -27.0, 27.0, -50.0, -11.6),                 # under the bolt knob (hidden in GR)
-              MS.box(558.0, 600.0, -36.9, 36.9, -39.58, 15.9),                 # forend root (overlaps the clip at 560)
+              # (W3 Part 0, UD2: both boxes stand past the plan width and under the traced top, so the plan / ring
+              # faces cut them cleanly; at Y +-27 / +-36.9 and Z 15.9 they were coincident and left 0.035-0.047 mm edges
+              # and 0.019 mm needles)
+              MS.box(344.0, 395.0, -28.0, 28.0, -50.0, -11.6),                 # under the bolt knob (hidden in GR)
+              MS.box(558.0, 600.0, -38.0, 38.0, -39.58, 15.6),                 # forend root (overlaps the clip at 560)
               MS.prism(np.array([(X_BUTT_JOINT + 0.02, -40.0), (346.0, -40.0), (346.0, -10.5), (326.0, -10.5),
                                  (318.0, -14.0), (X_BUTT_JOINT + 0.02, -14.0)]), -BIG / 4, BIG / 4)]
     plan = plan_prism(CHASSIS_HALF, x_ext=(X_BUTT_JOINT + 0.02, 840.0))
@@ -225,7 +232,9 @@ def chassis():
     post += [xcyl(381.96, 567.34, 17.19, nseg=48), xcyl(250.0, 382.5, 12.5, nseg=40),
             xcyl(566.0, 845.0, 20.6, nseg=48), MS.box(566.0, 845.0, -20.6, 20.6, 0.0, 40.0)]   # 1.34 into the inlet: no strip
     # bolt-stem relief (right) and the safety pocket (right tang)
-    post += [MS.prism(rrect(376.0, 397.0, -24.0, 2.0, 5.0), -60.0, -10.5),
+    # (W3 Part 0, UD2: the relief's inner face at Y -10.2, not -10.5: -10.5 met the inlet's 48-gon 0.035 mm from a
+    # facet vertex)
+    post += [MS.prism(rrect(376.0, 397.0, -24.0, 2.0, 5.0), -60.0, -10.2),
             MS.prism(rrect(351.5, 369.5, -22.5, 1.0, 3.0), -40.0, -17.0)]
     # magazine well (mag 414.1..503.3 x +-13.25, clearance 0.3; body top -20.0 -> shelf -19.7), feed opening
     post += [MS.box(413.8, 503.6, -13.55, 13.55, -90.0, -19.7), MS.box(417.5, 488.5, -9.0, 9.0, -19.8, -8.0)]
@@ -236,7 +245,8 @@ def chassis():
             MS.box(410.0, 414.5, -5.3, 5.3, -53.0, -46.5),
             ycyl(408.6, -74.0, -9.5, 9.5, 1.52, 24)]
     # trigger pocket (hub r 4.2 + blade root), pin bore
-    post += [ycyl(368.0, -57.0, -3.2, 3.2, 4.2, 32), MS.box(363.6, 373.4, -3.2, 3.2, -64.0, -57.0),
+    # (W3 Part 0: the slot runs 6 mm further back for the blade moved 5 mm rearward; it swings back on the pull)
+    post += [ycyl(368.0, -57.0, -3.2, 3.2, 4.2, 32), MS.box(357.6, 373.4, -3.2, 3.2, -64.0, -57.0),
             ycyl(368.0, -57.0, -30.0, 30.0, 1.52, 24)]
     # safety pin bore
     post += [ycyl(360.0, -16.0, -30.0, -12.0, 1.52, 24)]
@@ -455,11 +465,20 @@ def pins():
     return Part("pins", m, recipe=[(0.2, 1, 30.0)], spec_id="pins_fasteners")
 
 
+TRIGGER_BACK_MM = 5.0
+
+
 def trigger():
     face = [(366.0, -61.0), (364.4, -66.0), (363.4, -71.0), (363.2, -75.0), (363.5, -80.0), (364.6, -84.5),
             (366.6, -88.0), (368.8, -89.6)]
     back = [(370.6, -88.0), (369.6, -84.0), (368.8, -80.0), (368.6, -75.0), (369.0, -70.0), (370.0, -65.0),
             (371.2, -61.0)]
+    # W3 Part 0 (user OK 2026-10-13): the blade 5 mm further back, as drawn (the trace's blade sits 5-6 mm behind the
+    # W1 one); the root at the pivot stays (blend from Z -61.5 to -67), the hub and pocket are unchanged
+    def back5(x, z):
+        return x - TRIGGER_BACK_MM * min(max((-61.5 - z) / 5.5, 0.0), 1.0)
+    face = [(back5(x, z), z) for x, z in face]
+    back = [(back5(x, z), z) for x, z in back]
     P = np.array([(365.0, -57.0)] + face + back + [(371.4, -57.0)])
     m = MS.prism(P, -3.0, 3.0)
     hub = ycyl(368.0, -57.0, -3.0, 3.0, 4.0, 32)
@@ -501,6 +520,7 @@ def barrel():
     prof = [(505.5, 0.0), (505.5, 12.2), (506.0, 12.97), (566.8, 12.97), (567.32, 17.0), (567.9, r0), (1049.2, r1),
             (1049.7, r1 - 0.5), (1049.7, 7.95), (1063.5, 7.95), (1064.5, 6.95), (1064.5, 0.0)]
     prof[3:5] = [(567.33, 12.97), (567.34, 17.0)]
+
     base = MS.revolve([(x - xs, r) for x, r in prof], (xs, 0, 0), (1, 0, 0), 48)
     fx0, fx1 = b["flutes"]["X"]
     cut = []
