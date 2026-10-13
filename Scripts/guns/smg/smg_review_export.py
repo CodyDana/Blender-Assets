@@ -157,7 +157,13 @@ def l5_l(target, fill=0.0, bg=(126, 126, 126)):
 
 # (W4 resume) the realism views' studio rig (gunlib export_review_job 'studio'): Blender's bundled studio.exr (CC0),
 # saturation 0, strength 0.6, + the rough rig's softboxes at k 0.3 (0.85 x 0.35: the W2 texrender's rough light scaled)
-STUDIO = {"rig": "studio", "hdri": "studio", "strength": 0.6, "saturation": 0.0, "k": 0.30, "bg_rgb": [126, 126, 126]}
+# (W4b close-up r1, spec R46) the bundled interior.exr (CC0, Poly Haven hotel_room: window light with structure) at
+# strength 0.45 + the softboxes at k 0.12. The R45 rig (studio.exr 0.6 + k 0.3) lit the black polymer to sRGB 80-85 on
+# the hero's receiver side, twice the L5 calibration's exposure (41; the sheet's own receiver 63-64): the judges read
+# "mid-grey clay, not black polymer". Measured on hero_34 with the r1 maps: receiver side 42, stock 61, magazine 51
+# (studio.exr 0.32 / k 0.16 tried: 62 / 74 / 48, flatter; courtyard 0.35: 42 / 59 / 46, less structure)
+STUDIO = {"rig": "studio", "hdri": "interior", "strength": 0.45, "saturation": 0.0, "k": 0.12,
+          "bg_rgb": [126, 126, 126]}
 
 
 def form_fits():

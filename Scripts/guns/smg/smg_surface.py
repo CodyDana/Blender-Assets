@@ -115,19 +115,25 @@ FIN = {
     # polymer (46, 47, 49): spec (46, 47, 50) one blue level down by L5 (the sheet's shadowed polymer reads neutral;
     # the spec's B - R +4 made the trigger guard's shadowed leg 0.056 saturated in sRGB, tolerance 0.05)
     # (W4) B 48.5: with the moulded texture the guard's shadowed crop read 0.0535 saturated (L5 tolerance 0.05)
-    "polymer": {"metal": 0, "srgb": (46, 47, 48.5), "spec_srgb": (46, 47, 50), "rough": (0.58, 0.66), "rough_hand": 0.52},
-    "stipple": {"metal": 0, "srgb": (46, 47, 48.5), "rough": (0.78, 0.88)},
+    # (W4b close-up r1, spec R46) the moulded polymer a satin (0.50-0.58, hand polish 0.44), the phosphate a dead-flat
+    # crystalline charcoal (dry 0.70-0.82, oiled 0.58-0.68): at one albedo ratio (G20, the sheet's 1.45) the two read as
+    # different materials by their sheen, as on the reference photos (R44: 0.58-0.66 / 0.62-0.76 overlapped)
+    "polymer": {"metal": 0, "srgb": (46, 47, 48.5), "spec_srgb": (46, 47, 50), "rough": (0.50, 0.58), "rough_hand": 0.44},
+    "stipple": {"metal": 0, "srgb": (46, 47, 48.5), "rough": (0.72, 0.82)},   # (R46: -0.06 with the polymer)
     "polymer_mag": {"metal": 0, "srgb": (41, 42, 45), "rough": (0.55, 0.65)},
     "rubber": {"metal": 0, "srgb": (42, 42, 44), "rough": (0.82, 0.92)},
     # (W4 review fixes, G20; spec R44) the steel DARKER than the polymer, as the sheet shows it (CRAFT 3 samples: the
     # device 40, the rail side 49-50 against the receiver 63-64 under one light; the table's 48-54 base contradicted
     # its own 'steel darker' rule): base (40, 41, 42) (W2: 50-52 read lighter than the polymer's 46-49, so the device,
     # sights, rails and knob were the receiver's material); dry 0.62-0.76, oiled 0.52-0.62 ('slightly glossier-edged')
-    "phosphate": {"metal": 0, "srgb": (40, 41, 42), "rough": (0.62, 0.76), "oiled": (0.52, 0.62)},
+    # (R46) base (45, 46, 47), dry 0.66-0.78: with the rougher coat the L5 render's receiver / steel ratio rose to 1.635 at
+    # (40, 41, 42) / 0.70-0.82 and 1.573 at (44, 45, 46) / 0.70-0.82 (G20 band 1.3-1.5, the sheet 1.453); the albedo stays
+    # under the polymer's (46, 47, 48.5)
+    "phosphate": {"metal": 0, "srgb": (45, 46, 47), "rough": (0.66, 0.78), "oiled": (0.56, 0.66)},
     # worn steel at the spec's bare value but micro-scratched: rough 0.42-0.55 (spec 0.25-0.40; the AR-01's realism
     # rounds moved it to 0.50-0.62: at 0.25-0.40 every chip flashed as a white mirror fleck under the review lights);
     # the bolt's sliding flanks keep the spec's polished 0.15-0.25
-    "bare": {"metal": 1, "srgb": (190, 190, 188), "rough": (0.42, 0.55), "spec_rough": (0.25, 0.40),
+    "bare": {"metal": 1, "srgb": (190, 190, 188), "rough": (0.50, 0.62), "spec_rough": (0.25, 0.40),   # (W4b r1: 0.42-0.55 glinted)
              "sliding": (0.15, 0.25)},
     # (W4 review fixes, G11) soot at the PBR floor (sRGB 30, lin 0.013): the spec's 0.02-0.03 linear (sRGB 39-48) sat ON
     # the phosphate base and could not be seen; now ~10 levels under the darkened phosphate

@@ -11482,6 +11482,13 @@
    "conflict": "both realism judges called every close view one flat matte clay although the maps exist. Measured: the maps reach the review renders (FBX UV0, BC sRGB / ORM + N Non-Color, DirectX green flipped, BC-emission renders show the paint), but the paint was near-uniform at render scale: even after the first W4 fix pass (polymer BC std 3.9 levels; W3 shipped 2.3) the maps sat only 1.8-3.5 sRGB levels (mean over the object) off a constant per-set clay material in the 7 close-ups, and the review rigs' flat grey world left a dark rough finish nothing to reflect (no sheen, no edge highlights)",
    "resolution": "paint: real-scale roughness variation on the polymer (sheen fields at ~30 mm and ~8 mm, about 0.25 / 0.22 x fbm; 0.45 / 0.25 was tried and read as camouflage clouds at hero distance), recess dust on the polymer x 1.8, a settled dust film on up-facing faces (lighter, drier, wiped off in the handling zones), the phosphate's mottle x 1.8 and its sheen field; albedo mottle stays at the craft table's +-4 levels. Renders: the realism views lit by a photographic studio rig (Blender's bundled studio HDRI, neutral, for light and reflections + softboxes; the camera sees the same grey backdrop), with the L5 calibration rig's versions kept beside them; the review set and the colour test stay on L5. Measured after: the maps 3.28 / 3.37 levels (rough / studio rig, mean of the 7 close-ups) off the clay, x 1.23 over the first pass (review/diag/maps_vs_clay.json)",
    "rule": "realism judges; measurement (maps vs clay)"
+  },
+  {
+   "id": "R46",
+   "topic": "W4b close-up realism pass r1: the R45 clouds, the exposure, the seam, the glints, one material",
+   "conflict": "both realism judges failed all 12 close views of the R45 set: 'large, soft, cloudy grey / white blotches' (procedural noise / concrete) on the receiver and stock, 'one mid-grey value with one roughness' (steel = polymer), a centre seam down the receiver rear face and the stock head (ADS), white specks on the rail teeth and the sight drum, 'mid-grey clay, not black polymer'. Measured: the R45 sheen fields (+-0.12 roughness at 30 / 8 mm) and albedo fields (+-22 % / +-25 % at 9 / 25 mm) were the clouds; the studio rig (studio.exr 0.6 + k 0.3) lit the receiver to 1.92 x the L5 calibration's exposure; the seam was the painted mid-plane parting line on the lower receiver's rear face and the stock head (not UV: one island across Y 0); polymer 0.58-0.66 and phosphate 0.62-0.76 roughness overlapped; bare steel at 0.42-0.55 glinted",
+   "resolution": "paint: the clouds to a trace (sheen 0.05 / 0.05, albedo 0.10 / 0.06, per-texel speckle 0.14); the variation moved to where real wear puts it: a handling rub on every exposed convex edge (0.2-0.7 mm, up to +35 % linear, rough -0.10), dust as a grey-beige deposit in the deep recesses and against inside corners (no fbm patches), the hand-polish blended in (its switch drew a disc); polymer a satin 0.50-0.58 (hand 0.44) with its moulded grain at 12 / 20 um, phosphate a dead-flat crystalline charcoal 0.66-0.78 (oiled 0.56-0.66) with a +-4 um crystal grain in the normal map, its base (45, 46, 47) (R44 (40, 41, 42)) so the L5 render's receiver / steel ratio stays at the sheet's (G20 1.537 vs 1.453: at (40, 41, 42) / 0.70-0.82 it read 1.635), still under the polymer's albedo; the stipple 0.72-0.82 and x 1.24 (L5 grip); bare steel 0.50-0.62 and fewer bare dashes on the top rail (the rest rubbed phosphate); the parting line only on the grip / guard / magwell straps, the grip cover, the magazine and the stock's struts. Renders: the realism rig is the bundled interior.exr (CC0) at 0.45 + softboxes k 0.12, its exposure within 1.3 x the L5 calibration (review/closeup_r1, gates/closeup_r1.json)",
+   "rule": "realism judges; reference photos (realref/craft); measurement (closeup K1-K5)"
   }
  ],
  "fab_original_changes": {
@@ -11760,7 +11767,7 @@
   "mag_sockets": 5,
   "bones": 11,
   "rulings": 22,
-  "resolutions": 45,
+  "resolutions": 46,
   "open_questions": 14,
   "top_rail_cut_slots": 22,
   "lower_rail_slots": 6

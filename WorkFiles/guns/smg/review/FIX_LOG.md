@@ -128,3 +128,51 @@ Reported, not blocking: the 15 pairs were re-rendered from the new bytes (`revie
   AR-01 regression was re-run on them (`gates/gunlib_regression.json`).
 - The review renders, the realism set (studio + L5) and the blind pairs are rendered from the new exported bytes
   (sha256 in `gates/review_export.json`).
+
+---
+
+# W4b close-up realism pass, round 1 (spec R46)
+
+Both realism judges failed all 12 close views of the R45 set (fp_35cm, ads_55deg, hero_34, hero_34_folded, studio + L5).
+Each reason was checked against the renders, the maps and the real photos (`scratch/realref/craft`: the UMP-pattern
+photos show an even black satin polymer, matte black steel parts, and wear only at edges and contact points). Diagnostic
+looks (clay / clay + normal map / BC emission) separated geometry, normal map and albedo. Everything was rebuilt from the
+paint step (the FBX bytes are unchanged; W3 reads no texture) and rendered from the exported bytes: `review/closeup_r1/`
+(5 views x {realism rig, L5 rig} + 3 close-ups at ~21-24 cm + `before_after.png`). The numbers are in
+`gates/closeup_r1.json` (K1-K7, all pass). `review/realism`, `review/set` and the blind pairs were re-rendered too.
+
+## Measured causes and fixes
+
+| Tell (judge calls) | Verdict | Cause (measured) | Fix | Evidence |
+|---|---|---|---|---|
+| Large, soft, cloudy grey / white blotches on the receiver and stock: noise / concrete (5) | REAL, fixed | R45's sheen fields (roughness +-0.12 at 30 / 8 mm) and albedo fields (+-22 % at 9 mm, +-25 % at 25 mm), plus a per-texel speckle (+-35 % at 0.6 mm, 2 px at 35 cm), spread evenly over every flat | Clouds cut to a trace: sheen 0.05 / 0.05, albedo 0.10 / 0.06, speckle 0.14. The variation now sits where real wear puts it: a handling rub on every exposed convex edge (0.2-0.7 mm, up to +35 % linear, rough -0.10), dust as a grey-beige deposit in the deep recesses and against inside corners (no fbm patches) | K1 band-pass std / mean on the hero receiver flats 0.027 -> 0.006 and 0.029 -> 0.009 (x 0.22 / x 0.30); polymer BC std 3.74 levels (G15 >= 3.0, now from edges and recesses) |
+| Mid-grey clay, not black polymer; the top washed out (4) | REAL, fixed (realism rig) | R45's studio rig (studio.exr 0.6 + softboxes k 0.3) lit the receiver side to sRGB 80, 1.96 x the L5 calibration's exposure (the L5 rig is fitted to the sheet) | The realism rig is the bundled interior.exr (CC0) at 0.45 + softboxes k 0.12: window light with structure, exposure near the calibration. studio.exr 0.32 / k 0.16 and courtyard 0.35 were rendered and read flatter | K2 ratio 1.96 -> 1.17 (hero receiver 42.6 vs L5 36.6) |
+| One material: steel sights, rail, device = the polymer (6) | REAL, fixed | Roughness overlapped: polymer 0.58-0.66, phosphate 0.62-0.76, both flat in the normal map | Polymer a satin 0.50-0.58 (hand 0.44) with its moulded grain at 12 / 20 um; phosphate a dead-flat crystalline charcoal 0.66-0.78 (oiled 0.56-0.66) with a +-4 um crystal grain in the normal map. Its base went from (40, 41, 42) to (45, 46, 47) so the L5 render keeps the sheet's receiver / steel ratio (at (40, 41, 42) / 0.70-0.82 G20 read 1.635); the base stays under the polymer's (46, 47, 48.5) | K5 roughness P50 0.795 vs 0.554 (split 0.24, was ~0.02); G20 1.537 (sheet 1.453, band <= 1.55); L5 colour pass on every region |
+| ADS: a centre seam down the receiver rear face and the stock head (4) | REAL, fixed | Not UV: one island crosses Y 0 (checked per island). It was the painted mid-plane parting line (+0.02 mm, +12 %) on every face crossing Y 0, including the lower receiver's rear face and the stock head's top | The parting line only where a two-half tool parts on a strap or narrow face: grip / guard / magwell (lower receiver under Z -40), the grip cover, the magazine, the stock's struts (X < 218) | K3 centre-column contrast 3.77 -> 0.69 sRGB levels |
+| White specks / fireflies on the rail teeth, the sight drum and the base edge (4) | REAL, fixed | Bare steel (metallic, sRGB 190) at rough 0.42-0.55 on 1-2 px dashes reflected the light's hot spots | Bare 0.50-0.62 (the AR-01's realism value); on the top rail (the player's view) bare only on the most-worn crests, the rest rubbed phosphate | K4 pixels >= 235: fp 8 -> 0, ads 72 -> 4; bare still edge lines (clusters >= 14 texels, 0 off an edge, 0.60 % of the steel) |
+| No edge rub on the rail, sight ears, crown, mag lips, knob; no hand polish (3) | REAL, partly fixed | Polymer edges had whitening only in the zones (0.34 % of the polymer); the hand-polish clamp switched at half weight and drew a hard-edged lighter disc on the fore-end in the 24 cm close-up | The edge rub (above); the polish clamp blended (0.25-0.85). The steel's rubbed edges and bare crests are as in W4. The gun stays lightly used (spec wear_level 'moderate') | c1-c3 close-ups; Masks R / G |
+| No markings: selector letters, serial, roll marks, witness numbers (3) | REJECTED | - | Asset rule: generic, no markings; buyers add decals. Pictograms on the selector were also rejected in W4 | - |
+| The stock head nearest the camera: a flat slab with wavy, paper-like edges / blocky (5) | REAL, NOT fixed in r1 (geometry) | Clay renders show it is the geometry: the head's top follows the traced S-curve, and the r1 / r2 plan flare cuts meet that curve in wavy edges with R 1.0 rounds. The seam and the clouds on it are gone, but it still reads as a bent sheet at 35 cm | Round 2 candidate: the flare as moulded blends (outer rounds ~R 2.5-3 on the head, no straight plan cuts across the curved top). This needs the full chain from W1 (~2 h for W1 alone), so round 1 isolated the finish | `review/diag` clay look (scratch), closeup_r1 fp / ads |
+| The receiver rear face a large flat block with crude stepped chamfers (2) | DEFERRED with the head (geometry) | The traced end block and its 45 deg top chamfers | Judge again on r1; r2 if it is still called | - |
+| Ball charging knob a sphere primitive, oversized (4) | REJECTED | - | The sheet's knob (LEFT + TOP + 3/4: dia 16.8, protruding 19 mm; spec charging_handle authority). It is built with its flat 7.0 crown, a polished crown and a bright rim (CRAFT 2.3) | spec R-merge 'knob at rest where drawn' |
+| Small round pin dots look arbitrary (1) | REJECTED | - | The sheet's drawn pins and rivets at their traced positions | trace |
+| Hinge barrel a plain stack of cylinders with no pin detail (1) | REJECTED | - | The knuckle stack and the axle head (visible on top, round) are built per spec stock_hinge; the latch is on the left | - |
+| Engraved panel lines = decal grooves; magazine ladder invented (2) | REJECTED (as in W4) | - | R43's real two-piece step; the sheet draws the ladder | - |
+
+## Gates
+
+- `gates/closeup_r1.json`: K1 clouds, K2 exposure, K3 seam, K4 glints, K5 material split, K6 every stage gate of the chain
+  (form, form_magfit, uv_bake_paint, game, rig_export, mag, review_export, gunlib_regression: all pass), K7 set complete.
+- W2 re-run from the paint step (paint, recolour pre-check, Blender-side gates, L5 refit k 1.2035, renders): pass. On the
+  way the first R46 maps failed L5 (grip luma -0.059: the satin receiver lowered the fitted light) and G20 (1.635). The
+  stipple went to 0.72-0.82 and pebbles x 1.24, the phosphate base to (45, 46, 47) and 0.66-0.78: grip -0.047, G20 1.537,
+  both inside tolerance.
+- gunlib was not changed in this round, so the AR-01 regression stands (gunlib_regression pass). The FBX bytes and W3's
+  gates are unchanged; review_export.json carries the new texture hashes.
+
+## Honest status
+
+The finish-level tells (clouds, clay exposure, one material, seam, glints) are fixed and measured. The FP and ADS
+foreground is still the geometry of the stock head and the receiver's end block. It reads cleaner now, but at 35 cm it
+can still look like a bent sheet or a plain block, which is the likely remaining fake call. The realism verdict belongs
+to the judges, on `review/closeup_r1/` (realism rig; the L5 versions are in `l5/`).
