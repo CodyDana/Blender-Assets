@@ -61,6 +61,27 @@ DENSITY_PART = {"grip": 1.2, "butt_pad": 1.1, "bipod_foot_l": 1.1, "bipod_foot_r
 TARGET = {1: 0.45, 2: 0.15, 3: 2600}                 # LOD1 / LOD2 share of LOD0, LOD3 triangles
 DROP_UNDER = {1: 0, 2: 130, 3: 420}                  # parts left out below this many LOD0 triangles
 MIN_TRIS = 16
+# (W4 A3) silhouette-weighted LODs: W3's uniform ratio dropped pad_plate at LOD2 (the butt's end: the 2.9 px pop that
+# pushed LOD2 to 25.6 m) and spent as many triangles per part on hidden pins / screws / the swivel as on the chassis.
+# Silhouette parts are never dropped; the parts that don't make the outline decimate at LOW_W x the ratio.
+KEEP_ALWAYS = {"pad_plate", "grip", "magazine_floorplate", "trigger", "cheek_riser", "butt", "butt_pad"}
+SIL_LOW = {"pins", "rail_screws", "fasteners", "bipod_pins", "butt_knobs", "riser_posts", "bolt", "bipod_swivel",
+           "bipod_knob", "bipod_clamp", "safety", "riser_lever", "mag_release"}
+LOW_W = {1: 1.0, 2: 0.4, 3: 0.3}
+
+
+def solve_ratio(t0, keep, want, lv):
+    """the base ratio r so that sum(max(r x w, MIN_TRIS / t0) x t0) = want (w = LOW_W for SIL_LOW parts)."""
+    def tot(r):
+        return sum(t0[o.name] * min(1.0, max(r * (LOW_W[lv] if o.name in SIL_LOW else 1.0), MIN_TRIS / t0[o.name]))
+                   for o in keep)
+    lo, hi = 0.0, 1.0 / LOW_W[lv]
+    if tot(hi) <= want:
+        return hi
+    for _ in range(40):
+        mid = 0.5 * (lo + hi)
+        lo, hi = (mid, hi) if tot(mid) < want else (lo, mid)
+    return 0.5 * (lo + hi)
 OV = 1.5                                             # each side of a hull split: 3 mm overlap
 
 
@@ -126,13 +147,12 @@ def make_lods(rep):
     for lv in (1, 2, 3):
         coll = bpy.data.collections.new(f"{CODE}_LOD{lv}")
         bpy.context.scene.collection.children.link(coll)
-        keep = [o for o in parts0 if t0[o.name] >= DROP_UNDER[lv]]
-        kept = sum(t0[o.name] for o in keep)
+        keep = [o for o in parts0 if t0[o.name] >= DROP_UNDER[lv] or o.name in KEEP_ALWAYS]
         want = TARGET[lv] * total0 if lv < 3 else TARGET[lv]
-        ratio = min(1.0, want / kept)
+        ratio = solve_ratio(t0, keep, want, lv)
         rows = {}
         for o in keep:
-            r = max(ratio, MIN_TRIS / max(t0[o.name], 1))
+            r = min(1.0, max(ratio * (LOW_W[lv] if o.name in SIL_LOW else 1.0), MIN_TRIS / max(t0[o.name], 1)))
             c = LL.decimate_copy(o, f"{o.name}_LOD{lv}", coll, r)
             rows[c.name] = {"lod0": t0[o.name], "tris": tris_of(c), "ratio": round(r, 4)}
         rep["lods_parts"][f"LOD{lv}"] = {"ratio": round(ratio, 4), "dropped": sorted(o.name for o in parts0
@@ -235,6 +255,35 @@ def hull_points(S):
     ]
 
 
+def valid_hull(name, P_m, parent, coll):
+    """(W4) gunlib's hull_from_points, checked: every face outward, the box within the points' box + 20 mm, every point
+    inside. W4's cheek-riser hull (its LOD3 kept now) came back with 18 inward faces and grew to 1e16 m; a failed hull
+    is rebuilt with a lower vertex cap (a different collapse path). Returns (hull, tries)."""
+    lo, hi = P_m.min(0) - 0.02, P_m.max(0) + 0.02
+    for k, (how, mv) in enumerate((("gunlib", 32), ("safe", 32), ("safe", 30), ("safe", 28))):
+        try:
+            h = (GM.hull_from_points if how == "gunlib" else LL.hull_safe)(name, P_m, parent, coll, max_verts=mv)
+        except RuntimeError as e:                 # gunlib's grow gave up
+            log("hull", name, how, mv, repr(e))
+            h = bpy.data.objects.get(name)
+            if h is not None:
+                me = h.data
+                bpy.data.objects.remove(h, do_unlink=True)
+                bpy.data.meshes.remove(me)
+            continue
+        V = np.array([v.co[:] for v in h.data.vertices])
+        c = V.mean(0)
+        inward = sum(1 for p in h.data.polygons if np.dot(np.array(p.normal[:]), np.array(p.center[:]) - c) < 0)
+        ok = inward == 0 and np.all(V >= lo) and np.all(V <= hi) and GM.inside_union(P_m, [h], tol_m=1e-6).all()
+        if ok:
+            return h, [how, mv, k + 1]
+        log("hull", name, "invalid (inward", inward, ")", how, "max_verts", mv, "- rebuilt")
+        me = h.data
+        bpy.data.objects.remove(h, do_unlink=True)
+        bpy.data.meshes.remove(me)
+    raise SystemExit(f"no valid hull for {name}")
+
+
 def main():
     from pipeline import lock as L
     L.assert_owner(CODE, "claude")
@@ -281,9 +330,10 @@ def main():
     hulls = []
     for i, (desc, pts) in enumerate(hull_points(samples)):
         P = np.vstack([p for p in pts if len(p)])
-        h = GM.hull_from_points(f"UCX_{NAME}_{i:02d}", (P - GRIP) * 0.001, lod0, coll)
+        h, tries = valid_hull(f"UCX_{NAME}_{i:02d}", (P - GRIP) * 0.001, lod0, coll)
         hulls.append(h)
-        rep["hulls"].append({"name": h.name, "covers": desc, "vertices": len(h.data.vertices), "points": int(len(P))})
+        rep["hulls"].append({"name": h.name, "covers": desc, "vertices": len(h.data.vertices), "points": int(len(P)),
+                             "tries": tries})
         log("hull", h.name, len(h.data.vertices), "verts from", len(P), "points")
     # C1: every surface sample of every LOD inside the union of the hulls (world metres; the hulls ride LOD0 at identity)
     allP = (np.vstack(list(samples.values())) - GRIP) * 0.001

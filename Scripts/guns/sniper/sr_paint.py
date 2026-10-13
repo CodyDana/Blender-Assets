@@ -257,7 +257,9 @@ def paint(st, meta, bake, tex):
         col = col * (1.0 + 0.9 * rub)[:, None]                 # (fix round) crests rub to a lighter satin
         r = r - 0.12 * rub
         dash = PT.chunked(PT.fbm3, Pk, 4.0, 2, 152)
-        wl = (dist_e[k] < 0.25 + 0.30 * az[k]) & (dash > 0.82 - 0.22 * az[k]) & (edge_fine[k] > 0.35) & \
+        # (W4 review C8) the scope's caps wore as one identical bright ring each: its wear is rarer (dash > 0.93)
+        dcut = 0.93 if f == "scope_anod" else 0.82 - 0.22 * az[k]
+        wl = (dist_e[k] < 0.25 + 0.30 * az[k]) & (dash > dcut) & (edge_fine[k] > 0.35) & \
             (expo[k] > 0.5) & (az[k] > 0.10)
         wl = drop_small(wl, kk, idx, S, MIN_CHIP_PX)
         col[wl] = lin(F["wear_srgb"])[None, :] * (0.95 + 0.08 * v_mid[k][wl])[:, None]

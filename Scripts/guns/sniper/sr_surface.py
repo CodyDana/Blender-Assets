@@ -140,16 +140,18 @@ FIN = {
     "phos_barrel": {"metal": 0, "srgb": (47, 47, 47), "rough": (0.66, 0.76), "oiled": (0.52, 0.60)},
     # polished bolt body + lugs (bare steel, spec bare_steel_polished): linear 0.53-0.56, rough 0.15-0.30
     # (W2 look) 0.16-0.26 read as mirror chrome under the studio rig: a honed satin bolt, 0.24-0.36
-    "bolt_polish": {"metal": 1, "lin": (0.50, 0.54), "rough": (0.24, 0.36)},
+    # (W4 review C8) satin, not plated: both judges read the 0.24-0.36 polish as mirror chrome
+    "bolt_polish": {"metal": 1, "lin": (0.42, 0.46), "rough": (0.32, 0.44)},
     # polished inner legs (hard chrome-like steel)
-    "leg_polish": {"metal": 1, "lin": (0.55, 0.58), "rough": (0.18, 0.28)},
+    "leg_polish": {"metal": 1, "lin": (0.52, 0.56), "rough": (0.24, 0.34)},
     # polymer grip (black, satin moulded skin with its own panel texture)
     "polymer": {"metal": 0, "srgb": (44, 44, 46), "rough": (0.56, 0.66), "rough_hand": 0.46},
     # rubber (pad, feet): soft matte, a hair lighter and bluer than the polymer, very rough
     "rubber": {"metal": 0, "srgb": (38, 38, 40), "rough": (0.88, 0.96)},
     # scope: matte anodized black body (a step darker / smoother than the rail), opaque glossy lens
     # (fix round) a deeper gloss-black anodize (the scope's own sheen, not the rail's satin)
-    "scope_anod": {"metal": 0, "srgb": (30, 30, 33), "rough": (0.24, 0.34), "wear_srgb": (170, 172, 176)},
+    # (W4 review C1) matte type III anodize (study 0.45-0.65): at 0.24-0.34 the tube read as polished chrome
+    "scope_anod": {"metal": 0, "srgb": (30, 30, 33), "rough": (0.46, 0.56), "wear_srgb": (170, 172, 176)},
     "lens": {"metal": 0, "srgb": (18, 16, 30), "rough": (0.03, 0.05)},          # a coated (violet) glossy black
     "soot": {"metal": 0, "lin": 0.0130, "rough": (0.85, 0.95)},
     "grime": {"metal": 0, "srgb": (36, 35, 33), "rough": 0.85},

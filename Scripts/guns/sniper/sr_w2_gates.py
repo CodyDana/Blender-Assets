@@ -192,12 +192,11 @@ def main():
                "Scope sets sit at the density ceiling at 2048 / 512 (1024 / 256 cannot hold the class floors): fill "
                "0.49 / 0.51 against a declared 0.45 minimum (the gun's 0.65-0.70 rule cannot be met under the ceiling)",
                "B9 uniformity near-misses: Metal class C P5 31.3 vs 31.5 needed, scope class C P5 40.9 vs 41.1 (the "
-               "cylinder charts' box-projected ends); a per-island scale normalisation is a W3 UV item",
-               "UD2 3 / 4 / 0 on the chassis (the only part outside the repair pass) and UD3 8 float32 zero-tangent "
-               "corners (barrel 4, chassis 2, bipod clamp 1, swivel 1): both must be 0 before the W3 export; a "
-               "generator / UV-stage wedge fix, not done in this run",
-               "Generic markings: the S / F stamp at the safety selected the safety pocket and painted 0 texels "
-               "(paint report markings_texels 0): not delivered in W2",
+               "cylinder charts' box-projected ends); a per-island scale normalisation is still open (W5 / W6)",
+               "UD2 / UD3: resolved in W3 Part 0 (UD2 0 on the chassis; UD3 0 via the UV-stage visible-sliver rule, "
+               "sr_uv.f32_visible, normals only: a declared deviation from a generator fix)",
+               "Generic markings: S / F on the visible outer face under the safety pocket (W3 Part 0: 109 texels; "
+               "markings_texels in the paint report)",
                "L5 rail: the sheet's rail sits in the scope's shadow (sRGB 14): the L5 render carries the textured "
                "scope; saturation is not tested under 30 sRGB levels (a 2-level step is sat 0.12)",
            ]}

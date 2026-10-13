@@ -1,0 +1,81 @@
+{
+  "judge": "realism_A",
+  "images": {
+    "fp_35cm": {
+      "verdict": "fake",
+      "confidence": 95,
+      "tells": [
+        "Flat featureless mid-grey void background with no floor, horizon or environment: classic untextured CG render backdrop",
+        "Chrome bolt body shows smeared, blown-out streak highlights with no real environment reflected (just a white band), reads as a CG HDRI-less mirror shader",
+        "Chassis is a uniform pale olive-grey with a faint procedural noise grain; no anodize/Cerakote sheen variation, no edge wear, no handling marks, no dust",
+        "Large planar chassis faces with small uniform chamfers; edges are too clean and evenly lit, look like low-poly boxes with a bevel modifier",
+        "Scope tube is perfectly uniform satin grey with no anodizing grain, no printed markings, no turret graduations legible; objective lens is a flat dark-blue disc with no internal lens elements, coatings or reflections",
+        "Bolt knob is a perfect sphere with a uniform procedural knurl pattern, oversized and toy-like",
+        "Screws are plain cylinders with no hex sockets visible; tiny engraved selector numbers are blurry and floating",
+        "Lighting is soft, shadowless studio light with no contact shadows or ambient occlusion in crevices; no depth of field despite the 35 cm close-up, which a real lens at that distance would show"
+      ]
+    },
+    "ads_eyepiece": {
+      "verdict": "fake",
+      "confidence": 97,
+      "tells": [
+        "Eyepiece interior is an empty black-navy void: no reticle, no exit pupil, no image of the scene, no lens element edges or coatings reflections",
+        "Polygonal faceting is visible on the outer rim silhouette (straight segments on the circle) - a direct mesh-resolution giveaway",
+        "Thin bright rim line on the left/right edge is a uniform specular edge, not a real machined chamfer reflection",
+        "Rubber eyecup has no texture, moulding seams, dust or wear; perfectly smooth matte black",
+        "Grey flat background visible around the scope again reads as a CG viewport"
+      ]
+    },
+    "tp_3m": {
+      "verdict": "fake",
+      "confidence": 90,
+      "tells": [
+        "Object floats in a seamless grey void with no floor, no contact shadow under bipod feet, no cast shadow anywhere",
+        "Even, directionless lighting flattens the forms; chassis reads as a light grey plastic toy rather than a coated aluminium stock",
+        "Colour contrast between pale chassis and very dark metal parts is high and flat, like a toy/airsoft replica or a game asset",
+        "Objective lens is a flat blue-violet disc",
+        "Silhouette is plausible and proportions are believable, which is the main thing not giving it away at this distance"
+      ]
+    },
+    "hero_34": {
+      "verdict": "fake",
+      "confidence": 93,
+      "tells": [
+        "Chassis surfaces have a uniform fine procedural noise (looks like sandpaper/bump noise) with identical density everywhere, no real texture variation, no edge wear on high-traffic edges (mag well, bolt notch, forend edges)",
+        "Edges are crisp but uniformly tiny-bevelled; the forend and buttstock are faceted blocky masses with no casting draft, no machining tool marks, no parting lines",
+        "Grip has a stretched/smeared stipple texture that looks like a projected noise map rather than moulded texture, and its shape is blocky with hard planar facets",
+        "Scope tube shading has smooth gradient banding and no anodized micro-roughness; no markings, no turret numbers or hash marks, magnification ring has no legible numbers",
+        "Picatinny rail slots look shallow and too evenly spaced; scope ring screws are plain cylinders",
+        "Lens glass is a solid dark blue with a single soft gradient, no multi-layer coating reflections or visible internal elements",
+        "Magazine is a plain box with rounded edges and no follower, witness holes or markings",
+        "No dust, fingerprints, oil, scratches or any sign of the gun ever having been handled",
+        "Lighting: soft grey studio fill with almost no specular breakup; no depth of field"
+      ]
+    },
+    "deployed_34": {
+      "verdict": "fake",
+      "confidence": 93,
+      "tells": [
+        "Bipod feet hang in mid-air with no ground plane and no contact shadow",
+        "Bipod leg chrome inner sections show uniform cylindrical stripes; leg tubes are perfectly uniform with no knurling, springs or locking detail realism",
+        "Buttstock is a stack of flat boxes; the butt pad is a plain dark slab with no rubber texture or recoil-pad pattern",
+        "Large flat chassis planes are evenly lit pale grey with identical procedural grain everywhere - reads as painted plastic",
+        "Barrel fluting is shallow with soft, uniform shading, no muzzle device detail, no crown or bore visible",
+        "Bolt knob sphere, plain screw heads, and flat side-panel buttons (two discs) look simplified and toy-like",
+        "Same flat grey void background and shadowless lighting as other shots"
+      ]
+    }
+  },
+  "overall": "fake",
+  "priorities": [
+    "Put it in a real photographic context: a ground plane/bench or textured backdrop with contact shadows and AO under the gun and bipod feet, plus a real HDRI environment so metals and glass reflect something; the empty grey void alone flags every image as CG",
+    "Rework lighting like a product shoot: a key light with directional falloff, rim lights that trace the chassis edges, and real shadow contrast; turn on ambient occlusion/contact shadows in crevices (rail slots, mag well, bolt raceway)",
+    "Replace the uniform procedural chassis grain with a real Cerakote/anodized aluminium material: subtle roughness variation, slight colour shift at edges, edge wear to bare metal on high-contact edges (bolt notch, mag well lip, forend edges, butt corners), dust in recesses, fingerprints/oil smudges on top surfaces",
+    "Fix the scope optics: layered lens glass with coloured coating reflections (green/purple/amber), visible internal lens elements and depth, and in the eyepiece a visible reticle/exit pupil instead of an empty black disc; increase eyepiece rim segment count so the circle silhouette is not faceted",
+    "Add markings and legible small detail: turret graduations and numbers, magnification ring numbers, generic maker/serial/caliber engravings on receiver and barrel, selector markings that are crisp",
+    "Raise small-part fidelity: hex/Torx sockets in every screw, real knurling on turret caps and bolt knob (and reduce bolt knob to realistic size/shape), deeper and correctly profiled Picatinny slots, muzzle crown/bore, bipod leg locking collars and springs, a rubber-textured recoil pad",
+    "Soften the blocky chassis forms: varied bevel radii (larger on handling surfaces), casting/machining draft, tool-path marks on machined aluminium faces, and a moulded (not stretched) stipple on the grip with parting lines",
+    "Fix chrome/bolt shading: replace the near-mirror chrome with a brushed or nitrided steel (roughness ~0.25-0.4, anisotropic), so highlights are soft streaks rather than blown-out white bands",
+    "Use photographic camera behaviour: shallow depth of field on the 35 cm and eyepiece close-ups, slight lens vignetting, mild sensor noise and realistic exposure/tone mapping (Filmic/AgX with some contrast) instead of the flat, low-contrast grey render look"
+  ]
+}

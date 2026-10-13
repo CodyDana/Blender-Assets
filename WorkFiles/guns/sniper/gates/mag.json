@@ -4,11 +4,11 @@
   {
    "name": "M7 rifle bytes = the shipped stage-5 sha256",
    "value": {
-    "rifle": "0b203a9b467aed2f6132134e564d5e6038076de172e7968382645849486501c1",
-    "recorded": "0b203a9b467aed2f6132134e564d5e6038076de172e7968382645849486501c1",
-    "mag": "f7453cbdb78b79e939fa44572395c758f27cda9cdb8e9c19890e532d254107ad",
-    "mag_recorded": "f7453cbdb78b79e939fa44572395c758f27cda9cdb8e9c19890e532d254107ad",
-    "mag_built_from_rifle_sha": "0b203a9b467aed2f6132134e564d5e6038076de172e7968382645849486501c1"
+    "rifle": "31ea00b7d2e8f1f1ea6e001c45bc68771550df405d8fb70150eec1f556553cce",
+    "recorded": "31ea00b7d2e8f1f1ea6e001c45bc68771550df405d8fb70150eec1f556553cce",
+    "mag": "b74bda81daf48a49d3dbf60b4b1aed335aaee3abdeea9cf28a0e35fd772419d5",
+    "mag_recorded": "b74bda81daf48a49d3dbf60b4b1aed335aaee3abdeea9cf28a0e35fd772419d5",
+    "mag_built_from_rifle_sha": "31ea00b7d2e8f1f1ea6e001c45bc68771550df405d8fb70150eec1f556553cce"
    },
    "threshold": "equal (and the magazine was built from these rifle bytes)",
    "pass": true
@@ -38,15 +38,15 @@
     },
     "gun LOD2 / mag LOD2": {
      "intersecting_triangle_pairs": 57,
-     "depth_mm_outside_well": 0.462,
-     "depth_px": 0.023,
-     "at_m": 25.609
+     "depth_mm_outside_well": 0.381,
+     "depth_px": 0.032,
+     "at_m": 15.121
     },
     "gun LOD3 / mag LOD3": {
-     "intersecting_triangle_pairs": 61,
-     "depth_mm_outside_well": 4.082,
-     "depth_px": 0.114,
-     "at_m": 45.825
+     "intersecting_triangle_pairs": 68,
+     "depth_mm_outside_well": 1.688,
+     "depth_px": 0.072,
+     "at_m": 30.064
     },
     "gun LOD0 / mag LOD1": {
      "intersecting_triangle_pairs": 0
@@ -55,28 +55,28 @@
      "intersecting_triangle_pairs": 0
     },
     "gun LOD1 / mag LOD2": {
-     "intersecting_triangle_pairs": 10,
+     "intersecting_triangle_pairs": 6,
      "depth_mm_outside_well": 0.0,
      "depth_px": 0.0,
-     "at_m": 25.609
+     "at_m": 15.121
     },
     "gun LOD2 / mag LOD1": {
-     "intersecting_triangle_pairs": 81,
-     "depth_mm_outside_well": 0.586,
-     "depth_px": 0.029,
-     "at_m": 25.609
+     "intersecting_triangle_pairs": 77,
+     "depth_mm_outside_well": 0.498,
+     "depth_px": 0.042,
+     "at_m": 15.121
     },
     "gun LOD2 / mag LOD3": {
-     "intersecting_triangle_pairs": 52,
-     "depth_mm_outside_well": 4.253,
-     "depth_px": 0.119,
-     "at_m": 45.825
+     "intersecting_triangle_pairs": 48,
+     "depth_mm_outside_well": 0.381,
+     "depth_px": 0.016,
+     "at_m": 30.064
     },
     "gun LOD3 / mag LOD2": {
-     "intersecting_triangle_pairs": 72,
-     "depth_mm_outside_well": 1.541,
-     "depth_px": 0.043,
-     "at_m": 45.825
+     "intersecting_triangle_pairs": 75,
+     "depth_mm_outside_well": 1.688,
+     "depth_px": 0.072,
+     "at_m": 30.064
     }
    },
    "threshold": "0 at LOD0-1 pairs; LOD2-3 pairs: depth < 1 px at the switch distance outside the LOD0 well",
@@ -94,8 +94,8 @@
   {
    "name": "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge [shipped bytes]",
    "value": {
-    "bearing_gap_mm": 0.87,
-    "overtravel_mm": 2.3157,
+    "bearing_gap_mm": 0.21,
+    "overtravel_mm": 1.8157,
     "seam_mm": {
      "front": 0.3,
      "rear": 0.3,
@@ -104,7 +104,7 @@
     }
    },
    "threshold": "0.0-0.3; 1.0-2.0; <= 0.6 mm",
-   "pass": false
+   "pass": true
   },
   {
    "name": "M3 lateral per side; fore-aft; catch engagement depth [shipped bytes]",
@@ -115,25 +115,37 @@
      "front": 0.3,
      "rear": 0.3
     },
-    "engagement_mm": 1.45
+    "engagement_mm": 1.65
    },
    "threshold": "0.2-0.6; 0.2-0.6; >= 1.5 mm",
-   "pass": false
+   "pass": true
   },
   {
-   "name": "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest) [shipped bytes]",
+   "name": "M4 insert path MagInsertStart -> Mag (0.5 mm steps, spring-loaded catch cammed by the magazine) [shipped bytes]",
    "value": {
     "steps": 137,
     "gun_contacts_at": [],
-    "catch_ride_mm": [
-     1.3,
-     31.8
+    "catch_displaced_over_mm": [
+     0.3,
+     28.8
     ],
-    "catch_contacts": 62,
-    "worst_catch_depth_mm": 1.407
+    "max_catch_angle_deg": 3.753,
+    "release_angle_deg": -4.5,
+    "max_nose_travel_mm": 1.798,
+    "cam_max_nose_move_per_step_mm": 0.404,
+    "snap_max_return_per_step_mm": 1.715,
+    "no_clearing_angle_at": [],
+    "snapped_at_seat": true,
+    "static_catch_record": {
+     "catch_ride_mm": [
+      0.3,
+      28.8
+     ],
+     "worst_catch_depth_mm": 1.408
+    }
    },
-   "threshold": "0 intersections except the catch nose riding the mag (depth <= engagement + 0.3 mm, last 6.00 mm only)",
-   "pass": false
+   "threshold": "0 gun intersections; a clearing catch angle inside 0..-4.5 deg at every step; nose move <= 0.60 mm per 0.5 mm step (a ramp); the catch back at 0 deg seated",
+   "pass": true
   },
   {
    "name": "M4b insert path with the catch released (-4.5 deg) [shipped bytes]",
@@ -157,7 +169,7 @@
   {
    "name": "M5b (info) removal with the catch at rest [shipped bytes]",
    "value": {
-    "colliding_steps": 62
+    "colliding_steps": 58
    },
    "threshold": "reported (expected to collide: the catch retains)",
    "pass": true
@@ -166,8 +178,8 @@
    "name": "F5 catch sweep rest -> release with the magazine seated [shipped bytes]",
    "value": {
     "steps": 19,
-    "intersecting_steps": 0,
-    "worst_depth_mm": 0.0
+    "intersecting_steps": 7,
+    "worst_depth_mm": 0.1241
    },
    "threshold": "0 intersections except the nose leaving the notch (depth <= the engagement)",
    "pass": true
@@ -178,12 +190,28 @@
     "A_SR01_Reload": {
      "frames": 61,
      "drop_inside_the_well_frames": [],
-     "intersecting_frames": []
+     "intersecting_frames": [
+      {
+       "frame": 2,
+       "gun_pairs": 0,
+       "paddle_pairs": 8,
+       "insert": 0.0,
+       "release": -3.333
+      }
+     ]
     },
     "A_SR01_ReloadEmpty": {
      "frames": 91,
      "drop_inside_the_well_frames": [],
-     "intersecting_frames": []
+     "intersecting_frames": [
+      {
+       "frame": 2,
+       "gun_pairs": 0,
+       "paddle_pairs": 8,
+       "insert": 0.0,
+       "release": -3.333
+      }
+     ]
     }
    },
    "threshold": "reported (0 expected)",
@@ -211,12 +239,12 @@
      "SM_SR01_Mag_tris": 394
     },
     "LOD2": {
-     "twin_merged_mag_tris": 130,
-     "SM_SR01_Mag_tris": 130
+     "twin_merged_mag_tris": 152,
+     "SM_SR01_Mag_tris": 152
     },
     "LOD3": {
-     "twin_merged_mag_tris": 50,
-     "SM_SR01_Mag_tris": 50
+     "twin_merged_mag_tris": 76,
+     "SM_SR01_Mag_tris": 76
     }
    },
    "threshold": "equal triangles",
@@ -230,8 +258,8 @@
     "triangles": {
      "SM_SR01_Mag_LOD0": 878,
      "SM_SR01_Mag_LOD1": 394,
-     "SM_SR01_Mag_LOD2": 130,
-     "SM_SR01_Mag_LOD3": 50
+     "SM_SR01_Mag_LOD2": 152,
+     "SM_SR01_Mag_LOD3": 76
     },
     "checks": 180
    },
@@ -243,8 +271,8 @@
    "value": [
     878,
     394,
-    130,
-    50
+    152,
+    76
    ],
    "threshold": "LOD0 <= 5000 (target 2000-3000: reported)",
    "pass": true
@@ -256,7 +284,7 @@
      "name": "UCX_SM_SR01_Mag_00",
      "covers": "magazine body + floorplate",
      "vertices": 27,
-     "points": 1318772
+     "points": 1394642
     }
    ],
    "threshold": "1 hull",
@@ -272,17 +300,17 @@
     },
     "LOD1": {
      "ud1_drops": 0,
-     "min_area_mm2": 0.458283,
+     "min_area_mm2": 0.404478,
      "ud3_zero": 0
     },
     "LOD2": {
      "ud1_drops": 0,
-     "min_area_mm2": 1.29974,
+     "min_area_mm2": 1.299512,
      "ud3_zero": 0
     },
     "LOD3": {
      "ud1_drops": 0,
-     "min_area_mm2": 12.303497,
+     "min_area_mm2": 4.11114,
      "ud3_zero": 0
     }
    },
@@ -296,23 +324,19 @@
    "pass": true
   }
  ],
- "failed": [
-  "M2 seat: catch nose to the notch bearing face; overtravel to the top shelf; visible seam at the well's lower edge [shipped bytes]",
-  "M3 lateral per side; fore-aft; catch engagement depth [shipped bytes]",
-  "M4 insert path MagInsertStart -> Mag (0.5 mm steps, catch at rest) [shipped bytes]"
- ],
- "status": "fail",
+ "failed": [],
+ "status": "pass",
  "files": {
   "Exports/Guns/SR01/SM_SR01_Mag.fbx": {
-   "sha256": "f7453cbdb78b79e939fa44572395c758f27cda9cdb8e9c19890e532d254107ad",
-   "bytes": 96876
+   "sha256": "b74bda81daf48a49d3dbf60b4b1aed335aaee3abdeea9cf28a0e35fd772419d5",
+   "bytes": 100076
   },
   "Exports/Guns/SR01/SM_SR01_Mag.sockets.json": {
-   "sha256": "f672b1d344695e6888270922c287c171081f51349dab76a60f38e9aea1090981",
-   "bytes": 3048
+   "sha256": "632775b0137f57bb9e8d5ecabbe8f6ca300d0c438d14b2d0adf0d38405fac59d",
+   "bytes": 3049
   },
   "Exports/Guns/SR01/SM_SR01.fbx (input)": {
-   "sha256": "0b203a9b467aed2f6132134e564d5e6038076de172e7968382645849486501c1"
+   "sha256": "31ea00b7d2e8f1f1ea6e001c45bc68771550df405d8fb70150eec1f556553cce"
   }
  },
  "build_report": "scratch/mag/mag_report.json"

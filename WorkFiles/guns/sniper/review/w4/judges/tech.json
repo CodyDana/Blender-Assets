@@ -1,0 +1,94 @@
+{
+ "judge": "tech",
+ "date": "2026-10-13",
+ "summary": "Geometry, LOD, collision, socket, bounds and naming gates all pass on the exported bytes: gun 34,180/15,350/5,078/2,474 (45%/15%, strictly descending), 10+1+3 UCX hulls with 0 of 29.7M samples outside, 20+5+5 sockets in sidecars at <=0.0004 mm, bounds extension recorded, textures square power-of-two with 16-bit normals, and no deny-list or real brand hit in any file or sidecar. The release gaps are packaging and verification, not geometry: there is no README.md or MATERIALS_README.md in Exports/Guns/SR01, no Unreal import gate exists for SR01 (W5 not run), and the pack material instances (W6) are not built. Several W2 texture gates were recorded as declared near-misses (B9 uniformity, FAKE-looking realism judges, S/F marking not painted) that a buyer could notice. Budget floors (gun, mag, scope) are under target but inside ceilings and declared.",
+ "checks": {
+  "1 topology and budgets": "pass",
+  "2 UVs (UV0 + UV1, overlaps, density)": "finding",
+  "3 collision (UCX naming, hulls, C1)": "pass",
+  "4 sockets": "pass",
+  "5 bounds extension": "pass",
+  "6 textures": "finding",
+  "7 names / IP / brand scan": "pass",
+  "8 README readiness": "finding",
+  "9 failed / declared / deferred items": "finding",
+  "Unreal import verification": "not verifiable"
+ },
+ "findings": [
+  {
+   "id": "T1",
+   "severity": "major",
+   "area": "README / packaging",
+   "evidence": "Exports/Guns/SR01 holds no README.md and no MATERIALS_README.md (SMG01 has both). No Textures/Recolour/recolour_constants.json either: only recolour_maps.json (master M_Fabric_Master, colour_linear 0.08326/0.08521/0.06093, detail16 2048).",
+   "suggested_fix": "Write README.md on the SMG01 model: file table (SK + LOD1-3 tris 34,180/15,350/5,078/2,474; SM_SR01 35,058/15,744/5,230/2,552 with 10 hulls UCX_SM_SR01_LOD0_00..09; SM_SR01_Mag 878/394/152/78 with 1 hull; SM_Att_Scope_LongRange 5,884/2,640/846 with 3 hulls; 8 clips with fps/frames; Physics proxy). Import steps: Import Normals, Convert Scene, Force Front X off, no physics asset at import, import_lod for LOD1-3, LOD screen sizes SK 1/0.27303/0.07165/0.03604, SM_SR01 1/0.25/0.06561/0.033, Mag 1/0.03448/0.00905/0.00455, scope 1/0.09518/0.02498. Bone compression DefaultRecorderBoneCompression and why. Notifies table from the sidecar. Bounds extension (+0/8.681/2.407, -0/12.877/18.394 cm). Safety held at FIRE in Fire/BoltCycle/ReloadEmpty. Bipod states and 12 deg leg splay, cheek riser. Scope mount (Rail_Top + 2 slots = 20.02 mm; Sight/EyePoint are the aim sockets; the gun has no Sight socket). Socket lists (20 gun, 5 mag, 5 scope). Mag straight reload path 67.8 mm. Collision and in-hand advice, mass 5.9 kg and CoM. Texture table with colour-space and compression settings. FP FirstPerson + ForcedLodModel=1. Shared-skeleton note. 'Not tested yet' list. Write MATERIALS_README.md after W6 (MI_SR01_Metal on M_Steel_Master, MI_SR01_Chassis on M_Fabric_Master with Colour + Use Original Baked Colours off, MI_SR01_Mag, scope instances)."
+  },
+  {
+   "id": "T2",
+   "severity": "major",
+   "area": "Unreal verification",
+   "evidence": "WorkFiles/guns/sniper/gates contains no Unreal-run gate; every pass is a Blender re-import of the exported bytes. Plan items U5 (engine bounds / sphere radius), U7 (dropped-gun runtime bounds with the PHYS_SR01 envelope box), U9 (notifies, clip fidelity) and the hull/socket/LOD-size import are unmeasured. game.json B11 says 'U5 re-checks in engine'.",
+   "suggested_fix": "Run the W5 Unreal pass in a fresh process on the exact bytes (sha256 are recorded in rig_export.json, mag.json, scope_export.json) before any README claim of 'checked in Unreal'. README must say 'not tested yet' until then."
+  },
+  {
+   "id": "T3",
+   "severity": "major",
+   "area": "Texture quality as shipped (declared W2 items)",
+   "evidence": "uv_bake_paint.json status 'partial': B9 uniformity failed for Metal class C (P5 31.3 vs 31.5 needed) and scope Scope_Body class C (40.9 vs 41.1); realism judges FAKE 7/7 (judge A) and FAKE 7/7 (judge B) on the textured renders, geometry tells deferred to W4b; one declared line says the S / F stamp painted 0 texels and 'not delivered in W2', while the paint report row shows markings_texels 109 on Chassis; declared UD2 3/4/0 and 8 UD3 zero-tangent corners 'must be 0 before the W3 export' (later gate rows in the same file show UD2 0/0/0 and UD3 0, so the declared list is stale). Texture files in git status are modified after this report.",
+   "suggested_fix": "Confirm the B9 near-misses were fixed (per-island scale normalisation) or accept them in the README; re-run realism judges after W4b; reconcile the declared list with the final gates; state in the README whether the generic S/F marking ships. Re-read the final paint_report."
+  },
+  {
+   "id": "T4",
+   "severity": "minor",
+   "area": "Triangle budgets",
+   "evidence": "game.json B8: gun LOD0 34,180 below the plan's 35k floor (35,058 with the merged mag); mag LOD0 878 vs 2-3k target (mag.json); scope LOD0 5,884 vs 6-10k target (scope_export.json). LOD1 44.9%, LOD2 14.9%, LOD3 2,474 inside the 2-3k band; all strictly descending; all under the 50k/5k/12k ceilings. LOD-pop gate passes (mean <=0.107 px, max 2.5 px at 2560x1440).",
+   "suggested_fix": "None needed; record as accepted deviations in the README (SMG review item n2 precedent)."
+  },
+  {
+   "id": "T5",
+   "severity": "minor",
+   "area": "UV1 lightmap",
+   "evidence": "game.json: UV1 overlaps collapsed by the qa rule on coarse LODs (LOD1 2,514, LOD2 1,194, LOD3 586). uv_bake_paint.json UD4: collapsed_triangles 20,020 (gun, 34k tris) and 2,292 (scope, 5.9k tris) at 64 and 128 px, 0 shared texels and 0 padding violations. rig_export.json B2 note: coarse-LOD UV0 slivers 'opened by 4e-6 UV' (LOD1 79, LOD2 116, LOD3 69).",
+   "suggested_fix": "README: use authored UV1 with Generate Lightmap UVs off, LightMapResolution <=128 (SMG n3 precedent: the engine showed overlaps at 1024); measure in engine at W5."
+  },
+  {
+   "id": "T6",
+   "severity": "minor",
+   "area": "Texture colour-space metadata",
+   "evidence": "All 21 PNGs carry no gAMA/sRGB/iCCP chunk. Normal maps are 16-bit RGB (bit depth 16, colour type 2), Masks RGBA, ORM RGB, Detail16 16-bit grey. Sizes: Metal 2048 (Masks 1024), Chassis 4096 (Masks 2048), Mag 1024 (Masks 512), Scope_Body 2048 (Masks 1024), Scope_Lens 512 (Masks 256): all square power of two. Names follow T_<Asset>_<Set>_<Map>; the scope names double 'Scope' (T_Att_Scope_LongRange_Scope_Body_BC). BC sRGB / ORM linear / N DirectX is only stated in the gate notes, not in any shipped file.",
+   "suggested_fix": "README must state BC sRGB; ORM and Masks linear; N DirectX with Normalmap compression; Detail16 G16 grayscale; BC7 for the polymer BC as in the SMG README. Optional cosmetic: shorten the scope set names."
+  },
+  {
+   "id": "T7",
+   "severity": "minor",
+   "area": "Magazine hull name not re-verified on the export",
+   "evidence": "mag.json hull gate lists 'UCX_SM_SR01_Mag_00' (no LOD0); the rule for a LOD group is UCX_<base>_LOD0_NN (SMG ships UCX_SM_SMG01_Mag_LOD0_00). game.json C1 prints the twin hulls as 'UCX_SM_SR01_00' but its re-import row shows 'UCX_SM_SR01_LOD0_00..09' (correct). mag.json has no re-import name row (only M7/M9 sidecar rows); scope_export.json does confirm UCX_SM_Att_Scope_LongRange_LOD0_00..02.",
+   "suggested_fix": "One re-import name check on SM_SR01_Mag.fbx to confirm UCX_SM_SR01_Mag_LOD0_00; fix the gate label."
+  },
+  {
+   "id": "T8",
+   "severity": "minor",
+   "area": "Skeleton compatibility claim",
+   "evidence": "SK_SR01.skeletal.json compatible_skeletons ['SK_AR01_Skeleton']; rig_export/game gate: gunlib's own parent table rejects 'cheek_riser<-body' (proposal P1, validated with a sniper-side table); SR01 adds bipod, bipod_leg_*, cheek_riser and has no stock bone. Unreal compatibility is untested.",
+   "suggested_fix": "README: say the shared Anim Blueprint will warn on bones missing from either skeleton (SMG README precedent) and that SR01-only bones are driven by clips; verify in W5."
+  },
+  {
+   "id": "T9",
+   "severity": "minor",
+   "area": "LOD pair intersections (mag vs gun)",
+   "evidence": "mag.json M1: gun LOD2 / mag LOD2 57 pairs (0.381 mm, 0.032 px at 15.1 m), LOD3 / LOD3 68 pairs (1.688 mm, 0.072 px at 30.1 m); LOD0-1 pairs 0. M5b removal with the catch at rest collides in 58 steps (expected, the catch retains).",
+   "suggested_fix": "None; sub-pixel at the switch distance."
+  },
+  {
+   "id": "T10",
+   "severity": "minor",
+   "area": "FBX embedded source path",
+   "evidence": "SMG review item n6: FBX NativeFilePath carries the absolute source path, deferred pipeline-wide. Not checked here (FBX binaries not parsed).",
+   "suggested_fix": "Not verifiable from files; confirm the pipeline fix landed before the Fab release."
+  }
+ ],
+ "verified_ok": {
+  "deny_scan": "B10 checked 1008 names, 0 hits. An independent regex scan of all SR01 JSON sidecars for Accuracy International, AICS, Remington, MDT, KRG, Harris, Atlas, Vortex, Leupold, Schmidt, Nightforce, Barrett, Savage, Tikka, Sako, Mauser, CheyTac, Steyr, Ruger, Winchester, Bushnell, Swarovski, Zeiss, Magpul, M24, M40, AWP, L96 found 0 hits. Names used: SR01, Att_Scope_LongRange, M_Steel_Master, M_Fabric_Master.",
+  "sockets": "Skeletal sidecar lists 20 sockets (Grip, SupportHand, SupportHandBipod, Muzzle, MuzzleSeat, ShellEject, Mag, MagInsertStart, Rail_Top, SlingFront, SlingRear, Shoulder, CenterOfMass, Holster, Trigger, Selector, MagRelease, BoltHandle, BipodFoot_L, BipodFoot_R) = SM_SR01.sockets.json set; worst 4e-05 mm; mag 5 and scope 5 (CenterOfMass, EyePoint, Lens_Front, Mount, Sight). Sidecar notes cover the LodGroup socket drop; the 100x scale is handled by the sidecar path.",
+  "bounds": "Sidecar import.bounds_extension_cm +0/8.681/2.407, -0/12.877/18.394, plus a no-collision, no-mass bounds-envelope box in physics_bodies (SMG U7 precedent); LOD0-3 x every clip frame and extreme poses are inside (worst excursion 184.6 mm at legs90_ext76_cant +-15)."
+ }
+}

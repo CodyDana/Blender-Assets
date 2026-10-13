@@ -1,0 +1,78 @@
+{
+  "judge": "realism_B",
+  "images": {
+    "hero_34": {
+      "verdict": "fake",
+      "confidence": 93,
+      "tells": [
+        "Chassis (olive/grey-green) reads as flat untextured CG: uniform albedo, one roughness value, faint procedural speckle noise instead of real Cerakote/anodize orange-peel; no edge wear, no handling polish, no dust in recesses.",
+        "Chassis edges are near-razor-sharp boxy planes (forend slab, stock block, top rail of chassis) with no visible bevel highlight; real machined aluminium chassis carry 0.5-1.5 mm chamfers that catch a light line.",
+        "Forend M-LOK slots are plain rounded cutouts with no internal wall shading / chamfer and nothing seen through them (barrel behind should be visible).",
+        "Pistol grip has a crude faceted low-poly silhouette and a stretched dark texture; finger grooves and lower 'shelf' look like blockout geometry.",
+        "Bolt knob is a perfect smooth sphere on a thin straight rod: real tactical bolt knobs are knurled/tapered and the handle root has a weld/forged transition.",
+        "Magazine is a featureless dark box with two engraved lines; no feed lips visible, no floorplate seam, no texture.",
+        "Scope body is good-ish but too uniform: glossy black anodize has identical specular everywhere, no fine machining lines, no markings on turrets (elevation turret top is plain, no numerals/hash ticks), objective lens is a flat blue-purple disk with no internal reflections or coating colour variation.",
+        "Scope rings/rail: Picatinny slots are clean CG cuts; ring cap screws lack Torx/hex recesses at this scale.",
+        "Lighting: flat grey seamless with soft uniform fill and no contact shadow or environment reflection detail; reads as a turntable render, not a photo."
+      ]
+    },
+    "deployed_34": {
+      "verdict": "fake",
+      "confidence": 94,
+      "tells": [
+        "Same flat, single-value chassis material; large slabs of uniform grey-green with no colour or roughness variation, no wear on stock toe, cheek riser edges or forend tip.",
+        "Buttstock: recoil pad and cheek riser are rectangular blocks with stepped vertical ribs that look like extruded boxes; the two round buttons on the stock side are flat cylinders with no seating/shadow detail.",
+        "Bipod legs read as smooth plastic tubes with a few chrome bands; no knurling, no spring, no leg-lock detail of believable scale, rubber feet are perfect cylinders with no tread or dirt.",
+        "Bolt body visible in the ejection port is mirror chrome with a hard white specular stripe: real bolt bodies are matte-to-satin (jewelled or nitrided), not chrome.",
+        "Barrel flutes are clean, but barrel is uniformly matte black with no muzzle discolouration/carbon, no heat or handling marks.",
+        "No ground plane / no shadow under bipod feet; rifle floats in a grey void, which instantly says render."
+      ]
+    },
+    "fp_35cm": {
+      "verdict": "fake",
+      "confidence": 97,
+      "tells": [
+        "Scope tube looks like polished chrome/silver steel (bright mirrored bands) instead of black hard-anodized aluminium; this is the single loudest tell at first-person distance and it conflicts with the black scope seen in the other shots.",
+        "Eyepiece rubber/bell has visible polygon faceting on the silhouette (low segment count) and a dark flat lens with zero reflection.",
+        "Bolt body and bolt shroud are mirror chrome; real bolts are matte/satin; bolt knob shows a uniform procedural knurl dot pattern that looks stamped on, not cut.",
+        "Chassis top surfaces are flat untextured planes with hard edges; the faint numerals/markings near the safety are barely legible decals floating on a featureless surface.",
+        "No wear on the most-touched areas visible in FP (bolt knob, safety, top of chassis behind the action, scope turret caps).",
+        "Turret caps lack any engraved numbers/ticks; side parallax knob is plain grooved disc."
+      ]
+    },
+    "tp_3m": {
+      "verdict": "fake",
+      "confidence": 80,
+      "tells": [
+        "At 3 m the silhouette is plausible and proportions read like a real chassis rifle, which helps; but the chassis is a single flat light grey-green tone that reads as unpainted plastic/clay, with no tonal separation between chassis, stock hardware and receiver.",
+        "Stock/butt assembly reads as a stack of boxes; recoil pad appears as a dark brick.",
+        "Scope objective shows a saturated purple-blue disk; real coatings read mostly dark with a faint green/amber/magenta tint and a sky reflection.",
+        "Grey studio void with no shadow; scene staging, not material, makes this read CG at this distance."
+      ]
+    },
+    "ads_eyepiece": {
+      "verdict": "fake",
+      "confidence": 99,
+      "tells": [
+        "Eyepiece view shows only a black/near-black disk: no reticle, no image through the glass, no exit-pupil, no eye-box vignette. Anyone who has looked through a scope knows it instantly.",
+        "Eyepiece rim silhouette is visibly faceted (low segment count polygon edge, roughly 24-32 sides) with a hard bright rim highlight.",
+        "Inner barrel wall shows a flat CG gradient rather than the matte black baffled interior and rubber eyecup."
+      ]
+    }
+  },
+  "overall": "fake",
+  "priorities": [
+    "Fix the scope tube material everywhere (FP shot shows it chrome): black hard-anodized aluminium, base colour ~sRGB 18-24 (linear ~0.006-0.009), metallic 0 to 0.2 (anodize behaves dielectric-ish) or metallic 1 with very dark albedo, roughness 0.35-0.5 with low-frequency roughness variation +-0.05, and a fine circumferential lathe/brush anisotropy. Check the FP shot uses the same material/LOD as the hero.",
+    "Build a real ADS view: render-target or textured reticle (e.g. mil-dot/Christmas-tree style, generic) on the ocular, an image of the scene through the scope with circular exit pupil and soft dark vignette ring, faint chromatic fringe at the edge. A black disk is unacceptable for a sniper.",
+    "Chassis material: replace the single-value grey-green with a Cerakote/anodize stack: base colour variation +-3% value via large-scale noise, orange-peel micro normal (0.2-0.5 mm scale, intensity low), roughness 0.55-0.7 base with polished/worn areas down to 0.35-0.45 on handled zones; add edge wear exposing bare aluminium (light grey, metallic 1, roughness 0.3-0.4) on forend tip edges, stock toe, cheek riser corners, mag well lips and bolt-side of the receiver; add dust/grime in recesses (AO-driven, slightly lighter and rougher).",
+    "Bevels: add 0.6-1.2 mm chamfers on every chassis and stock edge, 0.3-0.5 mm on small parts (screws, rings, turrets), with weighted normals so the highlight line reads; chamfer the inner walls of the M-LOK slots and let the barrel show through them.",
+    "Bolt: matte/satin finish (nitrided black or bead-blasted steel, roughness 0.3-0.5, not mirror); add the bolt's helical/jewelled or fluted body pattern, extractor and handle root transition; bolt knob tapered with cut knurling (diamond pattern ~1 mm pitch as real geometry normal map), not a perfect sphere.",
+    "Raise segment counts on all round parts seen close (eyepiece, objective bell, turrets, barrel muzzle, bipod tubes): minimum 48-64 sides on the scope bells and eyepiece, or smooth-shaded with proper normals so no facets show on silhouettes.",
+    "Objective/ocular glass: dark with thin multicoating tint (green/amber/magenta Fresnel, low saturation), IOR ~1.52, environment reflections; show internal lens element rings and a black baffled interior instead of a flat blue-purple disk.",
+    "Small-part detail: engrave turret numerals and hash ticks (0-10 with half-marks), a zero-stop line, Torx/hex recesses in ring cap and chassis screws, Picatinny slot crosscuts with chamfer, magazine feed lips and floorplate seam, pistol grip stipple texture and smoother sculpted contour.",
+    "Stock: break up the box forms of the butt and cheek riser with radiused transitions, a real rubber recoil pad (soft rubber, roughness 0.8-0.9, slight sheen, moulded texture), and adjustment wheels/levers with knurling.",
+    "Bipod: knurled leg-lock collars, visible springs and pivot hardware, matte rubber feet with tread and dirt; legs in hard-anodized black rather than plastic-looking smooth tubes.",
+    "Barrel: add slight muzzle carbon darkening and matte Cerakote finish (roughness 0.6), subtle heat discolouration near the muzzle device, and a crowned muzzle detail.",
+    "Presentation: render on a surface or HDRI with a contact shadow and real environment reflections (outdoor overcast HDRI suits anodize); the grey void with flat fill makes everything read as a turntable render."
+  ]
+}

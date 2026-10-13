@@ -1,0 +1,623 @@
+{
+ "stage": "W4 review fixes (SR01_BUILD_PLAN 9 row W4)",
+ "date": "2026-10-13T18:56:35",
+ "stage_files": {
+  "form": {
+   "status": "partial",
+   "failed": [
+    "L2 GL IoU (scope stand-in)",
+    "L2 TOP IoU raw / declared fit",
+    "L2 per part on GR (IoU >= 0.95)",
+    "L3 GR contour P95 (sheet px)",
+    "L4 key dimensions (<= 0.05 mm)"
+   ]
+  },
+  "scope_form": {
+   "status": "pass",
+   "failed": []
+  },
+  "uv_bake_paint": {
+   "status": "partial",
+   "failed": [
+    "gun: B9 density Metal class C (px/cm P5 / median / P95)",
+    "scope: B9 density Scope_Body class C (px/cm P5 / median / P95)"
+   ]
+  },
+  "game": {
+   "status": "pass",
+   "failed": []
+  },
+  "rig_export": {
+   "status": "pass",
+   "failed": []
+  },
+  "mag": {
+   "status": "pass",
+   "failed": []
+  },
+  "scope_export": {
+   "status": "pass",
+   "failed": []
+  }
+ },
+ "judges": {
+  "before": {
+   "realism_A": {
+    "overall": "fake",
+    "images": {
+     "fp_35cm": "fake",
+     "ads_eyepiece": "fake",
+     "tp_3m": "fake",
+     "hero_34": "fake",
+     "deployed_34": "fake"
+    }
+   },
+   "realism_B": {
+    "overall": "fake",
+    "images": {
+     "hero_34": "fake",
+     "deployed_34": "fake",
+     "fp_35cm": "fake",
+     "tp_3m": "fake",
+     "ads_eyepiece": "fake"
+    }
+   },
+   "blind": {
+    "pairs": 14,
+    "copy_identified": 14,
+    "basis": {
+     "design": 14,
+     "style only": 0,
+     "guess": 0
+    }
+   }
+  },
+  "after": {
+   "realism_A": {
+    "overall": "fake",
+    "images": {
+     "fp_35cm": "fake",
+     "ads_eyepiece": "fake",
+     "tp_3m": "fake",
+     "hero_34": "fake",
+     "deployed_34": "fake"
+    }
+   },
+   "realism_B": {
+    "overall": "fake",
+    "images": {
+     "hero_34": "fake",
+     "deployed_34": "fake",
+     "fp_35cm": "fake",
+     "tp_3m": "fake",
+     "ads_eyepiece": "fake"
+    }
+   }
+  }
+ },
+ "counts": {
+  "items": 30,
+  "FIXED": 11,
+  "PARTIAL": 3,
+  "DEFERRED": 12,
+  "REJECTED": 2,
+  "DECLARED": 1
+ },
+ "items": [
+  {
+   "id": "A1",
+   "source": "W3",
+   "area": "Magazine catch (M2 0.87 / M3 1.45 / M4 ride)",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "sniper_parts: the spring-catch hook (flat bearing top Z -47.5, nose X 415.75, 41 deg ramp underside), notch 2.2 deep, magazine body top -21.2 (the shelf is the stop at 1.5) and lips + top round +0.5 (round to bolt 1.82); M4 in gunlib's catch_spring mode (the SMG's real-pattern rule). Proven first on the form blend (sr_catch_probe.py), then the full chain",
+   "evidence": {
+    "M2": {
+     "value": {
+      "bearing_gap_mm": 0.21,
+      "overtravel_mm": 1.8157,
+      "seam_mm": {
+       "front": 0.3,
+       "rear": 0.3,
+       "left": 0.3,
+       "right": 0.3
+      }
+     },
+     "pass": true
+    },
+    "M3": {
+     "value": {
+      "clearance_mm": {
+       "left": 0.3,
+       "right": 0.3,
+       "front": 0.3,
+       "rear": 0.3
+      },
+      "engagement_mm": 1.65
+     },
+     "pass": true
+    },
+    "M4": {
+     "value": {
+      "steps": 137,
+      "gun_contacts_at": [],
+      "catch_displaced_over_mm": [
+       0.3,
+       28.8
+      ],
+      "max_catch_angle_deg": 3.753,
+      "release_angle_deg": -4.5,
+      "max_nose_travel_mm": 1.798,
+      "cam_max_nose_move_per_step_mm": 0.404,
+      "snap_max_return_per_step_mm": 1.715,
+      "no_clearing_angle_at": [],
+      "snapped_at_seat": true,
+      "static_catch_record": {
+       "catch_ride_mm": [
+        0.3,
+        28.8
+       ],
+       "worst_catch_depth_mm": 1.408
+      }
+     },
+     "pass": true
+    },
+    "M4b": {
+     "value": {
+      "steps": 137,
+      "intersecting_steps": 0
+     },
+     "pass": true
+    },
+    "M5": {
+     "value": {
+      "steps": 137,
+      "intersecting_steps": 0
+     },
+     "pass": true
+    },
+    "F5": {
+     "value": {
+      "steps": 19,
+      "intersecting_steps": 7,
+      "worst_depth_mm": 0.1241
+     },
+     "pass": true
+    }
+   }
+  },
+  {
+   "id": "A2",
+   "source": "W3",
+   "area": "Scope LOD2: FBX dropped 2 coincident faces",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "sr_lodlib.drop_coincident_pairs after the joined LOD's weld (back-to-back internal walls of touching parts go in pairs) and on any fin a decimated part keeps; the check is unchanged",
+   "evidence": {
+    "scope LOD triangles build = FBX": {
+     "value": {
+      "fbx": {
+       "SM_Att_Scope_LongRange_LOD0": 9938,
+       "SM_Att_Scope_LongRange_LOD1": 4464,
+       "SM_Att_Scope_LongRange_LOD2": 1454
+      },
+      "build": {
+       "SM_Att_Scope_LongRange_LOD0": 9938,
+       "SM_Att_Scope_LongRange_LOD1": 4464,
+       "SM_Att_Scope_LongRange_LOD2": 1454
+      }
+     },
+     "pass": true
+    },
+    "SK LOD triangles": {
+     "value": {
+      "SK_SR01.fbx": [
+       34280,
+       34280
+      ],
+      "SK_SR01_LOD1.fbx": [
+       15396,
+       15396
+      ],
+      "SK_SR01_LOD2.fbx": [
+       5094,
+       5094
+      ],
+      "SK_SR01_LOD3.fbx": [
+       2468,
+       2468
+      ]
+     },
+     "pass": true
+    }
+   }
+  },
+  {
+   "id": "A3",
+   "source": "W3",
+   "area": "LOD2 switching late (25.6 m)",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "sr_game: silhouette-weighted LOD ratios (hidden pins / screws / swivel / bolt at 0.4 x at LOD2, 0.3 x at LOD3) and silhouette parts never dropped (W3 dropped pad_plate at LOD2: the 2.9 px pop at the butt). LOD2 15.1 m, LOD3 30.1 m (were 25.6 / 45.8); relative to size LOD2 now switches earlier than the SMG's (s 0.066 vs 0.053)",
+   "evidence": {
+    "game_lod_sizes": {
+     "SM_SR01": [
+      1.0,
+      0.25,
+      0.06561,
+      0.033
+     ],
+     "bounds_radius_m": 0.55799,
+     "states": [
+      "folded",
+      "deployed"
+     ],
+     "SK_SR01": [
+      1.0,
+      0.27303,
+      0.07165,
+      0.03604
+     ],
+     "SK_engine_radius_m": 0.6094,
+     "note": "SM_SR01 sizes from the LOD-pop gate (both bipod poses) at the twin's engine sphere radius (bounds_radius_m); SK_SR01 sizes = the same switch distances at the SK's engine radius (bind box + bounds extension: every clip frame and the extreme bipod / bolt / riser poses)"
+    }
+   }
+  },
+  {
+   "id": "A3b",
+   "source": "W4",
+   "area": "Hull UCX_SM_SR01_LOD0_01 (cheek riser) diverged to 1e16 m (W4 LOD change)",
+   "severity": "blocker",
+   "verdict": "FIXED",
+   "fix": "sr_game.valid_hull: every hull checked (outward faces, box, containment); a failed gunlib hull is rebuilt by sr_lodlib.hull_safe (same method, 1 um dedup, normals recalculated after every hull step)",
+   "evidence": {
+    "C1": {
+     "value": {
+      "hulls": [
+       [
+        "UCX_SM_SR01_00",
+        27,
+        "butt + pad + pad plate + butt knobs"
+       ],
+       [
+        "UCX_SM_SR01_01",
+        27,
+        "cheek riser + posts + lever"
+       ],
+       [
+        "UCX_SM_SR01_02",
+        27,
+        "grip + trigger guard + trigger + release paddle"
+       ],
+       [
+        "UCX_SM_SR01_03",
+        27,
+        "action: chassis centre, receiver rear, rail rear, bolt + handle, safety"
+       ],
+       [
+        "UCX_SM_SR01_04",
+        32,
+        "magazine well + merged magazine (twin only)"
+       ],
+       [
+        "UCX_SM_SR01_05",
+        27,
+        "forend + clamp + barrel inside the channel"
+       ],
+       [
+        "UCX_SM_SR01_06",
+        27,
+        "barrel (exposed) + muzzle device"
+       ],
+       [
+        "UCX_SM_SR01_07",
+        27,
+        "bipod swivel + tension knob + pins"
+       ],
+       [
+        "UCX_SM_SR01_08",
+        27,
+        "bipod leg left (folded) + extension + foot"
+       ],
+       [
+        "UCX_SM_SR01_09",
+        27,
+        "bipod leg right (folded) + extension + foot"
+       ]
+      ],
+      "samples": 29732546,
+      "outside": 0,
+      "max_hull_vertices": 32,
+      "pass": true
+     },
+     "pass": true
+    }
+   }
+  },
+  {
+   "id": "A4",
+   "source": "W3",
+   "area": "Magazine LOD0 878 triangles (target 2-3k)",
+   "severity": "minor",
+   "verdict": "DECLARED",
+   "fix": "not raised: the body sits in the well; the visible lower body + floorplate already carry the chamfers and pressed ribs as geometry; more triangles would not change the close read (A4 of the run brief)",
+   "evidence": {}
+  },
+  {
+   "id": "A5",
+   "source": "W3",
+   "area": "Re-export + fresh-process verify + regate",
+   "severity": "-",
+   "verdict": "FIXED",
+   "fix": "run_rig_mag.sh on the fix-round blend",
+   "evidence": {
+    "game": "pass",
+    "rig_export": "pass",
+    "mag": "pass",
+    "scope_export": "pass"
+   }
+  },
+  {
+   "id": "C1",
+   "source": "craft + both realism judges",
+   "area": "Scope anodize reads as polished chrome",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "sr_surface FIN scope_anod rough 0.24-0.34 -> 0.46-0.56 (study type III 0.45-0.65)",
+   "evidence": {}
+  },
+  {
+   "id": "C2",
+   "source": "craft",
+   "area": "Trigger guard open at the bottom (sheet: closed loop)",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "sniper_parts.chassis: the bottom bar X 336.5-399.5 from the arms' lowest point to the opening floor, sides at Y +-8.6 (0.4 inside the arms: the coplanar / short variants left 1-10 UD1 slivers)",
+   "evidence": {
+    "trigger_guard GR IoU": null,
+    "B3 trigger": "form.json B3 (0 intersections)",
+    "F9": "form.json F9"
+   }
+  },
+  {
+   "id": "C3",
+   "source": "craft (+ realism)",
+   "area": "Traced outline noise (forend nose sawtooth, butt-pad notches, mag-well facets)",
+   "severity": "major",
+   "verdict": "DEFERRED",
+   "fix": "W4b close-up realism pass: generator-level (C3 line / arc fit of the trace before extrusion, C4 lofted grip, C5 chassis edge bevels with the UD repair) and paint (C6 chips / grime); each is a method change with its own gate run, larger than this fix round",
+   "evidence": {}
+  },
+  {
+   "id": "C4",
+   "source": "craft (+ realism)",
+   "area": "Pistol grip: flat stepped extrusion, toe spur, no draft / parting line",
+   "severity": "major",
+   "verdict": "DEFERRED",
+   "fix": "W4b close-up realism pass: generator-level (C3 line / arc fit of the trace before extrusion, C4 lofted grip, C5 chassis edge bevels with the UD repair) and paint (C6 chips / grime); each is a method change with its own gate run, larger than this fix round",
+   "evidence": {}
+  },
+  {
+   "id": "C5",
+   "source": "craft (+ realism)",
+   "area": "Chassis / butt / riser: no readable chamfer highlights",
+   "severity": "major",
+   "verdict": "DEFERRED",
+   "fix": "W4b close-up realism pass: generator-level (C3 line / arc fit of the trace before extrusion, C4 lofted grip, C5 chassis edge bevels with the UD repair) and paint (C6 chips / grime); each is a method change with its own gate run, larger than this fix round",
+   "evidence": {}
+  },
+  {
+   "id": "C6",
+   "source": "craft (+ realism)",
+   "area": "Wear and grime effectively invisible",
+   "severity": "major",
+   "verdict": "DEFERRED",
+   "fix": "W4b close-up realism pass: generator-level (C3 line / arc fit of the trace before extrusion, C4 lofted grip, C5 chassis edge bevels with the UD repair) and paint (C6 chips / grime); each is a method change with its own gate run, larger than this fix round",
+   "evidence": {}
+  },
+  {
+   "id": "C7",
+   "source": "craft",
+   "area": "Barrel flutes narrow / short vs the sheet",
+   "severity": "minor",
+   "verdict": "DEFERRED",
+   "fix": "W4b: measure the flute width / ends on GR / Q34 first (spec flutes.X is the traced authority)",
+   "evidence": {}
+  },
+  {
+   "id": "C8",
+   "source": "craft + both realism judges",
+   "area": "Bolt reads as mirror chrome; identical bright ring on every turret cap",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "FIN bolt_polish lin 0.42-0.46 / rough 0.32-0.44 (was 0.50-0.54 / 0.24-0.36), leg_polish rough 0.24-0.34; scope cap wear rarer (dash > 0.93)",
+   "evidence": {}
+  },
+  {
+   "id": "C9",
+   "source": "craft",
+   "area": "Release pin end half in air on the outline",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "the pin ends inside the cheeks (Y +-8.0) and its bore stops at +-8.1: hidden (a 0.3 mm boss was tried first: 1 UD1 sliver)",
+   "evidence": {}
+  },
+  {
+   "id": "C10",
+   "source": "craft",
+   "area": "Butt side discs read as flat stickers",
+   "severity": "minor",
+   "verdict": "DEFERRED",
+   "fix": "W4b: size vs GR, edge + recess",
+   "evidence": {}
+  },
+  {
+   "id": "C11",
+   "source": "craft",
+   "area": "White specks on the rail / receiver flat",
+   "severity": "minor",
+   "verdict": "DEFERRED",
+   "fix": "W4b wear pass (rail teeth wear specks; the S / F marking stays)",
+   "evidence": {}
+  },
+  {
+   "id": "C12",
+   "source": "craft",
+   "area": "OD washes to grey-sage under the 3/4 key",
+   "severity": "minor",
+   "verdict": "DEFERRED",
+   "fix": "W4b: L5 is calibrated on GR; a Q34 crop match is added there",
+   "evidence": {}
+  },
+  {
+   "id": "C13",
+   "source": "craft + both realism judges",
+   "area": "Scope eyepiece / bell rims faceted; trigger blade kinks",
+   "severity": "minor",
+   "verdict": "PARTIAL",
+   "fix": "scope body revolve 36 -> 64 sides (scope LOD0 now inside the 6-10k target); trigger blade: W4b",
+   "evidence": {
+    "scope LOD triangles": {
+     "value": {
+      "fbx": {
+       "SM_Att_Scope_LongRange_LOD0": 9938,
+       "SM_Att_Scope_LongRange_LOD1": 4464,
+       "SM_Att_Scope_LongRange_LOD2": 1454
+      },
+      "build": {
+       "SM_Att_Scope_LongRange_LOD0": 9938,
+       "SM_Att_Scope_LongRange_LOD1": 4464,
+       "SM_Att_Scope_LongRange_LOD2": 1454
+      }
+     },
+     "pass": true
+    }
+   }
+  },
+  {
+   "id": "T1",
+   "source": "tech",
+   "area": "No README / MATERIALS_README",
+   "severity": "major",
+   "verdict": "PARTIAL",
+   "fix": "Exports/Guns/SR01/README.md written (pre-Unreal: contents, LOD sizes, sockets, colour spaces); the Unreal import notes come with W5, MATERIALS_README + recolour_constants with the pack (W6)",
+   "evidence": {}
+  },
+  {
+   "id": "T2",
+   "source": "tech",
+   "area": "No Unreal import gate",
+   "severity": "major",
+   "verdict": "DEFERRED",
+   "fix": "W5 (out of scope for W4)",
+   "evidence": {}
+  },
+  {
+   "id": "T3",
+   "source": "tech",
+   "area": "Stale declared list in uv_bake_paint.json",
+   "severity": "major",
+   "verdict": "FIXED",
+   "fix": "sr_w2_gates declared list: UD2 / UD3 resolved in W3, S / F delivered (109 texels), B9 still open",
+   "evidence": {}
+  },
+  {
+   "id": "T4",
+   "source": "tech",
+   "area": "Triangles under target floors",
+   "severity": "minor",
+   "verdict": "PARTIAL",
+   "fix": "scope now in target (C13); gun 34-35k declared (A5 of the plan: 35k floor is the twin with the magazine); mag A4",
+   "evidence": {}
+  },
+  {
+   "id": "T5",
+   "source": "tech",
+   "area": "UV1 collapsed on LODs",
+   "severity": "minor",
+   "verdict": "DEFERRED",
+   "fix": "W5 U8 lightmap check in engine",
+   "evidence": {}
+  },
+  {
+   "id": "T6",
+   "source": "tech",
+   "area": "PNGs carry no colour-space tags",
+   "severity": "minor",
+   "verdict": "FIXED",
+   "fix": "README states BC sRGB, ORM / N / Masks linear",
+   "evidence": {}
+  },
+  {
+   "id": "T7",
+   "source": "tech",
+   "area": "Mag hull name",
+   "severity": "minor",
+   "verdict": "REJECTED",
+   "fix": "the shipped hull is UCX_SM_SR01_Mag_LOD0_00 (blend + mag.json); the rule is met",
+   "evidence": {}
+  },
+  {
+   "id": "T8",
+   "source": "tech",
+   "area": "SK_AR01_Skeleton compatibility untested",
+   "severity": "minor",
+   "verdict": "DEFERRED",
+   "fix": "W5",
+   "evidence": {}
+  },
+  {
+   "id": "T9",
+   "source": "tech",
+   "area": "Mag vs gun LOD2/3 intersections",
+   "severity": "minor",
+   "verdict": "REJECTED",
+   "fix": "the M1 rule: < 1 px at the switch distance outside the LOD0 well (gate passes)",
+   "evidence": {}
+  },
+  {
+   "id": "T10",
+   "source": "tech",
+   "area": "FBX absolute source path",
+   "severity": "minor",
+   "verdict": "DEFERRED",
+   "fix": "W5 / W6 pack check",
+   "evidence": {}
+  },
+  {
+   "id": "R",
+   "source": "realism A + B",
+   "area": "Both judges: fake on 5 / 5 views (before the fix round)",
+   "severity": "-",
+   "verdict": "W4b",
+   "fix": "their priorities are the W4b list (FIX_LOG.md)",
+   "evidence": {
+    "A": [
+     "Fix metal materials: scope tube, rings, ocular housing and bolt body read as polished chrome. Make the scope matte/satin black hard-anodized aluminium (roughness ~0.45-0.6, broad soft highlights) and the bolt dull nitrided/blued steel (dark grey, roughness ~0.35-0.5) with a slightly brighter polished bolt-raceway wear band only",
+     "Build real optics: lenses need glass with layered anti-reflective coatings (faint green/magenta/amber reflections), visible internal lens elements and tube depth, and a reticle/exit pupil visible in the eyepiece view; the ADS view must not be a black void",
+     "Chassis finish: replace the flat procedural grain with a believable cerakote/anodize response (subtle sheen variation, micro-roughness breakup), and add edge wear on corners, screw heads, mag well lip, bolt handle path, plus light dust/fingerprints/handling smudges",
+     "Consistent machined chamfers on all chassis, stock and rail edges (1-2 mm with crisp catch-lights); remove knife-sharp edges and visible polygon facets on round parts (eyecup, bells, rings, bipod feet) by raising segment counts",
+     "Add markings: serial/caliber stamping on the action, turret numerals and hash marks, scope magnification ring numbers, rail slot numbers, small generic maker-style logo; empty surfaces scream CG",
+     "Rework the pistol grip and buttpad: proper rubber overmold texture/stippling, realistic finger contour, ribbed rubber recoil pad; stock spacers and cheek riser need hardware and real thickness detail",
+     "Small-part scale and detail: thinner screw heads with hex sockets, finer and denser turret knurling, deeper picatinny slots, a magazine with visible top cartridge/follower and a release latch",
+     "Photographic presentation: put the rifle on a surface (table, mat, ground) with contact shadows and bounce light, use a key/fill/rim photo setup with a softbox reflection on the metal, shallow depth of field and slight lens vignetting/grain for close-ups; the bipod must rest on a ground when deployed",
+     "Colour: chassis reads as light primer grey-green; push towards a real OD/FDE/black cerakote value and saturation with slight hue variation"
+    ],
+    "B": [
+     "Fix the scope tube material everywhere (FP shot shows it chrome): black hard-anodized aluminium, base colour ~sRGB 18-24 (linear ~0.006-0.009), metallic 0 to 0.2 (anodize behaves dielectric-ish) or metallic 1 with very dark albedo, roughness 0.35-0.5 with low-frequency roughness variation +-0.05, and a fine circumferential lathe/brush anisotropy. Check the FP shot uses the same material/LOD as the hero.",
+     "Build a real ADS view: render-target or textured reticle (e.g. mil-dot/Christmas-tree style, generic) on the ocular, an image of the scene through the scope with circular exit pupil and soft dark vignette ring, faint chromatic fringe at the edge. A black disk is unacceptable for a sniper.",
+     "Chassis material: replace the single-value grey-green with a Cerakote/anodize stack: base colour variation +-3% value via large-scale noise, orange-peel micro normal (0.2-0.5 mm scale, intensity low), roughness 0.55-0.7 base with polished/worn areas down to 0.35-0.45 on handled zones; add edge wear exposing bare aluminium (light grey, metallic 1, roughness 0.3-0.4) on forend tip edges, stock toe, cheek riser corners, mag well lips and bolt-side of the receiver; add dust/grime in recesses (AO-driven, slightly lighter and rougher).",
+     "Bevels: add 0.6-1.2 mm chamfers on every chassis and stock edge, 0.3-0.5 mm on small parts (screws, rings, turrets), with weighted normals so the highlight line reads; chamfer the inner walls of the M-LOK slots and let the barrel show through them.",
+     "Bolt: matte/satin finish (nitrided black or bead-blasted steel, roughness 0.3-0.5, not mirror); add the bolt's helical/jewelled or fluted body pattern, extractor and handle root transition; bolt knob tapered with cut knurling (diamond pattern ~1 mm pitch as real geometry normal map), not a perfect sphere.",
+     "Raise segment counts on all round parts seen close (eyepiece, objective bell, turrets, barrel muzzle, bipod tubes): minimum 48-64 sides on the scope bells and eyepiece, or smooth-shaded with proper normals so no facets show on silhouettes.",
+     "Objective/ocular glass: dark with thin multicoating tint (green/amber/magenta Fresnel, low saturation), IOR ~1.52, environment reflections; show internal lens element rings and a black baffled interior instead of a flat blue-purple disk.",
+     "Small-part detail: engrave turret numerals and hash ticks (0-10 with half-marks), a zero-stop line, Torx/hex recesses in ring cap and chassis screws, Picatinny slot crosscuts with chamfer, magazine feed lips and floorplate seam, pistol grip stipple texture and smoother sculpted contour.",
+     "Stock: break up the box forms of the butt and cheek riser with radiused transitions, a real rubber recoil pad (soft rubber, roughness 0.8-0.9, slight sheen, moulded texture), and adjustment wheels/levers with knurling.",
+     "Bipod: knurled leg-lock collars, visible springs and pivot hardware, matte rubber feet with tread and dirt; legs in hard-anodized black rather than plastic-looking smooth tubes.",
+     "Barrel: add slight muzzle carbon darkening and matte Cerakote finish (roughness 0.6), subtle heat discolouration near the muzzle device, and a crowned muzzle detail.",
+     "Presentation: render on a surface or HDRI with a contact shadow and real environment reflections (outdoor overcast HDRI suits anodize); the grey void with flat fill makes everything read as a turntable render."
+    ]
+   }
+  }
+ ]
+}

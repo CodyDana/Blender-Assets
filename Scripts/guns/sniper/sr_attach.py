@@ -156,6 +156,7 @@ def main():
         if lv:                                   # zero-area faces the decimation left (the FBX writer drops them)
             from gunlib import bl as _bl
             _bl.clean(ob, dist_m=1e-6)
+            rep.setdefault("coincident_faces_removed", {})[f"LOD{lv}"] = LL.drop_coincident_pairs(ob)
         V = np.empty(len(ob.data.vertices) * 3)
         ob.data.vertices.foreach_get("co", V)
         V = V.reshape(-1, 3) - origin_B * 0.001                      # origin = Mag / Mount

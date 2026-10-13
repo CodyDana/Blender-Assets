@@ -121,6 +121,8 @@ def stage_gates(F, out):
           "mag_axes_M": {"x": RM[:, 0].tolist(), "z": RM[:, 2].tolist()}, "insert_mm": ins,
           "well_band": [0.0, 44.8], "lip_z": 0.0, "well_parts": ("gun",), "catch_zone_mm": 6.0,
           "half_thickness": 13.25, "half_length": 44.6}
+    import sniper_parts as SP                   # (W4 A1) the spring-loaded catch: M4 in gunlib's catch_spring mode
+    Cs["catch_spring"] = dict(SP.CATCH_SPRING)
     try:
         sg = MC.straight_gates(S, Cs)
         for g in sg:

@@ -208,7 +208,14 @@ def chassis():
     fore = clip(fore, x0=560.0)
     guard = G.offset(ring("trigger_guard", 1.3), 0.25)   # UD1: 1.3 like the centre (0.8 left sub-width segments)
     base = MS.prism(cen, -BIG / 4, BIG / 4)
-    unions = [MS.prism(fore, -BIG / 4, BIG / 4), MS.prism(guard, -9.0, 9.0),
+    # (W4 review C2) the guard's bottom bar: the sheet draws a closed loop (the trace's opening Z -94.7..-62.8), but the
+    # trace gave the bar to the chassis label and the guard ring stopped at two hooked arms. The bar spans the arms
+    # (X 336.5-399.5) from their lowest point up past the opening's floor (the opening cut trims it back to -94.7);
+    # its sides sit 0.4 inside the guard's (Y +-8.6): coplanar with the arms' +-9 faces, or ending at X 338 / 398, the
+    # union left 1-10 UD1 slivers (variants in scratch/w4/FIX_LOG)
+    gz0 = float(np.asarray(guard)[:, 1].min())
+    bar = MS.prism(rrect(336.5, 399.5, gz0, -94.2, 1.5), -8.6, 8.6)
+    unions = [MS.prism(fore, -BIG / 4, BIG / 4), MS.prism(guard, -9.0, 9.0), bar,
               # (W3 Part 0, UD2: both boxes stand past the plan width and under the traced top, so the plan / ring
               # faces cut them cleanly; at Y +-27 / +-36.9 and Z 15.9 they were coincident and left 0.035-0.047 mm edges
               # and 0.019 mm needles)
@@ -243,7 +250,7 @@ def chassis():
     post += [MS.prism(np.array([(403.0, -74.0), (403.0, -46.5), (410.9, -46.5), (410.9, -74.0), (416.5, -74.0),
                                (416.5, -130.0), (405.0, -130.0), (405.0, -74.0)])[::-1], -5.3, 5.3),
             MS.box(410.0, 414.5, -5.3, 5.3, -53.0, -46.5),
-            ycyl(408.6, -74.0, -9.5, 9.5, 1.52, 24)]
+            ycyl(408.6, -74.0, -8.1, 8.1, 1.52, 24)]           # (W4 C9) the bore stops inside the cheeks
     # trigger pocket (hub r 4.2 + blade root), pin bore
     # (W3 Part 0: the slot runs 6 mm further back for the blade moved 5 mm rearward; it swings back on the pull)
     post += [ycyl(368.0, -57.0, -3.2, 3.2, 4.2, 32), MS.box(357.6, 373.4, -3.2, 3.2, -64.0, -57.0),
@@ -460,7 +467,7 @@ def pins():
     m = MS.Mesh()
     hw = half_at(CHASSIS_HALF, 368.0) - 0.02
     m.extend(ycyl(368.0, -57.0, -hw, hw, 1.48, 24))
-    m.extend(ycyl(408.6, -74.0, -8.98, 8.98, 1.48, 24))
+    m.extend(ycyl(408.6, -74.0, -8.0, 8.0, 1.48, 24))          # (W4 C9) hidden: its end sat on the outline, half in air
     m.extend(ycyl(360.0, -16.0, -21.8, -12.5, 1.48, 24))
     return Part("pins", m, recipe=[(0.2, 1, 30.0)], spec_id="pins_fasteners")
 
@@ -487,9 +494,17 @@ def trigger():
                 recipe=[(0.8, 2, 30.0)], jnt=joint("hinge"), motion=mo)
 
 
+CATCH_NOSE = (415.75, -47.5)          # the hook's top-front corner, seated (frame M, XZ)
+# the M4 spring-catch mode (gunlib magfit_check): the magazine cams the catch back, nose move <= 0.6 mm per 0.5 mm step
+CATCH_SPRING = {"nose_M": [CATCH_NOSE[0], 0.0, CATCH_NOSE[1]], "cam_mm_per_step": 0.6}
+
+
 def mag_release():
-    P = np.array([(405.6, -114.0), (409.0, -114.5), (410.6, -112.0), (410.6, -52.4), (415.52, -51.9), (415.52, -48.4),
-                  (410.0, -47.5), (405.6, -47.5)])
+    # (W4 A1) the real spring-catch hook: a flat bearing top at Z -47.5 (0.2 under the notch's top face), the nose at
+    # X 415.75 (1.65 into the notch), and a 41 deg ramp underside the magazine's rear wall cams back on the way in
+    # (was a square hook with a sloped top: bearing 0.87, engagement 1.45, the nose rode the wall at rest)
+    P = np.array([(405.6, -114.0), (409.0, -114.5), (410.6, -112.0), (410.6, -52.6), (412.8, -52.6),
+                  (CATCH_NOSE[0], CATCH_NOSE[1] - 1.7), CATCH_NOSE, (405.6, -47.5)])
     m = MS.prism(P, -5.0, 5.0)
     cut = [ycyl(408.6, -74.0, -6, 6, 1.65, 20),
            MS.box(410.9, 416.0, 4.4, 6.0, -53.0, -47.0), MS.box(410.9, 416.0, -6.0, -4.4, -53.0, -47.0)]  # hook 8.8 wide
@@ -547,7 +562,10 @@ def muzzle_device():
 
 
 # ------------------------------------------------------------------------------------------------ magazine
-MAG = dict(x0=414.1, x1=503.3, hy=13.25, z_bottom=-128.0, z_body_top=-20.0)
+# (W4 A1) body top -20.0 -> -21.2: the shelf (-19.7) is the magazine's stop at 1.5 mm overtravel (was 0.3, under the
+# gunlib 1.0-2.0 row); the lips and the top round rise 0.5 (round top to the bolt 2.32 -> 1.82)
+MAG = dict(x0=414.1, x1=503.3, hy=13.25, z_bottom=-128.0, z_body_top=-21.2)
+MAG_TOP_RISE = 0.5
 MAG_FLOOR_K = 0.0945     # W1 follow-up L2: both side views draw the floor rising 5.4 deg toward the front (spec)
 
 
@@ -568,11 +586,11 @@ def magazine():
     base = MS.loft([rrf(ch, 0.0), rrf(0.0, ch), rr3(0.0, g["z_body_top"] - ch), rr3(ch, g["z_body_top"])])
     lp = lambda c, z: np.c_[G.rounded_rect(418.0 + c, 488.0 - c, -8.0 + c, 8.0 - c, 1.5 - c, 3),
                             np.full(len(G.rounded_rect(418.0 + c, 488.0 - c, -8.0 + c, 8.0 - c, 1.5 - c, 3)), z)]
-    lips = MS.loft([lp(0.0, g["z_body_top"] - 1.0), lp(0.0, -14.3)])          # square top: the round's nose cuts one plane
+    lips = MS.loft([lp(0.0, g["z_body_top"] - 1.0), lp(0.0, -14.3 + MAG_TOP_RISE)])          # square top: the round's nose cuts one plane
     # top round (its nose ends square at r 2.8: the lip plane 0.6 over its axis then cuts the end disk, not the tip)
     rnd = MS.revolve([(0.0, 0.0), (0.0, 3.0), (2.0, 3.9), (52.0, 3.9), (58.0, 2.8), (58.0, 0.0)],
-                     (425.0, 2.2, -14.9), (1, 0, 0), 24)
-    cut = [MS.box(g["x0"] - 1.0, g["x0"] + 1.7, -4.8, 4.8, -52.4, -47.3)]           # catch notch (rear wall)
+                     (425.0, 2.2, -14.9 + MAG_TOP_RISE), (1, 0, 0), 24)
+    cut = [MS.box(g["x0"] - 1.0, g["x0"] + 2.2, -4.8, 4.8, -52.4, -47.3)]           # catch notch (rear wall, 2.2 deep)
     for x in (440.0, 478.0):                                                    # pressed ribs (recessed 0.8)
         for sg in (1, -1):
             cut.append(MS.prism(stadium(-117.0, -74.0, x - 2.0, x + 2.0)[:, ::-1], sg * (g["hy"] - 0.8), sg * 20.0))

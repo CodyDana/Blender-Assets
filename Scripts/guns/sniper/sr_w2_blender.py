@@ -88,7 +88,7 @@ def main():
         return order.index(SS.SLOT_SET[json.loads(o.get("gun_part", "{}"))["slot"]])
     tile = {order.index(st): SS.TILE_OF_SET[st] for st in order}
     tw = GM.join_copies(parts, "SM_SR01" if SS.TARGET == "gun" else "SM_Att_Scope_LongRange", coll, slot_of, mats, tile)
-    budget = 55000 if SS.TARGET == "gun" else 8000
+    budget = 55000 if SS.TARGET == "gun" else 12000      # (W4) the plan's attachment_optic ceiling (target 6-10k), as sr_attach
     q0 = qa_check([tw], budget_tris=budget, texel_density=None, require_uv1=True, require_ucx=False)
     agg = next(float(c["detail"].split(" px/cm")[0]) for c in q0["checks"] if c["name"] == "texel_density")
     q = qa_check([tw], budget_tris=budget, texel_density=agg, require_uv1=True, require_ucx=False)

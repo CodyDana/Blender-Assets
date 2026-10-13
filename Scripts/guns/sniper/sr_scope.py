@@ -38,7 +38,8 @@ def body():
             (689.3, 31.05), (X1, 30.0), (X1, 27.4), (X1 - 6.0, 27.4), (X1 - 6.0, 0.0)]
     xs = X0 + 4.0
     loop = [(x - X0, r) for x, r in prof[:-1]] + [(X1 - 6.0 - X0, 15.5), (4.0, 15.5)]
-    m = revolve_loop(loop, (X0, 0, AXZ), (1, 0, 0), 36)
+    # (W4 review C13) 64 sides (5.6 deg; G3 <= 7.5): at 36 the eyepiece and bell rims read polygonal in the FP / ADS views
+    m = revolve_loop(loop, (X0, 0, AXZ), (1, 0, 0), 64)
     # power-ring scallops (8) and the throw lever on the right
     cut = []
     for i in range(8):
