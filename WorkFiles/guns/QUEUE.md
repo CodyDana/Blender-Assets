@@ -3,11 +3,14 @@
 Order agreed with the user (2026-10-04 to 2026-10-09). One gun at a time; each starts when the previous finishes.
 
 1. **Assault Rifle AR-01**: DONE 2026-10-09 (merged to main). Report: `WorkFiles/guns/rifle/RIFLE_REPORT.md`.
-2. **Compact SMG SM-01** (`SMG01`): study running; then build. Includes a dedicated **close-up realism pass**
+2. **Compact SMG SM-01** (`SMG01`): BUILDING (2026-10-12: W1-W3 done, W4 review fixes running, then W4b close-up, W5 Unreal,
+   W6 finish). Includes a dedicated **close-up realism pass**
    (user 2026-10-09) before the Unreal stage: first person at 35 cm, ADS, hero 3/4 and 3x close-up crops; polymer
    and steel finish, micro-texture, wear and edge logic; target = the two realism judges pass the close views.
-3. **Shooting prototype** in DemoGame_1, alongside the SMG: plan in `WorkFiles/guns/shooting/SHOOTING_PROTOTYPE_PLAN.md`.
-   Ask the user to close the Unreal editor before any commandlet touches the project.
+3. **Shooting prototype**: G0-G7 + G10 DONE (2026-10-11: card-shop pawn, grip, reloads with hands 3P + FP, Alt free look,
+   shoulder camera, fire + reload sounds). Lives on DemoGame_1 branch `guns` in `Documents/Unreal Projects/DemoGame_1_Guns`.
+   Open: holster + magazine-drop sounds (Kenney CC0 packs awaiting the user's download OK; impact-sound code built, uncommitted);
+   later steps G9 tuning with the user, G11 network test, docs. Ask the user to close that editor before commandlets run.
 4. **AR-01 close-up realism pass** (user 2026-10-09), after the SMG: steel too clean/even, wood too orange and
    saturated, first-person dust cover; plus the open Unreal gates U5/U10 (micro bevel strips -> fix in the generators)
    and U8 (lightmap UV). Same target as the SMG pass.
