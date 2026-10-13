@@ -242,6 +242,17 @@ scope attachment are the two items without an SMG precedent.
 | P8 | `parts/hinge.py`: a `telescoping_leg(outer, inner, notches)` generator and a two-notch `detent_disk` | bipod legs here; the LMG bipod later |
 | P9 | the TOP-view shadow method (`top_silhouette` in `tools/trace_reference.py`) promoted to the shared trace helpers if the next sheets need it | sheets with a floor shadow under the TOP view |
 
+**W1 status of the proposals (2026-10-13, nothing in gunlib touched; sniper-local code the gun chat can promote):**
+
+| # | Sniper-local implementation | Notes for promotion |
+|---|---|---|
+| P2 / P6 | `Scripts/guns/sniper/sr_motion.py`: bolt rotate-then-slide (`bolt`, `bolt_cycle_param`), bipod `cant` / `leg` / `leg_ext` (leg ext in the leg's rest frame), riser, release, trigger, selector as 4x4 in frame M | the B3 driver mode for a compound path = sweep the two legs separately (rotate with proof, then slide at -60) as `sr_fgates.py` does |
+| P5 | `sniper_parts.chassis()`: the dovetail band as two 45 deg flank cutters under Z -25.1 + a flat clamp seat | a `dovetail_plain` part would take (X range, top Z, half-width, flank, depth) |
+| P8 | `sniper_parts.bipod_leg / bipod_ext / bipod_foot / bipod_swivel`: tube + collar + button + notched hub disk, telescoping bore (sliding 0.25), 5 notch rings, spool foot with tread rings, a yoke (rear web + outboard pivot cheeks) clear of the +-15 cant | `telescoping_leg(outer, inner, notches)` and `detent_disk` generators; the cant-clearance rule (wide parts only below Z -54 here) |
+| new | `sniper_parts.Part`: ordered boolean steps (U / I / D), loose-edge cleanup, `ud.repair` only when UD fails and only kept when not worse, `weighted_normals(clear_custom=True, weight=100)` | the last two are the SMG 0.2.1 lessons applied by default |
+| new | `sr_silhouette.py`: mm -> px mapping fitted from the trace's own px / mm ring pairs; TOP raw + a bounded Y-only fit (shadow bias) + a declared knob window; `--with-npz` stand-in parts (the blockout scope until W1b) | for sheets whose trace JSONs carry px + mm pairs but no origin |
+| new | `sr_scope.py`: the first attachment generator (34 mm tube revolve-loop with lens recesses, toothed-prism knurled turrets, rings with recoil lugs keyed to rail slots) | P4's attachment block; the ring / lug rule measured by A1-A2 |
+
 ## 11. Risks
 
 | Risk | Mitigation |

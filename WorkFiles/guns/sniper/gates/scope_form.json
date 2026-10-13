@@ -1,0 +1,386 @@
+{
+ "stage": "W1b SM_Att_Scope_LongRange form",
+ "date": "2026-10-13T10:13:50",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "A1 Mount (rear ring lug centre) at Rail_Top + 2 x 10.01",
+   "value": 416.148,
+   "threshold": "416.15 +-0.05",
+   "pass": true,
+   "note": "Mount M [416.15, 0.0, 30.0]; front ring on slot 12 (X 516.25)"
+  },
+  {
+   "name": "A2 ring recoil lugs in their slots, fore-aft gap per side (slot 5.24)",
+   "value": {
+    "scope_ring_2": {
+     "slot": 2,
+     "rear_gap": 0.12,
+     "front_gap": 0.125
+    },
+    "scope_ring_12": {
+     "slot": 12,
+     "rear_gap": 0.12,
+     "front_gap": 0.125
+    }
+   },
+   "threshold": "0.1-0.4",
+   "pass": true
+  },
+  {
+   "name": "A3 scope >= 2 mm from every gun part at rest",
+   "value": {
+    "min_mm": 6.0,
+    "pair": [
+     "s:scope_body",
+     "g:barrel"
+    ]
+   },
+   "threshold": ">= 2.0 (cap 6)",
+   "pass": true,
+   "note": "rings on the rail (butt contact): [{'a': 's:scope_ring_2', 'b': 'g:rail', 'min_gap_mm': 0.015}, {'a': 's:scope_ring_12', 'b': 'g:rail', 'min_gap_mm': 0.015}]"
+  },
+  {
+   "name": "A3 / F6 bolt group to the scope over rotate 0..-60 + slide 0..88",
+   "value": {
+    "min_mm": 13.67,
+    "at_u": 0.219
+   },
+   "threshold": ">= 2.0 (F6: handle >= 20)",
+   "pass": true
+  },
+  {
+   "name": "F6 bolt knob to the mounted scope over rotate + slide (real attachment)",
+   "value": 25.73,
+   "threshold": ">= 20 (W0 29.9)",
+   "pass": true
+  },
+  {
+   "name": "A3 cheek riser travel -12.9..+12 to the scope",
+   "value": 60.0,
+   "threshold": ">= 2.0",
+   "pass": true
+  },
+  {
+   "name": "A4 Sight Z above the bore (eyepiece face centre)",
+   "value": 57.6,
+   "threshold": "57.6 +-0.2",
+   "pass": true,
+   "note": "Sight M [271.11, 0.0, 57.6] (local [-145.04, 0.0, 27.6])"
+  },
+  {
+   "name": "A4 scope axis parallel to the bore",
+   "value": 0.0005,
+   "threshold": "<= 0.05 deg",
+   "pass": true
+  },
+  {
+   "name": "A4 EyePoint (95 mm relief) over the cheek riser",
+   "value": 176.11,
+   "threshold": "inside riser X 68.9..179.9",
+   "pass": true
+  },
+  {
+   "name": "A5 scope LOD0 triangles (target 6-10k, ceiling 12k)",
+   "value": 5884,
+   "threshold": "<= 12000 (target <= 10000)",
+   "pass": true
+  },
+  {
+   "name": "A5 closed manifold parts; 2 slots (body, lens)",
+   "value": {
+    "closed": true,
+    "slots": [
+     "M_Att_Scope_Body",
+     "M_Att_Scope_Lens"
+    ]
+   },
+   "threshold": "all closed; 2 slots",
+   "pass": true,
+   "note": "qa_check on the exported SM_Att_Scope_LongRange runs at W3 export (no export in W1)"
+  },
+  {
+   "name": "UD1 Unreal degenerate rule (scope)",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  }
+ ],
+ "files": {
+  "blend": "Assets/Guns/Att_Scope_LongRange.blend (built at the mounted pose in gun frame M; Empty 'Mount' = attachment origin)",
+  "renders": [
+   "Renders/Guns/SR01/form_real_scope_q34.png",
+   "Renders/Guns/SR01/form_real_scope_rings_close.png",
+   "Renders/Guns/SR01/form_real_scope_rear_q.png",
+   "Renders/Guns/SR01/form_grey_scope_right.png",
+   "Renders/Guns/SR01/form_real_scope_deployed_hero.png"
+  ]
+ },
+ "details": {
+  "build_report": {
+   "scope_body": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2592,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.018439,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 1.95,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_turret_elev": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 416,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.115814,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.16,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_turret_wind": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 566,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.016207,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.2,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_focus": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 566,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.014437,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.2,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_ring_2": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 554,
+    "shells": 3,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.249291,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.27,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_ring_2_screws": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 144,
+    "shells": 4,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.405247,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.01,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_ring_12": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 550,
+    "shells": 3,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.249292,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.27,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_ring_12_screws": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 144,
+    "shells": 4,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.405243,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.01,
+    "bone": "-",
+    "slot": "M_Att_Scope_Body"
+   },
+   "scope_lens_objective": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 192,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 2.142636,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.01,
+    "bone": "-",
+    "slot": "M_Att_Scope_Lens"
+   },
+   "scope_lens_ocular": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 160,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 1.443642,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.01,
+    "bone": "-",
+    "slot": "M_Att_Scope_Lens"
+   }
+  },
+  "rest_gaps_lowest": [
+   {
+    "a": "s:scope_body",
+    "b": "g:barrel",
+    "min_gap_mm": 6.0
+   },
+   {
+    "a": "s:scope_body",
+    "b": "g:bipod_clamp",
+    "min_gap_mm": 6.0
+   },
+   {
+    "a": "s:scope_body",
+    "b": "g:bipod_ext_l",
+    "min_gap_mm": 6.0
+   },
+   {
+    "a": "s:scope_body",
+    "b": "g:bipod_ext_r",
+    "min_gap_mm": 6.0
+   },
+   {
+    "a": "s:scope_body",
+    "b": "g:bipod_foot_l",
+    "min_gap_mm": 6.0
+   },
+   {
+    "a": "s:scope_body",
+    "b": "g:bipod_foot_r",
+    "min_gap_mm": 6.0
+   },
+   {
+    "a": "s:scope_body",
+    "b": "g:bipod_knob",
+    "min_gap_mm": 6.0
+   },
+   {
+    "a": "s:scope_body",
+    "b": "g:bipod_leg_l",
+    "min_gap_mm": 6.0
+   }
+  ]
+ }
+}

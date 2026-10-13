@@ -181,6 +181,18 @@ Metal From ORM on, the OD paint is dark enough (the study 5.9 brightness trap do
 | RP14 | forend slots and band | slots cut through (original pattern); band = plain dovetail, no teeth |
 | RP15 | scope | 34 mm, 56 mm-class bell, elevation top, windage right, side focus left, magnification lever, rubber eyecup |
 
+### 4.1 W1 real-pattern pass (2026-10-13, read-only web pass, nothing downloaded)
+
+| # | Result | Sources |
+|---|---|---|
+| RP1 | **Confirmed.** Modern 3-lug actions use a 60 deg throw (half the 120 deg lug pitch); rear tang carries the safety. The form models 3 lugs at 120 deg, 3 recesses in the receiver ring, raceway grooves for the lugs over the 88 mm stroke | https://rifleshooter.com/2018/08/review-ultimatum-precision-deadline/ , https://bulletcentral.com/bat-machine-3l-chrome-moly-polished-standard-length-round-1-55-in-right-bolt-straight-fluting-ppc-br-standard-knob-right-load-right-eject-std-no-sight-base-recessed-lug/ , https://www.cadexdefence.com/product/cdx-33-action-2/ |
+| RP5 | **Confirmed** (a lever in front of and below the guard is a real pattern; AICS-pattern chassis put the latch on the guard's front). Kept: forward-push paddle, hook above the pivot | https://patents.google.com/patent/US8434253 , https://gunmagwarehouse.com/mdt-hnt-26-aics-magazine-mlok-arca-rifle-chassis-for-remington-700-la.html |
+| RP10 | **Confirmed with one note.** Notched swivel bipods: legs spring-extend and lock at notches released by a button on each leg; stowed legs held by return springs; base swivel (cant) with a tension adjuster in the hinged base; tilt ~15-18 deg each way. Kept: independent legs, 0/+90 detents, 5 notches at 19 mm (real Harris-class notch = 25.4; 19 is the spec's 76/4, kept), cant +-15, knob = swivel tension | https://www.primaryarms.com/product/1726?page=2 , https://www.optics-trade.eu/ch/bipodfactory-9-13-inch-swivel-solid-base-bipod-pivoting-with-pod-loc.html , https://muzzle-loaders.com/products/tac-shield-pivot-bi-pod-t9501p , https://stmarysindoorshootingcentre.com.au/product/hy-skor-6-inch-9-inch-bipod-swivel/ |
+| RP15 | **Confirmed.** 34 mm tube / 56 mm objective long-range scopes: exposed elevation on top (zero stop), windage right, side parallax left, magnification ring at the eyepiece | https://www.adorama.com/nfc570.html , https://www.adorama.com/leica-prs-5-30-x-56-riflescope/p/lc53056prb , https://www.tractorsupply.com/tsc/product/leupold-8-32x-56mm-mark-4hd-rifle-scope-34mm-tube-ffp-pr2-moa-reticle-matte-black |
+
+Markings (user rule 2026-10-13, for W2): generic markings are allowed (safety letters / pictograms, rail slot numbers),
+never a real maker or model name or logo. W1 models no markings.
+
 ## 5. Unseen surfaces (plain)
 
 The chassis underside except the well and the dovetail; the bolt's left side; the trigger housing; the scope

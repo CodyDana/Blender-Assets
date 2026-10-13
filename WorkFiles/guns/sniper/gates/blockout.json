@@ -1,0 +1,169 @@
+{
+ "stage": "W1a blockout (L1)",
+ "date": "2026-10-13T09:14:11",
+ "status": "fail (not decisive: GR/GL pass; TOP >= 0.90 with declared conventions)",
+ "failed": [
+  "L1 TOP IoU (raw)",
+  "L1 TOP IoU (declared conventions: knob window I1 out + bounded Y fit for the shadow bias I2)"
+ ],
+ "gates": [
+  {
+   "name": "L1 GR IoU",
+   "value": 0.9763,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L1 GL IoU",
+   "value": 0.953,
+   "threshold": ">= 0.95",
+   "pass": true
+  },
+  {
+   "name": "L1 TOP IoU (raw)",
+   "value": 0.8411,
+   "threshold": ">= 0.92 (< 0.90 = stop)",
+   "pass": false,
+   "note": "raw TOP vs the traced TOP silhouette; the sheet's own 1-px erosion sensitivity is 0.9326"
+  },
+  {
+   "name": "L1 TOP IoU (declared conventions: knob window I1 out + bounded Y fit for the shadow bias I2)",
+   "value": 0.9083,
+   "threshold": ">= 0.92 (>= 0.90 not decisive)",
+   "pass": false,
+   "note": "y_scale 1.07, y_shift -3.0 mm"
+  }
+ ],
+ "details": {
+  "silhouette": {
+   "stage": "blockout",
+   "npz": "blockout_tris.npz",
+   "triangles": 24930,
+   "views": {
+    "GR": {
+     "iou": 0.9763,
+     "contour_p50_px": 0.0,
+     "contour_p95_px": 1.0,
+     "contour_max_px": 15.0,
+     "mapping_fit_p95_px": 0.006,
+     "ours_px": 34743,
+     "ref_px": 34180,
+     "parts": {
+      "scope": {
+       "iou": 0.954,
+       "area_px": 5654
+      },
+      "bipod": {
+       "iou": 0.9181,
+       "area_px": 2123
+      },
+      "magazine": {
+       "iou": 0.9173,
+       "area_px": 1597
+      },
+      "muzzle_device": {
+       "iou": 0.9228,
+       "area_px": 508
+      },
+      "barrel": {
+       "iou": 0.7361,
+       "area_px": 2081
+      },
+      "rail": {
+       "iou": 0.7886,
+       "area_px": 511
+      },
+      "bolt_handle": {
+       "iou": 0.9177,
+       "area_px": 471
+      },
+      "bolt_shroud": {
+       "iou": 0.331,
+       "area_px": 319
+      },
+      "receiver": {
+       "iou": 0.4718,
+       "area_px": 1791
+      },
+      "cheek_riser": {
+       "iou": 0.9738,
+       "area_px": 1520
+      },
+      "butt_pad": {
+       "iou": 0.961,
+       "area_px": 2562
+      },
+      "pad_plate": {
+       "iou": 0.6154,
+       "area_px": 754
+      },
+      "trigger": {
+       "iou": 0.1854,
+       "area_px": 94
+      },
+      "mag_release": {
+       "iou": 0.1609,
+       "area_px": 87
+      },
+      "trigger_guard": {
+       "iou": 0.0,
+       "area_px": 569
+      },
+      "grip": {
+       "iou": 0.9138,
+       "area_px": 1825
+      },
+      "butt": {
+       "iou": 0.6049,
+       "area_px": 4509
+      },
+      "chassis_forend": {
+       "iou": 0.9543,
+       "area_px": 4614
+      },
+      "chassis_centre": {
+       "iou": 0.9186,
+       "area_px": 4897
+      }
+     }
+    },
+    "GL": {
+     "iou": 0.953,
+     "contour_p50_px": 0.0,
+     "contour_p95_px": 3.16,
+     "contour_max_px": 18.38,
+     "mapping_fit_p95_px": 0.006,
+     "ours_px": 34627,
+     "ref_px": 33578
+    },
+    "TOP": {
+     "iou": 0.8411,
+     "contour_p50_px": 1.41,
+     "contour_p95_px": 7.21,
+     "contour_max_px": 18.0,
+     "mapping_fit_p95_px": 0.003,
+     "ours_px": 19738,
+     "ref_px": 20360,
+     "iou_knob_window_out": 0.8679,
+     "sheet_1px_sensitivity_iou": 0.9326
+    },
+    "TOP_fit": {
+     "iou": 0.9083,
+     "y_scale": 1.07,
+     "y_shift_mm": -3.0,
+     "contour_p95_px": 7.07,
+     "note": "bounded Y-only fit for the TOP's shadow bias + round-part inflation"
+    }
+   }
+  }
+ },
+ "decision": "continued to form: TOP misses come from the sheet's documented TOP biases (floor shadow on the right edge I2, round parts drawn 6-10 % wide, the knob drawn 32 mm back I1) and the W1b scope turrets; the side authorities pass",
+ "files": {
+  "blend": "WorkFiles/guns/sniper/scratch/w1/SR01_blockout.blend (scratch)",
+  "overlays": [
+   "WorkFiles/guns/sniper/review/blockout/GR_overlay.png",
+   "WorkFiles/guns/sniper/review/blockout/GL_overlay.png",
+   "WorkFiles/guns/sniper/review/blockout/TOP_overlay.png"
+  ]
+ }
+}

@@ -160,6 +160,11 @@ Rough-real finishes and a physical light rig from the first look (the SMG "flat 
 | Q5 | A second static twin with the bipod deployed, for set dressing? | no |
 | Q6 | Scope lens opaque glossy now (study Q19)? | yes |
 
+**Status 2026-10-13 (W1 start): Q1-Q6 ACCEPTED at the defaults** (the user said to continue with the defaults):
+1100 mm / 22 in / 5.9 kg; deployed legs straight down; thick barrel + 36 mm device kept; butt fixed; no deployed-bipod
+static twin; opaque glossy lens. New user rule the same day: generic markings (safety letters / pictograms, rail
+numbers) are allowed, never a real maker / model name or logo (applies from W2).
+
 ## 10. Fab-original change list (not applied)
 
 `CRAFT_STUDY.md` section 7: stepped side pockets, lozenge forend slots, a scalloped riser, a reversed butt cut-out,
