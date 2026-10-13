@@ -125,9 +125,17 @@ def obb(V, R):
     return R @ (0.5 * (lo + hi)), hi - lo
 
 
-def physics_bodies():
+def physics_bodies(envelope=None):
     """One body on 'body' (the held / dropped SMG, stock extended: Q14): boxes for the receiver, the guard, the raked
-    grip, the magwell, the stock frame + pad and the two sights, a capsule for the barrel + muzzle device (frame B)."""
+    grip, the magwell, the stock frame + pad and the two sights, a capsule for the barrel + muzzle device (frame B).
+
+    envelope = (lo, hi), the mesh's extended bounds box (bind AABB + bounds extension, both stock states; frame B mm):
+    added as a box with NO collision and NO mass. W5 U7 measured why: a SkeletalMeshComponent with a physics asset takes
+    its bounds from the bodies flagged consider_for_bounds (UPhysicsAsset::CalcAABB over every element of the body,
+    collision flags ignored; always in the editor, in game whenever bodies exist), so with the collision shapes alone a
+    dropped gun with the stock folded had its stock 55 mm outside its bounds and every SK_SMG01 a 33.6 cm LOD radius
+    instead of the 37.54 cm the screen sizes use. With the envelope the physics-route bounds equal the mesh's extended
+    bounds: every vertex of both stock states inside, the same LOD radius on every route; collision and mass unchanged."""
     objs = {o.name: o for o in lod_objects(0)}
     Vof = {n: GM.mesh_vt(o)[0] for n, o in objs.items()}
     M = {n: V + GRIP for n, V in Vof.items()}
@@ -166,6 +174,12 @@ def physics_bodies():
                      "centre_mm": [round(0.5 * (x0 + x1), 3), 0.0, round(zc, 3)], "matrix": Rc.tolist(),
                      "radius_mm": round(r, 3), "length_mm": round(max(0.1, (x1 - x0) - 2 * r), 3), "axis": "Z -> +X",
                      "collision": True, "contribute_to_mass": True})
+    if envelope is not None:
+        elo, ehi = (np.asarray(v, float) for v in envelope)
+        elements.append({"shape": "box", "covers": "bounds envelope: the mesh's extended bounds (bind AABB + bounds "
+                         "extension, both stock states); no collision, no mass (the component's physics-route bounds, W5 U7)",
+                         "centre_mm": [round(float(v), 3) for v in 0.5 * (elo + ehi)], "matrix": np.eye(3).tolist(),
+                         "size_mm": [round(float(v), 3) for v in ehi - elo], "collision": False, "contribute_to_mass": False})
     for e in elements:
         e["unreal_component"] = SKP.ue_component_transform(np.array(e["matrix"]), e["centre_mm"])
         if "size_mm" in e:
@@ -174,8 +188,9 @@ def physics_bodies():
              "mass_kg": MASS_KG, "elements": elements,
              "role": "ONE rigid body on 'body' (every other bone is its child): Kinematic while held (NoCollision / "
                      "QueryOnly in hand), simulated when dropped; a folded SK keeps the extended stock shapes (Q14, U7 "
-                     "reports a folded drop); the seated magazine is its own component with collision off while "
-                     "attached"}]
+                     "reports a folded drop); the last box is the bounds envelope (no collision, no mass), so the "
+                     "component's bounds hold both stock states and keep the 37.54 cm LOD radius; the seated magazine "
+                     "is its own component with collision off while attached"}]
 
 
 def socket_rows(com_B):
@@ -465,7 +480,7 @@ def main():
                                "switch_distances_m": [round(1.778 * r_twin / s, 3) for s in sizes_twin[1:]]}
     # ------------------------------------------------------------ sockets, physics
     sockets = socket_rows(com)
-    bodies = physics_bodies()
+    bodies = physics_bodies((elo, ehi))
     # ------------------------------------------------------------ the static twin: qa_check, then export
     lods = [bpy.data.objects[f"{SM}_LOD{k}"] for k in range(4)]
     q0 = qa_check(lods, budget_tris=BUDGET, texel_density=None, require_uv1=True)

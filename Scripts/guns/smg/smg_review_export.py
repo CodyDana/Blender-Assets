@@ -162,8 +162,29 @@ def l5_l(target, fill=0.0, bg=(126, 126, 126)):
 # the hero's receiver side, twice the L5 calibration's exposure (41; the sheet's own receiver 63-64): the judges read
 # "mid-grey clay, not black polymer". Measured on hero_34 with the r1 maps: receiver side 42, stock 61, magazine 51
 # (studio.exr 0.32 / k 0.16 tried: 62 / 74 / 48, flatter; courtyard 0.35: 42 / 59 / 46, less structure)
-STUDIO = {"rig": "studio", "hdri": "interior", "strength": 0.45, "saturation": 0.0, "k": 0.12,
-          "bg_rgb": [126, 126, 126]}
+STUDIO_R1 = {"rig": "studio", "hdri": "interior", "strength": 0.45, "saturation": 0.0, "k": 0.12,
+             "bg_rgb": [126, 126, 126]}
+# (W4b close-up r2) a black product is photographed by its REFLECTIONS: the r1 rig (a dim interior HDRI + four weak
+# softboxes) gave a dark rough finish nothing in its mirror direction, so every flat read one matte value and the
+# polymer / phosphate split (roughness 0.44 vs 0.80) never showed (both judges: "one flat charcoal value", "the steel
+# looks exactly like the polymer", "no edge highlights"). The r2 rig is a product set: the same neutral interior HDRI
+# low (0.15) for ambient reflections, a long softbox placed in the MIRROR direction of the side face the camera sees
+# (nudged up so its edge falls across the face as a sheen gradient) and one in the top faces' mirror direction, two
+# narrow strip lights behind-left / behind-right whose reflections run along the edges, a weak key from the camera's
+# upper left; the camera sees a flat sRGB 150 backdrop (the sheet's own backdrop reads 151). Exposure stays within
+# 1.3 x the L5 calibration on the hero's receiver side (K2). The renders run without the denoiser (it smoothed the
+# sub-millimetre grain, specks and scuffs into a clean plastic) at 1024 samples
+STUDIO = {"rig": "studio", "hdri": "interior", "strength": 0.15, "saturation": 0.0, "k": 0.0,
+          "bg_rgb": [150, 150, 150],
+          "extra_lights": [
+              {"name": "Flank", "mirror_n_M": "flank", "nudge_cam": [0.0, 0.55, 0.0], "dist": 1.3, "size": [1.2, 0.3],
+               "energy": 2.5},
+              {"name": "Top", "mirror_n_M": [0.0, 0.0, 1.0], "nudge_cam": [0.0, 0.1, 0.0], "dist": 1.3,
+               "size": [1.4, 0.3], "energy": 7.0},
+              {"name": "StripL", "dir_cam": [-0.9, 0.25, -0.45], "dist": 1.2, "size": [0.1, 1.4], "energy": 22.0},
+              {"name": "StripR", "dir_cam": [0.9, 0.25, -0.45], "dist": 1.2, "size": [0.1, 1.4], "energy": 22.0},
+              {"name": "Key", "dir_cam": [-0.5, 0.7, 0.5], "dist": 1.4, "size": [0.6, 0.6], "energy": 2.5}]}
+STUDIO_DENOISE, STUDIO_SAMPLES = False, 1024
 
 
 def form_fits():
@@ -377,8 +398,9 @@ def realism_shots(samples):
     out = []
     for n, c, L, kw, note in S:
         st = dict(STUDIO, target_M=L["target_M"], dist_m=dist[n])
-        out.append(dict({"name": n, "out": str(REAL / f"{n}.png"), "camera": c, "lights": st, "samples": samples,
-                         "note": note + " [studio rig]"}, **kw))
+        out.append(dict({"name": n, "out": str(REAL / f"{n}.png"), "camera": c, "lights": st,
+                         "samples": max(samples, STUDIO_SAMPLES) if not STUDIO_DENOISE else samples,
+                         "denoise": STUDIO_DENOISE, "note": note + " [studio rig]"}, **kw))
         out.append(dict({"name": n + "_l5", "out": str(REAL / "l5" / f"{n}.png"), "camera": c, "lights": L,
                          "samples": samples, "note": note + " [L5 calibration rig]"}, **kw))
     return out
@@ -712,8 +734,9 @@ def main():
                                                                "textures + shipped clips)",
                                                      "shots": [dict(s_, out=rel(s_["out"])) for s_ in sh]}, indent=1))
         res["realism"] = {"images": len(sh), "files": [rel(s_["out"]) for s_ in sh],
-                          "border_hits_whole_frames": {s_["name"]: border_hits(s_["out"]) for s_ in sh
-                                                       if s_["name"] in WHOLE}}
+                          # (W4b r2) against the shot's own backdrop (the r2 realism rig's is sRGB 150)
+                          "border_hits_whole_frames": {s_["name"]: border_hits(s_["out"], bg=int(
+                              s_["lights"].get("bg_rgb", [126])[0])) for s_ in sh if s_["name"] in WHOLE}}
     if "set" in only:
         SETD.mkdir(parents=True, exist_ok=True)
         sh = set_shots(a.samples)

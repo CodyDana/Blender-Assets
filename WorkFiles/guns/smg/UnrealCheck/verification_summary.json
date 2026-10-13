@@ -1,0 +1,1553 @@
+{
+ "stage": "W5 Unreal (UE 5.8, SMG_BUILD_PLAN 14.3 + GUN_BUILDING_STUDY 7.4)",
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "content_path": "/Game/GunCheck/SMG01_1013b",
+ "project": "WorkFiles/shuriken/UnrealShuriken/ShurikenValidation.uproject (the katana / AR-01 verification project, main checkout)",
+ "passes": {
+  "A import": "smA_import.py (-nullrhi)",
+  "A3 ABP": "smA3_abp.py (-nullrhi, -EnablePlugins=AllToolsets)",
+  "A2 check level": "smA2_level.py (-nullrhi)",
+  "B read-back": "smB_verify.py (-nullrhi)",
+  "C render + U2b": "smC_render.py (D3D12, -RenderOffscreen)",
+  "E game world": "smE_game.py (-game, D3D12, -RenderOffscreen)",
+  "D analysis": "smD_analyse.py (Blender)",
+  "F summary": "smF_summary.py"
+ },
+ "status": "pass",
+ "engine_verified": true,
+ "failed": [],
+ "issues": [
+  "U2b: a node on an SMG-only bone (stock) compiles with a warning ('Bone stock not found in Skeleton') because the class ABP is authored on the AR-01 pilot skeleton; it raises no runtime error and works on the SMG. For a warning-free class ABP the game should drive SMG-only bones (stock, sight_front, charging_handle) by clips on the slot / a linked layer, or author the class ABP on the superset skeleton. The game's DemoGame_1_Guns ABP_Gun_LongGun still drives the trigger with a constant AR-01 angle (-12) and no table: it needs the normalized inputs (this harness's graph) before the SMG is wired into the game (prototype work, not done here).",
+  "U4: 'owner sees no TP component' is not measured (needs the weapon Blueprint on a possessed pawn: game-side, as on the AR-01).",
+  "U11 not run: no player MetaHuman in the verification project (H1 full passed in Blender; gun.hand_offset carries it)."
+ ],
+ "findings": [
+  {
+   "gate": "U7 (W4 review addition): runtime bounds of the dropped SK with the stock folded",
+   "cause": "Measured on the W4b bytes (run /Game/GunCheck/SMG01_1013a): a SkeletalMeshComponent whose physics asset has bodies takes its bounds from UPhysicsAsset::CalcAABB over the bodies flagged consider_for_bounds (always in the editor, in game whenever bodies exist, e.g. QueryOnly in hand or simulating when dropped). PHYS_SMG01's one body holds only the extended-state shapes, so the folded stock lay 5.508 cm outside the component's bounds in 4,204 of 4,270 samples, and every SK_SMG01 on that route had a 33.61 cm LOD radius instead of the 37.54 cm the sidecar screen sizes use.",
+   "fix": "Generator: Scripts/guns/smg/smg_rig.py physics_bodies(envelope) adds a box with NO collision and NO mass to the 'body' body spanning the mesh's extended bounds (bind AABB + bounds extension, both stock states). The physics-route bounds now equal the mesh's extended bounds: 0 samples outside on the folded and the extended drop, the LOD radius is the same on every route; collision shapes, mass (2.5 kg) and CoM unchanged. Re-exported with run_rig_mag.sh --from rig (rig, verify, mag, fit, h1, look, gates all pass): every FBX's meshes, UVs, vertex groups and actions are identical to the W4b export (sm_reexport_diff.json, max difference 0.0); only the skeletal sidecar's physics_bodies changed. All Unreal passes re-ran on the new bytes (/Game/GunCheck/SMG01_1013b)."
+  },
+  {
+   "gate": "U7 harness (not an asset fault)",
+   "cause": "-game spawns its DefaultPawn (a 35 cm sphere) at the world origin; the first run's extended SK dropped at the origin came to rest on it (line traces found DefaultPawn_0 under it).",
+   "fix": "smA2_level.py places every drop 4 m off the origin."
+  },
+  {
+   "gate": "U4 harness (not an asset fault)",
+   "cause": "The AR-01's top view cannot tell the SMG's LOD0 from LOD3 (the refs differed by 252 px, noise): from above the LOD3 receiver and rail carry the same baked detail.",
+   "fix": "smC_render.py compares the LODs from the right side (70 cm, perspective); the shadow test keeps the top view."
+  },
+  {
+   "gate": "U2b (reported)",
+   "cause": "ABP_Gun_LongGun is authored on SK_AR01_Skeleton; its node on the SMG-only bone 'stock' compiles with the warning 'Bone stock not found in Skeleton' (status UP_TO_DATE_WITH_WARNINGS). At runtime it raises nothing on SK_AR01 (no bone moves) and folds the SMG's stock exactly to the StockFold clip's end.",
+   "recommendation": "Game side: drive SMG-only bones (stock, sight_front, charging_handle) by clips on the Weapon slot or a linked layer, or author the class ABP on a superset skeleton; give the game's ABP_Gun_LongGun (DemoGame_1_Guns, constant AR-01 trigger angle) the normalized inputs and per-gun angle table proven here before the SMG is wired in."
+  },
+  {
+   "gate": "U8 (reported)",
+   "cause": "Unreal's export of the authored UV1 shows 0 overlapping pixels at 64 and 128 px (the gate) but 17-22 px at 1024 on SM_SMG01 LOD0-2 and 2 px on the magazine LOD0, where the shipped FBX has 0: UV precision in Unreal's stored mesh (sub-texel at the lightmap's own resolution)."
+  }
+ ],
+ "sha256": {
+  "A_SMG01_Charge.fbx": "56823127eec8a292f2479c48e19a84ff4836059cc85e4a641251e70128179004",
+  "A_SMG01_Fire.fbx": "abffef9009c6347f87d2a4d80e8835ead6edd879d11b460c2c7a123809fff2b9",
+  "A_SMG01_Reload.fbx": "1baca15f32a87534adc5e67b6880a1af8b39372921074f8c96e2d7b14e1e75ba",
+  "A_SMG01_ReloadEmpty.fbx": "05543eb70b32d095f5e4770eec4fdd18ff957acd1e62621d659510963bc658ba",
+  "A_SMG01_Selector.fbx": "f54deccd0d1f11e1a585b84e71845114e442af7253786b621d09a3f1e57be9f7",
+  "A_SMG01_SightFlip.fbx": "7b340ebfb19c2df9979c1d8e1ff5b6ca8a964cd15ad802182ad28195c83b7a6e",
+  "A_SMG01_StockFold.fbx": "d6924d88fb4cdd9fc2d8556f072f4bdf374faa97603f85fee6c208c4d537b590",
+  "A_SMG01_StockUnfold.fbx": "ae3db1564d463f50465edebfc99cbc113fdb53fb76761fb08a42912715b1999b",
+  "Physics/SK_SMG01_PhysicsProxy.fbx": "262d01f76ab874d0384c1381c8c07a3e7a936955fe68984ace44cab08ac706da",
+  "SK_SMG01.fbx": "2f671038e6cffb3a65ce0a7f78ca3a182df50abf8ac95f8d9e41dbe836ae484f",
+  "SK_SMG01.skeletal.json": "c49acd7ddd2002bf642406fa6a2e0139ef0cab725f2b141ac6475dd0b368bea9",
+  "SK_SMG01_LOD1.fbx": "e53c7e8ab29078d786f191b32e103c9f09bfe2ce00808dd71e9042edd0242028",
+  "SK_SMG01_LOD2.fbx": "0472ac5c93a20c43d8b1e38edf029fd85a17d2cfd6a408ad25ff0911060e8cd9",
+  "SK_SMG01_LOD3.fbx": "010d5e7e11a6ac5a15eaa8aea74f524b511024154013feeeae51e9c5622e5903",
+  "SM_SMG01.fbx": "9145428cee628963c2413033f1b90c2ca790dc7cec723ca7277e8f646e0c1efe",
+  "SM_SMG01.sockets.json": "87f9beb4b642a1f93bc859949ed2a9065490c071f1898baaa6991232afc8a2eb",
+  "SM_SMG01_Mag.fbx": "7f44422cddbccfc4513c3b6e12269ef141975046937239896c0ad8519e60cceb",
+  "SM_SMG01_Mag.sockets.json": "c78d00c84bb520464d25da6c9eef6b8ad558dc1e68887b8ed3dac7a1fbe98c3d",
+  "Textures/Recolour/recolour_maps.json": "e6d8e6ae10cc440d707e714818380da25490f2cf51a4fa3b627bd19c6839face",
+  "Textures/Recolour/T_SMG01_Furniture_Detail16.png": "714f89de7be40b59a81c09d6ec61273985d641f07049efdeed0cee3375af84fb",
+  "Textures/Recolour/T_SMG01_Mag_Detail16.png": "b040c3e3652d87aed09ec6fb1f6568c6b9e998f2abd700c9729808ea406e9c90",
+  "Textures/T_SMG01_Furniture_BC.png": "fe4aacbe116d7c9b5fb280c674948b98c81072ed08442be0ec7079f7ce3e07ab",
+  "Textures/T_SMG01_Furniture_Masks.png": "a0e75c1352a9e7cf168f48d9cae222386505776a34e403fbb0f3ad848f44f969",
+  "Textures/T_SMG01_Furniture_N.png": "e846cc1303aedf28a1cd91672f601125c06acd3c2d4eb2dae18aeb4351a65d97",
+  "Textures/T_SMG01_Furniture_ORM.png": "93873666503c1e32bb1d1159a2cd112aff3c7485723b1a4cb12465b0db50a842",
+  "Textures/T_SMG01_Mag_BC.png": "bafba4ef1bab4e921f0a2cc666ac3c17738ddbbcde412d582bf466bc27b21736",
+  "Textures/T_SMG01_Mag_Masks.png": "cfd6224520d8a38ac7bd38f73b7322751bed1efbeaa73f6d87bf9ba3a832263e",
+  "Textures/T_SMG01_Mag_N.png": "76c206a29a214071038afba1158145d3c71b1e0d0d4b5b975a7c94004d2f1fef",
+  "Textures/T_SMG01_Mag_ORM.png": "04ec43c73597c13df09bf9bd4cf95d4ceef65f4ece42991562d82d5aea8db2b8",
+  "Textures/T_SMG01_Metal_BC.png": "b91701cb59dc9931cb3af31796f3bd35b4a76684cdb4a1c2faa2747ebed6ba36",
+  "Textures/T_SMG01_Metal_Masks.png": "ed5906b7d6f317f1db582c8fdaf2fe75da136e33d6b8d81c6c894a35a027225b",
+  "Textures/T_SMG01_Metal_N.png": "cb926711ac403b924ae55a99d60f61a648e4634eee4e4a2f6881b1cd30cf18ee",
+  "Textures/T_SMG01_Metal_ORM.png": "00616831d4764faf752feff7cabf37fc5ceb055673972bc9f58eab2f1eb8ac63"
+ },
+ "gates": [
+  {
+   "name": "bytes: every pass used the shipped bytes (sha256 of every Exports/Guns/SMG01 file before and after passes A, A2, A3, B, C)",
+   "value": {
+    "files": 33,
+    "unchanged_per_pass": {
+     "A": true,
+     "A2": true,
+     "A3": true,
+     "B": true,
+     "C": true
+    },
+    "now_equal_start": true
+   },
+   "threshold": "all equal",
+   "pass": true
+  },
+  {
+   "name": "bytes = the W3 gated bytes (rig_export.json sha256, mag.json M7)",
+   "value": {
+    "rig_export_files": 16,
+    "mismatch": [],
+    "SM_SMG01.fbx": true,
+    "SM_SMG01_Mag.fbx": true
+   },
+   "threshold": "equal",
+   "pass": true
+  },
+  {
+   "name": "pass A import (fresh process; legacy FBX importer, the sidecar settings; SK_AR01_Skeleton set compatible)",
+   "value": {
+    "status": "ok",
+    "lods_SK": 4,
+    "clips": 8,
+    "sockets_SK": 21,
+    "physics": "/Game/GunCheck/SMG01_1013b/PHYS_SMG01.PHYS_SMG01",
+    "physics_elements": {
+     "box": 8,
+     "capsule": 1,
+     "sphere": 0
+    },
+    "textures": 14,
+    "compatible_skeletons": [
+     "<Object '/Game/GunCheck/AR01_1009b/SK_AR01_Skeleton.SK_AR01_Skeleton' (0x0000014FEF550C00) Class 'Skeleton'>"
+    ]
+   },
+   "threshold": "ok; 4 LODs; 8 clips; 21 sockets",
+   "pass": true
+  },
+  {
+   "name": "U1 skeleton: names, parents, reference heads (<= 0.001 cm), root scale 1, rest rotations 0, axes (muzzle +X, up +Z, port right +Y)",
+   "value": {
+    "mesh_bones": 12,
+    "names_match": true,
+    "parents_match": true,
+    "max_head_err_cm": 3.1280517589493684e-06,
+    "root_scale_1": true,
+    "max_bone_rest_rotation_deg": 0.0,
+    "axes": {
+     "muzzle_plusX_cm": 32.255,
+     "muzzle_on_bore_y_cm": 0.0,
+     "sight_above_bore_cm": 6.7109999999999985,
+     "ejection_port_right_plusY_cm": 3.16,
+     "bolt_rest_x_axis_component": [
+      1.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "threshold": "all true; head err <= 0.001 cm",
+   "pass": true
+  },
+  {
+   "name": "U2 procedural (engine pose maths, bone-space offsets): the bolt's -X moves it straight back by the full travel; the selector turns about its own Y to SAFE / AUTO",
+   "value": {
+    "bolt_component_motion_cm": [
+     -6.79,
+     0.0,
+     0.0
+    ],
+    "selector": {
+     "selector_SAFE": {
+      "blender_deg_commanded": -63.4,
+      "about_Y_deg": -63.4,
+      "off_axis_deg": 0.0,
+      "head_moved_cm": 0.0
+     },
+     "selector_AUTO": {
+      "blender_deg_commanded": 45.0,
+      "about_Y_deg": 45.0,
+      "off_axis_deg": 0.0,
+      "head_moved_cm": 0.0
+     }
+    }
+   },
+   "threshold": "bolt (-6.79, 0, 0) +- 0.001 cm; selector about Y, angle +- 0.001 deg, pivot fixed",
+   "pass": true
+  },
+  {
+   "name": "U2b one ABP (ABP_Gun_LongGun, authored on SK_AR01_Skeleton) drives SK_SMG01 (Compatible Skeletons) and SK_AR01 through normalized inputs mapped by each gun's angle table: bolts straight back by the table travel (= each Fire clip's rear stop), both triggers pull their lower end rearward by the table angle (= each Fire clip's full pull), the detent index reaches each gun's SAFE / SEMI / AUTO (= its own clips), each release moves its own way (= its Reload clip), no error on the missing bone (stock on SK_AR01)",
+   "value": {
+    "SMG01": {
+     "anim_instance_every_case": true,
+     "skeleton": "/Game/GunCheck/SMG01_1013b/SK_SMG01_Skeleton.SK_SMG01_Skeleton",
+     "bolt": {
+      "full_cm": [
+       -6.79,
+       0.0,
+       0.0
+      ],
+      "half_cm": [
+       -3.395,
+       0.0,
+       0.0
+      ],
+      "fire_clip_rear_stop_cm": [
+       -6.79,
+       0.0,
+       0.0
+      ],
+      "ok": true
+     },
+     "trigger": {
+      "about_Y_deg": 13.0,
+      "half_deg": 6.5,
+      "off_axis_deg": 0.0,
+      "point_3cm_below_pivot_dx_cm": -0.67485,
+      "fire_clip_full_pull_deg": 13.0,
+      "ok": true
+     },
+     "selector": {
+      "detents_about_Y_deg": {
+       "SAFE": -63.4,
+       "SEMI": 0.0,
+       "AUTO": 45.0
+      },
+      "table": {
+       "SAFE": -63.4,
+       "SEMI": 0.0,
+       "AUTO": 45.0
+      },
+      "clips": {
+       "AUTO_held_in_Fire": 44.99999,
+       "SAFE_selector_clip_min": -63.39999,
+       "AUTO_selector_clip_max": 44.99999,
+       "SEMI_bind": 0.0
+      },
+      "ok": true
+     },
+     "release": {
+      "rotvec_deg": [
+       0.0,
+       -11.0,
+       0.0
+      ],
+      "reload_clip_extreme_rotvec_deg": [
+       0.0,
+       -11.00001,
+       0.0
+      ],
+      "same_way": true,
+      "ok": true
+     },
+     "stock": {
+      "vs_StockFold_end_cm": 0.0,
+      "vs_StockFold_end_deg": 0.0,
+      "ok": true
+     },
+     "rest_vs_bind": {},
+     "rest_ok": true,
+     "ok": true
+    },
+    "AR01": {
+     "anim_instance_every_case": true,
+     "skeleton": "/Game/GunCheck/AR01_1009b/SK_AR01_Skeleton.SK_AR01_Skeleton",
+     "bolt": {
+      "full_cm": [
+       -10.325,
+       0.0,
+       0.0
+      ],
+      "half_cm": [
+       -5.1625,
+       0.0,
+       0.0
+      ],
+      "fire_clip_rear_stop_cm": [
+       -10.325,
+       0.0,
+       0.0
+      ],
+      "ok": true
+     },
+     "trigger": {
+      "about_Y_deg": 12.0,
+      "half_deg": 6.0,
+      "off_axis_deg": 0.0,
+      "point_3cm_below_pivot_dx_cm": -0.62374,
+      "fire_clip_full_pull_deg": 12.0,
+      "ok": true
+     },
+     "selector": {
+      "detents_about_Y_deg": {
+       "SAFE": 0.0,
+       "SEMI": 32.0,
+       "AUTO": 16.0
+      },
+      "table": {
+       "SAFE": 0.0,
+       "SEMI": 32.0,
+       "AUTO": 16.0
+      },
+      "clips": {
+       "AUTO_held_in_Fire": 16.0,
+       "SAFE_bind": 0.0
+      },
+      "ok": true
+     },
+     "release": {
+      "rotvec_deg": [
+       0.0,
+       -10.0,
+       0.0
+      ],
+      "reload_clip_extreme_rotvec_deg": [
+       0.0,
+       -10.0,
+       0.0
+      ],
+      "same_way": true,
+      "ok": true
+     },
+     "stock": {
+      "missing_bone": "stock",
+      "max_bone_motion_cm": 0.0,
+      "max_socket_change": 0.0,
+      "ok": true
+     },
+     "rest_vs_bind": {
+      "selector": 3.793186
+     },
+     "rest_ok": true,
+     "ok": true
+    },
+    "runtime_log_lines_about_the_ABP_or_stock": [],
+    "compile": {
+     "status": "<BlueprintStatus.BS_UP_TO_DATE_WITH_WARNINGS: 5>",
+     "chain": [
+      "Component To Local",
+      "Transform (Modify) Bone - Bone: stock",
+      "Transform (Modify) Bone - Bone: mag_release",
+      "Transform (Modify) Bone - Bone: selector",
+      "Transform (Modify) Bone - Bone: trigger",
+      "Transform (Modify) Bone - Bone: bolt",
+      "Local To Component",
+      "Local Space Ref Pose"
+     ],
+     "log": [
+      "e/GunCheck/SMG01_1013b/ABP_Gun_LongGun.ABP_Gun_LongGun: [Compiler] Transform (Modify) Bone - Bone: stock  - Bone stock not found in Skeleton"
+     ]
+    }
+   },
+   "threshold": "0.01 cm / 0.01 deg on both guns; no runtime error lines",
+   "pass": true,
+   "note": "the only compile message is the authoring-time warning 'Bone stock not found in Skeleton' for the SMG-only node on the AR-01 pilot skeleton (status UP_TO_DATE_WITH_WARNINGS); at runtime the node does nothing on SK_AR01 and folds the SMG's stock exactly to its StockFold clip's end"
+  },
+  {
+   "name": "U3 sockets on SK_SMG01: from the sidecar, on the right bones, scale 1, outered to the asset, fresh process",
+   "value": {
+    "count": 21,
+    "worst_loc_cm": 4.440892098500626e-16,
+    "worst_rot_deg": 6.933553235942234e-07,
+    "extra": []
+   },
+   "threshold": "21; <= 0.001 cm / 0.001 deg; no extras",
+   "pass": true
+  },
+  {
+   "name": "sockets on SM_SMG01 (sidecar, fresh process)",
+   "value": {
+    "count": 21,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 0.0,
+    "extra": [],
+    "missing": []
+   },
+   "threshold": "21; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras",
+   "pass": true
+  },
+  {
+   "name": "sockets on SM_SMG01_Mag (sidecar, fresh process)",
+   "value": {
+    "count": 5,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 0.0,
+    "extra": [],
+    "missing": []
+   },
+   "threshold": "5; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras",
+   "pass": true
+  },
+  {
+   "name": "U4 First Person rendering with VSM (FP_Weapon + FP_Mag vs TP_Weapon + TP_Mag): FP casts no ground shadow, TP does; FP at ForcedLodModel 1 renders LOD0 where the auto-LOD TP component falls to LOD3",
+   "value": {
+    "ground_shadow_px": {
+     "u4_tp": 53668,
+     "u4_none": 53671,
+     "u4_fp": 0
+    },
+    "lod_pixels_differing": {
+     "tp_auto_vs_ref0": 590,
+     "tp_auto_vs_ref3": 49,
+     "fp_forced_vs_ref0": 678,
+     "fp_forced_vs_ref3": 1184
+    },
+    "components": {
+     "tp_noshadow_mask": {
+      "fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "forced_lod_model": 0,
+      "cast_shadow": false,
+      "file": "u4_tp_noshadow",
+      "predicted_lod_after_capture": 0
+     },
+     "tp": {
+      "fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "forced_lod_model": 0,
+      "cast_shadow": true,
+      "file": "u4_tp",
+      "predicted_lod_after_capture": 0
+     },
+     "none": {
+      "fp_type": "<FirstPersonPrimitiveType.NONE: 0>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.NONE: 0>",
+      "forced_lod_model": 0,
+      "cast_shadow": true,
+      "file": "u4_none",
+      "predicted_lod_after_capture": 0
+     },
+     "fp": {
+      "fp_type": "<FirstPersonPrimitiveType.FIRST_PERSON: 1>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.FIRST_PERSON: 1>",
+      "forced_lod_model": 1,
+      "cast_shadow": true,
+      "file": "u4_fp",
+      "predicted_lod_after_capture": 0
+     }
+    }
+   },
+   "threshold": "TP shadow > 1000 px, FP < 1 % of it; FP closer to the LOD0 reference, TP to LOD3",
+   "pass": true,
+   "note": "'the owner sees no TP component' needs a possessed player pawn carrying both components (game-side weapon Blueprint); not measurable here (same as the AR-01)"
+  },
+  {
+   "name": "U5 LOD count 4 (SK_SMG01, SM_SMG01, SM_SMG01_Mag)",
+   "value": {
+    "SK": 4,
+    "SM": 4,
+    "Mag": 4
+   },
+   "threshold": "4 each",
+   "pass": true
+  },
+  {
+   "name": "U5 triangles per LOD equal in Blender, the FBX and Unreal (render data, mesh description, Unreal's FBX export); predicted static-import drops 0 (UD1)",
+   "value": {
+    "SK_SMG01": [
+     {
+      "lod": 0,
+      "blender": 48236,
+      "fbx": 48236,
+      "unreal_export": 48236,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 23832,
+      "fbx": 23832,
+      "unreal_export": 23832,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 8844,
+      "fbx": 8844,
+      "unreal_export": 8844,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 1420,
+      "fbx": 1420,
+      "unreal_export": 1420,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ],
+    "SM_SMG01": [
+     {
+      "lod": 0,
+      "blender": 52536,
+      "fbx": 52536,
+      "unreal_render": 52536,
+      "unreal_mesh_description": 52536,
+      "unreal_export": 52536,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 25252,
+      "fbx": 25252,
+      "unreal_render": 25252,
+      "unreal_mesh_description": 25252,
+      "unreal_export": 25252,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 9532,
+      "fbx": 9532,
+      "unreal_render": 9532,
+      "unreal_mesh_description": 9532,
+      "unreal_export": 9532,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 1444,
+      "fbx": 1444,
+      "unreal_render": 1444,
+      "unreal_mesh_description": 1444,
+      "unreal_export": 1444,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ],
+    "SM_SMG01_Mag": [
+     {
+      "lod": 0,
+      "blender": 4300,
+      "fbx": 4300,
+      "unreal_render": 4300,
+      "unreal_mesh_description": 4300,
+      "unreal_export": 4300,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 1420,
+      "fbx": 1420,
+      "unreal_render": 1420,
+      "unreal_mesh_description": 1420,
+      "unreal_export": 1420,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 688,
+      "fbx": 688,
+      "unreal_render": 688,
+      "unreal_mesh_description": 688,
+      "unreal_export": 688,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 24,
+      "fbx": 24,
+      "unreal_render": 24,
+      "unreal_mesh_description": 24,
+      "unreal_export": 24,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ]
+   },
+   "threshold": "equal per LOD",
+   "pass": true
+  },
+  {
+   "name": "screen sizes from the sidecars (SK LOD settings, SM, Mag)",
+   "value": {
+    "SK": [
+     1.0,
+     0.2861199975013733,
+     0.060819998383522034,
+     0.037769999355077744
+    ],
+    "SK_sidecar": [
+     1.0,
+     0.28612,
+     0.06082,
+     0.03777
+    ],
+    "SM": [
+     1.0,
+     0.25,
+     0.05314,
+     0.033
+    ],
+    "SM_sidecar": [
+     1.0,
+     0.25,
+     0.05314,
+     0.033
+    ],
+    "Mag": [
+     1.0,
+     0.08465,
+     0.01799,
+     0.01117
+    ],
+    "Mag_sidecar": [
+     1.0,
+     0.08465,
+     0.01799,
+     0.01117
+    ]
+   },
+   "threshold": "equal (1e-6)",
+   "pass": true
+  },
+  {
+   "name": "U5 engine sphere radii = the radii the screen sizes were derived from (SK: bind box + extension; SM / Mag: max |v - box centre|)",
+   "value": {
+    "SK_engine_cm": 37.54048224046005,
+    "SK_build_cm": 37.54,
+    "SM_engine_cm": 32.80111,
+    "SM_build_cm": 32.801,
+    "Mag_engine_cm": 11.106418,
+    "Mag_build_cm": 11.110000000000001,
+    "game_json_bounds_radius_m": {
+     "twin_engine_sphere_radius": 0.32801,
+     "twin_with_mag_box_half_diagonal": 0.3508,
+     "gun_without_mag": 0.3355,
+     "gun_folded_without_mag": 0.235,
+     "spec": {
+      "gun_extended_no_mag": 0.336,
+      "gun_extended_with_mag": 0.3512,
+      "gun_folded_no_mag": 0.2338,
+      "mag": 0.1177
+     }
+    },
+    "extension_enters_lod_radius": {
+     "imported_radius_cm": 33.552954094925894,
+     "extended_radius_cm": 37.54048224046005,
+     "note": "the SK's engine bounds (LOD selection) include the bounds extension"
+    }
+   },
+   "threshold": "<= 0.01 cm",
+   "pass": true,
+   "note": "the SK's LOD radius includes the bounds extension (37.54 cm vs 33.55 cm imported): the sizes were derived at the extended radius"
+  },
+  {
+   "name": "mag screen sizes re-derived from the engine radii (size_SK x r_mag / r_SK)",
+   "value": {
+    "r_mag_cm": 11.106418,
+    "r_sk_cm": 37.54048224046005,
+    "derived": [
+     1.0,
+     0.08465,
+     0.01799,
+     0.01117
+    ],
+    "sidecar": [
+     1.0,
+     0.08465,
+     0.01799,
+     0.01117
+    ],
+    "max_diff": 0.0
+   },
+   "threshold": "<= 0.001 from the sidecar",
+   "pass": true
+  },
+  {
+   "name": "U5 bounds: the stored bounds (+ the sidecar extension) hold every LOD0-3 vertex at every runtime frame of every clip (both stock states: StockFold / StockUnfold; sights folded: SightFlip)",
+   "value": {
+    "extension_applied": {
+     "pos": [
+      0.0,
+      24.752,
+      0.257
+     ],
+     "neg": [
+      0.749,
+      0.0,
+      0.0
+     ],
+     "sidecar": [
+      [
+       0.0,
+       24.752,
+       0.257
+      ],
+      [
+       0.749,
+       0.0,
+       0.0
+      ]
+     ]
+    },
+    "vertices_outside": 0,
+    "per_clip": {
+     "A_SMG01_Fire": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SMG01_Charge": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SMG01_Reload": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SMG01_ReloadEmpty": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SMG01_Selector": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SMG01_StockFold": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SMG01_StockUnfold": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SMG01_SightFlip": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     }
+    }
+   },
+   "threshold": "0 outside",
+   "pass": true
+  },
+  {
+   "name": "U6 magazine at Mag (engine attach, SnapToTarget, gun at an arbitrary world transform): composed transform zero; every reload frame",
+   "value": {
+    "attached_vs_socket_cm": 1.5987211554602254e-14,
+    "rot": 4.4909684304705877e-10,
+    "relative_to_socket": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ],
+    "socket_vs_sidecar_cm": 1.5987211554602254e-14,
+    "reload_frames_attached_vs_socket": {
+     "A_SMG01_Reload": 8.590241851180735e-10,
+     "A_SMG01_ReloadEmpty": 8.590241851180735e-10
+    }
+   },
+   "threshold": "<= 0.001 cm, identity",
+   "pass": true
+  },
+  {
+   "name": "M9 seated fit on the read-back geometry (co-visible pairs LOD0-1 incl. (k, k+-1); LOD2-3 reported: mag.json M1 rates them in px at the switch distance)",
+   "value": {
+    "pairs": {
+     "gun LOD0 / mag LOD0": 0,
+     "gun LOD1 / mag LOD1": 0,
+     "gun LOD0 / mag LOD1": 0,
+     "gun LOD1 / mag LOD0": 0,
+     "gun LOD2 / mag LOD2": 8,
+     "gun LOD3 / mag LOD3": 12,
+     "gun LOD1 / mag LOD2": 16,
+     "gun LOD2 / mag LOD1": 0,
+     "gun LOD2 / mag LOD3": 26,
+     "gun LOD3 / mag LOD2": 232
+    },
+    "mag_json_M1": {
+     "gun LOD0 / mag LOD0": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD1 / mag LOD1": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD2 / mag LOD2": {
+      "intersecting_triangle_pairs": 8,
+      "depth_mm_outside_well": 1.218,
+      "depth_px": 0.142,
+      "at_m": 10.975,
+      "raw_depth_mm": 1.218
+     },
+     "gun LOD3 / mag LOD3": {
+      "intersecting_triangle_pairs": 12,
+      "depth_mm_outside_well": 0.0,
+      "depth_px": 0.0,
+      "at_m": 17.673,
+      "raw_depth_mm": 0.689
+     },
+     "gun LOD0 / mag LOD1": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD1 / mag LOD0": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD1 / mag LOD2": {
+      "intersecting_triangle_pairs": 16,
+      "depth_mm_outside_well": 1.218,
+      "depth_px": 0.142,
+      "at_m": 10.975,
+      "raw_depth_mm": 1.218
+     },
+     "gun LOD2 / mag LOD1": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD2 / mag LOD3": {
+      "intersecting_triangle_pairs": 26,
+      "depth_mm_outside_well": 0.0,
+      "depth_px": 0.0,
+      "at_m": 17.673,
+      "raw_depth_mm": 0.11
+     },
+     "gun LOD3 / mag LOD2": {
+      "intersecting_triangle_pairs": 232,
+      "depth_mm_outside_well": 3.07,
+      "depth_px": 0.222,
+      "at_m": 17.673,
+      "raw_depth_mm": 21.446
+     }
+    }
+   },
+   "threshold": "0 at LOD0 / LOD1",
+   "pass": true
+  },
+  {
+   "name": "M9 straight reload path from the engine sockets (MagInsertStart -> Mag, 0.5 mm steps) on the read-back geometry: with the catch at its release angle 0 intersections (M4b); with the catch at rest only the catch nose meets the magazine (R36: the spring-loaded catch is cammed aside)",
+   "value": {
+    "insert_mm": 68.20000191114372,
+    "insert_axis_vs_mag_z": 0.9999999999998681,
+    "rotation_constant_deg": 0.0,
+    "steps": 138,
+    "catch_release_deg_blender": -11.0,
+    "lods": {
+     "LOD0": {
+      "released_intersecting_steps": [],
+      "rest_steps_with_contact": 52,
+      "rest_contact_parts": [
+       "mag_release"
+      ],
+      "rest_contact_range_mm": [
+       42.31,
+       67.7
+      ],
+      "rest_noncatch_steps": []
+     },
+     "LOD1": {
+      "released_intersecting_steps": [],
+      "rest_steps_with_contact": 52,
+      "rest_contact_parts": [
+       "mag_release"
+      ],
+      "rest_contact_range_mm": [
+       42.31,
+       67.7
+      ],
+      "rest_noncatch_steps": []
+     }
+    }
+   },
+   "threshold": "0 released; 0 non-catch contacts; insert 68.2 mm along the magazine's +Z, rotation constant",
+   "pass": true
+  },
+  {
+   "name": "U6 reload clips in engine: the magazine on the posed SMG (catch posed by the clip) at every runtime frame (LOD0)",
+   "value": {
+    "A_SMG01_Reload": {
+     "frames": 56,
+     "frames_with_intersections": []
+    },
+    "A_SMG01_ReloadEmpty": {
+     "frames": 81,
+     "frames_with_intersections": []
+    }
+   },
+   "threshold": "0 frames",
+   "pass": true
+  },
+  {
+   "name": "PHYS_SMG01: one body on 'body'; the sidecar's colliding shapes (7 boxes + 1 capsule) and its no-collision, no-mass bounds envelope; 2.5 kg; consider_for_bounds; fresh process",
+   "value": {
+    "bodies": [
+     "body"
+    ],
+    "colliding": [
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "capsule"
+    ],
+    "no_collision": [
+     {
+      "shape": "box",
+      "contribute_to_mass": false
+     }
+    ],
+    "mass_kg": 2.5,
+    "override": true,
+    "consider_for_bounds": true
+   },
+   "threshold": "1 body; 7 box + 1 capsule colliding; the envelope box(es) no collision, no mass; 2.5 kg",
+   "pass": true
+  },
+  {
+   "name": "U7 physics in a ticking game world: SM_SMG01 (level, rolled 70 deg), SM_SMG01_Mag, SK_SMG01 (PHYS_SMG01) with the stock extended and a second SK_SMG01 with the stock folded, dropped 1 m: rest on their collision, no tunnelling (read-back LOD0 placed at every sampled transform; the folded one posed by the StockFold clip's end)",
+   "value": {
+    "SM_PHYS_SM_SMG01": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": -0.1266,
+     "final_lowest_vertex_cm": 0.0936,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SM_SMG01_rolled": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": 0.0483,
+     "final_lowest_vertex_cm": 0.0936,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SM_SMG01_Mag": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": -0.2225,
+     "final_lowest_vertex_cm": -0.0253,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SK_SMG01": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": 0.0,
+     "final_lowest_vertex_cm": 0.0001,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SK_SMG01_folded": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": 0.0,
+     "final_lowest_vertex_cm": 0.0,
+     "max_speed_last_1s_cm_s": 0.0
+    }
+   },
+   "threshold": "speed < 1 cm/s over the last 1 s; lowest vertex never < -2 cm, final >= -0.5 cm (ground top 0)",
+   "pass": true
+  },
+  {
+   "name": "U7 (W4 review addition) the COMPONENT's runtime bounds of every dropped, simulating actor hold every vertex at every sample, the folded-stock SK_SMG01 included",
+   "value": {
+    "SM_PHYS_SM_SMG01": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": null
+    },
+    "SM_PHYS_SM_SMG01_rolled": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": null
+    },
+    "SM_PHYS_SM_SMG01_Mag": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": null
+    },
+    "SM_PHYS_SK_SMG01": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": 0.0
+    },
+    "SM_PHYS_SK_SMG01_folded": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": 0.0
+    }
+   },
+   "threshold": "0 samples outside (0.001 cm)",
+   "pass": true
+  },
+  {
+   "name": "U8 lightmap (plan Q13): index 1, Generate Lightmap UVs OFF on every LOD, 2 UV channels (the authored UV1 is the lightmap)",
+   "value": {
+    "SM_SMG01": {
+     "index": 1,
+     "generate_off": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "uv_channels": [
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    "SM_SMG01_Mag": {
+     "index": 1,
+     "generate_off": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "uv_channels": [
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   },
+   "threshold": "index 1; off on 4 / 4 LODs; 2 channels",
+   "pass": true
+  },
+  {
+   "name": "U8 the authored UV1 as Unreal exports it: inside 0..1, 0 overlapping pixels at 64 and 128 px (UD4's resolutions); 1024 px reported beside the shipped FBX's",
+   "value": {
+    "SM_SMG01_LOD0": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 18,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SMG01_LOD1": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 17,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SMG01_LOD2": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 22,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SMG01_LOD3": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SMG01_Mag_LOD0": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 2,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SMG01_Mag_LOD1": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SMG01_Mag_LOD2": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SMG01_Mag_LOD3": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    }
+   },
+   "threshold": "inside; 0 at 64 and 128",
+   "pass": true
+  },
+  {
+   "name": "texture flags persisted (fresh process): BC sRGB TC_Default, ORM / Masks linear TC_Masks, N TC_Normalmap flip-green off (group WeaponNormalMap), Detail16 linear Grayscale; groups Weapon",
+   "value": {
+    "textures": 14,
+    "wrong": {}
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "full mip chains (ListTextures, real RHI); Detail16 builds PF_G16",
+   "value": {
+    "T_SMG01_Furniture_N": {
+     "size": 4096,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 13
+    },
+    "T_SMG01_Furniture_BC": {
+     "size": 4096,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 13
+    },
+    "T_SMG01_Furniture_Detail16": {
+     "size": 2048,
+     "format": "PF_G16",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SMG01_Furniture_ORM": {
+     "size": 4096,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 13
+    },
+    "T_SMG01_Furniture_Masks": {
+     "size": 2048,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SMG01_Metal_N": {
+     "size": 2048,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 12
+    },
+    "T_SMG01_Mag_Detail16": {
+     "size": 1024,
+     "format": "PF_G16",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_SMG01_Metal_BC": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SMG01_Metal_ORM": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SMG01_Mag_N": {
+     "size": 1024,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 11
+    },
+    "T_SMG01_Metal_Masks": {
+     "size": 1024,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_SMG01_Mag_BC": {
+     "size": 1024,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_SMG01_Mag_ORM": {
+     "size": 1024,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_SMG01_Mag_Masks": {
+     "size": 512,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 10
+    }
+   },
+   "threshold": "all full; Detail16 PF_G16",
+   "pass": true
+  },
+  {
+   "name": "U9 clips: frames = the sidecar's; engine-evaluated runtime (compressed) vs raw <= 0.1 mm on every rigid part; raw = the authored clip (smg_clips) <= 0.01 mm; start / end poses = bind except what the sidecar declares (AUTO held where the bolt moves, ReloadEmpty's held-open bolt at the start, the folded stock at StockFold's end / StockUnfold's start); every sidecar notify on its frame (+-0.5), no extras",
+   "value": {
+    "A_SMG01_Fire": {
+     "frames": 7,
+     "engine_num_frames": 6,
+     "play_length_s": 0.10000000149011612,
+     "authored_frames": 6,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {
+      "selector": 15.4533
+     },
+     "start_vs_bind_mm": {
+      "selector": 15.4533
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SMG01_Charge": {
+     "frames": 23,
+     "engine_num_frames": 22,
+     "play_length_s": 0.7333333492279053,
+     "authored_frames": 22,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {
+      "selector": 15.4533
+     },
+     "start_vs_bind_mm": {
+      "selector": 15.4533
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SMG01_Reload": {
+     "frames": 56,
+     "engine_num_frames": 55,
+     "play_length_s": 1.8333333730697632,
+     "authored_frames": 55,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 0.0,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SMG01_ReloadEmpty": {
+     "frames": 81,
+     "engine_num_frames": 80,
+     "play_length_s": 2.6666667461395264,
+     "authored_frames": 80,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 6e-05,
+     "max_runtime_vs_animpose_compressed_mm": 6e-05,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 67.9,
+     "end_vs_bind_mm": {
+      "selector": 15.4533
+     },
+     "start_vs_bind_mm": {
+      "bolt": 67.9,
+      "selector": 15.4533
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SMG01_Selector": {
+     "frames": 31,
+     "engine_num_frames": 30,
+     "play_length_s": 1.0,
+     "authored_frames": 30,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SMG01_StockFold": {
+     "frames": 25,
+     "engine_num_frames": 24,
+     "play_length_s": 0.800000011920929,
+     "authored_frames": 24,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.00037,
+     "max_runtime_vs_animpose_compressed_mm": 0.00037,
+     "max_raw_vs_authored_mm": 0.00016,
+     "end_vs_start_mm": 506.56985,
+     "end_vs_bind_mm": {
+      "stock": 506.5698
+     },
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SMG01_StockUnfold": {
+     "frames": 25,
+     "engine_num_frames": 24,
+     "play_length_s": 0.800000011920929,
+     "authored_frames": 24,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.00037,
+     "max_runtime_vs_animpose_compressed_mm": 0.00037,
+     "max_raw_vs_authored_mm": 0.00016,
+     "end_vs_start_mm": 506.56985,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {
+      "stock": 506.5698
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SMG01_SightFlip": {
+     "frames": 21,
+     "engine_num_frames": 20,
+     "play_length_s": 0.6666666865348816,
+     "authored_frames": 20,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 2e-05,
+     "max_runtime_vs_animpose_compressed_mm": 2e-05,
+     "max_raw_vs_authored_mm": 4e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    }
+   },
+   "threshold": "as stated",
+   "pass": true
+  },
+  {
+   "name": "U10 0 warning / error lines from the assets in every pass log (the harness ABP's compile warning is reported under U2b)",
+   "value": {
+    "smA_import.log": {
+     "count": 0,
+     "lines": []
+    },
+    "smA2_level.log": {
+     "count": 0,
+     "lines": []
+    },
+    "smA3_abp.log": {
+     "count": 0,
+     "lines": []
+    },
+    "smB_verify.log": {
+     "count": 0,
+     "lines": []
+    },
+    "smC_render.log": {
+     "count": 0,
+     "lines": []
+    },
+    "smE_game.log": {
+     "count": 0,
+     "lines": []
+    }
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "U12 texture residency in a ticking game world (streaming on): the gun's BC and N resident at the top mip at the hip (35 cm, 90 deg) and at ADS (Sight eye, 55 deg)",
+   "value": {
+    "hip": {
+     "T_SMG01_Furniture_BC": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SMG01_Furniture_N": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SMG01_Furniture_ORM": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SMG01_Mag_BC": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SMG01_Mag_N": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SMG01_Mag_ORM": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SMG01_Metal_BC": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SMG01_Metal_N": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SMG01_Metal_ORM": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     }
+    },
+    "ads": {
+     "T_SMG01_Furniture_BC": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SMG01_Furniture_N": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SMG01_Furniture_ORM": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SMG01_Mag_BC": {
+      "current": 1024,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SMG01_Mag_N": {
+      "current": 1024,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SMG01_Mag_ORM": {
+      "current": 1024,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SMG01_Metal_BC": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SMG01_Metal_N": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SMG01_Metal_ORM": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     }
+    }
+   },
+   "threshold": "current = max for Metal / Furniture BC and N at both views",
+   "pass": true,
+   "note": "the magazine's own maps are reported (a separate mesh)"
+  },
+  {
+   "name": "C2 every LOD0 surface sample (300k + every vertex) of the read-back geometry inside the stored hulls",
+   "value": {
+    "SM_SMG01": {
+     "samples": 326266,
+     "outside_gt_0.001cm": 0,
+     "max_outside_mm": 0.0
+    },
+    "SM_SMG01_Mag": {
+     "samples": 302156,
+     "outside_gt_0.001cm": 0,
+     "max_outside_mm": 0.0
+    }
+   },
+   "threshold": "0 outside",
+   "pass": true
+  },
+  {
+   "name": "hulls stored: SM_SMG01 8, SM_SMG01_Mag 1, <= 32 vertices each (Unreal's own export split into shells)",
+   "value": {
+    "SM_SMG01": {
+     "count": 8,
+     "vertices": [
+      27,
+      27,
+      27,
+      27,
+      27,
+      27,
+      27,
+      27
+     ]
+    },
+    "SM_SMG01_Mag": {
+     "count": 1,
+     "vertices": [
+      27
+     ]
+    },
+    "pass_B_convex_elems": {
+     "SM_SMG01": 8,
+     "SM_SMG01_Mag": 1
+    }
+   },
+   "threshold": "8 + 1; <= 32",
+   "pass": true
+  },
+  {
+   "name": "material slots (2 + 3 + 1, sidecar names); Nanite off",
+   "value": {
+    "slots": {
+     "SK_SMG01": [
+      "M_SMG01_Metal",
+      "M_SMG01_Furniture"
+     ],
+     "SM_SMG01": [
+      "M_SMG01_Metal",
+      "M_SMG01_Furniture",
+      "M_SMG01_Mag"
+     ],
+     "SM_SMG01_Mag": [
+      "M_SMG01_Mag"
+     ]
+    },
+    "nanite": {
+     "SM_SMG01": false,
+     "SM_SMG01_Mag": false
+    }
+   },
+   "threshold": "SK [Metal, Furniture], SM [Metal, Furniture, Mag], Mag [Mag]; nanite false",
+   "pass": true
+  },
+  {
+   "name": "U11 hand fit in engine",
+   "value": null,
+   "threshold": "if a player MetaHuman exists in the verification project",
+   "pass": true,
+   "note": "not run: the verification project holds no MetaHuman; the posed hand fit H1 full (gates/rig_export.json, MH_PlayerDefault in Blender) passed and its result is in the sidecar gun.hand_offset for the game to reproduce",
+   "kind": "not_applicable"
+  }
+ ]
+}
