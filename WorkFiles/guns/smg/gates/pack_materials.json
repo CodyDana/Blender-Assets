@@ -1,0 +1,529 @@
+{
+ "stage": "W6 pack materials (SMG01 + SMG01_Static + SMG01_Mag in the NinjaPack masters)",
+ "date": "2026-10-13",
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "validation_project": "WorkFiles/shuriken/UnrealShuriken (/Game/NinjaPack)",
+ "lock": "PackMaterials held by smg01-gun-chat (pid of the session) for the whole stage; released at the end",
+ "how": "run_build.sh ran from a short-path mirror root (C:/Users/Cody/AppData/Local/Temp/claude/smgpk: copies of main's Scripts/unreal/materials + Scripts/pipeline (LF bytes, as the other items' constants record) with this branch's spec and new script, junctions to main's Exports of the other pack items (every texture and FBX sha256 equal to the katana_1003 import records), to Scripts/props and Scripts/shuriken, to main's WorkFiles/shuriken (the validation project) and to this worktree's Exports/Guns), so nothing tracked in the main checkout changed; the mirror was removed afterwards",
+ "exports_sha256": {
+  "Exports/Guns/SMG01/SK_SMG01.fbx": "2f671038e6cffb3a65ce0a7f78ca3a182df50abf8ac95f8d9e41dbe836ae484f",
+  "Exports/Guns/SMG01/SM_SMG01.fbx": "9145428cee628963c2413033f1b90c2ca790dc7cec723ca7277e8f646e0c1efe",
+  "Exports/Guns/SMG01/SM_SMG01_Mag.fbx": "7f44422cddbccfc4513c3b6e12269ef141975046937239896c0ad8519e60cceb",
+  "Exports/Guns/SMG01/SK_SMG01.skeletal.json": "c49acd7ddd2002bf642406fa6a2e0139ef0cab725f2b141ac6475dd0b368bea9",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_BC.png": "fe4aacbe116d7c9b5fb280c674948b98c81072ed08442be0ec7079f7ce3e07ab",
+  "Exports/Guns/SMG01/Textures/T_SMG01_Mag_BC.png": "bafba4ef1bab4e921f0a2cc666ac3c17738ddbbcde412d582bf466bc27b21736",
+  "Exports/Guns/SMG01/Textures/Recolour/T_SMG01_Furniture_Detail16.png": "714f89de7be40b59a81c09d6ec61273985d641f07049efdeed0cee3375af84fb",
+  "Exports/Guns/SMG01/Textures/Recolour/T_SMG01_Mag_Detail16.png": "b040c3e3652d87aed09ec6fb1f6568c6b9e998f2abd700c9729808ea406e9c90",
+  "Exports/Guns/SMG01/Textures/Recolour/recolour_maps.json": "e6d8e6ae10cc440d707e714818380da25490f2cf51a4fa3b627bd19c6839face",
+  "Exports/Guns/SMG01/Textures/Recolour/recolour_constants.json": "2ced1c2842520f181816d37844455de6268e804858aea7a8f787ffde3c865d45"
+ },
+ "shipped_colour": {
+  "SMG01/Furniture": {
+   "Colour_linear": [
+    0.02828420203476948,
+    0.029292032331734004,
+    0.030937875779271706,
+    1.0
+   ],
+   "Lightest Colour": 0.6
+  },
+  "SMG01/Mag": {
+   "Colour_linear": [
+    0.025966973974790603,
+    0.027001380149582872,
+    0.0302833580129122,
+    1.0
+   ],
+   "Lightest Colour": 0.6
+  }
+ },
+ "gates": [
+  {
+   "name": "S1 constants (maps/derive_constants_smg01.py = derive_constants.fabric_part, run from the mirror on main's LF bytes of the pack code): default equals the v1 contract at mip 0 and every mip, guards inactive, mip drift of the fit within 2 %, both parts",
+   "value": {
+    "SMG01/Furniture": {
+     "default_equals_v1_contract": true,
+     "default_guards_inactive": true,
+     "default_every_mip_equals_v1": true,
+     "mip_mean_drift_within_2pct": true
+    },
+    "SMG01/Mag": {
+     "default_equals_v1_contract": true,
+     "default_guards_inactive": true,
+     "default_every_mip_equals_v1": true,
+     "mip_mean_drift_within_2pct": true
+    }
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "S2 spec additions only: the spec without the SMG01 keys equals material_spec_before_smg01.json (add_smg01_to_spec.py projection check); np_spec resolves, maps_check OK, every export PNG imported or listed",
+   "value": "projection OK; maps_check OK; accounting OK (142 PNGs: 135 imported, 7 listed)",
+   "threshold": "equal",
+   "pass": true
+  },
+  {
+   "name": "S3 pack build run_build.sh smg01_1013b (preflight, maps_check, import_meshes, import_textures, clean, build, assign, verify) from the short-path mirror root: every step passed=True, 0 compile failures",
+   "value": {
+    "steps_passed": 6,
+    "compile_failures_lines": 6
+   },
+   "threshold": "6 Unreal steps passed, 6 x 0 compile failures (+ preflight, maps_check ok)",
+   "pass": true
+  },
+  {
+   "name": "S4 pack verify gates (fresh process): functions, masters, instances, meshes, textures, dependencies, accounting",
+   "value": {
+    "functions": true,
+    "masters": true,
+    "instances": true,
+    "meshes": true,
+    "textures": true,
+    "dependencies": true,
+    "accounting": true
+   },
+   "threshold": "all true",
+   "pass": true
+  },
+  {
+   "name": "S5 SMG01 instances read back (parent + every effective value), permutations compile",
+   "value": {
+    "MI_SMG01_Furniture": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Colour"
+     ]
+    },
+    "MI_SMG01_Furniture_Base": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Albedo Ceiling",
+      "Base Colour Map",
+      "Cloth Sheen",
+      "Colour",
+      "Dark Detail Follow",
+      "Detail Bias",
+      "Detail Highlight Ratio",
+      "Detail Map",
+      "Detail Map Size",
+      "Detail Mean",
+      "Detail Mip Compensation 1-4",
+      "Detail Mip Compensation 5-8",
+      "Detail Mip Compensation Power",
+      "Detail Moments High",
+      "Detail Moments Low",
+      "Detail Scale",
+      "Lightest Colour",
+      "Metal From ORM",
+      "Normal Map",
+      "ORM Map",
+      "Specular From ORM Alpha",
+      "Specular Strength",
+      "Use Lettering",
+      "Use Original Baked Colours"
+     ]
+    },
+    "MI_SMG01_Mag": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Colour"
+     ]
+    },
+    "MI_SMG01_Mag_Base": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Albedo Ceiling",
+      "Base Colour Map",
+      "Cloth Sheen",
+      "Colour",
+      "Dark Detail Follow",
+      "Detail Bias",
+      "Detail Highlight Ratio",
+      "Detail Map",
+      "Detail Map Size",
+      "Detail Mean",
+      "Detail Mip Compensation 1-4",
+      "Detail Mip Compensation 5-8",
+      "Detail Mip Compensation Power",
+      "Detail Moments High",
+      "Detail Moments Low",
+      "Detail Scale",
+      "Lightest Colour",
+      "Metal From ORM",
+      "Normal Map",
+      "ORM Map",
+      "Specular From ORM Alpha",
+      "Specular Strength",
+      "Use Lettering",
+      "Use Original Baked Colours"
+     ]
+    },
+    "MI_SMG01_Metal": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": []
+    },
+    "MI_SMG01_Metal_Base": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": [
+      "Base Colour Map",
+      "Normal Map",
+      "ORM Map"
+     ]
+    }
+   },
+   "threshold": "6 pass",
+   "pass": true
+  },
+  {
+   "name": "S6 every other pack entry unchanged: dump katana_1003 (the last pack build in the main checkout; the AR-01's ar01_1009b added only AR01 entries to it) vs smg01_1013b",
+   "value": {
+    "functions": {
+     "before": 5,
+     "after": 5,
+     "added": 0,
+     "removed": 0,
+     "changed": 0
+    },
+    "masters": {
+     "before": 3,
+     "after": 3,
+     "added": 0,
+     "removed": 0,
+     "changed": 0
+    },
+    "instances": {
+     "before": 69,
+     "after": 81,
+     "added": 12,
+     "removed": 0,
+     "changed": 0
+    },
+    "meshes": {
+     "before": 23,
+     "after": 29,
+     "added": 6,
+     "removed": 0,
+     "changed": 0
+    },
+    "textures": {
+     "before": 114,
+     "after": 135,
+     "added": 21,
+     "removed": 0,
+     "changed": 0
+    },
+    "node_layout_identical": true,
+    "smg01_added": 20
+   },
+   "threshold": "only AR01 / SMG01 entries added (20 SMG01: 6 instances, 3 meshes, 11 textures); nothing removed or changed; layout identical",
+   "pass": true
+  },
+  {
+   "name": "S7 SK_SMG01 imported by the pack's skeletal path from the W5-verified bytes: 4 LODs, 21 sockets, 8 clips, PHYS_SMG01 (8 boxes + 1 capsule on body), bounds extension, LOD sizes",
+   "value": {
+    "lods": 4,
+    "sockets": 21,
+    "clips": 8,
+    "physics": {
+     "body": {
+      "unreal_bone": "body",
+      "boxes": 8,
+      "capsules": 1,
+      "spheres": 0
+     }
+    },
+    "bounds_extension_cm": {
+     "positive": [
+      0.0,
+      24.752,
+      0.257
+     ],
+     "negative": [
+      0.749,
+      0.0,
+      0.0
+     ]
+    },
+    "lod_sizes": [
+     1.0,
+     0.28612,
+     0.06082,
+     0.03777
+    ],
+    "fbx_sha_equals_W5": {
+     "SK_SMG01": true,
+     "SM_SMG01": true,
+     "SM_SMG01_Mag": true
+    }
+   },
+   "threshold": "as the sidecar; bytes = W5",
+   "pass": true
+  },
+  {
+   "name": "P1 default capture = shipped BC: the shipped MI_SMG01_Furniture / MI_SMG01_Mag (baked colours ON) vs the BC PNG at the measured sample positions",
+   "value": {
+    "fur": {
+     "BC7 (shipped)": {
+      "max": 4,
+      "mean": 0.14911,
+      "p99_9": 2.0,
+      "p99": 1.0,
+      "texels_gt1": 21701,
+      "texels_gt2": 359,
+      "texels": 16777216,
+      "dE00": {
+       "mean": 0.1672,
+       "p99": 1.1488
+      }
+     },
+     "BC1 (measured first)": {
+      "max": 23,
+      "mean": 1.0381,
+      "p99_9": 5.0,
+      "p99": 3.0,
+      "texels_gt1": 3161058,
+      "texels_gt2": 698388,
+      "texels": 16777216,
+      "dE00": {
+       "mean": 0.8716,
+       "p99": 2.7969
+      }
+     }
+    },
+    "mag": {
+     "BC7 (shipped)": {
+      "max": 4,
+      "mean": 0.17043,
+      "p99_9": 2.0,
+      "p99": 1.0,
+      "texels_gt1": 3997,
+      "texels_gt2": 118,
+      "texels": 1048576,
+      "dE00": {
+       "mean": 0.2268,
+       "p99": 1.2005
+      }
+     },
+     "BC1 (measured first)": {
+      "max": 13,
+      "mean": 1.1903,
+      "p99_9": 8.0,
+      "p99": 4.0,
+      "texels_gt1": 232267,
+      "texels_gt2": 90510,
+      "texels": 1048576,
+      "dE00": {
+       "mean": 0.9337,
+       "p99": 3.5724
+      }
+     }
+    }
+   },
+   "threshold": "p99.9 <= 2 levels",
+   "pass": true,
+   "note": "BC1 missed (furniture p99.9 5, magazine 8 levels), so both polymer BCs ship BC7 (texture kind BC_BC7, the plan's ruling): p99.9 2 / 2, max 4 / 4. Cost +10.7 MiB (furniture 4096) and +0.7 MiB (magazine)"
+  },
+  {
+   "name": "P2 the recolour path (switch OFF) at the default Colour vs the pack's float twin, both sets",
+   "value": {
+    "fur": {
+     "max": 1,
+     "mean": 0.12363,
+     "p99_9": 1.0,
+     "p99": 1.0,
+     "texels_gt1": 0,
+     "texels_gt2": 0,
+     "texels": 4194304
+    },
+    "mag": {
+     "max": 1,
+     "mean": 0.02703,
+     "p99_9": 1.0,
+     "p99": 1.0,
+     "texels_gt1": 0,
+     "texels_gt2": 0,
+     "texels": 1048576
+    }
+   },
+   "threshold": "p99.9 <= 1, mean <= 0.3 (pack default gate)",
+   "pass": true,
+   "note": "its distance from the BC (at the detail size, covered): furniture p99.9 20.0, magazine 47.0 levels (the fine wear the 2048 / 1024 detail cannot hold; why the defaults ship the baked BC)"
+  },
+  {
+   "name": "P3a 13-colour stress (10 + tan C2B280 / OD 4B5320 / FDE B08D57) on both polymer sets (mip 0) vs the twin",
+   "value": {
+    "fur": {
+     "FFFFFF": 1.0,
+     "FF0000": 1.0,
+     "0000FF": 1.0,
+     "F2E8D5": 1.0,
+     "000000": 1.0,
+     "808080": 1.0,
+     "1A1A1A": 1.0,
+     "3050A0": 1.0,
+     "2E5E2E": 1.0,
+     "6B3C27": 1.0,
+     "C2B280": 1.0,
+     "4B5320": 1.0,
+     "B08D57": 1.0
+    },
+    "mag": {
+     "FFFFFF": 1.0,
+     "FF0000": 1.0,
+     "0000FF": 1.0,
+     "F2E8D5": 1.0,
+     "000000": 1.0,
+     "808080": 1.0,
+     "1A1A1A": 1.0,
+     "3050A0": 1.0,
+     "2E5E2E": 1.0,
+     "6B3C27": 1.0,
+     "C2B280": 1.0,
+     "4B5320": 1.0,
+     "B08D57": 1.0
+    }
+   },
+   "threshold": "p99.9 <= 2 levels, 26 captures",
+   "pass": true,
+   "worst_level": 1.0
+  },
+  {
+   "name": "P3b the pack's v3 gate on the same 26 captures (clip <= 0.1 %, banding, std ratio >= 0.25, Spearman vs the default capture >= 0.98)",
+   "value": {
+    "failures": {
+     "fur": [
+      "000000",
+      "1A1A1A"
+     ],
+     "mag": [
+      "000000"
+     ]
+    },
+    "spearman": {
+     "fur": {
+      "000000": 0.97338,
+      "1A1A1A": 0.97168
+     },
+     "mag": {
+      "000000": 0.94582,
+      "1A1A1A": 0.99366
+     }
+    },
+    "floor_check_twin_spearman": {
+     "fur_000000": {
+      "float": 1.0,
+      "8bit": 0.9783,
+      "mean_srgb_level": 25.0
+     },
+     "fur_1A1A1A": {
+      "float": 1.0,
+      "8bit": 0.9681,
+      "mean_srgb_level": 25.5
+     },
+     "fur_808080": {
+      "float": 1.0,
+      "8bit": 0.9982,
+      "mean_srgb_level": 126.3
+     },
+     "mag_000000": {
+      "float": 1.0,
+      "8bit": 0.9462,
+      "mean_srgb_level": 24.7
+     },
+     "mag_1A1A1A": {
+      "float": 1.0,
+      "8bit": 0.9943,
+      "mean_srgb_level": 25.4
+     },
+     "mag_808080": {
+      "float": 1.0,
+      "8bit": 0.9992,
+      "mean_srgb_level": 125.9
+     }
+    }
+   },
+   "threshold": "26 pass",
+   "pass": false,
+   "explained_by_8bit_floor": true,
+   "note": "FAIL as worded on Spearman only, at near black (furniture 000000 0.973 / 1A1A1A 0.972, magazine 000000 0.946); clip 0, max gap 1, std ratio 0.995-1.009 (detail fully kept). The pack's own float twin gives Spearman 1.0 for these colours and the SAME misses once stored in 8 bits (floor_check_twin_spearman), so the miss is the 8-bit output at the black floor (sRGB ~25), the pack's known kunai-wrap miss (WorkFiles/materials/MATERIALS_REPORT.md 4.3: 0.956), not the recolour."
+  },
+  {
+   "name": "P4 mip drift: mip-4 capture mean vs the box-filtered mip-0 capture (14 colours per set incl. the default)",
+   "value": {
+    "worst_abs_ratio_minus_1": 0.0173
+   },
+   "threshold": "<= 0.02",
+   "pass": true
+  },
+  {
+   "name": "R1 steel set vs its BC PNG (BC1; reported, the pack does not gate steel)",
+   "value": {
+    "Metal 2048": {
+     "max": 22,
+     "mean": 1.17634,
+     "p99_9": 4.0,
+     "p99": 3.0,
+     "texels_gt1": 972172,
+     "texels_gt2": 110394,
+     "texels": 4194304
+    }
+   },
+   "threshold": "report",
+   "pass": true
+  },
+  {
+   "name": "R2 texture memory in Unreal (with mips); Detail16 builds G16 (2 bytes/texel)",
+   "value": {
+    "T_SMG01_Furniture_BC": 22413312,
+    "T_SMG01_Furniture_Detail16": 11206656,
+    "T_SMG01_Furniture_N": 22413312,
+    "T_SMG01_Furniture_ORM": 11206656,
+    "T_SMG01_Mag_BC": 1441792,
+    "T_SMG01_Mag_Detail16": 2818048,
+    "T_SMG01_Mag_N": 1441792,
+    "T_SMG01_Mag_ORM": 720896,
+    "T_SMG01_Metal_BC": 2818048,
+    "T_SMG01_Metal_N": 5636096,
+    "T_SMG01_Metal_ORM": 2818048
+   },
+   "total_MiB": 81.0,
+   "threshold": "report; Detail16 ~2.67 B/texel with mips",
+   "pass": true
+  },
+  {
+   "name": "R3 lit Unreal frames of SM_SMG01 and SM_SMG01_Mag with the pack instances (render smg01_1013b, beauty; looked at: metal, polymer and the merged magazine resolve on all three UV tiles of the twin; the black polymer reads dark under the pack's bright rig; a pinkish glint on the magwell lip is the rig's atmosphere-tinted key, not the maps: max R-B in every SMG01 BC is 1-3 levels)",
+   "value": {
+    "SK_SMG01": [],
+    "SM_SMG01": [
+     "threequarter",
+     "top",
+     "low"
+    ],
+    "SM_SMG01_Mag": [
+     "threequarter",
+     "top",
+     "low"
+    ]
+   },
+   "threshold": "rendered, no error",
+   "pass": true
+  }
+ ],
+ "failed": [
+  "P3b the pack's v3 gate on the same 26 captures (clip <= 0.1 %, banding, std ratio >= 0.25, Spearman vs the default capture >= 0.98)"
+ ],
+ "status": "pass (P3b Spearman at near black = the pack's known 8-bit floor, proven on the twin)"
+}

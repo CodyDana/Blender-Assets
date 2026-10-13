@@ -2940,6 +2940,337 @@
      "base_instance": "MI_AR01_Mag_Base"
     }
    ]
+  },
+  {
+   "item": "SMG01",
+   "kind": "skeletal",
+   "folder": "/Game/NinjaPack/Meshes/SMG01",
+   "short": "SMG01",
+   "mesh": "SK_SMG01",
+   "fbx": "Exports/Guns/SMG01/SK_SMG01.fbx",
+   "sidecar": "Exports/Guns/SMG01/SK_SMG01.skeletal.json",
+   "note": "ADDED 2026-10-13 (the SMG01 W6 pack-materials stage). The rigged compact SMG: 11 bones incl. root, 4 LODs (SK_SMG01_LOD1-3.fbx), 8 weapon clips (incl. StockFold / StockUnfold / SightFlip), PHYS_SMG01 (the body's bounds-envelope box has no collision and no mass), 21 sockets, bounds extension for the folded stock; np_skeletal.py imports it into its own folder from the sidecar (slots by name). The magazine is its own mesh (SM_SMG01_Mag on the Mag socket). Metal 2048, polymer 4096, all UV0 in 0..1",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_SMG01_Metal",
+     "part": "Metal",
+     "instance": "MI_SMG01_Metal",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SMG01/Textures/T_SMG01_Metal_BC.png",
+      "ORM Map": "Exports/Guns/SMG01/Textures/T_SMG01_Metal_ORM.png",
+      "Normal Map": "Exports/Guns/SMG01/Textures/T_SMG01_Metal_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SMG01_Metal_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_SMG01_Metal_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0 phosphate / 1 bare steel wear)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SMG01_Metal_N (DirectX, 16-bit source)"
+     },
+     "note": "manganese-phosphate steel (top and bottom rails, sights, barrel and nut, muzzle device, bolt, charging handle, selector, trigger, release paddle, pins, hinge pin; metallic 0 from ORM) with bare-steel wear on the rail crests, sight ears, device rim, knob crown, selector tip and the bolt's sliding flanks (metallic 1 from ORM); baked finish, not recolourable (spec materials.slots); Steel Tint multiplies",
+     "base_instance": "MI_SMG01_Metal_Base"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_SMG01_Furniture",
+     "part": "Furniture",
+     "instance": "MI_SMG01_Furniture",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Guns/SMG01/Textures/Recolour/T_SMG01_Furniture_Detail16.png (NEW: 16-bit linear tint-ready detail, Scripts/guns/smg/smg_recolour.py)",
+      "Base Colour Map": "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_BC.png",
+      "ORM Map": "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_ORM.png",
+      "Normal Map": "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_N.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SMG01_Furniture_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": {
+      "BC": 4096,
+      "Detail": 2048,
+      "ORM": 4096,
+      "N": 4096
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": false,
+      "Cloth Sheen": false,
+      "Use Lettering": false,
+      "Metal From ORM": false,
+      "Use Original Baked Colours": true
+     },
+     "look_contract": {
+      "BaseColor": "shipped (Use Original Baked Colours ON): T_SMG01_Furniture_BC exactly (the black polymer with its whitening specks, scuffs and polish); recolour (switch OFF): saturate(Colour x (Detail Bias + Detail Scale x Detail)) (v2 MF_TintDetail): the polymer takes the buyer's colour, value ratios kept",
+      "Metallic": "0 (Metal From ORM off)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SMG01_Furniture_N (DirectX, 16-bit source)"
+     },
+     "note": "the black polymer furniture (upper and lower receiver shells, grip frame and cover, magwell, skeleton stock, butt pad, stock latch); default Colour = the set's covered-texel mean; the default instance shows the baked BC because the 2048 detail map cannot carry the 4096 BC's fine wear (gates/recolour_precheck.json: 32 levels p99.9 on the tint path at the default, p50 1)",
+     "base_instance": "MI_SMG01_Furniture_Base"
+    }
+   ]
+  },
+  {
+   "item": "SMG01_Static",
+   "mesh": "SM_SMG01",
+   "fbx": "Exports/Guns/SMG01/SM_SMG01.fbx",
+   "sidecar": "Exports/Guns/SMG01/SM_SMG01.sockets.json",
+   "note": "ADDED 2026-10-13. The static twin of SK_SMG01 (stock extended) with a merged magazine copy: 4 LODs, UCX hulls, sockets. Each slot's UV0 sits in its own U tile (Wrap addressing reads the same texels); it shares the three instances with SK_SMG01 and SM_SMG01_Mag",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_SMG01_Metal",
+     "part": "Metal",
+     "instance": "MI_SMG01_Metal",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SMG01/Textures/T_SMG01_Metal_BC.png",
+      "ORM Map": "Exports/Guns/SMG01/Textures/T_SMG01_Metal_ORM.png",
+      "Normal Map": "Exports/Guns/SMG01/Textures/T_SMG01_Metal_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SMG01_Metal_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_SMG01_Metal_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0 phosphate / 1 bare steel wear)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SMG01_Metal_N (DirectX, 16-bit source)"
+     },
+     "note": "manganese-phosphate steel (top and bottom rails, sights, barrel and nut, muzzle device, bolt, charging handle, selector, trigger, release paddle, pins, hinge pin; metallic 0 from ORM) with bare-steel wear on the rail crests, sight ears, device rim, knob crown, selector tip and the bolt's sliding flanks (metallic 1 from ORM); baked finish, not recolourable (spec materials.slots); Steel Tint multiplies",
+     "base_instance": "MI_SMG01_Metal_Base",
+     "uv_tile": "u 0..1"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_SMG01_Furniture",
+     "part": "Furniture",
+     "instance": "MI_SMG01_Furniture",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Guns/SMG01/Textures/Recolour/T_SMG01_Furniture_Detail16.png (NEW: 16-bit linear tint-ready detail, Scripts/guns/smg/smg_recolour.py)",
+      "Base Colour Map": "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_BC.png",
+      "ORM Map": "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_ORM.png",
+      "Normal Map": "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_N.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SMG01_Furniture_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": {
+      "BC": 4096,
+      "Detail": 2048,
+      "ORM": 4096,
+      "N": 4096
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": false,
+      "Cloth Sheen": false,
+      "Use Lettering": false,
+      "Metal From ORM": false,
+      "Use Original Baked Colours": true
+     },
+     "look_contract": {
+      "BaseColor": "shipped (Use Original Baked Colours ON): T_SMG01_Furniture_BC exactly (the black polymer with its whitening specks, scuffs and polish); recolour (switch OFF): saturate(Colour x (Detail Bias + Detail Scale x Detail)) (v2 MF_TintDetail): the polymer takes the buyer's colour, value ratios kept",
+      "Metallic": "0 (Metal From ORM off)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SMG01_Furniture_N (DirectX, 16-bit source)"
+     },
+     "note": "the black polymer furniture (upper and lower receiver shells, grip frame and cover, magwell, skeleton stock, butt pad, stock latch); default Colour = the set's covered-texel mean; the default instance shows the baked BC because the 2048 detail map cannot carry the 4096 BC's fine wear (gates/recolour_precheck.json: 32 levels p99.9 on the tint path at the default, p50 1)",
+     "base_instance": "MI_SMG01_Furniture_Base",
+     "uv_tile": "u 1..2 (Wrap addressing reads the same texels)"
+    },
+    {
+     "index": 2,
+     "slot_name": "M_SMG01_Mag",
+     "part": "Mag",
+     "instance": "MI_SMG01_Mag",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Guns/SMG01/Textures/Recolour/T_SMG01_Mag_Detail16.png (NEW: 16-bit linear tint-ready detail, Scripts/guns/smg/smg_recolour.py)",
+      "Base Colour Map": "Exports/Guns/SMG01/Textures/T_SMG01_Mag_BC.png",
+      "ORM Map": "Exports/Guns/SMG01/Textures/T_SMG01_Mag_ORM.png",
+      "Normal Map": "Exports/Guns/SMG01/Textures/T_SMG01_Mag_N.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SMG01_Mag_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": {
+      "BC": 1024,
+      "Detail": 1024,
+      "ORM": 1024,
+      "N": 1024
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": false,
+      "Cloth Sheen": false,
+      "Use Lettering": false,
+      "Metal From ORM": false,
+      "Use Original Baked Colours": true
+     },
+     "look_contract": {
+      "BaseColor": "shipped (Use Original Baked Colours ON): T_SMG01_Mag_BC exactly (the black polymer with its whitening specks, scuffs and polish); recolour (switch OFF): saturate(Colour x (Detail Bias + Detail Scale x Detail)) (v2 MF_TintDetail): the polymer takes the buyer's colour, value ratios kept",
+      "Metallic": "0 (Metal From ORM off)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SMG01_Mag_N (DirectX, 16-bit source)"
+     },
+     "note": "the black polymer 25-round magazine (body, floor plate, follower); default Colour = the magazine's covered-texel mean; the default instance shows the baked BC (gates/recolour_precheck.json: 5 levels p99.9 on the tint path at the default)",
+     "base_instance": "MI_SMG01_Mag_Base",
+     "uv_tile": "u -1..0 (Wrap addressing reads the same texels)"
+    }
+   ]
+  },
+  {
+   "item": "SMG01_Mag",
+   "mesh": "SM_SMG01_Mag",
+   "fbx": "Exports/Guns/SMG01/SM_SMG01_Mag.fbx",
+   "sidecar": "Exports/Guns/SMG01/SM_SMG01_Mag.sockets.json",
+   "note": "ADDED 2026-10-13. The removable 25-round polymer magazine (attached to SK_SMG01's Mag socket; straight reload path MagInsertStart -> Mag along the magazine's -Z): 4 LODs, UCX hulls, sockets",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_SMG01_Mag",
+     "part": "Mag",
+     "instance": "MI_SMG01_Mag",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Guns/SMG01/Textures/Recolour/T_SMG01_Mag_Detail16.png (NEW: 16-bit linear tint-ready detail, Scripts/guns/smg/smg_recolour.py)",
+      "Base Colour Map": "Exports/Guns/SMG01/Textures/T_SMG01_Mag_BC.png",
+      "ORM Map": "Exports/Guns/SMG01/Textures/T_SMG01_Mag_ORM.png",
+      "Normal Map": "Exports/Guns/SMG01/Textures/T_SMG01_Mag_N.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SMG01_Mag_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": {
+      "BC": 1024,
+      "Detail": 1024,
+      "ORM": 1024,
+      "N": 1024
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": false,
+      "Cloth Sheen": false,
+      "Use Lettering": false,
+      "Metal From ORM": false,
+      "Use Original Baked Colours": true
+     },
+     "look_contract": {
+      "BaseColor": "shipped (Use Original Baked Colours ON): T_SMG01_Mag_BC exactly (the black polymer with its whitening specks, scuffs and polish); recolour (switch OFF): saturate(Colour x (Detail Bias + Detail Scale x Detail)) (v2 MF_TintDetail): the polymer takes the buyer's colour, value ratios kept",
+      "Metallic": "0 (Metal From ORM off)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SMG01_Mag_N (DirectX, 16-bit source)"
+     },
+     "note": "the black polymer 25-round magazine (body, floor plate, follower); default Colour = the magazine's covered-texel mean; the default instance shows the baked BC (gates/recolour_precheck.json: 5 levels p99.9 on the tint path at the default)",
+     "base_instance": "MI_SMG01_Mag_Base"
+    }
+   ]
   }
  ],
  "new_maps": [
@@ -3398,6 +3729,39 @@
    "name": "MI_AR01_Mag",
    "parent": "MI_AR01_Mag_Base",
    "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_SMG01_Metal_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_SMG01_Metal",
+   "parent": "MI_SMG01_Metal_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_SMG01_Furniture_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_SMG01_Furniture",
+   "parent": "MI_SMG01_Furniture_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_SMG01_Mag_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_SMG01_Mag",
+   "parent": "MI_SMG01_Mag_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
   }
  ],
  "verification": {
@@ -3490,7 +3854,8 @@
    "Flashbang": "Exports/Flashbang/Textures/Recolour/recolour_maps.json",
    "Senbon": "Exports/Senbon/Textures/Recolour/recolour_maps.json",
    "Katana": "Exports/Katana/Textures/Recolour/recolour_maps.json",
-   "AR01": "Exports/Guns/AR01/Textures/Recolour/recolour_maps.json"
+   "AR01": "Exports/Guns/AR01/Textures/Recolour/recolour_maps.json",
+   "SMG01": "Exports/Guns/SMG01/Textures/Recolour/recolour_maps.json"
   },
   "not_imported": {
    "Exports/SmokeBomb/Textures/T_SmokeBomb_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_SmokeBomb_Detail16 (the sRGB G8 builds as BGRA8: ~85 MiB)",
@@ -3503,7 +3868,10 @@
    "Exports/SnowFlower/v4/Textures/T_SnowFlower_Sheath_Lacquer_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_SnowFlower_Sheath_Lacquer_Detail16 (the sRGB G8 builds as BGRA8)",
    "Exports/Guns/AR01/Textures/T_AR01_Metal_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
    "Exports/Guns/AR01/Textures/T_AR01_Furniture_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
-   "Exports/Guns/AR01/Textures/T_AR01_Mag_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it"
+   "Exports/Guns/AR01/Textures/T_AR01_Mag_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SMG01/Textures/T_SMG01_Metal_Masks.png": "the SMG's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_Masks.png": "the SMG's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SMG01/Textures/T_SMG01_Mag_Masks.png": "the SMG's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it"
   },
   "recolour_constants": {
    "Shuriken": "Exports/Shuriken/Textures/Recolour/recolour_constants.json",
@@ -3516,7 +3884,8 @@
    "Flashbang": "Exports/Flashbang/Textures/Recolour/recolour_constants.json",
    "Senbon": "Exports/Senbon/Textures/Recolour/recolour_constants.json",
    "Katana": "Exports/Katana/Textures/Recolour/recolour_constants.json",
-   "AR01": "Exports/Guns/AR01/Textures/Recolour/recolour_constants.json"
+   "AR01": "Exports/Guns/AR01/Textures/Recolour/recolour_constants.json",
+   "SMG01": "Exports/Guns/SMG01/Textures/Recolour/recolour_constants.json"
   },
   "recolour_constants_note": "Scripts/unreal/materials/maps/derive_constants.py derives them from the Recolour maps; their params override recolour_maps.json. run_build.sh 'maps_check' verifies the sha256 chain.",
   "default_textures": {
@@ -3708,5 +4077,11 @@
   "what": "The Assault Rifle AR-01 joins the pack (additions only): items AR01 (SK_AR01, kind 'skeletal', folder Meshes/AR01), AR01_Static (SM_AR01, the static twin with the merged magazine) and AR01_Mag (SM_AR01_Mag); 6 instances (MI_AR01_Metal and MI_AR01_Mag on M_Steel_Master, MI_AR01_Furniture on M_Fabric_Master, each with its _Base; SK_AR01 and SM_AR01 share the Metal and Furniture instances, SM_AR01 and SM_AR01_Mag share the Mag instance); group AR01's recolour map (written by Scripts/guns/rifle/rifle_recolour.py) and constants (maps/derive_constants_ar01.py); the three Masks maps not imported. MI_AR01_Furniture_Base ships Use Original Baked Colours ON (the four wood pieces' hue offsets live only in the BC); a buyer recolour switches it off on MI_AR01_Furniture. The furniture BC imports as BC7 (new texture kind BC_BC7): the default look samples the BC itself, and BC7 cuts its compression error to a third of BC1's (measured in Unreal).",
   "masters": "unchanged",
   "code": "one new script maps/derive_constants_ar01.py (a copy of the katana's with the rifle's group and paths, no resolve() of export paths); nothing else in the code changed"
+ },
+ "changes_v10_smg01": {
+  "date": "2026-10-13",
+  "what": "The Compact SMG SM-01 joins the pack (additions only): items SMG01 (SK_SMG01, kind 'skeletal', folder Meshes/SMG01), SMG01_Static (SM_SMG01, the static twin with the merged magazine) and SMG01_Mag (SM_SMG01_Mag); 6 instances (MI_SMG01_Metal on M_Steel_Master, MI_SMG01_Furniture and MI_SMG01_Mag on M_Fabric_Master, each with its _Base; SK_SMG01 and SM_SMG01 share the Metal and Furniture instances, SM_SMG01 and SM_SMG01_Mag share the Mag instance); group SMG01's recolour map (written by Scripts/guns/smg/smg_recolour.py, two members) and constants (maps/derive_constants_smg01.py); the three Masks maps not imported. Both polymer _Base instances ship Use Original Baked Colours ON (the polymer's fine wear lives only in the BC); a buyer recolour switches it off on MI_SMG01_Furniture and MI_SMG01_Mag and sets the same Colour on both. The furniture and magazine BC imports as BC7 (texture kind BC_BC7): the default look samples the BC itself (measured in Unreal, WorkFiles/guns/smg/gates/pack_materials.json).",
+  "masters": "unchanged",
+  "code": "one new script maps/derive_constants_smg01.py (a copy of the AR-01's with the SMG's group and two parts, no resolve() of export paths); nothing else in the code changed"
  }
 }
