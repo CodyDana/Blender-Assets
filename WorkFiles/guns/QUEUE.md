@@ -16,6 +16,11 @@ Order agreed with the user (2026-10-04 to 2026-10-09). One gun at a time; each s
    and U8 (lightmap UV). Same target as the SMG pass.
 5. **Carbine CB-01** (`CB01`, M4-style sheet): defines the shared black-rifle parts with the long rifle.
 6. **Sniper SR-01** (`SR01`): bipod rigged to fold/unfold; never copy the Asiimov look of `References/AWP.webp`.
+   STARTED 2026-10-12 in a SEPARATE chat (user's request, Agent SDK runner on the user's API credit): branch
+   `claude/sniper-sr01`, worktree `.claude/worktrees/sniper-sr01`, lock SR01 held there. This chat does not take SR01 or
+   edit `WorkFiles/guns/sniper/` / `Scripts/guns/sniper/`; that chat treats gunlib, smg, rifle and this file as read-only
+   and writes gunlib needs as proposals in `WorkFiles/guns/sniper/SR01_BUILD_PLAN.md`. Plan (user): that chat does the
+   initial work and pushes; this chat then pulls it in as the starting point.
 7. **Long rifle LR-01** (`LR01`, M16-style sheet): reuses the carbine's parts.
 
 Not queued yet: Heavy Pistol HP-01 (sheet in `References/Guns/Pistol/`), pump shotgun, DMR, second SMG, LMG,
