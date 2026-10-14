@@ -49,6 +49,7 @@ from gunlib import edgemask as EM  # noqa: E402
 GRIP = np.array(SS.GRIP_M, np.float32)
 LW = np.array([0.2126, 0.7152, 0.0722], np.float32)
 MIN_CHIP_PX = 10
+SMALL_PARTS = ("pins", "fasteners", "rail_screws", "safety", "trigger", "mag_release")
 
 
 def lin(rgb):
@@ -191,25 +192,34 @@ def paint(st, meta, bake, tex):
         kk = np.nonzero(k)[0]
         Pk, Nk = P[k], N[k]
         base = lin(F["srgb"])
-        peel = PT.chunked(PT.fbm3, Pk, 0.65, 2, 131)                  # ceramic orange peel
+        # (W4b) the peel at the size a sprayed ceramic coat really has under a raking light (1-1.5 mm cells), so it
+        # reads in the sheen at 35 cm (the 0.65 mm peel sat at the texel size and vanished)
+        peel = PT.chunked(PT.fbm3, Pk, 1.3, 2, 131)                   # ceramic orange peel
         grain = PT.chunked(PT.vnoise3, Pk / 0.22, 136)                # sprayed fine grain
         # (W2 judge fix round) the peel visible in the normal map (+-14 um at 0.65 mm) and in the sheen (+-0.08 rough
         # on its crests / valleys); the low-frequency colour / roughness clouds down to a trace (they read as blotches)
         var = 1.0 + 0.012 * (v_lo[k] - 0.5) + 0.03 * (peel - 0.5) + 0.025 * (grain - 0.5)
         col = base[None, :] * var[:, None]
         r0, r1 = F["rough"]
-        r = r0 + (r1 - r0) * (0.45 + 0.08 * (v_lo[k] - 0.5) + 0.3 * (grain - 0.5)) + 0.16 * (peel - 0.5)
-        hh = 0.014 * (peel - 0.5) * 2.0 + 0.003 * (grain - 0.5) * 2.0
+        sheen = PT.chunked(PT.fbm3, Pk, 30.0, 2, 133)                 # (W4b) slow sheen drift (roughness only)
+        r = r0 + (r1 - r0) * (0.45 + 0.08 * (v_lo[k] - 0.5) + 0.3 * (grain - 0.5)) + 0.12 * (peel - 0.5) + \
+            0.10 * (sheen - 0.5)
+        hh = 0.028 * (peel - 0.5) * 2.0 + 0.004 * (grain - 0.5) * 2.0
         # burnish where hands / cheek slide (roughness only: OD keeps its colour, the coat goes satin)
         pol = np.clip(hz[k], 0, 1)
-        r = r - 0.12 * pol
+        r = r - 0.18 * pol                                            # (W4b) handling polish: satin, a shade darker
+        col = col * (1.0 - 0.05 * pol)[:, None]
+        hh = hh * (1.0 - 0.5 * pol)                                   # the peel's crests worn flatter
         # edge rub: continuous along the crest, varied along the part, lighter + smoother (coat thinned to the primer)
         # (fix round) every exposed edge rubbed (the judges saw none): wider, stronger, the broad edge field too
         rb_w = 0.45 + 0.75 * PT.chunked(PT.fbm3, Pk, 6.0, 2, 134)
         rub = PT.smoothstep(rb_w, rb_w * 0.2, dist_e[k]) * np.maximum(edge_fine[k], 0.6 * edge_broad[k]) * expo[k] * \
             (0.55 + 0.45 * np.maximum(cz[k], pol)) * (0.6 + 0.4 * PT.smoothstep(0.3, 0.7, along[k]))
+        # (W4b) only where it is caused: outside the chip / handling zones the rub fades to a trace (the W4 rub on
+        # every edge read as a uniform tint)
+        rub = rub * (0.12 + 0.88 * np.clip(np.maximum(cz[k], pol), 0, 1))
         rub = np.clip(1.3 * rub, 0, 1).astype(np.float32)
-        a_r = (0.9 * rub)[:, None]
+        a_r = (0.6 * rub)[:, None]
         col = col * (1.0 - a_r) + lin(F["rub_srgb"])[None, :] * a_r
         r = r - 0.12 * rub
         # chips by cause: on sharp convex edges, inside the cause zones (+ a rare base rate), in clusters
@@ -218,7 +228,8 @@ def paint(st, meta, bake, tex):
         width = (0.35 + 1.5 * wear * PT.chunked(PT.fbm3, Pk, 3.0, 2, 142)) * (0.5 + 0.5 * expo[k])
         chip = (dist_e[k] < width) & (cfield > 0.82 - 0.26 * wear) & (edge_fine[k] > 0.2) & (expo[k] > 0.35)
         chip = drop_small(chip, kk, idx, S, MIN_CHIP_PX)
-        core = chip & (dist_e[k] < 0.55 * width) & (cfield > 0.93 - 0.2 * wear)       # bright aluminium core
+        # (W4b) chips show the DARK hard anodize; bright aluminium only at the core of the largest, high-contact ones
+        core = chip & (dist_e[k] < 0.4 * width) & (cfield > 0.97 - 0.08 * wear) & (wear > 0.6)
         an = lin(SS.FIN["od_chip_anod"]["srgb"])
         col[chip] = an[None, :] * (0.92 + 0.16 * v_mid[k][chip])[:, None]
         r[chip] = SS.FIN["od_chip_anod"]["rough"] + 0.08 * v_mid[k][chip]
@@ -228,7 +239,7 @@ def paint(st, meta, bake, tex):
         r[core] = a0 + (a1 - a0) * v_mid[k][core]
         met = core.astype(np.float32)
         hh = np.where(chip, -0.02, hh).astype(np.float32)                   # the coat's step
-        col, r = dirt(k, col, r)
+        col, r = dirt(k, col, r, 1.4)                                 # (W4b) light dust in the recesses
         bc[k], rough[k], metal[k], h[k] = col, r, met, hh
         m_edge[k] = np.clip(np.maximum(rub, edge_fine[k] * wear), 0, 1)
         m_hand[k] = pol
@@ -305,6 +316,8 @@ def paint(st, meta, bake, tex):
             width = np.clip((0.15 + 0.30 * wear) * (0.4 + 0.6 * expo[k]), 0.0, 1.2)
             chip = (dist_e[k] < width) & (dash > 0.82 - 0.30 * sz[k]) & (edge_fine[k] > 0.25) & (expo[k] > 0.3) & \
                 (sz[k] > 0.1)
+            # (W4b, the SMG W4b lesson) no bare steel on the small parts: they rub to a lighter phosphate only
+            chip &= ~np.isin(pkk, SMALL_PARTS)
             chip = drop_small(chip, kk, idx, S, MIN_CHIP_PX)
             col[chip] = lin(F["bare_srgb"])[None, :] * (0.93 + 0.10 * v_mid[k][chip])[:, None]
             b0, b1 = F["bare_rough"]
@@ -364,10 +377,14 @@ def paint(st, meta, bake, tex):
         col = np.repeat(val[:, None], 3, 1) * np.array([1.0, 1.0, 1.015], np.float32)[None, :]
         col *= (1.0 - 0.12 * streak)[:, None]                                    # oil / carbon streaks
         r0, r1 = F["rough"]
-        r = r0 + (r1 - r0) * (0.2 + 0.8 * lines) + 0.06 * streak
+        # (W4b) bead-blasted satin with lathe bands (a 1D field along the bolt axis) and a blast grain in the normal
+        blast = PT.chunked(PT.vnoise3, Pk / 0.15, 162)
+        lathe = PT.chunked(PT.fbm3, np.c_[Pk[:, 0], np.zeros((len(Pk), 2), np.float32)].astype(np.float32), 1.6, 2, 163)
+        r = r0 + (r1 - r0) * (0.3 + 0.4 * lines + 0.3 * lathe) + 0.06 * streak + 0.06 * (blast - 0.5)
+        col *= (1.0 + 0.04 * (lathe - 0.5))[:, None]
         col, r = dirt(k, col, r, 0.5)
         bc[k], rough[k], metal[k] = col, r, 1.0
-        h[k] = 0.0015 * (lines - 0.5) * 2.0
+        h[k] = 0.0015 * (lines - 0.5) * 2.0 + 0.003 * (blast - 0.5) * 2.0 + 0.002 * (lathe - 0.5) * 2.0
         m_edge[k] = np.clip(edge_fine[k], 0, 1)
 
     # ---------------------------------------------------------------- polymer grip / floorplate, rubber
@@ -387,14 +404,16 @@ def paint(st, meta, bake, tex):
             gp = SS.GRIP_PANEL
             panel = (pkk == "grip") & (Pk[:, 2] > gp["z"][0]) & (Pk[:, 2] < gp["z"][1]) & (np.abs(Nk[:, 1]) > gp["abs_ny_min"])
             if panel.any():
-                g = Pk[panel][:, [0, 2]] / gp["pitch"]
-                # a moulded pyramid texture (two crossed triangle waves) -> its own read, not stipple pebbles
-                tri = lambda x: 1.0 - 2.0 * np.abs((x % 1.0) - 0.5)
-                pyr = np.minimum(tri(g[:, 0] + g[:, 1]), tri(g[:, 0] - g[:, 1])).astype(np.float32)
-                ht = gp["height"][0] + (gp["height"][1] - gp["height"][0]) * PT.chunked(PT.fbm3, Pk[panel], 3.0, 2, 502)
-                hh[panel] = ht * pyr
+                # (W4b) a hot-iron stipple: random round pits at ~0.75 mm, varying depth, crisp rims (the W4 pyramid
+                # pattern read as a printed noise texture)
+                cell = PT.chunked(PT.vnoise3, Pk[panel] / gp["stipple_cell"], 504)
+                pit = PT.smoothstep(0.52, 0.72, cell).astype(np.float32)
+                d0, d1 = gp["stipple_depth"]
+                ht = d0 + (d1 - d0) * PT.chunked(PT.fbm3, Pk[panel], 3.0, 2, 502)
+                pyr = 1.0 - pit
+                hh[panel] = -ht * pit
                 r[panel] = 0.70 + 0.10 * PT.chunked(PT.fbm3, Pk[panel], 2.0, 2, 503) - 0.10 * pyr * hz[k][panel]
-                col[panel] *= (1.08 + 0.10 * pyr)[:, None]
+                col[panel] *= (1.0 + 0.10 * pyr - 0.06 * pit)[:, None]
                 info["grip_panel_texels"] = int(panel.sum())
             pol = np.clip(hz[k], 0, 1)
             r = r - 0.10 * pol
@@ -415,9 +434,29 @@ def paint(st, meta, bake, tex):
     if k.any():
         F = SS.FIN["lens"]
         r0, r1 = F["rough"]
-        bc[k] = lin(F["srgb"])[None, :]
+        col = np.repeat(lin(F["srgb"])[None, :], int(k.sum()), 0)
+        hh = np.zeros(int(k.sum()), np.float32)
+        kk = np.nonzero(k)[0]
+        # (W4b) per lens (part): radial coordinate about its own centre in the plane across the bore (Y, Z)
+        for nm in np.unique(pk[k]):
+            sel = pk[kk] == nm
+            Q = P[kk[sel]]
+            c = Q.mean(0)
+            rr = np.hypot(Q[:, 1] - c[1], Q[:, 2] - c[2])
+            R = max(float(rr.max()), 1.0)
+            u = rr / R
+            ca, cb = lin(F["coat_srgb"][0]), lin(F["coat_srgb"][1])
+            ring = PT.smoothstep(0.55, 0.95, u)[:, None]
+            ang = np.arctan2(Q[:, 2] - c[2], Q[:, 1] - c[1])
+            mix = (0.5 + 0.5 * np.sin(ang + 0.7))[:, None]
+            coat = ca[None, :] * mix + cb[None, :] * (1 - mix)
+            col[sel] = col[sel] * (1 - 0.8 * ring) + coat * 0.8 * ring
+            hh[sel] = -(rr ** 2) / (2.0 * F["convex_R_mm"])               # a convex glass surface (sag)
+        bc[k] = col
         rough[k] = r0 + (r1 - r0) * v_mid[k]
         metal[k] = 0.0
+        h[k] = hh
+        info["lens_texels"] = int(k.sum())
 
     # ---------------------------------------------------------------- markings (generic: S / F at the safety)
     if SS.TARGET == "gun" and st == "Chassis":
@@ -438,6 +477,102 @@ def paint(st, meta, bake, tex):
             rough[si] = 0.62
             h[si] = -0.03
             info["markings_texels"] = int(len(si))
+
+    # ---------------------------------------------------------------- (W4b) hex sockets on the socket-head screws
+    hx = SS.HEX
+    khx = np.isin(pk, hx["parts"])
+    if khx.any():
+        n_hex = 0
+        ki = np.nonzero(khx)[0]
+        isl_k = isl.ravel()[idx[ki]]
+        for il in np.unique(isl_k):
+            s_ = ki[isl_k == il]
+            if len(s_) < 30:
+                continue
+            nm = N[s_].mean(0)
+            nn = float(np.linalg.norm(nm))
+            if nn < 0.9:                                    # not a flat head face (a shank / a rounded crown)
+                continue
+            nm = nm / nn
+            flat = s_[(N[s_] @ nm) > 0.97]
+            if len(flat) < 30:
+                continue
+            c = P[flat].mean(0)
+            dv = P[flat] - c
+            dv -= np.outer(dv @ nm, nm)
+            rad = float(np.percentile(np.linalg.norm(dv, axis=1), 98))
+            if not (1.2 < rad < 6.0):
+                continue
+            a = np.cross(nm, [1.0, 0.0, 0.0] if abs(nm[0]) < 0.9 else [0.0, 1.0, 0.0])
+            a /= np.linalg.norm(a)
+            b_ = np.cross(nm, a)
+            u, v = dv @ a, dv @ b_
+            th = np.arctan2(v, u)
+            rr = np.hypot(u, v)
+            af = hx["af_frac"] * rad                       # half across flats (af_frac x the head diameter / 2)
+            ph = np.radians((np.degrees(th) % 60.0) - 30.0)
+            inside = rr * np.cos(ph) <= af
+            wall = inside & (rr * np.cos(ph) > af - 0.25)
+            hi = flat[inside]
+            bc[hi] = lin((26, 26, 26))[None, :]
+            rough[hi] = 0.72
+            metal[hi] = 0.0
+            h[hi] = -hx["depth_mm"]
+            h[flat[wall]] = -0.5 * hx["depth_mm"]
+            n_hex += 1
+        info["hex_sockets"] = n_hex
+
+    # ---------------------------------------------------------------- (W4b) turret markings: ticks + numerals only
+    if SS.TARGET != "gun":
+        n_marks = 0
+        for nm, spec in SS.TURRET_MARKS.items():
+            kt = np.nonzero(pk == nm)[0]
+            if len(kt) < 50:
+                continue
+            ax = np.array({"scope_turret_elev": (0.0, 0.0, 1.0), "scope_turret_wind": (0.0, -1.0, 0.0),
+                           "scope_focus": (0.0, 1.0, 0.0)}[nm], np.float32)
+            top = kt[(N[kt] @ ax) > 0.97]
+            if len(top) < 30:
+                continue
+            hgt = P[top] @ ax
+            hg = np.percentile(hgt, 99.0)
+            top = top[np.abs(hgt - hg) < 0.35]               # the cap's top disc (robust to margin outliers)
+            if len(top) < 30:
+                continue
+            c = P[top].mean(0)
+            dv = P[top] - c
+            a = np.cross(ax, [1.0, 0.0, 0.0] if abs(ax[0]) < 0.9 else [0.0, 1.0, 0.0])
+            a /= np.linalg.norm(a)
+            b_ = np.cross(ax, a)
+            u, v = dv @ a, dv @ b_
+            rr = np.hypot(u, v)
+            R = float(np.percentile(rr, 99.0))
+            th = (np.degrees(np.arctan2(v, u)) + 360.0) % 360.0
+            step = 360.0 / spec["ticks"]
+            it = np.round(th / step).astype(int) % spec["ticks"]
+            dth = np.abs(((th - it * step) + 180.0) % 360.0 - 180.0)
+            longt = it % 5 == 0
+            w_deg = np.degrees(0.22 / np.maximum(rr, 1.0))           # 0.45 mm wide lines
+            mk = (dth < w_deg) & (rr > np.where(longt, R - 4.2, R - 2.8)) & (rr < R - 0.9)
+            if spec["numbers"]:
+                for j in range(0, spec["ticks"], 5):
+                    g = glyph_mask(str(j // 5))
+                    t0 = math.radians(j * step)
+                    cx, cy = (R - 6.3) * math.cos(t0), (R - 6.3) * math.sin(t0)
+                    ur = np.array([math.cos(t0), math.sin(t0)])
+                    ut = np.array([-math.sin(t0), math.cos(t0)])
+                    q = np.stack([u - cx, v - cy], -1)
+                    loc = np.stack([-(q @ ut), q @ ur], -1)               # (x right, y up): up = radial out
+                    hm = 2.2
+                    gw = hm * g.shape[1] / g.shape[0]
+                    mk |= stamp(loc, g, (-gw / 2.0, -hm / 2.0), hm)
+            mi = top[mk]
+            bc[mi] = lin((214, 214, 206))[None, :]                     # paint-filled engraving
+            rough[mi] = 0.55
+            metal[mi] = 0.0
+            h[mi] = -0.03
+            n_marks += int(mk.sum())
+        info["turret_mark_texels"] = n_marks
 
     # ---------------------------------------------------------------- limits (B9 / G7)
     is_m = metal > 0.5

@@ -1,6 +1,6 @@
 {
  "stage": "W1a form (gun without the scope)",
- "date": "2026-10-13T18:18:34",
+ "date": "2026-10-13T22:30:27",
  "status": "partial",
  "failed": [
   "L2 GL IoU (scope stand-in)",
@@ -12,25 +12,25 @@
  "gates": [
   {
    "name": "L2 GR IoU (scope = the blockout stand-in until W1b)",
-   "value": 0.9603,
+   "value": 0.9602,
    "threshold": ">= 0.96",
    "pass": true
   },
   {
    "name": "L2 GL IoU (scope stand-in)",
    "value": [
-    0.9434,
-    0.9513
+    0.9426,
+    0.9505
    ],
    "threshold": ">= 0.958",
    "pass": false,
-   "note": "raw / declared forend-underside window out; GL's silhouette is 602 px (1.8 %) smaller than GR's for the same object (ours differ by 106 px): the sheet's GL is drawn thinner, see scratch/w1/l2_columns.json"
+   "note": "raw / declared forend-underside window out; GL's silhouette is 602 px (1.8 %) smaller than GR's for the same object (ours differ by 98 px): the sheet's GL is drawn thinner, see scratch/w1/l2_columns.json"
   },
   {
    "name": "L2 TOP IoU raw / declared fit",
    "value": [
-    0.8373,
-    0.9015
+    0.8375,
+    0.902
    ],
    "threshold": ">= 0.93",
    "pass": false
@@ -50,7 +50,7 @@
   },
   {
    "name": "L4 key dimensions (<= 0.05 mm)",
-   "value": "13 / 14",
+   "value": "12 / 14",
    "threshold": "all",
    "pass": false
   },
@@ -113,7 +113,7 @@
    "name": "B3 riser -12.9..12.000000000000059 (step 0.3)",
    "value": {
     "intersecting_steps": 0,
-    "min_clearance_mm": 0.1601,
+    "min_clearance_mm": 0.1665,
     "min_with": "butt",
     "proof_fails": null
    },
@@ -356,7 +356,7 @@
   },
   {
    "name": "F8 riser low-stop gap",
-   "value": 0.3044,
+   "value": 0.3,
    "threshold": ">= 0.3 (spec 0.3; sampling 0.25)",
    "pass": true
   },
@@ -384,7 +384,7 @@
   },
   {
    "name": "B8 LOD0 triangles, gun without the scope (target 35-45k, ceiling 50k)",
-   "value": 35158,
+   "value": 41396,
    "threshold": "<= 50000 (target <= 45000)",
    "pass": true
   },
@@ -409,7 +409,7 @@
   },
   {
    "name": "H1 early: grip girth at the palm (46 mm down the grip axis)",
-   "value": 161.1,
+   "value": 165.9,
    "threshold": "<= 167 (polymer grip band + 10 %)",
    "pass": true
   },
@@ -468,15 +468,15 @@
   "silhouette": {
    "stage": "form",
    "npz": "form_tris.npz",
-   "triangles": 55618,
+   "triangles": 61856,
    "views": {
     "GR": {
-     "iou": 0.9603,
+     "iou": 0.9602,
      "contour_p50_px": 0.0,
      "contour_p95_px": 3.0,
      "contour_max_px": 15.03,
      "mapping_fit_p95_px": 0.006,
-     "ours_px": 34638,
+     "ours_px": 34653,
      "ref_px": 34180,
      "parts": {
       "scope": {
@@ -548,16 +548,16 @@
        }
       },
       "receiver": {
-       "iou": 0.4599,
+       "iou": 0.4978,
        "area_px": 1791,
        "missed_px_covered_by": {
         "rail": 335,
         "bolt": 289,
-        "chassis": 265
+        "chassis": 197
        }
       },
       "cheek_riser": {
-       "iou": 0.7384,
+       "iou": 0.7392,
        "area_px": 1520,
        "missed_px_covered_by": {
         "empty": 84,
@@ -590,42 +590,42 @@
         "why": "guard bottom bar labelled trigger in the trace (it is chassis)"
        },
        "missed_px_covered_by": {
-        "empty": 16,
-        "chassis": 2
+        "empty": 14,
+        "chassis": 4
        }
       },
       "mag_release": {
        "iou": 0.0,
        "area_px": 87,
        "missed_px_covered_by": {
-        "empty": 34,
-        "chassis": 33,
+        "chassis": 34,
+        "empty": 33,
         "magazine": 20
        }
       },
       "trigger_guard": {
-       "iou": 0.5941,
+       "iou": 0.6038,
        "area_px": 569,
        "missed_px_covered_by": {
-        "chassis": 99,
+        "chassis": 98,
         "grip": 21,
-        "empty": 4
+        "empty": 2
        }
       },
       "grip": {
-       "iou": 0.9474,
+       "iou": 0.9454,
        "area_px": 1825,
        "missed_px_covered_by": {
         "chassis": 67,
-        "empty": 18,
+        "empty": 16,
         "butt": 10
        }
       },
       "butt": {
-       "iou": 0.5807,
+       "iou": 0.5797,
        "area_px": 4509,
        "missed_px_covered_by": {
-        "empty": 211,
+        "empty": 218,
         "cheek_riser": 204,
         "chassis": 21
        }
@@ -640,43 +640,43 @@
        }
       },
       "chassis_centre": {
-       "iou": 0.8768,
+       "iou": 0.8635,
        "area_px": 4897,
        "missed_px_covered_by": {
         "chassis": 176,
-        "scope_blockout": 58,
-        "magazine": 47
+        "receiver": 80,
+        "scope_blockout": 58
        }
       }
      }
     },
     "GL": {
-     "iou": 0.9434,
-     "contour_p50_px": 0.0,
+     "iou": 0.9426,
+     "contour_p50_px": 1.0,
      "contour_p95_px": 4.0,
      "contour_max_px": 15.0,
      "mapping_fit_p95_px": 0.006,
-     "ours_px": 34532,
+     "ours_px": 34555,
      "ref_px": 33578,
-     "iou_forend_underside_window_out": 0.9513,
+     "iou_forend_underside_window_out": 0.9505,
      "contour_p95_px_window_out": 3.0
     },
     "TOP": {
-     "iou": 0.8373,
-     "contour_p50_px": 1.0,
+     "iou": 0.8375,
+     "contour_p50_px": 1.41,
      "contour_p95_px": 7.0,
      "contour_max_px": 16.0,
      "mapping_fit_p95_px": 0.003,
-     "ours_px": 19404,
+     "ours_px": 19401,
      "ref_px": 20360,
-     "iou_knob_window_out": 0.8697,
+     "iou_knob_window_out": 0.8699,
      "sheet_1px_sensitivity_iou": 0.9326
     },
     "TOP_fit": {
-     "iou": 0.9015,
-     "y_scale": 1.05,
-     "y_shift_mm": -3.5,
-     "contour_p95_px": 7.04,
+     "iou": 0.902,
+     "y_scale": 1.06,
+     "y_shift_mm": -3.0,
+     "contour_p95_px": 7.07,
      "note": "bounded Y-only fit for the TOP's shadow bias + round-part inflation"
     }
    }
@@ -761,17 +761,17 @@
    },
    {
     "feature": "grip bottom Z",
-    "measured": -166.194,
+    "measured": -166.28,
     "spec": -166.4,
-    "error_mm": 0.206,
+    "error_mm": 0.12,
     "pass": false
    },
    {
     "feature": "riser top Z",
-    "measured": 31.0,
+    "measured": 32.1,
     "spec": 31.0,
-    "error_mm": 0.0,
-    "pass": true
+    "error_mm": 1.1,
+    "pass": false
    },
    {
     "feature": "foot front X folded",
@@ -922,7 +922,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 572,
+     "triangles": 1950,
      "shells": 1
     },
     "butt_knobs": {
@@ -952,7 +952,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 2490,
+     "triangles": 4470,
      "shells": 1
     },
     "cheek_riser": {
@@ -962,7 +962,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 380,
+     "triangles": 1396,
      "shells": 1
     },
     "fasteners": {
@@ -982,7 +982,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 352,
+     "triangles": 2216,
      "shells": 1
     },
     "mag_release": {
@@ -1117,23 +1117,23 @@
     }
    },
    "B7_closed": 33,
-   "B8_triangles": 35158,
+   "B8_triangles": 41396,
    "G5_rest_intersections": [],
    "G5_butt_gaps": [
     {
      "a": "butt",
      "b": "chassis",
-     "min_gap_mm": 0.0507
+     "min_gap_mm": 0.04
     },
     {
      "a": "grip",
      "b": "chassis",
-     "min_gap_mm": 0.0633
+     "min_gap_mm": 0.03
     },
     {
      "a": "grip",
      "b": "butt",
-     "min_gap_mm": 0.0599
+     "min_gap_mm": 0.03
     },
     {
      "a": "butt_pad",
@@ -1143,7 +1143,7 @@
     {
      "a": "pad_plate",
      "b": "butt",
-     "min_gap_mm": 0.0507
+     "min_gap_mm": 0.04
     },
     {
      "a": "receiver",
@@ -1168,7 +1168,7 @@
     {
      "a": "bipod_clamp",
      "b": "chassis",
-     "min_gap_mm": 0.1248
+     "min_gap_mm": 0.1253
     },
     {
      "a": "fasteners",
@@ -1183,12 +1183,12 @@
     {
      "a": "butt_knobs",
      "b": "butt",
-     "min_gap_mm": 0.0321
+     "min_gap_mm": 0.02
     },
     {
      "a": "riser_lever",
      "b": "butt",
-     "min_gap_mm": 0.0528
+     "min_gap_mm": 0.037
     },
     {
      "a": "magazine_floorplate",
@@ -1219,9 +1219,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.21,
      "end_nearest": "receiver",
-     "seconds": 201.7,
+     "seconds": 314.9,
      "moving_samples": 270086,
-     "fixed_samples": 791815,
+     "fixed_samples": 827611,
      "row": "sliding",
      "pass": true,
      "proof_fails": 0,
@@ -1244,9 +1244,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.154,
      "end_nearest": "receiver",
-     "seconds": 72.8,
+     "seconds": 103.2,
      "moving_samples": 270086,
-     "fixed_samples": 832276,
+     "fixed_samples": 888954,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1268,9 +1268,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1546,
      "end_nearest": "pins",
-     "seconds": 2.3,
+     "seconds": 3.1,
      "moving_samples": 19899,
-     "fixed_samples": 26343,
+     "fixed_samples": 27660,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1292,9 +1292,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1991,
      "end_nearest": "pins",
-     "seconds": 3.8,
+     "seconds": 4.9,
      "moving_samples": 20198,
-     "fixed_samples": 18409,
+     "fixed_samples": 17883,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1316,9 +1316,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1632,
      "end_nearest": "pins",
-     "seconds": 10.6,
+     "seconds": 15.3,
      "moving_samples": 77821,
-     "fixed_samples": 69553,
+     "fixed_samples": 76883,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1333,16 +1333,16 @@
      "intersecting_steps": 0,
      "max_intersections": 0,
      "parts_hit": [],
-     "min_clearance_mm": 0.1601,
+     "min_clearance_mm": 0.1665,
      "min_at": -12.9,
      "min_with": "butt",
-     "rest_clearance_mm": 0.1601,
+     "rest_clearance_mm": 0.1665,
      "rest_nearest": "butt",
-     "end_clearance_mm": 0.1726,
+     "end_clearance_mm": 0.1665,
      "end_nearest": "butt",
-     "seconds": 16.8,
-     "moving_samples": 279929,
-     "fixed_samples": 212546,
+     "seconds": 34.8,
+     "moving_samples": 439305,
+     "fixed_samples": 217865,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1364,9 +1364,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 65.2,
+     "seconds": 108.7,
      "moving_samples": 509228,
-     "fixed_samples": 266295,
+     "fixed_samples": 266300,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1389,9 +1389,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 66.4,
+     "seconds": 88.5,
      "moving_samples": 509228,
-     "fixed_samples": 266295,
+     "fixed_samples": 266300,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1414,7 +1414,7 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 14.0,
+     "seconds": 13.9,
      "moving_samples": 272294,
      "fixed_samples": 172262,
      "row": "sliding",
@@ -1438,9 +1438,9 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 23.3,
+     "seconds": 24.0,
      "moving_samples": 272294,
-     "fixed_samples": 498937,
+     "fixed_samples": 498942,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1462,9 +1462,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 63.5,
+     "seconds": 67.7,
      "moving_samples": 509823,
-     "fixed_samples": 250748,
+     "fixed_samples": 250743,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1487,9 +1487,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 64.6,
+     "seconds": 69.4,
      "moving_samples": 509823,
-     "fixed_samples": 250748,
+     "fixed_samples": 250743,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1512,7 +1512,7 @@
      "rest_nearest": "bipod_leg_r",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_r",
-     "seconds": 14.0,
+     "seconds": 14.2,
      "moving_samples": 272713,
      "fixed_samples": 170673,
      "row": "sliding",
@@ -1536,9 +1536,9 @@
      "rest_nearest": "bipod_leg_r",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_r",
-     "seconds": 22.8,
+     "seconds": 23.3,
      "moving_samples": 272713,
-     "fixed_samples": 483556,
+     "fixed_samples": 483551,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1560,9 +1560,9 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 79.7,
+     "seconds": 81.3,
      "moving_samples": 1493936,
-     "fixed_samples": 127260,
+     "fixed_samples": 127032,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1585,7 +1585,7 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 78.3,
+     "seconds": 83.0,
      "moving_samples": 1493936,
      "fixed_samples": 116572,
      "row": "hinge",
@@ -1696,7 +1696,7 @@
      {
       "a": "cheek_riser",
       "b": "butt",
-      "min_gap_mm": 0.3044
+      "min_gap_mm": 0.3
      }
     ],
     "F9_trigger_full_pull": [
@@ -1738,9 +1738,9 @@
      "rest_nearest": "mag_release",
      "end_clearance_mm": 0.3,
      "end_nearest": "chassis",
-     "seconds": 43.3,
+     "seconds": 48.8,
      "moving_samples": 248837,
-     "fixed_samples": 197466,
+     "fixed_samples": 228423,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1764,9 +1764,9 @@
      "rest_nearest": "mag_release",
      "end_clearance_mm": 3.0,
      "end_nearest": null,
-     "seconds": 42.4,
+     "seconds": 47.3,
      "moving_samples": 248837,
-     "fixed_samples": 195369,
+     "fixed_samples": 226326,
      "row": "sliding",
      "pass": false,
      "hits_at": [
@@ -1789,49 +1789,49 @@
    "B6a": {
     "object": "SM_SR01_B6aCheck",
     "parts": 33,
-    "triangles": 35158,
+    "triangles": 41396,
     "checks": [
      {
       "name": "no_ngons",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 n-gon(s) of 29872 faces"
+      "detail": "0 n-gon(s) of 36520 faces"
      },
      {
       "name": "no_non_manifold_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 47451"
+      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 57218"
      },
      {
       "name": "open_boundary_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 boundary edge(s) of 47451 (informational: open meshes are allowed)"
+      "detail": "0 boundary edge(s) of 57218 (informational: open meshes are allowed)"
      },
      {
       "name": "no_loose_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 loose vertex/vertices of 17625"
+      "detail": "0 loose vertex/vertices of 20744"
      },
      {
       "name": "no_zero_length_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) at or below 1e-06 of 47451; shortest 5.09088e-05"
+      "detail": "0 edge(s) at or below 1e-06 of 57218; shortest 5.08916e-05"
      },
      {
       "name": "no_degenerate_faces",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 face(s) at or below 1e-12 area of 29872; smallest 1.05373e-08"
+      "detail": "0 face(s) at or below 1e-12 area of 36520; smallest 1.05373e-08"
      },
      {
       "name": "no_coincident_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 vertex pair(s) within 1e-06 of 17625"
+      "detail": "0 vertex pair(s) within 1e-06 of 20744"
      }
     ],
     "passed": true,
@@ -1840,9 +1840,9 @@
     "deny_list_clean": true
    },
    "H1": {
-    "girth_at_25mm_mm": 178.5,
-    "girth_at_46mm_mm": 161.1,
-    "girth_at_70mm_mm": 172.7,
+    "girth_at_25mm_mm": 181.1,
+    "girth_at_46mm_mm": 165.9,
+    "girth_at_70mm_mm": 171.2,
     "trigger_reach_mm": 44.7,
     "length_of_pull_mm": 358.2,
     "real_reference": "precision-rifle polymer grips: girth ~140-160 mm at the palm; trigger reach 60-80 mm (reported; the gate band is the SMG's polymer grip +10 %: <= 167 mm, reach <= 80 mm)"
@@ -1856,18 +1856,18 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2490,
+    "triangles": 4470,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.013592,
+     "min_area_mm2": 0.013451,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.89,
+    "seconds": 2.7,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -1875,6 +1875,19 @@
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 216,
+     "shell_drops_before_repair": 11,
+     "shell_drops_after": 0
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 1,
+     "reverted": false,
+     "drops_before": 1,
+     "drops_after": 0,
+     "pass_after": true
     }
    },
    "butt": {
@@ -1884,25 +1897,38 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 572,
+    "triangles": 1950,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.089592,
+     "min_area_mm2": 0.034907,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.35,
+    "seconds": 1.32,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 52,
-     "edges_under_0.05mm": 371,
-     "needles_under_0.02mm": 16,
-     "strip_polygons_under_0.1mm": 323
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 3,
+     "needles_under_0.02mm": 6,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 209,
+     "shell_drops_before_repair": 0,
+     "shell_drops_after": 0
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 0,
+     "reverted": false,
+     "drops_before": 0,
+     "drops_after": 0,
+     "pass_after": false
     }
    },
    "butt_pad": {
@@ -1923,7 +1949,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.33,
+    "seconds": 0.47,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -1968,25 +1994,38 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 380,
+    "triangles": 1396,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.183283,
+     "min_area_mm2": 0.014556,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
-     "pass_ud2": true
+     "pass_ud2": false
     },
-    "seconds": 0.31,
+    "seconds": 1.19,
     "bone": "cheek_riser",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 118,
-     "edges_under_0.05mm": 302,
-     "needles_under_0.02mm": 315,
-     "strip_polygons_under_0.1mm": 159
+     "unreal_drops": 2,
+     "edges_under_0.05mm": 2,
+     "needles_under_0.02mm": 4,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 79,
+     "shell_drops_before_repair": 13,
+     "shell_drops_after": 2
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 0,
+     "reverted": false,
+     "drops_before": 2,
+     "drops_after": 2,
+     "pass_after": false
     }
    },
    "riser_posts": {
@@ -2007,7 +2046,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.03,
+    "seconds": 0.06,
     "bone": "cheek_riser",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2035,7 +2074,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.09,
+    "seconds": 0.14,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2063,7 +2102,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.28,
+    "seconds": 0.43,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2091,7 +2130,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.5,
+    "seconds": 1.98,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2119,7 +2158,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.2,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2147,7 +2186,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.1,
+    "seconds": 0.15,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2175,7 +2214,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.53,
+    "seconds": 0.76,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2203,7 +2242,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.21,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2231,7 +2270,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.15,
+    "seconds": 0.21,
     "bone": "selector",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2259,7 +2298,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.04,
+    "seconds": 0.06,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2287,7 +2326,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.11,
+    "seconds": 0.17,
     "bone": "trigger",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2315,7 +2354,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.15,
+    "seconds": 0.2,
     "bone": "mag_release",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2332,25 +2371,38 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 352,
+    "triangles": 2216,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.012325,
+     "min_area_mm2": 0.027944,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
-     "pass_ud2": true
+     "pass_ud2": false
     },
-    "seconds": 0.37,
+    "seconds": 1.31,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 516,
-     "edges_under_0.05mm": 1033,
-     "needles_under_0.02mm": 165,
-     "strip_polygons_under_0.1mm": 675
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 178,
+     "shell_drops_before_repair": 26,
+     "shell_drops_after": 0
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 2,
+     "reverted": false,
+     "drops_before": 0,
+     "drops_after": 0,
+     "pass_after": false
     }
    },
    "barrel": {
@@ -2371,7 +2423,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.02,
+    "seconds": 1.35,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2399,7 +2451,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.11,
+    "seconds": 0.17,
     "bone": "muzzle_device",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2427,7 +2479,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.17,
+    "seconds": 0.26,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
@@ -2455,7 +2507,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.02,
+    "seconds": 0.03,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
@@ -2483,7 +2535,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.23,
+    "seconds": 0.33,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2511,7 +2563,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.64,
+    "seconds": 1.02,
     "bone": "bipod",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2539,7 +2591,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.22,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2567,7 +2619,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.05,
+    "seconds": 0.08,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2595,7 +2647,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.66,
+    "seconds": 1.02,
     "bone": "bipod_leg_l",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2623,7 +2675,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.66,
+    "seconds": 1.02,
     "bone": "bipod_leg_r",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2651,7 +2703,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.36,
+    "seconds": 0.51,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2679,7 +2731,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.36,
+    "seconds": 0.56,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2707,7 +2759,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.42,
+    "seconds": 0.67,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2735,7 +2787,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.42,
+    "seconds": 0.63,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2763,7 +2815,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.08,
+    "seconds": 0.12,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {

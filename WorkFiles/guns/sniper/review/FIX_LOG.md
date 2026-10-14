@@ -49,3 +49,16 @@ rebuilt on exported bytes.
    line, no toe spur (C4).
 5. Barrel flutes measured against GR / Q34 (C7); butt discs (C10); OD under the 3/4 light (C12, a Q34 crop match).
 6. More segments / analytic normals on small rounds (trigger blade, knobs); a floor + contact shadow in the review rig.
+
+## W4b close-up round 1 (2026-10-13; full report W4B_REPORT.md, gates/closeup_r1.json)
+
+| Item | What changed | Result |
+|---|---|---|
+| Edges | `sniper_parts`: weighted unclamped 1.2 mm / 3-seg round on chassis / butt / riser with round_free boxes + a protected local UD fix (Blender's global clamp had shrunk the W4 chamfer to microns); faired centre + guard outlines | UD / G5 / B3 / F / H1 pass; K1 hard creases 15.9 -> 14.9 m (FAIL vs <= 0.5x) |
+| Grip | moulded: YZ lens (palm swell), 3.5 mm round, stipple | H1 165.9 (<= 167); judges still call the grip torn / primitive |
+| Chassis finish | 1.3 mm peel, sheen drift, wear by cause only, dark-anodize chips, handling polish, dust | K3 FAIL (tilt 1.4x of the 2x target; rub -91 %) |
+| Bolt / legs | blasted satin 0.48-0.60, lathe bands | K2 FAIL (P5 0.39) |
+| Small parts | no bare-steel chips; hex sockets painted (66) | K4 FAIL (13,254 metallic texels left, source not traced); K6 pass |
+| Scope | turret ticks + numerals, coated convex lens (BC lifted to the B9 floor) | K5 pass |
+| Review rig | tabletop + contact shadows, DoF | K7 pass; K8 FAIL (6 hot px) |
+| Judges | realism A / B on 8 views each | fake 8/8 (88) and fake 8/8 (89): no movement; geometry artifacts now their top tell |

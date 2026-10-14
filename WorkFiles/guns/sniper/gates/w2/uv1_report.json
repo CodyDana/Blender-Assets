@@ -2,20 +2,20 @@
  "method": "1. PROJECTION charts per part: the part's frame (box keys / cylinder side + caps) on its visible faces; faces that\n   overlap inside one projection go to depth layers (greedy by area; each layer is a chart; extra layers past 3 or\n   under 150 mm2 are 'small');\n2. the LM_KEEP largest charts (each >= LM_MIN_KEEP_MM2) are packed, ONE raster pack at 64 px with 2 px padding\n   (sr_lmpack: gunlib.rasterpack's method with an unclipped conservative raster and a square padding ring, i.e. the\n   UD4 measure itself);\n3. every other visible face (pins, screws, sight leaves, small layers: sub-texel at 64 px) takes a ZERO-AREA UV1 at\n   the centre of the nearest packed host face that faces the same way (within 72 deg): it reads the lightmap texel of\n   the surface it sits on and takes no texel itself (no overlap; qa_check's overlap rule ignores zero-area UVs);\n   hidden faces (class E, no ray reaches them in any configuration) the same;\n4. UD4 measured right after (sr_ud4.py on scratch/uv/uv1_lod0.npz: conservative raster at 64 and 128 px, 2 px).",
  "size_px": 64,
  "pack_ring_cells": 2,
- "charts_total": 409,
+ "charts_total": 430,
  "charts_packed": 90,
- "smallest_packed_mm2": 684.3,
- "fill": 0.0641,
- "scale_px_per_mm": 0.023542150469575314,
+ "smallest_packed_mm2": 713.9,
+ "fill": 0.0593,
+ "scale_px_per_mm": 0.022788098909427887,
  "hosted": {
-  "visible_faces": 12521,
-  "visible_area_mm2": 31489.78979555294,
-  "hidden_faces": 7536,
-  "visible_area_fraction": 0.0612,
+  "visible_faces": 13316,
+  "visible_area_mm2": 34840.95387994704,
+  "hidden_faces": 8339,
+  "visible_area_fraction": 0.068,
   "host_distance_mm_p50_p95_max": [
-   2.11,
-   19.38,
-   52.7
+   1.95,
+   15.63,
+   49.44
   ]
  },
  "overlap_pairs_qa": 0,
@@ -25,9 +25,9 @@
    0.01562
   ],
   "max": [
-   0.98027,
-   0.96661
+   0.9794,
+   0.98146
   ]
  },
- "seconds": 16.2
+ "seconds": 25.6
 }

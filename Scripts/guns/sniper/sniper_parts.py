@@ -46,6 +46,41 @@ def ring(key, tol=0.6):
     return max(rr, key=lambda r: abs(G.area(r)))
 
 
+import os
+FAIR_FORE = os.environ.get("SR01_FAIR_FORE", "0") == "1"   # the faired forend left a channel sliver
+FAIR_GUARD = os.environ.get("SR01_FAIR_GUARD", "1") == "1"
+CH_R = float(os.environ.get("SR01_CH_R", "20.6"))    # barrel channel radius (>= 3.0 radial clearance)
+GRIP_RND = tuple(float(x) if i != 1 else int(x) for i, x in enumerate(os.environ.get("SR01_GRIP_RND", "3.5,5,25").split(",")))
+GRIP_SWELL = os.environ.get("SR01_GRIP_SWELL", "1") == "1"
+SHELL_FLAT_DEG = float(os.environ.get("SR01_SHELL_FLAT", "0.5"))
+ROUND_CLAMP = os.environ.get("SR01_ROUND_CLAMP", "0") == "1"
+ROUND_GROW = float(os.environ.get("SR01_ROUND_GROW", "2.5"))
+FAIR_SIGMA = float(os.environ.get("SR01_FAIR_SIGMA", "1.5"))
+FAIR_CORNER = float(os.environ.get("SR01_FAIR_CORNER", "40"))
+if os.environ.get("SR01_RNDC"):
+    RNDC = [tuple(float(x) if i != 1 else int(x) for i, x in enumerate(os.environ["SR01_RNDC"].split(",")))]
+
+
+def boxes_of(meshes, grow=None):
+    """frame-M boxes of cutter meshes grown by `grow` mm (the zones a weighted round keeps out of)."""
+    out = []
+    grow = ROUND_GROW if grow is None else grow
+    for m in meshes:
+        V = np.vstack(m.V)
+        lo, hi = V.min(0) - grow, V.max(0) + grow
+        out.append((lo[0], hi[0], lo[1], hi[1], lo[2], hi[2]))
+    return out
+
+
+def fair(P, sigma_mm=None, corner_deg=None):
+    """(W4b, craft C3) a traced ring faired before extrusion: resampled at 1 mm, Gaussian-smoothed, the real corners
+    (DP turn > corner_deg) pinned crisp, then DP 0.25: curvature-continuous runs instead of the 1.3 mm DP kinks."""
+    if FAIR_SIGMA <= 0:
+        return G.ccw(G.dp_simplify(P, 1.3))
+    return G.ccw(G.dp_simplify(G.clean_smooth(P, step=1.0, sigma_mm=sigma_mm or FAIR_SIGMA,
+                                              corner_deg=corner_deg or FAIR_CORNER), 0.25))
+
+
 def clip(P, x0=None, x1=None, z0=None, z1=None):
     Q = G.clip_x(P, x0, x1)
     if len(Q) >= 3 and (z0 is not None or z1 is not None):
@@ -113,6 +148,9 @@ CH = [(0.6, 1, 30.0)]             # M-chamfer (machined aluminium / steel): 0.6 
 CH4 = [(0.4, 1, 30.0)]
 RND = [(0.8, 2, 30.0)]
 RND1 = [(1.0, 1, 30.0)]          # L8 fix round: machined outer edges broken with a 1.0 radius (judges: razor slabs)
+# (W4b close-up) the chassis / butt / riser outer edges as a real machined radius: 1.2 in 3 segments (22.5 deg each,
+# under the 30 deg smoothing angle: the round shades as one curve, the flats keep their own normal)
+RNDC = [(1.2, 3, 30.0)]
 POLY = [(1.8, 3, 30.0)]
 RUB = [(3.0, 3, 30.0)]
 
@@ -122,11 +160,128 @@ class Part:
     """Ordered boolean steps (ops: ("U"|"I"|"D", [Mesh])) then the bevel recipe, post cutters, finish, record."""
 
     def __init__(self, name, base, ops=(), bone="body", cls="M-chamfer", slot=SLOT_METAL, recipe=CH, jnt=None,
-                 post=(), spec_id=None, smooth_deg=30.0, motion=None, weld_mm=None):
+                 post=(), spec_id=None, smooth_deg=30.0, motion=None, weld_mm=None, round_free=None, protect=None):
         self.name, self.base, self.ops, self.bone, self.cls, self.slot = name, base, list(ops), bone, cls, slot
         self.recipe, self.jnt, self.post, self.spec_id = recipe, jnt or joint("butt"), list(post), spec_id or name
         self.smooth_deg, self.motion = smooth_deg, motion
         self.weld_mm = weld_mm
+        # (W4b) round_free: a list of frame-M boxes (x0, x1, y0, y1, z0, z1) the round must stay out of. When set, the
+        # recipe runs as a WEIGHTED bevel without overlap clamping: Blender's clamp is global (one short edge anywhere
+        # cut the whole chassis round to microns, and the weld then collapsed it: the "sharp CG creases" of the W4
+        # judges), the boxes keep the round off the post cutters' zones (so they still cut unbevelled walls) and the
+        # beveled shell is UD-repaired BEFORE the post cuts (the gate-critical inlet / well / pocket walls are cut after)
+        self.round_free = round_free
+        self.round_skip_y = False
+        self.joint_slabs = []            # thin frame-M boxes around the joint planes: no local-fix vertex moves there
+        self.protect = protect           # frame-M boxes no vertex may move in during the final protected UD repair
+
+    def _round_weighted(self, ob):
+        """(W4b) the weighted, unclamped round on the shell (before the post cuts): an edge is rounded when its
+        dihedral passes the recipe angle and neither end nor its middle lies in a round_free box; then a UD repair of
+        the rounded shell (the gate-critical inlet / well / pocket / bore walls do not exist yet)."""
+        import bmesh
+        from gunlib import ud as _ud
+        B = np.array(self.round_free, float).reshape(-1, 6) if len(self.round_free) else np.zeros((0, 6))
+
+        def inside(P):
+            P = np.atleast_2d(P)
+            m = np.zeros(len(P), bool)
+            for x0, x1, y0, y1, z0, z1 in B:
+                m |= (P[:, 0] >= x0) & (P[:, 0] <= x1) & (P[:, 1] >= y0) & (P[:, 1] <= y1) & (P[:, 2] >= z0) & (P[:, 2] <= z1)
+            return m
+        for w, sg, a in self.recipe:
+            bm = bmesh.new()
+            bm.from_mesh(ob.data)
+            lay = bm.edges.layers.float.get("bevel_weight_edge") or bm.edges.layers.float.new("bevel_weight_edge")
+            n = 0
+            for e in bm.edges:
+                wt = 0.0
+                if len(e.link_faces) == 2 and math.degrees(e.calc_face_angle(0.0)) >= a:
+                    P = np.array([e.verts[0].co[:], e.verts[1].co[:]], float) * 1000.0 + GRIP
+                    dy = abs(P[1, 1] - P[0, 1]) / max(np.linalg.norm(P[1] - P[0]), 1e-9)
+                    if self.round_skip_y and dy > 0.7:          # the side outline's own corners stay as traced
+                        pass
+                    elif not inside(np.vstack([P, P.mean(0)])).any():
+                        wt = 1.0
+                e[lay] = wt
+                n += wt > 0
+            bm.to_mesh(ob.data)
+            bm.free()
+            self.round_edges = n
+            bl.bevel(ob, w, sg, a, limit="WEIGHT", clamp=ROUND_CLAMP)
+        u0 = _ud.check_object(ob)
+        # the local fix, the joint / post zones (round_free) protected: gunlib's global repair welds at 0.03 mm and
+        # closed the 0.03 mm grip / guard joint (G5 in the first chain)
+        bl.finish(ob)
+        self._local_fix(ob, self.joint_slabs)
+        u1 = _ud.check_object(ob)
+        self.shell_ud = {"edges_rounded": self.round_edges, "shell_drops_before_repair": u0.get("unreal_drops"),
+                         "shell_drops_after": u1.get("unreal_drops")}
+
+    def _local_fix(self, ob, boxes, rounds=8):
+        """(W4b) a LOCAL UD fix of a triangulated part: each failing triangle (area < 0.01 mm^2, an edge < 0.05 mm or
+        a needle < 0.02 mm, the gunlib UD1 / UD2 limits) with no vertex inside a protected box has its shortest edge
+        collapsed; reverted if the part stops being closed / manifold or gets more drops."""
+        import bmesh
+        from gunlib import ud as _ud
+        u0 = _ud.check_object(ob)
+        B = np.array(boxes, float).reshape(-1, 6)
+
+        def prot(co):
+            q = np.array(co[:], float) * 1000.0 + GRIP
+            return bool(((B[:, 0] <= q[0]) & (q[0] <= B[:, 1]) & (B[:, 2] <= q[1]) & (q[1] <= B[:, 3]) &
+                         (B[:, 4] <= q[2]) & (q[2] <= B[:, 5])).any())
+        keep = ob.data.copy()
+        n_fix = 0
+        for _ in range(rounds):
+            bm = bmesh.new()
+            bm.from_mesh(ob.data)
+            quads = [f for f in bm.faces if len(f.verts) > 3]          # the bevel strips' quads hide their tris
+            if quads:
+                bmesh.ops.triangulate(bm, faces=quads, quad_method="BEAUTY", ngon_method="BEAUTY")
+            bm.verts.ensure_lookup_table()
+            tri = [f for f in bm.faces if len(f.verts) == 3]
+            sc = float(ob.matrix_world.to_scale()[0]) * 1000.0
+            Vmm = np.array([v.co[:] for v in bm.verts], float) * sc
+            Tt = np.array([[v.index for v in f.verts] for f in tri], int).reshape(-1, 3)
+            bad = []
+            if len(Tt):
+                area, L, hgt, drop, _c = _ud._tri_metrics(Vmm, Tt)       # gunlib's own UD1 / UD2 rule
+                flag = drop | (area < _ud.MIN_AREA_MM2) | (L.min(1) < _ud.MIN_EDGE_MM) | (hgt < _ud.MIN_HEIGHT_MM)
+                for i in np.nonzero(flag)[0]:
+                    f = tri[i]
+                    if not any(prot(v.co) for v in f.verts):
+                        bad.append(min(f.edges, key=lambda e: e.calc_length()))
+            if not bad:
+                if quads:
+                    bm.to_mesh(ob.data)
+                bm.free()
+                break
+            bmesh.ops.collapse(bm, edges=bad[:1], uvs=False)
+            n_fix += 1
+            bm.to_mesh(ob.data)
+            bm.free()
+            bl.finish(ob)
+        r = bl.manifold_report(ob)
+        u1 = _ud.check_object(ob)
+        worse = r.get("boundary_edges") or r.get("multi_face_edges") or r.get("shells", 1) != 1 or             (u1.get("unreal_drops") or 0) > (u0.get("unreal_drops") or 0)
+        if worse:
+            bad_me = ob.data
+            ob.data = keep
+            __import__("bpy").data.meshes.remove(bad_me)
+            u1 = _ud.check_object(ob)
+        return {"collapses": n_fix, "reverted": bool(worse), "drops_before": u0.get("unreal_drops"),
+                "drops_after": u1.get("unreal_drops"), "pass_after": bool(u1.get("pass_ud1") and u1.get("pass_ud2"))}
+
+    def _protected_repair(self, ob):
+        """(W4b) the local fix on the finished part, the gate-critical post walls protected (gunlib's global repair
+        moved them, so it is not used here)."""
+        from gunlib import ud as _ud
+        u0 = _ud.check_object(ob)
+        if u0.get("pass_ud1") and u0.get("pass_ud2"):
+            self.protected_repair = {"needed": False}
+            return
+        self.protected_repair = dict(needed=True, **self._local_fix(ob, list(self.protect) + list(self.joint_slabs)))
 
     def build(self, coll):
         t0 = time.time()
@@ -140,8 +295,12 @@ class Part:
         bl.clean(ob)
         if NO_BEVEL:
             self.recipe = []
-        for w, s, a in self.recipe:
-            bl.bevel(ob, w, s, a)
+        rw = self.round_free is not None and self.recipe
+        if rw:
+            self._round_weighted(ob)
+        else:
+            for w, s, a in self.recipe:
+                bl.bevel(ob, w, s, a)
         if self.post:
             bl.boolean_many(ob, self.post, "DIFFERENCE", offset=GRIP)
             bl.clean(ob)
@@ -150,6 +309,9 @@ class Part:
             # boolean leaves where the round meets the traced outline; max move weld_mm / 2, no strip collapse (0.016: 0 drops and manifold; 0.02+ made 2 multi-face edges)
             bl.clean(ob, dist_m=self.weld_mm * 1e-3)
         bl.finish(ob)
+        if self.protect is not None:
+            self._protected_repair(ob)
+            bl.finish(ob)
         import bmesh
         bm = bmesh.new()
         bm.from_mesh(ob.data)
@@ -192,6 +354,10 @@ class Part:
         rep["seconds"] = round(time.time() - t0, 2)
         rep["bone"], rep["slot"] = self.bone, self.slot
         rep["ud_pre_repair"] = getattr(self, "ud_pre", None)
+        if getattr(self, "shell_ud", None):
+            rep["round_shell"] = self.shell_ud
+        if getattr(self, "protected_repair", None):
+            rep["protected_repair"] = self.protected_repair
         return ob, rep
 
 
@@ -202,11 +368,24 @@ X_GRIP_FRONT = 330.6           # grip | guard boundary
 X_BUTT_JOINT = 244.8
 
 
+# (W4b) where the unclamped round overlapped itself (UD drops, located by gunlib ud.locate on probe builds): the butt
+# joint face, the guard's lower loop (the bar meets the arms 0.4 inside their faces), the forend nose over the clamp seat
+CHASSIS_ROUND_FREE = [(240.0, 250.5, -60.0, 60.0, -200.0, 100.0), (326.0, 404.0, -13.0, 13.0, -110.0, -60.0),
+                      (826.0, 850.0, -60.0, 60.0, -45.0, -30.0), (326.0, 338.0, -13.0, 13.0, -60.0, -50.0),
+                      (365.0, 380.0, -5.0, 5.0, -62.0, -52.0), (595.0, 630.0, -28.0, 28.0, 5.0, 30.0),
+                      (240.0, 331.5, -60.0, 60.0, -70.0, -54.0)]     # the grip seat (a butt joint: never rounded)
+# (W4b) joint faces never take the round (an unclamped round spikes past a joint plane: G5 / B3 / F8 in the first
+# chain): the butt's chassis joint, grip seat and the riser seat; the riser's underside and the skirts' inner faces
+BUTT_ROUND_FREE = [(238.0, 260.0, -60.0, 60.0, -200.0, 100.0), (216.0, 260.0, -60.0, 60.0, -200.0, -54.0),
+                   (55.0, 216.0, -60.0, 60.0, -19.5, 100.0)]
+RISER_ROUND_FREE = [(60.0, 216.0, -30.7, 30.7, -30.0, 0.5)]
+
+
 def chassis():
-    cen = clip(ring("chassis_centre", 1.3), x0=X_BUTT_JOINT + 0.02)
-    fore = G.offset(ring("chassis_forend", 1.3), 0.25)
+    cen = clip(fair(ring("chassis_centre", 0.5)), x0=X_BUTT_JOINT + 0.02)
+    fore = G.offset(fair(ring("chassis_forend", 0.5)) if FAIR_FORE else ring("chassis_forend", 1.3), 0.25)
     fore = clip(fore, x0=560.0)
-    guard = G.offset(ring("trigger_guard", 1.3), 0.25)   # UD1: 1.3 like the centre (0.8 left sub-width segments)
+    guard = G.offset(fair(ring("trigger_guard", 0.5)) if FAIR_GUARD else ring("trigger_guard", 1.3), 0.25)   # UD1: 1.3 like the centre (0.8 left sub-width segments)
     base = MS.prism(cen, -BIG / 4, BIG / 4)
     # (W4 review C2) the guard's bottom bar: the sheet draws a closed loop (the trace's opening Z -94.7..-62.8), but the
     # trace gave the bar to the chassis label and the guard ring stopped at two hooked arms. The bar spans the arms
@@ -237,7 +416,7 @@ def chassis():
     post = []
     # receiver inlet (butt 0.02), bolt raceway behind the receiver (r 12.5), barrel channel (>= 3.0 radial, U open)
     post += [xcyl(381.96, 567.34, 17.19, nseg=48), xcyl(250.0, 382.5, 12.5, nseg=40),
-            xcyl(566.0, 845.0, 20.6, nseg=48), MS.box(566.0, 845.0, -20.6, 20.6, 0.0, 40.0)]   # 1.34 into the inlet: no strip
+            xcyl(566.0, 845.0, CH_R, nseg=48), MS.box(566.0, 845.0, -CH_R, CH_R, 0.0, 40.0)]   # 1.34 into the inlet: no strip
     # bolt-stem relief (right) and the safety pocket (right tang)
     # (W3 Part 0, UD2: the relief's inner face at Y -10.2, not -10.5: -10.5 met the inlet's 48-gon 0.035 mm from a
     # facet vertex)
@@ -261,13 +440,21 @@ def chassis():
     for s in dims("chassis")["slots"]:
         cut.append(MS.prism(stadium(s["X"][0], s["X"][1], s["Z"][0], s["Z"][1]), -50.0, 50.0))
     b0, b1 = dims("chassis")["dovetail_band"]["X"]
+    flanks = []
     for sg in (1, -1):
-        cut.append(yz_prism(np.array([(sg * 45.0, -24.55), (sg * 37.5, -24.55), (sg * 30.9, -31.15), (sg * 30.9, -80.0),
+        flanks.append(yz_prism(np.array([(sg * 45.0, -24.55), (sg * 37.5, -24.55), (sg * 30.9, -31.15), (sg * 30.9, -80.0),
                                       (sg * 45.0, -80.0)])[::(1 if sg > 0 else -1)], b0, b1))
+    cut += flanks
     # fastener seats (counterbores the drawn heads sit in)
     post += [ycyl(389.6, -38.3, -40.0, -25.6, 4.0, 24)]
-    return Part("chassis", base, [("U", unions), ("I", [plan]), ("D", cut)], slot=SLOT_CHASSIS, recipe=RND1,
-                post=post, spec_id="chassis", weld_mm=0.016)
+    pt = Part("chassis", base, [("U", unions), ("I", [plan]), ("D", cut)], slot=SLOT_CHASSIS, recipe=RNDC,
+                post=post, spec_id="chassis", weld_mm=0.016, round_free=boxes_of(post) + boxes_of(flanks) + CHASSIS_ROUND_FREE,
+                # the mag / bolt walls (inlet, raceway, well, feed opening, clevis, catch window, release bore): the
+                # trigger pocket's top lip may take a <= 0.05 mm collapse (F9 / B3 trigger keep > 0.15 mm)
+                protect=boxes_of(post[:2] + post[6:11], 0.5))
+    pt.joint_slabs = [(244.0, 245.6, -60.0, 60.0, -200.0, 100.0), (240.0, 331.0, -60.0, 60.0, -56.5, -55.4),
+                      (330.0, 331.2, -60.0, 60.0, -200.0, -55.0)]
+    return pt
 
 
 # ------------------------------------------------------------------------------------------------ butt group
@@ -275,7 +462,7 @@ def butt():
     rr = rings("butt", 1.3, min_area=300.0)
     main = max(rr, key=lambda r: abs(G.area(r)))
     tower = [r for r in rr if r is not main]
-    P = clip(main, x0=68.92, x1=X_BUTT_JOINT - 0.02)
+    P = clip(fair(main), x0=68.92, x1=X_BUTT_JOINT - 0.02)
     base = MS.prism(P, -BIG / 4, BIG / 4)
     un = []
     plan = plan_prism(BUTT_HALF, x_ext=(60.0, 252.0))
@@ -286,7 +473,11 @@ def butt():
         cut.append(MS.cylinder((x, 0, -66.0), (x, 0, -16.0), 5.15, 32))
     cut.append(MS.cylinder((122.0, 31.0, -70.0), (122.0, 24.0, -70.0), 6.0, 32))      # QD cup (left)
     cut.append(MS.cylinder((122.0, 31.0, -70.0), (122.0, 21.0, -70.0), 3.2, 24))
-    return Part("butt", base, [("U", un), ("I", [plan]), ("D", cut)], slot=SLOT_CHASSIS, recipe=RND1)
+    pt = Part("butt", base, [("U", un), ("I", [plan]), ("D", cut)], slot=SLOT_CHASSIS, recipe=RNDC,
+              round_free=BUTT_ROUND_FREE, protect=[])
+    pt.joint_slabs = [(244.0, 245.6, -60.0, 60.0, -200.0, 100.0), (216.0, 246.0, -60.0, 60.0, -56.5, -55.4),
+                      (55.0, 216.0, -60.0, 60.0, -18.5, -16.0), (55.0, 70.0, -60.0, 60.0, -200.0, 100.0)]
+    return pt
 
 
 def butt_pad():
@@ -328,8 +519,11 @@ def cheek_riser():
         cut.append(yz_prism(np.array([(sg * 31.5, z1 + 1), (sg * 40.0, z1 + 1), (sg * 40.0, z1 - 7.5)])[::(1 if sg > 0 else -1)],
                             60.0, 190.0))
     mo = {"kind": "translate", "axis": [0, 0, 1], "range": list(d["travel_Z"])}
-    return Part("cheek_riser", base, [("U", skirts), ("D", cut)], bone="cheek_riser", slot=SLOT_CHASSIS, recipe=RND1,
-                jnt=joint("sliding", parent="butt"), motion=mo)
+    pt = Part("cheek_riser", base, [("U", skirts), ("D", cut)], bone="cheek_riser", slot=SLOT_CHASSIS, recipe=RNDC,
+              round_free=RISER_ROUND_FREE, protect=[], jnt=joint("sliding", parent="butt"), motion=mo)
+    pt.joint_slabs = [(60.0, 216.0, -40.0, 40.0, -18.0, -15.5), (60.0, 216.0, -30.3, 30.3, -30.0, 0.5),
+                      (60.0, 70.0, -40.0, 40.0, -30.0, 40.0)]
+    return pt
 
 
 def riser_posts():
@@ -518,10 +712,28 @@ def mag_release():
 def grip():
     P = G.ccw(G.dp_simplify(G.clean_smooth(ring("grip", 0.5), step=1.0, sigma_mm=1.5, corner_deg=50.0), 0.2))
     P = clip(P, x0=222.03, x1=X_GRIP_FRONT - 0.03, z1=Z_GRIP_SPLIT - 0.03)
-    base = MS.prism(P, -16.0, 16.0)
-    # flared base (+1.5 per side below Z -150), 1.5 deg draft taper toward the top front
-    un = [MS.prism(clip(P, z1=-150.0), -17.2, 17.2)]
-    return Part("grip", base, [("U", un)], cls="P-round", slot=SLOT_CHASSIS, recipe=POLY)
+    if not GRIP_SWELL:
+        base = MS.prism(P, -16.0, 16.0)
+        # flared base (+1.5 per side below Z -150), 1.5 deg draft taper toward the top front
+        un = [MS.prism(clip(P, z1=-150.0), -17.2, 17.2)]
+        return Part("grip", base, [("U", un)], cls="P-round", slot=SLOT_CHASSIS, recipe=POLY)
+    # (W4b, craft C4 / realism judges "a prism with a noise texture") a moulded grip: the side outline (the sheet's)
+    # extruded, then cut by a YZ lens whose half-width follows the hand: 14.6 at the tang, the palm swell 16.4 at Z -112,
+    # 15.6 at the waist above the flare, 17.2 at the flared base; the moulded edges a real 3.5 mm round (5 segments)
+    base = MS.prism(P, -17.6, 17.6)
+    zk = np.array([-40.0, -62.0, -88.0, -112.0, -136.0, -148.0, -172.0, -260.0])
+    hk = np.array([14.6, 14.6, 15.6, 16.4, 15.9, 15.6, 17.2, 17.2])
+    zz = np.linspace(-260.0, -40.0, 45)
+    hh = np.interp(zz, zk[::-1], hk[::-1])                  # (np.interp needs increasing knots)
+    hh = np.convolve(np.r_[[hh[0]] * 2, hh, [hh[-1]] * 2], np.ones(5) / 5.0, "valid")      # a fair curve, no kinks
+    lens = np.array([(h, z) for z, h in zip(zz, hh)] + [(-h, z) for z, h in zip(zz[::-1], hh[::-1])])
+    lens = G.ccw(lens)
+    pt = Part("grip", base, [("I", [yz_prism(lens, 200.0, 360.0)])], cls="P-round", slot=SLOT_CHASSIS,
+              recipe=[GRIP_RND], round_free=[(200.0, 360.0, -30.0, 30.0, Z_GRIP_SPLIT - 1.5, 0.0),
+                                                 (326.0, 340.0, -30.0, 30.0, -125.0, -50.0)], protect=[])   # top + guard joint
+    pt.round_skip_y = True
+    pt.joint_slabs = [(200.0, 360.0, -30.0, 30.0, -56.6, -55.4), (329.8, 331.0, -30.0, 30.0, -200.0, -50.0)]
+    return pt
 
 
 def barrel():

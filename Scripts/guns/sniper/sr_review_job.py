@@ -447,6 +447,62 @@ def extra_lights(cam, L):
         ob.visible_camera = False
 
 
+# ------------------------------------------------------------------------------------------------ floor + lens (W4b)
+FLOOR = {}
+
+
+def floor(shot, objs):
+    """(SR01 W4b, both realism judges: "floats in a grey void, no contact shadow") an optional tabletop: a 40 m plane
+    under the lowest point of the visible meshes (posed), a neutral satin grey, so the gun casts and receives real
+    contact shadows. shot["floor"] = {"rgb": [r, g, b] sRGB, "rough": 0.55, "drop_mm": 0.3} or absent."""
+    F = shot.get("floor")
+    if "ob" in FLOOR:
+        FLOOR["ob"].hide_render = True
+    if not F:
+        return None
+    dg = bpy.context.evaluated_depsgraph_get()
+    zmin = 1e9
+    for o in objs:
+        if o.hide_render or o.type != "MESH":
+            continue
+        ev = o.evaluated_get(dg)
+        me = ev.to_mesh()
+        M = o.matrix_world
+        for v in me.vertices:
+            zmin = min(zmin, (M @ v.co).z)
+        ev.to_mesh_clear()
+    if "ob" not in FLOOR:
+        me = bpy.data.meshes.new("ER_Floor")
+        h = 20.0
+        me.from_pydata([(-h, -h, 0), (h, -h, 0), (h, h, 0), (-h, h, 0)], [], [(0, 1, 2, 3)])
+        ob = bpy.data.objects.new("ER_Floor", me)
+        sc.collection.objects.link(ob)
+        mat = bpy.data.materials.new("ER_Floor")
+        mat.use_nodes = True
+        ob.data.materials.append(mat)
+        FLOOR["ob"], FLOOR["mat"] = ob, mat
+    ob, mat = FLOOR["ob"], FLOOR["mat"]
+    bsdf = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    bsdf.inputs["Base Color"].default_value = (*RD.srgb_to_lin(tuple(F.get("rgb", (118, 118, 116)))), 1.0)
+    bsdf.inputs["Roughness"].default_value = float(F.get("rough", 0.55))
+    ob.location = (0.0, 0.0, zmin - float(F.get("drop_mm", 0.3)) / 1000.0)
+    ob.hide_render = False
+    return round(float(zmin) * 1000.0 + float(OFF[2]), 2)
+
+
+def lens_dof(cam, shot):
+    """(SR01 W4b, realism judge: "no depth of field despite the 35 cm close-up") shot["dof"] = {"fstop": 4.0} focuses
+    on the shot's camera target (frame M) through a real aperture; absent = pinhole."""
+    D = shot.get("dof")
+    cam.data.dof.use_dof = bool(D)
+    if not D:
+        return
+    c = shot["camera"]
+    t = B(D.get("focus_M", c.get("target_M", (0, 0, 0))))
+    cam.data.dof.focus_distance = float((Vector(cam.matrix_world.translation) - t).length)
+    cam.data.dof.aperture_fstop = float(D.get("fstop", 4.0))
+
+
 # ------------------------------------------------------------------------------------------------ shots
 def main():
     RD.engine(sc, "CYCLES", int(JOB.get("samples", 128)))
@@ -489,12 +545,14 @@ def main():
             cam.data.clip_end = float(shot["clip_end_m"])
         bpy.context.view_layer.update()
         lights(cam, shot["lights"])
+        fz = floor(shot, [m for _a, m in GUN] + list(MAG.values()) + list(SCOPE.values()))
+        lens_dof(cam, shot)
         transparent = bool(shot.get("transparent", False))
         Path(shot["out"]).parent.mkdir(parents=True, exist_ok=True)
         RD.still(sc, shot["out"], transparent)
         rec = {"name": shot["name"], "out": shot["out"], "res": [sc.render.resolution_x, sc.render.resolution_y],
                "lod": lod, "mesh": gmesh.name if "gun" in show else None, "mag": mag.name if "mag" in show else None,
-               "bones_M_mm": {}}
+               "bones_M_mm": {}, "floor_z_M_mm": fz}
         for bn in ("bolt", "selector", JOB["mag_bone"]):
             if bn in arm.pose.bones:
                 loc, _r = bone_world(arm, bn)

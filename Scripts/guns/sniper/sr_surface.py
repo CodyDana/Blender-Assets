@@ -141,9 +141,11 @@ FIN = {
     # polished bolt body + lugs (bare steel, spec bare_steel_polished): linear 0.53-0.56, rough 0.15-0.30
     # (W2 look) 0.16-0.26 read as mirror chrome under the studio rig: a honed satin bolt, 0.24-0.36
     # (W4 review C8) satin, not plated: both judges read the 0.24-0.36 polish as mirror chrome
-    "bolt_polish": {"metal": 1, "lin": (0.42, 0.46), "rough": (0.32, 0.44)},
+    # (W4b) still chrome at 0.32-0.44 under the strip lights (both judges): a bead-blasted satin steel, lathe bands
+    "bolt_polish": {"metal": 1, "lin": (0.36, 0.40), "rough": (0.48, 0.60)},
     # polished inner legs (hard chrome-like steel)
-    "leg_polish": {"metal": 1, "lin": (0.52, 0.56), "rough": (0.24, 0.34)},
+    # (W4b) "shiny chrome bands that look pasted": a satin hard-chrome
+    "leg_polish": {"metal": 1, "lin": (0.46, 0.50), "rough": (0.38, 0.48)},
     # polymer grip (black, satin moulded skin with its own panel texture)
     "polymer": {"metal": 0, "srgb": (44, 44, 46), "rough": (0.56, 0.66), "rough_hand": 0.46},
     # rubber (pad, feet): soft matte, a hair lighter and bluer than the polymer, very rough
@@ -152,7 +154,10 @@ FIN = {
     # (fix round) a deeper gloss-black anodize (the scope's own sheen, not the rail's satin)
     # (W4 review C1) matte type III anodize (study 0.45-0.65): at 0.24-0.34 the tube read as polished chrome
     "scope_anod": {"metal": 0, "srgb": (30, 30, 33), "rough": (0.46, 0.56), "wear_srgb": (170, 172, 176)},
-    "lens": {"metal": 0, "srgb": (18, 16, 30), "rough": (0.03, 0.05)},          # a coated (violet) glossy black
+    # (W4b) multi-coated glass in the opaque-glossy slot (Q6): a green-black centre, a violet / amber coating ring, a
+    # convex normal (the environment curves across it like a real objective)
+    "lens": {"metal": 0, "srgb": (28, 34, 31), "rough": (0.02, 0.04), "coat_srgb": ((44, 32, 56), (50, 42, 28)),
+             "convex_R_mm": 70.0},
     "soot": {"metal": 0, "lin": 0.0130, "rough": (0.85, 0.95)},
     "grime": {"metal": 0, "srgb": (36, 35, 33), "rough": 0.85},
 }
@@ -194,11 +199,14 @@ CHIP_ZONES = [
     {"what": "butt heel and the pad plate corners", "center_M": (70.0, 0.0, 10.0), "radius": 30.0, "w": 0.75},
     {"what": "trigger guard bottom", "center_M": (370.0, 0.0, -100.0), "radius": 30.0, "w": 0.8},
     {"what": "tang / action-bed rear under the thumb", "center_M": (300.0, 0.0, -10.0), "radius": 24.0, "w": 0.6},
-    {"what": "comb edges (cheek weld, riser in and out)", "center_M": (130.0, 0.0, 31.0), "radius": 55.0, "w": 0.5},
+    {"what": "comb / riser top edges (cheek weld, riser in and out)", "center_M": (125.0, 0.0, 31.0), "radius": 60.0,
+     "w": 0.8},
+    {"what": "grip area of the chassis (tang sides, grip seat, the thumb)", "center_M": (300.0, 0.0, -50.0),
+     "radius": 32.0, "w": 0.75},
     {"what": "bolt-knob side of the action bed (the knob strikes it)", "center_M": (370.0, -30.0, -12.0),
      "radius": 22.0, "w": 0.7, "side": -1},
 ]
-CHIP_BASE = 0.18              # outside the zones: rare tiny chips on the sharpest exposed edges only
+CHIP_BASE = 0.04              # (W4b: wear only where it is caused) outside the zones: rare tiny chips on the sharpest exposed edges only
 POLISH = [                    # paint / polymer burnished smooth where hands slide (roughness down, no colour step)
     {"what": "grip (firing hand)", "center_M": (300.0, 0.0, -110.0), "radius": 50.0, "w": 0.9},
     {"what": "forend sides (support hand)", "center_M": (650.0, 0.0, -15.0), "radius": 70.0, "w": 0.55},
@@ -225,7 +233,13 @@ ANOD_WEAR = [                 # anodize worn to bright aluminium (rare: rail edg
 SOOT = [{"what": "muzzle device exit and baffle", "center_M": (1095.0, 0.0, 0.0), "radius": 16.0, "w": 1.0},
         {"what": "bore mouth", "center_M": (1052.0, 0.0, 0.0), "radius": 8.0, "w": 0.9}]
 # grip texture panel (own polymer texture: a fine raised pyramid / pebble on the sides below the tang)
-GRIP_PANEL = {"z": (-150.0, -70.0), "abs_ny_min": 0.6, "pitch": 0.9, "height": (0.08, 0.13)}
+GRIP_PANEL = {"z": (-150.0, -70.0), "abs_ny_min": 0.6, "pitch": 0.9, "height": (0.08, 0.13),
+              "stipple_cell": 0.75, "stipple_depth": (0.10, 0.16)}       # (W4b) a hot-iron stipple, not pyramids
+# (W4b) socket heads: hex recess across flats as a fraction of the head diameter (ISO 4762: 3 / 7 on M4)
+HEX = {"parts": ("fasteners", "rail_screws"), "af_frac": 0.43, "depth_mm": 0.35}
+# (W4b) generic turret markings (numbers / ticks only): clicks per turn, a long tick every 5th, numerals at long ticks
+TURRET_MARKS = {"scope_turret_elev": {"ticks": 40, "numbers": True}, "scope_turret_wind": {"ticks": 40, "numbers": True},
+                "scope_focus": {"ticks": 24, "numbers": False}}
 # generic markings allowed (user 2026-10-13): S / F at the safety, rail slot numbers; never a maker / model / serial
 # W3 Part 0: the S / F stamp sits on the visible outer face (Y -27) just under the safety pocket (pocket Z -22.5..1.0,
 # floor at Y -17); at Z -8 it fell inside the pocket and painted 0 texels

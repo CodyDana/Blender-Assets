@@ -1,0 +1,104 @@
+{
+  "judge": "realism_B",
+  "images": {
+    "hero_34": {
+      "verdict": "fake",
+      "confidence": 90,
+      "tells": [
+        "Chassis coating is a flat uniform olive with a fine procedural noise; no edge wear, handling polish, scuffs or dust anywhere",
+        "Hard edges on chassis are near-sharp with tiny uniform bevels; real machined/anodised aluminium shows slightly broken and polished edges",
+        "Objective lens shows a single clean specular streak and no coating tint (no green/magenta multicoat reflections), no visible internal lens elements",
+        "Scope tube and rings are uniform matte black with identical roughness; no anodise variation or ring-to-tube seams with clamp gaps",
+        "Bolt-handle knob is a perfect smooth sphere with no knurling or texture; bolt body chrome looks like a clean mirror cylinder",
+        "Floor shadow shows faint rectangular blotchy artifacts (denoiser/low-sample patches) at lower left",
+        "Missing small hardware: few screws, no markings, no serials, no witness marks; pistol grip texture is a pasted stipple on simple planes",
+        "Pure grey cyclorama studio with soft even fill reads as a default render scene"
+      ]
+    },
+    "deployed_34": {
+      "verdict": "fake",
+      "confidence": 92,
+      "tells": [
+        "Background cyc has a hard horizon line and blotchy rectangular shadow patches on the floor (render/denoise artifacts)",
+        "Bipod legs stand on the floor but cast almost no contact shadow; feet look floating",
+        "Stock/cheek piece are blocky primitive volumes with a uniform noise coat; buttpad shows no rubber texture or compression",
+        "Magazine is a plain black box with grooves, no follower/feed lips seen, no wear on baseplate",
+        "Chassis colour is perfectly uniform across all faces, no wear on high-contact areas (grip, forend underside, cheek riser)",
+        "Bipod leg extensions show a chrome band that looks like a clean CG shader, rubber feet are simple cylinders"
+      ]
+    },
+    "fp_35cm": {
+      "verdict": "fake",
+      "confidence": 85,
+      "tells": [
+        "Depth of field is plausible but the in-focus area shows no surface microdetail: perfectly clean anodising, no fingerprints or oil on bolt",
+        "Bolt body is a mirror chrome with a single clean highlight band; real bolts show machining marks, jeweling or bluing, oil films",
+        "Bolt knob is a smooth untextured sphere; real precision rifles typically have a tactical knurled or textured knob",
+        "Chassis edges near the action are crisp CG planes; no machining tool marks, no anodise colour shift on edges",
+        "Elevation turret numbers are clean but tiny and uniform; no engraving depth, no paint fill imperfections"
+      ]
+    },
+    "ads_eyepiece": {
+      "verdict": "fake",
+      "confidence": 80,
+      "tells": [
+        "Eyepiece shows only a blurred black disc with a single round grey highlight; no reticle, no exit-pupil image, no coating colours",
+        "Heavy uniform Gaussian-like blur plus synthetic grain over the whole frame looks like a render with added noise",
+        "Background is a plain grey cyc horizon with no real-world content through or around the scope",
+        "Highlight is a perfect disc (area-light reflection) rather than a real-world light source shape"
+      ]
+    },
+    "tp_3m": {
+      "verdict": "fake",
+      "confidence": 95,
+      "tells": [
+        "Two big soft hot-spots on the cyc floor are classic CG area lights rendered as perfect lobes",
+        "Visible rectangular blotchy patches in the floor shadow/reflection (denoiser or low-sample artifacts)",
+        "Rifle shadow is extremely weak/diffuse for this light set-up; the rifle looks like it floats",
+        "Whole object is uniformly clean with flat colour blocks at this distance, reading like a game asset preview"
+      ]
+    },
+    "close_forend_right": {
+      "verdict": "fake",
+      "confidence": 98,
+      "tells": [
+        "Orthographic flat view with flat even lighting and plain grey background: reads as a viewport/render, not a photo",
+        "Forend front end has a jagged zig-zag notch geometry (looks like a boolean/mesh error), and there is a stray sawtooth at the top-left of the chassis",
+        "Chassis lower edge has a discontinuous step where the bipod rail meets it; geometry does not look like a machined part",
+        "Surfaces are completely flat-shaded with no texture, no anodise grain, no wear",
+        "Bipod parts are simple primitives (cylinders, boxes) with no screws threads, springs or knurling detail",
+        "M-LOK-style slots have a soft bevel but no internal depth realism; inside is pure black"
+      ]
+    },
+    "close_mag_well": {
+      "verdict": "fake",
+      "confidence": 95,
+      "tells": [
+        "Magazine is a perfectly clean flat black slab with two shallow vertical grooves; no seams, no text, no scuffs on baseplate",
+        "Mag release lever shows thin stair-stepped geometry and a fuzzy edge that looks like a mesh intersection",
+        "Trigger guard is a flat extruded 2D outline with no edge rounding",
+        "Bottom of chassis has a wavy/irregular outline at right that looks like a geometry artifact",
+        "Hex screw is the only hardware and is too pristine; no witness mark or Loctite"
+      ]
+    },
+    "eyepiece_view": {
+      "verdict": "fake",
+      "confidence": 80,
+      "tells": [
+        "Same as the ADS view: featureless black disc with one round highlight, no reticle, no eyebox shading or chromatic fringing",
+        "Blur is too uniform and smooth, typical of a CG DOF pass; no real optical vignetting edge or eye-relief shadow ring",
+        "Background is a CG grey cyc with a hard horizon band"
+      ]
+    }
+  },
+  "overall": "fake",
+  "priorities": [
+    "Add a real surface-wear layer: edge wear on chassis corners, polished/handled areas (grip, bolt knob, cheek riser, forend underside), dust in recesses, fingerprints/oil on bolt and scope; break the uniform olive with anodise/Cerakote tone variation and roughness variation",
+    "Fix geometry artifacts: the jagged zig-zag at the forend nose, the sawtooth at the top-left of the forend, the stepped bottom edge near the bipod rail, and the wavy chassis edge/thin mag release in the mag-well view",
+    "Make the scope optics believable: multicoated lens tint (green/magenta/amber reflections), visible internal lens elements, and an actual reticle plus exit-pupil image in the eyepiece views instead of a black disc",
+    "Replace the default grey cyc + twin area-light hotspots with an HDRI or real-world environment, and fix floor contact shadows (bipod feet, magazine) and the blotchy rectangular denoiser patches on the floor",
+    "Increase small-hardware and texture density: knurled/textured bolt knob, machined bolt surface (jeweling or tool marks), more screws, pins and roll pins, engraved and paint-filled markings/serial (generic), rubber texture on buttpad and bipod feet, spring/thread detail on bipod",
+    "Soften hard edges with consistent realistic bevels (0.3-1 mm) on all machined parts and rounded mould edges on polymer parts (trigger guard, mag, grip)",
+    "Render with a real camera look: slight lens distortion, natural chromatic aberration, sensor noise matched to exposure, and avoid perfectly orthographic flat views for realism shots"
+  ]
+}

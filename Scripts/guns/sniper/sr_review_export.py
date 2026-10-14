@@ -6,6 +6,7 @@ build blend. The SMG's smg_review_export.py is the template (SMG W4: studio rig 
 composited on the panel's own fitted backdrop at the panel's native px).
 
     py -3 -B Scripts/guns/sniper/sr_review_export.py [--tag w4] [--samples 128] [--no-render] [--only set,realism,blind]
+                                                     [--table]   (W4b: floor + depth of field on the perspective views)
 
 (a) review/<tag>/set/: right / left / top (ortho, 1x = 2560 px over 1100 mm), q34, deployed hero, bolt open (f14),
     scope close + eyepiece view, FP ~35 cm on the action, close-ups 3x (action right / left, forend + bipod, butt,
@@ -75,6 +76,13 @@ def side(xc, zc, w_mm, res, from_left=False):
     return look((xc, y, zc), (xc, 0.0, zc), res=res, ortho=w_mm)
 
 
+# (W4b, both realism judges: a floor with contact shadows; realism A: depth of field at 35 cm) --table puts the
+# perspective views on a neutral satin tabletop under the lowest posed point and gives the close views a real
+# aperture (f/4 at 35 cm, f/8 at the hero distances)
+TABLE = False
+FLOOR = {"rgb": [118, 118, 116], "rough": 0.55, "drop_mm": 0.3}
+DOF = {"fp_35cm": 4.0, "ads_eyepiece": 4.0, "fp_action": 4.0, "scope_close": 5.6, "eyepiece_view": 4.0,
+       "tp_3m": 11.0, "hero_34": 8.0, "deployed_34": 8.0, "q34": 8.0, "deployed_hero": 8.0, "bolt_open": 5.6}
 BOLT_BACK = {"clip": "A_SR01_BoltCycle", "frame": 14}
 DEPLOYED = {"clip": "A_SR01_BipodDeploy", "frame": 36}
 ALL = ["gun", "mag", "scope"]
@@ -101,6 +109,10 @@ def set_shots(out):
         name, cam = row[0], row[1]
         pose = row[2] if len(row) > 2 else None
         sh = {"name": f"set_{name}", "out": str(out / f"{name}.png"), "camera": cam, "show": ALL, "lights": lit(cam)}
+        if TABLE and "fov_deg" in cam:                       # the perspective views stand on the table
+            sh["floor"] = dict(FLOOR)
+            if name in DOF:
+                sh["dof"] = {"fstop": DOF[name]}
         if pose:
             sh["pose"] = pose
         shots.append(sh)
@@ -122,6 +134,9 @@ def realism_shots(out):
     for row in R:
         sh = {"name": f"realism_{row[0]}", "out": str(out / f"{row[0]}.png"), "camera": row[1], "show": ALL,
               "lights": lit(row[1]), "samples": 512, "denoise": False}     # SMG W4b: the denoiser reads as plastic
+        if TABLE:
+            sh["floor"] = dict(FLOOR)
+            sh["dof"] = {"fstop": DOF.get(row[0], 8.0)}
         if len(row) > 2:
             sh["pose"] = row[2]
         shots.append(sh)
@@ -244,7 +259,10 @@ def main():
     ap.add_argument("--samples", type=int, default=128)
     ap.add_argument("--no-render", action="store_true")
     ap.add_argument("--only", default="set,realism,blind")
+    ap.add_argument("--table", action="store_true")
     a = ap.parse_args()
+    global TABLE
+    TABLE = a.table
     only = set(a.only.split(","))
     R = WORK / "review" / a.tag
     jobd = WORK / "scratch" / "w4" / "review_job"

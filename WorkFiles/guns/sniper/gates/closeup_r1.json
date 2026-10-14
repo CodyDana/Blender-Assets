@@ -1,0 +1,306 @@
+{
+ "stage": "W4b close-up realism round 1",
+ "date": "2026-10-13T23:28:39",
+ "status": "fail",
+ "failed": [
+  "K1 chassis-slot edges: hard creases (> 60 deg) on SK_SR01 LOD0, after / before; the rounds shaded smooth",
+  "K2 bolt body roughness (not chrome): P50 and P5 (the mirror streaks come from the smooth tail)",
+  "K3 OD Cerakote: orange peel in the normal map (texels tilted > 1 deg); edge rub only where caused; chips",
+  "K4 no bare metal on small parts (pins, screws, safety, trigger, release)",
+  "K8 sparkle: isolated hot pixels (<= 3 px at >= 235)"
+ ],
+ "gates": [
+  {
+   "name": "K1 chassis-slot edges: hard creases (> 60 deg) on SK_SR01 LOD0, after / before; the rounds shaded smooth",
+   "value": {
+    "before": {
+     "mesh": "SK_SR01",
+     "faces_chassis_slot": 15374,
+     "hard_crease_mm": 15921.3,
+     "round_segment_mm": 38704.6,
+     "round_to_hard": 2.431,
+     "round_smooth_fraction": 0.946
+    },
+    "after": {
+     "mesh": "SK_SR01",
+     "faces_chassis_slot": 21612,
+     "hard_crease_mm": 14882.7,
+     "round_segment_mm": 58473.6,
+     "round_to_hard": 3.929,
+     "round_smooth_fraction": 0.934
+    },
+    "hard_ratio": 0.935
+   },
+   "threshold": "hard after <= 0.5 x before; round_smooth_fraction >= 0.9",
+   "pass": false,
+   "note": ""
+  },
+  {
+   "name": "K2 bolt body roughness (not chrome): P50 and P5 (the mirror streaks come from the smooth tail)",
+   "value": {
+    "before_p50": 0.49,
+    "after_p50": 0.612,
+    "before_p5_p95": [
+     0.349,
+     0.882
+    ],
+    "after_p5_p95": [
+     0.392,
+     0.882
+    ]
+   },
+   "threshold": "P50 >= before + 0.05; P5 >= 0.45",
+   "pass": false,
+   "note": ""
+  },
+  {
+   "name": "K3 OD Cerakote: orange peel in the normal map (texels tilted > 1 deg); edge rub only where caused; chips",
+   "value": {
+    "tilt_before": 0.3075,
+    "tilt_after": 0.435,
+    "rub_gt_0.3_before": 121267,
+    "rub_gt_0.3_after": 10757,
+    "chips_after": 1216,
+    "bare_al_after": 1,
+    "od_rough_p5_p50_p95": [
+     0.558,
+     0.623,
+     0.765
+    ]
+   },
+   "threshold": "tilt after >= 2 x before; rub after <= 0.5 x before; chips > 0",
+   "pass": false,
+   "note": ""
+  },
+  {
+   "name": "K4 no bare metal on small parts (pins, screws, safety, trigger, release)",
+   "value": 13254,
+   "threshold": "== 0",
+   "pass": false,
+   "note": "before 19717"
+  },
+  {
+   "name": "K5 scope: anodize roughness P50, turret markings, coated lens",
+   "value": {
+    "anod_rough_p50": 0.6,
+    "turret_mark_texels": 2795,
+    "lens_bc_std_srgb_before": 17.16,
+    "lens_bc_std_srgb_after": 19.42,
+    "lens_bc_mean_srgb": [
+     23.6,
+     21.0,
+     24.8
+    ],
+    "lens_convex_tilt_before": 0.0,
+    "lens_convex_tilt_after": 0.9678
+   },
+   "threshold": "rough >= 0.45; marks > 0; the lens convex (> 0.5 of its texels tilted > 1 deg)",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "K6 hardware + grip: hex sockets painted, grip stipple painted",
+   "value": {
+    "hex_sockets": 66,
+    "grip_panel_texels": 401903
+   },
+   "threshold": "> 0 each",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "K7 review rig: every realism view on the table; a real aperture on the close views",
+   "value": {
+    "realism_fp_35cm": {
+     "floor_z_M_mm": -166.28,
+     "fstop": 4.0
+    },
+    "realism_ads_eyepiece": {
+     "floor_z_M_mm": -166.28,
+     "fstop": 4.0
+    },
+    "realism_tp_3m": {
+     "floor_z_M_mm": -166.28,
+     "fstop": 11.0
+    },
+    "realism_hero_34": {
+     "floor_z_M_mm": -166.28,
+     "fstop": 8.0
+    },
+    "realism_deployed_34": {
+     "floor_z_M_mm": -303.88,
+     "fstop": 8.0
+    }
+   },
+   "threshold": "floor on all; DoF on fp_35cm / ads_eyepiece",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "K8 sparkle: isolated hot pixels (<= 3 px at >= 235)",
+   "value": {
+    "fp_35cm": 6,
+    "ads_eyepiece": 0
+   },
+   "threshold": "<= 5 each",
+   "pass": false,
+   "note": ""
+  },
+  {
+   "name": "K9 every stage gate of the rebuilt chain at W4's status",
+   "value": {
+    "form": {
+     "status": "partial",
+     "failed": [
+      "L2 GL IoU (scope stand-in)",
+      "L2 TOP IoU raw / declared fit",
+      "L2 per part on GR (IoU >= 0.95)",
+      "L3 GR contour P95 (sheet px)",
+      "L4 key dimensions (<= 0.05 mm)"
+     ]
+    },
+    "uv_bake_paint": {
+     "status": "partial",
+     "failed": [
+      "gun: B9 density Metal class C (px/cm P5 / median / P95)",
+      "scope: B9 density Scope_Body class C (px/cm P5 / median / P95)"
+     ]
+    },
+    "game": {
+     "status": "pass",
+     "failed": []
+    },
+    "game_lod_sizes": {
+     "pass": null,
+     "screen_sizes": null
+    },
+    "rig_export": {
+     "status": "pass",
+     "failed": []
+    },
+    "mag": {
+     "status": "pass",
+     "failed": []
+    },
+    "scope_form": {
+     "status": "pass",
+     "failed": []
+    },
+    "scope_export": {
+     "status": "pass",
+     "failed": []
+    }
+   },
+   "threshold": "form: only the W1-open L2/L3/L4 items; uv_bake_paint: the known B9 near-misses; the rest PASS",
+   "pass": true,
+   "note": "uv_bake_paint judged by its failed list in the report"
+  },
+  {
+   "name": "K10 side-view gates not worse than W4",
+   "value": {
+    "w4": {
+     "GR": 0.9603,
+     "GL": [
+      0.9434,
+      0.9513
+     ],
+     "TOP": [
+      0.8373,
+      0.9015
+     ],
+     "L3": 3.0,
+     "parts": "2 / 19"
+    },
+    "w4b": {
+     "GR": 0.9602,
+     "GL": [
+      0.9426,
+      0.9505
+     ],
+     "TOP": [
+      0.8375,
+      0.902
+     ],
+     "L3": 3.0,
+     "parts": "2 / 19"
+    }
+   },
+   "threshold": "IoU within 0.001, L3 not higher",
+   "pass": true,
+   "note": "the moulded grip's round moves GL by a few sheet px (declared)"
+  },
+  {
+   "name": "K11 the close set is complete (set + realism)",
+   "value": {
+    "images": 22,
+    "shots_in_job": 22
+   },
+   "threshold": "== every shot",
+   "pass": true,
+   "note": ""
+  }
+ ],
+ "before_maps": {
+  "bolt_rough_p50": 0.49,
+  "bolt_rough_p5_p95": [
+   0.349,
+   0.882
+  ],
+  "small_parts_metal_texels": 19717,
+  "od_rough_p5_p50_p95": [
+   0.564,
+   0.622,
+   0.727
+  ],
+  "od_normal_tilt_gt_1deg": 0.3075,
+  "od_info": {
+   "chip_texels": 1994,
+   "bare_al_texels": 129,
+   "chip_fraction": 0.00024,
+   "rub_texels_gt_0.3": 121267
+  },
+  "grip_panel_texels": 360285,
+  "hex_sockets": 0,
+  "scope_anod_rough_p50": 0.6,
+  "turret_mark_texels": 0,
+  "lens_bc_std_srgb": 17.16,
+  "lens_bc_mean_srgb": [
+   17.9,
+   16.7,
+   28.1
+  ],
+  "lens_normal_tilt_gt_1deg": 0.0
+ },
+ "after_maps": {
+  "bolt_rough_p50": 0.612,
+  "bolt_rough_p5_p95": [
+   0.392,
+   0.882
+  ],
+  "small_parts_metal_texels": 13254,
+  "od_rough_p5_p50_p95": [
+   0.558,
+   0.623,
+   0.765
+  ],
+  "od_normal_tilt_gt_1deg": 0.435,
+  "od_info": {
+   "chip_texels": 1216,
+   "bare_al_texels": 1,
+   "chip_fraction": 0.00015,
+   "rub_texels_gt_0.3": 10757
+  },
+  "grip_panel_texels": 401903,
+  "hex_sockets": 66,
+  "scope_anod_rough_p50": 0.6,
+  "turret_mark_texels": 2795,
+  "lens_bc_std_srgb": 19.42,
+  "lens_bc_mean_srgb": [
+   23.6,
+   21.0,
+   24.8
+  ],
+  "lens_normal_tilt_gt_1deg": 0.9678
+ },
+ "judges": "review/w4b/judges/realism_A.json, realism_B.json (reported, not gated)"
+}
