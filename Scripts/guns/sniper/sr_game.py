@@ -309,6 +309,7 @@ def main():
             if lay.name not in ("UV0", "UV1"):
                 ob.data.uv_layers.remove(lay)
         ob.data.uv_layers.active = ob.data.uv_layers["UV0"]
+        rep.setdefault("uv1_half_snap", {})[f"LOD{lv}"] = LL.half_uv1(ob)     # W5 U8: UV1 = what Unreal stores
         tris = tris_of(ob)
         mi = np.empty(len(ob.data.polygons), np.int32)
         ob.data.polygons.foreach_get("material_index", mi)

@@ -157,6 +157,7 @@ def main():
             from gunlib import bl as _bl
             _bl.clean(ob, dist_m=1e-6)
             rep.setdefault("coincident_faces_removed", {})[f"LOD{lv}"] = LL.drop_coincident_pairs(ob)
+        rep.setdefault("uv1_half_snap", {})[f"LOD{lv}"] = LL.half_uv1(ob)     # W5 U8: UV1 = what Unreal stores
         V = np.empty(len(ob.data.vertices) * 3)
         ob.data.vertices.foreach_get("co", V)
         V = V.reshape(-1, 3) - origin_B * 0.001                      # origin = Mag / Mount

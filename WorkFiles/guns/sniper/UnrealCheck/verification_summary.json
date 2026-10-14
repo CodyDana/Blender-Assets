@@ -1,0 +1,1919 @@
+{
+ "stage": "W5 Unreal (UE 5.8, SR01_BUILD_PLAN W5 + GUN_BUILDING_STUDY 6 / 7.4)",
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "content_path": "/Game/GunCheck/SR01_1014a",
+ "project": "WorkFiles/shuriken/UnrealShuriken/ShurikenValidation.uproject (the katana / AR-01 verification project, main checkout)",
+ "passes": {
+  "A import": "srA_import.py (-nullrhi)",
+  "A3 ABP": "srA3_abp.py (-nullrhi, -EnablePlugins=AllToolsets)",
+  "A2 check level": "srA2_level.py (-nullrhi)",
+  "B read-back": "srB_verify.py (-nullrhi)",
+  "C render + U2b": "srC_render.py (D3D12, -RenderOffscreen)",
+  "E game world": "srE_game.py (-game, D3D12, -RenderOffscreen)",
+  "D analysis": "srD_analyse.py (Blender)",
+  "F summary": "srF_summary.py"
+ },
+ "status": "fail",
+ "engine_verified": false,
+ "failed": [
+  "U6 reload clips in engine: the magazine on the posed SR01 (catch posed by the clip) at every runtime frame (LOD0)",
+  "U8 the authored UV1 as Unreal exports it: inside 0..1, 0 overlapping pixels at 64 and 128 px (UD4's resolutions); 1024 px reported beside the shipped FBX's",
+  "C2 every LOD0 surface sample (300k + every vertex) of the read-back geometry inside the stored hulls"
+ ],
+ "issues": [
+  "U2b: nodes on sniper-only bones (cheek_riser; the bipod bones the same way) compile with a 'bone not found' warning because the class ABP is authored on the AR-01 pilot skeleton (as the SMG's stock node did); no runtime error. The bolt's roll node needs NO Invert Rotator (about X the Blender and Unreal numbers agree; about Y / Z they flip). The game's DemoGame_1_Guns ABP_Gun_LongGun has neither the table nor a bolt-rotation input yet (prototype work, not done here).",
+  "U4: 'owner sees no TP component' is not measured (needs the weapon Blueprint on a possessed pawn: game-side, as on the AR-01).",
+  "scope UV1 (reported, not a plan U8 item): {\"SM_Att_Scope_LongRange_LOD0\": {\"layers\": [\"UVmap_0\", \"LightMapUV\"], \"overlap_px_64\": 0, \"overlap_px_128\": 0}, \"SM_Att_Scope_LongRange_LOD1\": {\"layers\": [\"UVmap_0\", \"LightMapUV\"], \"overlap_px_64\": 0, \"overlap_px_128\": 0}, \"SM_Att_Scope_LongRange_LOD2\": {\"layers\": [\"UVmap_0\", \"LightMapUV\"], \"overlap_px_64\": 0, \"overlap_px_128\": 0}}",
+  "U11 not run: no player MetaHuman in the verification project (H1 full passed in Blender; gun.hand_offset carries it).",
+  "scope view: renders/look_scope_view_reticle.png (generic duplex + mil dots drawn afterwards; 1 mil = 15.3 px at 10 m; the bore's 10 m point should sit 88 px under the cross)"
+ ],
+ "findings": [],
+ "sha256": {
+  "A_SR01_BipodDeploy.fbx": "23daf7277233447c9575f3325e83fa98e1c60667bce12e149024d35a1cbdfda2",
+  "A_SR01_BipodStow.fbx": "da97a6baff07670f66c5008cac9f98d2300879416d3a36fa90195989d9a8ba95",
+  "A_SR01_BoltCycle.fbx": "893f91b688a443d2d2ba652e1f62a8eb7b8442672a6f469e55830d42b8afd22d",
+  "A_SR01_CheekRiser.fbx": "6fd0ce14ae747053ed43beb7192b006bf01e122f9ad7f5650d89514c81615ab3",
+  "A_SR01_Fire.fbx": "7f8d6c99c2732a3245f864ba685f9926e4c1896a4775413f03aa881d2b6b4c8c",
+  "A_SR01_Reload.fbx": "586ea8b02ba30c575141161a2ecab5e2cc2d91bfbe4f1e4a390b84e16c535f56",
+  "A_SR01_ReloadEmpty.fbx": "d4f0b98552eefd4be4ce57b211e9b7ae659673410d18a9fb011724fc5e136e00",
+  "A_SR01_Selector.fbx": "8998961ac5d25407ec5f49d05e8afb3d6c99e272d36ba0b412bdde5f475ec249",
+  "Physics/SK_SR01_PhysicsProxy.fbx": "3df6175573accfdb44a4b5baa54a4d14f117d858b540c2efa05681ee2d35a67d",
+  "README.md": "f06f7acdd6794195a6ed5f717514006f5f980bc7b6048ac72bce14a11bbcb6d8",
+  "SK_SR01.fbx": "5a0688344ea9aac63521ebe302f218d6ded29209aa916126c38b305a4781f138",
+  "SK_SR01.skeletal.json": "26c75f451d2961a4c84dc988a9507eccfaf8bb3f87eb88a0bf5da85f12635392",
+  "SK_SR01_LOD1.fbx": "81bbdafec92f022a1bdbb850e94d7f087a0b235ca6b983dffb93ab23a35a81b6",
+  "SK_SR01_LOD2.fbx": "fd4f0255653b60ed10c8100aa82dfb97f0605bec17e8e7a7d7dfecbe53d1dda9",
+  "SK_SR01_LOD3.fbx": "5f2dd2d266b647c9e5795a4e0082c8022976682bd96326daad4a69bd341f0753",
+  "SM_Att_Scope_LongRange.fbx": "ecc849b25c3c15511ba69cb022b007cff0b90498d01a5f06bded98c21ca79532",
+  "SM_Att_Scope_LongRange.sockets.json": "6687c5ac318b5273a6f1ce4c03d663939c1d3cacb8d68e93ab7fb70ac99908f1",
+  "SM_SR01.fbx": "0393ce5cf6504ab17671a68efc94129bf6900405a1fb70629aeb7bd05ce39554",
+  "SM_SR01.sockets.json": "aa48fb12ef07167f054561e48d6acbabedc189e46f97981a9f35d6523e437a7d",
+  "SM_SR01_Mag.fbx": "da93361f818787883f8717a0743bda669cf2d2d9caa6a0d897dab6df4db786c6",
+  "SM_SR01_Mag.sockets.json": "632775b0137f57bb9e8d5ecabbe8f6ca300d0c438d14b2d0adf0d38405fac59d",
+  "Textures/Recolour/recolour_maps.json": "845d19000afe72fcddbe0a9abe12e15de773f582a9a073784b81a4d3ddd34b8a",
+  "Textures/Recolour/T_SR01_Chassis_Detail16.png": "9b48dae379248c690a5e555bdde6e3bab015e958ef368117eb041690014f4e53",
+  "Textures/T_Att_Scope_LongRange_Scope_Body_BC.png": "68985a0b7ba9b14381be76087987c4e325ccc21a00ef8b9ff363cd1a9c7b14ca",
+  "Textures/T_Att_Scope_LongRange_Scope_Body_Masks.png": "ecba0481340746ae4bf10b027f81092e859d94539a8f31bd016699c1d4a4b825",
+  "Textures/T_Att_Scope_LongRange_Scope_Body_N.png": "924efa52d139b641d22496a88b02a83417e8689ea2d7fcc9fe13985988704846",
+  "Textures/T_Att_Scope_LongRange_Scope_Body_ORM.png": "b91cee2c365aca4296e9d6896b9da7a17444645c5fd33a5e72ffc503d385f265",
+  "Textures/T_Att_Scope_LongRange_Scope_Lens_BC.png": "e8e0c006b2f3de8ed2cda641cf646dd9d529570e3583aa630c53aa34d9fbf90f",
+  "Textures/T_Att_Scope_LongRange_Scope_Lens_Masks.png": "edae6f8ae784bc9f8895c7487b62526eccc3017f5f1c14d899b65b09c8f8f009",
+  "Textures/T_Att_Scope_LongRange_Scope_Lens_N.png": "91feb682807b0e04d5c4f9a45497a2d7c5649f78326ac35bdfa75eb7c112b988",
+  "Textures/T_Att_Scope_LongRange_Scope_Lens_ORM.png": "8069f6613f21f2c1b51d3687932320fb4e5f3cdd2efc40b7314874f3d82df572",
+  "Textures/T_SR01_Chassis_BC.png": "cc47f70ba07001e7f3b837e965e33eba62e8b2eea70d3aa88bc0935146927529",
+  "Textures/T_SR01_Chassis_Masks.png": "a1e77f67ed3f50cc0be3449765f95ac1a96a9655e07d1611a84900304fa2be27",
+  "Textures/T_SR01_Chassis_N.png": "c85a9eb8d72d7aac336204cdebe4ba1230fcf4dbff6d508bd09a5c5bffc7d0dd",
+  "Textures/T_SR01_Chassis_ORM.png": "7094fc0cdbba4d7e3c940fb687e9870988e2dc8663182451afc27b56292701f8",
+  "Textures/T_SR01_Mag_BC.png": "537164323c8f92a7ca0526df67f12386979c9aea0abb81886cf5d4f5bf5b9b00",
+  "Textures/T_SR01_Mag_Masks.png": "cb66324abbf818ce86ede85f2871d7aafe2d9240d10d51a89be5a8f755d577cb",
+  "Textures/T_SR01_Mag_N.png": "bcfa45de44dd3bdf37410367da858d84f95ed22d7e2b2924748490d54c6af579",
+  "Textures/T_SR01_Mag_ORM.png": "87ba6d926ba305c27ea64d53ccd74f26a18e163ec085a21ae02d3cbbe8b19119",
+  "Textures/T_SR01_Metal_BC.png": "55d0bc2ea9d4c3ceaf87b2ba480bda6616e62f6a7076ad34ee737d5ee137d5b1",
+  "Textures/T_SR01_Metal_Masks.png": "d17ef5d2a8f47fc49dc29a4b3320e32ec4f112c7a3f4591fd4d1009adf7316ca",
+  "Textures/T_SR01_Metal_N.png": "c927ff8e3a5c5f21ba7cfdf0ed9c634dac6627f8d398d9324f23a63312e8a7e7",
+  "Textures/T_SR01_Metal_ORM.png": "c237240be5d272d914309b921e22c7d6dcd4e60c169c6ddba8822d753713e86e"
+ },
+ "gates": [
+  {
+   "name": "bytes: every pass used the shipped bytes (sha256 of every Exports/Guns/SR01 file before and after passes A, A2, A3, B, C)",
+   "value": {
+    "files": 43,
+    "unchanged_per_pass": {
+     "A": true,
+     "A2": true,
+     "A3": true,
+     "B": true,
+     "C": true
+    },
+    "now_equal_start": true
+   },
+   "threshold": "all equal",
+   "pass": true
+  },
+  {
+   "name": "bytes = the W4b gated bytes (rig_export.json sha256, mag.json M7, scope_export.json files)",
+   "value": {
+    "rig_export_files": 16,
+    "mismatch": [],
+    "SM_SR01.fbx": true,
+    "SM_SR01_Mag.fbx": true,
+    "scope_files": 2,
+    "scope_mismatch": []
+   },
+   "threshold": "equal",
+   "pass": true
+  },
+  {
+   "name": "pass A import (fresh process; legacy FBX importer, the sidecar settings; SK_AR01_Skeleton set compatible)",
+   "value": {
+    "status": "ok",
+    "lods_SK": 4,
+    "clips": 8,
+    "sockets_SK": 20,
+    "physics": "/Game/GunCheck/SR01_1014a/PHYS_SR01.PHYS_SR01",
+    "physics_elements": {
+     "box": 8,
+     "capsule": 1,
+     "sphere": 0
+    },
+    "textures": 21,
+    "compatible_skeletons": [
+     "<Object '/Game/GunCheck/AR01_1009b/SK_AR01_Skeleton.SK_AR01_Skeleton' (0x000001E791EA6C00) Class 'Skeleton'>"
+    ]
+   },
+   "threshold": "ok; 4 LODs; 8 clips; 20 sockets",
+   "pass": true
+  },
+  {
+   "name": "U1 skeleton: names, parents, reference heads (<= 0.001 cm), root scale 1, rest rotations 0, axes (muzzle +X, up +Z, port right +Y)",
+   "value": {
+    "mesh_bones": 14,
+    "names_match": true,
+    "parents_match": true,
+    "max_head_err_cm": 5.767822266022904e-06,
+    "root_scale_1": true,
+    "max_bone_rest_rotation_deg": 0.0,
+    "axes": {
+     "muzzle_plusX_cm": 80.287,
+     "muzzle_on_bore_y_cm": 0.0,
+     "rail_top_above_bore_cm": 3.0,
+     "ejection_port_right_plusY_cm": 1.72,
+     "bolt_rest_x_axis_component": [
+      1.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "threshold": "all true; head err <= 0.001 cm",
+   "pass": true
+  },
+  {
+   "name": "U2 procedural (engine pose maths, bone-space offsets): the bolt's -X moves it straight back by the full travel; the bolt turns -60 deg about its own X (Unreal numbers +60: Y mirrored); the selector turns about its own Y to SAFE / FIRE",
+   "value": {
+    "bolt_component_motion_cm": [
+     -8.8,
+     0.0,
+     0.0
+    ],
+    "bolt_rotation": {
+     "blender_deg_commanded": -60.0,
+     "about_X_deg": 60.0,
+     "off_axis_deg": 0.0,
+     "head_moved_cm": 0.0
+    },
+    "selector": {
+     "selector_SAFE": {
+      "blender_deg_commanded": -12.0,
+      "about_Y_deg": -12.0,
+      "off_axis_deg": 0.0,
+      "head_moved_cm": 0.0
+     },
+     "selector_FIRE": {
+      "blender_deg_commanded": 0.0,
+      "about_Y_deg": 0.0,
+      "off_axis_deg": 0.0,
+      "head_moved_cm": 0.0
+     }
+    }
+   },
+   "threshold": "bolt (-8.8, 0, 0) +- 0.001 cm; bolt about X, angle +- 0.001 deg, pivot fixed; selector about Y, angle +- 0.001 deg",
+   "pass": true
+  },
+  {
+   "name": "U2b one ABP (ABP_Gun_LongGun, authored on SK_AR01_Skeleton) drives SK_SR01 (Compatible Skeletons) and SK_AR01 through normalized inputs mapped by each gun's angle table: the sniper's bolt turns -60 deg and slides 8.8 cm (= A_SR01_BoltCycle open and back), the AR-01's slides its table travel (= its Fire clip's rear stop); both triggers pull their lower end rearward by the table angle (= each Fire clip's full pull); the detent index reaches each gun's SAFE / fire detents (= its own clips); each release moves its own way (= its Reload clip); the sniper-only cheek_riser rises 1.2 cm (= A_SR01_CheekRiser's top) and does nothing on SK_AR01",
+   "value": {
+    "SR01": {
+     "anim_instance_every_case": true,
+     "skeleton": "/Game/GunCheck/SR01_1014a/SK_SR01_Skeleton.SK_SR01_Skeleton",
+     "bolt": {
+      "full_cm": [
+       -8.8,
+       0.0,
+       0.0
+      ],
+      "half_cm": [
+       -4.4,
+       0.0,
+       0.0
+      ],
+      "rot_about_X_deg_unreal": [
+       60.0,
+       0.0,
+       0.0
+      ],
+      "open_back_vs_BoltCycle_f15_cm": 0.0,
+      "open_back_vs_BoltCycle_f15_deg": 8e-06,
+      "ok": true
+     },
+     "trigger": {
+      "about_Y_deg": 6.0,
+      "half_deg": 3.0,
+      "off_axis_deg": 0.0,
+      "point_3cm_below_pivot_dx_cm": -0.31359,
+      "fire_clip_full_pull_deg": 6.0,
+      "ok": true
+     },
+     "selector": {
+      "detents_about_Y_deg": {
+       "SAFE": -12.0,
+       "SEMI": 0.0,
+       "AUTO": 0.0
+      },
+      "table": {
+       "SAFE": -12.0,
+       "SEMI": 0.0,
+       "AUTO": 0.0
+      },
+      "clips": {
+       "AUTO_held_in_Fire": 0.0,
+       "SAFE_selector_clip_min": -12.0,
+       "AUTO_selector_clip_max": 0.0,
+       "SEMI_bind": 0.0
+      },
+      "ok": true
+     },
+     "release": {
+      "rotvec_deg": [
+       0.0,
+       -4.5,
+       0.0
+      ],
+      "reload_clip_extreme_rotvec_deg": [
+       0.0,
+       -4.49999,
+       0.0
+      ],
+      "same_way": true,
+      "ok": true
+     },
+     "riser": {
+      "rise_cm": 1.2,
+      "vs_CheekRiser_top_cm": 0.0,
+      "ok": true
+     },
+     "rest_vs_bind": {},
+     "rest_ok": true,
+     "ok": true
+    },
+    "AR01": {
+     "anim_instance_every_case": true,
+     "skeleton": "/Game/GunCheck/AR01_1009b/SK_AR01_Skeleton.SK_AR01_Skeleton",
+     "bolt": {
+      "full_cm": [
+       -10.325,
+       0.0,
+       0.0
+      ],
+      "half_cm": [
+       -5.1625,
+       0.0,
+       0.0
+      ],
+      "fire_clip_rear_stop_cm": [
+       -10.325,
+       0.0,
+       0.0
+      ],
+      "ok": true
+     },
+     "trigger": {
+      "about_Y_deg": 12.0,
+      "half_deg": 6.0,
+      "off_axis_deg": 0.0,
+      "point_3cm_below_pivot_dx_cm": -0.62374,
+      "fire_clip_full_pull_deg": 12.0,
+      "ok": true
+     },
+     "selector": {
+      "detents_about_Y_deg": {
+       "SAFE": 0.0,
+       "SEMI": 32.0,
+       "AUTO": 16.0
+      },
+      "table": {
+       "SAFE": 0.0,
+       "SEMI": 32.0,
+       "AUTO": 16.0
+      },
+      "clips": {
+       "AUTO_held_in_Fire": 16.0,
+       "SAFE_bind": 0.0
+      },
+      "ok": true
+     },
+     "release": {
+      "rotvec_deg": [
+       0.0,
+       -10.0,
+       0.0
+      ],
+      "reload_clip_extreme_rotvec_deg": [
+       0.0,
+       -10.0,
+       0.0
+      ],
+      "same_way": true,
+      "ok": true
+     },
+     "riser": {
+      "missing_bone": "cheek_riser",
+      "max_bone_motion_cm": 0.0,
+      "max_socket_change": 0.0,
+      "bolt_rot_case_motion (table 0)": 0.0,
+      "ok": true
+     },
+     "rest_vs_bind": {
+      "selector": 3.793186
+     },
+     "rest_ok": true,
+     "ok": true
+    },
+    "runtime_log_lines_about_the_ABP_or_riser": [],
+    "compile": {
+     "status": "<BlueprintStatus.BS_UP_TO_DATE_WITH_WARNINGS: 5>",
+     "chain": [
+      "Component To Local",
+      "Transform (Modify) Bone - Bone: cheek_riser",
+      "Transform (Modify) Bone - Bone: mag_release",
+      "Transform (Modify) Bone - Bone: selector",
+      "Transform (Modify) Bone - Bone: trigger",
+      "Transform (Modify) Bone - Bone: bolt",
+      "Transform (Modify) Bone - Bone: bolt",
+      "Local To Component",
+      "Local Space Ref Pose"
+     ],
+     "log": [
+      "SR01_1014a/ABP_Gun_LongGun.ABP_Gun_LongGun: [Compiler] Transform (Modify) Bone - Bone: cheek_riser  - Bone cheek_riser not found in Skeleton"
+     ]
+    }
+   },
+   "threshold": "0.01 cm / 0.01 deg on both guns; no runtime error lines",
+   "pass": true,
+   "note": "SR01's skeleton is compatible by design for the shared bones (bolt, trigger, selector, mag_release, magazine, muzzle_device); its bipod / riser bones are sniper-only and are driven by its own clips (or ABP nodes that do nothing on other guns: the cheek_riser node here)"
+  },
+  {
+   "name": "U3 sockets on SK_SR01: from the sidecar, on the right bones, scale 1, outered to the asset, fresh process",
+   "value": {
+    "count": 20,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 3.3374772267093808e-06,
+    "extra": []
+   },
+   "threshold": "20; <= 0.001 cm / 0.001 deg; no extras",
+   "pass": true
+  },
+  {
+   "name": "sockets on SM_SR01 (sidecar, fresh process)",
+   "value": {
+    "count": 20,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 0.0,
+    "extra": [],
+    "missing": []
+   },
+   "threshold": "20; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras",
+   "pass": true
+  },
+  {
+   "name": "sockets on SM_SR01_Mag (sidecar, fresh process)",
+   "value": {
+    "count": 5,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 0.0,
+    "extra": [],
+    "missing": []
+   },
+   "threshold": "5; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras",
+   "pass": true
+  },
+  {
+   "name": "sockets on SM_Att_Scope_LongRange (sidecar, fresh process)",
+   "value": {
+    "count": 5,
+    "worst_loc_cm": 0.0,
+    "worst_rot_deg": 0.0,
+    "extra": [],
+    "missing": []
+   },
+   "threshold": "5; <= 0.001 cm / 0.001 deg; scale 1; outer = asset; no extras",
+   "pass": true
+  },
+  {
+   "name": "U4 First Person rendering with VSM (FP_Weapon + FP_Mag + FP_Scope vs TP_Weapon + TP_Mag + TP_Scope): FP casts no ground shadow, TP does; FP at ForcedLodModel 1 renders LOD0 where the auto-LOD TP component falls to LOD3",
+   "value": {
+    "ground_shadow_px": {
+     "u4_tp": 60158,
+     "u4_none": 60104,
+     "u4_fp": 3
+    },
+    "lod_pixels_differing": {
+     "tp_auto_vs_ref0": 937,
+     "tp_auto_vs_ref3": 85,
+     "fp_forced_vs_ref0": 83,
+     "fp_forced_vs_ref3": 942
+    },
+    "components": {
+     "tp_noshadow_mask": {
+      "fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "scope_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "forced_lod_model": 0,
+      "scope_forced_lod_model": 0,
+      "cast_shadow": false,
+      "file": "u4_tp_noshadow",
+      "predicted_lod_after_capture": 0
+     },
+     "tp": {
+      "fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "scope_fp_type": "<FirstPersonPrimitiveType.WORLD_SPACE_REPRESENTATION: 2>",
+      "forced_lod_model": 0,
+      "scope_forced_lod_model": 0,
+      "cast_shadow": true,
+      "file": "u4_tp",
+      "predicted_lod_after_capture": 0
+     },
+     "none": {
+      "fp_type": "<FirstPersonPrimitiveType.NONE: 0>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.NONE: 0>",
+      "scope_fp_type": "<FirstPersonPrimitiveType.NONE: 0>",
+      "forced_lod_model": 0,
+      "scope_forced_lod_model": 0,
+      "cast_shadow": true,
+      "file": "u4_none",
+      "predicted_lod_after_capture": 0
+     },
+     "fp": {
+      "fp_type": "<FirstPersonPrimitiveType.FIRST_PERSON: 1>",
+      "mag_fp_type": "<FirstPersonPrimitiveType.FIRST_PERSON: 1>",
+      "scope_fp_type": "<FirstPersonPrimitiveType.FIRST_PERSON: 1>",
+      "forced_lod_model": 1,
+      "scope_forced_lod_model": 1,
+      "cast_shadow": true,
+      "file": "u4_fp",
+      "predicted_lod_after_capture": 0
+     }
+    }
+   },
+   "threshold": "TP shadow > 1000 px, FP < 1 % of it; FP closer to the LOD0 reference, TP to LOD3",
+   "pass": true,
+   "note": "'the owner sees no TP component' needs a possessed player pawn carrying both components (game-side weapon Blueprint); not measurable here (same as the AR-01)"
+  },
+  {
+   "name": "U4 scope pair: SM_Att_Scope_LongRange's Mount attached at Rail_Top (+2 slots, X +20.02 mm) on SM_SR01 and on SK_SR01 lands where Blender says (A1); Sight / EyePoint / Lens_Front on one line parallel to the bore, 57.6 mm above it (A4), centred; scope view: the bore's 10 m point sits 5.76 cm under the sight line (parallel lines)",
+   "value": {
+    "pairs": {
+     "SM_SR01 (pass B)": {
+      "mount_cm": [
+       11.902,
+       -0.0,
+       12.613
+      ],
+      "mount_minus_rail_top_cm": [
+       2.002,
+       0.0,
+       -0.0
+      ],
+      "mount_err_cm": 1.1546319456101628e-14,
+      "Sight": {
+       "cm": [
+        -2.603,
+        0.0,
+        15.373
+       ],
+       "vs_blender_cm": 2.886579864025407e-14,
+       "above_bore_mm": 57.6,
+       "lateral_mm": 0.0,
+       "axis_vs_bore_deg": 0.0
+      },
+      "EyePoint": {
+       "cm": [
+        -12.103,
+        -0.0,
+        15.373
+       ],
+       "vs_blender_cm": 1.4210854715202004e-14,
+       "above_bore_mm": 57.6,
+       "lateral_mm": -0.0,
+       "axis_vs_bore_deg": 0.0
+      },
+      "Lens_Front": {
+       "cm": [
+        39.337,
+        -0.0,
+        15.373
+       ],
+       "vs_blender_cm": 2.842170943040401e-14,
+       "above_bore_mm": 57.6,
+       "lateral_mm": -0.0,
+       "axis_vs_bore_deg": 0.0
+      },
+      "bore_dir_sockets_vs_muzzle_axis_deg": 0.0,
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "attach_socket": "Rail_Top"
+     },
+     "SK_SR01 (pass C)": {
+      "mount_cm": [
+       11.902,
+       -0.0,
+       12.613
+      ],
+      "mount_minus_rail_top_cm": [
+       2.002,
+       0.0,
+       0.0
+      ],
+      "mount_err_cm": 7.105427357601002e-15,
+      "Sight": {
+       "cm": [
+        -2.603,
+        -0.0,
+        15.373
+       ],
+       "vs_blender_cm": 2.842170943040401e-14,
+       "above_bore_mm": 57.6,
+       "lateral_mm": -0.0,
+       "axis_vs_bore_deg": 0.0
+      },
+      "EyePoint": {
+       "cm": [
+        -12.103,
+        0.0,
+        15.373
+       ],
+       "vs_blender_cm": 4.263256414560601e-14,
+       "above_bore_mm": 57.6,
+       "lateral_mm": 0.0,
+       "axis_vs_bore_deg": 0.0
+      },
+      "Lens_Front": {
+       "cm": [
+        39.337,
+        0.0,
+        15.373
+       ],
+       "vs_blender_cm": 2.1316282072803006e-14,
+       "above_bore_mm": 57.6,
+       "lateral_mm": 0.0,
+       "axis_vs_bore_deg": 0.0
+      },
+      "bore_dir_sockets_vs_muzzle_axis_deg": 0.0,
+      "scale": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "attach_socket": "Rail_Top"
+     },
+     "blender_A1_A4": {
+      "mount_minus_rail_top_mm": 20.02,
+      "sight_Z_over_bore_mm": 57.6
+     }
+    },
+    "scope_view": {
+     "eye_world": [
+      -12.103,
+      0.0,
+      15.373
+     ],
+     "sight_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "sight_up": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "range_cm": 1000.0,
+     "fov_deg": 6.0,
+     "px": [
+      1600,
+      1000
+     ],
+     "bore_point_world": [
+      987.897,
+      0.0,
+      9.613
+     ],
+     "bore_drop_below_sight_line_cm": 5.76,
+     "bore_lateral_cm": 0.0,
+     "muzzle_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "muzzle_dir_dot_sight_dir": 1.0
+    }
+   },
+   "threshold": "mount <= 0.001 cm; sockets = Blender <= 0.001 cm; 57.6 +- 0.2 mm; axes <= 0.01 deg; scope-view drop 5.76 +- 0.02 cm",
+   "pass": true
+  },
+  {
+   "name": "bipod poses read back (runtime, compressed): BipodDeploy's end and BipodStow's start = legs +90 about the 12 deg splayed pins (leaning out), extensions 3.8 cm along each leg; the feet where Blender puts them; BipodStow ends at the bind pose",
+   "value": {
+    "deploy_last": {
+     "l": {
+      "rotation_vs_build_deg": 2e-05,
+      "swing_from_forward_deg": 90.0,
+      "splay_deg": 12.0,
+      "leans": "out",
+      "ext_travel_cm": [
+       3.8,
+       0.0,
+       -0.0
+      ],
+      "ext_expected_cm": 3.8,
+      "foot_socket_cm": [
+       42.247,
+       -7.0231,
+       -20.4838
+      ],
+      "foot_below_bore_cm": 30.0968,
+      "foot_build_cm": [
+       42.247,
+       -7.023,
+       -20.4838
+      ],
+      "foot_vs_build_cm": 1e-05
+     },
+     "r": {
+      "rotation_vs_build_deg": 2e-05,
+      "swing_from_forward_deg": 90.0,
+      "splay_deg": 12.0,
+      "leans": "out",
+      "ext_travel_cm": [
+       3.8,
+       -0.0,
+       -0.0
+      ],
+      "ext_expected_cm": 3.8,
+      "foot_socket_cm": [
+       42.247,
+       7.0231,
+       -20.4838
+      ],
+      "foot_below_bore_cm": 30.0968,
+      "foot_build_cm": [
+       42.247,
+       7.023,
+       -20.4838
+      ],
+      "foot_vs_build_cm": 1e-05
+     }
+    },
+    "stow_first": {
+     "l": {
+      "rotation_vs_build_deg": 2e-05,
+      "swing_from_forward_deg": 90.0,
+      "splay_deg": 12.0,
+      "leans": "out",
+      "ext_travel_cm": [
+       3.8,
+       0.0,
+       -0.0
+      ],
+      "ext_expected_cm": 3.8,
+      "foot_socket_cm": null
+     },
+     "r": {
+      "rotation_vs_build_deg": 2e-05,
+      "swing_from_forward_deg": 90.0,
+      "splay_deg": 12.0,
+      "leans": "out",
+      "ext_travel_cm": [
+       3.8,
+       0.0,
+       -0.0
+      ],
+      "ext_expected_cm": 3.8,
+      "foot_socket_cm": null
+     }
+    },
+    "stow_last": {
+     "bipod_leg_l": 1.0658141036401503e-14,
+     "bipod_leg_r": 8.881784197001252e-15,
+     "bipod_leg_l_ext": 1.0658141036401503e-14,
+     "bipod_leg_r_ext": 1.4210854715202004e-14
+    }
+   },
+   "threshold": "rotation <= 0.01 deg vs the build; 90 / 12 deg +- 0.01; travel +- 0.001 cm; feet <= 0.01 cm; stow end <= 0.001 cm",
+   "pass": true
+  },
+  {
+   "name": "U5 LOD count (SK_SR01, SM_SR01, SM_SR01_Mag 4; the scope 3)",
+   "value": {
+    "SK": 4,
+    "SM": 4,
+    "Mag": 4,
+    "Scope": 3
+   },
+   "threshold": "4, 4, 4, 3",
+   "pass": true
+  },
+  {
+   "name": "U5 triangles per LOD equal in Blender, the FBX and Unreal (render data, mesh description, Unreal's FBX export); predicted static-import drops 0 (UD1)",
+   "value": {
+    "SK_SR01": [
+     {
+      "lod": 0,
+      "blender": 40518,
+      "fbx": 40518,
+      "unreal_export": 40518,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 18202,
+      "fbx": 18202,
+      "unreal_export": 18202,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 6028,
+      "fbx": 6028,
+      "unreal_export": 6028,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 2490,
+      "fbx": 2490,
+      "unreal_export": 2490,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ],
+    "SM_SR01": [
+     {
+      "lod": 0,
+      "blender": 41396,
+      "fbx": 41396,
+      "unreal_render": 41396,
+      "unreal_mesh_description": 41396,
+      "unreal_export": 41396,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 18596,
+      "fbx": 18596,
+      "unreal_render": 18596,
+      "unreal_mesh_description": 18596,
+      "unreal_export": 18596,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 6178,
+      "fbx": 6178,
+      "unreal_render": 6178,
+      "unreal_mesh_description": 6178,
+      "unreal_export": 6178,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 2552,
+      "fbx": 2552,
+      "unreal_render": 2552,
+      "unreal_mesh_description": 2552,
+      "unreal_export": 2552,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ],
+    "SM_SR01_Mag": [
+     {
+      "lod": 0,
+      "blender": 878,
+      "fbx": 878,
+      "unreal_render": 878,
+      "unreal_mesh_description": 878,
+      "unreal_export": 878,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 394,
+      "fbx": 394,
+      "unreal_render": 394,
+      "unreal_mesh_description": 394,
+      "unreal_export": 394,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 150,
+      "fbx": 150,
+      "unreal_render": 150,
+      "unreal_mesh_description": 150,
+      "unreal_export": 150,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 3,
+      "blender": 62,
+      "fbx": 62,
+      "unreal_render": 62,
+      "unreal_mesh_description": 62,
+      "unreal_export": 62,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ],
+    "SM_Att_Scope_LongRange": [
+     {
+      "lod": 0,
+      "blender": 9938,
+      "fbx": 9938,
+      "unreal_render": 9938,
+      "unreal_mesh_description": 9938,
+      "unreal_export": 9938,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 1,
+      "blender": 4464,
+      "fbx": 4464,
+      "unreal_render": 4464,
+      "unreal_mesh_description": 4464,
+      "unreal_export": 4464,
+      "predicted_import_drops": 0,
+      "equal": true
+     },
+     {
+      "lod": 2,
+      "blender": 1454,
+      "fbx": 1454,
+      "unreal_render": 1454,
+      "unreal_mesh_description": 1454,
+      "unreal_export": 1454,
+      "predicted_import_drops": 0,
+      "equal": true
+     }
+    ]
+   },
+   "threshold": "equal per LOD",
+   "pass": true
+  },
+  {
+   "name": "screen sizes from the sidecars (SK LOD settings, SM, Mag)",
+   "value": {
+    "SK": [
+     1.0,
+     0.2730099856853485,
+     0.07164999842643738,
+     0.03604000061750412
+    ],
+    "SK_sidecar": [
+     1.0,
+     0.27301,
+     0.07165,
+     0.03604
+    ],
+    "SM": [
+     1.0,
+     0.25,
+     0.06561,
+     0.033
+    ],
+    "SM_sidecar": [
+     1.0,
+     0.25,
+     0.06561,
+     0.033
+    ],
+    "Mag": [
+     1.0,
+     0.03448,
+     0.00905,
+     0.00455
+    ],
+    "Mag_sidecar": [
+     1.0,
+     0.03448,
+     0.00905,
+     0.00455
+    ]
+   },
+   "threshold": "equal (1e-6)",
+   "pass": true
+  },
+  {
+   "name": "U5 engine sphere radii = the radii the screen sizes were derived from (SK: bind box + extension; SM / Mag: max |v - box centre|)",
+   "value": {
+    "SK_engine_cm": 60.94171084060239,
+    "SK_build_cm": 60.940000000000005,
+    "SM_engine_cm": 55.805987,
+    "SM_build_cm": 55.806,
+    "Mag_engine_cm": 7.696881,
+    "Mag_build_cm": null,
+    "Scope_engine_cm": 21.242304,
+    "Scope_build_cm": 21.242,
+    "game_json_bounds_radius_m": {},
+    "extension_enters_lod_radius": {
+     "imported_radius_cm": 56.19831567072865,
+     "extended_radius_cm": 60.94171084060239,
+     "note": "the SK's engine bounds (LOD selection) include the bounds extension"
+    }
+   },
+   "threshold": "<= 0.01 cm",
+   "pass": true,
+   "note": "the SK's LOD radius includes the bounds extension: the sizes were derived at the extended radius; the magazine's build radius is not recorded in the gates (see the next row)"
+  },
+  {
+   "name": "mag screen sizes re-derived from the engine radii (size x r_mag / r, from the SK's or the twin's sizes)",
+   "value": {
+    "r_mag_cm": 7.696881,
+    "r_sk_cm": 60.94171084060239,
+    "r_twin_cm": 55.805987,
+    "derived_from_SK": [
+     1.0,
+     0.03448,
+     0.00905,
+     0.00455
+    ],
+    "derived_from_twin": [
+     1.0,
+     0.03448,
+     0.00905,
+     0.00455
+    ],
+    "sidecar": [
+     1.0,
+     0.03448,
+     0.00905,
+     0.00455
+    ],
+    "max_diff": 0.0
+   },
+   "threshold": "<= 0.001 from the sidecar",
+   "pass": true
+  },
+  {
+   "name": "U5 bounds: the stored bounds (+ the sidecar extension) hold every LOD0-3 vertex at every runtime frame of every clip (BipodDeploy / BipodStow, BoltCycle, ReloadEmpty, CheekRiser ...)",
+   "value": {
+    "extension_applied": {
+     "pos": [
+      0.0,
+      8.681,
+      2.31
+     ],
+     "neg": [
+      0.0,
+      12.877,
+      18.386
+     ],
+     "sidecar": [
+      [
+       0.0,
+       8.681,
+       2.31
+      ],
+      [
+       0.0,
+       12.877,
+       18.386
+      ]
+     ]
+    },
+    "vertices_outside": 0,
+    "per_clip": {
+     "A_SR01_Fire": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SR01_BoltCycle": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SR01_Reload": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SR01_ReloadEmpty": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SR01_Selector": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SR01_BipodDeploy": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SR01_BipodStow": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     },
+     "A_SR01_CheekRiser": {
+      "vertices_outside": 0,
+      "worst_outside_cm": 0.0
+     }
+    }
+   },
+   "threshold": "0 outside",
+   "pass": true
+  },
+  {
+   "name": "U6 magazine at Mag (engine attach, SnapToTarget, gun at an arbitrary world transform): composed transform zero; every reload frame",
+   "value": {
+    "attached_vs_socket_cm": 1.5987211554602254e-14,
+    "rot": 0.0,
+    "relative_to_socket": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ],
+    "socket_vs_sidecar_cm": 1.5987211554602254e-14,
+    "reload_frames_attached_vs_socket": {
+     "A_SR01_Reload": 4.826663513313179e-10,
+     "A_SR01_ReloadEmpty": 4.826663513313179e-10
+    }
+   },
+   "threshold": "<= 0.001 cm, identity",
+   "pass": true
+  },
+  {
+   "name": "M9 seated fit on the read-back geometry (co-visible pairs LOD0-1 incl. (k, k+-1); LOD2-3 reported: mag.json M1 rates them in px at the switch distance)",
+   "value": {
+    "pairs": {
+     "gun LOD0 / mag LOD0": 0,
+     "gun LOD1 / mag LOD1": 0,
+     "gun LOD0 / mag LOD1": 0,
+     "gun LOD1 / mag LOD0": 0,
+     "gun LOD2 / mag LOD2": 4,
+     "gun LOD3 / mag LOD3": 74,
+     "gun LOD1 / mag LOD2": 6,
+     "gun LOD2 / mag LOD1": 8,
+     "gun LOD2 / mag LOD3": 31,
+     "gun LOD3 / mag LOD2": 100
+    },
+    "mag_json_M1": {
+     "gun LOD0 / mag LOD0": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD1 / mag LOD1": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD2 / mag LOD2": {
+      "intersecting_triangle_pairs": 4,
+      "depth_mm_outside_well": 0.874,
+      "depth_px": 0.074,
+      "at_m": 15.123
+     },
+     "gun LOD3 / mag LOD3": {
+      "intersecting_triangle_pairs": 74,
+      "depth_mm_outside_well": 5.064,
+      "depth_px": 0.216,
+      "at_m": 30.068
+     },
+     "gun LOD0 / mag LOD1": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD1 / mag LOD0": {
+      "intersecting_triangle_pairs": 0
+     },
+     "gun LOD1 / mag LOD2": {
+      "intersecting_triangle_pairs": 6,
+      "depth_mm_outside_well": 0.0,
+      "depth_px": 0.0,
+      "at_m": 15.123
+     },
+     "gun LOD2 / mag LOD1": {
+      "intersecting_triangle_pairs": 8,
+      "depth_mm_outside_well": 1.02,
+      "depth_px": 0.086,
+      "at_m": 15.123
+     },
+     "gun LOD2 / mag LOD3": {
+      "intersecting_triangle_pairs": 31,
+      "depth_mm_outside_well": 1.68,
+      "depth_px": 0.072,
+      "at_m": 30.068
+     },
+     "gun LOD3 / mag LOD2": {
+      "intersecting_triangle_pairs": 100,
+      "depth_mm_outside_well": 3.653,
+      "depth_px": 0.156,
+      "at_m": 30.068
+     }
+    }
+   },
+   "threshold": "0 at LOD0 / LOD1",
+   "pass": true
+  },
+  {
+   "name": "M9 straight reload path from the engine sockets (MagInsertStart -> Mag, 0.5 mm steps) on the read-back geometry: with the catch at its release angle 0 intersections (M4b); with the catch at rest only the catch nose meets the magazine (R36: the spring-loaded catch is cammed aside)",
+   "value": {
+    "insert_mm": 67.79999999999998,
+    "insert_axis_vs_mag_z": 1.0,
+    "rotation_constant_deg": 0.0,
+    "steps": 137,
+    "catch_release_deg_blender": -4.5,
+    "lods": {
+     "LOD0": {
+      "released_intersecting_steps": [],
+      "rest_steps_with_contact": 58,
+      "rest_contact_parts": [
+       "mag_release"
+      ],
+      "rest_contact_range_mm": [
+       38.89,
+       67.3
+      ],
+      "rest_noncatch_steps": []
+     },
+     "LOD1": {
+      "released_intersecting_steps": [],
+      "rest_steps_with_contact": 58,
+      "rest_contact_parts": [
+       "mag_release"
+      ],
+      "rest_contact_range_mm": [
+       38.89,
+       67.3
+      ],
+      "rest_noncatch_steps": []
+     }
+    }
+   },
+   "threshold": "0 released; 0 non-catch contacts; insert 67.8 mm along the magazine's +Z, rotation constant",
+   "pass": true
+  },
+  {
+   "name": "U6 reload clips in engine: the magazine on the posed SR01 (catch posed by the clip) at every runtime frame (LOD0)",
+   "value": {
+    "A_SR01_Reload": {
+     "frames": 61,
+     "frames_with_intersections": [
+      [
+       2,
+       8
+      ]
+     ]
+    },
+    "A_SR01_ReloadEmpty": {
+     "frames": 91,
+     "frames_with_intersections": [
+      [
+       2,
+       8
+      ]
+     ]
+    }
+   },
+   "threshold": "0 frames",
+   "pass": false
+  },
+  {
+   "name": "PHYS_SR01: one body on 'body'; the sidecar's colliding shapes (7 boxes + 1 capsule) and its no-collision, no-mass bounds envelope; 5.9 kg; consider_for_bounds; fresh process",
+   "value": {
+    "bodies": [
+     "body"
+    ],
+    "colliding": [
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "box",
+     "capsule"
+    ],
+    "no_collision": [
+     {
+      "shape": "box",
+      "contribute_to_mass": false
+     }
+    ],
+    "mass_kg": 5.900000095367432,
+    "override": true,
+    "consider_for_bounds": true
+   },
+   "threshold": "1 body; 7 box + 1 capsule colliding; the envelope box(es) no collision, no mass; 5.9 kg",
+   "pass": true
+  },
+  {
+   "name": "U7 physics in a ticking game world: SM_SR01 (level, rolled 70 deg), SM_SR01_Mag, SK_SR01 (PHYS_SR01, bipod folded) dropped 1 m: rest on their collision, no tunnelling (read-back LOD0 placed at every sampled transform); the deployed-bipod SK rests (its legs have no collision by design: the game drops the gun with the legs folded; its leg depth is reported)",
+   "value": {
+    "SM_PHYS_SM_SR01": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": 0.0473,
+     "final_lowest_vertex_cm": 0.0595,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SM_SR01_rolled": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": 0.0505,
+     "final_lowest_vertex_cm": 0.1677,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SM_SR01_Mag": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": -0.1454,
+     "final_lowest_vertex_cm": 0.0484,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SK_SR01": {
+     "rests": true,
+     "no_tunnelling": true,
+     "min_lowest_vertex_cm": -0.0325,
+     "final_lowest_vertex_cm": 0.5534,
+     "max_speed_last_1s_cm_s": 0.0
+    },
+    "SM_PHYS_SK_SR01_deployed": {
+     "rests": true,
+     "no_tunnelling": false,
+     "min_lowest_vertex_cm": -18.744,
+     "final_lowest_vertex_cm": -18.6628,
+     "max_speed_last_1s_cm_s": 0.0
+    }
+   },
+   "threshold": "speed < 1 cm/s over the last 1 s; lowest vertex never < -2 cm, final >= -0.5 cm (ground top 0); deployed: rests only",
+   "pass": true
+  },
+  {
+   "name": "U7 (W4 review addition) the COMPONENT's runtime bounds of every dropped, simulating actor hold every vertex at every sample, the deployed-bipod SK_SR01 included",
+   "value": {
+    "SM_PHYS_SM_SR01": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": null
+    },
+    "SM_PHYS_SM_SR01_rolled": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": null
+    },
+    "SM_PHYS_SM_SR01_Mag": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": null
+    },
+    "SM_PHYS_SK_SR01": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": 0.0
+    },
+    "SM_PHYS_SK_SR01_deployed": {
+     "max_outside_cm": 0.0,
+     "samples_outside": 0,
+     "shoulder_engine_vs_analysis_cm": 0.0
+    }
+   },
+   "threshold": "0 samples outside (0.001 cm)",
+   "pass": true
+  },
+  {
+   "name": "U8 lightmap (plan Q13): index 1, Generate Lightmap UVs OFF on every LOD, 2 UV channels (the authored UV1 is the lightmap)",
+   "value": {
+    "SM_SR01": {
+     "index": 1,
+     "generate_off": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "uv_channels": [
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    "SM_SR01_Mag": {
+     "index": 1,
+     "generate_off": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "uv_channels": [
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   },
+   "threshold": "index 1; off on 4 / 4 LODs; 2 channels",
+   "pass": true
+  },
+  {
+   "name": "U8 the authored UV1 as Unreal exports it: inside 0..1, 0 overlapping pixels at 64 and 128 px (UD4's resolutions); 1024 px reported beside the shipped FBX's",
+   "value": {
+    "SM_SR01_LOD0": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 1,
+     "overlap_px_1024": 12,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SR01_LOD1": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 17,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SR01_LOD2": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 1,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SR01_LOD3": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SR01_Mag_LOD0": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SR01_Mag_LOD1": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SR01_Mag_LOD2": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    },
+    "SM_SR01_Mag_LOD3": {
+     "inside_0_1": true,
+     "overlap_px_64": 0,
+     "overlap_px_128": 0,
+     "overlap_px_1024": 0,
+     "shipped_fbx_overlap_px_1024": 0
+    }
+   },
+   "threshold": "inside; 0 at 64 and 128",
+   "pass": false
+  },
+  {
+   "name": "texture flags persisted (fresh process): BC sRGB TC_Default, ORM / Masks linear TC_Masks, N TC_Normalmap flip-green off (group WeaponNormalMap), Detail16 linear Grayscale; groups Weapon",
+   "value": {
+    "textures": 21,
+    "wrong": {}
+   },
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "full mip chains (ListTextures, real RHI); Detail16 builds PF_G16",
+   "value": {
+    "T_SR01_Chassis_N": {
+     "size": 4096,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 13
+    },
+    "T_SR01_Chassis_BC": {
+     "size": 4096,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 13
+    },
+    "T_SR01_Chassis_Detail16": {
+     "size": 2048,
+     "format": "PF_G16",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SR01_Chassis_ORM": {
+     "size": 4096,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 13
+    },
+    "T_Att_Scope_LongRange_Scope_Body_N": {
+     "size": 2048,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 12
+    },
+    "T_SR01_Chassis_Masks": {
+     "size": 2048,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SR01_Metal_N": {
+     "size": 2048,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 12
+    },
+    "T_Att_Scope_LongRange_Scope_Body_BC": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_Att_Scope_LongRange_Scope_Body_ORM": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SR01_Metal_BC": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_SR01_Metal_ORM": {
+     "size": 2048,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 12
+    },
+    "T_Att_Scope_LongRange_Scope_Body_Masks": {
+     "size": 1024,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_SR01_Mag_N": {
+     "size": 1024,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 11
+    },
+    "T_SR01_Metal_Masks": {
+     "size": 1024,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_SR01_Mag_BC": {
+     "size": 1024,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_SR01_Mag_ORM": {
+     "size": 1024,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 11
+    },
+    "T_Att_Scope_LongRange_Scope_Lens_N": {
+     "size": 512,
+     "format": "PF_BC5",
+     "group": "TEXTUREGROUP_WeaponNormalMap",
+     "mips": 10
+    },
+    "T_SR01_Mag_Masks": {
+     "size": 512,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 10
+    },
+    "T_Att_Scope_LongRange_Scope_Lens_BC": {
+     "size": 512,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 10
+    },
+    "T_Att_Scope_LongRange_Scope_Lens_ORM": {
+     "size": 512,
+     "format": "PF_DXT1",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 10
+    },
+    "T_Att_Scope_LongRange_Scope_Lens_Masks": {
+     "size": 256,
+     "format": "PF_DXT5",
+     "group": "TEXTUREGROUP_Weapon",
+     "mips": 9
+    }
+   },
+   "threshold": "all full; Detail16 PF_G16",
+   "pass": true
+  },
+  {
+   "name": "U9 clips: frames = the sidecar's; engine-evaluated runtime (compressed) vs raw <= 0.1 mm on every rigid part; raw = the authored clip (sr_clips, composed through the bipod parents) <= 0.01 mm; start / end poses = bind except what the sidecar declares (ReloadEmpty's open bolt at the start, the deployed bipod at BipodDeploy's end / BipodStow's start); every sidecar notify on its frame (+-0.5), no extras",
+   "value": {
+    "A_SR01_Fire": {
+     "frames": 9,
+     "engine_num_frames": 8,
+     "play_length_s": 0.13333334028720856,
+     "authored_frames": 8,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 0.0,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SR01_BoltCycle": {
+     "frames": 31,
+     "engine_num_frames": 30,
+     "play_length_s": 1.0,
+     "authored_frames": 30,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 4e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SR01_Reload": {
+     "frames": 61,
+     "engine_num_frames": 60,
+     "play_length_s": 2.0,
+     "authored_frames": 60,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 0.0,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SR01_ReloadEmpty": {
+     "frames": 91,
+     "engine_num_frames": 90,
+     "play_length_s": 3.0,
+     "authored_frames": 90,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.00012,
+     "max_runtime_vs_animpose_compressed_mm": 0.00012,
+     "max_raw_vs_authored_mm": 4e-05,
+     "end_vs_start_mm": 124.3452,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {
+      "bolt": 124.3452
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SR01_Selector": {
+     "frames": 21,
+     "engine_num_frames": 20,
+     "play_length_s": 0.6666666865348816,
+     "authored_frames": 20,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 0.0,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SR01_BipodDeploy": {
+     "frames": 37,
+     "engine_num_frames": 36,
+     "play_length_s": 1.2000000476837158,
+     "authored_frames": 36,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 4e-05,
+     "max_runtime_vs_animpose_compressed_mm": 4e-05,
+     "max_raw_vs_authored_mm": 8e-05,
+     "end_vs_start_mm": 321.60221,
+     "end_vs_bind_mm": {
+      "bipod_leg_l": 250.7235,
+      "bipod_leg_l_ext": 321.6022,
+      "bipod_leg_r": 250.7235,
+      "bipod_leg_r_ext": 321.6022
+     },
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SR01_BipodStow": {
+     "frames": 37,
+     "engine_num_frames": 36,
+     "play_length_s": 1.2000000476837158,
+     "authored_frames": 36,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 6e-05,
+     "max_runtime_vs_animpose_compressed_mm": 6e-05,
+     "max_raw_vs_authored_mm": 8e-05,
+     "end_vs_start_mm": 321.60222,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {
+      "bipod_leg_l": 250.7235,
+      "bipod_leg_l_ext": 321.6022,
+      "bipod_leg_r": 250.7235,
+      "bipod_leg_r_ext": 321.6022
+     },
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    },
+    "A_SR01_CheekRiser": {
+     "frames": 25,
+     "engine_num_frames": 24,
+     "play_length_s": 0.800000011920929,
+     "authored_frames": 24,
+     "compression": "/Engine/Animation/DefaultRecorderBoneCompression.DefaultRecorderBoneCompression",
+     "max_runtime_vs_raw_mm": 0.0,
+     "max_runtime_vs_animpose_compressed_mm": 0.0,
+     "max_raw_vs_authored_mm": 1e-05,
+     "end_vs_start_mm": 0.0,
+     "end_vs_bind_mm": {},
+     "start_vs_bind_mm": {},
+     "notifies_extra": 0,
+     "notifies_ok": true,
+     "declared_ok": true
+    }
+   },
+   "threshold": "as stated",
+   "pass": true
+  },
+  {
+   "name": "U10 0 warning / error lines from the assets in every pass log (the harness ABP's compile warning is reported under U2b)",
+   "value": {
+    "srA_import.log": {
+     "count": 0,
+     "lines": []
+    },
+    "srA2_level.log": {
+     "count": 0,
+     "lines": []
+    },
+    "srA3_abp.log": {
+     "count": 0,
+     "lines": []
+    },
+    "srB_verify.log": {
+     "count": 0,
+     "lines": []
+    },
+    "srC_render.log": {
+     "count": 0,
+     "lines": []
+    },
+    "srE_game.log": {
+     "count": 0,
+     "lines": []
+    }
+   },
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "U12 texture residency in a ticking game world (streaming on): the gun's BC and N resident at the top mip at the hip (35 cm, 90 deg) and at ADS (the scope's EyePoint, 55 deg)",
+   "value": {
+    "hip": {
+     "T_SR01_Chassis_BC": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SR01_Chassis_N": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SR01_Chassis_ORM": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SR01_Mag_BC": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SR01_Mag_N": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SR01_Mag_ORM": {
+      "current": 512,
+      "wanted": 512,
+      "max": 1024
+     },
+     "T_SR01_Metal_BC": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SR01_Metal_N": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SR01_Metal_ORM": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     }
+    },
+    "ads": {
+     "T_SR01_Chassis_BC": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SR01_Chassis_N": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SR01_Chassis_ORM": {
+      "current": 4096,
+      "wanted": 4096,
+      "max": 4096
+     },
+     "T_SR01_Mag_BC": {
+      "current": 1024,
+      "wanted": 1024,
+      "max": 1024
+     },
+     "T_SR01_Mag_N": {
+      "current": 1024,
+      "wanted": 1024,
+      "max": 1024
+     },
+     "T_SR01_Mag_ORM": {
+      "current": 1024,
+      "wanted": 1024,
+      "max": 1024
+     },
+     "T_SR01_Metal_BC": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SR01_Metal_N": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     },
+     "T_SR01_Metal_ORM": {
+      "current": 2048,
+      "wanted": 2048,
+      "max": 2048
+     }
+    }
+   },
+   "threshold": "current = max for Metal / Chassis BC and N at both views",
+   "pass": true,
+   "note": "the magazine's own maps are reported (a separate mesh)"
+  },
+  {
+   "name": "C2 every LOD0 surface sample (300k + every vertex) of the read-back geometry inside the stored hulls",
+   "value": {
+    "SM_SR01": {
+     "samples": 320744,
+     "outside_gt_0.001cm": 9498,
+     "max_outside_mm": 52.67778082033942
+    },
+    "SM_SR01_Mag": {
+     "samples": 300443,
+     "outside_gt_0.001cm": 0,
+     "max_outside_mm": 0.0
+    },
+    "SM_Att_Scope_LongRange": {
+     "samples": 305003,
+     "outside_gt_0.001cm": 0,
+     "max_outside_mm": 0.0
+    }
+   },
+   "threshold": "0 outside",
+   "pass": false
+  },
+  {
+   "name": "hulls stored: SM_SR01 10, SM_SR01_Mag 1, SM_Att_Scope_LongRange 3, <= 32 vertices each (Unreal's own export split into shells)",
+   "value": {
+    "SM_SR01": {
+     "count": 10,
+     "vertices": [
+      27,
+      27,
+      24,
+      27,
+      27,
+      22,
+      27,
+      27,
+      27,
+      27
+     ]
+    },
+    "SM_SR01_Mag": {
+     "count": 1,
+     "vertices": [
+      27
+     ]
+    },
+    "SM_Att_Scope_LongRange": {
+     "count": 3,
+     "vertices": [
+      27,
+      27,
+      27
+     ]
+    },
+    "pass_B_convex_elems": {
+     "SM_SR01": 10,
+     "SM_SR01_Mag": 1,
+     "SM_Att_Scope_LongRange": 3
+    }
+   },
+   "threshold": "10 + 1 + 3; <= 32",
+   "pass": true
+  },
+  {
+   "name": "material slots (2 + 3 + 1 + 2, sidecar names); Nanite off",
+   "value": {
+    "slots": {
+     "SK_SR01": [
+      "M_SR01_Metal",
+      "M_SR01_Chassis"
+     ],
+     "SM_SR01": [
+      "M_SR01_Metal",
+      "M_SR01_Chassis",
+      "M_SR01_Mag"
+     ],
+     "SM_SR01_Mag": [
+      "M_SR01_Mag"
+     ],
+     "SM_Att_Scope_LongRange": [
+      "M_Att_Scope_Body",
+      "M_Att_Scope_Lens"
+     ]
+    },
+    "nanite": {
+     "SM_SR01": false,
+     "SM_SR01_Mag": false,
+     "SM_Att_Scope_LongRange": false
+    }
+   },
+   "threshold": "SK [Metal, Chassis], SM [Metal, Chassis, Mag], Mag [Mag], Scope [Body, Lens]; nanite false",
+   "pass": true
+  },
+  {
+   "name": "U11 hand fit in engine",
+   "value": null,
+   "threshold": "if a player MetaHuman exists in the verification project",
+   "pass": true,
+   "note": "not run: the verification project holds no MetaHuman; the posed hand fit H1 full (gates/rig_export.json, MH_PlayerDefault in Blender) passed and its result is in the sidecar gun.hand_offset for the game to reproduce",
+   "kind": "not_applicable"
+  }
+ ]
+}

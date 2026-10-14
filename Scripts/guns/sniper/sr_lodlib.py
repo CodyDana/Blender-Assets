@@ -1,7 +1,8 @@
 """SR01 W3 LOD helpers (Blender; shared by sr_game.py and sr_attach.py): a part's LOD copy by collapse decimation
 (UV seams and both UV layers kept, weighted normals re-done: sharp 30, weight 100) and qa_check's UV overlap rule
-applied the SMG way (the smaller triangle of every overlapping pair collapses to its centre: zero area, ignored by
-qa_check)."""
+applied the SMG way (the smaller triangle of every overlapping pair shrinks to a speck at its centre, ignored by
+qa_check; W5: a speck, never a point: a zero-area UV triangle gets no MikkTSpace frame and Unreal warns "nearly zero
+bi-normals" on the static meshes)."""
 from __future__ import annotations
 
 import numpy as np
@@ -88,9 +89,28 @@ def loop_tris(o, layer):
     return uv, L
 
 
+SPECK = 9e-7     # UV units: 2 x area = SPECK^2 = 8.1e-13 < qa_check's 1e-12 ignore limit; >= 7 float32 ulps below 1.0
+
+
+def speck(t):
+    """(W5) a UV triangle shrunk to a speck at its centroid: legs SPECK long along the triangle's own UV orientation (the
+    rotation of its edge matrix, winding kept), so the tangent frame Unreal builds there keeps its direction and is never
+    degenerate; qa_check ignores it (2 x area <= 1e-12) like the old zero-area point."""
+    c = t.mean(0)
+    E = np.stack([t[1] - t[0], t[2] - t[0]], axis=1)
+    if not np.isfinite(E).all() or np.abs(E).max() < 1e-15:
+        R = np.eye(2)
+    else:
+        U, _S, Vt = np.linalg.svd(E)
+        R = U @ Vt
+    e1, e2 = SPECK * R[:, 0], SPECK * R[:, 1]
+    p0 = c - (e1 + e2) / 3.0
+    return np.stack([p0, p0 + e1, p0 + e2])
+
+
 def fix_uv_overlaps(objs, layer):
     """qa_check's SAT overlap rule over the given objects' triangles in `layer`: the smaller of every overlapping pair
-    collapses to its centre (zero area). Returns the number collapsed."""
+    shrinks to a speck at its centre (speck(); qa ignores it). Returns the number shrunk."""
     data = []
     for o in objs:
         uv, L = loop_tris(o, layer)
@@ -109,7 +129,7 @@ def fix_uv_overlaps(objs, layer):
         for i, j in pairs:
             kill.add(int(i) if area[i] <= area[j] else int(j))
         for k in kill:
-            T[k] = T[k].mean(0)[None, :]
+            T[k] = speck(T[k])
         n_fixed += len(kill)
     for i, (o, uv, L) in enumerate(data):
         sel = owner == i
@@ -189,3 +209,41 @@ def hull_safe(name, pts_m, parent, coll, max_verts=32, dilate_m=0.0002):
     h.display_type = "WIRE"
     h["ue_collision"] = "UCX"
     return h
+
+
+def half_uv1(ob, layer="UV1", rounds=4):
+    """(W5, U8) Unreal stores a static mesh's render UVs as half floats (Use Full Precision UVs off, the default): UV1
+    corners closer than a half-float step can cross after the rounding (W5 measured 1 px of overlap at 128 px in the
+    twin's stored lightmap UV where the shipped float32 UV1 had none). So the shipped UV1 is snapped to the float16 grid
+    here (Unreal's conversion is then exact) and any polygon that overlaps another after the snap (qa_check's SAT rule)
+    takes a zero-area UV1 at its own centre (it reads that lightmap texel and takes none; the hosted-face rule of
+    sr_uv1). Returns {"snapped_loops", "max_shift", "polygons_collapsed"}."""
+    me = ob.data
+    lay = me.uv_layers[layer]
+    uv = np.empty(len(lay.data) * 2)
+    lay.data.foreach_get("uv", uv)
+    uv = uv.reshape(-1, 2)
+    q = uv.astype(np.float16).astype(np.float64)
+    out = {"snapped_loops": int((q != uv).any(1).sum()), "max_shift": float(np.abs(q - uv).max()) if len(uv) else 0.0,
+           "polygons_collapsed": 0}
+    me.calc_loop_triangles()
+    LT = np.array([t.loops[:] for t in me.loop_triangles], np.int64)
+    TP = np.array([t.polygon_index for t in me.loop_triangles], np.int64)
+    ls = np.empty(len(me.polygons), np.int64)
+    lt = np.empty(len(me.polygons), np.int64)
+    me.polygons.foreach_get("loop_start", ls)
+    me.polygons.foreach_get("loop_total", lt)
+    for _ in range(rounds):
+        T = q[LT]
+        pairs = UC.overlap_pairs(T.astype(np.float32).astype(np.float64), 1e-5, qa=True)
+        if not len(pairs):
+            break
+        area = 0.5 * np.abs((T[:, 1, 0] - T[:, 0, 0]) * (T[:, 2, 1] - T[:, 0, 1]) -
+                            (T[:, 2, 0] - T[:, 0, 0]) * (T[:, 1, 1] - T[:, 0, 1]))
+        kill = {int(TP[i] if area[i] <= area[j] else TP[j]) for i, j in pairs}
+        for p in kill:
+            sl = slice(ls[p], ls[p] + lt[p])
+            q[sl] = q[sl].mean(0).astype(np.float16).astype(np.float64)[None, :]
+        out["polygons_collapsed"] += len(kill)
+    lay.data.foreach_set("uv", q.ravel())
+    return out
