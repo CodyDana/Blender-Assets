@@ -640,12 +640,14 @@ for cname in ("A_SR01_Reload", "A_SR01_ReloadEmpty"):
         npairs = len(pr_)
         if npairs:
             own = sorted({str(sk_lods[0]["bone"][sk_lods[0]["T"][i][0]]) for i, _ in pr_})
-            mb = bvh(place(magL[0][0], Rm, tm), magL[0][1])
-            depth = 0.0
-            for vi in np.unique(sk_lods[0]["T"][[i for i, _ in pr_]].ravel()):
-                loc, nrm, _ix, dist = mb.find_nearest(P[vi])
-                if loc is not None and (np.array(P[vi]) - np.array(loc)) @ np.array(nrm) < 0:
-                    depth = max(depth, float(dist))
+            # depth = the F5 method (gunlib: dense samples of the meeting triangles, inside by ray parity); the
+            # nearest-face normal sign called points beyond the notch's edges "inside" (W5: 4.74 mm on frame 2)
+            from gunlib import gateutil as GU
+            from gunlib import game as GMx
+            Pm0 = place(magL[0][0], Rm, tm)
+            Tg_ = np.asarray(sk_lods[0]["T"])[sorted({i for i, _ in pr_})][:, -3:]
+            depth = GU.depth_inside(GMx.dense_samples(np.asarray(P), Tg_, 0.025), bvh(Pm0, magL[0][1]),
+                                    Pm0.min(0), Pm0.max(0))
             own = own + [f"depth_mm={depth * 10:.4f}"]
             Pm_ = place(magL[0][0], Rm, tm)
             cen = [P[sk_lods[0]["T"][i]].mean(0).round(3).tolist() for i, _ in pr_[:4]]

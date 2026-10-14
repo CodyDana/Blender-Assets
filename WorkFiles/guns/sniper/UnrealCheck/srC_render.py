@@ -511,7 +511,7 @@ try:
         return a_, c_, ma_, mc_, sa_, scc_
     a, c, ma, mc, sa, scc = pose()
     views = {
-        "look_hero34": dict(loc=(-55.0, 135.0, 60.0), fwd=(0.7, -1.0, -0.42), fov=45.0),
+        "look_hero34": dict(loc=(-75.0, 160.0, 75.0), fwd=(0.50, -1.0, -0.42), fov=45.0),   # W5: pulled back (stock was cut)
         "look_right_side": dict(loc=(25.0, 200.0, 2.0), fwd=(0, -1, 0), ortho_w=125.0),
         "look_left_side": dict(loc=(25.0, -200.0, 2.0), fwd=(0, 1, 0), ortho_w=125.0),
         "look_receiver_right_close": dict(loc=(12.0, 40.0, 14.0), fwd=(0.05, -1.0, -0.15), fov=45.0),
@@ -546,7 +546,7 @@ try:
     RANGE = 1000.0
     board_c = eye + fx * RANGE
     bo, boc = st_actor(plane, (board_c.x + fx.x * 1.5, board_c.y + fx.y * 1.5, board_c.z + fx.z * 1.5),
-                       ML.make_rot_from_z(unreal.Vector(-fx.x, -fx.y, -fx.z)), [mats["Chassis"]])
+                       ML.make_rot_from_z(unreal.Vector(-fx.x, -fx.y, -fx.z)), [eng or mats["Chassis"]])   # plain board (the atlas read as noise)
     bo.set_actor_scale3d(unreal.Vector(1.2, 1.2, 0.02))
     mfx = mz.transform_direction(unreal.Vector(1, 0, 0))
     tb = (board_c - mz.translation).dot(fx) / max(mfx.dot(fx), 1e-9)
