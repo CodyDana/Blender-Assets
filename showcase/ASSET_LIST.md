@@ -3,7 +3,7 @@
 Every asset we have built in this project, with its showcase pictures. Each folder in `showcase/` holds only the
 pictures for one asset. Made on 2026-10-02 from the inventory in `WorkFiles/showcase/inventory.json`.
 
-**Totals: 25 assets, 748 meshes, 1,100 showcase images.**
+**Totals: 26 assets, 752 meshes, 1,115 showcase images.**
 
 - 24 are our own designs. SummoningJutsu is older fan art the user chose to keep in the showcase (local only, not for sale). The other fan-art pieces are under "Not included".
 - Mesh counts are the shipped LOD0 meshes. LOD1/LOD2, collision and physics proxies are not counted.
@@ -29,6 +29,7 @@ pictures for one asset. Made on 2026-10-02 from the inventory in `WorkFiles/show
 | [Katana](Katana/) | Plain, standard uchigatana (705 mm curved blade, frosted hamon, round iron tsuba, real-geometry diamond ito wrap) and its black-lacquer saya with horn fittings; sheathes and draws along the blade's arc; recolourable ito and lacquer. | Finished, Unreal-verified (2026-10-03) | 2 | `Exports/Katana/`; `Assets/Katana/Katana.blend`, `Assets/Katana/Saya.blend` | 18 |
 | [AssaultRifle_AR01](AssaultRifle_AR01/) | Assault Rifle AR-01: a stamped-receiver 7.62x39 pattern rifle with walnut furniture (generic, no markings), matched to the user's design sheet; rigged skeletal mesh (moving bolt, trigger, selector, catch, rear sight, removable magazine) with 5 weapon clips, a static twin and the separate magazine; recolourable wood. | Built; Unreal 5.8 checked with 3 import gates open (degenerate micro-bevel triangles, tangent warnings, generated lightmap UV overlap); pack colours verified (2026-10-09) | 3 | `Exports/Guns/AR01/`; `Assets/Guns/AR01.blend`, `Assets/Guns/AR01_Mag.blend` | 10 |
 | [CompactSMG_SM01](CompactSMG_SM01/) | Compact SMG SM-01: a compact polymer-framed pistol-calibre SMG with a side-folding skeleton stock, folding iron sights and a straight 25-round polymer magazine (generic, no markings), matched to the user's design sheet; rigged skeletal mesh (moving bolt, charging handle, trigger, selector, release, magazine, stock, both sights) with 8 weapon clips, a static twin and the separate magazine; recolourable polymer. | Built; Unreal 5.8 verified (34/34, no import gate open); pack colours verified (2026-10-13); close-up realism not yet passed by the judges (joint SMG + AR-01 close-up push queued) | 3 | `Exports/Guns/SMG01/`; `Assets/Guns/SMG01.blend` | 10 |
+| [SniperRifle_SR01](SniperRifle_SR01/) | Sniper Rifle SR-01: a bolt-action precision rifle in an olive-drab painted chassis with an adjustable cheek riser, a folding, extending and canting bipod (legs splayed 12 degrees), a detachable 10-round box magazine and a separate long-range scope (generic, no markings), matched to the user's design sheet; rigged skeletal mesh (bolt that turns and slides, trigger, safety, release, magazine, cheek riser, bipod legs and extensions) with 8 weapon clips incl. bipod deploy / stow, a static twin, the separate magazine and the scope attachment. | Built; Unreal 5.8 verified (37/37, no import gate open; hand fit not run); pack colours proposed, not built (2026-10-14); close-up realism not yet passed by the judges | 4 | `Exports/Guns/SR01/`; `Assets/Guns/SR01.blend`, `Assets/Guns/Att_Scope_LongRange.blend` | 15 |
 
 ## Clothing
 
