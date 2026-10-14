@@ -253,7 +253,19 @@ Use two components per part, both attached as listed:
 - **Close-up realism is not signed off.** The two realism judges did not pass the close views (FP 35 cm, the scope
   view, a 3x crop) after one W4b round. The game views (TP 3 m, hero) are the intended use; see
   `WorkFiles/guns/sniper/SR01_REPORT.md`.
-- **Hand pose:** `Grip` and `SupportHand` are provisional until a player-MetaHuman hand fit (U11) runs.
+- **Hand pose:** `Grip` and `SupportHand` are provisional until a player-MetaHuman hand fit (U11) runs in Unreal.
+  The Blender hand fit on `MH_PlayerDefault` has run (H1 full, `WorkFiles/guns/sniper/H1_REPORT.md`). Both hands seat
+  with 0 intersections at every clip extreme, and the index rests 0.7 mm from the trigger. Known follow-ups, measured
+  but not applied (the exports are unchanged):
+  - `SupportHand` (B 342.87, 0, 50.53 mm) is out of the left arm's reach by 83 mm when the body stands square to the
+    target. It is reachable with the shoulders turned 23 deg (a bladed stance), or at X 259.9 or nearer in the square
+    stance.
+  - `SupportHand` sits 9.6 mm inside the forend: the palm rests on the band's underside at Z 40.90.
+  - `SupportHandBipod` sits 38.1 mm inside the butt: the palm rests at Z -33.99.
+  - The cheek riser at full drop leaves the eye 38.4 mm above the comb. The fit body's upright face needs about
+    40 mm under the eye, so the riser is 1.6 mm short of travel there; at the riser's rear it would need 41 mm.
+  - The thumb cannot wrap the grip's left side with this body's rest thumb, so the engine hand pose needs its own
+    thumb.
 
 ## Measured in Unreal 5.8.3 (W5, run `/Game/GunCheck/SR01_1014b`)
 
