@@ -185,7 +185,7 @@ Bone ranges:
    - Deltas are documented only for AR01 (rifle plan 13). The SR01 has none listed.
    - No blind reverse IP test is recorded for the SR01, where a judge must not be able to name the real rifle (FAB_PUBLISHING_STUDY 3.1).
    - Clarify the W4 blind result, "copy picked 14/14 on design" (SR01_REPORT §3, §8.6).
-2. **Scope markings.** The turrets carry "generic tick and numeral markings" (MATERIALS_README). This conflicts with the "no numerals" rule in GUN_BUILDING_STUDY §9. Decide on it or remove the numerals.
+2. **Scope markings: APPROVED (user, 2026-10-14).** The turrets carry generic tick marks and numerals (MATERIALS_README). The user approved them as an allowed generic marking for this scope, an exception to the "no numerals" line in GUN_BUILDING_STUDY §9. Before upload, check only that they stay generic: ticks and plain numbers, never a maker name, model name, logo or serial.
 3. **AI declaration.**
    - The source is "the user's AI design sheet" (SR01_REPORT §1), and the rifle was built by Claude sessions.
    - Catalogue policy P1 recommends Created with AI = Yes, with NoAI on (FAB_PUBLISHING_STUDY 3.3, 8.3). The user decides.
