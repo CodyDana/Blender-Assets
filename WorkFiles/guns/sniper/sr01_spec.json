@@ -1,0 +1,4223 @@
+{
+ "meta": {
+  "name": "Sniper Rifle SR-01",
+  "code": "SR01",
+  "version": "0.1.0 (W0)",
+  "date": "2026-10-12",
+  "assets": {
+   "SK_SR01": "rigged skeletal rifle, scope NOT included (+ _LOD1..3, SK_SR01_Skeleton, PHYS_SR01, clips A_SR01_*)",
+   "SM_SR01": "static twin: bipod FOLDED (the sheet pose), riser at the sheet pose, magazine merged (study Q3 default); scope not included",
+   "SM_SR01_Mag": "10-round straight box",
+   "SM_Att_Scope_LongRange": "scope + its two rings, static attachment on Rail_Top (own Mount, Sight sockets; body + lens slots)",
+   "optional_SM_SR01_Deployed": "not built in v1 (Q5): a static twin with the bipod deployed for set dressing"
+  },
+  "units": "mm, deg; frame M unless a key says B or unreal",
+  "generator": "WorkFiles/guns/sniper/tools/make_spec.py",
+  "inputs": [
+   "sr01_measured.json",
+   "trace/GR_outline.json",
+   "craft_parts.json",
+   "sr01_interface.json",
+   "WorkFiles/guns/gunlib/gun_standard.json"
+  ],
+  "roles": "measurement wins on silhouette numbers; craft on small-part construction and finishes; plan on frames, bones, sockets, slots, budgets, gates, stages",
+  "ip": "generic names only (deny list clean, below); no markings, logos, serials; References/AWP.webp used ONLY as a fold-direction hint for the legs, never its look"
+ },
+ "sheet_panels": {
+  "GR": {
+   "sheet_label": "LEFT (labelled; shows the gun's RIGHT)",
+   "box_xyxy": [
+    4,
+    4,
+    622,
+    566
+   ],
+   "mirrored": false
+  },
+  "GL": {
+   "sheet_label": "RIGHT (labelled; shows the gun's LEFT)",
+   "box_xyxy": [
+    630,
+    4,
+    1249,
+    566
+   ],
+   "mirrored": true
+  },
+  "TOP": {
+   "sheet_label": "TOP",
+   "box_xyxy": [
+    4,
+    595,
+    622,
+    1205
+   ],
+   "mirrored": false
+  },
+  "Q34": {
+   "sheet_label": "3/4 FRONT RIGHT",
+   "box_xyxy": [
+    630,
+    595,
+    1249,
+    1205
+   ],
+   "mirrored": false
+  }
+ },
+ "frames": {
+  "M": "+X muzzle, +Z up, +Y gun left; X 0 butt-pad rear, Z 0 bore",
+  "B": {
+   "Grip_in_M": [
+    297.13,
+    0.0,
+    -96.13
+   ],
+   "rule": "B = M - Grip"
+  },
+  "unreal": "cm = (Bx, -By, Bz) / 10",
+  "grip": {
+   "axis_deg_from_vertical": 27.15,
+   "web_Z": -55.2,
+   "depth_mm": 46.0,
+   "web_point_M": [
+    318.12,
+    -55.2
+   ]
+  }
+ },
+ "scale": {
+  "overall_length": 1100.0,
+  "real": {
+   "overall_mm": 1100.0,
+   "barrel_mm": 559.0,
+   "barrel_in": 22,
+   "mass_kg_without_scope_and_mag": 5.9,
+   "scope_with_rings_kg": 1.15,
+   "mag_empty_kg": 0.2,
+   "round_g": 25.4,
+   "mag_capacity": 10,
+   "pattern": ".308-class bolt-action chassis rifle (short action, 22 in heavy fluted barrel)",
+   "range_for_class": {
+    "overall_mm": [
+     1050,
+     1200
+    ],
+    "barrel_mm": [
+     508,
+     660
+    ],
+    "mass_kg": [
+     5.0,
+     6.8
+    ]
+   },
+   "mass_loaded_ready_kg": 7.5
+  },
+  "anchors": {
+   "anchors": [
+    {
+     "anchor": "scope main tube",
+     "sheet_mm_at_overall": 34.1,
+     "real_range_mm": [
+      34.0,
+      34.0
+     ],
+     "implied_overall_mm": [
+      1097,
+      1097
+     ],
+     "implied_overall_mid": 1097,
+     "source": "34 mm tube class (30 mm would give 970 mm, 36 mm 1165 mm)"
+    },
+    {
+     "anchor": "scope eyepiece",
+     "sheet_mm_at_overall": 45.1,
+     "real_range_mm": [
+      42.0,
+      46.0
+     ],
+     "implied_overall_mm": [
+      1024,
+      1122
+     ],
+     "implied_overall_mid": 1073,
+     "source": "long-range eyepieces 42-46 mm"
+    },
+    {
+     "anchor": "scope objective bell",
+     "sheet_mm_at_overall": 62.1,
+     "real_range_mm": [
+      62.0,
+      68.0
+     ],
+     "implied_overall_mm": [
+      1098,
+      1205
+     ],
+     "implied_overall_mid": 1151,
+     "source": "56 mm objective, bell OD 62-68 mm"
+    },
+    {
+     "anchor": "rail slot pitch (drawn)",
+     "sheet_mm_at_overall": 10.61,
+     "real_range_mm": [
+      10.01,
+      10.01
+     ],
+     "implied_overall_mm": [
+      1038,
+      1038
+     ],
+     "implied_overall_mid": 1038,
+     "source": "MIL-STD-1913"
+    },
+    {
+     "anchor": "length of pull",
+     "sheet_mm_at_overall": 363.2,
+     "real_range_mm": [
+      330.0,
+      370.0
+     ],
+     "implied_overall_mm": [
+      999,
+      1121
+     ],
+     "implied_overall_mid": 1060,
+     "source": "precision chassis LOP 13.0-14.5 in"
+    },
+    {
+     "anchor": "bolt knob",
+     "sheet_mm_at_overall": 24.8,
+     "real_range_mm": [
+      20.0,
+      25.0
+     ],
+     "implied_overall_mm": [
+      887,
+      1109
+     ],
+     "implied_overall_mid": 998,
+     "source": "tactical bolt knobs 20-25 mm"
+    },
+    {
+     "anchor": "magazine fore-aft",
+     "sheet_mm_at_overall": 89.3,
+     "real_range_mm": [
+      80.0,
+      88.0
+     ],
+     "implied_overall_mm": [
+      985,
+      1084
+     ],
+     "implied_overall_mid": 1035,
+     "source": ".308-class detachable box, body + ribs"
+    },
+    {
+     "anchor": "muzzle device OD",
+     "sheet_mm_at_overall": 36.1,
+     "real_range_mm": [
+      30.0,
+      36.0
+     ],
+     "implied_overall_mm": [
+      914,
+      1097
+     ],
+     "implied_overall_mid": 1006,
+     "source": "linear compensator / brake class"
+    }
+   ],
+   "median_implied_overall_mm": 1049,
+   "spread_mm": [
+    998,
+    1151
+   ]
+  },
+  "px_per_mm": {
+   "GR": 0.5317,
+   "GL": 0.5309,
+   "TOP": 0.5336
+  }
+ },
+ "key_dimensions": {
+  "overall": 1100.0,
+  "height_with_scope": 265.2,
+  "height_without_scope": 197.5,
+  "scope_axis_over_bore": 57.6,
+  "rail_top_Z": 30.0,
+  "length_of_pull": 363.2,
+  "barrel": 559.0,
+  "max_width_incl_knob": 111.2
+ },
+ "stations_X": {
+  "butt_pad_front": 52.9,
+  "riser": [
+   68.9,
+   179.9
+  ],
+  "eye_point": 176.1,
+  "butt_chassis_joint": 244.8,
+  "shroud_rear": 345.4,
+  "safety": 360.0,
+  "trigger_face": 363.2,
+  "knob": 367.9,
+  "receiver": [
+   382.0,
+   567.3
+  ],
+  "mag": [
+   414.1,
+   503.3
+  ],
+  "bolt_face": 505.0,
+  "bipod_hub": 719.6,
+  "bipod_clamp": [
+   747.8,
+   812.7
+  ],
+  "forend_front": 836.8,
+  "device_seat": 1049.7,
+  "crown": 1064.5,
+  "muzzle": 1100.0
+ },
+ "parts": [
+  {
+   "id": "chassis",
+   "display": "Chassis (centre + forend, integral guard, mag well, dovetail band)",
+   "bone": "body",
+   "process": "M-chamfer (machined 6061-class aluminium billet)",
+   "bevel": "outer edges 0.6 mm 45 deg chamfer (>= rear visibility minimum 0.4); inside pocket corners keep the cutter radius 3.0 mm; slot edges 0.4",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "cerakote_od_over_al",
+   "texel_class": "B/C",
+   "construction": "One-piece machined chassis from the butt interface (X 150 px ~ X 244) to the forend front (X 836.8): action bed with a full-length bolt raceway (radius 12.5 at Z 0, open on top between X 345 and 567), an inletted receiver pocket, integral mag well (walls 3.0, clearance 0.3 to the mag, catch window at the rear, top shelf at Z -11.5), trigger-housing pocket, integral guard bosses, and the forend tube (U-section, wall 3.5) free-floating around the barrel with >= 3.0 radial clearance. The drawn panel recess on the action side (X ~455-560, both sides) is a 0.8 mm deep pocket with 3 mm corner radius. Three slots per side (X 662-698, 715-752, 768-811; Z -12.9..-3.5) cut through the forend wall with 0.4 chamfers; these are an original slot pattern (never named after a trade standard). Bottom of the forend: an integral plain dovetail band X 582-831 (the drawn lower band), 38 mm across, 45 deg flanks, no slots (none drawn).",
+   "key_features": [
+    "bolt raceway is real geometry: the bolt slides 88 mm back in it",
+    "mag well walls, shelf and catch window modelled (form stage)",
+    "no seam drawn between centre and forend: one part",
+    "action-bed screw heads only where drawn"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "chassis_centre",
+     "chassis_forend",
+     "trigger_guard"
+    ],
+    "area_px": {
+     "chassis_centre": 4476,
+     "chassis_forend": 4415,
+     "trigger_guard": 467
+    }
+   },
+   "box_M": {
+    "X": [
+     244.8,
+     836.8
+    ],
+    "Z": [
+     -68.8,
+     15.9
+    ],
+    "Y": [
+     -32.7,
+     32.7
+    ]
+   },
+   "dims": {
+    "width_at_mag": 65.4,
+    "forend_width": 73.8,
+    "forend_top_Z": 15.9,
+    "forend_bottom_Z": -39.6,
+    "forend_front_X": 836.8,
+    "bolt_raceway_r": 12.5,
+    "raceway_open_X": [
+     345.4,
+     567.3
+    ],
+    "slots": [
+     {
+      "X": [
+       662.3,
+       698.0
+      ],
+      "Z": [
+       -12.9,
+       -3.5
+      ]
+     },
+     {
+      "X": [
+       714.9,
+       751.6
+      ],
+      "Z": [
+       -12.9,
+       -3.5
+      ]
+     },
+     {
+      "X": [
+       767.6,
+       810.8
+      ],
+      "Z": [
+       -12.9,
+       -3.5
+      ]
+     }
+    ],
+    "dovetail_band": {
+     "X": [
+      582.3,
+      830.6
+     ],
+     "Z": [
+      -40.2,
+      -25.1
+     ]
+    },
+    "dovetail": {
+     "across": 38.0,
+     "flank_deg": 45.0,
+     "depth": 6.0
+    },
+    "well": {
+     "wall": 3.0,
+     "clearance": 0.3,
+     "shelf_Z": -11.5
+    },
+    "guard_opening": {
+     "X": [
+      340.7,
+      395.2
+     ],
+     "Z": [
+      -94.7,
+      -62.8
+     ],
+     "length": 54.5,
+     "height": 32.0
+    },
+    "barrel_radial_clearance_min": 3.0,
+    "width_note": "2 x the TOP left half-width (I2)"
+   },
+   "authority": "GR (outline, slots); TOP (widths x2 left half)",
+   "confidence": "high (outline), medium (widths)",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft chassis"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "butt",
+   "display": "Fixed skeleton-style butt",
+   "bone": "body",
+   "process": "M-chamfer (machined aluminium, fixed)",
+   "bevel": "0.6 chamfer outer; 2.5 radius at the cut-out's inside corners",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "cerakote_od_over_al",
+   "texel_class": "B/C",
+   "construction": "Fixed skeleton-style butt bolted to the chassis at X ~244 (a 0.3 mm visible seam with depth 0.5, the only joint drawn). Profile = the traced 'butt' part: flat top Z -16.7 (riser seat), lower edge rising from the heel step to the grip, rear vertical slab X 57-100 px with a stepped lower heel. The two drawn round heads (X 99 / 129, Z -67.5, dia 15) are the length-of-pull/ butt-height clamp knobs (knurled cap, 2 mm proud). Riser post bores (2x dia 10) in the top face.",
+   "key_features": [
+    "hinge not drawn: fixed (R6)",
+    "heel step as drawn",
+    "two clamp knobs on the right only (GL draws a rectangular QD-cup recess at X ~110-135 instead)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "butt"
+    ],
+    "area_px": {
+     "butt": 4291
+    }
+   },
+   "box_M": {
+    "X": [
+     52.9,
+     244.8
+    ],
+    "Z": [
+     -143.6,
+     31.3
+    ],
+    "Y": [
+     -29.6,
+     29.6
+    ]
+   },
+   "dims": {
+    "top_Z": -16.7,
+    "clamp_knobs": [
+     {
+      "centre_XZ": [
+       99.0,
+       -67.5
+      ],
+      "dia": 15.0
+     },
+     {
+      "centre_XZ": [
+       129.1,
+       -67.5
+      ],
+      "dia": 15.0
+     }
+    ],
+    "joint_to_chassis_X": 244.8,
+    "visible_seam": [
+     0.2,
+     0.8
+    ],
+    "neck_width": 43.2,
+    "post_bores": {
+     "dia": 10.3,
+     "X": [
+      95.0,
+      150.0
+     ]
+    }
+   },
+   "authority": "GR; GL for its QD-cup recess",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft butt"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "pad_plate",
+   "display": "LOP spacer plate",
+   "bone": "body",
+   "process": "M-chamfer (machined aluminium spacer plate)",
+   "bevel": "0.4",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "cerakote_od_over_al",
+   "texel_class": "C",
+   "construction": "LOP spacer plate X 52.9-68.9 between the butt and the pad, three socket-head screws (dia 6 / 8.3 / 6 drawn heads at Z -26, -69, -103) on the right; real pattern: 4 mm thread socket caps in counterbores.",
+   "key_features": [
+    "screw heads from the sheet (>= 4 px for the middle one)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "pad_plate"
+    ],
+    "area_px": {
+     "pad_plate": 609
+    }
+   },
+   "box_M": {
+    "X": [
+     52.9,
+     69.9
+    ],
+    "Z": [
+     -147.4,
+     -12.0
+    ],
+    "Y": [
+     -30.6,
+     30.6
+    ]
+   },
+   "dims": {
+    "screws": [
+     {
+      "centre_XZ": [
+       60.5,
+       -26.1
+      ],
+      "dia": 6.0
+     },
+     {
+      "centre_XZ": [
+       60.5,
+       -69.3
+      ],
+      "dia": 8.3
+     },
+     {
+      "centre_XZ": [
+       60.5,
+       -103.2
+      ],
+      "dia": 6.0
+     }
+    ]
+   },
+   "authority": "GR",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft pad_plate"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "butt_pad",
+   "display": "Recoil pad (rubber)",
+   "bone": "body",
+   "process": "P-round (moulded rubber)",
+   "bevel": "R 3.0-4.0 on the outer edges, R 1.5 on the face ribs",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "rubber_black (Masks A 0)",
+   "texel_class": "C",
+   "construction": "Thick recoil pad X 0-52.9, Z -153.7..16.4 (170 tall), width 61 (TOP left half x 2), rounded rectangle section; three horizontal moulded grooves on the side faces as drawn (0.8 deep); rear face flat with a faint stipple (normal only); slight draft 1.5 deg.",
+   "key_features": [
+    "rubber never shows metal",
+    "toe and heel abraded (R)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "butt_pad"
+    ],
+    "area_px": {
+     "butt_pad": 2454
+    }
+   },
+   "box_M": {
+    "X": [
+     0.0,
+     52.9
+    ],
+    "Z": [
+     -153.7,
+     16.4
+    ],
+    "Y": [
+     -30.6,
+     30.6
+    ]
+   },
+   "dims": {
+    "height": 170.1,
+    "width": 61.2,
+    "draft_deg": 1.5
+   },
+   "authority": "GR + TOP",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft butt_pad"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "cheek_riser",
+   "display": "Adjustable cheek riser (plate + 2 posts)",
+   "bone": "cheek_riser",
+   "process": "M-chamfer (machined aluminium plate on two steel posts)",
+   "bevel": "0.6 chamfer; plate's lower front corner chamfer 6 x 45 as drawn",
+   "joint": {
+    "type": "sliding",
+    "gap_mm": [
+     0.15,
+     0.4
+    ],
+    "parent": "butt (post bores)"
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "cerakote_od_over_al",
+   "texel_class": "B",
+   "construction": "Plate X 68.9-179.9, top Z 32.0, bottom Z -3.5 (35.5 thick), width 69 (TOP); a shallow cheek dish 1.5 mm on its left top (unseen, real pattern; plain if Q-free). Two posts dia 10 at X ~95 and ~150 into bores in the butt's top (sliding clearance 0.15-0.40); a clamp lever on the left side of the butt (GL draws a small dark lever at X ~95, Z -10). Height: sheet pose = rest; travel -12.9..+12.0 mm (plate bottom 0.3 above the butt top at the low stop).",
+   "key_features": [
+    "exposed post length at rest 13.2 mm (drawn)",
+    "cheek-weld wear on the left top (G)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "cheek_riser"
+    ],
+    "area_px": {
+     "cheek_riser": 1385
+    }
+   },
+   "box_M": {
+    "X": [
+     68.9,
+     179.9
+    ],
+    "Z": [
+     -46.7,
+     32.0
+    ],
+    "Y": [
+     -34.5,
+     34.5
+    ]
+   },
+   "dims": {
+    "plate_Z": [
+     -3.5,
+     31.0
+    ],
+    "width": 69.0,
+    "travel_Z": [
+     -12.9,
+     12.0
+    ],
+    "post_dia": 10.0,
+    "posts_X": [
+     95.0,
+     150.0
+    ],
+    "low_stop_gap": 0.3,
+    "plate_Z_note": "W1 follow-up L2: GR and GL both draw the riser top 1 px (1.9 mm) under 32.0; 31.0"
+   },
+   "authority": "GR + TOP",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft cheek_riser"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "receiver",
+   "display": "Receiver (round, short action) with port and lug recesses",
+   "bone": "body",
+   "process": "M-chamfer (machined steel, round-bottom receiver)",
+   "bevel": "0.4",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel",
+   "texel_class": "B",
+   "construction": "Round receiver dia 34.3 (real short-action class), X 382-567, axis = bore; ejection port on the right X 422.5-507.1, Z 4.9-14.3 (drawn) opened to the real port shape (cut to the bolt raceway, wall 3.0 visible); bolt-handle notch at the rear bridge right (the handle root drops into it when closed: 60 deg cam slope); recoil lug ring at the front under the chassis; the integral scope base rail screwed on top (separate part 'rail').",
+   "key_features": [
+    "port interior and bolt face revealed when open",
+    "rear tang on the right carries the safety",
+    "bolt stop on the left rear, hidden in the chassis (not animated, R11)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "receiver"
+    ],
+    "area_px": {
+     "receiver": 1581
+    }
+   },
+   "box_M": {
+    "X": [
+     382.0,
+     567.3
+    ],
+    "Z": [
+     -17.1,
+     17.1
+    ],
+    "Y": [
+     -17.1,
+     17.1
+    ]
+   },
+   "dims": {
+    "dia": 34.3,
+    "port_drawn": {
+     "X": [
+      422.5,
+      507.1
+     ],
+     "Z": [
+      4.9,
+      14.3
+     ]
+    },
+    "port_built_X": [
+     415.0,
+     507.1
+    ],
+    "lug_recesses": "3 x 60 deg at the front ring, 12 deep"
+   },
+   "authority": "GR (top, port); real pattern",
+   "confidence": "high (outline), real-pattern (internals)",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft receiver"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "rail",
+   "display": "Scope base rail (1913, flat)",
+   "bone": "body",
+   "process": "M-chamfer (gunlib rail_1913)",
+   "bevel": "0.3-0.5 (rail module)",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "anodized_black_al",
+   "texel_class": "B",
+   "construction": "Scope base X 385.8-546.6 (160.8), top Z 30.0, built by gunlib rail_1913 with 15 slots at 10.01 centred (end webs ~5.4); flat (0 MOA: the drawn scope axis is parallel to the bore within 0.06 deg); 4 button-head screws in slots 1, 5, 9, 13 (dia 4.8 heads inside the 5.24 slots, SMG C13 lesson).",
+   "key_features": [
+    "drawn tooth pitch 10.6 mm: built at 10.01 (line standard)",
+    "Rail_Top = centre of slot 0"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "rail"
+    ],
+    "area_px": {
+     "rail": 402
+    }
+   },
+   "box_M": {
+    "X": [
+     385.8,
+     546.6
+    ],
+    "Z": [
+     20.5,
+     30.0
+    ],
+    "Y": [
+     -10.6,
+     10.6
+    ]
+   },
+   "dims": {
+    "slots": 15,
+    "slot0_X": 396.13,
+    "end_webs": 7.71,
+    "pitch": 10.01,
+    "drawn_pitch": 10.61,
+    "screws_in_slots": [
+     1,
+     5,
+     9,
+     13
+    ]
+   },
+   "authority": "GR (extent, top)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft rail"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "bolt",
+   "display": "Bolt (3-lug, 60 deg) with shroud",
+   "bone": "bolt",
+   "process": "M-chamfer + M-round (machined steel, polished body)",
+   "bevel": "0.3 on lugs, 0.8 round on the shroud's rear edge",
+   "joint": {
+    "type": "sliding",
+    "gap_mm": [
+     0.15,
+     0.4
+    ],
+    "also": "lugs in recesses hinge row 0.10-0.30 during the 60 deg turn"
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "bare_steel_polished + phosphate shroud",
+   "texel_class": "B",
+   "construction": "Bolt body dia 17.8 from the face X 505 back to the shroud; three locking lugs at 120 deg (OD 25.4, 12 long) at the front: they ride in the raceway's lug grooves and lock into the receiver ring's lug recesses (modelled: 3 recesses cut 60 deg wide); recessed bolt face with an extractor hook (right) and plunger ejector hole; shroud X 345.4-380 (drawn: dia ~24, rear dome); cocking indicator tip at the shroud rear (plain). Real pattern: 3-lug 60 deg throw.",
+   "key_features": [
+    "rotate 60 deg, then slide 88 mm (clip BoltCycle)",
+    "polished sliding flanks (R forced)",
+    "bolt face visible through the open port"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "bolt_shroud"
+    ],
+    "area_px": {
+     "bolt_shroud": 277
+    }
+   },
+   "box_M": {
+    "X": [
+     345.4,
+     505.0
+    ],
+    "Z": [
+     -12.5,
+     12.5
+    ],
+    "Y": [
+     -12.5,
+     12.5
+    ]
+   },
+   "dims": {
+    "face_X": 505.0,
+    "body_dia": 17.8,
+    "lug_od": 25.4,
+    "lugs": 3,
+    "rotate_deg": -60.0,
+    "travel": 88.0,
+    "shroud_X": [
+     345.4,
+     380.0
+    ]
+   },
+   "authority": "GR + GL (shroud); real pattern",
+   "confidence": "high (shroud), real-pattern (body)",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft bolt"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "bolt_handle",
+   "display": "Bolt handle and knob",
+   "bone": "bolt",
+   "process": "M-round (machined steel stem) + knob (machined, round)",
+   "bevel": "stem 0.8 round; knob is a revolve",
+   "joint": {
+    "type": "integral",
+    "parent": "bolt"
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel",
+   "texel_class": "B",
+   "construction": "Stem from the bolt's rear right at X ~383, swept 15 mm rearward and 26 deg below horizontal to the knob centre (X 367.9, Y -66.5, Z -33.6); knob dia 24.8 (sheet), a sphere with a 6 mm flat at the stem joint; 0.4 thread-relief groove at the joint (knob screws on, real pattern). Y of the knob from TOP (right edge -85.0 less the 5 mm shadow bias, less the radius).",
+   "key_features": [
+    "TOP draws the knob 32 mm further back than GR: GR wins X, TOP gives Y",
+    "clears the scope by >= 20 mm open and back (S0 check)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "bolt_handle"
+    ],
+    "area_px": {
+     "bolt_handle": 398
+    }
+   },
+   "box_M": {
+    "X": [
+     355.5,
+     386.0
+    ],
+    "Z": [
+     -46.0,
+     0.0
+    ],
+    "Y": [
+     -80.0,
+     -9.0
+    ]
+   },
+   "dims": {
+    "knob_centre_M": [
+     367.9,
+     -67.6,
+     -33.6
+    ],
+    "knob_dia": 24.8,
+    "radius_from_axis": 75.49,
+    "rest_deg_below_horizontal": 26.43,
+    "open_centre_M": [
+     367.9,
+     -62.9,
+     41.7
+    ],
+    "back_centre_M": [
+     279.9,
+     -62.9,
+     41.7
+    ],
+    "min_to_scope": 29.9
+   },
+   "authority": "GR (X, Z); TOP (Y)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft bolt_handle"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "safety",
+   "display": "Safety (2-position tang rocker, right)",
+   "bone": "selector",
+   "process": "M-chamfer (machined steel lever)",
+   "bevel": "0.3",
+   "joint": {
+    "type": "hinge",
+    "gap_mm": [
+     0.1,
+     0.3
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel",
+   "texel_class": "B",
+   "construction": "Two-position rocker on the right receiver tang behind the bolt handle (real 2-position tang pattern): lever 14 long x 5 wide x 4 thick, serrated thumb face (geometry: 4 ridges at 1.2 pitch), pivot at X 360.0, Z -16.0 on a transverse pin; FIRE = forward (bind), SAFE = 12 deg rearward. Not resolved on the sheet (< 3 px): size and place from the real pattern (G6 source = norm).",
+   "key_features": [
+    "only on the right (G10)",
+    "thumb-travel scratch arc (G)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [],
+    "area_px": {}
+   },
+   "box_M": {
+    "X": [
+     355.0,
+     366.0
+    ],
+    "Z": [
+     -18.0,
+     -2.0
+    ],
+    "Y": [
+     -21.5,
+     -17.5
+    ]
+   },
+   "dims": {
+    "pivot_M": [
+     360.0,
+     -17.5,
+     -16.0
+    ],
+    "detents_deg": {
+     "FIRE": 0.0,
+     "SAFE": -12.0
+    },
+    "lever": [
+     14.0,
+     5.0,
+     4.0
+    ]
+   },
+   "authority": "real pattern (not resolved on the sheet)",
+   "confidence": "real-pattern",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft safety"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "trigger",
+   "display": "Trigger blade",
+   "bone": "trigger",
+   "process": "C-fillet (cast/machined steel blade)",
+   "bevel": "1.0 round",
+   "joint": {
+    "type": "hinge",
+    "gap_mm": [
+     0.1,
+     0.3
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel",
+   "texel_class": "C",
+   "construction": "Curved blade X 348.2-385.8 (traced), face X 363.2 at mid height; pivot inside the trigger housing above the blade at X 368, Z -57; pull 0..+6 deg (lower end rearward; 3 mm at the finger, precision trigger). Housing and adjustment screws hidden in the chassis pocket (not modelled beyond the pocket walls).",
+   "key_features": [
+    "LOP 363 mm (14.3 in) to the face",
+    "face polish (G)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "trigger"
+    ],
+    "area_px": {
+     "trigger": 87
+    }
+   },
+   "box_M": {
+    "X": [
+     348.2,
+     385.8
+    ],
+    "Z": [
+     -98.5,
+     -60.9
+    ],
+    "Y": [
+     -3.0,
+     3.0
+    ]
+   },
+   "dims": {
+    "pivot_XZ": [
+     368.0,
+     -57.0
+    ],
+    "pull_rot_Y_deg": 6.0,
+    "face_X": 363.2,
+    "tip_to_guard_at_pull": 3.27,
+    "length_of_pull": 363.2
+   },
+   "authority": "GR",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft trigger"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "mag_release",
+   "display": "Magazine release paddle",
+   "bone": "mag_release",
+   "process": "M-chamfer (machined steel paddle)",
+   "bevel": "0.4; finger edge 1.0",
+   "joint": {
+    "type": "hinge",
+    "gap_mm": [
+     0.1,
+     0.3
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel",
+   "texel_class": "C",
+   "construction": "Paddle in front of the trigger guard (real chassis pattern): drawn X 408.4-415.9, Z -71..-114. Built: pivot pin dia 3 at X 410.5, Z -78.0 (clevis in the guard's front leg); catch hook 24 above the pivot at Z -54 engaging the mag's rear-wall notch by 1.4 mm; finger pad 36 below the pivot; front face at rest 0.3 behind... see spec mag_release for the derived numbers (gap to the mag, press angle, hook travel). Push the pad forward = release.",
+   "key_features": [
+    "declared shift of the paddle's front face behind the drawn edge (spec)",
+    "hook travel > engagement (S0 check)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "mag_release"
+    ],
+    "area_px": {
+     "mag_release": 51
+    }
+   },
+   "box_M": {
+    "X": [
+     405.6,
+     410.6
+    ],
+    "Z": [
+     -114.0,
+     -50.0
+    ],
+    "Y": [
+     -5.0,
+     5.0
+    ]
+   },
+   "dims": {
+    "pivot_XZ": [
+     408.6,
+     -74.0
+    ],
+    "release_rot_Y_deg": -4.5,
+    "hook_above_pivot": 24.0,
+    "pad_below_pivot": 40.0,
+    "hook_engagement": 1.4,
+    "hook_travel": 1.88,
+    "pad_travel": 3.14,
+    "front_face_X": 410.6,
+    "drawn_X": [
+     409.3,
+     414.0
+    ],
+    "declared_shift_rearward": 3.4,
+    "gap_to_mag_pressed": 0.36,
+    "notch_Z": -50.0
+   },
+   "authority": "GR (position); real pattern (mechanism)",
+   "confidence": "medium",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft mag_release"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "grip",
+   "display": "Pistol grip (polymer)",
+   "bone": "body",
+   "process": "P-round (moulded glass-filled polymer)",
+   "bevel": "R 1.5-2.5, draft 1.5 deg, parting line on the mid-plane",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "polymer_black + grip_texture (Masks A 0)",
+   "texel_class": "B/C",
+   "construction": "Traced grip: rear strap 30.7 deg, front strap 24.9 deg from vertical (sheet; the brief said 'vertical', the sheet draws ~28 deg mean: the sheet wins, R13), fore-aft 54.3 at mid height, width 32 (unseen; polymer grip norm), bottom Z -166.4 with a flared base; finger-groove-free front; side panels with a moulded texture (normal: 0.6 pitch pebble) inside a geometric 0.5 border; one grip screw from below (hidden).",
+   "key_features": [
+    "hand-fit H1 early (grip girth, trigger reach)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "grip"
+    ],
+    "area_px": {
+     "grip": 1726
+    }
+   },
+   "box_M": {
+    "X": [
+     224.1,
+     331.3
+    ],
+    "Z": [
+     -166.2,
+     -55.2
+    ],
+    "Y": [
+     -16.0,
+     16.0
+    ]
+   },
+   "dims": {
+    "rear_strap_deg": 30.7,
+    "front_strap_deg": 24.9,
+    "axis_deg_from_vertical": 27.15,
+    "foreaft": 54.3,
+    "width": 32.0,
+    "width_note": "unseen: polymer grip norm",
+    "bottom_Z": -166.4
+   },
+   "authority": "GR",
+   "confidence": "high (outline), medium (width)",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft grip"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "barrel",
+   "display": "Barrel (heavy, 6 flutes)",
+   "bone": "body",
+   "process": "M-chamfer (turned steel, fluted)",
+   "bevel": "0.3 flute edges; crown chamfer 45 deg x 1.0",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ],
+    "note": "threaded into the receiver; >= 3.0 radial clearance to the forend"
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel",
+   "texel_class": "D",
+   "construction": "Breech X 505.5 to crown X 1064.5 (559 mm, 22 in): heavy contour, 35.2 at the forend front tapering to 31.8 at the device (both side views; TOP inflates round parts +6-10 %); 6 straight flutes (3 visible per side as drawn), 6.0 wide x 2.0 deep with 1.0 radius bottoms, X 841-1036 (drawn flute span), run-outs as ball-end cutter exits (no knife edges, UD2); plain shank ahead of the flutes X 1036-1049.7; thread tenon dia 15.9 x 15 under the device; bore 7.8 dia >= 2 calibres deep with darkening.",
+   "key_features": [
+    "flutes are geometry (study 3.2)",
+    "48 sides LOD0 (G3)",
+    "free-floated: >= 3.0 radial gap to the forend"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "barrel"
+    ],
+    "area_px": {
+     "barrel": 1959
+    }
+   },
+   "box_M": {
+    "X": [
+     505.5,
+     1064.5
+    ],
+    "Z": [
+     -17.6,
+     17.6
+    ],
+    "Y": [
+     -17.6,
+     17.6
+    ]
+   },
+   "dims": {
+    "length": 559.0,
+    "breech_X": 505.5,
+    "crown_X": 1064.5,
+    "od_at_forend": 35.2,
+    "od_mid": 32.9,
+    "od_at_device": 31.8,
+    "flutes": {
+     "n": 6,
+     "width": 6.0,
+     "depth": 2.0,
+     "X": [
+      841.0,
+      1036.0
+     ]
+    },
+    "bore": 7.8,
+    "tenon": [
+     15.9,
+     15.0
+    ],
+    "sides_lod0": 48
+   },
+   "authority": "GR + GL (diameters); TOP not used (I3)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft barrel"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "muzzle_device",
+   "display": "Linear compensator",
+   "bone": "muzzle_device",
+   "process": "M-chamfer (turned steel)",
+   "bevel": "front chamfer 2.0 x 45 as drawn; rear collar step 0.5",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel + soot",
+   "texel_class": "D",
+   "construction": "Linear compensator (closed outer sleeve, no side ports drawn): X 1049.7-1100, OD 36.1 (side), rear collar step at X ~1052, front face with an exit bore 12 mm (3/4 view), internal baffle + forward vent ring behind the face (hidden; visible only down the exit). Threads on the tenon (hidden).",
+   "key_features": [
+    "hide bone when a suppressor mounts (MuzzleSeat X 1049.7)",
+    "soot gradient at the exit"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "muzzle_device"
+    ],
+    "area_px": {
+     "muzzle_device": 486
+    }
+   },
+   "box_M": {
+    "X": [
+     1049.7,
+     1100.0
+    ],
+    "Z": [
+     -18.1,
+     18.1
+    ],
+    "Y": [
+     -18.1,
+     18.1
+    ]
+   },
+   "dims": {
+    "od": 36.1,
+    "seat_X": 1049.7,
+    "exit_bore": 12.0
+   },
+   "authority": "GR + GL; Q34 (exit)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft muzzle_device"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "magazine",
+   "display": "Magazine (10-round box)",
+   "bone": "magazine",
+   "process": "S-bend (stamped steel body) + P-round floorplate",
+   "bevel": "body bends inside R 1.0; cut edges 0.25; floorplate R 1.0",
+   "joint": {
+    "type": "seated_mag",
+    "gap_mm": {
+     "lateral": [
+      0.2,
+      0.6
+     ],
+     "foreaft": [
+      0.2,
+      0.6
+     ],
+     "top_stop": [
+      0.1,
+      0.5
+     ],
+     "lug_in_recess": [
+      0.1,
+      0.4
+     ]
+    }
+   },
+   "slot": "M_SR01_Mag",
+   "finish": "phosphate_steel + polymer floorplate",
+   "texel_class": "C",
+   "construction": "Straight double-stack 10-round box, vertical (sheet rake -0.9 / +1.3 deg: built 0.0), fore-aft 89.3, thickness 26.5 (unseen except 3/4; real .308 double stack 25.5-27.5), top at Z -11.0 under the bolt, well-entry Z -68.8, bottom Z -132.3 (exposed 63.5). Two pressed vertical ribs per side (as drawn in the 3/4, 0.8 proud), feed lips (single-feed, real pattern) with the top round modelled, follower; rear wall notch for the catch at Z -54; floorplate 2.0 thicker than the body with a 1.5 overhang front and back.",
+   "key_features": [
+    "mag AO baked alone (rifle lesson)",
+    "insertion straight along -Z",
+    "spine and floorplate corner wear (R)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "magazine"
+    ],
+    "area_px": {
+     "magazine": 1512
+    }
+   },
+   "box_M": {
+    "X": [
+     414.1,
+     503.3
+    ],
+    "Z": [
+     -132.3,
+     -11.0
+    ],
+    "Y": [
+     -13.2,
+     13.2
+    ]
+   },
+   "dims": {
+    "foreaft": 89.3,
+    "thickness": 26.5,
+    "top_Z": -11.0,
+    "bottom_Z": -132.3,
+    "length": 121.3,
+    "rake_deg": 0.0,
+    "rake_drawn": [
+     -0.91,
+     1.32
+    ],
+    "catch_notch_Z": -50.0,
+    "ribs_per_side": 2,
+    "floor_slope": {
+     "deg": 5.4,
+     "note": "W1 follow-up L2: GR and GL both draw the magazine floor rising toward the front (bottom Z -131.4 at X 420 to -123.9 at X 500); body bottom -128.0 at the rear wall X 414.1, rising 0.0945/mm"
+    }
+   },
+   "authority": "GR + GL (outline); Q34 (thickness, ribs)",
+   "confidence": "high (outline), medium (thickness)",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft magazine"
+   ],
+   "asset": "SM_SR01_Mag (merged in SM_SR01)",
+   "features": []
+  },
+  {
+   "id": "bipod_mount",
+   "display": "Bipod clamp + swivel body + tension knob",
+   "bone": "bipod",
+   "process": "M-chamfer (machined aluminium clamp + swivel body)",
+   "bevel": "0.5",
+   "joint": {
+    "type": "hinge",
+    "gap_mm": [
+     0.1,
+     0.3
+    ],
+    "note": "clamp is fixed to the dovetail (butt row) but rides the bipod bone: cant about X"
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "anodized_black_al (Masks A 0)",
+   "texel_class": "C",
+   "construction": "Dovetail clamp X 747.8-812.7 (drawn mount), Z -51.9..-39.7 under the forend band, with a throw-lever/ thumb screw on the left (unseen: plain screw head); swivel body extends rearward to the leg yoke around the hub axis (X 719.6, Z -61.8; hub dia 36.9 drawn); swivel (cant) about a bore-parallel axis at Z -48.0 with +-15 deg travel; the drawn knob below the hub (X 718-746, Z -85..-71) is the swivel-tension knob (dia 14, axis along X, knurled).",
+   "key_features": [
+    "cant +-15 deg (bone bipod, rotate about X)",
+    "tension knob inside the leg gap (<= +-7.0 Y)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "bipod"
+    ],
+    "area_px": {
+     "bipod": 2031
+    }
+   },
+   "box_M": {
+    "X": [
+     701.1,
+     812.7
+    ],
+    "Z": [
+     -85.2,
+     -39.6
+    ],
+    "Y": [
+     -25.0,
+     25.0
+    ]
+   },
+   "dims": {
+    "clamp": {
+     "X": [
+      747.8,
+      812.7
+     ],
+     "Z": [
+      -52.4,
+      -39.61
+     ],
+     "Y": [
+      -25.0,
+      25.0
+     ]
+    },
+    "cant_axis_Z": -46.0,
+    "cant_deg": [
+     -15.0,
+     15.0
+    ],
+    "tension_knob": {
+     "X": [
+      717.7,
+      746.0
+     ],
+     "Zc": -78.2,
+     "r": 7.0
+    }
+   },
+   "authority": "GR + GL (folded)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft bipod_mount"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "bipod_leg_l",
+   "display": "Bipod leg, left (outer tube + collar + knuckle)",
+   "bone": "bipod_leg_l",
+   "process": "M-round (drawn steel tube) + hinge yoke",
+   "bevel": "tube ends 0.8 round",
+   "joint": {
+    "type": "hinge",
+    "gap_mm": [
+     0.1,
+     0.3
+    ]
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "anodized_black_al (Masks A 0)",
+   "texel_class": "C",
+   "construction": "Outer tube OD 19.4 x wall 1.5 from the hub to the lock collar (X 719.6-896.4 folded), centres at Y +-19.5; each leg pivots on its own transverse pin through the yoke at the hub axis; detents 0 deg (folded forward, sheet pose) and +90 deg (deployed straight down) by a spring-loaded ball in a notched hub disk (2 notches); return spring inside the tube (hidden). Lock collar OD 28 x 18.8 with a push button on the outboard side.",
+   "key_features": [
+    "legs move independently",
+    "hinge clearance 0.10-0.30 at the yoke",
+    "mount bottom 0.2 above the leg's top when folded"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "bipod"
+    ],
+    "area_px": {
+     "bipod": 2031
+    }
+   },
+   "box_M": {
+    "X": [
+     701.1,
+     896.4
+    ],
+    "Z": [
+     -76.3,
+     -48.3
+    ],
+    "Y": [
+     5.5,
+     33.5
+    ]
+   },
+   "dims": {
+    "hub_M": [
+     719.6,
+     19.5,
+     -62.3
+    ],
+    "tube_od": 19.4,
+    "fold_deg": [
+     0.0,
+     90.0
+    ],
+    "detents_deg": [
+     0.0,
+     90.0
+    ]
+   },
+   "authority": "GR (folded); real pattern (deployed)",
+   "confidence": "high (folded)",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft bipod_legs"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "bipod_leg_r",
+   "display": "Bipod leg, right",
+   "bone": "bipod_leg_r",
+   "process": "M-round (drawn steel tube) + hinge yoke",
+   "bevel": "tube ends 0.8 round",
+   "joint": {
+    "type": "hinge",
+    "gap_mm": [
+     0.1,
+     0.3
+    ]
+   },
+   "slot": "M_SR01_Chassis",
+   "finish": "anodized_black_al (Masks A 0)",
+   "texel_class": "C",
+   "construction": "Outer tube OD 19.4 x wall 1.5 from the hub to the lock collar (X 719.6-896.4 folded), centres at Y +-19.5; each leg pivots on its own transverse pin through the yoke at the hub axis; detents 0 deg (folded forward, sheet pose) and +90 deg (deployed straight down) by a spring-loaded ball in a notched hub disk (2 notches); return spring inside the tube (hidden). Lock collar OD 28 x 18.8 with a push button on the outboard side.",
+   "key_features": [
+    "legs move independently",
+    "hinge clearance 0.10-0.30 at the yoke",
+    "mount bottom 0.2 above the leg's top when folded"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "bipod"
+    ],
+    "area_px": {
+     "bipod": 2031
+    }
+   },
+   "box_M": {
+    "X": [
+     701.1,
+     896.4
+    ],
+    "Z": [
+     -76.3,
+     -48.3
+    ],
+    "Y": [
+     -33.5,
+     -5.5
+    ]
+   },
+   "dims": {
+    "hub_M": [
+     719.6,
+     -19.5,
+     -62.3
+    ],
+    "tube_od": 19.4,
+    "fold_deg": [
+     0.0,
+     90.0
+    ],
+    "detents_deg": [
+     0.0,
+     90.0
+    ]
+   },
+   "authority": "GR (folded); real pattern (deployed)",
+   "confidence": "high (folded)",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft bipod_legs"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "bipod_ext_l",
+   "display": "Bipod inner leg + foot, left",
+   "bone": "bipod_leg_l_ext",
+   "process": "M-round (solid steel rod with notches) + P-round foot",
+   "bevel": "notch edges 0.3; foot R 3",
+   "joint": {
+    "type": "sliding",
+    "gap_mm": [
+     0.15,
+     0.4
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "bare_steel_polished + rubber foot",
+   "texel_class": "C",
+   "construction": "Inner leg dia 12.7 telescoping in the outer tube; 5 detent notches at 19.0 mm (0, 19, 38, 57, 76 mm extension) engaged by the collar's spring button; spool-shaped rubber foot dia 37 x 29 long (sheet: 38.5 x 29) with a 0.5 waist and a centre screw on the end face (3/4 view).",
+   "key_features": [
+    "ext travel 0..76 (5 detents)",
+    "feet abraded on the ground face (R)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "bipod"
+    ],
+    "area_px": {
+     "bipod": 2031
+    }
+   },
+   "box_M": {
+    "X": [
+     877.6,
+     925.6
+    ],
+    "Z": [
+     -80.8,
+     -43.8
+    ],
+    "Y": [
+     1.0,
+     38.0
+    ]
+   },
+   "dims": {
+    "rod_dia": 12.7,
+    "ext": [
+     0.0,
+     76.0
+    ],
+    "detents": [
+     0.0,
+     19.0,
+     38.0,
+     57.0,
+     76.0
+    ],
+    "foot": {
+     "dia": 37.0,
+     "X": [
+      896.4,
+      925.6
+     ]
+    }
+   },
+   "authority": "GR (folded foot)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft bipod_leg_ext"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "bipod_ext_r",
+   "display": "Bipod inner leg + foot, right",
+   "bone": "bipod_leg_r_ext",
+   "process": "M-round (solid steel rod with notches) + P-round foot",
+   "bevel": "notch edges 0.3; foot R 3",
+   "joint": {
+    "type": "sliding",
+    "gap_mm": [
+     0.15,
+     0.4
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "bare_steel_polished + rubber foot",
+   "texel_class": "C",
+   "construction": "Inner leg dia 12.7 telescoping in the outer tube; 5 detent notches at 19.0 mm (0, 19, 38, 57, 76 mm extension) engaged by the collar's spring button; spool-shaped rubber foot dia 37 x 29 long (sheet: 38.5 x 29) with a 0.5 waist and a centre screw on the end face (3/4 view).",
+   "key_features": [
+    "ext travel 0..76 (5 detents)",
+    "feet abraded on the ground face (R)"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "bipod"
+    ],
+    "area_px": {
+     "bipod": 2031
+    }
+   },
+   "box_M": {
+    "X": [
+     877.6,
+     925.6
+    ],
+    "Z": [
+     -80.8,
+     -43.8
+    ],
+    "Y": [
+     -38.0,
+     -1.0
+    ]
+   },
+   "dims": {
+    "rod_dia": 12.7,
+    "ext": [
+     0.0,
+     76.0
+    ],
+    "detents": [
+     0.0,
+     19.0,
+     38.0,
+     57.0,
+     76.0
+    ],
+    "foot": {
+     "dia": 37.0,
+     "X": [
+      896.4,
+      925.6
+     ]
+    }
+   },
+   "authority": "GR (folded foot)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft bipod_leg_ext"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "pins_fasteners",
+   "display": "Drawn fasteners",
+   "bone": "body",
+   "process": "M-chamfer (hardware)",
+   "bevel": "0.2",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_SR01_Metal",
+   "finish": "phosphate_steel",
+   "texel_class": "B/C",
+   "construction": "Only heads the sheet draws (GR: pad screws 3, butt knobs 2, chassis screws behind the knob and on the forend below slot 1, riser clamp; GL: its own set, read at form). Sizes: socket caps 4-5 mm thread class (heads 7-8.5), button heads 4.8 in rail slots, roll pins 3. Never written as 'M' + number.",
+   "key_features": [
+    "count and position from the sheet only (study 3.2)",
+    "random slot clocking"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [],
+    "area_px": {}
+   },
+   "box_M": null,
+   "dims": {
+    "GR_heads": {
+     "pad_screws": [
+      {
+       "centre_XZ": [
+        60.5,
+        -26.1
+       ],
+       "dia": 6.0
+      },
+      {
+       "centre_XZ": [
+        60.5,
+        -69.3
+       ],
+       "dia": 8.3
+      },
+      {
+       "centre_XZ": [
+        60.5,
+        -103.2
+       ],
+       "dia": 6.0
+      }
+     ],
+     "butt_knobs": [
+      {
+       "centre_XZ": [
+        99.0,
+        -67.5
+       ],
+       "dia": 15.0
+      },
+      {
+       "centre_XZ": [
+        129.1,
+        -67.5
+       ],
+       "dia": 15.0
+      }
+     ],
+     "chassis_head_behind_knob": {
+      "centre_XZ": [
+       389.6,
+       -38.3
+      ],
+      "dia": 7.5,
+      "note": "small dark head behind/below the bolt root; real-pattern 2-position safety placed here (craft RP)"
+     }
+    },
+    "GL_heads": "read at W1 from the GL crop (rows recorded in the form gate file)",
+    "rule": "Only heads the sheet draws (GR: pad screws 3, butt knobs 2, chassis screws behind the knob and on the forend below slot 1, riser clamp; GL: its own set, read at form). Sizes: socket caps 4-5 mm thread class (heads 7-8.5), button heads 4.8 in rail slots, roll pins 3. Never written as 'M' + number."
+   },
+   "authority": "GR / GL per side",
+   "confidence": "medium",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft pins_fasteners"
+   ],
+   "asset": "SK_SR01 + SM_SR01",
+   "features": []
+  },
+  {
+   "id": "scope_body",
+   "display": "Scope body (34 mm tube, turrets, eyepiece, bell)",
+   "bone": "- (static attachment)",
+   "process": "M-round (machined aluminium tube, revolves)",
+   "bevel": "0.4-0.8 by zone; knurl as geometry on turret skirts",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_Att_Scope_Body",
+   "finish": "anodized_black_al + rubber eyecup",
+   "texel_class": "A (eyepiece) / C",
+   "construction": "Revolved 34 mm tube with eyepiece (45.1) and bell (62.1), saddle with elevation turret on top, windage on the right, side-focus knob on the left (TOP), magnification ring with a throw lever, rubber eyecup ring. Built as the attachment SM_Att_Scope_LongRange with its rings.",
+   "key_features": [
+    "Sight + EyePoint sockets",
+    "class A eyepiece texels",
+    "no text or reticle markings"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [
+     "scope"
+    ],
+    "area_px": {
+     "scope": 5573
+    }
+   },
+   "box_M": {
+    "X": [
+     271.1,
+     690.5
+    ],
+    "Z": [
+     26.6,
+     99.0
+    ],
+    "Y": [
+     -34.8,
+     50.4
+    ]
+   },
+   "dims": {
+    "length": 419.4,
+    "tube": 34.1,
+    "eyepiece": 45.1,
+    "bell": 62.1,
+    "elevation_turret": {
+     "X": [
+      446.0,
+      478.0
+     ],
+     "Z": [
+      75.5,
+      99.4
+     ]
+    },
+    "saddle": {
+     "X": [
+      443.2,
+      482.7
+     ],
+     "Z": [
+      34.5,
+      75.5
+     ]
+    },
+    "side_focus_left_Y": 50.4,
+    "windage_right_Y": -34.8,
+    "eye_relief": 95.0,
+    "construction_rule": "revolves 48 sides, turret knurl/scallops geometry, no text, no reticle markings; real pattern RP15"
+   },
+   "authority": "GR + GL (profile); TOP (turret sides)",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft pins_fasteners"
+   ],
+   "asset": "SM_Att_Scope_LongRange",
+   "features": []
+  },
+  {
+   "id": "scope_rings",
+   "display": "Scope rings (2, 34 mm, medium)",
+   "bone": "- (static attachment)",
+   "process": "M-chamfer (machined aluminium rings)",
+   "bevel": "0.4",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ],
+    "note": "recoil lug in a rail slot 0.1-0.4 fore-aft"
+   },
+   "slot": "M_Att_Scope_Body",
+   "finish": "anodized_black_al",
+   "texel_class": "C",
+   "construction": "Two-piece 34 mm rings, each with a recoil lug in a rail slot, two cross-bolt nuts on the left and four cap screws (two per cap).",
+   "key_features": [
+    "ring k positions are integer rail slots",
+    "rings belong to the scope attachment"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [],
+    "area_px": {}
+   },
+   "box_M": {
+    "X": [
+     404.4,
+     527.0
+    ],
+    "Z": [
+     30.0,
+     78.7
+    ],
+    "Y": [
+     -23.0,
+     23.0
+    ]
+   },
+   "dims": {
+    "centres_drawn_X": [
+     413.6,
+     517.9
+    ],
+    "built_X": [
+     416.15,
+     516.25
+    ],
+    "slot_k": [
+     2,
+     12
+    ],
+    "shift": [
+     2.6,
+     -1.65
+    ],
+    "centre_height": 27.6,
+    "widths": [
+     23.5,
+     21.6
+    ]
+   },
+   "authority": "GR",
+   "confidence": "high",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft rail"
+   ],
+   "asset": "SM_Att_Scope_LongRange",
+   "features": []
+  },
+  {
+   "id": "scope_lens",
+   "display": "Scope lenses (objective + ocular)",
+   "bone": "- (static attachment)",
+   "process": "glass (revolve)",
+   "bevel": "none",
+   "joint": {
+    "type": "butt",
+    "gap_mm": [
+     0.01,
+     0.05
+    ]
+   },
+   "slot": "M_Att_Scope_Lens",
+   "finish": "opaque glossy glass (Q19)",
+   "texel_class": "A",
+   "construction": "Front and rear lens discs recessed 6 / 4 mm in their bells, own slot (opaque glossy until a lens master exists).",
+   "key_features": [
+    "own material slot",
+    "lens recess = real depth"
+   ],
+   "trace": {
+    "file": "trace/GR_outline.json",
+    "keys": [],
+    "area_px": {}
+   },
+   "box_M": {
+    "X": [
+     271.1,
+     690.5
+    ],
+    "Z": [
+     29.6,
+     85.6
+    ],
+    "Y": [
+     -28.0,
+     28.0
+    ]
+   },
+   "dims": {
+    "objective_recess": 6.0,
+    "ocular_recess": 4.0
+   },
+   "authority": "Q34 (objective face)",
+   "confidence": "medium",
+   "sources": [
+    "measure (sr01_measured.json)",
+    "craft pins_fasteners"
+   ],
+   "asset": "SM_Att_Scope_LongRange",
+   "features": []
+  }
+ ],
+ "fastener_rule": "count and position from the sheet only; sizes from norms where a head spans < 4 sheet px; written in mm, never 'M' + number",
+ "real_pattern_rulings": [
+  {
+   "id": "RP1",
+   "part": "bolt",
+   "ruling": "3-lug, 60 deg throw, 88 mm stroke, bolt face X 505 at rest",
+   "why": "the knob's rest angle (26 deg below horizontal) lifted 60 deg reaches 34 deg above horizontal: clears a 34 mm scope's eyepiece by > 20 mm; 88 mm clears a .308-class cartridge (71 mm) plus extraction; the port (84.6 drawn) is opened to 88 + 2"
+  },
+  {
+   "id": "RP2",
+   "part": "bolt handle and knob",
+   "ruling": "swept stem, spherical knob dia 24.8 (sheet), screw-on with a thread-relief groove",
+   "why": "sheet size; real tactical knobs 20-25 mm; GR authority for X, TOP for Y"
+  },
+  {
+   "id": "RP3",
+   "part": "trigger and guard",
+   "ruling": "single-stage precision trigger, pivot above the blade, 6 deg pull; guard integral with the chassis",
+   "why": "chassis rifles carry the guard in the chassis bottom; no seam drawn"
+  },
+  {
+   "id": "RP4",
+   "part": "safety",
+   "ruling": "2-position tang rocker on the right, behind the bolt handle; FIRE forward (bind), SAFE 12 deg back",
+   "why": "real pattern for this action class; not resolved on the sheet"
+  },
+  {
+   "id": "RP5",
+   "part": "mag release",
+   "ruling": "paddle in front of the trigger guard, push forward; hook 24 above the pivot, pad 36 below",
+   "why": "drawn where real chassis paddles sit; leverage chosen so a 3 mm pad press lifts the hook 2.0 mm (> 1.4 engagement)"
+  },
+  {
+   "id": "RP6",
+   "part": "magazine",
+   "ruling": "straight 10-round double-stack steel box, vertical, 26.5 thick, two pressed ribs per side, polymer floorplate",
+   "why": "exposed length 63.5 = a 10-round box; ribs drawn in the 3/4"
+  },
+  {
+   "id": "RP7",
+   "part": "rail and rings",
+   "ruling": "1913 base 15 slots flat; 34 mm two-piece rings (medium, centre 27.6 above the rail top), each with a recoil lug in a slot and two cross-bolt nuts on the left, 4 cap screws on top (2 per cap)",
+   "why": "drawn ring height and tube; rings belong to the scope attachment"
+  },
+  {
+   "id": "RP8",
+   "part": "cheek riser hardware",
+   "ruling": "two steel posts dia 10, clamp lever on the left of the butt, travel -12.9..+12.0",
+   "why": "drawn posts exposed 13.2 mm; GL draws a small lever"
+  },
+  {
+   "id": "RP9",
+   "part": "butt adjustment",
+   "ruling": "fixed butt; LOP by spacer plate (no bone); two clamp knobs on the right as drawn",
+   "why": "no hinge or slide drawn; the brief's 'folding-style' look is kept as shape only (R6)"
+  },
+  {
+   "id": "RP10",
+   "part": "bipod and mount",
+   "ruling": "tension-swivel folding bipod on a dovetail clamp; independent legs on transverse pins at the hub (X 719.6, Z -61.8), detents 0 / +90 deg; telescoping inner legs 0..76 mm in 5 notches; swivel cant +-15 deg with the drawn rear knob as the tension knob",
+   "why": "the drawn hub, knob, collar and spool feet are this pattern; the folded pose is the side views'"
+  },
+  {
+   "id": "RP11",
+   "part": "bolt stop",
+   "ruling": "internal, left rear, not animated; no bone",
+   "why": "not drawn; no visible function needed"
+  },
+  {
+   "id": "RP12",
+   "part": "muzzle device",
+   "ruling": "linear compensator, closed sleeve, exit bore 12 mm",
+   "why": "no ports drawn; front hole visible in the 3/4; brief: 'simple cylindrical muzzle cap'"
+  },
+  {
+   "id": "RP13",
+   "part": "flutes",
+   "ruling": "6 straight flutes 6.0 x 2.0, radius bottoms, ball-end run-outs, X 841-1036",
+   "why": "3 visible per side in the side views; run-outs avoid needle triangles (UD2)"
+  },
+  {
+   "id": "RP14",
+   "part": "forend slots and bottom band",
+   "ruling": "3 slots per side cut through the wall (original pattern, never named after a standard); bottom band = plain dovetail, no 1913 teeth",
+   "why": "drawn without teeth; Rail_Bottom not offered (the bipod uses it)"
+  },
+  {
+   "id": "RP15",
+   "part": "scope",
+   "ruling": "34 mm tube, 56 mm-class objective, elevation turret on top, windage on the right, parallax/side-focus on the left, magnification ring + throw lever at the eyepiece; rubber eyecup ring",
+   "why": "TOP shows the left knob larger than the right turret; brief: rubber eye cup"
+  }
+ ],
+ "bones": {
+  "root": "armature object 'root' at Grip, identity",
+  "count": 13,
+  "rest_rotation": "identity",
+  "same_bones_every_lod": true,
+  "compatible_skeleton": "SK_AR01_Skeleton",
+  "table": [
+   {
+    "bone": "body",
+    "parent": null,
+    "head_M": [
+     297.13,
+     0.0,
+     -96.13
+    ],
+    "motion": "fixed",
+    "limits": null,
+    "joint": "-",
+    "head_B": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "bone": "bolt",
+    "parent": "body",
+    "head_M": [
+     505.0,
+     0.0,
+     0.0
+    ],
+    "motion": "rotate about X, then translate -X",
+    "limits_deg": [
+     0.0,
+     -60.0
+    ],
+    "limits_mm": [
+     0.0,
+     88.0
+    ],
+    "joint": "sliding 0.15-0.40; lugs hinge 0.10-0.30",
+    "rule": "translation only at the full -60 deg rotation; rotation only at translation 0",
+    "head_B": [
+     207.87,
+     0.0,
+     96.13
+    ]
+   },
+   {
+    "bone": "trigger",
+    "parent": "body",
+    "head_M": [
+     368.0,
+     0.0,
+     -57.0
+    ],
+    "motion": "rotate about Y",
+    "limits_deg": [
+     0.0,
+     6.0
+    ],
+    "joint": "hinge 0.10-0.30",
+    "head_B": [
+     70.87,
+     0.0,
+     39.13
+    ]
+   },
+   {
+    "bone": "selector",
+    "parent": "body",
+    "head_M": [
+     360.0,
+     -17.5,
+     -16.0
+    ],
+    "motion": "rotate about Y",
+    "limits_deg": [
+     -12.0,
+     0.0
+    ],
+    "detents": {
+     "FIRE": 0.0,
+     "SAFE": -12.0
+    },
+    "joint": "hinge 0.10-0.30",
+    "head_B": [
+     62.87,
+     -17.5,
+     80.13
+    ]
+   },
+   {
+    "bone": "mag_release",
+    "parent": "body",
+    "head_M": [
+     408.6,
+     0.0,
+     -74.0
+    ],
+    "motion": "rotate about Y",
+    "limits_deg": [
+     -4.5,
+     0.0
+    ],
+    "joint": "hinge 0.10-0.30",
+    "head_B": [
+     111.47,
+     0.0,
+     22.13
+    ]
+   },
+   {
+    "bone": "magazine",
+    "parent": "body",
+    "head_M": [
+     458.7,
+     0.0,
+     -68.8
+    ],
+    "motion": "attach only (unweighted)",
+    "limits": null,
+    "joint": "seated mag",
+    "head_B": [
+     161.57,
+     0.0,
+     27.33
+    ]
+   },
+   {
+    "bone": "muzzle_device",
+    "parent": "body",
+    "head_M": [
+     1049.7,
+     0.0,
+     0.0
+    ],
+    "motion": "none",
+    "limits": null,
+    "joint": "-",
+    "head_B": [
+     752.57,
+     0.0,
+     96.13
+    ]
+   },
+   {
+    "bone": "cheek_riser",
+    "parent": "body",
+    "head_M": [
+     124.4,
+     0.0,
+     -3.5
+    ],
+    "motion": "translate Z",
+    "limits_mm": [
+     -12.9,
+     12.0
+    ],
+    "joint": "sliding 0.15-0.40",
+    "standard_note": "gun_standard lists cheek_riser under 'stock' only; this gun has no stock bone (fixed butt): proposal P1 adds 'body'",
+    "head_B": [
+     -172.73,
+     0.0,
+     92.63
+    ]
+   },
+   {
+    "bone": "bipod",
+    "parent": "body",
+    "head_M": [
+     780.2,
+     0.0,
+     -46.0
+    ],
+    "motion": "rotate about X (cant)",
+    "limits_deg": [
+     -15.0,
+     15.0
+    ],
+    "joint": "hinge 0.10-0.30",
+    "clips": "0 in every clip",
+    "head_B": [
+     483.07,
+     0.0,
+     50.13
+    ]
+   },
+   {
+    "bone": "bipod_leg_l",
+    "parent": "bipod",
+    "head_M": [
+     719.6,
+     19.5,
+     -62.3
+    ],
+    "motion": "rotate about Y (0 folded forward, +90 deployed down)",
+    "limits_deg": [
+     0.0,
+     90.0
+    ],
+    "detents": [
+     0.0,
+     90.0
+    ],
+    "joint": "hinge 0.10-0.30",
+    "head_B": [
+     422.47,
+     19.5,
+     33.83
+    ]
+   },
+   {
+    "bone": "bipod_leg_r",
+    "parent": "bipod",
+    "head_M": [
+     719.6,
+     -19.5,
+     -62.3
+    ],
+    "motion": "rotate about Y",
+    "limits_deg": [
+     0.0,
+     90.0
+    ],
+    "detents": [
+     0.0,
+     90.0
+    ],
+    "joint": "hinge 0.10-0.30",
+    "head_B": [
+     422.47,
+     -19.5,
+     33.83
+    ]
+   },
+   {
+    "bone": "bipod_leg_l_ext",
+    "parent": "bipod_leg_l",
+    "head_M": [
+     896.4,
+     19.5,
+     -62.3
+    ],
+    "motion": "translate +X (in the leg's rest frame)",
+    "limits_mm": [
+     0.0,
+     76.0
+    ],
+    "detents": [
+     0.0,
+     19.0,
+     38.0,
+     57.0,
+     76.0
+    ],
+    "joint": "sliding 0.15-0.40",
+    "head_B": [
+     599.27,
+     19.5,
+     33.83
+    ]
+   },
+   {
+    "bone": "bipod_leg_r_ext",
+    "parent": "bipod_leg_r",
+    "head_M": [
+     896.4,
+     -19.5,
+     -62.3
+    ],
+    "motion": "translate +X",
+    "limits_mm": [
+     0.0,
+     76.0
+    ],
+    "detents": [
+     0.0,
+     19.0,
+     38.0,
+     57.0,
+     76.0
+    ],
+    "joint": "sliding 0.15-0.40",
+    "head_B": [
+     599.27,
+     -19.5,
+     33.83
+    ]
+   }
+  ],
+  "abp_angle_table": {
+   "bolt_rotate_deg": [
+    0.0,
+    -60.0
+   ],
+   "bolt_mm": [
+    0.0,
+    88.0
+   ],
+   "trigger_deg": [
+    0.0,
+    6.0
+   ],
+   "selector_detents_deg": [
+    0.0,
+    -12.0
+   ],
+   "release_deg": [
+    0.0,
+    -4.5
+   ],
+   "bipod_legs_deg": [
+    0.0,
+    90.0
+   ],
+   "bipod_ext_mm": [
+    0.0,
+    76.0
+   ],
+   "bipod_cant_deg": [
+    -15.0,
+    15.0
+   ],
+   "cheek_riser_mm": [
+    -12.9,
+    12.0
+   ]
+  }
+ },
+ "bipod": {
+  "hub_axis": {
+   "X": 719.6,
+   "Z": -62.3,
+   "legs_Y": [
+    19.5,
+    -19.5
+   ],
+   "axis": "Y"
+  },
+  "fold": {
+   "folded_deg": 0.0,
+   "deployed_deg": 90.0,
+   "detents": [
+    0.0,
+    90.0
+   ],
+   "direction": "legs rotate down and back from forward (Blender +R_y)"
+  },
+  "leg_length_hub_to_foot_end": 206.0,
+  "ext": {
+   "range": [
+    0.0,
+    76.0
+   ],
+   "detents": [
+    0.0,
+    19.0,
+    38.0,
+    57.0,
+    76.0
+   ]
+  },
+  "cant": {
+   "axis_Z": -46.0,
+   "range": [
+    -15.0,
+    15.0
+   ],
+   "folded_allowed": true
+  },
+  "clearances": {
+   "fold_gap_mount": 0.2,
+   "foot_to_forend_folded": 4.2,
+   "feet_gap_Y": 2.0,
+   "leg_to_tension_knob_Y": 2.8
+  },
+  "sweep": {
+   "angles_deg": [
+    0.0,
+    90.0
+   ],
+   "step_deg": 0.5,
+   "ext_cases": [
+    0.0,
+    76.0
+   ],
+   "min_by_obstacle": {
+    "mount": 0.2,
+    "forend": 13.0,
+    "barrel": 29.8,
+    "tension_knob": 2.8,
+    "magazine": 206.69
+   }
+  },
+  "cant_worst": {
+   "folded": 7.73,
+   "deployed": 32.41
+  },
+  "ground_Z_deployed": {
+   "ext_0": -266.71,
+   "ext_19": -285.29,
+   "ext_38": -303.88,
+   "ext_57": -322.46,
+   "ext_76": -341.05
+  },
+  "bore_height_deployed": {
+   "ext_0": 266.71,
+   "ext_19": 285.29,
+   "ext_38": 303.88,
+   "ext_57": 322.46,
+   "ext_76": 341.05
+  },
+  "sheet": "folded in GR, GL and Q34 (R5); deployed = real pattern",
+  "splay": {
+   "deg_each_side": 12.0,
+   "decided": "user 2026-10-13 (replaces Q2 straight down)",
+   "construction": "leg pin rolled 12 deg about the leg axis (X through hub Z -62.3, Y +-19.5), outboard down; fold = roll . R_y(0..90) . roll^-1; folded pose unchanged",
+   "why_12": "middle of the 10-15 deg fixed-splay swivel-bipod spread; ~2x the parallel stance; inside the +-15 cant",
+   "foot_lowest_point": "end rim (axial 206, r 14) of the spool foot",
+   "ground_Z_formula": "-62.3 - 206 cos12 - 14 sin12 - ext cos12"
+  },
+  "ground_Z_deployed_straight_W1": {
+   "ext_0": -268.3,
+   "ext_19": -287.3,
+   "ext_38": -306.3,
+   "ext_57": -325.3,
+   "ext_76": -344.3
+  },
+  "foot_centre_track_deployed_mm": {
+   "ext_0": 118.6,
+   "ext_19": 126.5,
+   "ext_38": 134.4,
+   "ext_57": 142.3,
+   "ext_76": 150.2
+  }
+ },
+ "bolt_cycle": {
+  "face_X": 505.0,
+  "rotate_deg": -60.0,
+  "travel": 88.0,
+  "knob_rest": [
+   367.9,
+   -67.6,
+   -33.6
+  ],
+  "knob_open": [
+   367.9,
+   -62.9,
+   41.7
+  ],
+  "knob_back": [
+   279.9,
+   -62.9,
+   41.7
+  ],
+  "knob_min_to_scope": 29.9,
+  "bolt_back_rear_X": 257.4,
+  "riser_front_X": 179.9,
+  "port_built_X": [
+   415.0,
+   507.1
+  ]
+ },
+ "joints_clearance_mm": {
+  "butt": [
+   0.01,
+   0.05
+  ],
+  "sliding": [
+   0.15,
+   0.4
+  ],
+  "hinge": [
+   0.1,
+   0.3
+  ],
+  "hinge_swept_min": 0.1,
+  "seated_mag": {
+   "lateral": [
+    0.2,
+    0.6
+   ],
+   "foreaft": [
+    0.2,
+    0.6
+   ],
+   "top_stop": [
+    0.1,
+    0.5
+   ],
+   "lug_in_recess": [
+    0.1,
+    0.4
+   ]
+  },
+  "visible_seam": [
+   0.2,
+   0.8
+  ],
+  "why_butt_never_exact": "qa_check no_coincident_vertices fails any vertex pair within 1e-6 m across the joined twin; 0.01 mm is 10x that"
+ },
+ "sockets": {
+  "standard": "GUN_BUILDING_STUDY 5.3 + gun_standard.json",
+  "gun": [
+   {
+    "socket": "Grip",
+    "bone": "body",
+    "M_mm": [
+     297.13,
+     0.0,
+     -96.13
+    ],
+    "B_mm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "unreal_cm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "origin; grip_axis_deg in the sidecar"
+   },
+   {
+    "socket": "SupportHand",
+    "bone": "body",
+    "M_mm": [
+     640.0,
+     0.0,
+     -45.6
+    ],
+    "B_mm": [
+     342.87,
+     0.0,
+     50.53
+    ],
+    "unreal_cm": [
+     34.287,
+     0.0,
+     5.053
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "provisional (H1)",
+    "note": "forend belly behind the bipod clamp"
+   },
+   {
+    "socket": "SupportHandBipod",
+    "bone": "body",
+    "M_mm": [
+     118.0,
+     0.0,
+     -92.0
+    ],
+    "B_mm": [
+     -179.13,
+     0.0,
+     4.13
+    ],
+    "unreal_cm": [
+     -17.913,
+     0.0,
+     0.413
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "provisional (H1)",
+    "note": "off hand under the butt when prone (rear-bag grip)"
+   },
+   {
+    "socket": "Muzzle",
+    "bone": "muzzle_device",
+    "M_mm": [
+     1100.0,
+     0.0,
+     0.0
+    ],
+    "B_mm": [
+     802.87,
+     0.0,
+     96.13
+    ],
+    "unreal_cm": [
+     80.287,
+     0.0,
+     9.613
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": ""
+   },
+   {
+    "socket": "MuzzleSeat",
+    "bone": "body",
+    "M_mm": [
+     1049.7,
+     0.0,
+     0.0
+    ],
+    "B_mm": [
+     752.57,
+     0.0,
+     96.13
+    ],
+    "unreal_cm": [
+     75.257,
+     0.0,
+     9.613
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": ""
+   },
+   {
+    "socket": "ShellEject",
+    "bone": "body",
+    "M_mm": [
+     461.1,
+     -17.2,
+     9.6
+    ],
+    "B_mm": [
+     163.97,
+     -17.2,
+     105.73
+    ],
+    "unreal_cm": [
+     16.397,
+     1.72,
+     10.573
+    ],
+    "x_axis_M": [
+     -0.2506,
+     -0.9023,
+     0.3509
+    ],
+    "state": "final",
+    "note": "port centre; +X = throw (right, up, slightly back)"
+   },
+   {
+    "socket": "Mag",
+    "bone": "magazine",
+    "M_mm": [
+     458.7,
+     0.0,
+     -68.8
+    ],
+    "B_mm": [
+     161.57,
+     0.0,
+     27.33
+    ],
+    "unreal_cm": [
+     16.157,
+     0.0,
+     2.733
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "well-entry centre; mag vertical (rake 0)"
+   },
+   {
+    "socket": "MagInsertStart",
+    "bone": "body",
+    "M_mm": [
+     458.7,
+     0.0,
+     -136.6
+    ],
+    "B_mm": [
+     161.57,
+     0.0,
+     -40.47
+    ],
+    "unreal_cm": [
+     16.157,
+     0.0,
+     -4.047
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "straight insertion along +Z to Mag"
+   },
+   {
+    "socket": "Rail_Top",
+    "bone": "body",
+    "M_mm": [
+     396.13,
+     0.0,
+     30.0
+    ],
+    "B_mm": [
+     99.0,
+     0.0,
+     126.13
+    ],
+    "unreal_cm": [
+     9.9,
+     0.0,
+     12.613
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "centre of slot 0 of 15; slot k = +k x 10.01"
+   },
+   {
+    "socket": "SlingFront",
+    "bone": "body",
+    "M_mm": [
+     818.7,
+     0.0,
+     -45.6
+    ],
+    "B_mm": [
+     521.57,
+     0.0,
+     50.53
+    ],
+    "unreal_cm": [
+     52.157,
+     0.0,
+     5.053
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "data only (no stud drawn)",
+    "note": "sling hooks to the bipod clamp's front"
+   },
+   {
+    "socket": "SlingRear",
+    "bone": "body",
+    "M_mm": [
+     122.0,
+     30.5,
+     -70.0
+    ],
+    "B_mm": [
+     -175.13,
+     30.5,
+     26.13
+    ],
+    "unreal_cm": [
+     -17.513,
+     -3.05,
+     2.613
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "the QD-cup recess GL draws on the butt's left"
+   },
+   {
+    "socket": "Shoulder",
+    "bone": "body",
+    "M_mm": [
+     0.0,
+     0.0,
+     -68.6
+    ],
+    "B_mm": [
+     -297.13,
+     0.0,
+     27.53
+    ],
+    "unreal_cm": [
+     -29.713,
+     0.0,
+     2.753
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "butt-pad rear centre"
+   },
+   {
+    "socket": "CenterOfMass",
+    "bone": "body",
+    "M_mm": [
+     520.0,
+     0.0,
+     -30.0
+    ],
+    "B_mm": [
+     222.87,
+     0.0,
+     66.13
+    ],
+    "unreal_cm": [
+     22.287,
+     0.0,
+     6.613
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "provisional (computed at W1 from part volumes, scaled to 5.9 kg)",
+    "note": ""
+   },
+   {
+    "socket": "Holster",
+    "bone": "body",
+    "M_mm": [
+     560.0,
+     0.0,
+     20.0
+    ],
+    "B_mm": [
+     262.87,
+     0.0,
+     116.13
+    ],
+    "unreal_cm": [
+     26.287,
+     0.0,
+     11.613
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "provisional (W3)",
+    "note": ""
+   },
+   {
+    "socket": "Trigger",
+    "bone": "trigger",
+    "M_mm": [
+     363.2,
+     0.0,
+     -80.0
+    ],
+    "B_mm": [
+     66.07,
+     0.0,
+     16.13
+    ],
+    "unreal_cm": [
+     6.607,
+     0.0,
+     1.613
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": ""
+   },
+   {
+    "socket": "Selector",
+    "bone": "selector",
+    "M_mm": [
+     360.0,
+     -21.5,
+     -4.0
+    ],
+    "B_mm": [
+     62.87,
+     -21.5,
+     92.13
+    ],
+    "unreal_cm": [
+     6.287,
+     2.15,
+     9.213
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "safety lever tip"
+   },
+   {
+    "socket": "MagRelease",
+    "bone": "mag_release",
+    "M_mm": [
+     410.6,
+     0.0,
+     -100.0
+    ],
+    "B_mm": [
+     113.47,
+     0.0,
+     -3.87
+    ],
+    "unreal_cm": [
+     11.347,
+     0.0,
+     -0.387
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": ""
+   },
+   {
+    "socket": "BoltHandle",
+    "bone": "bolt",
+    "M_mm": [
+     367.9,
+     -67.6,
+     -33.6
+    ],
+    "B_mm": [
+     70.77,
+     -67.6,
+     62.53
+    ],
+    "unreal_cm": [
+     7.077,
+     6.76,
+     6.253
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "knob centre (hand target for the bolt cycle)"
+   },
+   {
+    "socket": "BipodFoot_L",
+    "bone": "bipod_leg_l_ext",
+    "M_mm": [
+     925.6,
+     19.5,
+     -62.3
+    ],
+    "B_mm": [
+     628.47,
+     19.5,
+     33.83
+    ],
+    "unreal_cm": [
+     62.847,
+     -1.95,
+     3.383
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": "foot end-face centre: the ground contact when deployed"
+   },
+   {
+    "socket": "BipodFoot_R",
+    "bone": "bipod_leg_r_ext",
+    "M_mm": [
+     925.6,
+     -19.5,
+     -62.3
+    ],
+    "B_mm": [
+     628.47,
+     -19.5,
+     33.83
+    ],
+    "unreal_cm": [
+     62.847,
+     1.95,
+     3.383
+    ],
+    "x_axis_M": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "state": "final",
+    "note": ""
+   }
+  ],
+  "mag": [
+   {
+    "socket": "Mag",
+    "mag_local_mm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "M_mm_seated": [
+     458.7,
+     0.0,
+     -68.8
+    ],
+    "state": "final",
+    "note": "origin"
+   },
+   {
+    "socket": "HandReload",
+    "mag_local_mm": [
+     0.0,
+     19.25,
+     -35.0
+    ],
+    "M_mm_seated": [
+     458.7,
+     19.25,
+     -103.8
+    ],
+    "state": "final",
+    "note": "left palm on the body"
+   },
+   {
+    "socket": "Feed",
+    "mag_local_mm": [
+     0.0,
+     0.0,
+     57.8
+    ],
+    "M_mm_seated": [
+     458.7,
+     0.0,
+     -11.0
+    ],
+    "state": "final",
+    "note": "top of the lips"
+   },
+   {
+    "socket": "Base",
+    "mag_local_mm": [
+     0.0,
+     0.0,
+     -63.5
+    ],
+    "M_mm_seated": [
+     458.7,
+     0.0,
+     -132.3
+    ],
+    "state": "final",
+    "note": "floorplate"
+   },
+   {
+    "socket": "CenterOfMass",
+    "mag_local_mm": [
+     0.0,
+     0.0,
+     -2.9
+    ],
+    "M_mm_seated": [
+     458.7,
+     0.0,
+     -71.7
+    ],
+    "state": "final",
+    "note": "loaded estimate"
+   }
+  ],
+  "scope": [
+   {
+    "socket": "Mount",
+    "scope_local_mm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "gun_M_when_mounted": [
+     416.15,
+     0.0,
+     30.0
+    ],
+    "rail": "Rail_Top + 2 x 10.01"
+   },
+   {
+    "socket": "Sight",
+    "scope_local_mm": [
+     -145.05,
+     0.0,
+     27.6
+    ],
+    "note": "on the scope axis at the eyepiece face, +X forward (overrides the gun's: the gun has none)"
+   },
+   {
+    "socket": "EyePoint",
+    "scope_local_mm": [
+     -240.05,
+     0.0,
+     27.6
+    ],
+    "note": "eye relief 95.0 mm behind Sight (game data hint)"
+   },
+   {
+    "socket": "Lens_Front",
+    "scope_local_mm": [
+     274.35,
+     0.0,
+     27.6
+    ]
+   },
+   {
+    "socket": "CenterOfMass",
+    "scope_local_mm": [
+     64.65,
+     0.0,
+     27.6
+    ],
+    "state": "provisional"
+   }
+  ],
+  "gun_count": 20,
+  "mag_count": 5,
+  "reload_path": "straight: MagInsertStart -> Mag along +Z",
+  "rail_slots": {
+   "Rail_Top": 15,
+   "occupied_by_scope_rings": [
+    2,
+    12
+   ]
+  }
+ },
+ "rails": {
+  "module": "gunlib parts/rail_1913",
+  "top": {
+   "X": [
+    385.8,
+    546.6
+   ],
+   "top_Z": 30.0,
+   "slots": 15,
+   "slot0_X": 396.13,
+   "end_webs": 7.71
+  },
+  "bottom": "plain dovetail (R18), not 1913"
+ },
+ "scope_attachment": {
+  "asset": "SM_Att_Scope_LongRange",
+  "mount_M": [
+   416.15,
+   0.0,
+   30.0
+  ],
+  "ring_X": [
+   416.15,
+   516.25
+  ],
+  "sight_M": [
+   271.1,
+   0.0,
+   57.6
+  ],
+  "eye_point_M": [
+   176.1,
+   0.0,
+   57.6
+  ],
+  "eye_relief": 95.0,
+  "eye_over_riser": true,
+  "riser_below_eye": 25.6,
+  "slots": [
+   "M_Att_Scope_Body",
+   "M_Att_Scope_Lens"
+  ],
+  "budget": [
+   [
+    6000,
+    10000
+   ],
+   12000
+  ],
+  "lods": 3
+ },
+ "materials": {
+  "cerakote_od_over_al": {
+   "metallic": 0,
+   "base_srgb_sheet": [
+    89,
+    89,
+    78
+   ],
+   "base_linear_target": 0.05,
+   "hue_deg": 59,
+   "sat": 0.12,
+   "roughness": [
+    0.55,
+    0.7
+   ],
+   "micro": "ceramic paint orange-peel 0.2-0.5 mm (Detail16, normal only)",
+   "wear": "edge chips to a dark rim first, then bare aluminium (metallic 1, 0.91, rough 0.30-0.45) on the highest corners only; brief: 'light edge wear to dark grey'",
+   "note": "Metal From ORM on: OD is dark enough (study 5.9 brightness trap: safe)"
+  },
+  "anodized_black_al": {
+   "metallic": 0,
+   "base_srgb": [
+    45,
+    62
+   ],
+   "roughness": [
+    0.45,
+    0.65
+   ],
+   "wear": "bright silver aluminium at edges (rare: rail edges, ring tops)"
+  },
+  "phosphate_steel": {
+   "metallic": 0,
+   "base_srgb": [
+    50,
+    66
+   ],
+   "roughness": [
+    0.65,
+    0.8
+   ],
+   "oiled": [
+    0.55,
+    0.7
+   ],
+   "wear": "bare steel (metallic 1, 0.53-0.56 linear, rough 0.25-0.40)"
+  },
+  "bare_steel_polished": {
+   "metallic": 1,
+   "base_linear": [
+    0.53,
+    0.56
+   ],
+   "roughness": [
+    0.15,
+    0.3
+   ],
+   "where": "bolt body and lugs, inner legs"
+  },
+  "polymer_black": {
+   "metallic": 0,
+   "base_srgb": [
+    42,
+    50
+   ],
+   "roughness": [
+    0.55,
+    0.7
+   ],
+   "wear": "polish only"
+  },
+  "rubber_black": {
+   "metallic": 0,
+   "base_linear": [
+    0.02,
+    0.03
+   ],
+   "roughness": [
+    0.75,
+    0.9
+   ],
+   "sheet": "butt pad reads 0.09 x the backdrop"
+  },
+  "soot": {
+   "metallic": 0,
+   "base_linear": [
+    0.02,
+    0.03
+   ],
+   "roughness": [
+    0.85,
+    0.95
+   ]
+  },
+  "calibration": "L5 against sheet crops under matched light before the first look (katana and SMG 'flat clay' lessons: rough-real finishes in the early looks, a physical light rig, not flat grey)"
+ },
+ "wear_logic": "Painted aluminium chips at corners to a dark rim then metal (R); hand zones polish the paint (G: grip top, comb/riser left top, forend belly, bolt knob, safety arc); the bolt body is polished bare by sliding; the bipod feet, butt toe/heel and mag floorplate corners are abraded (R); dust in rail slots, forend slots and pocket corners (B); soot at the device exit and the port.",
+ "textures": {
+  "texel_classes_px_per_cm": {
+   "A": {
+    "range": [
+     80,
+     100
+    ],
+    "what": "rear sight leaf / aperture, optic eyepiece, front post and hood (ADS 55 deg at 0.20-0.25 m)"
+   },
+   "B": {
+    "range": [
+     60,
+     80
+    ],
+    "what": "rear receiver, dust cover, selector, charging handle, grip top, comb"
+   },
+   "C": {
+    "range": [
+     30,
+     40
+    ],
+    "what": "mag, magwell, trigger guard, handguards, front receiver"
+   },
+   "D": {
+    "range": [
+     25,
+     30
+    ],
+    "what": "gas block, front sight base, barrel, brake"
+   },
+   "E": {
+    "range": [
+     8,
+     15
+    ],
+    "what": "hidden: undersides, insides, contact faces (reload-visible insides at the low end)"
+   }
+  },
+  "sets": {
+   "Metal": "2048 likely (classes B/C/D)",
+   "Chassis": "4096 likely (largest painted area incl. pad, grip, bipod body; class B comb/riser/action bed)",
+   "Mag": "1024",
+   "Scope_Body": "2048 (class A eyepiece)",
+   "rule": "smallest power of two holding the classes at fill >= 70/65 % (packer decides; x2.3 estimate factor)"
+  },
+  "slots": {
+   "SK_SR01": [
+    "M_SR01_Metal (M_Steel_Master: barrel, device, bolt, receiver, rail, small steel parts, bipod steel)",
+    "M_SR01_Chassis (M_Fabric_Master, Metal From ORM ON: OD Cerakote over aluminium with bare-metal wear, plus the non-recolourable rubber pad, polymer grip, anodized bipod body and rubber feet with Masks A = 0)"
+   ],
+   "SM_SR01": "Metal on U tile 0, Chassis on tile 1, merged mag on tile -1: 3 slots, the qa_check limit (study 5.8)",
+   "SM_SR01_Mag": [
+    "M_SR01_Mag (M_Fabric_Master + MFO: phosphated steel body, polymer floorplate)"
+   ],
+   "held_draw_calls": "gun 2 x 2 + mag 2 x 1 + scope 2 x 2 = 10 (the study's <= 10 with attachments)",
+   "SM_Att_Scope_LongRange": [
+    "M_Att_Scope_Body (M_Steel_Master: anodized black + rubber eyecup baked)",
+    "M_Att_Scope_Lens (opaque glossy, Q19 default)"
+   ]
+  },
+  "uv0": "SK all slots in 0..1; SM twin Metal tile 0, Chassis tile 1, merged mag tile -1",
+  "masks": "T_SR01_Masks from the first build"
+ },
+ "budgets_triangles": {
+  "gun_lod0": [
+   35000,
+   45000
+  ],
+  "gun_ceiling": 50000,
+  "lod1_share": 0.45,
+  "lod2_share": 0.15,
+  "lod3": [
+   2000,
+   3000
+  ],
+  "mag_lod0": [
+   2000,
+   3000
+  ],
+  "mag_ceiling": 5000,
+  "scope_lod0": [
+   6000,
+   10000
+  ],
+  "scope_ceiling": 12000,
+  "scope_lods": 3
+ },
+ "lods": {
+  "count": 4,
+  "gun_screen_sizes_start": [
+   1.0,
+   0.25,
+   0.1,
+   0.033
+  ],
+  "rest_bounds_radius_m": 0.559,
+  "rule": "measured LOD-pop on the final engine bounds incl. the bounds extension (folded and deployed)",
+  "bounds_extension": {
+   "rest_box_M": {
+    "X": [
+     0.0,
+     1100.0
+    ],
+    "Y": [
+     -80.0,
+     34.5
+    ],
+    "Z": [
+     -166.4,
+     32.0
+    ]
+   },
+   "posed_extremes_M": {
+    "Z_min_bipod_deployed_ext76_cant15": "re-derived in W1 follow-up (gates/form.json F3 + bounds)",
+    "Y_abs_max_bipod_cant15": 113.9,
+    "knob_open_Z": 41.7,
+    "knob_back_X": 279.9,
+    "bolt_back_rear_X": 257.4,
+    "riser_top_raised_Z": 44.0,
+    "folded_ext76_foot_front_X": 1001.6
+   }
+  },
+  "first_person": "FP forced to LOD0",
+  "nanite": "off"
+ },
+ "collision": {
+  "twin_hulls": 10,
+  "mag_hulls": 1,
+  "scope_hulls": 3
+ },
+ "clips": {
+  "rule": "start and end at the bind pose (bolt closed, FIRE, bipod folded, ext 0, cant 0, riser rest) unless starts_at_rest false",
+  "list": [
+   {
+    "file": "A_SR01_Fire",
+    "fps": 60,
+    "frames": [
+     0,
+     8
+    ],
+    "motion": "trigger 0 -> +6 -> 0; nothing else moves (bolt action)",
+    "notifies": [
+     "Fire",
+     "TriggerReset"
+    ]
+   },
+   {
+    "file": "A_SR01_BoltCycle",
+    "fps": 30,
+    "frames": [
+     0,
+     30
+    ],
+    "motion": "bolt rotate 0 -> -60 (f0-6), slide 0 -> 88 (f6-14), hold (f14-16), slide back 88 -> 0 (f16-24), rotate -60 -> 0 (f24-30); safety at FIRE",
+    "notifies": [
+     "BoltUnlock",
+     "ShellEject (f13)",
+     "BoltForward",
+     "BoltLock"
+    ]
+   },
+   {
+    "file": "A_SR01_Reload",
+    "fps": 30,
+    "frames": [
+     0,
+     60
+    ],
+    "motion": "paddle press, mag straight down along -Z, drop; new mag up the path, paddle release, hook snaps into the notch; bolt closed throughout",
+    "notifies": [
+     "MagRelease",
+     "MagOut",
+     "MagDrop",
+     "MagIn"
+    ]
+   },
+   {
+    "file": "A_SR01_ReloadEmpty",
+    "fps": 30,
+    "frames": [
+     0,
+     90
+    ],
+    "motion": "bolt open (rotate -60, slide 88: starts_at_rest false), mag change as Reload, then bolt forward and down",
+    "notifies": [
+     "MagRelease",
+     "MagOut",
+     "MagDrop",
+     "MagIn",
+     "BoltForward",
+     "BoltLock"
+    ],
+    "starts_at_rest": false
+   },
+   {
+    "file": "A_SR01_Selector",
+    "fps": 30,
+    "frames": [
+     0,
+     20
+    ],
+    "motion": "FIRE (bind) -> SAFE -> FIRE"
+   },
+   {
+    "file": "A_SR01_BipodDeploy",
+    "fps": 30,
+    "frames": [
+     0,
+     36
+    ],
+    "motion": "legs 0 -> +90 (f0-12, left leads by 2 frames: independent legs), detent click; ext 0 -> 38 (f16-30, both, the collar button pressed); cant 0",
+    "notifies": [
+     "BipodLegOut_L",
+     "BipodLegOut_R",
+     "BipodLocked"
+    ]
+   },
+   {
+    "file": "A_SR01_BipodStow",
+    "fps": 30,
+    "frames": [
+     0,
+     36
+    ],
+    "motion": "ext 38 -> 0 (f0-14), legs +90 -> 0 (f18-32), detent click; ends at the bind pose",
+    "notifies": [
+     "BipodRetracted",
+     "BipodStowed"
+    ],
+    "starts_at_rest": false
+   },
+   {
+    "file": "A_SR01_CheekRiser (optional)",
+    "fps": 30,
+    "frames": [
+     0,
+     24
+    ],
+    "motion": "rest -> +12 -> -12.9 -> rest (lever opened first)"
+   }
+  ],
+  "values": {
+   "trigger_pull_deg": 6.0,
+   "bolt_rotate_deg": -60.0,
+   "bolt_mm": 88.0,
+   "release_deg": -4.5,
+   "deploy_deg": 90.0,
+   "deploy_ext_mm": 38.0
+  }
+ },
+ "gates": {
+  "S0": "this file: 0 missing fields, 0 failed consistency/clearance checks (validator output in S0)",
+  "look": {
+   "L1": "blockout IoU GR >= 0.95, GL >= 0.95, TOP >= 0.92; < 0.90 = stop and change the method",
+   "L2": "form IoU GR >= 0.96 (authority), GL >= 0.958 (sheet self-IoU - 0.01), TOP >= 0.93; each part on GR >= 0.95 (areas in parts[].trace); Q34 camera-solved IoU >= 0.93, contour P95 <= 3 px, folded bipod pose",
+   "L3": "P95 contour <= 2 sheet px (3.8 mm); features <= 2 px; declared: paddle front face, ring positions (integer slots), knob X from GR only, TOP feet width",
+   "L4": "measured vs spec <= 0.05 mm",
+   "L5": "colour vs sheet crops (OD 89,89,78 rendered; stone S16 tolerances)",
+   "L6": "G1-G20 with evidence, 0 major",
+   "L7": "blind design judge >= 12 pairs (<= 8/12) REPORTED, not blocking (user rule); 2 realism judges on FP 35 cm, scope view, TP 3 m, hero 3/4 + bipod deployed hero: decide the look",
+   "L8": "early realism per part group at form (chassis, bolt group, bipod, scope): PASS = <= 1 single-judge fake call per group; both judges = decisive fail, stop"
+  },
+  "blender": {
+   "B1-B11": "as the SMG plan (skeleton, rigid skin, sweeps, sockets, sidecar, twin, geometry, budgets, textures, names, bounds over every LOD)",
+   "B3_steps": "rotation step min(1 deg, c_min / r_max): bipod legs r_max 296 mm -> 0.019 deg with c 0.10 (use the coarse-step-with-proof method of gunlib fit.sweep)",
+   "B4": "no iron sights: B4 = scope sight line (Sight on the tube axis, parallel to the bore <= 0.05 deg) with the attachment mounted",
+   "UD1-UD4": "from form (rifle lesson)",
+   "H1": "early: grip girth <= real + 10 %, trigger reach; full in W3 (rifle-class pose)"
+  },
+  "craft_bipod_bolt": {
+   "F1": "bipod folded: 0 intersections; mount-leg gap 0.2 (hinge row); feet 4.2 below the forend band; feet 2.0 apart",
+   "F2": "deploy sweep 0..+90 at ext 0 and 76 (cant 0): swept min >= 0.10 to every part (W0 analytic sweep: {'mount': 0.2, 'forend': 13.0, 'barrel': 29.8, 'tension_knob': 2.8, 'magazine': 206.69})",
+   "F3": "deployed: feet coplanar +-0.1, legs vertical +-0.05 deg, ground Z by detent {'ext_0': -268.3, 'ext_19': -287.3, 'ext_38': -306.3, 'ext_57': -325.3, 'ext_76': -344.3}",
+   "F4": "ext sweep 0..76 in both poses: inner rod in the outer tube 0.15-0.40, detent notches at 19.0",
+   "F5": "cant +-15 deployed: 0 intersections (W0 worst 32.41); folded: allowed (W0 worst 7.73)",
+   "F6": "bolt: rotate 0..-60 then slide 0..88: knob >= 20 mm from the mounted scope (W0 29.9); lugs clear recesses >= 0.10 while turning; bolt in the raceway sliding row",
+   "F7": "mag release: hook engagement 1.4 seated, travel 1.88 >= engagement + 0.3, pad >= 0.3 from the mag at full press (W0 0.36)",
+   "F8": "riser: posts sliding row over the travel; low-stop gap 0.3 >= 0.3",
+   "F9": "trigger: blade >= 1.0 from the guard at full pull (W0 3.27)"
+  },
+  "scope": {
+   "A1": "Mount at Rail_Top + 2 x 10.01 exactly",
+   "A2": "ring lugs in slots 0.1-0.4 fore-aft",
+   "A3": "scope >= 2 mm from every gun part at rest and over the bolt cycle and riser travel",
+   "A4": "Sight Z 57.6 above the bore +-0.2; EyePoint over the riser",
+   "A5": "scope LOD0 6-10k (12k ceiling), 3 LODs, 2 slots; qa_check on SM_Att_Scope_LongRange"
+  },
+  "magazine": "M1-M10 as the SMG (straight path along Z; M4b with the paddle pressed)",
+  "unreal": "U1-U12 incl. U2b (bolt -X and trigger/selector/release on SK_SR01 via the long-gun ABP), U5 bounds contain every clip frame incl. BipodDeploy at ext 38 and the cant range; U4 with the scope as the attachment FP + TP pair",
+  "pack": "P1-P4 (W6, PackMaterials lock, run_build.sh)"
+ },
+ "names": {
+  "product": "Sniper Rifle SR-01",
+  "code": "SR01",
+  "lock": "SR01",
+  "checked": [
+   "SK_SR01",
+   "SK_SR01_Skeleton",
+   "PHYS_SR01",
+   "SM_SR01",
+   "SM_SR01_Mag",
+   "SM_Att_Scope_LongRange",
+   "M_SR01_Metal",
+   "M_SR01_Chassis",
+   "M_SR01_Mag",
+   "M_Att_Scope_Body",
+   "M_Att_Scope_Lens",
+   "T_SR01_Metal_BC",
+   "T_SR01_Chassis_ORM",
+   "T_SR01_Masks",
+   "T_SR01_Mag_N",
+   "T_Att_Scope_Body_BC",
+   "A_SR01_Fire",
+   "A_SR01_BoltCycle",
+   "A_SR01_Reload",
+   "A_SR01_ReloadEmpty",
+   "A_SR01_Selector",
+   "A_SR01_BipodDeploy",
+   "A_SR01_BipodStow",
+   "A_SR01_CheekRiser",
+   "body",
+   "bolt",
+   "trigger",
+   "selector",
+   "mag_release",
+   "magazine",
+   "muzzle_device",
+   "cheek_riser",
+   "bipod",
+   "bipod_leg_l",
+   "bipod_leg_r",
+   "bipod_leg_l_ext",
+   "bipod_leg_r_ext",
+   "Grip",
+   "SupportHand",
+   "SupportHandBipod",
+   "Muzzle",
+   "MuzzleSeat",
+   "ShellEject",
+   "Mag",
+   "MagInsertStart",
+   "Rail_Top",
+   "SlingFront",
+   "SlingRear",
+   "Shoulder",
+   "CenterOfMass",
+   "Holster",
+   "Trigger",
+   "Selector",
+   "MagRelease",
+   "BoltHandle",
+   "BipodFoot_L",
+   "BipodFoot_R",
+   "Mag",
+   "HandReload",
+   "Feed",
+   "Base",
+   "CenterOfMass",
+   "Mount",
+   "Sight",
+   "EyePoint",
+   "Lens_Front",
+   "CenterOfMass",
+   "Sniper Rifle SR-01",
+   "UCX_SM_SR01_LOD0_00"
+  ],
+  "deny_hits": {},
+  "deny_negative_tests": {
+   "SM_AWM01": [
+    "awm"
+   ],
+   "T_Barrett_BC": [
+    "barrett"
+   ],
+   "SM_MLok_Slot": [
+    "m lok"
+   ]
+  },
+  "rule": "tokenised gun deny list (gunlib qa_gun) on every asset, material, texture, bone, socket name and shipped text"
+ },
+ "unseen_plain": [
+  "chassis underside except the mag well and dovetail",
+  "left side of the bolt (inside the receiver)",
+  "trigger housing internals",
+  "scope underside",
+  "the butt's left-side QD cup interior (plain recess)",
+  "bipod clamp's left side (plain screw head)",
+  "magazine top and feed lips (real pattern, plain)"
+ ],
+ "inconsistencies_in_sheet": [
+  {
+   "id": "I1",
+   "what": "TOP draws the bolt knob ~32 mm further back than GR (X 336 vs 368)",
+   "handling": "GR authority for X; TOP for the knob's Y only"
+  },
+  {
+   "id": "I2",
+   "what": "TOP right-side (image-down) edges sit 4-6 mm wider than the left edges (soft floor shadow at the right edge)",
+   "handling": "widths of symmetric parts = 2 x the left half-width; asymmetric parts read with a 5 mm bias correction"
+  },
+  {
+   "id": "I3",
+   "what": "TOP inflates round parts: device 38.1 vs 36.1 side, barrel 35.2 vs 31.8",
+   "handling": "side views win on diameters"
+  },
+  {
+   "id": "I4",
+   "what": "the folded bipod feet in TOP span only ~60 mm, narrower than two 37 mm feet side by side allow",
+   "handling": "legs at Y +-19.5 with 37 mm feet (side-view size): TOP feet width 76, declared; TOP is not the bipod's authority"
+  },
+  {
+   "id": "I5",
+   "what": "mag rake: rear edge -0.9 deg, front edge +1.3 deg (GR); GL rear +3.4",
+   "handling": "built vertical (0.0)"
+  },
+  {
+   "id": "I6",
+   "what": "the drawn mag-release front edge is 1.8 mm behind the mag's rear face, too close for a forward-push paddle",
+   "handling": "paddle front face moved rearward (declared in the spec)"
+  },
+  {
+   "id": "I7",
+   "what": "drawn rail pitch 10.6 mm (+6 %)",
+   "handling": "rail_1913 at 10.01"
+  },
+  {
+   "id": "I8",
+   "what": "the 3/4 view shows the bipod folded (the study's sheet note said deployed)",
+   "handling": "deployed pose from the real pattern; the 3/4 is a second folded-pose check"
+  }
+ ],
+ "resolutions": [
+  {
+   "id": "R1",
+   "topic": "Sides",
+   "ruling": "The sheet's LEFT/RIGHT labels are swapped. The panel labelled LEFT shows the gun's RIGHT (bolt handle and knob; muzzle image-right); TOP has the knob image-down = right (muzzle image-right); the 3/4 FRONT RIGHT shows the knob. Panels renamed GR / GL in every tool."
+  },
+  {
+   "id": "R2",
+   "topic": "Scale",
+   "ruling": "Overall 1100 mm (not the study table's 1270, an AWM-class .338 figure). The user asked for a .308-class chassis rifle; the sheet's own anchors give 1049 mm median (spread [998, 1151]) and the strongest one, the 34 mm scope tube (18.1 px on both sides), gives 1097. At 1270 the tube would be 39 mm (no such class) and the barrel 37 mm thick. 1100 sits in the class range 1050-1200."
+  },
+  {
+   "id": "R3",
+   "topic": "Barrel and mass",
+   "ruling": "Barrel 559 mm (22 in): breech X 505.5 (bolt face at the drawn port's front), crown X 1064.5 inside the device (seat X 1049.7); the sheet geometry and the real figure agree. Mass 5.9 kg without scope and mag (bipod included), scope + rings 1.15 kg, ready 7.5 kg."
+  },
+  {
+   "id": "R4",
+   "topic": "Bore axis",
+   "ruling": "Direction: the barrel's straight top edge (rms 0.13 px) and the scope tube (rms 0.05 px) agree within 0.06 deg; height: the device centre line (GR and GL agree to 0.01 px)."
+  },
+  {
+   "id": "R5",
+   "topic": "Bipod pose on the sheet",
+   "ruling": "Side views AND the 3/4 show the bipod FOLDED (legs forward under the forend, feet side by side ahead of the clamp). The study's 'deployed in the 3/4' is wrong: no deployed view exists. Folded pose = GR/GL authority and a second camera-solved check on the 3/4; deployed pose = the real pattern (legs straight down)."
+  },
+  {
+   "id": "R6",
+   "topic": "Butt",
+   "ruling": "Fixed: no hinge, fold seam or latch is resolvable on any view; the brief's 'folding-style' look is kept as shape only (no stock bone). Open Q4."
+  },
+  {
+   "id": "R7",
+   "topic": "Bipod mechanism",
+   "ruling": "Tension-swivel folding bipod: legs on transverse pins at the drawn hub (X 719.6, Z -62.3), Y +-19.5, independent, detents 0/+90; ext 0..76 in 19 mm notches; cant +-15 about X at Z -46.0; the drawn knob below the hub is the swivel-tension knob. Bore height deployed 268.3..344.3 mm."
+  },
+  {
+   "id": "R8",
+   "topic": "Bolt",
+   "ruling": "3-lug 60 deg throw then 88 mm stroke; knob (X 367.9, Y -67.6, Z -33.6) lifts to Z 41.7; it clears the mounted scope by 29.9 mm over the whole cycle."
+  },
+  {
+   "id": "R9",
+   "topic": "Knob Y",
+   "ruling": "TOP draws the knob 32 mm further back than GR; GR gives X and Z, TOP gives the knob's outboard reach (right edge less the 5 mm shadow bias)."
+  },
+  {
+   "id": "R10",
+   "topic": "TOP widths",
+   "ruling": "TOP right-side edges read 4-6 mm wide (soft floor shadow); symmetric widths = 2 x the left half-width; TOP inflates round parts 6-10 %: diameters from the side views."
+  },
+  {
+   "id": "R11",
+   "topic": "Magazine",
+   "ruling": "Straight, vertical (drawn -0.9/+1.3 deg), fore-aft 89.3, thickness 26.5 (unseen; real class), 10 rounds, top Z -11.0, insertion straight along Z; Mag at well entry [458.7, 0.0, -68.8]."
+  },
+  {
+   "id": "R12",
+   "topic": "Mag release",
+   "ruling": "Forward-push paddle; built front face X 410.6, 3.4 mm behind the drawn edge (declared, < 2 sheet px), hook 24.0 above the pivot travels 1.88 > engagement 1.4; pad keeps 0.36 to the mag at full press."
+  },
+  {
+   "id": "R13",
+   "topic": "Grip angle",
+   "ruling": "The brief says 'vertical pistol grip'; the sheet draws straps at 30.7 / 24.9 deg (axis 27.15). The sheet wins (silhouette rule)."
+  },
+  {
+   "id": "R14",
+   "topic": "Rail",
+   "ruling": "Scope base built with rail_1913, 15 slots at 10.01 (drawn pitch 10.61), flat (0 MOA); rings on slots [2, 12] (shift [2.6, -1.65] mm from the drawn ring centres)."
+  },
+  {
+   "id": "R15",
+   "topic": "Scope",
+   "ruling": "Separate attachment SM_Att_Scope_LongRange (scope + rings) on Rail_Top + 2 slots, own Sight/EyePoint, body + lens slots; the gun carries no Sight socket and no iron sights (none drawn)."
+  },
+  {
+   "id": "R16",
+   "topic": "Slots",
+   "ruling": "Gun: 2 slots (Metal on M_Steel_Master; Chassis on M_Fabric_Master + Metal From ORM with rubber/polymer/anodized parts at Masks A 0) so the twin holds Metal 0 / Chassis 1 / merged mag -1 = the qa_check 3-tile limit; held draws 10 incl. the scope."
+  },
+  {
+   "id": "R17",
+   "topic": "Cheek riser",
+   "ruling": "Adjustable: bone cheek_riser, travel [-12.9, 12.0] mm from the sheet pose (posts exposed 13.2 drawn); parent body pending gunlib proposal P1. ADS eye point (X 176.1) sits over the riser; riser top 25.6 mm below the scope axis."
+  },
+  {
+   "id": "R18",
+   "topic": "Forend bottom band",
+   "ruling": "Plain dovetail (no teeth drawn), the bipod clamp's seat; no Rail_Bottom socket in v1."
+  },
+  {
+   "id": "R19",
+   "topic": "Safety",
+   "ruling": "2-position tang rocker on the right behind the handle (bone selector; FIRE bind, SAFE -12); real pattern, not resolved on the sheet."
+  },
+  {
+   "id": "R20",
+   "topic": "Muzzle device",
+   "ruling": "Linear compensator (closed sleeve, 12 mm exit), bone muzzle_device, hidden for the universal suppressor at MuzzleSeat."
+  },
+  {
+   "id": "R21",
+   "topic": "Folded feet in TOP",
+   "ruling": "Legs at Y +-19.5 with 37 mm feet (side-view size) span 76 mm in TOP where TOP reads ~60: declared; the feet keep a 2.0 mm gap."
+  },
+  {
+   "id": "R22",
+   "topic": "Cant folded",
+   "ruling": "Cant is allowed only when deployed if the folded check fails (folded worst 7.73 mm, deployed 32.41 mm)."
+  }
+ ],
+ "open_questions": [
+  {
+   "id": "Q1",
+   "q": "Scale: 1100 mm overall (.308 class, sheet-anchored) instead of the study's 1270 (AWM class)?",
+   "default": "1100 (22 in barrel, 5.9 kg); the study's Q15 row is updated by this run's ruling"
+  },
+  {
+   "id": "Q2",
+   "q": "Deployed bipod: legs straight down (90 deg, parallel, as the real tension-swivel pattern), or splayed outward?",
+   "default": "straight down, parallel; splay would need a second hinge per leg"
+  },
+  {
+   "id": "Q3",
+   "q": "Keep the sheet's chunky heavy barrel (35 -> 32 mm, fluted) and 36 mm compensator?",
+   "default": "yes (silhouette authority; heavy-contour class)"
+  },
+  {
+   "id": "Q4",
+   "q": "Butt: fixed (nothing drawn folds), or add a side-folding hinge like the SMG?",
+   "default": "fixed in v1"
+  },
+  {
+   "id": "Q5",
+   "q": "Ship a second static twin with the bipod deployed (set dressing)?",
+   "default": "no; SK posed covers it"
+  },
+  {
+   "id": "Q6",
+   "q": "Scope lens: opaque glossy now (study Q19), or wait for a glass master?",
+   "default": "opaque glossy"
+  }
+ ],
+ "open_questions_rule": "the build follows each default unless the user decides otherwise",
+ "fab_original_changes": {
+  "status": "not applied; the user decides",
+  "items": [
+   "chassis side pocket reshaped as two stepped pockets",
+   "forend slots as tapered lozenges of three lengths",
+   "riser plate with a scalloped front",
+   "butt cut-out with a reversed curve and a thumb notch",
+   "grip texture as a hex field with a thumb ledge",
+   "compensator with 4 forward slots",
+   "bipod feet as cleated discs"
+  ]
+ },
+ "gunlib_proposals": [
+  "P1 cheek_riser parent 'body'",
+  "P2 bipod motion axes in the standard",
+  "P3 sniper budgets row",
+  "P4 attachment socket table (Mount, Sight, EyePoint, Lens_Front) + scope standard",
+  "P5 dovetail_plain part module",
+  "P6 bolt rotate-then-slide in rig.key_action helpers",
+  "P7 BoltHandle + BipodFoot_* optional sockets",
+  "P8 telescoping-leg / tube parts (hinge.py extension)",
+  "P9 TOP-view floor-shadow edge method into the shared trace helpers"
+ ],
+ "layout": {
+  "scripts": "Scripts/guns/sniper/",
+  "work": "WorkFiles/guns/sniper/",
+  "exports": "Exports/Guns/SR01/",
+  "attachment_exports": "Exports/Guns/Shared/Attachments/ (lock GunShared) or Exports/Guns/SR01/ until the kit exists (plan 16)",
+  "blend": "Assets/Guns/SR01.blend, Assets/Guns/Att_Scope_LongRange.blend"
+ },
+ "S0": {
+  "missing_fields": [],
+  "inconsistencies": [],
+  "consistency_checks": {
+   "trigger pull: part = bone = clip": true,
+   "release: part = bone = clip, negative": true,
+   "bolt rotate/travel: bone = clip": true,
+   "knob clears the scope >= 20 over the cycle": true,
+   "knob lifts above horizontal when open": true,
+   "bolt open rear stays ahead of the riser front": true,
+   "port opened for the bolt stroke": true,
+   "barrel = crown - breech, crown inside device": true,
+   "hook travel >= engagement + 0.3": true,
+   "pad >= 0.3 from the mag at full press": true,
+   "paddle shift < 2 sheet px": true,
+   "trigger tip >= 1.0 from the guard at pull": true,
+   "riser low stop gap >= 0.3": true,
+   "mag top under the bolt": true,
+   "bipod fold gap to mount in hinge row": true,
+   "bipod feet below the forend >= 3.0 folded": true,
+   "bipod feet apart >= 0.10": true,
+   "legs clear the tension knob in Y": true,
+   "deploy sweep: every obstacle >= 0.10 (mount analytic)": true,
+   "cant deployed >= 0.10": true,
+   "deployed ground below everything": true,
+   "bipod clip ext is a detent": true,
+   "rings on integer slots, shift <= 2 sheet px": true,
+   "rail end webs >= 3.0": true,
+   "eye point over the riser": true,
+   "scope axis parallel to the bore (<= 0.1 deg)": true,
+   "slots per twin <= 3 (incl. merged mag)": true,
+   "bone count 13 = interface": true,
+   "every bone parent per standard or proposal P1": true,
+   "names deny-list clean": true,
+   "deny negative tests hit": true,
+   "overall within the .308 class range": true,
+   "views agree on length (TOP/GR within 1 %)": true
+  },
+  "status": "PASS",
+  "provisional": [
+   "SupportHand",
+   "SupportHandBipod",
+   "SlingFront",
+   "CenterOfMass",
+   "Holster"
+  ],
+  "real_figures": {
+   "overall": "1100 in the .308-class range 1050-1200 (study table 1270 = AWM class: R2, Q1)",
+   "barrel": "559 (22 in)",
+   "mass": "5.9 kg without scope/mag"
+  }
+ },
+ "counts": {
+  "parts": 25,
+  "gun_sockets": 20,
+  "mag_sockets": 5,
+  "scope_sockets": 5,
+  "bones": 13,
+  "rulings": 15,
+  "resolutions": 22,
+  "open_questions": 6,
+  "rail_slots": 15
+ }
+}

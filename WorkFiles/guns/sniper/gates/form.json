@@ -1,0 +1,2952 @@
+{
+ "stage": "W1a form (gun without the scope)",
+ "date": "2026-10-13T22:30:27",
+ "status": "partial",
+ "failed": [
+  "L2 GL IoU (scope stand-in)",
+  "L2 TOP IoU raw / declared fit",
+  "L2 per part on GR (IoU >= 0.95)",
+  "L3 GR contour P95 (sheet px)",
+  "L4 key dimensions (<= 0.05 mm)"
+ ],
+ "gates": [
+  {
+   "name": "L2 GR IoU (scope = the blockout stand-in until W1b)",
+   "value": 0.9602,
+   "threshold": ">= 0.96",
+   "pass": true
+  },
+  {
+   "name": "L2 GL IoU (scope stand-in)",
+   "value": [
+    0.9426,
+    0.9505
+   ],
+   "threshold": ">= 0.958",
+   "pass": false,
+   "note": "raw / declared forend-underside window out; GL's silhouette is 602 px (1.8 %) smaller than GR's for the same object (ours differ by 98 px): the sheet's GL is drawn thinner, see scratch/w1/l2_columns.json"
+  },
+  {
+   "name": "L2 TOP IoU raw / declared fit",
+   "value": [
+    0.8375,
+    0.902
+   ],
+   "threshold": ">= 0.93",
+   "pass": false
+  },
+  {
+   "name": "L2 per part on GR (IoU >= 0.95)",
+   "value": "2 / 19",
+   "threshold": "all",
+   "pass": false,
+   "note": "z-buffer labels (W1 follow-up; the painter's order was replaced); per part with what covers the missed pixels in details.silhouette: most misses are label disagreements (our bolt through the port vs the sheet's 'receiver', our rail over the drawn receiver top, the riser skirts over 'butt'), the trigger blade is drawn ~3 px (5-6 mm) behind ours, the paddle sits behind the chassis wall"
+  },
+  {
+   "name": "L3 GR contour P95 (sheet px)",
+   "value": 3.0,
+   "threshold": "<= 2",
+   "pass": false
+  },
+  {
+   "name": "L4 key dimensions (<= 0.05 mm)",
+   "value": "12 / 14",
+   "threshold": "all",
+   "pass": false
+  },
+  {
+   "name": "B3 bolt_rotate 0.0..-60.0 (step -0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.2013,
+    "min_with": "receiver",
+    "proof_fails": 0
+   },
+   "threshold": "0 intersections; min >= sliding row low",
+   "pass": true
+  },
+  {
+   "name": "B3 bolt_slide 0.0..88.0 (step 0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1531,
+    "min_with": "receiver",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= sliding row low",
+   "pass": true
+  },
+  {
+   "name": "B3 trigger 0.0..6.0 (step 0.1)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1546,
+    "min_with": "pins",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 safety 0.0..-12.0 (step -0.1)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.199,
+    "min_with": "pins",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 mag_release 0.0..-4.5 (step -0.05)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1628,
+    "min_with": "pins",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 riser -12.9..12.000000000000059 (step 0.3)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1665,
+    "min_with": "butt",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= sliding row low",
+   "pass": true
+  },
+  {
+   "name": "B3 fold_l_ext0 0.0..90.0 (step 1.0)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1673,
+    "min_with": "bipod_pins",
+    "proof_fails": 0
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 fold_l_ext76 0.0..90.0 (step 1.0)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1673,
+    "min_with": "bipod_pins",
+    "proof_fails": 0
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 ext_l_folded 0.0..76.0 (step 0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.2001,
+    "min_with": "bipod_leg_l",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= sliding row low",
+   "pass": true
+  },
+  {
+   "name": "B3 ext_l_deployed 0.0..76.0 (step 0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.2,
+    "min_with": "bipod_leg_l",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= sliding row low",
+   "pass": true
+  },
+  {
+   "name": "B3 fold_r_ext0 0.0..90.0 (step 1.0)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1673,
+    "min_with": "bipod_pins",
+    "proof_fails": 0
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 fold_r_ext76 0.0..90.0 (step 1.0)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1673,
+    "min_with": "bipod_pins",
+    "proof_fails": 0
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 ext_r_folded 0.0..76.0 (step 0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.2001,
+    "min_with": "bipod_leg_r",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= sliding row low",
+   "pass": true
+  },
+  {
+   "name": "B3 ext_r_deployed 0.0..76.0 (step 0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.2,
+    "min_with": "bipod_leg_r",
+    "proof_fails": null
+   },
+   "threshold": "0 intersections; min >= sliding row low",
+   "pass": true
+  },
+  {
+   "name": "B3 cant_folded -15.0..15.0 (step 0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1842,
+    "min_with": "bipod_clamp",
+    "proof_fails": 0
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "B3 cant_deployed -15.0..15.0 (step 0.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.1842,
+    "min_with": "bipod_clamp",
+    "proof_fails": 0
+   },
+   "threshold": "0 intersections; min >= hinge row low",
+   "pass": true
+  },
+  {
+   "name": "G5 rest intersections between parts",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "G5 butt-joint gaps",
+   "value": "min 0.0152 over 16 pairs",
+   "threshold": ">= 0.01 (sampling 0.5 mm)",
+   "pass": true
+  },
+  {
+   "name": "F1 bipod folded gaps (leg-clamp, feet-forend, feet, legs-knob)",
+   "value": {
+    "bipod_leg_l|bipod_clamp": 4.7617,
+    "bipod_leg_r|bipod_clamp": 4.7549,
+    "bipod_foot_l|chassis": 8.0,
+    "bipod_foot_r|chassis": 8.0,
+    "bipod_foot_l|bipod_foot_r": 2.0553,
+    "bipod_leg_l|bipod_knob": 8.0,
+    "bipod_leg_r|bipod_knob": 8.0,
+    "bipod_leg_l|bipod_swivel": 0.2,
+    "bipod_foot_l|barrel": 8.0
+   },
+   "threshold": "0 intersections; feet >= 2.0 apart",
+   "pass": true
+  },
+  {
+   "name": "F2 deploy sweep 0..90 at ext 0 / 76 (both legs)",
+   "value": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "threshold": "all pass",
+   "pass": true
+  },
+  {
+   "name": "F3 deployed: feet coplanar, legs splayed outward by the spec angle, ground Z by detent",
+   "value": {
+    "feet": {
+     "ext_0": {
+      "left_Z": -266.709,
+      "right_Z": -266.709,
+      "spec": -266.71
+     },
+     "ext_19": {
+      "left_Z": -285.294,
+      "right_Z": -285.294,
+      "spec": -285.29
+     },
+     "ext_38": {
+      "left_Z": -303.879,
+      "right_Z": -303.879,
+      "spec": -303.88
+     },
+     "ext_57": {
+      "left_Z": -322.464,
+      "right_Z": -322.464,
+      "spec": -322.46
+     },
+     "ext_76": {
+      "left_Z": -341.048,
+      "right_Z": -341.048,
+      "spec": -341.05
+     }
+    },
+    "splay_spec_deg": 12.0,
+    "leg_splay_deg": {
+     "l": 12.0,
+     "r": 12.0
+    },
+    "leg_outward": {
+     "l": true,
+     "r": true
+    },
+    "leg_axis_deg_from_vertical": 12.0,
+    "foot_centre_track_ext0_mm": 118.97,
+    "coplanar_mm": 0.0
+   },
+   "threshold": "+-0.1 mm / splay +-0.05 deg",
+   "pass": true
+  },
+  {
+   "name": "F4 extension sweep 0..76 in both poses (sliding row)",
+   "value": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "threshold": "all pass",
+   "pass": true
+  },
+  {
+   "name": "F5 cant +-15 folded and deployed",
+   "value": [
+    true,
+    true
+   ],
+   "threshold": "0 intersections",
+   "pass": true
+  },
+  {
+   "name": "F6 bolt handle to the mounted scope over rotate + slide (scope = blockout stand-in)",
+   "value": 20.56,
+   "threshold": ">= 20",
+   "pass": true
+  },
+  {
+   "name": "F7 release: engagement / hook travel / pad gap pressed",
+   "value": {
+    "hook_tip_X_rest": 415.739,
+    "mag_rear_X": 414.1,
+    "engagement_mm": 1.639,
+    "hook_travel_mm": 1.969,
+    "hook_tip_X_pressed": 413.77,
+    "pad_gap_pressed_mm": 0.4407
+   },
+   "threshold": "engagement >= 1.4; travel >= engagement + 0.3; pad >= 0.3",
+   "pass": true
+  },
+  {
+   "name": "F8 riser low-stop gap",
+   "value": 0.3,
+   "threshold": ">= 0.3 (spec 0.3; sampling 0.25)",
+   "pass": true
+  },
+  {
+   "name": "F9 trigger at full pull to the chassis (guard / pocket)",
+   "value": 0.1848,
+   "threshold": ">= 0.10 (W0 tip-to-guard 3.27)",
+   "pass": true,
+   "note": "the minimum is the hub in its pocket; the blade tip to the guard is larger"
+  },
+  {
+   "name": "B6a joined twin: qa_check topology + degenerate checks; deny list",
+   "value": [
+    true,
+    true
+   ],
+   "threshold": "all pass",
+   "pass": true
+  },
+  {
+   "name": "B7 closed manifold parts",
+   "value": "33 / 33",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "B8 LOD0 triangles, gun without the scope (target 35-45k, ceiling 50k)",
+   "value": 41396,
+   "threshold": "<= 50000 (target <= 45000)",
+   "pass": true
+  },
+  {
+   "name": "UD1 Unreal degenerate rule on every LOD0 part",
+   "value": {
+    "unreal_drops": 0,
+    "min_area_mm2": 0.010543
+   },
+   "threshold": "0; >= 0.01 mm2",
+   "pass": true
+  },
+  {
+   "name": "UD2 micro edges / needles / strips",
+   "value": {
+    "edges_under_0.05mm": 0,
+    "needles_under_0.02mm": 0,
+    "strip_polygons_under_0.1mm": 0
+   },
+   "threshold": "0 / 0 / 0",
+   "pass": true
+  },
+  {
+   "name": "H1 early: grip girth at the palm (46 mm down the grip axis)",
+   "value": 165.9,
+   "threshold": "<= 167 (polymer grip band + 10 %)",
+   "pass": true
+  },
+  {
+   "name": "H1 early: trigger reach (web point -> trigger face)",
+   "value": 44.7,
+   "threshold": "<= 80",
+   "pass": true
+  },
+  {
+   "name": "L8 early realism: chassis",
+   "value": [
+    "PLAUSIBLE",
+    "PLAUSIBLE"
+   ],
+   "threshold": "<= 1 single-judge FAKE; both FAKE = stop",
+   "pass": true
+  },
+  {
+   "name": "L8 early realism: bolt group",
+   "value": [
+    "PLAUSIBLE",
+    "PLAUSIBLE"
+   ],
+   "threshold": "<= 1 single-judge FAKE; both FAKE = stop",
+   "pass": true
+  },
+  {
+   "name": "L8 early realism: bipod",
+   "value": [
+    "PLAUSIBLE",
+    "FAKE"
+   ],
+   "threshold": "<= 1 single-judge FAKE; both FAKE = stop",
+   "pass": true
+  }
+ ],
+ "declared_deviations": [
+  "Scope: not part of the gun; L2/F6 use the blockout scope (traced revolve + turret drums + ring blocks) as a stand-in until W1b builds SM_Att_Scope_LongRange",
+  "TOP: compared raw and with declared conventions (knob window, spec I1; bounded Y-only fit for the floor-shadow bias I2 and the round-part inflation); TOP is non-authority",
+  "Barrel OD per spec (35.2 -> 31.8, Q3 accepted): the sheet's silhouette draws it ~31-32 mm over the forend front",
+  "Riser: side skirts and the front block added (the sheet draws the riser as a closed block down to the butt and a front block over a background gap); the riser lever moved below the skirts' travel (GL draws it at Z -10)",
+  "Bipod clamp: a wide jaw plate (Y +-25) over a narrow swivel housing (Y +-9) so the folded legs cant +-15 beside it (W0's analytic folded-cant worst 7.7 mm)",
+  "Inner leg OD 15.9 (spec rod 12.7) to sit in the 16.4 tube bore at the sliding row (0.25 radial)",
+  "Magazine body top Z -20.0 with feed lips + top round up to Z -11 through the receiver feed port (the spec shelf -11.5 sits inside the round receiver; the shelf is at -19.7)",
+  "Mag release paddle built 3.4 mm behind the drawn lever (spec); hook 8.8 wide in a 9.6 notch",
+  "Pressed magazine ribs are recessed 0.8 (proud ribs would not pass the 0.3 well clearance)",
+  "Edge breaks on the chassis / butt / riser 1.0 x 45 (spec 0.6): the L8 fix round (judges: razor slab edges)",
+  "Grip bottom Z -166.19 vs spec -166.4 (the polymer contour smoothing of the traced bottom; 0.2 mm, under 0.1 px)",
+  "UD repair (gunlib ud.repair, strip collapses limited to 0.03 mm, kept only when not worse) on every part except chassis, bolt_handle and magazine; those three are now clean at the source (W1 follow-up): chassis internal pockets/bores cut after the round, guard outline at the centre's 1.3 tolerance, 1.34 mm inlet/channel overlap, dovetail flank 0.6 into the side, plus a 0.016 mm weld of the boolean's near-duplicate vertex pairs (max move 0.008 mm); bolt handle = one revolve (stem + ball, no bevel modifier) on a boss 2 mm past the stem base; magazine = lofted body with its 0.6 chamfers as geometry, square lips, the top round's nose square at r 2.8; butt knob flutes run through both cap chamfers",
+  "Bipod legs SPLAY 12 deg each side when deployed (user 2026-10-13, replaces Q2 straight down): angled pins (each rolled 12 deg about its leg axis), cheeks / bores / yoke faces rolled with them; folded pose unchanged",
+  "L2 (W1 follow-up): riser top 32.0 -> 31.0 and the magazine floor sloped 5.4 deg, where GR and GL both put the sheet's edge 1+ px off ours; left as sheet problems (GR and GL disagree): GL's forend underside X 555..700 drawn 5-13 mm higher than GR, the barrel top jitters 1 px between views, GL drawn 1.8 % thinner overall",
+  "L3 contour P95 is dominated by the declared TOP/GL differences and the scope stand-in; GR P95 3.2 px"
+ ],
+ "details": {
+  "silhouette": {
+   "stage": "form",
+   "npz": "form_tris.npz",
+   "triangles": 61856,
+   "views": {
+    "GR": {
+     "iou": 0.9602,
+     "contour_p50_px": 0.0,
+     "contour_p95_px": 3.0,
+     "contour_max_px": 15.03,
+     "mapping_fit_p95_px": 0.006,
+     "ours_px": 34653,
+     "ref_px": 34180,
+     "parts": {
+      "scope": {
+       "iou": 0.9611,
+       "area_px": 5654,
+       "missed_px_covered_by": {
+        "empty": 202,
+        "rail": 12,
+        "scope_blockout": 4
+       }
+      },
+      "bipod": {
+       "iou": 0.7923,
+       "area_px": 2123,
+       "missed_px_covered_by": {
+        "empty": 208,
+        "chassis": 134
+       }
+      },
+      "magazine": {
+       "iou": 0.9356,
+       "area_px": 1597,
+       "missed_px_covered_by": {
+        "empty": 55,
+        "chassis": 46
+       }
+      },
+      "muzzle_device": {
+       "iou": 0.9263,
+       "area_px": 508,
+       "missed_px_covered_by": {
+        "barrel": 15,
+        "empty": 3
+       }
+      },
+      "barrel": {
+       "iou": 0.803,
+       "area_px": 2081,
+       "missed_px_covered_by": {
+        "empty": 127,
+        "chassis": 34,
+        "muzzle_device": 16
+       }
+      },
+      "rail": {
+       "iou": 0.6604,
+       "area_px": 511,
+       "missed_px_covered_by": {
+        "empty": 32,
+        "scope_rings": 22
+       }
+      },
+      "bolt_handle": {
+       "iou": 0.3517,
+       "area_px": 471,
+       "missed_px_covered_by": {
+        "chassis": 242,
+        "safety": 24,
+        "bolt": 17
+       }
+      },
+      "bolt_shroud": {
+       "iou": 0.2813,
+       "area_px": 319,
+       "missed_px_covered_by": {
+        "empty": 40,
+        "safety": 24,
+        "chassis": 23
+       }
+      },
+      "receiver": {
+       "iou": 0.4978,
+       "area_px": 1791,
+       "missed_px_covered_by": {
+        "rail": 335,
+        "bolt": 289,
+        "chassis": 197
+       }
+      },
+      "cheek_riser": {
+       "iou": 0.7392,
+       "area_px": 1520,
+       "missed_px_covered_by": {
+        "empty": 84,
+        "butt": 61,
+        "pad_plate": 9
+       }
+      },
+      "butt_pad": {
+       "iou": 0.9617,
+       "area_px": 2562,
+       "missed_px_covered_by": {
+        "pad_plate": 72,
+        "empty": 26
+       }
+      },
+      "pad_plate": {
+       "iou": 0.679,
+       "area_px": 754,
+       "missed_px_covered_by": {
+        "empty": 73,
+        "butt_pad": 70,
+        "butt": 67
+       }
+      },
+      "trigger": {
+       "iou": 0.193,
+       "area_px": 29,
+       "trace_label_fix": {
+        "dropped_px": 65,
+        "why": "guard bottom bar labelled trigger in the trace (it is chassis)"
+       },
+       "missed_px_covered_by": {
+        "empty": 14,
+        "chassis": 4
+       }
+      },
+      "mag_release": {
+       "iou": 0.0,
+       "area_px": 87,
+       "missed_px_covered_by": {
+        "chassis": 34,
+        "empty": 33,
+        "magazine": 20
+       }
+      },
+      "trigger_guard": {
+       "iou": 0.6038,
+       "area_px": 569,
+       "missed_px_covered_by": {
+        "chassis": 98,
+        "grip": 21,
+        "empty": 2
+       }
+      },
+      "grip": {
+       "iou": 0.9454,
+       "area_px": 1825,
+       "missed_px_covered_by": {
+        "chassis": 67,
+        "empty": 16,
+        "butt": 10
+       }
+      },
+      "butt": {
+       "iou": 0.5797,
+       "area_px": 4509,
+       "missed_px_covered_by": {
+        "empty": 218,
+        "cheek_riser": 204,
+        "chassis": 21
+       }
+      },
+      "chassis_forend": {
+       "iou": 0.9098,
+       "area_px": 4614,
+       "missed_px_covered_by": {
+        "barrel": 290,
+        "chassis": 80,
+        "empty": 19
+       }
+      },
+      "chassis_centre": {
+       "iou": 0.8635,
+       "area_px": 4897,
+       "missed_px_covered_by": {
+        "chassis": 176,
+        "receiver": 80,
+        "scope_blockout": 58
+       }
+      }
+     }
+    },
+    "GL": {
+     "iou": 0.9426,
+     "contour_p50_px": 1.0,
+     "contour_p95_px": 4.0,
+     "contour_max_px": 15.0,
+     "mapping_fit_p95_px": 0.006,
+     "ours_px": 34555,
+     "ref_px": 33578,
+     "iou_forend_underside_window_out": 0.9505,
+     "contour_p95_px_window_out": 3.0
+    },
+    "TOP": {
+     "iou": 0.8375,
+     "contour_p50_px": 1.41,
+     "contour_p95_px": 7.0,
+     "contour_max_px": 16.0,
+     "mapping_fit_p95_px": 0.003,
+     "ours_px": 19401,
+     "ref_px": 20360,
+     "iou_knob_window_out": 0.8699,
+     "sheet_1px_sensitivity_iou": 0.9326
+    },
+    "TOP_fit": {
+     "iou": 0.902,
+     "y_scale": 1.06,
+     "y_shift_mm": -3.0,
+     "contour_p95_px": 7.07,
+     "note": "bounded Y-only fit for the TOP's shadow bias + round-part inflation"
+    }
+   }
+  },
+  "L4": [
+   {
+    "feature": "overall length X",
+    "measured": 1100.02,
+    "spec": 1100.0,
+    "error_mm": 0.02,
+    "pass": true
+   },
+   {
+    "feature": "muzzle X",
+    "measured": 1100.02,
+    "spec": 1100.0,
+    "error_mm": 0.02,
+    "pass": true
+   },
+   {
+    "feature": "butt rear X",
+    "measured": 0.0,
+    "spec": 0.0,
+    "error_mm": 0.0,
+    "pass": true
+   },
+   {
+    "feature": "rail top Z",
+    "measured": 30.0,
+    "spec": 30.0,
+    "error_mm": 0.0,
+    "pass": true
+   },
+   {
+    "feature": "barrel breech..crown",
+    "measured": 559.0,
+    "spec": 559.0,
+    "error_mm": 0.0,
+    "pass": true
+   },
+   {
+    "feature": "receiver dia",
+    "measured": 34.298,
+    "spec": 34.3,
+    "error_mm": 0.002,
+    "pass": true
+   },
+   {
+    "feature": "device OD",
+    "measured": 36.1,
+    "spec": 36.1,
+    "error_mm": 0.0,
+    "pass": true
+   },
+   {
+    "feature": "knob centre X",
+    "measured": 367.9,
+    "spec": 367.9,
+    "error_mm": 0.0,
+    "pass": 1.0
+   },
+   {
+    "feature": "knob centre Y",
+    "measured": -67.6,
+    "spec": -67.6,
+    "error_mm": 0.0,
+    "pass": 1.0
+   },
+   {
+    "feature": "knob centre Z",
+    "measured": -33.6,
+    "spec": -33.6,
+    "error_mm": 0.0,
+    "pass": 1.0
+   },
+   {
+    "feature": "magazine bottom Z",
+    "measured": -132.348,
+    "spec": -132.3,
+    "error_mm": 0.048,
+    "pass": true
+   },
+   {
+    "feature": "grip bottom Z",
+    "measured": -166.28,
+    "spec": -166.4,
+    "error_mm": 0.12,
+    "pass": false
+   },
+   {
+    "feature": "riser top Z",
+    "measured": 32.1,
+    "spec": 31.0,
+    "error_mm": 1.1,
+    "pass": false
+   },
+   {
+    "feature": "foot front X folded",
+    "measured": 925.6,
+    "spec": 925.6,
+    "error_mm": 0.0,
+    "pass": true
+   }
+  ],
+  "fgates": {
+   "stage": "W1a form (Blender gates on the built bytes)",
+   "blend": "Assets/Guns/SR01.blend",
+   "B7": {
+    "barrel": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 2634,
+     "shells": 1
+    },
+    "bipod_clamp": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 340,
+     "shells": 1
+    },
+    "bipod_ext_l": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1756,
+     "shells": 1
+    },
+    "bipod_ext_r": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1756,
+     "shells": 1
+    },
+    "bipod_foot_l": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1922,
+     "shells": 1
+    },
+    "bipod_foot_r": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1924,
+     "shells": 1
+    },
+    "bipod_knob": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 380,
+     "shells": 1
+    },
+    "bipod_leg_l": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1992,
+     "shells": 2
+    },
+    "bipod_leg_r": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1992,
+     "shells": 2
+    },
+    "bipod_pins": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 752,
+     "shells": 4
+    },
+    "bipod_swivel": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 2062,
+     "shells": 2
+    },
+    "bolt": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1020,
+     "shells": 1
+    },
+    "bolt_handle": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1210,
+     "shells": 1
+    },
+    "butt": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1950,
+     "shells": 1
+    },
+    "butt_knobs": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 984,
+     "shells": 2
+    },
+    "butt_pad": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1248,
+     "shells": 1
+    },
+    "chassis": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 4470,
+     "shells": 1
+    },
+    "cheek_riser": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1396,
+     "shells": 1
+    },
+    "fasteners": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 592,
+     "shells": 4
+    },
+    "grip": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 2216,
+     "shells": 1
+    },
+    "mag_release": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 224,
+     "shells": 1
+    },
+    "magazine": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 642,
+     "shells": 1
+    },
+    "magazine_floorplate": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 236,
+     "shells": 1
+    },
+    "muzzle_device": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1984,
+     "shells": 1
+    },
+    "pad_plate": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 100,
+     "shells": 1
+    },
+    "pins": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 564,
+     "shells": 3
+    },
+    "rail": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1568,
+     "shells": 1
+    },
+    "rail_screws": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 844,
+     "shells": 4
+    },
+    "receiver": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 1434,
+     "shells": 1
+    },
+    "riser_lever": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 204,
+     "shells": 1
+    },
+    "riser_posts": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 512,
+     "shells": 2
+    },
+    "safety": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 198,
+     "shells": 1
+    },
+    "trigger": {
+     "multi_face_edges": 0,
+     "boundary_edges": 0,
+     "wire_edges": 0,
+     "ngons": 0,
+     "zero_area_faces": 0,
+     "zero_length_edges": 0,
+     "triangles": 290,
+     "shells": 1
+    }
+   },
+   "B7_closed": 33,
+   "B8_triangles": 41396,
+   "G5_rest_intersections": [],
+   "G5_butt_gaps": [
+    {
+     "a": "butt",
+     "b": "chassis",
+     "min_gap_mm": 0.04
+    },
+    {
+     "a": "grip",
+     "b": "chassis",
+     "min_gap_mm": 0.03
+    },
+    {
+     "a": "grip",
+     "b": "butt",
+     "min_gap_mm": 0.03
+    },
+    {
+     "a": "butt_pad",
+     "b": "pad_plate",
+     "min_gap_mm": 0.0407
+    },
+    {
+     "a": "pad_plate",
+     "b": "butt",
+     "min_gap_mm": 0.04
+    },
+    {
+     "a": "receiver",
+     "b": "chassis",
+     "min_gap_mm": 0.0405
+    },
+    {
+     "a": "rail",
+     "b": "receiver",
+     "min_gap_mm": 0.0405
+    },
+    {
+     "a": "barrel",
+     "b": "receiver",
+     "min_gap_mm": 0.0152
+    },
+    {
+     "a": "muzzle_device",
+     "b": "barrel",
+     "min_gap_mm": 0.0272
+    },
+    {
+     "a": "bipod_clamp",
+     "b": "chassis",
+     "min_gap_mm": 0.1253
+    },
+    {
+     "a": "fasteners",
+     "b": "pad_plate",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "fasteners",
+     "b": "chassis",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "butt_knobs",
+     "b": "butt",
+     "min_gap_mm": 0.02
+    },
+    {
+     "a": "riser_lever",
+     "b": "butt",
+     "min_gap_mm": 0.037
+    },
+    {
+     "a": "magazine_floorplate",
+     "b": "magazine",
+     "min_gap_mm": 0.0299
+    },
+    {
+     "a": "pins",
+     "b": "chassis",
+     "min_gap_mm": 0.0396
+    }
+   ],
+   "B3": {
+    "bolt_rotate": {
+     "steps": 121,
+     "range": [
+      0.0,
+      -60.0
+     ],
+     "step": -0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.2013,
+     "min_at": -14.0,
+     "min_with": "receiver",
+     "rest_clearance_mm": 0.2064,
+     "rest_nearest": "receiver",
+     "end_clearance_mm": 0.21,
+     "end_nearest": "receiver",
+     "seconds": 314.9,
+     "moving_samples": 270086,
+     "fixed_samples": 827611,
+     "row": "sliding",
+     "pass": true,
+     "proof_fails": 0,
+     "hits_at": []
+    },
+    "bolt_slide": {
+     "steps": 177,
+     "range": [
+      0.0,
+      88.0
+     ],
+     "step": 0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1531,
+     "min_at": 15.0,
+     "min_with": "receiver",
+     "rest_clearance_mm": 0.21,
+     "rest_nearest": "receiver",
+     "end_clearance_mm": 0.154,
+     "end_nearest": "receiver",
+     "seconds": 103.2,
+     "moving_samples": 270086,
+     "fixed_samples": 888954,
+     "row": "sliding",
+     "pass": true,
+     "hits_at": []
+    },
+    "trigger": {
+     "steps": 61,
+     "range": [
+      0.0,
+      6.0
+     ],
+     "step": 0.1,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1546,
+     "min_at": 0.0,
+     "min_with": "pins",
+     "rest_clearance_mm": 0.1546,
+     "rest_nearest": "pins",
+     "end_clearance_mm": 0.1546,
+     "end_nearest": "pins",
+     "seconds": 3.1,
+     "moving_samples": 19899,
+     "fixed_samples": 27660,
+     "row": "hinge",
+     "pass": true,
+     "hits_at": []
+    },
+    "safety": {
+     "steps": 121,
+     "range": [
+      0.0,
+      -12.0
+     ],
+     "step": -0.1,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.199,
+     "min_at": -2.9000000000000004,
+     "min_with": "pins",
+     "rest_clearance_mm": 0.1991,
+     "rest_nearest": "pins",
+     "end_clearance_mm": 0.1991,
+     "end_nearest": "pins",
+     "seconds": 4.9,
+     "moving_samples": 20198,
+     "fixed_samples": 17883,
+     "row": "hinge",
+     "pass": true,
+     "hits_at": []
+    },
+    "mag_release": {
+     "steps": 91,
+     "range": [
+      0.0,
+      -4.5
+     ],
+     "step": -0.05,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1628,
+     "min_at": 0.0,
+     "min_with": "pins",
+     "rest_clearance_mm": 0.1628,
+     "rest_nearest": "pins",
+     "end_clearance_mm": 0.1632,
+     "end_nearest": "pins",
+     "seconds": 15.3,
+     "moving_samples": 77821,
+     "fixed_samples": 76883,
+     "row": "hinge",
+     "pass": true,
+     "hits_at": []
+    },
+    "riser": {
+     "steps": 84,
+     "range": [
+      -12.9,
+      12.000000000000059
+     ],
+     "step": 0.3000000000000007,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1665,
+     "min_at": -12.9,
+     "min_with": "butt",
+     "rest_clearance_mm": 0.1665,
+     "rest_nearest": "butt",
+     "end_clearance_mm": 0.1665,
+     "end_nearest": "butt",
+     "seconds": 34.8,
+     "moving_samples": 439305,
+     "fixed_samples": 217865,
+     "row": "sliding",
+     "pass": true,
+     "hits_at": []
+    },
+    "fold_l_ext0": {
+     "steps": 91,
+     "range": [
+      0.0,
+      90.0
+     ],
+     "step": 1.0,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1673,
+     "min_at": 0.0,
+     "min_with": "bipod_pins",
+     "rest_clearance_mm": 0.1673,
+     "rest_nearest": "bipod_pins",
+     "end_clearance_mm": 0.1674,
+     "end_nearest": "bipod_pins",
+     "seconds": 108.7,
+     "moving_samples": 509228,
+     "fixed_samples": 266300,
+     "row": "hinge",
+     "pass": true,
+     "proof_fails": 0,
+     "hits_at": []
+    },
+    "fold_l_ext76": {
+     "steps": 91,
+     "range": [
+      0.0,
+      90.0
+     ],
+     "step": 1.0,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1673,
+     "min_at": 0.0,
+     "min_with": "bipod_pins",
+     "rest_clearance_mm": 0.1673,
+     "rest_nearest": "bipod_pins",
+     "end_clearance_mm": 0.1674,
+     "end_nearest": "bipod_pins",
+     "seconds": 88.5,
+     "moving_samples": 509228,
+     "fixed_samples": 266300,
+     "row": "hinge",
+     "pass": true,
+     "proof_fails": 0,
+     "hits_at": []
+    },
+    "ext_l_folded": {
+     "steps": 153,
+     "range": [
+      0.0,
+      76.0
+     ],
+     "step": 0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.2001,
+     "min_at": 0.0,
+     "min_with": "bipod_leg_l",
+     "rest_clearance_mm": 0.2001,
+     "rest_nearest": "bipod_leg_l",
+     "end_clearance_mm": 0.2469,
+     "end_nearest": "bipod_leg_l",
+     "seconds": 13.9,
+     "moving_samples": 272294,
+     "fixed_samples": 172262,
+     "row": "sliding",
+     "pass": true,
+     "hits_at": []
+    },
+    "ext_l_deployed": {
+     "steps": 153,
+     "range": [
+      0.0,
+      76.0
+     ],
+     "step": 0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.2,
+     "min_at": 0.0,
+     "min_with": "bipod_leg_l",
+     "rest_clearance_mm": 0.2,
+     "rest_nearest": "bipod_leg_l",
+     "end_clearance_mm": 0.2469,
+     "end_nearest": "bipod_leg_l",
+     "seconds": 24.0,
+     "moving_samples": 272294,
+     "fixed_samples": 498942,
+     "row": "sliding",
+     "pass": true,
+     "hits_at": []
+    },
+    "fold_r_ext0": {
+     "steps": 91,
+     "range": [
+      0.0,
+      90.0
+     ],
+     "step": 1.0,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1673,
+     "min_at": 24.0,
+     "min_with": "bipod_pins",
+     "rest_clearance_mm": 0.1674,
+     "rest_nearest": "bipod_pins",
+     "end_clearance_mm": 0.1674,
+     "end_nearest": "bipod_pins",
+     "seconds": 67.7,
+     "moving_samples": 509823,
+     "fixed_samples": 250743,
+     "row": "hinge",
+     "pass": true,
+     "proof_fails": 0,
+     "hits_at": []
+    },
+    "fold_r_ext76": {
+     "steps": 91,
+     "range": [
+      0.0,
+      90.0
+     ],
+     "step": 1.0,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1673,
+     "min_at": 24.0,
+     "min_with": "bipod_pins",
+     "rest_clearance_mm": 0.1674,
+     "rest_nearest": "bipod_pins",
+     "end_clearance_mm": 0.1674,
+     "end_nearest": "bipod_pins",
+     "seconds": 69.4,
+     "moving_samples": 509823,
+     "fixed_samples": 250743,
+     "row": "hinge",
+     "pass": true,
+     "proof_fails": 0,
+     "hits_at": []
+    },
+    "ext_r_folded": {
+     "steps": 153,
+     "range": [
+      0.0,
+      76.0
+     ],
+     "step": 0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.2001,
+     "min_at": 0.0,
+     "min_with": "bipod_leg_r",
+     "rest_clearance_mm": 0.2001,
+     "rest_nearest": "bipod_leg_r",
+     "end_clearance_mm": 0.2469,
+     "end_nearest": "bipod_leg_r",
+     "seconds": 14.2,
+     "moving_samples": 272713,
+     "fixed_samples": 170673,
+     "row": "sliding",
+     "pass": true,
+     "hits_at": []
+    },
+    "ext_r_deployed": {
+     "steps": 153,
+     "range": [
+      0.0,
+      76.0
+     ],
+     "step": 0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.2,
+     "min_at": 0.0,
+     "min_with": "bipod_leg_r",
+     "rest_clearance_mm": 0.2,
+     "rest_nearest": "bipod_leg_r",
+     "end_clearance_mm": 0.2469,
+     "end_nearest": "bipod_leg_r",
+     "seconds": 23.3,
+     "moving_samples": 272713,
+     "fixed_samples": 483551,
+     "row": "sliding",
+     "pass": true,
+     "hits_at": []
+    },
+    "cant_folded": {
+     "steps": 61,
+     "range": [
+      -15.0,
+      15.0
+     ],
+     "step": 0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1842,
+     "min_at": -5.0,
+     "min_with": "bipod_clamp",
+     "rest_clearance_mm": 0.187,
+     "rest_nearest": "bipod_clamp",
+     "end_clearance_mm": 0.187,
+     "end_nearest": "bipod_clamp",
+     "seconds": 81.3,
+     "moving_samples": 1493936,
+     "fixed_samples": 127032,
+     "row": "hinge",
+     "pass": true,
+     "proof_fails": 0,
+     "hits_at": []
+    },
+    "cant_deployed": {
+     "steps": 61,
+     "range": [
+      -15.0,
+      15.0
+     ],
+     "step": 0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.1842,
+     "min_at": -5.0,
+     "min_with": "bipod_clamp",
+     "rest_clearance_mm": 0.187,
+     "rest_nearest": "bipod_clamp",
+     "end_clearance_mm": 0.187,
+     "end_nearest": "bipod_clamp",
+     "seconds": 83.0,
+     "moving_samples": 1493936,
+     "fixed_samples": 116572,
+     "row": "hinge",
+     "pass": true,
+     "proof_fails": 0,
+     "hits_at": []
+    }
+   },
+   "F": {
+    "F1_folded_gaps": [
+     {
+      "a": "bipod_leg_l",
+      "b": "bipod_clamp",
+      "min_gap_mm": 4.7617
+     },
+     {
+      "a": "bipod_leg_r",
+      "b": "bipod_clamp",
+      "min_gap_mm": 4.7549
+     },
+     {
+      "a": "bipod_foot_l",
+      "b": "chassis",
+      "min_gap_mm": 8.0
+     },
+     {
+      "a": "bipod_foot_r",
+      "b": "chassis",
+      "min_gap_mm": 8.0
+     },
+     {
+      "a": "bipod_foot_l",
+      "b": "bipod_foot_r",
+      "min_gap_mm": 2.0553
+     },
+     {
+      "a": "bipod_leg_l",
+      "b": "bipod_knob",
+      "min_gap_mm": 8.0
+     },
+     {
+      "a": "bipod_leg_r",
+      "b": "bipod_knob",
+      "min_gap_mm": 8.0
+     },
+     {
+      "a": "bipod_leg_l",
+      "b": "bipod_swivel",
+      "min_gap_mm": 0.2
+     },
+     {
+      "a": "bipod_foot_l",
+      "b": "barrel",
+      "min_gap_mm": 8.0
+     }
+    ],
+    "F3_deployed": {
+     "feet": {
+      "ext_0": {
+       "left_Z": -266.709,
+       "right_Z": -266.709,
+       "spec": -266.71
+      },
+      "ext_19": {
+       "left_Z": -285.294,
+       "right_Z": -285.294,
+       "spec": -285.29
+      },
+      "ext_38": {
+       "left_Z": -303.879,
+       "right_Z": -303.879,
+       "spec": -303.88
+      },
+      "ext_57": {
+       "left_Z": -322.464,
+       "right_Z": -322.464,
+       "spec": -322.46
+      },
+      "ext_76": {
+       "left_Z": -341.048,
+       "right_Z": -341.048,
+       "spec": -341.05
+      }
+     },
+     "splay_spec_deg": 12.0,
+     "leg_splay_deg": {
+      "l": 12.0,
+      "r": 12.0
+     },
+     "leg_outward": {
+      "l": true,
+      "r": true
+     },
+     "leg_axis_deg_from_vertical": 12.0,
+     "foot_centre_track_ext0_mm": 118.97,
+     "coplanar_mm": 0.0
+    },
+    "F6_handle_to_scope_mm": 20.56,
+    "F7_release": {
+     "hook_tip_X_rest": 415.739,
+     "mag_rear_X": 414.1,
+     "engagement_mm": 1.639,
+     "hook_travel_mm": 1.969,
+     "hook_tip_X_pressed": 413.77,
+     "pad_gap_pressed_mm": 0.4407
+    },
+    "F8_riser_low_stop": [
+     {
+      "a": "cheek_riser",
+      "b": "butt",
+      "min_gap_mm": 0.3
+     }
+    ],
+    "F9_trigger_full_pull": [
+     {
+      "a": "trigger",
+      "b": "chassis",
+      "min_gap_mm": 0.1848
+     }
+    ]
+   },
+   "magfit": {
+    "M1_seated_intersections": [],
+    "M3_lateral_foreaft_top": [
+     {
+      "a": "magazine",
+      "b": "chassis",
+      "min_gap_mm": 0.3
+     },
+     {
+      "a": "magazine",
+      "b": "receiver",
+      "min_gap_mm": 0.5007
+     }
+    ],
+    "M4b_insert_released": {
+     "steps": 136,
+     "range": [
+      67.5,
+      0.0
+     ],
+     "step": -0.5,
+     "intersecting_steps": 0,
+     "max_intersections": 0,
+     "parts_hit": [],
+     "min_clearance_mm": 0.3,
+     "min_at": 47.5,
+     "min_with": "chassis",
+     "rest_clearance_mm": 0.5382,
+     "rest_nearest": "mag_release",
+     "end_clearance_mm": 0.3,
+     "end_nearest": "chassis",
+     "seconds": 48.8,
+     "moving_samples": 248837,
+     "fixed_samples": 228423,
+     "row": "sliding",
+     "pass": true,
+     "hits_at": []
+    },
+    "M5b_removal_catch_rest": {
+     "steps": 136,
+     "range": [
+      0.0,
+      67.5
+     ],
+     "step": 0.5,
+     "intersecting_steps": 58,
+     "max_intersections": 16,
+     "parts_hit": [
+      "mag_release"
+     ],
+     "min_clearance_mm": 0.0007,
+     "min_at": 29.0,
+     "min_with": "mag_release",
+     "rest_clearance_mm": 0.2164,
+     "rest_nearest": "mag_release",
+     "end_clearance_mm": 3.0,
+     "end_nearest": null,
+     "seconds": 47.3,
+     "moving_samples": 248837,
+     "fixed_samples": 226326,
+     "row": "sliding",
+     "pass": false,
+     "hits_at": [
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0,
+      4.5,
+      5.0,
+      5.5,
+      6.0
+     ]
+    },
+    "note": "M5b is expected to collide while the hook holds the magazine (the catch retains it) and only at the hook: hits outside mag_release fail"
+   },
+   "B6a": {
+    "object": "SM_SR01_B6aCheck",
+    "parts": 33,
+    "triangles": 41396,
+    "checks": [
+     {
+      "name": "no_ngons",
+      "object": "SM_SR01_B6aCheck",
+      "passed": true,
+      "detail": "0 n-gon(s) of 36520 faces"
+     },
+     {
+      "name": "no_non_manifold_edges",
+      "object": "SM_SR01_B6aCheck",
+      "passed": true,
+      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 57218"
+     },
+     {
+      "name": "open_boundary_edges",
+      "object": "SM_SR01_B6aCheck",
+      "passed": true,
+      "detail": "0 boundary edge(s) of 57218 (informational: open meshes are allowed)"
+     },
+     {
+      "name": "no_loose_vertices",
+      "object": "SM_SR01_B6aCheck",
+      "passed": true,
+      "detail": "0 loose vertex/vertices of 20744"
+     },
+     {
+      "name": "no_zero_length_edges",
+      "object": "SM_SR01_B6aCheck",
+      "passed": true,
+      "detail": "0 edge(s) at or below 1e-06 of 57218; shortest 5.08916e-05"
+     },
+     {
+      "name": "no_degenerate_faces",
+      "object": "SM_SR01_B6aCheck",
+      "passed": true,
+      "detail": "0 face(s) at or below 1e-12 area of 36520; smallest 1.05373e-08"
+     },
+     {
+      "name": "no_coincident_vertices",
+      "object": "SM_SR01_B6aCheck",
+      "passed": true,
+      "detail": "0 vertex pair(s) within 1e-06 of 20744"
+     }
+    ],
+    "passed": true,
+    "uv_checks": "n/a until stage 3 (no UVs yet); B6a re-runs with uv_no_overlap once UVs exist",
+    "deny_list": {},
+    "deny_list_clean": true
+   },
+   "H1": {
+    "girth_at_25mm_mm": 181.1,
+    "girth_at_46mm_mm": 165.9,
+    "girth_at_70mm_mm": 171.2,
+    "trigger_reach_mm": 44.7,
+    "length_of_pull_mm": 358.2,
+    "real_reference": "precision-rifle polymer grips: girth ~140-160 mm at the palm; trigger reach 60-80 mm (reported; the gate band is the SMG's polymer grip +10 %: <= 167 mm, reach <= 80 mm)"
+   }
+  },
+  "build_report": {
+   "chassis": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 4470,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.013451,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 2.7,
+    "bone": "body",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 216,
+     "shell_drops_before_repair": 11,
+     "shell_drops_after": 0
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 1,
+     "reverted": false,
+     "drops_before": 1,
+     "drops_after": 0,
+     "pass_after": true
+    }
+   },
+   "butt": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1950,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.034907,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 1.32,
+    "bone": "body",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 3,
+     "needles_under_0.02mm": 6,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 209,
+     "shell_drops_before_repair": 0,
+     "shell_drops_after": 0
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 0,
+     "reverted": false,
+     "drops_before": 0,
+     "drops_after": 0,
+     "pass_after": false
+    }
+   },
+   "butt_pad": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1248,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.011773,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    },
+    "seconds": 0.47,
+    "bone": "body",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 24,
+     "edges_under_0.05mm": 12,
+     "needles_under_0.02mm": 14,
+     "strip_polygons_under_0.1mm": 24
+    }
+   },
+   "pad_plate": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 100,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.123802,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.01,
+    "bone": "body",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "cheek_riser": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1396,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.014556,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    },
+    "seconds": 1.19,
+    "bone": "cheek_riser",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 2,
+     "edges_under_0.05mm": 2,
+     "needles_under_0.02mm": 4,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 79,
+     "shell_drops_before_repair": 13,
+     "shell_drops_after": 2
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 0,
+     "reverted": false,
+     "drops_before": 2,
+     "drops_after": 2,
+     "pass_after": false
+    }
+   },
+   "riser_posts": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 512,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.363402,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.06,
+    "bone": "cheek_riser",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "riser_lever": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 204,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.097694,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.14,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 35,
+     "edges_under_0.05mm": 104,
+     "needles_under_0.02mm": 3,
+     "strip_polygons_under_0.1mm": 109
+    }
+   },
+   "butt_knobs": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 984,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.030663,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.43,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 128,
+     "edges_under_0.05mm": 64,
+     "needles_under_0.02mm": 128,
+     "strip_polygons_under_0.1mm": 32
+    }
+   },
+   "receiver": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1434,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.010543,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 1.98,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 1357,
+     "edges_under_0.05mm": 955,
+     "needles_under_0.02mm": 1800,
+     "strip_polygons_under_0.1mm": 835
+    }
+   },
+   "rail": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1568,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.078546,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.2,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "rail_screws": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 844,
+    "shells": 4,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.067616,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.15,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 96,
+     "edges_under_0.05mm": 48,
+     "needles_under_0.02mm": 96,
+     "strip_polygons_under_0.1mm": 48
+    }
+   },
+   "bolt": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1020,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.013366,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.76,
+    "bone": "bolt",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 169,
+     "edges_under_0.05mm": 559,
+     "needles_under_0.02mm": 68,
+     "strip_polygons_under_0.1mm": 458
+    }
+   },
+   "bolt_handle": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1210,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.016275,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.21,
+    "bone": "bolt",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "safety": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 198,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.019394,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.21,
+    "bone": "selector",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 258,
+     "edges_under_0.05mm": 206,
+     "needles_under_0.02mm": 306,
+     "strip_polygons_under_0.1mm": 127
+    }
+   },
+   "pins": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 564,
+    "shells": 3,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.014409,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.06,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "trigger": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 290,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.032961,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.17,
+    "bone": "trigger",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 277,
+     "edges_under_0.05mm": 405,
+     "needles_under_0.02mm": 615,
+     "strip_polygons_under_0.1mm": 304
+    }
+   },
+   "mag_release": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 224,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.011299,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.2,
+    "bone": "mag_release",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 98,
+     "edges_under_0.05mm": 230,
+     "needles_under_0.02mm": 26,
+     "strip_polygons_under_0.1mm": 164
+    }
+   },
+   "grip": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2216,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.027944,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    },
+    "seconds": 1.31,
+    "bone": "body",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "round_shell": {
+     "edges_rounded": 178,
+     "shell_drops_before_repair": 26,
+     "shell_drops_after": 0
+    },
+    "protected_repair": {
+     "needed": true,
+     "collapses": 2,
+     "reverted": false,
+     "drops_before": 0,
+     "drops_after": 0,
+     "pass_after": false
+    }
+   },
+   "barrel": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2634,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.011032,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 1.35,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 87,
+     "edges_under_0.05mm": 258,
+     "needles_under_0.02mm": 25,
+     "strip_polygons_under_0.1mm": 758
+    }
+   },
+   "muzzle_device": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1984,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.185241,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.17,
+    "bone": "muzzle_device",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "magazine": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 642,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.030037,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.26,
+    "bone": "magazine",
+    "slot": "M_SR01_Mag",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "magazine_floorplate": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 236,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.115019,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.03,
+    "bone": "magazine",
+    "slot": "M_SR01_Mag",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "bipod_clamp": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 340,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.011613,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    },
+    "seconds": 0.33,
+    "bone": "body",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 76,
+     "edges_under_0.05mm": 281,
+     "needles_under_0.02mm": 24,
+     "strip_polygons_under_0.1mm": 239
+    }
+   },
+   "bipod_swivel": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 2062,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.011037,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": false
+    },
+    "seconds": 1.02,
+    "bone": "bipod",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 2,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 2,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "bipod_knob": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 380,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.043755,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.22,
+    "bone": "bipod",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 352,
+     "edges_under_0.05mm": 496,
+     "needles_under_0.02mm": 664,
+     "strip_polygons_under_0.1mm": 290
+    }
+   },
+   "bipod_pins": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 752,
+    "shells": 4,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.044565,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.08,
+    "bone": "bipod",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "bipod_leg_l": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1992,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.010576,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 1.02,
+    "bone": "bipod_leg_l",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 43,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 528
+    }
+   },
+   "bipod_leg_r": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1992,
+    "shells": 2,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.010576,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 1.02,
+    "bone": "bipod_leg_r",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 45,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 529
+    }
+   },
+   "bipod_ext_l": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1756,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.221715,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.51,
+    "bone": "bipod_leg_l_ext",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "bipod_ext_r": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1756,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.221715,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.56,
+    "bone": "bipod_leg_r_ext",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    }
+   },
+   "bipod_foot_l": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1922,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.059001,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.67,
+    "bone": "bipod_leg_l_ext",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 56
+    }
+   },
+   "bipod_foot_r": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 1924,
+    "shells": 1,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.037155,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.63,
+    "bone": "bipod_leg_r_ext",
+    "slot": "M_SR01_Chassis",
+    "ud_pre_repair": {
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 56
+    }
+   },
+   "fasteners": {
+    "multi_face_edges": 0,
+    "boundary_edges": 0,
+    "wire_edges": 0,
+    "ngons": 0,
+    "zero_area_faces": 0,
+    "zero_length_edges": 0,
+    "triangles": 592,
+    "shells": 4,
+    "ud": {
+     "unreal_drops": 0,
+     "min_area_mm2": 0.253464,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0,
+     "pass_ud1": true,
+     "pass_ud2": true
+    },
+    "seconds": 0.12,
+    "bone": "body",
+    "slot": "M_SR01_Metal",
+    "ud_pre_repair": {
+     "unreal_drops": 144,
+     "edges_under_0.05mm": 72,
+     "needles_under_0.02mm": 144,
+     "strip_polygons_under_0.1mm": 72
+    }
+   }
+  },
+  "l8": {
+   "gate": "L8 early realism per part group at form (two independent judge passes; PASS = <= 1 single-judge FAKE per group; both FAKE after the one allowed fix round = stop)",
+   "judges": "two fresh general-purpose subagents per round, image sheets only (review/l8/judge*_<group>.png), no other context; round 2 told that straight-down parallel legs are the owner's decision (Q2)",
+   "rounds": {
+    "r1": {
+     "sheets": [
+      "WorkFiles/guns/sniper/review/l8/judge_chassis.png",
+      "WorkFiles/guns/sniper/review/l8/judge_bolt.png",
+      "WorkFiles/guns/sniper/review/l8/judge_bipod.png"
+     ],
+     "chassis": {
+      "A": "PLAUSIBLE",
+      "B": "PLAUSIBLE",
+      "notes": "uniform hard chamfers on slab faces, faceted bands on the forend top; zig-zag notches on the top line behind the action (trace stair-steps)"
+     },
+     "bolt group": {
+      "A": "PLAUSIBLE",
+      "B": "PLAUSIBLE",
+      "notes": "constant-diameter handle rod into the body with no forged root; perfect-ball knob"
+     },
+     "bipod": {
+      "A": "FAKE",
+      "B": "FAKE",
+      "notes": "no visible yoke / body; legs read as stacked tubes; both wanted splayed legs (contradicts the user's Q2 = straight down)"
+     }
+    },
+    "fix_round": [
+     "bipod: a real yoke (rear web behind the knuckles + two outboard pivot cheeks |Y| 29.5..32.4 carrying the leg pins, all below Z -54 so the bracket still cants +-15 under the forend); pin heads outboard of the cheeks; detent disks inside the cheeks",
+     "bipod feet: two moulded tread rings",
+     "bolt handle: tapered stem from a forged root (r 6.0 -> 4.7 -> 4.0) into the knob",
+     "chassis / butt / riser: 1.0 x 45 edge breaks (spec 0.6; declared), the top line behind the action rebuilt as a clean machined step (X 244.8..346: Z -14 -> ramp -> -10.5)",
+     "shading: stale bevel custom normals cleared, face-area weighted normals at 100 (the SMG gunlib 0.2.1 lesson)"
+    ],
+    "r2": {
+     "sheets": [
+      "WorkFiles/guns/sniper/review/l8/judge2_chassis.png",
+      "WorkFiles/guns/sniper/review/l8/judge2_bolt.png",
+      "WorkFiles/guns/sniper/review/l8/judge2_bipod.png"
+     ],
+     "chassis": {
+      "A": "PLAUSIBLE",
+      "B": "PLAUSIBLE",
+      "top_fixes": [
+       "pocketed / contoured butt, riser adjustment hardware visible, a recoil pad with a curved profile and joint line"
+      ]
+     },
+     "bolt group": {
+      "A": "PLAUSIBLE",
+      "B": "PLAUSIBLE",
+      "top_fixes": [
+       "bolt body detail visible when open (lugs are inside the receiver even at full travel: guide rib / flutes are real-pattern options), shaped shroud",
+       "tactical (tapered, flat-faced) knob instead of a sphere: the sheet draws a ball, kept"
+      ]
+     },
+     "bipod": {
+      "A": "PLAUSIBLE",
+      "B": "FAKE",
+      "top_fixes": [
+       "each leg top as a visible machined knuckle / clevis around the pin with a retaining clip; a spring or detent housing; a chamfered pocketed yoke body"
+      ]
+     }
+    }
+   },
+   "groups": {
+    "chassis": {
+     "verdicts": [
+      "PLAUSIBLE",
+      "PLAUSIBLE"
+     ],
+     "pass": true
+    },
+    "bolt group": {
+     "verdicts": [
+      "PLAUSIBLE",
+      "PLAUSIBLE"
+     ],
+     "pass": true
+    },
+    "bipod": {
+     "verdicts": [
+      "PLAUSIBLE",
+      "FAKE"
+     ],
+     "pass": true,
+     "note": "one single-judge FAKE (allowed); the knuckle / spring-housing fix is the first W4b close-up item"
+    }
+   },
+   "scope": "not judged here (W1b)"
+  }
+ },
+ "files": {
+  "blend": "Assets/Guns/SR01.blend",
+  "renders": [
+   "Renders/Guns/SR01/form_grey_bolt_open_back.png",
+   "Renders/Guns/SR01/form_grey_deployed_hero.png",
+   "Renders/Guns/SR01/form_grey_left.png",
+   "Renders/Guns/SR01/form_grey_q34.png",
+   "Renders/Guns/SR01/form_grey_right.png",
+   "Renders/Guns/SR01/form_grey_scope_deployed_hero.png",
+   "Renders/Guns/SR01/form_grey_scope_q34.png",
+   "Renders/Guns/SR01/form_grey_scope_rear_q.png",
+   "Renders/Guns/SR01/form_grey_scope_right.png",
+   "Renders/Guns/SR01/form_grey_scope_rings_close.png",
+   "Renders/Guns/SR01/form_grey_top.png",
+   "Renders/Guns/SR01/form_real_bolt_open_back.png",
+   "Renders/Guns/SR01/form_real_deployed_hero.png",
+   "Renders/Guns/SR01/form_real_left.png",
+   "Renders/Guns/SR01/form_real_q34.png",
+   "Renders/Guns/SR01/form_real_right.png",
+   "Renders/Guns/SR01/form_real_scope_deployed_hero.png",
+   "Renders/Guns/SR01/form_real_scope_q34.png",
+   "Renders/Guns/SR01/form_real_scope_rear_q.png",
+   "Renders/Guns/SR01/form_real_scope_right.png",
+   "Renders/Guns/SR01/form_real_scope_rings_close.png",
+   "Renders/Guns/SR01/form_real_top.png"
+  ],
+  "overlays": [
+   "WorkFiles/guns/sniper/review/form/GR_overlay.png",
+   "WorkFiles/guns/sniper/review/form/GL_overlay.png",
+   "WorkFiles/guns/sniper/review/form/TOP_overlay.png"
+  ],
+  "l8": "WorkFiles/guns/sniper/review/l8/"
+ }
+}

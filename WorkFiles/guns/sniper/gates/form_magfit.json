@@ -1,0 +1,124 @@
+{
+ "stage": "W1a form: magazine fit (straight insert)",
+ "date": "2026-10-13T22:30:27",
+ "status": "pass",
+ "failed": [],
+ "gates": [
+  {
+   "name": "MAGFIT M1 seated: intersecting triangle pairs, magazine vs the gun",
+   "value": 0,
+   "threshold": "0",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT M3 seated clearances (well walls / shelf / receiver)",
+   "value": {
+    "magazine|chassis": 0.3,
+    "magazine|receiver": 0.5007
+   },
+   "threshold": "0.2-0.6",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT M4b insert path MagInsertStart -> Mag with the release pressed (-4.5)",
+   "value": {
+    "intersecting_steps": 0,
+    "min_clearance_mm": 0.3,
+    "min_with": "chassis"
+   },
+   "threshold": "0 intersections",
+   "pass": true
+  },
+  {
+   "name": "MAGFIT M5b (info) removal with the catch at rest: only the hook retains",
+   "value": {
+    "intersecting_steps": 58,
+    "parts_hit": [
+     "mag_release"
+    ]
+   },
+   "threshold": "hits only mag_release",
+   "pass": true
+  }
+ ],
+ "note": "M4 with a spring-cammed catch is not modelled (the paddle is pressed in Reload / ReloadEmpty, M4b); the hook's square underside is a W3 item if the clips ever insert without pressing",
+ "details": {
+  "M1_seated_intersections": [],
+  "M3_lateral_foreaft_top": [
+   {
+    "a": "magazine",
+    "b": "chassis",
+    "min_gap_mm": 0.3
+   },
+   {
+    "a": "magazine",
+    "b": "receiver",
+    "min_gap_mm": 0.5007
+   }
+  ],
+  "M4b_insert_released": {
+   "steps": 136,
+   "range": [
+    67.5,
+    0.0
+   ],
+   "step": -0.5,
+   "intersecting_steps": 0,
+   "max_intersections": 0,
+   "parts_hit": [],
+   "min_clearance_mm": 0.3,
+   "min_at": 47.5,
+   "min_with": "chassis",
+   "rest_clearance_mm": 0.5382,
+   "rest_nearest": "mag_release",
+   "end_clearance_mm": 0.3,
+   "end_nearest": "chassis",
+   "seconds": 48.8,
+   "moving_samples": 248837,
+   "fixed_samples": 228423,
+   "row": "sliding",
+   "pass": true,
+   "hits_at": []
+  },
+  "M5b_removal_catch_rest": {
+   "steps": 136,
+   "range": [
+    0.0,
+    67.5
+   ],
+   "step": 0.5,
+   "intersecting_steps": 58,
+   "max_intersections": 16,
+   "parts_hit": [
+    "mag_release"
+   ],
+   "min_clearance_mm": 0.0007,
+   "min_at": 29.0,
+   "min_with": "mag_release",
+   "rest_clearance_mm": 0.2164,
+   "rest_nearest": "mag_release",
+   "end_clearance_mm": 3.0,
+   "end_nearest": null,
+   "seconds": 47.3,
+   "moving_samples": 248837,
+   "fixed_samples": 226326,
+   "row": "sliding",
+   "pass": false,
+   "hits_at": [
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.5,
+    5.0,
+    5.5,
+    6.0
+   ]
+  },
+  "note": "M5b is expected to collide while the hook holds the magazine (the catch retains it) and only at the hook: hits outside mag_release fail"
+ }
+}

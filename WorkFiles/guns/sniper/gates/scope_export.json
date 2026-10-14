@@ -1,0 +1,147 @@
+{
+ "stage": "W3 scope attachment export, verified on the exported bytes (fresh process)",
+ "gates": [
+  {
+   "name": "files = the build's bytes (sha256)",
+   "value": {
+    "Exports/Guns/SR01/SM_Att_Scope_LongRange.fbx": "845e32da91765b70dcad0164fa2093be4b65bb0704cf2b7a458f1cb0f388351e",
+    "Exports/Guns/SR01/SM_Att_Scope_LongRange.sockets.json": "6687c5ac318b5273a6f1ce4c03d663939c1d3cacb8d68e93ab7fb70ac99908f1"
+   },
+   "threshold": "all equal",
+   "pass": true
+  },
+  {
+   "name": "re-imported LOD triangles = the build's; descending; LOD0 <= 12,000 (target 6-10k)",
+   "value": {
+    "fbx": {
+     "SM_Att_Scope_LongRange_LOD0": 9938,
+     "SM_Att_Scope_LongRange_LOD1": 4464,
+     "SM_Att_Scope_LongRange_LOD2": 1454
+    },
+    "build": {
+     "SM_Att_Scope_LongRange_LOD0": 9938,
+     "SM_Att_Scope_LongRange_LOD1": 4464,
+     "SM_Att_Scope_LongRange_LOD2": 1454
+    }
+   },
+   "threshold": "equal; strictly descending; ceiling 12,000",
+   "pass": true
+  },
+  {
+   "name": "hulls",
+   "value": [
+    "UCX_SM_Att_Scope_LongRange_LOD0_00",
+    "UCX_SM_Att_Scope_LongRange_LOD0_01",
+    "UCX_SM_Att_Scope_LongRange_LOD0_02"
+   ],
+   "threshold": "3 x UCX_SM_Att_Scope_LongRange_LOD0_NN",
+   "pass": true
+  },
+  {
+   "name": "qa_check (before export)",
+   "value": {
+    "passed": true,
+    "triangles": {
+     "SM_Att_Scope_LongRange_LOD0": 9938,
+     "SM_Att_Scope_LongRange_LOD1": 4464,
+     "SM_Att_Scope_LongRange_LOD2": 1454
+    },
+    "checks": 176
+   },
+   "threshold": "pass; budget 12,000; UV1; UCX keyed to the node",
+   "pass": true
+  },
+  {
+   "name": "export warnings reviewed",
+   "value": [
+    "SOCKET_ nodes dropped from this LodGroup export (UE 5.8.2 cannot import LODs and sockets from one file); they are in the sidecar: SOCKET_SM_Att_Scope_LongRange_LOD0_CenterOfMass, SOCKET_SM_Att_Scope_LongRange_LOD0_EyePoint, SOCKET_SM_Att_Scope_LongRange_LOD0_Lens_Front, SOCKET_SM_Att_Scope_LongRange_LOD0_Mount, SOCKET_SM_Att_Scope_LongRange_LOD0_Sight"
+   ],
+   "threshold": "only 'sockets dropped into the sidecar'",
+   "pass": true
+  },
+  {
+   "name": "S1 scope sockets (exported sidecar vs spec)",
+   "value": {
+    "count": 5,
+    "names_match_spec": true,
+    "worst_mm": 0.00043,
+    "worst_deg": 0.0
+   },
+   "threshold": "5; <= 0.001 mm, 0 deg",
+   "pass": true,
+   "note": "CenterOfMass = the volume centroid of the scope parts (spec: provisional)"
+  },
+  {
+   "name": "A1 Mount = origin; mounted at Rail_Top + 2 slots",
+   "value": {
+    "mount_origin_mm": 0.0,
+    "mount_minus_rail_top_mm": 20.02,
+    "slot_pitch_x2": 20.02
+   },
+   "threshold": "0; 20.02 +-0.001",
+   "pass": true
+  },
+  {
+   "name": "A4 Sight above the bore and parallel (exported sidecars)",
+   "value": {
+    "sight_Z_over_bore_mm": 57.6,
+    "rotation_deg": {
+     "roll": 0.0,
+     "pitch": 0.0,
+     "yaw": 0.0
+    }
+   },
+   "threshold": "57.6 +-0.2; 0 deg",
+   "pass": true
+  },
+  {
+   "name": "A3 scope vs the gun on the exported bytes (rest; over A_SR01_BoltCycle)",
+   "value": {
+    "intersecting_triangle_pairs_rest": 0,
+    "min_distance_rest_mm": 2.458,
+    "bolt_group_min_distance_over_cycle_mm": 19.695,
+    "at_frame": 6
+   },
+   "threshold": ">= 2 mm at rest and over the bolt cycle (A3, the scope above rail top + 5 mm; the ring jaws on the rail are A2's); F6 (knob to scope >= 20) reported",
+   "pass": true,
+   "note": "2 mm surface samples (the min distance is an upper bound within ~1 mm)"
+  },
+  {
+   "name": "B10 names",
+   "value": {
+    "checked": 11,
+    "hits": {}
+   },
+   "threshold": "no hit",
+   "pass": true
+  }
+ ],
+ "failed": [],
+ "status": "pass",
+ "files": {
+  "Exports/Guns/SR01/SM_Att_Scope_LongRange.fbx": {
+   "sha256": "845e32da91765b70dcad0164fa2093be4b65bb0704cf2b7a458f1cb0f388351e",
+   "bytes": 798044
+  },
+  "Exports/Guns/SR01/SM_Att_Scope_LongRange.sockets.json": {
+   "sha256": "6687c5ac318b5273a6f1ce4c03d663939c1d3cacb8d68e93ab7fb70ac99908f1",
+   "bytes": 3185
+  }
+ },
+ "screen_sizes": {
+  "sizes": [
+   1.0,
+   0.09516,
+   0.02497
+  ],
+  "engine_radius_m": 0.21242,
+  "gun_sizes": [
+   1.0,
+   0.25,
+   0.06561,
+   0.033
+  ],
+  "gun_radius_m": 0.55806,
+  "rule": "the gun twin's LOD-pop switch distances (d = 1.778 r / s) at this attachment's own engine sphere radius"
+ }
+}

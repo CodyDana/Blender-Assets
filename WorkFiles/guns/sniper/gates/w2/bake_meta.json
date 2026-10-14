@@ -1,0 +1,125 @@
+{
+ "parts": {
+  "barrel": 1,
+  "bipod_clamp": 2,
+  "bipod_ext_l": 3,
+  "bipod_ext_r": 4,
+  "bipod_foot_l": 5,
+  "bipod_foot_r": 6,
+  "bipod_knob": 7,
+  "bipod_leg_l": 8,
+  "bipod_leg_r": 9,
+  "bipod_pins": 10,
+  "bipod_swivel": 11,
+  "bolt": 12,
+  "bolt_handle": 13,
+  "butt": 14,
+  "butt_knobs": 15,
+  "butt_pad": 16,
+  "chassis": 17,
+  "cheek_riser": 18,
+  "fasteners": 19,
+  "grip": 20,
+  "mag_release": 21,
+  "magazine": 22,
+  "magazine_floorplate": 23,
+  "muzzle_device": 24,
+  "pad_plate": 25,
+  "pins": 26,
+  "rail": 27,
+  "rail_screws": 28,
+  "receiver": 29,
+  "riser_lever": 30,
+  "riser_posts": 31,
+  "safety": 32,
+  "trigger": 33
+ },
+ "ao_samples": 256,
+ "ao_distance_m": 0.025,
+ "edge_samples": 64,
+ "device": "OPTIX",
+ "margin": 0,
+ "sets": {
+  "Metal": {
+   "size": 2048,
+   "objects": [
+    "barrel",
+    "bipod_ext_l",
+    "bipod_ext_r",
+    "bipod_knob",
+    "bipod_pins",
+    "bolt",
+    "bolt_handle",
+    "butt_knobs",
+    "fasteners",
+    "mag_release",
+    "muzzle_device",
+    "pins",
+    "rail",
+    "rail_screws",
+    "receiver",
+    "riser_lever",
+    "riser_posts",
+    "safety",
+    "trigger"
+   ],
+   "seconds": {
+    "pos": 12.9,
+    "nrm": 11.4,
+    "ids": 11.5,
+    "edge": 17.2,
+    "ao": 39.3
+   }
+  },
+  "Chassis": {
+   "size": 4096,
+   "objects": [
+    "bipod_clamp",
+    "bipod_foot_l",
+    "bipod_foot_r",
+    "bipod_leg_l",
+    "bipod_leg_r",
+    "bipod_swivel",
+    "butt",
+    "butt_pad",
+    "chassis",
+    "cheek_riser",
+    "grip",
+    "pad_plate"
+   ],
+   "seconds": {
+    "pos": 27.8,
+    "nrm": 25.7,
+    "ids": 25.1,
+    "edge": 36.2,
+    "ao": 68.5
+   }
+  },
+  "Mag": {
+   "size": 1024,
+   "objects": [
+    "magazine",
+    "magazine_floorplate"
+   ],
+   "seconds": {
+    "pos": 0.7,
+    "nrm": 0.7,
+    "ids": 0.7,
+    "edge": 1.4,
+    "ao": 3.0
+   }
+  }
+ },
+ "rules": {
+  "Mag": "AO + edge with the magazine alone",
+  "Metal/Furniture": "AO with the magazine out (rest, stock extended)"
+ },
+ "encoding": {
+  "pos": "metres frame B + 1.0",
+  "nrm": "n * 0.5 + 0.5 (world)",
+  "ids": "R part index + 1 (0 = empty), G class code (sr_surface.CLASS_CODE), B island id + 1",
+  "edge": "R 1 - Nbevel(0.6 mm).N, G 1 - Nbevel(2.0 mm).N, B pointiness",
+  "ao": "Cycles AO",
+  "rows": "bottom-up (Blender pixel order)"
+ }
+}

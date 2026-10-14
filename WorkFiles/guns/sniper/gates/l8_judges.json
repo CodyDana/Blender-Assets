@@ -1,0 +1,29 @@
+{
+ "gate": "L8 early realism per part group at form (two independent judge passes; PASS = <= 1 single-judge FAKE per group; both FAKE after the one allowed fix round = stop)",
+ "judges": "two fresh general-purpose subagents per round, image sheets only (review/l8/judge*_<group>.png), no other context; round 2 told that straight-down parallel legs are the owner's decision (Q2)",
+ "rounds": {
+  "r1": {
+   "sheets": ["WorkFiles/guns/sniper/review/l8/judge_chassis.png", "WorkFiles/guns/sniper/review/l8/judge_bolt.png", "WorkFiles/guns/sniper/review/l8/judge_bipod.png"],
+   "chassis": {"A": "PLAUSIBLE", "B": "PLAUSIBLE", "notes": "uniform hard chamfers on slab faces, faceted bands on the forend top; zig-zag notches on the top line behind the action (trace stair-steps)"},
+   "bolt group": {"A": "PLAUSIBLE", "B": "PLAUSIBLE", "notes": "constant-diameter handle rod into the body with no forged root; perfect-ball knob"},
+   "bipod": {"A": "FAKE", "B": "FAKE", "notes": "no visible yoke / body; legs read as stacked tubes; both wanted splayed legs (contradicts the user's Q2 = straight down)"}
+  },
+  "fix_round": ["bipod: a real yoke (rear web behind the knuckles + two outboard pivot cheeks |Y| 29.5..32.4 carrying the leg pins, all below Z -54 so the bracket still cants +-15 under the forend); pin heads outboard of the cheeks; detent disks inside the cheeks",
+                "bipod feet: two moulded tread rings",
+                "bolt handle: tapered stem from a forged root (r 6.0 -> 4.7 -> 4.0) into the knob",
+                "chassis / butt / riser: 1.0 x 45 edge breaks (spec 0.6; declared), the top line behind the action rebuilt as a clean machined step (X 244.8..346: Z -14 -> ramp -> -10.5)",
+                "shading: stale bevel custom normals cleared, face-area weighted normals at 100 (the SMG gunlib 0.2.1 lesson)"],
+  "r2": {
+   "sheets": ["WorkFiles/guns/sniper/review/l8/judge2_chassis.png", "WorkFiles/guns/sniper/review/l8/judge2_bolt.png", "WorkFiles/guns/sniper/review/l8/judge2_bipod.png"],
+   "chassis": {"A": "PLAUSIBLE", "B": "PLAUSIBLE", "top_fixes": ["pocketed / contoured butt, riser adjustment hardware visible, a recoil pad with a curved profile and joint line"]},
+   "bolt group": {"A": "PLAUSIBLE", "B": "PLAUSIBLE", "top_fixes": ["bolt body detail visible when open (lugs are inside the receiver even at full travel: guide rib / flutes are real-pattern options), shaped shroud", "tactical (tapered, flat-faced) knob instead of a sphere: the sheet draws a ball, kept"]},
+   "bipod": {"A": "PLAUSIBLE", "B": "FAKE", "top_fixes": ["each leg top as a visible machined knuckle / clevis around the pin with a retaining clip; a spring or detent housing; a chamfered pocketed yoke body"]}
+  }
+ },
+ "groups": {
+  "chassis": {"verdicts": ["PLAUSIBLE", "PLAUSIBLE"], "pass": true},
+  "bolt group": {"verdicts": ["PLAUSIBLE", "PLAUSIBLE"], "pass": true},
+  "bipod": {"verdicts": ["PLAUSIBLE", "FAKE"], "pass": true, "note": "one single-judge FAKE (allowed); the knuckle / spring-housing fix is the first W4b close-up item"}
+ },
+ "scope": "not judged here (W1b)"
+}
