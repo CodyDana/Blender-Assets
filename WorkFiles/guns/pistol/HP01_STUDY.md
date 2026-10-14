@@ -117,7 +117,7 @@ the lower screen, and the sheet resolves 0.47 mm per px.
 
 | # | Question | Default |
 |---|---|---|
-| **Q1** | **Width.** TOP draws the slide 46.9 mm (55.0 at the levers); the 3/4 implies ~17 % narrower; the real class is ~32 mm. A 47 mm slide fills more of the first-person view than any real pistol | **The TOP view as drawn** (the user's bar: exact on side / top), with one parameter `K_Y` (spec `scale.width`). The real-pattern option is `K_Y` ~0.70 (slide ~33 mm), a one-number change. **Ask before W1** |
+| **Q1** | **Width.** TOP draws the slide 46.9 mm (55.0 at the levers); the 3/4 implies ~17 % narrower; the real class is ~32 mm. A 47 mm slide fills more of the first-person view than any real pistol | **RULED by the user 2026-10-14: "go realistic"** -> `K_Y` 0.70 (slide ~33 mm, the real class); the TOP view is overruled on width only. Spec regenerated (S0 pass). Watch the grip: K_Y scales the grip width too (36 -> 25 mm as drawn-scaled); H1 girth at W1 decides whether the grip needs its own width |
 | Q2 | Should a visible ejection port show at rest? | No (R5: a window opens only when the slide is back) |
 | Q3 | Add the magazine release, which the sheet does not draw? | Yes: a low-profile left button (R8) |
 | Q4 | Flank tab: a fixed inlay, or a working takedown lever? | Fixed inlay (R9) |

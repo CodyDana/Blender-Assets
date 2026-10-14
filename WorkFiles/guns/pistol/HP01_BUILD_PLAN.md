@@ -24,7 +24,7 @@ wins.** Decisions R1-R18 and questions Q1-Q14 are in `HP01_STUDY.md`. The game i
 | Budgets | LOD0 22,800 allocated (target 15-25k, ceiling 30k); mag 1.8k (ceiling 2.5k); LOD1 ~45 %, LOD2 ~15 %, LOD3 0.8-1.2k |
 | Slots / sets | `M_HP01_Steel` (Steel 4096), `M_HP01_Furniture` (1024), `M_HP01_Mag` (1024), `T_HP01_Masks` 2048 |
 | Method | traced and **faired** outlines; section / outline generators with **authored bevel lands**; HP bakes for pebble, checkering and machining marks; finish cards; ER0 at W1c |
-| Before W1 | the user rules on **Q1 (width)**. Without an answer, the build uses the default (the TOP view as drawn) with `K_Y` as a single parameter |
+| Before W1 | **Q1 ruled 2026-10-14: realistic width, `K_Y` 0.70** (slide ~33 mm); check the grip width at the W1 H1 girth gate |
 
 ---
 

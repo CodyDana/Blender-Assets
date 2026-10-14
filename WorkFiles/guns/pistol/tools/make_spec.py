@@ -61,7 +61,7 @@ def Bpx(px, py):
 
 
 # Y half-widths (TOP authority, Q1 default = the sheet as drawn; K_Y is the one parameter for the real-pattern option)
-K_Y = 1.0
+K_Y = 0.70  # user 2026-10-14: "go realistic" (Q1): slide ~33 mm, the real class
 TOPW = M["top"]["slide_width_mm_sheet"]
 HALF = {"slide": r1(K_Y * TOPW / 2, 2), "levers": r1(K_Y * M["top"]["max_width_mm_sheet"] / 2, 2),
         "flank_tab_proud": r1(K_Y * (54.5 - TOPW) / 2, 2), "hammer": r1(K_Y * 17.0 / 2, 2),
@@ -237,7 +237,7 @@ spec = {
     "scale": {"overall_mm": 273.0, "barrel_mm": 152.0, "mass_kg": 2.0, "px_per_mm": s, "ruler_error_pct": M["scale"]["ruler_error_pct"],
               "height_mm_sheet": M["key_dimensions"]["height_mm_reads"], "height_mm_class": 159.0,
               "width": {"slide_mm_sheet": TOPW, "levers_mm_sheet": M["top"]["max_width_mm_sheet"], "class_max_mm": 32.0, "K_Y": K_Y,
-                        "ruling": "Q1 default: the TOP view as drawn (the user's bar: exact on side/top); one parameter K_Y gives the real-pattern option"},
+                        "ruling": "Q1 RULED by the user 2026-10-14 (\"go realistic\"): K_Y 0.70, slide ~33 mm (real class); the TOP view as drawn is overruled on width only"},
               "rule": "real overall length (study 3.5); proportions from the sheet; rulers reported only"},
     "key_dimensions": M["key_dimensions"], "half_widths_mm": HALF, "serrations": M["serrations"], "rail_sheet": M["rail"],
     "parts": parts, "finishes": C["finishes"], "bones": bones, "motion_axes": MOTION_AXES, "rest_pose": {"slide": 0, "hammer": "cocked (0)", "selector": "FIRE (0)", "slide_stop": 0, "magazine": "seated"},
