@@ -1,0 +1,162 @@
+"""Writes WorkFiles/guns/sniper/pack_materials_proposal.json: the exact material_spec.json additions SR01 would need
+(items, instances, build-map entries, changes_v11_sr01). PROPOSAL ONLY: nothing under Scripts/unreal/materials is
+changed; no build. Field shapes copied from the SMG01 entries of this branch's material_spec.json.
+
+    py -3 -B WorkFiles/guns/sniper/materials/make_pack_proposal.py
+"""
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[4]
+E = "Exports/Guns/SR01"
+T = f"{E}/Textures"
+GEN = "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)"
+GEN_KEYS = ("Colour", "Detail Bias", "Detail Scale", "Detail Mean", "Detail Highlight Ratio", "Detail Moments Low",
+            "Detail Moments High")
+
+
+def orm(set_):
+    return {"composite_texture": f"T_{set_}_N", "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+            "composite_power": 1.0}
+
+
+def steel_slot(idx, slot, part, inst, set_, size, contract_metal, note):
+    return {"index": idx, "slot_name": slot, "part": part, "instance": inst, "master": "M_Steel_Master",
+            "recolourable": False,
+            "textures": {"Base Colour Map": f"{T}/T_{set_}_BC.png", "ORM Map": f"{T}/T_{set_}_ORM.png",
+                         "Normal Map": f"{T}/T_{set_}_N.png"},
+            "texture_kinds": {"Base Colour Map": "BC", "ORM Map": "ORM_rgb", "Normal Map": "N"},
+            "orm_texture_settings": orm(set_), "size": [size, size], "params": {},
+            "look_contract": {"BaseColor": f"T_{set_}_BC (sRGB) x Steel Tint (white = as shipped)",
+                              "Metallic": contract_metal, "Roughness": "ORM.G", "AO": "ORM.R",
+                              "Normal": f"T_{set_}_N (DirectX, 16-bit source)"},
+            "note": note, "base_instance": inst + "_Base"}
+
+
+METAL = steel_slot(0, "M_SR01_Metal", "Metal", "MI_SR01_Metal", "SR01_Metal", 2048,
+                   "ORM.B (0 phosphate / blued / lacquer, 1 polished bolt body and bare-steel wear)",
+                   "the steel parts: receiver, rail, fluted barrel and compensator, bolt (polished body, phosphate "
+                   "shroud) and handle, trigger, safety, release, pins and fasteners; baked finish, not recolourable; "
+                   "Steel Tint multiplies")
+CHASSIS = {
+    "index": 1, "slot_name": "M_SR01_Chassis", "part": "Chassis", "instance": "MI_SR01_Chassis",
+    "master": "M_Fabric_Master", "recolourable": True, "tint_ready_shipped": True,
+    "textures": {"Detail Map": f"{T}/Recolour/T_SR01_Chassis_Detail16.png (NEW: 16-bit linear tint-ready detail over "
+                               "the OD paint only; pack-schema writer = the sniper's maps step, draft "
+                               "WorkFiles/guns/sniper/materials/sr01_recolour_pack_draft.py)",
+                 "Base Colour Map": f"{T}/T_SR01_Chassis_BC.png", "ORM Map": f"{T}/T_SR01_Chassis_ORM.png",
+                 "Normal Map": f"{T}/T_SR01_Chassis_N.png"},
+    "texture_kinds": {"Detail Map": "Detail16", "Base Colour Map": "BC_BC7", "ORM Map": "ORM_rgb", "Normal Map": "N"},
+    "orm_texture_settings": orm("SR01_Chassis"),
+    "size": {"BC": 4096, "Detail": 2048, "ORM": 4096, "N": 4096},
+    "params": {**{k: GEN for k in GEN_KEYS}, "Specular Strength": 0.5, "Specular From ORM Alpha": False,
+               "Cloth Sheen": False, "Use Lettering": False, "Metal From ORM": True,
+               "Use Original Baked Colours": True},
+    "look_contract": {
+        "BaseColor": "shipped (Use Original Baked Colours ON): T_SR01_Chassis_BC exactly (the OD paint with orange "
+                     "peel, chips to dark anodize and rubs, plus the set's black anodize, polymer and rubber); "
+                     "recolour (switch OFF): saturate(Colour x (Detail Bias + Detail Scale x Detail)), then Metal "
+                     "From ORM's lerp back to the BC on metallic or bright texels. OPEN (proposal D1): the master has "
+                     "no mask input, so the set's non-OD texels (28 %) would be tinted too",
+        "Metallic": "ORM.B (Metal From ORM on: bright bare-aluminium chip cores are 1)",
+        "Roughness": "ORM.G", "AO": "ORM.R", "Normal": "T_SR01_Chassis_N (DirectX, 16-bit source)"},
+    "note": "the chassis set: OD-painted aluminium chassis, forend, butt and cheek riser (Masks A = 1), with the black "
+            "anodized bipod and hardware, polymer grip and rubber butt pad (Masks A = 0); default Colour = the OD's "
+            "covered-texel mean (draft, linear 0.0796 / 0.0815 / 0.0582)",
+    "base_instance": "MI_SR01_Chassis_Base"}
+MAG = {
+    "index": 2, "slot_name": "M_SR01_Mag", "part": "Mag", "instance": "MI_SR01_Mag", "master": "M_Fabric_Master",
+    "recolourable": False,
+    "textures": {"Base Colour Map": f"{T}/T_SR01_Mag_BC.png", "ORM Map": f"{T}/T_SR01_Mag_ORM.png",
+                 "Normal Map": f"{T}/T_SR01_Mag_N.png"},
+    "texture_kinds": {"Base Colour Map": "BC_BC7", "ORM Map": "ORM_rgb", "Normal Map": "N"},
+    "orm_texture_settings": orm("SR01_Mag"), "size": [1024, 1024],
+    "params": {"Specular Strength": 0.5, "Specular From ORM Alpha": False, "Cloth Sheen": False,
+               "Use Lettering": False, "Metal From ORM": True, "Use Original Baked Colours": True},
+    "look_contract": {"BaseColor": "T_SR01_Mag_BC exactly (Use Original Baked Colours ON)",
+                      "Metallic": "ORM.B (Metal From ORM on)", "Roughness": "ORM.G", "AO": "ORM.R",
+                      "Normal": "T_SR01_Mag_N (DirectX, 16-bit source)"},
+    "note": "the 10-round box magazine: phosphated steel body (87 % of its texels) and polymer parts; no OD paint "
+            "(Masks A = 0 everywhere), so it is not in recolour group SR01; plan 0 puts it on M_Fabric_Master + Metal "
+            "From ORM (M_Steel_Master, as on the AR-01's magazine, is the equal alternative if P1 prefers it)",
+    "base_instance": "MI_SR01_Mag_Base"}
+SCOPE_BODY = steel_slot(0, "M_Att_Scope_Body", "Scope_Body", "MI_Att_Scope_LongRange_Body",
+                        "Att_Scope_LongRange_Scope_Body", 2048,
+                        "ORM.B (0 black anodize / rubber eyepiece, 1 bare-aluminium wear)",
+                        "the long-range scope: tube, turrets (knurl and scallops as geometry), eyepiece, objective "
+                        "bell and the rings; baked finish, not recolourable")
+SCOPE_LENS = steel_slot(1, "M_Att_Scope_Lens", "Scope_Lens", "MI_Att_Scope_LongRange_Lens",
+                        "Att_Scope_LongRange_Scope_Lens", 512, "ORM.B (0: opaque glossy coated glass)",
+                        "the front and rear lenses: opaque, glossy, dark coated glass (no translucency, no render "
+                        "target; a game's scope view is its own material)")
+
+items = [
+    {"item": "SR01", "kind": "skeletal", "folder": "/Game/NinjaPack/Meshes/SR01", "short": "SR01", "mesh": "SK_SR01",
+     "fbx": f"{E}/SK_SR01.fbx", "sidecar": f"{E}/SK_SR01.skeletal.json",
+     "note": "PROPOSED (SR-01 W6, unbuilt). The rigged bolt-action sniper rifle: 13 bones + root, 4 LODs "
+             "(SK_SR01_LOD1-3.fbx), 8 weapon clips (incl. BipodDeploy / BipodStow / CheekRiser), PHYS_SR01 (7 boxes "
+             "+ 1 capsule + a no-collision, no-mass bounds-envelope box), 20 sockets, bounds extension for the bipod, "
+             "bolt and riser; np_skeletal.py imports it into its own folder from the sidecar (slots by name). The "
+             "magazine (SM_SR01_Mag on Mag) and the scope (SM_Att_Scope_LongRange on Rail_Top + 2 slots) are their "
+             "own meshes. Metal 2048, Chassis 4096, all UV0 in 0..1",
+     "slots": [METAL, CHASSIS]},
+    {"item": "SR01_Static", "mesh": "SM_SR01", "fbx": f"{E}/SM_SR01.fbx", "sidecar": f"{E}/SM_SR01.sockets.json",
+     "note": "PROPOSED. The static twin of SK_SR01 (bipod folded) with a merged magazine copy (identical to "
+             "SM_SR01_Mag at every LOD): 4 LODs, 10 UCX hulls, 20 sockets. UV0 tiles: Metal 0, Chassis 1, merged "
+             "magazine -1 (Wrap addressing reads the same texels); it shares the three instances with SK_SR01 and "
+             "SM_SR01_Mag",
+     "slots": [METAL, CHASSIS, MAG]},
+    {"item": "SR01_Mag", "mesh": "SM_SR01_Mag", "fbx": f"{E}/SM_SR01_Mag.fbx",
+     "sidecar": f"{E}/SM_SR01_Mag.sockets.json",
+     "note": "PROPOSED. The removable 10-round magazine (attached to SK_SR01's Mag socket; straight reload path "
+             "MagInsertStart -> Mag along +Z, 67.8 mm): 4 LODs, 1 UCX hull, 5 sockets",
+     "slots": [dict(MAG, index=0)]},
+    {"item": "Att_Scope_LongRange", "mesh": "SM_Att_Scope_LongRange", "folder": "/Game/NinjaPack/Meshes/SR01",
+     "fbx": f"{E}/SM_Att_Scope_LongRange.fbx", "sidecar": f"{E}/SM_Att_Scope_LongRange.sockets.json",
+     "note": "PROPOSED. The long-range scope attachment (origin = Mount; attach to the gun's Rail_Top + 20.02 mm): 3 "
+             "LODs, 3 UCX hulls, 5 sockets (Mount, Sight, EyePoint, Lens_Front, CenterOfMass). UV0 tiles: Body 0, "
+             "Lens 1. Moves to a shared attachments folder when the gun chat creates one (plan 5)",
+     "slots": [SCOPE_BODY, SCOPE_LENS]},
+]
+instances = []
+for parent, names in (("M_Steel_Master", ["MI_SR01_Metal", "MI_Att_Scope_LongRange_Body",
+                                          "MI_Att_Scope_LongRange_Lens"]),
+                      ("M_Fabric_Master", ["MI_SR01_Chassis", "MI_SR01_Mag"])):
+    for n in names:
+        instances.append({"name": n + "_Base", "parent": parent, "folder": "Base",
+                          "role": "holds every texture and matched setting of the part"})
+        instances.append({"name": n, "parent": n + "_Base", "role": "buyer-facing: overrides only the colour(s)"})
+MASKS = ("the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable = 1 only on the "
+         "OD paint) for a buyer's own wear/dirt material; no pack master samples it")
+SCOPE_MASKS = ("the scope's shipped mask set (R edge-wear propensity, G handling, B cavity, A 0) for a buyer's own "
+               "wear/dirt material; no pack master samples it")
+not_imported = {f"{T}/T_SR01_{s}_Masks.png": MASKS for s in ("Metal", "Chassis", "Mag")}
+not_imported.update({f"{T}/T_Att_Scope_LongRange_Scope_{s}_Masks.png": SCOPE_MASKS for s in ("Body", "Lens")})
+build = {"recolour_maps": {"SR01": f"{T}/Recolour/recolour_maps.json"},
+         "recolour_constants": {"SR01": f"{T}/Recolour/recolour_constants.json"},
+         "not_imported": not_imported}
+changes = {
+    "date": "TBD (the build session)",
+    "what": "The Sniper Rifle SR-01 joins the pack (additions only): items SR01 (SK_SR01, kind 'skeletal', folder "
+            "Meshes/SR01), SR01_Static (SM_SR01, the static twin with the merged magazine), SR01_Mag (SM_SR01_Mag) "
+            "and Att_Scope_LongRange (SM_Att_Scope_LongRange, folder Meshes/SR01); 10 instances (MI_SR01_Metal, "
+            "MI_Att_Scope_LongRange_Body and _Lens on M_Steel_Master; MI_SR01_Chassis and MI_SR01_Mag on "
+            "M_Fabric_Master with Metal From ORM ON; each with its _Base); group SR01's recolour map (one member, the "
+            "OD paint) and constants (maps/derive_constants_sr01.py); the five Masks maps not imported. The Chassis "
+            "and Mag _Base instances ship Use Original Baked Colours ON. Chassis and Mag BC import as BC7 (texture "
+            "kind BC_BC7) unless P1 measures BC1 within 2 levels.",
+    "masters": "unchanged (option D1-a) or one additive static switch on M_Fabric_Master, default off (option D1-b)",
+    "code": "one new script maps/derive_constants_sr01.py (draft: WorkFiles/guns/sniper/materials/"
+            "derive_constants_sr01_draft.py); nothing else in the code changed"}
+doc = {"status": "PROPOSAL, UNBUILT. Nothing in Scripts/unreal/materials/ or material_spec.json was edited; no "
+                 "run_build.sh, no np_lock claim, no Unreal (SR-01 W6, 2026-10-14, branch claude/sniper-sr01)",
+       "how_to_apply": "a session holding the PackMaterials lock appends items[] to material_spec.json items and "
+                       "instances[] to instances, merges build_map_entries into build.recolour_maps / "
+                       "build.recolour_constants / build.not_imported, adds changes_v11_sr01, installs "
+                       "maps/derive_constants_sr01.py, writes the pack-schema recolour map, and builds through "
+                       "run_build.sh (additions only: removing the SR01 keys must give back the spec before)",
+       "recolour_group": {"name": "SR01", "members": ["M_SR01_Chassis"], "user_colour": "the OD paint (Colour)"},
+       "items": items, "instances": instances, "build_map_entries": build, "changes_v11_sr01": changes}
+out = ROOT / "WorkFiles/guns/sniper/pack_materials_proposal.json"
+out.write_text(json.dumps(doc, indent=1))
+print("wrote", out.relative_to(ROOT), len(items), "items", len(instances), "instances")
