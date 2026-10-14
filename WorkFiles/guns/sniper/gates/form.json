@@ -1,36 +1,40 @@
 {
  "stage": "W1a form (gun without the scope)",
- "date": "2026-10-13T22:30:27",
+ "date": "2026-10-14T17:13:08",
  "status": "partial",
  "failed": [
+  "L2 GR IoU (scope = the blockout stand-in until W1b)",
   "L2 GL IoU (scope stand-in)",
   "L2 TOP IoU raw / declared fit",
   "L2 per part on GR (IoU >= 0.95)",
   "L3 GR contour P95 (sheet px)",
-  "L4 key dimensions (<= 0.05 mm)"
+  "L4 key dimensions (<= 0.05 mm)",
+  "G5 rest intersections between parts",
+  "G5 butt-joint gaps",
+  "F1 bipod folded gaps (leg-clamp, feet-forend, feet, legs-knob)"
  ],
  "gates": [
   {
    "name": "L2 GR IoU (scope = the blockout stand-in until W1b)",
-   "value": 0.9602,
+   "value": 0.9571,
    "threshold": ">= 0.96",
-   "pass": true
+   "pass": false
   },
   {
    "name": "L2 GL IoU (scope stand-in)",
    "value": [
-    0.9426,
-    0.9505
+    0.9412,
+    0.9491
    ],
    "threshold": ">= 0.958",
    "pass": false,
-   "note": "raw / declared forend-underside window out; GL's silhouette is 602 px (1.8 %) smaller than GR's for the same object (ours differ by 98 px): the sheet's GL is drawn thinner, see scratch/w1/l2_columns.json"
+   "note": "raw / declared forend-underside window out; GL's silhouette is 602 px (1.8 %) smaller than GR's for the same object (ours differ by 128 px): the sheet's GL is drawn thinner, see scratch/w1/l2_columns.json"
   },
   {
    "name": "L2 TOP IoU raw / declared fit",
    "value": [
-    0.8375,
-    0.902
+    0.8376,
+    0.9026
    ],
    "threshold": ">= 0.93",
    "pass": false
@@ -44,13 +48,13 @@
   },
   {
    "name": "L3 GR contour P95 (sheet px)",
-   "value": 3.0,
+   "value": 3.61,
    "threshold": "<= 2",
    "pass": false
   },
   {
    "name": "L4 key dimensions (<= 0.05 mm)",
-   "value": "12 / 14",
+   "value": "13 / 14",
    "threshold": "all",
    "pass": false
   },
@@ -113,7 +117,7 @@
    "name": "B3 riser -12.9..12.000000000000059 (step 0.3)",
    "value": {
     "intersecting_steps": 0,
-    "min_clearance_mm": 0.1665,
+    "min_clearance_mm": 0.1692,
     "min_with": "butt",
     "proof_fails": null
    },
@@ -232,15 +236,15 @@
   },
   {
    "name": "G5 rest intersections between parts",
-   "value": 0,
+   "value": 1,
    "threshold": "0",
-   "pass": true
+   "pass": false
   },
   {
    "name": "G5 butt-joint gaps",
-   "value": "min 0.0152 over 16 pairs",
+   "value": "min 0.0033 over 16 pairs",
    "threshold": ">= 0.01 (sampling 0.5 mm)",
-   "pass": true
+   "pass": false
   },
   {
    "name": "F1 bipod folded gaps (leg-clamp, feet-forend, feet, legs-knob)",
@@ -256,7 +260,7 @@
     "bipod_foot_l|barrel": 8.0
    },
    "threshold": "0 intersections; feet >= 2.0 apart",
-   "pass": true
+   "pass": false
   },
   {
    "name": "F2 deploy sweep 0..90 at ext 0 / 76 (both legs)",
@@ -384,7 +388,7 @@
   },
   {
    "name": "B8 LOD0 triangles, gun without the scope (target 35-45k, ceiling 50k)",
-   "value": 41396,
+   "value": 44778,
    "threshold": "<= 50000 (target <= 45000)",
    "pass": true
   },
@@ -392,7 +396,7 @@
    "name": "UD1 Unreal degenerate rule on every LOD0 part",
    "value": {
     "unreal_drops": 0,
-    "min_area_mm2": 0.010543
+    "min_area_mm2": 0.010271
    },
    "threshold": "0; >= 0.01 mm2",
    "pass": true
@@ -409,7 +413,7 @@
   },
   {
    "name": "H1 early: grip girth at the palm (46 mm down the grip axis)",
-   "value": 165.9,
+   "value": 154.5,
    "threshold": "<= 167 (polymer grip band + 10 %)",
    "pass": true
   },
@@ -468,15 +472,15 @@
   "silhouette": {
    "stage": "form",
    "npz": "form_tris.npz",
-   "triangles": 61856,
+   "triangles": 65238,
    "views": {
     "GR": {
-     "iou": 0.9602,
+     "iou": 0.9571,
      "contour_p50_px": 0.0,
-     "contour_p95_px": 3.0,
+     "contour_p95_px": 3.61,
      "contour_max_px": 15.03,
      "mapping_fit_p95_px": 0.006,
-     "ours_px": 34653,
+     "ours_px": 34749,
      "ref_px": 34180,
      "parts": {
       "scope": {
@@ -513,11 +517,11 @@
        }
       },
       "barrel": {
-       "iou": 0.803,
+       "iou": 0.8024,
        "area_px": 2081,
        "missed_px_covered_by": {
-        "empty": 127,
-        "chassis": 34,
+        "empty": 128,
+        "chassis": 32,
         "muzzle_device": 16
        }
       },
@@ -533,44 +537,44 @@
        "iou": 0.3517,
        "area_px": 471,
        "missed_px_covered_by": {
-        "chassis": 242,
+        "chassis": 248,
         "safety": 24,
-        "bolt": 17
+        "bolt": 11
        }
       },
       "bolt_shroud": {
-       "iou": 0.2813,
+       "iou": 0.2763,
        "area_px": 319,
        "missed_px_covered_by": {
         "empty": 40,
-        "safety": 24,
-        "chassis": 23
+        "chassis": 27,
+        "safety": 24
        }
       },
       "receiver": {
-       "iou": 0.4978,
+       "iou": 0.4883,
        "area_px": 1791,
        "missed_px_covered_by": {
         "rail": 335,
         "bolt": 289,
-        "chassis": 197
+        "chassis": 210
        }
       },
       "cheek_riser": {
-       "iou": 0.7392,
+       "iou": 0.7356,
        "area_px": 1520,
        "missed_px_covered_by": {
-        "empty": 84,
+        "empty": 87,
         "butt": 61,
         "pad_plate": 9
        }
       },
       "butt_pad": {
-       "iou": 0.9617,
+       "iou": 0.9576,
        "area_px": 2562,
        "missed_px_covered_by": {
         "pad_plate": 72,
-        "empty": 26
+        "empty": 31
        }
       },
       "pad_plate": {
@@ -598,83 +602,83 @@
        "iou": 0.0,
        "area_px": 87,
        "missed_px_covered_by": {
-        "chassis": 34,
-        "empty": 33,
+        "empty": 34,
+        "chassis": 33,
         "magazine": 20
        }
       },
       "trigger_guard": {
-       "iou": 0.6038,
+       "iou": 0.5986,
        "area_px": 569,
        "missed_px_covered_by": {
         "chassis": 98,
         "grip": 21,
-        "empty": 2
+        "empty": 3
        }
       },
       "grip": {
-       "iou": 0.9454,
+       "iou": 0.9263,
        "area_px": 1825,
        "missed_px_covered_by": {
         "chassis": 67,
-        "empty": 16,
+        "empty": 12,
         "butt": 10
        }
       },
       "butt": {
-       "iou": 0.5797,
+       "iou": 0.5816,
        "area_px": 4509,
        "missed_px_covered_by": {
-        "empty": 218,
-        "cheek_riser": 204,
+        "empty": 206,
+        "cheek_riser": 202,
         "chassis": 21
        }
       },
       "chassis_forend": {
-       "iou": 0.9098,
+       "iou": 0.913,
        "area_px": 4614,
        "missed_px_covered_by": {
-        "barrel": 290,
-        "chassis": 80,
-        "empty": 19
+        "barrel": 291,
+        "chassis": 79,
+        "empty": 17
        }
       },
       "chassis_centre": {
-       "iou": 0.8635,
+       "iou": 0.8673,
        "area_px": 4897,
        "missed_px_covered_by": {
         "chassis": 176,
-        "receiver": 80,
+        "receiver": 63,
         "scope_blockout": 58
        }
       }
      }
     },
     "GL": {
-     "iou": 0.9426,
+     "iou": 0.9412,
      "contour_p50_px": 1.0,
-     "contour_p95_px": 4.0,
+     "contour_p95_px": 4.24,
      "contour_max_px": 15.0,
      "mapping_fit_p95_px": 0.006,
-     "ours_px": 34555,
+     "ours_px": 34621,
      "ref_px": 33578,
-     "iou_forend_underside_window_out": 0.9505,
-     "contour_p95_px_window_out": 3.0
+     "iou_forend_underside_window_out": 0.9491,
+     "contour_p95_px_window_out": 3.16
     },
     "TOP": {
-     "iou": 0.8375,
+     "iou": 0.8376,
      "contour_p50_px": 1.41,
      "contour_p95_px": 7.0,
      "contour_max_px": 16.0,
      "mapping_fit_p95_px": 0.003,
-     "ours_px": 19401,
+     "ours_px": 19404,
      "ref_px": 20360,
-     "iou_knob_window_out": 0.8699,
+     "iou_knob_window_out": 0.87,
      "sheet_1px_sensitivity_iou": 0.9326
     },
     "TOP_fit": {
-     "iou": 0.902,
-     "y_scale": 1.06,
+     "iou": 0.9026,
+     "y_scale": 1.05,
      "y_shift_mm": -3.0,
      "contour_p95_px": 7.07,
      "note": "bounded Y-only fit for the TOP's shadow bias + round-part inflation"
@@ -684,9 +688,9 @@
   "L4": [
    {
     "feature": "overall length X",
-    "measured": 1100.02,
+    "measured": 1099.979,
     "spec": 1100.0,
-    "error_mm": 0.02,
+    "error_mm": 0.021,
     "pass": true
    },
    {
@@ -698,9 +702,9 @@
    },
    {
     "feature": "butt rear X",
-    "measured": 0.0,
+    "measured": 0.041,
     "spec": 0.0,
-    "error_mm": 0.0,
+    "error_mm": 0.041,
     "pass": true
    },
    {
@@ -761,17 +765,17 @@
    },
    {
     "feature": "grip bottom Z",
-    "measured": -166.28,
+    "measured": -166.227,
     "spec": -166.4,
-    "error_mm": 0.12,
+    "error_mm": 0.173,
     "pass": false
    },
    {
     "feature": "riser top Z",
-    "measured": 32.1,
+    "measured": 31.0,
     "spec": 31.0,
-    "error_mm": 1.1,
-    "pass": false
+    "error_mm": 0.0,
+    "pass": true
    },
    {
     "feature": "foot front X folded",
@@ -922,7 +926,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1950,
+     "triangles": 1178,
      "shells": 1
     },
     "butt_knobs": {
@@ -942,7 +946,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1248,
+     "triangles": 1390,
      "shells": 1
     },
     "chassis": {
@@ -952,7 +956,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 4470,
+     "triangles": 8798,
      "shells": 1
     },
     "cheek_riser": {
@@ -962,7 +966,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 1396,
+     "triangles": 938,
      "shells": 1
     },
     "fasteners": {
@@ -982,7 +986,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 2216,
+     "triangles": 2358,
      "shells": 1
     },
     "mag_release": {
@@ -1117,13 +1121,19 @@
     }
    },
    "B7_closed": 33,
-   "B8_triangles": 41396,
-   "G5_rest_intersections": [],
+   "B8_triangles": 44778,
+   "G5_rest_intersections": [
+    {
+     "a": "bipod_clamp",
+     "b": "chassis",
+     "intersecting_triangle_pairs": 23
+    }
+   ],
    "G5_butt_gaps": [
     {
      "a": "butt",
      "b": "chassis",
-     "min_gap_mm": 0.04
+     "min_gap_mm": 0.043
     },
     {
      "a": "grip",
@@ -1133,12 +1143,12 @@
     {
      "a": "grip",
      "b": "butt",
-     "min_gap_mm": 0.03
+     "min_gap_mm": 0.0347
     },
     {
      "a": "butt_pad",
      "b": "pad_plate",
-     "min_gap_mm": 0.0407
+     "min_gap_mm": 0.0454
     },
     {
      "a": "pad_plate",
@@ -1148,12 +1158,12 @@
     {
      "a": "receiver",
      "b": "chassis",
-     "min_gap_mm": 0.0405
+     "min_gap_mm": 0.0389
     },
     {
      "a": "rail",
      "b": "receiver",
-     "min_gap_mm": 0.0405
+     "min_gap_mm": 0.0401
     },
     {
      "a": "barrel",
@@ -1168,7 +1178,7 @@
     {
      "a": "bipod_clamp",
      "b": "chassis",
-     "min_gap_mm": 0.1253
+     "min_gap_mm": 0.0033
     },
     {
      "a": "fasteners",
@@ -1219,9 +1229,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.21,
      "end_nearest": "receiver",
-     "seconds": 314.9,
+     "seconds": 215.8,
      "moving_samples": 270086,
-     "fixed_samples": 827611,
+     "fixed_samples": 821710,
      "row": "sliding",
      "pass": true,
      "proof_fails": 0,
@@ -1244,9 +1254,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.154,
      "end_nearest": "receiver",
-     "seconds": 103.2,
+     "seconds": 79.1,
      "moving_samples": 270086,
-     "fixed_samples": 888954,
+     "fixed_samples": 878972,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1268,9 +1278,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1546,
      "end_nearest": "pins",
-     "seconds": 3.1,
+     "seconds": 2.4,
      "moving_samples": 19899,
-     "fixed_samples": 27660,
+     "fixed_samples": 26708,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1292,9 +1302,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1991,
      "end_nearest": "pins",
-     "seconds": 4.9,
+     "seconds": 3.8,
      "moving_samples": 20198,
-     "fixed_samples": 17883,
+     "fixed_samples": 18088,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1316,9 +1326,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1632,
      "end_nearest": "pins",
-     "seconds": 15.3,
+     "seconds": 12.4,
      "moving_samples": 77821,
-     "fixed_samples": 76883,
+     "fixed_samples": 87157,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1333,16 +1343,16 @@
      "intersecting_steps": 0,
      "max_intersections": 0,
      "parts_hit": [],
-     "min_clearance_mm": 0.1665,
+     "min_clearance_mm": 0.1692,
      "min_at": -12.9,
      "min_with": "butt",
-     "rest_clearance_mm": 0.1665,
+     "rest_clearance_mm": 0.1692,
      "rest_nearest": "butt",
-     "end_clearance_mm": 0.1665,
+     "end_clearance_mm": 0.1692,
      "end_nearest": "butt",
-     "seconds": 34.8,
-     "moving_samples": 439305,
-     "fixed_samples": 217865,
+     "seconds": 19.9,
+     "moving_samples": 348203,
+     "fixed_samples": 243036,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1364,9 +1374,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 108.7,
+     "seconds": 68.9,
      "moving_samples": 509228,
-     "fixed_samples": 266300,
+     "fixed_samples": 270834,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1389,9 +1399,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 88.5,
+     "seconds": 70.0,
      "moving_samples": 509228,
-     "fixed_samples": 266300,
+     "fixed_samples": 270834,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1414,7 +1424,7 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 13.9,
+     "seconds": 14.4,
      "moving_samples": 272294,
      "fixed_samples": 172262,
      "row": "sliding",
@@ -1438,9 +1448,9 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 24.0,
+     "seconds": 23.6,
      "moving_samples": 272294,
-     "fixed_samples": 498942,
+     "fixed_samples": 503476,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1462,9 +1472,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 67.7,
+     "seconds": 75.4,
      "moving_samples": 509823,
-     "fixed_samples": 250743,
+     "fixed_samples": 255289,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1487,9 +1497,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 69.4,
+     "seconds": 67.1,
      "moving_samples": 509823,
-     "fixed_samples": 250743,
+     "fixed_samples": 255289,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1536,9 +1546,9 @@
      "rest_nearest": "bipod_leg_r",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_r",
-     "seconds": 23.3,
+     "seconds": 25.8,
      "moving_samples": 272713,
-     "fixed_samples": 483551,
+     "fixed_samples": 488097,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1560,9 +1570,9 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 81.3,
+     "seconds": 88.4,
      "moving_samples": 1493936,
-     "fixed_samples": 127032,
+     "fixed_samples": 159954,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1585,9 +1595,9 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 83.0,
+     "seconds": 89.8,
      "moving_samples": 1493936,
-     "fixed_samples": 116572,
+     "fixed_samples": 140342,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1738,9 +1748,9 @@
      "rest_nearest": "mag_release",
      "end_clearance_mm": 0.3,
      "end_nearest": "chassis",
-     "seconds": 48.8,
+     "seconds": 50.4,
      "moving_samples": 248837,
-     "fixed_samples": 228423,
+     "fixed_samples": 249144,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1764,9 +1774,9 @@
      "rest_nearest": "mag_release",
      "end_clearance_mm": 3.0,
      "end_nearest": null,
-     "seconds": 47.3,
+     "seconds": 49.6,
      "moving_samples": 248837,
-     "fixed_samples": 226326,
+     "fixed_samples": 247047,
      "row": "sliding",
      "pass": false,
      "hits_at": [
@@ -1789,49 +1799,49 @@
    "B6a": {
     "object": "SM_SR01_B6aCheck",
     "parts": 33,
-    "triangles": 41396,
+    "triangles": 44778,
     "checks": [
      {
       "name": "no_ngons",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 n-gon(s) of 36520 faces"
+      "detail": "0 n-gon(s) of 39902 faces"
      },
      {
       "name": "no_non_manifold_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 57218"
+      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 62291"
      },
      {
       "name": "open_boundary_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 boundary edge(s) of 57218 (informational: open meshes are allowed)"
+      "detail": "0 boundary edge(s) of 62291 (informational: open meshes are allowed)"
      },
      {
       "name": "no_loose_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 loose vertex/vertices of 20744"
+      "detail": "0 loose vertex/vertices of 22437"
      },
      {
       "name": "no_zero_length_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) at or below 1e-06 of 57218; shortest 5.08916e-05"
+      "detail": "0 edge(s) at or below 1e-06 of 62291; shortest 5.09088e-05"
      },
      {
       "name": "no_degenerate_faces",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 face(s) at or below 1e-12 area of 36520; smallest 1.05373e-08"
+      "detail": "0 face(s) at or below 1e-12 area of 39902; smallest 1.02737e-08"
      },
      {
       "name": "no_coincident_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 vertex pair(s) within 1e-06 of 20744"
+      "detail": "0 vertex pair(s) within 1e-06 of 22437"
      }
     ],
     "passed": true,
@@ -1841,8 +1851,8 @@
    },
    "H1": {
     "girth_at_25mm_mm": 181.1,
-    "girth_at_46mm_mm": 165.9,
-    "girth_at_70mm_mm": 171.2,
+    "girth_at_46mm_mm": 154.5,
+    "girth_at_70mm_mm": 166.8,
     "trigger_reach_mm": 44.7,
     "length_of_pull_mm": 358.2,
     "real_reference": "precision-rifle polymer grips: girth ~140-160 mm at the palm; trigger reach 60-80 mm (reported; the gate band is the SMG's polymer grip +10 %: <= 167 mm, reach <= 80 mm)"
@@ -1856,18 +1866,18 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 4470,
+    "triangles": 8798,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.013451,
+     "min_area_mm2": 0.010397,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 2.7,
+    "seconds": 5.92,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -1876,18 +1886,1442 @@
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0
     },
-    "round_shell": {
-     "edges_rounded": 216,
-     "shell_drops_before_repair": 11,
-     "shell_drops_after": 0
-    },
     "protected_repair": {
      "needed": true,
-     "collapses": 1,
+     "collapses": 59,
      "reverted": false,
-     "drops_before": 1,
+     "drops_before": 31,
+     "drops_after": 0,
+     "pass_after": false
+    },
+    "fine_fix": {
+     "collapses": 9,
+     "reverted": false,
+     "drops_before": 0,
      "drops_after": 0,
      "pass_after": true
+    },
+    "rim_slab": {
+     "slab0": {
+      "rings_simple": true,
+      "loops": 4,
+      "ring_verts": [
+       149,
+       38,
+       38,
+       37
+      ],
+      "breaks_snapped": 19,
+      "breaks_skipped": 0,
+      "ring_folds_fixed": [
+       [
+        0,
+        [
+         [
+          832.71,
+          -38.28
+         ],
+         [
+          832.7,
+          -38.33
+         ]
+        ],
+        6
+       ],
+       [
+        1,
+        [
+         [
+          575.22,
+          19.33
+         ],
+         [
+          570.08,
+          19.6
+         ]
+        ],
+        2
+       ],
+       [
+        2,
+        [
+         [
+          245.51,
+          -55.65
+         ],
+         [
+          245.52,
+          -55.89
+         ]
+        ],
+        1
+       ]
+      ],
+      "cdt_new_verts_+1": 10,
+      "cap_tris_+1": 286,
+      "cdt_new_verts_-1": 10,
+      "cap_tris_-1": 286,
+      "manifold": {
+       "multi_face_edges": 0,
+       "boundary_edges": 0,
+       "wire_edges": 0,
+       "ngons": 0,
+       "zero_area_faces": 0,
+       "zero_length_edges": 0,
+       "triangles": 4146,
+       "shells": 1
+      },
+      "ud_slab": {
+       "unreal_drops": 2,
+       "edges_under_0.05mm": 1,
+       "needles_under_0.02mm": 0
+      },
+      "ud_loc": [
+       [
+        [
+         246.0,
+         -22.0,
+         -54.0
+        ],
+        2
+       ],
+       [
+        [
+         246.0,
+         22.0,
+         -54.0
+        ],
+        2
+       ],
+       [
+        [
+         570.0,
+         36.0,
+         20.0
+        ],
+        2
+       ],
+       [
+        [
+         246.0,
+         -22.0,
+         -16.0
+        ],
+        1
+       ],
+       [
+        [
+         412.0,
+         -32.0,
+         -66.0
+        ],
+        1
+       ],
+       [
+        [
+         412.0,
+         32.0,
+         -66.0
+        ],
+        1
+       ],
+       [
+        [
+         414.0,
+         -32.0,
+         -68.0
+        ],
+        1
+       ],
+       [
+        [
+         246.0,
+         22.0,
+         -16.0
+        ],
+        1
+       ],
+       [
+        [
+         414.0,
+         32.0,
+         -68.0
+        ],
+        1
+       ],
+       [
+        [
+         660.0,
+         -30.0,
+         -50.0
+        ],
+        1
+       ],
+       [
+        [
+         660.0,
+         30.0,
+         -50.0
+        ],
+        1
+       ]
+      ],
+      "nm_loc": [],
+      "outline": [
+       [
+        503.347,
+        -69.249
+       ],
+       [
+        505.0,
+        -69.13
+       ],
+       [
+        519.307,
+        -68.1
+       ],
+       [
+        522.0,
+        -67.819
+       ],
+       [
+        530.25,
+        -66.96
+       ],
+       [
+        577.945,
+        -61.451
+       ],
+       [
+        580.8,
+        -60.935
+       ],
+       [
+        582.3,
+        -60.664
+       ],
+       [
+        589.653,
+        -59.335
+       ],
+       [
+        614.591,
+        -57.743
+       ],
+       [
+        624.245,
+        -55.735
+       ],
+       [
+        630.182,
+        -54.986
+       ],
+       [
+        653.095,
+        -53.604
+       ],
+       [
+        655.686,
+        -52.968
+       ],
+       [
+        656.074,
+        -52.826
+       ],
+       [
+        659.546,
+        -51.092
+       ],
+       [
+        659.997,
+        -50.775
+       ],
+       [
+        660.336,
+        -50.339
+       ],
+       [
+        660.532,
+        -49.824
+       ],
+       [
+        661.421,
+        -45.746
+       ],
+       [
+        661.558,
+        -45.419
+       ],
+       [
+        661.804,
+        -45.163
+       ],
+       [
+        662.125,
+        -45.012
+       ],
+       [
+        662.582,
+        -44.892
+       ],
+       [
+        663.086,
+        -44.831
+       ],
+       [
+        675.586,
+        -45.038
+       ],
+       [
+        685.411,
+        -43.568
+       ],
+       [
+        689.383,
+        -43.297
+       ],
+       [
+        740.0,
+        -43.161
+       ],
+       [
+        740.0,
+        -39.58
+       ],
+       [
+        741.959,
+        -39.821
+       ],
+       [
+        751.688,
+        -39.503
+       ],
+       [
+        830.6,
+        -39.37
+       ],
+       [
+        831.521,
+        -39.368
+       ],
+       [
+        832.1,
+        -39.426
+       ],
+       [
+        832.696,
+        -39.485
+       ],
+       [
+        833.088,
+        -39.453
+       ],
+       [
+        833.443,
+        -39.284
+       ],
+       [
+        833.716,
+        -39.0
+       ],
+       [
+        833.87,
+        -38.638
+       ],
+       [
+        835.565,
+        -31.15
+       ],
+       [
+        836.923,
+        -25.15
+       ],
+       [
+        837.185,
+        -23.993
+       ],
+       [
+        838.154,
+        -18.095
+       ],
+       [
+        838.36,
+        3.89
+       ],
+       [
+        838.13,
+        11.754
+       ],
+       [
+        838.256,
+        12.726
+       ],
+       [
+        838.248,
+        13.073
+       ],
+       [
+        838.134,
+        13.401
+       ],
+       [
+        837.926,
+        13.679
+       ],
+       [
+        837.643,
+        13.88
+       ],
+       [
+        836.546,
+        14.428
+       ],
+       [
+        835.888,
+        14.616
+       ],
+       [
+        832.1,
+        14.971
+       ],
+       [
+        830.534,
+        15.117
+       ],
+       [
+        744.515,
+        15.268
+       ],
+       [
+        662.525,
+        17.651
+       ],
+       [
+        600.527,
+        16.711
+       ],
+       [
+        588.794,
+        18.356
+       ],
+       [
+        583.198,
+        18.437
+       ],
+       [
+        582.535,
+        18.325
+       ],
+       [
+        581.787,
+        18.052
+       ],
+       [
+        581.299,
+        17.946
+       ],
+       [
+        580.8,
+        17.973
+       ],
+       [
+        580.327,
+        18.132
+       ],
+       [
+        578.264,
+        19.151
+       ],
+       [
+        575.712,
+        19.865
+       ],
+       [
+        575.277,
+        19.932
+       ],
+       [
+        569.517,
+        20.138
+       ],
+       [
+        569.448,
+        20.128
+       ],
+       [
+        569.387,
+        20.095
+       ],
+       [
+        569.34,
+        20.043
+       ],
+       [
+        569.314,
+        19.979
+       ],
+       [
+        569.311,
+        19.909
+       ],
+       [
+        569.333,
+        19.843
+       ],
+       [
+        569.369,
+        19.774
+       ],
+       [
+        569.489,
+        19.457
+       ],
+       [
+        569.529,
+        19.12
+       ],
+       [
+        569.508,
+        16.572
+       ],
+       [
+        569.457,
+        16.284
+       ],
+       [
+        569.314,
+        16.028
+       ],
+       [
+        569.096,
+        15.833
+       ],
+       [
+        568.826,
+        15.72
+       ],
+       [
+        568.533,
+        15.702
+       ],
+       [
+        567.352,
+        15.826
+       ],
+       [
+        560.071,
+        15.328
+       ],
+       [
+        559.662,
+        15.345
+       ],
+       [
+        558.84,
+        15.471
+       ],
+       [
+        558.59,
+        15.466
+       ],
+       [
+        558.356,
+        15.377
+       ],
+       [
+        558.166,
+        15.214
+       ],
+       [
+        558.043,
+        14.997
+       ],
+       [
+        558.0,
+        14.751
+       ],
+       [
+        558.0,
+        -8.278
+       ],
+       [
+        557.956,
+        -8.535
+       ],
+       [
+        557.827,
+        -8.763
+       ],
+       [
+        557.63,
+        -8.934
+       ],
+       [
+        557.387,
+        -9.029
+       ],
+       [
+        557.126,
+        -9.037
+       ],
+       [
+        556.058,
+        -8.888
+       ],
+       [
+        549.327,
+        -9.159
+       ],
+       [
+        522.0,
+        -9.161
+       ],
+       [
+        505.0,
+        -9.162
+       ],
+       [
+        414.0,
+        -9.169
+       ],
+       [
+        404.0,
+        -9.17
+       ],
+       [
+        393.284,
+        -9.171
+       ],
+       [
+        385.87,
+        -10.32
+       ],
+       [
+        354.407,
+        -11.574
+       ],
+       [
+        342.118,
+        -10.547
+       ],
+       [
+        329.178,
+        -10.589
+       ],
+       [
+        325.297,
+        -11.164
+       ],
+       [
+        317.793,
+        -13.545
+       ],
+       [
+        313.877,
+        -13.954
+       ],
+       [
+        290.0,
+        -14.048
+       ],
+       [
+        247.83,
+        -14.214
+       ],
+       [
+        247.137,
+        -14.351
+       ],
+       [
+        246.544,
+        -14.737
+       ],
+       [
+        245.61,
+        -15.64
+       ],
+       [
+        245.305,
+        -16.026
+       ],
+       [
+        245.112,
+        -16.479
+       ],
+       [
+        245.044,
+        -16.966
+       ],
+       [
+        244.996,
+        -25.15
+       ],
+       [
+        244.96,
+        -31.15
+       ],
+       [
+        244.823,
+        -54.54
+       ],
+       [
+        244.898,
+        -55.026
+       ],
+       [
+        245.121,
+        -55.465
+       ],
+       [
+        245.188,
+        -55.557
+       ],
+       [
+        245.411,
+        -55.778
+       ],
+       [
+        245.691,
+        -55.918
+       ],
+       [
+        246.002,
+        -55.965
+       ],
+       [
+        290.0,
+        -55.525
+       ],
+       [
+        318.0,
+        -55.245
+       ],
+       [
+        403.25,
+        -54.393
+       ],
+       [
+        404.0,
+        -54.414
+       ],
+       [
+        408.268,
+        -54.533
+       ],
+       [
+        408.965,
+        -54.69
+       ],
+       [
+        409.551,
+        -55.097
+       ],
+       [
+        410.491,
+        -56.066
+       ],
+       [
+        410.865,
+        -56.625
+       ],
+       [
+        411.015,
+        -57.281
+       ],
+       [
+        411.36,
+        -65.271
+       ],
+       [
+        411.262,
+        -66.592
+       ],
+       [
+        411.298,
+        -67.118
+       ],
+       [
+        411.48,
+        -67.612
+       ],
+       [
+        411.793,
+        -68.036
+       ],
+       [
+        412.533,
+        -68.786
+       ],
+       [
+        412.92,
+        -69.086
+       ],
+       [
+        413.373,
+        -69.275
+       ],
+       [
+        413.859,
+        -69.339
+       ]
+      ],
+      "raw_outline": [
+       [
+        503.35,
+        -69.34
+       ],
+       [
+        522.16,
+        -67.89
+       ],
+       [
+        582.338,
+        -60.969
+       ],
+       [
+        586.154,
+        -59.487
+       ],
+       [
+        618.131,
+        -57.597
+       ],
+       [
+        621.897,
+        -55.874
+       ],
+       [
+        635.018,
+        -54.459
+       ],
+       [
+        655.758,
+        -53.667
+       ],
+       [
+        660.342,
+        -50.694
+       ],
+       [
+        661.548,
+        -45.163
+       ],
+       [
+        663.257,
+        -44.354
+       ],
+       [
+        676.388,
+        -45.342
+       ],
+       [
+        685.807,
+        -43.26
+       ],
+       [
+        740.0,
+        -43.26
+       ],
+       [
+        740.0,
+        -39.58
+       ],
+       [
+        745.984,
+        -39.58
+       ],
+       [
+        746.064,
+        -39.5
+       ],
+       [
+        817.328,
+        -39.5
+       ],
+       [
+        817.423,
+        -39.58
+       ],
+       [
+        833.657,
+        -39.58
+       ],
+       [
+        833.868,
+        -39.378
+       ],
+       [
+        838.36,
+        -18.597
+       ],
+       [
+        838.36,
+        13.521
+       ],
+       [
+        836.317,
+        15.13
+       ],
+       [
+        744.084,
+        15.24
+       ],
+       [
+        661.332,
+        17.72
+       ],
+       [
+        597.418,
+        16.581
+       ],
+       [
+        591.78,
+        18.42
+       ],
+       [
+        582.276,
+        18.47
+       ],
+       [
+        581.04,
+        17.78
+       ],
+       [
+        574.82,
+        20.7
+       ],
+       [
+        569.17,
+        20.15
+       ],
+       [
+        569.5,
+        19.05
+       ],
+       [
+        569.5,
+        15.6
+       ],
+       [
+        558.0,
+        15.6
+       ],
+       [
+        558.0,
+        -9.16
+       ],
+       [
+        386.75,
+        -9.16
+       ],
+       [
+        384.87,
+        -11.04
+       ],
+       [
+        385.43,
+        -11.6
+       ],
+       [
+        349.7,
+        -11.6
+       ],
+       [
+        349.14,
+        -11.04
+       ],
+       [
+        346.0,
+        -11.04
+       ],
+       [
+        346.0,
+        -10.5
+       ],
+       [
+        326.0,
+        -10.5
+       ],
+       [
+        318.0,
+        -14.0
+       ],
+       [
+        244.82,
+        -14.0
+       ],
+       [
+        244.82,
+        -55.3
+       ],
+       [
+        245.49,
+        -55.97
+       ],
+       [
+        264.187,
+        -55.97
+       ],
+       [
+        411.2,
+        -54.3
+       ],
+       [
+        411.2,
+        -67.46
+       ],
+       [
+        413.08,
+        -69.34
+       ]
+      ]
+     },
+     "slab1": {
+      "rings_simple": true,
+      "loops": 2,
+      "ring_verts": [
+       68,
+       44
+      ],
+      "breaks_snapped": 0,
+      "breaks_skipped": 0,
+      "cap_tris_+1": 112,
+      "cap_tris_-1": 112,
+      "manifold": {
+       "multi_face_edges": 0,
+       "boundary_edges": 0,
+       "wire_edges": 0,
+       "ngons": 0,
+       "zero_area_faces": 0,
+       "zero_length_edges": 0,
+       "triangles": 1788,
+       "shells": 1
+      },
+      "ud_slab": {
+       "unreal_drops": 2,
+       "edges_under_0.05mm": 0,
+       "needles_under_0.02mm": 2
+      },
+      "ud_loc": [
+       [
+        [
+         408.0,
+         8.0,
+         -104.0
+        ],
+        2
+       ],
+       [
+        [
+         408.0,
+         -8.0,
+         -104.0
+        ],
+        2
+       ],
+       [
+        [
+         406.0,
+         8.0,
+         -104.0
+        ],
+        1
+       ],
+       [
+        [
+         406.0,
+         -8.0,
+         -104.0
+        ],
+        1
+       ],
+       [
+        [
+         410.0,
+         -8.0,
+         -54.0
+        ],
+        1
+       ],
+       [
+        [
+         410.0,
+         8.0,
+         -54.0
+        ],
+        1
+       ]
+      ],
+      "nm_loc": [],
+      "outline": [
+       [
+        330.6,
+        -96.183
+       ],
+       [
+        331.447,
+        -96.814
+       ],
+       [
+        332.183,
+        -97.17
+       ],
+       [
+        332.999,
+        -97.228
+       ],
+       [
+        334.538,
+        -97.045
+       ],
+       [
+        335.127,
+        -97.075
+       ],
+       [
+        335.673,
+        -97.299
+       ],
+       [
+        336.115,
+        -97.69
+       ],
+       [
+        336.401,
+        -98.206
+       ],
+       [
+        336.5,
+        -98.788
+       ],
+       [
+        336.5,
+        -104.272
+       ],
+       [
+        336.671,
+        -105.133
+       ],
+       [
+        337.159,
+        -105.863
+       ],
+       [
+        337.889,
+        -106.351
+       ],
+       [
+        338.75,
+        -106.522
+       ],
+       [
+        397.256,
+        -106.522
+       ],
+       [
+        398.115,
+        -106.351
+       ],
+       [
+        398.845,
+        -105.865
+       ],
+       [
+        399.333,
+        -105.137
+       ],
+       [
+        399.506,
+        -104.278
+       ],
+       [
+        399.527,
+        -95.695
+       ],
+       [
+        399.758,
+        -94.279
+       ],
+       [
+        399.966,
+        -93.636
+       ],
+       [
+        402.196,
+        -89.175
+       ],
+       [
+        402.646,
+        -88.563
+       ],
+       [
+        405.07,
+        -86.222
+       ],
+       [
+        405.186,
+        -86.142
+       ],
+       [
+        405.321,
+        -86.106
+       ],
+       [
+        405.461,
+        -86.115
+       ],
+       [
+        405.59,
+        -86.171
+       ],
+       [
+        405.693,
+        -86.266
+       ],
+       [
+        405.76,
+        -86.389
+       ],
+       [
+        405.915,
+        -86.846
+       ],
+       [
+        406.032,
+        -87.485
+       ],
+       [
+        406.088,
+        -89.032
+       ],
+       [
+        405.059,
+        -102.211
+       ],
+       [
+        404.822,
+        -103.89
+       ],
+       [
+        404.835,
+        -104.482
+       ],
+       [
+        405.035,
+        -105.039
+       ],
+       [
+        405.402,
+        -105.503
+       ],
+       [
+        405.897,
+        -105.828
+       ],
+       [
+        406.43,
+        -106.065
+       ],
+       [
+        407.091,
+        -106.238
+       ],
+       [
+        407.773,
+        -106.193
+       ],
+       [
+        408.405,
+        -105.934
+       ],
+       [
+        408.617,
+        -105.804
+       ],
+       [
+        409.13,
+        -105.358
+       ],
+       [
+        409.469,
+        -104.769
+       ],
+       [
+        409.597,
+        -104.102
+       ],
+       [
+        410.417,
+        -70.75
+       ],
+       [
+        410.54,
+        -70.069
+       ],
+       [
+        410.863,
+        -69.459
+       ],
+       [
+        411.357,
+        -68.975
+       ],
+       [
+        412.389,
+        -68.237
+       ],
+       [
+        412.894,
+        -67.738
+       ],
+       [
+        413.218,
+        -67.107
+       ],
+       [
+        413.33,
+        -66.407
+       ],
+       [
+        413.33,
+        -55.157
+       ],
+       [
+        413.163,
+        -54.306
+       ],
+       [
+        412.687,
+        -53.582
+       ],
+       [
+        411.965,
+        -52.845
+       ],
+       [
+        411.496,
+        -52.479
+       ],
+       [
+        410.948,
+        -52.249
+       ],
+       [
+        410.358,
+        -52.17
+       ],
+       [
+        333.131,
+        -52.17
+       ],
+       [
+        332.322,
+        -52.32
+       ],
+       [
+        331.621,
+        -52.752
+       ],
+       [
+        330.6,
+        -53.676
+       ]
+      ],
+      "raw_outline": [
+       [
+        330.6,
+        -96.183
+       ],
+       [
+        332.141,
+        -97.33
+       ],
+       [
+        336.5,
+        -96.812
+       ],
+       [
+        336.5,
+        -106.522
+       ],
+       [
+        399.5,
+        -106.522
+       ],
+       [
+        399.5,
+        -94.2
+       ],
+       [
+        399.265,
+        -94.2
+       ],
+       [
+        400.914,
+        -92.029
+       ],
+       [
+        402.005,
+        -88.805
+       ],
+       [
+        405.547,
+        -85.761
+       ],
+       [
+        406.158,
+        -86.372
+       ],
+       [
+        405.872,
+        -101.225
+       ],
+       [
+        404.223,
+        -103.127
+       ],
+       [
+        404.608,
+        -105.255
+       ],
+       [
+        407.459,
+        -106.522
+       ],
+       [
+        409.57,
+        -105.22
+       ],
+       [
+        409.57,
+        -69.59
+       ],
+       [
+        411.304,
+        -69.59
+       ],
+       [
+        413.33,
+        -67.564
+       ],
+       [
+        413.33,
+        -54.196
+       ],
+       [
+        411.304,
+        -52.17
+       ],
+       [
+        332.106,
+        -52.17
+       ],
+       [
+        330.6,
+        -53.676
+       ]
+      ]
+     }
     }
    },
    "butt": {
@@ -1897,38 +3331,344 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1950,
+    "triangles": 1178,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.034907,
+     "min_area_mm2": 0.025153,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.32,
+    "seconds": 0.47,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
      "unreal_drops": 0,
-     "edges_under_0.05mm": 3,
-     "needles_under_0.02mm": 6,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0
-    },
-    "round_shell": {
-     "edges_rounded": 209,
-     "shell_drops_before_repair": 0,
-     "shell_drops_after": 0
     },
     "protected_repair": {
      "needed": true,
-     "collapses": 0,
+     "collapses": 2,
      "reverted": false,
-     "drops_before": 0,
+     "drops_before": 2,
      "drops_after": 0,
-     "pass_after": false
+     "pass_after": true
+    },
+    "rim_slab": {
+     "slab0": {
+      "rings_simple": true,
+      "loops": 1,
+      "ring_verts": [
+       44
+      ],
+      "breaks_snapped": 2,
+      "breaks_skipped": 1,
+      "cap_tris_+1": 42,
+      "cap_tris_-1": 42,
+      "manifold": {
+       "multi_face_edges": 0,
+       "boundary_edges": 0,
+       "wire_edges": 0,
+       "ngons": 0,
+       "zero_area_faces": 0,
+       "zero_length_edges": 0,
+       "triangles": 694,
+       "shells": 1
+      },
+      "ud_slab": {
+       "unreal_drops": 2,
+       "edges_under_0.05mm": 0,
+       "needles_under_0.02mm": 0
+      },
+      "ud_loc": [
+       [
+        [
+         90.0,
+         -30.0,
+         -142.0
+        ],
+        1
+       ],
+       [
+        [
+         90.0,
+         30.0,
+         -142.0
+        ],
+        1
+       ]
+      ],
+      "nm_loc": [],
+      "outline": [
+       [
+        89.111,
+        -143.253
+       ],
+       [
+        89.491,
+        -143.185
+       ],
+       [
+        89.849,
+        -143.04
+       ],
+       [
+        91.833,
+        -141.983
+       ],
+       [
+        92.24,
+        -141.689
+       ],
+       [
+        93.182,
+        -140.794
+       ],
+       [
+        93.597,
+        -140.208
+       ],
+       [
+        96.473,
+        -133.806
+       ],
+       [
+        96.693,
+        -133.436
+       ],
+       [
+        96.993,
+        -133.127
+       ],
+       [
+        98.432,
+        -131.952
+       ],
+       [
+        99.053,
+        -131.618
+       ],
+       [
+        99.754,
+        -131.538
+       ],
+       [
+        108.598,
+        -132.232
+       ],
+       [
+        109.08,
+        -132.207
+       ],
+       [
+        117.062,
+        -130.738
+       ],
+       [
+        117.729,
+        -130.474
+       ],
+       [
+        118.247,
+        -129.978
+       ],
+       [
+        143.043,
+        -94.705
+       ],
+       [
+        151.165,
+        -86.557
+       ],
+       [
+        151.724,
+        -86.171
+       ],
+       [
+        152.385,
+        -86.013
+       ],
+       [
+        190.0,
+        -84.048
+       ],
+       [
+        197.385,
+        -83.662
+       ],
+       [
+        200.032,
+        -83.311
+       ],
+       [
+        200.567,
+        -83.156
+       ],
+       [
+        202.981,
+        -82.041
+       ],
+       [
+        212.0,
+        -76.647
+       ],
+       [
+        222.0,
+        -70.666
+       ],
+       [
+        222.0,
+        -55.97
+       ],
+       [
+        243.666,
+        -55.902
+       ],
+       [
+        244.066,
+        -55.822
+       ],
+       [
+        244.406,
+        -55.594
+       ],
+       [
+        244.78,
+        -55.22
+       ],
+       [
+        244.78,
+        -14.809
+       ],
+       [
+        212.024,
+        -14.77
+       ],
+       [
+        212.0,
+        -17.9
+       ],
+       [
+        190.0,
+        -17.9
+       ],
+       [
+        179.161,
+        -17.9
+       ],
+       [
+        179.0,
+        -16.7
+       ],
+       [
+        70.644,
+        -16.846
+       ],
+       [
+        68.92,
+        -18.57
+       ],
+       [
+        68.92,
+        -142.69
+       ],
+       [
+        86.6,
+        -143.437
+       ]
+      ],
+      "raw_outline": [
+       [
+        89.6,
+        -143.57
+       ],
+       [
+        93.7,
+        -140.81
+       ],
+       [
+        96.39,
+        -133.29
+       ],
+       [
+        99.01,
+        -131.48
+       ],
+       [
+        108.41,
+        -132.46
+       ],
+       [
+        117.81,
+        -130.6
+       ],
+       [
+        143.64,
+        -93.79
+       ],
+       [
+        151.67,
+        -86.05
+       ],
+       [
+        200.56,
+        -83.5
+       ],
+       [
+        222.0,
+        -70.666
+       ],
+       [
+        222.0,
+        -55.97
+       ],
+       [
+        244.03,
+        -55.97
+       ],
+       [
+        244.78,
+        -55.22
+       ],
+       [
+        244.78,
+        -14.809
+       ],
+       [
+        212.0,
+        -14.77
+       ],
+       [
+        212.0,
+        -17.9
+       ],
+       [
+        179.0,
+        -17.9
+       ],
+       [
+        179.0,
+        -16.7
+       ],
+       [
+        70.79,
+        -16.7
+       ],
+       [
+        68.92,
+        -18.57
+       ],
+       [
+        68.92,
+        -142.69
+       ]
+      ]
+     }
     }
    },
    "butt_pad": {
@@ -1938,25 +3678,353 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1248,
+    "triangles": 1390,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.011773,
+     "min_area_mm2": 0.010271,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
-     "pass_ud2": false
+     "pass_ud2": true
     },
     "seconds": 0.47,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 24,
-     "edges_under_0.05mm": 12,
-     "needles_under_0.02mm": 14,
-     "strip_polygons_under_0.1mm": 24
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 0,
+     "strip_polygons_under_0.1mm": 0
+    },
+    "fine_fix": {
+     "collapses": 15,
+     "reverted": false,
+     "drops_before": 2,
+     "drops_after": 0,
+     "pass_after": true
+    },
+    "rim_slab": {
+     "slab0": {
+      "rings_simple": true,
+      "loops": 1,
+      "ring_verts": [
+       46
+      ],
+      "breaks_snapped": 0,
+      "breaks_skipped": 0,
+      "ring_folds_fixed": [
+       [
+        0,
+        [
+         [
+          48.7,
+          -149.35
+         ],
+         [
+          48.78,
+          -149.31
+         ]
+        ],
+        1
+       ],
+       [
+        1,
+        [
+         [
+          49.41,
+          -150.26
+         ],
+         [
+          49.73,
+          -149.97
+         ]
+        ],
+        1
+       ]
+      ],
+      "cap_tris_+1": 44,
+      "cap_tris_-1": 44,
+      "manifold": {
+       "multi_face_edges": 0,
+       "boundary_edges": 0,
+       "wire_edges": 0,
+       "ngons": 0,
+       "zero_area_faces": 0,
+       "zero_length_edges": 0,
+       "triangles": 908,
+       "shells": 1
+      },
+      "ud_slab": {
+       "unreal_drops": 2,
+       "edges_under_0.05mm": 0,
+       "needles_under_0.02mm": 2
+      },
+      "ud_loc": [
+       [
+        [
+         48.0,
+         -30.0,
+         -150.0
+        ],
+        1
+       ],
+       [
+        [
+         48.0,
+         30.0,
+         -150.0
+        ],
+        1
+       ]
+      ],
+      "nm_loc": [],
+      "outline": [
+       [
+        2.496,
+        11.898
+       ],
+       [
+        2.04,
+        10.694
+       ],
+       [
+        1.368,
+        7.528
+       ],
+       [
+        0.492,
+        -4.412
+       ],
+       [
+        2.178,
+        -72.322
+       ],
+       [
+        0.041,
+        -134.223
+       ],
+       [
+        0.052,
+        -144.203
+       ],
+       [
+        0.551,
+        -147.414
+       ],
+       [
+        0.936,
+        -148.628
+       ],
+       [
+        1.661,
+        -150.096
+       ],
+       [
+        2.301,
+        -151.041
+       ],
+       [
+        2.769,
+        -151.563
+       ],
+       [
+        3.648,
+        -152.306
+       ],
+       [
+        4.155,
+        -152.627
+       ],
+       [
+        5.338,
+        -153.141
+       ],
+       [
+        6.914,
+        -153.554
+       ],
+       [
+        8.022,
+        -153.691
+       ],
+       [
+        42.377,
+        -153.332
+       ],
+       [
+        47.412,
+        -152.999
+       ],
+       [
+        48.96,
+        -152.591
+       ],
+       [
+        49.893,
+        -152.141
+       ],
+       [
+        50.561,
+        -151.726
+       ],
+       [
+        51.125,
+        -151.179
+       ],
+       [
+        51.256,
+        -151.022
+       ],
+       [
+        52.002,
+        -149.697
+       ],
+       [
+        52.473,
+        -148.323
+       ],
+       [
+        52.69,
+        -147.264
+       ],
+       [
+        52.862,
+        -144.885
+       ],
+       [
+        52.876,
+        3.967
+       ],
+       [
+        52.41,
+        9.187
+       ],
+       [
+        52.106,
+        10.421
+       ],
+       [
+        51.464,
+        11.97
+       ],
+       [
+        50.889,
+        12.954
+       ],
+       [
+        50.066,
+        14.004
+       ],
+       [
+        49.444,
+        14.644
+       ],
+       [
+        48.702,
+        15.137
+       ],
+       [
+        47.792,
+        15.612
+       ],
+       [
+        46.338,
+        16.059
+       ],
+       [
+        44.25,
+        16.303
+       ],
+       [
+        8.343,
+        16.06
+       ],
+       [
+        7.051,
+        15.843
+       ],
+       [
+        5.993,
+        15.518
+       ],
+       [
+        5.501,
+        15.292
+       ],
+       [
+        4.393,
+        14.551
+       ],
+       [
+        4.04,
+        14.223
+       ],
+       [
+        3.248,
+        13.221
+       ]
+      ],
+      "raw_outline": [
+       [
+        1.68,
+        11.52
+       ],
+       [
+        0.4,
+        -3.52
+       ],
+       [
+        2.24,
+        -73.11
+       ],
+       [
+        0.0,
+        -134.44
+       ],
+       [
+        0.0,
+        -146.778
+       ],
+       [
+        0.26,
+        -148.33
+       ],
+       [
+        3.09,
+        -152.91
+       ],
+       [
+        6.85,
+        -153.94
+       ],
+       [
+        50.11,
+        -153.2
+       ],
+       [
+        52.88,
+        -149.593
+       ],
+       [
+        52.88,
+        9.752
+       ],
+       [
+        50.11,
+        14.92
+       ],
+       [
+        48.23,
+        16.36
+       ],
+       [
+        4.97,
+        16.13
+       ]
+      ]
+     }
     }
    },
    "pad_plate": {
@@ -1994,38 +4062,440 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 1396,
+    "triangles": 938,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.014556,
+     "min_area_mm2": 0.01172,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
-     "pass_ud2": false
+     "pass_ud2": true
     },
-    "seconds": 1.19,
+    "seconds": 0.69,
     "bone": "cheek_riser",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 2,
-     "edges_under_0.05mm": 2,
-     "needles_under_0.02mm": 4,
+     "unreal_drops": 0,
+     "edges_under_0.05mm": 0,
+     "needles_under_0.02mm": 1,
      "strip_polygons_under_0.1mm": 0
-    },
-    "round_shell": {
-     "edges_rounded": 79,
-     "shell_drops_before_repair": 13,
-     "shell_drops_after": 2
     },
     "protected_repair": {
      "needed": true,
-     "collapses": 0,
+     "collapses": 8,
      "reverted": false,
-     "drops_before": 2,
-     "drops_after": 2,
+     "drops_before": 6,
+     "drops_after": 4,
      "pass_after": false
+    },
+    "fine_fix": {
+     "collapses": 7,
+     "reverted": false,
+     "drops_before": 4,
+     "drops_after": 0,
+     "pass_after": false
+    },
+    "rim_slab": {
+     "slab0": {
+      "rings_simple": true,
+      "loops": 1,
+      "ring_verts": [
+       26
+      ],
+      "breaks_snapped": 0,
+      "breaks_skipped": 0,
+      "cap_tris_+1": 24,
+      "cap_tris_-1": 24,
+      "manifold": {
+       "multi_face_edges": 0,
+       "boundary_edges": 0,
+       "wire_edges": 0,
+       "ngons": 0,
+       "zero_area_faces": 0,
+       "zero_length_edges": 0,
+       "triangles": 412,
+       "shells": 1
+      },
+      "ud_slab": {
+       "unreal_drops": 0,
+       "edges_under_0.05mm": 0,
+       "needles_under_0.02mm": 0
+      },
+      "ud_loc": [
+       [
+        [
+         70.0,
+         -34.0,
+         2.0
+        ],
+        1
+       ],
+       [
+        [
+         70.0,
+         34.0,
+         2.0
+        ],
+        1
+       ],
+       [
+        [
+         84.0,
+         -34.0,
+         -16.0
+        ],
+        1
+       ],
+       [
+        [
+         84.0,
+         34.0,
+         -16.0
+        ],
+        1
+       ],
+       [
+        [
+         178.0,
+         -34.0,
+         -12.0
+        ],
+        1
+       ],
+       [
+        [
+         178.0,
+         34.0,
+         -12.0
+        ],
+        1
+       ]
+      ],
+      "nm_loc": [],
+      "outline": [
+       [
+        68.9,
+        3.27
+       ],
+       [
+        68.963,
+        2.789
+       ],
+       [
+        69.149,
+        2.34
+       ],
+       [
+        69.445,
+        1.955
+       ],
+       [
+        74.4,
+        -3.0
+       ],
+       [
+        83.444,
+        -15.623
+       ],
+       [
+        83.856,
+        -16.04
+       ],
+       [
+        84.377,
+        -16.308
+       ],
+       [
+        84.956,
+        -16.4
+       ],
+       [
+        175.23,
+        -16.4
+       ],
+       [
+        175.941,
+        -16.258
+       ],
+       [
+        176.545,
+        -15.855
+       ],
+       [
+        179.355,
+        -13.045
+       ],
+       [
+        179.651,
+        -12.66
+       ],
+       [
+        179.837,
+        -12.211
+       ],
+       [
+        179.9,
+        -11.73
+       ],
+       [
+        179.9,
+        29.14
+       ],
+       [
+        179.758,
+        29.852
+       ],
+       [
+        179.355,
+        30.455
+       ],
+       [
+        178.752,
+        30.858
+       ],
+       [
+        178.04,
+        31.0
+       ],
+       [
+        70.76,
+        31.0
+       ],
+       [
+        70.048,
+        30.858
+       ],
+       [
+        69.445,
+        30.455
+       ],
+       [
+        69.042,
+        29.852
+       ],
+       [
+        68.9,
+        29.14
+       ]
+      ],
+      "raw_outline": [
+       [
+        68.9,
+        2.5
+       ],
+       [
+        74.4,
+        -3.0
+       ],
+       [
+        84.0,
+        -16.4
+       ],
+       [
+        176.0,
+        -16.4
+       ],
+       [
+        179.9,
+        -12.5
+       ],
+       [
+        179.9,
+        31.0
+       ],
+       [
+        68.9,
+        31.0
+       ]
+      ]
+     },
+     "slab1": {
+      "rings_simple": true,
+      "loops": 1,
+      "ring_verts": [
+       25
+      ],
+      "breaks_snapped": 0,
+      "breaks_skipped": 0,
+      "cap_tris_+1": 23,
+      "cap_tris_-1": 23,
+      "manifold": {
+       "multi_face_edges": 0,
+       "boundary_edges": 0,
+       "wire_edges": 0,
+       "ngons": 0,
+       "zero_area_faces": 0,
+       "zero_length_edges": 0,
+       "triangles": 396,
+       "shells": 1
+      },
+      "ud_slab": {
+       "unreal_drops": 0,
+       "edges_under_0.05mm": 0,
+       "needles_under_0.02mm": 0
+      },
+      "ud_loc": [
+       [
+        [
+         208.0,
+         -28.0,
+         20.0
+        ],
+        1
+       ],
+       [
+        [
+         208.0,
+         28.0,
+         20.0
+        ],
+        1
+       ]
+      ],
+      "nm_loc": [],
+      "outline": [
+       [
+        194.317,
+        -4.7
+       ],
+       [
+        195.018,
+        -4.563
+       ],
+       [
+        195.615,
+        -4.173
+       ],
+       [
+        199.832,
+        -0.067
+       ],
+       [
+        200.17,
+        0.381
+       ],
+       [
+        208.169,
+        15.171
+       ],
+       [
+        209.398,
+        18.542
+       ],
+       [
+        209.505,
+        19.04
+       ],
+       [
+        209.473,
+        19.548
+       ],
+       [
+        207.768,
+        27.986
+       ],
+       [
+        207.577,
+        28.509
+       ],
+       [
+        207.241,
+        28.952
+       ],
+       [
+        205.676,
+        30.471
+       ],
+       [
+        205.076,
+        30.862
+       ],
+       [
+        204.373,
+        30.997
+       ],
+       [
+        181.353,
+        30.907
+       ],
+       [
+        180.643,
+        30.764
+       ],
+       [
+        180.042,
+        30.36
+       ],
+       [
+        179.641,
+        29.757
+       ],
+       [
+        179.5,
+        29.047
+       ],
+       [
+        179.5,
+        -2.84
+       ],
+       [
+        179.642,
+        -3.552
+       ],
+       [
+        180.045,
+        -4.155
+       ],
+       [
+        180.648,
+        -4.558
+       ],
+       [
+        181.36,
+        -4.7
+       ]
+      ],
+      "raw_outline": [
+       [
+        195.073,
+        -4.7
+       ],
+       [
+        200.035,
+        0.131
+       ],
+       [
+        208.169,
+        15.171
+       ],
+       [
+        209.577,
+        19.034
+       ],
+       [
+        207.654,
+        28.55
+       ],
+       [
+        205.132,
+        31.0
+       ],
+       [
+        184.151,
+        31.0
+       ],
+       [
+        179.5,
+        30.9
+       ],
+       [
+        179.5,
+        -4.7
+       ]
+      ]
+     }
     }
    },
    "riser_posts": {
@@ -2046,7 +4516,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.06,
+    "seconds": 0.03,
     "bone": "cheek_riser",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2074,7 +4544,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.09,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2102,7 +4572,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.43,
+    "seconds": 0.29,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2130,7 +4600,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.98,
+    "seconds": 1.49,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2158,7 +4628,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.2,
+    "seconds": 0.14,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2186,7 +4656,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.15,
+    "seconds": 0.1,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2214,7 +4684,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.76,
+    "seconds": 0.54,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2242,7 +4712,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.21,
+    "seconds": 0.16,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2270,7 +4740,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.21,
+    "seconds": 0.15,
     "bone": "selector",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2298,7 +4768,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.06,
+    "seconds": 0.04,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2326,7 +4796,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.17,
+    "seconds": 0.11,
     "bone": "trigger",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2354,7 +4824,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.2,
+    "seconds": 0.15,
     "bone": "mag_release",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2371,38 +4841,919 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 2216,
+    "triangles": 2358,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.027944,
+     "min_area_mm2": 0.012248,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
-     "pass_ud2": false
+     "pass_ud2": true
     },
-    "seconds": 1.31,
+    "seconds": 1.44,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
-     "unreal_drops": 0,
-     "edges_under_0.05mm": 0,
-     "needles_under_0.02mm": 0,
+     "unreal_drops": 7,
+     "edges_under_0.05mm": 4,
+     "needles_under_0.02mm": 10,
      "strip_polygons_under_0.1mm": 0
-    },
-    "round_shell": {
-     "edges_rounded": 178,
-     "shell_drops_before_repair": 26,
-     "shell_drops_after": 0
     },
     "protected_repair": {
      "needed": true,
+     "collapses": 6,
+     "reverted": false,
+     "drops_before": 10,
+     "drops_after": 7,
+     "pass_after": false
+    },
+    "fine_fix": {
      "collapses": 2,
      "reverted": false,
-     "drops_before": 0,
-     "drops_after": 0,
+     "drops_before": 7,
+     "drops_after": 7,
      "pass_after": false
+    },
+    "rim_slab": {
+     "slab0": {
+      "rings_simple": true,
+      "loops": 1,
+      "ring_verts": [
+       138
+      ],
+      "breaks_snapped": 6,
+      "breaks_skipped": 23,
+      "ring_folds_fixed": [
+       [
+        0,
+        [
+         [
+          226.64,
+          -62.0
+         ],
+         [
+          224.77,
+          -64.78
+         ]
+        ],
+        7
+       ],
+       [
+        1,
+        [
+         [
+          225.56,
+          -62.0
+         ],
+         [
+          225.11,
+          -65.8
+         ]
+        ],
+        5
+       ],
+       [
+        2,
+        [
+         [
+          224.65,
+          -66.6
+         ],
+         [
+          224.76,
+          -66.7
+         ]
+        ],
+        5
+       ]
+      ],
+      "cap_tris_+1": 136,
+      "cap_tris_-1": 136,
+      "manifold": {
+       "multi_face_edges": 0,
+       "boundary_edges": 0,
+       "wire_edges": 0,
+       "ngons": 0,
+       "zero_area_faces": 0,
+       "zero_length_edges": 0,
+       "triangles": 3192,
+       "shells": 1
+      },
+      "ud_slab": {
+       "unreal_drops": 3,
+       "edges_under_0.05mm": 0,
+       "needles_under_0.02mm": 0
+      },
+      "ud_loc": [
+       [
+        [
+         298.0,
+         16.0,
+         -162.0
+        ],
+        2
+       ],
+       [
+        [
+         312.0,
+         -16.0,
+         -118.0
+        ],
+        2
+       ],
+       [
+        [
+         312.0,
+         16.0,
+         -118.0
+        ],
+        2
+       ],
+       [
+        [
+         298.0,
+         -16.0,
+         -162.0
+        ],
+        1
+       ]
+      ],
+      "nm_loc": [],
+      "outline": [
+       [
+        223.451,
+        -56.66
+       ],
+       [
+        223.135,
+        -59.524
+       ],
+       [
+        223.142,
+        -62.0
+       ],
+       [
+        223.155,
+        -66.528
+       ],
+       [
+        223.257,
+        -67.085
+       ],
+       [
+        223.548,
+        -67.57
+       ],
+       [
+        223.991,
+        -67.923
+       ],
+       [
+        224.176,
+        -68.022
+       ],
+       [
+        224.728,
+        -68.22
+       ],
+       [
+        225.314,
+        -68.248
+       ],
+       [
+        225.883,
+        -68.104
+       ],
+       [
+        240.444,
+        -62.0
+       ],
+       [
+        241.545,
+        -61.539
+       ],
+       [
+        245.343,
+        -60.441
+       ],
+       [
+        283.201,
+        -57.376
+       ],
+       [
+        284.284,
+        -57.49
+       ],
+       [
+        285.048,
+        -57.664
+       ],
+       [
+        285.75,
+        -58.012
+       ],
+       [
+        285.899,
+        -58.109
+       ],
+       [
+        286.482,
+        -58.621
+       ],
+       [
+        286.899,
+        -59.276
+       ],
+       [
+        287.475,
+        -60.549
+       ],
+       [
+        287.841,
+        -61.753
+       ],
+       [
+        288.125,
+        -63.455
+       ],
+       [
+        288.176,
+        -64.633
+       ],
+       [
+        287.911,
+        -67.999
+       ],
+       [
+        287.529,
+        -69.64
+       ],
+       [
+        287.122,
+        -70.752
+       ],
+       [
+        286.457,
+        -71.732
+       ],
+       [
+        284.475,
+        -74.0
+       ],
+       [
+        283.438,
+        -75.186
+       ],
+       [
+        281.233,
+        -78.977
+       ],
+       [
+        280.618,
+        -79.813
+       ],
+       [
+        274.954,
+        -86.0
+       ],
+       [
+        272.207,
+        -89.001
+       ],
+       [
+        270.033,
+        -92.0
+       ],
+       [
+        265.683,
+        -98.0
+       ],
+       [
+        261.648,
+        -103.566
+       ],
+       [
+        261.43,
+        -104.0
+       ],
+       [
+        258.415,
+        -110.0
+       ],
+       [
+        255.4,
+        -116.0
+       ],
+       [
+        252.386,
+        -122.0
+       ],
+       [
+        250.428,
+        -125.896
+       ],
+       [
+        249.695,
+        -128.0
+       ],
+       [
+        247.604,
+        -134.0
+       ],
+       [
+        245.514,
+        -140.0
+       ],
+       [
+        245.336,
+        -140.51
+       ],
+       [
+        245.103,
+        -141.508
+       ],
+       [
+        244.823,
+        -143.761
+       ],
+       [
+        244.812,
+        -144.857
+       ],
+       [
+        245.046,
+        -145.926
+       ],
+       [
+        245.32,
+        -146.728
+       ],
+       [
+        246.157,
+        -148.233
+       ],
+       [
+        247.066,
+        -149.344
+       ],
+       [
+        247.984,
+        -150.208
+       ],
+       [
+        250.472,
+        -152.0
+       ],
+       [
+        253.957,
+        -154.511
+       ],
+       [
+        254.578,
+        -155.07
+       ],
+       [
+        255.064,
+        -155.75
+       ],
+       [
+        255.307,
+        -156.182
+       ],
+       [
+        255.729,
+        -157.179
+       ],
+       [
+        255.972,
+        -158.0
+       ],
+       [
+        256.416,
+        -159.497
+       ],
+       [
+        256.606,
+        -160.823
+       ],
+       [
+        256.626,
+        -162.029
+       ],
+       [
+        256.586,
+        -162.401
+       ],
+       [
+        256.624,
+        -162.874
+       ],
+       [
+        256.834,
+        -163.301
+       ],
+       [
+        257.185,
+        -163.62
+       ],
+       [
+        258.444,
+        -164.392
+       ],
+       [
+        260.113,
+        -165.03
+       ],
+       [
+        262.087,
+        -165.389
+       ],
+       [
+        279.061,
+        -166.227
+       ],
+       [
+        296.05,
+        -165.932
+       ],
+       [
+        297.153,
+        -165.761
+       ],
+       [
+        298.668,
+        -165.259
+       ],
+       [
+        298.88,
+        -165.147
+       ],
+       [
+        300.172,
+        -164.143
+       ],
+       [
+        300.304,
+        -163.998
+       ],
+       [
+        300.772,
+        -163.343
+       ],
+       [
+        301.08,
+        -162.6
+       ],
+       [
+        301.131,
+        -162.425
+       ],
+       [
+        301.292,
+        -160.818
+       ],
+       [
+        301.257,
+        -160.384
+       ],
+       [
+        300.984,
+        -159.122
+       ],
+       [
+        300.579,
+        -158.0
+       ],
+       [
+        299.806,
+        -155.86
+       ],
+       [
+        299.523,
+        -154.434
+       ],
+       [
+        299.445,
+        -152.737
+       ],
+       [
+        299.509,
+        -151.701
+       ],
+       [
+        299.804,
+        -149.97
+       ],
+       [
+        300.19,
+        -148.733
+       ],
+       [
+        301.466,
+        -146.0
+       ],
+       [
+        304.267,
+        -140.0
+       ],
+       [
+        307.067,
+        -134.0
+       ],
+       [
+        308.363,
+        -131.224
+       ],
+       [
+        310.151,
+        -128.0
+       ],
+       [
+        310.924,
+        -126.605
+       ],
+       [
+        312.706,
+        -123.008
+       ],
+       [
+        313.402,
+        -122.0
+       ],
+       [
+        314.198,
+        -120.848
+       ],
+       [
+        314.592,
+        -120.081
+       ],
+       [
+        314.776,
+        -119.239
+       ],
+       [
+        314.793,
+        -119.043
+       ],
+       [
+        314.954,
+        -118.187
+       ],
+       [
+        315.281,
+        -117.38
+       ],
+       [
+        316.007,
+        -116.0
+       ],
+       [
+        316.68,
+        -114.72
+       ],
+       [
+        318.209,
+        -110.0
+       ],
+       [
+        319.869,
+        -104.875
+       ],
+       [
+        320.4,
+        -103.753
+       ],
+       [
+        321.357,
+        -102.258
+       ],
+       [
+        322.015,
+        -101.442
+       ],
+       [
+        324.012,
+        -99.449
+       ],
+       [
+        324.964,
+        -98.71
+       ],
+       [
+        325.364,
+        -98.473
+       ],
+       [
+        326.663,
+        -98.0
+       ],
+       [
+        326.985,
+        -97.883
+       ],
+       [
+        332.508,
+        -96.973
+       ],
+       [
+        334.109,
+        -96.408
+       ],
+       [
+        335.418,
+        -95.326
+       ],
+       [
+        336.273,
+        -93.859
+       ],
+       [
+        336.57,
+        -92.188
+       ],
+       [
+        336.57,
+        -86.0
+       ],
+       [
+        336.57,
+        -80.0
+       ],
+       [
+        336.57,
+        -74.0
+       ],
+       [
+        336.57,
+        -68.0
+       ],
+       [
+        336.57,
+        -62.0
+       ],
+       [
+        336.57,
+        -54.85
+       ],
+       [
+        336.201,
+        -52.994
+       ],
+       [
+        335.149,
+        -51.421
+       ],
+       [
+        333.576,
+        -50.369
+       ],
+       [
+        331.72,
+        -50.0
+       ],
+       [
+        226.897,
+        -50.0
+       ],
+       [
+        225.718,
+        -50.224
+       ],
+       [
+        224.704,
+        -50.866
+       ],
+       [
+        223.996,
+        -51.836
+       ],
+       [
+        223.694,
+        -52.997
+       ]
+      ],
+      "raw_outline": [
+       [
+        223.451,
+        -56.66
+       ],
+       [
+        223.135,
+        -59.524
+       ],
+       [
+        223.157,
+        -67.475
+       ],
+       [
+        225.01,
+        -68.47
+       ],
+       [
+        241.545,
+        -61.539
+       ],
+       [
+        245.343,
+        -60.441
+       ],
+       [
+        283.201,
+        -57.376
+       ],
+       [
+        285.08,
+        -57.574
+       ],
+       [
+        286.569,
+        -58.547
+       ],
+       [
+        287.737,
+        -61.127
+       ],
+       [
+        288.223,
+        -64.041
+       ],
+       [
+        287.911,
+        -67.999
+       ],
+       [
+        287.254,
+        -70.82
+       ],
+       [
+        283.438,
+        -75.186
+       ],
+       [
+        280.971,
+        -79.428
+       ],
+       [
+        272.207,
+        -89.001
+       ],
+       [
+        261.648,
+        -103.566
+       ],
+       [
+        250.428,
+        -125.896
+       ],
+       [
+        245.167,
+        -140.996
+       ],
+       [
+        244.685,
+        -144.87
+       ],
+       [
+        245.603,
+        -147.556
+       ],
+       [
+        247.469,
+        -149.836
+       ],
+       [
+        254.648,
+        -155.008
+       ],
+       [
+        255.574,
+        -156.656
+       ],
+       [
+        256.416,
+        -159.497
+       ],
+       [
+        256.692,
+        -161.425
+       ],
+       [
+        256.5,
+        -163.2
+       ],
+       [
+        259.218,
+        -164.868
+       ],
+       [
+        262.087,
+        -165.389
+       ],
+       [
+        279.061,
+        -166.227
+       ],
+       [
+        296.05,
+        -165.932
+       ],
+       [
+        297.952,
+        -165.636
+       ],
+       [
+        299.615,
+        -164.759
+       ],
+       [
+        300.854,
+        -163.389
+       ],
+       [
+        301.357,
+        -161.636
+       ],
+       [
+        301.206,
+        -159.735
+       ],
+       [
+        299.556,
+        -155.169
+       ],
+       [
+        299.421,
+        -152.216
+       ],
+       [
+        299.914,
+        -149.326
+       ],
+       [
+        308.363,
+        -131.224
+       ],
+       [
+        311.039,
+        -127.331
+       ],
+       [
+        310.809,
+        -125.879
+       ],
+       [
+        312.757,
+        -123.974
+       ],
+       [
+        312.655,
+        -122.042
+       ],
+       [
+        314.7,
+        -120.12
+       ],
+       [
+        314.869,
+        -118.162
+       ],
+       [
+        316.68,
+        -114.72
+       ],
+       [
+        320.062,
+        -104.28
+       ],
+       [
+        321.642,
+        -101.814
+       ],
+       [
+        324.442,
+        -99.02
+       ],
+       [
+        326.119,
+        -98.025
+       ],
+       [
+        336.57,
+        -96.304
+       ],
+       [
+        336.57,
+        -50.0
+       ],
+       [
+        223.894,
+        -50.0
+       ]
+      ]
+     }
     }
    },
    "barrel": {
@@ -2423,7 +5774,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.35,
+    "seconds": 1.02,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2451,7 +5802,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.17,
+    "seconds": 0.12,
     "bone": "muzzle_device",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2479,7 +5830,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.26,
+    "seconds": 0.17,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
@@ -2507,7 +5858,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.03,
+    "seconds": 0.02,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
@@ -2535,7 +5886,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.33,
+    "seconds": 0.23,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2563,7 +5914,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 1.02,
+    "seconds": 0.62,
     "bone": "bipod",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2591,7 +5942,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.22,
+    "seconds": 0.14,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2619,7 +5970,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.08,
+    "seconds": 0.05,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2647,7 +5998,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.02,
+    "seconds": 0.66,
     "bone": "bipod_leg_l",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2675,7 +6026,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.02,
+    "seconds": 0.65,
     "bone": "bipod_leg_r",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2703,7 +6054,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.51,
+    "seconds": 0.37,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2731,7 +6082,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.56,
+    "seconds": 0.37,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -2759,7 +6110,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.67,
+    "seconds": 0.44,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2787,7 +6138,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.63,
+    "seconds": 0.43,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -2815,7 +6166,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.12,
+    "seconds": 0.08,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {

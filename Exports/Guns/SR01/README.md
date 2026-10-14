@@ -299,3 +299,7 @@ Use two components per part, both attached as listed:
   5.9 kg. Dropped 1 m in a ticking game world, SM_SR01 (level and rolled), the magazine and SK_SR01 come to rest
   without tunnelling.
 - Asset warnings: 0 in every import / read-back / render / game log.
+
+> **Branch claude/sniper-sr01-realism (realism round 2, 2026-10-14):** these files were re-exported with the rim-slab
+> edges. The bytes fail form G5 / F1 (bipod clamp 0.003 mm into the seat) and have **not** been verified in Unreal. W5
+> must be re-run on the final bytes before merging. See `WorkFiles/guns/sniper/REALISM_R2_REPORT.md`.

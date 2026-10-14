@@ -174,6 +174,9 @@ class Part:
         self.round_skip_y = False
         self.joint_slabs = []            # thin frame-M boxes around the joint planes: no local-fix vertex moves there
         self.protect = protect           # frame-M boxes no vertex may move in during the final protected UD repair
+        # (R2) slab: a callable (name, coll) -> object building the base with its edge radii already in the generator
+        # (sr_rimslab); the recipe is then recorded but no bevel runs
+        self.slab = None
 
     def _round_weighted(self, ob):
         """(W4b) the weighted, unclamped round on the shell (before the post cuts): an edge is rounded when its
@@ -218,7 +221,7 @@ class Part:
         self.shell_ud = {"edges_rounded": self.round_edges, "shell_drops_before_repair": u0.get("unreal_drops"),
                          "shell_drops_after": u1.get("unreal_drops")}
 
-    def _local_fix(self, ob, boxes, rounds=8):
+    def _local_fix(self, ob, boxes, rounds=8, max_len=None):
         """(W4b) a LOCAL UD fix of a triangulated part: each failing triangle (area < 0.01 mm^2, an edge < 0.05 mm or
         a needle < 0.02 mm, the gunlib UD1 / UD2 limits) with no vertex inside a protected box has its shortest edge
         collapsed; reverted if the part stops being closed / manifold or gets more drops."""
@@ -233,6 +236,7 @@ class Part:
                          (B[:, 4] <= q[2]) & (q[2] <= B[:, 5])).any())
         keep = ob.data.copy()
         n_fix = 0
+        tried = set()                    # (R2) rotations already tried: a second visit collapses instead (no ping-pong)
         for _ in range(rounds):
             bm = bmesh.new()
             bm.from_mesh(ob.data)
@@ -250,14 +254,43 @@ class Part:
                 flag = drop | (area < _ud.MIN_AREA_MM2) | (L.min(1) < _ud.MIN_EDGE_MM) | (hgt < _ud.MIN_HEIGHT_MM)
                 for i in np.nonzero(flag)[0]:
                     f = tri[i]
-                    if not any(prot(v.co) for v in f.verts):
+                    if max_len is not None and any(prot(v.co) for v in f.verts):
+                        # a joint slab / protected wall: only the no-move fix (rotate the longest edge)
+                        e1 = max(f.edges, key=lambda e: e.calc_length())
+                        k1 = tuple(sorted(tuple(np.round(np.array(v.co[:]) * 1e6).astype(int)) for v in e1.verts))
+                        if len(e1.link_faces) == 2 and k1 not in tried:
+                            tried.add(k1)
+                            bad.append(("rot", e1))
+                    elif max_len is not None:
+                        # (R2) fine pass: collapse only sub-max_len edges (moves < max_len / 2, protected zones too);
+                        # a needle with longer edges gets its longest edge rotated (no vertex moves)
+                        e0 = min(f.edges, key=lambda e: e.calc_length())
+                        # a needle (height < 0.02 mm): its apex lies on its base within 0.02 mm, so collapsing the
+                        # shortest edge changes the surface by < 0.02 mm wherever it is
+                        if e0.calc_length() * sc < max_len or hgt[i] < _ud.MIN_HEIGHT_MM:
+                            bad.append(e0)
+                        else:
+                            e1 = max(f.edges, key=lambda e: e.calc_length())
+                            k1 = tuple(sorted(tuple(np.round(np.array(v.co[:]) * 1e6).astype(int)) for v in e1.verts))
+                            if len(e1.link_faces) == 2 and k1 not in tried:
+                                tried.add(k1)
+                                bad.append(("rot", e1))
+                            elif e0.calc_length() * sc < 2.0 * max_len:
+                                bad.append(e0)
+                    elif not any(prot(v.co) for v in f.verts):
                         bad.append(min(f.edges, key=lambda e: e.calc_length()))
             if not bad:
                 if quads:
                     bm.to_mesh(ob.data)
                 bm.free()
                 break
-            bmesh.ops.collapse(bm, edges=bad[:1], uvs=False)
+            if isinstance(bad[0], tuple):
+                r_ = bmesh.ops.rotate_edges(bm, edges=[bad[0][1]], use_ccw=False)
+                if not r_.get("edges"):
+                    bm.free()
+                    break
+            else:
+                bmesh.ops.collapse(bm, edges=bad[:1], uvs=False)
             n_fix += 1
             bm.to_mesh(ob.data)
             bm.free()
@@ -281,11 +314,16 @@ class Part:
         if u0.get("pass_ud1") and u0.get("pass_ud2"):
             self.protected_repair = {"needed": False}
             return
-        self.protected_repair = dict(needed=True, **self._local_fix(ob, list(self.protect) + list(self.joint_slabs)))
+        self.protected_repair = dict(needed=True, **self._local_fix(ob, list(self.protect) + list(self.joint_slabs),
+                                                                    rounds=getattr(self, "fix_rounds", 8)))
 
     def build(self, coll):
         t0 = time.time()
-        ob = self.base.to_object(self.name, coll, GRIP, smooth_deg=self.smooth_deg)
+        if self.slab is not None:
+            self.slab_rep = {}
+            ob = self.slab(self.name, coll, self.slab_rep)
+        else:
+            ob = self.base.to_object(self.name, coll, GRIP, smooth_deg=self.smooth_deg)
         for op, meshes in self.ops:
             meshes = [m for m in meshes if m is not None and len(m.F)]
             if not meshes:
@@ -295,10 +333,10 @@ class Part:
         bl.clean(ob)
         if NO_BEVEL:
             self.recipe = []
-        rw = self.round_free is not None and self.recipe
+        rw = self.round_free is not None and self.recipe and self.slab is None
         if rw:
             self._round_weighted(ob)
-        else:
+        elif self.slab is None:
             for w, s, a in self.recipe:
                 bl.bevel(ob, w, s, a)
         if self.post:
@@ -312,6 +350,13 @@ class Part:
         if self.protect is not None:
             self._protected_repair(ob)
             bl.finish(ob)
+        if self.slab is not None:
+            from gunlib import ud as _ud
+            _u = _ud.check_object(ob)
+            if not (_u.get("pass_ud1") and _u.get("pass_ud2")):
+                self.fine_fix = self._local_fix(ob, list(self.joint_slabs) + list(getattr(self, "seat_slabs", [])),
+                                                rounds=300, max_len=0.15)
+                bl.finish(ob)
         import bmesh
         bm = bmesh.new()
         bm.from_mesh(ob.data)
@@ -358,6 +403,10 @@ class Part:
             rep["round_shell"] = self.shell_ud
         if getattr(self, "protected_repair", None):
             rep["protected_repair"] = self.protected_repair
+        if getattr(self, "fine_fix", None):
+            rep["fine_fix"] = self.fine_fix
+        if getattr(self, "slab_rep", None):
+            rep["rim_slab"] = self.slab_rep
         return ob, rep
 
 
@@ -968,6 +1017,224 @@ def fasteners():
 
 
 # ------------------------------------------------------------------------------------------------ registry
+# ------------------------------------------------------------------------------------------------ (R2) rim slabs
+# Realism round 2: the chassis, butt, butt pad, cheek riser and grip take their edge radii from the generator
+# (sr_rimslab: 2D side-view CSG -> faired + filleted outline -> per-edge offset rings lofted into a rounded rim -> plan
+# width as a shear) instead of round 1's unclamped weighted bevel with exclusion boxes (torn slivers, steps, zig-zags).
+# SR01_RIMSLAB=0 restores the round-1 builders above.
+import sr_rimslab as RS
+RIMSLAB = os.environ.get("SR01_RIMSLAB", "1") == "1"
+RIM_R = float(os.environ.get("SR01_RIM_R", "1.2"))          # machined outer edge radius (chassis / butt / riser)
+
+
+def _on(v, a, b, ax, tol=0.06):
+    return abs(a[ax] - v) < tol and abs(b[ax] - v) < tol
+
+
+def _slab_builder(specs):
+    """specs: dicts adds, subs, W, r, seg, [hfun, bx, bz, joint, sigma, corner, rc]. Each spec becomes one rim slab;
+    the slabs are united with the exact solver (concave seams stay crisp, as on a moulded / machined part)."""
+    def make(name, coll, rep):
+        import bpy
+        obs = []
+        for i, sp in enumerate(specs):
+            loops = RS.csg2d(sp["adds"], sp.get("subs", ()), tag="%s%d" % (name, i))
+            for x0_, x1_, zmax_ in sp.get("lowhull", ()):
+                loops[0] = RS.lower_hull_run(loops[0], x0_, x1_, zmax_)
+            r = sp["r"]
+            rc = sp.get("rc", 1.3 * r + 0.3)
+            out = []
+            for k, L in enumerate(loops):
+                P = RS.prep(L, sp.get("sigma", 1.5), sp.get("corner", 40.0), rc, joint=sp.get("joint") if k == 0 else None,
+                            step=sp.get("step", 2.0 * r + 0.5))
+                if k:
+                    P = P[::-1]
+                out.append(RS.insert_breaks(P, sp.get("bx", ()), sp.get("bz", ())))
+            sub = {}
+            obs.append(RS.slab_object("%s_s%d" % (name, i), coll, out, sp["W"], r, sp["seg"], GRIP, sp.get("hfun"),
+                                      sp.get("bx", ()), sp.get("bz", ()), sp.get("joint"), report=sub))
+            from gunlib import ud as _ud
+            _u = _ud.check_object(obs[-1])
+            sub["ud_slab"] = {k: _u.get(k) for k in ("unreal_drops", "edges_under_0.05mm", "needles_under_0.02mm")}
+            sub["ud_loc"] = RS.ud_locate(obs[-1], GRIP) if not _u.get("pass_ud1", True) or _u.get("unreal_drops") else []
+            sub["nm_loc"] = RS.nonmanifold_locate(obs[-1], GRIP, cell=1.0)
+            sub["outline"] = np.round(out[0], 3).tolist()
+            sub["raw_outline"] = np.round(loops[0], 3).tolist()
+            rep["slab%d" % i] = sub
+        ob = obs[0]
+        ob.name = name
+        for o in obs[1:]:
+            m = ob.modifiers.new("u", "BOOLEAN")
+            m.operation, m.solver, m.object = "UNION", "EXACT", o
+            bl.apply_modifiers(ob)
+            bpy.data.objects.remove(o, do_unlink=True)
+        bl.clean(ob)
+        return ob
+    return make
+
+
+def chassis_r2():
+    pt = chassis_r1()                        # the round-1 part: its post cutters, protect boxes and joint slabs
+    X0 = X_BUTT_JOINT + 0.02
+    # DP 1.0 + sigma 3 (corners > 40 deg pinned): the trace's sub-mm wobble on the long runs read as a wavy underside
+    cen = np.asarray(ring("chassis_centre", 1.0), float)
+    # the trace's step at X 567.29 stood 0.05 mm from the receiver inlet's end plane (567.34): non-manifold slivers
+    cen[np.abs(cen[:, 0] - 567.3) < 0.1, 0] = 569.5     # (its fillet then starts clear of the channel's X 566 end)
+    cen = clip(cen, x0=X0)
+    fore = np.asarray(ring("chassis_forend", 1.0))
+    # the nose: the trace zig-zags 4 mm in and out over Z -32..-20 (judges B: "a zig-zag at the forend nose"); the nose
+    # runs as one chamfer from the dovetail band's end to the front face
+    fore = fore[~((fore[:, 0] > 831.0) & (fore[:, 1] > -33.0) & (fore[:, 1] < -20.0))]
+    fore = clip(G.offset(fore, 0.25), x0=560.0)
+    guard = G.offset(ring("trigger_guard", 0.5), 0.25)
+    gz0 = float(np.asarray(guard)[:, 1].min())
+    hole = [np.array(r, float) for r in trace("GR")["silhouette"]["mm"]
+            if signed_area(r) < 0 and np.array(r)[:, 0].min() > 330 and np.array(r)[:, 0].max() < 400][0]
+    hole = G.ccw(G.dp_simplify(hole, 1.0))
+    tang = np.array([(X0, -40.0), (346.0, -40.0), (346.0, -10.5), (326.0, -10.5), (318.0, -14.0), (X0, -14.0)])
+    top = np.array([(X_BUTT_JOINT - 1.0, -14.0), (318.0, -14.0), (326.0, -10.5), (346.5, -10.5), (346.5, 60.0),
+                    (X_BUTT_JOINT - 1.0, 60.0)])
+    slots = [stadium(sl["X"][0], sl["X"][1], sl["Z"][0], sl["Z"][1]) for sl in dims("chassis")["slots"]]
+
+    def jmain(a, b):                         # butt joint face, grip seat, grip front face: flat and sharp
+        return _on(X0, a, b, 0) or (_on(Z_GRIP_SPLIT, a, b, 1) and max(a[0], b[0]) <= X_GRIP_FRONT + 0.1) or \
+            (_on(X_GRIP_FRONT, a, b, 0) and max(a[1], b[1]) <= Z_GRIP_SPLIT + 0.1) or \
+            (_on(-39.58, a, b, 1) and min(a[0], b[0]) >= 739.9) or (_on(740.0, a, b, 0) and max(a[1], b[1]) <= -39.5)
+    # (the clamp seat too: a concave fillet at the X 740 step put chassis under Z -39.58, into the clamp's 0.03 gap)
+    b0, b1 = dims("chassis")["dovetail_band"]["X"]
+    BR = 1.5                                 # the band's end ramps (mm)
+    # (R2) the dovetail band (the clamp's rail: 45 deg flanks from Y 37.5 at Z -24.55 to 30.9 at -31.15, 30.9 below) is
+    # part of the width function, not a boolean: the flank cut sliced the rounded slab into slivers
+    def h_main(x, z):
+        h = half_at(CHASSIS_HALF, x)
+        w = float(np.clip(min(x - (b0 - BR), (b1 + BR) - x) / BR, 0.0, 1.0))
+        if w <= 0.0:
+            return h
+        prof = 36.9 if z >= -25.15 else (30.9 if z <= -31.15 else 30.9 + (z + 31.15))
+        return min(h, 36.9 - w * (36.9 - prof))
+    bx = [x for x, _ in CHASSIS_HALF[1:-1]] + [b0 - BR, b0, b1, b1 + BR]
+    main = dict(adds=[cen, fore, RS.rect(558.0, 600.0, -39.58, 15.6), RS.rect(344.0, 395.0, -50.0, -11.6), tang],
+                # the guard opening 0.25 mm smaller in the body than in the guard slab: their walls must not coincide
+                subs=[top, RS.rect(240.0, X_GRIP_FRONT, -200.0, Z_GRIP_SPLIT), RS.rect(740.0, 845.0, -200.0, -39.58),
+                      G.offset(hole, -0.25)] + slots,
+                W=36.9, r=RIM_R, seg=3, hfun=h_main, bx=bx, bz=[-25.15, -31.15], joint=jmain, sigma=3.0,
+                # the belly from the well to the forend: the trace bumps 1.2 mm at X 522-533 and dips 0.6 mm at the
+                # centre / forend seam (judges: "wavy chassis underside"); the run becomes its lower convex hull
+                lowhull=[(500.0, 600.0, -50.0)])
+    # the guard starts at the grip's front joint plane (its traced ring reached X 330.05, into the grip's seat corner)
+    grd = dict(adds=[clip(guard, x0=X_GRIP_FRONT), RS.rect(336.5, 399.5, gz0, -94.2)], subs=[hole], W=9.0, r=1.5, seg=3,
+               joint=lambda a, b: _on(X_GRIP_FRONT, a, b, 0),
+               lowhull=[(325.0, 420.0, -90.0)])          # the loop's bottom run convex (trace jags at X 405)
+    pt.slab = _slab_builder([main, grd])
+    pt.fix_rounds = 120
+    pt.seat_slabs = [(738.0, 846.0, -40.0, 40.0, -40.3, -39.0)]       # the clamp seat: no fine-fix vertex moves
+    pt.ops = []
+    pt.round_free = None
+    pt.smooth_deg = 40.0
+    return pt
+
+
+def butt_r2():
+    pt = butt_r1()
+    rr = rings("butt", 1.3, min_area=300.0)
+    main = max(rr, key=lambda r: abs(G.area(r)))
+    X1 = X_BUTT_JOINT - 0.02
+
+    def jb(a, b):
+        if _on(68.92, a, b, 0) or _on(X1, a, b, 0) or (_on(Z_GRIP_SPLIT, a, b, 1) and min(a[0], b[0]) >= 221.9):
+            return True
+        if min(a[1], b[1]) >= -18.0 and max(a[0], b[0]) <= 212.1:               # the riser seat / recess (hidden)
+            return True
+        return _on(222.0, a, b, 0) and max(a[1], b[1]) <= Z_GRIP_SPLIT + 0.1
+    spec = dict(adds=[clip(main, x0=68.92, x1=X1)],
+                subs=[RS.rect(222.0, 250.0, -200.0, Z_GRIP_SPLIT), RS.rect(60.0, 181.6, -16.7, 80.0),
+                      RS.rect(179.0, 212.0, -17.9, 80.0)],
+                W=29.6, r=RIM_R, seg=3, hfun=lambda x, z: half_at(BUTT_HALF, x), bx=[190.0, 212.0], joint=jb)
+    pt.slab = _slab_builder([spec])
+    cut = [m for op, ms in pt.ops if op == "D" for m in ms]
+    pt.ops = [("D", [m for m in cut if len(np.vstack(m.V)) > 8])]                 # post bores + QD cup only (no boxes)
+    pt.round_free = None
+    pt.smooth_deg = 40.0
+    return pt
+
+
+def butt_pad_r2():
+    pt = butt_pad_r1()
+    # the trace's 2-3 mm jags on the pad's rear top (judges: "jagged notches on the top-left edge") dropped: the rear
+    # face runs (5.0, 16.1) -> (1.7, 11.5) -> (0.4, -3.5)
+    P = np.asarray(clip(ring("butt_pad"), x0=0.0, x1=52.88))
+    P = P[~((P[:, 0] < 5.0) & (P[:, 1] > 0.8) & (P[:, 1] < 9.0))]
+    spec = dict(adds=[P], W=30.6, r=3.0, seg=4, sigma=1.2, corner=60.0)
+    pt.slab = _slab_builder([spec])
+    pt.smooth_deg = 40.0
+    return pt
+
+
+def cheek_riser_r2():
+    pt = cheek_riser_r1()
+    d = dims("cheek_riser")
+    z0, z1 = d["plate_Z"]
+    P = np.array([(68.9, z0 + 6.0), (74.9, z0), (179.9, z0), (179.9, z1), (68.9, z1)])
+    # the skirts' rear top corner on the plate's rear chamfer line (at X 72 it stood 2.4 mm proud of the chamfer: a
+    # notch narrower than the rim radius)
+    sk = np.array([(84.0, -16.4), (176.0, -16.4), (179.9, -12.5), (179.9, z0 + 0.5), (74.4, z0 + 0.5)])
+    rr = rings("butt", 1.3, min_area=300.0)
+    main = max(rr, key=lambda r: abs(G.area(r)))
+    blk = [clip(G.offset(t, 0.2), x0=179.0, z0=-4.7, z1=31.0) for t in rr if t is not main]
+    # the front block as one convex block (the trace's strip plus its seat lug: their union left a 1 mm notch)
+    pts = np.vstack(blk + [RS.rect(179.5, 185.0, -4.7, 30.9)])
+    hull = RS.hull(pts)
+    specs = [dict(adds=[P, sk], W=34.5, r=RIM_R, seg=3, sigma=0.0),
+             dict(adds=[hull], W=29.0, r=RIM_R, seg=3, sigma=0.0)]
+    pt.slab = _slab_builder(specs)
+    cut = [MS.box(60.0, 216.0, -30.0, 30.0, -40.0, z0)]                           # the skirts' inner pocket
+    cut += [MS.ellipsoid((128.0, 26.0, z1 + 60.0), 60.0, 30.0, 61.5, 48, 16)]
+    for sg in (1, -1):
+        cut.append(yz_prism(np.array([(sg * 31.5, z1 + 1), (sg * 40.0, z1 + 1), (sg * 40.0, z1 - 7.5)])[::(1 if sg > 0 else -1)],
+                            60.0, 190.0))
+    pt.ops = [("D", cut)]
+    pt.round_free = None
+    pt.smooth_deg = 40.0
+    return pt
+
+
+def grip_r2():
+    pt = grip_r1()
+    # the heel: the trace drew a 1-3 mm lip under a 1 mm slot (X 256-276, Z -160..-165; judges: "torn, floating slivers
+    # at the grip base"); it becomes a solid flared heel with the same rearmost reach (X 256.5)
+    R = np.asarray(ring("grip", 0.5), float)
+    heel = (R[:, 0] > 255.5) & (R[:, 0] < 277.0) & (R[:, 1] > -164.0) & (R[:, 1] < -159.0)
+    i0 = int(np.nonzero(heel)[0][0])
+    R = np.vstack([R[:i0], [(256.8, -160.5), (256.5, -163.2)], R[i0:][~heel[i0:]]])
+    # the beavertail tab's underside met the back strap 1.3 mm under the chassis joint (a neck thinner than the rim): it
+    # meets it at Z -60.5 (a 4.5 mm neck)
+    R[(np.abs(R[:, 0] - 243.8) < 0.3) & (np.abs(R[:, 1] + 57.3) < 0.3)] = (244.0, -60.5)
+    P = G.ccw(G.dp_simplify(G.clean_smooth(G.ccw(R), step=1.0, sigma_mm=1.5, corner_deg=50.0), 0.2))
+    ZT, XF = Z_GRIP_SPLIT - 0.03, X_GRIP_FRONT - 0.03
+    P = np.array(clip(P, x0=222.03, x1=XF, z1=ZT))
+    # the joint faces (top on the chassis seat, front on the guard): the outline runs 6 mm past them and the slab is cut
+    # flat there, so the rim never turns at a joint corner
+    P[np.abs(P[:, 1] - ZT) < 1e-4, 1] = ZT + 6.0
+    P[np.abs(P[:, 0] - XF) < 1e-4, 0] = XF + 6.0
+    zk = np.array([-40.0, -62.0, -88.0, -112.0, -136.0, -148.0, -172.0, -260.0])
+    hk = np.array([14.6, 14.6, 15.6, 16.4, 15.9, 15.6, 17.2, 17.2])
+    zz = np.linspace(-260.0, -40.0, 45)
+    hh = np.interp(zz, zk[::-1], hk[::-1])
+    hh = np.convolve(np.r_[[hh[0]] * 2, hh, [hh[-1]] * 2], np.ones(5) / 5.0, "valid")
+    spec = dict(adds=[P], W=17.2, r=float(os.environ.get("SR01_GRIP_R", "3.5")), seg=5, sigma=0.0,
+                hfun=lambda x, z: float(np.interp(z, zz, hh)), bz=list(np.arange(-158.0, -57.0, 6.0)))
+    pt.slab = _slab_builder([spec])
+    pt.ops = [("D", [MS.box(200.0, 370.0, -40.0, 40.0, ZT, 0.0), MS.box(XF, 370.0, -40.0, 40.0, -220.0, 0.0)])]
+    pt.round_free = None
+    pt.smooth_deg = 40.0
+    return pt
+
+
+chassis_r1, butt_r1, butt_pad_r1, cheek_riser_r1, grip_r1 = chassis, butt, butt_pad, cheek_riser, grip
+if RIMSLAB:
+    chassis, butt, butt_pad, cheek_riser, grip = chassis_r2, butt_r2, butt_pad_r2, cheek_riser_r2, grip_r2
+
+
 PARTS = {
     "chassis": chassis, "butt": butt, "butt_pad": butt_pad, "pad_plate": pad_plate, "cheek_riser": cheek_riser,
     "riser_posts": riser_posts, "riser_lever": riser_lever, "butt_knobs": butt_knobs, "receiver": receiver,
