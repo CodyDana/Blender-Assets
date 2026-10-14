@@ -1,0 +1,835 @@
+{
+ "meta": {
+  "code": "HP01",
+  "what": "game / gun-chat interface for SK_HP01 (W0 plan values; the build overwrites with built numbers)",
+  "date": "2026-10-14",
+  "frame": "B mm (Blender, origin Grip); Unreal cm = (Bx, -By, Bz) / 10"
+ },
+ "assets": {
+  "sk": "SK_HP01",
+  "skeleton": "SK_HP01_Skeleton (pistol class pilot)",
+  "sm": "SM_HP01",
+  "mag": "SM_HP01_Mag",
+  "phys": "PHYS_HP01",
+  "clips": [
+   "A_HP01_Fire",
+   "A_HP01_FireLast",
+   "A_HP01_Reload",
+   "A_HP01_ReloadEmpty",
+   "A_HP01_Safety",
+   "A_HP01_SlideRack",
+   "A_HP01_Inspect"
+  ],
+  "exports": "Exports/Guns/HP01/",
+  "asset": "Assets/Guns/HP01.blend",
+  "lock": "HP01"
+ },
+ "bones": [
+  {
+   "name": "body",
+   "parent": null,
+   "head_B": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "motion": "fixed (physics body)"
+  },
+  {
+   "name": "slide",
+   "parent": "body",
+   "head_B": [
+    340.88,
+    0.0,
+    0.0
+   ],
+   "motion": "translate -X 0..48 (lock 46, press check 14)"
+  },
+  {
+   "name": "selector",
+   "parent": "slide",
+   "head_B": [
+    -34.61,
+    0.0,
+    87.98
+   ],
+   "motion": "rotate about Y 0 (FIRE) .. -40 (SAFE)"
+  },
+  {
+   "name": "hammer",
+   "parent": "body",
+   "head_B": [
+    -38.4,
+    0.0,
+    65.23
+   ],
+   "motion": "rotate about Y 0 (cocked, rest) .. +58 (down)"
+  },
+  {
+   "name": "trigger",
+   "parent": "body",
+   "head_B": [
+    48.81,
+    0.0,
+    45.79
+   ],
+   "motion": "rotate about Y 0 .. -9 (pull)"
+  },
+  {
+   "name": "slide_stop",
+   "parent": "body",
+   "head_B": [
+    -30.82,
+    0.0,
+    54.8
+   ],
+   "motion": "rotate about Y 0 .. +10 (front up, engaged)"
+  },
+  {
+   "name": "mag_release",
+   "parent": "body",
+   "head_B": [
+    39.33,
+    0.0,
+    40.58
+   ],
+   "motion": "translate -Y 0..3 (pressed in from the left)"
+  },
+  {
+   "name": "magazine",
+   "parent": "body",
+   "head_B": [
+    -10.44,
+    0.0,
+    -53.28
+   ],
+   "motion": "attach only (no weights); keyed in the reload clips"
+  }
+ ],
+ "motion_axes": {
+  "slide": "-X",
+  "selector": "Y",
+  "hammer": "Y",
+  "trigger": "Y",
+  "slide_stop": "Y",
+  "mag_release": "-Y"
+ },
+ "rest_pose": {
+  "slide": 0,
+  "hammer": "cocked (0)",
+  "selector": "FIRE (0)",
+  "slide_stop": 0,
+  "magazine": "seated"
+ },
+ "sockets": [
+  {
+   "name": "Grip",
+   "bone": "body",
+   "B": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "5.1 origin (provisional 46 mm depth, pistol H1)"
+  },
+  {
+   "name": "SupportHand",
+   "bone": "body",
+   "B": [
+    12.32,
+    22.0,
+    -15.36
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "support wrap: off-hand palm on the left grip panel [J], H1 replaces"
+  },
+  {
+   "name": "Muzzle",
+   "bone": "body",
+   "B": [
+    215.19,
+    0.0,
+    78.5
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "crown front on the bore (barrel fixed: body, not slide; 5.3 deviation R4)"
+  },
+  {
+   "name": "ShellEject",
+   "bone": "body",
+   "B": [
+    5.21,
+    -16.0,
+    91.3
+   ],
+   "rot": [
+    0,
+    25.0,
+    -110.0
+   ],
+   "source": "ejection window at the hood end, right side; throw right, up, slightly rear (R5)"
+  },
+  {
+   "name": "Sight",
+   "bone": "slide",
+   "B": [
+    -18.26,
+    0.0,
+    110.73
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "rear notch bottom on the sight line"
+  },
+  {
+   "name": "Mag",
+   "bone": "magazine",
+   "B": [
+    -10.44,
+    0.0,
+    -53.28
+   ],
+   "rot": [
+    0.0,
+    -17.4,
+    0.0
+   ],
+   "source": "well-entry centre, +Z up the grip axis (5.6)"
+  },
+  {
+   "name": "MagInsertStart",
+   "bone": "body",
+   "B": [
+    -28.38,
+    0.0,
+    -110.53
+   ],
+   "rot": [
+    0.0,
+    -17.4,
+    0.0
+   ],
+   "source": "60 mm out along -Z of Mag"
+  },
+  {
+   "name": "Rail_Top",
+   "bone": "body",
+   "B": [
+    5.54,
+    0.0,
+    104.57
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "slot 0 (rearmost) centre on the rail-top plane, standard pitch about the drawn recess centre"
+  },
+  {
+   "name": "Holster",
+   "bone": "body",
+   "B": [
+    85.79,
+    0.0,
+    77.08
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "slide mid, on the bore plane [J]"
+  },
+  {
+   "name": "CenterOfMass",
+   "bone": "body",
+   "B": [
+    38.39,
+    0.0,
+    55.75
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "estimate [D]; the builder recomputes from part volumes and overwrites (5.3)"
+  },
+  {
+   "name": "Trigger",
+   "bone": "trigger",
+   "B": [
+    51.66,
+    0.0,
+    29.68
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "trigger face mid (optional socket)"
+  },
+  {
+   "name": "Selector",
+   "bone": "selector",
+   "B": [
+    -34.61,
+    23.45,
+    72.34
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "lever paddle, left (optional)"
+  },
+  {
+   "name": "MagRelease",
+   "bone": "mag_release",
+   "B": [
+    39.33,
+    18.0,
+    40.58
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "button face (optional)"
+  }
+ ],
+ "mag_sockets": [
+  {
+   "name": "Mag",
+   "B": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "name": "HandReload",
+   "B": [
+    0,
+    9.0,
+    -40.0
+   ]
+  },
+  {
+   "name": "Feed",
+   "B": [
+    0,
+    0,
+    124.0
+   ]
+  },
+  {
+   "name": "Base",
+   "B": [
+    0,
+    0,
+    -4.7
+   ]
+  },
+  {
+   "name": "CenterOfMass",
+   "B": [
+    0,
+    0,
+    55.0
+   ]
+  }
+ ],
+ "clips": [
+  {
+   "name": "A_HP01_Fire",
+   "fps": 60,
+   "frames": 10,
+   "keys": {
+    "trigger": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      -9
+     ],
+     [
+      8,
+      -9
+     ],
+     [
+      10,
+      0
+     ]
+    ],
+    "hammer": [
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      58
+     ],
+     [
+      4,
+      -5
+     ],
+     [
+      5,
+      0
+     ]
+    ],
+    "slide_mm": [
+     [
+      2,
+      0
+     ],
+     [
+      4,
+      48
+     ],
+     [
+      8,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "Fire",
+     1
+    ],
+    [
+     "ShellEject",
+     3
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_FireLast",
+   "fps": 60,
+   "frames": 10,
+   "keys": {
+    "trigger": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      -9
+     ],
+     [
+      10,
+      -9
+     ]
+    ],
+    "hammer": [
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      58
+     ],
+     [
+      4,
+      -5
+     ],
+     [
+      5,
+      0
+     ]
+    ],
+    "slide_mm": [
+     [
+      2,
+      0
+     ],
+     [
+      4,
+      48
+     ],
+     [
+      6,
+      46
+     ]
+    ],
+    "slide_stop": [
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      10
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "Fire",
+     1
+    ],
+    [
+     "ShellEject",
+     3
+    ],
+    [
+     "SlideLock",
+     6
+    ]
+   ],
+   "ends": "slide held at 46 with slide_stop up"
+  },
+  {
+   "name": "A_HP01_Reload",
+   "fps": 30,
+   "frames": 60,
+   "keys": {
+    "mag_release": [
+     [
+      6,
+      0
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      14,
+      3
+     ],
+     [
+      16,
+      0
+     ]
+    ],
+    "magazine_mm": [
+     [
+      8,
+      0
+     ],
+     [
+      14,
+      -130
+     ],
+     [
+      16,
+      -130
+     ],
+     [
+      36,
+      -130
+     ],
+     [
+      42,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "MagRelease",
+     8
+    ],
+    [
+     "MagOut",
+     12
+    ],
+    [
+     "MagDrop",
+     16
+    ],
+    [
+     "MagIn",
+     42
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_ReloadEmpty",
+   "fps": 30,
+   "frames": 70,
+   "starts": "slide 46 + slide_stop 10 (FireLast end)",
+   "keys": {
+    "slide_mm": [
+     [
+      0,
+      46
+     ],
+     [
+      52,
+      46
+     ],
+     [
+      55,
+      0
+     ]
+    ],
+    "slide_stop": [
+     [
+      0,
+      10
+     ],
+     [
+      52,
+      10
+     ],
+     [
+      53,
+      0
+     ]
+    ],
+    "mag_release": [
+     [
+      6,
+      0
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      14,
+      3
+     ],
+     [
+      16,
+      0
+     ]
+    ],
+    "magazine_mm": [
+     [
+      8,
+      0
+     ],
+     [
+      14,
+      -130
+     ],
+     [
+      16,
+      -130
+     ],
+     [
+      36,
+      -130
+     ],
+     [
+      42,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "MagRelease",
+     8
+    ],
+    [
+     "MagOut",
+     12
+    ],
+    [
+     "MagDrop",
+     16
+    ],
+    [
+     "MagIn",
+     42
+    ],
+    [
+     "BoltRelease",
+     52
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_Safety",
+   "fps": 30,
+   "frames": 24,
+   "keys": {
+    "selector": [
+     [
+      0,
+      0
+     ],
+     [
+      6,
+      -40
+     ],
+     [
+      18,
+      -40
+     ],
+     [
+      24,
+      0
+     ]
+    ]
+   },
+   "notifies": []
+  },
+  {
+   "name": "A_HP01_SlideRack",
+   "fps": 30,
+   "frames": 20,
+   "keys": {
+    "slide_mm": [
+     [
+      0,
+      0
+     ],
+     [
+      6,
+      48
+     ],
+     [
+      9,
+      48
+     ],
+     [
+      11,
+      0
+     ]
+    ],
+    "hammer": [
+     [
+      0,
+      0
+     ],
+     [
+      5,
+      -5
+     ],
+     [
+      7,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "BoltRelease",
+     9
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_Inspect",
+   "fps": 30,
+   "frames": 60,
+   "keys": {
+    "slide_mm": [
+     [
+      10,
+      0
+     ],
+     [
+      18,
+      14
+     ],
+     [
+      42,
+      14
+     ],
+     [
+      48,
+      0
+     ]
+    ]
+   },
+   "notifies": [],
+   "note": "press check; the character's inspect montage turns the gun (buyer / game side)"
+  }
+ ],
+ "notifies_rule": "sidecar 'notifies' list (study 4.6), harness adds them in Unreal",
+ "sidecar_gun_block": {
+  "class": "pistol",
+  "grip_axis_deg": 17.4,
+  "rail_slots": {
+   "Rail_Top": 6
+  },
+  "muzzle_class": "none (no thread drawn)",
+  "mag_family": "HP01 single-stack (own)",
+  "texel_classes": {
+   "A": [
+    80,
+    100
+   ],
+   "B": [
+    70,
+    90
+   ],
+   "C": [
+    45,
+    60
+   ],
+   "D": [
+    35,
+    45
+   ],
+   "E": [
+    10,
+    15
+   ]
+  },
+  "slide_travel_mm": 48.0,
+  "slide_lock_mm": 46.0,
+  "hand_offset": "from pistol H1 (pending)",
+  "mass_kg": 2.0
+ },
+ "abp_pistol_table": {
+  "slide_mm": [
+   0,
+   48
+  ],
+  "hammer_deg": [
+   0,
+   58
+  ],
+  "trigger_pull": [
+   0,
+   -9
+  ],
+  "selector_detents_deg": {
+   "FIRE": 0,
+   "SAFE": -40
+  },
+  "slide_stop_deg": [
+   0,
+   10
+  ],
+  "mag_release_translate_mm": [
+   0,
+   3.0
+  ],
+  "rule": "ABP_Gun_Pistol authored on SK_HP01_Skeleton (pistol class pilot, study 5.2)"
+ },
+ "fp_tp": "FP_Weapon + TP_Weapon (SK_HP01), FP_Mag + TP_Mag (SM_HP01_Mag on Mag); FP components FirstPerson + ForcedLodModel 1; TP WorldSpaceRepresentation (study 2.3); 4 draws held (Steel + Furniture, x2) + 2 mag"
+}

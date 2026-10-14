@@ -1,0 +1,2148 @@
+{
+ "meta": {
+  "name": "Heavy Pistol HP-01",
+  "code": "HP01",
+  "version": "0.1",
+  "date": "2026-10-14",
+  "stage": "W0 study",
+  "generator": "WorkFiles/guns/pistol/tools/make_spec.py",
+  "inputs": [
+   "hp01_measured.json",
+   "craft_parts.json",
+   "gun_standard.json 0.3.0 (read only)",
+   "HP01_BUILD_PLAN.md"
+  ],
+  "reference": "References/Guns/Pistol/pistol_sheetA.webp (LEFT, RIGHT, TOP, 3/4 FRONT LEFT; AI-generated)",
+  "tags": "[S] sheet, [N] norm / real pattern, [D] derived, [J] judgement, [K] class figure from the study table"
+ },
+ "frames": {
+  "F": "F: +X muzzle, +Z up, X = 0 at the crown front, Z = 0 on the bore axis (mm)",
+  "B": "Blender metres, modelled in mm; +X = muzzle (bore parallel to X at Y = 0), +Z up, -Y = the gun's right side; origin = Grip",
+  "grip_F": [
+   -215.88,
+   -78.5
+  ],
+  "grip_axis_deg": 17.4,
+  "grip_origin_depth_mm": 46.0,
+  "tang_px": [
+   451.96,
+   285.0
+  ],
+  "unreal": "Unreal cm = (Bx, -By, Bz) / 10; Unreal +X forward, +Y right, +Z up"
+ },
+ "scale": {
+  "overall_mm": 273.0,
+  "barrel_mm": 152.0,
+  "mass_kg": 2.0,
+  "px_per_mm": 2.1097,
+  "ruler_error_pct": 9.5,
+  "height_mm_sheet": 170.6,
+  "height_mm_class": 159.0,
+  "width": {
+   "slide_mm_sheet": 46.9,
+   "levers_mm_sheet": 55.0,
+   "class_max_mm": 32.0,
+   "K_Y": 1.0,
+   "ruling": "Q1 default: the TOP view as drawn (the user's bar: exact on side/top); one parameter K_Y gives the real-pattern option"
+  },
+  "rule": "real overall length (study 3.5); proportions from the sheet; rulers reported only"
+ },
+ "key_dimensions": {
+  "overall_X": [
+   -273.0,
+   0.0
+  ],
+  "height_Z": [
+   -136.5,
+   34.1
+  ],
+  "height_mm_reads": 170.6,
+  "barrel_visible_X": [
+   -7.8,
+   0.0
+  ],
+  "bore_axis_Z": 0.0,
+  "crown_diameter_mm": 19.0,
+  "slide_length_mm": 250.7,
+  "slide_height_mm_mid": 40.3,
+  "slide_plus_lower_band_mm": 53.6,
+  "sight_radius_mm": 217.6,
+  "sight_line_above_bore_mm": 32.7,
+  "top_line_rise_deg": 2.16,
+  "grip_angle_deg_front_strap": 17.8,
+  "grip_angle_deg_backstrap_groove": 17.0,
+  "trigger_reach_to_backstrap_mm": 79.6,
+  "mag_base_length_mm": 63.0,
+  "guard_opening_mm": [
+   43.1,
+   32.7
+  ]
+ },
+ "half_widths_mm": {
+  "slide": 23.45,
+  "levers": 27.5,
+  "flank_tab_proud": 3.8,
+  "hammer": 8.5,
+  "rib_top_flat": 10.5,
+  "grip": 18.0,
+  "source": "[S] TOP width profile (hp01_measured.json top.width_profile_mm_every_5); grip from the TOP lever line minus the levers [D]; K_Y = 1.000 (Q1)"
+ },
+ "serrations": {
+  "rows_px": [
+   [
+    465,
+    471,
+    474,
+    481,
+    484,
+    492,
+    501,
+    508,
+    511,
+    521
+   ],
+   [
+    469,
+    479,
+    486,
+    489,
+    496,
+    506,
+    516,
+    525
+   ],
+   [
+    474,
+    484,
+    493,
+    500,
+    510,
+    520
+   ],
+   [
+    478,
+    488,
+    495,
+    505,
+    515,
+    525
+   ]
+  ],
+  "grooves": 7,
+  "pitch_along_X_mm": 4.27,
+  "pitch_normal_mm": 4.09,
+  "lean_deg_top_forward": 16.6,
+  "field_F": [
+   [
+    -204.5,
+    14.7
+   ],
+   [
+    -233.9,
+    14.7
+   ],
+   [
+    -242.9,
+    -17.1
+   ],
+   [
+    -214.0,
+    -17.1
+   ]
+  ]
+ },
+ "rail_sheet": {
+  "bars_side": 6,
+  "bars_top_view": 5,
+  "bar_centres_X": [
+   -158.8,
+   -169.2,
+   -179.4,
+   -190.1,
+   -201.0,
+   -212.1
+  ],
+  "pitch_mm_sheet": 10.66,
+  "bar_width_mm_sheet": 5.37,
+  "recess_X": [
+   -217.3,
+   -153.3
+  ],
+  "cap_Z": 26.1,
+  "floor_Z": 19.9
+ },
+ "parts": [
+  {
+   "id": "barrel",
+   "display": "Barrel group: crown boss, front block, top rib with facets, hood under the rail, chamber block (fixed: gas-operated class)",
+   "bone": "body",
+   "process": "M-chamfer",
+   "bevels": {
+    "rib_long_edges": 0.5,
+    "facet_breaks": 0.4,
+    "front_block_corners": 0.6,
+    "crown_chamfer": 0.8,
+    "hood_end_diagonal": 0.4
+   },
+   "finish": "stainless_brushed",
+   "slot": "M_HP01_Steel",
+   "texel_class": "B top (sight plane) / D front block",
+   "authority": "LEFT side + TOP (rib width)",
+   "joint": "fixed to the frame through the lug (inside, not modelled); slide runs under the rib: sliding row against the slide",
+   "real_pattern": "rib top and upper facets belong to the fixed barrel; the facet runs out in the drawn diagonal; bore >= 2 calibres deep, 12.7 mm bore class, crown chamfer 0.8, rifling texture only [N]",
+   "closeup": "facets and rib lands are section-profile edges (no modifier bevel); crown is a revolve with true chamfer; bore darkening by depth",
+   "features_B": {
+    "crown_front_X_B": 215.19,
+    "crown_d": 19.0,
+    "rib_top_line_B": [
+     [
+      190.07,
+      97.93
+     ],
+     [
+      128.45,
+      100.3
+     ],
+     [
+      64.46,
+      102.67
+     ]
+    ],
+    "upper_facet_Z_B": [
+     85.61,
+     95.09
+    ],
+    "facet_runout_B": [
+     [
+      38.39,
+      85.61
+     ],
+     [
+      12.32,
+      91.3
+     ]
+    ],
+    "hood_end_X_B": -1.9,
+    "bore_d": 12.7,
+    "bore_depth_min": 25.4
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT side + TOP (rib width)",
+   "joint_row": "butt",
+   "contact_parent": "frame",
+   "texel_set": "Steel",
+   "lod0_alloc": 3200,
+   "fasteners": [],
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "chamber block + hood end face (ejection window) when the slide is back",
+   "handling_zones": []
+  },
+  {
+   "id": "rail",
+   "display": "Short 1913-profile rail on the barrel hood (6 crossbars)",
+   "bone": "body",
+   "process": "M-chamfer",
+   "bevels": {
+    "crossbar_tops": 0.25,
+    "flank_V": 0.3
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "B",
+   "authority": "LEFT (count 6, ends) / TOP (width)",
+   "joint": "integral with the barrel hood (butt row if built as its own object)",
+   "real_pattern": "gunlib rail_1913: pitch 10.01, slot 5.24 x 3.0, square flat crossbar tops (CLOSEUP_METHOD_PLAN 2.3 'fins' lesson); sheet pitch 10.69 +-0.5 = the standard within reading error; TOP shows 5 bars: 6 kept (both sides + 3/4)",
+   "closeup": "slot floors in the rail's own oxide with root grime only; square crossbar tops with a 0.2-0.25 break",
+   "features_B": {
+    "recess_X_B": [
+     -1.43,
+     62.56
+    ],
+    "cap_Z_B": 104.57,
+    "floor_Z_B": 98.41,
+    "n_bars": 6,
+    "pitch": 10.01,
+    "sheet_bar_centres_X_B": [
+     57.08,
+     46.68,
+     36.48,
+     25.78,
+     14.88,
+     3.78
+    ]
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT (count 6, ends) / TOP (width)",
+   "joint_row": "butt",
+   "contact_parent": "barrel",
+   "texel_set": "Steel",
+   "lod0_alloc": 900,
+   "fasteners": [],
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "none",
+   "handling_zones": []
+  },
+  {
+   "id": "sight_front",
+   "display": "Front sight: dovetailed block, sloped rear face, dot insert",
+   "bone": "body",
+   "process": "M-chamfer",
+   "bevels": {
+    "block_edges": 0.3,
+    "ear_top": 0.3
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "A",
+   "authority": "LEFT + TOP",
+   "joint": "butt in a dovetail on the rib (dovetail seam 0.2 visible)",
+   "fasteners": [
+    {
+     "type": "dot insert",
+     "d_mm": 2.4,
+     "source": "[S] 5 px ring on the sheet"
+    }
+   ],
+   "real_pattern": "dovetail base 60 deg, block ~8.5 wide [N]; dot = a flush insert ring (colourless: no paint invented; a white/tritium-free dot is Q7)",
+   "closeup": "ADS-visible: rear face matte, serrated? NO (sheet shows smooth) -> smooth rear face with a 0.3 break",
+   "features_B": {
+    "X_B": [
+     189.12,
+     206.66
+    ],
+    "top_Z_B": 110.26,
+    "base_Z_B": 98.88
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT + TOP",
+   "joint_row": "butt",
+   "contact_parent": "barrel",
+   "texel_set": "Steel",
+   "lod0_alloc": 400,
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "none",
+   "handling_zones": []
+  },
+  {
+   "id": "slide",
+   "display": "Slide: U-section under the rib, flank flats + lower chamfer band, rear block with 7 raked serrations, rear-face slant",
+   "bone": "slide",
+   "process": "M-chamfer",
+   "bevels": {
+    "flank_long_edges": 0.5,
+    "lower_band_break": 0.5,
+    "rear_block_corners": 0.6,
+    "serration_crest": 0.25,
+    "serration_root_R": 0.4,
+    "front_face": 0.4
+   },
+   "finish": "stainless_brushed",
+   "slot": "M_HP01_Steel",
+   "texel_class": "B rear block / C flanks / E inside rails",
+   "authority": "LEFT (outline, facets, serration field) + TOP (width)",
+   "joint": "sliding on the frame rails (0.15-0.40 per side) and under the rib",
+   "motion": {
+    "type": "translate",
+    "axis": "-X",
+    "travel_mm": 48.0,
+    "lock_mm": 46.0,
+    "press_check_mm": 14.0
+   },
+   "fasteners": [
+    {
+     "type": "rear-sight cross pin (chamfered, flush)",
+     "d_mm": 2.0,
+     "where": "rear sight block centre",
+     "source": "[S] dot on the rear block"
+    }
+   ],
+   "rear_sight": "dovetailed square block on the rear block, two ears with the notch between (part of the slide object; black_oxide; texel A)",
+   "serrations": {
+    "count": 7,
+    "pitch_normal_mm": 4.1,
+    "lean_deg_top_forward": 16.6,
+    "depth_mm": 1.2,
+    "form": "raised flat-topped ribs between square-bottom grooves, as drawn (crest highlight then dark groove)",
+    "source": "[S] measured rows"
+   },
+   "real_pattern": "the sheet's rib count and lean are kept (they differ from the style reference's: a design delta in our favour); grooves cut through the upper facet and stop 1.5 mm above the slide bottom [S]",
+   "closeup": "serrations are part of the slide's 2D section/outline generator: each groove is extruded from one faired 2D profile with its crest/root lands, never a boolean through a bevelled block",
+   "features_B": {
+    "front_X_B": 208.08,
+    "rear_top_B": [
+     -27.97,
+     94.61
+    ],
+    "rear_bottom_B": [
+     -37.45,
+     61.43
+    ],
+    "bottom_Z_B": 60.49,
+    "lower_band_Z_B": [
+     46.74,
+     60.49
+    ],
+    "lower_band_rear_X_B": 103.8,
+    "rear_block_top_Z_B": 104.09,
+    "rear_sight_X_B": [
+     -25.6,
+     -10.91
+    ],
+    "rear_sight_top_Z_B": 112.63,
+    "serration_field_B": [
+     [
+      11.37,
+      93.19
+     ],
+     [
+      -18.02,
+      93.19
+     ],
+     [
+      -27.03,
+      61.43
+     ],
+     [
+      1.89,
+      61.43
+     ]
+    ],
+    "half_width": 23.45
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT (outline, facets, serration field) + TOP (width)",
+   "joint_row": "sliding",
+   "contact_parent": "frame",
+   "texel_set": "Steel",
+   "lod0_alloc": 6500,
+   "revealed": "inside rails, recoil-guide bores, breech face (slide back)",
+   "handling_zones": [
+    "serrations (rack)",
+    "front flats (holster)"
+   ]
+  },
+  {
+   "id": "front_plate",
+   "display": "Slide front plate (thin band, chamfered corners, crown opening)",
+   "bone": "slide",
+   "process": "M-chamfer",
+   "bevels": {
+    "corners": 0.6,
+    "opening_chamfer": 0.5
+   },
+   "finish": "stainless_brushed",
+   "slot": "M_HP01_Steel",
+   "texel_class": "D",
+   "authority": "LEFT + 3/4",
+   "joint": "part of the slide (one object); visible seam 0.3 to the crown boss",
+   "real_pattern": "R6: the drawn front band spans the slide's lower band, so it moves with the slide; the crown boss stays (fixed barrel) and shows a gap when the slide is back",
+   "closeup": "front face catches the 3/4 key light: lapped flat, crown opening with wall",
+   "features_B": {
+    "X_B": [
+     208.55,
+     213.29
+    ],
+    "Z_B": [
+     60.49,
+     95.56
+    ]
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT + 3/4",
+   "joint_row": "visible_seam",
+   "contact_parent": "slide",
+   "texel_set": "Steel",
+   "lod0_alloc": 500,
+   "fasteners": [],
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "none",
+   "handling_zones": []
+  },
+  {
+   "id": "recoil_guides",
+   "display": "Twin recoil guide rods + springs (revealed when the slide is back)",
+   "bone": "body",
+   "process": "M-round",
+   "bevels": {
+    "rod_ends": 0.4
+   },
+   "finish": "stainless_bead",
+   "slot": "M_HP01_Steel",
+   "texel_class": "E (reload-visible)",
+   "authority": "none (hidden at rest; real pattern)",
+   "joint": "fixed to the frame/barrel lug; slide slides over them (sliding row)",
+   "real_pattern": "gas-operated class: two guide rods under the barrel [N]; only the forward 50 mm (exposed over the 48 mm travel) is modelled",
+   "closeup": "seen only in the fire clip at frame rate; LOD0 8-sided rods are enough (facet rule waived for E: flagged in the spec)",
+   "features_B": {
+    "rod_d": 6.0,
+    "exposed_len": 50.0,
+    "Z_B": 53.38,
+    "Y_B": [
+     -9.0,
+     9.0
+    ],
+    "source": "[N] class practice; hidden at rest"
+   },
+   "trace_ref": "none",
+   "authority_view": "none (hidden at rest; real pattern)",
+   "joint_row": "sliding",
+   "contact_parent": "frame",
+   "texel_set": "Steel",
+   "lod0_alloc": 400,
+   "fasteners": [],
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "forward 50 mm when the slide is back",
+   "handling_zones": []
+  },
+  {
+   "id": "frame",
+   "display": "Frame: dust-cover front block, top band, trigger guard (square front), front strap, beavertail tang, grip seat",
+   "bone": "body",
+   "process": "C-fillet",
+   "bevels": {
+    "guard_outer": 1.2,
+    "guard_inner": 1.0,
+    "strap_edges": 1.5,
+    "tang": 1.2,
+    "top_band_machined": 0.5,
+    "front_block_face": 0.5
+   },
+   "finish": "stainless_brushed (flats) / stainless_bead (curves)",
+   "slot": "M_HP01_Steel",
+   "texel_class": "B tang + grip top / C guard, strap",
+   "authority": "LEFT (outline) + TOP (width at the levers)",
+   "joint": "slide on its rails (sliding); grip panels butt; pins butt",
+   "fasteners": [
+    {
+     "type": "guard pin (flush, chamfered)",
+     "d_mm": 3.8,
+     "where": "guard front upper",
+     "source": "[S] 8 px ring"
+    }
+   ],
+   "real_pattern": "investment-cast and machined: cast fillets on the guard and strap, machined flats on the top band and rails; no other pins drawn at 2.1 px/mm (a 3-4 mm pin would be 6-8 px): none invented",
+   "closeup": "variable radii by process (cast 1-1.5, machined 0.5); guard inner face shows a cast parting line at mid-thickness",
+   "features_B": {
+    "front_X_B": 103.8,
+    "guard_opening_B": [
+     [
+      84.84,
+      47.21
+     ],
+     [
+      41.7,
+      14.51
+     ]
+    ],
+    "guard_bottom_Z_B": 10.71,
+    "guard_pin_B": [
+     92.42,
+     44.84
+    ],
+    "beavertail_tip_B": [
+     -55.94,
+     51.01
+    ],
+    "front_strap_B": [
+     [
+      40.76,
+      14.03
+     ],
+     [
+      19.43,
+      -52.33
+     ]
+    ],
+    "half_width_levers": 27.5
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT (outline) + TOP (width at the levers)",
+   "joint_row": "sliding",
+   "contact_parent": "root part (carries body)",
+   "texel_set": "Steel",
+   "lod0_alloc": 4000,
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "rails and the grip seat under the slide when back",
+   "handling_zones": [
+    "guard front (support finger)",
+    "tang under the web"
+   ]
+  },
+  {
+   "id": "grip",
+   "display": "Wrap-around rubber grip: side panels (coarse pebble) inside a raised border, fine-stipple backstrap strip, groove between",
+   "bone": "body",
+   "process": "P-round",
+   "bevels": {
+    "border_crest": 0.8,
+    "panel_drop": 0.6,
+    "groove_R": 0.5
+   },
+   "draft_deg": 1.0,
+   "finish": "rubber_pebble",
+   "slot": "M_HP01_Furniture",
+   "texel_class": "B (palm) / C",
+   "authority": "LEFT (outline, panel and groove lines)",
+   "joint": "butt on the frame grip seat (0.01-0.05)",
+   "real_pattern": "moulded rubber wrap, one piece; parting line along the backstrap centre; no screw visible on the sheet (none invented: the wrap is retained by the frame tang lip and a hidden screw under the panel, Q8)",
+   "closeup": "pebble from an HP bake (0.7-1.1 mm cells, 0.12-0.2 tall), coarse field on the panel and fine field on the backstrap; the border is real geometry 0.6 proud",
+   "features_B": {
+    "panel_B": [
+     [
+      33.65,
+      45.32
+     ],
+     [
+      -9.01,
+      45.32
+     ],
+     [
+      -27.97,
+      -47.59
+     ],
+     [
+      14.69,
+      -47.59
+     ]
+    ],
+    "backstrap_groove_B": [
+     [
+      -16.12,
+      36.79
+     ],
+     [
+      -37.45,
+      -47.59
+     ]
+    ],
+    "bottom_Z_B": -53.28,
+    "half_width": 18.0,
+    "axis_deg": 17.4
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT (outline, panel and groove lines)",
+   "joint_row": "butt",
+   "contact_parent": "frame",
+   "texel_set": "Furniture",
+   "lod0_alloc": 2500,
+   "fasteners": [],
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "none",
+   "handling_zones": [
+    "palm swell",
+    "thumb rest left",
+    "fingers front"
+   ]
+  },
+  {
+   "id": "trigger",
+   "display": "Trigger: curved blade, smooth face, 6.5 mm thick",
+   "bone": "trigger",
+   "process": "C-fillet",
+   "bevels": {
+    "face_R": 2.5,
+    "side_edges": 0.6,
+    "tip": 1.0
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "C",
+   "authority": "LEFT",
+   "joint": "hinge (0.10-0.30)",
+   "motion": {
+    "type": "rotate",
+    "axis": "Y",
+    "pull_deg": 9.0,
+    "pivot": "trigger_pivot read"
+   },
+   "real_pattern": "single-action pistol blade: 6-7 mm wide with a crowned face (R 2.5 across) [N]; ER1 lesson: real side faces + edge radius, never a flat cut-out",
+   "closeup": "blade section is a loft of crowned sections along the traced centre curve",
+   "features_B": {
+    "box_B": [
+     [
+      57.35,
+      47.21
+     ],
+     [
+      40.28,
+      17.82
+     ]
+    ],
+    "tip_B": [
+     54.98,
+     18.77
+    ],
+    "pivot_B": [
+     48.81,
+     45.79
+    ],
+    "thickness": 6.5
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT",
+   "joint_row": "hinge",
+   "contact_parent": "frame",
+   "texel_set": "Steel",
+   "lod0_alloc": 600,
+   "fasteners": [],
+   "revealed": "none",
+   "handling_zones": [
+    "face"
+   ]
+  },
+  {
+   "id": "hammer",
+   "display": "Hammer: spur (cocked as drawn), body behind the safety",
+   "bone": "hammer",
+   "process": "C-fillet",
+   "bevels": {
+    "spur_edges": 0.6,
+    "body": 0.8
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "B",
+   "authority": "LEFT + TOP (17 mm width at X -270)",
+   "joint": "hinge",
+   "motion": {
+    "type": "rotate",
+    "axis": "Y",
+    "fall_deg": 58.0,
+    "rest": "cocked (as drawn)"
+   },
+   "real_pattern": "spur checkering as an HP-baked 0.8 mm pyramid field on the spur top only (texture class, study 3.2) [N]",
+   "closeup": "spur thickness tapers 9 -> 6 mm toward the tip (TOP shows the hammer narrower than its body)",
+   "features_B": {
+    "box_B": [
+     [
+      -35.08,
+      92.24
+     ],
+     [
+      -52.15,
+      60.49
+     ]
+    ],
+    "spur_tip_B": [
+     -51.2,
+     88.93
+    ],
+    "pivot_B": [
+     -38.4,
+     65.23
+    ],
+    "half_width": 8.5
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT + TOP (17 mm width at X -270)",
+   "joint_row": "hinge",
+   "contact_parent": "frame",
+   "texel_set": "Steel",
+   "lod0_alloc": 800,
+   "fasteners": [],
+   "revealed": "none",
+   "handling_zones": []
+  },
+  {
+   "id": "selector",
+   "display": "Safety/decocker lever on the slide rear (ambidextrous, flush block as drawn)",
+   "bone": "selector",
+   "process": "M-chamfer",
+   "bevels": {
+    "edges": 0.4,
+    "paddle_grooves": 0.25
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "B",
+   "authority": "LEFT (box) + TOP (no protrusion > 1 mm)",
+   "joint": "hinge (0.10-0.30)",
+   "motion": {
+    "type": "rotate",
+    "axis": "Y",
+    "safe_deg": -40.0,
+    "rest": "FIRE (as drawn)"
+   },
+   "real_pattern": "slide-mounted safety rotating on a transverse shaft [N]; paddle with 3 grooves (real pattern; the sheet's block is too dark to show detail: grooves cut 0.25 deep, Q5)",
+   "closeup": "generic marks allowed: a dot pictogram pair (SAFE / FIRE) on the slide at the lever arc",
+   "features_B": {
+    "box_B": [
+     [
+      -29.4,
+      91.3
+     ],
+     [
+      -39.82,
+      60.49
+     ]
+    ],
+    "pivot_B": [
+     -34.61,
+     87.98
+    ],
+    "proud_max": 0.8
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT (box) + TOP (no protrusion > 1 mm)",
+   "joint_row": "hinge",
+   "contact_parent": "slide",
+   "texel_set": "Steel",
+   "lod0_alloc": 400,
+   "fasteners": [],
+   "revealed": "none",
+   "handling_zones": [
+    "thumb arc"
+   ]
+  },
+  {
+   "id": "slide_stop",
+   "display": "Slide stop lever (frame top, under the serrations' front), left side only in the real pattern; drawn both sides",
+   "bone": "slide_stop",
+   "process": "M-chamfer",
+   "bevels": {
+    "edges": 0.4,
+    "pad_grooves": 0.2
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "B",
+   "authority": "LEFT (outline) + TOP (2 mm proud)",
+   "joint": "hinge",
+   "motion": {
+    "type": "rotate",
+    "axis": "Y",
+    "up_deg": 10.0,
+    "pivot": "rear pin under the tang"
+   },
+   "real_pattern": "R7 sides: both sides kept as drawn (the sheet is a mirrored pair; an ambidextrous lever is a real option); thumb pad with 4 grooves 0.2 deep [N]",
+   "closeup": "ER1 lesson: no blocky stacked slab: pad dished 0.3 and grooved",
+   "features_B": {
+    "outline_B": [
+     [
+      -0.96,
+      59.54
+     ],
+     [
+      -33.66,
+      59.54
+     ],
+     [
+      -27.97,
+      54.8
+     ],
+     [
+      -13.75,
+      50.06
+     ],
+     [
+      -4.27,
+      54.8
+     ]
+    ],
+    "pivot_B": [
+     -30.82,
+     54.8
+    ],
+    "proud": 4.05
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT (outline) + TOP (2 mm proud)",
+   "joint_row": "hinge",
+   "contact_parent": "frame",
+   "texel_set": "Steel",
+   "lod0_alloc": 500,
+   "fasteners": [],
+   "revealed": "none",
+   "handling_zones": [
+    "thumb pad"
+   ]
+  },
+  {
+   "id": "mag_release",
+   "display": "Magazine release button (left, behind the guard root): NOT drawn on the sheet",
+   "bone": "mag_release",
+   "process": "M-chamfer",
+   "bevels": {
+    "rim": 0.4
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "C",
+   "authority": "none (real pattern; sheet silent)",
+   "joint": "sliding (0.15-0.40)",
+   "motion": {
+    "type": "translate",
+    "axis": "+Y (into the frame from the left)",
+    "travel_mm": 3.0
+   },
+   "real_pattern": "R8 / Q3: low-profile 9 mm round button, checkered face (bake), proud 0.8 inside a 1 mm fence relief in the steel strip at the guard root; the only invented visible part, needed for the reload clip",
+   "closeup": "button face checkered 0.6 mm (ER1: smooth domes were called)",
+   "features_B": {
+    "centre_B": [
+     39.33,
+     40.58
+    ],
+    "d": 9.0,
+    "proud": 0.8,
+    "side": "left (+Y)"
+   },
+   "trace_ref": "none",
+   "authority_view": "none (real pattern; sheet silent)",
+   "joint_row": "sliding",
+   "contact_parent": "frame",
+   "texel_set": "Steel",
+   "lod0_alloc": 250,
+   "fasteners": [],
+   "revealed": "none",
+   "handling_zones": [
+    "thumb"
+   ]
+  },
+  {
+   "id": "flank_tab",
+   "display": "Slide flank tab (sheet part, both sides; no counterpart on the style reference)",
+   "bone": "slide",
+   "process": "M-chamfer",
+   "bevels": {
+    "edges": 0.4
+   },
+   "finish": "black_oxide",
+   "slot": "M_HP01_Steel",
+   "texel_class": "C",
+   "authority": "LEFT + TOP (3.8 mm proud)",
+   "joint": "butt on the slide flank (inlay with a 0.3 seam)",
+   "real_pattern": "R9: kept as drawn as a fixed inlaid steel tab (an original design element; Q4 asks whether it should be a takedown lever)",
+   "closeup": "seam 0.3 visible with depth; top face slightly crowned",
+   "features_B": {
+    "outline_B": [
+     [
+      50.24,
+      73.76
+     ],
+     [
+      26.54,
+      73.76
+     ],
+     [
+      23.22,
+      67.12
+     ],
+     [
+      26.54,
+      63.8
+     ],
+     [
+      48.81,
+      63.8
+     ]
+    ],
+    "proud": 3.8
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT + TOP (3.8 mm proud)",
+   "joint_row": "visible_seam",
+   "contact_parent": "slide",
+   "texel_set": "Steel",
+   "lod0_alloc": 200,
+   "fasteners": [],
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "none",
+   "handling_zones": []
+  },
+  {
+   "id": "magazine",
+   "display": "Magazine: single-stack steel tube (hidden when seated), base plate visible below the grip",
+   "bone": "magazine",
+   "process": "S-bend",
+   "bevels": {
+    "tube_bends": 1.0,
+    "base_plate_edges": 0.6
+   },
+   "finish": "stainless_brushed (tube) / black_oxide (base plate)",
+   "slot": "M_HP01_Mag",
+   "texel_class": "C base plate / E tube",
+   "authority": "LEFT (base plate 63.2 long, 4.7 tall)",
+   "joint": "seated_mag rows",
+   "dims_mm": {
+    "tube_section": [
+     16.5,
+     34.0
+    ],
+    "tube_wall": 0.9,
+    "length_along_axis": 128.0,
+    "rounds": 7,
+    "follower": "visible through the top when empty"
+   },
+   "real_pattern": "single-stack large-calibre mag (tube ~16.5 x 34) [N]; witness holes on the tube spine (real practice) are hidden in the grip: Q9 default yes (reload-visible)",
+   "closeup": "base plate drop corners and the scratch fan from insertion (wear cause 'mag insertion')",
+   "features_B": {
+    "base_plate_B": [
+     [
+      20.37,
+      -53.28
+     ],
+     [
+      -41.25,
+      -58.02
+     ]
+    ],
+    "seat_B": [
+     -10.44,
+     -53.28
+    ]
+   },
+   "trace_ref": "traces/LEFT_outline.json + traces/TOP_outline.json",
+   "authority_view": "LEFT (base plate 63.2 long, 4.7 tall)",
+   "joint_row": "seated_mag",
+   "contact_parent": "frame",
+   "texel_set": "Mag",
+   "lod0_alloc": 1800,
+   "fasteners": [],
+   "motion": {
+    "type": "fixed"
+   },
+   "revealed": "tube, follower, top round during reload",
+   "handling_zones": [
+    "base plate (insertion palm)"
+   ]
+  }
+ ],
+ "finishes": {
+  "stainless_brushed": {
+   "metallic": 1,
+   "base_lin": [
+    0.67,
+    0.64,
+    0.6
+   ],
+   "rough_along": [
+    0.25,
+    0.4
+   ],
+   "rough_across_add": 0.15,
+   "brush_axis": "part X (slide/barrel flats along the bore; frame flats along the part's long edge)",
+   "wear": "holster bright on slide front, sight bases and flats; sliding polish on slide rails and frame rails; scratches across the brush"
+  },
+  "stainless_bead": {
+   "metallic": 1,
+   "base_lin": [
+    0.6,
+    0.58,
+    0.55
+   ],
+   "rough": [
+    0.45,
+    0.6
+   ],
+   "where": "frame curves (guard, front strap): a matte blast against the brushed flats [J: the sheet reads the guard duller than the slide]"
+  },
+  "black_oxide": {
+   "metallic": 1,
+   "base_lin": [
+    0.16,
+    0.16,
+    0.17
+   ],
+   "rough": [
+    0.3,
+    0.55
+   ],
+   "wear": "grey-brown then bright steel on crests only"
+  },
+  "rubber_pebble": {
+   "metallic": 0,
+   "base_lin": [
+    0.025,
+    0.025,
+    0.027
+   ],
+   "rough": [
+    0.75,
+    0.9
+   ],
+   "pebble_pitch_mm": [
+    0.7,
+    1.1
+   ],
+   "pebble_height_mm": [
+    0.12,
+    0.2
+   ],
+   "wear": "polish (roughness -0.1) at palm swell and thumb rest; dust in the border groove"
+  },
+  "soot": {
+   "metallic": 0,
+   "base_lin": [
+    0.02,
+    0.02,
+    0.02
+   ],
+   "rough": [
+    0.8,
+    0.95
+   ],
+   "where": "crown, ejection window edges (bake masks only)"
+  }
+ },
+ "bones": [
+  {
+   "name": "body",
+   "parent": null,
+   "head_B": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "motion": "fixed (physics body)"
+  },
+  {
+   "name": "slide",
+   "parent": "body",
+   "head_B": [
+    340.88,
+    0.0,
+    0.0
+   ],
+   "motion": "translate -X 0..48 (lock 46, press check 14)"
+  },
+  {
+   "name": "selector",
+   "parent": "slide",
+   "head_B": [
+    -34.61,
+    0.0,
+    87.98
+   ],
+   "motion": "rotate about Y 0 (FIRE) .. -40 (SAFE)"
+  },
+  {
+   "name": "hammer",
+   "parent": "body",
+   "head_B": [
+    -38.4,
+    0.0,
+    65.23
+   ],
+   "motion": "rotate about Y 0 (cocked, rest) .. +58 (down)"
+  },
+  {
+   "name": "trigger",
+   "parent": "body",
+   "head_B": [
+    48.81,
+    0.0,
+    45.79
+   ],
+   "motion": "rotate about Y 0 .. -9 (pull)"
+  },
+  {
+   "name": "slide_stop",
+   "parent": "body",
+   "head_B": [
+    -30.82,
+    0.0,
+    54.8
+   ],
+   "motion": "rotate about Y 0 .. +10 (front up, engaged)"
+  },
+  {
+   "name": "mag_release",
+   "parent": "body",
+   "head_B": [
+    39.33,
+    0.0,
+    40.58
+   ],
+   "motion": "translate -Y 0..3 (pressed in from the left)"
+  },
+  {
+   "name": "magazine",
+   "parent": "body",
+   "head_B": [
+    -10.44,
+    0.0,
+    -53.28
+   ],
+   "motion": "attach only (no weights); keyed in the reload clips"
+  }
+ ],
+ "motion_axes": {
+  "slide": "-X",
+  "selector": "Y",
+  "hammer": "Y",
+  "trigger": "Y",
+  "slide_stop": "Y",
+  "mag_release": "-Y"
+ },
+ "rest_pose": {
+  "slide": 0,
+  "hammer": "cocked (0)",
+  "selector": "FIRE (0)",
+  "slide_stop": 0,
+  "magazine": "seated"
+ },
+ "joints_clearance_mm": {
+  "butt": [
+   0.01,
+   0.05
+  ],
+  "sliding": [
+   0.15,
+   0.4
+  ],
+  "hinge": [
+   0.1,
+   0.3
+  ],
+  "hinge_swept_min": 0.1,
+  "seated_mag": {
+   "lateral": [
+    0.2,
+    0.6
+   ],
+   "foreaft": [
+    0.2,
+    0.6
+   ],
+   "top_stop": [
+    0.1,
+    0.5
+   ],
+   "lug_in_recess": [
+    0.1,
+    0.4
+   ]
+  },
+  "visible_seam": [
+   0.2,
+   0.8
+  ],
+  "why_butt_never_exact": "qa_check no_coincident_vertices fails any vertex pair within 1e-6 m across the joined twin; 0.01 mm is 10x that"
+ },
+ "sockets": [
+  {
+   "name": "Grip",
+   "bone": "body",
+   "B": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "5.1 origin (provisional 46 mm depth, pistol H1)"
+  },
+  {
+   "name": "SupportHand",
+   "bone": "body",
+   "B": [
+    12.32,
+    22.0,
+    -15.36
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "support wrap: off-hand palm on the left grip panel [J], H1 replaces"
+  },
+  {
+   "name": "Muzzle",
+   "bone": "body",
+   "B": [
+    215.19,
+    0.0,
+    78.5
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "crown front on the bore (barrel fixed: body, not slide; 5.3 deviation R4)"
+  },
+  {
+   "name": "ShellEject",
+   "bone": "body",
+   "B": [
+    5.21,
+    -16.0,
+    91.3
+   ],
+   "rot": [
+    0,
+    25.0,
+    -110.0
+   ],
+   "source": "ejection window at the hood end, right side; throw right, up, slightly rear (R5)"
+  },
+  {
+   "name": "Sight",
+   "bone": "slide",
+   "B": [
+    -18.26,
+    0.0,
+    110.73
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "rear notch bottom on the sight line"
+  },
+  {
+   "name": "Mag",
+   "bone": "magazine",
+   "B": [
+    -10.44,
+    0.0,
+    -53.28
+   ],
+   "rot": [
+    0.0,
+    -17.4,
+    0.0
+   ],
+   "source": "well-entry centre, +Z up the grip axis (5.6)"
+  },
+  {
+   "name": "MagInsertStart",
+   "bone": "body",
+   "B": [
+    -28.38,
+    0.0,
+    -110.53
+   ],
+   "rot": [
+    0.0,
+    -17.4,
+    0.0
+   ],
+   "source": "60 mm out along -Z of Mag"
+  },
+  {
+   "name": "Rail_Top",
+   "bone": "body",
+   "B": [
+    5.54,
+    0.0,
+    104.57
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "slot 0 (rearmost) centre on the rail-top plane, standard pitch about the drawn recess centre"
+  },
+  {
+   "name": "Holster",
+   "bone": "body",
+   "B": [
+    85.79,
+    0.0,
+    77.08
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "slide mid, on the bore plane [J]"
+  },
+  {
+   "name": "CenterOfMass",
+   "bone": "body",
+   "B": [
+    38.39,
+    0.0,
+    55.75
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "estimate [D]; the builder recomputes from part volumes and overwrites (5.3)"
+  },
+  {
+   "name": "Trigger",
+   "bone": "trigger",
+   "B": [
+    51.66,
+    0.0,
+    29.68
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "trigger face mid (optional socket)"
+  },
+  {
+   "name": "Selector",
+   "bone": "selector",
+   "B": [
+    -34.61,
+    23.45,
+    72.34
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "lever paddle, left (optional)"
+  },
+  {
+   "name": "MagRelease",
+   "bone": "mag_release",
+   "B": [
+    39.33,
+    18.0,
+    40.58
+   ],
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "source": "button face (optional)"
+  }
+ ],
+ "mag_sockets": [
+  {
+   "name": "Mag",
+   "B": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "name": "HandReload",
+   "B": [
+    0,
+    9.0,
+    -40.0
+   ]
+  },
+  {
+   "name": "Feed",
+   "B": [
+    0,
+    0,
+    124.0
+   ]
+  },
+  {
+   "name": "Base",
+   "B": [
+    0,
+    0,
+    -4.7
+   ]
+  },
+  {
+   "name": "CenterOfMass",
+   "B": [
+    0,
+    0,
+    55.0
+   ]
+  }
+ ],
+ "clips": [
+  {
+   "name": "A_HP01_Fire",
+   "fps": 60,
+   "frames": 10,
+   "keys": {
+    "trigger": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      -9
+     ],
+     [
+      8,
+      -9
+     ],
+     [
+      10,
+      0
+     ]
+    ],
+    "hammer": [
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      58
+     ],
+     [
+      4,
+      -5
+     ],
+     [
+      5,
+      0
+     ]
+    ],
+    "slide_mm": [
+     [
+      2,
+      0
+     ],
+     [
+      4,
+      48
+     ],
+     [
+      8,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "Fire",
+     1
+    ],
+    [
+     "ShellEject",
+     3
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_FireLast",
+   "fps": 60,
+   "frames": 10,
+   "keys": {
+    "trigger": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      -9
+     ],
+     [
+      10,
+      -9
+     ]
+    ],
+    "hammer": [
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      58
+     ],
+     [
+      4,
+      -5
+     ],
+     [
+      5,
+      0
+     ]
+    ],
+    "slide_mm": [
+     [
+      2,
+      0
+     ],
+     [
+      4,
+      48
+     ],
+     [
+      6,
+      46
+     ]
+    ],
+    "slide_stop": [
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      10
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "Fire",
+     1
+    ],
+    [
+     "ShellEject",
+     3
+    ],
+    [
+     "SlideLock",
+     6
+    ]
+   ],
+   "ends": "slide held at 46 with slide_stop up"
+  },
+  {
+   "name": "A_HP01_Reload",
+   "fps": 30,
+   "frames": 60,
+   "keys": {
+    "mag_release": [
+     [
+      6,
+      0
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      14,
+      3
+     ],
+     [
+      16,
+      0
+     ]
+    ],
+    "magazine_mm": [
+     [
+      8,
+      0
+     ],
+     [
+      14,
+      -130
+     ],
+     [
+      16,
+      -130
+     ],
+     [
+      36,
+      -130
+     ],
+     [
+      42,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "MagRelease",
+     8
+    ],
+    [
+     "MagOut",
+     12
+    ],
+    [
+     "MagDrop",
+     16
+    ],
+    [
+     "MagIn",
+     42
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_ReloadEmpty",
+   "fps": 30,
+   "frames": 70,
+   "starts": "slide 46 + slide_stop 10 (FireLast end)",
+   "keys": {
+    "slide_mm": [
+     [
+      0,
+      46
+     ],
+     [
+      52,
+      46
+     ],
+     [
+      55,
+      0
+     ]
+    ],
+    "slide_stop": [
+     [
+      0,
+      10
+     ],
+     [
+      52,
+      10
+     ],
+     [
+      53,
+      0
+     ]
+    ],
+    "mag_release": [
+     [
+      6,
+      0
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      14,
+      3
+     ],
+     [
+      16,
+      0
+     ]
+    ],
+    "magazine_mm": [
+     [
+      8,
+      0
+     ],
+     [
+      14,
+      -130
+     ],
+     [
+      16,
+      -130
+     ],
+     [
+      36,
+      -130
+     ],
+     [
+      42,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "MagRelease",
+     8
+    ],
+    [
+     "MagOut",
+     12
+    ],
+    [
+     "MagDrop",
+     16
+    ],
+    [
+     "MagIn",
+     42
+    ],
+    [
+     "BoltRelease",
+     52
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_Safety",
+   "fps": 30,
+   "frames": 24,
+   "keys": {
+    "selector": [
+     [
+      0,
+      0
+     ],
+     [
+      6,
+      -40
+     ],
+     [
+      18,
+      -40
+     ],
+     [
+      24,
+      0
+     ]
+    ]
+   },
+   "notifies": []
+  },
+  {
+   "name": "A_HP01_SlideRack",
+   "fps": 30,
+   "frames": 20,
+   "keys": {
+    "slide_mm": [
+     [
+      0,
+      0
+     ],
+     [
+      6,
+      48
+     ],
+     [
+      9,
+      48
+     ],
+     [
+      11,
+      0
+     ]
+    ],
+    "hammer": [
+     [
+      0,
+      0
+     ],
+     [
+      5,
+      -5
+     ],
+     [
+      7,
+      0
+     ]
+    ]
+   },
+   "notifies": [
+    [
+     "BoltRelease",
+     9
+    ]
+   ]
+  },
+  {
+   "name": "A_HP01_Inspect",
+   "fps": 30,
+   "frames": 60,
+   "keys": {
+    "slide_mm": [
+     [
+      10,
+      0
+     ],
+     [
+      18,
+      14
+     ],
+     [
+      42,
+      14
+     ],
+     [
+      48,
+      0
+     ]
+    ]
+   },
+   "notifies": [],
+   "note": "press check; the character's inspect montage turns the gun (buyer / game side)"
+  }
+ ],
+ "materials": {
+  "M_HP01_Steel": {
+   "master": "M_Steel_Master",
+   "carries": "stainless_brushed, stainless_bead, black_oxide (baked colour)",
+   "set": "Steel"
+  },
+  "M_HP01_Furniture": {
+   "master": "M_Fabric_Master",
+   "metal_from_orm": false,
+   "carries": "rubber grip",
+   "set": "Furniture"
+  },
+  "M_HP01_Mag": {
+   "master": "M_Steel_Master",
+   "carries": "mag tube stainless + base plate black oxide",
+   "set": "Mag"
+  }
+ },
+ "textures": {
+  "Steel": {
+   "size": 4096,
+   "fill_min": 0.7,
+   "why": "~800 cm2 of metal at classes A-D (pistol targets) needs ~4.1 M texels at 70 % fill; 2048 holds 2.9 M: packer reports, smallest power of two that meets the classes wins"
+  },
+  "Furniture": {
+   "size": 1024,
+   "fill_min": 0.65
+  },
+  "Mag": {
+   "size": 1024,
+   "fill_min": 0.65
+  },
+  "Masks": {
+   "size": 2048
+  },
+  "maps": "T_HP01_<Set>_BC (sRGB), _ORM (linear), _N (DirectX); T_HP01_Masks (linear RGBA)"
+ },
+ "budgets_triangles": {
+  "gun": {
+   "lod0": [
+    15000,
+    25000
+   ],
+   "ceiling": 30000,
+   "alloc": {
+    "slide": 6500,
+    "barrel": 3200,
+    "rail": 900,
+    "sight_front": 400,
+    "front_plate": 500,
+    "recoil_guides": 400,
+    "frame": 4000,
+    "grip": 2500,
+    "trigger": 600,
+    "hammer": 800,
+    "selector": 400,
+    "slide_stop": 500,
+    "mag_release": 250,
+    "flank_tab": 200
+   },
+   "reserve": 1650,
+   "sum": 22800
+  },
+  "magazine": {
+   "lod0": [
+    1000,
+    2000
+   ],
+   "ceiling": 2500,
+   "alloc": 1800
+  },
+  "lod_shares": {
+   "LOD1": 0.45,
+   "LOD2": 0.15
+  },
+  "lod3": [
+   800,
+   1200
+  ]
+ },
+ "lods": {
+  "screen_sizes_start": [
+   1.0,
+   0.25,
+   0.09,
+   0.03
+  ],
+  "rule": "measured by the LOD-pop gate (bounding radius ~0.17 m vs the rifle's 0.45)"
+ },
+ "collision": {
+  "SM_HP01": "UCX_SM_HP01_00..03 (slide+barrel box, frame front box, grip hull, guard hull)",
+  "physics": "PHYS_HP01 one body on body, 2.0 kg"
+ },
+ "names": {
+  "sk": "SK_HP01",
+  "skeleton": "SK_HP01_Skeleton (pistol class pilot)",
+  "sm": "SM_HP01",
+  "mag": "SM_HP01_Mag",
+  "phys": "PHYS_HP01",
+  "clips": [
+   "A_HP01_Fire",
+   "A_HP01_FireLast",
+   "A_HP01_Reload",
+   "A_HP01_ReloadEmpty",
+   "A_HP01_Safety",
+   "A_HP01_SlideRack",
+   "A_HP01_Inspect"
+  ],
+  "exports": "Exports/Guns/HP01/",
+  "asset": "Assets/Guns/HP01.blend",
+  "lock": "HP01"
+ },
+ "camera": {
+  "target": [
+   2560,
+   1440
+  ],
+  "hip_fp_hfov_deg": 70.0,
+  "ads_fp_hfov_deg": 55.0,
+  "ads_eye_relief_mm": 250.0,
+  "b4_supersample": 8,
+  "b4_window_half_px": 110,
+  "lod_pop": {
+   "hfov_deg": 90.0,
+   "distance_factor": 1.778,
+   "rule": "d = 1.778 r / s (Unreal's 2 max(0.5 P00, 0.5 P11) r / d at 16:9, 90 deg)",
+   "headings": [
+    [
+     "right",
+     -90,
+     10
+    ],
+    [
+     "left",
+     90,
+     10
+    ],
+    [
+     "front_right_34",
+     -35,
+     10
+    ],
+    [
+     "rear_left_34",
+     145,
+     10
+    ]
+   ],
+   "supersample": 2,
+   "gate": "mean <= 1 px, max <= 3 px"
+  },
+  "s2_gate_px": 0.5,
+  "b4_gate_mm": 0.2,
+  "pistol": {
+   "hip_eye_to_rear_mm": [
+    350,
+    450
+   ],
+   "ads_eye_to_rear_sight_mm": 300,
+   "inspect_eye_to_gun_mm": [
+    250,
+    350
+   ],
+   "visibility_min_mm": {
+    "rear": 0.35,
+    "mid": 0.45,
+    "front": 0.6
+   },
+   "texel_targets_px_per_cm": {
+    "A": [
+     80,
+     100
+    ],
+    "B": [
+     70,
+     90
+    ],
+    "C": [
+     45,
+     60
+    ],
+    "D": [
+     35,
+     45
+    ],
+    "E": [
+     10,
+     15
+    ]
+   },
+   "why": "a pistol sits 35-45 cm from the eye at the hip and 25-35 cm in an inspect; class C/D raised over the long-gun table (study 5.8 derivation, same formula)"
+  }
+ },
+ "gates": {
+  "S0": "this validator: 0 missing / null fields; real dims within +-5 %; camera block; every bone and socket name from gun_standard 0.3.0",
+  "L1": "blockout IoU LEFT >= 0.95 (RIGHT is a mirror: reported), TOP >= 0.92 (on the Q1 width); < 0.90 = stop and change the method",
+  "L2": "form IoU LEFT >= 0.96, TOP >= 0.93; each part on its authority view >= 0.95",
+  "L3": "P95 contour distance <= 2 sheet px (0.95 mm); features <= 2 sheet px; angles (grip axis, serration lean, top-line rise) <= 1 deg",
+  "L4": "measured vs spec <= 0.05 mm",
+  "L5": "colour report (reported, not a gate, if the user rules CLOSEUP CM-R1 for this gun; default: reported)",
+  "L6": "G1-G20 with evidence; 0 major",
+  "L7": "blind design judge >= 12 pairs <= 8/12; realism judges: fp35 (slide rear + grip), ADS (sights), TP 3 m, hero 3/4: at most 1 of 4 called fake by at most 1 judge",
+  "B1-B10, H1, M1-M5": "as GUN_BUILDING_STUDY 7.2 with the pistol's numbers (budget row pistol: LOD0 15-25k, ceiling 30k; mag 1-2k)",
+  "U1-U12": "as 7.4; U2 for the pistol: Transform Modify Bone slide -X moves straight back; hammer and selector turn about Y",
+  "CU1": "outline fairness: every traced outline is faired before extrusion (deviation to the trace <= 1 sheet px = 0.47 mm; direction change <= 12 deg between 0.5 mm segments except at declared corners; 0 second-difference jags > 0.08 mm)",
+  "CU2": "authored bevels: every edge set's land width within +-0.05 of the spec along its whole length (min >= 0.9 x spec: no clamp collapse); normals monotonic across each land (no stepped bevel)",
+  "CU3": "no slivers / torn faces: gunlib UD rule (Unreal degenerate thresholds) 0 failures; visible-face min angle >= 2 deg; 0 non-manifold; B6a twin topology from W1 on",
+  "CU4": "early realism ER0 at W1c on 8 rendered crops (slide rear + serrations L/R, trigger + guard, grip + slide stop, front sight + crown, hammer + safety, mag base, rail) under the frozen judge rig, 2 judges + 6 real-photo controls: pass <= 1/8 called CG on geometry by both; >= 6/8 = decisive fail: stop and change the method",
+  "CU5": "finish cards tuned on a swatch board first (stainless_brushed, stainless_bead, black_oxide, rubber_pebble) under the grey-card rig, AgX; stainless flat highlight P95/P5 >= 3 in fp35 crops",
+  "CU6": "real-pattern small parts: every part in craft_parts.json real_pattern built as ruled (trigger thickness + crowned face, grooved pads, checkered button, dovetail seams); audit lists each with a crop",
+  "CU7": "marks audit: only the inventory glyphs (safety dot pictograms; rail digits only if Q6 says yes); 0 text",
+  "CU8": "pebble and serration identity from geometry/bakes at real scale: pebble cell >= 3 texels at class B; serration crest polish follows the baked curvature, not noise"
+ },
+ "marks": {
+  "default": [
+   "safety dot pictograms on the slide at the lever arc (white = SAFE, red = FIRE), 0.1 mm V-cut + fill"
+  ],
+  "optional_Q6": [
+   "rail digits on every 2nd crossbar (1913 practice)"
+  ],
+  "never": "maker, model, calibre text, serials, logos"
+ },
+ "real_dimensions_check": {
+  "overall": [
+   273.0,
+   273.0
+  ],
+  "barrel_class": [
+   152.0,
+   152.0
+  ],
+  "mass": [
+   2.0,
+   2.0
+  ]
+ },
+ "S0": {
+  "missing_fields": [],
+  "consistency_checks": {
+   "8 bones from the standard (pistol 8-9)": true,
+   "every bone parent allowed by gun_standard": true,
+   "every socket name in gun_standard": true,
+   "mag socket names in gun_standard": true,
+   "every part bone exists": true,
+   "every socket bone exists": true,
+   "overall 273 within +-5 % of the class": true,
+   "LOD0 allocation + reserve within 15-25k": true,
+   "per-part allocation sums": true,
+   "Muzzle on the bore (Z_B equal to the bore)": true,
+   "Sight above the bore 25-40 mm": true,
+   "slide travel > cartridge class OAL 40.4 + 5": true,
+   "lock position < travel": true,
+   "clips: ReloadEmpty starts where FireLast ends (46, slide_stop 10)": true,
+   "every clip notify a standard name": true,
+   "deny list clean on every asset / bone / socket / material name": true,
+   "grip axis 15-22 deg": true,
+   "camera block present": true,
+   "3 material slots max": true
+  },
+  "deny_hits": {},
+  "deny_terms_read": 48,
+  "status": "pass"
+ }
+}
