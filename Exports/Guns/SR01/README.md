@@ -10,14 +10,20 @@ The rifle is a rigged skeletal mesh. The bolt, trigger, safety, magazine release
 A static twin is included for pickups and world props. The magazine and the scope are separate static meshes. The gun
 carries generic markings only (S / F at the safety): no names, serials or logos.
 
-> **Status (W6, 2026-10-14): verified in Unreal Engine 5.8.3; pack materials not built yet.**
-> - These exact bytes (sha256 in `WorkFiles/guns/sniper/UnrealCheck/SHA256_at_start.json` / `_at_end.json`) were
->   imported and checked in fresh Unreal processes: 37 of 37 gates pass
+> **Status (2026-10-16): verified in Unreal Engine 5.8.3; pack materials specified, Unreal build pending.**
+> - These exact meshes and maps (sha256 in `WorkFiles/guns/sniper/UnrealCheck/SHA256_at_start.json` /
+>   `_at_end.json`) were imported and checked in fresh Unreal processes: 37 of 37 gates pass
 >   (`WorkFiles/guns/sniper/UnrealCheck/verification_summary.json`).
+>   - Exception: the pack-colours stage replaced `Textures/Recolour/` (the Detail16 map and `recolour_maps.json`, now
+>     in the pack's schema) and added `recolour_constants.json`. Only textures and JSON changed; the meshes did not.
 > - The hand fit on a player MetaHuman (U11) was not run: there is no player MetaHuman in the verification project.
-> - The pack's recolourable material instances (`MI_SR01_*`) are proposed but not built
->   (`MATERIALS_README.md`, `WorkFiles/guns/sniper/pack_materials_proposal.md`). The maps here work with any PBR
->   material.
+> - **Pack materials (option D1-a):** the pack builds `MI_SR01_Metal`, `MI_SR01_Chassis`, `MI_SR01_Mag` and the
+>   scope's `MI_Att_Scope_LongRange_Body` / `_Lens`, each with its `_Base`. No master changes.
+>   - The OD ships as baked (*Use Original Baked Colours* ON on `MI_SR01_Chassis_Base`).
+>   - **Recolour is not safe on this item yet.** It will be the OD paint only, after a future master switch. Details
+>     in `MATERIALS_README.md`.
+>   - The Unreal build and its gates (P1-P4) are pending: `WorkFiles/guns/sniper/pack/run_pack_build.sh`. If P1
+>     needs it, the Chassis and Mag BC stay BC7 (the default in the spec).
 
 ## What is in this folder
 
@@ -232,14 +238,15 @@ Use two components per part, both attached as listed:
 
 ## Materials and textures
 
-| Slot | Mesh(es) | Texture set | Proposed pack instance (not built) |
+| Slot | Mesh(es) | Texture set | Pack instance (built by the pack; build pending) |
 |---|---|---|---|
 | `M_SR01_Metal` | 0 on `SK_SR01` and `SM_SR01` | Metal 2048 | `MI_SR01_Metal` (`M_Steel_Master`) |
-| `M_SR01_Chassis` | 1 on `SK_SR01` and `SM_SR01` | Chassis 4096 | `MI_SR01_Chassis` (`M_Fabric_Master`, Metal From ORM on) |
-| `M_SR01_Mag` | 2 on `SM_SR01`, 0 on `SM_SR01_Mag` | Mag 1024 | `MI_SR01_Mag` (`M_Fabric_Master`, Metal From ORM on) |
+| `M_SR01_Chassis` | 1 on `SK_SR01` and `SM_SR01` | Chassis 4096 | `MI_SR01_Chassis` (`M_Fabric_Master`, Metal From ORM on, baked colours on) |
+| `M_SR01_Mag` | 2 on `SM_SR01`, 0 on `SM_SR01_Mag` | Mag 1024 | `MI_SR01_Mag` (`M_Steel_Master`, as the AR-01's magazine) |
 | `M_Att_Scope_Body` / `M_Att_Scope_Lens` | 0 / 1 on the scope | Scope Body 2048 / Lens 512 | `MI_Att_Scope_LongRange_Body` / `_Lens` (`M_Steel_Master`) |
 
-- Maps, colour spaces, Masks channels and the recolour plan are in `MATERIALS_README.md`.
+- Maps, colour spaces, Masks channels and the colour rules (OD baked, recolour not safe yet) are in
+  `MATERIALS_README.md`.
 - **Draw calls in hand:** 10 (gun 2 x 2 + magazine 2 x 1 + scope 2 x 2, FP and TP).
 - **UV tiles:** the twin's UV0 sits in tiles (Metal 0, Chassis 1, merged magazine -1) and the scope's (Body 0,
   Lens 1). Keep Wrap addressing.

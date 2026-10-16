@@ -1,0 +1,537 @@
+{
+ "stage": "SR-01 pack colours (SR01 + SR01_Static + SR01_Mag + Att_Scope_LongRange in the NinjaPack masters; option D1-a)",
+ "tag": "sr01_1016",
+ "engine": "5.8.3-58210709+++UE5+Release-5.8",
+ "validation_project": "WorkFiles/shuriken/UnrealShuriken (/Game/NinjaPack)",
+ "lock": "PackMaterials, owner sr01-pack (run_build.sh ran with NP_OWNER=sr01-pack)",
+ "how": "run_pack_build.sh: make_mirror.py (copies of main's Scripts/unreal/materials + Scripts/pipeline with this branch's spec and derive_constants_sr01.py; junctions to main's Exports of the other items, checked against the last import records, and to this worktree's Exports/Guns/SR01), run_build.sh from the mirror, the captures and this file",
+ "reference_dump": "C:\\Users\\Cody\\Desktop\\Blender_Projects\\.claude\\worktrees\\sniper-sr01\\WorkFiles\\guns\\smg\\materials\\build\\dump_smg01_1013b.json",
+ "exports_sha256": {
+  "Exports/Guns/SR01/A_SR01_BipodDeploy.fbx": "f0d4b4eddf5319c86b2102c7aaaeb1d13d8269c733386d61554e3df8de229263",
+  "Exports/Guns/SR01/A_SR01_BipodStow.fbx": "d79c55cc3658753034573734e0a8103b90d82a533d7e8d49e7b04206b290f167",
+  "Exports/Guns/SR01/A_SR01_BoltCycle.fbx": "dab35ce455b0b5689f828dd3a7eb821b069bfe70f86d030f0ae3d7ed6dea9f29",
+  "Exports/Guns/SR01/A_SR01_CheekRiser.fbx": "ee979dd5560627c1274043c9ef0ce3ab24652d9d3da1ecf744745abda6fd5e94",
+  "Exports/Guns/SR01/A_SR01_Fire.fbx": "0a60cdf961a48413dcb84007fb09b2a74c843c4c306aace71e0ae0bf1c037bf7",
+  "Exports/Guns/SR01/A_SR01_Reload.fbx": "f1ad4d1615178395f2fd71197ae7e51d5ec0e16d02aade9df45a67ded276af59",
+  "Exports/Guns/SR01/A_SR01_ReloadEmpty.fbx": "83582341eb67ef074db407316f28880f77747b16f60ed03d1d01d728aadce18d",
+  "Exports/Guns/SR01/A_SR01_Selector.fbx": "811492817510c1cef6470892edda8f3cea9794fb3e2d8e7ec9c90403decc2bc1",
+  "Exports/Guns/SR01/SK_SR01.fbx": "9f6fcb70500330f2848e6847d9bb0c8cfacd3698cd4794eb77a62ae8495d5db6",
+  "Exports/Guns/SR01/SK_SR01.skeletal.json": "e68d4c807d153f772a87433648905a3630ec1c4f9f9ffe9ce2055b56708ca625",
+  "Exports/Guns/SR01/SK_SR01_LOD1.fbx": "f5ad7c1f6b296c802e0eb877ad8424e89522230feebb8405ecfb41de409351fc",
+  "Exports/Guns/SR01/SK_SR01_LOD2.fbx": "392801a17e0997c83d6ae9e1821483d623bca7922ce29df20e6ff8b3cb0c578f",
+  "Exports/Guns/SR01/SK_SR01_LOD3.fbx": "8a16a14946df3d1a55831ad231d34ca7604749a81d163d8e22e1c196960cf67d",
+  "Exports/Guns/SR01/SM_Att_Scope_LongRange.fbx": "732085967aff356b1448c93989c266fb00f593d23cb0d5f763632dd6d7b0ee3a",
+  "Exports/Guns/SR01/SM_SR01.fbx": "3dd9786545f09c8eee0ff2969f9ac116775629f5870c6730d6a3e2079ff8ab0d",
+  "Exports/Guns/SR01/SM_SR01_Mag.fbx": "a4ac59d2ea8083baa2904776fb9bdb0451ffc4367fa4405177e7fcfa9c0828f1",
+  "Exports/Guns/SR01/Textures/Recolour/recolour_constants.json": "283954603930a317e1947c88036a8b0486874aaf6f29c0a377fee5864a39eeb9",
+  "Exports/Guns/SR01/Textures/Recolour/recolour_maps.json": "aeb0cc5e1b1ddefc4f937a9093016feb892bf921622cee121f6daef0824000fc",
+  "Exports/Guns/SR01/Textures/Recolour/T_SR01_Chassis_Detail16.png": "4f4dc439346b8043ec58402711cd8539752e3b025a263425f1083901a657f132",
+  "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Body_BC.png": "68985a0b7ba9b14381be76087987c4e325ccc21a00ef8b9ff363cd1a9c7b14ca",
+  "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Lens_BC.png": "e8e0c006b2f3de8ed2cda641cf646dd9d529570e3583aa630c53aa34d9fbf90f",
+  "Exports/Guns/SR01/Textures/T_SR01_Chassis_BC.png": "76405726133b466929bdd50e6817abc01d8c0462eb1dab531eede73acd0606b8",
+  "Exports/Guns/SR01/Textures/T_SR01_Mag_BC.png": "537164323c8f92a7ca0526df67f12386979c9aea0abb81886cf5d4f5bf5b9b00",
+  "Exports/Guns/SR01/Textures/T_SR01_Metal_BC.png": "128186ee4e80fceab8255e9b1c00e3c07bd5546877cd46891c8302488dee6918"
+ },
+ "shipped_colour": {
+  "SR01/Chassis": {
+   "Colour_linear": [
+    0.07955342914574413,
+    0.08148368724742042,
+    0.05818562082328038,
+    1.0
+   ]
+  }
+ },
+ "gates": [
+  {
+   "name": "S1 constants (maps/derive_constants_sr01.py = derive_constants.fabric_part, run from the mirror on main's LF bytes of the pack code): default equals the v1 contract at mip 0 and every mip, guards inactive, mip drift of the fit within 2 %",
+   "blocking": true,
+   "value": {
+    "SR01/Chassis": {
+     "default_equals_v1_contract": true,
+     "default_guards_inactive": true,
+     "default_every_mip_equals_v1": true,
+     "mip_mean_drift_within_2pct": true
+    }
+   },
+   "twin_sha256": "738545ec678088158dea86ddf5ff786941df07b9537d745f30a17ebac9c4b66a",
+   "threshold": "all",
+   "pass": true
+  },
+  {
+   "name": "S2 spec additions only: the spec without the SR01 keys equals material_spec_before_sr01.json (add_sr01_to_spec.py projection check, re-run by run_pack_build.sh); preflight + maps_check OK",
+   "blocking": true,
+   "value": "checked by run_pack_build.sh before the build (stops otherwise)",
+   "threshold": "equal",
+   "pass": true
+  },
+  {
+   "name": "S3 pack build run_build.sh sr01_1016 (preflight, maps_check, import_meshes, import_textures, clean, build, assign, verify, render) from the short-path mirror: every Unreal step passed=True, 0 compile failures",
+   "blocking": true,
+   "value": {
+    "steps_passed": 7,
+    "compile_failures_0_lines": 7,
+    "STOP_in_log": false
+   },
+   "threshold": "7 Unreal steps passed, 7 x 0 compile failures",
+   "pass": true
+  },
+  {
+   "name": "S4 pack verify gates (fresh process): functions, masters, instances, meshes, textures, dependencies, accounting",
+   "blocking": true,
+   "value": {
+    "functions": true,
+    "masters": true,
+    "instances": true,
+    "meshes": true,
+    "textures": true,
+    "dependencies": true,
+    "accounting": true
+   },
+   "threshold": "all true",
+   "pass": true
+  },
+  {
+   "name": "S5 SR01 + scope instances read back (parent + every effective value), permutations compile",
+   "blocking": true,
+   "value": {
+    "MI_Att_Scope_LongRange_Body": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": []
+    },
+    "MI_Att_Scope_LongRange_Body_Base": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": [
+      "Base Colour Map",
+      "Normal Map",
+      "ORM Map"
+     ]
+    },
+    "MI_Att_Scope_LongRange_Lens": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": []
+    },
+    "MI_Att_Scope_LongRange_Lens_Base": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": [
+      "Base Colour Map",
+      "Normal Map",
+      "ORM Map"
+     ]
+    },
+    "MI_SR01_Chassis": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Colour"
+     ]
+    },
+    "MI_SR01_Chassis_Base": {
+     "pass": true,
+     "ps_instructions": 163,
+     "samplers": 4,
+     "overridden": [
+      "Albedo Ceiling",
+      "Base Colour Map",
+      "Cloth Sheen",
+      "Colour",
+      "Dark Detail Follow",
+      "Detail Bias",
+      "Detail Highlight Ratio",
+      "Detail Map",
+      "Detail Map Size",
+      "Detail Mean",
+      "Detail Mip Compensation 1-4",
+      "Detail Mip Compensation 5-8",
+      "Detail Mip Compensation Power",
+      "Detail Moments High",
+      "Detail Moments Low",
+      "Detail Scale",
+      "Lightest Colour",
+      "Metal From ORM",
+      "Normal Map",
+      "ORM Map",
+      "Specular From ORM Alpha",
+      "Specular Strength",
+      "Use Lettering",
+      "Use Original Baked Colours"
+     ]
+    },
+    "MI_SR01_Mag": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": []
+    },
+    "MI_SR01_Mag_Base": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": [
+      "Base Colour Map",
+      "Normal Map",
+      "ORM Map"
+     ]
+    },
+    "MI_SR01_Metal": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": []
+    },
+    "MI_SR01_Metal_Base": {
+     "pass": true,
+     "ps_instructions": 165,
+     "samplers": 4,
+     "overridden": [
+      "Base Colour Map",
+      "Normal Map",
+      "ORM Map"
+     ]
+    }
+   },
+   "threshold": "10 pass",
+   "pass": true
+  },
+  {
+   "name": "S6 every other pack entry unchanged: dump dump_smg01_1013b.json (the last pack build) vs dump_sr01_1016",
+   "blocking": true,
+   "value": {
+    "functions": {
+     "before": 5,
+     "after": 5,
+     "added": 0,
+     "removed": 0,
+     "changed": 0
+    },
+    "masters": {
+     "before": 3,
+     "after": 3,
+     "added": 0,
+     "removed": 0,
+     "changed": 0
+    },
+    "instances": {
+     "before": 81,
+     "after": 91,
+     "added": 10,
+     "removed": 0,
+     "changed": 0
+    },
+    "meshes": {
+     "before": 29,
+     "after": 33,
+     "added": 4,
+     "removed": 0,
+     "changed": 0
+    },
+    "textures": {
+     "before": 135,
+     "after": 151,
+     "added": 16,
+     "removed": 0,
+     "changed": 0
+    },
+    "node_layout_identical": true,
+    "added": {
+     "functions": 0,
+     "masters": 0,
+     "instances": 10,
+     "meshes": 4,
+     "textures": 16
+    }
+   },
+   "threshold": "only SR01 / scope entries added (10 instances, 4 meshes, 16 textures); nothing removed or changed; node layout identical",
+   "pass": true
+  },
+  {
+   "name": "S7 SK_SR01 imported by the pack's skeletal path from the W5-verified bytes: 4 LODs, sockets as the sidecar (20), 8 clips, PHYS_SR01, bounds extension; every SR01 FBX = the W5 bytes",
+   "blocking": true,
+   "value": {
+    "lods": 4,
+    "sockets": 20,
+    "sidecar_sockets": 20,
+    "clips": 8,
+    "physics": {
+     "body": {
+      "unreal_bone": "body",
+      "boxes": 8,
+      "capsules": 1,
+      "spheres": 0
+     }
+    },
+    "bounds_extension_cm": {
+     "positive": [
+      0.0,
+      8.681,
+      2.42
+     ],
+     "negative": [
+      0.0,
+      12.877,
+      18.391
+     ]
+    },
+    "lod_sizes": [
+     1.0,
+     0.27332,
+     0.08855,
+     0.03608
+    ],
+    "fbx_sha_equals_W5": {
+     "SK_SR01": true,
+     "SM_SR01": true,
+     "SM_SR01_Mag": true,
+     "SM_Att_Scope_LongRange": true
+    }
+   },
+   "threshold": "as the sidecar; bytes = W5",
+   "pass": true
+  },
+  {
+   "name": "P1 default capture = shipped BC: MI_SR01_Chassis (baked colours ON) and MI_SR01_Mag vs the BC PNG at the measured sample positions (the other compression measured beside it)",
+   "blocking": true,
+   "value": {
+    "chassis": {
+     "shipped": "<TextureCompressionSettings.TC_BC7: 11>",
+     "shipped_vs_BC": {
+      "max": 5,
+      "mean": 0.04396,
+      "p99_9": 1.0,
+      "p99": 1.0,
+      "texels_gt1": 4731,
+      "texels_gt2": 167,
+      "texels": 16777216,
+      "dE00": {
+       "mean": 0.1073,
+       "p99": 0.81
+      }
+     },
+     "alt": "BC1 (TC_DEFAULT)",
+     "alt_vs_BC": {
+      "max": 19,
+      "mean": 1.00769,
+      "p99_9": 4.0,
+      "p99": 3.0,
+      "texels_gt1": 2008537,
+      "texels_gt2": 282706,
+      "texels": 16777216
+     }
+    },
+    "mag": {
+     "shipped": "<TextureCompressionSettings.TC_BC7: 11>",
+     "shipped_vs_BC": {
+      "max": 3,
+      "mean": 0.05349,
+      "p99_9": 1.0,
+      "p99": 1.0,
+      "texels_gt1": 143,
+      "texels_gt2": 6,
+      "texels": 1048576,
+      "dE00": {
+       "mean": 0.0771,
+       "p99": 1.0201
+      }
+     },
+     "alt": "BC1 (TC_DEFAULT)",
+     "alt_vs_BC": {
+      "max": 17,
+      "mean": 0.97702,
+      "p99_9": 4.0,
+      "p99": 3.0,
+      "texels_gt1": 177202,
+      "texels_gt2": 17089,
+      "texels": 1048576
+     }
+    }
+   },
+   "threshold": "p99.9 <= 2 levels (shipped)",
+   "pass": true,
+   "note": "if the shipped kind is BC7 and the BC1 alt also meets p99.9 <= 2, the BC1 kind may be chosen (saves memory): re-run add_sr01_to_spec.py --bc-kind BC / --mag-bc-kind BC and rebuild. If the shipped kind is BC1 and misses, use BC7 (the plan's fallback)"
+  },
+  {
+   "name": "P2 the chassis recolour path (switch OFF) at the default Colour vs the pack's float twin, OD texels",
+   "blocking": true,
+   "value": {
+    "max": 18,
+    "mean": 0.06278,
+    "p99_9": 1.0,
+    "p99": 1.0,
+    "texels_gt1": 1,
+    "texels_gt2": 1,
+    "texels": 2482042
+   },
+   "threshold": "p99.9 <= 1, mean <= 0.3",
+   "pass": true,
+   "note": "its distance from the BC on the OD (detail size): p99.9 38.0 levels (why the default ships the baked BC, D1-a)"
+  },
+  {
+   "name": "P3a 13-colour stress (10 + tan C2B280 / OD 4B5320 / FDE B08D57) on the chassis OD texels (mip 0) vs the twin",
+   "blocking": true,
+   "value": {
+    "FFFFFF": 1.0,
+    "FF0000": 1.0,
+    "0000FF": 1.0,
+    "F2E8D5": 1.0,
+    "000000": 1.0,
+    "808080": 1.0,
+    "1A1A1A": 1.0,
+    "3050A0": 1.0,
+    "2E5E2E": 1.0,
+    "6B3C27": 1.0,
+    "C2B280": 1.0,
+    "4B5320": 1.0,
+    "B08D57": 1.0
+   },
+   "threshold": "p99.9 <= 1 level per colour, 13 captures",
+   "pass": true,
+   "worst_level": 1.0
+  },
+  {
+   "name": "P3b the pack's v3 gate on the same 13 captures (clip <= 0.1 %, banding, std ratio >= 0.25, Spearman vs the default capture >= 0.98): reported; a near-black Spearman miss the 8-bit twin also shows is the pack's known floor",
+   "blocking": false,
+   "value": {
+    "failures": [
+     "FFFFFF",
+     "FF0000",
+     "0000FF",
+     "F2E8D5",
+     "000000",
+     "808080",
+     "1A1A1A",
+     "6B3C27",
+     "C2B280",
+     "4B5320",
+     "B08D57"
+    ],
+    "floor_check_twin_spearman": {
+     "chassis_000000": {
+      "float": 1.0,
+      "8bit": 0.9424,
+      "mean_srgb_level": 25.2
+     },
+     "chassis_1A1A1A": {
+      "float": 1.0,
+      "8bit": 0.934,
+      "mean_srgb_level": 25.8
+     },
+     "chassis_808080": {
+      "float": 1.0,
+      "8bit": 0.9684,
+      "mean_srgb_level": 127.5
+     }
+    }
+   },
+   "threshold": "13 pass",
+   "pass": false,
+   "explained_by_8bit_floor": false
+  },
+  {
+   "name": "P4 mip drift: mip-4 capture mean vs the box-filtered mip-0 capture (14 colours incl. the default)",
+   "blocking": true,
+   "value": {
+    "worst_abs_ratio_minus_1": 0.00508
+   },
+   "threshold": "<= 0.02",
+   "pass": true
+  },
+  {
+   "name": "R1 steel sets vs their BC PNG (BC1; reported, the pack does not gate steel)",
+   "blocking": false,
+   "value": {
+    "metal": {
+     "max": 30,
+     "mean": 1.24548,
+     "p99_9": 8.0,
+     "p99": 3.0,
+     "texels_gt1": 975395,
+     "texels_gt2": 129006,
+     "texels": 4194304
+    },
+    "scope_body": {
+     "max": 30,
+     "mean": 0.18514,
+     "p99_9": 4.0,
+     "p99": 2.0,
+     "texels_gt1": 198460,
+     "texels_gt2": 37451,
+     "texels": 4194304
+    },
+    "scope_lens": {
+     "max": 14,
+     "mean": 0.74421,
+     "p99_9": 3.0,
+     "p99": 2.0,
+     "texels_gt1": 19453,
+     "texels_gt2": 1527,
+     "texels": 262144
+    }
+   },
+   "threshold": "report",
+   "pass": true
+  },
+  {
+   "name": "R2 texture memory in Unreal (with mips)",
+   "blocking": false,
+   "value": {
+    "T_Att_Scope_LongRange_Scope_Body_BC": 2818048,
+    "T_Att_Scope_LongRange_Scope_Body_N": 5636096,
+    "T_Att_Scope_LongRange_Scope_Body_ORM": 2818048,
+    "T_Att_Scope_LongRange_Scope_Lens_BC": 196608,
+    "T_Att_Scope_LongRange_Scope_Lens_N": 393216,
+    "T_Att_Scope_LongRange_Scope_Lens_ORM": 196608,
+    "T_SR01_Chassis_BC": 22413312,
+    "T_SR01_Chassis_Detail16": 11206656,
+    "T_SR01_Chassis_N": 22413312,
+    "T_SR01_Chassis_ORM": 11206656,
+    "T_SR01_Mag_BC": 1441792,
+    "T_SR01_Mag_N": 1441792,
+    "T_SR01_Mag_ORM": 720896,
+    "T_SR01_Metal_BC": 2818048,
+    "T_SR01_Metal_N": 5636096,
+    "T_SR01_Metal_ORM": 2818048
+   },
+   "total_MiB": 89.81,
+   "threshold": "report",
+   "pass": true
+  },
+  {
+   "name": "R3 lit Unreal frames (render sr01_1016): LOOK AT THEM before merging (the twin's three UV tiles resolve; scope on the rail)",
+   "blocking": false,
+   "value": {
+    "SK_SR01": [],
+    "SM_Att_Scope_LongRange": [
+     "threequarter",
+     "top",
+     "low"
+    ],
+    "SM_SR01": [
+     "threequarter",
+     "top",
+     "low"
+    ],
+    "SM_SR01_Mag": [
+     "threequarter",
+     "top",
+     "low"
+    ]
+   },
+   "threshold": "rendered, no error; looked at by the main chat",
+   "pass": true
+  }
+ ],
+ "blocking_failed": [],
+ "reported_failed": [
+  "P3b the pack's v3 gate on the same 13 captures (clip <= 0.1 %, banding, std ratio >= 0.25, Spearman vs the default capture >= 0.98): reported; a near-black Spearman miss the 8-bit twin also shows is the pack's known floor"
+ ],
+ "status": "pass on the blocking gates; P3b v3 failure NOT explained by the 8-bit floor: look before merging"
+}

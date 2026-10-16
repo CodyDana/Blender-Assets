@@ -3,12 +3,28 @@
 This file covers:
 - the texture sets and which slot uses which;
 - how to import the maps (colour spaces, compression, channels);
-- the planned OD-paint recolour.
+- the pack's material instances;
+- the OD-paint recolour (not safe on this item yet; the pack's recolour-quality gate P3b also fails on it).
 
-> **The pack's material instances for the SR-01 are not built yet.** The pack's shared masters are `M_Steel_Master`
-> and `M_Fabric_Master`, as on the AR-01 and the SMG. The instances `MI_SR01_Metal`, `MI_SR01_Chassis`,
-> `MI_SR01_Mag`, `MI_Att_Scope_LongRange_Body` and `MI_Att_Scope_LongRange_Lens` (each with its `_Base`) are
-> specified, not built. The maps below are complete and work with any standard PBR material:
+> **The pack builds the SR-01's material instances** from the shared masters `M_Steel_Master` and `M_Fabric_Master`,
+> as on the AR-01 and the SMG. No master was changed for the SR-01.
+>
+> | Instance (on the mesh) | Holds the settings | Master | Slot |
+> |---|---|---|---|
+> | `MI_SR01_Metal` | `MI_SR01_Metal_Base` | `M_Steel_Master` | `M_SR01_Metal` |
+> | `MI_SR01_Chassis` | `MI_SR01_Chassis_Base` | `M_Fabric_Master` (Metal From ORM ON, *Use Original Baked Colours* ON) | `M_SR01_Chassis` |
+> | `MI_SR01_Mag` | `MI_SR01_Mag_Base` | `M_Steel_Master` | `M_SR01_Mag` |
+> | `MI_Att_Scope_LongRange_Body` | `MI_Att_Scope_LongRange_Body_Base` | `M_Steel_Master` | `M_Att_Scope_Body` |
+> | `MI_Att_Scope_LongRange_Lens` | `MI_Att_Scope_LongRange_Lens_Base` | `M_Steel_Master` | `M_Att_Scope_Lens` |
+>
+> - The `_Base` instance holds every texture and matched setting. The instance on the mesh overrides only its colour.
+>   Reset to default gives back the shipped look.
+> - **Every instance shows the baked maps exactly.** The OD ships as baked.
+>
+> **Build status (2026-10-16):** the spec entries, the recolour maps and constants are done, and every check that
+> needs no Unreal passes. The Unreal build and its gates are pending (`WorkFiles/guns/sniper/pack/run_pack_build.sh`;
+> results in `WorkFiles/guns/sniper/gates/pack_materials.json`). Until it has run, use the maps with any standard PBR
+> material:
 > - BaseColor = BC;
 > - AO / Roughness / Metallic = ORM R / G / B;
 > - Normal = N.
@@ -33,7 +49,7 @@ This file covers:
 
 | Map | Setting |
 |---|---|
-| `*_BC` | sRGB on. Compression Default (BC1). For the Chassis and Mag BC, BC7 is recommended if the dark wear must match exactly (the SMG's polymer BCs drifted 5-8 levels with BC1 and 2 with BC7; not yet measured on the SR-01) |
+| `*_BC` | sRGB on. Metal and scope: compression Default (BC1). **Chassis and Mag: BC7** (the pack imports them as BC7). The SMG's dark polymer BCs drifted 5-8 levels with BC1 and 2 with BC7. The pack build measures both on the SR-01. If BC1 is within 2 levels there, the pack may switch to BC1 to save memory |
 | `*_ORM` | sRGB off, compression Masks, no alpha. R ambient occlusion, G roughness, B metallic (0 or 1). Optional: set the composite texture to the set's normal map (*Normal Roughness To Green*, power 1) to cut specular shimmer at distance |
 | `*_N` | Normal map compression, **DirectX** convention (green already flipped, *Flip Green Channel* off). 16-bit source. Group `WeaponNormalMap` in a game |
 | `*_Masks` (half size) | sRGB off, compression Masks. **Not used by the pack's materials**; for your own wear or dirt layer. Channels below |
@@ -53,34 +69,38 @@ This file covers:
 | B | Cavity (recesses that collect dust) |
 | A | Refinishable: **1 only on the OD paint**, 0 on anodize, polymer, rubber and steel (on the Metal, Mag and scope sets A is 0 everywhere) |
 
-## The recolour plan (OD paint = the user colour)
+## Colours: the OD ships as baked; recolour is not safe on this item yet
 
-- **What is planned:** one recolour group `SR01` with one member, `M_SR01_Chassis`. The buyer picks one **Colour**
-  for the OD paint (tan, black, grey, FDE...). The paint's peel, rub, chips and polish then follow the new colour.
-  The metal, the magazine and the scope stay baked.
-- **The shipped instance shows the baked colours** (*Use Original Baked Colours* ON). The OD's chip and rub hue is
-  finer than one Colour can hold: the default recolour path is within 1 level at p99 and 4 levels at p99.9 of the BC,
-  against the pack's 2-level bar.
+- **Shipped:** `MI_SR01_Chassis_Base` has *Use Original Baked Colours* ON. The default look is the BC itself: the OD
+  paint with its peel, rub, chips and polish, the black anodize, the polymer grip and the rubber pad.
+- **Do not switch *Use Original Baked Colours* off on the SR-01.** The Chassis set also carries the black anodize, the
+  polymer grip and the rubber pad: 28 % of its painted texels. `M_Fabric_Master` has no mask input. With the switch
+  off, the recolour path would tint the grip, the pad and the bipod as well as the paint.
+- **The recolour will be the OD paint only, and only after a future master switch.** The plan is one static switch
+  on `M_Fabric_Master`, default off, that masks the tint with Masks A (option D1-b in
+  `WorkFiles/guns/sniper/pack_materials_proposal.md`). It is not built. When it is, the recolour group `SR01` (one
+  member, `M_SR01_Chassis`) is ready: the buyer picks one **Colour** for the paint, and the paint's wear follows it.
+- **Even with that switch, one Colour cannot hold all of the OD's hue.** On the OD, the default recolour path is
+  within 1 level of the BC at p99 and 3 levels at p99.9 (bar 2). That is why the shipped instance keeps the BC.
+- **Your own paint colour today:** in your own material, lerp between the BC and your tinted colour with Masks A as
+  the mask (A = 1 only on the OD paint).
+- **The magazine, the metal and the scope have no OD paint.** They are baked, on `M_Steel_Master`.
+- **Measured in the pack build `sr01_1016` (2026-10-16):** the shipped default equals the BC (P1), the recolour path matches the pack's float twin (P2) and the 13-colour stress test passes against the twin (P3a), but the pack's v3 recolour-quality gate (P3b: detail kept, Spearman vs the default >= 0.98) fails on 11 of 13 colours, not only at the 8-bit black floor. A recoloured OD would lose part of its wear detail. One more reason the item ships baked; a recolour needs D1-b plus a recolour-specific detail pass first. Details: `WorkFiles/guns/sniper/gates/pack_materials.json`.
 
-**Open point before the instances are built.** The Chassis set also carries the black anodize, the polymer grip and
-the rubber pad: 28 % of its painted texels. The pack's `M_Fabric_Master` has no mask input, so switching off the baked
-colours would tint those parts too. Masks A already marks exactly the OD paint. The fix is either:
-- a small mask switch on the master; or
-- keeping the SR-01 baked-only until that switch exists.
-
-The proposal and its gates are in `WorkFiles/guns/sniper/pack_materials_proposal.md`. Until then, **do not switch
-off the baked colours on the Chassis**. For a different paint colour in your own material, use Masks A as the lerp
-mask between the BC and your tinted colour.
-
-`Recolour/recolour_maps.json` and `Recolour/T_SR01_Chassis_Detail16.png` are the preliminary maps from the surface
-stage. They use the same OD texels (Masks A) and the same default Colour (linear about 0.080 / 0.082 / 0.058). The
-pack build rewrites them in the pack's schema and adds `recolour_constants.json`, the matched settings for the
-master's detail model.
+**Recolour files (pack schema).**
+- `Recolour/T_SR01_Chassis_Detail16.png` (2048, 16-bit linear): normalised luminance over the OD texels (Masks A = 1),
+  written by `WorkFiles/guns/sniper/materials/sr01_recolour_maps.py`.
+- `Recolour/recolour_maps.json` (schema `ninjapack.recolour_maps/1`): records the map, the group and the defaults.
+- `Recolour/recolour_constants.json`: the matched settings for the master's detail model. Written by the pack's
+  `maps/derive_constants_sr01.py`; every gate passes.
+- Default Colour (linear): about 0.080 / 0.081 / 0.058.
+- These replace the preliminary maps from the surface stage. Only textures and JSON changed; the meshes did not.
 
 ## Metal and scope
 
-- **Metal and scope:** baked finishes, not designed to be recoloured. The planned `M_Steel_Master` instances have one
-  colour control, **Steel Tint** (white = as shipped), which multiplies the base colour. The bare-steel wear comes from
+- **Metal, magazine and scope:** baked finishes, not designed to be recoloured. Their `M_Steel_Master` instances have
+  one colour control, **Steel Tint** (white = as shipped), which multiplies the base colour. The magazine is on
+  `M_Steel_Master`, as on the AR-01: it has no OD paint, and the steel master shows its BC exactly. The bare-steel wear comes from
   the ORM's metallic channel, so a strong tint also colours the worn edges.
 - **Lens:** stays dark and glossy.
 
@@ -94,5 +114,5 @@ The sets are:
 - Masks at half size;
 - Detail16 2048.
 
-In Unreal with BC1 / Masks / normal compression and full mips, the Chassis set is the largest: 4096 BC + N + ORM.
-Measure the total with the pack build; it is not recorded here.
+The Chassis set is the largest: 4096 BC (BC7) + N + ORM. The pack build's render step records the memory in Unreal
+(full mips) in `WorkFiles/guns/sniper/gates/pack_materials.json` (R2).

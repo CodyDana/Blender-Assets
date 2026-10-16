@@ -3271,6 +3271,380 @@
      "base_instance": "MI_SMG01_Mag_Base"
     }
    ]
+  },
+  {
+   "item": "SR01",
+   "kind": "skeletal",
+   "folder": "/Game/NinjaPack/Meshes/SR01",
+   "short": "SR01",
+   "mesh": "SK_SR01",
+   "fbx": "Exports/Guns/SR01/SK_SR01.fbx",
+   "sidecar": "Exports/Guns/SR01/SK_SR01.skeletal.json",
+   "note": "ADDED 2026-10-16 (the SR-01 pack-colours stage). The rigged bolt-action sniper rifle: 13 bones + root, 4 LODs (SK_SR01_LOD1-3.fbx), 8 weapon clips (incl. BipodDeploy / BipodStow / CheekRiser), PHYS_SR01 (7 boxes + 1 capsule + a no-collision, no-mass bounds-envelope box), 20 sockets, bounds extension for the bipod, bolt and riser; np_skeletal.py imports it into its own folder from the sidecar (slots by name). The magazine (SM_SR01_Mag on Mag) and the scope (SM_Att_Scope_LongRange on Rail_Top + 2 slots) are their own meshes. Metal 2048, Chassis 4096, all UV0 in 0..1",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_SR01_Metal",
+     "part": "Metal",
+     "instance": "MI_SR01_Metal",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_SR01_Metal_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_SR01_Metal_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_SR01_Metal_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SR01_Metal_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_SR01_Metal_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0 phosphate / blued / lacquer, 1 polished bolt body and bare-steel wear)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SR01_Metal_N (DirectX, 16-bit source)"
+     },
+     "note": "the steel parts: receiver, rail, fluted barrel and compensator, bolt (polished body, phosphate shroud) and handle, trigger, safety, release, pins and fasteners; baked finish, not recolourable; Steel Tint multiplies",
+     "base_instance": "MI_SR01_Metal_Base"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_SR01_Chassis",
+     "part": "Chassis",
+     "instance": "MI_SR01_Chassis",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Guns/SR01/Textures/Recolour/T_SR01_Chassis_Detail16.png (16-bit linear tint-ready detail over the OD paint only, Masks A = 1; WorkFiles/guns/sniper/materials/sr01_recolour_maps.py)",
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_SR01_Chassis_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_SR01_Chassis_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_SR01_Chassis_N.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SR01_Chassis_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": {
+      "BC": 4096,
+      "Detail": 2048,
+      "ORM": 4096,
+      "N": 4096
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": false,
+      "Cloth Sheen": false,
+      "Use Lettering": false,
+      "Metal From ORM": true,
+      "Use Original Baked Colours": true
+     },
+     "look_contract": {
+      "BaseColor": "shipped (Use Original Baked Colours ON): T_SR01_Chassis_BC exactly (the OD paint with orange peel, chips to dark anodize and rubs, plus the set's black anodize, polymer and rubber); recolour (switch OFF): saturate(Colour x (Detail Bias + Detail Scale x Detail)), then Metal From ORM's lerp back to the BC on metallic or bright texels. OPEN (proposal D1): the master has no mask input, so the set's non-OD texels (28 %) would be tinted too",
+      "Metallic": "ORM.B (Metal From ORM on: bright bare-aluminium chip cores are 1)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SR01_Chassis_N (DirectX, 16-bit source)"
+     },
+     "note": "the chassis set: OD-painted aluminium chassis, forend, butt and cheek riser (Masks A = 1), with the black anodized bipod and hardware, polymer grip and rubber butt pad (Masks A = 0); default Colour = the OD's covered-texel mean (draft, linear 0.0796 / 0.0815 / 0.0582)",
+     "base_instance": "MI_SR01_Chassis_Base"
+    }
+   ]
+  },
+  {
+   "item": "SR01_Static",
+   "mesh": "SM_SR01",
+   "fbx": "Exports/Guns/SR01/SM_SR01.fbx",
+   "sidecar": "Exports/Guns/SR01/SM_SR01.sockets.json",
+   "note": "ADDED 2026-10-16. The static twin of SK_SR01 (bipod folded) with a merged magazine copy (identical to SM_SR01_Mag at every LOD): 4 LODs, 10 UCX hulls, 20 sockets. UV0 tiles: Metal 0, Chassis 1, merged magazine -1 (Wrap addressing reads the same texels); it shares the three instances with SK_SR01 and SM_SR01_Mag",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_SR01_Metal",
+     "part": "Metal",
+     "instance": "MI_SR01_Metal",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_SR01_Metal_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_SR01_Metal_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_SR01_Metal_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SR01_Metal_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_SR01_Metal_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0 phosphate / blued / lacquer, 1 polished bolt body and bare-steel wear)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SR01_Metal_N (DirectX, 16-bit source)"
+     },
+     "note": "the steel parts: receiver, rail, fluted barrel and compensator, bolt (polished body, phosphate shroud) and handle, trigger, safety, release, pins and fasteners; baked finish, not recolourable; Steel Tint multiplies",
+     "base_instance": "MI_SR01_Metal_Base"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_SR01_Chassis",
+     "part": "Chassis",
+     "instance": "MI_SR01_Chassis",
+     "master": "M_Fabric_Master",
+     "recolourable": true,
+     "tint_ready_shipped": true,
+     "textures": {
+      "Detail Map": "Exports/Guns/SR01/Textures/Recolour/T_SR01_Chassis_Detail16.png (16-bit linear tint-ready detail over the OD paint only, Masks A = 1; WorkFiles/guns/sniper/materials/sr01_recolour_maps.py)",
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_SR01_Chassis_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_SR01_Chassis_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_SR01_Chassis_N.png"
+     },
+     "texture_kinds": {
+      "Detail Map": "Detail16",
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SR01_Chassis_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": {
+      "BC": 4096,
+      "Detail": 2048,
+      "ORM": 4096,
+      "N": 4096
+     },
+     "params": {
+      "Colour": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Bias": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Scale": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Mean": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Highlight Ratio": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments Low": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Detail Moments High": "GENERATOR (recolour_constants.json, derived from recolour_maps.json over covered texels)",
+      "Specular Strength": 0.5,
+      "Specular From ORM Alpha": false,
+      "Cloth Sheen": false,
+      "Use Lettering": false,
+      "Metal From ORM": true,
+      "Use Original Baked Colours": true
+     },
+     "look_contract": {
+      "BaseColor": "shipped (Use Original Baked Colours ON): T_SR01_Chassis_BC exactly (the OD paint with orange peel, chips to dark anodize and rubs, plus the set's black anodize, polymer and rubber); recolour (switch OFF): saturate(Colour x (Detail Bias + Detail Scale x Detail)), then Metal From ORM's lerp back to the BC on metallic or bright texels. OPEN (proposal D1): the master has no mask input, so the set's non-OD texels (28 %) would be tinted too",
+      "Metallic": "ORM.B (Metal From ORM on: bright bare-aluminium chip cores are 1)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SR01_Chassis_N (DirectX, 16-bit source)"
+     },
+     "note": "the chassis set: OD-painted aluminium chassis, forend, butt and cheek riser (Masks A = 1), with the black anodized bipod and hardware, polymer grip and rubber butt pad (Masks A = 0); default Colour = the OD's covered-texel mean (draft, linear 0.0796 / 0.0815 / 0.0582)",
+     "base_instance": "MI_SR01_Chassis_Base"
+    },
+    {
+     "index": 2,
+     "slot_name": "M_SR01_Mag",
+     "part": "Mag",
+     "instance": "MI_SR01_Mag",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_SR01_Mag_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_SR01_Mag_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_SR01_Mag_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SR01_Mag_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      1024,
+      1024
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_SR01_Mag_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0 phosphate and polymer / 1 bare steel wear)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SR01_Mag_N (DirectX, 16-bit source)"
+     },
+     "note": "the 10-round box magazine: phosphated steel body (87 % of its texels) and polymer parts; no OD paint (Masks A = 0 everywhere), so it is not in recolour group SR01; baked finish, not recolourable; on M_Steel_Master as the AR-01's magazine (M_Fabric_Master's leaf needs a Colour, which a baked-only part has no value for); Steel Tint multiplies",
+     "base_instance": "MI_SR01_Mag_Base"
+    }
+   ]
+  },
+  {
+   "item": "SR01_Mag",
+   "mesh": "SM_SR01_Mag",
+   "fbx": "Exports/Guns/SR01/SM_SR01_Mag.fbx",
+   "sidecar": "Exports/Guns/SR01/SM_SR01_Mag.sockets.json",
+   "note": "ADDED 2026-10-16. The removable 10-round magazine (attached to SK_SR01's Mag socket; straight reload path MagInsertStart -> Mag along +Z, 67.8 mm): 4 LODs, 1 UCX hull, 5 sockets",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_SR01_Mag",
+     "part": "Mag",
+     "instance": "MI_SR01_Mag",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_SR01_Mag_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_SR01_Mag_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_SR01_Mag_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC_BC7",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_SR01_Mag_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      1024,
+      1024
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_SR01_Mag_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0 phosphate and polymer / 1 bare steel wear)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_SR01_Mag_N (DirectX, 16-bit source)"
+     },
+     "note": "the 10-round box magazine: phosphated steel body (87 % of its texels) and polymer parts; no OD paint (Masks A = 0 everywhere), so it is not in recolour group SR01; baked finish, not recolourable; on M_Steel_Master as the AR-01's magazine (M_Fabric_Master's leaf needs a Colour, which a baked-only part has no value for); Steel Tint multiplies",
+     "base_instance": "MI_SR01_Mag_Base"
+    }
+   ]
+  },
+  {
+   "item": "Att_Scope_LongRange",
+   "mesh": "SM_Att_Scope_LongRange",
+   "folder": "/Game/NinjaPack/Meshes/SR01",
+   "fbx": "Exports/Guns/SR01/SM_Att_Scope_LongRange.fbx",
+   "sidecar": "Exports/Guns/SR01/SM_Att_Scope_LongRange.sockets.json",
+   "note": "ADDED 2026-10-16. The long-range scope attachment (origin = Mount; attach to the gun's Rail_Top + 20.02 mm): 3 LODs, 3 UCX hulls, 5 sockets (Mount, Sight, EyePoint, Lens_Front, CenterOfMass). UV0 tiles: Body 0, Lens 1. Moves to a shared attachments folder when the gun chat creates one (plan 5)",
+   "slots": [
+    {
+     "index": 0,
+     "slot_name": "M_Att_Scope_Body",
+     "part": "Scope_Body",
+     "instance": "MI_Att_Scope_LongRange_Body",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Body_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Body_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Body_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_Att_Scope_LongRange_Scope_Body_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      2048,
+      2048
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_Att_Scope_LongRange_Scope_Body_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0 black anodize / rubber eyepiece, 1 bare-aluminium wear)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_Att_Scope_LongRange_Scope_Body_N (DirectX, 16-bit source)"
+     },
+     "note": "the long-range scope: tube, turrets (knurl and scallops as geometry), eyepiece, objective bell and the rings; baked finish, not recolourable",
+     "base_instance": "MI_Att_Scope_LongRange_Body_Base"
+    },
+    {
+     "index": 1,
+     "slot_name": "M_Att_Scope_Lens",
+     "part": "Scope_Lens",
+     "instance": "MI_Att_Scope_LongRange_Lens",
+     "master": "M_Steel_Master",
+     "recolourable": false,
+     "textures": {
+      "Base Colour Map": "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Lens_BC.png",
+      "ORM Map": "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Lens_ORM.png",
+      "Normal Map": "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Lens_N.png"
+     },
+     "texture_kinds": {
+      "Base Colour Map": "BC",
+      "ORM Map": "ORM_rgb",
+      "Normal Map": "N"
+     },
+     "orm_texture_settings": {
+      "composite_texture": "T_Att_Scope_LongRange_Scope_Lens_N",
+      "composite_texture_mode": "CTM_NORMAL_ROUGHNESS_TO_GREEN",
+      "composite_power": 1.0
+     },
+     "size": [
+      512,
+      512
+     ],
+     "params": {},
+     "look_contract": {
+      "BaseColor": "T_Att_Scope_LongRange_Scope_Lens_BC (sRGB) x Steel Tint (white = as shipped)",
+      "Metallic": "ORM.B (0: opaque glossy coated glass)",
+      "Roughness": "ORM.G",
+      "AO": "ORM.R",
+      "Normal": "T_Att_Scope_LongRange_Scope_Lens_N (DirectX, 16-bit source)"
+     },
+     "note": "the front and rear lenses: opaque, glossy, dark coated glass (no translucency, no render target; a game's scope view is its own material)",
+     "base_instance": "MI_Att_Scope_LongRange_Lens_Base"
+    }
+   ]
   }
  ],
  "new_maps": [
@@ -3762,6 +4136,61 @@
    "name": "MI_SMG01_Mag",
    "parent": "MI_SMG01_Mag_Base",
    "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_SR01_Metal_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_SR01_Metal",
+   "parent": "MI_SR01_Metal_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Att_Scope_LongRange_Body_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Att_Scope_LongRange_Body",
+   "parent": "MI_Att_Scope_LongRange_Body_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_Att_Scope_LongRange_Lens_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_Att_Scope_LongRange_Lens",
+   "parent": "MI_Att_Scope_LongRange_Lens_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_SR01_Chassis_Base",
+   "parent": "M_Fabric_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_SR01_Chassis",
+   "parent": "MI_SR01_Chassis_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
+  },
+  {
+   "name": "MI_SR01_Mag_Base",
+   "parent": "M_Steel_Master",
+   "folder": "Base",
+   "role": "holds every texture and matched setting of the part"
+  },
+  {
+   "name": "MI_SR01_Mag",
+   "parent": "MI_SR01_Mag_Base",
+   "role": "buyer-facing: overrides only the colour(s)"
   }
  ],
  "verification": {
@@ -3855,7 +4284,8 @@
    "Senbon": "Exports/Senbon/Textures/Recolour/recolour_maps.json",
    "Katana": "Exports/Katana/Textures/Recolour/recolour_maps.json",
    "AR01": "Exports/Guns/AR01/Textures/Recolour/recolour_maps.json",
-   "SMG01": "Exports/Guns/SMG01/Textures/Recolour/recolour_maps.json"
+   "SMG01": "Exports/Guns/SMG01/Textures/Recolour/recolour_maps.json",
+   "SR01": "Exports/Guns/SR01/Textures/Recolour/recolour_maps.json"
   },
   "not_imported": {
    "Exports/SmokeBomb/Textures/T_SmokeBomb_Detail.png": "superseded by the lossless 16-bit linear Recolour/T_SmokeBomb_Detail16 (the sRGB G8 builds as BGRA8: ~85 MiB)",
@@ -3871,7 +4301,12 @@
    "Exports/Guns/AR01/Textures/T_AR01_Mag_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
    "Exports/Guns/SMG01/Textures/T_SMG01_Metal_Masks.png": "the SMG's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
    "Exports/Guns/SMG01/Textures/T_SMG01_Furniture_Masks.png": "the SMG's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
-   "Exports/Guns/SMG01/Textures/T_SMG01_Mag_Masks.png": "the SMG's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it"
+   "Exports/Guns/SMG01/Textures/T_SMG01_Mag_Masks.png": "the SMG's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SR01/Textures/T_SR01_Metal_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable = 1 only on the OD paint) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SR01/Textures/T_SR01_Chassis_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable = 1 only on the OD paint) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SR01/Textures/T_SR01_Mag_Masks.png": "the rifle's shipped mask set (R edge-wear propensity, G handling, B cavity, A refinishable = 1 only on the OD paint) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Body_Masks.png": "the scope's shipped mask set (R edge-wear propensity, G handling, B cavity, A 0) for a buyer's own wear/dirt material; no pack master samples it",
+   "Exports/Guns/SR01/Textures/T_Att_Scope_LongRange_Scope_Lens_Masks.png": "the scope's shipped mask set (R edge-wear propensity, G handling, B cavity, A 0) for a buyer's own wear/dirt material; no pack master samples it"
   },
   "recolour_constants": {
    "Shuriken": "Exports/Shuriken/Textures/Recolour/recolour_constants.json",
@@ -3885,7 +4320,8 @@
    "Senbon": "Exports/Senbon/Textures/Recolour/recolour_constants.json",
    "Katana": "Exports/Katana/Textures/Recolour/recolour_constants.json",
    "AR01": "Exports/Guns/AR01/Textures/Recolour/recolour_constants.json",
-   "SMG01": "Exports/Guns/SMG01/Textures/Recolour/recolour_constants.json"
+   "SMG01": "Exports/Guns/SMG01/Textures/Recolour/recolour_constants.json",
+   "SR01": "Exports/Guns/SR01/Textures/Recolour/recolour_constants.json"
   },
   "recolour_constants_note": "Scripts/unreal/materials/maps/derive_constants.py derives them from the Recolour maps; their params override recolour_maps.json. run_build.sh 'maps_check' verifies the sha256 chain.",
   "default_textures": {
@@ -4083,5 +4519,11 @@
   "what": "The Compact SMG SM-01 joins the pack (additions only): items SMG01 (SK_SMG01, kind 'skeletal', folder Meshes/SMG01), SMG01_Static (SM_SMG01, the static twin with the merged magazine) and SMG01_Mag (SM_SMG01_Mag); 6 instances (MI_SMG01_Metal on M_Steel_Master, MI_SMG01_Furniture and MI_SMG01_Mag on M_Fabric_Master, each with its _Base; SK_SMG01 and SM_SMG01 share the Metal and Furniture instances, SM_SMG01 and SM_SMG01_Mag share the Mag instance); group SMG01's recolour map (written by Scripts/guns/smg/smg_recolour.py, two members) and constants (maps/derive_constants_smg01.py); the three Masks maps not imported. Both polymer _Base instances ship Use Original Baked Colours ON (the polymer's fine wear lives only in the BC); a buyer recolour switches it off on MI_SMG01_Furniture and MI_SMG01_Mag and sets the same Colour on both. The furniture and magazine BC imports as BC7 (texture kind BC_BC7): the default look samples the BC itself (measured in Unreal, WorkFiles/guns/smg/gates/pack_materials.json).",
   "masters": "unchanged",
   "code": "one new script maps/derive_constants_smg01.py (a copy of the AR-01's with the SMG's group and two parts, no resolve() of export paths); nothing else in the code changed"
+ },
+ "changes_v11_sr01": {
+  "date": "2026-10-16",
+  "what": "The Sniper Rifle SR-01 joins the pack (additions only): items SR01 (SK_SR01, kind 'skeletal', folder Meshes/SR01), SR01_Static (SM_SR01, the static twin with the merged magazine), SR01_Mag (SM_SR01_Mag) and Att_Scope_LongRange (SM_Att_Scope_LongRange, folder Meshes/SR01); 10 instances (MI_SR01_Metal, MI_SR01_Mag, MI_Att_Scope_LongRange_Body and _Lens on M_Steel_Master; MI_SR01_Chassis on M_Fabric_Master with Metal From ORM ON; each with its _Base; the baked-only magazine is on M_Steel_Master as the AR-01's, because M_Fabric_Master's leaf must override a Colour that a non-member has no value for); group SR01's recolour map (one member, the OD paint, written by WorkFiles/guns/sniper/materials/sr01_recolour_maps.py) and constants (maps/derive_constants_sr01.py); the five Masks maps not imported. Option D1-a: the Chassis and Mag _Base instances ship Use Original Baked Colours ON (the OD ships as baked); M_Fabric_Master has no mask input, so switching it off would tint the whole Chassis set (grip, butt pad and bipod too): recolour is documented as not safe on this item until a future master switch. The Mag _Base on M_Steel_Master is BC x white Steel Tint (exactly the BC). The chassis and magazine BC imports as BC7 (texture kind BC_BC7), as the SMG's polymer needed for P1 (WorkFiles/guns/sniper/gates/pack_materials.json).",
+  "masters": "unchanged (option D1-a)",
+  "code": "one new script maps/derive_constants_sr01.py (derive_constants_smg01.py with group SR01 and one part); nothing else in the code changed"
  }
 }
