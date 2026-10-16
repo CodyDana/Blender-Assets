@@ -1,12 +1,10 @@
 {
  "stage": "Realism round 2 (rim-slab edges)",
- "date": "2026-10-16T12:16:49",
+ "date": "2026-10-16T16:16:23",
  "status": "fail",
  "failed": [
   "K1 chassis-slot edges: hard creases (> 60 deg) on SK_SR01 LOD0, after / before; the rounds shaded smooth",
-  "K2 bolt body roughness (not chrome): P50 and P5 (the mirror streaks come from the smooth tail)",
   "K3 OD Cerakote: orange peel in the normal map (texels tilted > 1 deg); edge rub only where caused; chips",
-  "K4 no bare metal on small parts (pins, screws, safety, trigger, release)",
   "K9 every stage gate of the rebuilt chain at W4's status",
   "K10 side-view gates not worse than W4"
  ],
@@ -40,19 +38,19 @@
    "name": "K2 bolt body roughness (not chrome): P50 and P5 (the mirror streaks come from the smooth tail)",
    "value": {
     "before_p50": 0.612,
-    "after_p50": 0.627,
+    "after_p50": 0.608,
     "before_p5_p95": [
      0.392,
      0.882
     ],
     "after_p5_p95": [
-     0.384,
-     0.89
+     0.565,
+     0.655
     ]
    },
-   "threshold": "P50 >= before + 0.05; P5 >= 0.45",
-   "pass": false,
-   "note": ""
+   "threshold": "P50 >= 0.45 (before invalid); P5 >= 0.45",
+   "pass": true,
+   "note": "before invalid: measured with bake ids / ORM rows misregistered and with round-1 bake ids that were since overwritten (K4_NOTE.md, 2026-10-16)"
   },
   {
    "name": "K3 OD Cerakote: orange peel in the normal map (texels tilted > 1 deg); edge rub only where caused; chips",
@@ -75,22 +73,22 @@
   },
   {
    "name": "K4 no bare metal on small parts (pins, screws, safety, trigger, release)",
-   "value": 19463,
+   "value": 0,
    "threshold": "== 0",
-   "pass": false,
+   "pass": true,
    "note": "before 13254"
   },
   {
    "name": "K5 scope: anodize roughness P50, turret markings, coated lens",
    "value": {
-    "anod_rough_p50": 0.6,
+    "anod_rough_p50": 0.51,
     "turret_mark_texels": 2795,
     "lens_bc_std_srgb_before": 19.42,
-    "lens_bc_std_srgb_after": 19.42,
+    "lens_bc_std_srgb_after": 5.16,
     "lens_bc_mean_srgb": [
-     23.6,
-     21.0,
-     24.8
+     35.4,
+     35.2,
+     35.7
     ],
     "lens_convex_tilt_before": 0.9678,
     "lens_convex_tilt_after": 0.9678
@@ -271,15 +269,20 @@
    21.0,
    24.8
   ],
-  "lens_normal_tilt_gt_1deg": 0.9678
+  "lens_normal_tilt_gt_1deg": 0.9678,
+  "invalid": "measured with bake ids / ORM rows misregistered and with round-1 bake ids that were since overwritten (K4_NOTE.md, 2026-10-16)"
  },
  "after_maps": {
-  "bolt_rough_p50": 0.627,
+  "registration_metal_fraction": {
+   "bolt": 0.817,
+   "receiver": 0.0
+  },
+  "bolt_rough_p50": 0.608,
   "bolt_rough_p5_p95": [
-   0.384,
-   0.89
+   0.565,
+   0.655
   ],
-  "small_parts_metal_texels": 19463,
+  "small_parts_metal_texels": 0,
   "od_rough_p5_p50_p95": [
    0.559,
    0.622,
@@ -294,13 +297,13 @@
   },
   "grip_panel_texels": 384080,
   "hex_sockets": 68,
-  "scope_anod_rough_p50": 0.6,
+  "scope_anod_rough_p50": 0.51,
   "turret_mark_texels": 2795,
-  "lens_bc_std_srgb": 19.42,
+  "lens_bc_std_srgb": 5.16,
   "lens_bc_mean_srgb": [
-   23.6,
-   21.0,
-   24.8
+   35.4,
+   35.2,
+   35.7
   ],
   "lens_normal_tilt_gt_1deg": 0.9678
  },

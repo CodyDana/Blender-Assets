@@ -85,9 +85,9 @@ off joints):
 | UD1 / UD2, B3 (all, incl. full bipod sweeps), F2–F9, H1 | pass | pass |
 | G5 / F1 | pass | **fail** (clamp seat) |
 | K1 hard creases (after/before) | 15.9 → 14.9 m | 14.9 → **8.6 m** (0.58×, target ≤ 0.5×) |
-| K2 bolt P5 | 0.39 | 0.39 (the floor did not reach the shipped ORM: the threshold is read from texels the floor does not cover) |
+| K2 bolt P5 | 0.39 | 0.39 (misread: the gate's rows were mirrored, see "K-gate measurement fix"; the floor did reach the ORM) |
 | K3 peel tilt | 0.435 | 0.436 (not addressed) |
-| K4 small-part metal texels | 13,254 | **8,331** (one source removed; another remains) |
+| K4 small-part metal texels | 13,254 | **8,331** (misread, same bug: mirrored rows; neither number describes the small parts) |
 | K8 hot pixels fp_35cm | 6 | **2** (pass) |
 | K5, K6, K7, K11 | pass | pass |
 | K10 side views | pass | **fail** (GR −0.003) |
@@ -154,9 +154,10 @@ Results are in `review/r2/judges/realism_A.json` and `realism_B.json`.
 | game, rig_export, mag M1–M10, scope_export | pass | pass |
 | L2 GR / L3 GR P95 | 0.9571 / 3.61 | 0.9571 / 3.61 (declared, see above) |
 | uv_bake_paint | partial (B9 density class C) | partial (same, as W4) |
-| K1 / K2 / K3 | fail | fail (unchanged; not addressed) |
-| K4 small-part metal texels | 8,331 | **19,463 (worse; not investigated, no budget)** |
-| K9 / K10 | fail | fail (K9 follows form partial and K1–K4; K10 = GR −0.003) |
+| K1 / K3 | fail | fail (unchanged; not addressed) |
+| K2 bolt P5 | 0.39 | 0.384 as first measured; **0.565 pass** after the measurement fix (see "K-gate measurement fix") |
+| K4 small-part metal texels | 8,331 | 19,463 as first measured; **0 pass** after the measurement fix |
+| K9 / K10 | fail | fail (K9 = the form stage gate's failed list; K10 = GR −0.003) |
 
 - qa_check passed before every export.
 - Export sha256: `scratch/r2/exports_sha256_r2.txt`.
@@ -172,6 +173,29 @@ Results are in `review/r2/judges/realism_A.json` and `realism_B.json`.
 - No judges this round (no budget).
 
 **Left**
-1. K4 went up (8,331 → 19,463 bare-metal texels on small parts). Find out why before calling the surface done.
-2. GR −0.003 / K10, and K1–K3: as listed above.
+1. ~~K4 went up (8,331 → 19,463).~~ Resolved: a measurement bug, see "K-gate measurement fix". K4 = 0.
+2. GR −0.003 / K10, and K1 / K3: as listed above.
 3. The judges still call the renders fake. That is unchanged from round 2's first pass and was not re-judged.
+
+## K-gate measurement fix (2026-10-16)
+
+**Cause.** `sr_closeup.py` `maps_metrics()` compared the bake arrays (`*_ids.npy`, `*_pos.npy`, stored bottom-up in
+Blender pixel order) with the PNG maps (top-down) without flipping either. K2, K4 and K5 were read from the vertically
+mirrored texels. The paint was never wrong. Details: `K4_NOTE.md`.
+
+**Fix.** The bake arrays are flipped to PNG row order (`[::-1]`). A registration guard now stops the run unless the bolt
+is > 50 % metal and the receiver < 5 % (measured: bolt 81.7 %, receiver 0.0 %). Round 1's "before" snapshot
+(`scratch/r2/before_metrics.json`) was taken with the same bug and with bake ids that no longer exist, so it is marked
+invalid; K2's relative P50 test falls back to the absolute P50 ≥ 0.45. Re-run with
+`sr_closeup.py --round r2 --reuse-k1` (no Blender, no export; the old gate file is kept in
+`scratch/k4/closeup_r2_before_fix.json`).
+
+| Gate | before the fix | after the fix |
+|---|---|---|
+| K2 bolt roughness P5 / P50 / P95 | 0.384 / 0.627 / 0.89, **fail** | 0.565 / 0.608 / 0.655, **pass** |
+| K4 small-part metal texels | 19,463, **fail** | **0, pass** |
+| K5 scope anodize roughness P50 | 0.60, pass | 0.51, pass |
+| K5 lens BC std / mean (sRGB) | 19.42 / (24, 21, 25) | 5.16 / (35, 35, 36) (reported, not gated) |
+
+`gates/closeup_r2.json` is still **fail**, now on K1, K3, K9 and K10 only. K9 fails on the form stage gate's failed list
+(it contains "L2 GR IoU", which is not one of the W1-open items), not on K2/K4. Nothing was re-exported, so W5 (37/37) stays valid.
