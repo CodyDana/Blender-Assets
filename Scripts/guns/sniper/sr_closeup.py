@@ -3,6 +3,8 @@ before / after on the maps and the exported bytes and writes gates/closeup_r1.js
 
     py -3 -B Scripts/guns/sniper/sr_closeup.py --snapshot      (BEFORE the chain: W4 bakes + shipped maps -> scratch)
     py -3 -B Scripts/guns/sniper/sr_closeup.py                 (after the chain + the w4b renders: the gates)
+    py -3 -B Scripts/guns/sniper/sr_closeup.py --round r2 [--snapshot]   (realism round 2: before = round 1's exported
+        state in scratch/r2/before_exports, renders review/r2, writes gates/closeup_r2.json; K10 against W4b)
 
   K1 edges: hard creases (> 60 deg) on the chassis slot of SK_SR01.fbx after <= 0.5 x before (sr_closeup_edges.py,
      fresh Blender process on the exported bytes) and the new rounds shaded smooth (>= 0.9 of the round length);
@@ -41,6 +43,7 @@ S = WORK / "scratch"
 W4B = S / "w4b"
 EXP = ROOT / "Exports" / "Guns" / "SR01"
 REV = WORK / "review" / "w4b"
+RND = "r1"
 SMALL = ("pins", "fasteners", "rail_screws", "safety", "trigger", "mag_release")
 
 
@@ -106,7 +109,12 @@ def hot_clusters(p):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--snapshot", action="store_true")
+    ap.add_argument("--round", default="r1")
     a = ap.parse_args()
+    global RND, W4B, REV
+    RND = a.round
+    if RND == "r2":
+        W4B, REV = S / "r2", WORK / "review" / "r2"
     if a.snapshot:
         snapshot()
         return
@@ -155,9 +163,10 @@ def main():
     gate("K6 hardware + grip: hex sockets painted, grip stipple painted",
          {"hex_sockets": after["hex_sockets"], "grip_panel_texels": after["grip_panel_texels"]}, "> 0 each",
          after["hex_sockets"] > 0 and (after["grip_panel_texels"] or 0) > 0)
-    res = json.loads((S / "w4" / "review_job" / "result_w4b.json").read_text())
+    tag = "w4b" if RND == "r1" else RND
+    res = json.loads((S / "w4" / "review_job" / f"result_{tag}.json").read_text())
     rs = {s["name"]: s for s in res["shots"] if s["name"].startswith("realism_")}
-    job = json.loads((S / "w4" / "review_job" / "job_w4b.json").read_text())
+    job = json.loads((S / "w4" / "review_job" / f"job_{tag}.json").read_text())
     jd = {s["name"]: s for s in job["shots"]}
     k7 = {n: {"floor_z_M_mm": s.get("floor_z_M_mm"), "fstop": jd[n].get("dof", {}).get("fstop")} for n, s in rs.items()}
     gate("K7 review rig: every realism view on the table; a real aperture on the close views", k7,
@@ -183,6 +192,8 @@ def main():
     fm = json.loads((GATES / "form.json").read_text())
     gv = {g["name"]: g["value"] for g in fm["gates"]}
     w4 = {"GR": 0.9603, "GL": [0.9434, 0.9513], "TOP": [0.8373, 0.9015], "L3": 3.0, "parts": "2 / 19"}
+    if RND == "r2":                              # round 2 is held to round 1's (W4b) side views
+        w4 = {"GR": 0.9602, "GL": [0.9426, 0.9505], "TOP": [0.8375, 0.9020], "L3": 3.0, "parts": "2 / 19"}
     cur = {"GR": gv.get("L2 GR IoU (scope = the blockout stand-in until W1b)"), "GL": gv.get("L2 GL IoU (scope stand-in)"),
            "TOP": gv.get("L2 TOP IoU raw / declared fit"), "L3": gv.get("L3 GR contour P95 (sheet px)"),
            "parts": gv.get("L2 per part on GR (IoU >= 0.95)")}
@@ -193,12 +204,12 @@ def main():
     n = sum(len(list((REV / d).glob("*.png"))) for d in ("set", "realism"))
     want = len([s_ for s_ in job["shots"] if not s_["name"].startswith("blind_")])
     gate("K11 the close set is complete (set + realism)", {"images": n, "shots_in_job": want}, "== every shot", n >= want)
-    rec = {"stage": "W4b close-up realism round 1", "date": datetime.datetime.now().isoformat(timespec="seconds"),
+    rec = {"stage": "W4b close-up realism round 1" if RND == "r1" else "Realism round 2 (rim-slab edges)", "date": datetime.datetime.now().isoformat(timespec="seconds"),
            "status": "pass" if all(g["pass"] for g in gates) else "fail",
            "failed": [g["name"] for g in gates if not g["pass"]], "gates": gates,
            "before_maps": before, "after_maps": after,
-           "judges": "review/w4b/judges/realism_A.json, realism_B.json (reported, not gated)"}
-    (GATES / "closeup_r1.json").write_text(json.dumps(rec, indent=1))
+           "judges": f"review/{'w4b' if RND == 'r1' else RND}/judges/realism_A.json, realism_B.json (reported, not gated)"}
+    (GATES / f"closeup_{RND}.json").write_text(json.dumps(rec, indent=1))
     print("[SR01-closeup] DONE", rec["status"], rec["failed"])
 
 

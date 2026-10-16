@@ -272,6 +272,9 @@ def paint(st, meta, bake, tex):
         dcut = 0.93 if f == "scope_anod" else 0.82 - 0.22 * az[k]
         wl = (dist_e[k] < 0.25 + 0.30 * az[k]) & (dash > dcut) & (edge_fine[k] > 0.35) & \
             (expo[k] > 0.5) & (az[k] > 0.10)
+        # (R2, K4 source) the anodized small parts (screws, release, safety) took the bright-wear mask = metal 1: they
+        # rub to the satin crest above only, like the phosphate small parts in W4b
+        wl &= ~np.isin(pkk, SMALL_PARTS)
         wl = drop_small(wl, kk, idx, S, MIN_CHIP_PX)
         col[wl] = lin(F["wear_srgb"])[None, :] * (0.95 + 0.08 * v_mid[k][wl])[:, None]
         r[wl] = 0.36 + 0.08 * v_mid[k][wl]
@@ -383,6 +386,10 @@ def paint(st, meta, bake, tex):
         r = r0 + (r1 - r0) * (0.3 + 0.4 * lines + 0.3 * lathe) + 0.06 * streak + 0.06 * (blast - 0.5)
         col *= (1.0 + 0.04 * (lathe - 0.5))[:, None]
         col, r = dirt(k, col, r, 0.5)
+        if f == "bolt_polish":
+            # (R2, K2) the handling polish in dirt() pulled the satin's tail to 0.39 (the bright streak through the
+            # port in fp_35cm): bead-blasted satin never polishes below 0.46
+            r = np.maximum(r, 0.46)
         bc[k], rough[k], metal[k] = col, r, 1.0
         h[k] = 0.0015 * (lines - 0.5) * 2.0 + 0.003 * (blast - 0.5) * 2.0 + 0.002 * (lathe - 0.5) * 2.0
         m_edge[k] = np.clip(edge_fine[k], 0, 1)

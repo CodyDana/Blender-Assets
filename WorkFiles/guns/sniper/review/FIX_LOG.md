@@ -62,3 +62,20 @@ rebuilt on exported bytes.
 | Scope | turret ticks + numerals, coated convex lens (BC lifted to the B9 floor) | K5 pass |
 | Review rig | tabletop + contact shadows, DoF | K7 pass; K8 FAIL (6 hot px) |
 | Judges | realism A / B on 8 views each | fake 8/8 (88) and fake 8/8 (89): no movement; geometry artifacts now their top tell |
+
+## Realism round 2 (2026-10-14, branch claude/sniper-sr01-realism): rim-slab edges
+- Method changed: no bevel on the chassis / butt / pad / riser / grip. Edge radii are built into the generator
+  (`sr_rimslab.py`: 2D CSG -> fair / de-step / fillet -> 1:1 offset rings -> plan shear incl. the dovetail band -> CDT
+  caps). Round-1 weighted round + exclusion boxes retired (`SR01_RIMSLAB=0` restores them).
+- Trace fixes at the outline: nose sawtooth (x 832-838), belly bump / dip (lower hull, x 500-600), grip heel lip +
+  slot, pad rear-top jags, grip tang neck 1.3 -> 4.5 mm.
+- Paint: anodized small parts are excluded from bright wear (K4 13,254 -> 8,331); bolt satin is floored at 0.46 (K2 is
+  unchanged in the shipped ORM).
+- Gates (see `REALISM_R2_REPORT.md`):
+  - UD1 / UD2, B3, F2-F9, H1, W2 / W3 all pass.
+  - G5 / F1 fail: the bipod clamp is 0.003 mm into the seat.
+  - K10: GR 0.9602 -> 0.9571.
+  - K1: 14.9 -> 8.6 m.
+- Judges: A and B fake 8/8. The tears, grip base and nose zig-zag are no longer named. The lower handguard edge,
+  stock seams and faceting are still named.
+- Stopped before a clean export. W5 must be re-run on any new bytes.
