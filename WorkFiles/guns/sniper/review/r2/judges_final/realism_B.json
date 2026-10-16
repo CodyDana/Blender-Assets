@@ -1,0 +1,38 @@
+{"judge":"B","images":[
+{"image":"fp_35cm","verdict":"cg","confidence":93,"tells":[
+{"part":"stock (chassis top/cheek area)","cause":"geometry","tell":"Faceted low-poly planes and visible shading kinks on the curved chassis surfaces; edges are sharp-hard with no consistent moulded/machined radius, flat facets read as polygons"},
+{"part":"stock","cause":"material","tell":"Uniform flat olive paint with a faint procedural mottle; no handling wear, scuffs, dust, edge rub-through or fingerprints on the most-touched surface of the rifle"},
+{"part":"bolt body / bolt shroud","cause":"material","tell":"Bolt body is a perfect chrome mirror stripe with no machining marks, jeweling, oil film or carbon; shroud/handle are untextured matte black plastic-looking"},
+{"part":"bolt handle knob","cause":"geometry","tell":"Knob is a perfect smooth sphere on a plain cylinder stem; real knobs have knurling/texture or a tapered transition"},
+{"part":"scope tube / ocular","cause":"material","tell":"Scope anodizing is spotless and uniform, no lettering, serials or knurl texture on the ocular ring; matte finish shows no micro variation"},
+{"part":"scope ocular / background","cause":"render_rig","tell":"Out-of-focus areas carry fine grainy path-tracer noise instead of smooth optical bokeh; the defocus falls off too evenly for a real macro lens at 35 cm"},
+{"part":"backdrop","cause":"render_rig","tell":"Featureless seamless grey gradient with no studio sweep texture; lighting is soft and directionless, typical of an HDRI/area-light Blender studio"}]},
+{"image":"ads_eyepiece","verdict":"cg","confidence":85,"tells":[
+{"part":"scope eyepiece / optics","cause":"render_rig","tell":"No reticle, no sight picture, no exit pupil image: the ocular is just a black disc with a single round blob highlight; a real eyepiece at eye relief shows the magnified scene and crosshair"},
+{"part":"scope eyepiece highlight","cause":"render_rig","tell":"The highlight is a perfect uniform grey circle with noisy interior, a reflection of a disc area light, with no lens-coating tint (green/magenta) or multiple element reflections"},
+{"part":"whole frame","cause":"render_rig","tell":"Heavy monochromatic sampling noise across flat regions and inside the blur, unlike sensor noise (no chroma, no pattern), plus a hard horizontal grey band background reading as a CG wall/floor seam"},
+{"part":"eyepiece rim","cause":"geometry","tell":"Eyepiece reads as a perfect circle with no rubber eyecup ridge or diopter ring visible even in defocus"}]},
+{"image":"tp_3m","verdict":"cg","confidence":96,"tells":[
+{"part":"floor / backdrop","cause":"render_rig","tell":"Two blown-out elliptical light pools on the floor and a dark vignette dome: classic Blender spot/area lights on an infinite plane; no real studio sweep produces this pattern"},
+{"part":"floor shadow","cause":"render_rig","tell":"Contact shadow under the rifle is blocky/stepped with rectangular staircase artifacts (shadow/AO or reflection resolution artifacts) and a ghost reflection band offset from the rifle"},
+{"part":"rifle (whole)","cause":"render_rig","tell":"Rifle looks like it floats: weak grounding, bipod feet and buttpad lack crisp contact occlusion"},
+{"part":"stock","cause":"material","tell":"Flat uniform olive with no variation at this distance; the scope and barrel are identical toy-like black"},
+{"part":"barrel","cause":"geometry","tell":"Barrel is a long perfect cylinder with plain flutes and a simple can-like muzzle device, no crown detail"}]},
+{"image":"hero_34","verdict":"cg","confidence":92,"tells":[
+{"part":"stock forend","cause":"geometry","tell":"Stepped/notched irregular ridge along the forend top edge and visible facet kinks on the side bevels; the vent slots are simple extruded stadiums with soft uniform bevels"},
+{"part":"stock","cause":"material","tell":"Olive coating has a uniform fine procedural noise but zero wear on edges, around the mag well or bolt handle path; reads as clean CG paint"},
+{"part":"pistol grip","cause":"material","tell":"Grip texture is a bump-only noise stipple that looks pasted on; it does not wrap or terminate at panel borders like a moulded texture would"},
+{"part":"scope turret / dial","cause":"material","tell":"Dial numerals are tiny and soft, no other markings anywhere (no brand, serial, magnification numbers on the zoom ring), unnaturally sterile"},
+{"part":"scope objective lens","cause":"render_rig","tell":"Objective shows a single clean crescent highlight and pure black interior, no coating tint or reflection of the room/camera"},
+{"part":"magazine","cause":"geometry","tell":"Magazine is a plain box with two engraved lines and simple bevel, no follower window or baseplate detail; joins to the stock with a hard intersection"},
+{"part":"floor","cause":"render_rig","tell":"Blocky stepped shadow artifacts on the floor at lower left; uniform soft grey sweep with no texture"}]},
+{"image":"deployed_34","verdict":"cg","confidence":93,"tells":[
+{"part":"backdrop","cause":"render_rig","tell":"Hard horizontal seam where a darker grey wall meets the floor, an untextured CG cyclorama with no cove"},
+{"part":"floor shadow","cause":"render_rig","tell":"Stepped blocky shadow shapes under the buttstock on the floor (left), a render artifact no photograph would show"},
+{"part":"bipod legs","cause":"material","tell":"Leg extensions are bright ribbed chrome with perfect regular rings; inner legs are clean with no oxidation; feet are perfectly smooth rubber cylinders"},
+{"part":"bipod feet / floor contact","cause":"render_rig","tell":"Feet show weak contact shadow and no compression into the floor, rifle looks weightless"},
+{"part":"stock (buttstock)","cause":"geometry","tell":"Buttstock is boxy with flat slab cheek riser and plain round dots for adjusters; transitions between blocks are hard boolean-like joins"},
+{"part":"stock","cause":"material","tell":"Paint tone is lighter and cleaner than in other views, uniform with no edge wear or dirt"},
+{"part":"barrel","cause":"render_rig","tell":"Barrel runs out of frame with even smooth reflection gradient, no micro-scratches or dust picked up by the key light"}]}
+],
+"overall":"All five images are CG; none would pass as a product photograph. The strongest give-aways are render_rig: the Blender-style studio (two blown elliptical light pools and dark dome in tp_3m, hard wall/floor seam in deployed_34 and ads_eyepiece), stepped blocky shadow artifacts on the floor in tp_3m, hero_34 and deployed_34, monochrome path-tracer noise in defocused areas, and an eyepiece with no reticle or sight picture in ads_eyepiece. Material tells are next: perfectly clean uniform olive paint with no edge wear, a mirror-chrome bolt with no machining marks, sterile scope with almost no markings, and bump-only grip stipple. Geometry tells are secondary but visible at close range: faceted shading kinks and a notched irregular ridge on the forend/chassis, boxy boolean-joined buttstock, plain sphere bolt knob and simple box magazine. Fix the rig (proper cove backdrop, shadow resolution, denoise/more samples, real scope optics) first, then add wear and markings."}
