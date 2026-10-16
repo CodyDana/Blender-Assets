@@ -61,6 +61,9 @@ qa_check ran before every export. The meshes were re-exported last in W5 (half-t
 - **W4b** (`gates/closeup_r1.json`, **status fail**, 5 of 11):
   - Failed: K1 hard creases (15.9 m -> 14.9 m, target 0.5x), K2 bolt roughness P5, K3 OD peel tilt, K4 bare metal on
     small parts, K8 sparkle (6 hot pixels vs 5).
+  - K2 / K4 / K5 here were measured with the bake ids and the ORM rows mirrored (fixed 2026-10-16, see `K4_NOTE.md`);
+    round 1's bake ids are gone, so these round-1 values cannot be re-measured. On the shipped round-2 maps, K2 and K4
+    pass (`REALISM_R2_REPORT.md` → "K-gate measurement fix").
   - Judges: **fake 8 / 8 (A) and fake 8 / 8 (B)**, mean confidence 88 / 89.
   - The round failed decisively and stopped there.
 - **The judges' geometry list (still open):**

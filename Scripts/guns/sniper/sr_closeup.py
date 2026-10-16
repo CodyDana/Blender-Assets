@@ -56,11 +56,18 @@ def maps_metrics(bake, sbake, tex, prep, sprep):
     meta = json.loads((bake / "bake_meta.json").read_text())
     smeta = json.loads((sbake / "bake_meta.json").read_text())
     out = {}
-    # Metal set: bolt body roughness; small parts metallic
-    ids = np.load(bake / "Metal_ids.npy")[..., 0].astype(int)
-    pos = np.load(bake / "Metal_pos.npy").reshape(-1, 3) * 1000.0 + GRIP
+    # Metal set: bolt body roughness; small parts metallic. The bake arrays are bottom-up (Blender pixel order,
+    # bake_meta encoding.rows), the PNGs top-down: flip the arrays to PNG row order (K4_NOTE.md)
+    ids = np.load(bake / "Metal_ids.npy")[::-1][..., 0].astype(int)
+    pos = np.load(bake / "Metal_pos.npy")[::-1].reshape(-1, 3) * 1000.0 + GRIP
     orm = img(tex / "T_SR01_Metal_ORM.png").astype(float) / (65535.0 if img(tex / "T_SR01_Metal_ORM.png").dtype == np.uint16 else 255.0)
     R, M = orm[..., 1].ravel(), orm[..., 2].ravel()
+    # registration guard: the bolt is bare metal, the phosphated receiver is not
+    reg = {p: round(float((M[ids.ravel() == meta["parts"][p]] > 0.5).mean()), 3) for p in ("bolt", "receiver")}
+    out["registration_metal_fraction"] = reg
+    if not (reg["bolt"] > 0.5 and reg["receiver"] < 0.05):
+        raise SystemExit(f"[SR01-closeup] bake ids / ORM misregistered (metal fraction {reg}; want bolt > 0.5, "
+                         "receiver < 0.05)")
     bolt = (ids.ravel() == meta["parts"]["bolt"]) & (pos[:, 0] >= 372.0)
     out["bolt_rough_p50"] = round(float(np.median(R[bolt])), 3)
     out["bolt_rough_p5_p95"] = [round(float(np.percentile(R[bolt], q)), 3) for q in (5, 95)]
@@ -74,13 +81,13 @@ def maps_metrics(bake, sbake, tex, prep, sprep):
     out["grip_panel_texels"] = prep["Chassis"]["info"].get("grip_panel_texels")
     out["hex_sockets"] = prep["Metal"]["info"].get("hex_sockets", 0)
     # scope
-    sid = np.load(sbake / "Scope_Body_ids.npy")[..., 0].astype(int).ravel()
+    sid = np.load(sbake / "Scope_Body_ids.npy")[::-1][..., 0].astype(int).ravel()
     sorm = img(tex / "T_Att_Scope_LongRange_Scope_Body_ORM.png").astype(float)
     sorm /= 65535.0 if sorm.max() > 255 else 255.0
     body = sid == smeta["parts"]["scope_body"]
     out["scope_anod_rough_p50"] = round(float(np.median(sorm[..., 1].ravel()[body])), 3)
     out["turret_mark_texels"] = sprep["Scope_Body"]["info"].get("turret_mark_texels", 0)
-    lid = np.load(sbake / "Scope_Lens_ids.npy")[..., 0].astype(int).ravel()
+    lid = np.load(sbake / "Scope_Lens_ids.npy")[::-1][..., 0].astype(int).ravel()
     lbc = img(tex / "T_Att_Scope_LongRange_Scope_Lens_BC.png", "RGB").reshape(-1, 3).astype(float)
     lens = lid > 0
     out["lens_bc_std_srgb"] = round(float(lbc[lens].std(0).mean()), 2)
@@ -110,6 +117,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--snapshot", action="store_true")
     ap.add_argument("--round", default="r1")
+    ap.add_argument("--reuse-k1", action="store_true", help="read the existing K1.json instead of starting Blender")
     a = ap.parse_args()
     global RND, W4B, REV
     RND = a.round
@@ -123,9 +131,10 @@ def main():
     sprep = json.loads((S / "w2_scope" / "paint" / "paint_report.json").read_text())
     after = maps_metrics(S / "w2" / "bake", S / "w2_scope" / "bake", EXP / "Textures", prep, sprep)
     k1f = W4B / "K1.json"
-    subprocess.run([BL, "-b", "--factory-startup", "--python", str(HERE / "sr_closeup_edges.py"), "--",
-                    "--fbx", f"{W4B / 'before_exports' / 'SK_SR01.fbx'},{EXP / 'SK_SR01.fbx'}", "--out", str(k1f)],
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if not (a.reuse_k1 and k1f.exists()):
+        subprocess.run([BL, "-b", "--factory-startup", "--python", str(HERE / "sr_closeup_edges.py"), "--",
+                        "--fbx", f"{W4B / 'before_exports' / 'SK_SR01.fbx'},{EXP / 'SK_SR01.fbx'}", "--out", str(k1f)],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     K1 = list(json.loads(k1f.read_text()).values())
     gates = []
 
@@ -139,8 +148,11 @@ def main():
     gate("K2 bolt body roughness (not chrome): P50 and P5 (the mirror streaks come from the smooth tail)",
          {"before_p50": before["bolt_rough_p50"], "after_p50": after["bolt_rough_p50"],
           "before_p5_p95": before["bolt_rough_p5_p95"], "after_p5_p95": after["bolt_rough_p5_p95"]},
-         "P50 >= before + 0.05; P5 >= 0.45",
-         after["bolt_rough_p50"] >= before["bolt_rough_p50"] + 0.05 and after["bolt_rough_p5_p95"][0] >= 0.45)
+         # a before snapshot measured misregistered (K4_NOTE.md) cannot anchor the relative test: the absolute bar only
+         "P50 >= 0.45 (before invalid); P5 >= 0.45" if before.get("invalid") else "P50 >= before + 0.05; P5 >= 0.45",
+         (after["bolt_rough_p50"] >= 0.45 if before.get("invalid") else
+          after["bolt_rough_p50"] >= before["bolt_rough_p50"] + 0.05) and after["bolt_rough_p5_p95"][0] >= 0.45,
+         f"before invalid: {before['invalid']}" if before.get("invalid") else "")
     t0, t1 = before["od_normal_tilt_gt_1deg"] or 0.0, after["od_normal_tilt_gt_1deg"] or 0.0
     r0 = (before["od_info"] or {}).get("rub_texels_gt_0.3", 0)
     r1 = (after["od_info"] or {}).get("rub_texels_gt_0.3", 0)
