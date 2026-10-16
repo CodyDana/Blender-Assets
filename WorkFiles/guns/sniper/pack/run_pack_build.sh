@@ -18,6 +18,7 @@
 #   5  capture   sr01_ue_capture.py in a fresh UnrealEditor-Cmd (real RHI), the lock re-claimed as sr01-pack
 #   6  analyse   sr01_pack_analyse.py in headless Blender (P1-P4 on the captures)
 #   7  gates     sr01_pack_gates.py -> WorkFiles/guns/sniper/gates/pack_materials.json (P1-P4 + S1-S7 + dump compare)
+#   7b frames    lit render frames (SR01 + scope) and render_<tag>.json copied to pack/build/frames/
 #   8  cleanup   the mirror is removed (junctions unlinked, never recursed into); the lock stays HELD by sr01-pack
 # Build records are copied to WorkFiles/guns/sniper/pack/build/; logs of 5-7 go there too.
 set -u
@@ -102,11 +103,24 @@ echo "=== 7 gates"
 py -3 -B "$HERE/sr01_pack_gates.py" "$TAG" "$REF_DUMP" --pack-dir "$MPACK" 2>&1 | tee "$OUT/gates_${TAG}.log"
 st="${PIPESTATUS[0]}"
 [ "$st" = "0" ] || stop 7 "a blocking gate failed: see WorkFiles/guns/sniper/gates/pack_materials.json (blocking_failed). If only P1 failed on a BC1 kind, re-run add_sr01_to_spec.py with BC_BC7 and this script again"
+# 7b keep the lit render frames (R3): they live only in the mirror, which step 8 removes
+echo "=== 7b frames"
+FRAMES="$OUT/frames"
+mkdir -p "$FRAMES"
+n_fr=0
+for f in "$MIRROR"/WorkFiles/materials/ue_renders/frames_raw/*SR01*.png \
+         "$MIRROR"/WorkFiles/materials/ue_renders/frames_raw/*Scope_LongRange*.png \
+         "$MIRROR"/WorkFiles/materials/build/render_"${TAG}".json; do
+  [ -f "$f" ] && cp -f "$f" "$FRAMES/" && n_fr=$((n_fr + 1))
+done
+[ "$n_fr" -gt 1 ] || echo "WARNING: no SR01/scope frames found in $MIRROR/WorkFiles/materials/ue_renders/frames_raw/"
+echo "    $n_fr files (lit frames + render_${TAG}.json) copied to $FRAMES"
 # 8 cleanup
 echo "=== 8 cleanup"
 py -3 -B "$HERE/make_mirror.py" --mirror "$MIRROR" --remove
 $LOCK status
 echo
 echo "DONE: every blocking gate passed (WorkFiles/guns/sniper/gates/pack_materials.json)."
+echo "Lit frames (R3): $FRAMES"
 echo "Next (main chat): look at the lit frames in the render step (R3), review git diff, commit, then release the lock:"
 echo "    py -3 -B Scripts/unreal/materials/np_lock.py release $OWNER"
