@@ -696,6 +696,88 @@ def photo_render(shot):
     c.denoising_prefilter = "ACCURATE"
 
 
+NO_FINISH = "--no-finish" in argv
+FINISH = {"dispersion": 0.006, "lift": 0.002, "s_curve": ((0.05, 0.045), (0.18, 0.18), (0.6, 0.63)),
+          "vignette_k": 0.07, "grain_scale": 1.3, "grain_strength": 0.22}
+_FIN = {}
+
+
+def photo_finish(shot):
+    """(SR01 rig 2b, RIG_PROPOSAL judge tell "too clean, no grain or grading") a subtle photographic finish in the
+    Blender 5.2 compositor (node group on scene.compositing_node_group; scene-linear, before AgX): lateral chromatic
+    aberration (Lens Distortion dispersion only), a slight black lift + mild S-curve, a radial vignette, and
+    multiplicative ~1 px luminance grain. On for rig2 shots (shot["render"]) unless render["finish"] is false or the
+    job runs with --no-finish; every other shot renders with no compositor."""
+    P = shot.get("render")
+    if not P or NO_FINISH or not P.get("finish", True) or shot.get("transparent"):
+        sc.compositing_node_group = None
+        return
+    if "ng" not in _FIN:
+        F = dict(FINISH, **{k: v for k, v in P.items() if k in FINISH})
+        ng = bpy.data.node_groups.new("SR_PhotoFinish", "CompositorNodeTree")
+        ng.interface.new_socket("Image", in_out="OUTPUT", socket_type="NodeSocketColor")
+        N, L = ng.nodes, ng.links
+
+        def node(t, **kw):
+            n = N.new(t)
+            for k, v in kw.items():
+                setattr(n, k, v)
+            return n
+
+        def math(op, a, b=None, c=None):
+            n = node("ShaderNodeMath", operation=op)
+            for i, v in enumerate((a, b, c)):
+                if v is None:
+                    continue
+                if isinstance(v, (int, float)):
+                    n.inputs[i].default_value = v
+                else:
+                    L.new(v, n.inputs[i])
+            return n.outputs[0]
+
+        rl = node("CompositorNodeRLayers")
+        ld = node("CompositorNodeLensdist")                     # lateral CA only: no barrel/pincushion
+        ld.inputs["Distortion"].default_value = 0.0
+        ld.inputs["Dispersion"].default_value = F["dispersion"]
+        L.new(rl.outputs["Image"], ld.inputs["Image"])
+        cb = node("CompositorNodeColorBalance")                # black lift (offset), white balance left neutral
+        try:
+            cb.inputs["Type"].default_value = "Offset/Power/Slope (ASC-CDL)"
+        except (TypeError, ValueError):
+            print("[export_review] colour balance type menu:", [i.name for i in cb.inputs])
+        cb.inputs[9].default_value = F["lift"]                   # Offset (value)
+        L.new(ld.outputs["Image"], cb.inputs["Image"])
+        cv = node("CompositorNodeCurveRGB")                     # mild S on the combined curve, pivot at mid grey
+        cm = cv.mapping
+        cm.extend = "EXTRAPOLATED"
+        for x, y in F["s_curve"]:
+            cm.curves[3].points.new(x, y)
+        cm.update()
+        L.new(cb.outputs["Image"], cv.inputs["Image"])
+        ic = node("CompositorNodeImageCoordinates")             # vignette: 1 - k r^2 on zero-centred coordinates
+        L.new(rl.outputs["Image"], ic.inputs["Image"])
+        ln = node("ShaderNodeVectorMath", operation="LENGTH")
+        L.new(ic.outputs["Uniform"], ln.inputs[0])
+        vig = math("MULTIPLY_ADD", math("POWER", ln.outputs["Value"], 2.0), -F["vignette_k"], 1.0)
+        nz = node("ShaderNodeTexNoise", noise_dimensions="4D")  # grain: ~1 px value noise on pixel coordinates
+        nz.inputs["W"].default_value = 0.37
+        nz.inputs["Scale"].default_value = F["grain_scale"]
+        nz.inputs["Detail"].default_value = 0.0
+        L.new(ic.outputs["Pixel"], nz.inputs["Vector"])
+        gr = math("MULTIPLY_ADD", math("SUBTRACT", nz.outputs["Factor"], 0.5), F["grain_strength"], 1.0)
+        gain = math("MULTIPLY", vig, gr)
+        mx = node("ShaderNodeMix", data_type="RGBA", blend_type="MULTIPLY")
+        mx.inputs["Factor"].default_value = 1.0
+        L.new(cv.outputs["Image"], mx.inputs[6])
+        L.new(gain, mx.inputs[7])
+        go = node("NodeGroupOutput")
+        L.new(mx.outputs[2], go.inputs[0])
+        _FIN["ng"] = ng
+        print("[export_review] photo finish", json.dumps(F))
+    sc.compositing_node_group = _FIN["ng"]
+    sc.render.use_compositing = True
+
+
 # ------------------------------------------------------------------------------------------------ shots
 def main():
     RD.engine(sc, "CYCLES", int(JOB.get("samples", 128)))
@@ -746,6 +828,7 @@ def main():
         fz = floor(shot, vis, cam)
         lens_dof(cam, shot)
         photo_render(shot)
+        photo_finish(shot)
         transparent = bool(shot.get("transparent", False))
         Path(shot["out"]).parent.mkdir(parents=True, exist_ok=True)
         RD.still(sc, shot["out"], transparent)
