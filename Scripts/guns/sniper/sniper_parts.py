@@ -1032,7 +1032,7 @@ def _on(v, a, b, ax, tol=0.06):
 
 
 def _slab_builder(specs):
-    """specs: dicts adds, subs, W, r, seg, [hfun, bx, bz, joint, sigma, corner, rc]. Each spec becomes one rim slab;
+    """specs: dicts adds, subs, W, r, seg, [hfun, bx, bz, joint, sigma, corner, rc, flat]. Each spec becomes one rim slab;
     the slabs are united with the exact solver (concave seams stay crisp, as on a moulded / machined part)."""
     def make(name, coll, rep):
         import bpy
@@ -1047,6 +1047,13 @@ def _slab_builder(specs):
             for k, L in enumerate(loops):
                 P = RS.prep(L, sp.get("sigma", 1.5), sp.get("corner", 40.0), rc, joint=sp.get("joint") if k == 0 else None,
                             step=sp.get("step", 2.0 * r + 0.5))
+                # flat: machined floors (x0, x1, z, zlo) the fairing must not dip: the Gaussian blurs a neighbouring
+                # step into them (the clamp seat sat 0.25 mm low beside the X 740 step); points just under z go back
+                for x0_, x1_, z_, zlo_ in (sp.get("flat", ()) if k == 0 else ()):
+                    m_ = (P[:, 0] > x0_) & (P[:, 0] < x1_) & (P[:, 1] < z_) & (P[:, 1] > zlo_)
+                    P[m_, 1] = z_
+                    # outline vertices every 10 mm along the floor (one 80 mm edge made 0.1 deg rim needles: UD2)
+                    P = RS.insert_breaks(P, xs=np.arange(x0_ + 10.0, x1_ - 5.0, 10.0))
                 if k:
                     P = P[::-1]
                 out.append(RS.insert_breaks(P, sp.get("bx", ()), sp.get("bz", ())))
@@ -1112,12 +1119,15 @@ def chassis_r2():
             return h
         prof = 36.9 if z >= -25.15 else (30.9 if z <= -31.15 else 30.9 + (z + 31.15))
         return min(h, 36.9 - w * (36.9 - prof))
-    bx = [x for x, _ in CHASSIS_HALF[1:-1]] + [b0 - BR, b0, b1, b1 + BR]
-    main = dict(adds=[cen, fore, RS.rect(558.0, 600.0, -39.58, 15.6), RS.rect(344.0, 395.0, -50.0, -11.6), tang],
+    bx = [x for x, _ in CHASSIS_HALF[1:-1]] + [b0 - BR, b0, b1, b1 + BR]    # (R2) the clamp seat floor as material: the traced underside runs at Z -39.35..-39.48 over X 742-830, so the seat
+    # cut alone left no floor at -39.58 and the X 740 step (then not a joint) was filleted to Z -39.80, into the clamp
+    main = dict(adds=[cen, fore, RS.rect(558.0, 600.0, -39.58, 15.6), RS.rect(344.0, 395.0, -50.0, -11.6), tang,
+                      RS.rect(740.0, 828.0, -39.58, -38.0)],
                 # the guard opening 0.25 mm smaller in the body than in the guard slab: their walls must not coincide
                 subs=[top, RS.rect(240.0, X_GRIP_FRONT, -200.0, Z_GRIP_SPLIT), RS.rect(740.0, 845.0, -200.0, -39.58),
                       G.offset(hole, -0.25)] + slots,
                 W=36.9, r=RIM_R, seg=3, hfun=h_main, bx=bx, bz=[-25.15, -31.15], joint=jmain, sigma=3.0,
+                flat=[(740.05, 828.0, -39.58, -40.5)],
                 # the belly from the well to the forend: the trace bumps 1.2 mm at X 522-533 and dips 0.6 mm at the
                 # centre / forend seam (judges: "wavy chassis underside"); the run becomes its lower convex hull
                 lowhull=[(500.0, 600.0, -50.0)])

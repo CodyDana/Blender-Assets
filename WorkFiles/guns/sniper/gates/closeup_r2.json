@@ -1,6 +1,6 @@
 {
  "stage": "Realism round 2 (rim-slab edges)",
- "date": "2026-10-14T16:50:58",
+ "date": "2026-10-16T12:16:49",
  "status": "fail",
  "failed": [
   "K1 chassis-slot edges: hard creases (> 60 deg) on SK_SR01 LOD0, after / before; the rounds shaded smooth",
@@ -24,13 +24,13 @@
     },
     "after": {
      "mesh": "SK_SR01",
-     "faces_chassis_slot": 25806,
-     "hard_crease_mm": 8632.1,
-     "round_segment_mm": 66460.8,
-     "round_to_hard": 7.699,
+     "faces_chassis_slot": 25318,
+     "hard_crease_mm": 9098.8,
+     "round_segment_mm": 65456.1,
+     "round_to_hard": 7.194,
      "round_smooth_fraction": 0.991
     },
-    "hard_ratio": 0.58
+    "hard_ratio": 0.611
    },
    "threshold": "hard after <= 0.5 x before; round_smooth_fraction >= 0.9",
    "pass": false,
@@ -46,8 +46,8 @@
      0.882
     ],
     "after_p5_p95": [
-     0.388,
-     0.886
+     0.384,
+     0.89
     ]
    },
    "threshold": "P50 >= before + 0.05; P5 >= 0.45",
@@ -58,10 +58,10 @@
    "name": "K3 OD Cerakote: orange peel in the normal map (texels tilted > 1 deg); edge rub only where caused; chips",
    "value": {
     "tilt_before": 0.435,
-    "tilt_after": 0.4363,
+    "tilt_after": 0.436,
     "rub_gt_0.3_before": 10757,
-    "rub_gt_0.3_after": 8840,
-    "chips_after": 757,
+    "rub_gt_0.3_after": 8838,
+    "chips_after": 794,
     "bare_al_after": 1,
     "od_rough_p5_p50_p95": [
      0.559,
@@ -75,7 +75,7 @@
   },
   {
    "name": "K4 no bare metal on small parts (pins, screws, safety, trigger, release)",
-   "value": 8331,
+   "value": 19463,
    "threshold": "== 0",
    "pass": false,
    "note": "before 13254"
@@ -102,8 +102,8 @@
   {
    "name": "K6 hardware + grip: hex sockets painted, grip stipple painted",
    "value": {
-    "hex_sockets": 69,
-    "grip_panel_texels": 381174
+    "hex_sockets": 68,
+    "grip_panel_texels": 384080
    },
    "threshold": "> 0 each",
    "pass": true,
@@ -158,10 +158,7 @@
       "L2 TOP IoU raw / declared fit",
       "L2 per part on GR (IoU >= 0.95)",
       "L3 GR contour P95 (sheet px)",
-      "L4 key dimensions (<= 0.05 mm)",
-      "G5 rest intersections between parts",
-      "G5 butt-joint gaps",
-      "F1 bipod folded gaps (leg-clamp, feet-forend, feet, legs-knob)"
+      "L4 key dimensions (<= 0.05 mm)"
      ]
     },
     "uv_bake_paint": {
@@ -219,8 +216,8 @@
     "w4b": {
      "GR": 0.9571,
      "GL": [
-      0.941,
-      0.949
+      0.9412,
+      0.9491
      ],
      "TOP": [
       0.8376,
@@ -279,24 +276,24 @@
  "after_maps": {
   "bolt_rough_p50": 0.627,
   "bolt_rough_p5_p95": [
-   0.388,
-   0.886
+   0.384,
+   0.89
   ],
-  "small_parts_metal_texels": 8331,
+  "small_parts_metal_texels": 19463,
   "od_rough_p5_p50_p95": [
    0.559,
    0.622,
    0.764
   ],
-  "od_normal_tilt_gt_1deg": 0.4363,
+  "od_normal_tilt_gt_1deg": 0.436,
   "od_info": {
-   "chip_texels": 757,
+   "chip_texels": 794,
    "bare_al_texels": 1,
-   "chip_fraction": 9e-05,
-   "rub_texels_gt_0.3": 8840
+   "chip_fraction": 0.0001,
+   "rub_texels_gt_0.3": 8838
   },
-  "grip_panel_texels": 381174,
-  "hex_sockets": 69,
+  "grip_panel_texels": 384080,
+  "hex_sockets": 68,
   "scope_anod_rough_p50": 0.6,
   "turret_mark_texels": 2795,
   "lens_bc_std_srgb": 19.42,

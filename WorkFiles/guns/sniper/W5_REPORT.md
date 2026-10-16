@@ -1,5 +1,26 @@
 # SR-01 W5: Unreal 5.8 verification (2026-10-14)
 
+## Round 2 bytes (2026-10-16): 37 of 37 pass
+- **Bytes:** the realism-round-2 exports from one full chain run (`scratch/r2/master.sh`: probe, form, rest,
+  after). `Assets/Guns/SR01.blend` comes from the same pass. Hashes: `scratch/r2/exports_sha256_r2.txt` (44 files).
+- **Run:** folder `/Game/GunCheck/SR01_1016r2`, same project, driven by `UnrealCheck/run_w5_r2.sh`.
+  - Passes A, A3, A2, B, C and E each ran in a fresh process behind `sr_guard.ps1`, then D (Blender) and F.
+  - Log: `UnrealCheck/w5_r2.log`.
+  - A3 exits with rc 1 because of the project's GameFeatureData asset-manager errors. They are engine-level, not
+    asset errors; the pass status is ok and U10 counts 0 asset warnings.
+- **Result:** `verification_summary.json` reads `pass`, `engine_verified: true`, 37 gates, 0 failed.
+  - `SHA256_at_start.json` = `SHA256_at_end.json`.
+- **Numbers that changed with the new geometry:**
+  - Triangles: SK 44,224 / 19,872 / 6,588 / 2,502; SM 45,102 / 20,266 / 6,734 / 2,560; Mag 878 / 394 / 146 / 58
+    (equal in Blender, the FBX and Unreal).
+  - C2: 0 of 322,599 samples outside.
+  - U6: the catch nose only, 0.088 mm on frame 2, within F5.
+  - U8: 0 overlap at 64 / 128 px.
+- **README:** after the run I edited `Exports/Guns/SR01/README.md` (the measured section). It is the only file whose
+  hash differs from `SHA256_at_end.json`.
+- **Round 1 records:** the earlier `/Game/GunCheck/SR01_1014b` pass JSONs are kept in `scratch/w5_1014b_records/`.
+  The section below describes that run.
+
 **Result: 37 of 37 gates pass** on the re-exported bytes in fresh UE 5.8.3 processes
 (`UnrealCheck/verification_summary.json`, status `pass`, `engine_verified: true`). Run folder:
 `/Game/GunCheck/SR01_1014b` in `WorkFiles/shuriken/UnrealShuriken/ShurikenValidation.uproject` (main checkout). Nothing

@@ -1,6 +1,6 @@
 {
  "stage": "W1a form (gun without the scope)",
- "date": "2026-10-14T17:13:08",
+ "date": "2026-10-16T11:03:10",
  "status": "partial",
  "failed": [
   "L2 GR IoU (scope = the blockout stand-in until W1b)",
@@ -8,10 +8,7 @@
   "L2 TOP IoU raw / declared fit",
   "L2 per part on GR (IoU >= 0.95)",
   "L3 GR contour P95 (sheet px)",
-  "L4 key dimensions (<= 0.05 mm)",
-  "G5 rest intersections between parts",
-  "G5 butt-joint gaps",
-  "F1 bipod folded gaps (leg-clamp, feet-forend, feet, legs-knob)"
+  "L4 key dimensions (<= 0.05 mm)"
  ],
  "gates": [
   {
@@ -236,15 +233,15 @@
   },
   {
    "name": "G5 rest intersections between parts",
-   "value": 1,
+   "value": 0,
    "threshold": "0",
-   "pass": false
+   "pass": true
   },
   {
    "name": "G5 butt-joint gaps",
-   "value": "min 0.0033 over 16 pairs",
+   "value": "min 0.0152 over 16 pairs",
    "threshold": ">= 0.01 (sampling 0.5 mm)",
-   "pass": false
+   "pass": true
   },
   {
    "name": "F1 bipod folded gaps (leg-clamp, feet-forend, feet, legs-knob)",
@@ -260,7 +257,7 @@
     "bipod_foot_l|barrel": 8.0
    },
    "threshold": "0 intersections; feet >= 2.0 apart",
-   "pass": false
+   "pass": true
   },
   {
    "name": "F2 deploy sweep 0..90 at ext 0 / 76 (both legs)",
@@ -388,15 +385,16 @@
   },
   {
    "name": "B8 LOD0 triangles, gun without the scope (target 35-45k, ceiling 50k)",
-   "value": 44778,
+   "value": 45102,
    "threshold": "<= 50000 (target <= 45000)",
-   "pass": true
+   "pass": true,
+   "note": "over the 45k target by 102"
   },
   {
    "name": "UD1 Unreal degenerate rule on every LOD0 part",
    "value": {
     "unreal_drops": 0,
-    "min_area_mm2": 0.010271
+    "min_area_mm2": 0.01021
    },
    "threshold": "0; >= 0.01 mm2",
    "pass": true
@@ -472,7 +470,7 @@
   "silhouette": {
    "stage": "form",
    "npz": "form_tris.npz",
-   "triangles": 65238,
+   "triangles": 65562,
    "views": {
     "GR": {
      "iou": 0.9571,
@@ -552,12 +550,12 @@
        }
       },
       "receiver": {
-       "iou": 0.4883,
+       "iou": 0.4889,
        "area_px": 1791,
        "missed_px_covered_by": {
         "rail": 335,
         "bolt": 289,
-        "chassis": 210
+        "chassis": 209
        }
       },
       "cheek_riser": {
@@ -635,7 +633,7 @@
        }
       },
       "chassis_forend": {
-       "iou": 0.913,
+       "iou": 0.9128,
        "area_px": 4614,
        "missed_px_covered_by": {
         "barrel": 291,
@@ -644,11 +642,11 @@
        }
       },
       "chassis_centre": {
-       "iou": 0.8673,
+       "iou": 0.8669,
        "area_px": 4897,
        "missed_px_covered_by": {
         "chassis": 176,
-        "receiver": 63,
+        "receiver": 64,
         "scope_blockout": 58
        }
       }
@@ -956,7 +954,7 @@
      "ngons": 0,
      "zero_area_faces": 0,
      "zero_length_edges": 0,
-     "triangles": 8798,
+     "triangles": 9122,
      "shells": 1
     },
     "cheek_riser": {
@@ -1121,14 +1119,8 @@
     }
    },
    "B7_closed": 33,
-   "B8_triangles": 44778,
-   "G5_rest_intersections": [
-    {
-     "a": "bipod_clamp",
-     "b": "chassis",
-     "intersecting_triangle_pairs": 23
-    }
-   ],
+   "B8_triangles": 45102,
+   "G5_rest_intersections": [],
    "G5_butt_gaps": [
     {
      "a": "butt",
@@ -1158,12 +1150,12 @@
     {
      "a": "receiver",
      "b": "chassis",
-     "min_gap_mm": 0.0389
+     "min_gap_mm": 0.0402
     },
     {
      "a": "rail",
      "b": "receiver",
-     "min_gap_mm": 0.0401
+     "min_gap_mm": 0.0405
     },
     {
      "a": "barrel",
@@ -1178,7 +1170,7 @@
     {
      "a": "bipod_clamp",
      "b": "chassis",
-     "min_gap_mm": 0.0033
+     "min_gap_mm": 0.0453
     },
     {
      "a": "fasteners",
@@ -1229,9 +1221,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.21,
      "end_nearest": "receiver",
-     "seconds": 215.8,
+     "seconds": 544.9,
      "moving_samples": 270086,
-     "fixed_samples": 821710,
+     "fixed_samples": 821913,
      "row": "sliding",
      "pass": true,
      "proof_fails": 0,
@@ -1254,9 +1246,9 @@
      "rest_nearest": "receiver",
      "end_clearance_mm": 0.154,
      "end_nearest": "receiver",
-     "seconds": 79.1,
+     "seconds": 207.4,
      "moving_samples": 270086,
-     "fixed_samples": 878972,
+     "fixed_samples": 878980,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1278,7 +1270,7 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1546,
      "end_nearest": "pins",
-     "seconds": 2.4,
+     "seconds": 6.1,
      "moving_samples": 19899,
      "fixed_samples": 26708,
      "row": "hinge",
@@ -1302,9 +1294,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1991,
      "end_nearest": "pins",
-     "seconds": 3.8,
+     "seconds": 10.1,
      "moving_samples": 20198,
-     "fixed_samples": 18088,
+     "fixed_samples": 18106,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1326,9 +1318,9 @@
      "rest_nearest": "pins",
      "end_clearance_mm": 0.1632,
      "end_nearest": "pins",
-     "seconds": 12.4,
+     "seconds": 32.8,
      "moving_samples": 77821,
-     "fixed_samples": 87157,
+     "fixed_samples": 87158,
      "row": "hinge",
      "pass": true,
      "hits_at": []
@@ -1350,7 +1342,7 @@
      "rest_nearest": "butt",
      "end_clearance_mm": 0.1692,
      "end_nearest": "butt",
-     "seconds": 19.9,
+     "seconds": 52.1,
      "moving_samples": 348203,
      "fixed_samples": 243036,
      "row": "sliding",
@@ -1374,9 +1366,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 68.9,
+     "seconds": 174.8,
      "moving_samples": 509228,
-     "fixed_samples": 270834,
+     "fixed_samples": 270992,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1399,9 +1391,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 70.0,
+     "seconds": 178.9,
      "moving_samples": 509228,
-     "fixed_samples": 270834,
+     "fixed_samples": 270992,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1424,7 +1416,7 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 14.4,
+     "seconds": 36.4,
      "moving_samples": 272294,
      "fixed_samples": 172262,
      "row": "sliding",
@@ -1448,9 +1440,9 @@
      "rest_nearest": "bipod_leg_l",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_l",
-     "seconds": 23.6,
+     "seconds": 60.1,
      "moving_samples": 272294,
-     "fixed_samples": 503476,
+     "fixed_samples": 503634,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1472,9 +1464,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 75.4,
+     "seconds": 178.4,
      "moving_samples": 509823,
-     "fixed_samples": 255289,
+     "fixed_samples": 255447,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1497,9 +1489,9 @@
      "rest_nearest": "bipod_pins",
      "end_clearance_mm": 0.1674,
      "end_nearest": "bipod_pins",
-     "seconds": 67.1,
+     "seconds": 160.6,
      "moving_samples": 509823,
-     "fixed_samples": 255289,
+     "fixed_samples": 255447,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1522,7 +1514,7 @@
      "rest_nearest": "bipod_leg_r",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_r",
-     "seconds": 14.2,
+     "seconds": 16.8,
      "moving_samples": 272713,
      "fixed_samples": 170673,
      "row": "sliding",
@@ -1546,9 +1538,9 @@
      "rest_nearest": "bipod_leg_r",
      "end_clearance_mm": 0.2469,
      "end_nearest": "bipod_leg_r",
-     "seconds": 25.8,
+     "seconds": 23.6,
      "moving_samples": 272713,
-     "fixed_samples": 488097,
+     "fixed_samples": 488255,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1570,9 +1562,9 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 88.4,
+     "seconds": 128.1,
      "moving_samples": 1493936,
-     "fixed_samples": 159954,
+     "fixed_samples": 198482,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1595,9 +1587,9 @@
      "rest_nearest": "bipod_clamp",
      "end_clearance_mm": 0.187,
      "end_nearest": "bipod_clamp",
-     "seconds": 89.8,
+     "seconds": 134.4,
      "moving_samples": 1493936,
-     "fixed_samples": 140342,
+     "fixed_samples": 170466,
      "row": "hinge",
      "pass": true,
      "proof_fails": 0,
@@ -1748,9 +1740,9 @@
      "rest_nearest": "mag_release",
      "end_clearance_mm": 0.3,
      "end_nearest": "chassis",
-     "seconds": 50.4,
+     "seconds": 60.9,
      "moving_samples": 248837,
-     "fixed_samples": 249144,
+     "fixed_samples": 249173,
      "row": "sliding",
      "pass": true,
      "hits_at": []
@@ -1774,9 +1766,9 @@
      "rest_nearest": "mag_release",
      "end_clearance_mm": 3.0,
      "end_nearest": null,
-     "seconds": 49.6,
+     "seconds": 70.5,
      "moving_samples": 248837,
-     "fixed_samples": 247047,
+     "fixed_samples": 247076,
      "row": "sliding",
      "pass": false,
      "hits_at": [
@@ -1799,49 +1791,49 @@
    "B6a": {
     "object": "SM_SR01_B6aCheck",
     "parts": 33,
-    "triangles": 44778,
+    "triangles": 45102,
     "checks": [
      {
       "name": "no_ngons",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 n-gon(s) of 39902 faces"
+      "detail": "0 n-gon(s) of 40226 faces"
      },
      {
       "name": "no_non_manifold_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 62291"
+      "detail": "0 edge(s) with more than 2 faces, 0 wire edge(s), of 62777"
      },
      {
       "name": "open_boundary_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 boundary edge(s) of 62291 (informational: open meshes are allowed)"
+      "detail": "0 boundary edge(s) of 62777 (informational: open meshes are allowed)"
      },
      {
       "name": "no_loose_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 loose vertex/vertices of 22437"
+      "detail": "0 loose vertex/vertices of 22599"
      },
      {
       "name": "no_zero_length_edges",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 edge(s) at or below 1e-06 of 62291; shortest 5.09088e-05"
+      "detail": "0 edge(s) at or below 1e-06 of 62777; shortest 5.09088e-05"
      },
      {
       "name": "no_degenerate_faces",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 face(s) at or below 1e-12 area of 39902; smallest 1.02737e-08"
+      "detail": "0 face(s) at or below 1e-12 area of 40226; smallest 1.02082e-08"
      },
      {
       "name": "no_coincident_vertices",
       "object": "SM_SR01_B6aCheck",
       "passed": true,
-      "detail": "0 vertex pair(s) within 1e-06 of 22437"
+      "detail": "0 vertex pair(s) within 1e-06 of 22599"
      }
     ],
     "passed": true,
@@ -1866,18 +1858,18 @@
     "ngons": 0,
     "zero_area_faces": 0,
     "zero_length_edges": 0,
-    "triangles": 8798,
+    "triangles": 9122,
     "shells": 1,
     "ud": {
      "unreal_drops": 0,
-     "min_area_mm2": 0.010397,
+     "min_area_mm2": 0.01021,
      "edges_under_0.05mm": 0,
      "needles_under_0.02mm": 0,
      "strip_polygons_under_0.1mm": 0,
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 5.92,
+    "seconds": 12.2,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -1888,14 +1880,14 @@
     },
     "protected_repair": {
      "needed": true,
-     "collapses": 59,
+     "collapses": 65,
      "reverted": false,
-     "drops_before": 31,
+     "drops_before": 34,
      "drops_after": 0,
      "pass_after": false
     },
     "fine_fix": {
-     "collapses": 9,
+     "collapses": 8,
      "reverted": false,
      "drops_before": 0,
      "drops_after": 0,
@@ -1906,7 +1898,7 @@
       "rings_simple": true,
       "loops": 4,
       "ring_verts": [
-       149,
+       165,
        38,
        38,
        37
@@ -1918,12 +1910,12 @@
         0,
         [
          [
-          832.71,
-          -38.28
+          832.1,
+          -38.21
          ],
          [
-          832.7,
-          -38.33
+          832.72,
+          -38.28
          ]
         ],
         6
@@ -1932,12 +1924,12 @@
         1,
         [
          [
-          575.22,
-          19.33
+          575.19,
+          19.34
          ],
          [
           570.08,
-          19.6
+          19.57
          ]
         ],
         2
@@ -1958,9 +1950,9 @@
        ]
       ],
       "cdt_new_verts_+1": 10,
-      "cap_tris_+1": 286,
+      "cap_tris_+1": 302,
       "cdt_new_verts_-1": 10,
-      "cap_tris_-1": 286,
+      "cap_tris_-1": 302,
       "manifold": {
        "multi_face_edges": 0,
        "boundary_edges": 0,
@@ -1968,20 +1960,36 @@
        "ngons": 0,
        "zero_area_faces": 0,
        "zero_length_edges": 0,
-       "triangles": 4146,
+       "triangles": 4414,
        "shells": 1
       },
       "ud_slab": {
        "unreal_drops": 2,
-       "edges_under_0.05mm": 1,
+       "edges_under_0.05mm": 3,
        "needles_under_0.02mm": 0
       },
       "ud_loc": [
        [
         [
+         570.0,
+         -36.0,
+         20.0
+        ],
+        4
+       ],
+       [
+        [
          246.0,
          -22.0,
          -54.0
+        ],
+        2
+       ],
+       [
+        [
+         560.0,
+         -36.0,
+         14.0
         ],
         2
        ],
@@ -2003,33 +2011,17 @@
        ],
        [
         [
+         412.0,
+         -32.0,
+         -68.0
+        ],
+        1
+       ],
+       [
+        [
          246.0,
          -22.0,
          -16.0
-        ],
-        1
-       ],
-       [
-        [
-         412.0,
-         -32.0,
-         -66.0
-        ],
-        1
-       ],
-       [
-        [
-         412.0,
-         32.0,
-         -66.0
-        ],
-        1
-       ],
-       [
-        [
-         414.0,
-         -32.0,
-         -68.0
         ],
         1
        ],
@@ -2051,17 +2043,25 @@
        ],
        [
         [
-         660.0,
-         -30.0,
-         -50.0
+         414.0,
+         -32.0,
+         -68.0
         ],
         1
        ],
        [
         [
-         660.0,
-         30.0,
-         -50.0
+         412.0,
+         32.0,
+         -68.0
+        ],
+        1
+       ],
+       [
+        [
+         560.0,
+         36.0,
+         14.0
         ],
         1
        ]
@@ -2077,7 +2077,7 @@
         -69.13
        ],
        [
-        519.307,
+        519.306,
         -68.1
        ],
        [
@@ -2085,11 +2085,11 @@
         -67.819
        ],
        [
-        530.25,
+        530.248,
         -66.96
        ],
        [
-        577.945,
+        577.941,
         -61.451
        ],
        [
@@ -2101,32 +2101,32 @@
         -60.664
        ],
        [
-        589.653,
+        589.649,
         -59.335
        ],
        [
-        614.591,
-        -57.743
+        614.586,
+        -57.744
        ],
        [
-        624.245,
-        -55.735
+        624.239,
+        -55.736
        ],
        [
-        630.182,
-        -54.986
+        630.176,
+        -54.987
        ],
        [
-        653.095,
-        -53.604
+        653.088,
+        -53.605
        ],
        [
-        655.686,
-        -52.968
+        655.68,
+        -52.971
        ],
        [
-        656.074,
-        -52.826
+        656.068,
+        -52.828
        ],
        [
         659.546,
@@ -2145,88 +2145,120 @@
         -49.824
        ],
        [
-        661.421,
-        -45.746
+        661.422,
+        -45.743
        ],
        [
         661.558,
-        -45.419
+        -45.418
        ],
        [
-        661.804,
+        661.803,
         -45.163
        ],
        [
-        662.125,
-        -45.012
+        662.122,
+        -45.013
        ],
        [
-        662.582,
-        -44.892
+        662.576,
+        -44.894
        ],
        [
-        663.086,
-        -44.831
+        663.078,
+        -44.834
        ],
        [
-        675.586,
+        675.578,
         -45.038
        ],
        [
-        685.411,
-        -43.568
+        685.402,
+        -43.569
        ],
        [
-        689.383,
-        -43.297
+        689.374,
+        -43.298
        ],
        [
         740.0,
-        -43.161
+        -43.164
        ],
        [
         740.0,
         -39.58
        ],
        [
-        741.959,
-        -39.821
+        741.95,
+        -39.58
        ],
        [
-        751.688,
-        -39.503
+        748.708,
+        -39.58
+       ],
+       [
+        750.05,
+        -39.576
+       ],
+       [
+        760.05,
+        -39.55
+       ],
+       [
+        770.05,
+        -39.524
+       ],
+       [
+        780.05,
+        -39.498
+       ],
+       [
+        790.05,
+        -39.471
+       ],
+       [
+        800.05,
+        -39.445
+       ],
+       [
+        810.05,
+        -39.419
+       ],
+       [
+        820.05,
+        -39.392
        ],
        [
         830.6,
-        -39.37
+        -39.365
        ],
        [
-        831.521,
-        -39.368
+        831.563,
+        -39.362
        ],
        [
         832.1,
-        -39.426
+        -39.418
        ],
        [
-        832.696,
-        -39.485
+        832.715,
+        -39.482
        ],
        [
-        833.088,
-        -39.453
+        833.099,
+        -39.452
        ],
        [
-        833.443,
-        -39.284
+        833.447,
+        -39.288
        ],
        [
-        833.716,
-        -39.0
+        833.714,
+        -39.01
        ],
        [
-        833.87,
-        -38.638
+        833.866,
+        -38.656
        ],
        [
         835.565,
@@ -2237,239 +2269,271 @@
         -25.15
        ],
        [
-        837.185,
-        -23.993
+        837.195,
+        -23.948
        ],
        [
-        838.154,
-        -18.095
+        838.158,
+        -18.049
        ],
        [
-        838.36,
-        3.89
+        838.359,
+        4.935
        ],
        [
-        838.13,
-        11.754
+        838.124,
+        11.795
        ],
        [
-        838.256,
-        12.726
+        838.254,
+        12.744
        ],
        [
-        838.248,
-        13.073
+        838.247,
+        13.083
        ],
        [
-        838.134,
-        13.401
+        838.138,
+        13.404
        ],
        [
-        837.926,
-        13.679
+        837.935,
+        13.676
        ],
        [
-        837.643,
-        13.88
+        837.659,
+        13.874
        ],
        [
-        836.546,
-        14.428
+        836.518,
+        14.448
        ],
        [
-        835.888,
-        14.616
+        835.848,
+        14.639
        ],
        [
         832.1,
-        14.971
+        14.974
        ],
        [
-        830.534,
-        15.117
+        830.491,
+        15.118
        ],
        [
-        744.515,
-        15.268
+        820.05,
+        15.137
        ],
        [
-        662.525,
-        17.651
+        810.05,
+        15.154
        ],
        [
-        600.527,
-        16.711
+        800.05,
+        15.172
        ],
        [
-        588.794,
-        18.356
+        790.05,
+        15.189
        ],
        [
-        583.198,
-        18.437
+        780.05,
+        15.207
        ],
        [
-        582.535,
-        18.325
+        770.05,
+        15.224
        ],
        [
-        581.787,
-        18.052
+        760.05,
+        15.241
        ],
        [
-        581.299,
-        17.946
+        750.05,
+        15.259
        ],
        [
-        580.8,
-        17.973
+        744.476,
+        15.269
        ],
        [
-        580.327,
-        18.132
+        662.489,
+        17.652
        ],
        [
-        578.264,
-        19.151
+        600.494,
+        16.712
        ],
        [
-        575.712,
-        19.865
+        588.762,
+        18.358
        ],
        [
-        575.277,
-        19.932
+        583.173,
+        18.438
        ],
        [
-        569.517,
-        20.138
+        582.498,
+        18.322
        ],
        [
-        569.448,
-        20.128
+        581.791,
+        18.059
        ],
        [
-        569.387,
-        20.095
+        581.3,
+        17.949
        ],
        [
-        569.34,
-        20.043
+        580.798,
+        17.975
        ],
        [
-        569.314,
-        19.979
+        580.322,
+        18.134
        ],
        [
-        569.311,
-        19.909
+        578.235,
+        19.161
        ],
        [
-        569.333,
-        19.843
+        575.681,
+        19.871
        ],
        [
-        569.369,
-        19.774
-       ],
-       [
-        569.489,
-        19.457
+        575.248,
+        19.938
        ],
        [
         569.529,
-        19.12
-       ],
-       [
-        569.508,
-        16.572
+        20.137
        ],
        [
         569.457,
-        16.284
+        20.127
        ],
        [
-        569.314,
-        16.028
+        569.392,
+        20.094
        ],
        [
-        569.096,
-        15.833
+        569.344,
+        20.04
        ],
        [
-        568.826,
-        15.72
+        569.316,
+        19.973
        ],
        [
-        568.533,
-        15.702
+        569.312,
+        19.9
        ],
        [
-        567.352,
-        15.826
+        569.334,
+        19.831
        ],
        [
-        560.071,
-        15.328
+        569.37,
+        19.76
        ],
        [
-        559.662,
-        15.345
+        569.492,
+        19.43
        ],
        [
-        558.84,
-        15.471
+        569.531,
+        19.082
        ],
        [
-        558.59,
-        15.466
+        569.509,
+        16.584
        ],
        [
-        558.356,
-        15.377
+        569.457,
+        16.291
        ],
        [
-        558.166,
-        15.214
+        569.313,
+        16.032
        ],
        [
-        558.043,
-        14.997
+        569.091,
+        15.834
+       ],
+       [
+        568.818,
+        15.719
+       ],
+       [
+        568.521,
+        15.7
+       ],
+       [
+        567.325,
+        15.822
+       ],
+       [
+        560.05,
+        15.324
+       ],
+       [
+        559.632,
+        15.342
+       ],
+       [
+        558.828,
+        15.469
+       ],
+       [
+        558.582,
+        15.465
+       ],
+       [
+        558.351,
+        15.378
+       ],
+       [
+        558.164,
+        15.218
+       ],
+       [
+        558.042,
+        15.004
        ],
        [
         558.0,
-        14.751
+        14.762
        ],
        [
         558.0,
-        -8.278
+        -8.267
        ],
        [
-        557.956,
-        -8.535
+        557.955,
+        -8.528
        ],
        [
-        557.827,
-        -8.763
+        557.825,
+        -8.759
        ],
        [
-        557.63,
-        -8.934
+        557.626,
+        -8.933
        ],
        [
-        557.387,
-        -9.029
+        557.38,
+        -9.03
        ],
        [
-        557.126,
-        -9.037
+        557.115,
+        -9.039
        ],
        [
-        556.058,
-        -8.888
+        556.033,
+        -8.892
        ],
        [
-        549.327,
+        549.298,
         -9.159
        ],
        [
@@ -2489,103 +2553,103 @@
         -9.17
        ],
        [
-        393.284,
+        393.262,
         -9.171
        ],
        [
-        385.87,
-        -10.32
+        385.862,
+        -10.328
        ],
        [
-        354.407,
-        -11.574
+        354.388,
+        -11.573
        ],
        [
-        342.118,
-        -10.547
+        343.066,
+        -10.583
        ],
        [
-        329.178,
-        -10.589
+        329.16,
+        -10.59
        ],
        [
-        325.297,
-        -11.164
+        325.28,
+        -11.169
        ],
        [
-        317.793,
-        -13.545
+        317.775,
+        -13.548
        ],
        [
-        313.877,
-        -13.954
+        313.859,
+        -13.955
        ],
        [
         290.0,
-        -14.048
+        -14.049
        ],
        [
-        247.83,
-        -14.214
+        247.823,
+        -14.215
        ],
        [
-        247.137,
-        -14.351
+        247.125,
+        -14.354
        ],
        [
-        246.544,
-        -14.737
+        246.53,
+        -14.746
        ],
        [
-        245.61,
-        -15.64
+        245.601,
+        -15.654
        ],
        [
-        245.305,
-        -16.026
+        245.299,
+        -16.039
        ],
        [
-        245.112,
-        -16.479
+        245.109,
+        -16.489
        ],
        [
-        245.044,
-        -16.966
+        245.041,
+        -16.973
        ],
        [
-        244.996,
+        244.994,
         -25.15
        ],
        [
-        244.96,
+        244.959,
         -31.15
        ],
        [
         244.823,
-        -54.54
+        -54.553
        ],
        [
         244.898,
-        -55.026
+        -55.035
        ],
        [
         245.121,
-        -55.465
+        -55.47
        ],
        [
         245.188,
-        -55.557
+        -55.561
        ],
        [
         245.411,
-        -55.778
+        -55.78
        ],
        [
-        245.691,
-        -55.918
+        245.69,
+        -55.919
        ],
        [
-        246.002,
+        245.998,
         -55.965
        ],
        [
@@ -2597,7 +2661,7 @@
         -55.245
        ],
        [
-        403.25,
+        403.255,
         -54.393
        ],
        [
@@ -2605,48 +2669,48 @@
         -54.414
        ],
        [
-        408.268,
-        -54.533
+        408.271,
+        -54.534
        ],
        [
-        408.965,
-        -54.69
+        408.969,
+        -54.691
        ],
        [
-        409.551,
-        -55.097
+        409.556,
+        -55.1
        ],
        [
-        410.491,
-        -56.066
+        410.494,
+        -56.071
        ],
        [
-        410.865,
-        -56.625
+        410.866,
+        -56.629
        ],
        [
         411.015,
-        -57.281
+        -57.283
        ],
        [
         411.36,
-        -65.271
+        -65.276
        ],
        [
         411.262,
-        -66.592
+        -66.593
        ],
        [
         411.298,
-        -67.118
+        -67.119
        ],
        [
         411.48,
-        -67.612
+        -67.614
        ],
        [
-        411.793,
-        -68.036
+        411.794,
+        -68.037
        ],
        [
         412.533,
@@ -2724,22 +2788,6 @@
        ],
        [
         740.0,
-        -39.58
-       ],
-       [
-        745.984,
-        -39.58
-       ],
-       [
-        746.064,
-        -39.5
-       ],
-       [
-        817.328,
-        -39.5
-       ],
-       [
-        817.423,
         -39.58
        ],
        [
@@ -3342,7 +3390,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.47,
+    "seconds": 1.12,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -3689,7 +3737,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.47,
+    "seconds": 1.09,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -4045,7 +4093,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.01,
+    "seconds": 0.03,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -4073,7 +4121,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.69,
+    "seconds": 1.54,
     "bone": "cheek_riser",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -4516,7 +4564,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.03,
+    "seconds": 0.09,
     "bone": "cheek_riser",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4544,7 +4592,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.09,
+    "seconds": 0.2,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4572,7 +4620,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.29,
+    "seconds": 0.67,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4600,7 +4648,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.49,
+    "seconds": 3.13,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4628,7 +4676,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.47,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4656,7 +4704,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.1,
+    "seconds": 0.29,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4684,7 +4732,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.54,
+    "seconds": 1.15,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4712,7 +4760,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.16,
+    "seconds": 0.32,
     "bone": "bolt",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4740,7 +4788,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.15,
+    "seconds": 0.29,
     "bone": "selector",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4768,7 +4816,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.04,
+    "seconds": 0.09,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4796,7 +4844,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.11,
+    "seconds": 0.24,
     "bone": "trigger",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4824,7 +4872,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.15,
+    "seconds": 0.3,
     "bone": "mag_release",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -4852,7 +4900,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.44,
+    "seconds": 3.67,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -5774,7 +5822,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 1.02,
+    "seconds": 2.34,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -5802,7 +5850,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.12,
+    "seconds": 0.4,
     "bone": "muzzle_device",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -5830,7 +5878,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.17,
+    "seconds": 0.35,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
@@ -5858,7 +5906,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.02,
+    "seconds": 0.05,
     "bone": "magazine",
     "slot": "M_SR01_Mag",
     "ud_pre_repair": {
@@ -5886,7 +5934,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.23,
+    "seconds": 0.5,
     "bone": "body",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -5914,7 +5962,7 @@
      "pass_ud1": true,
      "pass_ud2": false
     },
-    "seconds": 0.62,
+    "seconds": 1.38,
     "bone": "bipod",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -5942,7 +5990,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.14,
+    "seconds": 0.31,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -5970,7 +6018,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.05,
+    "seconds": 0.12,
     "bone": "bipod",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -5998,7 +6046,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.66,
+    "seconds": 1.6,
     "bone": "bipod_leg_l",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -6026,7 +6074,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.65,
+    "seconds": 1.35,
     "bone": "bipod_leg_r",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -6054,7 +6102,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.37,
+    "seconds": 0.81,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -6082,7 +6130,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.37,
+    "seconds": 0.77,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {
@@ -6110,7 +6158,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.44,
+    "seconds": 0.97,
     "bone": "bipod_leg_l_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -6138,7 +6186,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.43,
+    "seconds": 0.99,
     "bone": "bipod_leg_r_ext",
     "slot": "M_SR01_Chassis",
     "ud_pre_repair": {
@@ -6166,7 +6214,7 @@
      "pass_ud1": true,
      "pass_ud2": true
     },
-    "seconds": 0.08,
+    "seconds": 0.21,
     "bone": "body",
     "slot": "M_SR01_Metal",
     "ud_pre_repair": {

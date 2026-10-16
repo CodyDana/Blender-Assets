@@ -203,7 +203,7 @@ Use two components per part, both attached as listed:
 - **Static meshes:** `SM_SR01` collides through 10 convex hulls `UCX_SM_SR01_LOD0_00..09`, the magazine through 1 and
   the scope through 3. All hulls have 32 vertices or fewer.
   - Import with *One Convex Hull per UCX* on and *Auto Generate Collision* off.
-  - Every LOD0 surface sample lies inside the hulls (measured in Unreal: 0 of 320,744 / 300,443 / 305,003).
+  - Every LOD0 surface sample lies inside the hulls (measured in Unreal: 0 of 322,599 / 300,443 / 305,003).
 - **Skeletal mesh:** `SK_SR01` collides through `PHYS_SR01` (below).
 - **In hand:** while the gun, magazine and scope are attached to the character, set their components to
   *No Collision* (or a query-only weapon profile) with *Simulate Physics* off, so they never push the capsule. Turn
@@ -267,12 +267,12 @@ Use two components per part, both attached as listed:
   - The thumb cannot wrap the grip's left side with this body's rest thumb, so the engine hand pose needs its own
     thumb.
 
-## Measured in Unreal 5.8.3 (W5, run `/Game/GunCheck/SR01_1014b`)
+## Measured in Unreal 5.8.3 (W5, run `/Game/GunCheck/SR01_1016r2`, realism round 2 bytes)
 
 - Import: the legacy FBX importer with the settings above. Triangles per LOD are identical in Blender, the FBX and
-  Unreal: SK_SR01 40,518 / 18,202 / 6,028 / 2,490; SM_SR01 41,396 / 18,596 / 6,178 / 2,552; SM_SR01_Mag
-  878 / 394 / 150 / 62; the scope 9,938 / 4,464 / 1,454. LOD screen sizes match the sidecars: SK 1 / 0.273 / 0.0717 /
-  0.0360, SM 1 / 0.25 / 0.0656 / 0.033, Mag 1 / 0.0345 / 0.00905 / 0.00455. Nanite off.
+  Unreal: SK_SR01 44,224 / 19,872 / 6,588 / 2,502; SM_SR01 45,102 / 20,266 / 6,734 / 2,560; SM_SR01_Mag
+  878 / 394 / 146 / 58; the scope 9,938 / 4,464 / 1,454. LOD screen sizes match the sidecars: SK 1 / 0.273 / 0.0886 /
+  0.0361, SM 1 / 0.25 / 0.081 / 0.033, Mag 1 / 0.0345 / 0.0112 / 0.00456. Nanite off.
 - Textures: BaseColor sRGB `TC_Default`; ORM and Masks linear `TC_Masks`; Normal `TC_Normalmap` with flip green OFF
   (DirectX), group `WeaponNormalMap`; Detail16 builds `PF_G16`. Full mip chains (4096 maps: 13 mips). With streaming on,
   the Metal and Chassis BC / N are resident at the top mip both at the hip and at ADS.
@@ -300,6 +300,6 @@ Use two components per part, both attached as listed:
   without tunnelling.
 - Asset warnings: 0 in every import / read-back / render / game log.
 
-> **Branch claude/sniper-sr01-realism (realism round 2, 2026-10-14):** these files were re-exported with the rim-slab
-> edges. The bytes fail form G5 / F1 (bipod clamp 0.003 mm into the seat) and have **not** been verified in Unreal. W5
-> must be re-run on the final bytes before merging. See `WorkFiles/guns/sniper/REALISM_R2_REPORT.md`.
+> **Realism round 2 (branch claude/sniper-sr01-realism, 2026-10-16):** these files come from one full chain run.
+> The Blender gates pass (G5 / F1 included), and W5 passes 37 of 37 on these exact bytes (`/Game/GunCheck/SR01_1016r2`;
+> sha256 equal at start and end). See `WorkFiles/guns/sniper/REALISM_R2_REPORT.md`.

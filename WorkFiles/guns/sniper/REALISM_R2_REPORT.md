@@ -132,3 +132,46 @@ Results are in `review/r2/judges/realism_A.json` and `realism_B.json`.
    path, since fixed). That is outside this worktree and I can't delete it.
 6. Two of my Blender processes overlapped once: the first form chain's `fgates` was still running while the next
    chain started. The second process only read the blend.
+
+## Finish (2026-10-16): clamp seat fixed, one full pass, W5 37/37
+
+**What changed**
+- `Scripts/guns/sniper/sniper_parts.py` now builds the clamp seat floor as material at exact z. The outline's floor
+  edge is split inside the `flat` handler, which removes the needle rim triangles UD2 flagged.
+- The probe (`scratch/r2/p8`) reports no bad parts.
+- **GR recovery:** not attempted. It was not cheap enough for the remaining credit. GR stays at 0.9571 (−0.003),
+  caused by the fillets and fairing that removed the four defects. K10 is still the one side-view regression.
+
+**One chain from nothing** (`scratch/r2/master.sh`, run in full, 10:26–12:19)
+- The blend and every export come from this pass. Logs: `scratch/r2/logs/` (killed run: `logs_pass3_killed/`).
+
+| Gate | Round 2 (first pass) | Round 2 final |
+|---|---|---|
+| G5 rest intersections / butt-joint gaps | **fail** (23 pairs, 0.003 mm) | **pass** (0; min 0.0152 mm over 16 pairs) |
+| F1 bipod folded gaps | **fail** | **pass** |
+| B3 (bolt, trigger, safety, release, riser, full bipod fold / extend / cant sweeps) | pass | pass (0 intersecting steps; min clearance 0.153 mm) |
+| UD1–UD4, F2–F9, H1, scope A1–A5 | pass | pass |
+| game, rig_export, mag M1–M10, scope_export | pass | pass |
+| L2 GR / L3 GR P95 | 0.9571 / 3.61 | 0.9571 / 3.61 (declared, see above) |
+| uv_bake_paint | partial (B9 density class C) | partial (same, as W4) |
+| K1 / K2 / K3 | fail | fail (unchanged; not addressed) |
+| K4 small-part metal texels | 8,331 | **19,463 (worse; not investigated, no budget)** |
+| K9 / K10 | fail | fail (K9 follows form partial and K1–K4; K10 = GR −0.003) |
+
+- qa_check passed before every export.
+- Export sha256: `scratch/r2/exports_sha256_r2.txt`.
+
+**W5 (Unreal 5.8.3, `/Game/GunCheck/SR01_1016r2`)**
+- **37 of 37 pass**, `engine_verified: true`, sha256 equal at start and end. See `W5_REPORT.md` → "Round 2 bytes".
+
+**Renders**
+- From the exported bytes: `review/r2/realism/deployed_34.png`, `hero_34.png`, `review/r2/set/deployed_hero.png`,
+  `q34.png`.
+- From Unreal: `UnrealCheck/renders/look_deployed_hero34.png`, `look_hero34.png`.
+- `Renders/Guns/SR01/tex_deployed_hero.png` was refreshed by the chain.
+- No judges this round (no budget).
+
+**Left**
+1. K4 went up (8,331 → 19,463 bare-metal texels on small parts). Find out why before calling the surface done.
+2. GR −0.003 / K10, and K1–K3: as listed above.
+3. The judges still call the renders fake. That is unchanged from round 2's first pass and was not re-judged.
