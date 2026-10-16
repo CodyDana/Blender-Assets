@@ -95,3 +95,29 @@ File: `review/rig2/judges/realism_A.json`.
   - a non-empty set, i.e. a real surface such as a wooden bench or a mat instead of the bare sweep, which the user
     would have to approve as staging
 - The main remaining gap is the asset (materials and geometry), as in FINAL_JUDGES.
+
+## rig 2b: grain + grade
+
+Answers the rig-2 judge's last render tell ("too clean, no grain or grading"). Code: `photo_finish()` in
+`Scripts/guns/sniper/sr_review_job.py` (gunlib untouched). It is on for every rig2 shot (`shot["render"]`) by default;
+turn it off with `sr_review_export.py --rig2 --no-finish` (or `render["finish"]: false`, or `--no-finish` on the job).
+Non-rig2 and transparent shots render with no compositor. Renders: `review/rig2b/realism/` (5 shots, from the shipped
+exports, 384 spp denoised as rig 2); side-by-side `review/rig2b/compare_grade.png` (rig2 left, rig2b right).
+
+Blender 5.2 compositor: the node group goes on `scene.compositing_node_group` (a `CompositorNodeTree` with an `Image`
+output socket and a `NodeGroupOutput`, because 5.x has no Composite node). Shader Math/Mix/Noise nodes run inside it.
+It works in scene-linear, before AgX - Medium High Contrast (exposure -1.1). The chain:
+
+| Step | Node | Settings |
+|---|---|---|
+| Lateral CA | `CompositorNodeLensdist` | Distortion 0.0, Dispersion **0.006**, Jitter off, Fit off |
+| Black lift | `CompositorNodeColorBalance` | Type Offset/Power/Slope (ASC-CDL), Offset **+0.002**; Power/Slope 1; white balance untouched (neutral) |
+| Mild S | `CompositorNodeCurveRGB` | combined curve, extrapolated, points (0,0) (0.05,0.045) (0.18,0.18) (0.6,0.63) (1,1): pivot at mid grey |
+| Vignette | `CompositorNodeImageCoordinates`.Uniform → VectorMath LENGTH r → `1 − 0.07·r²` | corners ×0.89 at 16:9 |
+| Grain | `ShaderNodeTexNoise` 4D, W 0.37, Scale **1.3** on `.Pixel` coords (~1 px at 1920), Detail 0 → `1 + 0.22·(n − 0.5)` | multiplicative = luminance-only (the same factor on R, G and B) |
+| Apply | `ShaderNodeMix` RGBA MULTIPLY, factor 1: graded image × (vignette × grain) | |
+
+Measured, rig2 → rig2b: flat backdrop patch std 0.55 → 1.63 (hero) and 0.77 → 2.04 (tp_3m) on 8-bit L (grain about 1.5/255),
+corner mean −3.4/255, frame mean −0.6 to −0.9/255. Looked at the full frames and a 1:1 crop: the grain only shows
+at 1:1, and the CA and vignette read as a lens, not a filter, so the settings were not dialled down. No judge run (out of scope).
+For gunlib: port `photo_finish()` along with rig 2; the defaults live in the `FINISH` dict.

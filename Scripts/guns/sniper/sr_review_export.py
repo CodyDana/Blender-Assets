@@ -81,6 +81,7 @@ def side(xc, zc, w_mm, res, from_left=False):
 # aperture (f/4 at 35 cm, f/8 at the hero distances)
 TABLE = False
 RIG2 = False
+FINISH = True                              # rig 2b: the compositor grain + grade on the rig2 shots (--no-finish = off)
 FLOOR = {"rgb": [118, 118, 116], "rough": 0.55, "drop_mm": 0.3}
 DOF = {"fp_35cm": 4.0, "ads_eyepiece": 4.0, "fp_action": 4.0, "scope_close": 5.6, "eyepiece_view": 4.0,
        "tp_3m": 11.0, "hero_34": 8.0, "deployed_34": 8.0, "q34": 8.0, "deployed_hero": 8.0, "bolt_open": 5.6}
@@ -145,7 +146,7 @@ def realism_shots(out):
                                  "wall_m": 2.2 if row[0] == "tp_3m" else 1.3, "radius_m": 0.9},
                        "dof": {"fstop": DOF.get(row[0], 8.0), "blades": 7},
                        "render": {"view": "AgX", "look": "AgX - Medium High Contrast", "exposure": -1.1, "clamp_indirect": 10.0,
-                                  "filter_glossy": 0.5}})
+                                  "filter_glossy": 0.5, "finish": FINISH}})     # rig 2b grain + grade
             if row[0] == "deployed_34":                        # r2 cut the near bipod foot at the bottom edge
                 sh["camera"] = look((1500, -1050, 80), (560, 0, -120), 40.0, (1920, 1080))
                 sh["rest_on_butt"] = True                        # grounded: the butt rests on the floor too
@@ -278,9 +279,11 @@ def main():
     ap.add_argument("--only", default="set,realism,blind")
     ap.add_argument("--table", action="store_true")
     ap.add_argument("--rig2", action="store_true", help="realism shots on the rig2 photo rig (RIG_PROPOSAL.md)")
+    ap.add_argument("--no-finish", action="store_true", help="rig2 without the 2b grain + grade compositor finish")
     a = ap.parse_args()
-    global TABLE, RIG2
+    global TABLE, RIG2, FINISH
     TABLE = a.table
+    FINISH = not a.no_finish
     RIG2 = a.rig2
     only = set(a.only.split(","))
     R = WORK / "review" / a.tag
