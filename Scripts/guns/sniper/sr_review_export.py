@@ -80,6 +80,7 @@ def side(xc, zc, w_mm, res, from_left=False):
 # perspective views on a neutral satin tabletop under the lowest posed point and gives the close views a real
 # aperture (f/4 at 35 cm, f/8 at the hero distances)
 TABLE = False
+RIG2 = False
 FLOOR = {"rgb": [118, 118, 116], "rough": 0.55, "drop_mm": 0.3}
 DOF = {"fp_35cm": 4.0, "ads_eyepiece": 4.0, "fp_action": 4.0, "scope_close": 5.6, "eyepiece_view": 4.0,
        "tp_3m": 11.0, "hero_34": 8.0, "deployed_34": 8.0, "q34": 8.0, "deployed_hero": 8.0, "bolt_open": 5.6}
@@ -134,7 +135,23 @@ def realism_shots(out):
     for row in R:
         sh = {"name": f"realism_{row[0]}", "out": str(out / f"{row[0]}.png"), "camera": row[1], "show": ALL,
               "lights": lit(row[1]), "samples": 512, "denoise": False}     # SMG W4b: the denoiser reads as plastic
-        if TABLE:
+        if RIG2:
+            # (rig2, FINAL_JUDGES render-rig tells) cyclorama sweep touching the lowest point, soft-box photo rig, AgX,
+            # denoised at 384 spp, 7-blade iris
+            tgt = list(row[1].get("target_M", [550.0, 0.0, -40.0]))
+            sh.update({"lights": {"rig": "photo", "target_M": tgt, "bg_rgb": [128, 128, 128], "env": 0.12},
+                       "samples": 384, "denoise": True,
+                       "floor": {"cyc": True, "target_M": tgt, "rgb": [92, 92, 90], "rough": 0.62, "drop_mm": 0.0,
+                                 "wall_m": 2.2 if row[0] == "tp_3m" else 1.3, "radius_m": 0.9},
+                       "dof": {"fstop": DOF.get(row[0], 8.0), "blades": 7},
+                       "render": {"view": "AgX", "look": "AgX - Medium High Contrast", "exposure": -1.1, "clamp_indirect": 10.0,
+                                  "filter_glossy": 0.5}})
+            if row[0] == "deployed_34":                        # r2 cut the near bipod foot at the bottom edge
+                sh["camera"] = look((1500, -1050, 80), (560, 0, -120), 40.0, (1920, 1080))
+                sh["rest_on_butt"] = True                        # grounded: the butt rests on the floor too
+            if row[0] == "ads_eyepiece":                       # focus on the eyepiece glass (X 271, CRAFT_STUDY)
+                sh["dof"] = {"fstop": 8.0, "blades": 7, "focus_M": [271.0, 0.0, 61.5]}
+        elif TABLE:
             sh["floor"] = dict(FLOOR)
             sh["dof"] = {"fstop": DOF.get(row[0], 8.0)}
         if len(row) > 2:
@@ -260,9 +277,11 @@ def main():
     ap.add_argument("--no-render", action="store_true")
     ap.add_argument("--only", default="set,realism,blind")
     ap.add_argument("--table", action="store_true")
+    ap.add_argument("--rig2", action="store_true", help="realism shots on the rig2 photo rig (RIG_PROPOSAL.md)")
     a = ap.parse_args()
-    global TABLE
+    global TABLE, RIG2
     TABLE = a.table
+    RIG2 = a.rig2
     only = set(a.only.split(","))
     R = WORK / "review" / a.tag
     jobd = WORK / "scratch" / "w4" / "review_job"

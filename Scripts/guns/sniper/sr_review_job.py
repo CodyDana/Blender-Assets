@@ -334,6 +334,9 @@ def lights(cam, L):
         LK.rough_world(sc, bg, float(L.get("env", 0.55)))
         LK.rough_lights(cam, tuple(B(L["target_M"])), float(L.get("dist_m", 1.1)), k)
         return
+    if L["rig"] == "photo":
+        photo_lights(cam, L)
+        return
     if L["rig"] == "studio":
         # (gunlib 0.2.x, SMG01 W4 resume; optional, no AR-01 job uses it) a photographic studio for the realism views:
         # lighting and reflections from Blender's bundled studio HDRI (studiolights/world/<hdri>.exr, CC0) made
@@ -399,6 +402,47 @@ def lights(cam, L):
                       float(L["fill"]) * k)
 
 
+def photo_lights(cam, L):
+    """(SR01 rig2, FINAL_JUDGES tells #1/#3/#7) a product-photo rig: NO environment map (the interior HDRI's window
+    rectangles were the blocky floor patches) but a dim neutral world, the cyclorama of floor() as the visible backdrop
+    and the bounce, and three large soft boxes placed in the camera's axes: a key high on the left front, a broad weak
+    fill low on the right, a rim/kicker strip behind and above. Sizes are real softbox sizes (1.2 x 0.9 m key, 2 x 1.4 m
+    fill) so no light pool has a hard edge. L["photo"] may override {"key", "fill", "rim", "top"} energies (W)."""
+    LK.clear_lights()
+    w = bpy.data.worlds.new("ER_Photo")
+    sc.world = w
+    w.use_nodes = True
+    bgn = next(n for n in w.node_tree.nodes if n.type == "BACKGROUND")
+    bgn.inputs["Color"].default_value = (*RD.srgb_to_lin(tuple(L.get("bg_rgb", (128, 128, 128)))), 1.0)
+    bgn.inputs["Strength"].default_value = float(L.get("env", 0.12))
+    Mw = cam.matrix_world
+    rgt = Vector(Mw.col[0][:3]).normalized()
+    back = Vector(Mw.col[2][:3]).normalized()
+    z = Vector((0.0, 0.0, 1.0))
+    hb = Vector((back.x, back.y, 0.0))
+    hb = hb.normalized() if hb.length > 1e-6 else Vector((0.0, -1.0, 0.0))
+    hr = Vector((rgt.x, rgt.y, 0.0)).normalized()
+    t = Vector(B(L["target_M"]))
+    E = dict({"key": 260.0, "fill": 35.0, "rim": 45.0, "top": 70.0}, **L.get("photo", {}))
+    # (spread: a honeycomb grid on the rim only, so it lights the gun, not a pool on the sweep; a narrower spread
+    # concentrates the same power, hence its lower energy)
+    specs = [("Key", -0.75 * hr + 0.55 * hb + 1.0 * z, 1.7, (1.2, 0.9), E["key"], 180.0),
+             ("Fill", 1.0 * hr + 0.7 * hb + 0.35 * z, 2.2, (2.0, 1.4), E["fill"], 180.0),
+             ("Rim", 0.35 * hr - 1.0 * hb + 0.8 * z, 1.6, (0.35, 1.6), E["rim"], 45.0),
+             ("Top", -0.15 * hb + 1.0 * z, 1.5, (1.6, 0.6), E["top"], 180.0)]
+    for name, d, dist, size, energy, spread in specs:
+        ld = bpy.data.lights.new(name, "AREA")
+        ld.shape = "RECTANGLE"
+        ld.size, ld.size_y = size
+        ld.energy = energy
+        ld.spread = math.radians(spread)
+        ob = bpy.data.objects.new(name, ld)
+        sc.collection.objects.link(ob)
+        ob.location = t + d.normalized() * dist
+        ob.rotation_euler = (t - ob.location).to_track_quat("-Z", "Y").to_euler()
+        ob.visible_camera = False
+
+
 def extra_lights(cam, L):
     """(gunlib 0.2.x, SMG01 W4b close-up r2; optional, no AR-01 job uses it) explicit rectangular softboxes / strip
     lights for the 'studio' rig, the way a black product is photographed: a broad overhead box whose mirror image lands
@@ -449,15 +493,131 @@ def extra_lights(cam, L):
 
 # ------------------------------------------------------------------------------------------------ floor + lens (W4b)
 FLOOR = {}
+HOME = {}                                 # rig2: each armature's / scope's load-time matrix (rest_on_butt undo)
 
 
-def floor(shot, objs):
+def cyc_material(F):
+    """a matte paper/vinyl sweep: neutral grey with a faint large-scale tone drift and fine roughness/bump grain (a
+    perfectly uniform surface is itself a CG tell)."""
+    m = bpy.data.materials.new("ER_Cyc")
+    m.use_nodes = True
+    nt = m.node_tree
+    bs = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+    base = RD.srgb_to_lin(tuple(F.get("rgb", (120, 120, 118))))
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    big = nt.nodes.new("ShaderNodeTexNoise")
+    big.inputs["Scale"].default_value = 0.8
+    big.inputs["Detail"].default_value = 2.0
+    nt.links.new(tc.outputs["Object"], big.inputs["Vector"])
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.elements[0].color = (*(c * 0.95 for c in base), 1.0)
+    ramp.color_ramp.elements[1].color = (*(c * 1.04 for c in base), 1.0)
+    nt.links.new(big.outputs["Fac"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], bs.inputs["Base Color"])
+    fine = nt.nodes.new("ShaderNodeTexNoise")
+    fine.inputs["Scale"].default_value = 900.0
+    fine.inputs["Detail"].default_value = 4.0
+    nt.links.new(tc.outputs["Object"], fine.inputs["Vector"])
+    mr = nt.nodes.new("ShaderNodeMapRange")
+    mr.inputs["To Min"].default_value = float(F.get("rough", 0.62)) - 0.06
+    mr.inputs["To Max"].default_value = float(F.get("rough", 0.62)) + 0.06
+    nt.links.new(fine.outputs["Fac"], mr.inputs["Value"])
+    nt.links.new(mr.outputs["Result"], bs.inputs["Roughness"])
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.04
+    bump.inputs["Distance"].default_value = 0.0003
+    nt.links.new(fine.outputs["Fac"], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], bs.inputs["Normal"])
+    for nm in ("Specular IOR Level", "Specular"):
+        if nm in bs.inputs:
+            bs.inputs[nm].default_value = 0.35
+            break
+    return m
+
+
+def cyclorama(F, zmin, cam):
+    """(SR01 rig2, FINAL_JUDGES tells #1/#5) a seamless studio sweep instead of the infinite plane + flat world: the
+    floor runs from well behind the camera to `wall_m` behind the shot's target, bends up through a radius-`radius_m`
+    quarter circle (48 smooth segments, no seam) into a 9 m wall; the sweep is turned about Z so the wall faces the
+    camera. Its floor sits EXACTLY at the lowest posed vertex (drop 0: the lowest point touches, nothing intersects)."""
+    if "cyc" in FLOOR:
+        bpy.data.objects.remove(FLOOR["cyc"], do_unlink=True)
+    R, Dw, H, W, Df = (float(F.get("radius_m", 1.0)), float(F.get("wall_m", 1.4)), 9.0, 20.0, 10.0)
+    prof = [(Df, 0.0), (0.0, 0.0), (-(Dw - R), 0.0)]
+    for i in range(1, 49):                                # y toward the camera, z up
+        a = (math.pi / 2.0) * i / 48.0
+        prof.append((-(Dw - R) - R * math.sin(a), R - R * math.cos(a)))
+    prof.append((-Dw, H))
+    verts, faces = [], []
+    for y, zz in prof:
+        verts += [(-W / 2, y, zz), (W / 2, y, zz)]
+    for i in range(len(prof) - 1):
+        faces.append((2 * i, 2 * i + 1, 2 * i + 3, 2 * i + 2))
+    me = bpy.data.meshes.new("ER_Cyc")
+    me.from_pydata(verts, [], faces)
+    for p in me.polygons:
+        p.use_smooth = True
+    ob = bpy.data.objects.new("ER_Cyc", me)
+    sc.collection.objects.link(ob)
+    if "cycmat" not in FLOOR:
+        FLOOR["cycmat"] = cyc_material(F)
+    ob.data.materials.append(FLOOR["cycmat"])
+    t = Vector(B(F["target_M"]))
+    v = Vector(cam.matrix_world.translation) - t
+    ang = math.atan2(v.y, v.x) - math.pi / 2.0          # local +y -> the camera's horizontal direction
+    ob.rotation_euler = (0.0, 0.0, ang)
+    ob.location = (t.x, t.y, zmin - float(F.get("drop_mm", 0.0)) / 1000.0)
+    FLOOR["cyc"] = ob
+    return round(float(zmin) * 1000.0 + float(OFF[2]), 2)
+
+
+def world_verts(objs):
+    dg = bpy.context.evaluated_depsgraph_get()
+    pts = []
+    for o in objs:
+        if o.hide_render or o.type != "MESH":
+            continue
+        ev = o.evaluated_get(dg)
+        me = ev.to_mesh()
+        co = np.empty(len(me.vertices) * 3)
+        me.vertices.foreach_get("co", co)
+        M = np.array(o.matrix_world)
+        co = co.reshape(-1, 3) @ M[:3, :3].T + M[:3, 3]
+        pts.append(co)
+        ev.to_mesh_clear()
+    return np.concatenate(pts)
+
+
+def rest_on_butt(movers, objs):
+    """(SR01 rig2, FINAL_JUDGES tell #5: "the butt doesn't press into the floor") a rifle grounded on its bipod rests
+    its butt on the ground: one rigid pitch of the whole assembly (armature, scope; the magazine follows its bone)
+    about a Y line through the lowest point (a bipod foot), by the smallest angle that brings a point behind it down to
+    the same height. No bone is re-posed. Returns the angle in degrees."""
+    bpy.context.view_layer.update()
+    P = world_verts(objs)
+    p = P[np.argmin(P[:, 2])]
+    rear = P[P[:, 0] < p[0] - 0.3]
+    dx, dz = rear[:, 0] - p[0], rear[:, 2] - p[2]
+    th = float(np.min(np.arctan2(dz, -dx)))
+    R = Matrix.Translation(Vector(p)) @ Matrix.Rotation(th, 4, "Y") @ Matrix.Translation(-Vector(p))
+    if (R @ Vector(rear[0])).z > rear[0][2]:            # pick the sense that lowers the rear
+        R = Matrix.Translation(Vector(p)) @ Matrix.Rotation(-th, 4, "Y") @ Matrix.Translation(-Vector(p))
+    for o in movers:
+        o.matrix_world = R @ o.matrix_world
+    bpy.context.view_layer.update()
+    return round(math.degrees(th), 2)
+
+
+def floor(shot, objs, cam=None):
     """(SR01 W4b, both realism judges: "floats in a grey void, no contact shadow") an optional tabletop: a 40 m plane
     under the lowest point of the visible meshes (posed), a neutral satin grey, so the gun casts and receives real
-    contact shadows. shot["floor"] = {"rgb": [r, g, b] sRGB, "rough": 0.55, "drop_mm": 0.3} or absent."""
+    contact shadows. shot["floor"] = {"rgb": [r, g, b] sRGB, "rough": 0.55, "drop_mm": 0.3} or absent.
+    (rig2) {"cyc": true, "target_M", "wall_m", "radius_m", "rgb", "rough", "drop_mm": 0} = the cyclorama sweep."""
     F = shot.get("floor")
     if "ob" in FLOOR:
         FLOOR["ob"].hide_render = True
+    if "cyc" in FLOOR:
+        FLOOR["cyc"].hide_render = True
     if not F:
         return None
     dg = bpy.context.evaluated_depsgraph_get()
@@ -471,6 +631,8 @@ def floor(shot, objs):
         for v in me.vertices:
             zmin = min(zmin, (M @ v.co).z)
         ev.to_mesh_clear()
+    if F.get("cyc"):
+        return cyclorama(F, zmin, cam)
     if "ob" not in FLOOR:
         me = bpy.data.meshes.new("ER_Floor")
         h = 20.0
@@ -501,6 +663,37 @@ def lens_dof(cam, shot):
     t = B(D.get("focus_M", c.get("target_M", (0, 0, 0))))
     cam.data.dof.focus_distance = float((Vector(cam.matrix_world.translation) - t).length)
     cam.data.dof.aperture_fstop = float(D.get("fstop", 4.0))
+    # (rig2) a real lens's polygonal iris (7 blades) and the 36 mm full-frame sensor the fov is solved on
+    cam.data.dof.aperture_blades = int(D.get("blades", 0))
+    cam.data.dof.aperture_rotation = math.radians(15.0) if D.get("blades") else 0.0
+    cam.data.sensor_width = 36.0
+
+
+def photo_render(shot):
+    """(SR01 rig2, FINAL_JUDGES tells #1/#7) shot["render"] = {"view": "AgX", "look": ..., "exposure": 0.0,
+    "clamp_indirect": 10, "filter_glossy": 0.5}: a filmic view transform so the soft boxes roll off instead of
+    clipping to blown pools, no caustics, light tree on, and (with "denoise": true) OIDN on albedo + normal passes.
+    Absent = the calibration settings (Standard, no clamp)."""
+    P = shot.get("render")
+    vs = sc.view_settings
+    c = sc.cycles
+    if not P:
+        vs.view_transform, vs.look, vs.exposure = "Standard", "None", 0.0
+        c.sample_clamp_indirect, c.blur_glossy = 0.0, 0.0
+        return
+    vs.view_transform = P.get("view", "AgX")
+    try:
+        vs.look = P.get("look", "None")
+    except TypeError:
+        print("[export_review] look not found:", P.get("look"))
+    vs.exposure = float(P.get("exposure", 0.0))
+    c.sample_clamp_indirect = float(P.get("clamp_indirect", 10.0))
+    c.blur_glossy = float(P.get("filter_glossy", 0.5))
+    c.caustics_reflective = c.caustics_refractive = False
+    c.use_light_tree = True
+    c.denoiser = "OPENIMAGEDENOISE"
+    c.denoising_input_passes = "RGB_ALBEDO_NORMAL"
+    c.denoising_prefilter = "ACCURATE"
 
 
 # ------------------------------------------------------------------------------------------------ shots
@@ -509,6 +702,7 @@ def main():
     sc.render.resolution_percentage = 100
     cam = RD.camera_object("ER_Cam")
     results = []
+    HOME.update({o: o.matrix_world.copy() for o in [a for a, _m in GUN] + list(SCOPE.values())})
     for shot in JOB["shots"]:
         sc.cycles.samples = int(shot.get("samples", JOB.get("samples", 128)))
         # (SMG01 W4b r2, optional) the denoiser smooths sub-millimetre texture (moulded grain, stipple, wear flecks)
@@ -522,6 +716,8 @@ def main():
             m.hide_render = True
         for a, _m in GUN:
             rest(a)
+        for o, M0 in HOME.items():                       # undo a previous shot's rest_on_butt (rig2)
+            o.matrix_world = M0
         arm, gmesh = GUN[lod]
         mag = MAG[int(shot.get("mag_lod", lod))]
         gmesh.hide_render = "gun" not in show
@@ -545,14 +741,17 @@ def main():
             cam.data.clip_end = float(shot["clip_end_m"])
         bpy.context.view_layer.update()
         lights(cam, shot["lights"])
-        fz = floor(shot, [m for _a, m in GUN] + list(MAG.values()) + list(SCOPE.values()))
+        vis = [m for _a, m in GUN] + list(MAG.values()) + list(SCOPE.values())
+        tilt = rest_on_butt([arm, mag] + list(SCOPE.values()), vis) if shot.get("rest_on_butt") else 0.0
+        fz = floor(shot, vis, cam)
         lens_dof(cam, shot)
+        photo_render(shot)
         transparent = bool(shot.get("transparent", False))
         Path(shot["out"]).parent.mkdir(parents=True, exist_ok=True)
         RD.still(sc, shot["out"], transparent)
         rec = {"name": shot["name"], "out": shot["out"], "res": [sc.render.resolution_x, sc.render.resolution_y],
                "lod": lod, "mesh": gmesh.name if "gun" in show else None, "mag": mag.name if "mag" in show else None,
-               "bones_M_mm": {}, "floor_z_M_mm": fz}
+               "bones_M_mm": {}, "floor_z_M_mm": fz, "rest_on_butt_deg": tilt}
         for bn in ("bolt", "selector", JOB["mag_bone"]):
             if bn in arm.pose.bones:
                 loc, _r = bone_world(arm, bn)
