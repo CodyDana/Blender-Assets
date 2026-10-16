@@ -1,0 +1,36 @@
+{"judge":"A","images":[
+{"image":"fp_35cm","verdict":"cg","confidence":93,"tells":[
+{"part":"stock (chassis top/cheek area)","cause":"geometry","tell":"Large flat planar facets meeting at hard creases with visible polygonal shading breaks along the receiver-to-stock transition; real molded/machined chassis has continuous fillets and draft blends"},
+{"part":"stock","cause":"material","tell":"Perfectly uniform olive paint with no dust, scuffs, edge wear, fingerprints or mold/cerakote variation, even at 35 cm where these would dominate"},
+{"part":"bolt body","cause":"material","tell":"Bolt is a flawless mirror chrome with a clean studio gradient reflection; real bolts show machining marks, oil film, carbon and jeweling/fluting, never a smooth CG chrome tube"},
+{"part":"bolt handle knob","cause":"geometry","tell":"Bolt knob is a perfect smooth sphere on a plain cylinder stem with no checkering, tapering or weld/transition blend"},
+{"part":"scope tube and rings","cause":"material","tell":"Scope body is a single uniform satin black with no anodize grain, printed markings, logos or serial; ring screws are simple dark dots"},
+{"part":"background / lighting","cause":"render_rig","tell":"Featureless seamless grey cyc with soft even falloff and synthetic, perfectly smooth DOF bokeh on the out-of-focus scope objective; reads as a studio render rather than a real environment"}]},
+{"image":"ads_eyepiece","verdict":"cg","confidence":72,"tells":[
+{"part":"scope eyepiece / optics","cause":"render_rig","tell":"No sight picture, reticle or exit pupil image at all: the eyepiece is just a black disc with one round grey highlight; a real ADS view through a scope shows the magnified scene and reticle"},
+{"part":"eyepiece highlight","cause":"render_rig","tell":"Highlight is a perfectly circular, evenly filled disc with no lens-coating tint (green/magenta), no internal element reflections or ghosts"},
+{"part":"whole frame","cause":"render_rig","tell":"Uniform fine monochrome grain evenly across all tones (path-tracer residual noise look) rather than photographic luminance-dependent sensor noise; defocus is a uniform gaussian-like blur with no lens character"},
+{"part":"backdrop","cause":"render_rig","tell":"Background is the same flat grey studio cyc with a hard horizontal wall/floor band, no real-world detail"}]},
+{"image":"tp_3m","verdict":"cg","confidence":97,"tells":[
+{"part":"floor / lighting","cause":"render_rig","tell":"Two symmetric blown-out light pools on the floor left and right with hard elliptical edges and a dark ceiling dome; reads as a CG area-light cyc, not a photo studio"},
+{"part":"floor shadow","cause":"render_rig","tell":"Blocky rectangular stepped patches of shadow/brightness under and behind the rifle (shadow-catcher or denoiser tiling artifacts) that no real shadow would form"},
+{"part":"bipod feet / contact","cause":"render_rig","tell":"No dense contact shadow under bipod feet or butt; rifle appears to float above the floor"},
+{"part":"whole rifle","cause":"material","tell":"Every part is uniform clean paint/anodize with no wear, dust or tonal variation; the olive stock looks like flat untextured plastic at this distance"},
+{"part":"stock / butt and cheek riser","cause":"geometry","tell":"Buttpad and cheek riser read as simple boxes with sharp primitive edges"}]},
+{"image":"hero_34","verdict":"cg","confidence":95,"tells":[
+{"part":"stock forend top edge and receiver section","cause":"geometry","tell":"Visible faceted polygon shading and uneven dents along the forend top edge and the step where the chassis meets the receiver (shading artifacts / low-subdivision bevels), plus a crude chunky notch at the barrel channel"},
+{"part":"stock","cause":"material","tell":"Fine uniform procedural noise speckle over the whole olive surface with identical scale everywhere; no wear on edges, M-LOK slot edges or grip contact areas"},
+{"part":"pistol grip","cause":"material","tell":"Grip stipple is an even procedural bump that reads as noise, not a molded stipple pattern, and stops abruptly at clean edges"},
+{"part":"magazine","cause":"geometry","tell":"Magazine is a plain box with two engraved lines, no follower/floorplate detail or seams"},
+{"part":"scope objective","cause":"render_rig","tell":"Objective lens shows only a single thin crescent highlight in an otherwise black void; no coating colour, no reflection of surroundings, no internal elements"},
+{"part":"scope turrets and markings","cause":"material","tell":"Turret dial numerals are tiny generic text; tube has no maker marks, model or serial markings anywhere on the rifle"},
+{"part":"floor","cause":"render_rig","tell":"Blotchy rectangular shadow patches on the floor bottom-left; seamless grey cyc lighting"}]},
+{"image":"deployed_34","verdict":"cg","confidence":96,"tells":[
+{"part":"cheek riser and butt","cause":"geometry","tell":"Cheek riser is a near-primitive box with simple chamfers; buttstock plate and pad are flat slabs with evenly spaced screw dots"},
+{"part":"stock","cause":"material","tell":"Pale olive paint with uniform sandpaper-like noise texture and no wear, dirt or handling marks; colour/value is perfectly consistent across all panels"},
+{"part":"bipod","cause":"geometry","tell":"Bipod legs are plain cylinders with simple banded collars and cylindrical rubber feet; no leg-locking hardware, springs or notches typical of real bipods"},
+{"part":"bipod legs","cause":"material","tell":"Lower leg segments are bright clean chrome cylinders with perfect stripe reflections"},
+{"part":"bipod feet / floor contact","cause":"render_rig","tell":"Weak, soft contact shadows under the feet; rifle weight does not read as resting on the floor"},
+{"part":"floor and backdrop","cause":"render_rig","tell":"Hard horizontal wall/floor step in the background of an otherwise seamless grey box, and blocky shadow patches on the floor at lower left"},
+{"part":"ejection port / bolt","cause":"material","tell":"Bolt visible in the port is a clean mirror chrome with no machining or lubrication marks"}]}
+],"overall":"All five images read as CG renders. The dominant tells are the render rig (seamless grey cyc with symmetric blown light pools, blocky rectangular shadow/denoise patches on the floor, weak contact shadows, uniform path-tracer grain, and an eyepiece shot that shows no sight picture or reticle), followed by materials (perfectly clean uniform olive paint with procedural noise, mirror-chrome bolt and bipod legs, no wear, dust or markings anywhere) and geometry (box-like cheek riser and buttpad, faceted shading on the forend and chassis transitions, sphere-on-stick bolt knob, plain-cylinder bipod). Biggest wins for realism: replace the studio cyc with a real HDRI/environment and fix the floor shadow artifacts and contact shadows; add edge wear, dust and roughness variation to the stock and dull/machine the chrome parts; render an actual sight picture through the scope; and smooth the faceted chassis bevels."}
