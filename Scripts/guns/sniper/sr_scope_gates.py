@@ -23,7 +23,9 @@ from gunlib import fit, bl  # noqa: E402
 GUN = {}
 BONE = {}
 for o in bpy.data.objects:
-    if o.type == "MESH":
+    # only the form parts: the final blend also holds the game stage's collision hulls (UCX_*) and LOD/twin copies,
+    # which are not gun parts (a UCX hull hugging the rail read as a 0.0001 mm "clash" with the scope ring)
+    if o.type == "MESH" and not o.name.startswith(("UCX_", "SM_", "SK_")) and "_LOD" not in o.name:
         V, T = bl.tris_np(o)
         GUN[o.name] = (V + GRIP, T)
         BONE[o.name] = json.loads(o.get("gun_part", "{}")).get("bone", "body")

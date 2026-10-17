@@ -152,11 +152,15 @@ gates = [
      "value": {s: {k: (len(v) if isinstance(v, list) else v) for k, v in dump[s].items()}
                for s in ("functions", "masters", "instances", "meshes", "textures")}
      | {"node_layout_identical": dump["node_layout_identical"], "added": dump["added_sr01"]},
-     "threshold": f"only SR01 / scope entries added (10 instances, 4 meshes, {n_tex_expected} textures); nothing "
+     "threshold": f"first build: only SR01 / scope entries added (10 instances, 4 meshes, {n_tex_expected} textures); rebuild: nothing added; nothing "
                   "removed or changed; node layout identical",
-     "pass": bool(dump["pass"]) and dump["added_sr01"]["instances"] == 10 and dump["added_sr01"]["meshes"] == 4
-     and dump["added_sr01"]["textures"] == n_tex_expected
-     and dump["added_sr01"]["functions"] == 0 and dump["added_sr01"]["masters"] == 0},
+     # first SR01 build: exactly the SR01 / scope additions; a REBUILD (the reference already holds SR01): nothing
+     # added at all (every entry, SR01's included, unchanged or only re-imported)
+     "pass": bool(dump["pass"]) and dump["added_sr01"]["functions"] == 0 and dump["added_sr01"]["masters"] == 0
+     and ((dump["added_sr01"]["instances"] == 10 and dump["added_sr01"]["meshes"] == 4
+           and dump["added_sr01"]["textures"] == n_tex_expected)
+          or (dump["added_sr01"]["instances"] == 0 and dump["added_sr01"]["meshes"] == 0
+              and dump["added_sr01"]["textures"] == 0))},
     {"name": "S7 SK_SR01 imported by the pack's skeletal path from the W5-verified bytes: 4 LODs, sockets as the "
              "sidecar (20), 8 clips, PHYS_SR01, bounds extension; every SR01 FBX = the W5 bytes", "blocking": True,
      "value": {"lods": sk["lod_count"], "sockets": len(sk["sockets"]), "sidecar_sockets": n_sock,
