@@ -452,12 +452,17 @@ def paint(st, meta, bake, tex):
             rr = np.hypot(Q[:, 1] - c[1], Q[:, 2] - c[2])
             R = max(float(rr.max()), 1.0)
             u = rr / R
-            ca, cb = lin(F["coat_srgb"][0]), lin(F["coat_srgb"][1])
-            ring = PT.smoothstep(0.55, 0.95, u)[:, None]
+            cs = [lin(x) for x in F["coat_srgb"]]
+            g0, g1, gs = F["coat_ring"]
+            ring = gs * PT.smoothstep(g0, g1, u)
+            ic, iw, ia = F["inner_ring"]
+            ring = np.maximum(ring, ia * np.exp(-((u - ic) / iw) ** 2))[:, None]  # a faint inner coat ring
             ang = np.arctan2(Q[:, 2] - c[2], Q[:, 1] - c[1])
-            mix = (0.5 + 0.5 * np.sin(ang + 0.7))[:, None]
-            coat = ca[None, :] * mix + cb[None, :] * (1 - mix)
-            col[sel] = col[sel] * (1 - 0.8 * ring) + coat * 0.8 * ring
+            # three coat phases around the rim (violet / amber / green), each a cos^2 lobe 120 deg apart
+            wts = np.stack([np.cos(0.5 * (ang + 0.7 - j * 2.0944)) ** 2 for j in range(3)], -1)
+            wts /= wts.sum(1, keepdims=True)
+            coat = wts @ np.stack(cs)
+            col[sel] = col[sel] * (1 - ring) + coat * ring
             hh[sel] = -(rr ** 2) / (2.0 * F["convex_R_mm"])               # a convex glass surface (sag)
         bc[k] = col
         rough[k] = r0 + (r1 - r0) * v_mid[k]
@@ -580,6 +585,51 @@ def paint(st, meta, bake, tex):
             h[mi] = -0.03
             n_marks += int(mk.sum())
         info["turret_mark_texels"] = n_marks
+
+    # ---------------------------------------------------------------- (scope finish) power ring + diopter: generic only
+    if SS.TARGET != "gun" and st == "Scope_Body":
+        PR = SS.POWER_MARKS
+        kb = np.nonzero(pk == "scope_body")[0]
+        tb = kb[(P[kb, 0] > 290.0) & (P[kb, 0] < 345.0)]            # the plain eyepiece band: the axis from its extent
+        cy = 0.5 * (P[tb, 1].max() + P[tb, 1].min())
+        cz = 0.5 * (P[tb, 2].max() + P[tb, 2].min())
+        dy, dz = P[kb, 1] - cy, P[kb, 2] - cz
+        rr = np.hypot(dy, dz)
+        radial = (N[kb, 1] * dy + N[kb, 2] * dz) / np.maximum(rr, 1e-6)
+        th = np.arctan2(dz, dy)                                     # 90 deg = top; increasing toward the shooter's right
+        xx = P[kb, 0]
+        mk = np.zeros(len(kb), bool)
+
+        def arc(t0):                                                # arc length (mm) from angle t0, wrapped
+            return (((th - t0) + math.pi) % (2 * math.pi) - math.pi) * rr
+        # power ring: numerals in the gaps between the scallops (height along the bore, reading on the circumference,
+        # up = toward the objective as the shooter looks down), a short tick at each on the ring's rear band
+        on_ring = (radial > 0.9) & (rr > PR["ring_r_min"])
+        for txt, deg in zip(PR["numbers"], PR["gap_deg"]):
+            t0 = math.radians(deg)
+            s = arc(t0)
+            g = glyph_mask(txt)
+            hm = PR["num_h_mm"]
+            gw = hm * g.shape[1] / g.shape[0]
+            loc = np.stack([s, xx - PR["num_x"]], -1)
+            mk |= on_ring & stamp(loc, g, (-gw / 2.0, -hm / 2.0), hm)
+            mk |= on_ring & (np.abs(s) < 0.22) & (xx > PR["tick_x"][0]) & (xx < PR["tick_x"][1])
+        # the fixed index line on the eyepiece just behind the ring (top)
+        on_eye = (radial > 0.9) & (rr > 21.0)
+        mk |= on_eye & (np.abs(arc(math.pi / 2)) < 0.25) & (xx > PR["index_x"][0]) & (xx < PR["index_x"][1])
+        # diopter scale near the eyecup: ticks every few degrees over the top, the centre and ends long
+        x0d, x1d, x1l = PR["diopter_x"]
+        nd = PR["diopter_n"]
+        for i in range(-nd, nd + 1):
+            s = arc(math.pi / 2 + math.radians(i * PR["diopter_step_deg"]))
+            longt = i in (-nd, 0, nd)
+            mk |= on_eye & (np.abs(s) < 0.22) & (xx > x0d) & (xx < (x1l if longt else x1d))
+        mi = kb[mk]
+        bc[mi] = lin((214, 214, 206))[None, :]                         # paint-filled engraving (as the turrets)
+        rough[mi] = 0.55
+        metal[mi] = 0.0
+        h[mi] = -0.03
+        info["power_diopter_mark_texels"] = int(mk.sum())
 
     # ---------------------------------------------------------------- limits (B9 / G7)
     is_m = metal > 0.5

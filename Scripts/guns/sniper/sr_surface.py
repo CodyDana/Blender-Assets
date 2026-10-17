@@ -156,8 +156,11 @@ FIN = {
     "scope_anod": {"metal": 0, "srgb": (30, 30, 33), "rough": (0.46, 0.56), "wear_srgb": (170, 172, 176)},
     # (W4b) multi-coated glass in the opaque-glossy slot (Q6): a green-black centre, a violet / amber coating ring, a
     # convex normal (the environment curves across it like a real objective)
-    "lens": {"metal": 0, "srgb": (28, 34, 31), "rough": (0.02, 0.04), "coat_srgb": ((44, 32, 56), (50, 42, 28)),
-             "convex_R_mm": 70.0},
+    # (scope finish, FINAL_JUDGES 6 / 11: read pure black) a three-phase coat (violet / amber / green) climbing toward
+    # the rim, a faint inner coat ring, the centre a deep green-black instead of flat black
+    "lens": {"metal": 0, "srgb": (26, 36, 33), "rough": (0.02, 0.04),
+             "coat_srgb": ((86, 50, 128), (132, 94, 36), (48, 108, 76)), "coat_ring": (0.45, 0.98, 0.78),
+             "inner_ring": (0.42, 0.06, 0.35), "convex_R_mm": 70.0},
     "soot": {"metal": 0, "lin": 0.0130, "rough": (0.85, 0.95)},
     "grime": {"metal": 0, "srgb": (36, 35, 33), "rough": 0.85},
 }
@@ -240,6 +243,13 @@ HEX = {"parts": ("fasteners", "rail_screws"), "af_frac": 0.43, "depth_mm": 0.35}
 # (W4b) generic turret markings (numbers / ticks only): clicks per turn, a long tick every 5th, numerals at long ticks
 TURRET_MARKS = {"scope_turret_elev": {"ticks": 40, "numbers": True}, "scope_turret_wind": {"ticks": 40, "numbers": True},
                 "scope_focus": {"ticks": 24, "numbers": False}}
+# (scope finish) generic power-ring numerals in the 8 scallop gaps (scallops at 0 / 45 / ... deg about the bore, 0 =
+# +Y, 90 = top; the bottom gap left blank), a tick at each on the ring's rear band, the fixed index on the eyepiece,
+# a diopter tick scale by the eyecup; numbers and ticks only (frame M mm, sr_scope.body stations)
+POWER_MARKS = {"numbers": ("5", "6", "8", "10", "15", "20", "25"),
+               "gap_deg": (-67.5, -22.5, 22.5, 67.5, 112.5, 157.5, 202.5), "ring_r_min": 22.0,
+               "num_x": 363.0, "num_h_mm": 2.6, "tick_x": (351.4, 354.6), "index_x": (345.0, 349.6),
+               "diopter_x": (285.4, 287.6, 289.2), "diopter_n": 4, "diopter_step_deg": 6.0}
 # generic markings allowed (user 2026-10-13): S / F at the safety, rail slot numbers; never a maker / model / serial
 # W3 Part 0: the S / F stamp sits on the visible outer face (Y -27) just under the safety pocket (pocket Z -22.5..1.0,
 # floor at Y -17); at Z -8 it fell inside the pocket and painted 0 texels
